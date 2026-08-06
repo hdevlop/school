@@ -1,0 +1,66 @@
+[
+  {
+    "vehicleId": "m2o3V",
+    "driverId": "Cjahi",
+    "assignmentDate": "2026-04-03",
+    "status": "completed",
+    "unassignmentDate": "2026-06-17",
+    "notes": "Generated vehicle-driver assignment."
+  },
+  {
+    "vehicleId": "1plhB",
+    "driverId": "SsNVV",
+    "assignmentDate": "2026-04-06",
+    "status": "active",
+    "unassignmentDate": null,
+    "notes": "Generated vehicle-driver assignment."
+  },
+  {
+    "vehicleId": "i3a0p",
+    "driverId": "kbX0T",
+    "assignmentDate": "2026-04-09",
+    "status": "active",
+    "unassignmentDate": null,
+    "notes": "Generated vehicle-driver assignment."
+  },
+  {
+    "vehicleId": "XDxXL",
+    "driverId": "g03jx",
+    "assignmentDate": "2026-04-12",
+    "status": "active",
+    "unassignmentDate": null,
+    "notes": "Generated vehicle-driver assignment."
+  },
+  {
+    "vehicleId": "zbrTM",
+    "driverId": "CdVG2",
+    "assignmentDate": "2026-04-15",
+    "status": "completed",
+    "unassignmentDate": "2026-06-21",
+    "notes": "Generated vehicle-driver assignment."
+  },
+  {
+    "vehicleId": "SaPNr",
+    "driverId": "EOIME",
+    "assignmentDate": "2026-04-18",
+    "status": "active",
+    "unassignmentDate": null,
+    "notes": "Generated vehicle-driver assignment."
+  },
+  {
+    "vehicleId": "l7Iki",
+    "driverId": "07fVG",
+    "assignmentDate": "2026-04-21",
+    "status": "active",
+    "unassignmentDate": null,
+    "notes": "Generated vehicle-driver assignment."
+  },
+  {
+    "vehicleId": "LoT0t",
+    "driverId": "-zcte",
+    "assignmentDate": "2026-04-24",
+    "status": "active",
+    "unassignmentDate": null,
+    "notes": "Generated vehicle-driver assignment."
+  }
+]

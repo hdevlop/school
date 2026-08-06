@@ -1,0 +1,2 @@
+ALTER TABLE "expenses" ADD COLUMN "transaction_ref" text;--> statement-breakpoint
+CREATE UNIQUE INDEX "fees_student_fee_type_academic_year_unique" ON "fees" USING btree ("student_id","fee_type_id","academic_year");

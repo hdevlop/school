@@ -1,0 +1,2869 @@
+{
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية",
+    "es": "Español"
+  },
+  "assistant": {
+    "security": {
+      "readOnlyMode": "Por seguridad, este asistente actualmente solo puede leer y buscar datos. Las acciones de crear, actualizar, eliminar, asignar, quitar o vaciar estarán disponibles después de añadir la aprobación de confirmación."
+    }
+  },
+  "auth": {
+    "success": {
+      "login": "Inicio de sesión exitoso",
+      "logout": "Cierre de sesión exitoso",
+      "register": "Registro exitoso. ¡Bienvenido!",
+      "passwordReset": "Restablecimiento de contraseña enviado",
+      "tokenGenerated": "Token de acceso generado exitosamente",
+      "tokenRefreshed": "Token de acceso actualizado exitosamente",
+      "refreshTokenGenerated": "Token de actualización generado exitosamente",
+      "refreshTokenRefreshed": "Token de actualización renovado exitosamente",
+      "authInitialized": "Autenticación inicializada exitosamente"
+    },
+    "errors": {
+      "emailExists": "Ya existe una cuenta con este correo electrónico",
+      "credentialsMissing": "Uno o más campos obligatorios están vacíos",
+      "invalidCredentials": "Credenciales inválidas. Por favor, inténtalo de nuevo",
+      "accessDenied": "Acceso denegado. No tienes permisos para acceder a este recurso",
+      "emailMissing": "Falta el correo electrónico. Por favor, proporciona una dirección de correo",
+      "tokenExpired": "El token de acceso ha expirado. Por favor, actualiza tu token",
+      "tokenVerificationFailed": "Falló la verificación del token de acceso",
+      "tokenMissing": "Falta el token de acceso. Por favor, proporciona un token de acceso",
+      "tokenInvalid": "El token de acceso proporcionado es inválido. Por favor, obtén un token válido",
+      "refreshTokenExpired": "Sesión expirada. Por favor, inicia sesión de nuevo",
+      "refreshTokenVerificationFailed": "Falló la verificación del token de actualización",
+      "refreshTokenMissing": "Falta el token de actualización. Por favor, proporciona un token de actualización",
+      "refreshTokenInvalid": "Token de actualización inválido. Por favor, inicia sesión de nuevo",
+      "authInitFailed": "Falló la inicialización de la autenticación"
+    },
+    "validation": {
+      "emailInvalid": "Formato de dirección de correo electrónico inválido",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres"
+    },
+    "users": {
+      "success": {
+        "retrieved": "Usuario obtenido correctamente"
+      }
+    }
+  },
+  "users": {
+    "success": {
+      "retrieved": "Usuario recuperado exitosamente",
+      "created": "Usuario creado exitosamente",
+      "updated": "Usuario actualizado exitosamente",
+      "deleted": "Usuario eliminado exitosamente",
+      "allDeleted": "Todos los usuarios han sido eliminados"
+    },
+    "errors": {
+      "notFound": "No se encontró ningún usuario con la información proporcionada",
+      "adminRoleNotFound": "Rol de administrador no encontrado",
+      "idExists": "El ID de usuario ya existe"
+    },
+    "validation": {
+      "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+      "emailInvalid": "Formato de dirección de correo electrónico inválido",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordConfirmationRequired": "Se requiere confirmación de contraseña",
+      "passwordsDoNotMatch": "Las contraseñas no coinciden",
+      "roleRequired": "Por favor, selecciona un rol válido"
+    },
+    "form": {
+      "fullName": "Nombre Completo",
+      "fullNamePlaceholder": "Introduce el nombre completo",
+      "image": "Imagen",
+      "email": "Dirección de Correo Electrónico",
+      "emailPlaceholder": "Introduce la dirección de correo electrónico",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Introduce la contraseña",
+      "newPassword": "Nueva Contraseña (dejar en blanco para mantener la actual)",
+      "confirmPassword": "Confirmar Contraseña",
+      "confirmPasswordPlaceholder": "Confirmar contraseña",
+      "userRole": "Rol de Usuario"
+    },
+    "roles": {
+      "admin": "Administrador",
+      "user": "Usuario",
+      "moderator": "Moderador"
+    },
+    "dialogs": {
+      "createTitle": "Crear Nuevo Usuario",
+      "createButton": "Crear Usuario",
+      "viewTitle": "Detalles del Usuario",
+      "editTitle": "Editar Usuario",
+      "updateButton": "Actualizar Usuario",
+      "deleteButton": "Eliminar Usuario"
+    },
+    "table": {
+      "selectAll": "Seleccionar todo",
+      "selectRow": "Seleccionar fila",
+      "id": "ID",
+      "name": "Nombre",
+      "email": "Correo Electrónico",
+      "role": "Rol",
+      "status": "Estado"
+    },
+    "filters": {
+      "searchByName": "Buscar por nombre...",
+      "searchByEmail": "Buscar por correo electrónico...",
+      "filterByRole": "Filtrar por rol..."
+    }
+  },
+  "roles": {
+    "success": {
+      "retrieved": "Rol recuperado exitosamente",
+      "created": "Rol creado exitosamente",
+      "updated": "Rol actualizado exitosamente",
+      "deleted": "Rol eliminado exitosamente",
+      "allDeleted": "Todos los roles han sido eliminados",
+      "initialized": "Roles inicializados exitosamente",
+      "assignedToUser": "El rol se asignó exitosamente al usuario",
+      "userRolesRetrieved": "Roles de usuario recuperados exitosamente",
+      "usersByRoleRetrieved": "Usuarios para el rol especificado recuperados exitosamente",
+      "userRoleDeleted": "El rol de usuario ha sido eliminado exitosamente"
+    },
+    "errors": {
+      "exists": "El nombre del rol ya está en uso. Por favor, elige otro",
+      "notFound": "Rol no encontrado",
+      "userRoleExists": "El rol especificado para el usuario ya existe",
+      "userRoleNotFound": "El rol especificado para el usuario no fue encontrado"
+    },
+    "form": {
+      "name": "Nombre del Rol",
+      "namePlaceholder": "Introduce el nombre del rol",
+      "description": "Descripción (Opcional)",
+      "descriptionPlaceholder": "Introduce la descripción del rol"
+    },
+    "dialogs": {
+      "createTitle": "Crear Nuevo Rol",
+      "createButton": "Crear Rol",
+      "viewTitle": "Detalles del Rol",
+      "editTitle": "Editar Rol",
+      "updateButton": "Actualizar Rol",
+      "deleteButton": "Eliminar Rol"
+    },
+    "table": {
+      "selectAll": "Seleccionar todo",
+      "selectRow": "Seleccionar fila",
+      "id": "ID",
+      "roleName": "Nombre del Rol",
+      "description": "Descripción",
+      "noDescription": "Sin descripción"
+    },
+    "filters": {
+      "searchByName": "Buscar por nombre del rol...",
+      "searchByDescription": "Buscar por descripción..."
+    },
+    "validation": {
+      "nameRequired": "Se requiere un nombre de rol apropiado",
+      "nameMinLength": "El nombre del rol debe tener al menos 2 caracteres"
+    }
+  },
+  "system": {
+    "success": {
+      "demoSeeded": "Sistema de demostración inicializado exitosamente",
+      "dataCleared": "Todos los datos borrados exitosamente",
+      "fieldsSeeded": "Campos inicializados exitosamente",
+      "vehiclesSeeded": "Vehículos inicializados exitosamente",
+      "operatorsSeeded": "Operadores inicializados exitosamente",
+      "operationsSeeded": "Operaciones inicializadas exitosamente",
+      "refuelsSeeded": "Repostajes inicializados exitosamente"
+    },
+    "info": {
+      "seedingStarted": "Iniciando la carga de datos de demostración...",
+      "clearingData": "Borrando todos los datos...",
+      "operationsCleared": "Operaciones borradas",
+      "refuelsCleared": "Repostajes borrados",
+      "operatorsCleared": "Operadores borrados",
+      "vehiclesCleared": "Vehículos borrados",
+      "fieldsCleared": "Campos borrados",
+      "usersCleared": "Usuarios borrados"
+    },
+    "errors": {
+      "seedingDisabled": "La inicialización del sistema está deshabilitada en este entorno",
+      "invalidSeedApiKey": "Clave API de inicialización inválida proporcionada"
+    }
+  },
+  "files": {
+    "success": {
+      "retrieved": "Archivo recuperado exitosamente",
+      "created": "Archivo creado exitosamente",
+      "updated": "Archivo actualizado exitosamente",
+      "deleted": "Archivo eliminado exitosamente",
+      "served": "Archivo servido exitosamente",
+      "streamed": "Archivo transmitido exitosamente"
+    },
+    "errors": {
+      "notFound": "Archivo no encontrado",
+      "nameExists": "Ya existe un archivo con este nombre",
+      "sizeTooLarge": "El tamaño del archivo excede el límite máximo permitido",
+      "typeNotAllowed": "El tipo de archivo no está permitido",
+      "accessDenied": "No tienes permiso para acceder a este archivo",
+      "uploadFailed": "Falló la subida del archivo",
+      "deleteFailed": "Falló la eliminación del archivo",
+      "invalidType": "Tipo de archivo inválido",
+      "tooLarge": "El tamaño del archivo excede el límite máximo permitido",
+      "invalidEntityType": "Tipo de entidad inválido",
+      "entityNotFound": "Entidad no encontrada",
+      "insufficientPermissions": "Permisos insuficientes para acceder a este archivo",
+      "physicalNotFound": "Archivo físico no encontrado en el almacenamiento",
+      "mimeTypeMismatch": "La extensión del archivo no coincide con el tipo de archivo - riesgo de seguridad potencial",
+      "executableNotAllowed": "Los archivos ejecutables no están permitidos por razones de seguridad",
+      "recordNotFound": "Registro de archivo no encontrado en la base de datos para la ruta: {fileAbsPath}",
+      "onlyImagesAllowed": "Solo se permiten archivos de imagen",
+      "invalidImageType": "Tipo de archivo de imagen inválido"
+    }
+  },
+  "analytics": {
+    "success": {},
+    "errors": {}
+  },
+  "alerts": {
+    "success": {
+      "retrieved": "Alertas recuperadas con éxito",
+      "created": "Alerta creada con éxito",
+      "updated": "Alerta actualizada con éxito",
+      "deleted": "Alerta eliminada con éxito",
+      "allDeleted": "Todas las alertas han sido eliminadas",
+      "statusUpdated": "Estado de alerta actualizado con éxito",
+      "acknowledged": "Alerta reconocida con éxito",
+      "resolved": "Alerta resuelta con éxito",
+      "dismissed": "Alerta descartada con éxito",
+      "bulkUpdated": "Alertas actualizadas en lote con éxito",
+      "resolvedDeleted": "Alertas resueltas eliminadas con éxito",
+      "maintenanceAlertsGenerated": "Alertas de mantenimiento generadas con éxito",
+      "academicAlertsGenerated": "Alertas académicas generadas correctamente",
+      "attendanceAlertsGenerated": "Alertas de asistencia generadas correctamente"
+    },
+    "errors": {
+      "notFound": "Alerta no encontrada",
+      "invalidType": "Tipo de alerta inválido especificado",
+      "invalidStatus": "Estado de alerta inválido especificado",
+      "invalidPriority": "Prioridad de alerta inválida especificada",
+      "invalidTitle": "El título de la alerta debe tener al menos 2 caracteres",
+      "invalidMessage": "El mensaje de la alerta debe tener al menos 5 caracteres",
+      "cannotModifyResolved": "No se pueden modificar alertas resueltas",
+      "cannotDeleteActive": "No se pueden eliminar alertas activas",
+      "duplicateActiveAlert": "Ya existe una alerta activa de este tipo para este objetivo",
+      "noAlertsSelected": "No se seleccionaron alertas para la operación en lote",
+      "noAlertsToDelete": "No se encontraron alertas para eliminar",
+      "invalidStatusTransition": "Transición de estado inválida de {{from}} a {{to}}",
+      "atLeastOneTargetRequired": "Debe especificarse al menos un objetivo (vehículo, operador o usuario)"
+    },
+    "validation": {
+      "titleMinLength": "El título debe tener al menos 2 caracteres",
+      "messageMinLength": "El mensaje debe tener al menos 5 caracteres"
+    },
+    "types": {
+      "maintenance": "Mantenimiento",
+      "fuel": "Combustible",
+      "security": "Seguridad",
+      "operational": "Operacional",
+      "system": "Sistema"
+    },
+    "priorities": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta",
+      "critical": "Crítica"
+    },
+    "statuses": {
+      "active": "Activa",
+      "read": "Leída",
+      "resolved": "Resuelta",
+      "dismissed": "Descartada"
+    },
+    "form": {
+      "type": "Tipo de alerta",
+      "priority": "Prioridad",
+      "title": "Título",
+      "titlePlaceholder": "Ingrese el título de la alerta",
+      "message": "Mensaje",
+      "messagePlaceholder": "Ingrese el mensaje de la alerta",
+      "status": "Estado",
+      "vehicle": "Vehículo (Opcional)",
+      "vehiclePlaceholder": "Seleccionar un vehículo",
+      "operator": "Operador (Opcional)",
+      "operatorPlaceholder": "Seleccionar un operador"
+    },
+    "dialogs": {
+      "createTitle": "Crear nueva alerta",
+      "createButton": "Crear alerta",
+      "viewTitle": "Detalles de la alerta",
+      "editTitle": "Editar alerta",
+      "updateButton": "Actualizar alerta",
+      "deleteButton": "Eliminar alerta"
+    },
+    "table": {
+      "selectAll": "Seleccionar todo",
+      "selectRow": "Seleccionar fila",
+      "id": "ID",
+      "title": "Título",
+      "type": "Tipo",
+      "priority": "Prioridad",
+      "status": "Estado",
+      "vehicle": "Vehículo",
+      "operator": "Operador",
+      "createdAt": "Fecha de creación",
+      "readAt": "Fecha de lectura"
+    },
+    "filters": {
+      "searchByTitle": "Buscar por título...",
+      "searchByVehicle": "Buscar por vehículo...",
+      "filterByStatus": "Filtrar por estado...",
+      "filterByType": "Filtrar por tipo...",
+      "filterByPriority": "Filtrar por prioridad..."
+    }
+  },
+  "validation": {
+    "general": {
+      "requiredFieldMissing": "Falta un campo obligatorio",
+      "invalidDateFormat": "Formato de fecha inválido proporcionado",
+      "invalidTimeFormat": "Formato de hora inválido proporcionado",
+      "invalidNumericValue": "Valor numérico inválido proporcionado",
+      "valueOutOfRange": "El valor está fuera del rango aceptable"
+    },
+    "formats": {
+      "invalidSerialNumber": "Formato de número de serie inválido",
+      "invalidLicensePlate": "Formato de matrícula inválido",
+      "invalidPhoneNumber": "Formato de número de teléfono inválido",
+      "invalidEmail": "Formato de dirección de correo electrónico inválido",
+      "invalidLicenseNumber": "Formato de número de licencia inválido"
+    }
+  },
+  "dashboard": {
+    "widgets": {
+      "totalLiters": "Total Litros",
+      "totalFields": "Total Campos",
+      "activeVehicles": "Vehículos Activos",
+      "operationsToday": "Operaciones Hoy",
+      "totalOperators": "Total Operadores",
+      "completedOperations": "Operaciones Completadas",
+      "totalWorkHours": "Total Horas de Trabajo",
+      "totalCost": "Costo Total"
+    },
+    "cards": {
+      "recentOperations": {
+        "title": "Operaciones Completadas Recientemente",
+        "noOperations": "No se encontraron operaciones completadas recientemente",
+        "errorLoadingData": "Error al cargar las operaciones completadas recientemente"
+      }
+    },
+    "success": {
+      "widgetsRetrieved": "Widgets del panel recuperados exitosamente"
+    },
+    "finance": {
+      "aging1_30": "1-30 días",
+      "aging31_60": "31-60 días",
+      "aging60plus": "60+ días",
+      "agingBalance": "Saldo por antigüedad",
+      "agingCurrent": "Actual",
+      "collectionRateYTD": "Tasa de cobro del año",
+      "daysOverdue": "Días de retraso",
+      "expenseCount": "Cantidad de gastos",
+      "expenses": "Expenses",
+      "expensesByCategory": "Gastos por categoría",
+      "expensesMonth": "Gastos (Mes)",
+      "income": "Ingresos",
+      "incomeMonth": "Ingresos (Mes)",
+      "incomeVsExpenses": "Ingresos vs Gastos",
+      "netBalance": "Saldo neto",
+      "noExpensesRecorded": "No hay gastos registrados",
+      "noOverdue": "Sin cuotas vencidas",
+      "noRecentPayments": "Sin pagos recientes",
+      "overdueFees": "Cuotas vencidas",
+      "recentPayments": "Pagos recientes",
+      "totalStudents": "Total de estudiantes",
+      "totalTeachers": "Total de profesores"
+    },
+    "attendance": {
+      "studentsTitle": "Asistencia de estudiantes",
+      "teachersTitle": "Asistencia de profesores",
+      "staffTitle": "Asistencia del personal",
+      "todayAbsent": "Ausentes hoy",
+      "todayLate": "Tarde hoy",
+      "absent": "Ausente",
+      "late": "Tarde"
+    },
+    "calendar": {
+      "title": "Calendario",
+      "june": "Junio"
+    },
+    "students": {
+      "title": "Estudiantes"
+    },
+    "lastEvents": {
+      "title": "Últimos eventos"
+    },
+    "feesCollectionExpenses": "Cobro de cuotas / Gastos",
+    "totalIncomes": "Ingresos totales",
+    "totalExpenses": "Gastos totales",
+    "todayIncome": "Ingresos de hoy",
+    "todayExpenses": "Gastos de hoy"
+  },
+  "language": {
+    "success": {
+      "preferenceUpdated": "Preferencia de idioma actualizada exitosamente",
+      "preferenceRetrieved": "Preferencia de idioma recuperada exitosamente"
+    },
+    "errors": {
+      "invalid": "Idioma especificado inválido"
+    }
+  },
+  "common": {
+    "notAvailable": "N/D",
+    "all": "Todos",
+    "invalidDate": "Fecha inválida",
+    "loading": "Cargando...",
+    "processing": "Procesando...",
+    "loadingCreate": "Creando...",
+    "loadingUpdate": "Actualizando...",
+    "loadingDelete": "Eliminando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "create": "Crear",
+    "update": "Actualizar",
+    "actions": "Acciones",
+    "addItem": "Agregar elemento",
+    "noItemsAdded": "Todavía no se han agregado elementos.",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "confirmAction": "¿Está seguro?",
+    "female": "Femenino",
+    "male": "Masculino",
+    "no": "No",
+    "noDescription": "Sin descripción",
+    "notAssigned": "No asignado",
+    "notSpecified": "No especificado",
+    "parent": "Padre/Madre",
+    "total": "Total",
+    "warning": "Advertencia",
+    "yes": "Sí",
+    "monthsShort": {
+      "jan": "Ene",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Abr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Ago",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dic"
+    },
+    "weekdaysShort": {
+      "sun": "Do",
+      "mon": "Lu",
+      "tue": "Ma",
+      "wed": "Mi",
+      "thu": "Ju",
+      "fri": "Vi",
+      "sat": "Sá"
+    },
+    "monthsLong": {
+      "january": "Enero",
+      "february": "Febrero",
+      "march": "Marzo",
+      "april": "Abril",
+      "may": "Mayo",
+      "june": "Junio",
+      "july": "Julio",
+      "august": "Agosto",
+      "september": "Septiembre",
+      "october": "Octubre",
+      "november": "Noviembre",
+      "december": "Diciembre"
+    },
+    "gender": {
+      "M": "Masculino",
+      "F": "Femenino"
+    },
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar?"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "pending": "Pendiente",
+    "cancelled": "Cancelado",
+    "maintenance": "Mantenimiento",
+    "retired": "Retirado",
+    "approved": "Aprobado",
+    "rejected": "Rechazado",
+    "processing": "Procesando",
+    "completed": "Completado",
+    "graded": "Calificado",
+    "missed": "Perdido",
+    "draft": "Borrador",
+    "published": "Publicado",
+    "planned": "Planificado",
+    "suspended": "Suspendido",
+    "deleted": "Eliminado",
+    "archived": "Archivado",
+    "revoked": "Revocado",
+    "expired": "Expirado"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "fields": "Campos",
+    "vehicles": "Vehículos",
+    "operations": "Operaciones",
+    "operators": "Operadores",
+    "refuel": "Repostaje",
+    "maintenance": "Mantenimiento",
+    "alerts": "Alertas",
+    "trackers": "Localizadores",
+    "users": "Usuarios",
+    "roles": "Roles",
+    "permissions": "Permisos",
+    "accessControl": "Control de acceso",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión",
+    "academic": "Académico",
+    "attendance": "Asistencia",
+    "payroll": "Nómina",
+    "studentAttendance": "Estudiantes",
+    "discipline": "Disciplina",
+    "teacherAttendance": "Profesores",
+    "staffAttendance": "Personal",
+    "announcements": "Anuncios",
+    "assessments": "Evaluaciones",
+    "calendar": "Calendario",
+    "classes": "Clases",
+    "cycles": "Ciclos",
+    "drivers": "Conductores",
+    "exams": "Exámenes",
+    "expenses": "Gastos",
+    "feeTypes": "Fee Types",
+    "fees": "Fees",
+    "financial": "Financiero",
+    "grades": "Calificaciones",
+    "parents": "Padres",
+    "reminders": "Recordatorios",
+    "sections": "Secciones",
+    "staff": "Personal",
+    "personnel": "Personal",
+    "students": "Estudiantes",
+    "subjects": "Asignaturas",
+    "teachers": "Profesores",
+    "transport": "Transporte",
+    "classRoutines": "Horario",
+    "studentConduct": "Conducta estudiantil",
+    "violations": "Infracciones",
+    "behaviorRewards": "Conducta positiva y recompensas"
+  },
+  "classRoutines": {
+    "success": {
+      "retrieved": "Horario obtenido correctamente",
+      "created": "Horario creado correctamente",
+      "updated": "Horario actualizado correctamente",
+      "deleted": "Horario eliminado correctamente",
+      "published": "Horario publicado correctamente",
+      "archived": "Horario archivado correctamente",
+      "entryCreated": "Clase añadida correctamente",
+      "entryUpdated": "Clase actualizada correctamente",
+      "entryDeleted": "Clase eliminada correctamente"
+    },
+    "errors": {
+      "notFound": "Horario no encontrado",
+      "notEditable": "Solo se pueden editar borradores",
+      "entryNotFound": "Clase no encontrada",
+      "periodNotFound": "Periodo no encontrado",
+      "periodInactive": "Este periodo está inactivo",
+      "breakPeriod": "No se pueden asignar clases durante un descanso",
+      "invalidPeriodTime": "La hora de fin debe ser posterior a la de inicio",
+      "periodConflict": "Este periodo se solapa con otro periodo activo",
+      "sectionNotFound": "Sección no encontrada",
+      "academicYearMismatch": "El año académico debe coincidir con la clase",
+      "inactiveDay": "Este día no está activo",
+      "invalidAssignment": "La asignación no pertenece a esta sección",
+      "sectionConflict": "La sección ya tiene una clase en este periodo",
+      "teacherConflict": "El profesor ya está ocupado en este periodo",
+      "roomConflict": "El aula ya está ocupada en este periodo",
+      "emptySchedule": "Añade al menos una clase antes de publicar",
+      "forbidden": "No puedes consultar el horario de otro profesor",
+      "dutyNotFound": "Turno de supervisión no encontrado",
+      "dutyRequiresBreak": "La supervisión solo puede asignarse durante descansos",
+      "teacherNotFound": "Profesor no encontrado",
+      "layoutPastMidnight": "El horario generado no puede superar la medianoche",
+      "layoutRemovesLessons": "Elimina las clases de los periodos que desaparecerán antes de cambiar estos ajustes",
+    "layoutRemovesDuties": "Elimina las supervisiones de los descansos que desaparecerán antes de cambiar estos ajustes"
+  },
+  "ui": {
+    "title": "Horario",
+    "subtitle": "Crea un horario semanal sin conflictos para cada sección",
+    "fields": {
+      "class": "Clase", "section": "Sección", "period": "Periodo", "subjectTeacher": "Asignatura y profesor",
+      "room": "Aula", "notes": "Notas", "supervisingStaff": "Miembro del personal supervisor", "supervisingTeacher": "Profesor supervisor",
+      "dutyNotes": "Notas de supervisión", "teachingDays": "Días lectivos", "type": "Tipo", "nameLabel": "Nombre / etiqueta",
+      "startTime": "Hora de inicio", "endTime": "Hora de fin", "periodName": "Nombre del periodo", "order": "Orden",
+      "starts": "Inicio", "ends": "Fin", "breakPeriod": "Periodo de descanso", "active": "Activo"
+    },
+    "actions": {
+      "days": "Días", "periods": "Periodos", "saveDays": "Guardar días", "savePeriods": "Guardar periodos",
+      "createRoutine": "Crear horario", "addLesson": "Añadir clase", "updateLesson": "Actualizar clase", "removeLesson": "Eliminar clase",
+      "addSupervisor": "Añadir supervisor", "assignSupervisor": "Asignar supervisor", "updateSupervision": "Actualizar supervisión",
+      "removeSupervision": "Eliminar supervisión", "addTeachingPeriod": "Añadir periodo lectivo", "addBreak": "Añadir descanso"
+    },
+    "dialogs": {
+      "daysTitle": "Días lectivos", "daysDescription": "Elige los días incluidos en el horario de esta sección.",
+      "periodsTitle": "Periodos y descansos", "periodsDescription": "Gestiona los periodos lectivos, descansos y horas de esta sección.",
+      "editLesson": "Editar clase", "addLesson": "Añadir clase", "editSupervision": "Editar supervisión",
+      "assignSupervisor": "Asignar supervisor · {{period}}"
+    },
+    "placeholders": {
+      "chooseTeacher": "Elige un profesor asignado", "searchAssignments": "Buscar asignaciones...",
+      "selectStaff": "Selecciona un miembro del personal", "selectTeacher": "Selecciona un profesor"
+    },
+    "empty": {
+      "title": "No hay horario para esta sección", "description": "Crea el horario de la sección y edita las clases directamente desde la cuadrícula.",
+      "noAssignments": "No hay asignaciones de profesores para esta sección."
+    },
+    "grid": { "noRoom": "Sin aula" },
+    "validation": {
+      "chooseAssignment": "Elige un profesor y una asignatura", "notesMax": "Las notas no pueden superar los 500 caracteres",
+      "chooseSupervisor": "Elige un supervisor", "selectDay": "Selecciona al menos un día lectivo", "timeFormat": "Usa HH:mm",
+      "nameRequired": "Introduce un nombre", "teachingPeriodRequired": "Añade al menos un periodo lectivo",
+      "endAfterStart": "La hora de fin debe ser posterior a la de inicio", "noOverlap": "Los periodos no pueden solaparse"
+    },
+    "periodForm": {
+      "teachingPeriod": "Periodo lectivo", "breakRecess": "Descanso / recreo", "dragRow": "Arrastra la fila {{number}} para reordenarla",
+      "removeRow": "Eliminar {{name}}"
+    },
+    "defaultNames": {
+      "period": "Periodo {{number}}", "break": "Descanso {{number}}", "morningBreak": "Descanso de la mañana",
+      "lunchBreak": "Pausa para comer", "afternoonBreak": "Descanso de la tarde"
+    },
+    "days": {
+      "monday": "Lunes", "tuesday": "Martes", "wednesday": "Miércoles", "thursday": "Jueves",
+      "friday": "Viernes", "saturday": "Sábado", "sunday": "Domingo"
+    },
+    "loading": { "timetable": "Cargando horario", "weeklyRoutine": "Cargando horario semanal..." },
+    "messages": {
+      "saveError": "No se pudo guardar el horario.", "routineCreated": "Horario creado.", "routineUpdated": "Horario actualizado.",
+      "timesUpdated": "Horas del horario actualizadas.", "routineDeleted": "Borrador eliminado.", "routinePublished": "Horario publicado.",
+      "routineArchived": "Horario archivado.", "lessonAdded": "Clase añadida.", "lessonUpdated": "Clase actualizada.",
+      "lessonRemoved": "Clase eliminada.", "supervisionAssigned": "Supervisión asignada.", "supervisionUpdated": "Supervisión actualizada.",
+      "supervisionRemoved": "Supervisión eliminada.", "periodCreated": "Periodo creado.", "periodUpdated": "Periodo actualizado."
+    },
+    "teacher": {
+      "weeklyLessons": "Clases semanales", "sections": "Secciones", "noRoutine": "Sin horario",
+      "noRoutineDescription": "Las clases asignadas aparecerán aquí automáticamente."
+    },
+    "errors": { "loadFailed": "No se pudo cargar el horario." }
+  }
+  },
+  "payroll": {
+    "success": {
+      "retrieved": "Nómina obtenida correctamente",
+      "run": "Ejecución de nómina completada",
+      "paid": "Recibo de nómina marcado como pagado",
+      "unpaid": "Pago revertido",
+      "updated": "Recibo de nómina actualizado correctamente",
+      "deleted": "Recibo de nómina eliminado correctamente",
+      "bulkDeleted": "Recibos de nómina eliminados correctamente"
+    },
+    "errors": {
+      "notFound": "Recibo de nómina no encontrado",
+      "alreadyPaid": "Este recibo de nómina ya ha sido pagado",
+      "cancelled": "Este recibo de nómina ha sido cancelado"
+    },
+    "stats": {
+      "period": "Periodo",
+      "payroll": "Nómina",
+      "pending": "Pendiente",
+      "hourlyMonthly": "Por horas / Mensual"
+    },
+    "table": {
+      "selectAll": "Seleccionar personal pagable",
+      "selectRow": "Seleccionar recibo",
+      "teacher": "Personal",
+      "staff": "Personal",
+      "period": "Periodo",
+      "type": "Tipo",
+      "workload": "Carga",
+      "amount": "Importe",
+      "status": "Estado",
+      "action": "Acción"
+    },
+    "types": {
+      "vacataire": "Por horas",
+      "permanent": "Permanente"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "paid": "Pagado",
+      "notSet": "No definido"
+    },
+    "filters": {
+      "searchByTeacher": "Buscar por personal",
+      "searchByStaff": "Buscar por personal",
+      "filterByType": "Filtrar por tipo",
+      "filterByStatus": "Filtrar por estado"
+    },
+    "actions": {
+      "pay": "Pagar salario",
+      "paid": "Pagado",
+      "unpay": "Anular",
+      "paySelected": "Ejecutar nómina"
+    },
+    "loading": "Cargando nómina...",
+    "noData": "No se encontraron registros de nómina"
+  },
+  "attendance": {
+    "table": {
+      "selectAll": "Seleccionar todo",
+      "selectRow": "Seleccionar fila",
+      "date": "Fecha",
+      "studentName": "Estudiante",
+      "studentCode": "Código",
+      "teacherName": "Profesor",
+      "staffName": "Personal",
+      "class": "Clase",
+      "section": "Sección",
+      "subject": "Materia",
+      "status": "Estado",
+      "notes": "Notas"
+    },
+    "form": {
+      "attendanceInfo": "Información de asistencia",
+      "additionalInfo": "Información adicional",
+      "studentId": "Estudiante",
+      "studentIdPlaceholder": "Ingrese el ID del estudiante",
+      "teacherId": "Profesor",
+      "teacherIdPlaceholder": "Ingrese el ID del profesor",
+      "staffId": "Personal",
+      "staffIdPlaceholder": "Ingrese el ID del personal",
+      "sectionId": "Sección",
+      "sectionIdPlaceholder": "Ingrese el ID de la sección",
+      "subjectId": "Materia",
+      "subjectIdPlaceholder": "Ingrese el ID de la materia",
+      "date": "Fecha",
+      "status": "Estado",
+      "notes": "Notas",
+      "notesPlaceholder": "Agregar notas (opcional)"
+    },
+    "dialogs": {
+      "markStudentTitle": "Registrar asistencia del estudiante",
+      "markTeacherTitle": "Registrar asistencia del profesor",
+      "markStaffTitle": "Registrar asistencia del personal",
+      "editTitle": "Editar asistencia",
+      "viewTitle": "Detalles de asistencia",
+      "markButton": "Registrar asistencia",
+      "updateButton": "Actualizar",
+      "deleteButton": "Eliminar",
+      "correctTitle": "Corregir asistencia",
+      "correctDescription": "Otro profesor ya registró la asistencia de este estudiante hoy. Puede corregir el estado — el cambio se registra con su nombre.",
+      "historyTitle": "Historial de cambios"
+    },
+    "success": {
+      "retrieved": "Asistencia recuperada con éxito",
+      "marked": "Asistencia registrada con éxito",
+      "updated": "Asistencia actualizada con éxito",
+      "deleted": "Registro de asistencia eliminado",
+      "allDeleted": "Todos los registros de asistencia eliminados",
+      "seeded": "Datos de demostración de asistencia creados"
+    },
+    "errors": {
+      "notFound": "Registro de asistencia no encontrado",
+      "alreadyMarked": "Asistencia ya registrada para este estudiante en esta clase",
+      "dailyAlreadyMarked": "Asistencia ya registrada para este estudiante hoy — use actualizar para corregir el estado",
+      "noRecordToday": "No existe registro de asistencia para este estudiante hoy",
+      "notAuthorizedForSection": "No está autorizado a actualizar la asistencia para esta sección",
+      "invalidTransition": "Este cambio de estado no está permitido",
+      "futureDate": "La asistencia no puede registrarse para una fecha futura",
+      "dateTooOld": "La asistencia no puede registrarse para fechas anteriores a {{days}} días"
+    },
+    "filters": {
+      "searchByStudent": "Buscar por nombre del estudiante...",
+      "searchByTeacher": "Buscar por nombre del profesor...",
+      "searchByStaff": "Buscar por nombre del personal...",
+      "filterByStatus": "Filtrar por estado"
+    },
+    "status": {
+      "present": "Presente",
+      "absent": "Ausente",
+      "late": "Tarde"
+    },
+    "roster": {
+      "studentTitle": "Asistencia de estudiantes",
+      "teacherTitle": "Asistencia de profesores",
+      "staffTitle": "Asistencia del personal",
+      "submit": "Guardar asistencia",
+      "reset": "Restablecer",
+      "date": "Fecha",
+      "today": "Hoy",
+      "class": "Clase",
+      "section": "Sección",
+      "allClasses": "Todas las clases",
+      "allSections": "Todas las secciones",
+      "searchPlaceholder": "Buscar nombre o código…",
+      "total": "Total",
+      "present": "Presente",
+      "absent": "Ausente",
+      "late": "Tarde",
+      "allPresent": "Todos presentes",
+      "allAbsent": "Todos ausentes",
+      "code": "Código",
+      "student": "Estudiante",
+      "staff": "Personal",
+      "staffMember": "miembro del personal",
+      "staffMembers": "miembros del personal",
+      "teacher": "Profesor",
+      "classSection": "Clase",
+      "status": "Estado",
+      "noResults": "Ningún resultado coincide con los filtros",
+      "loading": "Cargando…",
+      "nothingToSave": "No hay cambios que guardar",
+      "submitSuccess": "Asistencia guardada correctamente",
+      "submitError": "Error al guardar la asistencia"
+    }
+  },
+  "fees": {
+    "form": {
+      "byStudent": "Por estudiante",
+      "byClass": "Por clase",
+      "addSelectedFees": "Agregar cuotas seleccionadas",
+      "additionalInformation": "Información adicional",
+      "amount": "Monto",
+      "effectiveDate": "Fecha de inicio del cobro",
+      "effectiveDateDescription": "Primera fecha en que se aplica esta cuota. Déjelo vacío para usar la fecha de inscripción del estudiante.",
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "discountAmount": "Monto de descuento",
+      "discountAmountPlaceholder": "Ingrese el monto de descuento",
+      "dueDate": "Fecha de vencimiento",
+      "feeInformation": "Fee Information",
+      "feeType": "Tipo de cuota",
+      "feeTypePlaceholder": "Seleccione el tipo de cuota",
+      "installmentPreview": "Vista previa de cuotas",
+      "installments": "Cuotas",
+      "netAmount": "Monto neto",
+      "noStudentFound": "No se encontró estudiante",
+      "notes": "Notas",
+      "notesPlaceholder": "Ingrese notas",
+      "schedule": "Calendario",
+      "schedulePlaceholder": "Seleccione el calendario",
+      "searchStudent": "Buscar estudiante...",
+      "section": "Sección",
+      "sectionPlaceholder": "Seleccione la sección",
+      "selectFeeTypes": "Seleccionar tipos de cuota",
+      "selectedFees": "Cuotas seleccionadas",
+      "status": "Estado",
+      "student": "Estudiante",
+      "studentPlaceholder": "Seleccione el estudiante",
+      "students": "Estudiantes",
+      "studentsInClass": "Estudiantes en la clase",
+      "total": "Total",
+      "unknownFeeType": "Tipo de cuota desconocido"
+    },
+    "status": {
+      "paying": "Pagando",
+      "overdue": "Atrasado",
+      "paid": "Pagado",
+      "partiallyPaid": "Parcialmente pagado",
+      "pending": "Pendiente",
+      "fullPaidCongratulations": "¡Totalmente pagado. Felicitaciones!"
+    },
+    "filters": {
+      "class": "Clase",
+      "section": "Sección",
+      "noSections": "Sin secciones",
+      "selectClass": "Seleccionar clase",
+      "filterByStatus": "Filtrar por estado",
+      "searchByStudent": "Search By Student"
+    },
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar"
+    },
+    "installment": "Cuota",
+    "installmentStatus": {
+      "overdue": "Atrasado",
+      "paid": "Pagado",
+      "pending": "Pendiente"
+    },
+    "noData": {
+      "noFees": "No se encontraron cuotas",
+      "noResults": "No se encontraron resultados",
+      "selectClass": "Seleccione una clase"
+    },
+    "paymentStatus": {
+      "completed": "Completado",
+      "failed": "Fallido",
+      "overdue": "Atrasado",
+      "paid": "Pagado",
+      "partiallyPaid": "Parcialmente pagado",
+      "pending": "Pendiente",
+      "refunded": "Reembolsado"
+    },
+    "table": {
+      "amount": "Monto",
+      "dueAmount": "Monto adeudado",
+      "dueDate": "Fecha de vencimiento",
+      "netAmount": "Monto neto",
+      "paidAmount": "Monto pagado",
+      "status": "Estado",
+      "student": "Estudiante",
+      "studentCode": "Código del estudiante"
+    },
+    "schedule": {
+      "monthly": "Mensual",
+      "quarterly": "Trimestral",
+      "semester": "Semestral",
+      "annually": "Anual",
+      "oneTime": "Única vez"
+    },
+    "success": {
+      "allocationDeleted": "Asignación eliminada correctamente",
+      "allocationRetrieved": "Asignación obtenida correctamente",
+      "allocationsRetrieved": "Asignaciones obtenidas correctamente",
+      "bulkCreated": "Cuota completado correctamente",
+      "bulkDeleted": "Registros de Cuota eliminados correctamente",
+      "created": "Cuota creado correctamente",
+      "dataRetrieved": "Datos de Cuota obtenidos correctamente",
+      "deleted": "Cuota eliminado correctamente",
+      "installmentCreated": "Cuota creada correctamente",
+      "installmentDeleted": "Cuota eliminada correctamente",
+      "installmentUpdated": "Cuota actualizada correctamente",
+      "installmentsRetrieved": "Cuotas obtenidas correctamente",
+      "paymentRecorded": "Pago registrado correctamente",
+      "paymentRefunded": "Pago reembolsado correctamente",
+      "paymentUpdated": "Pago actualizado correctamente",
+      "paymentVoided": "Pago anulado correctamente",
+      "paymentsRetrieved": "Cuota completado correctamente",
+      "retrieved": "Cuota obtenido correctamente",
+      "revenueRetrieved": "Cuota completado correctamente",
+      "statsRetrieved": "Estadísticas obtenidas correctamente",
+      "updated": "Cuota actualizado correctamente"
+    }
+  },
+  "behaviorRewards": {
+    "table": {
+      "recordCount": "{{count}} reconocimientos",
+      "student": "Estudiante",
+      "classSection": "Clase / sección",
+      "positiveBehavior": "Conducta positiva",
+      "recognition": "Reconocimiento",
+      "reward": "Recompensa",
+      "points": "Puntos",
+      "behaviorDate": "Fecha de conducta",
+      "awardedBy": "Otorgado por",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado"
+    },
+    "filters": {
+      "search": "Buscar estudiante, código o descripción...",
+      "category": "Categoría de conducta",
+      "recognitionLevel": "Nivel de reconocimiento",
+      "rewardType": "Tipo de recompensa",
+      "class": "Clase",
+      "section": "Sección"
+    },
+    "form": {
+      "behaviorSection": "Conducta positiva",
+      "rewardSection": "Reconocimiento y recompensa",
+      "student": "Estudiante",
+      "studentPlaceholder": "Seleccionar estudiante",
+      "studentSearch": "Buscar estudiantes activos...",
+      "noStudents": "No se encontraron estudiantes activos",
+      "behaviorAt": "Fecha y hora de la conducta",
+      "behaviorDate": "Fecha de la conducta",
+      "behaviorTime": "Hora de la conducta",
+      "category": "Categoría de conducta positiva",
+      "categoryPlaceholder": "Seleccionar categoría",
+      "recognitionLevel": "Nivel de reconocimiento",
+      "recognitionLevelPlaceholder": "Seleccionar nivel",
+      "description": "Descripción de la conducta",
+      "descriptionPlaceholder": "Describe objetivamente la conducta positiva",
+      "rewardType": "Tipo de recompensa",
+      "rewardTypePlaceholder": "Seleccionar recompensa",
+      "points": "Puntos otorgados (0–100)",
+      "rewardNote": "Nota de recompensa",
+      "rewardNotePlaceholder": "Añade detalles opcionales sobre el reconocimiento"
+    },
+    "categories": {
+      "academic_effort": "Esfuerzo académico",
+      "improvement": "Mejora",
+      "respect": "Respeto",
+      "helpfulness": "Colaboración",
+      "leadership": "Liderazgo",
+      "teamwork": "Trabajo en equipo",
+      "responsibility": "Responsabilidad",
+      "community_service": "Servicio comunitario",
+      "excellent_attendance": "Asistencia excelente",
+      "other": "Otro"
+    },
+    "recognitionLevels": {
+      "appreciation": "Apreciación",
+      "achievement": "Logro",
+      "excellence": "Excelencia"
+    },
+    "rewardTypes": {
+      "verbal_praise": "Elogio verbal",
+      "written_praise": "Elogio escrito",
+      "merit": "Mérito",
+      "badge": "Insignia",
+      "certificate": "Certificado",
+      "privilege": "Privilegio",
+      "prize": "Premio",
+      "other": "Otro"
+    },
+    "dialogs": {
+      "createTitle": "Añadir reconocimiento",
+      "createButton": "Añadir reconocimiento",
+      "viewTitle": "Detalles del reconocimiento",
+      "editTitle": "Editar reconocimiento",
+      "updateButton": "Actualizar reconocimiento",
+      "deleteButton": "Eliminar"
+    },
+    "success": {
+      "retrieved": "Recompensas obtenidas correctamente",
+      "created": "Reconocimiento añadido correctamente",
+      "updated": "Reconocimiento actualizado correctamente",
+      "deleted": "Reconocimiento eliminado correctamente"
+    },
+    "errors": {
+      "notFound": "No se encontró el reconocimiento",
+      "forbidden": "No puedes acceder a las recompensas de conducta",
+      "studentNotFound": "No se encontró el estudiante",
+      "studentInactive": "Solo los estudiantes activos pueden recibir reconocimiento",
+      "studentAcademicContextMissing": "El estudiante debe tener clase y sección",
+      "studentNotAssigned": "Solo puedes reconocer estudiantes de tus secciones asignadas",
+      "notOwner": "Los profesores solo pueden editar sus propios reconocimientos",
+      "deleteAdminOnly": "Solo los administradores pueden eliminar reconocimientos",
+      "invalidBehaviorDate": "La fecha de la conducta no es válida",
+      "futureBehaviorDate": "La fecha de la conducta no puede estar en el futuro"
+    }
+  },
+  "confirm": {
+    "discipline": { "create": "¿Crear este registro de infracción?", "update": "¿Actualizar este registro de infracción?", "resolve": "¿Resolver este registro de infracción?", "reopen": "¿Reabrir esta infracción y borrar su resolución?", "delete": "¿Eliminar este registro de infracción? Esta acción no se puede deshacer." },
+    "behaviorRewards": {
+      "create": "¿Crear este reconocimiento?",
+      "update": "¿Actualizar este reconocimiento?",
+      "delete": "¿Eliminar este reconocimiento? Esta acción no se puede deshacer."
+    },
+    "students": {
+      "create": "¿Crear este estudiante?",
+      "update": "¿Actualizar este estudiante?",
+      "delete": "¿Eliminar este estudiante? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estos estudiantes? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todos los estudiantes? Esta acción no se puede deshacer."
+    },
+    "teachers": {
+      "create": "¿Crear este profesor?",
+      "update": "¿Actualizar este profesor?",
+      "delete": "¿Eliminar este profesor? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estos profesores? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todos los profesores? Esta acción no se puede deshacer.",
+      "assignSubject": "¿Asignar esta materia al profesor?",
+      "unassignSubject": "¿Desasignar esta materia del profesor?",
+      "assignClass": "¿Asignar este profesor a la clase?",
+      "unassignClass": "¿Desasignar este profesor de la clase?"
+    },
+    "staff": {
+      "create": "¿Crear este miembro del personal?",
+      "update": "¿Actualizar este miembro del personal?",
+      "delete": "¿Eliminar este miembro del personal? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estos miembros del personal? Esta acción no se puede deshacer."
+    },
+    "parents": {
+      "create": "¿Crear este padre?",
+      "update": "¿Actualizar este padre?",
+      "delete": "¿Eliminar este padre? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estos padres? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todos los padres? Esta acción no se puede deshacer.",
+      "linkStudent": "¿Vincular este estudiante al padre?",
+      "unlinkStudent": "¿Desvincular este estudiante del padre?"
+    },
+    "users": {
+      "create": "¿Crear este usuario?",
+      "update": "¿Actualizar este usuario?",
+      "delete": "¿Eliminar este usuario? Esta acción no se puede deshacer.",
+      "assignRole": "¿Asignar este rol al usuario? Esto cambia el control de acceso.",
+      "removeRole": "¿Quitar este rol del usuario? Esto cambia el control de acceso."
+    },
+    "roles": {
+      "create": "¿Crear este rol?",
+      "update": "¿Actualizar este rol?",
+      "delete": "¿Eliminar este rol? Esta acción no se puede deshacer."
+    },
+    "permissions": {
+      "create": "¿Crear este permiso?",
+      "update": "¿Actualizar este permiso?",
+      "delete": "¿Eliminar este permiso? Esta acción no se puede deshacer.",
+      "assign": "¿Asignar este permiso al rol? Esto cambia el control de acceso.",
+      "remove": "¿Quitar este permiso del rol? Esto cambia el control de acceso."
+    },
+    "attendance": {
+      "mark": "¿Registrar la asistencia de este estudiante o profesor?",
+      "update": "¿Actualizar este registro de asistencia?",
+      "updateStatus": "¿Actualizar el estado de asistencia?",
+      "delete": "¿Eliminar este registro de asistencia? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todos los registros de asistencia? Esta acción no se puede deshacer.",
+      "seed": "¿Inicializar datos de asistencia de demostración? Esto creará registros de asistencia ejemplo."
+    },
+    "grades": {
+      "create": "¿Crear esta calificación?",
+      "update": "¿Actualizar esta calificación?",
+      "delete": "¿Eliminar esta calificación? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estas calificaciones? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todas las calificaciones? Esta acción no se puede deshacer.",
+      "seed": "¿Inicializar datos de calificaciones de demostración? Esto creará registros de calificaciones ejemplo."
+    },
+    "classes": {
+      "create": "¿Crear esta clase?",
+      "update": "¿Actualizar esta clase?",
+      "delete": "¿Eliminar esta clase? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todas las clases? Esta acción no se puede deshacer."
+    },
+    "sections": {
+      "create": "¿Crear esta sección?",
+      "update": "¿Actualizar esta sección?",
+      "delete": "¿Eliminar esta sección? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todas las secciones? Esta acción no se puede deshacer."
+    },
+    "exams": {
+      "create": "¿Crear este examen?",
+      "update": "¿Actualizar este examen?",
+      "delete": "¿Eliminar este examen? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estos exámenes? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todos los exámenes? Esta acción no se puede deshacer.",
+      "seed": "¿Inicializar datos de exámenes de demostración? Esto creará registros de exámenes ejemplo."
+    },
+    "subjects": {
+      "create": "¿Crear esta materia?",
+      "update": "¿Actualizar esta materia?",
+      "delete": "¿Eliminar esta materia? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todas las materias? Esta acción no se puede deshacer.",
+      "seed": "¿Inicializar datos de materias de demostración? Esto creará registros de materias ejemplo."
+    },
+    "fees": {
+      "create": "¿Crear esta tarifa?",
+      "bulkCreate": "¿Crear estas tarifas?",
+      "bulkClass": "¿Asignar esta tarifa a todos los estudiantes de la clase?",
+      "update": "¿Actualizar esta tarifa?",
+      "delete": "¿Eliminar esta tarifa? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estas tarifas? Esta acción no se puede deshacer.",
+      "deleteAll": "¿Eliminar todas las tarifas? Esta acción no se puede deshacer.",
+      "recalculate": "¿Recalcular el monto asignado de esta tarifa?"
+    },
+    "settings": {
+      "create": "¿Crear la configuración?",
+      "update": "¿Actualizar la configuración?"
+    },
+    "payroll": {
+      "run": "¿Ejecutar la nómina de este periodo? Se crearán recibos pendientes para todo el personal activo.",
+      "pay": "¿Marcar este recibo de nómina como pagado?",
+      "unpay": "¿Anular este pago? El recibo de nómina será eliminado.",
+      "delete": "¿Eliminar este recibo de nómina? Esta acción no se puede deshacer.",
+      "bulkDelete": "¿Eliminar estos recibos de nómina? Esta acción no se puede deshacer."
+    },
+    "staffRoles": {
+      "create": "¿Crear este rol del personal?",
+      "update": "¿Actualizar este rol del personal?",
+      "delete": "¿Desactivar este rol del personal? Los roles en uso se desactivan, no se eliminan."
+    }
+  },
+  "announcements": {
+    "audience": {
+      "all": "Todos",
+      "class": "Clase",
+      "parents": "Padres",
+      "students": "Estudiantes",
+      "teachers": "Profesores"
+    },
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByAudience": "Filtrar por público",
+      "filterByStatus": "Filtrar por estado",
+      "searchByTitle": "Buscar por título..."
+    },
+    "form": {
+      "announcementDetails": "Detalles del anuncio",
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "content": "Contenido",
+      "contentPlaceholder": "Ingrese el contenido",
+      "expiryDate": "Fecha de expiración",
+      "expiryDatePlaceholder": "Seleccione la fecha de expiración",
+      "publishDate": "Fecha de publicación",
+      "publishDatePlaceholder": "Seleccione la fecha de publicación",
+      "section": "Sección",
+      "sectionPlaceholder": "Seleccione la sección",
+      "targetAndPublishing": "Segmentación y publicación",
+      "targetAudience": "Público objetivo",
+      "targetAudiencePlaceholder": "Seleccione el público objetivo",
+      "title": "Título",
+      "titlePlaceholder": "Ingrese el título"
+    },
+    "status": {
+      "draft": "Borrador",
+      "published": "Publicado"
+    },
+    "table": {
+      "author": "Autor",
+      "class": "Clase",
+      "content": "Contenido",
+      "createdAt": "Creado el",
+      "isPublished": "Publicado",
+      "publishDate": "Fecha de publicación",
+      "targetAudience": "Público objetivo",
+      "title": "Título"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Anuncio fueron eliminados correctamente",
+      "bulkDeleted": "Registros de Anuncio eliminados correctamente",
+      "created": "Anuncio creado correctamente",
+      "deleted": "Anuncio eliminado correctamente",
+      "published": "Anuncio publicado correctamente",
+      "retrieved": "Anuncio obtenido correctamente",
+      "seeded": "Anuncio inicializado correctamente",
+      "unpublished": "Anuncio despublicado correctamente",
+      "updated": "Anuncio actualizado correctamente"
+    }
+  },
+  "assessments": {
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByStatus": "Filtrar por estado",
+      "filterByType": "Filtrar por tipo",
+      "searchByTitle": "Buscar por título..."
+    },
+    "form": {
+      "academicContext": "Contexto académico",
+      "assessmentDetails": "Detalles de la evaluación",
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "date": "Fecha",
+      "datePlaceholder": "Seleccione la fecha",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Ingrese la descripción",
+      "duration": "Duración",
+      "durationPlaceholder": "Ingrese la duración",
+      "instructions": "Instrucciones",
+      "instructionsPlaceholder": "Ingrese las instrucciones",
+      "passingMarks": "Nota de aprobación",
+      "passingMarksPlaceholder": "Ingrese la nota de aprobación",
+      "scheduleAndGrading": "Horario y calificación",
+      "section": "Sección",
+      "sectionPlaceholder": "Seleccione la sección",
+      "status": "Estado",
+      "statusPlaceholder": "Seleccione el estado",
+      "subject": "Asignatura",
+      "subjectPlaceholder": "Seleccione la asignatura",
+      "teacher": "Profesor",
+      "teacherPlaceholder": "Seleccione el profesor",
+      "title": "Título",
+      "titlePlaceholder": "Ingrese el título",
+      "totalMarks": "Nota total",
+      "totalMarksPlaceholder": "Ingrese la nota total",
+      "type": "Tipo",
+      "typePlaceholder": "Seleccione el tipo"
+    },
+    "status": {
+      "active": "Activo",
+      "cancelled": "Cancelado",
+      "completed": "Completado",
+      "scheduled": "Programado"
+    },
+    "table": {
+      "class": "Clase",
+      "date": "Fecha",
+      "duration": "Duración",
+      "section": "Sección",
+      "status": "Estado",
+      "subject": "Asignatura",
+      "teacher": "Profesor",
+      "title": "Título",
+      "totalMarks": "Nota total",
+      "type": "Tipo"
+    },
+    "type": {
+      "assignment": "Tarea",
+      "participation": "Participación",
+      "presentation": "Presentación",
+      "project": "Proyecto",
+      "quiz": "Cuestionario",
+      "test": "Examen"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Evaluación fueron eliminados correctamente",
+      "bulkDeleted": "Registros de Evaluación eliminados correctamente",
+      "created": "Evaluación creado correctamente",
+      "deleted": "Evaluación eliminado correctamente",
+      "retrieved": "Evaluación obtenido correctamente",
+      "seeded": "Evaluación inicializado correctamente",
+      "updated": "Evaluación actualizado correctamente"
+    }
+  },
+  "discipline": {
+    "table": { "student": "Estudiante", "classSection": "Clase / sección", "violation": "Infracción", "severity": "Gravedad", "status": "Estado", "incidentAt": "Fecha del incidente", "action": "Medida", "reportedBy": "Reportado por", "createdAt": "Creado", "updatedAt": "Actualizado", "resolvedBy": "Resuelto por", "resolvedAt": "Resuelto el", "count": "{{count}} registros disciplinarios" },
+    "filters": { "search": "Buscar estudiante, código o descripción...", "category": "Filtrar por categoría", "severity": "Filtrar por gravedad", "status": "Filtrar por estado" },
+    "form": { "incidentDetails": "Detalles de la infracción", "student": "Estudiante", "studentPlaceholder": "Seleccionar estudiante", "studentSearch": "Buscar estudiantes...", "noStudents": "No hay estudiantes activos", "incidentDate": "Fecha del incidente", "incidentTime": "Hora del incidente", "category": "Categoría", "severity": "Gravedad", "location": "Lugar", "locationPlaceholder": "¿Dónde ocurrió?", "description": "Descripción", "descriptionPlaceholder": "Describe los hechos claramente...", "actionType": "Medida disciplinaria", "actionNote": "Detalles de la medida", "actionNotePlaceholder": "Detalles opcionales...", "resolutionNote": "Nota de resolución", "resolutionNotePlaceholder": "Explica cómo se resolvió el incidente..." },
+    "categories": { "classroom_disruption": "Interrupción en clase", "disrespect": "Falta de respeto", "bullying": "Acoso", "fighting": "Pelea", "cheating": "Trampa", "vandalism": "Vandalismo", "uniform_violation": "Infracción de uniforme", "device_misuse": "Uso indebido de dispositivo", "prohibited_item": "Objeto prohibido", "other": "Otra" },
+    "severity": { "low": "Baja", "medium": "Media", "high": "Alta", "critical": "Crítica" },
+    "status": { "open": "Abierta", "resolved": "Resuelta" },
+    "actions": { "verbal_warning": "Advertencia verbal", "written_warning": "Advertencia escrita", "detention": "Detención", "counseling": "Orientación", "parent_meeting": "Reunión con padres", "suspension": "Suspensión", "other": "Otra" },
+    "dialogs": { "createTitle": "Añadir infracción", "createButton": "Añadir infracción", "viewTitle": "Detalles de la infracción", "editTitle": "Editar infracción", "updateButton": "Actualizar", "deleteButton": "Eliminar", "resolveTitle": "Resolver infracción", "resolveDescription": "Registra la medida disciplinaria y la resolución.", "resolveButton": "Resolver", "resolutionTitle": "Resolución", "reopenTitle": "Reabrir infracción", "reopenDescription": "Al reabrir, el registro vuelve a estar abierto.", "reopenWarning": "Se borrarán la medida y resolución actuales porque el historial no está disponible en esta versión.", "reopenButton": "Reabrir" },
+    "success": { "retrieved": "Registros disciplinarios obtenidos", "created": "Infracción creada", "updated": "Infracción actualizada", "resolved": "Infracción resuelta", "reopened": "Infracción reabierta", "deleted": "Infracción eliminada" },
+    "errors": { "notFound": "Registro disciplinario no encontrado", "studentNotFound": "Estudiante no encontrado", "studentInactive": "Solo los estudiantes activos pueden recibir una infracción", "studentAcademicPlacementRequired": "El estudiante debe tener clase y sección", "teacherStudentForbidden": "No estás asignado a la sección de este estudiante", "recordForbidden": "No puedes acceder a este registro", "recordNotOpen": "Solo se pueden modificar o resolver infracciones abiertas", "recordNotResolved": "Solo se pueden reabrir infracciones resueltas", "adminRequired": "Se requiere acceso de administrador", "invalidIncidentDate": "La fecha del incidente no es válida", "futureIncidentDate": "La fecha del incidente no puede ser futura" }
+  },
+  "classes": {
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "academicYear": "Año académico",
+      "academicYearPlaceholder": "Seleccione el año académico",
+      "classInformation": "Información de la clase",
+      "className": "Nombre de la clase",
+      "classNamePlaceholder": "Ingrese el nombre de la clase",
+      "description": "Descripción",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Ingrese la descripción",
+      "level": "Nivel",
+      "levelPlaceholder": "Seleccione el nivel"
+    },
+    "table": {
+      "academicYear": "Año académico",
+      "className": "Nombre de la clase",
+      "description": "Descripción",
+      "id": "ID",
+      "level": "Nivel"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Clase fueron eliminados correctamente",
+      "created": "Clase creado correctamente",
+      "deleted": "Clase eliminado correctamente",
+      "retrieved": "Clase obtenido correctamente",
+      "seeded": "Clase inicializado correctamente",
+      "updated": "Clase actualizado correctamente"
+    }
+  },
+  "drivers": {
+    "dialogs": {
+      "bulkDeleteItemName": "elemento",
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByStatus": "Filtrar por estado",
+      "searchByLicense": "Buscar por licencia...",
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "address": "Dirección",
+      "addressPlaceholder": "Ingrese la dirección",
+      "assignDriver": "Asignar conductor",
+      "assignmentDate": "Fecha de asignación",
+      "cin": "CIN",
+      "cinPlaceholder": "Ingrese el CIN",
+      "driver": "Conductor",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingrese el correo electrónico",
+      "emergencyContactName": "Nombre del contacto de emergencia",
+      "emergencyContactNamePlaceholder": "Ingrese el nombre del contacto de emergencia",
+      "emergencyPhone": "Teléfono de emergencia",
+      "emergencyPhonePlaceholder": "Ingrese el teléfono de emergencia",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Ingrese el nombre completo",
+      "gender": "Género",
+      "hireDate": "Fecha de contratación",
+      "image": "Imagen",
+      "licenseExpiry": "Vencimiento de la licencia",
+      "licenseNumber": "Número de licencia",
+      "licenseNumberPlaceholder": "Ingrese el número de licencia",
+      "licenseType": "Tipo de licencia",
+      "noDriverFound": "No se encontró conductor",
+      "notes": "Notas",
+      "notesPlaceholder": "Ingrese notas",
+      "personalInformation": "Información personal",
+      "phone": "Teléfono",
+      "phonePlaceholder": "Ingrese el número de teléfono",
+      "professionalInformation": "Información profesional",
+      "salary": "Salario",
+      "salaryPlaceholder": "Ingrese el salario",
+      "searchDriver": "Buscar conductor...",
+      "selectDriver": "Seleccionar conductor",
+      "status": "Estado",
+      "vehicle": "Vehículo",
+      "yearsOfExperience": "Años de experiencia",
+      "yearsOfExperiencePlaceholder": "Ingrese los años de experiencia"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "onLeave": "De baja",
+      "suspended": "Suspendido"
+    },
+    "table": {
+      "email": "Correo electrónico",
+      "hireDate": "Fecha de contratación",
+      "licenseExpiry": "Vencimiento de la licencia",
+      "licenseNumber": "Número de licencia",
+      "licenseType": "Tipo de licencia",
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "status": "Estado"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Conductor fueron eliminados correctamente",
+      "bulkDeleted": "Registros de Conductor eliminados correctamente",
+      "created": "Conductor creado correctamente",
+      "deleted": "Conductor eliminado correctamente",
+      "retrieved": "Conductor obtenido correctamente",
+      "seeded": "Conductor inicializado correctamente",
+      "statusUpdated": "Estado de Conductor actualizado correctamente",
+      "updated": "Conductor actualizado correctamente"
+    }
+  },
+  "exams": {
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByStatus": "Filtrar por estado",
+      "filterByType": "Filtrar por tipo",
+      "searchByTitle": "Buscar por título..."
+    },
+    "form": {
+      "academicContext": "Contexto académico",
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "date": "Fecha",
+      "datePlaceholder": "Seleccione la fecha",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Ingrese la descripción",
+      "duration": "Duración",
+      "durationPlaceholder": "Ingrese la duración",
+      "examDetails": "Detalles del examen",
+      "instructions": "Instrucciones",
+      "instructionsPlaceholder": "Ingrese las instrucciones",
+      "passingMarks": "Nota de aprobación",
+      "passingMarksPlaceholder": "Ingrese la nota de aprobación",
+      "roomNumber": "Número de aula",
+      "roomNumberPlaceholder": "Ingrese el número de aula",
+      "scheduleAndGrading": "Horario y calificación",
+      "section": "Sección",
+      "sectionPlaceholder": "Seleccione la sección",
+      "status": "Estado",
+      "statusPlaceholder": "Seleccione el estado",
+      "subject": "Asignatura",
+      "subjectPlaceholder": "Seleccione la asignatura",
+      "teacher": "Profesor",
+      "teacherPlaceholder": "Seleccione el profesor",
+      "title": "Título",
+      "titlePlaceholder": "Ingrese el título",
+      "totalMarks": "Nota total",
+      "totalMarksPlaceholder": "Ingrese la nota total",
+      "type": "Tipo",
+      "typePlaceholder": "Seleccione el tipo"
+    },
+    "status": {
+      "active": "Activo",
+      "cancelled": "Cancelado",
+      "completed": "Completado",
+      "rescheduled": "Reprogramado",
+      "scheduled": "Programado"
+    },
+    "table": {
+      "class": "Clase",
+      "date": "Fecha",
+      "duration": "Duración",
+      "section": "Sección",
+      "status": "Estado",
+      "subject": "Asignatura",
+      "teacher": "Profesor",
+      "title": "Título",
+      "totalMarks": "Nota total",
+      "type": "Tipo"
+    },
+    "type": {
+      "final": "Final",
+      "midterm": "Medio término",
+      "standardized": "Estandarizado"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Examen fueron eliminados correctamente",
+      "bulkDeleted": "Registros de Examen eliminados correctamente",
+      "created": "Examen creado correctamente",
+      "deleted": "Examen eliminado correctamente",
+      "retrieved": "Examen obtenido correctamente",
+      "seeded": "Examen inicializado correctamente",
+      "updated": "Examen actualizado correctamente"
+    }
+  },
+  "expenses": {
+    "categories": {
+      "payroll": "Nómina",
+      "cleaning": "Limpieza",
+      "equipment": "Equipo",
+      "food": "Alimentación",
+      "insurance": "Seguro",
+      "maintenance": "Mantenimiento",
+      "marketing": "Marketing",
+      "miscellaneous": "Varios",
+      "rent": "Alquiler",
+      "salary": "Salario",
+      "security": "Seguridad",
+      "supplies": "Suministros",
+      "tax": "Impuesto",
+      "technology": "Tecnología",
+      "training": "Formación",
+      "transport": "Transporte",
+      "utilities": "Servicios públicos",
+      "other": "Otro"
+    },
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByCategory": "Filtrar por categoría",
+      "filterByStatus": "Filtrar por estado",
+      "searchByTitle": "Buscar por título..."
+    },
+    "form": {
+      "amount": "Monto",
+      "amountPlaceholder": "Ingrese el monto",
+      "basicInformation": "Información básica",
+      "category": "Categoría",
+      "checkNumber": "Número de cheque",
+      "checkNumberPlaceholder": "Ingrese el número de cheque",
+      "expenseDate": "Fecha del gasto",
+      "invoiceNumber": "Número de factura",
+      "invoiceNumberPlaceholder": "Ingrese el número de factura",
+      "notes": "Notas",
+      "notesPlaceholder": "Ingrese notas",
+      "paymentDate": "Fecha de pago",
+      "paymentInformation": "Información de pago",
+      "paymentMethod": "Método de pago",
+      "receiptNumber": "Número de recibo",
+      "receiptNumberPlaceholder": "Ingrese el número de recibo",
+      "status": "Estado",
+      "title": "Título",
+      "titlePlaceholder": "Ingrese el título"
+    },
+    "paymentMethods": {
+      "bankTransfer": "Transferencia bancaria",
+      "cash": "Efectivo",
+      "check": "Cheque",
+      "creditCard": "Tarjeta de crédito",
+      "debitCard": "Tarjeta de débito",
+      "mobilePayment": "Pago móvil",
+      "online": "En línea"
+    },
+    "status": {
+      "approved": "Aprobado",
+      "cancelled": "Cancelado",
+      "paid": "Pagado",
+      "pending": "Pendiente",
+      "rejected": "Rechazado"
+    },
+    "table": {
+      "amount": "Monto",
+      "category": "Categoría",
+      "expenseDate": "Fecha del gasto",
+      "id": "ID",
+      "notSpecified": "No especificado",
+      "paymentMethod": "Método de pago",
+      "status": "Estado",
+      "title": "Título"
+    },
+    "success": {
+      "created": "Gasto creado correctamente",
+      "deleted": "Gasto eliminado correctamente",
+      "paymentRecorded": "Pago registrado correctamente",
+      "retrieved": "Gasto obtenido correctamente",
+      "updated": "Gasto actualizado correctamente"
+    }
+  },
+  "feeTypes": {
+    "category": {
+      "activities": "Actividades",
+      "books": "Libros",
+      "exam": "Examen",
+      "lunch": "Almuerzo",
+      "other": "Otro",
+      "registration": "Inscripción",
+      "transport": "Transporte",
+      "tuition": "Matrícula",
+      "uniform": "Uniforme",
+      "cafeteria": "Cafetería",
+      "sports": "Deportes",
+      "technology": "Tecnología",
+      "fieldtrip": "Excursión"
+    },
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByCategory": "Filtrar por categoría",
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "amount": "Monto",
+      "amountPlaceholder": "Ingrese el monto",
+      "category": "Categoría",
+      "categoryPlaceholder": "Seleccione la categoría",
+      "description": "Descripción",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Ingrese la descripción",
+      "feeTypeInformation": "Información del tipo de cuota",
+      "name": "Nombre",
+      "namePlaceholder": "Ingrese el nombre",
+      "paymentType": "Tipo de pago",
+      "paymentTypePlaceholder": "Seleccione el tipo de pago"
+    },
+    "table": {
+      "amount": "Monto",
+      "category": "Categoría",
+      "description": "Descripción",
+      "id": "ID",
+      "name": "Nombre",
+      "paymentType": "Tipo de pago",
+      "status": "Estado"
+    },
+    "success": {
+      "created": "Tipo de cuota creado correctamente",
+      "deleted": "Tipo de cuota eliminado correctamente",
+      "retrieved": "Tipo de cuota obtenido correctamente",
+      "updated": "Tipo de cuota actualizado correctamente"
+    }
+  },
+  "grades": {
+    "errors": {
+      "marksExceedTotal": "Las notas exceden el total",
+      "sourceRequired": "Seleccione una evaluación o un examen"
+    },
+    "form": {
+      "academicContext": "Contexto académico",
+      "assessment": "Assessment",
+      "assessmentPlaceholder": "Assessment Placeholder",
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "feedback": "Comentarios",
+      "feedbackPlaceholder": "Feedback Placeholder",
+      "gradeDetails": "Detalles de la calificación",
+      "gradedBy": "Calificado por",
+      "marksObtained": "Nota obtenida",
+      "marksObtainedPlaceholder": "Ingrese la nota obtenida",
+      "passingMarksRef": "Nota de aprobación",
+      "section": "Sección",
+      "sectionPlaceholder": "Seleccione la sección",
+      "student": "Estudiante",
+      "studentAndAssessment": "Estudiante y evaluación",
+      "studentPlaceholder": "Seleccione el estudiante",
+      "subject": "Asignatura",
+      "subjectPlaceholder": "Seleccione la asignatura",
+      "teacher": "Profesor",
+      "teacherPlaceholder": "Seleccione el profesor",
+      "totalMarksRef": "Nota total"
+    },
+    "report": {
+      "averagePercentage": "Porcentaje promedio",
+      "noGradesRecorded": "No hay notas registradas",
+      "overallGPA": "Promedio general",
+      "selectStudent": "Seleccione un estudiante",
+      "subjectAverage": "Promedio por asignatura",
+      "subjectGPA": "Promedio de la asignatura",
+      "totalGrades": "Total de notas"
+    },
+    "status": {
+      "missed": "Perdido",
+      "pending": "Pendiente"
+    },
+    "table": {
+      "class": "Clase",
+      "feedback": "Comentarios",
+      "gender": "Género",
+      "marksObtained": "Nota obtenida",
+      "percentage": "Porcentaje",
+      "phone": "Teléfono",
+      "section": "Sección",
+      "status": "Estado",
+      "student": "Estudiante",
+      "studentCode": "Código del estudiante"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Calificación fueron eliminados correctamente",
+      "bulkDeleted": "Registros de Calificación eliminados correctamente",
+      "created": "Calificación creado correctamente",
+      "deleted": "Calificación eliminado correctamente",
+      "retrieved": "Calificación obtenido correctamente",
+      "seeded": "Calificación inicializado correctamente",
+      "updated": "Calificación actualizado correctamente"
+    }
+  },
+  "parents": {
+    "success": {
+      "retrieved": "Padre o madre obtenido correctamente",
+      "allRetrieved": "Todos los padres fueron obtenidos correctamente",
+      "created": "Padre o madre creado correctamente",
+      "updated": "Padre o madre actualizado correctamente",
+      "deleted": "Padre o madre eliminado correctamente",
+      "allDeleted": "Todos los padres fueron eliminados correctamente",
+      "studentLinked": "Estudiante vinculado al padre o madre correctamente",
+      "studentUnlinked": "Estudiante desvinculado del padre o madre correctamente",
+      "seeded": "Padres inicializados correctamente",
+      "bulkDeleted": "Registros de Padre o madre eliminados correctamente"
+    },
+    "errors": {
+      "invalidMaritalStatus": "Seleccione un estado civil válido"
+    },
+    "tooltips": {
+      "orphaned": "Padre o madre sin vínculo: no tiene niños ni estudiantes vinculados."
+    },
+    "dialogs": {
+      "bulkDeleteItemName": "elemento",
+      "createButton": "Crear",
+      "createTitleMany": "Crear nuevo",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles",
+      "createTitle": "Crear un nuevo padre o madre"
+    },
+    "filters": {
+      "filterByRelationship": "Filtrar por relación",
+      "searchByEmail": "Buscar por correo...",
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "address": "Dirección",
+      "addressPlaceholder": "Ingrese la dirección",
+      "cin": "CIN",
+      "cinPlaceholder": "Ingrese el CIN",
+      "contactInformation": "Información de contacto",
+      "dateOfBirth": "Fecha de nacimiento",
+      "dateOfBirthPlaceholder": "Seleccione la fecha de nacimiento",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingrese el correo electrónico",
+      "financialResponsibility": "Responsabilidad financiera",
+      "financialResponsibilityLabel": "Tiene responsabilidad financiera",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Ingrese el nombre completo",
+      "gender": "Género",
+      "isEmergencyContact": "Contacto de emergencia",
+      "isEmergencyContactLabel": "Marcar como contacto de emergencia",
+      "maritalStatus": "Estado civil",
+      "name": "Nombre",
+      "nationality": "Nacionalidad",
+      "nationalityPlaceholder": "Seleccione la nacionalidad",
+      "occupation": "Ocupación",
+      "occupationPlaceholder": "Ingrese la ocupación",
+      "parent": "Padre/Madre",
+      "parentImage": "Imagen del padre/madre",
+      "personalInformation": "Información personal",
+      "phone": "Teléfono",
+      "phonePlaceholder": "Ingrese el número de teléfono",
+      "relationshipType": "Tipo de relación"
+    },
+    "profile": {
+      "activeStudents": "Estudiantes activos",
+      "additionalInfo": "Información adicional",
+      "addressInfo": "Dirección",
+      "agreements": "Acuerdos",
+      "basicInfo": "Información básica",
+      "children": "Niños",
+      "contactDetails": "Datos de contacto",
+      "contactInfo": "Información de contacto",
+      "documents": "Documentos",
+      "emergencyContact": "Contacto de emergencia",
+      "feesByChild": "Cuotas por niño",
+      "financial": "Financiero",
+      "financialResponsibility": "Responsabilidad financiera",
+      "graduatedStudents": "Estudiantes graduados",
+      "idDocuments": "Documentos de identidad",
+      "linkedChildren": "Niños vinculados",
+      "linkedStudents": "Estudiantes vinculados",
+      "noChildrenLinked": "No hay niños vinculados",
+      "noDocuments": "No hay documentos",
+      "noFeesForChild": "No hay cuotas para este niño",
+      "otherDetails": "Otros detalles",
+      "otherDocuments": "Otros documentos",
+      "overdueFees": "Cuotas vencidas",
+      "paidFees": "Cuotas pagadas",
+      "parentNotFound": "Padre/madre no encontrado",
+      "pendingFees": "Cuotas pendientes",
+      "personal": "Personal",
+      "personalDetails": "Datos personales",
+      "personalInformation": "Información personal",
+      "quickStats": "Estadísticas rápidas",
+      "residentialAddress": "Dirección residencial",
+      "totalChildren": "Total de niños",
+      "totalFees": "Total de cuotas",
+      "uploadDocument": "Subir documento",
+      "uploadDocuments": "Subir documentos",
+      "uploadParentDocuments": "Subir documentos del padre/madre",
+      "viewAllChildren": "Ver todos los niños",
+      "viewAllDocuments": "Ver todos los documentos",
+      "viewAllFees": "Ver todas las cuotas",
+      "dashboard": {
+        "welcomeBack": "Bienvenido de nuevo, {{name}}",
+        "subtitle": "Esto es lo que ocurre hoy con tus hijos.",
+        "backToParents": "Volver a padres",
+        "averageGrade": "Nota media",
+        "overallAttendance": "Asistencia general",
+        "pendingTasks": "Tareas pendientes",
+        "myChildren": "Mis hijos",
+        "childrenAttendance": "Asistencia de los hijos",
+        "recentGrades": "Notas recientes",
+        "feesPayments": "Cuotas y pagos",
+        "upcomingEvents": "Próximos eventos",
+        "noChildrenDescription": "Los estudiantes vinculados aparecerán aquí.",
+        "noAttendance": "Aún no hay asistencia",
+        "noAttendanceDescription": "El historial aparecerá cuando se registre la asistencia.",
+        "noGrades": "Aún no hay notas",
+        "noGradesDescription": "Los resultados recientes aparecerán aquí.",
+        "noFees": "No hay cuotas asignadas",
+        "noFeesDescription": "La información de pagos familiares aparecerá aquí.",
+        "noEvents": "No hay próximos eventos",
+        "noEventsDescription": "Los eventos escolares aparecerán aquí.",
+        "class": "Clase",
+        "attendance": "Asistencia",
+        "attendancePercent": "{{percent}} % de asistencia",
+        "assessment": "Evaluación",
+        "outstandingBalance": "Saldo pendiente",
+        "familyAccount": "Cuenta familiar",
+        "paymentStatus": "Estado del pago",
+        "percentPaid": "{{percent}} % pagado",
+        "paidAmount": "Pagado {{amount}}",
+        "totalAmount": "Total {{amount}}",
+        "openPaymentDetails": "Abrir detalles del pago",
+        "allDay": "Todo el día",
+        "schoolCampus": "Campus escolar",
+        "loadingOverview": "Cargando resumen familiar...",
+        "loadError": "No se pudo cargar este perfil.",
+        "tryAgain": "Intentar de nuevo"
+      }
+    },
+    "relationships": {
+      "father": "Padre",
+      "grandparent": "Abuelo/Abuela",
+      "guardian": "Tutor",
+      "mother": "Madre",
+      "other": "Otro",
+      "stepparent": "Padrastro/Madrastra"
+    },
+    "table": {
+      "cin": "CIN",
+      "email": "Correo electrónico",
+      "gender": "Género",
+      "name": "Nombre",
+      "occupation": "Ocupación",
+      "phone": "Teléfono",
+      "relationship": "Relationship"
+    },
+    "maritalStatus": {
+      "single": "Soltero/a",
+      "married": "Casado/a",
+      "divorced": "Divorciado/a",
+      "widowed": "Viudo/a",
+      "separated": "Separado/a"
+    }
+  },
+  "payments": {
+    "dialogs": {
+      "deleteButton": "Eliminar",
+      "viewTitle": "Detalles"
+    },
+    "errors": {
+      "notFound": "Pago no encontrado",
+      "paymentNotFound": "Pago no encontrado",
+      "receiptNumberNotFound": "Número de recibo no encontrado",
+      "receiptNumberExists": "El número de recibo ya existe",
+      "paymentNotCompleted": "Solo se pueden reembolsar pagos completados",
+      "paymentNotRefundable": "Este pago no se puede reembolsar",
+      "feeNotFound": "Tarifa asociada no encontrada",
+      "invalidAmount": "El monto del pago debe ser mayor que 0",
+      "amountExceedsBalance": "El monto del pago excede el saldo restante",
+      "invalidPaymentMethod": "Método de pago especificado inválido",
+      "receiptGenerationFailed": "Error al generar el recibo de pago",
+      "studentMismatch": "El pago no pertenece al estudiante especificado",
+      "feeTypeMismatch": "El pago no coincide con el tipo de tarifa especificado",
+      "allocationTotalMismatch": "El monto total asignado {{actual}} no coincide con el monto del pago {{expected}}.",
+      "allocationsRequired": "Se requiere al menos una asignación"
+    },
+    "filters": {
+      "filterByPaymentMethod": "Filtrar por método de pago",
+      "filterByStatus": "Filtrar por estado",
+      "searchByReceipt": "Buscar por recibo..."
+    },
+    "form": {
+      "amount": "Monto",
+      "amountPlaceholder": "Ingrese el monto",
+      "basicInformation": "Información básica",
+      "checkDueDate": "Fecha de vencimiento del cheque",
+      "checkNumber": "Número de cheque",
+      "checkNumberPlaceholder": "Ingrese el número de cheque",
+      "notes": "Notas",
+      "notesPlaceholder": "Ingrese notas",
+      "paymentDate": "Fecha de pago",
+      "paymentDetails": "Detalles del pago",
+      "paymentMethod": "Método de pago",
+      "receiptNumber": "Número de recibo",
+      "receiptNumberPlaceholder": "Ingrese el número de recibo",
+      "status": "Estado",
+      "transactionRef": "Ref. de transacción",
+      "transactionRefPlaceholder": "Ingrese la referencia de transacción"
+    },
+    "methods": {
+      "bankTransfer": "Transferencia bancaria",
+      "cash": "Efectivo",
+      "check": "Cheque",
+      "creditCard": "Tarjeta de crédito",
+      "debitCard": "Tarjeta de débito",
+      "mobilePayment": "Pago móvil",
+      "online": "En línea"
+    },
+    "status": {
+      "completed": "Completado",
+      "failed": "Fallido",
+      "pending": "Pendiente",
+      "refunded": "Reembolsado"
+    },
+    "table": {
+      "amount": "Monto",
+      "checkDueDate": "Fecha de vencimiento del cheque",
+      "checkNumber": "Número de cheque",
+      "loading": "Cargando...",
+      "noPayments": "No se encontraron pagos",
+      "notes": "Notas",
+      "paymentDate": "Fecha de pago",
+      "paymentMethod": "Método de pago",
+      "receiptNumber": "Número de recibo",
+      "status": "Estado",
+      "student": "Estudiante",
+      "transactionRef": "Ref. de transacción"
+    },
+    "type": {
+      "recurring": "Recurrente",
+      "oneTime": "Única vez"
+    }
+  },
+  "reports": {
+    "aging": {
+      "class": "Clase",
+      "d1_30": "1-30 días",
+      "d31_60": "31-60 días",
+      "d60plus": "60+ días",
+      "noData": "No hay datos disponibles",
+      "searchPlaceholder": "Buscar...",
+      "student": "Estudiante",
+      "title": "Título",
+      "total": "Total",
+      "totalStudents": "Total de estudiantes",
+      "upcoming": "Próximas"
+    },
+    "collection": {
+      "class": "Clase",
+      "due": "Adeudado",
+      "noData": "No hay datos disponibles",
+      "paid": "Pagado",
+      "rate": "Tasa",
+      "students": "Estudiantes",
+      "title": "Título"
+    },
+    "reminders": {
+      "daysOverdue": "Días de retraso",
+      "noData": "No hay datos disponibles",
+      "noResults": "No se encontraron resultados",
+      "oldestDueDate": "Fecha de vencimiento más antigua",
+      "overdueAmount": "Monto vencido",
+      "remind": "Recordar",
+      "remindAll": "Recordar a todos",
+      "reminded": "Recordado",
+      "searchPlaceholder": "Buscar...",
+      "studentsOverdue": "Estudiantes atrasados",
+      "title": "Título",
+      "toastReminded": "Recordatorio enviado",
+      "toastRemindedAll": "Todos los recordatorios enviados",
+      "toastSmsComingSoon": "SMS próximamente"
+    },
+    "title": "Título",
+    "year": "Año"
+  },
+  "sections": {
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "maxStudents": "Máx. estudiantes",
+      "maxStudentsPlaceholder": "Ingrese el máximo de estudiantes",
+      "roomNumber": "Número de aula",
+      "roomNumberPlaceholder": "Ingrese el número de aula",
+      "sectionInformation": "Información de la sección",
+      "sectionName": "Nombre de la sección",
+      "sectionNamePlaceholder": "Ingrese el nombre de la sección"
+    },
+    "table": {
+      "capacity": "Capacidad",
+      "class": "Clase",
+      "description": "Descripción",
+      "id": "ID",
+      "level": "Nivel",
+      "roomNumber": "Número de aula",
+      "sectionName": "Nombre de la sección",
+      "status": "Estado"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Sección fueron eliminados correctamente",
+      "created": "Sección creado correctamente",
+      "deleted": "Sección eliminado correctamente",
+      "retrieved": "Sección obtenido correctamente",
+      "seeded": "Sección inicializado correctamente",
+      "updated": "Sección actualizado correctamente"
+    }
+  },
+  "staff": {
+    "success": {
+      "retrieved": "Personal recuperado con éxito",
+      "created": "Miembro del personal creado con éxito",
+      "updated": "Miembro del personal actualizado con éxito",
+      "deleted": "Miembro del personal eliminado con éxito",
+      "bulkDeleted": "Miembros del personal eliminados con éxito"
+    },
+    "errors": {
+      "notFound": "Miembro del personal no encontrado",
+      "employeeCodeExists": "Ya existe un miembro del personal con este código de empleado",
+      "cinExists": "Ya existe un miembro del personal con este CIN"
+    },
+    "stats": {
+      "total": "Total Personal",
+      "payroll": "Nómina Total",
+      "activeRoles": "Personal Activo",
+      "uniqueRoles": "Roles Distintos",
+      "nonTeaching": "Personal No Docente Activo"
+    },
+    "table": {
+      "name": "Nombre",
+      "employeeCode": "Código de Empleado",
+      "role": "Rol",
+      "cin": "CIN",
+      "phone": "Teléfono",
+      "salary": "Salario",
+      "compensationMode": "Compensación",
+      "status": "Estado"
+    },
+    "filters": {
+      "search": "Buscar por nombre o código...",
+      "filterByRole": "Filtrar por rol",
+      "filterByCategory": "Filtrar por categoría",
+      "manageRoles": "Gestionar Roles"
+    },
+    "roles": {
+      "teacher": "Profesor",
+      "driver": "Conductor",
+      "busAssistant": "Asistente de Autobús",
+      "principal": "Director",
+      "secretary": "Secretario(a)",
+      "receptionist": "Recepcionista",
+      "accountant": "Contador",
+      "librarian": "Bibliotecario",
+      "itSupport": "Soporte IT",
+      "assistant": "Asistente",
+      "cleaner": "Conserje",
+      "security": "Seguridad",
+      "other": "Otro"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "onLeave": "De permiso",
+      "suspended": "Suspendido",
+      "terminated": "Terminado"
+    },
+    "compensationModes": {
+      "monthly": "Mensual",
+      "hourly": "Por horas"
+    },
+    "employmentTypes": {
+      "fullTime": "Tiempo completo",
+      "partTime": "Tiempo parcial",
+      "contract": "Contrato",
+      "temporary": "Temporal"
+    },
+    "form": {
+      "personalInformation": "Información personal",
+      "employmentInformation": "Información laboral",
+      "emergencyContact": "Contacto de emergencia",
+      "gender": "Género",
+      "address": "Dirección",
+      "department": "Departamento",
+      "employmentType": "Tipo de empleo",
+      "compensationMode": "Modo de compensación",
+      "hourlyRate": "Tarifa por hora",
+      "workloadHours": "Horas mensuales",
+      "hireDate": "Fecha de contratación",
+      "endDate": "Fecha de fin",
+      "bankAccount": "Cuenta bancaria",
+      "emergencyContactName": "Nombre del contacto de emergencia",
+      "emergencyPhone": "Teléfono de emergencia"
+    },
+    "dialogs": {
+      "createTitle": "Crear miembro del personal",
+      "createButton": "Crear personal",
+      "viewTitle": "Detalles del personal",
+      "editTitle": "Editar personal",
+      "updateButton": "Actualizar personal",
+      "deleteButton": "Eliminar personal",
+      "bulkDeleteItemName": "{{count}} miembro(s) del personal"
+    },
+    "loading": "Cargando personal...",
+    "noData": "No se encontraron miembros del personal",
+    "subtitle": {
+      "members": "miembros"
+    }
+  },
+  "staffRoles": {
+    "success": {
+      "retrieved": "Roles del personal recuperados con éxito",
+      "created": "Rol del personal creado con éxito",
+      "updated": "Rol del personal actualizado con éxito",
+      "deleted": "Rol del personal desactivado con éxito"
+    },
+    "errors": {
+      "notFound": "Rol del personal no encontrado",
+      "codeExists": "Ya existe un rol del personal con este código",
+      "invalidRole": "Rol inválido o inactivo",
+      "systemRoleInUse": "Los roles del sistema no se pueden eliminar"
+    },
+    "table": {
+      "code": "Código",
+      "label": "Etiqueta",
+      "category": "Categoría",
+      "active": "Activo",
+      "system": "Sistema"
+    },
+    "form": {
+      "addNewRole": "Añadir nuevo rol",
+      "code": "Código",
+      "codePlaceholder": "ej. counselor",
+      "label": "Etiqueta por defecto",
+      "labelPlaceholder": "ej. Consejero",
+      "labelFr": "Etiqueta en francés",
+      "labelFrPlaceholder": "ej. Conseiller",
+      "labelAr": "Etiqueta en árabe",
+      "labelArPlaceholder": "ej. مستشار",
+      "labelEs": "Etiqueta en español",
+      "labelEsPlaceholder": "ej. Consejero",
+      "category": "Categoría",
+      "categoryPlaceholder": "ej. support",
+      "sortOrder": "Orden",
+      "active": "Activo"
+    },
+    "dialogs": {
+      "createTitle": "Crear Rol del Personal",
+      "createButton": "Crear Rol",
+      "editTitle": "Editar Rol del Personal",
+      "updateButton": "Actualizar",
+      "deleteButton": "Desactivar Rol",
+      "manageTitle": "Gestionar Roles del Personal"
+    },
+    "categories": {
+      "teaching": "Docencia",
+      "transport": "Transporte",
+      "administration": "Administración",
+      "support": "Apoyo",
+      "operations": "Operaciones"
+    }
+  },
+  "settings": {
+    "academic": {
+      "attendanceMode": "Modo de asistencia",
+      "attendanceModeDaily": "Diario",
+      "attendanceModePerClass": "Por clase",
+      "attendanceRequirement": "Requisito de asistencia (%)",
+      "calendarSystem": "Sistema de calendario",
+      "defaultExamDuration": "Duración predeterminada del examen (min)",
+      "gradingPeriods": "Períodos de calificación",
+      "maxClassSize": "Tamaño máximo de clase",
+      "minimumPassingGrade": "Nota mínima de aprobación",
+      "title": "Título"
+    },
+    "clear": {
+      "button": "Confirmar",
+      "confirm": "Confirmar",
+      "confirmDescription": "Esta acción no se puede deshacer",
+      "confirmTitle": "Confirmar acción",
+      "warningMessage": "Esta es una acción destructiva",
+      "success": "Clear completado correctamente"
+    },
+    "database": {
+      "description": "Descripción",
+      "title": "Título"
+    },
+    "notifications": {
+      "academicAlerts": "Alertas académicas",
+      "attendanceAlerts": "Alertas de asistencia",
+      "disciplinaryAlerts": "Alertas disciplinarias",
+      "emailNotifications": "Notificaciones por correo",
+      "eventAlerts": "Alertas de eventos",
+      "examResultsAlerts": "Alertas de resultados de exámenes",
+      "feesOverdueAlerts": "Alertas de cuotas vencidas",
+      "feesReminder": "Recordatorio de cuotas",
+      "homeworkAlerts": "Alertas de tareas",
+      "lowGradeAlerts": "Alertas de notas bajas",
+      "parentNotifications": "Notificaciones a padres",
+      "smsNotifications": "Notificaciones SMS",
+      "title": "Título"
+    },
+    "school": {
+      "currentAcademicYear": "Año académico actual",
+      "lunchBreakDuration": "Duración del almuerzo (min)",
+      "schoolAddress": "Dirección de la escuela",
+      "schoolEmail": "Correo de la escuela",
+      "schoolEndTime": "Hora de fin de clases",
+      "schoolName": "Nombre de la escuela",
+      "schoolPhone": "Teléfono de la escuela",
+      "schoolStartTime": "Hora de inicio de clases",
+      "title": "Título"
+    },
+    "security": {
+      "apiKey": "Clave API",
+      "apiKeyDescription": "Clave API para integraciones externas",
+      "loginNotifications": "Notificaciones de inicio de sesión",
+      "parentAccessEnabled": "Acceso de padres",
+      "passwordExpiry": "Expiración de contraseña (días)",
+      "studentAccessEnabled": "Acceso de estudiantes",
+      "teacherAccessEnabled": "Acceso de profesores",
+      "title": "Título",
+      "twoFactorAuth": "Autenticación de dos factores"
+    },
+    "seed": {
+      "button": "Confirmar",
+      "confirm": "Confirmar",
+      "confirmDescription": "Esta acción no se puede deshacer",
+      "confirmTitle": "Confirmar acción",
+      "warningPoint1": "Esto borrará todos los datos",
+      "warningPoint2": "Esta acción no se puede deshacer",
+      "warningPoint3": "Asegúrese de hacer una copia de seguridad primero",
+      "warningTitle": "Advertencia",
+      "success": "Seed completado correctamente"
+    },
+    "system": {
+      "button": "Confirmar",
+      "confirm": "Confirmar",
+      "confirmDescription": "Esta acción no se puede deshacer",
+      "confirmTitle": "Confirmar acción",
+      "currency": "Moneda",
+      "darkTheme": "Oscuro",
+      "dateFormat": "Formato de fecha",
+      "language": "Idioma",
+      "lightTheme": "Claro",
+      "systemTheme": "Sistema",
+      "theme": "Tema",
+      "timeFormat": "Formato de hora",
+      "timeZone": "Zona horaria",
+      "title": "Título",
+      "success": "System completado correctamente"
+    },
+    "calendarSystem": {
+      "SEMESTER": "Semestre",
+      "TRIMESTER": "Trimestre",
+      "QUARTER": "Cuatrimestre"
+    },
+    "success": {
+      "created": "Configuración creado correctamente",
+      "retrieved": "Configuración obtenido correctamente",
+      "updated": "Configuración actualizado correctamente"
+    }
+  },
+  "students": {
+    "success": {
+      "retrieved": "Estudiante obtenido correctamente",
+      "created": "Estudiante creado correctamente",
+      "updated": "Estudiante actualizado correctamente",
+      "deleted": "Estudiante eliminado correctamente",
+      "bulkDeleted": "Estudiantes eliminados correctamente",
+      "allDeleted": "Todos los estudiantes fueron eliminados correctamente",
+      "seeded": "Estudiantes inicializados correctamente"
+    },
+    "subtitle": {
+      "count": "{{count}} estudiantes"
+    },
+    "dialogs": {
+      "bulkDeleteItemName": "elemento",
+      "createButton": "Crear estudiante",
+      "createTitle": "Crear un nuevo estudiante",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByClass": "Filtrar por clase",
+      "filterBySection": "Filtrar por sección",
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "academicInformation": "Información académica",
+      "studentInformation": "Información del estudiante",
+      "parentsInformation": "Información de los padres",
+      "accountInfo": "Información de la cuenta",
+      "address": "Dirección",
+      "addressPlaceholder": "Ingrese la dirección",
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "dateOfBirth": "Fecha de nacimiento",
+      "dateOfBirthPlaceholder": "Seleccione la fecha de nacimiento",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingrese el correo electrónico",
+      "enrollmentDate": "Fecha de inscripción",
+      "enrollmentDatePlaceholder": "Seleccione la fecha de inscripción",
+      "feesInformation": "Información de cuotas",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Ingrese el nombre completo",
+      "gender": "Género",
+      "medicalConditions": "Condiciones médicas",
+      "medicalConditionsPlaceholder": "Ingrese las condiciones médicas",
+      "password": "Contraseña",
+      "passwordPlaceholder": "Ingrese la contraseña",
+      "personalData": "Datos personales",
+      "phone": "Teléfono",
+      "phonePlaceholder": "Ingrese el número de teléfono",
+      "previousSchool": "Escuela anterior",
+      "previousSchoolPlaceholder": "Ingrese la escuela anterior",
+      "section": "Sección",
+      "sectionPlaceholder": "Seleccione la sección",
+      "studentCode": "Código del estudiante",
+      "studentCodePlaceholder": "Ingrese el código del estudiante",
+      "studentImage": "Imagen del estudiante"
+    },
+    "status": {
+      "active": "Activo",
+      "graduated": "Graduado",
+      "inactive": "Inactivo",
+      "transferred": "Transferido"
+    },
+    "table": {
+      "class": "Clase",
+      "email": "Correo electrónico",
+      "gender": "Género",
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "section": "Sección",
+      "status": "Estado",
+      "studentCode": "Código del estudiante"
+    },
+    "profile": {
+      "detailsTitle": "Detalles del estudiante",
+      "detailsSubtitle": "Perfil y expediente académico",
+      "downloadReport": "Descargar informe",
+      "closeDetails": "Cerrar detalles del estudiante",
+      "unknown": "Desconocido",
+      "age": "Edad",
+      "yearsShort": "{{count}} años",
+      "yearsLong": "{{count}} años",
+      "yearsOld": "{{count}} años",
+      "ageNotRecorded": "Edad no registrada",
+      "ageFromBirthDate": "Edad calculada desde la fecha de nacimiento",
+      "absences": "Ausencias",
+      "examsAverage": "Prom. exámenes",
+      "gpa": "GPA",
+      "nextDue": "Próximo vencimiento",
+      "due": "Pendiente",
+      "averageGrade": "Nota media",
+      "academic": "Académico",
+      "studentAvatar": "Foto del estudiante",
+      "studentAvatarNamed": "Foto de {{name}}",
+      "parentAvatarNamed": "Foto de {{name}}",
+      "familyContacts": "Contactos familiares",
+      "medical": "Salud",
+      "noPhoneRecorded": "Teléfono no registrado",
+      "noEmailRecorded": "Correo no registrado",
+      "noAddressRecorded": "Dirección no registrada",
+      "noCinRecorded": "CIN no registrada",
+      "noOccupationRecorded": "Ocupación no registrada",
+      "noPreviousSchoolRecorded": "Escuela anterior no registrada",
+      "noMedicalConditionsRecorded": "No hay condiciones médicas registradas",
+      "noParentsLinked": "No hay padres vinculados a este estudiante",
+      "noParentsLinkedHelp": "Los padres pueden vincularse al editar el perfil del estudiante",
+      "noResponsibilities": "No hay responsabilidades especiales registradas",
+      "emergencyContact": "Contacto de emergencia",
+      "financialResponsibility": "Responsabilidad financiera",
+      "emergency": "Emergencia",
+      "financial": "Financiero",
+      "firstName": "Nombre",
+      "lastName": "Apellido",
+      "relationship": "Parentesco",
+      "cinId": "CIN / ID",
+      "occupation": "Ocupación",
+      "nationality": "Nacionalidad",
+      "maritalStatus": "Estado civil",
+      "selectField": "Seleccionar {{field}}",
+      "personal": "Información personal",
+      "contact": "Contacto",
+      "savingParents": "Guardando...",
+      "saveParents": "Guardar padres",
+      "alertsPlaceholder": "El contenido de las alertas aparecerá aquí",
+      "academicsPlaceholder": "El contenido académico aparecerá aquí",
+      "tabs": { "overview": "Resumen", "attendance": "Asistencia", "grades": "Notas", "fees": "Cuotas", "transport": "Transporte", "alerts": "Alertas" },
+      "genders": { "M": "Masculino", "F": "Femenino", "Other": "Otro" },
+      "relationships": { "father": "Padre", "mother": "Madre", "guardian": "Tutor", "stepparent": "Padrastro/Madrastra", "grandparent": "Abuelo/a", "other": "Otro" },
+      "maritalStatuses": { "single": "Soltero/a", "married": "Casado/a", "divorced": "Divorciado/a", "widowed": "Viudo/a", "separated": "Separado/a" },
+      "attendanceDetails": {
+        "date": "Fecha", "status": "Estado", "class": "Clase", "subject": "Asignatura", "notes": "Notas", "daily": "Diario",
+        "present": "Presente", "absent": "Ausente", "late": "Tarde", "loading": "Cargando asistencia...", "noExceptions": "No hay ausencias ni retrasos registrados"
+      },
+      "gradeDetails": {
+        "subject": "Asignatura", "assessment": "Evaluación", "marks": "Calificaciones", "marksFor": "Calificación de {{assessment}}",
+        "feedback": "Comentario", "feedbackFor": "Comentario de {{assessment}}", "result": "Resultado", "graded": "Calificado",
+        "pending": "Pendiente", "missed": "No realizado", "average": "Promedio", "averageShort": "Prom.",
+        "loading": "Cargando notas...", "noneRecorded": "No hay notas registradas"
+      },
+      "feeDetails": {
+        "fee": "Cuota", "paid": "Pagado", "overdue": "Vencido", "partiallyPaid": "Pagado parcialmente", "pending": "Pendiente", "remaining": "Restante",
+        "installmentCount": "{{count}} cuota(s)", "overdueCount": "{{count}} vencida(s)", "studentIdRequired": "Se requiere el ID del estudiante para ver las cuotas.",
+        "noneAssigned": "No hay cuotas asignadas a este estudiante", "noneAssignedShort": "No hay cuotas asignadas",
+        "noneAssignedHelp": "Use el expediente completo de cuotas para asignarlas o gestionar pagos.", "openRecord": "Abrir expediente de cuotas",
+        "assignedCount": "{{count}} cuota(s) asignada(s)", "collectedPercent": "{{count}} % cobrado", "overdueInstallmentCount": "{{count}} cuota(s) vencida(s)",
+        "oldestUnpaid": "Cuota impagada más antigua", "assignedFees": "Cuotas asignadas", "feesWithInstallments": "{{fees}} cuota(s) con {{installments}} plazo(s) en total", "lastPayment": "Último pago"
+      }
+    },
+    "title": "Título"
+  },
+  "cycles": {
+    "form": {
+      "cycleInformation": "Información del ciclo",
+      "name": "Nombre",
+      "labels": "Etiquetas",
+      "labelFr": "Etiqueta en francés",
+      "labelAr": "Etiqueta en árabe",
+      "labelEs": "Etiqueta en español",
+      "sortOrder": "Orden",
+      "active": "Activo"
+    },
+    "dialogs": {
+      "createTitle": "Crear ciclo",
+      "createButton": "Crear ciclo",
+      "viewTitle": "Detalles del ciclo",
+      "editTitle": "Editar ciclo",
+      "updateButton": "Actualizar ciclo",
+      "deleteButton": "Eliminar ciclo"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Nombre",
+      "sortOrder": "Orden",
+      "status": "Estado"
+    },
+    "filters": {
+      "searchByName": "Buscar por nombre de ciclo..."
+    }
+  },
+  "subjects": {
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "code": "Código",
+      "codePlaceholder": "Ingrese el código",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Ingrese la descripción",
+      "name": "Nombre",
+      "namePlaceholder": "Ingrese el nombre",
+      "subjectInformation": "Información de la asignatura"
+    },
+    "table": {
+      "code": "Código",
+      "description": "Descripción",
+      "id": "ID",
+      "name": "Nombre"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Asignatura fueron eliminados correctamente",
+      "created": "Asignatura creado correctamente",
+      "deleted": "Asignatura eliminado correctamente",
+      "retrieved": "Asignatura obtenido correctamente",
+      "seeded": "Asignatura inicializado correctamente",
+      "updated": "Asignatura actualizado correctamente"
+    }
+  },
+  "teachers": {
+    "dialogs": {
+      "bulkDeleteItemName": "elemento",
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "filterByStatus": "Filtrar por estado",
+      "searchByEmail": "Buscar por correo...",
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "academicDegrees": "Títulos académicos",
+      "academicDegreesPlaceholder": "Ingrese los títulos",
+      "address": "Dirección",
+      "addressPlaceholder": "Ingrese la dirección",
+      "assignment": "Tarea",
+      "assignmentInformation": "Información de asignación",
+      "bankAccount": "Cuenta bancaria",
+      "bankAccountPlaceholder": "Ingrese la cuenta bancaria",
+      "cin": "CIN",
+      "cinPlaceholder": "Ingrese el CIN",
+      "class": "Clase",
+      "classPlaceholder": "Seleccione la clase",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "Ingrese el correo electrónico",
+      "emergencyContactName": "Nombre del contacto de emergencia",
+      "emergencyContactNamePlaceholder": "Ingrese el nombre del contacto de emergencia",
+      "emergencyPhone": "Teléfono de emergencia",
+      "emergencyPhonePlaceholder": "Ingrese el teléfono de emergencia",
+      "employmentType": "Tipo de empleo",
+      "employmentTypePlaceholder": "Seleccione el tipo de empleo",
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Ingrese el nombre completo",
+      "gender": "Género",
+      "hireDate": "Fecha de contratación",
+      "image": "Imagen",
+      "noTeacherFound": "No se encontró profesor",
+      "personalInformation": "Información personal",
+      "phone": "Teléfono",
+      "phonePlaceholder": "Ingrese el número de teléfono",
+      "professionalInformation": "Información profesional",
+      "salary": "Salario",
+      "salaryPlaceholder": "Ingrese el salario",
+      "searchTeacher": "Buscar profesor...",
+      "sections": "Secciones",
+      "sectionsPlaceholder": "Seleccione las secciones",
+      "specialization": "Especialización",
+      "specializationPlaceholder": "Ingrese la especialización",
+      "status": "Estado",
+      "subjects": "Asignaturas",
+      "subjectsPlaceholder": "Seleccione las asignaturas",
+      "teacher": "Profesor",
+      "teacherPlaceholder": "Seleccione el profesor",
+      "workloadHours": "Horas de carga",
+      "workloadHoursPlaceholder": "Ingrese las horas de carga",
+      "yearsOfExperience": "Años de experiencia",
+      "yearsOfExperiencePlaceholder": "Ingrese los años de experiencia"
+    },
+    "profile": {
+      "teacherNotFound": "Profesor no encontrado"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "onLeave": "De baja"
+    },
+    "table": {
+      "cin": "CIN",
+      "classes": "Clases",
+      "email": "Correo electrónico",
+      "hireDate": "Fecha de contratación",
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "specialization": "Especialización",
+      "status": "Estado"
+    },
+    "employmentType": {
+      "fullTime": "Tiempo completo",
+      "partTime": "Tiempo parcial",
+      "contract": "Contrato",
+      "temporary": "Temporal"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Profesor fueron eliminados correctamente",
+      "assigned": "Profesor asignado correctamente",
+      "bulkDeleted": "Registros de Profesor eliminados correctamente",
+      "created": "Profesor creado correctamente",
+      "deleted": "Profesor eliminado correctamente",
+      "retrieved": "Profesor obtenido correctamente",
+      "seeded": "Profesor inicializado correctamente",
+      "unassigned": "Profesor desasignado correctamente",
+      "updated": "Profesor actualizado correctamente"
+    }
+  },
+  "vehicleAssignments": {
+    "form": {
+      "notes": "Notas"
+    },
+    "success": {
+      "allRetrieved": "Todos los registros de Asignación de vehículo fueron obtenidos correctamente",
+      "assigned": "Asignación de vehículo asignado correctamente",
+      "created": "Asignación de vehículo creado correctamente",
+      "deleted": "Asignación de vehículo eliminado correctamente",
+      "retrieved": "Asignación de vehículo obtenido correctamente",
+      "unassigned": "Asignación de vehículo desasignado correctamente",
+      "updated": "Asignación de vehículo actualizado correctamente"
+    }
+  },
+  "vehicles": {
+    "card": {
+      "currentMileage": "Kilometraje actual",
+      "driver": "Conductor",
+      "licensePlate": "Matrícula"
+    },
+    "dialogs": {
+      "createButton": "Crear",
+      "createTitle": "Crear",
+      "deleteButton": "Eliminar",
+      "editTitle": "Editar",
+      "updateButton": "Actualizar",
+      "viewTitle": "Detalles"
+    },
+    "filters": {
+      "searchByLicensePlate": "Buscar por matrícula...",
+      "searchByName": "Buscar por nombre..."
+    },
+    "form": {
+      "additionalDetails": "Detalles adicionales",
+      "brand": "Marca",
+      "brandPlaceholder": "Ingrese la marca",
+      "capacity": "Capacidad",
+      "capacityPlaceholder": "Ingrese la capacidad",
+      "driver": "Conductor",
+      "driverPlaceholder": "Seleccione el conductor",
+      "initialMileage": "Kilometraje inicial",
+      "initialMileagePlaceholder": "Ingrese el kilometraje inicial",
+      "licensePlate": "Matrícula",
+      "licensePlatePlaceholder": "Ingrese la matrícula",
+      "model": "Modelo",
+      "modelPlaceholder": "Ingrese el modelo",
+      "name": "Nombre",
+      "namePlaceholder": "Ingrese el nombre",
+      "noDriverFound": "No se encontró conductor",
+      "notes": "Notas",
+      "notesPlaceholder": "Ingrese notas",
+      "purchaseDate": "Fecha de compra",
+      "purchasePrice": "Precio de compra",
+      "purchasePricePlaceholder": "Ingrese el precio de compra",
+      "searchDriver": "Buscar conductor...",
+      "status": "Estado",
+      "type": "Tipo",
+      "vehicleInformation": "Información del vehículo",
+      "year": "Año",
+      "yearPlaceholder": "Ingrese el año"
+    },
+    "status": {
+      "active": "Activo",
+      "maintenance": "Mantenimiento",
+      "retired": "Retirado"
+    },
+    "table": {
+      "brand": "Marca",
+      "capacity": "Capacidad",
+      "driver": "Conductor",
+      "id": "ID",
+      "licensePlate": "Matrícula",
+      "model": "Modelo",
+      "name": "Nombre",
+      "noDriver": "Sin conductor",
+      "seats": "Asientos",
+      "status": "Estado",
+      "type": "Tipo"
+    },
+    "types": {
+      "fullbus": "Autobús completo",
+      "minibus": "Minibús",
+      "suv": "SUV",
+      "truck": "Camión",
+      "van": "Furgoneta"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Vehículo fueron eliminados correctamente",
+      "created": "Vehículo creado correctamente",
+      "deleted": "Vehículo eliminado correctamente",
+      "retrieved": "Vehículo obtenido correctamente",
+      "seeded": "Vehículo inicializado correctamente",
+      "updated": "Vehículo actualizado correctamente"
+    }
+  },
+  "events": {
+    "type": {
+      "academic": "Académico",
+      "sports": "Deportes",
+      "cultural": "Cultural",
+      "holiday": "Vacaciones",
+      "exam": "Examen",
+      "meeting": "Reunión",
+      "workshop": "Taller",
+      "fieldtrip": "Excursión",
+      "ceremony": "Ceremonia",
+      "conference": "Conferencia",
+      "other": "Otro"
+    },
+    "status": {
+      "scheduled": "Programado",
+      "ongoing": "En curso",
+      "completed": "Completado",
+      "cancelled": "Cancelado",
+      "postponed": "Pospuesto"
+    },
+    "visibility": {
+      "public": "Público",
+      "private": "Privado",
+      "teachers": "Profesores",
+      "students": "Estudiantes",
+      "parents": "Padres",
+      "staff": "Personal"
+    },
+    "success": {
+      "allDeleted": "Todos los registros de Evento fueron eliminados correctamente",
+      "attendanceMarked": "Asistencia marcada correctamente",
+      "cancelled": "Evento cancelado correctamente",
+      "completed": "Evento completado correctamente",
+      "created": "Evento creado correctamente",
+      "deleted": "Evento eliminado correctamente",
+      "participantAdded": "Participante agregado correctamente",
+      "participantRemoved": "Participante eliminado correctamente",
+      "participantUpdated": "Participante actualizado correctamente",
+      "participantsRetrieved": "Participantes de Evento obtenidos correctamente",
+      "postponed": "Evento pospuesto correctamente",
+      "retrieved": "Evento obtenido correctamente",
+      "started": "Evento iniciado correctamente",
+      "updated": "Evento actualizado correctamente"
+    }
+  },
+  "auditLog": {
+    "list": "Lista de Registro de auditoría obtenida correctamente",
+    "retrieved": "Registro de auditoría obtenido correctamente"
+  },
+  "credits": {
+    "applied": "Crédito aplicado correctamente",
+    "retrieved": "Crédito obtenido correctamente"
+  },
+  "dashboards": {
+    "success": {
+      "retrieved": "Panel obtenido correctamente"
+    }
+  },
+  "maintenance": {
+    "success": {
+      "allDeleted": "Todos los registros de Mantenimiento fueron eliminados correctamente",
+      "completed": "Mantenimiento completado correctamente",
+      "created": "Mantenimiento creado correctamente",
+      "deleted": "Mantenimiento eliminado correctamente",
+      "overdueMarked": "Mantenimiento completado correctamente",
+      "retrieved": "Mantenimiento obtenido correctamente",
+      "statusUpdated": "Estado de Mantenimiento actualizado correctamente",
+      "updated": "Mantenimiento actualizado correctamente"
+    }
+  },
+  "notifications": {
+    "checkDueRun": "Notificaciones pendientes revisadas correctamente",
+    "list": "Lista de Notificación obtenida correctamente",
+    "overdueRun": "Notificaciones vencidas procesadas correctamente"
+  },
+  "permissions": {
+    "success": {
+      "assigned": "Permiso asignado correctamente",
+      "deleted": "Permiso eliminado correctamente",
+      "removed": "Permiso eliminado correctamente",
+      "retrieved": "Permiso obtenido correctamente",
+      "updated": "Permiso actualizado correctamente"
+    }
+  },
+  "refuels": {
+    "success": {
+      "allDeleted": "Todos los registros de Repostaje fueron eliminados correctamente",
+      "created": "Repostaje creado correctamente",
+      "deleted": "Repostaje eliminado correctamente",
+      "retrieved": "Repostaje obtenido correctamente",
+      "seeded": "Repostaje inicializado correctamente",
+      "updated": "Repostaje actualizado correctamente"
+    }
+  },
+  "rollover": {
+    "committed": "Traspaso confirmado correctamente",
+    "previewed": "Traspaso previsualizado correctamente",
+    "retrieved": "Traspaso obtenido correctamente"
+  },
+  "search": {
+    "success": "Búsqueda completado correctamente"
+  },
+  "studentRoutes": {
+    "success": {
+      "assigned": "Ruta de estudiante asignado correctamente",
+      "deleted": "Ruta de estudiante eliminado correctamente",
+      "retrieved": "Ruta de estudiante obtenido correctamente",
+      "unassigned": "Ruta de estudiante desasignado correctamente",
+      "updated": "Ruta de estudiante actualizado correctamente"
+    }
+  },
+  "transport": {
+    "form": {
+      "stepTitle": "Transporte", "title": "Transporte escolar", "description": "Asigna un vehículo, confirma el punto de recogida y revisa la cuota mensual.", "usesTransport": "Usa transporte escolar", "chooseVehicle": "Elegir vehículo", "chooseVehicleHint": "Solo los vehículos activos con plazas disponibles aceptan nuevos alumnos.", "vehicle": "Vehículo", "vehiclePlaceholder": "Selecciona un vehículo disponible", "searchVehicle": "Buscar vehículos...", "noVehicles": "No hay vehículos disponibles", "seatsAvailable": "plazas disponibles", "seatsLeft": "plazas restantes", "driver": "Conductor", "unassignedDriver": "Sin conductor asignado", "occupancy": "Ocupación", "pickupLocation": "Punto de recogida", "pickupPlaceholder": "Introduce la dirección de recogida", "dropoffLocation": "Punto de llegada", "dropoffPlaceholder": "Introduce el punto de llegada a la escuela", "useHomeAddress": "Usar dirección del domicilio", "startDate": "Fecha de inicio", "notes": "Notas de transporte", "notesPlaceholder": "Instrucciones de acceso o recogida...", "feePreview": "Cuota de transporte", "monthlyBilling": "La facturación mensual se creará automáticamente", "missingFeeType": "Configura una cuota de transporte activa antes de asignar el transporte.", "optionalTitle": "El transporte es opcional", "optionalDescription": "Activa el transporte escolar para elegir vehículo y confirmar la recogida."
+    },
+    "location": {
+      "search": "Buscar una dirección", "chooseTitle": "Elegir punto de recogida", "chooseOnMap": "Elegir en el mapa", "map": "Mapa", "dragHint": "Busca, haz clic en el mapa o arrastra el marcador para ajustar la ubicación.", "loadingMap": "Cargando mapa...", "selectedLocation": "Ubicación seleccionada", "resolving": "Obteniendo dirección...", "noLocation": "Sin ubicación seleccionada", "confirm": "Confirmar ubicación", "pinSaved": "Marcador exacto guardado", "manualAllowed": "Se permite introducir la dirección manualmente", "unavailableTitle": "Google Maps no está disponible", "unavailableDescription": "Comprueba la clave de Maps API y sus restricciones. Puedes cerrar e introducir la dirección manualmente."
+    },
+    "profile": {
+      "assignTitle": "Asignar transporte escolar", "editTitle": "Editar recogida", "changeTitle": "Cambiar vehículo", "assign": "Asignar transporte", "active": "Activo", "noAssignment": "Sin asignación de transporte activa", "noAssignmentDescription": "Asigna este alumno a un vehículo disponible y confirma su recogida.", "noPickup": "Sin punto de recogida", "schoolDefault": "Entrada principal de la escuela", "editPickup": "Editar recogida", "changeBus": "Cambiar vehículo", "unassignTitle": "Finalizar transporte", "unassignDescription": "Finaliza la asignación activa y conserva el historial de cuotas y pagos.", "unassign": "Desasignar", "unassigned": "Asignación de transporte finalizada", "history": "Historial de transporte"
+    }
+  }
+}

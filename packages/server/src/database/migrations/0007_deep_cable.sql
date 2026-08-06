@@ -1,0 +1,1 @@
+ALTER TABLE "fees" ADD COLUMN "effective_date" date;

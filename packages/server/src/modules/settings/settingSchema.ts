@@ -1,0 +1,67 @@
+import { boolean, doublePrecision, integer, jsonb, numeric, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
+
+import { idField, timestamps } from '@server/database/shared';
+import { getEnumValues } from '@server/shared/enums';
+
+export const calendarSystemEnum = pgEnum('calendarSystem', getEnumValues('calendarSystem'));
+export const languageEnum = pgEnum('language', getEnumValues('language'));
+
+export const settings = pgTable('settings', {
+  id: idField(),
+  schoolName: text('school_name').notNull(),
+  schoolAddress: text('school_address'),
+  schoolAddressPlaceId: text('school_address_place_id'),
+  schoolAddressLatitude: doublePrecision('school_address_latitude'),
+  schoolAddressLongitude: doublePrecision('school_address_longitude'),
+  schoolPhone: text('school_phone'),
+  schoolEmail: text('school_email'),
+  schoolWebsite: text('school_website'),
+  schoolLogo: text('school_logo'),
+  currentAcademicYear: text('current_academic_year').notNull(),
+  gradingScale: jsonb('grading_scale'),
+  attendanceRequirement: numeric('attendance_requirement', { precision: 5, scale: 2 }).default('75.00'),
+  // 'daily' = first period locks, later teachers may correct with audit trail.
+  // 'per_class' = each teacher-assignment records independently.
+  attendanceMode: text('attendance_mode').default('daily'),
+  maxClassSize: integer('max_class_size').default(34),
+  minimumPassingGrade: numeric('minimum_passing_grade', { precision: 5, scale: 2 }).default('60.00'),
+  defaultExamDuration: integer('default_exam_duration').default(120),
+  calendarSystem: calendarSystemEnum('calendar_system').default('SEMESTER'),
+  startMonth: text('start_month').default('september'),
+  endMonth: text('end_month').default('june'),
+  academicAlerts: boolean('academic_alerts').default(true),
+  attendanceAlerts: boolean('attendance_alerts').default(true),
+  eventAlerts: boolean('event_alerts').default(true),
+  homeworkAlerts: boolean('homework_alerts').default(true),
+  feesReminder: boolean('fees_reminder').default(true),
+  feesOverdueAlerts: boolean('fees_overdue_alerts').default(true),
+  emailNotifications: boolean('email_notifications').default(true),
+  smsNotifications: boolean('sms_notifications').default(false),
+  parentNotifications: boolean('parent_notifications').default(true),
+  lowGradeAlerts: boolean('low_grade_alerts').default(true),
+  allowLateSubmission: boolean('allow_late_submission').default(true),
+  examResultsAlerts: boolean('exam_results_alerts').default(true),
+  disciplinaryAlerts: boolean('disciplinary_alerts').default(true),
+  achievementAlerts: boolean('achievement_alerts').default(true),
+  maintenanceNotifications: boolean('maintenance_notifications').default(true),
+  twoFactorEnabled: boolean('two_factor_enabled').default(false),
+  sessionTimeout: text('session_timeout').default('60'),
+  passwordRequireSymbols: boolean('password_require_symbols').default(true),
+  loginNotifications: boolean('login_notifications').default(true),
+  parentAccessEnabled: boolean('parent_access_enabled').default(true),
+  teacherAccessEnabled: boolean('teacher_access_enabled').default(true),
+  studentAccessEnabled: boolean('student_access_enabled').default(true),
+  timeZone: text('time_zone').default('UTC'),
+  language: languageEnum('language').default('en'),
+  theme: text('theme').default('system'),
+  dateFormat: text('date_format').default('MM/DD/YYYY'),
+  timeFormat: text('time_format').default('12'),
+  currency: text('currency').default('USD'),
+  gradingPeriods: integer('grading_periods').default(4),
+  schoolStartTime: text('school_start_time').default('08:00'),
+  schoolEndTime: text('school_end_time').default('15:00'),
+  lunchBreakDuration: integer('lunch_break_duration').default(30),
+  maintenanceMode: boolean('maintenance_mode').default(false),
+  autoBackup: boolean('auto_backup').default(true),
+  ...timestamps,
+});

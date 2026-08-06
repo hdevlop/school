@@ -1,0 +1,50 @@
+[
+  {
+    "name": "admin",
+    "description": "Full system access with all administrative privileges including user management, system configuration, academic settings, and complete data access across all modules"
+  },
+  {
+    "name": "principal",
+    "description": "School leadership role with access to academic oversight, staff management, student discipline, and institutional reporting and analytics"
+  },
+  {
+    "name": "accounting",
+    "description": "Financial management role with access to fee management, payment processing, financial reporting, expense tracking, and student billing operations"
+  },
+  {
+    "name": "teacher",
+    "description": "Educator role with access to class management, student grading, attendance tracking, assessment creation, and parent communication for assigned classes"
+  },
+  {
+    "name": "student",
+    "description": "Student role with access to personal academic records, assignments, grades, attendance, class schedules, and school announcements"
+  },
+  {
+    "name": "parent",
+    "description": "Parent role with access to their children's academic progress, attendance records, grades, teacher communications, and school announcements"
+  },
+  {
+    "name": "counselor",
+    "description": "Guidance role with access to student behavioral records, academic intervention, parent consultations, and student support services"
+  },
+  {
+    "name": "nurse",
+    "description": "Health services role with access to student medical records, health alerts, medication management, and emergency contact information"
+  },
+  {
+    "name": "secretary",
+    "description": "Administrative support role with access to student enrollment, parent communications, document management, and general office operations"
+  },
+  {
+    "name": "librarian",
+    "description": "Library management role with access to student library records, book tracking, educational resources, and reading program coordination"
+  },
+  {
+    "name": "driver",
+    "description": "Transportation role with access to student transportation lists, route management, student pick-up/drop-off tracking, and safety incident reporting"
+  },
+  {
+    "name": "assistant",
+    "description": "General helper staff role with flexible access to assist with various school operations, administrative tasks, classroom support, and other duties as assigned by school administration"
+  }
+]

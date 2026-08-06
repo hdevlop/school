@@ -1,0 +1,962 @@
+[
+  {
+    "studentId": "6xJJZ",
+    "assessmentId": "ASM0001",
+    "marksObtained": 6.63,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "7JooH",
+    "assessmentId": "ASM0001",
+    "marksObtained": 8.49,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "Oy5ur",
+    "assessmentId": "ASM0001",
+    "marksObtained": 6.34,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "YpCB6",
+    "assessmentId": "ASM0001",
+    "marksObtained": 8.99,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "p68TH",
+    "assessmentId": "ASM0001",
+    "marksObtained": 4.9,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "0e68V",
+    "assessmentId": "ASM0001",
+    "marksObtained": 6.18,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "LspX6",
+    "assessmentId": "ASM0001",
+    "marksObtained": 8.07,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "OusNZ",
+    "assessmentId": "ASM0001",
+    "marksObtained": 7.6,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "GBu4s",
+    "assessmentId": "ASM0001",
+    "marksObtained": 8.69,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "pHkzv",
+    "assessmentId": "ASM0001",
+    "marksObtained": 8.55,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "d-IYy",
+    "assessmentId": "ASM0001",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "mgY5m",
+    "assessmentId": "ASM0001",
+    "marksObtained": 7.63,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "9Wd3A",
+    "assessmentId": "ASM0004",
+    "marksObtained": 57.68,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "qVwjg",
+    "assessmentId": "ASM0004",
+    "marksObtained": 53.14,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "mswnV",
+    "assessmentId": "ASM0004",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "0-XNJ",
+    "assessmentId": "ASM0004",
+    "marksObtained": 87.94,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "4aR5F",
+    "assessmentId": "ASM0004",
+    "marksObtained": 53.71,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "02FeG",
+    "assessmentId": "ASM0004",
+    "marksObtained": 62.98,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "zIWXj",
+    "assessmentId": "ASM0004",
+    "marksObtained": 80.51,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "0mGX2",
+    "assessmentId": "ASM0004",
+    "marksObtained": 93.7,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "g-34P",
+    "assessmentId": "ASM0004",
+    "marksObtained": 93.22,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "XpqzA",
+    "assessmentId": "ASM0004",
+    "marksObtained": 82.91,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "FJRDU",
+    "assessmentId": "ASM0004",
+    "marksObtained": 82.67,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "_2E_V",
+    "assessmentId": "ASM0004",
+    "marksObtained": 60.27,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "nHW7D",
+    "assessmentId": "ASM0007",
+    "marksObtained": 27.33,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "noMQK",
+    "assessmentId": "ASM0007",
+    "marksObtained": 37.45,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "0Mn1z",
+    "assessmentId": "ASM0007",
+    "marksObtained": 23.12,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "_iE3F",
+    "assessmentId": "ASM0007",
+    "marksObtained": 28.82,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "MsXrI",
+    "assessmentId": "ASM0007",
+    "marksObtained": 30.96,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "lJW_4",
+    "assessmentId": "ASM0007",
+    "marksObtained": 33.51,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "AfmkU",
+    "assessmentId": "ASM0007",
+    "marksObtained": 27.68,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "bFXu0",
+    "assessmentId": "ASM0007",
+    "marksObtained": 35.18,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "d78kW",
+    "assessmentId": "ASM0007",
+    "marksObtained": 27.42,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "I9oY5",
+    "assessmentId": "ASM0007",
+    "marksObtained": 20.28,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "9vXup",
+    "assessmentId": "ASM0007",
+    "marksObtained": 20.13,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "qdFHo",
+    "assessmentId": "ASM0007",
+    "marksObtained": 19.04,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "QkmuJ",
+    "assessmentId": "ASM0010",
+    "marksObtained": 12.44,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "S2LML",
+    "assessmentId": "ASM0010",
+    "marksObtained": 16.24,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "ASL5j",
+    "assessmentId": "ASM0010",
+    "marksObtained": 11.03,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "sMgMy",
+    "assessmentId": "ASM0010",
+    "marksObtained": 14.12,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "Cv5kD",
+    "assessmentId": "ASM0010",
+    "marksObtained": 11.81,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "7EheW",
+    "assessmentId": "ASM0010",
+    "marksObtained": 18.27,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "24FCa",
+    "assessmentId": "ASM0010",
+    "marksObtained": 13.48,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "a4hyF",
+    "assessmentId": "ASM0010",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "wGVsT",
+    "assessmentId": "ASM0010",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "z6NHH",
+    "assessmentId": "ASM0010",
+    "marksObtained": 12.54,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "hufoX",
+    "assessmentId": "ASM0010",
+    "marksObtained": 16.94,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "3GypX",
+    "assessmentId": "ASM0010",
+    "marksObtained": 15.63,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "SN_2I",
+    "assessmentId": "ASM0013",
+    "marksObtained": 7.01,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "SF2r5",
+    "assessmentId": "ASM0013",
+    "marksObtained": 4.97,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "dRwjA",
+    "assessmentId": "ASM0013",
+    "marksObtained": 8.03,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "xtGQQ",
+    "assessmentId": "ASM0013",
+    "marksObtained": 4.84,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "CDacM",
+    "assessmentId": "ASM0013",
+    "marksObtained": 6.9,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "_w4U6",
+    "assessmentId": "ASM0013",
+    "marksObtained": 6.43,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "OkE9A",
+    "assessmentId": "ASM0013",
+    "marksObtained": 4.54,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "PcxzL",
+    "assessmentId": "ASM0013",
+    "marksObtained": 7.14,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "_oX3e",
+    "assessmentId": "ASM0013",
+    "marksObtained": 6.74,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "ROFv7",
+    "assessmentId": "ASM0013",
+    "marksObtained": 4.61,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "pyOfj",
+    "assessmentId": "ASM0013",
+    "marksObtained": 6.13,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "QkrnR",
+    "assessmentId": "ASM0013",
+    "marksObtained": 6.54,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "UqJ0c",
+    "assessmentId": "ASM0016",
+    "marksObtained": 60.7,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "8RB-l",
+    "assessmentId": "ASM0016",
+    "marksObtained": 75.61,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "moJrl",
+    "assessmentId": "ASM0016",
+    "marksObtained": 71.45,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "nPMUV",
+    "assessmentId": "ASM0016",
+    "marksObtained": 86.22,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "SWryz",
+    "assessmentId": "ASM0016",
+    "marksObtained": 54.66,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "3jJD9",
+    "assessmentId": "ASM0016",
+    "marksObtained": 61.19,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "pLvzb",
+    "assessmentId": "ASM0016",
+    "marksObtained": 51.64,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "Xa-q4",
+    "assessmentId": "ASM0016",
+    "marksObtained": 64.39,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "klg6u",
+    "assessmentId": "ASM0016",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "22wJx",
+    "assessmentId": "ASM0016",
+    "marksObtained": 82.43,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "PDfYL",
+    "assessmentId": "ASM0016",
+    "marksObtained": 46.5,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "7knDM",
+    "assessmentId": "ASM0016",
+    "marksObtained": 68.5,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "atKQr",
+    "assessmentId": "ASM0019",
+    "marksObtained": 26.47,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "pHkzv",
+    "assessmentId": "ASM0019",
+    "marksObtained": 20.97,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "d-IYy",
+    "assessmentId": "ASM0019",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "6xJJZ",
+    "assessmentId": "ASM0019",
+    "marksObtained": 35.75,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "LspX6",
+    "assessmentId": "ASM0019",
+    "marksObtained": 35.58,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "YpCB6",
+    "assessmentId": "ASM0019",
+    "marksObtained": 33.39,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "xpQwg",
+    "assessmentId": "ASM0019",
+    "marksObtained": 33.52,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "GBu4s",
+    "assessmentId": "ASM0019",
+    "marksObtained": 24.1,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "OusNZ",
+    "assessmentId": "ASM0019",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "mgY5m",
+    "assessmentId": "ASM0019",
+    "marksObtained": 33.29,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "GX9bl",
+    "assessmentId": "ASM0019",
+    "marksObtained": 18.79,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "0e68V",
+    "assessmentId": "ASM0019",
+    "marksObtained": 27.23,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "RB90b",
+    "assessmentId": "ASM0022",
+    "marksObtained": 11.79,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "0mGX2",
+    "assessmentId": "ASM0022",
+    "marksObtained": 12.42,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "mswnV",
+    "assessmentId": "ASM0022",
+    "marksObtained": 11.35,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "GVrBV",
+    "assessmentId": "ASM0022",
+    "marksObtained": 18.58,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "y9BXO",
+    "assessmentId": "ASM0022",
+    "marksObtained": 11.71,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "g-34P",
+    "assessmentId": "ASM0022",
+    "marksObtained": 10.98,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "oCtyi",
+    "assessmentId": "ASM0022",
+    "marksObtained": 17.46,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "zIWXj",
+    "assessmentId": "ASM0022",
+    "marksObtained": 17.57,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "qVwjg",
+    "assessmentId": "ASM0022",
+    "marksObtained": 17.97,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "FJRDU",
+    "assessmentId": "ASM0022",
+    "marksObtained": 9.74,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "9Wd3A",
+    "assessmentId": "ASM0022",
+    "marksObtained": 12.39,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "02FeG",
+    "assessmentId": "ASM0022",
+    "marksObtained": 17.14,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "qdFHo",
+    "assessmentId": "ASM0025",
+    "marksObtained": 4.53,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "bFXu0",
+    "assessmentId": "ASM0025",
+    "marksObtained": 6.88,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "I9oY5",
+    "assessmentId": "ASM0025",
+    "marksObtained": 5.09,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "o9q7w",
+    "assessmentId": "ASM0025",
+    "marksObtained": 7.95,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "9zhDt",
+    "assessmentId": "ASM0025",
+    "marksObtained": 5.7,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "9vXup",
+    "assessmentId": "ASM0025",
+    "marksObtained": 6.56,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "d78kW",
+    "assessmentId": "ASM0025",
+    "marksObtained": 5.11,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "AfmkU",
+    "assessmentId": "ASM0025",
+    "marksObtained": 4.86,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "nHW7D",
+    "assessmentId": "ASM0025",
+    "marksObtained": 6.81,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "lbxZI",
+    "assessmentId": "ASM0025",
+    "marksObtained": 8.96,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "lJW_4",
+    "assessmentId": "ASM0025",
+    "marksObtained": 6.38,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "noMQK",
+    "assessmentId": "ASM0025",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "hufoX",
+    "assessmentId": "ASM0028",
+    "marksObtained": 56.31,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "Uklau",
+    "assessmentId": "ASM0028",
+    "marksObtained": 94.96,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "7EheW",
+    "assessmentId": "ASM0028",
+    "marksObtained": 64.37,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "S2LML",
+    "assessmentId": "ASM0028",
+    "marksObtained": 56.24,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "Vanhd",
+    "assessmentId": "ASM0028",
+    "marksObtained": 58.63,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "ASL5j",
+    "assessmentId": "ASM0028",
+    "marksObtained": 68.67,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "dDgFR",
+    "assessmentId": "ASM0028",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  },
+  {
+    "studentId": "sMgMy",
+    "assessmentId": "ASM0028",
+    "marksObtained": 50.03,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "3GypX",
+    "assessmentId": "ASM0028",
+    "marksObtained": 47.47,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "a4hyF",
+    "assessmentId": "ASM0028",
+    "marksObtained": 63.99,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "RWDRP",
+    "assessmentId": "ASM0028",
+    "marksObtained": 60.2,
+    "feedback": "Generated academic feedback for the demo profile.",
+    "status": "graded",
+    "gradedBy": null
+  },
+  {
+    "studentId": "PdyTq",
+    "assessmentId": "ASM0028",
+    "marksObtained": 0,
+    "feedback": "Absent during assessment.",
+    "status": "missed",
+    "gradedBy": null
+  }
+]

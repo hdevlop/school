@@ -1,0 +1,107 @@
+[
+  {
+    "id": "CLS00",
+    "name": "PS",
+    "description": "Petite Section",
+    "academicYear": "2025-2026",
+    "level": "Maternelle"
+  },
+  {
+    "id": "CLS01",
+    "name": "MS",
+    "description": "Moyenne Section",
+    "academicYear": "2025-2026",
+    "level": "Maternelle"
+  },
+  {
+    "id": "CLS02",
+    "name": "GS",
+    "description": "Grande Section",
+    "academicYear": "2025-2026",
+    "level": "Maternelle"
+  },
+  {
+    "id": "CLS03",
+    "name": "CP",
+    "description": "Cours Préparatoire",
+    "academicYear": "2025-2026",
+    "level": "Primaire"
+  },
+  {
+    "id": "CLS04",
+    "name": "CE1",
+    "description": "Cours Élémentaire 1ère année",
+    "academicYear": "2025-2026",
+    "level": "Primaire"
+  },
+  {
+    "id": "CLS05",
+    "name": "CE2",
+    "description": "Cours Élémentaire 2ème année",
+    "academicYear": "2025-2026",
+    "level": "Primaire"
+  },
+  {
+    "id": "CLS06",
+    "name": "CM1",
+    "description": "Cours Moyen 1ère année",
+    "academicYear": "2025-2026",
+    "level": "Primaire"
+  },
+  {
+    "id": "CLS07",
+    "name": "CM2",
+    "description": "Cours Moyen 2ème année",
+    "academicYear": "2025-2026",
+    "level": "Primaire"
+  },
+  {
+    "id": "CLS08",
+    "name": "CE6",
+    "description": "Sixième - Début du collège",
+    "academicYear": "2025-2026",
+    "level": "Collège"
+  },
+  {
+    "id": "CLS09",
+    "name": "1AC",
+    "description": "1ère année collège",
+    "academicYear": "2025-2026",
+    "level": "Collège"
+  },
+  {
+    "id": "CLS10",
+    "name": "2AC",
+    "description": "2ème année collège",
+    "academicYear": "2025-2026",
+    "level": "Collège"
+  },
+  {
+    "id": "CLS11",
+    "name": "3AC",
+    "description": "3ème année collège",
+    "academicYear": "2025-2026",
+    "level": "Collège"
+  },
+  {
+    "id": "CLS12",
+    "name": "TC",
+    "description": "Tronc Commun",
+    "academicYear": "2025-2026",
+    "level": "Lycée"
+  },
+  {
+    "id": "CLS13",
+    "name": "1BAC",
+    "description": "1ère année Baccalauréat",
+    "academicYear": "2025-2026",
+    "level": "Lycée"
+  },
+  {
+    "id": "CLS14",
+    "name": "2BAC",
+    "description": "2ème année Baccalauréat",
+    "academicYear": "2025-2026",
+    "level": "Lycée"
+  }
+]

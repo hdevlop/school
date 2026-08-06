@@ -1,0 +1,83 @@
+[
+  {
+    "id": "FT00",
+    "name": "Tuition Fee",
+    "description": "Monthly tuition fee for academic year",
+    "category": "tuition",
+    "amount": 1100,
+    "paymentType": "recurring",
+    "status": "active"
+  },
+  {
+    "id": "FT01",
+    "name": "Registration Fee",
+    "description": "One-time registration fee for new students",
+    "category": "registration",
+    "amount": 1000,
+    "paymentType": "oneTime",
+    "status": "active"
+  },
+  {
+    "id": "FT02",
+    "name": "Transport Fee",
+    "description": "Monthly school bus transportation fee",
+    "category": "transport",
+    "amount": 400,
+    "paymentType": "recurring",
+    "status": "active"
+  },
+  {
+    "id": "FT03",
+    "name": "Cafeteria Fee",
+    "description": "Monthly school cafeteria and meal service fee",
+    "category": "cafeteria",
+    "amount": 400,
+    "paymentType": "recurring",
+    "status": "active"
+  },
+  {
+    "id": "FT04",
+    "name": "Books & Materials",
+    "description": "Textbooks and study materials fee",
+    "category": "books",
+    "amount": 300,
+    "paymentType": "oneTime",
+    "status": "active"
+  },
+  {
+    "id": "FT05",
+    "name": "Sports Fee",
+    "description": "Annual sports and athletic programs fee",
+    "category": "sports",
+    "amount": 250,
+    "paymentType": "oneTime",
+    "status": "active"
+  },
+  {
+    "id": "FT06",
+    "name": "Uniform Fee",
+    "description": "School uniform and dress code items",
+    "category": "uniform",
+    "amount": 350,
+    "paymentType": "oneTime",
+    "status": "active"
+  },
+  {
+    "id": "FT07",
+    "name": "Technology Fee",
+    "description": "Computer lab and digital learning resources",
+    "category": "technology",
+    "amount": 200,
+    "paymentType": "recurring",
+    "status": "active"
+  },
+  {
+    "id": "FT8",
+    "name": "Field Trip Fee",
+    "description": "Educational excursions and field trips",
+    "category": "fieldtrip",
+    "amount": 200,
+    "paymentType": "oneTime",
+    "status": "active"
+  }
+]

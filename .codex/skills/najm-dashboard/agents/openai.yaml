@@ -1,0 +1,8 @@
+interface:
+  display_name: "Najm Dashboard"
+  short_description: "Najm repo workflow and dashboard data ops"
+  brand_color: "#0F766E"
+  default_prompt: "Use $najm-dashboard for Najm module work or live dashboard data ops. Any agent working under this skill must follow it in addition to `AGENTS.md`. On Windows, prefer PowerShell `Invoke-RestMethod` MCP calls built with `[ordered]` hashtables plus `ConvertTo-Json`, login with `auth_login` first, omit `arguments` for no-input tools, and check `.next/dev/logs/next-development.log` if MCP starts failing with stale chunk or DTO reference errors."
+
+policy:
+  allow_implicit_invocation: true

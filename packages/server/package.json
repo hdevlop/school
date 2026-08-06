@@ -1,0 +1,62 @@
+{
+  "name": "@sms/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./najm": {
+      "types": "./dist/najm.d.ts",
+      "import": "./dist/najm.js",
+      "default": "./dist/najm.js"
+    },
+    "./modules": {
+      "types": "./dist/modules/index.d.ts",
+      "import": "./dist/modules/index.js",
+      "default": "./dist/modules/index.js"
+    },
+    "./locales": {
+      "types": "./dist/locales/index.d.ts",
+      "import": "./dist/locales/index.js",
+      "default": "./dist/locales/index.js"
+    }
+  },
+  "scripts": {
+    "build": "node ./build-types.mjs --clean && bun run build:js && node ./build-types.mjs",
+    "build:js": "bun build --target=node --format=esm --sourcemap=none --outdir=dist --root=src -e najm-api -e najm-auth -e najm-cache -e najm-chatbot -e najm-chatbot/studio-assistant -e najm-cookies -e najm-core -e najm-cors -e najm-database -e najm-email -e najm-event -e najm-guard -e najm-i18n -e najm-mcp -e najm-rag -e najm-rate -e najm-storage -e najm-validation -e hono -e reflect-metadata -e diject -e drizzle-orm -e drizzle-zod -e postgres -e nanoid -e zod -e pino -e pino-pretty -e nodemailer -e lodash.isempty src/index.ts src/najm.ts src/modules/index.ts src/locales/index.ts",
+    "test": "bun test tests"
+  },
+  "dependencies": {
+    "diject": "^0.1.0",
+    "drizzle-orm": "0.45.1",
+    "drizzle-zod": "^0.8.3",
+    "hono": "^4.11.1",
+    "lodash.isempty": "^4.4.0",
+    "najm-auth": "*",
+    "najm-core": "*",
+    "najm-cors": "*",
+    "najm-chatbot": "*",
+    "najm-database": "*",
+    "najm-event": "*",
+    "najm-guard": "*",
+    "najm-i18n": "*",
+    "najm-mcp": "*",
+    "najm-rag": "*",
+    "najm-rate": "*",
+    "najm-storage": "*",
+    "najm-validation": "*",
+    "nanoid": "^5.0.0",
+    "nodemailer": "^8.0.1",
+    "pino": "^10.1.0",
+    "pino-pretty": "^13.1.3",
+    "postgres": "3.4.8",
+    "reflect-metadata": "^0.2.2",
+    "zod": "^4.2.1"
+  }
+}

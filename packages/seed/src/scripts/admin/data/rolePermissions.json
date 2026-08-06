@@ -1,0 +1,198 @@
+[
+  {
+    "roleName": "admin",
+    "permissions": [
+      "*:*"
+    ]
+  },
+  {
+    "roleName": "principal",
+    "permissions": [
+      "create:students",
+      "read:students",
+      "update:students",
+      "delete:students",
+      "create:teachers",
+      "read:teachers",
+      "update:teachers",
+      "delete:teachers",
+      "create:parents",
+      "read:parents",
+      "update:parents",
+      "delete:parents",
+      "create:classes",
+      "read:classes",
+      "update:classes",
+      "delete:classes",
+      "create:sections",
+      "read:sections",
+      "update:sections",
+      "delete:sections",
+      "create:subjects",
+      "read:subjects",
+      "update:subjects",
+      "delete:subjects",
+      "create:grades",
+      "read:grades",
+      "update:grades",
+      "delete:grades",
+      "manage:attendance",
+      "create:attendance",
+      "read:attendance",
+      "update:attendance",
+      "delete:attendance",
+      "view:reports",
+      "create:feeTypes",
+      "read:feeTypes",
+      "update:feeTypes",
+      "delete:feeTypes",
+      "create:fees",
+      "read:fees",
+      "update:fees",
+      "delete:fees",
+      "create:payments",
+      "read:payments",
+      "update:payments",
+      "delete:payments",
+      "create:vehicles",
+      "read:vehicles",
+      "update:vehicles",
+      "delete:vehicles",
+      "create:drivers",
+      "read:drivers",
+      "update:drivers",
+      "delete:drivers",
+      "create:refuel",
+      "read:refuel",
+      "update:refuel",
+      "delete:refuel",
+      "create:maintenance",
+      "read:maintenance",
+      "update:maintenance",
+      "delete:maintenance",
+      "create:expenses",
+      "read:expenses",
+      "update:expenses",
+      "delete:expenses",
+      "create:exams",
+      "read:exams",
+      "update:exams",
+      "delete:exams",
+      "create:assessments",
+      "read:assessments",
+      "update:assessments",
+      "delete:assessments",
+      "create:announcements",
+      "read:announcements",
+      "update:announcements",
+      "delete:announcements",
+      "create:events",
+      "read:events",
+      "update:events",
+      "delete:events",
+      "create:alerts",
+      "read:alerts",
+      "update:alerts",
+      "delete:alerts",
+      "create:settings",
+      "read:settings",
+      "update:settings",
+      "delete:settings"
+    ]
+  },
+  {
+    "roleName": "teacher",
+    "permissions": [
+      "read:teachers",
+      "read:students",
+      "update:students",
+      "read:parents",
+      "read:classes",
+      "read:sections",
+      "read:subjects",
+      "create:grades",
+      "read:grades",
+      "update:grades",
+      "create:behavior-rewards",
+      "read:behavior-rewards",
+      "update:behavior-rewards",
+      "create:discipline",
+      "read:discipline",
+      "update:discipline",
+      "manage:attendance"
+    ]
+  },
+  {
+    "roleName": "student",
+    "permissions": [
+      "read:students",
+      "read:parents",
+      "read:classes",
+      "read:subjects",
+      "read:grades"
+    ]
+  },
+  {
+    "roleName": "parent",
+    "permissions": [
+      "read:parents",
+      "read:students",
+      "read:classes",
+      "read:subjects",
+      "read:grades"
+    ]
+  },
+  {
+    "roleName": "counselor",
+    "permissions": [
+      "read:students",
+      "update:students",
+      "read:parents",
+      "read:classes",
+      "read:grades",
+      "manage:attendance"
+    ]
+  },
+  {
+    "roleName": "nurse",
+    "permissions": [
+      "read:students",
+      "read:parents"
+    ]
+  },
+  {
+    "roleName": "secretary",
+    "permissions": [
+      "create:students",
+      "read:students",
+      "update:students",
+      "read:parents",
+      "create:parents",
+      "update:parents",
+      "read:classes",
+      "read:teachers"
+    ]
+  },
+  {
+    "roleName": "librarian",
+    "permissions": [
+      "read:students",
+      "read:classes",
+      "read:teachers"
+    ]
+  },
+  {
+    "roleName": "driver",
+    "permissions": [
+      "read:students"
+    ]
+  },
+  {
+    "roleName": "assistant",
+    "permissions": [
+      "read:students",
+      "read:classes",
+      "read:teachers"
+    ]
+  }
+]

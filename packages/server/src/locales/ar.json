@@ -1,0 +1,2883 @@
+{
+  "languages": {
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية",
+    "es": "Español"
+  },
+  "assistant": {
+    "security": {
+      "readOnlyMode": "لأسباب أمنية، يمكن لهذا المساعد حالياً قراءة البيانات والبحث فيها فقط. ستتوفر إجراءات الإنشاء والتحديث والحذف والإسناد والإزالة والمسح بعد إضافة موافقة التأكيد."
+    }
+  },
+  "auth": {
+    "success": {
+      "login": "تم تسجيل الدخول بنجاح",
+      "logout": "تم تسجيل الخروج بنجاح",
+      "register": "تم التسجيل بنجاح. مرحباً بك!",
+      "passwordReset": "تم إرسال إعادة تعيين كلمة المرور",
+      "tokenGenerated": "تم إنشاء رمز الوصول بنجاح",
+      "tokenRefreshed": "تم تحديث رمز الوصول بنجاح",
+      "refreshTokenGenerated": "تم إنشاء رمز التحديث بنجاح",
+      "refreshTokenRefreshed": "تم تحديث رمز التحديث بنجاح",
+      "authInitialized": "تم تهيئة المصادقة بنجاح"
+    },
+    "errors": {
+      "emailExists": "يوجد حساب بهذا البريد الإلكتروني بالفعل",
+      "credentialsMissing": "واحد أو أكثر من الحقول المطلوبة فارغة",
+      "invalidCredentials": "بيانات الاعتماد غير صحيحة. يرجى المحاولة مرة أخرى",
+      "accessDenied": "تم رفض الوصول. ليس لديك الحقوق للوصول إلى هذا المورد",
+      "emailMissing": "البريد الإلكتروني مفقود. يرجى تقديم عنوان بريد إلكتروني",
+      "tokenExpired": "انتهت صلاحية رمز الوصول. يرجى تحديث الرمز",
+      "tokenVerificationFailed": "فشل في التحقق من رمز الوصول",
+      "tokenMissing": "رمز الوصول مفقود. يرجى تقديم رمز الوصول",
+      "tokenInvalid": "رمز الوصول المقدم غير صحيح. يرجى الحصول على رمز صحيح",
+      "refreshTokenExpired": "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى",
+      "refreshTokenVerificationFailed": "فشل في التحقق من رمز التحديث",
+      "refreshTokenMissing": "رمز التحديث مفقود. يرجى تقديم رمز التحديث",
+      "refreshTokenInvalid": "رمز التحديث غير صحيح. يرجى تسجيل الدخول مرة أخرى",
+      "authInitFailed": "فشل في تهيئة المصادقة"
+    },
+    "validation": {
+      "emailInvalid": "تنسيق عنوان البريد الإلكتروني غير صحيح",
+      "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
+    },
+    "users": {
+      "success": {
+        "retrieved": "تم جلب المستخدم بنجاح"
+      }
+    }
+  },
+  "users": {
+    "success": {
+      "retrieved": "تم استرداد المستخدم بنجاح",
+      "created": "تم إنشاء المستخدم بنجاح",
+      "updated": "تم تحديث المستخدم بنجاح",
+      "deleted": "تم حذف المستخدم بنجاح",
+      "allDeleted": "تم حذف جميع المستخدمين بنجاح"
+    },
+    "errors": {
+      "notFound": "لم يتم العثور على مستخدم بالمعلومات المقدمة",
+      "adminRoleNotFound": "لم يتم العثور على دور المدير",
+      "idExists": "معرف المستخدم موجود بالفعل"
+    },
+    "validation": {
+      "nameMinLength": "يجب أن يكون الاسم حرفين على الأقل",
+      "emailInvalid": "تنسيق عنوان البريد الإلكتروني غير صحيح",
+      "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      "passwordConfirmationRequired": "تأكيد كلمة المرور مطلوب",
+      "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
+      "roleRequired": "يرجى اختيار دور صحيح"
+    },
+    "form": {
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "أدخل الاسم الكامل",
+      "image": "الصورة",
+      "email": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "أدخل عنوان البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "newPassword": "كلمة المرور الجديدة (اتركها فارغة للاحتفاظ بالحالية)",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "أكد كلمة المرور",
+      "userRole": "دور المستخدم"
+    },
+    "roles": {
+      "admin": "مدير",
+      "user": "مستخدم",
+      "moderator": "مشرف"
+    },
+    "dialogs": {
+      "createTitle": "إنشاء مستخدم جديد",
+      "createButton": "إنشاء مستخدم",
+      "viewTitle": "تفاصيل المستخدم",
+      "editTitle": "تعديل المستخدم",
+      "updateButton": "تحديث المستخدم",
+      "deleteButton": "حذف المستخدم"
+    },
+    "table": {
+      "selectAll": "تحديد الكل",
+      "selectRow": "تحديد الصف",
+      "id": "المعرف",
+      "name": "الاسم",
+      "email": "البريد الإلكتروني",
+      "role": "الدور",
+      "status": "الحالة"
+    },
+    "filters": {
+      "searchByName": "البحث بالاسم...",
+      "searchByEmail": "البحث بالبريد الإلكتروني...",
+      "filterByRole": "تصفية حسب الدور..."
+    }
+  },
+  "roles": {
+    "success": {
+      "retrieved": "تم استرداد الدور بنجاح",
+      "allRetrieved": "تم استرداد جميع الأدوار بنجاح",
+      "created": "تم إنشاء الدور بنجاح",
+      "updated": "تم تحديث الدور بنجاح",
+      "deleted": "تم حذف الدور بنجاح",
+      "allDeleted": "تم حذف جميع الأدوار",
+      "initialized": "تم تهيئة الأدوار بنجاح",
+      "assignedToUser": "تم تعيين الدور للمستخدم بنجاح",
+      "userRolesRetrieved": "تم استرداد أدوار المستخدم بنجاح",
+      "usersByRoleRetrieved": "تم استرداد المستخدمين للدور المحدد بنجاح",
+      "userRoleDeleted": "تم حذف دور المستخدم بنجاح"
+    },
+    "errors": {
+      "exists": "اسم الدور مستخدم بالفعل. يرجى اختيار اسم آخر",
+      "notFound": "لم يتم العثور على الدور",
+      "userRoleExists": "الدور المحدد للمستخدم موجود بالفعل",
+      "userRoleNotFound": "لم يتم العثور على الدور المحدد للمستخدم"
+    },
+    "validation": {
+      "nameRequired": "اسم دور مناسب مطلوب",
+      "nameMinLength": "اسم الدور يجب أن يحتوي على حرفين على الأقل"
+    },
+    "form": {
+      "name": "اسم الدور",
+      "namePlaceholder": "أدخل اسم الدور",
+      "description": "الوصف (اختياري)",
+      "descriptionPlaceholder": "أدخل وصف الدور"
+    },
+    "dialogs": {
+      "createTitle": "إنشاء دور جديد",
+      "createButton": "إنشاء دور",
+      "viewTitle": "تفاصيل الدور",
+      "editTitle": "تعديل الدور",
+      "updateButton": "تحديث الدور",
+      "deleteButton": "حذف الدور"
+    },
+    "table": {
+      "selectAll": "تحديد الكل",
+      "selectRow": "تحديد الصف",
+      "id": "المعرف",
+      "roleName": "اسم الدور",
+      "description": "الوصف",
+      "noDescription": "لا يوجد وصف"
+    },
+    "filters": {
+      "searchByName": "البحث باسم الدور...",
+      "searchByDescription": "البحث بالوصف..."
+    }
+  },
+  "system": {
+    "success": {
+      "demoSeeded": "تم تهيئة نظام العرض التوضيحي بنجاح",
+      "dataCleared": "تم مسح جميع البيانات بنجاح",
+      "fieldsSeeded": "تم تهيئة الحقول بنجاح",
+      "vehiclesSeeded": "تم تهيئة المركبات بنجاح",
+      "operatorsSeeded": "تم تهيئة المشغلين بنجاح",
+      "operationsSeeded": "تم تهيئة العمليات بنجاح",
+      "refuelsSeeded": "تم تهيئة عمليات التزويد بالوقود بنجاح"
+    },
+    "info": {
+      "seedingStarted": "بدء تهيئة بيانات العرض التوضيحي...",
+      "clearingData": "مسح جميع البيانات...",
+      "operationsCleared": "تم مسح العمليات",
+      "refuelsCleared": "تم مسح عمليات التزويد بالوقود",
+      "operatorsCleared": "تم مسح المشغلين",
+      "vehiclesCleared": "تم مسح المركبات",
+      "fieldsCleared": "تم مسح الحقول",
+      "usersCleared": "تم مسح المستخدمين"
+    },
+    "errors": {
+      "seedingDisabled": "تهيئة النظام معطلة في هذه البيئة",
+      "invalidSeedApiKey": "مفتاح API للتهيئة غير صحيح"
+    }
+  },
+  "files": {
+    "success": {
+      "retrieved": "تم استرداد الملف بنجاح",
+      "created": "تم إنشاء الملف بنجاح",
+      "updated": "تم تحديث الملف بنجاح",
+      "deleted": "تم حذف الملف بنجاح",
+      "served": "تم تقديم الملف بنجاح",
+      "streamed": "تم بث الملف بنجاح"
+    },
+    "errors": {
+      "notFound": "لم يتم العثور على الملف",
+      "nameExists": "يوجد ملف بهذا الاسم بالفعل",
+      "sizeTooLarge": "حجم الملف يتجاوز الحد الأقصى المسموح به",
+      "typeNotAllowed": "نوع الملف غير مسموح",
+      "accessDenied": "ليس لديك إذن للوصول إلى هذا الملف",
+      "uploadFailed": "فشل في رفع الملف",
+      "deleteFailed": "فشل في حذف الملف",
+      "invalidType": "نوع ملف غير صحيح",
+      "tooLarge": "حجم الملف يتجاوز الحد الأقصى المسموح به",
+      "invalidEntityType": "نوع كيان غير صحيح",
+      "entityNotFound": "لم يتم العثور على الكيان",
+      "insufficientPermissions": "أذونات غير كافية للوصول إلى هذا الملف",
+      "physicalNotFound": "لم يتم العثور على الملف الفعلي في التخزين",
+      "mimeTypeMismatch": "امتداد الملف لا يتطابق مع نوع الملف - خطر أمني محتمل",
+      "executableNotAllowed": "الملفات التنفيذية غير مسموحة لأسباب أمنية",
+      "recordNotFound": "لم يتم العثور على سجل الملف في قاعدة البيانات للمسار: {fileAbsPath}",
+      "onlyImagesAllowed": "فقط ملفات الصور مسموحة",
+      "invalidImageType": "نوع صورة غير صحيح"
+    }
+  },
+  "analytics": {
+    "success": {
+      "vehicleUsageReport": "تم إنشاء تقرير استخدام المركبات بنجاح",
+      "fuelConsumptionReport": "تم إنشاء تقرير استهلاك الوقود بنجاح",
+      "operatorPerformanceReport": "تم إنشاء تقرير أداء المشغل بنجاح",
+      "fieldOperationsReport": "تم إنشاء تقرير عمليات الحقل بنجاح",
+      "maintenanceSchedule": "تم استرداد جدول الصيانة بنجاح"
+    },
+    "errors": {
+      "insufficientData": "بيانات غير كافية متاحة لإنشاء التقرير المطلوب",
+      "invalidDateRange": "نطاق تاريخ غير صحيح محدد للتقرير",
+      "generationFailed": "فشل في إنشاء التقرير. يرجى المحاولة مرة أخرى"
+    }
+  },
+  "alerts": {
+    "success": {
+      "retrieved": "تم استرجاع التنبيهات بنجاح",
+      "created": "تم إنشاء التنبيه بنجاح",
+      "updated": "تم تحديث التنبيه بنجاح",
+      "deleted": "تم حذف التنبيه بنجاح",
+      "allDeleted": "تم حذف جميع التنبيهات",
+      "statusUpdated": "تم تحديث حالة التنبيه بنجاح",
+      "acknowledged": "تم إقرار التنبيه بنجاح",
+      "resolved": "تم حل التنبيه بنجاح",
+      "dismissed": "تم رفض التنبيه بنجاح",
+      "bulkUpdated": "تم تحديث التنبيهات مجمعة بنجاح",
+      "resolvedDeleted": "تم حذف التنبيهات المحلولة بنجاح",
+      "maintenanceAlertsGenerated": "تم إنشاء تنبيهات الصيانة بنجاح",
+      "academicAlertsGenerated": "تم إنشاء التنبيهات الأكاديمية بنجاح",
+      "attendanceAlertsGenerated": "تم إنشاء تنبيهات الحضور بنجاح"
+    },
+    "errors": {
+      "notFound": "التنبيه غير موجود",
+      "invalidType": "نوع تنبيه غير صالح محدد",
+      "invalidStatus": "حالة تنبيه غير صالحة محددة",
+      "invalidPriority": "أولوية تنبيه غير صالحة محددة",
+      "invalidTitle": "عنوان التنبيه يجب أن يكون على الأقل حرفين",
+      "invalidMessage": "رسالة التنبيه يجب أن تكون على الأقل 5 أحرف",
+      "cannotModifyResolved": "لا يمكن تعديل التنبيهات المحلولة",
+      "cannotDeleteActive": "لا يمكن حذف التنبيهات النشطة",
+      "duplicateActiveAlert": "يوجد تنبيه نشط من هذا النوع لهذا الهدف",
+      "noAlertsSelected": "لم يتم تحديد تنبيهات للعملية الجماعية",
+      "noAlertsToDelete": "لا توجد تنبيهات للحذف",
+      "invalidStatusTransition": "انتقال حالة غير صالح من {{from}} إلى {{to}}",
+      "atLeastOneTargetRequired": "يجب تحديد هدف واحد على الأقل (مركبة، مشغل، أو مستخدم)"
+    },
+    "validation": {
+      "titleMinLength": "العنوان يجب أن يكون على الأقل حرفين",
+      "messageMinLength": "الرسالة يجب أن تكون على الأقل 5 أحرف"
+    },
+    "types": {
+      "maintenance": "صيانة",
+      "fuel": "وقود",
+      "security": "أمان",
+      "operational": "تشغيلي",
+      "system": "نظام"
+    },
+    "priorities": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "عالية",
+      "critical": "حرجة"
+    },
+    "statuses": {
+      "active": "نشط",
+      "read": "مقروء",
+      "resolved": "محلول",
+      "dismissed": "مرفوض"
+    },
+    "form": {
+      "type": "نوع التنبيه",
+      "priority": "الأولوية",
+      "title": "العنوان",
+      "titlePlaceholder": "أدخل عنوان التنبيه",
+      "message": "الرسالة",
+      "messagePlaceholder": "أدخل رسالة التنبيه",
+      "status": "الحالة",
+      "vehicle": "المركبة (اختياري)",
+      "vehiclePlaceholder": "اختر مركبة",
+      "operator": "المشغل (اختياري)",
+      "operatorPlaceholder": "اختر مشغل"
+    },
+    "dialogs": {
+      "createTitle": "إنشاء تنبيه جديد",
+      "createButton": "إنشاء تنبيه",
+      "viewTitle": "تفاصيل التنبيه",
+      "editTitle": "تحرير التنبيه",
+      "updateButton": "تحديث التنبيه",
+      "deleteButton": "حذف التنبيه"
+    },
+    "table": {
+      "selectAll": "تحديد الكل",
+      "selectRow": "تحديد الصف",
+      "id": "المعرف",
+      "title": "العنوان",
+      "type": "النوع",
+      "priority": "الأولوية",
+      "status": "الحالة",
+      "vehicle": "المركبة",
+      "operator": "المشغل",
+      "createdAt": "تاريخ الإنشاء",
+      "readAt": "تاريخ القراءة"
+    },
+    "filters": {
+      "searchByTitle": "البحث بالعنوان...",
+      "searchByVehicle": "البحث بالمركبة...",
+      "filterByStatus": "تصفية بالحالة...",
+      "filterByType": "تصفية بالنوع...",
+      "filterByPriority": "تصفية بالأولوية..."
+    }
+  },
+  "validation": {
+    "general": {
+      "requiredFieldMissing": "حقل مطلوب مفقود",
+      "invalidDateFormat": "تنسيق تاريخ غير صحيح مقدم",
+      "invalidTimeFormat": "تنسيق وقت غير صحيح مقدم",
+      "invalidNumericValue": "قيمة رقمية غير صحيحة مقدمة",
+      "valueOutOfRange": "القيمة خارج النطاق المقبول"
+    },
+    "formats": {
+      "invalidSerialNumber": "تنسيق رقم تسلسلي غير صحيح",
+      "invalidLicensePlate": "تنسيق لوحة ترخيص غير صحيح",
+      "invalidPhoneNumber": "تنسيق رقم هاتف غير صحيح",
+      "invalidEmail": "تنسيق عنوان بريد إلكتروني غير صحيح",
+      "invalidLicenseNumber": "تنسيق رقم رخصة غير صحيح"
+    }
+  },
+  "dashboard": {
+    "widgets": {
+      "totalLiters": "إجمالي اللترات",
+      "totalFields": "إجمالي الحقول",
+      "activeVehicles": "المركبات النشطة",
+      "operationsToday": "العمليات اليوم",
+      "totalOperators": "إجمالي المشغلين",
+      "completedOperations": "العمليات المكتملة",
+      "totalWorkHours": "إجمالي ساعات العمل",
+      "totalCost": "إجمالي التكلفة"
+    },
+    "finance": {
+      "totalStudents": "إجمالي الطلاب",
+      "totalTeachers": "إجمالي المعلمين",
+      "incomeMonth": "الإيرادات (الشهر)",
+      "expensesMonth": "المصروفات (الشهر)",
+      "netBalance": "الرصيد الصافي",
+      "collectionRateYTD": "معدل التحصيل منذ بداية السنة",
+      "studentsByGender": "الطلاب حسب الجنس",
+      "incomeVsExpenses": "الإيرادات مقابل المصروفات",
+      "income": "الإيرادات",
+      "expenses": "المصروفات",
+      "agingBalance": "الأرصدة المستحقة",
+      "agingCurrent": "حالي",
+      "aging1_30": "1–30 يوم",
+      "aging31_60": "31–60 يوم",
+      "aging60plus": "60+ يوم",
+      "overdueFees": "الرسوم المتأخرة",
+      "recentPayments": "المدفوعات الأخيرة",
+      "calendar": "التقويم",
+      "remind": "تذكير",
+      "daysOverdue": "يوم تأخير",
+      "noOverdue": "لا توجد رسوم متأخرة",
+      "noRecentPayments": "لا توجد مدفوعات حديثة",
+      "expenseCount": "عدد المصاريف",
+      "expensesByCategory": "المصاريف حسب الفئة",
+      "noExpensesRecorded": "لا توجد مصاريف مسجلة"
+    },
+    "cards": {
+      "recentOperations": {
+        "title": "العمليات المكتملة مؤخرًا",
+        "noOperations": "لم يتم العثور على عمليات مكتملة مؤخرًا",
+        "errorLoadingData": "خطأ في تحميل العمليات المكتملة مؤخرًا"
+      }
+    },
+    "success": {
+      "widgetsRetrieved": "تم استرداد عناصر لوحة التحكم بنجاح"
+    },
+    "attendance": {
+      "studentsTitle": "حضور التلاميذ",
+      "teachersTitle": "حضور الأساتذة",
+      "staffTitle": "حضور الموظفين",
+      "todayAbsent": "غائبون اليوم",
+      "todayLate": "متأخرون اليوم",
+      "absent": "غائب",
+      "late": "متأخر"
+    },
+    "calendar": {
+      "title": "التقويم",
+      "june": "يونيو"
+    },
+    "students": {
+      "title": "التلاميذ"
+    },
+    "lastEvents": {
+      "title": "آخر الأحداث"
+    },
+    "feesCollectionExpenses": "تحصيل الرسوم / المصاريف",
+    "totalIncomes": "إجمالي الإيرادات",
+    "totalExpenses": "إجمالي المصاريف",
+    "todayIncome": "إيرادات اليوم",
+    "todayExpenses": "مصاريف اليوم"
+  },
+  "language": {
+    "success": {
+      "preferenceUpdated": "تم تحديث تفضيل اللغة بنجاح",
+      "preferenceRetrieved": "تم استرداد تفضيل اللغة بنجاح"
+    },
+    "errors": {
+      "invalid": "لغة غير صحيحة محددة"
+    }
+  },
+  "common": {
+    "notAvailable": "غير متاح",
+    "all": "الكل",
+    "invalidDate": "تاريخ غير صحيح",
+    "loading": "جاري التحميل...",
+    "processing": "جاري المعالجة...",
+    "loadingCreate": "جاري الإنشاء...",
+    "loadingUpdate": "جاري التحديث...",
+    "loadingDelete": "جاري الحذف...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "actions": "الإجراءات",
+    "addItem": "إضافة عنصر",
+    "noItemsAdded": "لم تتم إضافة أي عناصر بعد.",
+    "next": "التالي",
+    "previous": "السابق",
+    "confirm": "تأكيد",
+    "confirmAction": "هل أنت متأكد؟",
+    "female": "أنثى",
+    "male": "ذكر",
+    "no": "لا",
+    "noDescription": "لا يوجد وصف",
+    "notAssigned": "غير محدد",
+    "notSpecified": "غير محدد",
+    "parent": "الوالد",
+    "total": "الإجمالي",
+    "warning": "تحذير",
+    "yes": "نعم",
+    "monthsShort": {
+      "jan": "ينا",
+      "feb": "فبر",
+      "mar": "مار",
+      "apr": "أبر",
+      "may": "ماي",
+      "jun": "يون",
+      "jul": "يول",
+      "aug": "أغس",
+      "sep": "سبت",
+      "oct": "أكت",
+      "nov": "نوف",
+      "dec": "ديس"
+    },
+    "weekdaysShort": {
+      "sun": "أحد",
+      "mon": "إثن",
+      "tue": "ثلا",
+      "wed": "أرب",
+      "thu": "خمي",
+      "fri": "جمع",
+      "sat": "سبت"
+    },
+    "monthsLong": {
+      "january": "يناير",
+      "february": "فبراير",
+      "march": "مارس",
+      "april": "أبريل",
+      "may": "مايو",
+      "june": "يونيو",
+      "july": "يوليوز",
+      "august": "غشت",
+      "september": "شتنبر",
+      "october": "أكتوبر",
+      "november": "نونبر",
+      "december": "دجنبر"
+    },
+    "gender": {
+      "M": "ذكر",
+      "F": "أنثى"
+    },
+    "deleteConfirm": "هل أنت متأكد أنك تريد الحذف؟"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "pending": "قيد الانتظار",
+    "cancelled": "ملغى",
+    "maintenance": "صيانة",
+    "retired": "متقاعد",
+    "approved": "موافق عليه",
+    "rejected": "مرفوض",
+    "processing": "قيد المعالجة",
+    "completed": "مكتمل",
+    "graded": "مصحح",
+    "missed": "فائت",
+    "draft": "مسودة",
+    "published": "منشور",
+    "planned": "مخطط",
+    "suspended": "معلق",
+    "deleted": "محذوف",
+    "archived": "مؤرشف",
+    "revoked": "ملغى",
+    "expired": "منتهي الصلاحية"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "fields": "الحقول",
+    "vehicles": "المركبات",
+    "operations": "العمليات",
+    "operators": "المشغلين",
+    "refuel": "التزود بالوقود",
+    "maintenance": "الصيانة",
+    "alerts": "التنبيهات",
+    "trackers": "المتتبعات",
+    "users": "المستخدمين",
+    "roles": "الأدوار",
+    "permissions": "الصلاحيات",
+    "accessControl": "التحكم بالوصول",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "academic": "أكاديمي",
+    "fees": "الرسوم",
+    "feeTypes": "أنواع الرسوم",
+    "financial": "المالية",
+    "payroll": "الرواتب",
+    "studentAttendance": "الطلاب",
+    "teacherAttendance": "المعلمين",
+    "staffAttendance": "الموظفون",
+    "discipline": "الانضباط",
+    "announcements": "الإعلانات",
+    "assessments": "التقييمات",
+    "attendance": "الحضور",
+    "calendar": "التقويم",
+    "classes": "الأقسام",
+    "cycles": "الأسلاك",
+    "drivers": "السائقون",
+    "exams": "الامتحانات",
+    "expenses": "المصاريف",
+    "grades": "النقط",
+    "parents": "الوالدين",
+    "reminders": "التذكيرات",
+    "sections": "الفوج",
+    "staff": "الموظفون",
+    "personnel": "شؤون الموظفين",
+    "students": "التلاميذ",
+    "subjects": "المواد",
+    "teachers": "الأساتذة",
+    "transport": "النقل",
+    "classRoutines": "الجدول",
+    "studentConduct": "سلوك الطلاب",
+    "violations": "المخالفات",
+    "behaviorRewards": "السلوك الإيجابي والمكافآت"
+  },
+  "classRoutines": {
+    "success": {
+      "retrieved": "تم استرجاع جدول الحصص بنجاح",
+      "created": "تم إنشاء جدول الحصص بنجاح",
+      "updated": "تم تحديث جدول الحصص بنجاح",
+      "deleted": "تم حذف جدول الحصص بنجاح",
+      "published": "تم نشر جدول الحصص بنجاح",
+      "archived": "تمت أرشفة جدول الحصص بنجاح",
+      "entryCreated": "تمت إضافة الحصة بنجاح",
+      "entryUpdated": "تم تحديث الحصة بنجاح",
+      "entryDeleted": "تم حذف الحصة بنجاح"
+    },
+    "errors": {
+      "notFound": "جدول الحصص غير موجود",
+      "notEditable": "يمكن تعديل المسودات فقط",
+      "entryNotFound": "الحصة غير موجودة",
+      "periodNotFound": "الفترة غير موجودة",
+      "periodInactive": "هذه الفترة غير مفعلة",
+      "breakPeriod": "لا يمكن إضافة حصة خلال فترة الاستراحة",
+      "invalidPeriodTime": "يجب أن يكون وقت النهاية بعد وقت البداية",
+      "periodConflict": "هذه الفترة تتداخل مع فترة أخرى",
+      "sectionNotFound": "الفوج غير موجود",
+      "academicYearMismatch": "يجب أن توافق السنة الدراسية سنة القسم",
+      "inactiveDay": "هذا اليوم غير مفعل",
+      "invalidAssignment": "تكليف الأستاذ لا ينتمي إلى هذا الفوج",
+      "sectionConflict": "لدى الفوج حصة أخرى في نفس الفترة",
+      "teacherConflict": "الأستاذ مشغول في نفس الفترة",
+      "roomConflict": "القاعة مشغولة في نفس الفترة",
+      "emptySchedule": "أضف حصة واحدة على الأقل قبل النشر",
+      "forbidden": "لا يمكنك عرض جدول أستاذ آخر",
+      "dutyNotFound": "مهمة الإشراف غير موجودة",
+      "dutyRequiresBreak": "يمكن تعيين الإشراف خلال فترات الاستراحة فقط",
+      "teacherNotFound": "الأستاذ غير موجود",
+      "layoutPastMidnight": "لا يمكن أن يمتد الجدول بعد منتصف الليل",
+      "layoutRemovesLessons": "احذف الحصص من الفترات التي ستزال قبل تغيير الإعدادات",
+    "layoutRemovesDuties": "احذف مهام الإشراف من الاستراحات التي ستزال قبل تغيير الإعدادات"
+  },
+  "ui": {
+    "title": "الجدول",
+    "subtitle": "أنشئ جدولاً أسبوعياً خالياً من التعارض لكل فوج",
+    "fields": {
+      "class": "القسم", "section": "الفوج", "period": "الحصة", "subjectTeacher": "المادة والأستاذ",
+      "room": "القاعة", "notes": "ملاحظات", "supervisingStaff": "الموظف المشرف", "supervisingTeacher": "الأستاذ المشرف",
+      "dutyNotes": "ملاحظات الإشراف", "teachingDays": "أيام الدراسة", "type": "النوع", "nameLabel": "الاسم / التسمية",
+      "startTime": "وقت البداية", "endTime": "وقت النهاية", "periodName": "اسم الحصة", "order": "الترتيب",
+      "starts": "البداية", "ends": "النهاية", "breakPeriod": "فترة استراحة", "active": "مفعّل"
+    },
+    "actions": {
+      "days": "الأيام", "periods": "الحصص", "saveDays": "حفظ الأيام", "savePeriods": "حفظ الحصص",
+      "createRoutine": "إنشاء الجدول", "addLesson": "إضافة حصة", "updateLesson": "تحديث الحصة", "removeLesson": "حذف الحصة",
+      "addSupervisor": "إضافة مشرف", "assignSupervisor": "تعيين مشرف", "updateSupervision": "تحديث الإشراف",
+      "removeSupervision": "حذف الإشراف", "addTeachingPeriod": "إضافة حصة دراسية", "addBreak": "إضافة استراحة"
+    },
+    "dialogs": {
+      "daysTitle": "أيام الدراسة", "daysDescription": "اختر الأيام المدرجة في جدول هذا الفوج.",
+      "periodsTitle": "الحصص والاستراحات", "periodsDescription": "تحكم في الحصص والاستراحات وأوقاتها لهذا الفوج.",
+      "editLesson": "تعديل الحصة", "addLesson": "إضافة حصة", "editSupervision": "تعديل الإشراف",
+      "assignSupervisor": "تعيين مشرف · {{period}}"
+    },
+    "placeholders": {
+      "chooseTeacher": "اختر أستاذاً مكلفاً", "searchAssignments": "البحث في التكليفات...",
+      "selectStaff": "اختر موظفاً", "selectTeacher": "اختر أستاذاً"
+    },
+    "empty": {
+      "title": "لا يوجد جدول لهذا الفوج", "description": "أنشئ جدول الفوج ثم عدّل الحصص مباشرة من الشبكة.",
+      "noAssignments": "لا توجد تكليفات أساتذة لهذا الفوج."
+    },
+    "grid": { "noRoom": "دون قاعة" },
+    "validation": {
+      "chooseAssignment": "اختر أستاذاً ومادة", "notesMax": "يجب ألا تتجاوز الملاحظات 500 حرف",
+      "chooseSupervisor": "اختر مشرفاً", "selectDay": "اختر يوماً دراسياً واحداً على الأقل", "timeFormat": "استخدم الصيغة HH:mm",
+      "nameRequired": "أدخل اسماً", "teachingPeriodRequired": "أضف حصة دراسية واحدة على الأقل",
+      "endAfterStart": "يجب أن يكون وقت النهاية بعد وقت البداية", "noOverlap": "لا يمكن أن تتداخل الحصص الزمنية"
+    },
+    "periodForm": {
+      "teachingPeriod": "حصة دراسية", "breakRecess": "استراحة", "dragRow": "اسحب السطر {{number}} لإعادة ترتيبه",
+      "removeRow": "حذف {{name}}"
+    },
+    "defaultNames": {
+      "period": "الحصة {{number}}", "break": "استراحة {{number}}", "morningBreak": "استراحة الصباح",
+      "lunchBreak": "استراحة الغداء", "afternoonBreak": "استراحة بعد الظهر"
+    },
+    "days": {
+      "monday": "الاثنين", "tuesday": "الثلاثاء", "wednesday": "الأربعاء", "thursday": "الخميس",
+      "friday": "الجمعة", "saturday": "السبت", "sunday": "الأحد"
+    },
+    "loading": { "timetable": "جارٍ تحميل الجدول", "weeklyRoutine": "جارٍ تحميل الجدول الأسبوعي..." },
+    "messages": {
+      "saveError": "تعذر حفظ الجدول.", "routineCreated": "تم إنشاء الجدول.", "routineUpdated": "تم تحديث الجدول.",
+      "timesUpdated": "تم تحديث أوقات الجدول.", "routineDeleted": "تم حذف المسودة.", "routinePublished": "تم نشر الجدول.",
+      "routineArchived": "تمت أرشفة الجدول.", "lessonAdded": "تمت إضافة الحصة.", "lessonUpdated": "تم تحديث الحصة.",
+      "lessonRemoved": "تم حذف الحصة.", "supervisionAssigned": "تم تعيين الإشراف.", "supervisionUpdated": "تم تحديث الإشراف.",
+      "supervisionRemoved": "تم حذف الإشراف.", "periodCreated": "تم إنشاء الحصة.", "periodUpdated": "تم تحديث الحصة."
+    },
+    "teacher": {
+      "weeklyLessons": "الحصص الأسبوعية", "sections": "الأفواج", "noRoutine": "لا يوجد جدول",
+      "noRoutineDescription": "ستظهر الحصص المكلف بها هنا تلقائياً."
+    },
+    "errors": { "loadFailed": "تعذر تحميل الجدول." }
+  }
+  },
+  "payroll": {
+    "success": {
+      "retrieved": "تم استرجاع كشوف الرواتب بنجاح",
+      "run": "اكتمل تشغيل كشف الرواتب",
+      "paid": "تم وضع علامة مدفوع على قسيمة الراتب",
+      "unpaid": "تم التراجع عن الدفع",
+      "updated": "تم تحديث قسيمة الراتب بنجاح",
+      "deleted": "تم حذف قسيمة الراتب بنجاح",
+      "bulkDeleted": "تم حذف قسائم الرواتب بنجاح"
+    },
+    "errors": {
+      "notFound": "قسيمة الراتب غير موجودة",
+      "alreadyPaid": "تم دفع قسيمة الراتب هذه بالفعل",
+      "cancelled": "تم إلغاء قسيمة الراتب هذه"
+    },
+    "stats": {
+      "period": "الفترة",
+      "payroll": "الرواتب",
+      "pending": "قيد الانتظار",
+      "hourlyMonthly": "بالساعة / شهري"
+    },
+    "table": {
+      "selectAll": "تحديد الموظفين القابلين للدفع",
+      "selectRow": "تحديد القسيمة",
+      "teacher": "الموظف",
+      "staff": "الموظف",
+      "period": "الفترة",
+      "type": "النوع",
+      "workload": "ساعات العمل",
+      "amount": "المبلغ",
+      "status": "الحالة",
+      "action": "الإجراء"
+    },
+    "types": {
+      "vacataire": "متعاقد بالساعة",
+      "permanent": "دائم"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "paid": "مدفوع",
+      "notSet": "غير محدد"
+    },
+    "filters": {
+      "searchByTeacher": "البحث باسم الموظف",
+      "searchByStaff": "البحث باسم الموظف",
+      "filterByType": "تصفية حسب النوع",
+      "filterByStatus": "تصفية حسب الحالة"
+    },
+    "actions": {
+      "pay": "صرف الراتب",
+      "paid": "مدفوع",
+      "unpay": "إلغاء الدفع",
+      "paySelected": "تشغيل الرواتب"
+    },
+    "loading": "جاري تحميل الرواتب...",
+    "noData": "لا توجد سجلات رواتب"
+  },
+  "attendance": {
+    "table": {
+      "selectAll": "تحديد الكل",
+      "selectRow": "تحديد الصف",
+      "date": "التاريخ",
+      "studentName": "الطالب",
+      "studentCode": "الرقم",
+      "teacherName": "المعلم",
+      "staffName": "الموظف",
+      "class": "الفصل",
+      "section": "القسم",
+      "subject": "المادة",
+      "status": "الحالة",
+      "notes": "ملاحظات"
+    },
+    "form": {
+      "attendanceInfo": "معلومات الحضور",
+      "additionalInfo": "معلومات إضافية",
+      "studentId": "الطالب",
+      "studentIdPlaceholder": "أدخل رقم الطالب",
+      "teacherId": "المعلم",
+      "teacherIdPlaceholder": "أدخل رقم المعلم",
+      "staffId": "الموظف",
+      "staffIdPlaceholder": "أدخل رقم الموظف",
+      "sectionId": "القسم",
+      "sectionIdPlaceholder": "أدخل رقم القسم",
+      "subjectId": "المادة",
+      "subjectIdPlaceholder": "أدخل رقم المادة",
+      "date": "التاريخ",
+      "status": "الحالة",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "إضافة ملاحظات (اختياري)"
+    },
+    "dialogs": {
+      "markStudentTitle": "تسجيل حضور الطالب",
+      "markTeacherTitle": "تسجيل حضور المعلم",
+      "markStaffTitle": "تسجيل حضور الموظف",
+      "editTitle": "تعديل الحضور",
+      "viewTitle": "تفاصيل الحضور",
+      "markButton": "تسجيل الحضور",
+      "updateButton": "تحديث",
+      "deleteButton": "حذف",
+      "correctTitle": "تصحيح الحضور",
+      "correctDescription": "قام معلم آخر بتسجيل حضور هذا الطالب اليوم بالفعل. يمكنك تصحيح الحالة — وسيتم تسجيل التغيير باسمك.",
+      "historyTitle": "سجل التغييرات"
+    },
+    "success": {
+      "retrieved": "تم استرداد الحضور بنجاح",
+      "marked": "تم تسجيل الحضور بنجاح",
+      "updated": "تم تحديث الحضور بنجاح",
+      "deleted": "تم حذف سجل الحضور",
+      "allDeleted": "تم حذف جميع سجلات الحضور",
+      "seeded": "تم إنشاء بيانات تجريبية للحضور"
+    },
+    "errors": {
+      "notFound": "سجل الحضور غير موجود",
+      "alreadyMarked": "تم تسجيل الحضور بالفعل لهذا الطالب في هذا الفصل",
+      "dailyAlreadyMarked": "تم تسجيل الحضور بالفعل لهذا الطالب اليوم — استخدم التحديث لتصحيح الحالة",
+      "noRecordToday": "لا يوجد سجل حضور لهذا الطالب اليوم",
+      "notAuthorizedForSection": "غير مصرح لك بتحديث الحضور لهذا القسم",
+      "invalidTransition": "تغيير الحالة هذا غير مسموح به",
+      "futureDate": "لا يمكن تسجيل الحضور لتاريخ مستقبلي",
+      "dateTooOld": "لا يمكن تسجيل الحضور لتواريخ أقدم من {{days}} يوم"
+    },
+    "filters": {
+      "searchByStudent": "البحث باسم الطالب...",
+      "searchByTeacher": "البحث باسم المعلم...",
+      "searchByStaff": "البحث باسم الموظف...",
+      "filterByStatus": "تصفية حسب الحالة"
+    },
+    "status": {
+      "present": "حاضر",
+      "absent": "غائب",
+      "late": "متأخر"
+    },
+    "roster": {
+      "studentTitle": "حضور الطلاب",
+      "teacherTitle": "حضور المعلمين",
+      "staffTitle": "حضور الموظفين",
+      "submit": "تسجيل الحضور",
+      "reset": "إعادة تعيين",
+      "date": "التاريخ",
+      "today": "اليوم",
+      "class": "الصف",
+      "section": "الفصل",
+      "allClasses": "جميع الصفوف",
+      "allSections": "جميع الفصول",
+      "searchPlaceholder": "ابحث بالاسم أو الرمز…",
+      "total": "الإجمالي",
+      "present": "حاضر",
+      "absent": "غائب",
+      "late": "متأخر",
+      "allPresent": "الكل حاضر",
+      "allAbsent": "الكل غائب",
+      "code": "الرمز",
+      "student": "الطالب",
+      "teacher": "المعلم",
+      "staff": "الموظف",
+      "staffMember": "موظف",
+      "staffMembers": "موظفون",
+      "classSection": "الصف",
+      "status": "الحالة",
+      "noResults": "لا توجد نتائج مطابقة للتصفية",
+      "loading": "جارٍ التحميل…",
+      "nothingToSave": "لا توجد تغييرات للحفظ",
+      "submitSuccess": "تم حفظ الحضور بنجاح",
+      "submitError": "فشل حفظ الحضور"
+    }
+  },
+  "fees": {
+    "form": {
+      "byStudent": "حسب الطالب",
+      "byClass": "حسب الفصل",
+      "addSelectedFees": "إضافة الرسوم المختارة",
+      "additionalInformation": "معلومات إضافية",
+      "amount": "المبلغ",
+      "effectiveDate": "تاريخ بدء احتساب الرسوم",
+      "effectiveDateDescription": "أول تاريخ تُطبق فيه هذه الرسوم. اتركه فارغاً لاستخدام تاريخ تسجيل التلميذ.",
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "discountAmount": "قيمة الخصم",
+      "discountAmountPlaceholder": "أدخل قيمة الخصم",
+      "dueDate": "تاريخ الاستحقاق",
+      "feeInformation": "Fee Information",
+      "feeType": "نوع الرسوم",
+      "feeTypePlaceholder": "اختر نوع الرسوم",
+      "installmentPreview": "معاينة الأقساط",
+      "installments": "الأقساط",
+      "netAmount": "المبلغ الصافي",
+      "noStudentFound": "لا يوجد تلميذ",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أدخل ملاحظات",
+      "schedule": "الجدول",
+      "schedulePlaceholder": "اختر الجدول",
+      "searchStudent": "ابحث عن تلميذ...",
+      "section": "الفوج",
+      "sectionPlaceholder": "اختر الفوج",
+      "selectFeeTypes": "اختر أنواع الرسوم",
+      "selectedFees": "الرسوم المختارة",
+      "status": "الحالة",
+      "student": "التلميذ",
+      "studentPlaceholder": "اختر التلميذ",
+      "students": "التلاميذ",
+      "studentsInClass": "التلاميذ في القسم",
+      "total": "الإجمالي",
+      "unknownFeeType": "نوع رسوم غير معروف"
+    },
+    "status": {
+      "paying": "يدفع",
+      "overdue": "متأخر",
+      "paid": "مدفوع",
+      "partiallyPaid": "مدفوع جزئيًا",
+      "pending": "قيد الانتظار",
+      "fullPaidCongratulations": "دفع كاملاً. مبروك!"
+    },
+    "filters": {
+      "class": "القسم",
+      "section": "الشعبة",
+      "noSections": "لا توجد شعب",
+      "selectClass": "اختر قسماً",
+      "filterByStatus": "تصفية حسب الحالة",
+      "searchByStudent": "Search By Student"
+    },
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث"
+    },
+    "installment": "قسط",
+    "installmentStatus": {
+      "overdue": "متأخر",
+      "paid": "مدفوع",
+      "pending": "قيد الانتظار"
+    },
+    "noData": {
+      "noFees": "لا توجد رسوم",
+      "noResults": "لا توجد نتائج",
+      "selectClass": "اختر قسما"
+    },
+    "paymentStatus": {
+      "completed": "مكتمل",
+      "failed": "فشل",
+      "overdue": "متأخر",
+      "paid": "مدفوع",
+      "partiallyPaid": "مدفوع جزئيًا",
+      "pending": "قيد الانتظار",
+      "refunded": "مسترد"
+    },
+    "table": {
+      "amount": "المبلغ",
+      "dueAmount": "المبلغ المستحق",
+      "dueDate": "تاريخ الاستحقاق",
+      "netAmount": "المبلغ الصافي",
+      "paidAmount": "المبلغ المدفوع",
+      "status": "الحالة",
+      "student": "التلميذ",
+      "studentCode": "رمز التلميذ"
+    },
+    "schedule": {
+      "monthly": "شهري",
+      "quarterly": "ربع سنوي",
+      "semester": "نصف سنوي",
+      "annually": "سنوي",
+      "oneTime": "مرة واحدة"
+    },
+    "success": {
+      "allocationDeleted": "تم حذف التخصيص بنجاح",
+      "allocationRetrieved": "تم جلب التخصيص بنجاح",
+      "allocationsRetrieved": "تم جلب التخصيصات بنجاح",
+      "bulkCreated": "تم إكمال الرسوم بنجاح",
+      "bulkDeleted": "تم حذف سجلات الرسوم بنجاح",
+      "created": "تم إنشاء الرسوم بنجاح",
+      "dataRetrieved": "تم جلب بيانات الرسوم بنجاح",
+      "deleted": "تم حذف الرسوم بنجاح",
+      "installmentCreated": "تم إنشاء القسط بنجاح",
+      "installmentDeleted": "تم حذف القسط بنجاح",
+      "installmentUpdated": "تم تحديث القسط بنجاح",
+      "installmentsRetrieved": "تم جلب الأقساط بنجاح",
+      "paymentRecorded": "تم تسجيل الدفع بنجاح",
+      "paymentRefunded": "تم رد الدفع بنجاح",
+      "paymentUpdated": "تم تحديث الدفع بنجاح",
+      "paymentVoided": "تم إلغاء الدفع بنجاح",
+      "paymentsRetrieved": "تم إكمال الرسوم بنجاح",
+      "retrieved": "تم جلب الرسوم بنجاح",
+      "revenueRetrieved": "تم إكمال الرسوم بنجاح",
+      "statsRetrieved": "تم جلب الإحصائيات بنجاح",
+      "updated": "تم تحديث الرسوم بنجاح"
+    }
+  },
+  "behaviorRewards": {
+    "table": {
+      "recordCount": "{{count}} سجلات تقدير",
+      "student": "الطالب",
+      "classSection": "الفصل / الشعبة",
+      "positiveBehavior": "السلوك الإيجابي",
+      "recognition": "التقدير",
+      "reward": "المكافأة",
+      "points": "النقاط",
+      "behaviorDate": "تاريخ السلوك",
+      "awardedBy": "مُنح بواسطة",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "تاريخ التحديث"
+    },
+    "filters": {
+      "search": "البحث باسم الطالب أو الرمز أو الوصف...",
+      "category": "فئة السلوك",
+      "recognitionLevel": "مستوى التقدير",
+      "rewardType": "نوع المكافأة",
+      "class": "الفصل",
+      "section": "الشعبة"
+    },
+    "form": {
+      "behaviorSection": "السلوك الإيجابي",
+      "rewardSection": "التقدير والمكافأة",
+      "student": "الطالب",
+      "studentPlaceholder": "اختر طالبًا",
+      "studentSearch": "البحث عن الطلاب النشطين...",
+      "noStudents": "لم يتم العثور على طلاب نشطين",
+      "behaviorAt": "تاريخ ووقت السلوك",
+      "behaviorDate": "تاريخ السلوك",
+      "behaviorTime": "وقت السلوك",
+      "category": "فئة السلوك الإيجابي",
+      "categoryPlaceholder": "اختر فئة",
+      "recognitionLevel": "مستوى التقدير",
+      "recognitionLevelPlaceholder": "اختر مستوى التقدير",
+      "description": "وصف السلوك",
+      "descriptionPlaceholder": "صف السلوك الإيجابي بموضوعية",
+      "rewardType": "نوع المكافأة",
+      "rewardTypePlaceholder": "اختر مكافأة",
+      "points": "النقاط الممنوحة (0–100)",
+      "rewardNote": "ملاحظة المكافأة",
+      "rewardNotePlaceholder": "أضف تفاصيل اختيارية عن التقدير"
+    },
+    "categories": {
+      "academic_effort": "الجهد الدراسي",
+      "improvement": "التحسن",
+      "respect": "الاحترام",
+      "helpfulness": "المساعدة",
+      "leadership": "القيادة",
+      "teamwork": "العمل الجماعي",
+      "responsibility": "المسؤولية",
+      "community_service": "خدمة المجتمع",
+      "excellent_attendance": "الحضور الممتاز",
+      "other": "أخرى"
+    },
+    "recognitionLevels": {
+      "appreciation": "تقدير",
+      "achievement": "إنجاز",
+      "excellence": "تميز"
+    },
+    "rewardTypes": {
+      "verbal_praise": "ثناء شفهي",
+      "written_praise": "ثناء كتابي",
+      "merit": "استحقاق",
+      "badge": "شارة",
+      "certificate": "شهادة",
+      "privilege": "امتياز",
+      "prize": "جائزة",
+      "other": "أخرى"
+    },
+    "dialogs": {
+      "createTitle": "إضافة تقدير",
+      "createButton": "إضافة تقدير",
+      "viewTitle": "تفاصيل التقدير",
+      "editTitle": "تعديل التقدير",
+      "updateButton": "تحديث التقدير",
+      "deleteButton": "حذف"
+    },
+    "success": {
+      "retrieved": "تم جلب مكافآت السلوك بنجاح",
+      "created": "تمت إضافة التقدير بنجاح",
+      "updated": "تم تحديث التقدير بنجاح",
+      "deleted": "تم حذف التقدير بنجاح"
+    },
+    "errors": {
+      "notFound": "سجل التقدير غير موجود",
+      "forbidden": "لا يمكنك الوصول إلى مكافآت السلوك",
+      "studentNotFound": "الطالب غير موجود",
+      "studentInactive": "يمكن تقدير الطلاب النشطين فقط",
+      "studentAcademicContextMissing": "يجب أن يكون للطالب فصل وشعبة",
+      "studentNotAssigned": "يمكنك تقدير طلاب الشعب المسندة إليك فقط",
+      "notOwner": "يمكن للمعلم تعديل التقديرات التي منحها فقط",
+      "deleteAdminOnly": "يمكن للمسؤولين فقط حذف سجلات التقدير",
+      "invalidBehaviorDate": "تاريخ السلوك غير صالح",
+      "futureBehaviorDate": "لا يمكن أن يكون تاريخ السلوك في المستقبل"
+    }
+  },
+  "confirm": {
+    "discipline": { "create": "إنشاء سجل المخالفة؟", "update": "تحديث سجل المخالفة؟", "resolve": "معالجة سجل المخالفة؟", "reopen": "إعادة فتح المخالفة ومسح معالجتها؟", "delete": "حذف سجل المخالفة؟ لا يمكن التراجع عن هذا الإجراء." },
+    "behaviorRewards": {
+      "create": "هل تريد إنشاء سجل التقدير هذا؟",
+      "update": "هل تريد تحديث سجل التقدير هذا؟",
+      "delete": "هل تريد حذف سجل التقدير هذا؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "students": {
+      "create": "هل تريد إنشاء هذا الطالب؟",
+      "update": "هل تريد تحديث هذا الطالب؟",
+      "delete": "هل تريد حذف هذا الطالب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "bulkDelete": "هل تريد حذف هؤلاء الطلاب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع الطلاب؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "teachers": {
+      "create": "هل تريد إنشاء هذا المعلم؟",
+      "update": "هل تريد تحديث هذا المعلم؟",
+      "delete": "هل تريد حذف هذا المعلم؟ لا يمكن التراجع عن هذا الإجراء.",
+      "bulkDelete": "هل تريد حذف هؤلاء المعلمين؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع المعلمين؟ لا يمكن التراجع عن هذا الإجراء.",
+      "assignSubject": "هل تريد إسناد هذه المادة للمعلم؟",
+      "unassignSubject": "هل تريد إلغاء إسناد هذه المادة من المعلم؟",
+      "assignClass": "هل تريد إسناد هذا المعلم للفصل؟",
+      "unassignClass": "هل تريد إلغاء إسناد هذا المعلم من الفصل؟"
+    },
+    "staff": {
+      "create": "هل تريد إنشاء هذا الموظف؟",
+      "update": "هل تريد تحديث هذا الموظف؟",
+      "delete": "هل تريد حذف هذا الموظف؟ لا يمكن التراجع.",
+      "bulkDelete": "هل تريد حذف هؤلاء الموظفين؟ لا يمكن التراجع."
+    },
+    "parents": {
+      "create": "هل تريد إنشاء هذا ولي الأمر؟",
+      "update": "هل تريد تحديث هذا ولي الأمر؟",
+      "delete": "هل تريد حذف هذا ولي الأمر؟ لا يمكن التراجع عن هذا الإجراء.",
+      "bulkDelete": "هل تريد حذف هؤلاء أولياء الأمور؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع أولياء الأمور؟ لا يمكن التراجع عن هذا الإجراء.",
+      "linkStudent": "هل تريد ربط هذا الطالب بولي الأمر؟",
+      "unlinkStudent": "هل تريد إلغاء ربط هذا الطالب من ولي الأمر؟"
+    },
+    "users": {
+      "create": "هل تريد إنشاء هذا المستخدم؟",
+      "update": "هل تريد تحديث هذا المستخدم؟",
+      "delete": "هل تريد حذف هذا المستخدم؟ لا يمكن التراجع عن هذا الإجراء.",
+      "assignRole": "هل تريد إسناد هذا الدور للمستخدم؟ هذا يغير التحكم في الوصول.",
+      "removeRole": "هل تريد إزالة هذا الدور من المستخدم؟ هذا يغير التحكم في الوصول."
+    },
+    "roles": {
+      "create": "هل تريد إنشاء هذا الدور؟",
+      "update": "هل تريد تحديث هذا الدور؟",
+      "delete": "هل تريد حذف هذا الدور؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "permissions": {
+      "create": "هل تريد إنشاء هذا الإذن؟",
+      "update": "هل تريد تحديث هذا الإذن؟",
+      "delete": "هل تريد حذف هذا الإذن؟ لا يمكن التراجع عن هذا الإجراء.",
+      "assign": "هل تريد إسناد هذا الإذن للدور؟ هذا يغير التحكم في الوصول.",
+      "remove": "هل تريد إزالة هذا الإذن من الدور؟ هذا يغير التحكم في الوصول."
+    },
+    "attendance": {
+      "mark": "هل تريد تسجيل الحضور لهذا الطالب أو المعلم؟",
+      "update": "هل تريد تحديث سجل الحضور هذا؟",
+      "updateStatus": "هل تريد تحديث حالة الحضور؟",
+      "delete": "هل تريد حذف سجل الحضور هذا؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع سجلات الحضور؟ لا يمكن التراجع عن هذا الإجراء.",
+      "seed": "هل تريد تهيئة بيانات الحضور التجريبية؟ سيؤدي ذلك إلى إنشاء سجلات حضور نموذجية."
+    },
+    "grades": {
+      "create": "هل تريد إنشاء هذه الدرجة؟",
+      "update": "هل تريد تحديث هذه الدرجة؟",
+      "delete": "هل تريد حذف هذه الدرجة؟ لا يمكن التراجع عن هذا الإجراء.",
+      "bulkDelete": "هل تريد حذف هذه الدرجات؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع الدرجات؟ لا يمكن التراجع عن هذا الإجراء.",
+      "seed": "هل تريد تهيئة بيانات الدرجات التجريبية؟ سيؤدي ذلك إلى إنشاء سجلات درجات نموذجية."
+    },
+    "classes": {
+      "create": "هل تريد إنشاء هذا الفصل؟",
+      "update": "هل تريد تحديث هذا الفصل؟",
+      "delete": "هل تريد حذف هذا الفصل؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع الفصول؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "sections": {
+      "create": "هل تريد إنشاء هذا الشعب؟",
+      "update": "هل تريد تحديث هذا الشعب؟",
+      "delete": "هل تريد حذف هذا الشعب؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع الشعب؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "exams": {
+      "create": "هل تريد إنشاء هذا الامتحان؟",
+      "update": "هل تريد تحديث هذا الامتحان؟",
+      "delete": "هل تريد حذف هذا الامتحان؟ لا يمكن التراجع عن هذا الإجراء.",
+      "bulkDelete": "هل تريد حذف هذه الامتحانات؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع الامتحانات؟ لا يمكن التراجع عن هذا الإجراء.",
+      "seed": "هل تريد تهيئة بيانات الامتحانات التجريبية؟ سيؤدي ذلك إلى إنشاء سجلات امتحانات نموذجية."
+    },
+    "subjects": {
+      "create": "هل تريد إنشاء هذه المادة؟",
+      "update": "هل تريد تحديث هذه المادة؟",
+      "delete": "هل تريد حذف هذه المادة؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع المواد؟ لا يمكن التراجع عن هذا الإجراء.",
+      "seed": "هل تريد تهيئة بيانات المواد التجريبية؟ سيؤدي ذلك إلى إنشاء سجلات مواد نموذجية."
+    },
+    "fees": {
+      "create": "هل تريد إنشاء هذا الرسم؟",
+      "bulkCreate": "هل تريد إنشاء هذه الرسوم؟",
+      "bulkClass": "هل تريد إسناد هذا الرسم لجميع الطلاب في الفصل؟",
+      "update": "هل تريد تحديث هذا الرسم؟",
+      "delete": "هل تريد حذف هذا الرسم؟ لا يمكن التراجع عن هذا الإجراء.",
+      "bulkDelete": "هل تريد حذف هذه الرسوم؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteAll": "هل تريد حذف جميع الرسوم؟ لا يمكن التراجع عن هذا الإجراء.",
+      "recalculate": "هل تريد إعادة حساب المبلغ المخصص لهذا الرسم؟"
+    },
+    "settings": {
+      "create": "هل تريد إنشاء الإعدادات؟",
+      "update": "هل تريد تحديث الإعدادات؟"
+    },
+    "payroll": {
+      "run": "تشغيل كشف الرواتب لهذه الفترة؟ سيتم إنشاء قسائم رواتب معلقة لجميع الموظفين النشطين.",
+      "pay": "وضع علامة مدفوع على قسيمة الراتب هذه؟",
+      "unpay": "التراجع عن هذا الدفع؟ سيتم حذف قسيمة الراتب.",
+      "delete": "حذف قسيمة الراتب هذه؟ لا يمكن التراجع عن هذا الإجراء.",
+      "bulkDelete": "حذف قسائم الرواتب هذه؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "staffRoles": {
+      "create": "إنشاء دور الموظف هذا؟",
+      "update": "تحديث دور الموظف هذا؟",
+      "delete": "إلغاء تنشيط دور الموظف هذا؟ الأدوار المستخدمة يتم إلغاء تنشيطها، وليس حذفها."
+    }
+  },
+  "announcements": {
+    "audience": {
+      "all": "الجميع",
+      "class": "القسم",
+      "parents": "الوالدين",
+      "students": "التلاميذ",
+      "teachers": "الأساتذة"
+    },
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByAudience": "تصفية حسب الجمهور",
+      "filterByStatus": "تصفية حسب الحالة",
+      "searchByTitle": "ابحث بالعنوان..."
+    },
+    "form": {
+      "announcementDetails": "تفاصيل الإعلان",
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "content": "المحتوى",
+      "contentPlaceholder": "أدخل المحتوى",
+      "expiryDate": "تاريخ الانتهاء",
+      "expiryDatePlaceholder": "اختر تاريخ الانتهاء",
+      "publishDate": "تاريخ النشر",
+      "publishDatePlaceholder": "اختر تاريخ النشر",
+      "section": "الفوج",
+      "sectionPlaceholder": "اختر الفوج",
+      "targetAndPublishing": "الاستهداف والنشر",
+      "targetAudience": "الجمهور المستهدف",
+      "targetAudiencePlaceholder": "اختر الجمهور المستهدف",
+      "title": "العنوان",
+      "titlePlaceholder": "أدخل العنوان"
+    },
+    "status": {
+      "draft": "مسودة",
+      "published": "منشور"
+    },
+    "table": {
+      "author": "المؤلف",
+      "class": "القسم",
+      "content": "المحتوى",
+      "createdAt": "تاريخ الإنشاء",
+      "isPublished": "منشور",
+      "publishDate": "تاريخ النشر",
+      "targetAudience": "الجمهور المستهدف",
+      "title": "العنوان"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات الإعلان بنجاح",
+      "bulkDeleted": "تم حذف سجلات الإعلان بنجاح",
+      "created": "تم إنشاء الإعلان بنجاح",
+      "deleted": "تم حذف الإعلان بنجاح",
+      "published": "تم نشر الإعلان بنجاح",
+      "retrieved": "تم جلب الإعلان بنجاح",
+      "seeded": "تم إنشاء بيانات الإعلان بنجاح",
+      "unpublished": "تم إلغاء نشر الإعلان بنجاح",
+      "updated": "تم تحديث الإعلان بنجاح"
+    }
+  },
+  "assessments": {
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByStatus": "تصفية حسب الحالة",
+      "filterByType": "تصفية حسب النوع",
+      "searchByTitle": "ابحث بالعنوان..."
+    },
+    "form": {
+      "academicContext": "السياق الأكاديمي",
+      "assessmentDetails": "تفاصيل التقييم",
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "date": "التاريخ",
+      "datePlaceholder": "اختر التاريخ",
+      "description": "الوصف",
+      "descriptionPlaceholder": "أدخل الوصف",
+      "duration": "المدة",
+      "durationPlaceholder": "أدخل المدة",
+      "instructions": "التعليمات",
+      "instructionsPlaceholder": "أدخل التعليمات",
+      "passingMarks": "نقطة النجاح",
+      "passingMarksPlaceholder": "أدخل نقطة النجاح",
+      "scheduleAndGrading": "الجدولة والتقييم",
+      "section": "الفوج",
+      "sectionPlaceholder": "اختر الفوج",
+      "status": "الحالة",
+      "statusPlaceholder": "اختر الحالة",
+      "subject": "المادة",
+      "subjectPlaceholder": "اختر المادة",
+      "teacher": "الأستاذ",
+      "teacherPlaceholder": "اختر الأستاذ",
+      "title": "العنوان",
+      "titlePlaceholder": "أدخل العنوان",
+      "totalMarks": "مجموع النقاط",
+      "totalMarksPlaceholder": "أدخل مجموع النقاط",
+      "type": "النوع",
+      "typePlaceholder": "اختر النوع"
+    },
+    "status": {
+      "active": "نشط",
+      "cancelled": "ملغى",
+      "completed": "مكتمل",
+      "scheduled": "مجدول"
+    },
+    "table": {
+      "class": "القسم",
+      "date": "التاريخ",
+      "duration": "المدة",
+      "section": "الفوج",
+      "status": "الحالة",
+      "subject": "المادة",
+      "teacher": "الأستاذ",
+      "title": "العنوان",
+      "totalMarks": "مجموع النقاط",
+      "type": "النوع"
+    },
+    "type": {
+      "assignment": "واجب",
+      "participation": "مشاركة",
+      "presentation": "عرض",
+      "project": "مشروع",
+      "quiz": "اختبار قصير",
+      "test": "اختبار"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات التقييم بنجاح",
+      "bulkDeleted": "تم حذف سجلات التقييم بنجاح",
+      "created": "تم إنشاء التقييم بنجاح",
+      "deleted": "تم حذف التقييم بنجاح",
+      "retrieved": "تم جلب التقييم بنجاح",
+      "seeded": "تم إنشاء بيانات التقييم بنجاح",
+      "updated": "تم تحديث التقييم بنجاح"
+    }
+  },
+  "discipline": {
+    "table": { "student": "التلميذ", "classSection": "القسم / الشعبة", "violation": "المخالفة", "severity": "الخطورة", "status": "الحالة", "incidentAt": "تاريخ الواقعة", "action": "الإجراء", "reportedBy": "أبلغ عنها", "createdAt": "تاريخ الإنشاء", "updatedAt": "آخر تحديث", "resolvedBy": "عالجها", "resolvedAt": "تاريخ المعالجة", "count": "{{count}} سجلات انضباط" },
+    "filters": { "search": "ابحث بالاسم أو الرمز أو الوصف...", "category": "تصفية حسب الفئة", "severity": "تصفية حسب الخطورة", "status": "تصفية حسب الحالة" },
+    "form": { "incidentDetails": "تفاصيل المخالفة", "student": "التلميذ", "studentPlaceholder": "اختر تلميذاً", "studentSearch": "ابحث عن تلميذ...", "noStudents": "لا يوجد تلاميذ نشطون", "incidentDate": "تاريخ الواقعة", "incidentTime": "وقت الواقعة", "category": "الفئة", "severity": "الخطورة", "location": "المكان", "locationPlaceholder": "أين وقعت؟", "description": "الوصف", "descriptionPlaceholder": "صف الوقائع بوضوح...", "actionType": "الإجراء التأديبي", "actionNote": "تفاصيل الإجراء", "actionNotePlaceholder": "تفاصيل اختيارية عن الإجراء...", "resolutionNote": "ملاحظة المعالجة", "resolutionNotePlaceholder": "اشرح كيف تمت معالجة الواقعة..." },
+    "categories": { "classroom_disruption": "إخلال بالنظام داخل الفصل", "disrespect": "قلة احترام", "bullying": "تنمر", "fighting": "شجار", "cheating": "غش", "vandalism": "تخريب", "uniform_violation": "مخالفة الزي", "device_misuse": "سوء استعمال جهاز", "prohibited_item": "غرض محظور", "other": "أخرى" },
+    "severity": { "low": "منخفضة", "medium": "متوسطة", "high": "مرتفعة", "critical": "حرجة" },
+    "status": { "open": "مفتوحة", "resolved": "تمت المعالجة" },
+    "actions": { "verbal_warning": "إنذار شفهي", "written_warning": "إنذار كتابي", "detention": "احتجاز مدرسي", "counseling": "إرشاد", "parent_meeting": "اجتماع مع ولي الأمر", "suspension": "توقيف", "other": "أخرى" },
+    "dialogs": { "createTitle": "إضافة مخالفة", "createButton": "إضافة مخالفة", "viewTitle": "تفاصيل المخالفة", "editTitle": "تعديل المخالفة", "updateButton": "تحديث", "deleteButton": "حذف", "resolveTitle": "معالجة المخالفة", "resolveDescription": "سجّل الإجراء التأديبي وملخص المعالجة.", "resolveButton": "معالجة", "resolutionTitle": "المعالجة", "reopenTitle": "إعادة فتح المخالفة", "reopenDescription": "إعادة الفتح تعيد السجل إلى الحالة المفتوحة.", "reopenWarning": "سيتم مسح الإجراء والمعالجة الحاليين لأن سجل التغييرات غير متاح في هذا الإصدار.", "reopenButton": "إعادة الفتح" },
+    "success": { "retrieved": "تم جلب سجلات الانضباط", "created": "تم إنشاء المخالفة", "updated": "تم تحديث المخالفة", "resolved": "تمت معالجة المخالفة", "reopened": "تمت إعادة فتح المخالفة", "deleted": "تم حذف المخالفة" },
+    "errors": { "notFound": "سجل الانضباط غير موجود", "studentNotFound": "التلميذ غير موجود", "studentInactive": "لا يمكن تسجيل مخالفة إلا لتلميذ نشط", "studentAcademicPlacementRequired": "يجب أن يكون التلميذ مسجلاً في قسم وشعبة", "teacherStudentForbidden": "أنت غير مكلّف بشعبة هذا التلميذ", "recordForbidden": "لا يمكنك الوصول إلى هذا السجل", "recordNotOpen": "لا يمكن تعديل أو معالجة إلا المخالفات المفتوحة", "recordNotResolved": "لا يمكن إعادة فتح إلا المخالفات المعالجة", "adminRequired": "صلاحية المدير مطلوبة", "invalidIncidentDate": "تاريخ الواقعة غير صالح", "futureIncidentDate": "لا يمكن أن يكون تاريخ الواقعة في المستقبل" }
+  },
+  "classes": {
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "academicYear": "السنة الدراسية",
+      "academicYearPlaceholder": "اختر السنة الدراسية",
+      "classInformation": "معلومات القسم",
+      "className": "اسم القسم",
+      "classNamePlaceholder": "أدخل اسم القسم",
+      "description": "الوصف",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "أدخل الوصف",
+      "level": "المستوى",
+      "levelPlaceholder": "اختر المستوى"
+    },
+    "table": {
+      "academicYear": "السنة الدراسية",
+      "className": "اسم القسم",
+      "description": "الوصف",
+      "id": "المعرف",
+      "level": "المستوى"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات القسم بنجاح",
+      "created": "تم إنشاء القسم بنجاح",
+      "deleted": "تم حذف القسم بنجاح",
+      "retrieved": "تم جلب القسم بنجاح",
+      "seeded": "تم إنشاء بيانات القسم بنجاح",
+      "updated": "تم تحديث القسم بنجاح"
+    }
+  },
+  "drivers": {
+    "dialogs": {
+      "bulkDeleteItemName": "العنصر",
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByStatus": "تصفية حسب الحالة",
+      "searchByLicense": "ابحث بالرخصة...",
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "address": "العنوان",
+      "addressPlaceholder": "أدخل العنوان",
+      "assignDriver": "تعيين سائق",
+      "assignmentDate": "تاريخ التعيين",
+      "cin": "بطاقة التعريف",
+      "cinPlaceholder": "أدخل رقم البطاقة",
+      "driver": "السائق",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل البريد الإلكتروني",
+      "emergencyContactName": "اسم جهة الاتصال للطوارئ",
+      "emergencyContactNamePlaceholder": "أدخل اسم جهة الاتصال للطوارئ",
+      "emergencyPhone": "هاتف الطوارئ",
+      "emergencyPhonePlaceholder": "أدخل هاتف الطوارئ",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "أدخل الاسم الكامل",
+      "gender": "الجنس",
+      "hireDate": "تاريخ التوظيف",
+      "image": "الصورة",
+      "licenseExpiry": "انتهاء صلاحية الرخصة",
+      "licenseNumber": "رقم الرخصة",
+      "licenseNumberPlaceholder": "أدخل رقم الرخصة",
+      "licenseType": "نوع الرخصة",
+      "noDriverFound": "لا يوجد سائق",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أدخل ملاحظات",
+      "personalInformation": "المعلومات الشخصية",
+      "phone": "الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "professionalInformation": "المعلومات المهنية",
+      "salary": "الراتب",
+      "salaryPlaceholder": "أدخل الراتب",
+      "searchDriver": "ابحث عن سائق...",
+      "selectDriver": "اختر السائق",
+      "status": "الحالة",
+      "vehicle": "المركبة",
+      "yearsOfExperience": "سنوات الخبرة",
+      "yearsOfExperiencePlaceholder": "أدخل سنوات الخبرة"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "onLeave": "في إجازة",
+      "suspended": "موقوف"
+    },
+    "table": {
+      "email": "البريد الإلكتروني",
+      "hireDate": "تاريخ التوظيف",
+      "licenseExpiry": "انتهاء صلاحية الرخصة",
+      "licenseNumber": "رقم الرخصة",
+      "licenseType": "نوع الرخصة",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "status": "الحالة"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات السائق بنجاح",
+      "bulkDeleted": "تم حذف سجلات السائق بنجاح",
+      "created": "تم إنشاء السائق بنجاح",
+      "deleted": "تم حذف السائق بنجاح",
+      "retrieved": "تم جلب السائق بنجاح",
+      "seeded": "تم إنشاء بيانات السائق بنجاح",
+      "statusUpdated": "تم تحديث حالة السائق بنجاح",
+      "updated": "تم تحديث السائق بنجاح"
+    }
+  },
+  "exams": {
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByStatus": "تصفية حسب الحالة",
+      "filterByType": "تصفية حسب النوع",
+      "searchByTitle": "ابحث بالعنوان..."
+    },
+    "form": {
+      "academicContext": "السياق الأكاديمي",
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "date": "التاريخ",
+      "datePlaceholder": "اختر التاريخ",
+      "description": "الوصف",
+      "descriptionPlaceholder": "أدخل الوصف",
+      "duration": "المدة",
+      "durationPlaceholder": "أدخل المدة",
+      "examDetails": "تفاصيل الامتحان",
+      "instructions": "التعليمات",
+      "instructionsPlaceholder": "أدخل التعليمات",
+      "passingMarks": "نقطة النجاح",
+      "passingMarksPlaceholder": "أدخل نقطة النجاح",
+      "roomNumber": "رقم القاعة",
+      "roomNumberPlaceholder": "أدخل رقم القاعة",
+      "scheduleAndGrading": "الجدولة والتقييم",
+      "section": "الفوج",
+      "sectionPlaceholder": "اختر الفوج",
+      "status": "الحالة",
+      "statusPlaceholder": "اختر الحالة",
+      "subject": "المادة",
+      "subjectPlaceholder": "اختر المادة",
+      "teacher": "الأستاذ",
+      "teacherPlaceholder": "اختر الأستاذ",
+      "title": "العنوان",
+      "titlePlaceholder": "أدخل العنوان",
+      "totalMarks": "مجموع النقاط",
+      "totalMarksPlaceholder": "أدخل مجموع النقاط",
+      "type": "النوع",
+      "typePlaceholder": "اختر النوع"
+    },
+    "status": {
+      "active": "نشط",
+      "cancelled": "ملغى",
+      "completed": "مكتمل",
+      "rescheduled": "أعيد جدولته",
+      "scheduled": "مجدول"
+    },
+    "table": {
+      "class": "القسم",
+      "date": "التاريخ",
+      "duration": "المدة",
+      "section": "الفوج",
+      "status": "الحالة",
+      "subject": "المادة",
+      "teacher": "الأستاذ",
+      "title": "العنوان",
+      "totalMarks": "مجموع النقاط",
+      "type": "النوع"
+    },
+    "type": {
+      "final": "نهائي",
+      "midterm": "منتصف الفصل",
+      "standardized": "معياري"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات الامتحان بنجاح",
+      "bulkDeleted": "تم حذف سجلات الامتحان بنجاح",
+      "created": "تم إنشاء الامتحان بنجاح",
+      "deleted": "تم حذف الامتحان بنجاح",
+      "retrieved": "تم جلب الامتحان بنجاح",
+      "seeded": "تم إنشاء بيانات الامتحان بنجاح",
+      "updated": "تم تحديث الامتحان بنجاح"
+    }
+  },
+  "expenses": {
+    "categories": {
+      "payroll": "كشف الرواتب",
+      "cleaning": "التنظيف",
+      "equipment": "المعدات",
+      "food": "الطعام",
+      "insurance": "التأمين",
+      "maintenance": "صيانة",
+      "marketing": "التسويق",
+      "miscellaneous": "متفرقات",
+      "rent": "الإيجار",
+      "salary": "الراتب",
+      "security": "الأمن",
+      "supplies": "اللوازم",
+      "tax": "الضريبة",
+      "technology": "التكنولوجيا",
+      "training": "التدريب",
+      "transport": "النقل",
+      "utilities": "المرافق",
+      "other": "أخرى"
+    },
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByCategory": "تصفية حسب الفئة",
+      "filterByStatus": "تصفية حسب الحالة",
+      "searchByTitle": "ابحث بالعنوان..."
+    },
+    "form": {
+      "amount": "المبلغ",
+      "amountPlaceholder": "أدخل المبلغ",
+      "basicInformation": "المعلومات الأساسية",
+      "category": "الفئة",
+      "checkNumber": "رقم الشيك",
+      "checkNumberPlaceholder": "أدخل رقم الشيك",
+      "expenseDate": "تاريخ المصروف",
+      "invoiceNumber": "رقم الفاتورة",
+      "invoiceNumberPlaceholder": "أدخل رقم الفاتورة",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أدخل ملاحظات",
+      "paymentDate": "تاريخ الدفع",
+      "paymentInformation": "معلومات الدفع",
+      "paymentMethod": "طريقة الدفع",
+      "receiptNumber": "رقم الإيصال",
+      "receiptNumberPlaceholder": "أدخل رقم الإيصال",
+      "status": "الحالة",
+      "title": "العنوان",
+      "titlePlaceholder": "أدخل العنوان"
+    },
+    "paymentMethods": {
+      "bankTransfer": "تحويل بنكي",
+      "cash": "نقدًا",
+      "check": "شيك",
+      "creditCard": "بطاقة ائتمان",
+      "debitCard": "بطاقة خصم",
+      "mobilePayment": "دفع عبر الهاتف",
+      "online": "عبر الإنترنت"
+    },
+    "status": {
+      "approved": "موافق عليه",
+      "cancelled": "ملغى",
+      "paid": "مدفوع",
+      "pending": "قيد الانتظار",
+      "rejected": "مرفوض"
+    },
+    "table": {
+      "amount": "المبلغ",
+      "category": "الفئة",
+      "expenseDate": "تاريخ المصروف",
+      "id": "المعرف",
+      "notSpecified": "غير محدد",
+      "paymentMethod": "طريقة الدفع",
+      "status": "الحالة",
+      "title": "العنوان"
+    },
+    "success": {
+      "created": "تم إنشاء المصروف بنجاح",
+      "deleted": "تم حذف المصروف بنجاح",
+      "paymentRecorded": "تم تسجيل الدفع بنجاح",
+      "retrieved": "تم جلب المصروف بنجاح",
+      "updated": "تم تحديث المصروف بنجاح"
+    }
+  },
+  "feeTypes": {
+    "category": {
+      "activities": "الأنشطة",
+      "books": "الكتب",
+      "exam": "الامتحان",
+      "lunch": "الغداء",
+      "other": "أخرى",
+      "registration": "التسجيل",
+      "transport": "النقل",
+      "tuition": "الرسوم الدراسية",
+      "uniform": "الزي المدرسي",
+      "cafeteria": "المطعم",
+      "sports": "الرياضة",
+      "technology": "التكنولوجيا",
+      "fieldtrip": "رحلة مدرسية"
+    },
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByCategory": "تصفية حسب الفئة",
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "amount": "المبلغ",
+      "amountPlaceholder": "أدخل المبلغ",
+      "category": "الفئة",
+      "categoryPlaceholder": "اختر الفئة",
+      "description": "الوصف",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "أدخل الوصف",
+      "feeTypeInformation": "معلومات نوع الرسوم",
+      "name": "الاسم",
+      "namePlaceholder": "أدخل الاسم",
+      "paymentType": "نوع الدفع",
+      "paymentTypePlaceholder": "اختر نوع الدفع"
+    },
+    "table": {
+      "amount": "المبلغ",
+      "category": "الفئة",
+      "description": "الوصف",
+      "id": "المعرف",
+      "name": "الاسم",
+      "paymentType": "نوع الدفع",
+      "status": "الحالة"
+    },
+    "success": {
+      "created": "تم إنشاء نوع الرسوم بنجاح",
+      "deleted": "تم حذف نوع الرسوم بنجاح",
+      "retrieved": "تم جلب نوع الرسوم بنجاح",
+      "updated": "تم تحديث نوع الرسوم بنجاح"
+    }
+  },
+  "grades": {
+    "errors": {
+      "marksExceedTotal": "النقاط تتجاوز المجموع",
+      "sourceRequired": "اختر تقييما أو امتحانا"
+    },
+    "form": {
+      "academicContext": "السياق الأكاديمي",
+      "assessment": "Assessment",
+      "assessmentPlaceholder": "Assessment Placeholder",
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "feedback": "ملاحظات",
+      "feedbackPlaceholder": "Feedback Placeholder",
+      "gradeDetails": "تفاصيل النقطة",
+      "gradedBy": "تم تقييمه من طرف",
+      "marksObtained": "النقطة المحصل عليها",
+      "marksObtainedPlaceholder": "أدخل النقطة المحصل عليها",
+      "passingMarksRef": "نقطة النجاح",
+      "section": "الفوج",
+      "sectionPlaceholder": "اختر الفوج",
+      "student": "التلميذ",
+      "studentAndAssessment": "التلميذ والتقييم",
+      "studentPlaceholder": "اختر التلميذ",
+      "subject": "المادة",
+      "subjectPlaceholder": "اختر المادة",
+      "teacher": "الأستاذ",
+      "teacherPlaceholder": "اختر الأستاذ",
+      "totalMarksRef": "مجموع النقاط"
+    },
+    "report": {
+      "averagePercentage": "متوسط النسبة المئوية",
+      "noGradesRecorded": "لا توجد نقط مسجلة",
+      "overallGPA": "المعدل العام",
+      "selectStudent": "اختر تلميذًا",
+      "subjectAverage": "متوسط المادة",
+      "subjectGPA": "معدل المادة",
+      "totalGrades": "مجموع النقط"
+    },
+    "status": {
+      "missed": "فائت",
+      "pending": "قيد الانتظار"
+    },
+    "table": {
+      "class": "القسم",
+      "feedback": "ملاحظات",
+      "gender": "الجنس",
+      "marksObtained": "النقطة المحصل عليها",
+      "percentage": "النسبة المئوية",
+      "phone": "الهاتف",
+      "section": "الفوج",
+      "status": "الحالة",
+      "student": "التلميذ",
+      "studentCode": "رمز التلميذ"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات النقطة بنجاح",
+      "bulkDeleted": "تم حذف سجلات النقطة بنجاح",
+      "created": "تم إنشاء النقطة بنجاح",
+      "deleted": "تم حذف النقطة بنجاح",
+      "retrieved": "تم جلب النقطة بنجاح",
+      "seeded": "تم إنشاء بيانات النقطة بنجاح",
+      "updated": "تم تحديث النقطة بنجاح"
+    }
+  },
+  "parents": {
+    "success": {
+      "retrieved": "تم جلب ولي الأمر بنجاح",
+      "allRetrieved": "تم جلب جميع أولياء الأمور بنجاح",
+      "created": "تم إنشاء ولي الأمر بنجاح",
+      "updated": "تم تحديث ولي الأمر بنجاح",
+      "deleted": "تم حذف ولي الأمر بنجاح",
+      "allDeleted": "تم حذف جميع أولياء الأمور بنجاح",
+      "studentLinked": "تم ربط التلميذ بولي الأمر بنجاح",
+      "studentUnlinked": "تم إلغاء ربط التلميذ بولي الأمر بنجاح",
+      "seeded": "تم إنشاء بيانات أولياء الأمور بنجاح",
+      "bulkDeleted": "تم حذف سجلات ولي الأمر بنجاح"
+    },
+    "errors": {
+      "invalidMaritalStatus": "يرجى اختيار حالة عائلية صحيحة"
+    },
+    "tooltips": {
+      "orphaned": "ولي أمر غير مرتبط: لا يوجد أطفال أو تلاميذ مرتبطون."
+    },
+    "dialogs": {
+      "bulkDeleteItemName": "العنصر",
+      "createButton": "إنشاء",
+      "createTitleMany": "إنشاء جديد",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل",
+      "createTitle": "إنشاء ولي أمر جديد"
+    },
+    "filters": {
+      "filterByRelationship": "تصفية حسب العلاقة",
+      "searchByEmail": "ابحث بالبريد الإلكتروني...",
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "address": "العنوان",
+      "addressPlaceholder": "أدخل العنوان",
+      "cin": "بطاقة التعريف",
+      "cinPlaceholder": "أدخل رقم البطاقة",
+      "contactInformation": "معلومات الاتصال",
+      "dateOfBirth": "تاريخ الازدياد",
+      "dateOfBirthPlaceholder": "اختر تاريخ الازدياد",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل البريد الإلكتروني",
+      "financialResponsibility": "المسؤولية المالية",
+      "financialResponsibilityLabel": "لديه مسؤولية مالية",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "أدخل الاسم الكامل",
+      "gender": "الجنس",
+      "isEmergencyContact": "جهة الاتصال في الطوارئ",
+      "isEmergencyContactLabel": "تحديد كجهة اتصال للطوارئ",
+      "maritalStatus": "الحالة العائلية",
+      "name": "الاسم",
+      "nationality": "الجنسية",
+      "nationalityPlaceholder": "اختر الجنسية",
+      "occupation": "المهنة",
+      "occupationPlaceholder": "أدخل المهنة",
+      "parent": "الوالد",
+      "parentImage": "صورة الوالد",
+      "personalInformation": "المعلومات الشخصية",
+      "phone": "الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "relationshipType": "نوع العلاقة"
+    },
+    "profile": {
+      "activeStudents": "التلاميذ النشطون",
+      "additionalInfo": "معلومات إضافية",
+      "addressInfo": "العنوان",
+      "agreements": "الاتفاقيات",
+      "basicInfo": "المعلومات الأساسية",
+      "children": "الأطفال",
+      "contactDetails": "تفاصيل الاتصال",
+      "contactInfo": "معلومات الاتصال",
+      "documents": "الوثائق",
+      "emergencyContact": "جهة اتصال الطوارئ",
+      "feesByChild": "الرسوم حسب الطفل",
+      "financial": "مالي",
+      "financialResponsibility": "المسؤولية المالية",
+      "graduatedStudents": "التلاميذ المتخرجون",
+      "idDocuments": "وثائق الهوية",
+      "linkedChildren": "الأطفال المرتبطون",
+      "linkedStudents": "التلاميذ المرتبطون",
+      "noChildrenLinked": "لا يوجد أطفال مرتبطون",
+      "noDocuments": "لا توجد وثائق",
+      "noFeesForChild": "لا توجد رسوم لهذا الطفل",
+      "otherDetails": "تفاصيل أخرى",
+      "otherDocuments": "وثائق أخرى",
+      "overdueFees": "الرسوم المتأخرة",
+      "paidFees": "الرسوم المدفوعة",
+      "parentNotFound": "الوالد غير موجود",
+      "pendingFees": "الرسوم قيد الانتظار",
+      "personal": "شخصي",
+      "personalDetails": "التفاصيل الشخصية",
+      "personalInformation": "المعلومات الشخصية",
+      "quickStats": "إحصائيات سريعة",
+      "residentialAddress": "عنوان السكن",
+      "totalChildren": "مجموع الأطفال",
+      "totalFees": "مجموع الرسوم",
+      "uploadDocument": "تحميل وثيقة",
+      "uploadDocuments": "تحميل الوثائق",
+      "uploadParentDocuments": "تحميل وثائق الولي",
+      "viewAllChildren": "عرض جميع الأطفال",
+      "viewAllDocuments": "عرض جميع الوثائق",
+      "viewAllFees": "عرض جميع الرسوم",
+      "dashboard": {
+        "welcomeBack": "مرحباً بعودتك، {{name}}",
+        "subtitle": "إليك ما يحدث مع أطفالك اليوم.",
+        "backToParents": "العودة إلى أولياء الأمور",
+        "averageGrade": "متوسط الدرجات",
+        "overallAttendance": "الحضور العام",
+        "pendingTasks": "المهام المعلقة",
+        "myChildren": "أطفالي",
+        "childrenAttendance": "حضور الأطفال",
+        "recentGrades": "أحدث الدرجات",
+        "feesPayments": "الرسوم والمدفوعات",
+        "upcomingEvents": "الأحداث القادمة",
+        "noChildrenDescription": "سيظهر التلاميذ المرتبطون هنا.",
+        "noAttendance": "لا يوجد حضور بعد",
+        "noAttendanceDescription": "سيظهر سجل الحضور عند تسجيله.",
+        "noGrades": "لا توجد درجات بعد",
+        "noGradesDescription": "ستظهر النتائج الحديثة هنا.",
+        "noFees": "لا توجد رسوم مخصصة",
+        "noFeesDescription": "ستظهر معلومات دفع الأسرة هنا.",
+        "noEvents": "لا توجد أحداث قادمة",
+        "noEventsDescription": "ستظهر الأحداث المدرسية هنا.",
+        "class": "القسم",
+        "attendance": "الحضور",
+        "attendancePercent": "نسبة الحضور {{percent}}٪",
+        "assessment": "التقييم",
+        "outstandingBalance": "الرصيد المتبقي",
+        "familyAccount": "حساب الأسرة",
+        "paymentStatus": "حالة الدفع",
+        "percentPaid": "تم دفع {{percent}}٪",
+        "paidAmount": "المدفوع {{amount}}",
+        "totalAmount": "الإجمالي {{amount}}",
+        "openPaymentDetails": "فتح تفاصيل الدفع",
+        "allDay": "طوال اليوم",
+        "schoolCampus": "المؤسسة التعليمية",
+        "loadingOverview": "جارٍ تحميل نظرة عامة على الأسرة...",
+        "loadError": "تعذر تحميل ملف ولي الأمر.",
+        "tryAgain": "إعادة المحاولة"
+      }
+    },
+    "relationships": {
+      "father": "الأب",
+      "grandparent": "الجد/الجدة",
+      "guardian": "الوصي",
+      "mother": "الأم",
+      "other": "أخرى",
+      "stepparent": "الزوج/الزوجة"
+    },
+    "table": {
+      "cin": "بطاقة التعريف",
+      "email": "البريد الإلكتروني",
+      "gender": "الجنس",
+      "name": "الاسم",
+      "occupation": "المهنة",
+      "phone": "الهاتف",
+      "relationship": "Relationship"
+    },
+    "maritalStatus": {
+      "single": "أعزب",
+      "married": "متزوج",
+      "divorced": "مطلق",
+      "widowed": "أرمل",
+      "separated": "منفصل"
+    }
+  },
+  "payments": {
+    "dialogs": {
+      "deleteButton": "حذف",
+      "viewTitle": "التفاصيل"
+    },
+    "errors": {
+      "notFound": "الدفعة غير موجودة",
+      "paymentNotFound": "الدفعة غير موجودة",
+      "receiptNumberNotFound": "رقم الإيصال غير موجود",
+      "receiptNumberExists": "رقم الإيصال موجود مسبقًا",
+      "paymentNotCompleted": "لا يمكن استرداد سوى المدفوعات المكتملة",
+      "paymentNotRefundable": "لا يمكن استرداد هذه الدفعة",
+      "feeNotFound": "الرسوم المرتبطة غير موجودة",
+      "invalidAmount": "يجب أن يكون مبلغ الدفع أكبر من صفر",
+      "amountExceedsBalance": "مبلغ الدفع يتجاوز الرصيد المتبقي",
+      "invalidPaymentMethod": "طريقة الدفع المحددة غير صالحة",
+      "receiptGenerationFailed": "فشل إنشاء إيصال الدفع",
+      "studentMismatch": "الدفعة لا تنتمي إلى التلميذ المحدد",
+      "feeTypeMismatch": "الدفعة لا تطابق نوع الرسوم المحدد",
+      "allocationTotalMismatch": "إجمالي المبلغ المخصص {{actual}} لا يطابق مبلغ الدفع {{expected}}.",
+      "allocationsRequired": "تخصيص واحد على الأقل مطلوب"
+    },
+    "filters": {
+      "filterByPaymentMethod": "تصفية حسب طريقة الدفع",
+      "filterByStatus": "تصفية حسب الحالة",
+      "searchByReceipt": "ابحث بالإيصال..."
+    },
+    "form": {
+      "amount": "المبلغ",
+      "amountPlaceholder": "أدخل المبلغ",
+      "basicInformation": "المعلومات الأساسية",
+      "checkDueDate": "تاريخ استحقاق الشيك",
+      "checkNumber": "رقم الشيك",
+      "checkNumberPlaceholder": "أدخل رقم الشيك",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أدخل ملاحظات",
+      "paymentDate": "تاريخ الدفع",
+      "paymentDetails": "تفاصيل الدفع",
+      "paymentMethod": "طريقة الدفع",
+      "receiptNumber": "رقم الإيصال",
+      "receiptNumberPlaceholder": "أدخل رقم الإيصال",
+      "status": "الحالة",
+      "transactionRef": "مرجع المعاملة",
+      "transactionRefPlaceholder": "أدخل مرجع المعاملة"
+    },
+    "methods": {
+      "bankTransfer": "تحويل بنكي",
+      "cash": "نقدًا",
+      "check": "شيك",
+      "creditCard": "بطاقة ائتمان",
+      "debitCard": "بطاقة خصم",
+      "mobilePayment": "دفع عبر الهاتف",
+      "online": "عبر الإنترنت"
+    },
+    "status": {
+      "completed": "مكتمل",
+      "failed": "فشل",
+      "pending": "قيد الانتظار",
+      "refunded": "مسترد"
+    },
+    "table": {
+      "amount": "المبلغ",
+      "checkDueDate": "تاريخ استحقاق الشيك",
+      "checkNumber": "رقم الشيك",
+      "loading": "جار التحميل...",
+      "noPayments": "لا توجد مدفوعات",
+      "notes": "ملاحظات",
+      "paymentDate": "تاريخ الدفع",
+      "paymentMethod": "طريقة الدفع",
+      "receiptNumber": "رقم الإيصال",
+      "status": "الحالة",
+      "student": "التلميذ",
+      "transactionRef": "مرجع المعاملة"
+    },
+    "type": {
+      "recurring": "متكرر",
+      "oneTime": "مرة واحدة"
+    }
+  },
+  "reports": {
+    "aging": {
+      "class": "القسم",
+      "d1_30": "1-30 يومًا",
+      "d31_60": "31-60 يومًا",
+      "d60plus": "60+ يومًا",
+      "noData": "لا توجد بيانات",
+      "searchPlaceholder": "ابحث...",
+      "student": "التلميذ",
+      "title": "العنوان",
+      "total": "الإجمالي",
+      "totalStudents": "مجموع التلاميذ",
+      "upcoming": "القادمة"
+    },
+    "collection": {
+      "class": "القسم",
+      "due": "مستحق",
+      "noData": "لا توجد بيانات",
+      "paid": "مدفوع",
+      "rate": "النسبة",
+      "students": "التلاميذ",
+      "title": "العنوان"
+    },
+    "reminders": {
+      "daysOverdue": "أيام التأخر",
+      "noData": "لا توجد بيانات",
+      "noResults": "لا توجد نتائج",
+      "oldestDueDate": "أقدم تاريخ استحقاق",
+      "overdueAmount": "المبلغ المتأخر",
+      "remind": "تذكير",
+      "remindAll": "تذكير الكل",
+      "reminded": "تم التذكير",
+      "searchPlaceholder": "ابحث...",
+      "studentsOverdue": "التلاميذ المتأخرون",
+      "title": "العنوان",
+      "toastReminded": "تم إرسال التذكير",
+      "toastRemindedAll": "تم إرسال جميع التذكيرات",
+      "toastSmsComingSoon": "الرسائل القصيرة قريبًا"
+    },
+    "title": "العنوان",
+    "year": "السنة"
+  },
+  "sections": {
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "maxStudents": "الحد الأقصى للتلاميذ",
+      "maxStudentsPlaceholder": "أدخل الحد الأقصى للتلاميذ",
+      "roomNumber": "رقم القاعة",
+      "roomNumberPlaceholder": "أدخل رقم القاعة",
+      "sectionInformation": "معلومات الفوج",
+      "sectionName": "اسم الفوج",
+      "sectionNamePlaceholder": "أدخل اسم الفوج"
+    },
+    "table": {
+      "capacity": "السعة",
+      "class": "القسم",
+      "description": "الوصف",
+      "id": "المعرف",
+      "level": "المستوى",
+      "roomNumber": "رقم القاعة",
+      "sectionName": "اسم الفوج",
+      "status": "الحالة"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات الفوج بنجاح",
+      "created": "تم إنشاء الفوج بنجاح",
+      "deleted": "تم حذف الفوج بنجاح",
+      "retrieved": "تم جلب الفوج بنجاح",
+      "seeded": "تم إنشاء بيانات الفوج بنجاح",
+      "updated": "تم تحديث الفوج بنجاح"
+    }
+  },
+  "staff": {
+    "success": {
+      "retrieved": "تم استرجاع الموظف بنجاح",
+      "created": "تم إنشاء الموظف بنجاح",
+      "updated": "تم تحديث الموظف بنجاح",
+      "deleted": "تم حذف الموظف بنجاح",
+      "bulkDeleted": "تم حذف الموظفين بنجاح"
+    },
+    "errors": {
+      "notFound": "الموظف غير موجود",
+      "employeeCodeExists": "يوجد موظف بهذا الرمز الوظيفي بالفعل",
+      "cinExists": "يوجد موظف برقم التعريف الوطني هذا بالفعل"
+    },
+    "stats": {
+      "total": "إجمالي الموظفين",
+      "payroll": "إجمالي الرواتب",
+      "activeRoles": "الموظفون النشطون",
+      "uniqueRoles": "الأدوار المختلفة",
+      "nonTeaching": "الموظفون غير المعلمين النشطون"
+    },
+    "table": {
+      "name": "الاسم",
+      "employeeCode": "الرمز الوظيفي",
+      "role": "الدور",
+      "cin": "رقم التعريف",
+      "phone": "الهاتف",
+      "salary": "الراتب",
+      "compensationMode": "التعويض",
+      "status": "الحالة"
+    },
+    "filters": {
+      "search": "البحث بالاسم أو الرمز...",
+      "filterByRole": "تصفية حسب الدور",
+      "filterByCategory": "تصفية حسب الفئة",
+      "manageRoles": "إدارة الأدوار"
+    },
+    "roles": {
+      "teacher": "المعلم",
+      "driver": "السائق",
+      "busAssistant": "مساعد الحافلة",
+      "principal": "المدير",
+      "secretary": "السكرتير(ة)",
+      "receptionist": "موظف الاستقبال",
+      "accountant": "المحاسب",
+      "librarian": "أمين المكتبة",
+      "itSupport": "دعم تقني",
+      "assistant": "مساعد",
+      "cleaner": "عامل النظافة",
+      "security": "الأمن",
+      "other": "أخرى"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "onLeave": "في إجازة",
+      "suspended": "موقوف",
+      "terminated": "منتهي"
+    },
+    "compensationModes": {
+      "monthly": "شهري",
+      "hourly": "بالساعة"
+    },
+    "employmentTypes": {
+      "fullTime": "دوام كامل",
+      "partTime": "دوام جزئي",
+      "contract": "عقد",
+      "temporary": "مؤقت"
+    },
+    "form": {
+      "personalInformation": "المعلومات الشخصية",
+      "employmentInformation": "معلومات التوظيف",
+      "emergencyContact": "جهة اتصال الطوارئ",
+      "gender": "الجنس",
+      "address": "العنوان",
+      "department": "القسم",
+      "employmentType": "نوع التوظيف",
+      "compensationMode": "نمط التعويض",
+      "hourlyRate": "الأجر بالساعة",
+      "workloadHours": "الساعات الشهرية",
+      "hireDate": "تاريخ التوظيف",
+      "endDate": "تاريخ الانتهاء",
+      "bankAccount": "الحساب البنكي",
+      "emergencyContactName": "اسم جهة اتصال الطوارئ",
+      "emergencyPhone": "هاتف الطوارئ"
+    },
+    "dialogs": {
+      "createTitle": "إنشاء موظف",
+      "createButton": "إنشاء الموظف",
+      "viewTitle": "تفاصيل الموظف",
+      "editTitle": "تعديل الموظف",
+      "updateButton": "تحديث الموظف",
+      "deleteButton": "حذف الموظف",
+      "bulkDeleteItemName": "{{count}} موظف/موظفين"
+    },
+    "loading": "جاري تحميل الموظفين...",
+    "noData": "لا يوجد موظفون",
+    "subtitle": {
+      "members": "موظفون"
+    }
+  },
+  "staffRoles": {
+    "success": {
+      "retrieved": "تم استرجاع أدوار الموظفين بنجاح",
+      "created": "تم إنشاء دور الموظف بنجاح",
+      "updated": "تم تحديث دور الموظف بنجاح",
+      "deleted": "تم إلغاء تنشيط دور الموظف بنجاح"
+    },
+    "errors": {
+      "notFound": "دور الموظف غير موجود",
+      "codeExists": "يوجد دور موظف بهذا الرمز بالفعل",
+      "invalidRole": "دور غير صالح أو غير نشط",
+      "systemRoleInUse": "لا يمكن إزالة أدوار النظام"
+    },
+    "table": {
+      "code": "الرمز",
+      "label": "التسمية",
+      "category": "الفئة",
+      "active": "نشط",
+      "system": "نظام"
+    },
+    "form": {
+      "addNewRole": "إضافة دور جديد",
+      "code": "الرمز",
+      "codePlaceholder": "مثال: counselor",
+      "label": "التسمية الافتراضية",
+      "labelPlaceholder": "مثال: مستشار",
+      "labelFr": "التسمية بالفرنسية",
+      "labelFrPlaceholder": "مثال: Conseiller",
+      "labelAr": "التسمية بالعربية",
+      "labelArPlaceholder": "مثال: مستشار",
+      "labelEs": "التسمية بالإسبانية",
+      "labelEsPlaceholder": "مثال: Consejero",
+      "category": "الفئة",
+      "categoryPlaceholder": "مثال: support",
+      "sortOrder": "الترتيب",
+      "active": "نشط"
+    },
+    "dialogs": {
+      "createTitle": "إنشاء دور الموظف",
+      "createButton": "إنشاء الدور",
+      "editTitle": "تعديل دور الموظف",
+      "updateButton": "تحديث",
+      "deleteButton": "إلغاء تنشيط الدور",
+      "manageTitle": "إدارة أدوار الموظفين"
+    },
+    "categories": {
+      "teaching": "التعليم",
+      "transport": "النقل",
+      "administration": "الإدارة",
+      "support": "الدعم",
+      "operations": "العمليات"
+    }
+  },
+  "settings": {
+    "academic": {
+      "attendanceMode": "نمط الحضور",
+      "attendanceModeDaily": "يومي",
+      "attendanceModePerClass": "حسب القسم",
+      "attendanceRequirement": "متطلب الحضور (٪)",
+      "calendarSystem": "نظام التقويم",
+      "defaultExamDuration": "المدة الافتراضية للامتحان (د)",
+      "gradingPeriods": "فترات التقييم",
+      "maxClassSize": "الحجم الأقصى للقسم",
+      "minimumPassingGrade": "الحد الأدنى للنجاح",
+      "title": "العنوان"
+    },
+    "clear": {
+      "button": "تأكيد",
+      "confirm": "تأكيد",
+      "confirmDescription": "لا يمكن التراجع عن هذا الإجراء",
+      "confirmTitle": "تأكيد الإجراء",
+      "warningMessage": "هذا إجراء مدمر",
+      "success": "تم إكمال Clear بنجاح"
+    },
+    "database": {
+      "description": "الوصف",
+      "title": "العنوان"
+    },
+    "notifications": {
+      "academicAlerts": "التنبيهات الأكاديمية",
+      "attendanceAlerts": "تنبيهات الحضور",
+      "disciplinaryAlerts": "التنبيهات التأديبية",
+      "emailNotifications": "إشعارات البريد الإلكتروني",
+      "eventAlerts": "تنبيهات الأحداث",
+      "examResultsAlerts": "تنبيهات نتائج الامتحانات",
+      "feesOverdueAlerts": "تنبيهات الرسوم المتأخرة",
+      "feesReminder": "تذكير الرسوم",
+      "homeworkAlerts": "تنبيهات الواجبات",
+      "lowGradeAlerts": "تنبيهات الدرجات المنخفضة",
+      "parentNotifications": "إشعارات الوالدين",
+      "smsNotifications": "إشعارات SMS",
+      "title": "العنوان"
+    },
+    "school": {
+      "currentAcademicYear": "السنة الدراسية الحالية",
+      "lunchBreakDuration": "مدة استراحة الغداء (د)",
+      "schoolAddress": "عنوان المدرسة",
+      "schoolEmail": "البريد الإلكتروني للمدرسة",
+      "schoolEndTime": "وقت انتهاء الدراسة",
+      "schoolName": "اسم المدرسة",
+      "schoolPhone": "هاتف المدرسة",
+      "schoolStartTime": "وقت بدء الدراسة",
+      "title": "العنوان"
+    },
+    "security": {
+      "apiKey": "مفتاح API",
+      "apiKeyDescription": "مفتاح API المستخدم للتكاملات الخارجية",
+      "loginNotifications": "إشعارات تسجيل الدخول",
+      "parentAccessEnabled": "وصول الوالدين",
+      "passwordExpiry": "انتهاء كلمة المرور (أيام)",
+      "studentAccessEnabled": "وصول التلاميذ",
+      "teacherAccessEnabled": "وصول الأساتذة",
+      "title": "العنوان",
+      "twoFactorAuth": "المصادقة الثنائية"
+    },
+    "seed": {
+      "button": "تأكيد",
+      "confirm": "تأكيد",
+      "confirmDescription": "لا يمكن التراجع عن هذا الإجراء",
+      "confirmTitle": "تأكيد الإجراء",
+      "warningPoint1": "سيؤدي ذلك إلى مسح جميع البيانات",
+      "warningPoint2": "لا يمكن التراجع عن هذا الإجراء",
+      "warningPoint3": "تأكد من النسخ الاحتياطي أولاً",
+      "warningTitle": "تحذير",
+      "success": "تم إكمال Seed بنجاح"
+    },
+    "system": {
+      "button": "تأكيد",
+      "confirm": "تأكيد",
+      "confirmDescription": "لا يمكن التراجع عن هذا الإجراء",
+      "confirmTitle": "تأكيد الإجراء",
+      "currency": "العملة",
+      "darkTheme": "داكن",
+      "dateFormat": "تنسيق التاريخ",
+      "language": "اللغة",
+      "lightTheme": "فاتح",
+      "systemTheme": "النظام",
+      "theme": "السمة",
+      "timeFormat": "تنسيق الوقت",
+      "timeZone": "المنطقة الزمنية",
+      "title": "العنوان",
+      "success": "تم إكمال System بنجاح"
+    },
+    "calendarSystem": {
+      "SEMESTER": "فصل دراسي",
+      "TRIMESTER": "ثلث سنوي",
+      "QUARTER": "ربع سنوي"
+    },
+    "success": {
+      "created": "تم إنشاء الإعدادات بنجاح",
+      "retrieved": "تم جلب الإعدادات بنجاح",
+      "updated": "تم تحديث الإعدادات بنجاح"
+    }
+  },
+  "students": {
+    "success": {
+      "retrieved": "تم جلب التلميذ بنجاح",
+      "created": "تم إنشاء التلميذ بنجاح",
+      "updated": "تم تحديث التلميذ بنجاح",
+      "deleted": "تم حذف التلميذ بنجاح",
+      "bulkDeleted": "تم حذف التلاميذ بنجاح",
+      "allDeleted": "تم حذف جميع التلاميذ بنجاح",
+      "seeded": "تم إنشاء بيانات التلاميذ بنجاح"
+    },
+    "subtitle": {
+      "count": "{{count}} طالب"
+    },
+    "dialogs": {
+      "bulkDeleteItemName": "العنصر",
+      "createButton": "إنشاء الطالب",
+      "createTitle": "إنشاء طالب جديد",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByClass": "تصفية حسب القسم",
+      "filterBySection": "تصفية حسب الفوج",
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "academicInformation": "المعلومات الأكاديمية",
+      "studentInformation": "معلومات التلميذ",
+      "parentsInformation": "معلومات أولياء الأمور",
+      "accountInfo": "معلومات الحساب",
+      "address": "العنوان",
+      "addressPlaceholder": "أدخل العنوان",
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "dateOfBirth": "تاريخ الازدياد",
+      "dateOfBirthPlaceholder": "اختر تاريخ الازدياد",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل البريد الإلكتروني",
+      "enrollmentDate": "تاريخ التسجيل",
+      "enrollmentDatePlaceholder": "اختر تاريخ التسجيل",
+      "feesInformation": "معلومات الرسوم",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "أدخل الاسم الكامل",
+      "gender": "الجنس",
+      "medicalConditions": "الحالات الصحية",
+      "medicalConditionsPlaceholder": "أدخل الحالات الصحية",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "personalData": "البيانات الشخصية",
+      "phone": "الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "previousSchool": "المدرسة السابقة",
+      "previousSchoolPlaceholder": "أدخل المدرسة السابقة",
+      "section": "الفوج",
+      "sectionPlaceholder": "اختر الفوج",
+      "studentCode": "رمز التلميذ",
+      "studentCodePlaceholder": "أدخل رمز التلميذ",
+      "studentImage": "صورة التلميذ"
+    },
+    "status": {
+      "active": "نشط",
+      "graduated": "متخرج",
+      "inactive": "غير نشط",
+      "transferred": "منقول"
+    },
+    "table": {
+      "class": "القسم",
+      "email": "البريد الإلكتروني",
+      "gender": "الجنس",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "section": "الفوج",
+      "status": "الحالة",
+      "studentCode": "رمز التلميذ"
+    },
+    "profile": {
+      "detailsTitle": "تفاصيل التلميذ",
+      "detailsSubtitle": "الملف والسجل الدراسي",
+      "downloadReport": "تحميل التقرير",
+      "closeDetails": "إغلاق تفاصيل التلميذ",
+      "unknown": "غير معروف",
+      "age": "العمر",
+      "yearsShort": "{{count}} سنة",
+      "yearsLong": "{{count}} سنة",
+      "yearsOld": "{{count}} سنة",
+      "ageNotRecorded": "العمر غير مسجل",
+      "ageFromBirthDate": "العمر محسوب من تاريخ الازدياد",
+      "absences": "الغيابات",
+      "examsAverage": "معدل الامتحانات",
+      "gpa": "المعدل",
+      "nextDue": "الاستحقاق القادم",
+      "due": "المستحق",
+      "averageGrade": "معدل النقط",
+      "academic": "الدراسة",
+      "studentAvatar": "صورة التلميذ",
+      "studentAvatarNamed": "صورة {{name}}",
+      "parentAvatarNamed": "صورة {{name}}",
+      "familyContacts": "جهات الاتصال العائلية",
+      "medical": "الصحة",
+      "noPhoneRecorded": "لا يوجد هاتف مسجل",
+      "noEmailRecorded": "لا يوجد بريد إلكتروني مسجل",
+      "noAddressRecorded": "لا يوجد عنوان مسجل",
+      "noCinRecorded": "لا توجد بطاقة تعريف مسجلة",
+      "noOccupationRecorded": "لا توجد مهنة مسجلة",
+      "noPreviousSchoolRecorded": "لا توجد مدرسة سابقة مسجلة",
+      "noMedicalConditionsRecorded": "لا توجد حالات صحية مسجلة",
+      "noParentsLinked": "لا يوجد ولي أمر مرتبط بهذا التلميذ",
+      "noParentsLinkedHelp": "يمكن ربط أولياء الأمور عند تعديل ملف التلميذ",
+      "noResponsibilities": "لا توجد مسؤوليات خاصة مسجلة",
+      "emergencyContact": "جهة اتصال للطوارئ",
+      "financialResponsibility": "المسؤولية المالية",
+      "emergency": "الطوارئ",
+      "financial": "مالي",
+      "firstName": "الاسم الشخصي",
+      "lastName": "الاسم العائلي",
+      "relationship": "صلة القرابة",
+      "cinId": "البطاقة الوطنية / المعرف",
+      "occupation": "المهنة",
+      "nationality": "الجنسية",
+      "maritalStatus": "الحالة العائلية",
+      "selectField": "اختر {{field}}",
+      "personal": "المعلومات الشخصية",
+      "contact": "معلومات الاتصال",
+      "savingParents": "جار الحفظ...",
+      "saveParents": "حفظ أولياء الأمور",
+      "alertsPlaceholder": "سيظهر محتوى التنبيهات هنا",
+      "academicsPlaceholder": "سيظهر المحتوى الدراسي هنا",
+      "tabs": { "overview": "نظرة عامة", "attendance": "الحضور", "grades": "النقط", "fees": "الرسوم", "transport": "النقل", "alerts": "التنبيهات" },
+      "genders": { "M": "ذكر", "F": "أنثى", "Other": "آخر" },
+      "relationships": { "father": "الأب", "mother": "الأم", "guardian": "الوصي", "stepparent": "زوج/زوجة الوالد", "grandparent": "الجد/الجدة", "other": "آخر" },
+      "maritalStatuses": { "single": "أعزب", "married": "متزوج", "divorced": "مطلق", "widowed": "أرمل", "separated": "منفصل" },
+      "attendanceDetails": {
+        "date": "التاريخ", "status": "الحالة", "class": "القسم", "subject": "المادة", "notes": "ملاحظات", "daily": "يومي",
+        "present": "حاضر", "absent": "غائب", "late": "متأخر", "loading": "جار تحميل الحضور...", "noExceptions": "لا توجد غيابات أو حالات تأخر مسجلة"
+      },
+      "gradeDetails": {
+        "subject": "المادة", "assessment": "التقييم", "marks": "النقط", "marksFor": "نقطة {{assessment}}",
+        "feedback": "ملاحظة", "feedbackFor": "ملاحظة حول {{assessment}}", "result": "النتيجة", "graded": "تم التنقيط",
+        "pending": "قيد الانتظار", "missed": "فائت", "average": "المعدل", "averageShort": "المعدل",
+        "loading": "جار تحميل النقط...", "noneRecorded": "لا توجد نقط مسجلة"
+      },
+      "feeDetails": {
+        "fee": "الرسم", "paid": "مدفوع", "overdue": "متأخر", "partiallyPaid": "مدفوع جزئيا", "pending": "قيد الانتظار", "remaining": "المتبقي",
+        "installmentCount": "{{count}} قسط", "overdueCount": "{{count}} متأخر", "studentIdRequired": "معرف التلميذ مطلوب لعرض الرسوم.",
+        "noneAssigned": "لا توجد رسوم مخصصة لهذا التلميذ", "noneAssignedShort": "لا توجد رسوم مخصصة",
+        "noneAssignedHelp": "استخدم سجل الرسوم الكامل لتخصيص الرسوم أو إدارة المدفوعات.", "openRecord": "فتح سجل الرسوم",
+        "assignedCount": "{{count}} رسم مخصص", "collectedPercent": "تم تحصيل {{count}}٪", "overdueInstallmentCount": "{{count}} قسط متأخر",
+        "oldestUnpaid": "أقدم قسط غير مدفوع", "assignedFees": "الرسوم المخصصة", "feesWithInstallments": "{{fees}} رسم مع {{installments}} قسط إجمالا", "lastPayment": "آخر دفعة"
+      }
+    },
+    "title": "العنوان"
+  },
+  "cycles": {
+    "form": {
+      "cycleInformation": "معلومات السلك",
+      "name": "الاسم",
+      "labels": "التسميات",
+      "labelFr": "التسمية بالفرنسية",
+      "labelAr": "التسمية بالعربية",
+      "labelEs": "التسمية بالإسبانية",
+      "sortOrder": "ترتيب العرض",
+      "active": "نشط"
+    },
+    "dialogs": {
+      "createTitle": "إنشاء سلك",
+      "createButton": "إنشاء سلك",
+      "viewTitle": "تفاصيل السلك",
+      "editTitle": "تعديل السلك",
+      "updateButton": "تحديث السلك",
+      "deleteButton": "حذف السلك"
+    },
+    "table": {
+      "id": "المعرف",
+      "name": "الاسم",
+      "sortOrder": "ترتيب العرض",
+      "status": "الحالة"
+    },
+    "filters": {
+      "searchByName": "ابحث باسم السلك..."
+    }
+  },
+  "subjects": {
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "code": "الرمز",
+      "codePlaceholder": "أدخل الرمز",
+      "description": "الوصف",
+      "descriptionPlaceholder": "أدخل الوصف",
+      "name": "الاسم",
+      "namePlaceholder": "أدخل الاسم",
+      "subjectInformation": "معلومات المادة"
+    },
+    "table": {
+      "code": "الرمز",
+      "description": "الوصف",
+      "id": "المعرف",
+      "name": "الاسم"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات المادة بنجاح",
+      "created": "تم إنشاء المادة بنجاح",
+      "deleted": "تم حذف المادة بنجاح",
+      "retrieved": "تم جلب المادة بنجاح",
+      "seeded": "تم إنشاء بيانات المادة بنجاح",
+      "updated": "تم تحديث المادة بنجاح"
+    }
+  },
+  "teachers": {
+    "dialogs": {
+      "bulkDeleteItemName": "العنصر",
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "filterByStatus": "تصفية حسب الحالة",
+      "searchByEmail": "ابحث بالبريد الإلكتروني...",
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "academicDegrees": "الشهادات الأكاديمية",
+      "academicDegreesPlaceholder": "أدخل الشهادات الأكاديمية",
+      "address": "العنوان",
+      "addressPlaceholder": "أدخل العنوان",
+      "assignment": "واجب",
+      "assignmentInformation": "معلومات التعيين",
+      "bankAccount": "الحساب البنكي",
+      "bankAccountPlaceholder": "أدخل الحساب البنكي",
+      "cin": "بطاقة التعريف",
+      "cinPlaceholder": "أدخل رقم البطاقة",
+      "class": "القسم",
+      "classPlaceholder": "اختر القسم",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "أدخل البريد الإلكتروني",
+      "emergencyContactName": "اسم جهة الاتصال للطوارئ",
+      "emergencyContactNamePlaceholder": "أدخل اسم جهة الاتصال للطوارئ",
+      "emergencyPhone": "هاتف الطوارئ",
+      "emergencyPhonePlaceholder": "أدخل هاتف الطوارئ",
+      "employmentType": "نوع التوظيف",
+      "employmentTypePlaceholder": "اختر نوع التوظيف",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "أدخل الاسم الكامل",
+      "gender": "الجنس",
+      "hireDate": "تاريخ التوظيف",
+      "image": "الصورة",
+      "noTeacherFound": "لا يوجد أستاذ",
+      "personalInformation": "المعلومات الشخصية",
+      "phone": "الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "professionalInformation": "المعلومات المهنية",
+      "salary": "الراتب",
+      "salaryPlaceholder": "أدخل الراتب",
+      "searchTeacher": "ابحث عن أستاذ...",
+      "sections": "الفوج",
+      "sectionsPlaceholder": "اختر الأفواج",
+      "specialization": "التخصص",
+      "specializationPlaceholder": "أدخل التخصص",
+      "status": "الحالة",
+      "subjects": "المواد",
+      "subjectsPlaceholder": "اختر المواد",
+      "teacher": "الأستاذ",
+      "teacherPlaceholder": "اختر الأستاذ",
+      "workloadHours": "ساعات العمل",
+      "workloadHoursPlaceholder": "أدخل ساعات العمل",
+      "yearsOfExperience": "سنوات الخبرة",
+      "yearsOfExperiencePlaceholder": "أدخل سنوات الخبرة"
+    },
+    "profile": {
+      "teacherNotFound": "الأستاذ غير موجود"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "onLeave": "في إجازة"
+    },
+    "table": {
+      "cin": "بطاقة التعريف",
+      "classes": "الأقسام",
+      "email": "البريد الإلكتروني",
+      "hireDate": "تاريخ التوظيف",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "specialization": "التخصص",
+      "status": "الحالة"
+    },
+    "employmentType": {
+      "fullTime": "دوام كامل",
+      "partTime": "دوام جزئي",
+      "contract": "عقد",
+      "temporary": "مؤقت"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات الأستاذ بنجاح",
+      "assigned": "تم تعيين الأستاذ بنجاح",
+      "bulkDeleted": "تم حذف سجلات الأستاذ بنجاح",
+      "created": "تم إنشاء الأستاذ بنجاح",
+      "deleted": "تم حذف الأستاذ بنجاح",
+      "retrieved": "تم جلب الأستاذ بنجاح",
+      "seeded": "تم إنشاء بيانات الأستاذ بنجاح",
+      "unassigned": "تم إلغاء تعيين الأستاذ بنجاح",
+      "updated": "تم تحديث الأستاذ بنجاح"
+    }
+  },
+  "vehicleAssignments": {
+    "form": {
+      "notes": "ملاحظات"
+    },
+    "success": {
+      "allRetrieved": "تم جلب جميع سجلات تعيين المركبة بنجاح",
+      "assigned": "تم تعيين تعيين المركبة بنجاح",
+      "created": "تم إنشاء تعيين المركبة بنجاح",
+      "deleted": "تم حذف تعيين المركبة بنجاح",
+      "retrieved": "تم جلب تعيين المركبة بنجاح",
+      "unassigned": "تم إلغاء تعيين تعيين المركبة بنجاح",
+      "updated": "تم تحديث تعيين المركبة بنجاح"
+    }
+  },
+  "vehicles": {
+    "card": {
+      "currentMileage": "المسافة المقطوعة الحالية",
+      "driver": "السائق",
+      "licensePlate": "لوحة التسجيل"
+    },
+    "dialogs": {
+      "createButton": "إنشاء",
+      "createTitle": "إنشاء",
+      "deleteButton": "حذف",
+      "editTitle": "تعديل",
+      "updateButton": "تحديث",
+      "viewTitle": "التفاصيل"
+    },
+    "filters": {
+      "searchByLicensePlate": "ابحث بلوحة التسجيل...",
+      "searchByName": "ابحث بالاسم..."
+    },
+    "form": {
+      "additionalDetails": "تفاصيل إضافية",
+      "brand": "العلامة التجارية",
+      "brandPlaceholder": "أدخل العلامة التجارية",
+      "capacity": "السعة",
+      "capacityPlaceholder": "أدخل السعة",
+      "driver": "السائق",
+      "driverPlaceholder": "اختر السائق",
+      "initialMileage": "المسافة المقطوعة الأولية",
+      "initialMileagePlaceholder": "أدخل المسافة المقطوعة الأولية",
+      "licensePlate": "لوحة التسجيل",
+      "licensePlatePlaceholder": "أدخل لوحة التسجيل",
+      "model": "الموديل",
+      "modelPlaceholder": "أدخل الموديل",
+      "name": "الاسم",
+      "namePlaceholder": "أدخل الاسم",
+      "noDriverFound": "لا يوجد سائق",
+      "notes": "ملاحظات",
+      "notesPlaceholder": "أدخل ملاحظات",
+      "purchaseDate": "تاريخ الشراء",
+      "purchasePrice": "سعر الشراء",
+      "purchasePricePlaceholder": "أدخل سعر الشراء",
+      "searchDriver": "ابحث عن سائق...",
+      "status": "الحالة",
+      "type": "النوع",
+      "vehicleInformation": "معلومات المركبة",
+      "year": "السنة",
+      "yearPlaceholder": "أدخل السنة"
+    },
+    "status": {
+      "active": "نشط",
+      "maintenance": "صيانة",
+      "retired": "متقاعد"
+    },
+    "table": {
+      "brand": "العلامة التجارية",
+      "capacity": "السعة",
+      "driver": "السائق",
+      "id": "المعرف",
+      "licensePlate": "لوحة التسجيل",
+      "model": "الموديل",
+      "name": "الاسم",
+      "noDriver": "لا يوجد سائق",
+      "seats": "المقاعد",
+      "status": "الحالة",
+      "type": "النوع"
+    },
+    "types": {
+      "fullbus": "حافلة كاملة",
+      "minibus": "حافلة صغيرة",
+      "suv": "سيارة دفع رباعي",
+      "truck": "شاحنة",
+      "van": "شاحنة صغيرة"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات المركبة بنجاح",
+      "created": "تم إنشاء المركبة بنجاح",
+      "deleted": "تم حذف المركبة بنجاح",
+      "retrieved": "تم جلب المركبة بنجاح",
+      "seeded": "تم إنشاء بيانات المركبة بنجاح",
+      "updated": "تم تحديث المركبة بنجاح"
+    }
+  },
+  "events": {
+    "type": {
+      "academic": "أكاديمي",
+      "sports": "رياضة",
+      "cultural": "ثقافي",
+      "holiday": "عطلة",
+      "exam": "امتحان",
+      "meeting": "اجتماع",
+      "workshop": "ورشة",
+      "fieldtrip": "رحلة مدرسية",
+      "ceremony": "حفل",
+      "conference": "مؤتمر",
+      "other": "أخرى"
+    },
+    "status": {
+      "scheduled": "مجدول",
+      "ongoing": "جاري",
+      "completed": "مكتمل",
+      "cancelled": "ملغى",
+      "postponed": "مؤجل"
+    },
+    "visibility": {
+      "public": "عام",
+      "private": "خاص",
+      "teachers": "الأساتذة",
+      "students": "التلاميذ",
+      "parents": "الوالدين",
+      "staff": "الموظفون"
+    },
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات الحدث بنجاح",
+      "attendanceMarked": "تم تسجيل الحضور بنجاح",
+      "cancelled": "تم إلغاء الحدث بنجاح",
+      "completed": "تم إكمال الحدث بنجاح",
+      "created": "تم إنشاء الحدث بنجاح",
+      "deleted": "تم حذف الحدث بنجاح",
+      "participantAdded": "تمت إضافة المشارك بنجاح",
+      "participantRemoved": "تم حذف المشارك بنجاح",
+      "participantUpdated": "تم تحديث المشارك بنجاح",
+      "participantsRetrieved": "تم جلب مشاركي الحدث بنجاح",
+      "postponed": "تم تأجيل الحدث بنجاح",
+      "retrieved": "تم جلب الحدث بنجاح",
+      "started": "تم بدء الحدث بنجاح",
+      "updated": "تم تحديث الحدث بنجاح"
+    }
+  },
+  "auditLog": {
+    "list": "تم جلب قائمة سجل التدقيق بنجاح",
+    "retrieved": "تم جلب سجل التدقيق بنجاح"
+  },
+  "credits": {
+    "applied": "تم تطبيق الرصيد بنجاح",
+    "retrieved": "تم جلب الرصيد بنجاح"
+  },
+  "dashboards": {
+    "success": {
+      "retrieved": "تم جلب لوحة التحكم بنجاح"
+    }
+  },
+  "maintenance": {
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات الصيانة بنجاح",
+      "completed": "تم إكمال الصيانة بنجاح",
+      "created": "تم إنشاء الصيانة بنجاح",
+      "deleted": "تم حذف الصيانة بنجاح",
+      "overdueMarked": "تم إكمال الصيانة بنجاح",
+      "retrieved": "تم جلب الصيانة بنجاح",
+      "statusUpdated": "تم تحديث حالة الصيانة بنجاح",
+      "updated": "تم تحديث الصيانة بنجاح"
+    }
+  },
+  "notifications": {
+    "checkDueRun": "تم فحص الإشعارات المستحقة بنجاح",
+    "list": "تم جلب قائمة الإشعار بنجاح",
+    "overdueRun": "تمت معالجة الإشعارات المتأخرة بنجاح"
+  },
+  "permissions": {
+    "success": {
+      "assigned": "تم تعيين الصلاحية بنجاح",
+      "deleted": "تم حذف الصلاحية بنجاح",
+      "removed": "تمت إزالة الصلاحية بنجاح",
+      "retrieved": "تم جلب الصلاحية بنجاح",
+      "updated": "تم تحديث الصلاحية بنجاح"
+    }
+  },
+  "refuels": {
+    "success": {
+      "allDeleted": "تم حذف جميع سجلات التزود بالوقود بنجاح",
+      "created": "تم إنشاء التزود بالوقود بنجاح",
+      "deleted": "تم حذف التزود بالوقود بنجاح",
+      "retrieved": "تم جلب التزود بالوقود بنجاح",
+      "seeded": "تم إنشاء بيانات التزود بالوقود بنجاح",
+      "updated": "تم تحديث التزود بالوقود بنجاح"
+    }
+  },
+  "rollover": {
+    "committed": "تم تنفيذ الترحيل بنجاح",
+    "previewed": "تمت معاينة الترحيل بنجاح",
+    "retrieved": "تم جلب الترحيل بنجاح"
+  },
+  "search": {
+    "success": "تم إكمال البحث بنجاح"
+  },
+  "studentRoutes": {
+    "success": {
+      "assigned": "تم تعيين مسار التلميذ بنجاح",
+      "deleted": "تم حذف مسار التلميذ بنجاح",
+      "retrieved": "تم جلب مسار التلميذ بنجاح",
+      "unassigned": "تم إلغاء تعيين مسار التلميذ بنجاح",
+      "updated": "تم تحديث مسار التلميذ بنجاح"
+    }
+  },
+  "transport": {
+    "form": {
+      "stepTitle": "النقل", "title": "النقل المدرسي", "description": "عيّن حافلة وحدد نقطة الركوب وراجع الرسوم الشهرية.", "usesTransport": "يستخدم النقل المدرسي", "chooseVehicle": "اختر حافلة", "chooseVehicleHint": "يمكن تعيين التلميذ فقط للحافلات النشطة التي تتوفر فيها مقاعد.", "vehicle": "الحافلة", "vehiclePlaceholder": "اختر حافلة متاحة", "searchVehicle": "ابحث عن حافلة...", "noVehicles": "لا توجد حافلات متاحة", "seatsAvailable": "مقاعد متاحة", "seatsLeft": "مقاعد متبقية", "driver": "السائق", "unassignedDriver": "لم يتم تعيين سائق", "occupancy": "الإشغال", "pickupLocation": "نقطة الركوب", "pickupPlaceholder": "أدخل عنوان ركوب التلميذ", "dropoffLocation": "نقطة النزول", "dropoffPlaceholder": "أدخل نقطة النزول بالمدرسة", "useHomeAddress": "استخدم عنوان المنزل", "startDate": "تاريخ بدء النقل", "notes": "ملاحظات النقل", "notesPlaceholder": "تعليمات الوصول أو ملاحظات الركوب...", "feePreview": "رسوم النقل", "monthlyBilling": "سيتم إنشاء الفوترة الشهرية تلقائياً", "missingFeeType": "قم بإعداد نوع رسوم نقل نشط قبل تعيين النقل.", "optionalTitle": "النقل اختياري", "optionalDescription": "فعّل النقل المدرسي لاختيار الحافلة وتحديد نقطة الركوب."
+    },
+    "location": {
+      "search": "ابحث عن عنوان", "chooseTitle": "اختر نقطة الركوب", "chooseOnMap": "اختر على الخريطة", "map": "الخريطة", "dragHint": "ابحث أو انقر على الخريطة أو اسحب العلامة لضبط الموقع.", "loadingMap": "جارٍ تحميل الخريطة...", "selectedLocation": "الموقع المحدد", "resolving": "جارٍ تحديد العنوان...", "noLocation": "لم يتم تحديد موقع", "confirm": "تأكيد الموقع", "pinSaved": "تم حفظ العلامة الدقيقة", "manualAllowed": "يمكن إدخال العنوان يدوياً", "unavailableTitle": "خرائط Google غير متاحة", "unavailableDescription": "تحقق من مفتاح Maps API وقيوده. يمكنك إغلاق النافذة وإدخال العنوان يدوياً."
+    },
+    "profile": {
+      "assignTitle": "تعيين النقل المدرسي", "editTitle": "تعديل نقطة الركوب", "changeTitle": "تغيير الحافلة", "assign": "تعيين النقل", "active": "نشط", "noAssignment": "لا يوجد تعيين نقل نشط", "noAssignmentDescription": "عيّن التلميذ لحافلة متاحة وحدد نقطة الركوب.", "noPickup": "لم يتم تسجيل نقطة ركوب", "schoolDefault": "المدخل الرئيسي للمدرسة", "editPickup": "تعديل نقطة الركوب", "changeBus": "تغيير الحافلة", "unassignTitle": "إنهاء تعيين النقل", "unassignDescription": "ينهي هذا تعيين الحافلة النشط مع الحفاظ على سجل الرسوم والمدفوعات.", "unassign": "إلغاء التعيين", "unassigned": "تم إنهاء تعيين نقل التلميذ", "history": "سجل النقل"
+    }
+  }
+}

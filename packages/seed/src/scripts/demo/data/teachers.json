@@ -1,0 +1,2372 @@
+[
+  {
+    "id": "-BK8h",
+    "cin": "JT563319",
+    "name": "Keltoum Ait Mhand",
+    "email": "keltoum.aitmhand1970@outlook.com",
+    "phone": "212713784281",
+    "address": "449, Avenue du 2 Mars, Beni Mellal",
+    "gender": "F",
+    "specialization": "Mathématiques",
+    "yearsOfExperience": 23,
+    "salary": 11639,
+    "hireDate": "2019-08-25",
+    "bankAccount": "058110523070553295031171",
+    "employmentType": "fullTime",
+    "workloadHours": 20,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Zouhair Tanjaoui",
+    "emergencyPhone": "212707768285",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "0SmWx",
+    "cin": "NQ641008",
+    "name": "Talal Zniber",
+    "email": "talal.zniber2016@hotmail.com",
+    "phone": "212555788624",
+    "address": "154, Boulevard de la Corniche, Fès",
+    "gender": "M",
+    "specialization": "Français",
+    "yearsOfExperience": 19,
+    "salary": 11507,
+    "hireDate": "2012-11-17",
+    "bankAccount": "791817326941582452380647",
+    "employmentType": "contract",
+    "workloadHours": 23,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Badr Kettani",
+    "emergencyPhone": "212670926366",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "-V7j0",
+    "cin": "YK175008",
+    "name": "Talal Azoulay",
+    "email": "talal.azoulay9666@icloud.com",
+    "phone": "212719917930",
+    "address": "277, Avenue Abdelkrim Sahraoui, Oujda",
+    "gender": "M",
+    "specialization": "العربية",
+    "yearsOfExperience": 11,
+    "salary": 9413,
+    "hireDate": "2020-05-12",
+    "bankAccount": "497715384850073180845375",
+    "employmentType": "fullTime",
+    "workloadHours": 25,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Imane Lmrabet",
+    "emergencyPhone": "212791530802",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "I9ga3",
+    "cin": "PD571241",
+    "name": "Ammar Jettou",
+    "email": "ammar.jettou5161@zoho.com",
+    "phone": "212667619331",
+    "address": "128, Avenue du 2 Mars, Kénitra",
+    "gender": "M",
+    "specialization": "Physique",
+    "yearsOfExperience": 6,
+    "salary": 7409,
+    "hireDate": "2025-08-18",
+    "bankAccount": "364017481461127758142799",
+    "employmentType": "contract",
+    "workloadHours": 33,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Dounia Bouchaara",
+    "emergencyPhone": "212689199226",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Q1TRO",
+    "cin": "JM239593",
+    "name": "Siham Talal",
+    "email": "siham.talal3587@outlook.com",
+    "phone": "212753852538",
+    "address": "228, Rue Tantan, Safi",
+    "gender": "F",
+    "specialization": "Sciences de la Vie et de la Terre",
+    "yearsOfExperience": 20,
+    "salary": 11593,
+    "hireDate": "2010-09-04",
+    "bankAccount": "216694500358145657644340",
+    "employmentType": "fullTime",
+    "workloadHours": 40,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Omar Skalli",
+    "emergencyPhone": "212728368706",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "PlepU",
+    "cin": "AO745249",
+    "name": "Zakaria Kadiri",
+    "email": "z.kadiri3676@gmx.com",
+    "phone": "212762982944",
+    "address": "476, Boulevard Mohammed Zefzaf, Chefchaouen",
+    "gender": "M",
+    "specialization": "Histoire",
+    "yearsOfExperience": 17,
+    "salary": 9654,
+    "hireDate": "2020-01-01",
+    "bankAccount": "859671601050022359387283",
+    "employmentType": "fullTime",
+    "workloadHours": 30,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Shuruq Kabbaj",
+    "emergencyPhone": "212762599050",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "UXP4v",
+    "cin": "CF952240",
+    "name": "Faouzi Sebti",
+    "email": "faouzi.sebti1988@icloud.com",
+    "phone": "212789878982",
+    "address": "80, Rue Oum Errabia, Tétouan",
+    "gender": "M",
+    "specialization": "Géographie",
+    "yearsOfExperience": 2,
+    "salary": 8305,
+    "hireDate": "2024-12-14",
+    "bankAccount": "597247598803834344055348",
+    "employmentType": "partTime",
+    "workloadHours": 39,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Hicham El Moussaou",
+    "emergencyPhone": "212754851325",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "p6FsT",
+    "cin": "IN413757",
+    "name": "Naji Chiguer",
+    "email": "naji.chiguer2005@free.fr",
+    "phone": "212763351243",
+    "address": "456, Rue Ibn Tachfine, Casablanca",
+    "gender": "M",
+    "specialization": "English",
+    "yearsOfExperience": 4,
+    "salary": 7932,
+    "hireDate": "2023-08-23",
+    "bankAccount": "905050604455944264313624",
+    "employmentType": "partTime",
+    "workloadHours": 26,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Rihab Talal",
+    "emergencyPhone": "212646679929",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "qZju4",
+    "cin": "FT070053",
+    "name": "Mariam Ayouch",
+    "email": "mariam.ayouch5141@outlook.com",
+    "phone": "212772888636",
+    "address": "239, Boulevard Zerouali, Al Hoceïma",
+    "gender": "F",
+    "specialization": "Éducation Physique",
+    "yearsOfExperience": 12,
+    "salary": 10300,
+    "hireDate": "2024-04-16",
+    "bankAccount": "020489462566811266976315",
+    "employmentType": "fullTime",
+    "workloadHours": 27,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Selma Khattabi",
+    "emergencyPhone": "212671325734",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "4Kkie",
+    "cin": "UK141552",
+    "name": "Abla Karimi",
+    "email": "abla.karimi2023@mail.com",
+    "phone": "212775437949",
+    "address": "381, Boulevard de Bordeaux, Essaouira",
+    "gender": "F",
+    "specialization": "Informatique",
+    "yearsOfExperience": 22,
+    "salary": 11188,
+    "hireDate": "2012-12-17",
+    "bankAccount": "747455629349433567411717",
+    "employmentType": "fullTime",
+    "workloadHours": 37,
+    "academicDegrees": "Master",
+    "emergencyContact": "Ikram El Idrissi",
+    "emergencyPhone": "212682740898",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10",
+          "SC11"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      },
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC12",
+          "SC13",
+          "SC14"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      },
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC15",
+          "SC16",
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      },
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19",
+          "SC20"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      },
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC21",
+          "SC22",
+          "SC23"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      },
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC24",
+          "SC25",
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "x5Dsr",
+    "cin": "RG690699",
+    "name": "Lamiaa Nejjari",
+    "email": "lamiaa.nejjari2015@web.de",
+    "phone": "212607202778",
+    "address": "246, Rue Karatchi, Tanger",
+    "gender": "F",
+    "specialization": "Mathématiques",
+    "yearsOfExperience": 16,
+    "salary": 9350,
+    "hireDate": "2019-07-21",
+    "bankAccount": "041326003545873065454829",
+    "employmentType": "partTime",
+    "workloadHours": 24,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Fadwa Tazi",
+    "emergencyPhone": "212694091222",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "N8tXv",
+    "cin": "DA799303",
+    "name": "Shahd Draoui",
+    "email": "shahd.draoui7301@protonmail.com",
+    "phone": "212617266017",
+    "address": "381, Boulevard Moulay Youssef, Marrakech",
+    "gender": "F",
+    "specialization": "Français",
+    "yearsOfExperience": 16,
+    "salary": 9239,
+    "hireDate": "2012-12-26",
+    "bankAccount": "118448759831739986050073",
+    "employmentType": "partTime",
+    "workloadHours": 39,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Ghali Douiri",
+    "emergencyPhone": "212698169172",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "jOtWp",
+    "cin": "TO553357",
+    "name": "Ilham Nait",
+    "email": "ilham.nait1015@web.de",
+    "phone": "212747561300",
+    "address": "131, Rue Oum Errabia, Tanger",
+    "gender": "F",
+    "specialization": "العربية",
+    "yearsOfExperience": 20,
+    "salary": 11975,
+    "hireDate": "2024-09-24",
+    "bankAccount": "277590787801771935620829",
+    "employmentType": "fullTime",
+    "workloadHours": 27,
+    "academicDegrees": "Master",
+    "emergencyContact": "Saffiya Belkady",
+    "emergencyPhone": "212713913139",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "UW01_",
+    "cin": "IV102350",
+    "name": "Amina Sebti",
+    "email": "a.sebti4683@outlook.com",
+    "phone": "212637783576",
+    "address": "121, Avenue Pasteur, Essaouira",
+    "gender": "F",
+    "specialization": "Physique",
+    "yearsOfExperience": 19,
+    "salary": 11198,
+    "hireDate": "2024-03-31",
+    "bankAccount": "865882733939106288239849",
+    "employmentType": "partTime",
+    "workloadHours": 25,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Tahia Belhaj",
+    "emergencyPhone": "212629929970",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "i7XRN",
+    "cin": "KJ021978",
+    "name": "Safiya Guessous",
+    "email": "safiyaguessous9740@aol.com",
+    "phone": "212758217611",
+    "address": "429, Rue Hassan II, Mohammédia",
+    "gender": "F",
+    "specialization": "Sciences de la Vie et de la Terre",
+    "yearsOfExperience": 12,
+    "salary": 8824,
+    "hireDate": "2025-05-26",
+    "bankAccount": "744542045656267255376358",
+    "employmentType": "partTime",
+    "workloadHours": 26,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Farishta Oulad",
+    "emergencyPhone": "212585191231",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "-efH0",
+    "cin": "BX791914",
+    "name": "Hind Haddad",
+    "email": "hindhaddad6422@yandex.com",
+    "phone": "212592045072",
+    "address": "413, Avenue Moulay Rachid, Beni Mellal",
+    "gender": "F",
+    "specialization": "Histoire",
+    "yearsOfExperience": 11,
+    "salary": 9861,
+    "hireDate": "2015-12-16",
+    "bankAccount": "829942151651678453786806",
+    "employmentType": "temporary",
+    "workloadHours": 27,
+    "academicDegrees": "Diploma",
+    "emergencyContact": "Abdelali Ait Mhand",
+    "emergencyPhone": "212723734038",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "wBeyR",
+    "cin": "AK665152",
+    "name": "Omar Idrissi",
+    "email": "idrissi.omar.633@web.de",
+    "phone": "212725120394",
+    "address": "418, Avenue des Forces Auxiliaires, Meknès",
+    "gender": "M",
+    "specialization": "Géographie",
+    "yearsOfExperience": 11,
+    "salary": 9142,
+    "hireDate": "2017-08-07",
+    "bankAccount": "182242415365833556759260",
+    "employmentType": "contract",
+    "workloadHours": 39,
+    "academicDegrees": "Master",
+    "emergencyContact": "Samih Kaddour",
+    "emergencyPhone": "212590338675",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "UJBOb",
+    "cin": "FG824858",
+    "name": "Zayn El Guerd",
+    "email": "zayn.elguerd1980@yandex.com",
+    "phone": "212602246616",
+    "address": "385, Rue Prince Moulay Abdellah, Chefchaouen",
+    "gender": "M",
+    "specialization": "English",
+    "yearsOfExperience": 17,
+    "salary": 9627,
+    "hireDate": "2015-04-29",
+    "bankAccount": "709993376229123506698802",
+    "employmentType": "partTime",
+    "workloadHours": 35,
+    "academicDegrees": "Master",
+    "emergencyContact": "Oualid Kamel",
+    "emergencyPhone": "212670056747",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "RqJ6G",
+    "cin": "IY723935",
+    "name": "Zine Saada",
+    "email": "zine_saada_7877@free.fr",
+    "phone": "212734589016",
+    "address": "429, Rue Nador, Beni Mellal",
+    "gender": "M",
+    "specialization": "Éducation Physique",
+    "yearsOfExperience": 14,
+    "salary": 10720,
+    "hireDate": "2015-12-02",
+    "bankAccount": "263721373699137027983597",
+    "employmentType": "temporary",
+    "workloadHours": 32,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Said Malki",
+    "emergencyPhone": "212613477814",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "az0bT",
+    "cin": "WC832880",
+    "name": "Taima Es-Skali",
+    "email": "taima.esskali1988@yandex.com",
+    "phone": "212669026280",
+    "address": "449, Rue Oum Errabia, Laâyoune",
+    "gender": "F",
+    "specialization": "Informatique",
+    "yearsOfExperience": 18,
+    "salary": 10786,
+    "hireDate": "2016-08-03",
+    "bankAccount": "366411326900907580660248",
+    "employmentType": "contract",
+    "workloadHours": 20,
+    "academicDegrees": "Master",
+    "emergencyContact": "Ferial Cherkaoui",
+    "emergencyPhone": "212714984446",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28",
+          "SC29"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      },
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC30",
+          "SC31",
+          "SC32"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      },
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC33",
+          "SC34",
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "54scT",
+    "cin": "MA372141",
+    "name": "Wissal Slaoui",
+    "email": "slaoui.wissal.143@gmail.com",
+    "phone": "212738250914",
+    "address": "405, Avenue des Forces Auxiliaires, Oujda",
+    "gender": "F",
+    "specialization": "Mathématiques",
+    "yearsOfExperience": 7,
+    "salary": 7585,
+    "hireDate": "2025-09-22",
+    "bankAccount": "712585412432287250987535",
+    "employmentType": "contract",
+    "workloadHours": 34,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Farishta Chbicheb",
+    "emergencyPhone": "212593074001",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Y7R02",
+    "cin": "UI852458",
+    "name": "Sherif Guedira",
+    "email": "s.guedira5145@icloud.com",
+    "phone": "212707246083",
+    "address": "26, Avenue Mohammed V, Casablanca",
+    "gender": "M",
+    "specialization": "Français",
+    "yearsOfExperience": 2,
+    "salary": 7483,
+    "hireDate": "2024-10-29",
+    "bankAccount": "719534389352669416488832",
+    "employmentType": "contract",
+    "workloadHours": 31,
+    "academicDegrees": "Master",
+    "emergencyContact": "Mouna Raki",
+    "emergencyPhone": "212707530386",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "4zPZ8",
+    "cin": "MA817044",
+    "name": "Ramzi Marrakch",
+    "email": "ramzi.marrakch6365@web.de",
+    "phone": "212633492190",
+    "address": "466, Rue Jemaa el-Fna, Salé",
+    "gender": "M",
+    "specialization": "العربية",
+    "yearsOfExperience": 6,
+    "salary": 7864,
+    "hireDate": "2025-12-02",
+    "bankAccount": "183954728647514188437704",
+    "employmentType": "contract",
+    "workloadHours": 23,
+    "academicDegrees": "Master",
+    "emergencyContact": "Walid Boutaleb",
+    "emergencyPhone": "212647303677",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC22"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "twynU",
+    "cin": "LM998517",
+    "name": "Issam El Khayatt",
+    "email": "issamelkhayatt1639@aol.com",
+    "phone": "212785997665",
+    "address": "194, Avenue des Orangers, Mohammédia",
+    "gender": "M",
+    "specialization": "Physique",
+    "yearsOfExperience": 12,
+    "salary": 9501,
+    "hireDate": "2020-09-18",
+    "bankAccount": "447541717692680117286572",
+    "employmentType": "partTime",
+    "workloadHours": 36,
+    "academicDegrees": "Diploma",
+    "emergencyContact": "Farida Cherkaoui",
+    "emergencyPhone": "212674501930",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "zBtAV",
+    "cin": "SI952998",
+    "name": "Yousra Derkaoui",
+    "email": "yousraderkaoui6091@gmx.com",
+    "phone": "212682930451",
+    "address": "383, Avenue du 2 Mars, Tétouan",
+    "gender": "F",
+    "specialization": "Sciences de la Vie et de la Terre",
+    "yearsOfExperience": 17,
+    "salary": 10232,
+    "hireDate": "2018-06-08",
+    "bankAccount": "390982837895624803759359",
+    "employmentType": "partTime",
+    "workloadHours": 28,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Nabil Bennani",
+    "emergencyPhone": "212687857192",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "jRStM",
+    "cin": "RT483319",
+    "name": "Nidal Raki",
+    "email": "nidalraki2256@outlook.com",
+    "phone": "212507186915",
+    "address": "293, Boulevard Anfa, Fès",
+    "gender": "M",
+    "specialization": "Histoire",
+    "yearsOfExperience": 12,
+    "salary": 8854,
+    "hireDate": "2024-08-09",
+    "bankAccount": "546662487558068546927279",
+    "employmentType": "fullTime",
+    "workloadHours": 35,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Mutasem Qadiri",
+    "emergencyPhone": "212664490859",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC31"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bZtNp",
+    "cin": "HA020235",
+    "name": "Rabia Essalmi",
+    "email": "rabia.essalmi7310@web.de",
+    "phone": "212640655361",
+    "address": "344, Place des Nations Unies, Tétouan",
+    "gender": "F",
+    "specialization": "Géographie",
+    "yearsOfExperience": 13,
+    "salary": 8927,
+    "hireDate": "2019-09-21",
+    "bankAccount": "953290021424265564496057",
+    "employmentType": "contract",
+    "workloadHours": 40,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Bilal Baraka",
+    "emergencyPhone": "212638651249",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2nGdN",
+    "cin": "FM254344",
+    "name": "Selma Tazi",
+    "email": "selma_tazi_4052@yahoo.com",
+    "phone": "212640712368",
+    "address": "382, Rue Allal Ben Abdellah, Agadir",
+    "gender": "F",
+    "specialization": "English",
+    "yearsOfExperience": 5,
+    "salary": 8576,
+    "hireDate": "2024-01-07",
+    "bankAccount": "382543148843076364320672",
+    "employmentType": "temporary",
+    "workloadHours": 35,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Yassir Brahimi",
+    "emergencyPhone": "212652389863",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "_orGX",
+    "cin": "GV760401",
+    "name": "Oumaima Lamrini",
+    "email": "lamrini.oumaima.184@live.com",
+    "phone": "212658138908",
+    "address": "22, Rue Oum Errabia, Tétouan",
+    "gender": "F",
+    "specialization": "Éducation Physique",
+    "yearsOfExperience": 9,
+    "salary": 8636,
+    "hireDate": "2020-05-18",
+    "bankAccount": "543483751830955822522545",
+    "employmentType": "contract",
+    "workloadHours": 21,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Wajdi El Omari",
+    "emergencyPhone": "212677986862",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC13"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "eCQ_a",
+    "cin": "CC835455",
+    "name": "Youssef Wazzani",
+    "email": "youssef.wazzani9949@web.de",
+    "phone": "212739120325",
+    "address": "115, Boulevard Moulay Youssef, Al Hoceïma",
+    "gender": "M",
+    "specialization": "Informatique",
+    "yearsOfExperience": 9,
+    "salary": 7855,
+    "hireDate": "2019-08-20",
+    "bankAccount": "256323615485668580529472",
+    "employmentType": "fullTime",
+    "workloadHours": 37,
+    "academicDegrees": "Diploma",
+    "emergencyContact": "Walid Sebti",
+    "emergencyPhone": "212712543420",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "8tKiD",
+    "cin": "DR766203",
+    "name": "Randa Ayouch",
+    "email": "randaayouch6539@aol.com",
+    "phone": "212767620715",
+    "address": "395, Rue Tantan, Tétouan",
+    "gender": "F",
+    "specialization": "Mathématiques",
+    "yearsOfExperience": 21,
+    "salary": 11067,
+    "hireDate": "2023-09-13",
+    "bankAccount": "021905270300188689939258",
+    "employmentType": "temporary",
+    "workloadHours": 33,
+    "academicDegrees": "Master",
+    "emergencyContact": "Saba El Bakkali",
+    "emergencyPhone": "212693331559",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "y7Zm8",
+    "cin": "UA307127",
+    "name": "Hatim El Fassi",
+    "email": "hatim.elfassi7823@icloud.com",
+    "phone": "212663442345",
+    "address": "2, Rue Allal Ben Abdellah, Marrakech",
+    "gender": "M",
+    "specialization": "Français",
+    "yearsOfExperience": 24,
+    "salary": 12680,
+    "hireDate": "2004-04-26",
+    "bankAccount": "673888423653926443546939",
+    "employmentType": "temporary",
+    "workloadHours": 23,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Raja Hilali",
+    "emergencyPhone": "212557245961",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC22"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "OX4-i",
+    "cin": "YE210197",
+    "name": "Salima Idrissi",
+    "email": "s.idrissi3983@aol.com",
+    "phone": "212697766728",
+    "address": "213, Avenue Pasteur, Meknès",
+    "gender": "F",
+    "specialization": "العربية",
+    "yearsOfExperience": 23,
+    "salary": 12112,
+    "hireDate": "2008-05-10",
+    "bankAccount": "648638007355887407321348",
+    "employmentType": "fullTime",
+    "workloadHours": 20,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Sania Boutaleb",
+    "emergencyPhone": "212638524749",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "rYLgk",
+    "cin": "IW807368",
+    "name": "Soukaina Mernissi",
+    "email": "soukainamernissi6184@protonmail.com",
+    "phone": "212652197080",
+    "address": "215, Boulevard Ibn Sina (Avicenne), Oujda",
+    "gender": "F",
+    "specialization": "Physique",
+    "yearsOfExperience": 6,
+    "salary": 8313,
+    "hireDate": "2023-05-06",
+    "bankAccount": "407114000254172786294557",
+    "employmentType": "contract",
+    "workloadHours": 30,
+    "academicDegrees": "Master",
+    "emergencyContact": "Wafa Maalouf",
+    "emergencyPhone": "212577341404",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "r6Vkg",
+    "cin": "SI842756",
+    "name": "Ziad El Qasem",
+    "email": "ziad.elqasem1971@hotmail.com",
+    "phone": "212740589310",
+    "address": "343, Avenue Al Massira Al Khadra, Ouarzazate",
+    "gender": "M",
+    "specialization": "Sciences de la Vie et de la Terre",
+    "yearsOfExperience": 2,
+    "salary": 6848,
+    "hireDate": "2026-06-29",
+    "bankAccount": "311874592484122128789959",
+    "employmentType": "temporary",
+    "workloadHours": 39,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Kenza Ouazzani",
+    "emergencyPhone": "212775542430",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC31"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Ez99-",
+    "cin": "CK527558",
+    "name": "Dina Hassar",
+    "email": "hassar.dina.999@gmx.com",
+    "phone": "212617042197",
+    "address": "244, Avenue Mohammed VI, Salé",
+    "gender": "F",
+    "specialization": "Histoire",
+    "yearsOfExperience": 5,
+    "salary": 7002,
+    "hireDate": "2026-01-26",
+    "bankAccount": "167120611487560645610317",
+    "employmentType": "temporary",
+    "workloadHours": 31,
+    "academicDegrees": "Master",
+    "emergencyContact": "Yassir Nour",
+    "emergencyPhone": "212620180089",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "4OLWt",
+    "cin": "SV347270",
+    "name": "Sara Chiguer",
+    "email": "sara.chiguer9007@zoho.com",
+    "phone": "212714412112",
+    "address": "161, Avenue Houmane El Fetouaki, Agadir",
+    "gender": "F",
+    "specialization": "Géographie",
+    "yearsOfExperience": 5,
+    "salary": 8240,
+    "hireDate": "2024-04-22",
+    "bankAccount": "725435972354395001422539",
+    "employmentType": "contract",
+    "workloadHours": 37,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Imane Hassani",
+    "emergencyPhone": "212500822517",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "T8sgN",
+    "cin": "IF766355",
+    "name": "Soufiane Fassi Fihri",
+    "email": "s.fassifihri6750@yandex.com",
+    "phone": "212715367234",
+    "address": "192, Boulevard de la Corniche, Salé",
+    "gender": "M",
+    "specialization": "English",
+    "yearsOfExperience": 10,
+    "salary": 9225,
+    "hireDate": "2026-02-27",
+    "bankAccount": "515254787408703747423040",
+    "employmentType": "fullTime",
+    "workloadHours": 30,
+    "academicDegrees": "Master",
+    "emergencyContact": "Zouhair Yata",
+    "emergencyPhone": "212663180940",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC13"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "LuqRd",
+    "cin": "KK148545",
+    "name": "Tahia Mernissi",
+    "email": "t.mernissi9441@yandex.com",
+    "phone": "212511831645",
+    "address": "380, Rue Idriss Al Akber, Oujda",
+    "gender": "F",
+    "specialization": "Éducation Physique",
+    "yearsOfExperience": 17,
+    "salary": 10293,
+    "hireDate": "2010-01-21",
+    "bankAccount": "651263207334846796216563",
+    "employmentType": "temporary",
+    "workloadHours": 30,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Imane Maalouf",
+    "emergencyPhone": "212789268905",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "oTrka",
+    "cin": "QA196888",
+    "name": "Wahid Touzani",
+    "email": "wahidtouzani7243@web.de",
+    "phone": "212750774430",
+    "address": "5, Boulevard Anfa, Safi",
+    "gender": "M",
+    "specialization": "Informatique",
+    "yearsOfExperience": 13,
+    "salary": 8977,
+    "hireDate": "2018-03-09",
+    "bankAccount": "856575856423284372853418",
+    "employmentType": "contract",
+    "workloadHours": 24,
+    "academicDegrees": "Master",
+    "emergencyContact": "Hasnaa Lahlou",
+    "emergencyPhone": "212683684942",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "xUzOQ",
+    "cin": "VZ923564",
+    "name": "Soraya Lyoussi",
+    "email": "s.lyoussi7029@outlook.com",
+    "phone": "212697789763",
+    "address": "137, Rue Tantan, Essaouira",
+    "gender": "F",
+    "specialization": "Mathématiques",
+    "yearsOfExperience": 17,
+    "salary": 10935,
+    "hireDate": "2017-12-16",
+    "bankAccount": "199976515159956819812820",
+    "employmentType": "temporary",
+    "workloadHours": 23,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Hayat Bouchaara",
+    "emergencyPhone": "212644600133",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC22"
+        ],
+        "subjectIds": [
+          "SB00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "AvYLP",
+    "cin": "OC258502",
+    "name": "Aicha Squalli",
+    "email": "a.squalli2355@gmail.com",
+    "phone": "212715225377",
+    "address": "317, Rue de Paris, Mohammédia",
+    "gender": "F",
+    "specialization": "Français",
+    "yearsOfExperience": 8,
+    "salary": 7973,
+    "hireDate": "2025-03-07",
+    "bankAccount": "917347607309522450212684",
+    "employmentType": "temporary",
+    "workloadHours": 35,
+    "academicDegrees": "Diploma",
+    "emergencyContact": "Khadija El Glaoui",
+    "emergencyPhone": "212697656658",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS08",
+        "sectionIds": [
+          "SC26"
+        ],
+        "subjectIds": [
+          "SB01"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Mgq4F",
+    "cin": "GO374484",
+    "name": "Faysal Zemmama",
+    "email": "zemmama.faysal.55@aol.com",
+    "phone": "212720666205",
+    "address": "148, Boulevard de la Corniche, Laâyoune",
+    "gender": "M",
+    "specialization": "العربية",
+    "yearsOfExperience": 21,
+    "salary": 11908,
+    "hireDate": "2011-08-15",
+    "bankAccount": "828266729840531918346364",
+    "employmentType": "partTime",
+    "workloadHours": 39,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Ammar Ouzani",
+    "emergencyPhone": "212767878121",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS09",
+        "sectionIds": [
+          "SC27",
+          "SC28"
+        ],
+        "subjectIds": [
+          "SB02"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "oR8lB",
+    "cin": "YE550568",
+    "name": "Tawfiq Touzani",
+    "email": "tawfiqtouzani4321@yahoo.com",
+    "phone": "212782945525",
+    "address": "198, Avenue Mohammed VI, Ouarzazate",
+    "gender": "M",
+    "specialization": "Physique",
+    "yearsOfExperience": 17,
+    "salary": 9731,
+    "hireDate": "2018-05-14",
+    "bankAccount": "066803898876551036403150",
+    "employmentType": "fullTime",
+    "workloadHours": 39,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Adnane Jabar",
+    "emergencyPhone": "212692000739",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS10",
+        "sectionIds": [
+          "SC31"
+        ],
+        "subjectIds": [
+          "SB03"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "33vQg",
+    "cin": "DY443078",
+    "name": "Hiba El Youssouf",
+    "email": "hiba.elyoussouf1173@live.com",
+    "phone": "212664737936",
+    "address": "324, Rue Tantan, Beni Mellal",
+    "gender": "F",
+    "specialization": "Sciences de la Vie et de la Terre",
+    "yearsOfExperience": 20,
+    "salary": 10346,
+    "hireDate": "2011-04-09",
+    "bankAccount": "681834025328282265892215",
+    "employmentType": "partTime",
+    "workloadHours": 22,
+    "academicDegrees": "Master",
+    "emergencyContact": "Ghani Loukili",
+    "emergencyPhone": "212604336929",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS11",
+        "sectionIds": [
+          "SC35"
+        ],
+        "subjectIds": [
+          "SB04"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "Y0SDk",
+    "cin": "FN717916",
+    "name": "Soukaina Smires",
+    "email": "soukainasmires5950@hotmail.com",
+    "phone": "212757135163",
+    "address": "318, Avenue Abdelkrim Sahraoui, Nador",
+    "gender": "F",
+    "specialization": "Histoire",
+    "yearsOfExperience": 22,
+    "salary": 11068,
+    "hireDate": "2015-01-10",
+    "bankAccount": "348626672921305545025264",
+    "employmentType": "partTime",
+    "workloadHours": 37,
+    "academicDegrees": "Master",
+    "emergencyContact": "Yasmine Sebbar",
+    "emergencyPhone": "212743189223",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS03",
+        "sectionIds": [
+          "SC09",
+          "SC10"
+        ],
+        "subjectIds": [
+          "SB05"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "BjTj3",
+    "cin": "QC551860",
+    "name": "Khaoula Salek",
+    "email": "khaoula.salek1982@icloud.com",
+    "phone": "212752806574",
+    "address": "95, Rue Jemaa el-Fna, Tétouan",
+    "gender": "F",
+    "specialization": "Géographie",
+    "yearsOfExperience": 1,
+    "salary": 7555,
+    "hireDate": "2026-02-06",
+    "bankAccount": "651012976903057001910870",
+    "employmentType": "fullTime",
+    "workloadHours": 36,
+    "academicDegrees": "PhD",
+    "emergencyContact": "Jalila Kaddour",
+    "emergencyPhone": "212779272961",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS04",
+        "sectionIds": [
+          "SC13"
+        ],
+        "subjectIds": [
+          "SB06"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bYpFc",
+    "cin": "KI395201",
+    "name": "Qays Alaoui",
+    "email": "qays_alaoui_4605@yandex.com",
+    "phone": "212690476943",
+    "address": "340, Avenue Al Qods, Oujda",
+    "gender": "M",
+    "specialization": "English",
+    "yearsOfExperience": 15,
+    "salary": 10152,
+    "hireDate": "2015-04-22",
+    "bankAccount": "850665228334144795605555",
+    "employmentType": "contract",
+    "workloadHours": 27,
+    "academicDegrees": "Bachelor",
+    "emergencyContact": "Yasmine Boujemaa",
+    "emergencyPhone": "212698284783",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS05",
+        "sectionIds": [
+          "SC17"
+        ],
+        "subjectIds": [
+          "SB07"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "jXxHm",
+    "cin": "JK573186",
+    "name": "Nezar Smires",
+    "email": "n.smires1827@live.com",
+    "phone": "212684643931",
+    "address": "167, Avenue Mohammed V, Essaouira",
+    "gender": "M",
+    "specialization": "Éducation Physique",
+    "yearsOfExperience": 8,
+    "salary": 8093,
+    "hireDate": "2023-10-22",
+    "bankAccount": "282989101627647693699107",
+    "employmentType": "contract",
+    "workloadHours": 30,
+    "academicDegrees": "Master",
+    "emergencyContact": "Walid Karmous",
+    "emergencyPhone": "212750589677",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS06",
+        "sectionIds": [
+          "SC18",
+          "SC19"
+        ],
+        "subjectIds": [
+          "SB08"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "1jBvv",
+    "cin": "JU011248",
+    "name": "Fouad Guenoun",
+    "email": "f.guenoun7586@hotmail.com",
+    "phone": "212741688958",
+    "address": "1, Rue Tariq Bnou Ziad, Tétouan",
+    "gender": "M",
+    "specialization": "Informatique",
+    "yearsOfExperience": 20,
+    "salary": 10537,
+    "hireDate": "2015-08-23",
+    "bankAccount": "666091264534597399907329",
+    "employmentType": "temporary",
+    "workloadHours": 34,
+    "academicDegrees": "Diploma",
+    "emergencyContact": "Abdelaziz Fadel",
+    "emergencyPhone": "212639859051",
+    "status": "active",
+    "assignments": [
+      {
+        "classId": "CLS07",
+        "sectionIds": [
+          "SC22"
+        ],
+        "subjectIds": [
+          "SB09"
+        ]
+      }
+    ]
+  }
+]

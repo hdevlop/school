@@ -1,0 +1,90 @@
+[
+  {
+    "title": "Parent meeting reminder",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "all",
+    "publishDate": "2026-07-02T13:05:56.224Z",
+    "expiryDate": "2026-07-22T13:05:56.224Z"
+  },
+  {
+    "title": "School schedule update",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "students",
+    "publishDate": "2026-07-01T13:05:56.224Z",
+    "expiryDate": "2026-07-23T13:05:56.224Z"
+  },
+  {
+    "title": "Transport route notice",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "teachers",
+    "publishDate": "2026-06-30T13:05:56.224Z",
+    "expiryDate": "2026-07-24T13:05:56.224Z"
+  },
+  {
+    "title": "Assessment calendar notice",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "parents",
+    "publishDate": "2026-06-29T13:05:56.224Z",
+    "expiryDate": "2026-07-25T13:05:56.224Z"
+  },
+  {
+    "title": "Cafeteria menu update",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "class",
+    "classId": "CLS10",
+    "sectionId": "SC31",
+    "publishDate": "2026-06-28T13:05:56.224Z",
+    "expiryDate": "2026-07-26T13:05:56.224Z"
+  },
+  {
+    "title": "Parent meeting reminder",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "all",
+    "publishDate": "2026-06-27T13:05:56.224Z",
+    "expiryDate": "2026-07-27T13:05:56.224Z"
+  },
+  {
+    "title": "School schedule update",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "students",
+    "publishDate": "2026-06-26T13:05:56.224Z",
+    "expiryDate": "2026-07-28T13:05:56.224Z"
+  },
+  {
+    "title": "Transport route notice",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "teachers",
+    "publishDate": "2026-06-25T13:05:56.224Z",
+    "expiryDate": "2026-07-29T13:05:56.224Z"
+  },
+  {
+    "title": "Assessment calendar notice",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "parents",
+    "publishDate": "2026-06-24T13:05:56.224Z",
+    "expiryDate": "2026-07-30T13:05:56.224Z"
+  },
+  {
+    "title": "Cafeteria menu update",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "class",
+    "classId": "CLS05",
+    "sectionId": "SC16",
+    "publishDate": "2026-06-23T13:05:56.224Z",
+    "expiryDate": "2026-07-31T13:05:56.224Z"
+  },
+  {
+    "title": "Parent meeting reminder",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "all",
+    "publishDate": "2026-06-22T13:05:56.224Z",
+    "expiryDate": "2026-08-01T13:05:56.224Z"
+  },
+  {
+    "title": "School schedule update",
+    "content": "Please review this school notice and contact the administration if more information is needed.",
+    "targetAudience": "students",
+    "publishDate": "2026-06-21T13:05:56.224Z",
+    "expiryDate": "2026-08-02T13:05:56.224Z"
+  }
+]

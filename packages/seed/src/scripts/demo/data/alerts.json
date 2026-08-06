@@ -1,0 +1,249 @@
+[
+  {
+    "type": "academic",
+    "title": "Academic alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "low",
+    "status": "acknowledged",
+    "isRead": true,
+    "targetAudience": "all",
+    "studentId": "6xJJZ"
+  },
+  {
+    "type": "attendance",
+    "title": "Attendance alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "medium",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "students",
+    "studentId": "p68TH"
+  },
+  {
+    "type": "behavioral",
+    "title": "Behavioral alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "high",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "teachers",
+    "studentId": "NGfMG"
+  },
+  {
+    "type": "health",
+    "title": "Health alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "critical",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "parents",
+    "studentId": "4zqCE"
+  },
+  {
+    "type": "system",
+    "title": "System alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "low",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "all",
+    "subjectId": "SB04"
+  },
+  {
+    "type": "announcement",
+    "title": "Announcement alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "medium",
+    "status": "acknowledged",
+    "isRead": true,
+    "targetAudience": "students",
+    "classId": "CLS08"
+  },
+  {
+    "type": "reminder",
+    "title": "Reminder alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "high",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "teachers",
+    "teacherId": "UXP4v"
+  },
+  {
+    "type": "emergency",
+    "title": "Emergency alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "critical",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "parents"
+  },
+  {
+    "type": "academic",
+    "title": "Academic alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "low",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "all",
+    "studentId": "mgY5m"
+  },
+  {
+    "type": "attendance",
+    "title": "Attendance alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "medium",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "students",
+    "studentId": "d-IYy"
+  },
+  {
+    "type": "behavioral",
+    "title": "Behavioral alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "high",
+    "status": "acknowledged",
+    "isRead": true,
+    "targetAudience": "teachers",
+    "studentId": "atKQr"
+  },
+  {
+    "type": "health",
+    "title": "Health alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "critical",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "parents",
+    "studentId": "0e68V"
+  },
+  {
+    "type": "system",
+    "title": "System alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "low",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "all",
+    "subjectId": "SB02"
+  },
+  {
+    "type": "announcement",
+    "title": "Announcement alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "medium",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "students",
+    "classId": "CLS07"
+  },
+  {
+    "type": "reminder",
+    "title": "Reminder alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "high",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "teachers",
+    "teacherId": "i7XRN"
+  },
+  {
+    "type": "emergency",
+    "title": "Emergency alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "critical",
+    "status": "acknowledged",
+    "isRead": true,
+    "targetAudience": "parents"
+  },
+  {
+    "type": "academic",
+    "title": "Academic alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "low",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "all",
+    "studentId": "LspX6"
+  },
+  {
+    "type": "attendance",
+    "title": "Attendance alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "medium",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "students",
+    "studentId": "Oy5ur"
+  },
+  {
+    "type": "behavioral",
+    "title": "Behavioral alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "high",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "teachers",
+    "studentId": "WCYLk"
+  },
+  {
+    "type": "health",
+    "title": "Health alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "critical",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "parents",
+    "studentId": "EiSHu"
+  },
+  {
+    "type": "system",
+    "title": "System alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "low",
+    "status": "acknowledged",
+    "isRead": true,
+    "targetAudience": "all",
+    "subjectId": "SB00"
+  },
+  {
+    "type": "announcement",
+    "title": "Announcement alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "medium",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "students",
+    "classId": "CLS06"
+  },
+  {
+    "type": "reminder",
+    "title": "Reminder alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "high",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "teachers",
+    "teacherId": "4zPZ8"
+  },
+  {
+    "type": "emergency",
+    "title": "Emergency alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "critical",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "parents"
+  },
+  {
+    "type": "academic",
+    "title": "Academic alert",
+    "message": "Generated alert to exercise dashboard alerts, reports, and profile views.",
+    "priority": "low",
+    "status": "active",
+    "isRead": false,
+    "targetAudience": "all",
+    "studentId": "QE4O4"
+  }
+]

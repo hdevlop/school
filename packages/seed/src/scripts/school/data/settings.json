@@ -1,0 +1,77 @@
+{
+  "schoolName": "Henri Lambert",
+  "schoolAddress": "Route de la Mecque, qods, Casablanca 20150, Morocco",
+  "schoolPhone": "+212664823515",
+  "schoolEmail": "Henri.lambert@school.ma",
+  "schoolWebsite": "https://www.henrilambert.ma",
+  "schoolLogo": "https://www.henrilambert.ma/assets/logo.png",
+  "currentAcademicYear": "2025-2026",
+  "gradingScale": {
+    "A": {
+      "min": 90,
+      "max": 100,
+      "points": 4.0
+    },
+    "B": {
+      "min": 80,
+      "max": 89,
+      "points": 3.0
+    },
+    "C": {
+      "min": 70,
+      "max": 79,
+      "points": 2.0
+    },
+    "D": {
+      "min": 60,
+      "max": 69,
+      "points": 1.0
+    },
+    "F": {
+      "min": 0,
+      "max": 59,
+      "points": 0.0
+    }
+  },
+  "attendanceRequirement": 85.00,
+  "maxClassSize": 28,
+  "minimumPassingGrade": 60.00,
+  "defaultExamDuration": 90,
+  "calendarSystem": "SEMESTER",
+  "startMonth": "september",
+  "endMonth": "june",
+  "academicAlerts": true,
+  "attendanceAlerts": true,
+  "eventAlerts": true,
+  "homeworkAlerts": true,
+  "feesReminder": true,
+  "feesOverdueAlerts": true,
+  "emailNotifications": true,
+  "smsNotifications": true,
+  "parentNotifications": true,
+  "lowGradeAlerts": true,
+  "allowLateSubmission": true,
+  "examResultsAlerts": true,
+  "disciplinaryAlerts": true,
+  "achievementAlerts": true,
+  "maintenanceNotifications": true,
+  "twoFactorEnabled": true,
+  "sessionTimeout": "60",
+  "passwordRequireSymbols": true,
+  "loginNotifications": true,
+  "parentAccessEnabled": true,
+  "teacherAccessEnabled": true,
+  "studentAccessEnabled": true,
+  "timeZone": "Africa/Casablanca",
+  "language": "fr",
+  "theme": "light",
+  "dateFormat": "DD/MM/YYYY",
+  "timeFormat": "24",
+  "currency": "MAD",
+  "gradingPeriods": 4,
+  "schoolStartTime": "08:30",
+  "schoolEndTime": "15:30",
+  "lunchBreakDuration": 60,
+  "maintenanceMode": false,
+  "autoBackup": true
+}

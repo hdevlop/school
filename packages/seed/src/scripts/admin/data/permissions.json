@@ -1,0 +1,656 @@
+[
+  {
+    "name": "create:users",
+    "description": "Permission to create new users",
+    "resource": "users",
+    "action": "create"
+  },
+  {
+    "name": "read:users",
+    "description": "Permission to view users",
+    "resource": "users",
+    "action": "read"
+  },
+  {
+    "name": "update:users",
+    "description": "Permission to update user information",
+    "resource": "users",
+    "action": "update"
+  },
+  {
+    "name": "delete:users",
+    "description": "Permission to delete users",
+    "resource": "users",
+    "action": "delete"
+  },
+  {
+    "name": "create:roles",
+    "description": "Permission to create new roles",
+    "resource": "roles",
+    "action": "create"
+  },
+  {
+    "name": "read:roles",
+    "description": "Permission to view roles",
+    "resource": "roles",
+    "action": "read"
+  },
+  {
+    "name": "update:roles",
+    "description": "Permission to update role information",
+    "resource": "roles",
+    "action": "update"
+  },
+  {
+    "name": "delete:roles",
+    "description": "Permission to delete roles",
+    "resource": "roles",
+    "action": "delete"
+  },
+  {
+    "name": "create:students",
+    "description": "Permission to create new students",
+    "resource": "students",
+    "action": "create"
+  },
+  {
+    "name": "read:students",
+    "description": "Permission to view students",
+    "resource": "students",
+    "action": "read"
+  },
+  {
+    "name": "update:students",
+    "description": "Permission to update student information",
+    "resource": "students",
+    "action": "update"
+  },
+  {
+    "name": "delete:students",
+    "description": "Permission to delete students",
+    "resource": "students",
+    "action": "delete"
+  },
+  {
+    "name": "create:teachers",
+    "description": "Permission to create new teachers",
+    "resource": "teachers",
+    "action": "create"
+  },
+  {
+    "name": "read:teachers",
+    "description": "Permission to view teachers",
+    "resource": "teachers",
+    "action": "read"
+  },
+  {
+    "name": "update:teachers",
+    "description": "Permission to update teacher information",
+    "resource": "teachers",
+    "action": "update"
+  },
+  {
+    "name": "delete:teachers",
+    "description": "Permission to delete teachers",
+    "resource": "teachers",
+    "action": "delete"
+  },
+  {
+    "name": "create:parents",
+    "description": "Permission to create new parents",
+    "resource": "parents",
+    "action": "create"
+  },
+  {
+    "name": "read:parents",
+    "description": "Permission to view parents",
+    "resource": "parents",
+    "action": "read"
+  },
+  {
+    "name": "update:parents",
+    "description": "Permission to update parent information",
+    "resource": "parents",
+    "action": "update"
+  },
+  {
+    "name": "delete:parents",
+    "description": "Permission to delete parents",
+    "resource": "parents",
+    "action": "delete"
+  },
+  {
+    "name": "create:classes",
+    "description": "Permission to create new classes",
+    "resource": "classes",
+    "action": "create"
+  },
+  {
+    "name": "read:classes",
+    "description": "Permission to view classes",
+    "resource": "classes",
+    "action": "read"
+  },
+  {
+    "name": "update:classes",
+    "description": "Permission to update class information",
+    "resource": "classes",
+    "action": "update"
+  },
+  {
+    "name": "delete:classes",
+    "description": "Permission to delete classes",
+    "resource": "classes",
+    "action": "delete"
+  },
+  {
+    "name": "create:sections",
+    "description": "Permission to create new sections",
+    "resource": "sections",
+    "action": "create"
+  },
+  {
+    "name": "read:sections",
+    "description": "Permission to view sections",
+    "resource": "sections",
+    "action": "read"
+  },
+  {
+    "name": "update:sections",
+    "description": "Permission to update section information",
+    "resource": "sections",
+    "action": "update"
+  },
+  {
+    "name": "delete:sections",
+    "description": "Permission to delete sections",
+    "resource": "sections",
+    "action": "delete"
+  },
+  {
+    "name": "create:subjects",
+    "description": "Permission to create new subjects",
+    "resource": "subjects",
+    "action": "create"
+  },
+  {
+    "name": "read:subjects",
+    "description": "Permission to view subjects",
+    "resource": "subjects",
+    "action": "read"
+  },
+  {
+    "name": "update:subjects",
+    "description": "Permission to update subject information",
+    "resource": "subjects",
+    "action": "update"
+  },
+  {
+    "name": "delete:subjects",
+    "description": "Permission to delete subjects",
+    "resource": "subjects",
+    "action": "delete"
+  },
+  {
+    "name": "create:grades",
+    "description": "Permission to create new grades",
+    "resource": "grades",
+    "action": "create"
+  },
+  {
+    "name": "read:grades",
+    "description": "Permission to view grades",
+    "resource": "grades",
+    "action": "read"
+  },
+  {
+    "name": "update:grades",
+    "description": "Permission to update grade information",
+    "resource": "grades",
+    "action": "update"
+  },
+  {
+    "name": "delete:grades",
+    "description": "Permission to delete grades",
+    "resource": "grades",
+    "action": "delete"
+  },
+  {
+    "name": "manage:attendance",
+    "description": "Permission to manage student attendance",
+    "resource": "attendance",
+    "action": "manage"
+  },
+  {
+    "name": "view:reports",
+    "description": "Permission to view system reports",
+    "resource": "reports",
+    "action": "view"
+  },
+  {
+    "name": "create:feeTypes",
+    "description": "Permission to create new fee types",
+    "resource": "feeTypes",
+    "action": "create"
+  },
+  {
+    "name": "read:feeTypes",
+    "description": "Permission to view fee types",
+    "resource": "feeTypes",
+    "action": "read"
+  },
+  {
+    "name": "update:feeTypes",
+    "description": "Permission to update fee type information",
+    "resource": "feeTypes",
+    "action": "update"
+  },
+  {
+    "name": "delete:feeTypes",
+    "description": "Permission to delete fee types",
+    "resource": "feeTypes",
+    "action": "delete"
+  },
+  {
+    "name": "create:fees",
+    "description": "Permission to assign fees to students",
+    "resource": "fees",
+    "action": "create"
+  },
+  {
+    "name": "read:fees",
+    "description": "Permission to view student fees",
+    "resource": "fees",
+    "action": "read"
+  },
+  {
+    "name": "update:fees",
+    "description": "Permission to update fee information",
+    "resource": "fees",
+    "action": "update"
+  },
+  {
+    "name": "delete:fees",
+    "description": "Permission to delete fees",
+    "resource": "fees",
+    "action": "delete"
+  },
+  {
+    "name": "create:payments",
+    "description": "Permission to process payments",
+    "resource": "payments",
+    "action": "create"
+  },
+  {
+    "name": "read:payments",
+    "description": "Permission to view payment records",
+    "resource": "payments",
+    "action": "read"
+  },
+  {
+    "name": "update:payments",
+    "description": "Permission to update payment information",
+    "resource": "payments",
+    "action": "update"
+  },
+  {
+    "name": "delete:payments",
+    "description": "Permission to delete payments",
+    "resource": "payments",
+    "action": "delete"
+  },
+    {
+    "name": "create:vehicles",
+    "description": "Permission to create new vehicles",
+    "resource": "vehicles",
+    "action": "create"
+  },
+  {
+    "name": "read:vehicles",
+    "description": "Permission to view vehicles",
+    "resource": "vehicles",
+    "action": "read"
+  },
+  {
+    "name": "update:vehicles",
+    "description": "Permission to update vehicle information",
+    "resource": "vehicles",
+    "action": "update"
+  },
+  {
+    "name": "delete:vehicles",
+    "description": "Permission to delete vehicles",
+    "resource": "vehicles",
+    "action": "delete"
+  },
+  {
+    "name": "create:drivers",
+    "description": "Permission to create new drivers",
+    "resource": "drivers",
+    "action": "create"
+  },
+  {
+    "name": "read:drivers",
+    "description": "Permission to view drivers",
+    "resource": "drivers",
+    "action": "read"
+  },
+  {
+    "name": "update:drivers",
+    "description": "Permission to update driver information",
+    "resource": "drivers",
+    "action": "update"
+  },
+  {
+    "name": "delete:drivers",
+    "description": "Permission to delete drivers",
+    "resource": "drivers",
+    "action": "delete"
+  },
+  {
+    "name": "create:refuel",
+    "description": "Permission to create new refuel records",
+    "resource": "refuel",
+    "action": "create"
+  },
+  {
+    "name": "read:refuel",
+    "description": "Permission to view refuel records",
+    "resource": "refuel",
+    "action": "read"
+  },
+  {
+    "name": "update:refuel",
+    "description": "Permission to update refuel information",
+    "resource": "refuel",
+    "action": "update"
+  },
+  {
+    "name": "delete:refuel",
+    "description": "Permission to delete refuel records",
+    "resource": "refuel",
+    "action": "delete"
+  },
+  {
+    "name": "create:maintenance",
+    "description": "Permission to create new maintenance records",
+    "resource": "maintenance",
+    "action": "create"
+  },
+  {
+    "name": "read:maintenance",
+    "description": "Permission to view maintenance records",
+    "resource": "maintenance",
+    "action": "read"
+  },
+  {
+    "name": "update:maintenance",
+    "description": "Permission to update maintenance information",
+    "resource": "maintenance",
+    "action": "update"
+  },
+  {
+    "name": "delete:maintenance",
+    "description": "Permission to delete maintenance records",
+    "resource": "maintenance",
+    "action": "delete"
+  },
+  {
+    "name": "create:expenses",
+    "description": "Permission to create new expenses",
+    "resource": "expenses",
+    "action": "create"
+  },
+  {
+    "name": "read:expenses",
+    "description": "Permission to view expenses",
+    "resource": "expenses",
+    "action": "read"
+  },
+  {
+    "name": "update:expenses",
+    "description": "Permission to update expense information",
+    "resource": "expenses",
+    "action": "update"
+  },
+  {
+    "name": "delete:expenses",
+    "description": "Permission to delete expenses",
+    "resource": "expenses",
+    "action": "delete"
+  },
+    {
+    "name": "create:exams",
+    "description": "Permission to create new exams",
+    "resource": "exams",
+    "action": "create"
+  },
+  {
+    "name": "read:exams",
+    "description": "Permission to view exams",
+    "resource": "exams",
+    "action": "read"
+  },
+  {
+    "name": "update:exams",
+    "description": "Permission to update exam information",
+    "resource": "exams",
+    "action": "update"
+  },
+  {
+    "name": "delete:exams",
+    "description": "Permission to delete exams",
+    "resource": "exams",
+    "action": "delete"
+  },
+  {
+    "name": "create:assessments",
+    "description": "Permission to create new assessments",
+    "resource": "assessments",
+    "action": "create"
+  },
+  {
+    "name": "read:assessments",
+    "description": "Permission to view assessments",
+    "resource": "assessments",
+    "action": "read"
+  },
+  {
+    "name": "update:assessments",
+    "description": "Permission to update assessment information",
+    "resource": "assessments",
+    "action": "update"
+  },
+  {
+    "name": "delete:assessments",
+    "description": "Permission to delete assessments",
+    "resource": "assessments",
+    "action": "delete"
+  },
+  {
+    "name": "create:attendance",
+    "description": "Permission to create attendance records",
+    "resource": "attendance",
+    "action": "create"
+  },
+  {
+    "name": "read:attendance",
+    "description": "Permission to view attendance records",
+    "resource": "attendance",
+    "action": "read"
+  },
+  {
+    "name": "update:attendance",
+    "description": "Permission to update attendance information",
+    "resource": "attendance",
+    "action": "update"
+  },
+  {
+    "name": "delete:attendance",
+    "description": "Permission to delete attendance records",
+    "resource": "attendance",
+    "action": "delete"
+  },
+  {
+    "name": "create:announcements",
+    "description": "Permission to create new announcements",
+    "resource": "announcements",
+    "action": "create"
+  },
+  {
+    "name": "read:announcements",
+    "description": "Permission to view announcements",
+    "resource": "announcements",
+    "action": "read"
+  },
+  {
+    "name": "update:announcements",
+    "description": "Permission to update announcement information",
+    "resource": "announcements",
+    "action": "update"
+  },
+  {
+    "name": "delete:announcements",
+    "description": "Permission to delete announcements",
+    "resource": "announcements",
+    "action": "delete"
+  },
+  {
+    "name": "create:events",
+    "description": "Permission to create new events",
+    "resource": "events",
+    "action": "create"
+  },
+  {
+    "name": "read:events",
+    "description": "Permission to view events",
+    "resource": "events",
+    "action": "read"
+  },
+  {
+    "name": "update:events",
+    "description": "Permission to update event information",
+    "resource": "events",
+    "action": "update"
+  },
+  {
+    "name": "delete:events",
+    "description": "Permission to delete events",
+    "resource": "events",
+    "action": "delete"
+  },
+  {
+    "name": "create:alerts",
+    "description": "Permission to create new alerts",
+    "resource": "alerts",
+    "action": "create"
+  },
+  {
+    "name": "read:alerts",
+    "description": "Permission to view alerts",
+    "resource": "alerts",
+    "action": "read"
+  },
+  {
+    "name": "update:alerts",
+    "description": "Permission to update alert information",
+    "resource": "alerts",
+    "action": "update"
+  },
+  {
+    "name": "delete:alerts",
+    "description": "Permission to delete alerts",
+    "resource": "alerts",
+    "action": "delete"
+  },
+  {
+    "name": "create:settings",
+    "description": "Permission to create new settings",
+    "resource": "settings",
+    "action": "create"
+  },
+  {
+    "name": "read:settings",
+    "description": "Permission to view settings",
+    "resource": "settings",
+    "action": "read"
+  },
+  {
+    "name": "update:settings",
+    "description": "Permission to update settings",
+    "resource": "settings",
+    "action": "update"
+  },
+  {
+    "name": "delete:settings",
+    "description": "Permission to delete settings",
+    "resource": "settings",
+    "action": "delete"
+  },
+  {
+    "name": "create:behavior-rewards",
+    "description": "Permission to create positive behavior and reward records",
+    "resource": "behavior-rewards",
+    "action": "create"
+  },
+  {
+    "name": "read:behavior-rewards",
+    "description": "Permission to view positive behavior and reward records",
+    "resource": "behavior-rewards",
+    "action": "read"
+  },
+  {
+    "name": "update:behavior-rewards",
+    "description": "Permission to update positive behavior and reward records",
+    "resource": "behavior-rewards",
+    "action": "update"
+  },
+  {
+    "name": "delete:behavior-rewards",
+    "description": "Permission to delete positive behavior and reward records",
+    "resource": "behavior-rewards",
+    "action": "delete"
+  },
+  {
+    "name": "create:discipline",
+    "description": "Permission to create discipline incidents",
+    "resource": "discipline",
+    "action": "create"
+  },
+  {
+    "name": "read:discipline",
+    "description": "Permission to view discipline incidents",
+    "resource": "discipline",
+    "action": "read"
+  },
+  {
+    "name": "update:discipline",
+    "description": "Permission to update discipline incidents",
+    "resource": "discipline",
+    "action": "update"
+  },
+  {
+    "name": "delete:discipline",
+    "description": "Permission to delete discipline incidents",
+    "resource": "discipline",
+    "action": "delete"
+  },
+  {
+    "name": "resolve:discipline",
+    "description": "Permission to resolve and reopen discipline incidents",
+    "resource": "discipline",
+    "action": "resolve"
+  },
+  {
+    "name": "admin:system",
+    "description": "Full system administration access",
+    "resource": "system",
+    "action": "admin"
+  },
+  {
+    "name": "*:*",
+    "description": "God mode - unlimited access to all resources and actions",
+    "resource": "*",
+    "action": "*"
+  }
+]

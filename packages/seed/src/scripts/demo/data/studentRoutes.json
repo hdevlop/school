@@ -1,0 +1,182 @@
+[
+  {
+    "studentId": "6cVxI",
+    "vehicleId": "i3a0p",
+    "assignmentDate": "2026-05-03",
+    "status": "active",
+    "pickupLocation": "226, Boulevard Moulay Youssef, Casablanca",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "QE4O4",
+    "vehicleId": "m2o3V",
+    "assignmentDate": "2026-05-04",
+    "status": "active",
+    "pickupLocation": "102, Avenue Fal Ould Oumeir, Al Hoceïma",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "qwq6L",
+    "vehicleId": "OVFNC",
+    "assignmentDate": "2026-05-05",
+    "status": "active",
+    "pickupLocation": "152, Rue Kénitra, Ouarzazate",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "xpQwg",
+    "vehicleId": "SaPNr",
+    "assignmentDate": "2026-05-06",
+    "status": "active",
+    "pickupLocation": "300, Avenue Pasteur, Ouarzazate",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "upCOR",
+    "vehicleId": "1plhB",
+    "assignmentDate": "2026-05-07",
+    "status": "active",
+    "pickupLocation": "286, Boulevard Zerktouni, Beni Mellal",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "I9oY5",
+    "vehicleId": "zbrTM",
+    "assignmentDate": "2026-05-08",
+    "status": "active",
+    "pickupLocation": "162, Rue Allal Ben Abdellah, Nador",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "h-Gbn",
+    "vehicleId": "l7Iki",
+    "assignmentDate": "2026-05-09",
+    "status": "active",
+    "pickupLocation": "9, Avenue Al Massira Al Khadra, Laâyoune",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "yiJrT",
+    "vehicleId": "ouahM",
+    "assignmentDate": "2026-05-10",
+    "status": "active",
+    "pickupLocation": "323, Avenue Pasteur, Marrakech",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "9J8p_",
+    "vehicleId": "LoT0t",
+    "assignmentDate": "2026-05-11",
+    "status": "active",
+    "pickupLocation": "121, Rue Bab Agnaou, Agadir",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "ad6EM",
+    "vehicleId": "XDxXL",
+    "assignmentDate": "2026-05-12",
+    "status": "active",
+    "pickupLocation": "272, Avenue Houmane El Fetouaki, Oujda",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "yKSvl",
+    "vehicleId": "i3a0p",
+    "assignmentDate": "2026-05-13",
+    "status": "active",
+    "pickupLocation": "336, Avenue des Forces Auxiliaires, Marrakech",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "6U8ny",
+    "vehicleId": "m2o3V",
+    "assignmentDate": "2026-05-14",
+    "status": "active",
+    "pickupLocation": "358, Boulevard Ghandi, Oujda",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "wbCrN",
+    "vehicleId": "OVFNC",
+    "assignmentDate": "2026-05-15",
+    "status": "active",
+    "pickupLocation": "45, Boulevard Yaacoub Al Mansour, Casablanca",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "GGzZx",
+    "vehicleId": "SaPNr",
+    "assignmentDate": "2026-05-16",
+    "status": "active",
+    "pickupLocation": "260, Avenue Pasteur, Casablanca",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "K6nIu",
+    "vehicleId": "1plhB",
+    "assignmentDate": "2026-05-17",
+    "status": "active",
+    "pickupLocation": "413, Place des Nations Unies, Al Hoceïma",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "MiHQ8",
+    "vehicleId": "zbrTM",
+    "assignmentDate": "2026-05-18",
+    "status": "active",
+    "pickupLocation": "446, Rue de Paris, Kénitra",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "w4nsa",
+    "vehicleId": "l7Iki",
+    "assignmentDate": "2026-05-19",
+    "status": "active",
+    "pickupLocation": "406, Boulevard Rachidi, Tétouan",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "didl9",
+    "vehicleId": "ouahM",
+    "assignmentDate": "2026-05-20",
+    "status": "active",
+    "pickupLocation": "294, Avenue Abdelkrim Sahraoui, Fès",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "RdbVc",
+    "vehicleId": "LoT0t",
+    "assignmentDate": "2026-05-21",
+    "status": "active",
+    "pickupLocation": "360, Boulevard Moulay Youssef, Laâyoune",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  },
+  {
+    "studentId": "f_46D",
+    "vehicleId": "XDxXL",
+    "assignmentDate": "2026-05-22",
+    "status": "active",
+    "pickupLocation": "480, Derb Sultan, Ouarzazate",
+    "dropoffLocation": "School main gate",
+    "notes": "Generated student transport route."
+  }
+]

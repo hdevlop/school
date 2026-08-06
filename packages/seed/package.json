@@ -1,0 +1,29 @@
+{
+  "name": "@sms/seed",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "test": "bun test",
+    "seed:admin":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-admin.ts",
+    "seed:staff":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-backfill.ts",
+    "seed:roles":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-roles.ts",
+    "seed:school":   "bun --env-file=../../apps/dashboard/.env.local src/scripts/school/seed-school.ts",
+    "seed:demo":     "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-demo.ts",
+    "seed:expenses": "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-expenses.ts",
+    "seed:topup":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-topup.ts",
+    "test:health":   "bun --env-file=../../apps/dashboard/.env.local src/scripts/health/test-health.ts",
+    "gen:demo":      "bun src/scripts/demo/generator.ts",
+    "gen:demo:ui":   "bun src/scripts/demo/cli.ts",
+    "reset:demo":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/reset-demo.ts",
+    "seed:full":     "bun run seed:admin && bun run gen:demo && bun run reset:demo && bun run seed:demo"
+  },
+  "dependencies": {
+    "@sms/server": "workspace:*",
+    "@faker-js/faker": "^10.1.0",
+    "bcryptjs": "^3.0.3",
+    "drizzle-orm": "0.45.1",
+    "nanoid": "^5.0.0",
+    "najm-auth": "*"
+  }
+}

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "SB00",
+    "code": "MATH",
+    "name": "Mathématiques",
+    "description": "Cours de mathématiques incluant l'arithmétique, la géométrie et l'algèbre"
+  },
+  {
+    "id": "SB01",
+    "code": "FR",
+    "name": "Français",
+    "description": "Langue française, littérature, grammaire et expression écrite"
+  }, 
+  {
+    "id": "SB02",
+    "code": "AR",
+    "name": "العربية",
+    "description": "اللغة العربية والأدب العربي والقواعد النحوية"
+  },
+  {
+    "id": "SB03",
+    "code": "PHY",
+    "name": "Physique",
+    "description": "Physique et chimie, mécanique, électricité et thermodynamique"
+  },
+  {
+    "id": "SB04",
+    "code": "SVT",
+    "name": "Sciences de la Vie et de la Terre",
+    "description": "Biologie, géologie, écologie et sciences naturelles"
+  },
+  {
+    "id": "SB05",
+    "code": "HIST",
+    "name": "Histoire",
+    "description": "Histoire du monde et du Maroc"
+  },
+  {
+    "id": "SB06",
+    "code": "GEO",
+    "name": "Géographie",
+    "description": "Géographie physique et humaine"
+  },
+  {
+    "id": "SB07",
+    "code": "ENG",
+    "name": "English",
+    "description": "English language and literature"
+  },
+  {
+    "id": "SB08",
+    "code": "PE",
+    "name": "Éducation Physique",
+    "description": "Sport et éducation physique"
+  },
+  {
+    "id": "SB09",
+    "code": "INFO",
+    "name": "Informatique",
+    "description": "Initiation à l'informatique et programmation"
+  }
+]
