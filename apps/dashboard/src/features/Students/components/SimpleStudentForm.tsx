@@ -9,7 +9,6 @@ import { useTranslation } from '@/hooks/useLanguage'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { studentSchema } from '@/lib/validations'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useEnum } from '@/hooks/useEnum'
 import { LocationField } from '@/components/location/LocationField'
 
@@ -76,7 +75,6 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
       onSubmit={handleSubmit}
       devTools={{ enabled: isDevFill, fill }}
     >
-      <DevFormFiller fill={fill} />
       <StudentFormContent classes={classes} student={student} />
     </NForm>
   )

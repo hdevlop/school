@@ -1,29 +1,33 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
+import { useState } from 'react';
 import screenfull from 'screenfull';
-import { NButton } from 'najm-kit';
+import { NButton, toast, useNajmTheme } from 'najm-kit';
 import { Maximize, Moon, Sun } from 'lucide-react';
 import LanguageSwitcher from '@/features/Settings/components/LanguageSwitcher';
 
 const actionButtonClass = 'text-foreground hover:text-foreground [&_svg]:text-foreground [&_svg]:opacity-100';
 
 export default function PageHeaderGlobalActions() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useNajmTheme();
+  const [isChangingTheme, setIsChangingTheme] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const handleToggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark');
+  const handleToggleTheme = async () => {
+    setIsChangingTheme(true);
+    try {
+      await setTheme(theme === 'dark' ? 'light' : 'dark');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Could not update color theme.');
+    } finally {
+      setIsChangingTheme(false);
+    }
+  };
 
   const handleFullscreen = () => {
     if (screenfull.isEnabled) screenfull.toggle();
   };
 
-  const ThemeIcon = mounted && theme === 'dark' ? Sun : Moon;
+  const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
   return (
     <>
@@ -32,7 +36,8 @@ export default function PageHeaderGlobalActions() {
         type="button"
         variant="ghost"
         size="icon"
-        onClick={handleToggleTheme}
+        disabled={isChangingTheme}
+        onClick={() => void handleToggleTheme()}
         aria-label="Toggle theme"
         className={actionButtonClass}
       >

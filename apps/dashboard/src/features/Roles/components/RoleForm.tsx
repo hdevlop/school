@@ -7,7 +7,6 @@ import { Tag, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { roleValidationSchema } from '../config/rolesValidateSchema'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 
 const RoleForm = ({ role = null, mode = 'create' }) => {
@@ -45,7 +44,6 @@ const RoleForm = ({ role = null, mode = 'create' }) => {
                     onSubmit={handleSubmit}
                     devTools={{ enabled: isDevFill, fill: () => buildFill(schema) }}
                 >
-                    <DevFormFiller fill={() => buildFill(schema)} />
                     <FormInput
                         name='name'
                         type='text'

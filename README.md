@@ -28,17 +28,18 @@ A comprehensive, modern school management system built with Next.js and TypeScri
 ## Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 15 with App Router
+- **Framework**: Next.js 16 with App Router
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **UI Components**: Custom component library (N-prefix components)
+- **UI Components**: `najm-kit`, wrapped by School's N-prefix components
+- **Providers**: one `NajmAppProvider` from `najm-kit/app`
 - **Forms**: React Hook Form + Zod validation
 - **State Management**: Zustand (global) + React Query (server state)
 - **Charts**: Recharts
 - **Icons**: Lucide React
 
 ### Backend
-- **Framework**: najm-api (custom Node.js framework)
+- **Framework**: Najm (`najm-core` + plugin packages)
 - **Language**: TypeScript
 - **Database**: PostgreSQL
 - **ORM**: Drizzle ORM
@@ -48,49 +49,67 @@ A comprehensive, modern school management system built with Next.js and TypeScri
 
 ## Prerequisites
 
-- Node.js 18+
+- Bun 1.3+ — the package manager and test runner for this monorepo. Do not use
+  npm, yarn, or pnpm: they ignore `bun.lock` and the `overrides` block that
+  pins one version of every Najm package.
 - PostgreSQL 14+
-- npm or yarn package manager
 
 ## Installation
 
 1. **Clone the repository**
 ```bash
 git clone <repository-url>
-cd dashboard
+cd school
 ```
 
 2. **Install dependencies**
+
+One install at the repository root covers every workspace.
 ```bash
-npm install
+bun install
 ```
 
 3. **Configure environment variables**
-Create a `.env` file in the root directory:
-```env
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/school_db
 
-# Authentication
-JWT_SECRET=your-secret-key
-JWT_REFRESH_SECRET=your-refresh-secret-key
-
-# App
-NEXT_PUBLIC_API_URL=http://localhost:3000
+Copy the tracked template and fill in real values:
+```bash
+cp apps/dashboard/.env.local.example apps/dashboard/.env.local
 ```
+
+`apps/dashboard/.env.local` is the whole monorepo's environment file. Next.js
+loads it for the dashboard, and every `db:*` and `seed:*` script passes it
+explicitly with `--env-file`. There is no root `.env`.
+
+Four values are required and abort startup when missing:
+
+| Variable | Why |
+| --- | --- |
+| `DB_URL` | Postgres connection string. Drizzle's config requires this exact name; `DATABASE_URL` is only a runtime fallback. |
+| `JWT_ACCESS_SECRET` | Read by `najm-auth`, not by School's `authConfig()`. Missing throws `Plugin "auth" requires configuration`. |
+| `JWT_REFRESH_SECRET` | Same, for the refresh family. Use a different value from the access secret. |
+| `NAJM_ENCRYPTION_KEY` | 32 bytes, base64 or hex. Rotating it invalidates everything encrypted with the previous key. |
+
+The template documents the optional values, including `NAJM_SESSION_SECRET`
+and `NAJM_AUTH_INTERNAL_URL` for server-side session recovery. Never commit
+`.env.local`; only the `.example` template is tracked.
 
 4. **Set up the database**
 ```bash
-# Generate migrations
-npm run db:generate
+# Generate migrations from schema changes
+bun run db:generate
 
-# Push schema to database
-npm run db:push
+# Apply pending migrations
+bun run db:migrate
 ```
 
-5. **Start development server**
+5. **Create the first administrator**
 ```bash
-npm run dev
+bun run seed:admin
+```
+
+6. **Start development server**
+```bash
+bun run dev
 ```
 
 The application will be available at `http://localhost:3000`
@@ -98,10 +117,17 @@ The application will be available at `http://localhost:3000`
 ## Development Commands
 
 ### Core Development
-- `npm run dev` - Start development server with Turbopack
-- `npm run build` - Build production application
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint for code quality
+- `bun run dev` - Start development server with Turbopack
+- `bun run build` - Build the dashboard
+- `bun run build:all` - Build server, seed, and dashboard
+- `bun start` - Start production server
+- `bun run lint` - Run ESLint for code quality
+
+### Tests
+- `bun run test:server` - Backend module tests
+- `bun run test:dashboard` - Dashboard unit and contract tests, including the
+  Najm dependency-resolution guard
+- `bun run test:seed` - Seed data faker tests
 
 ### Runtime Business Date For Testing
 
@@ -140,42 +166,45 @@ Remove-Item Env:APP_BUSINESS_DATE
 Leave the academic settings at September through June. July remains available for collecting late payments, but new enrollment and billable assignments should use a business date inside the academic period.
 
 ### Database Operations
-- `npm run db:generate` - Generate database migrations from schema changes
-- `npm run db:push` - Push schema changes to database
-- `npm run db:drop` - Drop database tables (destructive)
-- `npm run db:check` - Validate database schema consistency
+- `bun run db:generate` - Generate database migrations from schema changes
+- `bun run db:migrate` - Apply pending migrations
+- `bun run db:push` - Push schema changes to database
+- `bun run db:drop` - Drop database tables (destructive)
+- `bun run db:check` - Validate database schema consistency
+
+### Najm Upgrade Acceptance
+
+- `bun run test:e2e:najm-upgrade` - Run the production-build auth, provider,
+  preference, responsive, RTL, and role acceptance suite. It requires an
+  isolated migrated database and runs automatically in GitHub with pgvector.
 
 ## Project Structure
 
+A Bun workspace monorepo. The backend is its own package, not a folder inside
+the Next.js app.
+
 ```
-dashboard/
-├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── (auth)/            # Authentication pages
-│   │   └── (dashboard)/       # Dashboard pages
-│   ├── features/              # Feature modules
-│   │   ├── Students/          # Student management
-│   │   ├── Teachers/          # Teacher management
-│   │   ├── Classes/           # Class management
-│   │   ├── Fees/              # Fee management
-│   │   └── ...                # Other features
-│   ├── components/            # Shared UI components
-│   │   ├── NTable/            # Advanced data table
-│   │   ├── NForm/             # Form components
-│   │   ├── NInputs/           # Input components
-│   │   └── ...                # Other components
-│   ├── server/                # Backend code
-│   │   ├── modules/           # Backend modules
-│   │   │   ├── students/      # Student module
-│   │   │   ├── teachers/      # Teacher module
-│   │   │   └── ...            # Other modules
-│   │   └── database/          # Database schema and config
-│   ├── services/              # API service layer
-│   ├── hooks/                 # Custom React hooks
-│   ├── stores/                # Global state management
-│   ├── lib/                   # Utilities and helpers
-│   └── locales/               # i18n translations
-├── public/                    # Static assets
+school/
+├── apps/
+│   ├── dashboard/             # Next.js app
+│   │   ├── src/app/           # App Router
+│   │   │   ├── (auth)/        # Authentication pages
+│   │   │   ├── (dashboard)/   # Dashboard pages
+│   │   │   └── api/           # Catch-all Najm handler + preference endpoints
+│   │   ├── src/features/      # Feature modules (Students, Teachers, …)
+│   │   ├── src/components/    # Shared UI wrappers over najm-kit
+│   │   ├── src/preferences/   # Typed language/theme/time-zone/currency allowlists
+│   │   ├── src/services/      # API service layer
+│   │   ├── src/hooks/         # Custom React hooks
+│   │   ├── src/shared/        # Dashboard shell and cross-feature pieces
+│   │   ├── src/stores/        # Zustand stores
+│   │   └── src/lib/           # auth, session, server preferences, utilities
+├── packages/
+│   ├── server/                # Najm backend
+│   │   ├── src/modules/       # Controller → Service → Repository → Validator
+│   │   ├── src/database/      # Drizzle schema and migrations
+│   │   └── src/locales/       # Source of truth for en/fr/ar/es translations
+│   └── seed/                  # Seed and demo-data scripts
 └── ...config files
 ```
 
@@ -199,6 +228,32 @@ Controller → Service → Repository → Validator
 - Each feature module contains components, hooks, and configurations
 - Shared component library with N-prefix naming convention
 - Consistent patterns across all entities using `useEntityCRUD` hook
+
+### Framework Contracts
+
+These four boundaries are single-owner. Adding a second owner produces no
+error — just two states that drift apart — so change them deliberately.
+
+**One UI provider.** `apps/dashboard/src/app/providers.tsx` mounts exactly one
+`NajmAppProvider`, which owns language, theme, design, time zone, branding,
+formatting, and `NTable` defaults. Do not mount `NajmDesignProvider`,
+`next-themes`, a second `I18nProvider`, or a local theme wrapper. Auth and
+React Query stay above it because they are app-owned.
+
+**One preference source.** Server-rendered defaults come from
+`apps/dashboard/src/lib/serverPreferences.ts`, which resolves cookie → signed-in
+user → School settings → typed fallback. New preferences belong in
+`apps/dashboard/src/preferences/`, not inline in a component.
+
+**One session resolution.** Server components read the session through the
+`serverAuth` singleton in `apps/dashboard/src/lib/session.ts`. Do not call
+`auth.getSession()` directly in a layout or page, and do not construct the
+adapter per request — that re-resolves the session and can cross requests.
+
+**One version of each Najm package.** Versions are pinned exactly in every
+workspace manifest and deduped by the root `overrides` block.
+`bun run test:dashboard` fails when a second copy resolves, including a stale
+nested directory that `bun install` left behind.
 
 ## Key Features Explained
 
@@ -322,16 +377,27 @@ Translation files located in `src/locales/`
 
 **Database connection errors:**
 - Verify PostgreSQL is running
-- Check DATABASE_URL in .env file
+- Check `DB_URL` in `apps/dashboard/.env.local`
 - Ensure database exists
 
 **Build errors:**
-- Clear node_modules and reinstall: `rm -rf node_modules && npm install`
-- Clear Next.js cache: `rm -rf .next`
+- Clear node_modules and reinstall: `rm -rf node_modules && bun install`
+- Clear Next.js cache: `rm -rf apps/dashboard/.next`
+
+**`Plugin "auth" requires configuration: JWT_ACCESS_SECRET` during build:**
+- The build collects page data, which starts the Najm server. Set
+  `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, and `NAJM_ENCRYPTION_KEY` in
+  `apps/dashboard/.env.local`.
+
+**Duplicate `najm-kit` styling or a sidebar that will not open:**
+- Two resolved copies of a Najm package mean two React contexts. Run
+  `bun run test:dashboard`; the resolution guard names the offending path.
+  Delete the nested directory and re-run `bun install` to confirm it is not
+  recreated.
 
 **Authentication issues:**
-- Verify JWT secrets are set in .env
-- Check token expiration settings
+- Verify the JWT secrets are set in `apps/dashboard/.env.local`
+- Check `ACCESS_EXPIRES_IN` / `REFRESH_EXPIRES_IN`
 
 ## License
 

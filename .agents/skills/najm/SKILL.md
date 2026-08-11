@@ -9,13 +9,17 @@ description: Najm framework reference and dashboard data operator. Use when auth
 
 najm-api is a TypeScript decorator-based web framework built on Hono.js. It provides dependency injection (via `diject`), 40+ parameter decorators, guards, transactions, events, i18n, MCP support, and CLI tooling. Targets Bun runtime with Node.js fallback.
 
-**Local source:** `C:\Users\pc\Desktop\libs\najm` (monorepo)
+**Local source (read-only reference):** `C:\Users\hdevlop\Desktop\najm`
+
+Consult it to understand internals. Never make School consume it: no workspace
+link, no `file:` dependency, no copied source, no tarball. School upgrades only
+by pinning a published version in the root `package.json`.
 
 ---
 
 ## Package Overview
 
-All packages live under `C:\Users\pc\Desktop\libs\najm\packages/`:
+All packages live under `C:\Users\hdevlop\Desktop\najm\packages/`:
 
 | Package | Purpose |
 |---|---|
@@ -632,7 +636,7 @@ najm-storage → najm-email → najm-auth → najm-cli
 ### Commands
 
 ```bash
-cd C:\Users\pc\Desktop\libs\najm
+cd C:\Users\hdevlop\Desktop\najm
 
 bun run build              # All packages (turbo parallel)
 bun run build:<name>       # Single package

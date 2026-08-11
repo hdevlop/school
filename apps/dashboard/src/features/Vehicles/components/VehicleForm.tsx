@@ -9,7 +9,6 @@ import { Car, Hash, Calendar, DollarSign, Gauge, Tag, Truck, Users, Activity, Us
 import { useDialog } from 'najm-kit'
 import { vehicleSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 
 const VehicleForm = ({ vehicle = null, drivers = [] }) => {
@@ -39,7 +38,6 @@ const VehicleForm = ({ vehicle = null, drivers = [] }) => {
 
    return (
       <NForm id='vehicle-form' schema={vehicleSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(vehicleSchema, { driverId: drivers?.map((d: any) => ({ value: d.id })) }) }}>
-         <DevFormFiller fill={() => buildFill(vehicleSchema, { driverId: drivers?.map((d: any) => ({ value: d.id })) })} />
          <VehicleFormContent drivers={drivers} />
       </NForm>
    )

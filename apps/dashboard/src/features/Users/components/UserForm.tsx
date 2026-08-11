@@ -7,7 +7,6 @@ import { Mail, Lock, User, Shield } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { usersValidationSchema, updateUsersValidationSchema } from '../config/usersValidateSchema'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useRoles } from '@/features/Roles/hooks/useRoles'
 import { useTranslation } from '@/hooks/useLanguage'
 
@@ -50,7 +49,6 @@ const UserForm = ({ user = null, mode = 'create' }) => {
                onSubmit={handleSubmit}
                devTools={{ enabled: isDevFill, fill: () => buildFill(schema, { roleId: roleOptions }) }}
             >
-               <DevFormFiller fill={() => buildFill(schema, { roleId: roleOptions })} />
                <FormInput
                   name='name'
                   type='text'

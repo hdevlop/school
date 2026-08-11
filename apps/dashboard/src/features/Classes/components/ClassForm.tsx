@@ -9,7 +9,6 @@ import { GraduationCap, Calendar, FileText, Layers } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { classSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 
 const ClassForm = ({ classData = null}) => {
@@ -39,7 +38,6 @@ const ClassForm = ({ classData = null}) => {
                onSubmit={handleSubmit}
                devTools={{ enabled: isDevFill, fill: () => buildFill(classSchema) }}
             >
-               <DevFormFiller fill={() => buildFill(classSchema)} />
                <div className='flex flex-col gap-4'>
 
                   {/* Class Information Section */}

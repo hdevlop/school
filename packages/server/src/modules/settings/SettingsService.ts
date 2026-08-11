@@ -90,7 +90,7 @@ export class SettingsService {
       // System Preferences
       timeZone: data.timeZone || 'UTC',
       language: data.language || 'en',
-      theme: data.theme || 'system',
+      theme: data.theme || 'light',
       dateFormat: data.dateFormat || 'MM/DD/YYYY',
       timeFormat: data.timeFormat || '12',
       currency: data.currency || 'USD',

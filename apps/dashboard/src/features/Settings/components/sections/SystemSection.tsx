@@ -28,10 +28,12 @@ const SystemSection: React.FC = () => {
     { value: 'es', label: 'Español' },
   ];
 
+  // No `system` option: Najm Kit's mode is `light | dark`, and an option that
+  // silently rendered as light would be a lie in the one place a user looks to
+  // check it.
   const themeOptions = [
     { value: 'light', label: t('settings.system.lightTheme') || 'Light' },
     { value: 'dark', label: t('settings.system.darkTheme') || 'Dark' },
-    { value: 'system', label: t('settings.system.systemTheme') || 'System' },
   ];
 
   const dateFormatOptions = [

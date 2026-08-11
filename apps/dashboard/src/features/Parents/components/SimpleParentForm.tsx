@@ -8,7 +8,6 @@ import { useDialog } from 'najm-kit'
 import { useTranslation } from '@/hooks/useLanguage'
 import { parentSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { usePrefix } from 'najm-kit';
 import { useEnum } from '@/hooks/useEnum'
@@ -228,7 +227,6 @@ const SimpleParentForm = ({ parent = null }) => {
          onSubmit={handleSubmit}
          devTools={{ enabled: isDevFill, fill: () => buildFill(parentSchema) }}
       >
-         <DevFormFiller fill={() => buildFill(parentSchema)} />
          <ParentFormContent form={form} />
       </NForm>
    )

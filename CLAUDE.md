@@ -4,29 +4,62 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 ## Development Commands
 
+This is a Bun workspace monorepo. Use `bun`, never npm/yarn/pnpm — they ignore
+`bun.lock` and the root `overrides` block that keeps one version of every Najm
+package. Run every command from the repository root.
+
 ### Core Development
-- `npm run dev` - Start development server with Turbopack (Next.js dev mode)
-- `npm run build` - Build production application
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint for code quality
+- `bun install` - One root install covers all workspaces
+- `bun run dev` - Start development server with Turbopack (Next.js dev mode)
+- `bun run build` - Build the dashboard
+- `bun run build:all` - Build server, seed, and dashboard
+- `bun start` - Start production server
+- `bun run lint` - Run ESLint for code quality
 
 ### Database Operations
-- `npm run db:generate` - Generate database migrations from schema changes
-- `npm run db:push` - Push schema changes to database
-- `npm run db:drop` - Drop database tables (destructive)
-- `npm run db:check` - Validate database schema consistency
+All read `apps/dashboard/.env.local`, the monorepo's only env file.
+- `bun run db:generate` - Generate database migrations from schema changes
+- `bun run db:migrate` - Apply pending migrations
+- `bun run db:push` - Push schema changes to database
+- `bun run db:drop` - Drop database tables (destructive)
+- `bun run db:check` - Validate database schema consistency
 
 ### Testing & Quality
-- Always run `npm run lint` after making code changes
-- Use `npm run build` to verify production readiness
+- Always run `bun run lint` after making code changes
+- `bun run test:server` / `bun run test:dashboard` / `bun run test:seed`
+- `bun run test:e2e:najm-upgrade` after a production build and isolated database seed
+- Use `bun run build:all` to verify production readiness
+- `bun run i18n:check` when touching `packages/server/src/locales/*.json`
+
+## Framework Contracts
+
+Single-owner boundaries. A second owner raises no error — it just produces two
+states that drift — so do not add one without changing the plan first.
+
+- **One UI provider.** `apps/dashboard/src/app/providers.tsx` mounts exactly one
+  `NajmAppProvider` from `najm-kit/app`, owning language, theme, design, time
+  zone, branding, formatting, and `NTable` defaults. Never add
+  `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local
+  theme wrapper.
+- **One preference source.** `apps/dashboard/src/lib/serverPreferences.ts`
+  resolves cookie → signed-in user → School settings → typed fallback. New
+  preference values belong in `apps/dashboard/src/preferences/`.
+- **One session resolution.** Server components use the `serverAuth` singleton
+  in `apps/dashboard/src/lib/session.ts`. Never call `auth.getSession()`
+  directly from a layout or page, and never build the adapter per request.
+- **One version of each Najm package.** Pinned exactly in every workspace
+  manifest; `bun run test:dashboard` fails when a second copy resolves.
+
+Current Najm versions are the pins in the root `package.json`. Read them there
+rather than assuming; they are upgraded deliberately, not by range.
 
 ---
 
-# BACKEND ARCHITECTURE (src/server)
+# BACKEND ARCHITECTURE (packages/server/src)
 
 ## Core Architecture Pattern
 
-This backend uses a **4-layer architecture** with the najm-api framework:
+This backend uses a **4-layer architecture** on the Najm framework (`najm-core` plus plugin packages):
 
 ```
 Controller → Service → Repository → Validation
@@ -104,7 +137,7 @@ alerts → system notifications
 
 Each backend module follows this structure:
 ```
-src/server/modules/[entity]/
+packages/server/src/modules/[entity]/
 ├── index.ts              # Module exports
 ├── [Entity]Controller.ts # HTTP layer
 ├── [Entity]Service.ts    # Business logic
@@ -119,7 +152,7 @@ src/server/modules/[entity]/
 1. **Never** put business logic in Controllers
 2. Always validate inputs through Validator classes
 3. Use Repository pattern for all database operations
-4. Implement proper error handling with najm-api patterns
+4. Implement proper error handling with Najm error classes
 5. Handle cross-module dependencies properly
 
 ### Repository Guidelines
@@ -147,23 +180,27 @@ src/server/modules/[entity]/
 
 ---
 
-# FRONTEND ARCHITECTURE (src/)
+# FRONTEND ARCHITECTURE (apps/dashboard/src)
 
 ## Core Architecture Pattern
 
 **Feature-based structure** with consistent patterns across all entities:
 
 ```
-src/
+apps/dashboard/src/
 ├── app/                 # Next.js App Router
 ├── features/[Entity]/   # Feature modules
 ├── components/          # Shared UI components (N-prefix)
+├── shared/              # Dashboard shell and cross-feature pieces
 ├── hooks/              # Shared custom hooks
+├── preferences/        # Typed language/theme/time-zone/currency allowlists
 ├── services/           # API service layer
 ├── stores/             # Global state management
-├── lib/                # Utilities and configurations
-└── locales/            # Internationalization
+└── lib/                # auth, session, server preferences, utilities
 ```
+
+Translations are not here. They live in `packages/server/src/locales/` and
+serve both the backend and the frontend catalog.
 
 ## Feature Module Structure
 
@@ -263,7 +300,7 @@ const {
 ### Global State (Zustand)
 - `AuthStore`: User authentication state
 - `DialogStore`: Modal and dialog management
-- `SidebarStore`: UI state management
+- Sidebar state: owned by `NSidebarProvider` from `najm-kit`, read with `useNSidebar()`. There is no School sidebar store.
 - `MultiStepFormStore`: Complex form workflows
 
 ### Form State (React Hook Form)
@@ -328,10 +365,11 @@ export const createStudentApi = async (data: CreateStudentData) => {
 # CROSS-CUTTING CONCERNS
 
 ## Internationalization
-- Translation files: `src/locales/[lang].json`
+- Translation files: `packages/server/src/locales/[lang].json` — one catalog for backend and frontend
 - Supported languages: English, French, Arabic, Spanish
-- Use `t()` function from najm-api for backend strings
-- Frontend translations through Next.js i18n
+- Use `t()` from `najm-i18n` for backend strings
+- Frontend reads the same catalog through `NajmAppProvider`; `useTranslation` in `apps/dashboard/src/hooks/useLanguage.tsx` is a thin facade that adds a per-key English fallback
+- Run `bun run i18n:check` after adding keys: every key must exist in all four locales or `NTable` and forms render raw key strings
 
 ## File Upload System
 - `FileService.handleImageUpload()` for profile pictures and documents
@@ -376,7 +414,7 @@ export const createStudentApi = async (data: CreateStudentData) => {
 5. Add proper TypeScript types and validation schemas
 
 ### Error Handling Strategy
-- **Backend**: najm-api error classes with proper HTTP status codes
+- **Backend**: Najm error classes with proper HTTP status codes
 - **Frontend**: React Query automatic error handling + toast notifications
 - **Validation**: Consistent error messages with i18n support
 - **User Experience**: Graceful degradation with loading states
@@ -417,7 +455,7 @@ export const createStudentApi = async (data: CreateStudentData) => {
 - Handle errors gracefully with proper HTTP codes
 - Use transactions for multi-table operations
 - Optimize database queries
-- Follow najm-api patterns strictly
+- Follow Najm framework patterns strictly
 
 ### Frontend Best Practices
 - Feature-based architecture

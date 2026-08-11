@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react'
 import { WizardForm, useDialog } from 'najm-kit'
 import type { StepConfig } from 'najm-kit'
@@ -45,8 +45,6 @@ const FullStudentForm = ({
 }) => {
   const { pop } = useDialog()
   const { t } = useTranslation()
-  const [wizardKey, setWizardKey] = useState(0)
-  const [seededValues, setSeededValues] = useState<Record<string, any> | null>(null)
   const [transportSelected, setTransportSelected] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
@@ -107,20 +105,19 @@ const FullStudentForm = ({
     }
   }, [fillFees, fillStudent])
 
-  useEffect(() => {
-    if (!isDevFill) return
-
-    const handler = (event: KeyboardEvent) => {
-      if (event.key !== 'F8') return
-      event.preventDefault()
-      setSeededValues(fillAll())
-      setTransportSelected(false)
-      setWizardKey((key) => key + 1)
-    }
-
-    window.addEventListener('keydown', handler, true)
-    return () => window.removeEventListener('keydown', handler, true)
-  }, [fillAll])
+  // The wizard's own dev tools own the F8 shortcut, the step reset, and the
+  // seeding. Only the transport step is School's to reset: it is derived from a
+  // field the fill rewrites, and nothing in the package knows that.
+  const devTools = useMemo(
+    () => ({
+      enabled: isDevFill,
+      fill: () => {
+        setTransportSelected(false)
+        return fillAll()
+      },
+    }),
+    [fillAll],
+  )
 
   const studentStepTitle = t('students.form.studentInformation')
   const parentsStepTitle = t('students.form.parentsInformation')
@@ -204,11 +201,6 @@ const FullStudentForm = ({
     },
   }), [defaultFees, initialStudentValues])
 
-  const wizardDefaultValues = useMemo(
-    () => ({ ...defaultValues, ...(seededValues ?? {}) }),
-    [defaultValues, seededValues],
-  )
-
   const handleSubmit = useCallback(async (data) => {
     const { transportEnabled, ...studentData } = data
     const fees = transportEnabled
@@ -246,10 +238,10 @@ const FullStudentForm = ({
   return (
     <div className='h-full min-h-0' aria-busy={isSubmitting}>
       <StudentWizardForm
-        key={wizardKey}
         steps={steps}
         schema={fullStudentSchema}
-        defaultValues={wizardDefaultValues}
+        defaultValues={defaultValues}
+        devTools={devTools}
         onStepComplete={(stepIndex, data) => {
           if (stepIndex === 0) setTransportSelected(Boolean(data.transportEnabled))
         }}

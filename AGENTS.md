@@ -4,17 +4,15 @@ Unified repo guide for agentic tools working in this School Management System mo
 
 This file merges the high-signal parts of:
 - `CLAUDE.md`
-- `.claude/commands/najm.md`
-- `.claude/commands/internal-mcp.md`
-- the repo-relevant skill guidance for Najm, frontend design, and React/Next performance
+- the `najm` skill (`.claude/skills/najm/SKILL.md`), which covers both the framework reference and live MCP/REST data operations
+- the repo-relevant skill guidance for frontend design and React/Next performance
 
 Use this file as the default entry point. Read the deeper files only when a task needs their extra detail.
 
 ## Read Order
 
 1. Read this file first.
-2. If the task is about live data operations, also read `.claude/commands/internal-mcp.md`.
-3. If the task is about backend modules, MCP exposure, storage, validation, or publishing Najm packages, also read `.claude/commands/najm.md`.
+2. For live data operations, or for backend modules, MCP exposure, storage, validation, or Najm package internals, load the `najm` skill.
 
 ## Working Modes
 
@@ -178,10 +176,23 @@ Patterns:
 - Respect React Query for server state and Zustand for global client state.
 - Keep forms consistent with `NForm`, `StepForm`, and multi-step flows already used in the app.
 
+### Framework Contracts
+
+Single-owner boundaries. A second owner raises no error — it produces two
+states that drift apart — so do not add one without changing the plan first.
+
+- **One UI provider.** `apps/dashboard/src/app/providers.tsx` mounts exactly one `NajmAppProvider` from `najm-kit/app`, owning language, theme, design, time zone, branding, formatting, and `NTable` defaults. Never add `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local theme wrapper.
+- **One preference source.** `apps/dashboard/src/lib/serverPreferences.ts` resolves cookie → signed-in user → School settings → typed fallback. New preference values belong in `apps/dashboard/src/preferences/`.
+- **One session resolution.** Server components use the `serverAuth` singleton in `apps/dashboard/src/lib/session.ts`. Never call `auth.getSession()` directly from a layout or page, and never build the adapter per request.
+- **Sidebar state** belongs to `NSidebarProvider` from `najm-kit`, read with `useNSidebar()`. School has no sidebar store.
+- **Translations** live in `packages/server/src/locales/` and serve backend and frontend from one catalog. Run `bun run i18n:check` after adding keys.
+
 ### Local Najm Package Sources
 
-- When a task involves `najm-kit` internals, check the local source repo at `C:\Users\pc\Desktop\libs\najm` instead of relying only on installed `node_modules`.
-- Read `C:\Users\pc\Desktop\libs\najm\AGENTS.md` before editing or debugging that library.
+- Read installed behavior from `node_modules/najm-*/dist` first. That is what School actually runs.
+- A local Najm source checkout may be consulted **read-only** to understand internals. Never make School consume it: no workspace link, no `file:` dependency, no copied source, no tarball. School upgrades only by pinning a published version.
+- Najm versions are exact pins in the root `package.json` with a matching `overrides` block. Read the versions there rather than assuming, and never widen a pin to a range.
+- `bun run test:dashboard` fails when a second copy of a Najm package resolves, including a stale nested directory that `bun install` left behind. Delete the nested directory and re-run `bun install` to confirm it is not recreated; do not relax the guard.
 
 ### Design Guidance
 
@@ -201,11 +212,19 @@ When building or redesigning UI:
 
 ## Commands
 
-Use the actual root scripts from `package.json`:
+Use the actual root scripts from `package.json`. Bun only — npm, yarn, and pnpm
+ignore `bun.lock` and the `overrides` block that pins the Najm versions.
 
+- `bun install`
 - `bun run dev`
 - `bun run build`
+- `bun run build:all`
 - `bun run lint`
+- `bun run test:server`
+- `bun run test:dashboard`
+- `bun run test:seed`
+- `bun run test:e2e:najm-upgrade`
+- `bun run i18n:check`
 - `bun run db:generate`
 - `bun run db:migrate`
 - `bun run db:push`
@@ -215,6 +234,12 @@ Use the actual root scripts from `package.json`:
 - `bun run seed:demo`
 - `bun run seed:full`
 - `bun run reset:demo`
+
+Environment: `apps/dashboard/.env.local` is the monorepo's only env file, and
+`apps/dashboard/.env.local.example` is the tracked template documenting every
+value. `DB_URL`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, and
+`NAJM_ENCRYPTION_KEY` are required — a build fails while collecting page data
+without them. Never commit real values.
 
 Verification rules:
 - After code changes, run the smallest relevant verification first.
@@ -227,8 +252,11 @@ Verification rules:
 Use these files when behavior matters more than documentation:
 
 - `CLAUDE.md`
-- `.claude/commands/najm.md`
-- `.claude/commands/internal-mcp.md`
+- `.claude/skills/najm/SKILL.md`
+- `apps/dashboard/.env.local.example`
+- `apps/dashboard/src/app/providers.tsx`
+- `apps/dashboard/src/lib/session.ts`
+- `apps/dashboard/src/lib/serverPreferences.ts`
 - `packages/server/src/modules/students/StudentController.ts`
 - `packages/server/src/modules/students/StudentService.ts`
 - `packages/server/src/modules/parents/ParentController.ts`
@@ -248,4 +276,4 @@ When no special instruction is given:
 - for backend tasks, follow Najm module conventions
 - for frontend tasks, preserve the existing UI language and apply solid React/Next performance habits
 
-If a task becomes specialized, load the matching `.claude/commands` file and continue from there.
+If a task becomes specialized, load the `najm` skill and continue from there.

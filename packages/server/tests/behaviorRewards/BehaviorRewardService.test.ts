@@ -55,4 +55,47 @@ describe('BehaviorRewardService', () => {
     expect(result.classId).toBe('cls_02');
     expect(result.sectionId).toBe('sec_02');
   });
+
+  it('requires ownership validation before update', async () => {
+    const repository = {
+      update: mock((_id, data) => Promise.resolve({ id: 'br_01', ...data })),
+    };
+    const validator = {
+      ensureExists: mock(() => Promise.resolve({ id: 'br_01', studentId: 'stu_01', awardedBy: 'usr_teacher' })),
+      ensureTeacherOwns: mock(() => undefined),
+      ensureBehaviorDate: mock(() => undefined),
+    };
+    const service = new BehaviorRewardService(repository as any, validator as any);
+
+    await service.update('br_01', { description: 'Updated description.' }, {
+      id: 'usr_teacher', role: 'teacher',
+    });
+
+    expect(validator.ensureTeacherOwns).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'br_01', awardedBy: 'usr_teacher' }),
+      { id: 'usr_teacher', role: 'teacher' },
+    );
+  });
+
+  it('requires administrator validation before delete', async () => {
+    const repository = { delete: mock((id) => Promise.resolve({ id })) };
+    const validator = {
+      ensureAdmin: mock(() => undefined),
+      ensureExists: mock(() => Promise.resolve({ id: 'br_01' })),
+    };
+    const service = new BehaviorRewardService(repository as any, validator as any);
+    const actor = { id: 'admin_01', role: 'admin' };
+
+    await service.delete('br_01', actor);
+
+    expect(validator.ensureAdmin).toHaveBeenCalledWith(actor);
+    expect(repository.delete).toHaveBeenCalledWith('br_01');
+  });
+
+  it('has no notification or alert side effects', async () => {
+    const source = await Bun.file(
+      new URL('../../src/modules/behaviorRewards/BehaviorRewardService.ts', import.meta.url),
+    ).text();
+    expect(source).not.toMatch(/Notification|Alert|Email|WhatsApp/);
+  });
 });

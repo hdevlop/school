@@ -12,6 +12,7 @@ import { chatbot } from 'najm-chatbot';
 import { studioAssistant } from 'najm-chatbot/studio-assistant';
 import { rag, ragStudio } from 'najm-rag';
 import type { NajmPlugin } from 'najm-core';
+export { themeConfig } from './themeConfig';
 
 import translations from '@server/locales';
 import { db } from '@server/database/db';
@@ -39,11 +40,12 @@ IDs are random short strings (nanoid). You cannot guess them. Before calling any
 - Summarize results in plain language. Show names, not raw IDs, unless the user asks for IDs.
 - Ask the user for any required field you cannot resolve, such as emails, names, codes, amounts, or dates. Do not fabricate them.`;
 
-export const emailConfig = () =>
-  email({
-    provider: { provider: (process.env.EMAIL_PROVIDER as any) || 'console' },
-    defaultFrom: process.env.EMAIL_DEFAULT_FROM || 'noreply@sms.local',
-  });
+const getEmailPluginConfig = () => ({
+  provider: { provider: (process.env.EMAIL_PROVIDER as any) || 'console' },
+  defaultFrom: process.env.EMAIL_DEFAULT_FROM || 'noreply@sms.local',
+});
+
+export const emailConfig = () => email(getEmailPluginConfig());
 
 export const databaseConfig = () =>
   database({
@@ -54,6 +56,10 @@ export const authConfig = () =>
   auth({
     dialect: 'pg',
     encryptionKey: process.env.NAJM_ENCRYPTION_KEY,
+    // najm-auth declares its own email plugin dependency. Forward the same
+    // transport config so builds and runtime startup do not rely on a global
+    // EMAIL_PROVIDER merely to resolve that dependency.
+    email: getEmailPluginConfig(),
   });
 
 export const validationConfig = () => validation();

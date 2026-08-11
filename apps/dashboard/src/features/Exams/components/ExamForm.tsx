@@ -12,7 +12,6 @@ import {
 import { useDialog } from 'najm-kit'
 import { examSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 import { useEnum } from '@/hooks/useEnum'
 import { useClasses } from '@/hooks/useClasses'
@@ -176,7 +175,6 @@ const ExamForm = ({ exam = null }) => {
           onSubmit={handleSubmit}
           devTools={{ enabled: isDevFill, fill }}
         >
-          <DevFormFiller fill={fill} />
           <div className='flex flex-col gap-4'>
 
             <FormSectionHeader

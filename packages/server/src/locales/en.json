@@ -439,7 +439,21 @@
       "november": "November",
       "december": "December"
     },
-    "deleteConfirm": "Are you sure you want to delete?"
+    "deleteConfirm": "Are you sure you want to delete?",
+    "inactive": "Inactive",
+    "pagination": {
+      "rowsPerPage": "Rows/page",
+      "pagination": "Pagination",
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "lastPage": "Last page",
+      "goToPage": "Go to page {{page}}",
+      "currentPage": "Page {{page}}, current page",
+      "pageOf": "Page {{page}} of {{pageCount}}",
+      "pageOfUnknown": "Page {{page}}",
+      "rowsSelected": "{{selected}} of {{total}} row(s) selected"
+    }
   },
   "status": {
     "active": "Active",

@@ -1,6 +1,9 @@
 import { describe, expect, it, mock } from 'bun:test';
 
+const najmEvent = await import('najm-event');
+
 mock.module('najm-event', () => ({
+  ...najmEvent,
   Events: () => () => undefined,
   EventService: class {},
   On: () => () => undefined,
@@ -49,6 +52,9 @@ function createMockDeps() {
       create: mock(() => Promise.resolve({ id: 'usr_01', email: 'mohammed@example.com' })),
       update: mock(() => Promise.resolve({ id: 'usr_01' })),
     },
+    authService: {
+      provisionUser: mock(() => Promise.resolve({ id: 'usr_01', email: 'mohammed@example.com' })),
+    },
     storage: {
       processFile: mock(() => Promise.resolve('/images/parent_male.png')),
       delete: mock(() => Promise.resolve()),
@@ -61,6 +67,7 @@ function createService(deps = createMockDeps()) {
     deps.parentRepository as any,
     deps.parentValidator as any,
     deps.userService as any,
+    deps.authService as any,
     deps.storage as any,
   );
   return { service, deps };
@@ -146,7 +153,7 @@ describe('ParentService', () => {
       expect(deps.parentValidator.ensureGenderValid).toHaveBeenCalledWith('M');
       expect(deps.parentValidator.ensureRelationshipTypeValid).toHaveBeenCalledWith('father');
       expect(deps.parentValidator.ensureMaritalStatusValid).toHaveBeenCalledWith('married');
-      expect(deps.userService.create).toHaveBeenCalled();
+      expect(deps.authService.provisionUser).toHaveBeenCalled();
       expect(deps.parentRepository.create).toHaveBeenCalled();
     });
 

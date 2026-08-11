@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { NButton, Tabs, TabsContent, TabsList, TabsTrigger, useNSidebar } from 'najm-kit';
 import { useTranslation } from '@/hooks/useLanguage';
 import ProfileSidebar from './ProfileSidebar';
 import AcademicInfoTab from './tabs/AcademicInfoTab';
@@ -19,6 +19,7 @@ import {
   Calendar,
   FileText,
   CreditCard,
+  Menu,
 } from 'lucide-react';
 
 interface TeacherProfileProps {
@@ -67,6 +68,7 @@ const createDraft = (teacher: any) => ({
 
 const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacherId }) => {
   const { t } = useTranslation();
+  const sidebar = useNSidebar();
   const [teacher, setTeacher] = useState<any>(null);
   const [draft, setDraft] = useState(() => createDraft(null));
   const [loading, setLoading] = useState(true);
@@ -177,6 +179,19 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacherId }) => {
 
   return (
     <div className="h-full grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
+      {/* This profile has no NPageHeader, so it carries the mobile sidebar
+          trigger a page header would otherwise provide. */}
+      <NButton
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="-ms-2 lg:hidden"
+        aria-label="Open sidebar"
+        onClick={() => sidebar?.openMobile()}
+      >
+        <Menu className="h-5 w-5" />
+      </NButton>
+
       <div className="lg:col-span-1">
         <ProfileSidebar
           teacher={teacher}

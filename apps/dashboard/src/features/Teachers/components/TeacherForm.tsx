@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react'
 import { WizardForm, useDialog } from 'najm-kit'
 import type { StepConfig } from 'najm-kit'
@@ -59,8 +59,6 @@ export const getTeacherAssignmentsDefaultValues = (teacher = null) => ({
 const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeacher }) => {
    const { pop } = useDialog()
    const { t } = useTranslation()
-   const [wizardKey, setWizardKey] = useState(0)
-   const [seededValues, setSeededValues] = useState<Record<string, any> | null>(null)
    const [isSubmitting, setIsSubmitting] = useState(false)
    const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
 
@@ -93,19 +91,12 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       image: teacher?.image ?? null,
    }), [fillAssignments, fillPersonal, fillProfessional, teacher])
 
-   useEffect(() => {
-      if (!isDevFill) return
-
-      const handler = (event: KeyboardEvent) => {
-         if (event.key !== 'F8') return
-         event.preventDefault()
-         setSeededValues(fillAll())
-         setWizardKey((key) => key + 1)
-      }
-
-      window.addEventListener('keydown', handler, true)
-      return () => window.removeEventListener('keydown', handler, true)
-   }, [fillAll])
+   // The wizard's own dev tools own the F8 shortcut, the step reset, and the
+   // seeding; School only supplies the values.
+   const devTools = useMemo(
+      () => ({ enabled: isDevFill, fill: fillAll }),
+      [fillAll],
+   )
 
    const steps: StepConfig[] = useMemo(() => [
       {
@@ -172,10 +163,10 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
    return (
       <div className='h-full min-h-0' aria-busy={isSubmitting}>
          <TeacherWizardForm
-            key={wizardKey}
             steps={steps}
             schema={teacherFullSchema}
-            defaultValues={seededValues ?? defaultValues}
+            defaultValues={defaultValues}
+            devTools={devTools}
             onSubmit={handleSubmit}
             className={isSubmitting ? 'pointer-events-none select-none' : undefined}
             nextLabel={t('common.next')}

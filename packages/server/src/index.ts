@@ -16,9 +16,12 @@ import {
   chatbotConfig,
   studioAssistantConfig,
   ragStudioConfig,
+  themeConfig,
 } from '@server/config';
 
 import * as modulesModule from '@server/modules';
+
+export { loadSchoolUiSettings, type SchoolUiSettings } from '@server/uiSettings';
 
 export {
   databaseConfig,
@@ -35,6 +38,7 @@ export {
   chatbotConfig,
   studioAssistantConfig,
   ragStudioConfig,
+  themeConfig,
 };
 
 export const server = new Server()
@@ -48,6 +52,7 @@ export const server = new Server()
   .use(authConfig())
   .use(mcpConfig())
   .use(storageConfig())
+  .use(themeConfig())
   .use(ragConfig())
   .use(chatbotConfig())
   .use(studioAssistantConfig())

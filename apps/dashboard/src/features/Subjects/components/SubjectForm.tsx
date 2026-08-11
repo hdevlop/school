@@ -9,7 +9,6 @@ import { BookOpen, Hash, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { subjectSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 
 const SubjectForm = ({ subject = null }) => {
@@ -38,7 +37,6 @@ const SubjectForm = ({ subject = null }) => {
                onSubmit={handleSubmit}
                devTools={{ enabled: isDevFill, fill: () => buildFill(subjectSchema) }}
             >
-               <DevFormFiller fill={() => buildFill(subjectSchema)} />
                <div className='flex flex-col gap-4'>
 
                   {/* Subject Information Section */}

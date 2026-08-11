@@ -296,7 +296,22 @@
       "M": "Masculin",
       "F": "Féminin"
     },
-    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?"
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
+    "amount": "Montant",
+    "inactive": "Inactif",
+    "pagination": {
+      "rowsPerPage": "Lignes/page",
+      "pagination": "Pagination",
+      "firstPage": "Première page",
+      "previousPage": "Page précédente",
+      "nextPage": "Page suivante",
+      "lastPage": "Dernière page",
+      "goToPage": "Aller à la page {{page}}",
+      "currentPage": "Page {{page}}, page actuelle",
+      "pageOf": "Page {{page}} sur {{pageCount}}",
+      "pageOfUnknown": "Page {{page}}",
+      "rowsSelected": "{{selected}} ligne(s) sélectionnée(s) sur {{total}}"
+    }
   },
   "staff": {
     "success": {
@@ -326,7 +341,8 @@
       "phone": "Téléphone",
       "salary": "Salaire",
       "compensationMode": "Rémunération",
-      "status": "Statut"
+      "status": "Statut",
+      "assignments": "Affectations"
     },
     "filters": {
       "search": "Rechercher par nom ou code...",
@@ -381,7 +397,16 @@
       "endDate": "Date de fin",
       "bankAccount": "Compte bancaire",
       "emergencyContactName": "Nom du contact d'urgence",
-      "emergencyPhone": "Téléphone d'urgence"
+      "emergencyPhone": "Téléphone d'urgence",
+      "assignments": "Affectations",
+      "class": "Classe",
+      "cycle": "Cycle",
+      "driverLicense": "Permis de conduire",
+      "email": "E-mail",
+      "shift": "Horaire",
+      "startDate": "Date de début",
+      "vehicle": "Véhicule",
+      "zone": "Zone"
     },
     "dialogs": {
       "createTitle": "Créer un membre du personnel",
@@ -1367,7 +1392,8 @@
       "students": "Étudiants",
       "studentsInClass": "Étudiants dans la classe",
       "total": "Total",
-      "unknownFeeType": "Type de frais inconnu"
+      "unknownFeeType": "Type de frais inconnu",
+      "academicYear": "Année scolaire"
     },
     "status": {
       "paying": "En cours",
@@ -3004,6 +3030,40 @@
       "removed": "Permission retiré avec succès",
       "retrieved": "Permission récupéré avec succès",
       "updated": "Permission mis à jour avec succès"
+    },
+    "dialogs": {
+      "createButton": "Créer une autorisation",
+      "createTitle": "Créer une autorisation",
+      "deleteButton": "Supprimer l’autorisation",
+      "editTitle": "Modifier l’autorisation",
+      "updateButton": "Mettre à jour l’autorisation",
+      "viewTitle": "Détails de l’autorisation"
+    },
+    "filters": {
+      "searchByName": "Rechercher par nom d’autorisation…",
+      "searchByResource": "Rechercher par ressource…"
+    },
+    "form": {
+      "action": "Action",
+      "actionPlaceholder": "Sélectionner une action",
+      "description": "Description (facultatif)",
+      "descriptionPlaceholder": "Saisir une description",
+      "name": "Nom de l’autorisation",
+      "namePlaceholder": "Saisir le nom de l’autorisation",
+      "resource": "Ressource",
+      "resourcePlaceholder": "Sélectionner une ressource"
+    },
+    "table": {
+      "action": "Action",
+      "description": "Description",
+      "name": "Nom",
+      "noDescription": "Aucune description",
+      "resource": "Ressource"
+    },
+    "validation": {
+      "actionRequired": "L’action est requise",
+      "nameRequired": "Le nom de l’autorisation est requis",
+      "resourceRequired": "La ressource est requise"
     }
   },
   "refuels": {
@@ -3042,6 +3102,27 @@
     },
     "profile": {
       "assignTitle": "Affecter le transport scolaire", "editTitle": "Modifier le ramassage", "changeTitle": "Changer de véhicule", "assign": "Affecter le transport", "active": "Actif", "noAssignment": "Aucune affectation de transport active", "noAssignmentDescription": "Affectez cet élève à un véhicule disponible et confirmez son ramassage.", "noPickup": "Aucun point de ramassage", "schoolDefault": "Entrée principale de l’école", "editPickup": "Modifier le ramassage", "changeBus": "Changer de véhicule", "unassignTitle": "Terminer le transport", "unassignDescription": "Cette action termine l’affectation active et conserve l’historique des frais et paiements.", "unassign": "Désaffecter", "unassigned": "Affectation de transport terminée", "history": "Historique du transport"
+    }
+  },
+  "staffScopes": {
+    "dialogs": {
+      "createZone": "Créer la zone",
+      "createZoneTitle": "Créer une zone",
+      "deleteZone": "Supprimer la zone",
+      "editZone": "Modifier la zone",
+      "manageTitle": "Gérer les périmètres du personnel",
+      "updateZone": "Mettre à jour la zone"
+    },
+    "empty": {
+      "location": "Aucun détail de localisation",
+      "zones": "Aucune zone trouvée"
+    },
+    "form": {
+      "addZone": "Ajouter une zone",
+      "building": "Bâtiment",
+      "description": "Description",
+      "floor": "Étage",
+      "name": "Nom"
     }
   }
 }

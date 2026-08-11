@@ -9,7 +9,6 @@ import { Building, Hash, Users, DoorOpen } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { sectionSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 import { useClasses } from '@/hooks/useClasses'
 
@@ -48,7 +47,6 @@ const SectionForm = ({ section = null }) => {
                onSubmit={handleSubmit}
                devTools={{ enabled: isDevFill, fill: () => buildFill(sectionSchema, { classId: classOptions }) }}
             >
-               <DevFormFiller fill={() => buildFill(sectionSchema, { classId: classOptions })} />
                <div className='flex flex-col gap-4'>
 
                   <FormSectionHeader

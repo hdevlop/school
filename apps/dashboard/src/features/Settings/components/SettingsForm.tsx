@@ -6,6 +6,7 @@ import { NSkeleton as Skeleton } from 'najm-kit';
 import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
 
 import { NForm, NButton } from 'najm-kit';
+import AppearanceSection from './sections/AppearanceSection';
 import DatabaseSection from './sections/DatabaseSection';
 import SchoolSection from './sections/SchoolSection';
 import AcademicSection from './sections/AcademicSection';
@@ -132,7 +133,7 @@ const SettingsForm: React.FC = () => {
     studentAccessEnabled: settings?.studentAccessEnabled ?? true,
     timeZone: settings?.timeZone || 'UTC',
     language: settings?.language || 'en' as const,
-    theme: settings?.theme || 'system' as const,
+    theme: settings?.theme === 'dark' ? ('dark' as const) : ('light' as const),
     dateFormat: settings?.dateFormat || 'MM/DD/YYYY' as const,
     timeFormat: settings?.timeFormat || '12' as const,
     currency: settings?.currency || 'USD',
@@ -159,7 +160,7 @@ const SettingsForm: React.FC = () => {
   }
 
   return (
-    <div className='flex flex-col gap-2 w-full'>
+    <div className='flex flex-col gap-2 w-full min-h-0 overflow-y-auto'>
       <NPageHeader
         icon={SettingsIcon}
         title={t('navigation.settings')}
@@ -207,6 +208,10 @@ const SettingsForm: React.FC = () => {
           </Card>
         </NForm>
       </div>
+
+      {/* Outside the settings form on purpose: najm-theme owns its own
+          persistence, revisions, and Save. */}
+      <AppearanceSection />
     </div>
   );
 };

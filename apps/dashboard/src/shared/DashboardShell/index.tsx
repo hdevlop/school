@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useMemo } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
@@ -39,10 +38,10 @@ import {
 } from 'lucide-react';
 import { Chatbot } from 'najm-chatbot/react';
 import { SignOutButton, useAuth } from 'najm-auth/client/react';
-import { NSidebar, type NavItem } from 'najm-kit';
-import logo from '@/assets/images/logo.png';
-import useSidebarStore from '@/stores/SidebarStore';
+import { NSidebar, NSidebarProvider, useNSidebar, type NavItem } from 'najm-kit';
+import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from '@/hooks/useLanguage';
+import { clearSchoolUiPreferences } from '@/preferences/clearUiPreferences';
 
 const LinkAdapter = ({
   href,
@@ -190,10 +189,13 @@ function isSidebarItemActive(item: NavItem, activePath: string) {
   return activePath === item.href || activePath.startsWith(`${item.href}/`);
 }
 
-function SidebarFooterContent({ isExpanded }: { isExpanded: boolean }) {
+function SidebarFooterContent() {
   const router = useRouter();
   const { user } = useAuth();
   const { t } = useTranslation();
+  // The provider is the one source for collapsed state, so the footer reads it
+  // rather than being handed an approximation of it from the shell.
+  const isExpanded = !useNSidebar()?.collapsed;
   const role = (user as any)?.role;
   const canSeeSettings = role === 'admin' || role === 'principal';
   const itemClassName =
@@ -207,7 +209,15 @@ function SidebarFooterContent({ isExpanded }: { isExpanded: boolean }) {
           {isExpanded && <span>{t('navigation.settings')}</span>}
         </button>
       )}
-      <SignOutButton onSuccess={() => router.push('/login')}>
+      <SignOutButton
+        onSuccess={async () => {
+          // The UI preference cookies outrank the signed-in user's stored
+          // preferences, so they must not survive into the next person's
+          // session on a shared machine.
+          await clearSchoolUiPreferences();
+          router.push('/login');
+        }}
+      >
         <button type="button" className={itemClassName}>
           <LogOut className="h-4 w-4 shrink-0" />
           {isExpanded && <span>{t('navigation.logout')}</span>}
@@ -217,62 +227,60 @@ function SidebarFooterContent({ isExpanded }: { isExpanded: boolean }) {
   );
 }
 
+/**
+ * The sidebar and the page content are siblings, so the state they share has to
+ * live above both — that is what `NSidebarProvider` is for, and what lets a
+ * nested `NPageHeader` open the mobile drawer without the shell threading a
+ * callback down to it.
+ */
 export default function DashboardShell({ children }: { children: React.ReactNode }) {
+  return (
+    <NSidebarProvider mobileBreakpoint="lg">
+      <DashboardShellContent>{children}</DashboardShellContent>
+    </NSidebarProvider>
+  );
+}
+
+function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user } = useAuth();
   const { t } = useTranslation();
-  const {
-    isExpanded,
-    isMobileMenuOpen,
-    collapseSidebar,
-    expandSidebar,
-    openMobileMenu,
-    closeMobileMenu,
-  } = useSidebarStore();
   const role = (user as any)?.role ?? 'teacher';
 
   const navItems: NavItem[] = useMemo(() => createSidebarItems(t, role), [role, t]);
 
-  const handleCollapsedChange = (collapsed: boolean) => {
-    if (collapsed) collapseSidebar();
-    else expandSidebar();
-  };
-
-  const handleMobileOpenChange = (open: boolean) => {
-    if (open) openMobileMenu();
-    else closeMobileMenu();
-  };
-
-  const handleNavigate = () => {
-    closeMobileMenu();
-  };
-
   return (
     <div className="flex h-screen w-full overflow-hidden  gap-2 bg-background font-sans">
       <NSidebar
-        logo={
-          <div className="flex min-w-0 items-center gap-2">
-            <Image src={logo} alt="MyScolAI logo" className="min-w-12 h-12 w-12 object-contain" />
-            {isExpanded && (
-              <span className="truncate text-xl font-semibold leading-none text-sidebar-foreground">
-                MyScolAI
-              </span>
-            )}
-          </div>
-        }
+        // The render prop, rather than a second reading of the sidebar state:
+        // the sidebar already knows whether it is collapsed and whether it is
+        // rendering as the mobile drawer, where the expanded mark is correct
+        // even though the desktop rail is collapsed.
+        logo={({ collapsed, isMobile }) => {
+          const showExpandedMark = isMobile || !collapsed;
+          return (
+            <div className="flex min-w-0 items-center gap-2">
+              <NThemeImage
+                slot={showExpandedMark ? 'sidebarLogoExpanded' : 'sidebarLogoCollapsed'}
+                alt="MyScolAI"
+                className="h-12 w-12 min-w-12 object-contain"
+              />
+              {showExpandedMark && (
+                <span className="truncate text-xl font-semibold leading-none text-sidebar-foreground">
+                  MyScolAI
+                </span>
+              )}
+            </div>
+          );
+        }}
         navItems={navItems}
         activePath={pathname}
         isActive={isSidebarItemActive}
-        onNavigate={handleNavigate}
         linkComponent={LinkAdapter}
-        collapsed={!isExpanded}
-        onCollapsedChange={handleCollapsedChange}
-        footer={<SidebarFooterContent isExpanded={isExpanded} />}
+        footer={<SidebarFooterContent />}
         widths={{ expanded: 264 }}
         mobileBreakpoint="lg"
-        mobileOpen={isMobileMenuOpen}
-        onMobileOpenChange={handleMobileOpenChange}
-        showHamburgerButton
+        closeOnNavigate
       />
 
       <div className='flex flex-col w-full h-full min-h-0 gap-2 py-2'>

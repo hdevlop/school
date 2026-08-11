@@ -51,7 +51,7 @@ const settingsSchema = z.object({
 
   timeZone: z.string().min(1, 'Time zone is required').default('UTC'),
   language: languageEnum.default('en'),
-  theme: z.enum(['light', 'dark', 'system']).default('system'),
+  theme: z.enum(['light', 'dark']).default('light'),
   dateFormat: z.enum(['YYYY-MM-DD', 'MM/DD/YYYY', 'DD/MM/YYYY', 'DD-MM-YY', 'DD-MM-YYYY']).default('MM/DD/YYYY'),
   timeFormat: z.enum(['12', '24']).default('12'),
   currency: z.string().length(3, 'Currency must be a 3-letter ISO code').regex(/^[A-Z]{3}$/, 'Currency must be uppercase ISO code').default('USD'),

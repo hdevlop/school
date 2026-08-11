@@ -1,6 +1,12 @@
 import { describe, expect, it, mock } from 'bun:test';
 
+// mock.module is process-global, so a partial stub here also reaches every later
+// test file. najm-auth imports I18nService from this module, so the real exports
+// have to survive; only the two used below are replaced.
+const najmI18n = await import('najm-i18n');
+
 mock.module('najm-i18n', () => ({
+  ...najmI18n,
   I18n: () => () => undefined,
   t: (key: string) => key,
 }));

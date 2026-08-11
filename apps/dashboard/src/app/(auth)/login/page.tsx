@@ -11,8 +11,10 @@ import { useRouter } from 'next/navigation'
 import { useForgotPasswordStore } from '@/stores/ForgotPasswordStore'
 import { toast } from 'sonner';
 
+// `identifier` is Najm Auth v3's wire field. School authenticates by email, so
+// the value is still validated and labelled as one.
 const loginSchema = z.object({
-  email: z.string().email({ message: 'Invalid mail address' }),
+  identifier: z.string().email({ message: 'Invalid mail address' }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
   rememberMe: z.boolean()
 })
@@ -37,7 +39,9 @@ const getLoginErrorMessage = (error: unknown) => {
   return 'Login failed. Please try again.';
 };
 
-const INVALID_REDIRECT_PREFIXES = ['/login', '/_next', '/api', '/images', '/storage'];
+// `/change-password` is listed so a stale `?from=` cannot send a user who just
+// finished setup straight back into the setup screen.
+const INVALID_REDIRECT_PREFIXES = ['/login', '/change-password', '/_next', '/api', '/images', '/storage'];
 const INVALID_REDIRECT_EXACT_PATHS = new Set(['/manifest.webmanifest', '/favicon.ico', '/sw.js']);
 const INVALID_REDIRECT_FILE_EXTENSIONS = /\.(?:webmanifest|ico|png|jpe?g|svg|webp|gif|css|js|map)$/i;
 
@@ -79,9 +83,14 @@ const Login = () => {
   const router = useRouter();
 
   const { login, isLoading } = useLogin({
-    onSuccess: () => {
+    // v3 login has two outcomes. Only the authenticated one has a session, so
+    // only it may reach the dashboard.
+    onAuthenticated: () => {
       toast.success('Login successful');
       router.replace(getLoginRedirectPath());
+    },
+    onCredentialSetup: () => {
+      router.replace('/change-password');
     },
     onError: (error) => {
       toast.error(getLoginErrorMessage(error));
@@ -90,13 +99,13 @@ const Login = () => {
   const { openDialog } = useForgotPasswordStore();
 
   const defaultValues = {
-    email: 'admin@admin.com',
+    identifier: 'admin@admin.com',
     password: 'ChangeMe123456',
     rememberMe: false
   }
 
   const handleLogin = async (credentials) => {
-    await login({ email: credentials.email, password: credentials.password });
+    await login(credentials);
   }
 
   const handleForgotPasswordClick = (e) => {
@@ -112,7 +121,7 @@ const Login = () => {
 
         <NForm id='login-form' schema={loginSchema} defaultValues={defaultValues} onSubmit={handleLogin}>
           <FormInput
-            name='email'
+            name='identifier'
             type='text'
             formLabel='Email'
             placeholder='Enter your email'

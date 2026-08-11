@@ -24,7 +24,10 @@ if (isClean) {
   console.log('Cleaned .d.ts files from dist/');
 } else {
   execSync(
-    'tsc -p tsconfig.json --declaration --emitDeclarationOnly --noEmit false --outDir dist',
+    // The root config enables incremental compilation. A cached tsbuildinfo can
+    // otherwise claim the declaration build is current after `--clean` removes
+    // every .d.ts file, leaving the package with runtime JS but no type surface.
+    'tsc -p tsconfig.json --declaration --emitDeclarationOnly --noEmit false --incremental false --outDir dist',
     { stdio: 'inherit', cwd: __dirname },
   );
   console.log('Generated .d.ts files in dist/');

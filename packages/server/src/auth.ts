@@ -15,6 +15,8 @@ import {
   rolesTable,
   permissionsTable,
   rolePermissionsTable,
+  credentialSetupSessionsTable,
+  credentialSetupRequirementsTable,
   own, join, where,
   Owned, ScopeContext,
   Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete,
@@ -35,6 +37,8 @@ export {
   rolesTable,
   permissionsTable,
   rolePermissionsTable,
+  credentialSetupSessionsTable,
+  credentialSetupRequirementsTable,
 };
 
 // Scoped ownership API

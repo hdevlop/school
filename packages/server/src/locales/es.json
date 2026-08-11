@@ -485,7 +485,23 @@
       "M": "Masculino",
       "F": "Femenino"
     },
-    "deleteConfirm": "¿Estás seguro de que deseas eliminar?"
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar?",
+    "amount": "Importe",
+    "inactive": "Inactivo",
+    "none": "Ninguno",
+    "pagination": {
+      "rowsPerPage": "Filas/página",
+      "pagination": "Paginación",
+      "firstPage": "Primera página",
+      "previousPage": "Página anterior",
+      "nextPage": "Página siguiente",
+      "lastPage": "Última página",
+      "goToPage": "Ir a la página {{page}}",
+      "currentPage": "Página {{page}}, página actual",
+      "pageOf": "Página {{page}} de {{pageCount}}",
+      "pageOfUnknown": "Página {{page}}",
+      "rowsSelected": "{{selected}} de {{total}} fila(s) seleccionada(s)"
+    }
   },
   "status": {
     "active": "Activo",
@@ -861,7 +877,8 @@
       "students": "Estudiantes",
       "studentsInClass": "Estudiantes en la clase",
       "total": "Total",
-      "unknownFeeType": "Tipo de cuota desconocido"
+      "unknownFeeType": "Tipo de cuota desconocido",
+      "academicYear": "Año académico"
     },
     "status": {
       "paying": "Pagando",
@@ -2104,7 +2121,8 @@
       "phone": "Teléfono",
       "salary": "Salario",
       "compensationMode": "Compensación",
-      "status": "Estado"
+      "status": "Estado",
+      "assignments": "Asignaciones"
     },
     "filters": {
       "search": "Buscar por nombre o código...",
@@ -2159,7 +2177,16 @@
       "endDate": "Fecha de fin",
       "bankAccount": "Cuenta bancaria",
       "emergencyContactName": "Nombre del contacto de emergencia",
-      "emergencyPhone": "Teléfono de emergencia"
+      "emergencyPhone": "Teléfono de emergencia",
+      "assignments": "Asignaciones",
+      "class": "Clase",
+      "cycle": "Ciclo",
+      "driverLicense": "Permiso de conducir",
+      "email": "Correo electrónico",
+      "shift": "Turno",
+      "startDate": "Fecha de inicio",
+      "vehicle": "Vehículo",
+      "zone": "Zona"
     },
     "dialogs": {
       "createTitle": "Crear miembro del personal",
@@ -2826,6 +2853,40 @@
       "removed": "Permiso eliminado correctamente",
       "retrieved": "Permiso obtenido correctamente",
       "updated": "Permiso actualizado correctamente"
+    },
+    "dialogs": {
+      "createButton": "Crear permiso",
+      "createTitle": "Crear permiso",
+      "deleteButton": "Eliminar permiso",
+      "editTitle": "Editar permiso",
+      "updateButton": "Actualizar permiso",
+      "viewTitle": "Detalles del permiso"
+    },
+    "filters": {
+      "searchByName": "Buscar por nombre del permiso…",
+      "searchByResource": "Buscar por recurso…"
+    },
+    "form": {
+      "action": "Acción",
+      "actionPlaceholder": "Seleccionar una acción",
+      "description": "Descripción (opcional)",
+      "descriptionPlaceholder": "Introducir una descripción",
+      "name": "Nombre del permiso",
+      "namePlaceholder": "Introducir el nombre del permiso",
+      "resource": "Recurso",
+      "resourcePlaceholder": "Seleccionar un recurso"
+    },
+    "table": {
+      "action": "Acción",
+      "description": "Descripción",
+      "name": "Nombre",
+      "noDescription": "Sin descripción",
+      "resource": "Recurso"
+    },
+    "validation": {
+      "actionRequired": "La acción es obligatoria",
+      "nameRequired": "El nombre del permiso es obligatorio",
+      "resourceRequired": "El recurso es obligatorio"
     }
   },
   "refuels": {
@@ -2864,6 +2925,27 @@
     },
     "profile": {
       "assignTitle": "Asignar transporte escolar", "editTitle": "Editar recogida", "changeTitle": "Cambiar vehículo", "assign": "Asignar transporte", "active": "Activo", "noAssignment": "Sin asignación de transporte activa", "noAssignmentDescription": "Asigna este alumno a un vehículo disponible y confirma su recogida.", "noPickup": "Sin punto de recogida", "schoolDefault": "Entrada principal de la escuela", "editPickup": "Editar recogida", "changeBus": "Cambiar vehículo", "unassignTitle": "Finalizar transporte", "unassignDescription": "Finaliza la asignación activa y conserva el historial de cuotas y pagos.", "unassign": "Desasignar", "unassigned": "Asignación de transporte finalizada", "history": "Historial de transporte"
+    }
+  },
+  "staffScopes": {
+    "dialogs": {
+      "createZone": "Crear zona",
+      "createZoneTitle": "Crear zona",
+      "deleteZone": "Eliminar zona",
+      "editZone": "Editar zona",
+      "manageTitle": "Gestionar ámbitos del personal",
+      "updateZone": "Actualizar zona"
+    },
+    "empty": {
+      "location": "Sin detalles de ubicación",
+      "zones": "No se encontraron zonas"
+    },
+    "form": {
+      "addZone": "Añadir zona",
+      "building": "Edificio",
+      "description": "Descripción",
+      "floor": "Planta",
+      "name": "Nombre"
     }
   }
 }

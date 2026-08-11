@@ -10,7 +10,6 @@ import { useDialog } from 'najm-kit'
 import { useTranslation } from '@/hooks/useLanguage'
 import { feeTypeSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useEnum } from '@/hooks/useEnum'
 
 const FeeTypeForm = ({ feeType = null }) => {
@@ -44,7 +43,6 @@ const FeeTypeForm = ({ feeType = null }) => {
             onSubmit={handleSubmit}
             devTools={{ enabled: isDevFill, fill: () => buildFill(feeTypeSchema, { category: categoryOptions }) }}
          >
-            <DevFormFiller fill={() => buildFill(feeTypeSchema, { category: categoryOptions })} />
             <div className='flex flex-col gap-4'>
                <FormSectionHeader
                   icon={DollarSign}

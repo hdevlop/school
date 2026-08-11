@@ -1,3 +1,3 @@
-CREATE TYPE "public"."tokenStatus" AS ENUM('active', 'revoked', 'expired');--> statement-breakpoint
-CREATE TYPE "public"."tokenType" AS ENUM('access', 'refresh');--> statement-breakpoint
-CREATE TYPE "public"."userStatus" AS ENUM('active', 'inactive', 'pending');
+ALTER TABLE "tokens" ADD COLUMN "previous_hash" text;--> statement-breakpoint
+ALTER TABLE "tokens" ADD COLUMN "previous_valid_until" timestamp;--> statement-breakpoint
+ALTER TABLE "tokens" ADD COLUMN "previous_used_at" timestamp;

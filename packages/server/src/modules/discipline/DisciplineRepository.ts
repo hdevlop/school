@@ -127,6 +127,7 @@ export class DisciplineRepository {
     return record;
   }
 
+  /** Internal reset support only; intentionally not exposed by the controller. */
   async deleteAll() {
     return this.db.delete(disciplineIncidents).returning({ id: disciplineIncidents.id });
   }

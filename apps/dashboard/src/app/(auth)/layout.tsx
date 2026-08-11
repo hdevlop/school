@@ -1,35 +1,28 @@
 import React from 'react';
-import Image from 'next/image';
 import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth';
-import intro from '@/assets/images/loginBackground.png'
-import logo from '@/assets/images/logo.png'
+import { NThemeImage } from 'najm-theme/react';
+import { serverAuth } from '@/lib/session';
 import { ForgotPasswordDialog } from './ForgotPasswordDialog';
 
 const AuthLayout = async ({ children }) => {
-    const session = await auth.getSession();
+    // Shares the root layout's resolution for this render rather than repeating
+    // the cookie verification and recovery round trip.
+    const session = await serverAuth.getSession();
 
     if (session?.user) {
         redirect('/');
     }
 
     return (
-         <div 
-            className='flex h-full w-full overflow-hidden relative'
-            style={{
-                backgroundImage: `url(${intro.src})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'left',
-                backgroundRepeat: 'no-repeat'
-            }}
-        >
-            <div className='flex flex-col h-full flex-1 justify-center items-center'>
-                <Image src={logo} width={120} height={120} alt='noauth' />
+         <div className='relative flex h-full w-full overflow-hidden'>
+            <div className='relative z-10 flex h-full flex-1 flex-col items-center justify-center'>
+                <NThemeImage slot="authLogo" className="h-[120px] w-[120px] object-contain" alt="MyScolAI" />
                 {children}
                 <ForgotPasswordDialog />
                 <span className='mt-24 text-muted-foreground'>@2025 all rights reserved</span>
             </div>
-            <div className='h-full w-1/2 hidden lg:flex'>
+            <div className='relative hidden h-full w-1/2 lg:flex'>
+                <NThemeImage slot="authHeroImage" alt="" fill className="object-cover" />
             </div>
         </div>
     )

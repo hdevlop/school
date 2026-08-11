@@ -45,7 +45,7 @@ export class SettingsValidator {
   }
 
   validateTheme(theme: string): boolean {
-    const validThemes = ['light', 'dark', 'auto'];
+    const validThemes = ['light', 'dark'];
     if (!validThemes.includes(theme)) {
       Err(400, this.t('invalidTheme'));
     }

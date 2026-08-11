@@ -11,7 +11,7 @@ import {
 
 describe("entity generators", () => {
   it("generates two parents with a shared household address", () => {
-    const [father, mother] = generateParents();
+    const [father, mother] = generateParents({ maritalStatus: 'married' });
 
     expect(father.gender).toBe("M");
     expect(mother.gender).toBe("F");

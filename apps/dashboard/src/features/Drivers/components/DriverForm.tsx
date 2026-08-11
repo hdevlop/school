@@ -10,7 +10,6 @@ import { useTranslation } from '@/hooks/useLanguage'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { driverSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 
 const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
 
@@ -43,7 +42,6 @@ const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
 
    return (
       <NForm id='driver-form' schema={driverSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(driverSchema) }} >
-         <DevFormFiller fill={() => buildFill(driverSchema)} />
          <DriverFormContent />
       </NForm>
    )

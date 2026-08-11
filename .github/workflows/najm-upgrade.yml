@@ -1,0 +1,76 @@
+name: Najm upgrade acceptance
+
+on:
+  pull_request:
+  push:
+    branches:
+      - agent/finish-najm-upgrade
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: pgvector/pgvector:pg18
+        env:
+          POSTGRES_DB: school_upgrade
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d school_upgrade"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DB_URL: postgres://postgres:postgres@127.0.0.1:5432/school_upgrade
+      JWT_ACCESS_SECRET: ci-access-secret-not-for-production-000000000000
+      JWT_REFRESH_SECRET: ci-refresh-secret-not-for-production-00000000000
+      NAJM_SESSION_SECRET: ci-session-secret-not-for-production-00000000000
+      NAJM_ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef
+      ADMIN_EMAIL: admin@admin.com
+      ADMIN_PASSWORD: ChangeMe123456
+      EMAIL_PROVIDER: console
+      EMAIL_DEFAULT_FROM: noreply@school.test
+      NEXT_PUBLIC_APP_URL: http://localhost:3102
+      FRONTEND_URL: http://localhost:3102
+      CORS_ORIGIN: http://localhost:3102
+      NAJM_AUTH_INTERNAL_URL: http://localhost:3102/api/auth/session/recover
+      NEXT_PUBLIC_FORM_FILL_ENABLED: "false"
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.14
+
+      - run: bun install --frozen-lockfile
+      - name: Apply the complete migration chain to pgvector Postgres
+        run: bun run db:migrate
+      - name: Seed acceptance identities and data
+        run: bun run seed:full
+
+      - run: bun run lint
+      - run: bun run test:server
+      - run: bun run test:dashboard
+      - run: bun run test:seed
+      - run: bun run i18n:check
+      - run: bun run db:check
+      - run: bun run build:all
+
+      - name: Install pinned Chromium
+        run: bunx playwright install --with-deps chromium
+      - name: Run Najm upgrade browser acceptance
+        run: bun run test:e2e:najm-upgrade
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: najm-upgrade-playwright
+          path: |
+            apps/dashboard/playwright-report
+            apps/dashboard/test-results/najm-upgrade
+          if-no-files-found: ignore

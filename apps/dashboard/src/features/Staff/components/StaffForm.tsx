@@ -242,8 +242,6 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
   const { pop } = useDialog();
   const { t } = useTranslation();
   const defaultValues = useMemo(() => getStaffDefaultValues(staff), [staff]);
-  const [wizardKey, setWizardKey] = useState(0);
-  const [seededValues, setSeededValues] = useState<Record<string, any> | null>(null);
   const [selectedRole, setSelectedRole] = useState(defaultValues.role);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -258,7 +256,6 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
   useEffect(() => {
     setSelectedRole(defaultValues.role);
     setCurrentStep(1);
-    setSeededValues(null);
   }, [defaultValues.role, staff?.id]);
 
   const pickFillRole = useCallback(() => {
@@ -366,22 +363,20 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
     return values;
   }, [buildAssignmentsForRole, defaultValues, pickFillRole, staff?.id, staff?.image]);
 
-  useEffect(() => {
-    if (!isDevFill) return;
-
-    const handler = (event: KeyboardEvent) => {
-      if (event.key !== 'F8') return;
-      event.preventDefault();
-      const values = fillAll();
-      setSelectedRole(values.role);
-      setCurrentStep(1);
-      setSeededValues(values);
-      setWizardKey((key) => key + 1);
-    };
-
-    window.addEventListener('keydown', handler, true);
-    return () => window.removeEventListener('keydown', handler, true);
-  }, [fillAll]);
+  // The wizard's own dev tools own the F8 shortcut and the step reset. The
+  // role is School's to apply: it decides which steps exist at all, and the
+  // package cannot know that a filled field drives the step list.
+  const devTools = useMemo(
+    () => ({
+      enabled: isDevFill,
+      fill: () => {
+        const values = fillAll();
+        setSelectedRole(values.role);
+        return values;
+      },
+    }),
+    [fillAll],
+  );
 
   const steps: StepConfig[] = useMemo(() => {
     const visibleSteps: StepConfig[] = [
@@ -444,10 +439,10 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
   return (
     <div className="h-full min-h-0" aria-busy={isSubmitting}>
       <StaffWizardForm
-        key={wizardKey}
         steps={steps}
         schema={staffFullSchema}
-        defaultValues={seededValues ?? defaultValues}
+        defaultValues={defaultValues}
+        devTools={devTools}
         onSubmit={handleSubmit}
         currentStep={currentStep}
         onCurrentStepChange={setCurrentStep}

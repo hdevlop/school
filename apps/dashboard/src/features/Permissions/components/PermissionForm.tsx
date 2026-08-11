@@ -7,7 +7,6 @@ import { Tag, FileText, Boxes, Zap } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { permissionValidationSchema } from '../config/permissionsValidateSchema'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 
 const PermissionForm = ({ permission = null, mode = 'create' }) => {
@@ -46,7 +45,6 @@ const PermissionForm = ({ permission = null, mode = 'create' }) => {
                     onSubmit={handleSubmit}
                     devTools={{ enabled: isDevFill, fill: () => buildFill(schema) }}
                 >
-                    <DevFormFiller fill={() => buildFill(schema)} />
                     <FormInput
                         name='name'
                         type='text'

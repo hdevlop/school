@@ -8,7 +8,7 @@ export const normalizedSettingsData = {
   ...settingsData,
   calendarSystem: settingsData.calendarSystem as 'SEMESTER' | 'TRIMESTER' | 'QUARTER',
   language: settingsData.language as 'en' | 'fr' | 'ar' | 'es',
-  theme: settingsData.theme as 'light' | 'dark' | 'system',
+  theme: settingsData.theme as 'light' | 'dark',
   dateFormat: settingsData.dateFormat as 'YYYY-MM-DD' | 'MM/DD/YYYY' | 'DD/MM/YYYY' | 'DD-MM-YY' | 'DD-MM-YYYY',
   timeFormat: settingsData.timeFormat as '12' | '24',
   attendanceMode: 'daily' as 'daily' | 'per_class',

@@ -101,6 +101,7 @@ export class DisciplineService {
     return this.repository.delete(id);
   }
 
+  /** Internal demo-reset support only; intentionally not exposed by REST or MCP. */
   async deleteAll() {
     return this.repository.deleteAll();
   }

@@ -9,7 +9,6 @@ import { Megaphone, FileText, Users, Building, Calendar } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { announcementSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 import { useClasses } from '@/hooks/useClasses'
 
@@ -113,7 +112,6 @@ const AnnouncementForm = ({ announcement = null, defaultPublishDate = null }) =>
           onSubmit={handleSubmit}
           devTools={{ enabled: isDevFill, fill: () => buildFill(announcementSchema, { targetAudience: 'all', classId: '', classIds: [] }) }}
         >
-          <DevFormFiller fill={() => buildFill(announcementSchema, { targetAudience: 'all', classId: '', classIds: [] })} />
           <div className='flex flex-col gap-4'>
 
             <FormSectionHeader

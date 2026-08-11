@@ -10,7 +10,6 @@ import { useTranslation } from '@/hooks/useLanguage'
 import { useEnum } from '@/hooks/useEnum'
 import { expenseSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useActiveForm } from '@/hooks/useActiveForm'
 
 const ExpenseForm = ({ expense = null }) => {
@@ -44,7 +43,6 @@ const ExpenseForm = ({ expense = null }) => {
 
    return (
       <NForm id='expense-form' schema={expenseSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(expenseSchema) }} >
-         <DevFormFiller fill={() => buildFill(expenseSchema)} />
          <ExpenseFormContent isEdit={isEdit} />
       </NForm>
    )

@@ -499,7 +499,23 @@
       "M": "ذكر",
       "F": "أنثى"
     },
-    "deleteConfirm": "هل أنت متأكد أنك تريد الحذف؟"
+    "deleteConfirm": "هل أنت متأكد أنك تريد الحذف؟",
+    "amount": "المبلغ",
+    "inactive": "غير نشط",
+    "none": "لا يوجد",
+    "pagination": {
+      "rowsPerPage": "صفوف/صفحة",
+      "pagination": "ترقيم الصفحات",
+      "firstPage": "الصفحة الأولى",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "lastPage": "الصفحة الأخيرة",
+      "goToPage": "الانتقال إلى الصفحة {{page}}",
+      "currentPage": "الصفحة {{page}}، الصفحة الحالية",
+      "pageOf": "الصفحة {{page}} من {{pageCount}}",
+      "pageOfUnknown": "الصفحة {{page}}",
+      "rowsSelected": "تم تحديد {{selected}} من {{total}} صف"
+    }
   },
   "status": {
     "active": "نشط",
@@ -875,7 +891,8 @@
       "students": "التلاميذ",
       "studentsInClass": "التلاميذ في القسم",
       "total": "الإجمالي",
-      "unknownFeeType": "نوع رسوم غير معروف"
+      "unknownFeeType": "نوع رسوم غير معروف",
+      "academicYear": "السنة الدراسية"
     },
     "status": {
       "paying": "يدفع",
@@ -2118,7 +2135,8 @@
       "phone": "الهاتف",
       "salary": "الراتب",
       "compensationMode": "التعويض",
-      "status": "الحالة"
+      "status": "الحالة",
+      "assignments": "التعيينات"
     },
     "filters": {
       "search": "البحث بالاسم أو الرمز...",
@@ -2173,7 +2191,16 @@
       "endDate": "تاريخ الانتهاء",
       "bankAccount": "الحساب البنكي",
       "emergencyContactName": "اسم جهة اتصال الطوارئ",
-      "emergencyPhone": "هاتف الطوارئ"
+      "emergencyPhone": "هاتف الطوارئ",
+      "assignments": "التعيينات",
+      "class": "القسم الدراسي",
+      "cycle": "السلك",
+      "driverLicense": "رخصة السياقة",
+      "email": "البريد الإلكتروني",
+      "shift": "الفترة",
+      "startDate": "تاريخ البدء",
+      "vehicle": "المركبة",
+      "zone": "المنطقة"
     },
     "dialogs": {
       "createTitle": "إنشاء موظف",
@@ -2840,6 +2867,40 @@
       "removed": "تمت إزالة الصلاحية بنجاح",
       "retrieved": "تم جلب الصلاحية بنجاح",
       "updated": "تم تحديث الصلاحية بنجاح"
+    },
+    "dialogs": {
+      "createButton": "إنشاء صلاحية",
+      "createTitle": "إنشاء صلاحية",
+      "deleteButton": "حذف الصلاحية",
+      "editTitle": "تعديل الصلاحية",
+      "updateButton": "تحديث الصلاحية",
+      "viewTitle": "تفاصيل الصلاحية"
+    },
+    "filters": {
+      "searchByName": "البحث باسم الصلاحية…",
+      "searchByResource": "البحث حسب المورد…"
+    },
+    "form": {
+      "action": "الإجراء",
+      "actionPlaceholder": "اختر إجراءً",
+      "description": "الوصف (اختياري)",
+      "descriptionPlaceholder": "أدخل الوصف",
+      "name": "اسم الصلاحية",
+      "namePlaceholder": "أدخل اسم الصلاحية",
+      "resource": "المورد",
+      "resourcePlaceholder": "اختر موردًا"
+    },
+    "table": {
+      "action": "الإجراء",
+      "description": "الوصف",
+      "name": "الاسم",
+      "noDescription": "لا يوجد وصف",
+      "resource": "المورد"
+    },
+    "validation": {
+      "actionRequired": "الإجراء مطلوب",
+      "nameRequired": "اسم الصلاحية مطلوب",
+      "resourceRequired": "المورد مطلوب"
     }
   },
   "refuels": {
@@ -2878,6 +2939,27 @@
     },
     "profile": {
       "assignTitle": "تعيين النقل المدرسي", "editTitle": "تعديل نقطة الركوب", "changeTitle": "تغيير الحافلة", "assign": "تعيين النقل", "active": "نشط", "noAssignment": "لا يوجد تعيين نقل نشط", "noAssignmentDescription": "عيّن التلميذ لحافلة متاحة وحدد نقطة الركوب.", "noPickup": "لم يتم تسجيل نقطة ركوب", "schoolDefault": "المدخل الرئيسي للمدرسة", "editPickup": "تعديل نقطة الركوب", "changeBus": "تغيير الحافلة", "unassignTitle": "إنهاء تعيين النقل", "unassignDescription": "ينهي هذا تعيين الحافلة النشط مع الحفاظ على سجل الرسوم والمدفوعات.", "unassign": "إلغاء التعيين", "unassigned": "تم إنهاء تعيين نقل التلميذ", "history": "سجل النقل"
+    }
+  },
+  "staffScopes": {
+    "dialogs": {
+      "createZone": "إنشاء منطقة",
+      "createZoneTitle": "إنشاء منطقة",
+      "deleteZone": "حذف المنطقة",
+      "editZone": "تعديل المنطقة",
+      "manageTitle": "إدارة نطاقات الموظفين",
+      "updateZone": "تحديث المنطقة"
+    },
+    "empty": {
+      "location": "لا توجد تفاصيل للموقع",
+      "zones": "لم يتم العثور على مناطق"
+    },
+    "form": {
+      "addZone": "إضافة منطقة",
+      "building": "المبنى",
+      "description": "الوصف",
+      "floor": "الطابق",
+      "name": "الاسم"
     }
   }
 }

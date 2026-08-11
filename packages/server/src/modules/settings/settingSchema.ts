@@ -53,7 +53,7 @@ export const settings = pgTable('settings', {
   studentAccessEnabled: boolean('student_access_enabled').default(true),
   timeZone: text('time_zone').default('UTC'),
   language: languageEnum('language').default('en'),
-  theme: text('theme').default('system'),
+  theme: text('theme').default('light'),
   dateFormat: text('date_format').default('MM/DD/YYYY'),
   timeFormat: text('time_format').default('12'),
   currency: text('currency').default('USD'),

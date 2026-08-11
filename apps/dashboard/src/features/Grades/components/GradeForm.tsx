@@ -12,7 +12,6 @@ import {
 import { useDialog } from 'najm-kit'
 import { gradeSchema } from '@/lib/validations'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { DevFormFiller } from '@/components/DevFormFiller'
 import { useTranslation } from '@/hooks/useLanguage'
 import { useClasses } from '@/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
@@ -202,7 +201,6 @@ const GradeForm = ({ grade = null }) => {
           onSubmit={handleSubmit}
           devTools={{ enabled: isDevFill, fill }}
         >
-          <DevFormFiller fill={fill} />
           <AssessmentContextSync assessments={assessments} isEdit={isEdit} />
 
           <div className='flex flex-col gap-4'>

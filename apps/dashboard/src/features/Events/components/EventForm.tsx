@@ -18,7 +18,6 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useDialog } from 'najm-kit';
 import { eventSchema } from '@/lib/validations';
 import { buildFill, isDevFill } from '@/lib/devFill';
-import { DevFormFiller } from '@/components/DevFormFiller';
 import { useEnum } from '@/hooks/useEnum';
 import { useClasses } from '@/hooks/useClasses';
 
@@ -129,7 +128,6 @@ const EventForm = ({ event = null, initialDate = null }) => {
 
   return (
     <NForm id="event-form" schema={eventSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(eventSchema, devFillValues) }}>
-      <DevFormFiller fill={() => buildFill(eventSchema, devFillValues)} />
       <div className="flex flex-col gap-4">
         <FormSectionHeader icon={Calendar} title="Event Details" />
 

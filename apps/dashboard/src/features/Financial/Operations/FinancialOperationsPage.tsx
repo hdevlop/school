@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { NButton } from 'najm-kit';
+import { NButton, useNSidebar } from 'najm-kit';
 import { toast } from 'sonner';
-import { Activity, Banknote, BellRing, History, RefreshCw, RotateCw } from 'lucide-react';
+import { Activity, Banknote, BellRing, History, Menu, RefreshCw, RotateCw } from 'lucide-react';
 import { getStudentsApi } from '@/services/studentApi';
 import {
   getPendingChecksApi,
@@ -56,6 +56,7 @@ const checkStatusBadge: Record<string, string> = {
 const inputClass = 'h-10 rounded-md border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/30';
 
 export default function FinancialOperationsPage() {
+  const sidebar = useNSidebar();
   const [studentId, setStudentId] = useState('');
   const [creditAmount, setCreditAmount] = useState('');
   const [fromYear, setFromYear] = useState('2025-2026');
@@ -152,6 +153,19 @@ export default function FinancialOperationsPage() {
   return (
     <div className="h-full overflow-y-auto px-4 pb-8">
       <header className="mb-5 rounded-xl border bg-card p-5">
+        {/* This page predates NPageHeader and so has no header-owned sidebar
+            trigger. Without one it is the only dashboard route a phone can
+            reach but not navigate away from. */}
+        <NButton
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="-ms-2 mb-2 lg:hidden"
+          aria-label="Open sidebar"
+          onClick={() => sidebar?.openMobile()}
+        >
+          <Menu size={18} />
+        </NButton>
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Financial controls</p>
         <h1 className="mt-1 text-2xl font-semibold">Operations and reconciliation</h1>
         <p className="mt-1 text-sm text-muted-foreground">Manage check settlement, unapplied credit, audit history, delivery runs, and academic-year rollover.</p>

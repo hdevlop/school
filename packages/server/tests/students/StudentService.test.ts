@@ -1,6 +1,9 @@
 import { describe, expect, it, mock } from 'bun:test';
 
+const najmEvent = await import('najm-event');
+
 mock.module('najm-event', () => ({
+  ...najmEvent,
   Events: () => () => undefined,
   EventService: class {},
   On: () => () => undefined,
@@ -42,11 +45,17 @@ function createMockServiceDeps() {
       create: mock(() => Promise.resolve({ id: 'usr_01', email: 'ahmed@example.com' })),
       update: mock(() => Promise.resolve({ id: 'usr_01' })),
     },
+    authService: {
+      provisionUser: mock(() => Promise.resolve({ id: 'usr_01', email: 'ahmed@example.com' })),
+    },
     parentService: {
       processParents: mock(() => Promise.resolve()),
     },
     feeService: {
       processFees: mock(() => Promise.resolve()),
+    },
+    studentRouteService: {
+      assign: mock(() => Promise.resolve()),
     },
     storage: {
       processFile: mock(() => Promise.resolve('/images/student_male.png')),
@@ -60,8 +69,10 @@ function createService(deps = createMockServiceDeps()) {
     deps.studentRepository as any,
     deps.studentValidator as any,
     deps.userService as any,
+    deps.authService as any,
     deps.parentService as any,
     deps.feeService as any,
+    deps.studentRouteService as any,
     deps.storage as any,
   );
   return { service, deps };
@@ -145,7 +156,7 @@ describe('StudentService', () => {
       expect(deps.studentValidator.ensureEmailUnique).toHaveBeenCalledWith('ahmed@example.com');
       expect(deps.studentValidator.ensurePhoneUnique).toHaveBeenCalledWith('+212600000000');
       expect(deps.studentValidator.ensureClassAndSectionValid).toHaveBeenCalledWith('cls_01', 'sec_01');
-      expect(deps.userService.create).toHaveBeenCalled();
+      expect(deps.authService.provisionUser).toHaveBeenCalled();
       expect(deps.studentRepository.create).toHaveBeenCalled();
       expect(deps.parentService.processParents).toHaveBeenCalled();
       expect(deps.feeService.processFees).toHaveBeenCalled();

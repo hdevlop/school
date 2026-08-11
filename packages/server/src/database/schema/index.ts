@@ -1,4 +1,6 @@
 export {
+  credentialSetupRequirementsTable as credentialSetupRequirements,
+  credentialSetupSessionsTable as credentialSetupSessions,
   permissionsTable as permissions,
   rolePermissionsTable as rolePermissions,
   rolesTable as roles,
@@ -12,6 +14,12 @@ export {
 export * from '@server/database/shared';
 
 export { auditLogs } from './coreSchema';
+
+export {
+  najmThemeAppearance,
+  najmThemeBranding,
+  najmThemePresets,
+} from 'najm-theme/pg';
 
 export { classes, classRef } from '../../modules/classes/classSchema';
 export { cycles, cycleRef } from '../../modules/cycles/cycleSchema';

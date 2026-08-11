@@ -1,17 +1,32 @@
 import { Label } from 'najm-kit';
-import { NAvatar, NButton } from 'najm-kit';
+import { NAvatar, NButton, useNSidebar } from 'najm-kit';
 import { getAvatarFallback } from '@/lib/avatar';
-import { CreditCard } from 'lucide-react';
+import { CreditCard, Menu } from 'lucide-react';
 
 export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) => {
 
    const { student, alerts, assignment } = studentFees;
+   const sidebar = useNSidebar();
 
    return (
       <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 text-card-foreground">
 
          {/* Left: Avatar + Info */}
          <div className="flex items-center gap-3 flex-1 min-w-0">
+            {/* This header stands in for NPageHeader on the standalone
+                /students/[id]/fees route, so it carries the mobile sidebar
+                trigger the page header would otherwise provide. */}
+            <NButton
+               type="button"
+               variant="ghost"
+               size="icon"
+               className="-ms-1 lg:hidden"
+               aria-label="Open sidebar"
+               onClick={() => sidebar?.openMobile()}
+            >
+               <Menu className="h-5 w-5" />
+            </NButton>
+
             <NAvatar
                src={student.image}
                fallback={getAvatarFallback(student.name)}
