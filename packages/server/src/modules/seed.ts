@@ -323,6 +323,7 @@ export function configureSeedContainer(seedContainer: Container) {
     AuthService,
     ParentService,
     FeeService,
+    StudentRouteService,
     StorageService,
   ]);
 

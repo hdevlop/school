@@ -316,6 +316,13 @@
       "when": 1786484868167,
       "tag": "0044_auth_v3_schema_repair",
       "breakpoints": true
+    },
+    {
+      "idx": 45,
+      "version": "7",
+      "when": 1786488487972,
+      "tag": "0045_staff_assignment_schema_repair",
+      "breakpoints": true
     }
   ]
 }

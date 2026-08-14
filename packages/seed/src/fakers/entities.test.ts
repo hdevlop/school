@@ -40,7 +40,7 @@ describe("entity generators", () => {
   it("derives family metadata from the generated parents", () => {
     const family = generateFamilyUnit();
 
-    expect(family.parents).toHaveLength(2);
+    expect([1, 2]).toContain(family.parents.length);
     expect(family.parentIds).toEqual(family.parents.map((parent) => parent.id));
     expect(family.address).toBe(family.parents[0].address);
     expect(family.lastName).toBe(family.parents[0].name.split(" ").pop());

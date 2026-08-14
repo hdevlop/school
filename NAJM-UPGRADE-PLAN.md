@@ -1,15 +1,17 @@
 # School Najm Platform Upgrade Plan
 
-Status: **FINAL ACCEPTANCE** — every source, database, package-resolution and
-production-build gate is green locally. School resolves `najm-auth@3.1.1`,
-`najm-kit@2.11.2`, and `najm-theme@0.2.1`; the complete server suite is now
-green instead of carrying the 28 stale Parent/Student fixtures. A fresh
-PostgreSQL 18 database proved the auth/session/preference flows and migration
-history, and the repository now carries a pgvector migration plus production
-Playwright workflow. The only remaining gate is its first GitHub run, after
-which this plan records the accepted commit and workflow URL.
+Status: **LOCAL IMPLEMENTATION GREEN; BROWSER AND CI ACCEPTANCE OPEN** — School
+resolves the approved Najm versions, and the source, schema, production build,
+fresh PostgreSQL 18 migration chain, and full demo-seed gates pass locally. The
+first GitHub candidate run failed in `seed:full`; the local repair adds the
+missing `StudentRouteService` dependency before `StorageService` and a focused
+regression test. That repair is not yet committed or pushed. Production
+Playwright did not execute locally because the pinned Chromium revision is not
+installed and the available browsers cannot establish Playwright's debugging
+pipe. The browser/visual checklists and a green post-fix GitHub run therefore
+remain required before final acceptance.
 
-Last updated: 2026-08-11
+Last updated: 2026-08-14
 
 Primary executor: **Claude Opus**
 
@@ -633,8 +635,12 @@ Phase 2 focused acceptance:
 - [x] Review every statement. It must add only the v3 credential-setup storage
   for this phase and must not recreate users, roles, permissions, or tokens.
 - [x] Add schema and migration-content tests.
-- [ ] Run the migration against a disposable/backup-restorable PostgreSQL
-  database before any production consideration.
+- [x] Run the migration against a disposable/backup-restorable PostgreSQL
+  database before any production consideration. *(2026-08-14: a fresh local
+  PostgreSQL 18 cluster applied all 46 journaled migrations and exposed 75
+  public tables. Because this Windows host has no pgvector build, only the
+  temporary local input for `0014`/`0020` used the already documented
+  `real[]`/index substitutions; committed SQL stayed unchanged.)*
 
 ### 7b. Server auth configuration and provisioning
 
@@ -819,10 +825,10 @@ evidence location.
 
 ## 11. Verification gates
 
-Latest local evidence (2026-08-11, final candidate):
+Latest local evidence (2026-08-14, uncommitted CI repair):
 
 - `bun run lint`: pass, 0 errors and the same 3 `<img>` warnings.
-- `bun run test:server`: 1134 pass, 0 fail, 2047 assertions. The 28 stale
+- `bun run test:server`: 1137 pass, 0 fail, 2053 assertions. The 28 stale
   Parent/Student fixtures are fixed against the current constructors and
   `AuthService.provisionUser` contract.
 - `bun run test:dashboard`: 39 pass, 0 fail, 100 assertions.
@@ -831,11 +837,22 @@ Latest local evidence (2026-08-11, final candidate):
 - `bun run db:check`: pass. `bun run db:generate`: 74-table schema, no changes.
 - `bun run build:all`: pass, including server declarations, seed typecheck,
   Next compile/typecheck/page generation, proxy and every new route.
-- `bun run --cwd packages/najm-theme test:rsc`: 21 pass, 0 fail, 53 assertions.
-- Fresh PostgreSQL 18: the complete non-vector migration chain plus `0044`
-  applied, seeds passed, and live auth/preferences/setup acceptance passed.
-  This Windows host has no pgvector build; GitHub applies the unmodified chain
-  to `pgvector/pgvector:pg18` before running the production Playwright suite.
+- Focused CI regression: 3 pass, 0 fail, 6 assertions for StudentService
+  dependency order, additive migration content, and journal order.
+- Fresh PostgreSQL 18: 46 migrations applied, 75 public tables, and the full
+  seed completed with 1,224 users, 500 students, 3,945 payments, 1,000
+  payslips, and 58,740 attendance rows. Temporary local vector substitutions
+  were used as documented; committed SQL stayed unchanged.
+- `bun run --cwd packages/najm-theme test:rsc` was not rerun because School has
+  no local `packages/najm-theme` workspace; School consumes the published
+  package only.
+- Production Playwright: not executed. The required Chromium 1217 headless
+  shell is missing; cached/system browsers launch but cannot connect to the
+  Playwright debugging pipe. The in-app browser is also unavailable in this
+  session.
+- GitHub Actions run `31543464909` failed before browser acceptance in
+  `seed:full`; the local dependency-order repair has not been pushed, so no
+  green post-fix run exists yet.
 
 The exact runtime and CI matrix is in
 `docs/evidence/najm-upgrade/acceptance-ledger.md`.
