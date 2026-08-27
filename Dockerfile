@@ -13,6 +13,8 @@ WORKDIR /app
 
 ARG OCI_CREATED
 ARG OCI_REVISION
+ARG NEXT_PUBLIC_APP_URL=https://demo.example.invalid
+ARG FRONTEND_URL=https://demo.example.invalid
 
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=dependencies /app/apps/dashboard/node_modules ./apps/dashboard/node_modules
@@ -26,8 +28,8 @@ COPY . .
 RUN DB_URL=postgresql://build:build@127.0.0.1:5432/build \
     EMAIL_PROVIDER=console \
     EMAIL_DEFAULT_FROM=no-reply@example.invalid \
-    NEXT_PUBLIC_APP_URL=https://demo.example.invalid \
-    FRONTEND_URL=https://demo.example.invalid \
+    NEXT_PUBLIC_APP_URL="${NEXT_PUBLIC_APP_URL}" \
+    FRONTEND_URL="${FRONTEND_URL}" \
     NAJM_AUTH_INTERNAL_URL=http://127.0.0.1:3000/api/auth/session/recover \
     JWT_ACCESS_SECRET=build-only-access-secret-at-least-32-characters \
     JWT_REFRESH_SECRET=build-only-refresh-secret-at-least-32-characters \

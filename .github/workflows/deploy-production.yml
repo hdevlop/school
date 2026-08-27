@@ -92,6 +92,8 @@ jobs:
           build-args: |
             OCI_CREATED=${{ steps.created.outputs.value }}
             OCI_REVISION=${{ github.sha }}
+            NEXT_PUBLIC_APP_URL=https://myscolai.com
+            FRONTEND_URL=https://myscolai.com
 
   deploy:
     name: Deploy through Dokploy
