@@ -72,7 +72,8 @@
     "najm-theme": "0.2.1",
     "najm-validation": "2.0.2",
     "najm-whatsapp": "2.0.2",
-    "sqlite-vec": "^0.1.9"
+    "sqlite-vec": "^0.1.9",
+    "zod": "4.3.6"
   },
   "overrides": {
     "najm-auth": "$najm-auth",
