@@ -68,6 +68,10 @@ services:
       - postgres_data:/var/lib/postgresql
     networks:
       - backend
+      # Dokploy replaces the routed app service's declared networks with its
+      # external proxy network plus `default`. Keep Postgres on that internal
+      # network as well so the converted app can still resolve `postgres`.
+      - default
     init: true
     security_opt:
       - no-new-privileges:true
@@ -83,6 +87,8 @@ services:
         max-file: "5"
 
 networks:
+  default:
+    internal: true
   backend:
     internal: true
   frontend:
