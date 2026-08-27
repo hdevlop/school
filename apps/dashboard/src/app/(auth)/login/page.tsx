@@ -142,7 +142,7 @@ const Login = () => {
             <FormInput
               name="rememberMe"
               type="checkbox"
-              label="Keep me logged in"
+              formLabel="Keep me logged in"
               variant='ghost'
             />
 

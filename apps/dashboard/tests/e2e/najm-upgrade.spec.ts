@@ -1,6 +1,7 @@
 import { expect, test, type Browser, type Page } from '@playwright/test';
 import { hash } from 'bcryptjs';
 import postgres from 'postgres';
+import { baseURL } from '../../playwright.najm-upgrade.config';
 
 const ADMIN = {
   identifier: process.env.ADMIN_EMAIL ?? 'admin@admin.com',
@@ -14,6 +15,12 @@ const databaseUrl = process.env.DB_URL;
 if (!databaseUrl) throw new Error('DB_URL is required for the Najm upgrade E2E suite.');
 
 const sql = postgres(databaseUrl, { max: 1 });
+
+// `page.request`/a manually created `browser.newContext()` do not reliably
+// resolve a relative path against the project's `baseURL` in every runtime
+// this suite executes under. Building an absolute URL here removes the
+// dependency on that resolution entirely.
+const apiPath = (path: string) => new URL(path, baseURL).toString();
 
 async function ensureRoleUser(role: string) {
   const [roleRow] = await sql<{ id: string }[]>`
@@ -62,7 +69,13 @@ async function login(page: Page, credentials = ADMIN, rememberMe = false) {
   await page.goto('/login');
   await page.getByLabel('Email').fill(credentials.identifier);
   await page.getByLabel('Password').fill(credentials.password);
-  const checkbox = page.getByLabel('Keep me logged in');
+  // Not `getByLabel`: najm-kit's checkbox `FormInput` renders a `<label for>`
+  // whose id is never applied to the checkbox control (a package-level a11y
+  // gap, not something School's code can fix), so match by DOM proximity to
+  // the label text instead of the broken for/id association.
+  const checkbox = page
+    .locator('[data-slot="form-item"]', { hasText: 'Keep me logged in' })
+    .getByRole('checkbox');
   if (rememberMe !== (await checkbox.isChecked())) await checkbox.click();
   await page.getByRole('button', { name: 'Login', exact: true }).click();
 }
@@ -72,7 +85,7 @@ async function loginInNewContext(
   credentials: { identifier: string; password: string },
   rememberMe = false,
 ) {
-  const context = await browser.newContext();
+  const context = await browser.newContext({ baseURL });
   const page = await context.newPage();
   await login(page, credentials, rememberMe);
   return { context, page };
@@ -97,9 +110,9 @@ test('anonymous routing and first-paint preferences use the server snapshot', as
   await expect(page.getByLabel('Email')).toBeVisible();
   await expect(page.getByLabel('Password')).toBeVisible();
 
-  await expect((await page.request.post('/api/ui-language', { data: { language: 'ar' } })).status()).toBe(200);
-  await expect((await page.request.post('/api/ui-theme', { data: { theme: 'dark' } })).status()).toBe(200);
-  await expect((await page.request.post('/api/ui-timezone', { data: { timeZone: 'Africa/Casablanca' } })).status()).toBe(200);
+  await expect((await page.request.post(apiPath('/api/ui-language'), { data: { language: 'ar' } })).status()).toBe(200);
+  await expect((await page.request.post(apiPath('/api/ui-theme'), { data: { theme: 'dark' } })).status()).toBe(200);
+  await expect((await page.request.post(apiPath('/api/ui-timezone'), { data: { timeZone: 'Africa/Casablanca' } })).status()).toBe(200);
   await page.reload();
 
   const html = page.locator('html');
@@ -111,13 +124,13 @@ test('anonymous routing and first-paint preferences use the server snapshot', as
   await expect(authLogo).toBeVisible();
   await expect.poll(() => authLogo.evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
 
-  await expect((await page.request.post('/api/ui-language', { data: { language: 'xx' } })).status()).toBe(400);
-  await expect((await page.request.post('/api/ui-theme', { data: { theme: 'system' } })).status()).toBe(400);
-  await expect((await page.request.post('/api/ui-timezone', { data: { timeZone: 'Mars/Olympus' } })).status()).toBe(400);
+  await expect((await page.request.post(apiPath('/api/ui-language'), { data: { language: 'xx' } })).status()).toBe(400);
+  await expect((await page.request.post(apiPath('/api/ui-theme'), { data: { theme: 'system' } })).status()).toBe(400);
+  await expect((await page.request.post(apiPath('/api/ui-timezone'), { data: { timeZone: 'Mars/Olympus' } })).status()).toBe(400);
 });
 
 test('admin login covers failures, session/persistent cookies, redirects, mobile sidebar, and logout cleanup', async ({ browser, page }) => {
-  const wrong = await page.request.post('/api/auth/login', {
+  const wrong = await page.request.post(apiPath('/api/auth/login'), {
     data: { ...ADMIN, password: 'wrong-password', rememberMe: false },
   });
   expect(wrong.status()).toBe(401);
@@ -138,12 +151,12 @@ test('admin login covers failures, session/persistent cookies, redirects, mobile
   await openSidebar.click();
   await expect(page.locator('a[href="/students"]:visible').first()).toBeVisible();
 
-  await page.request.post('/api/ui-language', { data: { language: 'fr' } });
-  await page.request.post('/api/ui-theme', { data: { theme: 'dark' } });
-  await page.request.post('/api/ui-timezone', { data: { timeZone: 'Africa/Casablanca' } });
+  await page.request.post(apiPath('/api/ui-language'), { data: { language: 'fr' } });
+  await page.request.post(apiPath('/api/ui-theme'), { data: { theme: 'dark' } });
+  await page.request.post(apiPath('/api/ui-timezone'), { data: { timeZone: 'Africa/Casablanca' } });
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');
-  await page.locator('button:has(svg.lucide-log-out)').click();
+  await page.locator('button:has(svg.lucide-log-out):visible').click();
   await expect(page).toHaveURL(/\/login$/);
   const clearedNames = (await page.context().cookies()).map((cookie) => cookie.name);
   for (const name of [
@@ -172,7 +185,7 @@ test('credential setup completes once, requires a fresh login, rejects replay, c
   await expect(first.page).toHaveURL(/\/login$/);
   expect((await first.context.cookies()).map((cookie) => cookie.name)).not.toContain('najm.session');
 
-  const replay = await first.page.request.post('/api/auth/credential-setup/change', {
+  const replay = await first.page.request.post(apiPath('/api/auth/credential-setup/change'), {
     data: { newPassword: 'Replay12345' },
   });
   expect(replay.status()).toBe(401);
@@ -197,11 +210,20 @@ test('credential setup completes once, requires a fresh login, rejects replay, c
     update credential_setup_sessions set expires_at = now() - interval '1 minute'
     where user_id = ${expiredUser.id} and consumed_at is null and revoked_at is null
   `;
-  const expiredChange = await expired.page.request.post('/api/auth/credential-setup/change', {
+  const expiredChange = await expired.page.request.post(apiPath('/api/auth/credential-setup/change'), {
     data: { newPassword: NEW_PASSWORD },
   });
   expect(expiredChange.status()).toBe(401);
   await expired.context.close();
+
+  // `ensureRoleUser` reuses these same deterministic ids in the next test;
+  // only the completed (admin) flow actually clears its requirement, so the
+  // cancelled and expired users would otherwise still demand setup on their
+  // next login there. Not app state to preserve — just this test's fixture.
+  await sql`
+    update credential_setup_requirements set required = false, completed_at = now()
+    where user_id in (${setupUser.id}, ${cancelledUser.id}, ${expiredUser.id})
+  `;
 });
 
 test('role, locale, viewport, RTL, dark-mode, touch and keyboard matrix stays routable', async ({ browser }, testInfo) => {
@@ -217,12 +239,13 @@ test('role, locale, viewport, RTL, dark-mode, touch and keyboard matrix stays ro
   for (const entry of cases) {
     const user = await ensureRoleUser(entry.role);
     const context = await browser.newContext({
+      baseURL,
       viewport: { width: entry.width, height: entry.height },
       hasTouch: entry.width <= 768,
     });
     const page = await context.newPage();
-    await page.request.post('/api/ui-language', { data: { language: entry.language } });
-    await page.request.post('/api/ui-theme', { data: { theme: entry.theme } });
+    await page.request.post(apiPath('/api/ui-language'), { data: { language: entry.language } });
+    await page.request.post(apiPath('/api/ui-theme'), { data: { theme: entry.theme } });
     await login(page, user);
     await expect(page).toHaveURL(/\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', entry.language);

@@ -186,7 +186,7 @@ export const ParentFormContent = ({ form = null }: { form?: any } = {}) => {
             <FormInput
                name='isEmergencyContact'
                type='checkbox'
-               label={t('parents.form.isEmergencyContact')}
+               formLabel={t('parents.form.isEmergencyContact')}
                variant='ghost'
                icon={PhoneCall}
             />
@@ -194,7 +194,7 @@ export const ParentFormContent = ({ form = null }: { form?: any } = {}) => {
             <FormInput
                name='financialResponsibility'
                type='checkbox'
-               label={t('parents.form.financialResponsibility')}
+               formLabel={t('parents.form.financialResponsibility')}
                variant='ghost'
                icon={Wallet}
             />

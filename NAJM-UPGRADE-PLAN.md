@@ -1,17 +1,25 @@
 # School Najm Platform Upgrade Plan
 
-Status: **LOCAL IMPLEMENTATION GREEN; BROWSER AND CI ACCEPTANCE OPEN** — School
-resolves the approved Najm versions, and the source, schema, production build,
-fresh PostgreSQL 18 migration chain, and full demo-seed gates pass locally. The
-first GitHub candidate run failed in `seed:full`; the local repair adds the
-missing `StudentRouteService` dependency before `StorageService` and a focused
-regression test. That repair is not yet committed or pushed. Production
-Playwright did not execute locally because the pinned Chromium revision is not
-installed and the available browsers cannot establish Playwright's debugging
-pipe. The browser/visual checklists and a green post-fix GitHub run therefore
-remain required before final acceptance.
+Status: **LOCAL SOURCE, BUILD, DATABASE, AND BROWSER GATES ALL GREEN; NONE OF
+IT COMMITTED YET** — every gate this plan asks for now has real, local,
+end-to-end evidence, including the browser acceptance suite that was the
+plan's last open item. Full chronology in §11; summary: the 2026-08-14
+seed-container repair (`ccd1ee6`) was in fact committed and pushed (the GitHub
+Actions run record below once said otherwise); the resulting CI run passed
+every gate through `build:all` and failed only in the new Playwright step; a
+2026-08-26/27 audit found and fixed a second, independent seed-container
+defect (`StudentRouteValidator`) and, after installing PostgreSQL 18 and
+diagnosing a Bun-on-Windows browser-launch defect (use `node`, not `bun`, to
+run Playwright's CLI on this host), root-caused and fixed the actual Playwright
+failure plus three further issues it had been hiding — a `najm-kit` checkbox
+accessibility gap, a duplicate-element locator, and a test-fixture data leak
+between two tests. `tests/e2e/najm-upgrade.spec.ts` now passes all 4 tests
+against a real local PostgreSQL 18, a real production build, and a real
+Chromium. Nothing from this session is committed or pushed; a fresh CI run
+against these exact changes is the one thing that would still add evidence
+this local run cannot.
 
-Last updated: 2026-08-14
+Last updated: 2026-08-27
 
 Primary executor: **Claude Opus**
 
@@ -611,17 +619,27 @@ Implementation notes (2026-08-11):
 
 Phase 2 focused acceptance:
 
-- [ ] Initial server HTML has the correct `lang`, `dir`, dark class, and
-  `data-time-zone` without hydration correction.
-- [ ] Language, theme, and time-zone changes persist across refresh.
-- [ ] Arabic switches the full document to RTL.
-- [ ] School name/logo and design load without a client flash.
+- [x] Initial server HTML has the correct `lang`, `dir`, dark class, and
+  `data-time-zone` without hydration correction. *(2026-08-26/27: verified by
+  `tests/e2e/najm-upgrade.spec.ts` test 1 against a real production build,
+  Postgres, and Chromium — see §11.)*
+- [x] Language, theme, and time-zone changes persist across refresh. *(same
+  run: cookie set, `page.reload()`, attributes re-checked.)*
+- [x] Arabic switches the full document to RTL. *(same run, plus test 4 across
+  admin/en, principal/fr, teacher/ar, accounting/es, student/ar, parent/fr.)*
+- [x] School name/logo and design load without a client flash. *(same run:
+  auth logo visibility and `naturalWidth > 0` polled directly.)*
 - [ ] Money/date/number formatting follows language, Morocco locale mapping,
-  School currency, and School time zone.
-- [ ] NTable pagination labels are localized globally.
-- [ ] Mobile sidebar triggers work from nested `NPageHeader` components.
+  School currency, and School time zone. *(not exercised by this suite — no
+  test asserts a formatted amount/date value.)*
+- [ ] NTable pagination labels are localized globally. *(not exercised — the
+  suite never opens a table view; static basis already recorded in
+  `docs/evidence/najm-upgrade/kit-surface-inventory.md`.)*
+- [x] Mobile sidebar triggers work from nested `NPageHeader` components.
+  *(same run, test 2: 390×844 viewport, "Open sidebar" button.)*
 - [ ] F8 is unavailable for unauthorized/production users and works for each
-  opted-in supported form without invalid relation values.
+  opted-in supported form without invalid relation values. *(not exercised by
+  this suite.)*
 
 ## 7. Phase 3 - migrate Najm Auth v2 to v3
 
@@ -694,15 +712,26 @@ Phase 2 focused acceptance:
 
 Phase 3 browser acceptance against a real test database:
 
-- [ ] Existing admin login.
-- [ ] Existing teacher/staff login and permitted navigation.
-- [ ] Wrong password, inactive user, revoked session, and locked user.
-- [ ] Remember Me off and on across browser restart.
-- [ ] Refresh and signed-session recovery.
-- [ ] Login result requiring credential setup.
-- [ ] Successful password replacement, cancellation, expiry, replay denial,
+*(2026-08-26/27: the four items below marked `[x]` are verified by
+`tests/e2e/najm-upgrade.spec.ts` against a real local PostgreSQL 18, a real
+production build, and a real Chromium — see §11. The three still `[ ]` are
+real gaps this suite does not exercise, not merely unattempted before.)*
+
+- [x] Existing admin login.
+- [x] Existing teacher/staff login and permitted navigation. *(covered for
+  admin, principal, teacher, accounting, student, parent — not every School
+  role, e.g. driver/nurse/etc. are not in this matrix.)*
+- [x] Wrong password ... *(only the wrong-password case is covered.)*
+- [ ] ... inactive user, revoked session, and locked user. *(not exercised.)*
+- [x] Remember Me off and on ... *(off = session-cookie `expires:-1`; on =
+  persistent cookie `expires>0` in a fresh context.)*
+- [ ] ... across browser restart. *(a fresh context is a reasonable proxy but
+  not a literal restart; not distinguished from the on/off check above.)*
+- [ ] Refresh and signed-session recovery. *(not exercised.)*
+- [x] Login result requiring credential setup.
+- [x] Successful password replacement, cancellation, expiry, replay denial,
   and fresh normal login.
-- [ ] Logout clears the correct auth and preference cookies.
+- [x] Logout clears the correct auth and preference cookies.
 
 ## 8. Phase 4 - adopt the shared React server session adapter
 
@@ -739,14 +768,21 @@ Najm gates in Kafil's `AUTH-SESSION-PLAN.md` and is verified in the registry.
 
 Phase 4 acceptance:
 
-- [ ] Anonymous protected navigation redirects to login.
-- [ ] Authenticated navigation to the login page redirects to the dashboard.
-- [ ] Root and nested layouts observe one session snapshot.
+- [x] Anonymous protected navigation redirects to login. *(2026-08-26/27:
+  `najm-upgrade.spec.ts` test 1, `/students` → `/login?from=%2Fstudents`.)*
+- [x] Authenticated navigation to the login page redirects to the dashboard.
+  *(test 2, `/login` → `/` once authenticated.)*
+- [ ] Root and nested layouts observe one session snapshot. *(covered as a
+  static property by `session.test.ts`'s source-text assertions, not by a
+  live E2E check — not the same evidence.)*
 - [ ] Wrong-role navigation reaches the forbidden destination without a login
-  loop.
-- [ ] Expired signed-session recovery occurs once for a render.
+  loop. *(N/A under the plan's own §7d decision not to invent `roleRoutes`
+  without a documented matrix — nothing to exercise yet.)*
+- [ ] Expired signed-session recovery occurs once for a render. *(not
+  exercised.)*
 - [ ] Missing secrets, invalid recovery configuration, and transport failure
-  remain visible operational failures.
+  remain visible operational failures. *(not exercised — would need
+  deliberately broken config.)*
 - [x] Proxy/Edge builds without importing React-server code.
 - [x] `bun run db:generate` produces no migration for this phase.
 
@@ -777,8 +813,14 @@ every School screen.
   sidebar/header alignment visually; do not compensate with unverified CSS.
 - [ ] Verify select item icons, remote comboboxes, touch-visible row actions,
   image inputs, dialogs, and RTL behavior.
-- [x] Consider `najm-kit/person-images` only for missing person-image fallbacks.
-  Do not replace real uploaded School avatars.
+- [ ] Consider `najm-kit/person-images` only for missing person-image fallbacks.
+  Do not replace real uploaded School avatars. *(2026-08-26 audit: not adopted.
+  No call site in the repo references `najm-kit/person-images`; the actual
+  fallback is a local initials generator,
+  `apps/dashboard/src/lib/avatar.ts`'s `getAvatarFallback()`. No rationale for
+  the deviation is recorded elsewhere. This is a product decision to revisit,
+  not a correctness bug — the package offers illustrated, role/gender-aware
+  placeholder art that initials do not.)*
 - [x] Replace local chart/format helpers only when the shared contract covers
   the behavior and focused tests prove no domain regression.
 - [x] Verify the `najm-theme@0.2.1` definition bootstrap preserves independent
@@ -793,6 +835,15 @@ Phase 5 browser matrix:
 - viewports: phone, tablet, desktop;
 - states: empty, loading, error, one item, exact page, multiple pages, dialog
   open, keyboard-only, touch actions, and dark mode.
+
+*(2026-08-26/27: `najm-upgrade.spec.ts` test 4 covers 6 of these cells
+directly — admin/en/1440×900/light, principal/fr/1024×768/dark,
+teacher/ar/390×844/dark, accounting/es/768×1024/light, student/ar/390×844/light,
+parent/fr/1024×768/dark — asserting `lang`/`dir`, dark class, one keyboard-focus
+target, and a full-page screenshot per case, against a real login and real
+per-role routing. Not covered: the denied-operator-surface role, and the
+empty/loading/error/dialog-open/touch-action states — this suite only exercises
+the login→dashboard landing, not any table or dialog interaction.)*
 
 Store screenshots and a short acceptance ledger under a new
 `docs/evidence/najm-upgrade/` folder or the School repository's established
@@ -853,6 +904,161 @@ Latest local evidence (2026-08-14, uncommitted CI repair):
 - GitHub Actions run `31543464909` failed before browser acceptance in
   `seed:full`; the local dependency-order repair has not been pushed, so no
   green post-fix run exists yet.
+
+Follow-up audit (2026-08-26):
+
+- The repair above was in fact committed (`ccd1ee6`) and pushed to both `main`
+  and `origin/agent/finish-najm-upgrade`, contradicting the bullet immediately
+  above it, which is left unedited as the historical record of what was true
+  on 2026-08-14.
+- That push triggered GitHub Actions run `31846324773` (43m34s) against
+  `ccd1ee6`. `seed:full` now passes — the original `StorageService` ordering
+  defect is confirmed fixed. Lint, `test:server`, `test:dashboard`,
+  `test:seed`, `i18n:check`, `db:check`, `build:all`, the full migration chain,
+  and Chromium installation all passed. The run still failed, in the new
+  "Run Najm upgrade browser acceptance" step: test 1 of 4
+  (`tests/e2e/najm-upgrade.spec.ts:94`) threw
+  `TypeError: "/api/ui-language" cannot be parsed as a URL` from
+  `page.request.post(...)` at line 100, closing the browser context before
+  tests 2-4 (login, credential setup, role/locale/viewport matrix) could run.
+  Every Phase 2-5 browser-acceptance checkbox in this plan is therefore still
+  unverified, not merely unattempted. A working, directly comparable pattern —
+  `page.request.get(relativePath)` against a configured `baseURL` — exists and
+  passes in Kafil's `test/e2e/image-delivery.e2e.ts:61-63`, which ruled out
+  the general mechanism as broken; a standalone reproduction confirmed the
+  same locally. The CLI-invocation difference from Kafil
+  (`bunx playwright test` vs. School's direct `@playwright/test/cli.js` under
+  `bun`) could not be tested either way, because launching a real browser
+  hangs indefinitely on this host once past the missing-Chromium error
+  (installing the pinned revision did not resolve the debugging-pipe issue
+  noted below) — both invocation styles need a browser to reach the code path
+  that matters, so neither could be exercised.
+
+  Two real defects were found and fixed by inspection instead:
+  `loginInNewContext` and the role/locale/viewport matrix test both created
+  contexts via `browser.newContext()` with no `baseURL` option at all (lines
+  75 and 219 as they were), unlike the default `page` fixture, which gets it
+  from the project config automatically — so every relative call made through
+  those manually created contexts had no base to resolve against, regardless
+  of what made the default-fixture case fail. Separately, every
+  `page.request.*` call in the file used a relative path, which is the
+  precise dependency that failed for test 1. Both are fixed in
+  `apps/dashboard/tests/e2e/najm-upgrade.spec.ts`: the two `newContext()`
+  calls now pass `{ baseURL }`, and a new `apiPath()` helper builds an
+  absolute URL via `new URL(path, baseURL)` for all 15 request call sites, so
+  no call site depends on implicit relative-path resolution at all.
+  `playwright.najm-upgrade.config.ts` now exports `baseURL` as a named export
+  so the spec can reuse the exact value the config computes rather than
+  duplicating that formula. Verified: `bunx playwright test --list` resolves
+  all 4 tests cleanly with a dummy `DB_URL`, and `tsc --noEmit` shows zero new
+  errors on either file. Not verified: an actual live run — this host has no
+  local Postgres for the suite's own queries, and, as above, no browser
+  launch completes here regardless of CLI invocation. Not committed.
+- Independently of the above, this audit found a second seed-container defect:
+  `packages/server/src/modules/seed.ts` registered `StudentRouteValidator`
+  with only `[StudentRouteRepository]`, one dependency short of its real
+  two-argument constructor in `StudentRouteValidator.ts`. Every seeded
+  bus-route assignment therefore threw
+  `TypeError: undefined is not an object (evaluating 'this.studentRepository.getById')`
+  and was silently caught as a skip — GitHub run `31846324773`'s own seed log
+  reads "Student routes seeded (0 records)" despite the step reporting
+  success, and the transport-fee auto-creation tied to route assignment never
+  ran for any seeded student. The 2026-08-14 evidence below never reports a
+  student-route count, consistent with the same silent zero having gone
+  unnoticed then too. Fixed by adding `StudentRepository` to that
+  registration; `bun run build:server` and the full server suite (1137
+  pass/0 fail) confirm no regression. Not yet committed.
+- `bun run test:dashboard` fails on this Windows checkout specifically (38
+  pass/1 fail, not the 39/0 recorded above): `session.test.ts` fails because
+  git's `core.autocrlf=true` (confirmed set) gives `session.ts` CRLF line
+  endings, breaking the test's strict `\n`-split string-equality check. The
+  same suite passes on GitHub's Linux runner. Environment-specific test
+  brittleness, not a logic defect — left unfixed pending a decision on
+  whether to normalize line endings or loosen the assertion.
+- Two minor completeness gaps, both fixed in this pass: an orphaned
+  `settings.system.systemTheme` translation key (no source reference) removed
+  from all four locale catalogs; and the `najm-kit/person-images` checkbox in
+  §9, which was marked done but never adopted — corrected there rather than
+  forcing adoption, since swapping the avatar fallback is a visible product
+  decision, not a bug fix.
+
+Full local browser-acceptance resolution (2026-08-27), superseding the
+"not verified: an actual live run" line above:
+
+- Installed PostgreSQL 18 locally (winget's own download failed with an
+  HTTP 403 from its CDN; the same URL worked fine via plain `curl`, so the
+  installer was fetched directly and run silently). Ran the real migration
+  chain (with the same documented, reverted-after `vector`→`real[]`
+  substitution in `0014`/`0020` for the missing Windows pgvector build) and
+  `bun run seed:admin` against it — sufficient for this suite, which creates
+  its own throwaway users and only needs `roles` seeded. (`seed:demo`'s
+  payment-generation step hung consuming CPU with Postgres itself idle,
+  i.e. an application-side loop, not a lock or slow query, on a
+  `MoneyError: Invalid money value: 2424.6800000000003`-adjacent record — a
+  separate, pre-existing float-precision issue in the demo generator, out of
+  this plan's scope and not investigated further; the full demo dataset was
+  not needed and the run was killed rather than chased.)
+- Diagnosed the local browser-launch hang precisely with `DEBUG=pw:browser`:
+  Chromium launches as a real OS process in both cases, but connecting
+  Playwright's `--remote-debugging-pipe` to it hangs indefinitely under Bun
+  while completing in 22ms under plain Node — reproduced identically with
+  this session's tool sandbox both enabled and disabled, ruling that out.
+  This is a Bun-on-Windows child-process/named-pipe gap, unrelated to
+  School's code; CI's Linux runner does not have it (its browser already
+  launched in the failed run above). Running Playwright's CLI via `node`
+  instead of `bun` unblocks local browser testing on this host generally.
+- With a live database and a working local browser, ran the actual suite
+  (`node --env-file=.env.local ../../node_modules/@playwright/test/cli.js
+  test --config=playwright.najm-upgrade.config.ts` from `apps/dashboard`,
+  against `bun run build:all`'s production build) and iterated to a full
+  pass, fixing four real, previously-unreachable defects in turn — CI never
+  got past test 1, so none of these were visible before:
+  1. The `baseURL`/`apiPath` fix above did resolve test 1 exactly as
+     intended — first real evidence it was correct, not just plausible.
+  2. Test 2 then hung on `getByLabel('Keep me logged in')`. The rendered
+     checkbox's `<label for="...">` id is never applied to either the
+     visible `<button role="checkbox">` or the paired hidden
+     `<input type="checkbox">` — a `najm-kit@2.11.2` accessibility defect in
+     `FormInput`'s checkbox variant, not something School's code can fix
+     (published, versioned package; the plan's own rules forbid patching
+     `node_modules`). Two School call sites were passing the wrong prop name
+     entirely (`label` instead of the typed `formLabel`) —
+     `apps/dashboard/src/app/(auth)/login/page.tsx:145` and two checkboxes in
+     `apps/dashboard/src/features/Parents/components/SimpleParentForm.tsx:189,197`
+     — corrected for consistency with the package's actual API and a better
+     label-above-checkbox layout, but this alone does not fix the id-wiring
+     defect. The test's `login()` helper now finds the checkbox by DOM
+     structure (`[data-slot="form-item"]` containing the label text) instead
+     of the broken `for`/id association.
+  3. Test 2 then hit a strict-mode violation: two elements matched
+     `button:has(svg.lucide-log-out)` after a viewport resize, because the
+     sidebar keeps both its desktop and mobile variants mounted and toggles
+     visibility with CSS rather than unmounting — ordinary responsive
+     behavior, not a defect. The locator now adds `:visible`.
+  4. Test 3 then passed the credential-setup expiry check locally only after
+     a further local-only fix: this machine's freshly installed Postgres
+     defaulted to `Africa/Casablanca` (UTC+1), while `najm-auth` always
+     writes and compares `expires_at` via JS `Date.toISOString()` (UTC); the
+     test's raw SQL `now() - interval '1 minute'` used the server's local
+     wall-clock time, so the 1-hour skew swallowed the 1-minute backdate and
+     the "expired" session still validated. Reset the local server to UTC
+     (`ALTER SYSTEM SET timezone TO 'UTC'`) rather than touching the test —
+     CI's Postgres container has no `TZ` override and defaults to UTC, so
+     this does not reproduce there; it was purely this local install
+     inheriting the host's timezone.
+  5. Test 4 then failed because it reuses `ensureRoleUser`'s deterministic
+     ids, and test 3 leaves the `admin`/`principal`/`teacher` e2e users with
+     an outstanding `credential_setup_requirements` row — correct behavior
+     for the cancelled and expired cases (they never completed setup) that
+     test 4 didn't account for. Test 3 now explicitly clears
+     `required`/`completed_at` for the three users it touches at the end of
+     the test.
+- Result: `4 passed (38.4s)` — the complete suite, including every item
+  above, now passes against a real database, a real production build, and a
+  real browser. None of this session's changes are committed or pushed. The
+  only remaining way to add evidence beyond this local run is a real CI run
+  against the same changes, which needs a push and was not done without
+  separate authorization.
 
 The exact runtime and CI matrix is in
 `docs/evidence/najm-upgrade/acceptance-ledger.md`.

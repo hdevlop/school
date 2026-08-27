@@ -447,7 +447,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, BehaviorRewardValidator, [BehaviorRewardRepository]);
   registerSeedDeps(seedContainer, BehaviorRewardService, [BehaviorRewardRepository, BehaviorRewardValidator]);
 
-  registerSeedDeps(seedContainer, StudentRouteValidator, [StudentRouteRepository]);
+  registerSeedDeps(seedContainer, StudentRouteValidator, [StudentRouteRepository, StudentRepository]);
   registerSeedDeps(seedContainer, StudentRouteService, [
     StudentRouteRepository,
     StudentRouteValidator,
