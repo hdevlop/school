@@ -1,0 +1,81 @@
+name: school
+
+x-app: &app
+  image: ${SCHOOL_IMAGE:-ghcr.io/hdevlop/school:sha-0000000000000000000000000000000000000000}
+  env_file:
+    - path: /opt/school/env/app.env
+      required: false
+  volumes:
+    - type: bind
+      source: ${SCHOOL_STORAGE_HOST_PATH:-/srv/school/storage-demo}
+      target: /srv/school/storage
+      bind:
+        create_host_path: false
+  networks:
+    - backend
+    - frontend
+  init: true
+  security_opt:
+    - no-new-privileges:true
+  logging:
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "5"
+
+services:
+  app:
+    <<: *app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - 127.0.0.1:${SCHOOL_LOOPBACK_PORT:-3400}:3000
+    healthcheck:
+      test: ["CMD", "bun", "-e", "const r=await fetch('http://127.0.0.1:3000/login');process.exit(r.status<500?0:1)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 30s
+      retries: 4
+
+  migrate:
+    <<: *app
+    profiles: [tools]
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["bun", "x", "drizzle-kit", "migrate"]
+
+  postgres:
+    image: pgvector/pgvector:pg18
+    restart: unless-stopped
+    env_file:
+      - path: /opt/school/env/infrastructure.env
+        required: false
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "5"
+
+networks:
+  backend:
+    internal: true
+  frontend:
+
+volumes:
+  postgres_data:
