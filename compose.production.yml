@@ -3,6 +3,10 @@ name: school
 x-app: &app
   image: ${SCHOOL_IMAGE:-ghcr.io/hdevlop/school:sha-0000000000000000000000000000000000000000}
   env_file:
+    # Dokploy writes the service's encrypted environment to this file in its
+    # deployment checkout. Direct host runs fall through to the root-only file.
+    - path: ./.env
+      required: false
     - path: /opt/school/env/app.env
       required: false
   volumes:
@@ -54,6 +58,12 @@ services:
     env_file:
       - path: /opt/school/env/infrastructure.env
         required: false
+    environment:
+      # Dokploy resolves these from its generated .env. They intentionally
+      # override the optional host-only env_file without exposing app secrets.
+      POSTGRES_DB: ${POSTGRES_DB:-school_production}
+      POSTGRES_USER: ${POSTGRES_USER:-school}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
     volumes:
       - postgres_data:/var/lib/postgresql
     networks:
