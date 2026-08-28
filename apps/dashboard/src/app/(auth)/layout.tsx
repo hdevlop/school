@@ -16,13 +16,13 @@ const AuthLayout = async ({ children }) => {
 
     return (
          <div className='relative flex h-full w-full overflow-hidden'>
-            <div className='relative z-10 flex h-full flex-1 flex-col items-center justify-center'>
+            <div className='relative z-10 flex flex-1 flex-col items-center justify-center self-stretch'>
                 <NThemeImage slot="authLogo" className="h-[120px] w-[120px] object-contain" alt="MyScolAI" />
                 {children}
                 <ForgotPasswordDialog />
                 <span className='mt-24 text-muted-foreground'>@2025 all rights reserved</span>
             </div>
-            <div className='relative hidden h-full w-1/2 lg:flex'>
+            <div className='relative hidden w-1/2 self-stretch lg:flex'>
                 <ReliableThemeImage slot="authHeroImage" alt="" fill className="object-cover" />
             </div>
         </div>
