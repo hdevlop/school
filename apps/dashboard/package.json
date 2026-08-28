@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbo -p 3102",
     "build": "node ./scripts/next-build.mjs",
-    "start": "next start",
+    "start": "next start -p 3102",
     "test:e2e:najm-upgrade": "bun --env-file=.env.local ../../node_modules/@playwright/test/cli.js test --config=playwright.najm-upgrade.config.ts",
     "lint": "eslint src",
-    "https": "next dev --experimental-https"
+    "https": "next dev --experimental-https -p 3102"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.71",
@@ -65,9 +65,9 @@
     "leaflet": "^1.9.4",
     "lucide-react": "^1.8.0",
     "mqtt": "^5.15.1",
-    "najm-auth": "3.1.1",
+    "najm-auth": "3.1.5",
     "najm-chatbot": "2.0.2",
-    "najm-kit": "2.11.2",
+    "najm-kit": "2.11.8",
     "najm-theme": "0.2.1",
     "next": "16.2.4",
     "nextjs-ui": "^0.0.6",

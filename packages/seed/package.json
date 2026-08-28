@@ -24,6 +24,6 @@
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "0.45.2",
     "nanoid": "^5.0.0",
-    "najm-auth": "3.1.1"
+    "najm-auth": "3.1.5"
   }
 }

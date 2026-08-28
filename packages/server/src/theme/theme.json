@@ -1,4 +1,5 @@
 {
+  "version": 1,
   "theme": {
     "mode": "light",
     "accent": "emerald",
@@ -9,6 +10,8 @@
       "card-foreground": "oklch(0.1445 0 0)",
       "popover": "oklch(1 0 0)",
       "popover-foreground": "oklch(0.1445 0 0)",
+      "primary": "oklch(0.5227 0.1920 9.5005)",
+      "primary-foreground": "oklch(1 0 0)",
       "secondary": "oklch(0.7686 0.1647 70.0804)",
       "secondary-foreground": "oklch(0.9851 0 0)",
       "tertiary": "oklch(0.4282 0.1199 251.76)",
@@ -21,7 +24,7 @@
       "destructive-foreground": "oklch(0.9848 0 0)",
       "border": "oklch(0.5555 0 0)",
       "input": "oklch(0.5555 0 0)",
-      "radius": "0.5rem",
+      "ring": "oklch(0.6902 0.1481 162.368)",
       "sidebar": "oklch(0.2645 0 0)",
       "sidebar-foreground": "oklch(1 0 0)",
       "sidebar-primary": "oklch(0.5227 0.1920 9.5005)",
@@ -30,11 +33,9 @@
       "sidebar-accent-foreground": "oklch(0.9697 0.0119 17.36)",
       "sidebar-border": "oklch(0.9219 0 0)",
       "sidebar-ring": "oklch(0.5227 0.1920 9.5005)",
-      "primary": "oklch(0.5227 0.1920 9.5005)",
-      "primary-foreground": "oklch(1 0 0)",
-      "ring": "oklch(0.6902 0.1481 162.368)",
       "chart-2": "oklch(0.6136 0.2482 28.91)",
-      "chart-3": "oklch(0.5976 0.1922 255.07)"
+      "chart-3": "oklch(0.5976 0.1922 255.07)",
+      "radius": "0.5rem"
     },
     "overrides": {
       "light": {
@@ -70,7 +71,6 @@
     },
     "radius": "0.625rem"
   },
-  "version": 1,
   "typography": {
     "fontSans": "var(--font-lora), Lora, serif",
     "fontHeading": "var(--font-lora), Lora, serif",
@@ -81,17 +81,35 @@
     "letterSpacing": "0"
   },
   "components": {
-    "pageHeader": { "card": true },
-    "select": { "borderWidth": "1px" },
+    "pageHeader": {
+      "card": true
+    },
     "sidebar": {
       "showSectionLabels": true,
       "showSectionSeparators": true,
-      "slots": { "content": { "paddingTop": "48px" } }
+      "expandedWidth": 196,
+      "collapsedWidth": 64,
+      "mobileWidth": 196,
+      "slots": {
+        "content": {
+          "paddingTop": "48px"
+        }
+      }
     },
     "table": {
-      "headerColor": "oklch(0.5227 0.1920 9.5005)",
-      "borderColor": "oklch(0.5555 0 0)"
+      "headerColor": "var(--primary)",
+      "headerTextColor": "var(--primary-foreground)",
+      "borderColor": "var(--border)"
+    },
+    "input": {
+      "borderWidth": "1px"
+    },
+    "select": {
+      "borderWidth": "1px"
     }
   },
-  "layout": { "pageGutter": "8px", "sectionGap": "8px" }
+  "layout": {
+    "pageGutter": "8px",
+    "sectionGap": "8px"
+  }
 }

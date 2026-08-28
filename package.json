@@ -53,7 +53,7 @@
   "dependencies": {
     "@types/node": "^25.6.0",
     "najm-api": "2.0.3",
-    "najm-auth": "3.1.1",
+    "najm-auth": "3.1.5",
     "najm-cache": "2.0.2",
     "najm-chatbot": "2.0.2",
     "najm-cookies": "2.0.2",
@@ -64,7 +64,7 @@
     "najm-event": "2.0.2",
     "najm-guard": "2.0.2",
     "najm-i18n": "2.0.3",
-    "najm-kit": "2.11.2",
+    "najm-kit": "2.11.8",
     "najm-mcp": "2.1.0",
     "najm-rag": "2.0.2",
     "najm-rate": "2.0.2",

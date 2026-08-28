@@ -278,7 +278,6 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         isActive={isSidebarItemActive}
         linkComponent={LinkAdapter}
         footer={<SidebarFooterContent />}
-        widths={{ expanded: 264 }}
         mobileBreakpoint="lg"
         closeOnNavigate
       />
