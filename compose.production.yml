@@ -1,7 +1,11 @@
 name: school
 
 x-app: &app
-  image: ${SCHOOL_IMAGE:-ghcr.io/hdevlop/school:sha-0000000000000000000000000000000000000000}
+  # The GitHub workflow publishes this tag immediately before calling the
+  # Dokploy webhook. Always pull it so a successful webhook cannot leave an
+  # older SHA-pinned container running.
+  image: ghcr.io/hdevlop/school:main
+  pull_policy: always
   env_file:
     # Dokploy writes the service's encrypted environment to this file in its
     # deployment checkout. Direct host runs fall through to the root-only file.
