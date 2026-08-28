@@ -86,7 +86,7 @@ function ExamsTable() {
       <NPageHeader
         icon={FileText}
         title={t('navigation.exams')}
-        subtitle={`${total} ${total === 1 ? 'exam' : 'exams'}`}
+        subtitle={t('exams.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

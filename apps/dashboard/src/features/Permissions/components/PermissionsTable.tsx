@@ -91,7 +91,7 @@ function PermissionsTable() {
       <NPageHeader
         icon={KeyRound}
         title={tf('navigation.permissions', 'Permissions')}
-        subtitle={`${total} ${total === 1 ? 'permission' : 'permissions'}`}
+        subtitle={t('permissions.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

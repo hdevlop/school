@@ -9,6 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
+import { useTranslation } from '@/hooks/useLanguage';
 
 // Min 8 to match the backend's confirmResetPasswordDto password rule.
 const resetPasswordSchema = z.object({
@@ -30,6 +31,7 @@ const getErrorMessage = (error: unknown) => {
 // Used for both password reset and account invites — both arrive here with a
 // one-time ?token= and set a new password via the same endpoint.
 const ResetPasswordForm = () => {
+  const { t } = useTranslation();
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get('token') ?? ''
@@ -37,7 +39,7 @@ const ResetPasswordForm = () => {
   const mutation = useMutation({
     mutationFn: (data: { token: string; newPassword: string }) => auth.client.resetPassword(data),
     onSuccess: () => {
-      toast.success('Your password has been set. Please log in.')
+      toast.success(t('auth.success.passwordSet'))
       router.replace('/login')
     },
     onError: (error) => {
@@ -69,8 +71,8 @@ const ResetPasswordForm = () => {
             <FormInput
               name='newPassword'
               type='password'
-              formLabel='New password'
-              placeholder='Enter a new password'
+              formLabel={t('auth.form.newPassword')}
+              placeholder={t('auth.form.resetNewPasswordPlaceholder')}
               variant='default'
               icon={KeyRound}
             />
@@ -78,8 +80,8 @@ const ResetPasswordForm = () => {
             <FormInput
               name='confirmPassword'
               type='password'
-              formLabel='Confirm password'
-              placeholder='Re-enter your password'
+              formLabel={t('auth.form.confirmPassword')}
+              placeholder={t('auth.form.resetConfirmPasswordPlaceholder')}
               variant='default'
               icon={KeyRound}
             />

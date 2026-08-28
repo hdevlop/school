@@ -274,7 +274,7 @@ const StaffTable = () => {
       <NPageHeader
         icon={Briefcase}
         title={t('navigation.staff')}
-        subtitle={`${rows.length} ${t('staff.subtitle.members')}`}
+        subtitle={t('staff.subtitle.count', { count: rows.length })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -1,6 +1,7 @@
 import { TrendingUp, TrendingDown, Target, RotateCcw, Loader2, Send } from 'lucide-react';
 import { NButton } from 'najm-kit';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/hooks/useLanguage';
 
 interface Stats {
   total: number;
@@ -56,6 +57,7 @@ export default function GradesHeader({
   canSubmit = true,
   submitTitle = 'Save grades',
 }: Props) {
+  const { t } = useTranslation();
   const fmt = (v: number | null) => (v == null ? '—' : `${v}%`);
   return (
     <div className="flex w-full items-stretch justify-end gap-2">
@@ -72,7 +74,7 @@ export default function GradesHeader({
           onClick={onReset}
           disabled={isSubmitting}
           aria-label="Reset changes"
-          title="Reset changes"
+          title={t('grades.messages.resetChanges')}
           className="h-10 w-10 cursor-pointer p-0 border border-slate-900 bg-white text-slate-900 shadow-sm hover:bg-slate-900 hover:text-white disabled:cursor-not-allowed disabled:border-slate-300 disabled:bg-slate-50 disabled:text-slate-300 disabled:shadow-none"
         >
           <RotateCcw className="h-4 w-4" />

@@ -4,12 +4,14 @@ import { NBadge, NButton } from 'najm-kit';
 import { STATUS_COLOR_MAP, STATUS_ICON_MAP } from '@/lib/statusBadge';
 import { CreditCard, Eye } from 'lucide-react';
 import { isInstallmentPayable } from '@/features/Financial/Payment/store/paymentStore';
+import { useTranslation } from '@/hooks/useLanguage';
 
 export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (installment: any) => void; onPay?: (installment: any) => void } = {}) => {
+  const { t } = useTranslation();
   return useMemo(() => [
     {
       accessorKey: "number",
-      header: "Installment",
+      header: t('installments.table.installment'),
       enableSorting: true,
       cell: ({ getValue }: any) => (
         <div className="font-medium">
@@ -19,7 +21,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
     },
     {
       accessorKey: "dueDate",
-      header: "Due Date",
+      header: t('installments.table.dueDate'),
       enableSorting: true,
       cell: ({ getValue }: any) => (
         <div className="flex items-center gap-2">
@@ -30,7 +32,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
     },
     {
       accessorKey: "amount",
-      header: "Amount",
+      header: t('installments.table.amount'),
       enableSorting: true,
       cell: ({ getValue }: any) => {
         const amount = getValue() || 0;
@@ -43,7 +45,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
     },
     {
       accessorKey: "paidDate",
-      header: "Paid Date",
+      header: t('installments.table.paidDate'),
       enableSorting: true,
       cell: ({ getValue }: any) => {
         const paidDate = getValue();
@@ -59,7 +61,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: t('installments.table.status'),
       enableSorting: true,
       enableColumnFilter: true,
       cell: ({ getValue }: any) => {
@@ -79,7 +81,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
     },
     {
       id: "actions",
-      header: "Actions",
+      header: t('installments.table.actions'),
       enableSorting: false,
       cell: ({ row }: any) => {
         const installment = row.original;
@@ -118,5 +120,5 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
         );
       },
     }
-  ], [onPay, onView]);
+  ], [onPay, onView, t]);
 };

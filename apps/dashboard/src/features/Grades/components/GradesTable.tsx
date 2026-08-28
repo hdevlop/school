@@ -18,6 +18,7 @@ import { useExams } from '@/features/Exams/hooks/useExams';
 import { useGradesTableColumns } from '../hooks/useGradesTableColumns';
 import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useTranslation } from '@/hooks/useLanguage';
 
 const PASS_THRESHOLD = 50;
 type GradeSourceType = 'assessment' | 'exam';
@@ -55,6 +56,7 @@ const resolveGradeStatus = (marksObtained, fallback = 'pending') => {
 };
 
 function GradesTable() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const role = (user as any)?.role;
   const isAdminOrPrincipal = role === 'admin' || role === 'principal';
@@ -288,7 +290,7 @@ function GradesTable() {
 
   const handleSubmit = async () => {
     if (!canSubmit) {
-      toast.error('Select an assessment or exam before saving grades.');
+      toast.error(t('grades.errors.selectSource'));
       return;
     }
 
@@ -314,13 +316,13 @@ function GradesTable() {
       });
 
     if (payloads.length === 0) {
-      toast.info('Nothing to save.');
+      toast.info(t('grades.messages.nothingToSave'));
       return;
     }
 
     try {
       await submitGrades(payloads);
-      toast.success('Grades saved.');
+      toast.success(t('grades.success.saved'));
       resetDraft();
     } catch (err: any) {
       toast.error(err?.response?.data?.message || err?.message || 'Failed to save grades.');
@@ -347,8 +349,8 @@ function GradesTable() {
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
         icon={GraduationCap}
-        title="Grades"
-        subtitle={`${stats.total} students${selectedSource ? ` · ${selectedSource.title}` : ''}`}
+        title={t('grades.messages.pageTitle')}
+        subtitle={`${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}`}
       >
         <NPageHeaderActions>
           <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">

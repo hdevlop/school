@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { NTable } from 'najm-kit';
 import { Badge } from 'najm-kit';
 import { Banknote, CalendarDays, Clock, ReceiptText } from 'lucide-react';
+import { useTranslation } from '@/hooks/useLanguage';
 
 interface PaymentsTabProps {
   teacher: any;
@@ -41,6 +42,7 @@ const StatCard = ({
 );
 
 const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
+  const { t } = useTranslation();
   const contractType = normalizeEmploymentType(teacher?.employmentType);
   const monthlySalary = Number(teacher?.salary || 0);
   const workloadHours = Number(teacher?.workloadHours || 0);
@@ -73,29 +75,29 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
   const columns = useMemo(() => [
     {
       accessorKey: 'period',
-      header: 'Period',
+      header: t('teachers.profile.table.period'),
       enableSorting: true,
       cell: ({ getValue }) => <span className="font-medium text-slate-700">{getValue() as string}</span>,
     },
     {
       accessorKey: 'type',
-      header: 'Type',
+      header: t('teachers.profile.table.type'),
       enableSorting: true,
     },
     {
       accessorKey: 'base',
-      header: 'Base',
+      header: t('teachers.profile.table.base'),
       enableSorting: false,
     },
     {
       accessorKey: 'amount',
-      header: 'Amount',
+      header: t('teachers.profile.table.amount'),
       enableSorting: true,
       cell: ({ getValue }) => <span className="font-semibold text-slate-800">{getValue() as string}</span>,
     },
     {
       accessorKey: 'status',
-      header: 'Status',
+      header: t('teachers.profile.table.status'),
       enableSorting: true,
       cell: ({ getValue }) => (
         <Badge className="border-amber-200 bg-amber-50 text-amber-700">
@@ -103,7 +105,7 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
         </Badge>
       ),
     },
-  ], []);
+  ], [t]);
 
   return (
     <div className="space-y-4">

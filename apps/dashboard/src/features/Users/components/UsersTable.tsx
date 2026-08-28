@@ -87,7 +87,7 @@ function UsersTable() {
       <NPageHeader
         icon={UserCog}
         title={t('navigation.users')}
-        subtitle={`${total} ${total === 1 ? 'user' : 'users'}`}
+        subtitle={t('users.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

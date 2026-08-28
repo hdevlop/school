@@ -87,7 +87,7 @@ function SubjectsTable() {
       <NPageHeader
         icon={BookOpen}
         title={t('navigation.subjects')}
-        subtitle={`${total} ${total === 1 ? 'subject' : 'subjects'}`}
+        subtitle={t('subjects.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

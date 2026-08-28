@@ -43,7 +43,7 @@ function StaffAttendanceTable() {
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.staffAttendance')}
-        subtitle={`${total} ${total === 1 ? t('attendance.roster.staffMember') : t('attendance.roster.staffMembers')}`}
+        subtitle={t('attendance.subtitle.staffCount', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

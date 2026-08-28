@@ -218,7 +218,7 @@ function FeesTable() {
       <NPageHeader
         icon={CircleDollarSign}
         title={t('navigation.fees')}
-        subtitle={`${total} ${total === 1 ? 'student' : 'students'}`}
+        subtitle={t('fees.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

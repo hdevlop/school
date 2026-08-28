@@ -110,7 +110,7 @@ function TeachersTable() {
       <NPageHeader
         icon={Users}
         title={t('navigation.teachers')}
-        subtitle={`${total} ${total === 1 ? 'teacher' : 'teachers'}`}
+        subtitle={t('teachers.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

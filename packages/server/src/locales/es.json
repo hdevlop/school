@@ -1,4 +1,30 @@
 {
+  "financialOperations": {
+    "updateAcademicYear": "Actualizar el año académico tras el éxito",
+    "includeOneTimeFees": "Incluir tarifas únicas",
+    "copyDiscounts": "Copiar descuentos",
+    "createPreviewFirst": "Crea primero una vista previa",
+    "selectStudentAmount": "Selecciona un estudiante e introduce un importe",
+    "amountPlaceholder": "Importe",
+    "notificationsDescription": "Envíos idempotentes de vencidos y cheques.",
+    "notificationsTitle": "Registro de envío de notificaciones",
+    "creditDescription": "Aplica fondos liquidados no aplicados a las cuotas más antiguas.",
+    "creditTitle": "Crédito del estudiante",
+    "checksDescription": "Los cheques pendientes reservan saldos hasta su liquidación o liberación.",
+    "checksTitle": "Cheques pendientes de liquidación"
+  },
+  "installments": {
+    "table": {
+      "allocate": "Asignar",
+      "available": "Disponible",
+      "actions": "Acciones",
+      "status": "Estado",
+      "paidDate": "Fecha de pago",
+      "amount": "Importe",
+      "dueDate": "Fecha de vencimiento",
+      "installment": "Cuota"
+    }
+  },
   "languages": {
     "en": "English",
     "fr": "Français",
@@ -11,7 +37,22 @@
     }
   },
   "auth": {
+    "form": {
+      "resetConfirmPasswordPlaceholder": "Vuelve a introducir tu contraseña",
+      "resetNewPasswordPlaceholder": "Introduce una nueva contraseña",
+      "confirmPasswordPlaceholder": "Vuelve a introducir tu nueva contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "newPasswordPlaceholder": "Introduce tu nueva contraseña",
+      "newPassword": "Nueva contraseña",
+      "passwordPlaceholder": "Introduce tu contraseña",
+      "password": "Contraseña",
+      "emailPlaceholder": "Introduce tu correo",
+      "email": "Correo electrónico"
+    },
     "success": {
+      "resetLinkSent": "Enlace de restablecimiento enviado a tu correo",
+      "loginSuccessful": "Inicio de sesión correcto",
+      "passwordSet": "Tu contraseña ha sido establecida. Inicia sesión.",
       "login": "Inicio de sesión exitoso",
       "logout": "Cierre de sesión exitoso",
       "register": "Registro exitoso. ¡Bienvenido!",
@@ -23,6 +64,7 @@
       "authInitialized": "Autenticación inicializada exitosamente"
     },
     "errors": {
+      "resetEmailFailed": "No se pudo enviar el correo de restablecimiento",
       "emailExists": "Ya existe una cuenta con este correo electrónico",
       "credentialsMissing": "Uno o más campos obligatorios están vacíos",
       "invalidCredentials": "Credenciales inválidas. Por favor, inténtalo de nuevo",
@@ -49,6 +91,15 @@
     }
   },
   "users": {
+    "view": {
+      "recentSessions": "Sesiones recientes",
+      "recentActivities": "Actividades recientes",
+      "accountDetails": "Detalles de la cuenta",
+      "accountInformation": "Información de la cuenta"
+    },
+    "subtitle": {
+      "count": "{{count}} usuarios en total"
+    },
     "success": {
       "retrieved": "Usuario recuperado exitosamente",
       "created": "Usuario creado exitosamente",
@@ -111,6 +162,9 @@
     }
   },
   "roles": {
+    "subtitle": {
+      "count": "{{count}} roles en total"
+    },
     "success": {
       "retrieved": "Rol recuperado exitosamente",
       "created": "Rol creado exitosamente",
@@ -412,6 +466,11 @@
     }
   },
   "common": {
+    "updateLanguageFailed": "No se pudo actualizar el idioma",
+    "notes": "Notas",
+    "dueDate": "Fecha de vencimiento",
+    "type": "Tipo",
+    "status": "Estado",
     "notAvailable": "N/D",
     "all": "Todos",
     "invalidDate": "Fecha inválida",
@@ -676,6 +735,9 @@
   }
   },
   "payroll": {
+    "subtitle": {
+      "count": "{{count}} empleados"
+    },
     "success": {
       "retrieved": "Nómina obtenida correctamente",
       "run": "Ejecución de nómina completada",
@@ -733,6 +795,10 @@
     "noData": "No se encontraron registros de nómina"
   },
   "attendance": {
+    "subtitle": {
+      "studentCount": "{{count}} estudiantes",
+      "staffCount": "{{count}} miembros del personal"
+    },
     "table": {
       "selectAll": "Seleccionar todo",
       "selectRow": "Seleccionar fila",
@@ -787,6 +853,8 @@
       "seeded": "Datos de demostración de asistencia creados"
     },
     "errors": {
+      "selectTeacherSubject": "Selecciona un profesor y una asignatura antes de guardar la asistencia.",
+      "selectSection": "Selecciona una sección antes de guardar la asistencia.",
       "notFound": "Registro de asistencia no encontrado",
       "alreadyMarked": "Asistencia ya registrada para este estudiante en esta clase",
       "dailyAlreadyMarked": "Asistencia ya registrada para este estudiante hoy — use actualizar para corregir el estado",
@@ -842,6 +910,15 @@
     }
   },
   "fees": {
+    "card": {
+      "overdueInstallments": "Cuotas vencidas",
+      "payments": "Pagos",
+      "installments": "Cuotas",
+      "loadingStudentFees": "Cargando tarifas…"
+    },
+    "subtitle": {
+      "count": "{{count}} estudiantes en total"
+    },
     "form": {
       "byStudent": "Por estudiante",
       "byClass": "Por clase",
@@ -941,6 +1018,7 @@
       "oneTime": "Única vez"
     },
     "success": {
+      "paymentDeleted": "Pago eliminado correctamente",
       "allocationDeleted": "Asignación eliminada correctamente",
       "allocationRetrieved": "Asignación obtenida correctamente",
       "allocationsRetrieved": "Asignaciones obtenidas correctamente",
@@ -1192,6 +1270,9 @@
     }
   },
   "announcements": {
+    "subtitle": {
+      "count": "{{count}} anuncios en total"
+    },
     "audience": {
       "all": "Todos",
       "class": "Clase",
@@ -1213,6 +1294,9 @@
       "searchByTitle": "Buscar por título..."
     },
     "form": {
+      "noClasses": "No se encontraron clases",
+      "searchClasses": "Buscar clases…",
+      "classesPlaceholder": "Selecciona las clases",
       "announcementDetails": "Detalles del anuncio",
       "class": "Clase",
       "classPlaceholder": "Seleccione la clase",
@@ -1257,6 +1341,9 @@
     }
   },
   "assessments": {
+    "subtitle": {
+      "count": "{{count}} evaluaciones en total"
+    },
     "dialogs": {
       "createButton": "Crear",
       "createTitle": "Crear",
@@ -1271,6 +1358,8 @@
       "searchByTitle": "Buscar por título..."
     },
     "form": {
+      "noSections": "No se encontraron secciones",
+      "searchSections": "Buscar secciones…",
       "academicContext": "Contexto académico",
       "assessmentDetails": "Detalles de la evaluación",
       "class": "Clase",
@@ -1350,6 +1439,9 @@
     "errors": { "notFound": "Registro disciplinario no encontrado", "studentNotFound": "Estudiante no encontrado", "studentInactive": "Solo los estudiantes activos pueden recibir una infracción", "studentAcademicPlacementRequired": "El estudiante debe tener clase y sección", "teacherStudentForbidden": "No estás asignado a la sección de este estudiante", "recordForbidden": "No puedes acceder a este registro", "recordNotOpen": "Solo se pueden modificar o resolver infracciones abiertas", "recordNotResolved": "Solo se pueden reabrir infracciones resueltas", "adminRequired": "Se requiere acceso de administrador", "invalidIncidentDate": "La fecha del incidente no es válida", "futureIncidentDate": "La fecha del incidente no puede ser futura" }
   },
   "classes": {
+    "subtitle": {
+      "count": "{{count}} clases en total"
+    },
     "dialogs": {
       "createButton": "Crear",
       "createTitle": "Crear",
@@ -1390,6 +1482,9 @@
     }
   },
   "drivers": {
+    "subtitle": {
+      "count": "{{count}} conductores en total"
+    },
     "dialogs": {
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear",
@@ -1405,6 +1500,7 @@
       "searchByName": "Buscar por nombre..."
     },
     "form": {
+      "licenseTypePlaceholder": "Selecciona el tipo de licencia",
       "address": "Dirección",
       "addressPlaceholder": "Ingrese la dirección",
       "assignDriver": "Asignar conductor",
@@ -1471,6 +1567,9 @@
     }
   },
   "exams": {
+    "subtitle": {
+      "count": "{{count}} exámenes en total"
+    },
     "dialogs": {
       "createButton": "Crear",
       "createTitle": "Crear",
@@ -1485,6 +1584,8 @@
       "searchByTitle": "Buscar por título..."
     },
     "form": {
+      "noSections": "No se encontraron secciones",
+      "searchSections": "Buscar secciones…",
       "academicContext": "Contexto académico",
       "class": "Clase",
       "classPlaceholder": "Seleccione la clase",
@@ -1552,6 +1653,9 @@
     }
   },
   "expenses": {
+    "subtitle": {
+      "count": "{{count}} gastos en total"
+    },
     "categories": {
       "payroll": "Nómina",
       "cleaning": "Limpieza",
@@ -1641,6 +1745,9 @@
     }
   },
   "feeTypes": {
+    "subtitle": {
+      "count": "{{count}} tipos de tarifa en total"
+    },
     "category": {
       "activities": "Actividades",
       "books": "Libros",
@@ -1699,7 +1806,16 @@
     }
   },
   "grades": {
+    "messages": {
+      "pageTitle": "Notas",
+      "resetChanges": "Restablecer cambios",
+      "nothingToSave": "No hay nada que guardar."
+    },
+    "subtitle": {
+      "count": "{{count}} estudiantes"
+    },
     "errors": {
+      "selectSource": "Selecciona una evaluación o examen antes de guardar las notas.",
       "marksExceedTotal": "Las notas exceden el total",
       "sourceRequired": "Seleccione una evaluación o un examen"
     },
@@ -1753,6 +1869,7 @@
       "studentCode": "Código del estudiante"
     },
     "success": {
+      "saved": "Notas guardadas.",
       "allDeleted": "Todos los registros de Calificación fueron eliminados correctamente",
       "bulkDeleted": "Registros de Calificación eliminados correctamente",
       "created": "Calificación creado correctamente",
@@ -1763,6 +1880,9 @@
     }
   },
   "parents": {
+    "subtitle": {
+      "count": "{{count}} padres en total"
+    },
     "success": {
       "retrieved": "Padre o madre obtenido correctamente",
       "allRetrieved": "Todos los padres fueron obtenidos correctamente",
@@ -1931,11 +2051,20 @@
     }
   },
   "payments": {
+    "success": {
+      "voided": "Pago anulado",
+      "checkMarked": "Cheque marcado {{status}}",
+      "recorded": "Pago registrado correctamente"
+    },
     "dialogs": {
       "deleteButton": "Eliminar",
       "viewTitle": "Detalles"
     },
     "errors": {
+      "recordFailed": "No se pudo registrar el pago. Inténtalo de nuevo.",
+      "studentMissing": "Falta la información del estudiante",
+      "insufficientCash": "Efectivo insuficiente. Añade {{amount}} MAD para cubrir las cuotas seleccionadas.",
+      "amountRequired": "El importe del pago es obligatorio",
       "notFound": "Pago no encontrado",
       "paymentNotFound": "Pago no encontrado",
       "receiptNumberNotFound": "Número de recibo no encontrado",
@@ -1958,6 +2087,12 @@
       "searchByReceipt": "Buscar por recibo..."
     },
     "form": {
+      "notesOptional": "Notas (opcional)",
+      "bankPlaceholder": "Banco emisor",
+      "bank": "Banco",
+      "referencePlaceholder": "N.º de recibo, ref…",
+      "reference": "Referencia (opcional)",
+      "amountReceived": "Importe recibido (MAD)",
       "amount": "Monto",
       "amountPlaceholder": "Ingrese el monto",
       "basicInformation": "Información básica",
@@ -2043,6 +2178,7 @@
       "reminded": "Recordado",
       "searchPlaceholder": "Buscar...",
       "studentsOverdue": "Estudiantes atrasados",
+        "studentsOverdueCount": "{{count}} estudiantes atrasados",
       "title": "Título",
       "toastReminded": "Recordatorio enviado",
       "toastRemindedAll": "Todos los recordatorios enviados",
@@ -2052,6 +2188,9 @@
     "year": "Año"
   },
   "sections": {
+    "subtitle": {
+      "count": "{{count}} secciones en total"
+    },
     "dialogs": {
       "createButton": "Crear",
       "createTitle": "Crear",
@@ -2163,6 +2302,27 @@
       "temporary": "Temporal"
     },
     "form": {
+      "bankAccountPlaceholder": "Introduce la cuenta bancaria",
+      "workloadHoursPlaceholder": "Introduce las horas mensuales",
+      "hourlyRatePlaceholder": "Introduce la tarifa por hora",
+      "salaryPlaceholder": "Introduce el salario",
+      "shiftPlaceholder": "Selecciona el turno",
+      "compensationModePlaceholder": "Selecciona el modo de retribución",
+      "employmentTypePlaceholder": "Selecciona el tipo de empleo",
+      "departmentPlaceholder": "Introduce el departamento",
+      "medicalConditionsPlaceholder": "Indica condiciones médicas, alergias o necesidades especiales…",
+      "medicalConditions": "Condiciones médicas",
+      "addressPlaceholder": "Introduce la dirección",
+      "emergencyPhonePlaceholder": "Introduce el teléfono de emergencia",
+      "emergencyContactNamePlaceholder": "Introduce el nombre de contacto",
+      "phonePlaceholder": "Introduce el teléfono",
+      "emailPlaceholder": "Introduce el correo",
+      "statusPlaceholder": "Selecciona el estado",
+      "rolePlaceholder": "Selecciona el rol",
+      "genderPlaceholder": "Selecciona el género",
+      "cinPlaceholder": "Introduce el CIN",
+      "employeeCodePlaceholder": "Introduce el código de empleado",
+      "namePlaceholder": "Introduce el nombre completo",
       "personalInformation": "Información personal",
       "employmentInformation": "Información laboral",
       "emergencyContact": "Contacto de emergencia",
@@ -2200,6 +2360,7 @@
     "loading": "Cargando personal...",
     "noData": "No se encontraron miembros del personal",
     "subtitle": {
+      "count": "{{count}} miembros en total",
       "members": "miembros"
     }
   },
@@ -2258,6 +2419,7 @@
   },
   "settings": {
     "academic": {
+      "semesterPlaceholder": "Semestre",
       "attendanceMode": "Modo de asistencia",
       "attendanceModeDaily": "Diario",
       "attendanceModePerClass": "Por clase",
@@ -2297,6 +2459,7 @@
       "title": "Título"
     },
     "school": {
+      "namePlaceholder": "Mi escuela",
       "currentAcademicYear": "Año académico actual",
       "lunchBreakDuration": "Duración del almuerzo (min)",
       "schoolAddress": "Dirección de la escuela",
@@ -2367,7 +2530,7 @@
       "seeded": "Estudiantes inicializados correctamente"
     },
     "subtitle": {
-      "count": "{{count}} estudiantes"
+      "count": "{{count}} estudiantes en total"
     },
     "dialogs": {
       "bulkDeleteItemName": "elemento",
@@ -2511,6 +2674,9 @@
     "title": "Título"
   },
   "cycles": {
+    "subtitle": {
+      "count": "{{count}} ciclos en total"
+    },
     "form": {
       "cycleInformation": "Información del ciclo",
       "name": "Nombre",
@@ -2540,6 +2706,9 @@
     }
   },
   "subjects": {
+    "subtitle": {
+      "count": "{{count}} asignaturas en total"
+    },
     "dialogs": {
       "createButton": "Crear",
       "createTitle": "Crear",
@@ -2576,6 +2745,9 @@
     }
   },
   "teachers": {
+    "subtitle": {
+      "count": "{{count}} profesores en total"
+    },
     "dialogs": {
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear",
@@ -2639,6 +2811,23 @@
       "yearsOfExperiencePlaceholder": "Ingrese los años de experiencia"
     },
     "profile": {
+      "table": {
+        "loadingAssignments": "Cargando asignaciones…",
+        "classCount": "Número de clases",
+        "classes": "Clases",
+        "code": "Código",
+        "amount": "Importe",
+        "base": "Base",
+        "period": "Periodo",
+        "uploaded": "Subido",
+        "type": "Tipo",
+        "document": "Documento",
+        "status": "Estado",
+        "students": "Estudiantes",
+        "subject": "Asignatura",
+        "section": "Sección",
+        "class": "Clase"
+      },
       "teacherNotFound": "Profesor no encontrado"
     },
     "status": {
@@ -2689,6 +2878,9 @@
     }
   },
   "vehicles": {
+    "subtitle": {
+      "count": "{{count}} vehículos en total"
+    },
     "card": {
       "currentMileage": "Kilometraje actual",
       "driver": "Conductor",
@@ -2770,6 +2962,34 @@
     }
   },
   "events": {
+    "sections": {
+      "schedule": "Horario",
+      "eventDetails": "Detalles del evento"
+    },
+    "form": {
+      "noClasses": "No se encontraron clases",
+      "searchClasses": "Buscar clases…",
+      "visibilityPlaceholder": "Selecciona la visibilidad",
+      "statusPlaceholder": "Selecciona el estado",
+      "classPlaceholder": "Selecciona las clases",
+      "venuePlaceholder": "Sala, salón o campo",
+      "locationPlaceholder": "Campus, ciudad o zona",
+      "descriptionPlaceholder": "Añade detalles del evento",
+      "typePlaceholder": "Selecciona el tipo",
+      "titlePlaceholder": "Introduce el título del evento",
+      "visibility": "Visibilidad",
+      "status": "Estado",
+      "class": "Clase",
+      "venue": "Sede",
+      "location": "Ubicación",
+      "endTime": "Hora de fin",
+      "startTime": "Hora de inicio",
+      "endDate": "Fecha de fin",
+      "startDate": "Fecha de inicio",
+      "description": "Descripción",
+      "type": "Tipo",
+      "title": "Título"
+    },
     "type": {
       "academic": "Académico",
       "sports": "Deportes",
@@ -2846,6 +3066,9 @@
     "overdueRun": "Notificaciones vencidas procesadas correctamente"
   },
   "permissions": {
+    "subtitle": {
+      "count": "{{count}} permisos en total"
+    },
     "success": {
       "assigned": "Permiso asignado correctamente",
       "deleted": "Permiso eliminado correctamente",
@@ -2916,6 +3139,16 @@
     }
   },
   "transport": {
+    "panel": {
+      "manageSubtitle": "Gestiona rutas y facturación",
+      "unassign": "Desasignar",
+      "notesPlaceholder": "Notas opcionales…",
+      "notes": "Notas",
+      "noStudent": "No se encontró ningún estudiante",
+      "searchStudents": "Buscar estudiantes…",
+      "selectStudent": "Selecciona un estudiante…",
+      "student": "Estudiante"
+    },
     "form": {
       "stepTitle": "Transporte", "title": "Transporte escolar", "description": "Asigna un vehículo, confirma el punto de recogida y revisa la cuota mensual.", "usesTransport": "Usa transporte escolar", "chooseVehicle": "Elegir vehículo", "chooseVehicleHint": "Solo los vehículos activos con plazas disponibles aceptan nuevos alumnos.", "vehicle": "Vehículo", "vehiclePlaceholder": "Selecciona un vehículo disponible", "searchVehicle": "Buscar vehículos...", "noVehicles": "No hay vehículos disponibles", "seatsAvailable": "plazas disponibles", "seatsLeft": "plazas restantes", "driver": "Conductor", "unassignedDriver": "Sin conductor asignado", "occupancy": "Ocupación", "pickupLocation": "Punto de recogida", "pickupPlaceholder": "Introduce la dirección de recogida", "dropoffLocation": "Punto de llegada", "dropoffPlaceholder": "Introduce el punto de llegada a la escuela", "useHomeAddress": "Usar dirección del domicilio", "startDate": "Fecha de inicio", "notes": "Notas de transporte", "notesPlaceholder": "Instrucciones de acceso o recogida...", "feePreview": "Cuota de transporte", "monthlyBilling": "La facturación mensual se creará automáticamente", "missingFeeType": "Configura una cuota de transporte activa antes de asignar el transporte.", "optionalTitle": "El transporte es opcional", "optionalDescription": "Activa el transporte escolar para elegir vehículo y confirmar la recogida."
     },

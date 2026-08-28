@@ -124,12 +124,12 @@ export const useAttendanceRoster = ({
 
   const handleSubmit = useCallback(async () => {
     if (kind === 'student' && !allSections && !studentContext?.sectionId) {
-      toast.error('Select a section before saving student attendance.');
+      toast.error(t('attendance.errors.selectSection'));
       return;
     }
 
     if (kind === 'student' && !allSections && attendanceMode === 'per_class' && (!studentContext?.teacherId || !studentContext?.subjectId)) {
-      toast.error('Select a teacher and subject before saving student attendance.');
+      toast.error(t('attendance.errors.selectTeacherSubject'));
       return;
     }
 

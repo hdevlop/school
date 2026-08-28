@@ -9,8 +9,10 @@ import {
   deletePaymentApi,
 } from '@/services/paymentApi'
 import { toast } from 'sonner'
+import { useTranslation } from '@/hooks/useLanguage';
 
 export const usePayments = (studentId?: string, feeId?: string) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient()
 
   // Get payments by student
@@ -39,7 +41,7 @@ export const usePayments = (studentId?: string, feeId?: string) => {
   const recordPaymentMutation = useMutation({
     mutationFn: recordPaymentApi,
     onSuccess: () => {
-      toast.success('Payment recorded successfully')
+      toast.success(t('fees.success.paymentRecorded'))
       queryClient.invalidateQueries({ queryKey: ['payments'] })
       queryClient.invalidateQueries({ queryKey: ['fees'] })
     },
@@ -52,7 +54,7 @@ export const usePayments = (studentId?: string, feeId?: string) => {
   const updatePaymentMutation = useMutation({
     mutationFn: updatePaymentApi,
     onSuccess: () => {
-      toast.success('Payment updated successfully')
+      toast.success(t('fees.success.paymentUpdated'))
       queryClient.invalidateQueries({ queryKey: ['payments'] })
       queryClient.invalidateQueries({ queryKey: ['fees'] })
     },
@@ -65,7 +67,7 @@ export const usePayments = (studentId?: string, feeId?: string) => {
   const deletePaymentMutation = useMutation({
     mutationFn: deletePaymentApi,
     onSuccess: () => {
-      toast.success('Payment deleted successfully')
+      toast.success(t('fees.success.paymentDeleted'))
       queryClient.invalidateQueries({ queryKey: ['payments'] })
       queryClient.invalidateQueries({ queryKey: ['fees'] })
     },

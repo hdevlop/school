@@ -277,7 +277,7 @@ const PayrollTable = () => {
       <NPageHeader
         icon={Wallet}
         title={t('navigation.payroll')}
-        subtitle={`${tableRows.length} ${tableRows.length === 1 ? 'employee' : 'employees'} · ${formatPeriod(period)}`}
+        subtitle={`${t('payroll.subtitle.count', { count: tableRows.length })} · ${formatPeriod(period)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

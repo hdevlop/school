@@ -1,4 +1,30 @@
 {
+  "financialOperations": {
+    "updateAcademicYear": "تحديث السنة الدراسية بعد النجاح",
+    "includeOneTimeFees": "تضمين الرسوم لمرة واحدة",
+    "copyDiscounts": "نسخ التخفيضات",
+    "createPreviewFirst": "أنشئ معاينة أولاً",
+    "selectStudentAmount": "اختر تلميذاً وأدخل مبلغاً",
+    "amountPlaceholder": "المبلغ",
+    "notificationsDescription": "إشعارات التأخير واستحقاق الشيكات.",
+    "notificationsTitle": "سجل تسليم الإشعارات",
+    "creditDescription": "تطبيق الأموال المسواة غير المخصصة على أقدم الأقساط.",
+    "creditTitle": "رصيد التلميذ",
+    "checksDescription": "الشيكات المعلقة تحجز الأرصدة حتى التسوية أو الإفراج.",
+    "checksTitle": "شيكات بانتظار التسوية"
+  },
+  "installments": {
+    "table": {
+      "allocate": "تخصيص",
+      "available": "المتاح",
+      "actions": "الإجراءات",
+      "status": "الحالة",
+      "paidDate": "تاريخ الدفع",
+      "amount": "المبلغ",
+      "dueDate": "تاريخ الاستحقاق",
+      "installment": "القسط"
+    }
+  },
   "languages": {
     "en": "English",
     "fr": "Français",
@@ -11,7 +37,22 @@
     }
   },
   "auth": {
+    "form": {
+      "resetConfirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+      "resetNewPasswordPlaceholder": "أدخل كلمة مرور جديدة",
+      "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "newPasswordPlaceholder": "أدخل كلمة المرور الجديدة",
+      "newPassword": "كلمة المرور الجديدة",
+      "passwordPlaceholder": "أدخل كلمة المرور",
+      "password": "كلمة المرور",
+      "emailPlaceholder": "أدخل بريدك الإلكتروني",
+      "email": "البريد الإلكتروني"
+    },
     "success": {
+      "resetLinkSent": "تم إرسال رابط إعادة التعيين إلى بريدك",
+      "loginSuccessful": "تم تسجيل الدخول بنجاح",
+      "passwordSet": "تم تعيين كلمة المرور. يرجى تسجيل الدخول.",
       "login": "تم تسجيل الدخول بنجاح",
       "logout": "تم تسجيل الخروج بنجاح",
       "register": "تم التسجيل بنجاح. مرحباً بك!",
@@ -23,6 +64,7 @@
       "authInitialized": "تم تهيئة المصادقة بنجاح"
     },
     "errors": {
+      "resetEmailFailed": "تعذر إرسال بريد إعادة التعيين",
       "emailExists": "يوجد حساب بهذا البريد الإلكتروني بالفعل",
       "credentialsMissing": "واحد أو أكثر من الحقول المطلوبة فارغة",
       "invalidCredentials": "بيانات الاعتماد غير صحيحة. يرجى المحاولة مرة أخرى",
@@ -49,6 +91,15 @@
     }
   },
   "users": {
+    "view": {
+      "recentSessions": "الجلسات الأخيرة",
+      "recentActivities": "الأنشطة الأخيرة",
+      "accountDetails": "تفاصيل الحساب",
+      "accountInformation": "معلومات الحساب"
+    },
+    "subtitle": {
+      "count": "{{count}} مستخدم إجمالاً"
+    },
     "success": {
       "retrieved": "تم استرداد المستخدم بنجاح",
       "created": "تم إنشاء المستخدم بنجاح",
@@ -111,6 +162,9 @@
     }
   },
   "roles": {
+    "subtitle": {
+      "count": "{{count}} دور إجمالاً"
+    },
     "success": {
       "retrieved": "تم استرداد الدور بنجاح",
       "allRetrieved": "تم استرداد جميع الأدوار بنجاح",
@@ -426,6 +480,11 @@
     }
   },
   "common": {
+    "updateLanguageFailed": "تعذر تحديث اللغة",
+    "notes": "ملاحظات",
+    "dueDate": "تاريخ الاستحقاق",
+    "type": "النوع",
+    "status": "الحالة",
     "notAvailable": "غير متاح",
     "all": "الكل",
     "invalidDate": "تاريخ غير صحيح",
@@ -690,6 +749,9 @@
   }
   },
   "payroll": {
+    "subtitle": {
+      "count": "{{count}} موظف"
+    },
     "success": {
       "retrieved": "تم استرجاع كشوف الرواتب بنجاح",
       "run": "اكتمل تشغيل كشف الرواتب",
@@ -747,6 +809,10 @@
     "noData": "لا توجد سجلات رواتب"
   },
   "attendance": {
+    "subtitle": {
+      "studentCount": "{{count}} طالب",
+      "staffCount": "{{count}} موظف"
+    },
     "table": {
       "selectAll": "تحديد الكل",
       "selectRow": "تحديد الصف",
@@ -801,6 +867,8 @@
       "seeded": "تم إنشاء بيانات تجريبية للحضور"
     },
     "errors": {
+      "selectTeacherSubject": "اختر أستاذاً ومادة قبل حفظ الحضور.",
+      "selectSection": "اختر شعبة قبل حفظ الحضور.",
       "notFound": "سجل الحضور غير موجود",
       "alreadyMarked": "تم تسجيل الحضور بالفعل لهذا الطالب في هذا الفصل",
       "dailyAlreadyMarked": "تم تسجيل الحضور بالفعل لهذا الطالب اليوم — استخدم التحديث لتصحيح الحالة",
@@ -856,6 +924,15 @@
     }
   },
   "fees": {
+    "card": {
+      "overdueInstallments": "أقساط متأخرة",
+      "payments": "المدفوعات",
+      "installments": "الأقساط",
+      "loadingStudentFees": "جارٍ تحميل الرسوم…"
+    },
+    "subtitle": {
+      "count": "{{count}} طالب إجمالاً"
+    },
     "form": {
       "byStudent": "حسب الطالب",
       "byClass": "حسب الفصل",
@@ -955,6 +1032,7 @@
       "oneTime": "مرة واحدة"
     },
     "success": {
+      "paymentDeleted": "تم حذف الدفع بنجاح",
       "allocationDeleted": "تم حذف التخصيص بنجاح",
       "allocationRetrieved": "تم جلب التخصيص بنجاح",
       "allocationsRetrieved": "تم جلب التخصيصات بنجاح",
@@ -1206,6 +1284,9 @@
     }
   },
   "announcements": {
+    "subtitle": {
+      "count": "{{count}} إعلان إجمالاً"
+    },
     "audience": {
       "all": "الجميع",
       "class": "القسم",
@@ -1227,6 +1308,9 @@
       "searchByTitle": "ابحث بالعنوان..."
     },
     "form": {
+      "noClasses": "لم يتم العثور على أقسام",
+      "searchClasses": "ابحث عن الأقسام…",
+      "classesPlaceholder": "اختر الأقسام",
       "announcementDetails": "تفاصيل الإعلان",
       "class": "القسم",
       "classPlaceholder": "اختر القسم",
@@ -1271,6 +1355,9 @@
     }
   },
   "assessments": {
+    "subtitle": {
+      "count": "{{count}} تقييم إجمالاً"
+    },
     "dialogs": {
       "createButton": "إنشاء",
       "createTitle": "إنشاء",
@@ -1285,6 +1372,8 @@
       "searchByTitle": "ابحث بالعنوان..."
     },
     "form": {
+      "noSections": "لم يتم العثور على شعب",
+      "searchSections": "ابحث عن الشعب…",
       "academicContext": "السياق الأكاديمي",
       "assessmentDetails": "تفاصيل التقييم",
       "class": "القسم",
@@ -1364,6 +1453,9 @@
     "errors": { "notFound": "سجل الانضباط غير موجود", "studentNotFound": "التلميذ غير موجود", "studentInactive": "لا يمكن تسجيل مخالفة إلا لتلميذ نشط", "studentAcademicPlacementRequired": "يجب أن يكون التلميذ مسجلاً في قسم وشعبة", "teacherStudentForbidden": "أنت غير مكلّف بشعبة هذا التلميذ", "recordForbidden": "لا يمكنك الوصول إلى هذا السجل", "recordNotOpen": "لا يمكن تعديل أو معالجة إلا المخالفات المفتوحة", "recordNotResolved": "لا يمكن إعادة فتح إلا المخالفات المعالجة", "adminRequired": "صلاحية المدير مطلوبة", "invalidIncidentDate": "تاريخ الواقعة غير صالح", "futureIncidentDate": "لا يمكن أن يكون تاريخ الواقعة في المستقبل" }
   },
   "classes": {
+    "subtitle": {
+      "count": "{{count}} قسم إجمالاً"
+    },
     "dialogs": {
       "createButton": "إنشاء",
       "createTitle": "إنشاء",
@@ -1404,6 +1496,9 @@
     }
   },
   "drivers": {
+    "subtitle": {
+      "count": "{{count}} سائق إجمالاً"
+    },
     "dialogs": {
       "bulkDeleteItemName": "العنصر",
       "createButton": "إنشاء",
@@ -1419,6 +1514,7 @@
       "searchByName": "ابحث بالاسم..."
     },
     "form": {
+      "licenseTypePlaceholder": "اختر نوع الرخصة",
       "address": "العنوان",
       "addressPlaceholder": "أدخل العنوان",
       "assignDriver": "تعيين سائق",
@@ -1485,6 +1581,9 @@
     }
   },
   "exams": {
+    "subtitle": {
+      "count": "{{count}} امتحان إجمالاً"
+    },
     "dialogs": {
       "createButton": "إنشاء",
       "createTitle": "إنشاء",
@@ -1499,6 +1598,8 @@
       "searchByTitle": "ابحث بالعنوان..."
     },
     "form": {
+      "noSections": "لم يتم العثور على شعب",
+      "searchSections": "ابحث عن الشعب…",
       "academicContext": "السياق الأكاديمي",
       "class": "القسم",
       "classPlaceholder": "اختر القسم",
@@ -1566,6 +1667,9 @@
     }
   },
   "expenses": {
+    "subtitle": {
+      "count": "{{count}} مصروف إجمالاً"
+    },
     "categories": {
       "payroll": "كشف الرواتب",
       "cleaning": "التنظيف",
@@ -1655,6 +1759,9 @@
     }
   },
   "feeTypes": {
+    "subtitle": {
+      "count": "{{count}} نوع رسوم إجمالاً"
+    },
     "category": {
       "activities": "الأنشطة",
       "books": "الكتب",
@@ -1713,7 +1820,16 @@
     }
   },
   "grades": {
+    "messages": {
+      "pageTitle": "النقط",
+      "resetChanges": "إعادة تعيين التغييرات",
+      "nothingToSave": "لا يوجد ما يُحفظ."
+    },
+    "subtitle": {
+      "count": "{{count}} طالب"
+    },
     "errors": {
+      "selectSource": "اختر تقييماً أو امتحاناً قبل حفظ النقط.",
       "marksExceedTotal": "النقاط تتجاوز المجموع",
       "sourceRequired": "اختر تقييما أو امتحانا"
     },
@@ -1767,6 +1883,7 @@
       "studentCode": "رمز التلميذ"
     },
     "success": {
+      "saved": "تم حفظ النقط.",
       "allDeleted": "تم حذف جميع سجلات النقطة بنجاح",
       "bulkDeleted": "تم حذف سجلات النقطة بنجاح",
       "created": "تم إنشاء النقطة بنجاح",
@@ -1777,6 +1894,9 @@
     }
   },
   "parents": {
+    "subtitle": {
+      "count": "{{count}} ولي أمر إجمالاً"
+    },
     "success": {
       "retrieved": "تم جلب ولي الأمر بنجاح",
       "allRetrieved": "تم جلب جميع أولياء الأمور بنجاح",
@@ -1945,11 +2065,20 @@
     }
   },
   "payments": {
+    "success": {
+      "voided": "تم إلغاء الدفع",
+      "checkMarked": "تم تعليم الشيك {{status}}",
+      "recorded": "تم تسجيل الدفع بنجاح"
+    },
     "dialogs": {
       "deleteButton": "حذف",
       "viewTitle": "التفاصيل"
     },
     "errors": {
+      "recordFailed": "تعذر تسجيل الدفع. حاول مرة أخرى.",
+      "studentMissing": "معلومات التلميذ مفقودة",
+      "insufficientCash": "المبلغ غير كافٍ. أضف {{amount}} درهم لتغطية الأقساط المحددة.",
+      "amountRequired": "مبلغ الدفع مطلوب",
       "notFound": "الدفعة غير موجودة",
       "paymentNotFound": "الدفعة غير موجودة",
       "receiptNumberNotFound": "رقم الإيصال غير موجود",
@@ -1972,6 +2101,12 @@
       "searchByReceipt": "ابحث بالإيصال..."
     },
     "form": {
+      "notesOptional": "ملاحظات (اختياري)",
+      "bankPlaceholder": "البنك المُصدر",
+      "bank": "البنك",
+      "referencePlaceholder": "رقم الإيصال أو المرجع…",
+      "reference": "المرجع (اختياري)",
+      "amountReceived": "المبلغ المستلم (درهم)",
       "amount": "المبلغ",
       "amountPlaceholder": "أدخل المبلغ",
       "basicInformation": "المعلومات الأساسية",
@@ -2057,6 +2192,7 @@
       "reminded": "تم التذكير",
       "searchPlaceholder": "ابحث...",
       "studentsOverdue": "التلاميذ المتأخرون",
+        "studentsOverdueCount": "{{count}} تلميذ متأخر",
       "title": "العنوان",
       "toastReminded": "تم إرسال التذكير",
       "toastRemindedAll": "تم إرسال جميع التذكيرات",
@@ -2066,6 +2202,9 @@
     "year": "السنة"
   },
   "sections": {
+    "subtitle": {
+      "count": "{{count}} شعبة إجمالاً"
+    },
     "dialogs": {
       "createButton": "إنشاء",
       "createTitle": "إنشاء",
@@ -2177,6 +2316,27 @@
       "temporary": "مؤقت"
     },
     "form": {
+      "bankAccountPlaceholder": "أدخل الحساب البنكي",
+      "workloadHoursPlaceholder": "أدخل الساعات الشهرية",
+      "hourlyRatePlaceholder": "أدخل الأجر بالساعة",
+      "salaryPlaceholder": "أدخل الراتب",
+      "shiftPlaceholder": "اختر الوردية",
+      "compensationModePlaceholder": "اختر طريقة الأجر",
+      "employmentTypePlaceholder": "اختر نوع التوظيف",
+      "departmentPlaceholder": "أدخل القسم",
+      "medicalConditionsPlaceholder": "اذكر أي حالات طبية أو حساسية أو احتياجات خاصة…",
+      "medicalConditions": "الحالات الطبية",
+      "addressPlaceholder": "أدخل العنوان",
+      "emergencyPhonePlaceholder": "أدخل هاتف الطوارئ",
+      "emergencyContactNamePlaceholder": "أدخل اسم جهة الاتصال",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "emailPlaceholder": "أدخل البريد الإلكتروني",
+      "statusPlaceholder": "اختر الحالة",
+      "rolePlaceholder": "اختر الدور",
+      "genderPlaceholder": "اختر الجنس",
+      "cinPlaceholder": "أدخل رقم البطاقة الوطنية",
+      "employeeCodePlaceholder": "أدخل رمز الموظف",
+      "namePlaceholder": "أدخل الاسم الكامل",
       "personalInformation": "المعلومات الشخصية",
       "employmentInformation": "معلومات التوظيف",
       "emergencyContact": "جهة اتصال الطوارئ",
@@ -2214,6 +2374,7 @@
     "loading": "جاري تحميل الموظفين...",
     "noData": "لا يوجد موظفون",
     "subtitle": {
+      "count": "{{count}} عضو إجمالاً",
       "members": "موظفون"
     }
   },
@@ -2272,6 +2433,7 @@
   },
   "settings": {
     "academic": {
+      "semesterPlaceholder": "الفصل الدراسي",
       "attendanceMode": "نمط الحضور",
       "attendanceModeDaily": "يومي",
       "attendanceModePerClass": "حسب القسم",
@@ -2311,6 +2473,7 @@
       "title": "العنوان"
     },
     "school": {
+      "namePlaceholder": "مدرستي",
       "currentAcademicYear": "السنة الدراسية الحالية",
       "lunchBreakDuration": "مدة استراحة الغداء (د)",
       "schoolAddress": "عنوان المدرسة",
@@ -2381,7 +2544,7 @@
       "seeded": "تم إنشاء بيانات التلاميذ بنجاح"
     },
     "subtitle": {
-      "count": "{{count}} طالب"
+      "count": "{{count}} طالب إجمالاً"
     },
     "dialogs": {
       "bulkDeleteItemName": "العنصر",
@@ -2525,6 +2688,9 @@
     "title": "العنوان"
   },
   "cycles": {
+    "subtitle": {
+      "count": "{{count}} سلك إجمالاً"
+    },
     "form": {
       "cycleInformation": "معلومات السلك",
       "name": "الاسم",
@@ -2554,6 +2720,9 @@
     }
   },
   "subjects": {
+    "subtitle": {
+      "count": "{{count}} مادة إجمالاً"
+    },
     "dialogs": {
       "createButton": "إنشاء",
       "createTitle": "إنشاء",
@@ -2590,6 +2759,9 @@
     }
   },
   "teachers": {
+    "subtitle": {
+      "count": "{{count}} أستاذ إجمالاً"
+    },
     "dialogs": {
       "bulkDeleteItemName": "العنصر",
       "createButton": "إنشاء",
@@ -2653,6 +2825,23 @@
       "yearsOfExperiencePlaceholder": "أدخل سنوات الخبرة"
     },
     "profile": {
+      "table": {
+        "loadingAssignments": "جارٍ تحميل الإسنادات…",
+        "classCount": "عدد الأقسام",
+        "classes": "الأقسام",
+        "code": "الرمز",
+        "amount": "المبلغ",
+        "base": "الأساسي",
+        "period": "الفترة",
+        "uploaded": "تاريخ الرفع",
+        "type": "النوع",
+        "document": "الوثيقة",
+        "status": "الحالة",
+        "students": "التلاميذ",
+        "subject": "المادة",
+        "section": "الشعبة",
+        "class": "القسم"
+      },
       "teacherNotFound": "الأستاذ غير موجود"
     },
     "status": {
@@ -2703,6 +2892,9 @@
     }
   },
   "vehicles": {
+    "subtitle": {
+      "count": "{{count}} مركبة إجمالاً"
+    },
     "card": {
       "currentMileage": "المسافة المقطوعة الحالية",
       "driver": "السائق",
@@ -2784,6 +2976,34 @@
     }
   },
   "events": {
+    "sections": {
+      "schedule": "الجدول",
+      "eventDetails": "تفاصيل الحدث"
+    },
+    "form": {
+      "noClasses": "لم يتم العثور على أقسام",
+      "searchClasses": "ابحث عن الأقسام…",
+      "visibilityPlaceholder": "اختر الظهور",
+      "statusPlaceholder": "اختر الحالة",
+      "classPlaceholder": "اختر الأقسام",
+      "venuePlaceholder": "قاعة أو ملعب",
+      "locationPlaceholder": "الحرم أو المدينة أو المنطقة",
+      "descriptionPlaceholder": "أضف تفاصيل الحدث",
+      "typePlaceholder": "اختر النوع",
+      "titlePlaceholder": "أدخل عنوان الحدث",
+      "visibility": "الظهور",
+      "status": "الحالة",
+      "class": "القسم",
+      "venue": "المكان",
+      "location": "الموقع",
+      "endTime": "وقت الانتهاء",
+      "startTime": "وقت البدء",
+      "endDate": "تاريخ الانتهاء",
+      "startDate": "تاريخ البدء",
+      "description": "الوصف",
+      "type": "النوع",
+      "title": "العنوان"
+    },
     "type": {
       "academic": "أكاديمي",
       "sports": "رياضة",
@@ -2860,6 +3080,9 @@
     "overdueRun": "تمت معالجة الإشعارات المتأخرة بنجاح"
   },
   "permissions": {
+    "subtitle": {
+      "count": "{{count}} صلاحية إجمالاً"
+    },
     "success": {
       "assigned": "تم تعيين الصلاحية بنجاح",
       "deleted": "تم حذف الصلاحية بنجاح",
@@ -2930,6 +3153,16 @@
     }
   },
   "transport": {
+    "panel": {
+      "manageSubtitle": "إدارة مسارات المركبات وفوترة التلاميذ",
+      "unassign": "إلغاء الإسناد",
+      "notesPlaceholder": "ملاحظات اختيارية…",
+      "notes": "ملاحظات",
+      "noStudent": "لم يتم العثور على تلميذ",
+      "searchStudents": "ابحث عن التلاميذ…",
+      "selectStudent": "اختر تلميذاً…",
+      "student": "التلميذ"
+    },
     "form": {
       "stepTitle": "النقل", "title": "النقل المدرسي", "description": "عيّن حافلة وحدد نقطة الركوب وراجع الرسوم الشهرية.", "usesTransport": "يستخدم النقل المدرسي", "chooseVehicle": "اختر حافلة", "chooseVehicleHint": "يمكن تعيين التلميذ فقط للحافلات النشطة التي تتوفر فيها مقاعد.", "vehicle": "الحافلة", "vehiclePlaceholder": "اختر حافلة متاحة", "searchVehicle": "ابحث عن حافلة...", "noVehicles": "لا توجد حافلات متاحة", "seatsAvailable": "مقاعد متاحة", "seatsLeft": "مقاعد متبقية", "driver": "السائق", "unassignedDriver": "لم يتم تعيين سائق", "occupancy": "الإشغال", "pickupLocation": "نقطة الركوب", "pickupPlaceholder": "أدخل عنوان ركوب التلميذ", "dropoffLocation": "نقطة النزول", "dropoffPlaceholder": "أدخل نقطة النزول بالمدرسة", "useHomeAddress": "استخدم عنوان المنزل", "startDate": "تاريخ بدء النقل", "notes": "ملاحظات النقل", "notesPlaceholder": "تعليمات الوصول أو ملاحظات الركوب...", "feePreview": "رسوم النقل", "monthlyBilling": "سيتم إنشاء الفوترة الشهرية تلقائياً", "missingFeeType": "قم بإعداد نوع رسوم نقل نشط قبل تعيين النقل.", "optionalTitle": "النقل اختياري", "optionalDescription": "فعّل النقل المدرسي لاختيار الحافلة وتحديد نقطة الركوب."
     },

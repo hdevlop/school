@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, AlertTriangle, Clock, CheckCircle2, LockKeyhole } from 'lucide-react';
 import { Label, NajmScroll, NTable } from 'najm-kit';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
+import { useTranslation } from '@/hooks/useLanguage';
 
 const toAmount = (value: unknown) => Number(value ?? 0) || 0;
 const formatMAD = (value: unknown) => `${toAmount(value).toLocaleString()} MAD`;
@@ -33,6 +34,7 @@ const FeeInstallmentsTable = ({
    toggleAllFeeInstallments,
    updateAllocatedAmount,
 }: any) => {
+   const { t } = useTranslation();
    const rows = useMemo(() => (
       fee.installments
          .filter((inst: any) => stats.fullyPaid || inst.status !== 'paid')
@@ -87,7 +89,7 @@ const FeeInstallmentsTable = ({
       },
       {
          accessorKey: 'number',
-         header: 'Installment',
+         header: t('installments.table.installment'),
          enableSorting: false,
          cell: ({ getValue }: any) => (
             <span className="font-medium text-gray-900 text-xs">Installment #{getValue()}</span>
@@ -95,7 +97,7 @@ const FeeInstallmentsTable = ({
       },
       {
          accessorKey: 'dueDate',
-         header: 'Due Date',
+         header: t('installments.table.dueDate'),
          enableSorting: false,
          cell: ({ getValue }: any) => (
             <span className="text-xs text-gray-600">{getValue()}</span>
@@ -103,7 +105,7 @@ const FeeInstallmentsTable = ({
       },
       {
          accessorKey: 'availableAmount',
-         header: 'Available',
+         header: t('installments.table.available'),
          enableSorting: false,
          cell: ({ row }: any) => {
             const inst = row.original;
@@ -132,7 +134,7 @@ const FeeInstallmentsTable = ({
       },
       {
          accessorKey: 'allocatedAmount',
-         header: 'Allocate',
+         header: t('installments.table.allocate'),
          enableSorting: false,
          cell: ({ row }: any) => {
             const inst = row.original;
@@ -157,7 +159,7 @@ const FeeInstallmentsTable = ({
       },
       {
          accessorKey: 'status',
-         header: 'Status',
+         header: t('installments.table.status'),
          enableSorting: false,
          cell: ({ row }: any) => (
             <div className="flex justify-center">
@@ -169,7 +171,7 @@ const FeeInstallmentsTable = ({
             </div>
          ),
       },
-   ], [allPayableSelected, fee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, updateAllocatedAmount]);
+   ], [allPayableSelected, fee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, updateAllocatedAmount, t]);
 
    return (
       <div className="border-t border-gray-300 bg-muted/20 p-2">

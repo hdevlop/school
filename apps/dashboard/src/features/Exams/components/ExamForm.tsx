@@ -50,8 +50,8 @@ const SectionsMultiselect = ({ initialClassId }) => {
       placeholder={t('exams.form.sectionPlaceholder')}
       icon={DoorOpen}
       items={sectionOptions}
-      searchPlaceholder='Search sections...'
-      emptyMessage='No sections found'
+      searchPlaceholder={t('exams.form.searchSections')}
+      emptyMessage={t('exams.form.noSections')}
       maxDisplay={3}
       required={true}
       disabled={isSectionsLoading || !classId}

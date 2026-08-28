@@ -20,6 +20,7 @@ import { eventSchema } from '@/lib/validations';
 import { buildFill, isDevFill } from '@/lib/devFill';
 import { useEnum } from '@/hooks/useEnum';
 import { useClasses } from '@/hooks/useClasses';
+import { useTranslation } from '@/hooks/useLanguage';
 
 const eventTypeLabels = {
   academic: 'Academic',
@@ -61,6 +62,7 @@ const toDateInput = (value?: string | Date | null) => {
 const emptyToUndefined = (value) => (value === '' || value === null ? undefined : value);
 
 const EventForm = ({ event = null, initialDate = null }) => {
+  const { t } = useTranslation();
   const { pop } = useDialog();
   const { classes, isClassesLoading } = useClasses();
 
@@ -129,14 +131,14 @@ const EventForm = ({ event = null, initialDate = null }) => {
   return (
     <NForm id="event-form" schema={eventSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(eventSchema, devFillValues) }}>
       <div className="flex flex-col gap-4">
-        <FormSectionHeader icon={Calendar} title="Event Details" />
+        <FormSectionHeader icon={Calendar} title={t('events.sections.eventDetails')} />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput
             name="title"
             type="text"
-            formLabel="Title"
-            placeholder="Enter event title"
+            formLabel={t('events.form.title')}
+            placeholder={t('events.form.titlePlaceholder')}
             icon={Calendar}
             required
           />
@@ -144,8 +146,8 @@ const EventForm = ({ event = null, initialDate = null }) => {
           <FormInput
             name="type"
             type="select"
-            formLabel="Type"
-            placeholder="Select type"
+            formLabel={t('events.form.type')}
+            placeholder={t('events.form.typePlaceholder')}
             icon={Tag}
             items={typeOptions}
             required
@@ -155,34 +157,34 @@ const EventForm = ({ event = null, initialDate = null }) => {
         <FormInput
           name="description"
           type="textarea"
-          formLabel="Description"
-          placeholder="Add event details"
+          formLabel={t('events.form.description')}
+          placeholder={t('events.form.descriptionPlaceholder')}
           icon={FileText}
         />
 
-        <FormSectionHeader icon={Clock} title="Schedule" />
+        <FormSectionHeader icon={Clock} title={t('events.sections.schedule')} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput name="startDate" type="date" formLabel="Start Date" icon={Calendar} required />
-          <FormInput name="endDate" type="date" formLabel="End Date" icon={Calendar} required />
-          <FormInput name="startTime" type="time" formLabel="Start Time" icon={Clock} />
-          <FormInput name="endTime" type="time" formLabel="End Time" icon={Clock} />
+          <FormInput name="startDate" type="date" formLabel={t('events.form.startDate')} icon={Calendar} required />
+          <FormInput name="endDate" type="date" formLabel={t('events.form.endDate')} icon={Calendar} required />
+          <FormInput name="startTime" type="time" formLabel={t('events.form.startTime')} icon={Clock} />
+          <FormInput name="endTime" type="time" formLabel={t('events.form.endTime')} icon={Clock} />
         </div>
 
         <FormSectionHeader icon={MapPin} title="Place & Audience" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput name="location" type="text" formLabel="Location" placeholder="Campus, city, or area" icon={MapPin} />
-          <FormInput name="venue" type="text" formLabel="Venue" placeholder="Room, hall, or field" icon={Building} />
+          <FormInput name="location" type="text" formLabel={t('events.form.location')} placeholder={t('events.form.locationPlaceholder')} icon={MapPin} />
+          <FormInput name="venue" type="text" formLabel={t('events.form.venue')} placeholder={t('events.form.venuePlaceholder')} icon={Building} />
           <FormInput
             name="classIds"
             type="multiselect"
-            formLabel="Class"
-            placeholder="Select classes"
+            formLabel={t('events.form.class')}
+            placeholder={t('events.form.classPlaceholder')}
             icon={Building}
             items={classOptions}
-            searchPlaceholder="Search classes..."
-            emptyMessage="No classes found"
+            searchPlaceholder={t('events.form.searchClasses')}
+            emptyMessage={t('events.form.noClasses')}
             disabled={isClassesLoading || classOptions.length === 0}
             maxDisplay={3}
             required
@@ -191,8 +193,8 @@ const EventForm = ({ event = null, initialDate = null }) => {
           <FormInput
             name="status"
             type="select"
-            formLabel="Status"
-            placeholder="Select status"
+            formLabel={t('events.form.status')}
+            placeholder={t('events.form.statusPlaceholder')}
             icon={Activity}
             items={statusOptions}
             required
@@ -200,8 +202,8 @@ const EventForm = ({ event = null, initialDate = null }) => {
           <FormInput
             name="visibility"
             type="select"
-            formLabel="Visibility"
-            placeholder="Select visibility"
+            formLabel={t('events.form.visibility')}
+            placeholder={t('events.form.visibilityPlaceholder')}
             icon={Users}
             items={visibilityOptions}
             required

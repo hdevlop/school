@@ -7,6 +7,7 @@ import { Loader2, KeyRound, LogOut } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { credentialSetupApi } from '@/services/credentialSetupApi'
+import { useTranslation } from '@/hooks/useLanguage';
 
 // Min 8 to match Najm's default credential-setup password rule.
 const changePasswordSchema = z.object({
@@ -29,6 +30,7 @@ const getErrorMessage = (error: unknown) => {
 // user holds Najm's one-time setup cookie and no session, so this page is
 // public and must never assume an authenticated identity.
 const ChangePassword = () => {
+  const { t } = useTranslation();
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
@@ -44,7 +46,7 @@ const ChangePassword = () => {
   const mutation = useMutation({
     mutationFn: (newPassword: string) => credentialSetupApi.changePassword({ newPassword }),
     onSuccess: () => {
-      toast.success('Your password has been set. Please log in.')
+      toast.success(t('auth.success.passwordSet'))
       // Setup deliberately does not issue a session; a fresh login is required.
       window.location.replace('/login')
     },
@@ -81,8 +83,8 @@ const ChangePassword = () => {
           <FormInput
             name='newPassword'
             type='password'
-            formLabel='New password'
-            placeholder='Enter your new password'
+            formLabel={t('auth.form.newPassword')}
+            placeholder={t('auth.form.newPasswordPlaceholder')}
             variant='default'
             icon='Lock'
           />
@@ -90,8 +92,8 @@ const ChangePassword = () => {
           <FormInput
             name='confirmPassword'
             type='password'
-            formLabel='Confirm password'
-            placeholder='Re-enter your new password'
+            formLabel={t('auth.form.confirmPassword')}
+            placeholder={t('auth.form.confirmPasswordPlaceholder')}
             variant='default'
             icon='Lock'
           />

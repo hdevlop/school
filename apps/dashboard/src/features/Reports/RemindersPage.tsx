@@ -167,7 +167,7 @@ const RemindersPage: React.FC = () => {
       <NPageHeader
         icon={BellRing}
         title={t('reports.reminders.title')}
-        subtitle={`${filtered.length} ${t('reports.reminders.studentsOverdue')} · ${formatMAD(totalOverdue, locale)}`}
+        subtitle={`${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${formatMAD(totalOverdue, locale)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

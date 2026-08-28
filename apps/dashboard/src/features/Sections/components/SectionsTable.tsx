@@ -92,7 +92,7 @@ function SectionsTable() {
       <NPageHeader
         icon={Layers}
         title={t('navigation.sections')}
-        subtitle={`${total} ${total === 1 ? 'section' : 'sections'}`}
+        subtitle={t('sections.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

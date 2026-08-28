@@ -78,7 +78,7 @@ function CyclesTable() {
       <NPageHeader
         icon={CalendarRange}
         title={t('navigation.cycles')}
-        subtitle={`${total} ${total === 1 ? 'cycle' : 'cycles'}`}
+        subtitle={t('cycles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

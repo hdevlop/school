@@ -102,7 +102,7 @@ function RolesTable() {
       <NPageHeader
         icon={Shield}
         title={t('navigation.roles')}
-        subtitle={`${total} ${total === 1 ? 'role' : 'roles'}`}
+        subtitle={t('roles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -1,4 +1,30 @@
 {
+  "financialOperations": {
+    "updateAcademicYear": "Update current academic year after success",
+    "includeOneTimeFees": "Include one-time fees",
+    "copyDiscounts": "Copy discounts",
+    "createPreviewFirst": "Create a preview first",
+    "selectStudentAmount": "Select a student and enter an amount",
+    "amountPlaceholder": "Amount",
+    "notificationsDescription": "Idempotent overdue and check-due delivery claims.",
+    "notificationsTitle": "Notification delivery log",
+    "creditDescription": "Apply settled unapplied funds to the oldest available installments.",
+    "creditTitle": "Student credit",
+    "checksDescription": "Pending checks reserve balances until completion or release.",
+    "checksTitle": "Checks awaiting settlement"
+  },
+  "installments": {
+    "table": {
+      "allocate": "Allocate",
+      "available": "Available",
+      "actions": "Actions",
+      "status": "Status",
+      "paidDate": "Paid Date",
+      "amount": "Amount",
+      "dueDate": "Due Date",
+      "installment": "Installment"
+    }
+  },
   "languages": {
     "en": "English",
     "fr": "Français",
@@ -11,7 +37,22 @@
     }
   },
   "auth": {
+    "form": {
+      "resetConfirmPasswordPlaceholder": "Re-enter your password",
+      "resetNewPasswordPlaceholder": "Enter a new password",
+      "confirmPasswordPlaceholder": "Re-enter your new password",
+      "confirmPassword": "Confirm password",
+      "newPasswordPlaceholder": "Enter your new password",
+      "newPassword": "New password",
+      "passwordPlaceholder": "Enter your password",
+      "password": "Password",
+      "emailPlaceholder": "Enter your email",
+      "email": "Email"
+    },
     "success": {
+      "resetLinkSent": "Password reset link sent to your email",
+      "loginSuccessful": "Login successful",
+      "passwordSet": "Your password has been set. Please log in.",
       "login": "Login successful",
       "logout": "Logout successful",
       "register": "Registration successful. Welcome!",
@@ -23,6 +64,7 @@
       "authInitialized": "Authentication initialized successfully"
     },
     "errors": {
+      "resetEmailFailed": "Failed to send reset email",
       "emailExists": "An account with this email already exists",
       "credentialsMissing": "One or more required fields are empty",
       "invalidCredentials": "Invalid credentials. Please try again",
@@ -49,6 +91,15 @@
     }
   },
   "users": {
+    "view": {
+      "recentSessions": "Recent Sessions",
+      "recentActivities": "Recent Activities",
+      "accountDetails": "Account Details",
+      "accountInformation": "Account Information"
+    },
+    "subtitle": {
+      "count": "{{count}} users total"
+    },
     "success": {
       "retrieved": "User retrieved successfully",
       "allRetrieved": "All users retrieved successfully",
@@ -112,6 +163,9 @@
     }
   },
   "roles": {
+    "subtitle": {
+      "count": "{{count}} roles total"
+    },
     "success": {
       "retrieved": "Role retrieved successfully",
       "allRetrieved": "All roles retrieved successfully",
@@ -164,6 +218,9 @@
     }
   },
   "permissions": {
+    "subtitle": {
+      "count": "{{count}} permissions total"
+    },
     "success": {
       "retrieved": "Permission retrieved successfully",
       "allRetrieved": "All permissions retrieved successfully",
@@ -357,6 +414,11 @@
     }
   },
   "common": {
+    "updateLanguageFailed": "Failed to update language",
+    "notes": "Notes",
+    "dueDate": "Due Date",
+    "type": "Type",
+    "status": "Status",
     "all": "All",
     "notAvailable": "N/A",
     "notAssigned": "Not Assigned",
@@ -554,6 +616,7 @@
       "success": "System defaults initialized successfully"
     },
     "school": {
+      "namePlaceholder": "My School",
       "title": "School Information",
       "schoolName": "School Name",
       "schoolAddress": "School Address",
@@ -565,6 +628,7 @@
       "lunchBreakDuration": "Lunch Break Duration (minutes)"
     },
     "academic": {
+      "semesterPlaceholder": "Semester",
       "title": "Academic Settings",
       "attendanceRequirement": "Attendance Requirement (%)",
       "maxClassSize": "Maximum Class Size",
@@ -642,6 +706,9 @@
     }
   },
   "feeTypes": {
+    "subtitle": {
+      "count": "{{count}} fee types total"
+    },
     "success": {
       "retrieved": "Fee type retrieved successfully",
       "allRetrieved": "All fee types retrieved successfully",
@@ -751,6 +818,9 @@
     }
   },
   "fees": {
+    "subtitle": {
+      "count": "{{count}} students total"
+    },
     "success": {
       "retrieved": "Fee retrieved successfully",
       "allRetrieved": "All fees retrieved successfully",
@@ -988,6 +1058,10 @@
       "online": "Online Payment"
     },
     "card": {
+      "overdueInstallments": "Overdue installments",
+      "payments": "Payments",
+      "installments": "Installments",
+      "loadingStudentFees": "Loading student fees...",
       "feeInfo": "Fee Information",
       "paymentInfo": "Payment Information",
       "studentInfo": "Student Information",
@@ -1401,7 +1475,7 @@
     },
     "title": "Title",
     "subtitle": {
-      "count": "{{count}} students"
+      "count": "{{count}} students total"
     }
   },
   "parents": {
@@ -1431,7 +1505,7 @@
       "orphaned": "Orphaned parent: no kids, no students linked."
     },
     "subtitle": {
-      "count": "{{count}} students"
+      "count": "{{count}} parents total"
     },
     "validation": {
       "nameMinLength": "Name must be at least 2 characters long",
@@ -1672,6 +1746,27 @@
       "fullDay": "Full Day"
     },
     "form": {
+      "bankAccountPlaceholder": "Enter bank account",
+      "workloadHoursPlaceholder": "Enter monthly hours",
+      "hourlyRatePlaceholder": "Enter hourly rate",
+      "salaryPlaceholder": "Enter salary",
+      "shiftPlaceholder": "Select shift",
+      "compensationModePlaceholder": "Select compensation mode",
+      "employmentTypePlaceholder": "Select employment type",
+      "departmentPlaceholder": "Enter department",
+      "medicalConditionsPlaceholder": "List any medical conditions, allergies, or special needs...",
+      "medicalConditions": "Medical Conditions",
+      "addressPlaceholder": "Enter address",
+      "emergencyPhonePlaceholder": "Enter emergency phone",
+      "emergencyContactNamePlaceholder": "Enter contact name",
+      "phonePlaceholder": "Enter phone number",
+      "emailPlaceholder": "Enter email",
+      "statusPlaceholder": "Select status",
+      "rolePlaceholder": "Select role",
+      "genderPlaceholder": "Select gender",
+      "cinPlaceholder": "Enter CIN",
+      "employeeCodePlaceholder": "Enter employee code",
+      "namePlaceholder": "Enter full name",
       "personalInformation": "Personal Information",
       "employmentInformation": "Employment Information",
       "emergencyContact": "Emergency Contact",
@@ -1714,6 +1809,7 @@
     "loading": "Loading staff...",
     "noData": "No staff members found",
     "subtitle": {
+      "count": "{{count}} members total",
       "members": "members"
     }
   },
@@ -1813,6 +1909,9 @@
     }
   },
   "teachers": {
+    "subtitle": {
+      "count": "{{count}} teachers total"
+    },
     "success": {
       "retrieved": "Teacher retrieved successfully",
       "allRetrieved": "All teachers retrieved successfully",
@@ -1956,6 +2055,23 @@
       "assignmentData": "Assignment Data"
     },
     "profile": {
+      "table": {
+        "loadingAssignments": "Loading academic assignments...",
+        "classCount": "Class Count",
+        "classes": "Classes",
+        "code": "Code",
+        "amount": "Amount",
+        "base": "Base",
+        "period": "Period",
+        "uploaded": "Uploaded",
+        "type": "Type",
+        "document": "Document",
+        "status": "Status",
+        "students": "Students",
+        "subject": "Subject",
+        "section": "Section",
+        "class": "Class"
+      },
       "quickStats": "Quick Stats",
       "joinDate": "Join Date",
       "experience": "Experience",
@@ -2019,6 +2135,9 @@
     }
   },
   "drivers": {
+    "subtitle": {
+      "count": "{{count}} drivers total"
+    },
     "success": {
       "retrieved": "Driver retrieved successfully",
       "allRetrieved": "All drivers retrieved successfully",
@@ -2048,6 +2167,7 @@
       "licenseExpiryRequired": "License expiry date is required"
     },
     "form": {
+      "licenseTypePlaceholder": "Select license type",
       "personalInformation": "Personal Information",
       "professionalInformation": "Professional Information",
       "fullName": "Full Name",
@@ -2122,6 +2242,9 @@
   },
   "payments": {
     "success": {
+      "voided": "Payment voided",
+      "checkMarked": "Check marked {{status}}",
+      "recorded": "Payment recorded successfully",
       "retrieved": "Payment retrieved successfully",
       "allRetrieved": "All payments retrieved successfully",
       "created": "Payment created successfully",
@@ -2132,6 +2255,10 @@
       "receiptGenerated": "Payment receipt generated successfully"
     },
     "errors": {
+      "recordFailed": "Failed to record payment. Please try again.",
+      "studentMissing": "Student information is missing",
+      "insufficientCash": "Insufficient cash. Add {{amount}} MAD to cover the selected installments.",
+      "amountRequired": "Payment amount is required",
       "notFound": "Payment not found",
       "paymentNotFound": "Payment not found",
       "receiptNumberNotFound": "Receipt number not found",
@@ -2162,6 +2289,12 @@
       "paymentDateNotFuture": "Payment date cannot be in the future"
     },
     "form": {
+      "notesOptional": "Notes (Optional)",
+      "bankPlaceholder": "Issuing bank",
+      "bank": "Bank",
+      "referencePlaceholder": "Receipt #, Ref #...",
+      "reference": "Reference (Optional)",
+      "amountReceived": "Amount Received (MAD)",
       "basicInformation": "Basic Information",
       "paymentInformation": "Payment Information",
       "paymentDetails": "Payment Details",
@@ -2264,6 +2397,16 @@
     }
   },
   "transport": {
+    "panel": {
+      "manageSubtitle": "Manage vehicle routes and student billing",
+      "unassign": "Unassign",
+      "notesPlaceholder": "Optional notes…",
+      "notes": "Notes",
+      "noStudent": "No student found",
+      "searchStudents": "Search students…",
+      "selectStudent": "Select student…",
+      "student": "Student"
+    },
     "success": {
       "retrieved": "Bus retrieved successfully",
       "allRetrieved": "All buses retrieved successfully",
@@ -2404,6 +2547,9 @@
     }
   },
   "sections": {
+    "subtitle": {
+      "count": "{{count}} sections total"
+    },
     "success": {
       "retrieved": "Section retrieved successfully",
       "allRetrieved": "All sections retrieved successfully",
@@ -2469,6 +2615,14 @@
     }
   },
   "grades": {
+    "messages": {
+      "pageTitle": "Grades",
+      "resetChanges": "Reset changes",
+      "nothingToSave": "Nothing to save."
+    },
+    "subtitle": {
+      "count": "{{count}} students"
+    },
     "form": {
       "studentAndAssessment": "Student & Assessment",
       "academicContext": "Academic Context",
@@ -2547,6 +2701,7 @@
       "selectStudent": "Select a student to view report"
     },
     "success": {
+      "saved": "Grades saved.",
       "retrieved": "Grades retrieved successfully",
       "created": "Grade created successfully",
       "updated": "Grade updated successfully",
@@ -2556,6 +2711,7 @@
       "seeded": "Grades seeded successfully"
     },
     "errors": {
+      "selectSource": "Select an assessment or exam before saving grades.",
       "notFound": "Grade not found",
       "idExists": "Grade ID already exists",
       "alreadyExists": "Grade already exists for this student and source",
@@ -2565,7 +2721,12 @@
     }
   },
   "exams": {
+    "subtitle": {
+      "count": "{{count}} exams total"
+    },
     "form": {
+      "noSections": "No sections found",
+      "searchSections": "Search sections...",
       "examDetails": "Exam Details",
       "academicContext": "Academic Context",
       "scheduleAndGrading": "Schedule & Grading",
@@ -2654,7 +2815,12 @@
     }
   },
   "assessments": {
+    "subtitle": {
+      "count": "{{count}} assessments total"
+    },
     "form": {
+      "noSections": "No sections found",
+      "searchSections": "Search sections...",
       "assessmentDetails": "Assessment Details",
       "academicContext": "Academic Context",
       "scheduleAndGrading": "Schedule & Grading",
@@ -2740,7 +2906,13 @@
     }
   },
   "announcements": {
+    "subtitle": {
+      "count": "{{count}} announcements total"
+    },
     "form": {
+      "noClasses": "No classes found",
+      "searchClasses": "Search classes...",
+      "classesPlaceholder": "Select classes",
       "announcementDetails": "Announcement Details",
       "targetAndPublishing": "Target & Publishing",
       "title": "Title",
@@ -2835,6 +3007,9 @@
     "errors": { "notFound": "Discipline record not found", "studentNotFound": "Student not found", "studentInactive": "Only active students can receive a violation", "studentAcademicPlacementRequired": "The student must have a class and section", "teacherStudentForbidden": "You are not assigned to this student's section", "recordForbidden": "You cannot access this discipline record", "recordNotOpen": "Only open violations can be changed or resolved", "recordNotResolved": "Only resolved violations can be reopened", "adminRequired": "Administrator access is required", "invalidIncidentDate": "Incident date is invalid", "futureIncidentDate": "Incident date cannot be in the future" }
   },
   "classes": {
+    "subtitle": {
+      "count": "{{count}} classes total"
+    },
     "success": {
       "retrieved": "Class retrieved successfully",
       "allRetrieved": "All classes retrieved successfully",
@@ -2890,6 +3065,9 @@
     }
   },
   "cycles": {
+    "subtitle": {
+      "count": "{{count}} cycles total"
+    },
     "form": {
       "cycleInformation": "Cycle Information",
       "name": "Name",
@@ -2919,6 +3097,9 @@
     }
   },
   "subjects": {
+    "subtitle": {
+      "count": "{{count}} subjects total"
+    },
     "success": {
       "retrieved": "Subject retrieved successfully",
       "allRetrieved": "All subjects retrieved successfully",
@@ -2972,6 +3153,9 @@
     }
   },
   "expenses": {
+    "subtitle": {
+      "count": "{{count}} expenses total"
+    },
     "success": {
       "retrieved": "Expense retrieved successfully",
       "allRetrieved": "All expenses retrieved successfully",
@@ -3090,6 +3274,9 @@
     }
   },
   "vehicles": {
+    "subtitle": {
+      "count": "{{count}} vehicles total"
+    },
     "success": {
       "retrieved": "Vehicle retrieved successfully",
       "allRetrieved": "All vehicles retrieved successfully",
@@ -3435,6 +3622,9 @@
   }
   },
   "payroll": {
+    "subtitle": {
+      "count": "{{count}} employees"
+    },
     "success": {
       "retrieved": "Payroll retrieved successfully",
       "run": "Payroll run completed",
@@ -3513,6 +3703,7 @@
       "noData": "No overdue payments",
       "searchPlaceholder": "Search student…",
       "studentsOverdue": "student(s) overdue",
+        "studentsOverdueCount": "{{count}} student(s) overdue",
       "overdueAmount": "overdue",
       "remindAll": "Remind all ({{count}})",
       "daysOverdue": "{{count}} day{{plural}} overdue",
@@ -3535,6 +3726,10 @@
     }
   },
   "attendance": {
+    "subtitle": {
+      "studentCount": "{{count}} students",
+      "staffCount": "{{count}} staff members"
+    },
     "table": {
       "selectAll": "Select all",
       "selectRow": "Select row",
@@ -3589,6 +3784,8 @@
       "seeded": "Attendance demo data seeded"
     },
     "errors": {
+      "selectTeacherSubject": "Select a teacher and subject before saving student attendance.",
+      "selectSection": "Select a section before saving student attendance.",
       "notFound": "Attendance record not found",
       "alreadyMarked": "Attendance already recorded for this student in this class",
       "dailyAlreadyMarked": "Attendance already recorded for this student today — use update to correct status",
@@ -3894,6 +4091,34 @@
     }
   },
   "events": {
+    "sections": {
+      "schedule": "Schedule",
+      "eventDetails": "Event Details"
+    },
+    "form": {
+      "noClasses": "No classes found",
+      "searchClasses": "Search classes...",
+      "visibilityPlaceholder": "Select visibility",
+      "statusPlaceholder": "Select status",
+      "classPlaceholder": "Select classes",
+      "venuePlaceholder": "Room, hall, or field",
+      "locationPlaceholder": "Campus, city, or area",
+      "descriptionPlaceholder": "Add event details",
+      "typePlaceholder": "Select type",
+      "titlePlaceholder": "Enter event title",
+      "visibility": "Visibility",
+      "status": "Status",
+      "class": "Class",
+      "venue": "Venue",
+      "location": "Location",
+      "endTime": "End Time",
+      "startTime": "Start Time",
+      "endDate": "End Date",
+      "startDate": "Start Date",
+      "description": "Description",
+      "type": "Type",
+      "title": "Title"
+    },
     "type": {
       "academic": "Academic",
       "sports": "Sports",

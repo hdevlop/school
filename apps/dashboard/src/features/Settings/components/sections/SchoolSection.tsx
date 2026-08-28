@@ -26,7 +26,7 @@ const SchoolSection: React.FC = () => {
           formLabel={t('settings.school.schoolName') }
           icon={Building2}
           iconColor="#3b82f6"
-          placeholder="My School"
+          placeholder={t('settings.school.namePlaceholder')}
           required={true}
         />
 

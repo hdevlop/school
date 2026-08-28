@@ -89,7 +89,7 @@ function ExpensesTable() {
       <NPageHeader
         icon={Receipt}
         title={t('navigation.expenses')}
-        subtitle={`${total} ${total === 1 ? 'expense' : 'expenses'}`}
+        subtitle={t('expenses.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -5,6 +5,7 @@ import { NTable } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
 import { BookOpen, GraduationCap } from 'lucide-react';
 import PageLoadingState from '@/shared/PageLoadingState';
+import { useTranslation } from '@/hooks/useLanguage';
 
 interface SubjectsTabProps {
   teacher: any;
@@ -19,6 +20,7 @@ const StatCard = ({ label, value }: { label: string; value: string }) => (
 );
 
 const SubjectsTab: React.FC<SubjectsTabProps> = ({ teacher, teacherId }) => {
+  const { t } = useTranslation();
   const [assignmentRows, setAssignmentRows] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -56,7 +58,7 @@ const SubjectsTab: React.FC<SubjectsTabProps> = ({ teacher, teacherId }) => {
   const columns = [
     {
       accessorKey: 'name',
-      header: 'Subject',
+      header: t('teachers.profile.table.subject'),
       enableSorting: true,
       cell: ({ getValue }) => (
         <div className="flex items-center gap-2 font-medium text-slate-700">
@@ -67,13 +69,13 @@ const SubjectsTab: React.FC<SubjectsTabProps> = ({ teacher, teacherId }) => {
     },
     {
       accessorKey: 'code',
-      header: 'Code',
+      header: t('teachers.profile.table.code'),
       enableSorting: true,
       cell: ({ getValue }) => getValue() || <span className="text-slate-400">-</span>,
     },
     {
       accessorKey: 'classesText',
-      header: 'Classes',
+      header: t('teachers.profile.table.classes'),
       enableSorting: true,
       cell: ({ row }) => (
         <div className="flex items-center gap-2 text-slate-600">
@@ -84,7 +86,7 @@ const SubjectsTab: React.FC<SubjectsTabProps> = ({ teacher, teacherId }) => {
     },
     {
       accessorKey: 'classCount',
-      header: 'Class Count',
+      header: t('teachers.profile.table.classCount'),
       enableSorting: true,
       cell: ({ row }) => row.original.classes?.length || 0,
     },

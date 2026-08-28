@@ -285,7 +285,7 @@ function StudentAttendanceTable() {
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.studentAttendance')}
-        subtitle={`${filteredStudents.length} ${filteredStudents.length === 1 ? 'student' : 'students'}`}
+        subtitle={t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -103,7 +103,7 @@ function DriversTable() {
       <NPageHeader
         icon={Car}
         title={t('navigation.drivers')}
-        subtitle={`${total} ${total === 1 ? 'driver' : 'drivers'}`}
+        subtitle={t('drivers.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -54,7 +54,7 @@ function PaymentsTable({studentId}) {
       if (status === 'bounced' && !reason) return;
       await updateCheckStatusApi(payment.id, { status, reason });
       await refetch();
-      toast.success(`Check marked ${status}`);
+      toast.success(t('payments.success.checkMarked', { status }));
     };
 
     const voidPayment = async () => {
@@ -62,7 +62,7 @@ function PaymentsTable({studentId}) {
       if (!reason) return;
       await voidPaymentApi(payment.id, reason);
       await refetch();
-      toast.success('Payment voided');
+      toast.success(t('payments.success.voided'));
     };
 
     openDialog({

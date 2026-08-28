@@ -53,7 +53,7 @@ const UserCard = ({ data }) => {
       {/* Account Information */}
       <NSection
         icon={User}
-        title="Account Information"
+        title={t('users.view.accountInformation')}
         iconColor="text-blue-400"
         background="bg-foreground/10"
       >

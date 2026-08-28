@@ -109,7 +109,7 @@ function ParentsTable() {
       <NPageHeader
         icon={HeartHandshake}
         title={t('navigation.parents')}
-        subtitle={`${total} ${total === 1 ? 'parent' : 'parents'}`}
+        subtitle={t('parents.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

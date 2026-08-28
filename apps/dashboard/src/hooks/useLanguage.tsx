@@ -104,7 +104,7 @@ export const useUpdateLang = () => {
       toast.success(resp?.message || fallbackMessage);
     },
     onError: () => {
-      toast.error('Failed to update language');
+      toast.error(t('common.updateLanguageFailed'));
     },
   });
 

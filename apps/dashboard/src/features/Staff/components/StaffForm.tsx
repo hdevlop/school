@@ -512,23 +512,23 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-          <FormInput name="name" type="text" formLabel={t('staff.table.name')} placeholder="Enter full name" icon={User} required />
-          <FormInput name="employeeCode" type="text" formLabel={t('staff.table.employeeCode')} placeholder="Enter employee code" icon={Hash} />
-          <FormInput name="cin" type="text" formLabel={t('staff.table.cin')} placeholder="Enter CIN" icon={IdCard} required />
-          <FormInput name="gender" type="select" formLabel={t('staff.form.gender')} placeholder="Select gender" items={genderOptions} icon={UserRound} />
-          <FormInput name="role" type="select" formLabel={t('staff.table.role')} placeholder="Select role" items={roleOptions} icon={Briefcase} required disabled={lockedRole} />
-          <FormInput name="status" type="select" formLabel={t('staff.table.status')} placeholder="Select status" items={statusOptions} icon={Activity} required />
+          <FormInput name="name" type="text" formLabel={t('staff.table.name')} placeholder={t('staff.form.namePlaceholder')} icon={User} required />
+          <FormInput name="employeeCode" type="text" formLabel={t('staff.table.employeeCode')} placeholder={t('staff.form.employeeCodePlaceholder')} icon={Hash} />
+          <FormInput name="cin" type="text" formLabel={t('staff.table.cin')} placeholder={t('staff.form.cinPlaceholder')} icon={IdCard} required />
+          <FormInput name="gender" type="select" formLabel={t('staff.form.gender')} placeholder={t('staff.form.genderPlaceholder')} items={genderOptions} icon={UserRound} />
+          <FormInput name="role" type="select" formLabel={t('staff.table.role')} placeholder={t('staff.form.rolePlaceholder')} items={roleOptions} icon={Briefcase} required disabled={lockedRole} />
+          <FormInput name="status" type="select" formLabel={t('staff.table.status')} placeholder={t('staff.form.statusPlaceholder')} items={statusOptions} icon={Activity} required />
         </div>
       </div>
 
       <FormSectionHeader icon={Mail} title={t('parents.form.contactInformation')} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-        <FormInput name="email" type="text" formLabel={t('staff.form.email')} placeholder="Enter email" icon={Mail} />
-        <FormInput name="phone" type="phone" formLabel={t('staff.table.phone')} placeholder="Enter phone number" icon={Phone} required />
-        <FormInput name="emergencyContact" type="text" formLabel={t('staff.form.emergencyContactName')} placeholder="Enter contact name" icon={User} />
-        <FormInput name="emergencyPhone" type="phone" formLabel={t('staff.form.emergencyPhone')} placeholder="Enter emergency phone" icon={Phone} />
-        <FormInput name="address" type="textarea" formLabel={t('staff.form.address')} placeholder="Enter address" icon={MapPin} rows={2} required />
-        <FormInput name="medicalConditions" type="textarea" formLabel="Medical Conditions" placeholder="List any medical conditions, allergies, or special needs..." icon={HeartPulse} rows={2} />
+        <FormInput name="email" type="text" formLabel={t('staff.form.email')} placeholder={t('staff.form.emailPlaceholder')} icon={Mail} />
+        <FormInput name="phone" type="phone" formLabel={t('staff.table.phone')} placeholder={t('staff.form.phonePlaceholder')} icon={Phone} required />
+        <FormInput name="emergencyContact" type="text" formLabel={t('staff.form.emergencyContactName')} placeholder={t('staff.form.emergencyContactNamePlaceholder')} icon={User} />
+        <FormInput name="emergencyPhone" type="phone" formLabel={t('staff.form.emergencyPhone')} placeholder={t('staff.form.emergencyPhonePlaceholder')} icon={Phone} />
+        <FormInput name="address" type="textarea" formLabel={t('staff.form.address')} placeholder={t('staff.form.addressPlaceholder')} icon={MapPin} rows={2} required />
+        <FormInput name="medicalConditions" type="textarea" formLabel={t('staff.form.medicalConditions')} placeholder={t('staff.form.medicalConditionsPlaceholder')} icon={HeartPulse} rows={2} />
       </div>
     </>
   );
@@ -558,28 +558,28 @@ const DetailsStep = ({ form }) => {
     <div className="space-y-4">
       <FormSectionHeader icon={Briefcase} title={t('staff.form.employmentInformation')} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-        <FormInput name="department" type="text" formLabel={t('staff.form.department')} placeholder="Enter department" icon={Briefcase} />
-        <FormInput name="employmentType" type="select" formLabel={t('staff.form.employmentType')} placeholder="Select employment type" items={employmentTypeOptions} icon={Briefcase} />
-        <FormInput name="compensationMode" type="select" formLabel={t('staff.form.compensationMode')} placeholder="Select compensation mode" items={compensationModeOptions} icon={Wallet} />
-        <FormInput name="shift" type="select" formLabel={t('staff.form.shift')} placeholder="Select shift" items={shiftOptions} icon={Activity} />
+        <FormInput name="department" type="text" formLabel={t('staff.form.department')} placeholder={t('staff.form.departmentPlaceholder')} icon={Briefcase} />
+        <FormInput name="employmentType" type="select" formLabel={t('staff.form.employmentType')} placeholder={t('staff.form.employmentTypePlaceholder')} items={employmentTypeOptions} icon={Briefcase} />
+        <FormInput name="compensationMode" type="select" formLabel={t('staff.form.compensationMode')} placeholder={t('staff.form.compensationModePlaceholder')} items={compensationModeOptions} icon={Wallet} />
+        <FormInput name="shift" type="select" formLabel={t('staff.form.shift')} placeholder={t('staff.form.shiftPlaceholder')} items={shiftOptions} icon={Activity} />
         <FormInput name="hireDate" type="date" formLabel={t('staff.form.hireDate')} icon={Calendar} required />
         <FormInput name="endDate" type="date" formLabel={t('staff.form.endDate')} icon={Calendar} />
-        <FormInput name="salary" type="number" formLabel={t('staff.table.salary')} placeholder="Enter salary" icon={Wallet} required />
-        <FormInput name="hourlyRate" type="number" formLabel={t('staff.form.hourlyRate')} placeholder="Enter hourly rate" icon={Wallet} />
-        <FormInput name="workloadHours" type="number" formLabel={t('staff.form.workloadHours')} placeholder="Enter monthly hours" icon={Calendar} />
-        <FormInput name="bankAccount" type="text" formLabel={t('staff.form.bankAccount')} placeholder="Enter bank account" icon={CreditCard} />
+        <FormInput name="salary" type="number" formLabel={t('staff.table.salary')} placeholder={t('staff.form.salaryPlaceholder')} icon={Wallet} required />
+        <FormInput name="hourlyRate" type="number" formLabel={t('staff.form.hourlyRate')} placeholder={t('staff.form.hourlyRatePlaceholder')} icon={Wallet} />
+        <FormInput name="workloadHours" type="number" formLabel={t('staff.form.workloadHours')} placeholder={t('staff.form.workloadHoursPlaceholder')} icon={Calendar} />
+        <FormInput name="bankAccount" type="text" formLabel={t('staff.form.bankAccount')} placeholder={t('staff.form.bankAccountPlaceholder')} icon={CreditCard} />
       </div>
 
       {role === 'driver' && (
         <>
           <FormSectionHeader icon={Car} title={t('staff.form.driverLicense')} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-            <FormInput name="licenseNumber" type="text" formLabel={t('drivers.form.licenseNumber')} placeholder="Enter license number" icon={CreditCard} required />
-            <FormInput name="licenseType" type="select" formLabel={t('drivers.form.licenseType')} placeholder="Select license type" items={licenseTypeOptions} icon={Car} required />
+            <FormInput name="licenseNumber" type="text" formLabel={t('drivers.form.licenseNumber')} placeholder={t('drivers.form.licenseNumberPlaceholder')} icon={CreditCard} required />
+            <FormInput name="licenseType" type="select" formLabel={t('drivers.form.licenseType')} placeholder={t('drivers.form.licenseTypePlaceholder')} items={licenseTypeOptions} icon={Car} required />
             <FormInput name="licenseExpiry" type="date" formLabel={t('drivers.form.licenseExpiry')} icon={Calendar} required />
-            <FormInput name="yearsOfExperience" type="number" formLabel={t('drivers.form.yearsOfExperience')} placeholder="Years of experience" icon={Award} />
+            <FormInput name="yearsOfExperience" type="number" formLabel={t('drivers.form.yearsOfExperience')} placeholder={t('drivers.form.yearsOfExperiencePlaceholder')} icon={Award} />
             <div className="md:col-span-2">
-              <FormInput name="notes" type="textarea" formLabel={t('drivers.form.notes')} placeholder="Notes" icon={FileText} />
+              <FormInput name="notes" type="textarea" formLabel={t('drivers.form.notes')} placeholder={t('drivers.form.notesPlaceholder')} icon={FileText} />
             </div>
           </div>
         </>
@@ -645,7 +645,7 @@ const AssignmentsStep = ({ form }) => {
               </>
             )}
             <div className="md:col-span-2">
-              <FormInput name="assignments.0.notes" type="textarea" formLabel={t('drivers.form.notes')} placeholder="Notes" icon={FileText} />
+              <FormInput name="assignments.0.notes" type="textarea" formLabel={t('drivers.form.notes')} placeholder={t('drivers.form.notesPlaceholder')} icon={FileText} />
             </div>
           </div>
         </>

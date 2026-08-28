@@ -87,7 +87,7 @@ function ClassesTable() {
       <NPageHeader
         icon={School}
         title={t('navigation.classes')}
-        subtitle={`${total} ${total === 1 ? 'class' : 'classes'}`}
+        subtitle={t('classes.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

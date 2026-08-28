@@ -86,7 +86,7 @@ function AnnouncementsTable() {
       <NPageHeader
         icon={Megaphone}
         title={t('navigation.announcements')}
-        subtitle={`${total} ${total === 1 ? 'announcement' : 'announcements'}`}
+        subtitle={t('announcements.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

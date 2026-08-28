@@ -20,6 +20,7 @@ import {
   previewRolloverApi,
 } from '@/services/financialOperationsApi';
 import { formatMAD } from '@/lib/format';
+import { useTranslation } from '@/hooks/useLanguage';
 
 const unwrap = (value: any) => value?.data?.data ?? value?.data ?? value;
 const list = (value: any) => {
@@ -56,6 +57,7 @@ const checkStatusBadge: Record<string, string> = {
 const inputClass = 'h-10 rounded-md border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/30';
 
 export default function FinancialOperationsPage() {
+  const { t } = useTranslation();
   const sidebar = useNSidebar();
   const [studentId, setStudentId] = useState('');
   const [creditAmount, setCreditAmount] = useState('');
@@ -118,7 +120,7 @@ export default function FinancialOperationsPage() {
 
   const applyCredit = async () => {
     const amount = Number(creditAmount);
-    if (!studentId || !(amount > 0)) return toast.error('Select a student and enter an amount');
+    if (!studentId || !(amount > 0)) return toast.error(t('financialOperations.selectStudentAmount'));
     await run('credit', () => applyStudentCreditApi(studentId, amount), 'Student credit applied');
     setCreditAmount('');
     await Promise.all([creditsQuery.refetch(), auditQuery.refetch()]);
@@ -139,7 +141,7 @@ export default function FinancialOperationsPage() {
   };
 
   const commitRollover = async () => {
-    if (!rolloverRun?.id) return toast.error('Create a preview first');
+    if (!rolloverRun?.id) return toast.error(t('financialOperations.createPreviewFirst'));
     const result = await run('rollover-commit', () => commitRolloverApi({
       ...rolloverPayload,
       runId: rolloverRun.id,
@@ -172,7 +174,7 @@ export default function FinancialOperationsPage() {
       </header>
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <Panel title="Checks awaiting settlement" description="Pending checks reserve balances until completion or release." icon={Activity} badge={checks.length || null}>
+        <Panel title={t('financialOperations.checksTitle')} description={t('financialOperations.checksDescription')} icon={Activity} badge={checks.length || null}>
           <div className="max-h-[28rem] space-y-2 overflow-y-auto pr-1">
             {checks.length === 0 ? <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">No pending or deposited checks.</p> : checks.map((payment: any) => (
               <div key={payment.id} className="rounded-lg border p-3">
@@ -197,13 +199,13 @@ export default function FinancialOperationsPage() {
           </div>
         </Panel>
 
-        <Panel title="Student credit" description="Apply settled unapplied funds to the oldest available installments." icon={Banknote}>
+        <Panel title={t('financialOperations.creditTitle')} description={t('financialOperations.creditDescription')} icon={Banknote}>
           <div className="grid gap-3 md:grid-cols-[1fr_150px_auto]">
             <select className={inputClass} value={studentId} onChange={(event) => setStudentId(event.target.value)}>
               <option value="">Select student</option>
               {students.map((student: any) => <option key={student.id} value={student.id}>{student.name} · {student.studentCode}</option>)}
             </select>
-            <input className={inputClass} type="number" min="0.01" step="0.01" placeholder="Amount" value={creditAmount} onChange={(event) => setCreditAmount(event.target.value)} />
+            <input className={inputClass} type="number" min="0.01" step="0.01" placeholder={t('financialOperations.amountPlaceholder')} value={creditAmount} onChange={(event) => setCreditAmount(event.target.value)} />
             <NButton disabled={busy === 'credit'} onClick={applyCredit}>Apply credit</NButton>
           </div>
           <div className="mt-4 rounded-lg bg-muted/50 p-3">
@@ -218,9 +220,9 @@ export default function FinancialOperationsPage() {
             <input className={inputClass} value={toYear} onChange={(event) => setToYear(event.target.value)} placeholder="2026-2027" />
           </div>
           <div className="mt-3 flex flex-wrap gap-4 text-sm">
-            <label className="flex items-center gap-2"><input type="checkbox" checked={copyDiscounts} onChange={(event) => setCopyDiscounts(event.target.checked)} /> Copy discounts</label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={includeOneTimeFees} onChange={(event) => setIncludeOneTimeFees(event.target.checked)} /> Include one-time fees</label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={confirmSettingsUpdate} onChange={(event) => setConfirmSettingsUpdate(event.target.checked)} /> Update current academic year after success</label>
+            <label className="flex items-center gap-2"><input type="checkbox" checked={copyDiscounts} onChange={(event) => setCopyDiscounts(event.target.checked)} /> {t('financialOperations.copyDiscounts')}</label>
+            <label className="flex items-center gap-2"><input type="checkbox" checked={includeOneTimeFees} onChange={(event) => setIncludeOneTimeFees(event.target.checked)} /> {t('financialOperations.includeOneTimeFees')}</label>
+            <label className="flex items-center gap-2"><input type="checkbox" checked={confirmSettingsUpdate} onChange={(event) => setConfirmSettingsUpdate(event.target.checked)} /> {t('financialOperations.updateAcademicYear')}</label>
           </div>
           <div className="mt-4 flex gap-2">
             <NButton variant="outline" disabled={busy === 'rollover-preview'} onClick={previewRollover}>Preview</NButton>
@@ -231,7 +233,7 @@ export default function FinancialOperationsPage() {
           ) : null}
         </Panel>
 
-        <Panel title="Notification delivery log" description="Idempotent overdue and check-due delivery claims." icon={BellRing} badge={notifications.length || null}>
+        <Panel title={t('financialOperations.notificationsTitle')} description={t('financialOperations.notificationsDescription')} icon={BellRing} badge={notifications.length || null}>
           <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
             {notifications.length === 0 ? <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">No delivery claims yet.</p> : notifications.map((item: any) => (
               <div key={item.id} className="rounded-lg border p-3 text-sm">

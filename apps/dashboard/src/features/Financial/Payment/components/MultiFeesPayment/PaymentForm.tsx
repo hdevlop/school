@@ -10,6 +10,7 @@ import { useActiveForm } from '@/hooks/useActiveForm';
 import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { useTranslation } from '@/hooks/useLanguage';
 
 const paymentDetailsSchema = feePaymentSchema.pick({
     amount: true,
@@ -48,6 +49,7 @@ const paymentDetailsSchema = feePaymentSchema.pick({
 );
 
 export const PaymentForm = ({ studentId }) => {
+    const { t } = useTranslation();
     const { pop } = useDialog();
     const paymentDetails = usePaymentStore((state) => state.paymentDetails);
     const selectedInstallments = usePaymentStore((state) => state.selectedInstallments);
@@ -77,7 +79,7 @@ export const PaymentForm = ({ studentId }) => {
             : formData.amount;
 
         if (!formData.amount || cashReceived <= 0) {
-            toast.error('Payment amount is required');
+            toast.error(t('payments.errors.amountRequired'));
             return;
         }
 
@@ -85,7 +87,7 @@ export const PaymentForm = ({ studentId }) => {
 
         if (!shouldAutoAllocate && totalAllocated > cashReceived) {
             const difference = Math.abs(totalAllocated - cashReceived);
-            toast.error(`Insufficient cash. Add ${difference.toFixed(2)} MAD to cover the selected installments.`);
+            toast.error(t('payments.errors.insufficientCash', { amount: difference.toFixed(2) }));
             return;
         }
 
@@ -98,7 +100,7 @@ export const PaymentForm = ({ studentId }) => {
         const paymentAmount = shouldAutoAllocate ? cashReceived : totalAllocated;
 
         if (!studentId) {
-            toast.error('Student information is missing');
+            toast.error(t('payments.errors.studentMissing'));
             return;
         }
 
@@ -111,9 +113,9 @@ export const PaymentForm = ({ studentId }) => {
                 allocations: shouldAutoAllocate ? undefined : allocations,
                 idempotencyKey: idempotencyKey.current,
             });
-            toast.success('Payment recorded successfully!');
+            toast.success(t('payments.success.recorded'));
         } catch {
-            toast.error('Failed to record payment. Please try again.');
+            toast.error(t('payments.errors.recordFailed'));
         }
     };
 
@@ -131,6 +133,7 @@ export const PaymentForm = ({ studentId }) => {
 };
 
 const PaymentDetailsFormContent = () => {
+    const { t } = useTranslation();
     const { watch } = useActiveForm();
     const setPaymentDetails = usePaymentStore((state) => state.setPaymentDetails);
     const paymentMethod = watch('paymentMethod');
@@ -158,7 +161,7 @@ const PaymentDetailsFormContent = () => {
                     name='amount'
                     type='number'
                     icon={DollarSign}
-                    formLabel='Amount Received (MAD)'
+                    formLabel={t('payments.form.amountReceived')}
                     placeholder='0.00'
                     required={true}
                 />
@@ -167,7 +170,7 @@ const PaymentDetailsFormContent = () => {
                     name='paymentMethod'
                     type='select'
                     icon={CreditCard}
-                    formLabel='Payment Method'
+                    formLabel={t('payments.form.paymentMethod')}
                     items={paymentMethodOptions}
                     required={true}
                 />
@@ -176,7 +179,7 @@ const PaymentDetailsFormContent = () => {
                     name='paymentDate'
                     type='date'
                     icon={Calendar}
-                    formLabel='Payment Date'
+                    formLabel={t('payments.form.paymentDate')}
                     required={true}
                 />
 
@@ -184,8 +187,8 @@ const PaymentDetailsFormContent = () => {
                     name='transactionRef'
                     type='text'
                     icon={Hash}
-                    formLabel='Reference (Optional)'
-                    placeholder='Receipt #, Ref #...'
+                    formLabel={t('payments.form.reference')}
+                    placeholder={t('payments.form.referencePlaceholder')}
                 />
             </div>
 
@@ -195,22 +198,22 @@ const PaymentDetailsFormContent = () => {
                         name='checkNumber'
                         type='text'
                         icon={Hash}
-                        formLabel='Check Number'
-                        placeholder='Enter check number'
+                        formLabel={t('payments.form.checkNumber')}
+                        placeholder={t('payments.form.checkNumberPlaceholder')}
                     />
 
                     <FormInput
                         name='checkDueDate'
                         type='date'
                         icon={CalendarClock}
-                        formLabel='Check Due Date'
+                        formLabel={t('payments.form.checkDueDate')}
                     />
                     <FormInput
                         name='checkBank'
                         type='text'
                         icon={Hash}
-                        formLabel='Bank'
-                        placeholder='Issuing bank'
+                        formLabel={t('payments.form.bank')}
+                        placeholder={t('payments.form.bankPlaceholder')}
                     />
                 </div>
             )}
@@ -219,8 +222,8 @@ const PaymentDetailsFormContent = () => {
                 name='notes'
                 type='textarea'
                 icon={FileText}
-                formLabel='Notes (Optional)'
-                placeholder='Add any notes about this payment...'
+                formLabel={t('payments.form.notesOptional')}
+                placeholder={t('payments.form.notesPlaceholder')}
             />
         </div>
     );

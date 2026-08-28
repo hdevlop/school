@@ -44,11 +44,11 @@ const ClassTargetFields = () => {
         name='classIds'
         type='multiselect'
         formLabel={t('announcements.form.class')}
-        placeholder='Select classes'
+        placeholder={t('announcements.form.classesPlaceholder')}
         icon={Building}
         items={classOptions}
-        searchPlaceholder='Search classes...'
-        emptyMessage='No classes found'
+        searchPlaceholder={t('announcements.form.searchClasses')}
+        emptyMessage={t('announcements.form.noClasses')}
         maxDisplay={3}
         required
         disabled={isClassesLoading || classOptions.length === 0}

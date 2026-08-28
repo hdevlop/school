@@ -6,8 +6,10 @@ import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, CreditCard, Receip
 import { formatCurrency } from '@/lib/utils';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { NBadge } from 'najm-kit';
+import { useTranslation } from '@/hooks/useLanguage';
 
 const FeeCard = ({ data }) => {
+  const { t } = useTranslation();
   const fee = data;
 
   const { publicSettings } = usePublicSettings();
@@ -91,16 +93,16 @@ const FeeCard = ({ data }) => {
           )}
         </div>
         <div className="flex shrink-0 items-center gap-3 text-xs text-gray-600">
-          <span className="inline-flex items-center gap-1" title="Installments">
+          <span className="inline-flex items-center gap-1" title={t('fees.card.installments')}>
             <ReceiptText className="h-3.5 w-3.5" />
             {installmentsCount}
           </span>
-          <span className="inline-flex items-center gap-1" title="Payments">
+          <span className="inline-flex items-center gap-1" title={t('fees.card.payments')}>
             <CreditCard className="h-3.5 w-3.5" />
             {paymentsCount}
           </span>
           {overdueCount > 0 && (
-            <span className="inline-flex items-center gap-1 text-red-600" title="Overdue installments">
+            <span className="inline-flex items-center gap-1 text-red-600" title={t('fees.card.overdueInstallments')}>
               <AlertTriangle className="h-3.5 w-3.5" />
               {overdueCount}
             </span>

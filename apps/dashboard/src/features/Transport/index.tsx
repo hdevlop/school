@@ -56,7 +56,7 @@ export default function TransportPage() {
       <NPageHeader
         icon={Bus}
         title={t('navigation.transport')}
-        subtitle="Manage vehicle routes and student billing"
+        subtitle={t('transport.panel.manageSubtitle')}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -9,22 +9,24 @@ import { useForgotPasswordStore } from '@/stores/ForgotPasswordStore'
 import { auth } from '@/lib/auth'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { useTranslation } from '@/hooks/useLanguage';
 
 const forgotPasswordSchema = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
 })
 
 export function ForgotPasswordDialog() {
+    const { t } = useTranslation();
     const { isOpen, openDialog, closeDialog } = useForgotPasswordStore()
 
     const mutation = useMutation({
         mutationFn: (data: { email: string }) => auth.client.forgotPassword(data),
         onSuccess: () => {
-            toast.success('Password reset link sent to your email')
+            toast.success(t('auth.success.resetLinkSent'))
             closeDialog()
         },
         onError: () => {
-            toast.error('Failed to send reset email')
+            toast.error(t('auth.errors.resetEmailFailed'))
         }
     })
 
@@ -47,8 +49,8 @@ export function ForgotPasswordDialog() {
                     <FormInput
                         name="email"
                         type="text"
-                        formLabel="Email"
-                        placeholder="Enter your email"
+                        formLabel={t('auth.form.email')}
+                        placeholder={t('auth.form.emailPlaceholder')}
                         variant="default"
                         icon={Mail}
                         iconColor="black"

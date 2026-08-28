@@ -10,6 +10,7 @@ import { z } from 'zod'
 import { toast } from 'sonner'
 import { LocationField } from '@/components/location/LocationField'
 import { useActiveForm } from '@/hooks/useActiveForm'
+import { useTranslation } from '@/hooks/useLanguage';
 
 const assignSchema = z.object({
   studentId: z.string().min(1, 'Student is required'),
@@ -25,6 +26,7 @@ const assignSchema = z.object({
 })
 
 const AssignStudentFields = ({ students }) => {
+  const { t } = useTranslation();
   const form = useActiveForm()
   const studentId = form.watch('studentId')
   const selectedStudent = (students || []).find((student: any) => student.id === studentId)
@@ -47,10 +49,10 @@ const AssignStudentFields = ({ students }) => {
       <FormInput
         name="studentId"
         type="combobox"
-        formLabel="Student"
-        placeholder="Select student…"
-        searchPlaceholder="Search students…"
-        emptyMessage="No student found"
+        formLabel={t('transport.panel.student')}
+        placeholder={t('transport.panel.selectStudent')}
+        searchPlaceholder={t('transport.panel.searchStudents')}
+        emptyMessage={t('transport.panel.noStudent')}
         items={studentOptions}
         required
       />
@@ -70,7 +72,7 @@ const AssignStudentFields = ({ students }) => {
           compact
         />
       </div>
-      <FormInput name="notes" type="textarea" formLabel="Notes" placeholder="Optional notes…" />
+      <FormInput name="notes" type="textarea" formLabel={t('transport.panel.notes')} placeholder={t('transport.panel.notesPlaceholder')} />
     </>
   )
 }
@@ -106,6 +108,7 @@ interface VehicleStudentsPanelProps {
 }
 
 export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => {
+  const { t } = useTranslation();
   const { routes = [], isLoading, assignStudent, isAssigning, unassignStudent } = useStudentRoutes({ vehicleId: vehicle.id })
   const { students } = useStudents()
   const { openDialog } = useDialog()
@@ -213,7 +216,7 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
                 size="sm"
                 className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive shrink-0"
                 onClick={() => handleUnassign(route)}
-                title="Unassign"
+                title={t('transport.panel.unassign')}
               >
                 <UserMinus className="w-3.5 h-3.5" />
               </NButton>

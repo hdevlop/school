@@ -6,6 +6,7 @@ import { NTable } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
 import { BookOpen, GraduationCap, Users } from 'lucide-react';
 import PageLoadingState from '@/shared/PageLoadingState';
+import { useTranslation } from '@/hooks/useLanguage';
 
 interface ClassesTabProps {
   teacherId: string;
@@ -26,6 +27,7 @@ const statusClass = (status?: string) => {
 };
 
 const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
+  const { t } = useTranslation();
   const [classes, setClasses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -57,7 +59,7 @@ const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
   const columns = [
     {
       accessorKey: 'className',
-      header: 'Class',
+      header: t('teachers.profile.table.class'),
       enableSorting: true,
       cell: ({ getValue }) => (
         <div className="flex items-center gap-2 font-medium text-slate-700">
@@ -68,12 +70,12 @@ const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
     },
     {
       accessorKey: 'sectionName',
-      header: 'Section',
+      header: t('teachers.profile.table.section'),
       enableSorting: true,
     },
     {
       accessorKey: 'subjectName',
-      header: 'Subject',
+      header: t('teachers.profile.table.subject'),
       enableSorting: true,
       cell: ({ getValue }) => (
         <div className="flex items-center gap-2 text-slate-600">
@@ -84,7 +86,7 @@ const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
     },
     {
       accessorKey: 'studentCount',
-      header: 'Students',
+      header: t('teachers.profile.table.students'),
       enableSorting: true,
       cell: ({ getValue }) => (
         <div className="flex items-center gap-2 text-slate-600">
@@ -95,7 +97,7 @@ const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
     },
     {
       accessorKey: 'status',
-      header: 'Status',
+      header: t('teachers.profile.table.status'),
       enableSorting: true,
       cell: ({ getValue }) => <Badge className={statusClass(getValue() as string)}>{getValue() || 'active'}</Badge>,
     },

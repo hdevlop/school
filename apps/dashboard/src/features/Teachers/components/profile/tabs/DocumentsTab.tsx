@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { NTable } from 'najm-kit';
 import { Award, FileText } from 'lucide-react';
+import { useTranslation } from '@/hooks/useLanguage';
 
 interface DocumentsTabProps {
   teacher: any;
@@ -19,25 +20,26 @@ const StatCard = ({ icon: Icon, label, value }: { icon: any; label: string; valu
 );
 
 const DocumentsTab: React.FC<DocumentsTabProps> = () => {
+  const { t } = useTranslation();
   const documents: any[] = [];
   const columns = useMemo(() => [
     {
       accessorKey: 'name',
-      header: 'Document',
+      header: t('teachers.profile.table.document'),
       enableSorting: true,
       cell: ({ getValue }) => <span className="font-medium text-slate-700">{getValue() as string}</span>,
     },
     {
       accessorKey: 'type',
-      header: 'Type',
+      header: t('teachers.profile.table.type'),
       enableSorting: true,
     },
     {
       accessorKey: 'uploadDate',
-      header: 'Uploaded',
+      header: t('teachers.profile.table.uploaded'),
       enableSorting: true,
     },
-  ], []);
+  ], [t]);
 
   return (
     <div className="space-y-4">

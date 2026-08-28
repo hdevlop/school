@@ -5,6 +5,7 @@ import { NIcon, NTable } from 'najm-kit';
 import { Input } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
 import { Award, BookOpen, Briefcase, Calendar, GraduationCap, Hash, ShieldCheck, Users } from 'lucide-react';
+import { useTranslation } from '@/hooks/useLanguage';
 
 interface AcademicInfoTabProps {
   teacher: any;
@@ -44,6 +45,7 @@ const EditableField = ({
 const formatText = (value?: string | null) => value ? value.replace(/[-_]/g, ' ') : '-';
 
 const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, draft = {}, onDraftChange }) => {
+  const { t } = useTranslation();
   const [classRows, setClassRows] = useState<any[]>([]);
   const [loadingClasses, setLoadingClasses] = useState(true);
 
@@ -88,7 +90,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
   const assignmentColumns = useMemo(() => [
     {
       accessorKey: 'className',
-      header: 'Class',
+      header: t('teachers.profile.table.class'),
       enableSorting: true,
       cell: ({ row }) => (
         <div className="flex items-center gap-2 font-medium text-slate-700">
@@ -99,13 +101,13 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
     },
     {
       accessorKey: 'sectionName',
-      header: 'Section',
+      header: t('teachers.profile.table.section'),
       enableSorting: true,
       cell: ({ row }) => row.original.sectionName || '-',
     },
     {
       accessorKey: 'subjectName',
-      header: 'Subject',
+      header: t('teachers.profile.table.subject'),
       enableSorting: true,
       cell: ({ row }) => (
         <div className="flex items-center gap-2 text-slate-600">
@@ -116,7 +118,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
     },
     {
       accessorKey: 'studentCount',
-      header: 'Students',
+      header: t('teachers.profile.table.students'),
       enableSorting: true,
       cell: ({ row }) => (
         <div className="flex items-center gap-2 text-slate-600">
@@ -125,7 +127,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
         </div>
       ),
     },
-  ], []);
+  ], [t]);
 
   return (
     <div className="space-y-7">
@@ -180,7 +182,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
             showAddButton={false}
             showViewToggle={false}
             showColumnVisibility={false}
-            loadingText="Loading academic assignments..."
+            loadingText={t('teachers.profile.table.loadingAssignments')}
             noDataText="No assignments recorded"
           />
         </div>

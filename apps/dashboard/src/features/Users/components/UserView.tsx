@@ -88,7 +88,7 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
       {/* Account Information */}
       <NSection
         icon={User}
-        title="Account Information"
+        title={t('users.view.accountInformation')}
         iconColor="text-blue-500"
         background="bg-card"
         className="border shadow-sm"
@@ -125,7 +125,7 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
       {/* Account Details */}
       <NSection
         icon={Settings}
-        title="Account Details"
+        title={t('users.view.accountDetails')}
         iconColor="text-purple-500"
         background="bg-card"
         className="border shadow-sm"
@@ -163,7 +163,7 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
       {recentActivities.length > 0 && (
         <NSection
           icon={Activity}
-          title="Recent Activities"
+          title={t('users.view.recentActivities')}
           iconColor="text-green-500"
           background="bg-card"
           className="border shadow-sm"
@@ -210,7 +210,7 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
       {recentSessions.length > 0 && (
         <NSection
           icon={Clock}
-          title="Recent Sessions"
+          title={t('users.view.recentSessions')}
           iconColor="text-yellow-500"
           background="bg-card"
           className="border shadow-sm"

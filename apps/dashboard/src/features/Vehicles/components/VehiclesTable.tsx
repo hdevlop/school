@@ -111,7 +111,7 @@ function VehiclesTable() {
       <NPageHeader
         icon={Bus}
         title={t('navigation.vehicles')}
-        subtitle={`${total} ${total === 1 ? 'vehicle' : 'vehicles'}`}
+        subtitle={t('vehicles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

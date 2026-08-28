@@ -87,7 +87,7 @@ function FeeTypesTable() {
       <NPageHeader
         icon={Tag}
         title={t('navigation.feeTypes')}
-        subtitle={`${total} ${total === 1 ? 'fee type' : 'fee types'}`}
+        subtitle={t('feeTypes.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

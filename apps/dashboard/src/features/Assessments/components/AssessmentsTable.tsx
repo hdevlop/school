@@ -86,7 +86,7 @@ function AssessmentsTable() {
       <NPageHeader
         icon={ClipboardList}
         title={t('navigation.assessments')}
-        subtitle={`${total} ${total === 1 ? 'assessment' : 'assessments'}`}
+        subtitle={t('assessments.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

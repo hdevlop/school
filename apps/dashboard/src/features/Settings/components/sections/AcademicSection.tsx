@@ -77,7 +77,7 @@ const AcademicSection: React.FC = () => {
           name="calendarSystem"
           type="select"
           formLabel={t('settings.academic.calendarSystem')}
-          placeholder="Semester"
+          placeholder={t('settings.academic.semesterPlaceholder')}
           icon={Calendar}
           items={calendarSystemOptions}
           iconColor="#3b82f6"
