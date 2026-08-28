@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { NThemeImage } from 'najm-theme/react';
 import { serverAuth } from '@/lib/session';
 import { ForgotPasswordDialog } from './ForgotPasswordDialog';
+import { ReliableThemeImage } from './ReliableThemeImage';
 
 const AuthLayout = async ({ children }) => {
     // Shares the root layout's resolution for this render rather than repeating
@@ -22,7 +23,7 @@ const AuthLayout = async ({ children }) => {
                 <span className='mt-24 text-muted-foreground'>@2025 all rights reserved</span>
             </div>
             <div className='relative hidden h-full w-1/2 lg:flex'>
-                <NThemeImage slot="authHeroImage" alt="" fill className="object-cover" />
+                <ReliableThemeImage slot="authHeroImage" alt="" fill className="object-cover" />
             </div>
         </div>
     )
