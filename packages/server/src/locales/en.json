@@ -414,6 +414,17 @@
     }
   },
   "common": {
+    "feedback": {
+      "loadingLabel": "Loading...",
+      "emptyTitle": "No data available",
+      "errorTitle": "Something went wrong",
+      "errorMessage": "This list could not be loaded. Please try again.",
+      "retryLabel": "Try again",
+      "forbiddenTitle": "Access denied",
+      "forbiddenDescription": "You do not have permission to view this.",
+      "notFoundTitle": "Not found",
+      "notFoundDescription": "The requested page could not be found."
+    },
     "updateLanguageFailed": "Failed to update language",
     "notes": "Notes",
     "dueDate": "Due Date",

@@ -272,6 +272,17 @@
     }
   },
   "common": {
+    "feedback": {
+      "loadingLabel": "Chargement...",
+      "emptyTitle": "Aucune donnée disponible",
+      "errorTitle": "Une erreur est survenue",
+      "errorMessage": "Cette liste n'a pas pu être chargée. Veuillez réessayer.",
+      "retryLabel": "Réessayer",
+      "forbiddenTitle": "Accès refusé",
+      "forbiddenDescription": "Vous n'avez pas l'autorisation de voir ceci.",
+      "notFoundTitle": "Introuvable",
+      "notFoundDescription": "La page demandée est introuvable."
+    },
     "updateLanguageFailed": "Échec de la mise à jour de la langue",
     "notes": "Notes",
     "dueDate": "Date d'échéance",
@@ -952,7 +963,26 @@
     "deleted": "Supprimé",
     "archived": "Archivé",
     "revoked": "Révoqué",
-    "expired": "Expiré"
+    "expired": "Expiré",
+    "absent": "Absent",
+    "all": "Tous",
+    "class": "Classe",
+    "failed": "Échoué",
+    "graduated": "Diplômé",
+    "inProgress": "En cours",
+    "late": "En retard",
+    "onLeave": "En congé",
+    "overdue": "En retard",
+    "paid": "Payé",
+    "parents": "Parents",
+    "partiallyPaid": "Partiellement payé",
+    "present": "Présent",
+    "refunded": "Remboursé",
+    "rescheduled": "Reprogrammé",
+    "reviewed": "Examiné",
+    "students": "Étudiants",
+    "teachers": "Enseignants",
+    "transferred": "Transféré"
   },
   "seed": {
     "success": {

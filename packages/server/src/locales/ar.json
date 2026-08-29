@@ -480,6 +480,17 @@
     }
   },
   "common": {
+    "feedback": {
+      "loadingLabel": "جاري التحميل...",
+      "emptyTitle": "لا توجد بيانات",
+      "errorTitle": "حدث خطأ ما",
+      "errorMessage": "تعذر تحميل هذه القائمة. يرجى المحاولة مرة أخرى.",
+      "retryLabel": "إعادة المحاولة",
+      "forbiddenTitle": "تم رفض الوصول",
+      "forbiddenDescription": "ليس لديك إذن لعرض هذا.",
+      "notFoundTitle": "غير موجود",
+      "notFoundDescription": "تعذر العثور على الصفحة المطلوبة."
+    },
     "updateLanguageFailed": "تعذر تحديث اللغة",
     "notes": "ملاحظات",
     "dueDate": "تاريخ الاستحقاق",
@@ -596,7 +607,26 @@
     "deleted": "محذوف",
     "archived": "مؤرشف",
     "revoked": "ملغى",
-    "expired": "منتهي الصلاحية"
+    "expired": "منتهي الصلاحية",
+    "absent": "غائب",
+    "all": "الجميع",
+    "class": "القسم",
+    "failed": "فشل",
+    "graduated": "متخرج",
+    "inProgress": "قيد التنفيذ",
+    "late": "متأخر",
+    "onLeave": "في إجازة",
+    "overdue": "متأخر",
+    "paid": "مدفوع",
+    "parents": "الوالدين",
+    "partiallyPaid": "مدفوع جزئيًا",
+    "present": "حاضر",
+    "refunded": "مسترد",
+    "rescheduled": "أعيد جدولته",
+    "reviewed": "تمت المراجعة",
+    "students": "التلاميذ",
+    "teachers": "الأساتذة",
+    "transferred": "منقول"
   },
   "navigation": {
     "dashboard": "لوحة التحكم",

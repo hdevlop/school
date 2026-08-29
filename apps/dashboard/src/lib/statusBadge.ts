@@ -9,6 +9,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import type { BadgeColor } from 'najm-kit'
+import translations from '@sms/server/locales'
 
 export const STATUS_COLOR_MAP: Record<string, BadgeColor> = {
   active: 'success',
@@ -90,3 +91,34 @@ export const STATUS_ICON_MAP = {
 
   approved_by_admin: ShieldCheck,
 }
+
+/**
+ * Every status token this app renders, pointed at its entry in the shared
+ * `status.*` catalog.
+ *
+ * `NBadge` resolves a status to its text in this order: an explicit `label`, a
+ * string child, `statusLabelKeys` through the provider's translator, and only
+ * then a humanized form of the raw token. Nearly thirty badge renders across
+ * School passed none of the first three, so every one of them fell through to
+ * the humanized English token — "All" where the catalog says "Everyone", and
+ * English statuses on a French or Arabic screen.
+ *
+ * Registering the map once on the provider fixes all of them at their source
+ * rather than at twenty-nine call sites, and a token with no catalog entry
+ * still falls through to the humanized form exactly as before.
+ *
+ * The catalog is keyed in camelCase (`onLeave`) while the database stores
+ * snake_case (`on_leave`), and `NBadge` normalizes only spaces and hyphens —
+ * so both spellings are registered.
+ */
+export const STATUS_LABEL_KEYS: Record<string, string> = (() => {
+  const toSnakeCase = (key: string) => key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+  const statusCatalog = (translations as Record<string, any>)?.en?.status ?? {};
+
+  const keys: Record<string, string> = {};
+  for (const token of Object.keys(statusCatalog)) {
+    keys[token] = `status.${token}`;
+    keys[toSnakeCase(token)] = `status.${token}`;
+  }
+  return keys;
+})();

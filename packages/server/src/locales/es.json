@@ -466,6 +466,17 @@
     }
   },
   "common": {
+    "feedback": {
+      "loadingLabel": "Cargando...",
+      "emptyTitle": "No hay datos disponibles",
+      "errorTitle": "Algo salió mal",
+      "errorMessage": "No se pudo cargar esta lista. Inténtalo de nuevo.",
+      "retryLabel": "Intentar de nuevo",
+      "forbiddenTitle": "Acceso denegado",
+      "forbiddenDescription": "No tienes permiso para ver esto.",
+      "notFoundTitle": "No encontrado",
+      "notFoundDescription": "No se pudo encontrar la página solicitada."
+    },
     "updateLanguageFailed": "No se pudo actualizar el idioma",
     "notes": "Notas",
     "dueDate": "Fecha de vencimiento",
@@ -582,7 +593,26 @@
     "deleted": "Eliminado",
     "archived": "Archivado",
     "revoked": "Revocado",
-    "expired": "Expirado"
+    "expired": "Expirado",
+    "absent": "Ausente",
+    "all": "Todos",
+    "class": "Clase",
+    "failed": "Fallido",
+    "graduated": "Graduado",
+    "inProgress": "En curso",
+    "late": "Tarde",
+    "onLeave": "De permiso",
+    "overdue": "Atrasado",
+    "paid": "Pagado",
+    "parents": "Padres",
+    "partiallyPaid": "Parcialmente pagado",
+    "present": "Presente",
+    "refunded": "Reembolsado",
+    "rescheduled": "Reprogramado",
+    "reviewed": "Revisado",
+    "students": "Estudiantes",
+    "teachers": "Profesores",
+    "transferred": "Transferido"
   },
   "navigation": {
     "dashboard": "Panel",

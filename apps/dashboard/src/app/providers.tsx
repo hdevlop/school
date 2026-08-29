@@ -9,6 +9,7 @@ import type { PublicBranding } from 'najm-theme';
 import { NThemeBrandingProvider } from 'najm-theme/react';
 import translations from '@sms/server/locales';
 import { auth } from '@/lib/auth';
+import { STATUS_COLOR_MAP, STATUS_LABEL_KEYS } from '@/lib/statusBadge';
 import { KeyboardProvider } from '@/providers/KeyboardProvider';
 import { QueryProvider } from '@/providers/QueryProvider';
 import type { SchoolPreferenceSnapshot } from '@/lib/serverPreferences';
@@ -20,6 +21,39 @@ import { SCHOOL_UI_PREFERENCE_ENDPOINTS } from '@/preferences/cookies';
 import { isDevFill } from '@/lib/devFill';
 
 const SCHOOL_APP_NAME = 'MyScolAI';
+
+/**
+ * Module scope on purpose: the provider rebuilds its resolved badge bundle
+ * whenever this object's identity changes.
+ */
+const SCHOOL_BADGE_DEFAULTS = {
+  statusMap: STATUS_COLOR_MAP,
+  statusLabelKeys: STATUS_LABEL_KEYS,
+};
+
+/**
+ * The words every loading, empty, error, forbidden and not-found state uses.
+ *
+ * Spelled out key by key rather than through `prefix`: the provider computes a
+ * prefix and then discards it, so `labelKeys` is the only wiring that actually
+ * resolves through `t`. Without this the kit falls back to packaged English —
+ * a French user reading "Access denied".
+ *
+ * Module scope for the same reason as the badge bundle above.
+ */
+const SCHOOL_FEEDBACK_DEFAULTS = {
+  labelKeys: {
+    loadingLabel: 'common.feedback.loadingLabel',
+    emptyTitle: 'common.feedback.emptyTitle',
+    errorTitle: 'common.feedback.errorTitle',
+    errorMessage: 'common.feedback.errorMessage',
+    retryLabel: 'common.feedback.retryLabel',
+    forbiddenTitle: 'common.feedback.forbiddenTitle',
+    forbiddenDescription: 'common.feedback.forbiddenDescription',
+    notFoundTitle: 'common.feedback.notFoundTitle',
+    notFoundDescription: 'common.feedback.notFoundDescription',
+  },
+};
 
 type Props = {
   children: ReactNode;
@@ -56,7 +90,13 @@ export function AppProviders({
         <KeyboardProvider>
           <NajmAppProvider
             appName={SCHOOL_APP_NAME}
+            // The one place status badges are taught to speak the interface
+            // language. Without it every `<NBadge status={…} />` in the app
+            // falls through to a humanized English token, whatever the
+            // language — see `STATUS_LABEL_KEYS`.
+            badgeDefaults={SCHOOL_BADGE_DEFAULTS}
             currency={preferences.currency}
+            feedbackDefaults={SCHOOL_FEEDBACK_DEFAULTS}
             endpoints={{
               theme: SCHOOL_UI_PREFERENCE_ENDPOINTS.theme,
               timeZone: SCHOOL_UI_PREFERENCE_ENDPOINTS.timeZone,
