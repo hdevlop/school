@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { CalendarCheck } from 'lucide-react';
 import RosterHeader from './RosterHeader';
+import RosterCard from './RosterCard';
 import { useStudentAttendance } from '../hooks/useAttendance';
 import { useAttendanceRoster } from '../hooks/useAttendanceRoster';
 import { useStudentRosterColumns } from '../hooks/useAttendanceTableColumns';
@@ -13,6 +14,7 @@ import { useSections } from '@/features/Sections/hooks/useSections';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useTranslation } from '@/hooks/useLanguage';
+import { studentAvatarClassNames } from '@/lib/avatar';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
@@ -172,6 +174,27 @@ function StudentAttendanceTable() {
   }, [selectedSectionId, selectedAssignmentId, resetDraft]);
 
   const columns = useStudentRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus });
+
+  // Below `NTable`'s card breakpoint the nine-column register is unusable — it
+  // compresses rather than scrolls — so the same roster row is handed a card
+  // that keeps the student legible and the marks tappable. Memoised because
+  // `NTable` treats the renderer as a component type: a new identity each
+  // render would remount every card and drop the press it was handling.
+  const renderRosterCard = useCallback(
+    (props: any) => (
+      <RosterCard
+        {...props}
+        getStatus={roster.getStatus}
+        setStatus={roster.setStatus}
+        detail={[
+          props.data?.studentCode,
+          [props.data?.class?.name, props.data?.section?.name].filter(Boolean).join(' - '),
+        ].filter(Boolean).join(' | ')}
+        classNames={{ avatar: studentAvatarClassNames }}
+      />
+    ),
+    [roster.getStatus, roster.setStatus],
+  );
   const filters = useMemo(
     () => [
       {
@@ -312,6 +335,7 @@ function StudentAttendanceTable() {
         showCheckbox
         showViewToggle={false}
         defaultMode='table'
+        renderCard={renderRosterCard}
         noDataText={noDataText}
       />
     </div>

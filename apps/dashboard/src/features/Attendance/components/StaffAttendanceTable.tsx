@@ -2,8 +2,9 @@
 
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { CalendarCheck } from 'lucide-react';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import RosterHeader from './RosterHeader';
+import RosterCard from './RosterCard';
 import { useStaffAttendance } from '../hooks/useAttendance';
 import { useAttendanceRoster } from '../hooks/useAttendanceRoster';
 import { useStaffRosterColumns } from '../hooks/useAttendanceTableColumns';
@@ -13,6 +14,7 @@ import { useStaffRoles } from '@/features/Staff/hooks/useStaffRoles';
 import { useTranslation } from '@/hooks/useLanguage';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { toLocalISODate } from '@/lib/localDate';
+import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
@@ -32,6 +34,21 @@ function StaffAttendanceTable() {
   });
 
   const columns = useStaffRosterColumns({ getStatus: roster.getStatus, setStatus: roster.setStatus });
+
+  // The staff register is the same nine-column table as the student one and was
+  // squeezed the same way below the card breakpoint.
+  const renderRosterCard = useCallback(
+    (props: any) => (
+      <RosterCard
+        {...props}
+        getStatus={roster.getStatus}
+        setStatus={roster.setStatus}
+        detail={props.data?.role}
+        avatarSrc={props.data?.image || getStaffAvatar(props.data?.role, props.data?.gender)}
+      />
+    ),
+    [roster.getStatus, roster.setStatus],
+  );
   const rawFilters = useStaffRosterFilters(
     { value: roster.selectedDate, onChange: roster.goToDate },
     activeStaffRoles,
@@ -69,6 +86,7 @@ function StaffAttendanceTable() {
         showCheckbox
         showViewToggle={false}
         defaultMode="table"
+        renderCard={renderRosterCard}
       />
     </div>
   );

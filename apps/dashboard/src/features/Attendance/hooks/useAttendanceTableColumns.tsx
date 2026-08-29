@@ -1,38 +1,14 @@
 import { useMemo } from 'react';
-import { Check, X, Clock } from 'lucide-react';
-import { NBadge, NAvatar, NButton } from 'najm-kit';
+import { NBadge, NAvatar } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
-import { cn } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useLanguage';
 import { useStudentsTableColumns } from '@/features/Students/hooks/useStudentsTableColumns';
+import RosterMarks from '../components/RosterMarks';
 import type { RosterStatus } from './useAttendanceRoster';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 
 const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'email', 'phone', 'class', 'section', 'gender']);
 
-
-const IDLE = 'border-2 border-slate-300 bg-white text-slate-500 shadow-none hover:border-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800';
-
-const STATUS_META: Record<RosterStatus, { label: string; icon: any; idle: string; active: string }> = {
-  present: {
-    label: 'Present',
-    icon: Check,
-    idle: IDLE + ' hover:text-emerald-600 dark:hover:text-emerald-400',
-    active: 'border-2 border-emerald-700 bg-emerald-600 text-white shadow-none outline outline-2 outline-offset-1 outline-emerald-200 hover:bg-emerald-700 dark:border-emerald-400 dark:bg-emerald-500 dark:text-white dark:outline-emerald-900',
-  },
-  absent: {
-    label: 'Absent',
-    icon: X,
-    idle: IDLE + ' hover:text-red-600 dark:hover:text-red-400',
-    active: 'border-2 border-red-700 bg-red-600 text-white shadow-none outline outline-2 outline-offset-1 outline-red-200 hover:bg-red-700 dark:border-red-400 dark:bg-red-500 dark:text-white dark:outline-red-900',
-  },
-  late: {
-    label: 'Late',
-    icon: Clock,
-    idle: IDLE + ' hover:text-amber-600 dark:hover:text-amber-400',
-    active: 'border-2 border-amber-600 bg-amber-500 text-white shadow-none outline outline-2 outline-offset-1 outline-amber-200 hover:bg-amber-600 dark:border-amber-400 dark:bg-amber-500 dark:text-white dark:outline-amber-900',
-  },
-};
 
 interface RosterColumnsOptions {
   getStatus: (id: string) => RosterStatus;
@@ -45,35 +21,12 @@ const statusCell = ({ getStatus, setStatus }: RosterColumnsOptions) => ({
   header: () => <div className="flex w-full justify-center text-center">Status</div>,
   enableSorting: false,
   enableColumnFilter: true,
-  cell: ({ row }: any) => {
-    const current = getStatus(row.original.id);
-    return (
-      <div className="flex w-full justify-center gap-2">
-        {(['present', 'absent', 'late'] as RosterStatus[]).map((s) => {
-          const meta = STATUS_META[s];
-          const Icon = meta.icon;
-          const active = current === s;
-          return (
-            <NButton
-              key={s}
-              type="button"
-              variant="outline"
-              size="sm"
-              title={meta.label}
-              aria-pressed={active}
-              onClick={() => setStatus(row.original.id, s)}
-              className={cn(
-                'flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg p-0 transition-all duration-150 hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30',
-                active ? meta.active : meta.idle
-              )}
-            >
-              <Icon className="h-4 w-4" />
-            </NButton>
-          );
-        })}
-      </div>
-    );
-  },
+  cell: ({ row }: any) => (
+    <RosterMarks
+      current={getStatus(row.original.id)}
+      onSelect={(status) => setStatus(row.original.id, status)}
+    />
+  ),
 });
 
 export const useStudentRosterColumns = ({ getStatus, setStatus }: RosterColumnsOptions) => {
