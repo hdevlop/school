@@ -113,9 +113,25 @@ function GradesTable() {
     );
   }, [classId, sectionOptions]);
 
-  useEffect(() => {
-    setSourceId('');
-  }, [classId, sectionId, subjectId, teacherId, sourceType]);
+  // Changing what the roster is about invalidates whichever assessment or exam
+  // was chosen for it.
+  //
+  // This lives in the filter handlers rather than in an effect on the filter
+  // values, because choosing a source *also* fills in the subject and teacher
+  // it belongs to (see the back-fill below). An effect cannot tell that
+  // back-fill apart from a person changing a filter, so it used to clear the
+  // very selection that triggered it — picking an assessment while subject and
+  // teacher were still empty discarded it on the spot. Only a deliberate change
+  // clears the source now; the internal corrections keep the plain setters.
+  const clearSource = useCallback(() => setSourceId(''), []);
+  const selectClass = useCallback((value: string) => { setClassId(value); clearSource(); }, [clearSource]);
+  const selectSection = useCallback((value: string) => { setSectionId(value); clearSource(); }, [clearSource]);
+  const selectSubject = useCallback((value: string) => { setSubjectId(value); clearSource(); }, [clearSource]);
+  const selectTeacher = useCallback((value: string) => { setTeacherId(value); clearSource(); }, [clearSource]);
+  const selectSourceType = useCallback((value: GradeSourceType) => {
+    setSourceType(value);
+    clearSource();
+  }, [clearSource]);
 
   // Discard unsaved edits whenever the roster context switches, so drafts never
   // leak across a different section / assessment / exam.
@@ -332,7 +348,12 @@ function GradesTable() {
   const columns = useGradesTableColumns({ canEdit, onToggleStatus: handleStatusToggle });
   const rawFilters = useGradesTableFilters({
     classId, sectionId, subjectId, teacherId,
-    setClassId, setSectionId, setSubjectId, setTeacherId,
+    // The filter row is the deliberate half: every change made here drops the
+    // chosen assessment or exam with it.
+    setClassId: selectClass,
+    setSectionId: selectSection,
+    setSubjectId: selectSubject,
+    setTeacherId: selectTeacher,
     sourceType, sourceId, setSourceId, sourceOptions,
     classOptions, sectionOptions, subjectOptions, teacherOptions,
     isClassesLoading, isSectionsLoading, isSubjectsLoading, isTeachersLoading,
@@ -356,7 +377,7 @@ function GradesTable() {
           <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
             <NTabs
               value={sourceType}
-              onValueChange={(value) => setSourceType(value as GradeSourceType)}
+              onValueChange={(value) => selectSourceType(value as GradeSourceType)}
               color="primary"
               classNames={{
                 list: 'h-9 rounded-md bg-primary/10 p-0.5',
