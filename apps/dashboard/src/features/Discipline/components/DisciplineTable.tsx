@@ -14,6 +14,7 @@ import { useDiscipline } from '../hooks/useDiscipline';
 import { useDisciplineTableColumns } from '../hooks/useDisciplineTableColumns';
 import { useDisciplineTableFilters } from '../hooks/useDisciplineTableFilters';
 import type { DisciplineIncident } from '../disciplineConstants';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 export default function DisciplineTable() {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export default function DisciplineTable() {
   const { openDialog, confirmDelete } = useConfirmDelete();
   const {
     incidents, createIncident, updateIncident, deleteIncident, resolveIncident, reopenIncident,
-    isDisciplineLoading, isCreating, isUpdating, isDeleting, isResolving, isReopening,
+    error, isDisciplineLoading, isCreating, isUpdating, isDeleting, isResolving, isReopening,
   } = useDiscipline();
 
   const canEdit = (incident: DisciplineIncident) => incident.status === 'open'
@@ -101,7 +102,7 @@ export default function DisciplineTable() {
       <NPageHeader
         icon={ShieldAlert}
         title={t('navigation.discipline')}
-        subtitle={t('discipline.table.count', { count: incidents?.length || 0 })}
+        subtitle={hasFailedToLoad(error, incidents || []) ? undefined : t('discipline.table.count', { count: incidents?.length || 0 })}
       >
         <NPageHeaderActions><PageHeaderGlobalActions /></NPageHeaderActions>
       </NPageHeader>
@@ -111,6 +112,7 @@ export default function DisciplineTable() {
         columns={columns}
         filters={filters}
         loading={isDisciplineLoading}
+        {...tableErrorProps(error, incidents || [])}
         onCreate={handleCreate}
         onRowClick={handleView}
         menuButton

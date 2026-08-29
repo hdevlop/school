@@ -14,6 +14,7 @@ import { useTeachersTableColumns } from '../hooks/useTeachersTableColumns';
 import { useTeachersTableFilters } from '../hooks/useTeachersTableFilters';
 import { TeacherProfile } from './profile';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function TeachersTable() {
 
@@ -29,6 +30,7 @@ function TeachersTable() {
 
     isBulkDeleting,
     bulkDeleteTeachers,
+    error,
     isTeachersLoading,
     isDeleting
   } = useTeachers();
@@ -110,7 +112,7 @@ function TeachersTable() {
       <NPageHeader
         icon={Users}
         title={t('navigation.teachers')}
-        subtitle={t('teachers.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, teachers) ? undefined : t('teachers.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -127,6 +129,7 @@ function TeachersTable() {
         onDelete={handleDelete}
         onBulkDelete={handleBulkDelete}
         loading={isTeachersLoading}
+        {...tableErrorProps(error, teachers)}
         loadingText={t('common.loading')}
         renderCard={TeacherCard}
         addButtonText={t('teachers.dialogs.createButton')}

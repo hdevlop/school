@@ -12,6 +12,7 @@ import RoleCard from './RoleCard';
 import { useRolesTableColumns } from '../hooks/useRolesTableColumns';
 import { useRolesTableFilters } from '../hooks/useRolesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function RolesTable() {
 
@@ -40,6 +41,7 @@ function RolesTable() {
     createRole,
     updateRole,
     deleteRole,
+    error,
     isRolesLoading,
     isUpdating,
     isCreating,
@@ -102,7 +104,7 @@ function RolesTable() {
       <NPageHeader
         icon={Shield}
         title={t('navigation.roles')}
-        subtitle={t('roles.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, roles) ? undefined : t('roles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -118,6 +120,7 @@ function RolesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isRolesLoading}
+        {...tableErrorProps(error, roles)}
         renderCard={RoleCard}
         addButtonText={t('roles.dialogs.createButton')}
         defaultMode='table'

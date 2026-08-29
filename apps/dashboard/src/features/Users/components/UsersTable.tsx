@@ -11,6 +11,7 @@ import UserCard from './UserCard';
 import { useUsersTableColumns } from '../hooks/useUsersTableColumns';
 import { useUsersTableFilters } from '../hooks/useUsersTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function UsersTable() {
 
@@ -23,6 +24,7 @@ function UsersTable() {
     createUser,
     updateUser,
     deleteUser,
+    error,
     isUsersLoading,
     isUpdating,
     isCreating,
@@ -87,7 +89,7 @@ function UsersTable() {
       <NPageHeader
         icon={UserCog}
         title={t('navigation.users')}
-        subtitle={t('users.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, users) ? undefined : t('users.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -103,6 +105,7 @@ function UsersTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isUsersLoading}
+        {...tableErrorProps(error, users)}
         renderCard={UserCard}
         addButtonText={t('users.dialogs.createButton')}
         defaultMode='cards'

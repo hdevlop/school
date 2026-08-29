@@ -12,6 +12,7 @@ import { useParentsTableColumns } from '../hooks/useParentsTableColumns';
 import { useParentsTableFilters } from '../hooks/useParentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 const getParentRowClassName = (parent) => {
   const isOrphaned = parent?.isOrphaned === true || Number(parent?.totalChildren) === 0;
@@ -35,6 +36,7 @@ function ParentsTable() {
     deleteParent,
     isBulkDeleting,
     bulkDeleteParents,
+    error,
     isParentsLoading,
     isUpdating,
     isCreating,
@@ -109,7 +111,7 @@ function ParentsTable() {
       <NPageHeader
         icon={HeartHandshake}
         title={t('navigation.parents')}
-        subtitle={t('parents.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, parents) ? undefined : t('parents.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -128,6 +130,7 @@ function ParentsTable() {
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         loading={isParentsLoading}
+        {...tableErrorProps(error, parents)}
         loadingText={t('common.loading')}
         renderCard={ParentCard}
         getRowClassName={getParentRowClassName}

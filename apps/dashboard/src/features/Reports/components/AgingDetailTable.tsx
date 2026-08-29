@@ -8,6 +8,7 @@ import { useFinanceAgingDetail } from '@/features/Dashboard/hooks/useDashboardHo
 import { formatMAD, type SupportedLocale } from '@/lib/format';
 import { useTranslation } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
+import { isPermissionDenied } from '@/lib/queryError';
 
 type AgingRow = {
   studentId: string;
@@ -38,7 +39,7 @@ interface Props {
 const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
   const { t, language } = useTranslation();
   const locale = (language as SupportedLocale) ?? 'en';
-  const { data, isLoading } = useFinanceAgingDetail();
+  const { data, error, isLoading } = useFinanceAgingDetail();
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('total');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
@@ -117,6 +118,14 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
       icon={AlertTriangle}
       className={cn('flex w-full h-full', className)}
       loading={isLoading}
+      error={error ?? null}
+      errorText={t(
+        // `NCard` renders one message and has no forbidden state of its own, so
+        // the distinction a table makes with an icon is made here in words.
+        isPermissionDenied(error)
+          ? 'common.feedback.forbiddenDescription'
+          : 'common.feedback.errorMessage',
+      )}
       skeleton={<NSkeletonEventList />}
       noData={!isLoading && rows.length === 0}
       noDataText={t('reports.aging.noData')}

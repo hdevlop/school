@@ -11,6 +11,7 @@ import { useTranslation } from '@/hooks/useLanguage';
 import { useAssessmentsTableColumns } from '../hooks/useAssessmentsTableColumns';
 import { useAssessmentsTableFilters } from '../hooks/useAssessmentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function AssessmentsTable() {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ function AssessmentsTable() {
     createAssessment,
     updateAssessment,
     deleteAssessment,
+    error,
     isAssessmentsLoading,
     isUpdating,
     isCreating,
@@ -86,7 +88,7 @@ function AssessmentsTable() {
       <NPageHeader
         icon={ClipboardList}
         title={t('navigation.assessments')}
-        subtitle={t('assessments.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, assessments) ? undefined : t('assessments.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -103,6 +105,7 @@ function AssessmentsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isAssessmentsLoading}
+        {...tableErrorProps(error, assessments)}
         renderCard={AssessmentCard}
         addButtonText={t('assessments.dialogs.createButton')}
         defaultMode='table'

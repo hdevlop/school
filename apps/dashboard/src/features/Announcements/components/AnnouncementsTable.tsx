@@ -11,6 +11,7 @@ import { useTranslation } from '@/hooks/useLanguage';
 import { useAnnouncementsTableColumns } from '../hooks/useAnnouncementsTableColumns';
 import { useAnnouncementsTableFilters } from '../hooks/useAnnouncementsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function AnnouncementsTable() {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ function AnnouncementsTable() {
     createAnnouncement,
     updateAnnouncement,
     deleteAnnouncement,
+    error,
     isAnnouncementsLoading,
     isUpdating,
     isCreating,
@@ -86,7 +88,7 @@ function AnnouncementsTable() {
       <NPageHeader
         icon={Megaphone}
         title={t('navigation.announcements')}
-        subtitle={t('announcements.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, announcements) ? undefined : t('announcements.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -103,6 +105,7 @@ function AnnouncementsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isAnnouncementsLoading}
+        {...tableErrorProps(error, announcements)}
         renderCard={AnnouncementCard}
         addButtonText={t('announcements.dialogs.createButton')}
         defaultMode='table'

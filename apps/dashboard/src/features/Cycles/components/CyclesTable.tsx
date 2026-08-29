@@ -10,6 +10,7 @@ import CycleForm from './CycleForm';
 import { useCycles } from '../hooks/useCycles';
 import { useCyclesTableColumns } from '../hooks/useCyclesTableColumns';
 import { useCyclesTableFilters } from '../hooks/useCyclesTableFilters';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 const sortCycles = (cycles = []) => [...cycles].sort((a, b) => {
   const order = Number(a.sortOrder || 0) - Number(b.sortOrder || 0);
@@ -20,7 +21,7 @@ function CyclesTable() {
   const { t } = useTranslation();
   const columns = useCyclesTableColumns();
   const rawFilters = useCyclesTableFilters();
-  const { cycles, createCycle, updateCycle, deleteCycle, isCyclesLoading } = useCycles();
+  const { cycles, createCycle, updateCycle, deleteCycle, error, isCyclesLoading } = useCycles();
   const { openDialog, confirmDelete } = useConfirmDelete();
 
   const orderedCycles = sortCycles(cycles || []);
@@ -78,7 +79,7 @@ function CyclesTable() {
       <NPageHeader
         icon={CalendarRange}
         title={t('navigation.cycles')}
-        subtitle={t('cycles.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, orderedCycles) ? undefined : t('cycles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -94,6 +95,7 @@ function CyclesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isCyclesLoading}
+        {...tableErrorProps(error, orderedCycles)}
         renderCard={CycleCard}
         addButtonText={t('cycles.dialogs.createButton')}
         defaultMode="table"

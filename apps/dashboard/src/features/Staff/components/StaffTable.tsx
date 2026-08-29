@@ -8,6 +8,7 @@ import { useTranslation } from '@/hooks/useLanguage';
 import { useStaff } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
 import { formatAssignments } from '../utils/staffAssignments';
@@ -274,7 +275,7 @@ const StaffTable = () => {
       <NPageHeader
         icon={Briefcase}
         title={t('navigation.staff')}
-        subtitle={t('staff.subtitle.count', { count: rows.length })}
+        subtitle={hasFailedToLoad(isError ? error : null, rows) ? undefined : t('staff.subtitle.count', { count: rows.length })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -323,7 +324,7 @@ const StaffTable = () => {
         onDelete={handleDelete}
         onBulkDelete={handleBulkDelete}
         loading={isStaffLoading}
-        error={isError ? error : null}
+        {...tableErrorProps(isError ? error : null, rows)}
         showViewToggle={true}
         renderCard={StaffCard}
         addButtonText={t('staff.dialogs.createButton')}

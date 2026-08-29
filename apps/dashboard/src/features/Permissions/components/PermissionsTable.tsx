@@ -11,6 +11,7 @@ import PermissionCard from './PermissionCard';
 import { usePermissionsTableColumns } from '../hooks/usePermissionsTableColumns';
 import { usePermissionsTableFilters } from '../hooks/usePermissionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function PermissionsTable() {
 
@@ -27,6 +28,7 @@ function PermissionsTable() {
     createPermission,
     updatePermission,
     deletePermission,
+    error,
     isPermissionsLoading,
     isUpdating,
     isCreating,
@@ -91,7 +93,7 @@ function PermissionsTable() {
       <NPageHeader
         icon={KeyRound}
         title={tf('navigation.permissions', 'Permissions')}
-        subtitle={t('permissions.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, permissions) ? undefined : t('permissions.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -107,6 +109,7 @@ function PermissionsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isPermissionsLoading}
+        {...tableErrorProps(error, permissions)}
         renderCard={PermissionCard}
         addButtonText={t('permissions.dialogs.createButton')}
         defaultMode='table'

@@ -12,6 +12,7 @@ import SectionCard from './SectionCard';
 import { useSectionsTableColumns } from '../hooks/useSectionsTableColumns';
 import { useSectionsTableFilters } from '../hooks/useSectionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function SectionsTable() {
 
@@ -24,6 +25,7 @@ function SectionsTable() {
     createSection,
     updateSection,
     deleteSection,
+    error,
     isSectionsLoading,
     isUpdating,
     isCreating,
@@ -92,7 +94,7 @@ function SectionsTable() {
       <NPageHeader
         icon={Layers}
         title={t('navigation.sections')}
-        subtitle={t('sections.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, sections) ? undefined : t('sections.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -110,6 +112,7 @@ function SectionsTable() {
         onDelete={handleDelete}
         onCellEdit={handleCellEdit}
         loading={isSectionsLoading}
+        {...tableErrorProps(error, sections)}
         renderCard={SectionCard}
         addButtonText={t('sections.dialogs.createButton')}
         defaultMode='table'

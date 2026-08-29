@@ -10,6 +10,7 @@ import DriverCard from './DriverCard';
 import { useDriversTableColumns } from '../hooks/useDriversTableColumns';
 import { useDriversTableFilters } from '../hooks/useDriversTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function DriversTable() {
 
@@ -24,6 +25,7 @@ function DriversTable() {
     deleteDriver,
     isBulkDeleting,
     bulkDeleteDrivers,
+    error,
     isDriversLoading,
     isUpdating,
     isCreating,
@@ -103,7 +105,7 @@ function DriversTable() {
       <NPageHeader
         icon={Car}
         title={t('navigation.drivers')}
-        subtitle={t('drivers.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, drivers) ? undefined : t('drivers.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -120,6 +122,7 @@ function DriversTable() {
         onDelete={handleDelete}
         onBulkDelete={handleBulkDelete}
         loading={isDriversLoading}
+        {...tableErrorProps(error, drivers)}
         loadingText={t('common.loading')}
         renderCard={DriverCard}
         addButtonText={t('drivers.dialogs.createButton')}

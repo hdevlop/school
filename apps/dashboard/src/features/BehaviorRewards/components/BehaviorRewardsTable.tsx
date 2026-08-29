@@ -13,6 +13,7 @@ import BehaviorRewardForm from './BehaviorRewardForm';
 import { useBehaviorRewards } from '../hooks/useBehaviorRewards';
 import { useBehaviorRewardsTableColumns } from '../hooks/useBehaviorRewardsTableColumns';
 import { useBehaviorRewardsTableFilters } from '../hooks/useBehaviorRewardsTableFilters';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 const BehaviorRewardsTable = () => {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ const BehaviorRewardsTable = () => {
     createBehaviorReward,
     updateBehaviorReward,
     deleteBehaviorReward,
+    error,
     isBehaviorRewardsLoading,
     isCreating,
     isUpdating,
@@ -93,7 +95,7 @@ const BehaviorRewardsTable = () => {
       <NPageHeader
         icon={Award}
         title={t('navigation.behaviorRewards')}
-        subtitle={t('behaviorRewards.table.recordCount', { count: total })}
+        subtitle={hasFailedToLoad(error, tableData) ? undefined : t('behaviorRewards.table.recordCount', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -110,6 +112,7 @@ const BehaviorRewardsTable = () => {
         onEdit={handleEdit}
         onDelete={canDelete ? handleDelete : undefined}
         loading={isBehaviorRewardsLoading}
+        {...tableErrorProps(error, tableData)}
         renderCard={BehaviorRewardCard}
         addButtonText={t('behaviorRewards.dialogs.createButton')}
         defaultMode="table"

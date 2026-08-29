@@ -14,6 +14,7 @@ import { useDrivers } from '@/features/Drivers/hooks/useDrivers';
 import { useVehiclesTableColumns } from '../hooks/useVehiclesTableColumns';
 import { useVehiclesTableFilters } from '../hooks/useVehiclesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function VehiclesTable() {
 
@@ -29,6 +30,7 @@ function VehiclesTable() {
     updateVehicle,
     deleteVehicle,
     assignDriver,
+    error,
     isVehiclesLoading,
     isUpdating,
     isCreating,
@@ -111,7 +113,7 @@ function VehiclesTable() {
       <NPageHeader
         icon={Bus}
         title={t('navigation.vehicles')}
-        subtitle={t('vehicles.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, vehicles) ? undefined : t('vehicles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -127,6 +129,7 @@ function VehiclesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isVehiclesLoading}
+        {...tableErrorProps(error, vehicles)}
         renderCard={VehicleCard}
         addButtonText={t('vehicles.dialogs.createButton')}
         defaultMode='cards'

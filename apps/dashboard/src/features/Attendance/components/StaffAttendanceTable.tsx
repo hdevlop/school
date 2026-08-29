@@ -13,13 +13,14 @@ import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { useStaffRoles } from '@/features/Staff/hooks/useStaffRoles';
 import { useTranslation } from '@/hooks/useLanguage';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 import { toLocalISODate } from '@/lib/localDate';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(toLocalISODate);
-  const { staff, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
+  const { staff, error: staffError, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
   const { activeStaffRoles, isStaffRolesLoading } = useStaffRoles({ activeOnly: true });
   const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading } = useStaffAttendance({ date: selectedDate });
   const staffRows = staff || [];
@@ -60,7 +61,7 @@ function StaffAttendanceTable() {
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.staffAttendance')}
-        subtitle={t('attendance.subtitle.staffCount', { count: total })}
+        subtitle={hasFailedToLoad(staffError, staffRows) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -82,6 +83,7 @@ function StaffAttendanceTable() {
           />
         }
         loading={isStaffLoading || isAttendanceLoading || isStaffRolesLoading}
+        {...tableErrorProps(staffError, staffRows)}
         showAddButton={false}
         showCheckbox
         showViewToggle={false}

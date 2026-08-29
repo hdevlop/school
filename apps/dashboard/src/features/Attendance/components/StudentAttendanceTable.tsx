@@ -17,6 +17,7 @@ import { useTranslation } from '@/hooks/useLanguage';
 import { studentAvatarClassNames } from '@/lib/avatar';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -32,7 +33,7 @@ const getStudentSectionId = (student: any) => student?.sectionId ?? student?.sec
 
 function StudentAttendanceTable() {
   const { t } = useTranslation();
-  const { students, isStudentsLoading } = useStudents();
+  const { students, error: studentsError, isStudentsLoading } = useStudents();
   const { sections, isSectionsLoading } = useSections();
   const { classes, isClassesLoading } = useClasses();
   const { attendance, submitRoster, isSubmittingRoster } = useStudentAttendance();
@@ -308,7 +309,7 @@ function StudentAttendanceTable() {
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.studentAttendance')}
-        subtitle={t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
+        subtitle={hasFailedToLoad(studentsError, filteredStudents) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -331,6 +332,7 @@ function StudentAttendanceTable() {
           />
         }
         loading={isStudentsLoading || isSectionsLoading || isClassesLoading}
+        {...tableErrorProps(studentsError, filteredStudents)}
         showAddButton={false}
         showCheckbox
         showViewToggle={false}

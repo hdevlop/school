@@ -18,6 +18,7 @@ import { useExams } from '@/features/Exams/hooks/useExams';
 import { useGradesTableColumns } from '../hooks/useGradesTableColumns';
 import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 import { useTranslation } from '@/hooks/useLanguage';
 
 const PASS_THRESHOLD = 50;
@@ -61,8 +62,8 @@ function GradesTable() {
   const role = (user as any)?.role;
   const isAdminOrPrincipal = role === 'admin' || role === 'principal';
 
-  const { grades, submitGrades, isSubmittingBatch, isGradesLoading } = useGrades();
-  const { students, isStudentsLoading } = useStudents();
+  const { grades, error: gradesError, submitGrades, isSubmittingBatch, isGradesLoading } = useGrades();
+  const { students, error: studentsError, isStudentsLoading } = useStudents();
   const { classes, isClassesLoading } = useClasses();
   const { sections, isSectionsLoading } = useSections();
   const { subjects, isSubjectsLoading } = useSubjects();
@@ -371,7 +372,7 @@ function GradesTable() {
       <NPageHeader
         icon={GraduationCap}
         title={t('grades.messages.pageTitle')}
-        subtitle={`${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}`}
+        subtitle={hasFailedToLoad(gradesError ?? studentsError, roster) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}`}
       >
         <NPageHeaderActions>
           <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
@@ -417,6 +418,7 @@ function GradesTable() {
         )}
         onCellEdit={handleCellEdit}
         loading={isGradesLoading || isStudentsLoading}
+        {...tableErrorProps(gradesError ?? studentsError, roster)}
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'

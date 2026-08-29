@@ -11,6 +11,7 @@ import SubjectCard from './SubjectCard';
 import { useSubjectsTableColumns } from '../hooks/useSubjectsTableColumns';
 import { useSubjectsTableFilters } from '../hooks/useSubjectsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function SubjectsTable() {
 
@@ -23,6 +24,7 @@ function SubjectsTable() {
     createSubject,
     updateSubject,
     deleteSubject,
+    error,
     isSubjectsLoading,
     isUpdating,
     isCreating,
@@ -87,7 +89,7 @@ function SubjectsTable() {
       <NPageHeader
         icon={BookOpen}
         title={t('navigation.subjects')}
-        subtitle={t('subjects.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, subjects) ? undefined : t('subjects.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -103,6 +105,7 @@ function SubjectsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isSubjectsLoading}
+        {...tableErrorProps(error, subjects)}
         renderCard={SubjectCard}
         addButtonText={t('subjects.dialogs.createButton')}
         defaultMode='table'

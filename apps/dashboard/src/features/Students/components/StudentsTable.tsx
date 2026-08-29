@@ -17,6 +17,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useState } from 'react';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function StudentsTable() {
 
@@ -35,6 +36,7 @@ function StudentsTable() {
     updateStudent,
     deleteStudent,
     bulkDeleteStudents,
+    error,
     isStudentsLoading,
     isUpdating,
     isDeleting,
@@ -132,7 +134,7 @@ function StudentsTable() {
       <NPageHeader
         icon={GraduationCap}
         title={t('navigation.students')}
-        subtitle={t('students.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, students) ? undefined : t('students.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -153,6 +155,7 @@ function StudentsTable() {
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         loading={isStudentsLoading}
+        {...tableErrorProps(error, students)}
         loadingText={t('common.loading')}
         renderCard={StudentCard}
         addButtonText={t('students.dialogs.createButton')}

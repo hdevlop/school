@@ -11,6 +11,7 @@ import { useTranslation } from '@/hooks/useLanguage';
 import { useExamsTableColumns } from '../hooks/useExamsTableColumns';
 import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function ExamsTable() {
   const { t } = useTranslation();
@@ -22,6 +23,7 @@ function ExamsTable() {
     createExam,
     updateExam,
     deleteExam,
+    error,
     isExamsLoading,
     isUpdating,
     isCreating,
@@ -86,7 +88,7 @@ function ExamsTable() {
       <NPageHeader
         icon={FileText}
         title={t('navigation.exams')}
-        subtitle={t('exams.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, exams) ? undefined : t('exams.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -103,6 +105,7 @@ function ExamsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isExamsLoading}
+        {...tableErrorProps(error, exams)}
         renderCard={ExamCard}
         addButtonText={t('exams.dialogs.createButton')}
         defaultMode='table'

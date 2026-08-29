@@ -10,6 +10,7 @@ import ClassCard from './ClassCard';
 import { useClassesTableColumns } from '../hooks/useClassesTableColumns';
 import { useClassesTableFilters } from '../hooks/useClassesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
 function ClassesTable() {
 
@@ -22,6 +23,7 @@ function ClassesTable() {
     createClass,
     updateClass,
     deleteClass,
+    error,
     isClassesLoading,
     isUpdating,
     isCreating,
@@ -87,7 +89,7 @@ function ClassesTable() {
       <NPageHeader
         icon={School}
         title={t('navigation.classes')}
-        subtitle={t('classes.subtitle.count', { count: total })}
+        subtitle={hasFailedToLoad(error, classes) ? undefined : t('classes.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -103,6 +105,7 @@ function ClassesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isClassesLoading}
+        {...tableErrorProps(error, classes)}
         renderCard={ClassCard}
         addButtonText={t('classes.dialogs.createButton')}
         defaultMode='table'
