@@ -22,8 +22,11 @@ describe('the server session boundary is package-owned', () => {
 
     // A second call, or one nested inside a function, would build a separate
     // memoized resolver that shares nothing with this one.
+    // Trimmed before comparing: on a CRLF checkout every line carries a
+    // trailing `\r`, which has nothing to do with how many adapters exist.
     const calls = session
       .split('\n')
+      .map((line) => line.trim())
       .filter((line) => line.includes('createReactServerAuth('));
 
     expect(calls).toEqual(["export const serverAuth = createReactServerAuth(auth);"]);
