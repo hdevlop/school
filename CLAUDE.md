@@ -28,6 +28,18 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 - Always run `bun run lint` after making code changes
 - `bun run test:server` / `bun run test:dashboard` / `bun run test:seed`
 - `bun run test:e2e:najm-upgrade` after a production build and isolated database seed
+- `bun run test:e2e:acceptance` for the browser acceptance suite in
+  `apps/dashboard/tests/e2e/*.acceptance.spec.ts` — role-scoped navigation, the
+  student, teacher and parent directories, the student profile, the academic
+  tables, exams, fees and expenses, the attendance register, the grading
+  workbench, student conduct, announcements, the vehicle fleet, access control,
+  settings, and the header language/theme controls. It needs the same
+  production build and
+  disposable database, signs in once per test, and mocks the API responses it
+  asserts on. Najm Auth rate limits sign-in to 8 per 10 minutes, so a server
+  started outside the suite needs `NAJM_AUTH_LOGIN_RATE_LIMIT` raised; the
+  suite's own managed server sets it. Runs under Node, not Bun: Bun on Windows
+  cannot hand Chrome the pipe its debugging handshake needs.
 - Use `bun run build:all` to verify production readiness
 - `bun run i18n:check` when touching `packages/server/src/locales/*.json`
 
@@ -49,6 +61,23 @@ states that drift — so do not add one without changing the plan first.
   directly from a layout or page, and never build the adapter per request.
 - **One version of each Najm package.** Pinned exactly in every workspace
   manifest; `bun run test:dashboard` fails when a second copy resolves.
+- **One set of words for status and state.** The provider's `badgeDefaults`
+  (`STATUS_LABEL_KEYS` in `apps/dashboard/src/lib/statusBadge.ts`) and
+  `feedbackDefaults` (`common.feedback.*`) are what make `<NBadge status=…/>`
+  and the kit's loading/empty/error/forbidden states speak the interface
+  language. Both resolve through `t`, and a key that is missing from a catalog
+  renders as the raw key — not as English — so add every key to all four
+  locales. Do not word these at the call site.
+- **A failed list is not an empty one.** Every `NTable` fed by a query passes
+  `{...tableErrorProps(error, rows)}` from
+  `apps/dashboard/src/shared/TableErrorState.tsx`, and guards its `NPageHeader`
+  count with the same `hasFailedToLoad(error, rows)` so the header cannot
+  contradict the table. Without it `useEntityCRUD` hands the table the `[]` it
+  returns for a failed query and the screen invites the user to add their first
+  record — including when the server refused the request. `rows` is what keeps a
+  failed background refetch from raising an error over records already on
+  screen. `NCard`-based lists have no `renderError`, so they pass `errorText`
+  instead — see `Reports/components/AgingDetailTable.tsx`.
 
 Current Najm versions are the pins in the root `package.json`. Read them there
 rather than assuming; they are upgraded deliberately, not by range.
@@ -370,6 +399,7 @@ export const createStudentApi = async (data: CreateStudentData) => {
 - Use `t()` from `najm-i18n` for backend strings
 - Frontend reads the same catalog through `NajmAppProvider`; `useTranslation` in `apps/dashboard/src/hooks/useLanguage.tsx` is a thin facade that adds a per-key English fallback
 - Run `bun run i18n:check` after adding keys: every key must exist in all four locales or `NTable` and forms render raw key strings
+- `@sms/server/locales` resolves to the built `dist`, so run `bun run build:server` before `bun run build` whenever a catalog changes — otherwise the dashboard keeps serving the previous keys
 
 ## File Upload System
 - `FileService.handleImageUpload()` for profile pictures and documents
