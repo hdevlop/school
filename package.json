@@ -18,6 +18,7 @@
     "test:server": "bun test packages/server/tests",
     "test:dashboard": "bun test apps/dashboard/src",
     "test:e2e:najm-upgrade": "bun run --cwd apps/dashboard test:e2e:najm-upgrade",
+    "test:e2e:acceptance": "bun run --cwd apps/dashboard test:e2e:acceptance",
     "db:generate": "bun --env-file=apps/dashboard/.env.local drizzle-kit generate",
     "db:migrate": "bun --env-file=apps/dashboard/.env.local drizzle-kit migrate",
     "db:push": "bun --env-file=apps/dashboard/.env.local drizzle-kit push",

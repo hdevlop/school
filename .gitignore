@@ -63,3 +63,7 @@ apps/dashboard/storage/
 # local agent/editor state
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
+# playwright artifacts and saved sign-in state (contains session cookies)
+apps/dashboard/test-results/
+apps/dashboard/playwright-report/
+apps/dashboard/playwright/.auth/
