@@ -131,3 +131,56 @@ jobs:
             --header "X-GitHub-Event: push" \
             --data "$payload" \
             "$DOKPLOY_DEPLOY_WEBHOOK"
+
+      - name: Verify deployed revision is serving
+        env:
+          DEPLOY_REVISION: ${{ github.sha }}
+        run: |
+          deadline=$((SECONDS + 900))
+          revision_url="https://myscolai.com/deployment-revision.txt?revision=${DEPLOY_REVISION}"
+          last_revision="unavailable"
+          last_apex_status="000"
+          last_www_status="000"
+
+          while (( SECONDS < deadline )); do
+            last_revision="$(
+              curl \
+                --fail \
+                --silent \
+                --show-error \
+                --max-time 10 \
+                "$revision_url" \
+                2>/dev/null || true
+            )"
+
+            if [ "$last_revision" = "$DEPLOY_REVISION" ]; then
+              last_apex_status="$(
+                curl \
+                  --silent \
+                  --show-error \
+                  --output /dev/null \
+                  --write-out '%{http_code}' \
+                  --max-time 20 \
+                  https://myscolai.com/login || true
+              )"
+              last_www_status="$(
+                curl \
+                  --silent \
+                  --show-error \
+                  --output /dev/null \
+                  --write-out '%{http_code}' \
+                  --max-time 20 \
+                  https://www.myscolai.com/login || true
+              )"
+
+              if [ "$last_apex_status" = "200" ] && [ "$last_www_status" = "200" ]; then
+                echo "Revision $DEPLOY_REVISION is serving on both production hostnames."
+                exit 0
+              fi
+            fi
+
+            sleep 10
+          done
+
+          echo "::error::Dokploy accepted the webhook, but revision $DEPLOY_REVISION did not become ready within 15 minutes (served revision: $last_revision, apex: $last_apex_status, www: $last_www_status)."
+          exit 1
