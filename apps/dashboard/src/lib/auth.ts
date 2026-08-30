@@ -14,5 +14,5 @@ export const auth = defineAuth({
   // yet — they hold only Najm's one-time setup cookie.
   publicRoutes: ['/login', '/register', '/forgot-password', '/reset-password', '/change-password', '/manifest.webmanifest'],
   protectedRoutes: ['/', '/:path*'],
-  verifyAlways: true,
+  proxySessionMode: 'authoritative',
 });

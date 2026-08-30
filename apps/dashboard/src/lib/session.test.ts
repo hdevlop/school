@@ -7,6 +7,7 @@ const read = (relativePath: string) =>
 const session = read('./session.ts');
 const authConfig = read('./auth.ts');
 const proxy = read('../proxy.ts');
+const routeHandlers = read('../app/api/[[...route]]/route.ts');
 
 const sessionConsumers = {
   'app/layout.tsx': read('../app/layout.tsx'),
@@ -63,6 +64,22 @@ describe('the proxy and core config stay free of React-server code', () => {
 
   it('keeps the speculative-prefetch bypass', () => {
     expect(proxy).toContain('isSpeculativePrefetch');
+  });
+
+  it('uses the explicit authoritative proxy mode and package proxy alias', () => {
+    expect(authConfig).toContain("proxySessionMode: 'authoritative'");
+    expect(authConfig).not.toContain('verifyAlways');
+    expect(proxy).toContain('auth.proxy(req)');
+    expect(proxy).not.toContain('auth.middleware(req)');
+  });
+
+  it('composes every Next.js API verb through the shared auth definition', () => {
+    expect(routeHandlers).toContain("import { auth } from '@/lib/auth'");
+    expect(routeHandlers).toContain(
+      'export const { GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS } = auth.routeHandlers(',
+    );
+    expect(routeHandlers).toContain("rememberCookieName: 'sms.remember'");
+    expect(routeHandlers).not.toContain('withAuthCookiePersistence');
   });
 });
 

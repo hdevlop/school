@@ -17,12 +17,12 @@ function isSpeculativePrefetch(req: Request) {
   );
 }
 
-export default async function middleware(req: Request) {
+export default async function proxy(req: Request) {
   if (hasRefreshToken(req) && isSpeculativePrefetch(req)) {
     return NextResponse.next();
   }
 
-  return await auth.middleware(req);
+  return auth.proxy(req);
 }
 
 export const config = {

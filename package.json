@@ -54,7 +54,7 @@
   "dependencies": {
     "@types/node": "^25.6.0",
     "najm-api": "2.0.3",
-    "najm-auth": "3.1.5",
+    "najm-auth": "3.2.0",
     "najm-cache": "2.0.2",
     "najm-chatbot": "2.0.2",
     "najm-cookies": "2.0.2",
