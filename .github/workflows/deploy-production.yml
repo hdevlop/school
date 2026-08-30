@@ -18,8 +18,78 @@ env:
   NEXT_PUBLIC_FORM_FILL_ENABLED: "false"
 
 jobs:
+  classify:
+    name: Classify deployment impact
+    runs-on: ubuntu-latest
+    outputs:
+      runtime_changed: ${{ steps.impact.outputs.runtime_changed }}
+    steps:
+      - name: Check out exact revision and history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Detect runtime-relevant paths
+        id: impact
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "runtime_changed=true" >> "$GITHUB_OUTPUT"
+            echo "Manual deployment requested; runtime publication is enabled."
+            exit 0
+          fi
+
+          if git cat-file -e "${BEFORE_SHA}^{commit}" 2>/dev/null; then
+            mapfile -t changed_files < <(
+              git diff \
+                --name-only \
+                --diff-filter=ACDMRT \
+                "$BEFORE_SHA" \
+                "$GITHUB_SHA"
+            )
+          else
+            mapfile -t changed_files < <(
+              git diff-tree \
+                --root \
+                --no-commit-id \
+                --name-only \
+                -r \
+                "$GITHUB_SHA"
+            )
+          fi
+
+          runtime_changed=false
+          # Keep this fail-closed allowlist synchronized with section 11 of the
+          # active School connected acceptance plan.
+          for path in "${changed_files[@]}"; do
+            case "$path" in
+              apps/dashboard/tests/* | \
+              apps/dashboard/playwright*.config.ts | \
+              apps/dashboard/scripts/run-connected-e2e.mjs | \
+              apps/dashboard/scripts/run-remote-e2e.mjs | \
+              *.test.ts | *.test.tsx | *.spec.ts | *.spec.tsx | \
+              docs/evidence/* | docs/*.md | \
+              SCHOOL-CONNECTED-ACCEPTANCE-PLAN.md)
+                ;;
+              *)
+                runtime_changed=true
+                echo "Runtime-relevant path: $path"
+                ;;
+            esac
+          done
+
+          echo "runtime_changed=$runtime_changed" >> "$GITHUB_OUTPUT"
+          if [ "$runtime_changed" = "true" ]; then
+            echo "Application image publication and deployment are required."
+          else
+            echo "Only tests, evidence, or the active acceptance plan changed; publication and deployment will be skipped."
+          fi
+
   verify:
     name: Verify
+    needs: classify
     runs-on: ubuntu-latest
     env:
       DB_URL: postgresql://build:build@127.0.0.1:5432/build
@@ -56,7 +126,8 @@ jobs:
 
   publish:
     name: Build and publish image
-    needs: verify
+    needs: [classify, verify]
+    if: ${{ needs.classify.outputs.runtime_changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
