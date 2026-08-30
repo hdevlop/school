@@ -24,3 +24,7 @@ export const personAvatarClassNames = {
 
 export const studentAvatarBackgroundClass = personAvatarBackgroundClass;
 export const studentAvatarClassNames = personAvatarClassNames;
+
+// Placeholder portrait behind a person's own photo, chosen by gender.
+export const getStudentAvatar = (gender?: string | null) =>
+  gender === 'F' ? '/images/student_female.png' : '/images/student_male.png';

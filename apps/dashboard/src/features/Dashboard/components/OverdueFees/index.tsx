@@ -3,13 +3,14 @@
 import { NButton } from 'najm-kit';
 
 import React from 'react';
-import { NCard } from 'najm-kit';
+import { NAvatar, NCard } from 'najm-kit';
 import { Clock, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from '@/hooks/useLanguage';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { getAvatarFallback, getStudentAvatar, personAvatarClassNames } from '@/lib/avatar';
 
 interface OverdueFeesProps {
   className?: string;
@@ -23,6 +24,8 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
   type OverdueRow = {
     studentId: string;
     studentName: string;
+    studentImage: string | null;
+    gender: string | null;
     totalOverdue: number;
     daysOverdue: number;
     oldestDueDate: string | null;
@@ -43,40 +46,37 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
             {t('dashboard.finance.noOverdue')}
           </div>
         )}
-        {rows.map((row) => {
-          const initials = row.studentName
-            .split(' ')
-            .map((n) => n[0])
-            .join('')
-            .slice(0, 2)
-            .toUpperCase();
-          return (
-            <div
-              key={row.studentId}
-              className="flex items-center justify-between gap-2 p-2 rounded-lg border border-border/50 hover:bg-muted/30"
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs font-bold shrink-0">
-                  {initials}
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-semibold truncate">{row.studentName}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {row.daysOverdue} {t('dashboard.finance.daysOverdue')}
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-sm font-semibold text-red-600">
-                  {formatMAD(Number(row.totalOverdue ?? 0), locale)}
+        {rows.map((row) => (
+          <div
+            key={row.studentId}
+            className="flex items-center justify-between gap-2 p-2 rounded-lg border border-border/50 hover:bg-muted/30"
+          >
+            <div className="flex items-center gap-2 min-w-0">
+              <NAvatar
+                src={row.studentImage}
+                fallbackSrc={getStudentAvatar(row.gender)}
+                fallback={getAvatarFallback(row.studentName)}
+                alt={row.studentName}
+                size="sm"
+                classNames={personAvatarClassNames}
+              />
+              <div className="flex flex-col min-w-0">
+                <span className="text-sm font-semibold truncate">{row.studentName}</span>
+                <span className="text-xs text-muted-foreground">
+                  {row.daysOverdue} {t('dashboard.finance.daysOverdue')}
                 </span>
-                <NButton size="sm" variant="outline" className="h-7 px-2">
-                  <Bell className="w-3.5 h-3.5" />
-                </NButton>
               </div>
             </div>
-          );
-        })}
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-sm font-semibold text-red-600">
+                {formatMAD(Number(row.totalOverdue ?? 0), locale)}
+              </span>
+              <NButton size="sm" variant="outline" className="h-7 px-2">
+                <Bell className="w-3.5 h-3.5" />
+              </NButton>
+            </div>
+          </div>
+        ))}
       </div>
     </NCard>
   );

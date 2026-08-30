@@ -216,6 +216,7 @@ export class FinanceDashboardRepository {
         studentId: students.id,
         studentName: students.name,
         studentImage: users.image,
+        gender: students.gender,
         totalOverdue: sql<string>`COALESCE(SUM(${feeInstallments.amount} - ${feeInstallments.paidAmount}), 0)`,
         oldestDueDate: sql<string>`MIN(${feeInstallments.dueDate})`,
       })
@@ -229,7 +230,7 @@ export class FinanceDashboardRepository {
           sql`${feeInstallments.amount} - ${feeInstallments.paidAmount} > 0`,
         ),
       )
-      .groupBy(students.id, students.name, users.image)
+      .groupBy(students.id, students.name, users.image, students.gender)
       .orderBy(sql`MIN(${feeInstallments.dueDate}) ASC`)
       .limit(limit);
 
@@ -242,6 +243,7 @@ export class FinanceDashboardRepository {
         studentId: r.studentId,
         studentName: r.studentName,
         studentImage: r.studentImage,
+        gender: r.gender,
         totalOverdue: Number(r.totalOverdue ?? 0),
         daysOverdue,
         oldestDueDate: r.oldestDueDate,
