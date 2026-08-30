@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { credentialSetupApi } from '@/services/credentialSetupApi'
 import { useTranslation } from '@/hooks/useLanguage';
+import { AuthHeading } from '../AuthHeading';
 
 // Min 8 to match Najm's default credential-setup password rule.
 const changePasswordSchema = z.object({
@@ -60,20 +61,20 @@ const ChangePassword = () => {
 
   if (checking) {
     return (
-      <div className='flex flex-col justify-center items-center p-8 w-full md:w-[500px]'>
+      <div className='flex w-full flex-col items-center justify-center py-10'>
         <Loader2 className='animate-spin text-muted-foreground' />
       </div>
     )
   }
 
   return (
-    <div className='flex flex-col justify-center items-center p-8 w-full md:w-[500px]'>
-      <span className='text-2xl my-5 md:text-3xl font-semibold'>Choose a password</span>
-      <p className='text-sm text-muted-foreground mb-4 text-center'>
-        Your account uses a temporary password. Set your own to continue.
-      </p>
+    <div className='flex w-full flex-col'>
+      <AuthHeading
+        title={t('auth.page.setupTitle')}
+        subtitle={t('auth.page.setupSubtitle')}
+      />
 
-      <div className='flex flex-col h-full w-full gap-2'>
+      <div className='flex w-full flex-col gap-2'>
         <NForm
           id='change-password-form'
           schema={changePasswordSchema}
@@ -108,12 +109,12 @@ const ChangePassword = () => {
           {mutation.isPending ? (
             <>
               <Loader2 className='animate-spin' />
-              Saving...
+              {t('auth.page.savingPending')}
             </>
           ) : (
             <>
               <KeyRound />
-              Set password
+              {t('auth.page.resetSubmit')}
             </>
           )}
         </NButton>
@@ -126,7 +127,7 @@ const ChangePassword = () => {
           onClick={() => cancelMutation.mutate()}
         >
           <LogOut />
-          Cancel
+          {t('auth.page.cancel')}
         </NButton>
       </div>
     </div>

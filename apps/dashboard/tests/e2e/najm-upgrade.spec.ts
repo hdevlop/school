@@ -67,17 +67,15 @@ async function requirePasswordSetup(userId: string) {
 
 async function login(page: Page, credentials = ADMIN, rememberMe = false) {
   await page.goto('/login');
-  await page.getByLabel('Email').fill(credentials.identifier);
-  await page.getByLabel('Password').fill(credentials.password);
-  // Not `getByLabel`: najm-kit's checkbox `FormInput` renders a `<label for>`
-  // whose id is never applied to the checkbox control (a package-level a11y
-  // gap, not something School's code can fix), so match by DOM proximity to
-  // the label text instead of the broken for/id association.
-  const checkbox = page
-    .locator('[data-slot="form-item"]', { hasText: 'Keep me logged in' })
-    .getByRole('checkbox');
+  // The server snapshot can select any supported locale before login. Stable
+  // form names keep this auth helper independent of translated labels.
+  await page.locator('input[name="identifier"]').fill(credentials.identifier);
+  await page.locator('input[name="password"]').fill(credentials.password);
+  // Najm Kit does not currently forward this field's name/id to its checkbox
+  // control, but the login form has exactly one checkbox with the correct role.
+  const checkbox = page.getByRole('checkbox');
   if (rememberMe !== (await checkbox.isChecked())) await checkbox.click();
-  await page.getByRole('button', { name: 'Login', exact: true }).click();
+  await page.locator('button[form="login-form"]').click();
 }
 
 async function loginInNewContext(
@@ -107,8 +105,8 @@ test.afterAll(async () => {
 test('anonymous routing and first-paint preferences use the server snapshot', async ({ page }) => {
   await page.goto('/students');
   await expect(page).toHaveURL(/\/login\?from=%2Fstudents$/);
-  await expect(page.getByLabel('Email')).toBeVisible();
-  await expect(page.getByLabel('Password')).toBeVisible();
+  await expect(page.locator('input[name="identifier"]')).toBeVisible();
+  await expect(page.locator('input[name="password"]')).toBeVisible();
 
   await expect((await page.request.post(apiPath('/api/ui-language'), { data: { language: 'ar' } })).status()).toBe(200);
   await expect((await page.request.post(apiPath('/api/ui-theme'), { data: { theme: 'dark' } })).status()).toBe(200);
@@ -178,9 +176,9 @@ test('credential setup completes once, requires a fresh login, rejects replay, c
 
   const first = await loginInNewContext(browser, setupUser);
   await expect(first.page).toHaveURL(/\/change-password$/);
-  await expect(first.page.getByLabel('New password')).toBeVisible();
-  await first.page.getByLabel('New password').fill(NEW_PASSWORD);
-  await first.page.getByLabel('Confirm password').fill(NEW_PASSWORD);
+  await expect(first.page.locator('input[name="newPassword"]')).toBeVisible();
+  await first.page.locator('input[name="newPassword"]').fill(NEW_PASSWORD);
+  await first.page.locator('input[name="confirmPassword"]').fill(NEW_PASSWORD);
   await first.page.getByRole('button', { name: 'Set password' }).click();
   await expect(first.page).toHaveURL(/\/login$/);
   expect((await first.context.cookies()).map((cookie) => cookie.name)).not.toContain('najm.session');

@@ -1,11 +1,9 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
-import { NThemeImage } from 'najm-theme/react';
 import { serverAuth } from '@/lib/session';
-import { ForgotPasswordDialog } from './ForgotPasswordDialog';
-import { ReliableThemeImage } from './ReliableThemeImage';
+import { AuthFrame } from './AuthFrame';
 
-const AuthLayout = async ({ children }) => {
+const AuthLayout = async ({ children }: { readonly children: React.ReactNode }) => {
     // Shares the root layout's resolution for this render rather than repeating
     // the cookie verification and recovery round trip.
     const session = await serverAuth.getSession();
@@ -14,19 +12,7 @@ const AuthLayout = async ({ children }) => {
         redirect('/');
     }
 
-    return (
-         <div className='relative flex h-screen w-full overflow-hidden'>
-            <div className='relative z-10 flex flex-1 flex-col items-center justify-center self-stretch'>
-                <NThemeImage slot="authLogo" className="h-[120px] w-[120px] object-contain" alt="MyScolAI" />
-                {children}
-                <ForgotPasswordDialog />
-                <span className='mt-24 text-muted-foreground'>@2025 all rights reserved</span>
-            </div>
-            <div className='relative hidden w-1/2 self-stretch lg:flex'>
-                <ReliableThemeImage slot="authHeroImage" alt="" fill className="object-cover" />
-            </div>
-        </div>
-    )
-}
+    return <AuthFrame>{children}</AuthFrame>;
+};
 
-export default AuthLayout
+export default AuthLayout;

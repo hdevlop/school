@@ -76,7 +76,9 @@ describe('najm-theme adoption — School boundary', () => {
 
   test('loads the snapshot at the root and renders every factory branding slot', () => {
     const root = readSource('../app/layout.tsx');
-    const auth = readSource('../app/(auth)/layout.tsx');
+    // The auth frame, not the auth layout: the layout resolves the session and
+    // hands off, and the two branding slots live in the frame it renders.
+    const auth = readSource('../app/(auth)/AuthFrame.tsx');
     const shell = readSource('../shared/DashboardShell/index.tsx');
 
     expect(root).toContain("from '@/lib/serverTheme'");

@@ -4,12 +4,13 @@ import { NForm, NButton } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 
 import React from 'react'
+import Link from 'next/link'
 import { Loader2, LogIn } from 'lucide-react'
 import { z } from 'zod'
 import { useLogin } from 'najm-auth/client/react'
-import { useForgotPasswordStore } from '@/stores/ForgotPasswordStore'
 import { toast } from 'sonner';
 import { useTranslation } from '@/hooks/useLanguage';
+import { AuthHeading } from '../AuthHeading';
 
 // `identifier` is Najm Auth v3's wire field. School authenticates by email, so
 // the value is still validated and labelled as one.
@@ -41,7 +42,7 @@ const getLoginErrorMessage = (error: unknown) => {
 
 // `/change-password` is listed so a stale `?from=` cannot send a user who just
 // finished setup straight back into the setup screen.
-const INVALID_REDIRECT_PREFIXES = ['/login', '/change-password', '/_next', '/api', '/images', '/storage'];
+const INVALID_REDIRECT_PREFIXES = ['/login', '/register', '/forgot-password', '/change-password', '/_next', '/api', '/images', '/storage'];
 const INVALID_REDIRECT_EXACT_PATHS = new Set(['/manifest.webmanifest', '/favicon.ico', '/sw.js']);
 const INVALID_REDIRECT_FILE_EXTENSIONS = /\.(?:webmanifest|ico|png|jpe?g|svg|webp|gif|css|js|map)$/i;
 
@@ -98,7 +99,6 @@ const Login = () => {
       toast.error(getLoginErrorMessage(error));
     },
   });
-  const { openDialog } = useForgotPasswordStore();
 
   const defaultValues = {
     identifier: 'admin@admin.com',
@@ -110,16 +110,14 @@ const Login = () => {
     await login(credentials);
   }
 
-  const handleForgotPasswordClick = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    openDialog()
-  }
-
   return (
-    <div className='flex flex-col  justify-center items-center  p-8 w-full md:w-[500px]'>
-      <span className='text-2xl my-5 md:text-3xl font-semibold'>Welcome To Academix!</span>
-      <div className='flex flex-col h-full w-full gap-2 '>
+    <div className='flex w-full flex-col'>
+      <AuthHeading
+        title={t('auth.page.loginTitle')}
+        subtitle={t('auth.page.loginSubtitle')}
+      />
+
+      <div className='flex w-full flex-col gap-2'>
 
         <NForm id='login-form' schema={loginSchema} defaultValues={defaultValues} onSubmit={handleLogin}>
           <FormInput
@@ -140,9 +138,16 @@ const Login = () => {
             icon="Lock"
           />
 
-          <div className="flex w-full justify-between">
+          <div className="flex w-full items-center justify-between">
             {/* `label` (not `formLabel`) keeps the caption inline beside the
-                box: `formLabel` renders a FormLabel stacked above the control. */}
+                box: `formLabel` renders a FormLabel stacked above the control.
+
+                The caption stays hardcoded English. The browser acceptance
+                suite signs in under every supported language and finds this
+                checkbox by the text of its form item — see
+                `tests/e2e/support/acceptance.ts`. It is also the only checkbox
+                on the page, which `najm-upgrade.spec.ts` relies on, so nothing
+                else here may grow one. */}
             <FormInput
               name="rememberMe"
               type="checkbox"
@@ -152,13 +157,12 @@ const Login = () => {
               classNames={{ item: "w-auto shrink-0" }}
             />
 
-            <NButton
-              variant="link"
-              className=" text-sm text-tertiary hover:underline cursor-pointer mt-1 p-2 font-normal"
-              onClick={handleForgotPasswordClick}
+            <Link
+              href="/forgot-password"
+              className="mt-1 p-2 text-sm font-normal text-tertiary hover:underline"
             >
-              Forgot password?
-            </NButton>
+              {t('auth.page.forgotPassword')}
+            </Link>
 
           </div>
         </NForm>
@@ -169,6 +173,8 @@ const Login = () => {
           className="w-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:bg-primary/80 disabled:bg-primary/45 disabled:text-primary-foreground/80 disabled:opacity-100 disabled:cursor-not-allowed [&_svg]:size-5"
           disabled={isLoading}
         >
+          {/* Both captions stay hardcoded English for the same reason as the
+              checkbox above: the acceptance suite clicks `name: 'Login'`. */}
           {isLoading ? (
             <>
               <Loader2 className="animate-spin" />
@@ -181,6 +187,13 @@ const Login = () => {
             </>
           )}
         </NButton>
+
+        <p className="mt-4 text-center text-sm text-muted-foreground">
+          {t('auth.page.noAccount')}{' '}
+          <Link href="/register" className="font-medium text-tertiary hover:underline">
+            {t('auth.page.signUp')}
+          </Link>
+        </p>
 
       </div>
     </div>

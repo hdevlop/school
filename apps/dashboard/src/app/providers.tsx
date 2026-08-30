@@ -19,8 +19,7 @@ import {
 } from '@/preferences';
 import { SCHOOL_UI_PREFERENCE_ENDPOINTS } from '@/preferences/cookies';
 import { isDevFill } from '@/lib/devFill';
-
-const SCHOOL_APP_NAME = 'MyScolAI';
+import { SCHOOL_APP_NAME } from '@/lib/appName';
 
 /**
  * Module scope on purpose: the provider rebuilds its resolved badge bundle

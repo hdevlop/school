@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
 import { useTranslation } from '@/hooks/useLanguage';
+import { AuthHeading } from '../AuthHeading';
 
 // Min 8 to match the backend's confirmResetPasswordDto password rule.
 const resetPasswordSchema = z.object({
@@ -52,16 +53,19 @@ const ResetPasswordForm = () => {
   }
 
   return (
-    <div className='flex flex-col justify-center items-center p-8 w-full md:w-[500px]'>
-      <span className='text-2xl my-5 md:text-3xl font-semibold'>Set your password</span>
+    <div className='flex w-full flex-col'>
+      <AuthHeading
+        title={t('auth.page.resetTitle')}
+        subtitle={t('auth.page.resetSubtitle')}
+      />
 
       {!token ? (
         <div className='flex flex-col items-center gap-3 text-center'>
-          <p className='text-muted-foreground'>This link is invalid or missing its token.</p>
-          <Link href='/login' className='text-tertiary hover:underline'>Back to login</Link>
+          <p className='text-muted-foreground'>{t('auth.page.invalidLink')}</p>
+          <Link href='/login' className='text-tertiary hover:underline'>{t('auth.page.backToLogin')}</Link>
         </div>
       ) : (
-        <div className='flex flex-col h-full w-full gap-2'>
+        <div className='flex w-full flex-col gap-2'>
           <NForm
             id='reset-password-form'
             schema={resetPasswordSchema}
@@ -96,10 +100,10 @@ const ResetPasswordForm = () => {
             {mutation.isPending ? (
               <>
                 <Loader2 className='animate-spin' />
-                Saving...
+                {t('auth.page.savingPending')}
               </>
             ) : (
-              'Set password'
+              t('auth.page.resetSubmit')
             )}
           </NButton>
         </div>
