@@ -53,10 +53,10 @@
   },
   "dependencies": {
     "@types/node": "^25.6.0",
-    "najm-api": "2.0.3",
-    "najm-auth": "3.2.0",
+    "najm-api": "2.0.4",
+    "najm-auth": "3.2.1",
     "najm-cache": "2.0.2",
-    "najm-chatbot": "2.0.2",
+    "najm-chatbot": "2.0.3",
     "najm-cookies": "2.0.2",
     "najm-core": "2.0.5",
     "najm-cors": "2.0.2",
@@ -65,14 +65,14 @@
     "najm-event": "2.0.2",
     "najm-guard": "2.0.2",
     "najm-i18n": "2.0.3",
-    "najm-kit": "2.11.9",
-    "najm-mcp": "2.1.0",
-    "najm-rag": "2.0.2",
+    "najm-kit": "2.11.10",
+    "najm-mcp": "2.1.1",
+    "najm-rag": "2.0.3",
     "najm-rate": "2.0.2",
     "najm-storage": "2.2.0",
     "najm-theme": "0.2.1",
     "najm-validation": "2.0.2",
-    "najm-whatsapp": "2.0.2",
+    "najm-whatsapp": "2.0.3",
     "sqlite-vec": "^0.1.9",
     "zod": "4.3.6"
   },
@@ -97,7 +97,8 @@
     "najm-rate": "$najm-rate",
     "najm-storage": "$najm-storage",
     "najm-theme": "$najm-theme",
-    "najm-validation": "$najm-validation"
+    "najm-validation": "$najm-validation",
+    "najm-whatsapp": "$najm-whatsapp"
   },
   "trustedDependencies": [
     "protobufjs",

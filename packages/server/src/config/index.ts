@@ -88,7 +88,9 @@ export const mcpConfig = () =>
     name: 'sms-mcp',
     version: '1.0.0',
     path: '/mcp',
-    cors: true,
+    auth: { type: 'najm-auth' },
+    cors: false,
+    exposeErrorDetails: false,
   });
 
 export const ragConfig = (): NajmPlugin =>
