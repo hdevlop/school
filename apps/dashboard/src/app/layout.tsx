@@ -1,4 +1,5 @@
 import type { Viewport } from "next";
+import { NajmPwaRegistration } from 'najm-next/pwa/react';
 import "@/styles/globals.css";
 import "flag-icons/css/flag-icons.min.css";
 import 'najm-theme/styles.css';
@@ -64,6 +65,7 @@ export default async function RootLayout({
         >
           {children}
           <NajmClientRoot />
+          <NajmPwaRegistration />
         </AppProviders>
       </body>
     </html>
