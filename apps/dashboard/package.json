@@ -68,7 +68,7 @@
     "mqtt": "^5.15.1",
     "najm-auth": "3.2.1",
     "najm-chatbot": "2.0.3",
-    "najm-kit": "2.11.10",
+    "najm-kit": "2.11.12",
     "najm-next": "0.2.0",
     "najm-theme": "0.2.1",
     "next": "16.2.4",
