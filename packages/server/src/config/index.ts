@@ -41,6 +41,25 @@ IDs are random short strings (nanoid). You cannot guess them. Before calling any
 - Ask the user for any required field you cannot resolve, such as emails, names, codes, amounts, or dates. Do not fabricate them.`;
 
 const DEFAULT_EMAIL_FROM = 'noreply@sms.local';
+const MAX_TRUSTED_PROXY_HOPS = 8;
+
+export function resolveTrustedProxyHops() {
+  const value = process.env.SCHOOL_TRUSTED_PROXY_HOPS;
+  if (value === undefined || value === '') return process.env.NODE_ENV === 'production' ? 1 : 0;
+  if (!/^\d+$/.test(value)) {
+    throw new Error(
+      `SCHOOL_TRUSTED_PROXY_HOPS must be an integer from 0 to ${MAX_TRUSTED_PROXY_HOPS}.`,
+    );
+  }
+
+  const hops = Number(value);
+  if (!Number.isSafeInteger(hops) || hops > MAX_TRUSTED_PROXY_HOPS) {
+    throw new Error(
+      `SCHOOL_TRUSTED_PROXY_HOPS must be an integer from 0 to ${MAX_TRUSTED_PROXY_HOPS}.`,
+    );
+  }
+  return hops;
+}
 
 function requiredEmailEnv(name: string, rawValue: string | undefined) {
   const value = rawValue?.trim();
@@ -132,10 +151,12 @@ export const authConfig = () =>
     // resolved transport config so builds and runtime startup do not rely on a
     // global EMAIL_PROVIDER merely to resolve that dependency.
     email: resolveEmailConfig(),
+    rateLimit: { trustedProxyHops: resolveTrustedProxyHops() },
   });
 
 export const validationConfig = () => validation();
-export const rateLimitConfig = () => rateLimit();
+export const rateLimitConfig = () =>
+  rateLimit({ trustedProxyHops: resolveTrustedProxyHops() });
 export const eventsConfig = () => events();
 
 export const corsConfig = () =>
