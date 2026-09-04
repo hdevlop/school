@@ -1,4 +1,4 @@
-import { Controller, Get } from '@server/najm';
+import { Controller, Get, RawResponse } from '@server/najm';
 import { HealthService } from './HealthService';
 
 @Controller('/health')
@@ -17,12 +17,21 @@ export class HealthController {
   }
 
   @Get('/status')
+  @RawResponse()
   async getStatus() {
-    return {
-      data: await this.healthService.getStatus(),
-      message: 'Health service is working correctly',
-      status: 'success',
-    };
+    const readiness = await this.healthService.getReadiness();
+    return Response.json(
+      {
+        checks: readiness.checks,
+        service: 'school',
+        status: readiness.ready ? 'ready' : 'not_ready',
+        version: '0.1.0',
+      },
+      {
+        headers: { 'Cache-Control': 'no-store' },
+        status: readiness.ready ? 200 : 503,
+      },
+    );
   }
 
   @Get('/ping')

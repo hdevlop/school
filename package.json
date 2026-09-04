@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@types/node": "^25.6.0",
+    "ioredis": "5.11.1",
     "najm-api": "2.0.5",
     "najm-auth": "3.3.0",
     "najm-cache": "2.1.2",
@@ -78,6 +79,7 @@
     "zod": "4.3.6"
   },
   "overrides": {
+    "ioredis": "5.11.1",
     "najm-auth": "$najm-auth",
     "najm-core": "$najm-core",
     "diject": "0.1.8",

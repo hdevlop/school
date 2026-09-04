@@ -3,6 +3,7 @@ import { i18n } from 'najm-i18n';
 import { events } from 'najm-event';
 import { validation } from 'najm-validation';
 import { rateLimit } from 'najm-rate';
+import { cache, type CachePluginConfig } from 'najm-cache';
 import { database } from 'najm-database';
 import { storage } from 'najm-storage';
 import { FileCategory } from 'najm-storage';
@@ -42,6 +43,45 @@ IDs are random short strings (nanoid). You cannot guess them. Before calling any
 
 const DEFAULT_EMAIL_FROM = 'noreply@sms.local';
 const MAX_TRUSTED_PROXY_HOPS = 8;
+const NEXT_PRODUCTION_BUILD_PHASE = 'phase-production-build';
+
+function resolveRedisUrl(value: string | undefined, required: boolean) {
+  if (!value) {
+    if (required) throw new Error('Production rate limiting requires a Redis URL.');
+    return undefined;
+  }
+
+  try {
+    const parsed = new URL(value);
+    if (
+      !['redis:', 'rediss:'].includes(parsed.protocol) ||
+      !parsed.hostname ||
+      (required && !parsed.password)
+    ) {
+      throw new Error('invalid Redis URL');
+    }
+  } catch {
+    throw new Error('REDIS_URL must be a valid redis:// or rediss:// URL.');
+  }
+
+  return value;
+}
+
+export function resolveCacheConfig(): CachePluginConfig {
+  // Next evaluates server modules while producing an image. That build phase
+  // is not an application runtime and must not contact production services.
+  if (process.env.NEXT_PHASE === NEXT_PRODUCTION_BUILD_PHASE) {
+    return { driver: 'memory', required: false };
+  }
+
+  const required = process.env.NODE_ENV === 'production';
+  const url = resolveRedisUrl(process.env.REDIS_URL, required);
+  return {
+    driver: required || url ? 'redis' : 'memory',
+    required,
+    ...(url ? { redis: { keyPrefix: 'school:', url } } : {}),
+  };
+}
 
 export function resolveTrustedProxyHops() {
   const value = process.env.SCHOOL_TRUSTED_PROXY_HOPS;
@@ -143,16 +183,26 @@ export const databaseConfig = () =>
     default: db,
   });
 
-export const authConfig = () =>
-  auth({
+export const authInfrastructureConfig = () => ({
+  cache: resolveCacheConfig(),
+  rateLimit: { trustedProxyHops: resolveTrustedProxyHops() },
+});
+
+export const cacheConfig = () => cache(resolveCacheConfig());
+
+export const authConfig = () => {
+  const infrastructure = authInfrastructureConfig();
+  return auth({
+    cache: infrastructure.cache,
     dialect: 'pg',
     encryptionKey: process.env.NAJM_ENCRYPTION_KEY,
     // najm-auth declares its own email plugin dependency. Forward the same
     // resolved transport config so builds and runtime startup do not rely on a
     // global EMAIL_PROVIDER merely to resolve that dependency.
     email: resolveEmailConfig(),
-    rateLimit: { trustedProxyHops: resolveTrustedProxyHops() },
+    rateLimit: infrastructure.rateLimit,
   });
+};
 
 export const validationConfig = () => validation();
 export const rateLimitConfig = () =>

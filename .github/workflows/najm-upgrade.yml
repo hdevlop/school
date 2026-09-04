@@ -40,6 +40,7 @@ jobs:
       CORS_ORIGIN: http://localhost:3102
       NAJM_AUTH_INTERNAL_URL: http://localhost:3102/api/auth/session/recover
       NEXT_PUBLIC_FORM_FILL_ENABLED: "false"
+      REDIS_URL: redis://:school-ci-redis-password@127.0.0.1:6379/0
 
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +49,11 @@ jobs:
           bun-version: 1.3.14
 
       - run: bun install --frozen-lockfile
+      - name: Start authenticated Redis for production-server acceptance
+        run: >-
+          docker run --detach --name school-ci-redis --publish 127.0.0.1:6379:6379
+          redis:7.4.5-bookworm redis-server --appendonly no
+          --requirepass school-ci-redis-password
       - name: Apply the complete migration chain to pgvector Postgres
         run: bun run db:migrate
       - name: Seed acceptance identities and data

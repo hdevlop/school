@@ -53,6 +53,7 @@ A comprehensive, modern school management system built with Next.js and TypeScri
   npm, yarn, or pnpm: they ignore `bun.lock` and the `overrides` block that
   pins one version of every Najm package.
 - PostgreSQL 14+
+- Redis 7+ for production; local development may use the in-memory fallback
 
 ## Installation
 
@@ -88,6 +89,12 @@ Four values are required and abort startup when missing:
 | `JWT_ACCESS_SECRET` | Read by `najm-auth`, not by School's `authConfig()`. Missing throws `Plugin "auth" requires configuration`. |
 | `JWT_REFRESH_SECRET` | Same, for the refresh family. Use a different value from the access secret. |
 | `NAJM_ENCRYPTION_KEY` | 32 bytes, base64 or hex. Rotating it invalidates everything encrypted with the previous key. |
+
+Production additionally requires an authenticated `REDIS_URL`. Najm stores
+rate-limit counters there, verifies Redis during startup, and refuses to fall
+back to per-process memory. `/api/health/status` reports only database/cache
+availability and returns `503` when either dependency is unavailable. The
+Compose Redis service is internal-only and persists counters with AOF.
 
 The template documents the optional values, including `NAJM_SESSION_SECRET`
 and `NAJM_AUTH_INTERNAL_URL` for server-side session recovery. Never commit

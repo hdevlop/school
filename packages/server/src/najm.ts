@@ -10,6 +10,7 @@ export {
   Post,
   Put,
   Query,
+  RawResponse,
   Repository,
   ResMsg,
   Server,

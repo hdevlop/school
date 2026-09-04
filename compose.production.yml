@@ -38,10 +38,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - 127.0.0.1:${SCHOOL_LOOPBACK_PORT:-3400}:3000
     healthcheck:
-      test: ["CMD", "bun", "-e", "const r=await fetch('http://127.0.0.1:3000/login');process.exit(r.status<500?0:1)"]
+      test: ["CMD", "bun", "-e", "const r=await fetch('http://127.0.0.1:3000/api/health/status');process.exit(r.ok?0:1)"]
       interval: 15s
       timeout: 5s
       start_period: 30s
@@ -90,6 +92,36 @@ services:
         max-size: 10m
         max-file: "5"
 
+  # Authentication throttles are security state, so production must not use a
+  # per-process memory cache that resets on each deployment.
+  redis:
+    image: redis:7.4.5-bookworm
+    restart: unless-stopped
+    env_file:
+      - path: /opt/school/env/infrastructure.env
+        required: false
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+    command: ["sh", "-ec", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+      - default
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$$REDIS_PASSWORD\" --no-auth-warning ping | grep -qx PONG"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "5"
+
 networks:
   default:
     internal: true
@@ -99,3 +131,4 @@ networks:
 
 volumes:
   postgres_data:
+  redis_data:

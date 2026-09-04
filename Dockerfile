@@ -25,7 +25,7 @@ COPY . .
 # deployment workflow uses it to distinguish the replacement container from a
 # still-serving previous revision before declaring production ready.
 RUN printf '%s\n' "${OCI_REVISION}" > apps/dashboard/public/deployment-revision.txt
-# najm-auth@3.1.1 and the database client read these at build time (Next's
+# najm-auth@3.3.0 and the database client read these at build time (Next's
 # static page-data collection boots the server); none of it needs to resolve
 # to anything real, and none of it is used at runtime — see the runtime
 # stage's own env_file for the real values.
@@ -67,7 +67,7 @@ COPY --from=build --chown=bun:bun /app/packages/server ./packages/server
 USER bun
 EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=4 \
-  CMD ["bun", "-e", "const r=await fetch('http://127.0.0.1:3000/login');process.exit(r.status<500?0:1)"]
+  CMD ["bun", "-e", "const r=await fetch('http://127.0.0.1:3000/api/health/status');process.exit(r.ok?0:1)"]
 # The dashboard's local start script is pinned to its developer port. Override
 # it explicitly so the runtime agrees with EXPOSE, the healthcheck and Dokploy.
 CMD ["bun", "run", "--cwd", "apps/dashboard", "start", "--", "-p", "3000"]
