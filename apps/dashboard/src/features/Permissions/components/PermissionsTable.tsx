@@ -6,7 +6,7 @@ import { KeyRound } from 'lucide-react';
 import React from 'react';
 import PermissionForm from './PermissionForm';
 import { usePermissions } from '../hooks/usePermissions';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PermissionCard from './PermissionCard';
 import { usePermissionsTableColumns } from '../hooks/usePermissionsTableColumns';
 import { usePermissionsTableFilters } from '../hooks/usePermissionsTableFilters';

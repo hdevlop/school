@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import {
   formatBehaviorDate,
   recognitionClasses,

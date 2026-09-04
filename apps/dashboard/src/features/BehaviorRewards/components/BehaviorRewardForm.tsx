@@ -2,7 +2,7 @@
 
 import { Award, CalendarClock, FileText, Gift, Star, Trophy, UserRound } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { behaviorRewardSchema } from '@/lib/validations';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import {

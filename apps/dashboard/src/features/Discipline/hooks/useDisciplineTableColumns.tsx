@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { NAvatar, NBadge } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import {
   ACTION_COLORS,
   SEVERITY_COLORS,

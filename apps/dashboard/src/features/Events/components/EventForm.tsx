@@ -20,7 +20,7 @@ import { eventSchema } from '@/lib/validations';
 import { buildFill, isDevFill } from '@/lib/devFill';
 import { useEnum } from '@/hooks/useEnum';
 import { useClasses } from '@/hooks/useClasses';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const eventTypeLabels = {
   academic: 'Academic',

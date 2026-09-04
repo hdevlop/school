@@ -7,7 +7,7 @@ import React from 'react';
 import AssessmentForm from './AssessmentForm';
 import AssessmentCard from './AssessmentCard';
 import { useAssessments } from '../hooks/useAssessments';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useAssessmentsTableColumns } from '../hooks/useAssessmentsTableColumns';
 import { useAssessmentsTableFilters } from '../hooks/useAssessmentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

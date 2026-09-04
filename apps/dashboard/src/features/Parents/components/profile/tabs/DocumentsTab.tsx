@@ -5,7 +5,7 @@ import { NButton } from 'najm-kit';
 import React from 'react';
 import { Card } from 'najm-kit';
 import { NSectionHeader } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { FileText, Download, Eye, Upload, Award } from 'lucide-react';
 import { Label } from 'najm-kit';
 

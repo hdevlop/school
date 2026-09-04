@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { User, Truck, Calendar, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { z } from 'zod'
 
 const assignDriverSchema = z.object({

@@ -40,7 +40,7 @@ import { Chatbot } from 'najm-chatbot/react';
 import { SignOutButton, useAuth } from 'najm-auth/client/react';
 import { NSidebar, NSidebarProvider, useNSidebar, type NavItem } from 'najm-kit';
 import { NThemeImage } from 'najm-theme/react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { clearSchoolUiPreferences } from '@/preferences/clearUiPreferences';
 
 const LinkAdapter = ({

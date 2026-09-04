@@ -5,7 +5,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart, Phone, MapPin, PhoneCall, Wallet } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { parentSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useActiveForm } from '@/hooks/useActiveForm'

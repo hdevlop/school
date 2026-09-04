@@ -3,7 +3,7 @@
 import React from 'react';
 import { BookOpen, Users, BarChart3, Clock, Award, Calendar, ClipboardCheck } from 'lucide-react';
 import { FormInput } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useEnum } from '@/hooks/useEnum';
 

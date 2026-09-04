@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { NBadge, NAvatar } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useStudentsTableColumns } from '@/features/Students/hooks/useStudentsTableColumns';
 import RosterMarks from '../components/RosterMarks';
 import type { RosterStatus } from './useAttendanceRoster';

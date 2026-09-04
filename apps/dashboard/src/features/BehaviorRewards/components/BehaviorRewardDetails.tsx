@@ -2,7 +2,7 @@
 
 import { Award, CalendarClock, Gift, School, Star, UserRound } from 'lucide-react';
 import { NAvatar, NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import {
   formatBehaviorDate,
   recognitionClasses,

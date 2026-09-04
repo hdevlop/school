@@ -13,8 +13,8 @@ import { isPermissionDenied } from '@/lib/queryError';
  * be refused too. A teacher who types `/users` was being told the school has no
  * accounts.
  *
- * Every string resolves through the provider's `feedbackDefaults`, so nothing
- * is worded here and all four languages stay in step.
+ * Every string resolves through the package's `common.feedback` convention, so
+ * nothing is worded here and all four languages stay in step.
  */
 export default function TableErrorState({ error }: { error: unknown }) {
   return isPermissionDenied(error) ? <NForbiddenState /> : <NErrorState />;

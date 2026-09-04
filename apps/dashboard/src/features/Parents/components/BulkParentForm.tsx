@@ -2,7 +2,7 @@
 
 import { NForm, useNForm } from 'najm-kit'
 import { useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { DynamicArray } from 'najm-kit';
 
 import { ParentFormContent, getParentDefaultValues } from './SimpleParentForm'

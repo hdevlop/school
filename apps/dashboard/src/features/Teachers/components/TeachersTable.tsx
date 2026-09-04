@@ -6,7 +6,7 @@ import { Users } from 'lucide-react';
 import React from 'react';
 import TeacherForm from './TeacherForm';
 import { useTeachers } from '../hooks/useTeachers';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import TeacherCard from './TeacherCard';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects';

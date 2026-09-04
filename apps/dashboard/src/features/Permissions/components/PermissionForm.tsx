@@ -7,7 +7,7 @@ import { Tag, FileText, Boxes, Zap } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { permissionValidationSchema } from '../config/permissionsValidateSchema'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 
 const PermissionForm = ({ permission = null, mode = 'create' }) => {
 

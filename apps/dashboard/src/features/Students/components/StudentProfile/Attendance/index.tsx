@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { CalendarCheck, CalendarDays, CheckCircle2, Clock3, UserX } from 'lucide-react';
 import { getAttendanceByStudentApi } from '@/services/attendanceApi';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const formatDate = (value: string | null | undefined, language: string) =>
   value ? new Date(value).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' }) : '—';

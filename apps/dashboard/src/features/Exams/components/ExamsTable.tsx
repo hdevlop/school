@@ -7,7 +7,7 @@ import React from 'react';
 import ExamForm from './ExamForm';
 import ExamCard from './ExamCard';
 import { useExams } from '../hooks/useExams';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useExamsTableColumns } from '../hooks/useExamsTableColumns';
 import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

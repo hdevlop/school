@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Calendar, CreditCard, Receipt, Hash, CalendarClock } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useEnum } from '@/hooks/useEnum'
 import { z } from 'zod'
 import { useActiveForm } from '@/hooks/useActiveForm'

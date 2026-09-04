@@ -4,7 +4,7 @@ import { UserCheck } from 'lucide-react';
 import { NCard } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
 import { cn } from '@/lib/utils';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useStaffAttendanceMonthly } from '../../hooks/useDashboardHooks';
 
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];

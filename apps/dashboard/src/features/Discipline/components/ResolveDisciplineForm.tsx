@@ -2,7 +2,7 @@
 
 import { FileCheck2, FileText, Gavel } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { resolveDisciplineSchema } from '@/lib/validations';
 import { DISCIPLINE_ACTIONS } from '../disciplineConstants';
 

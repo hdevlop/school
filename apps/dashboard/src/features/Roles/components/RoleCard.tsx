@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Shield, Tag, FileText, Hash } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const RoleCard = ({ data }) => {
   const { t } = useTranslation();

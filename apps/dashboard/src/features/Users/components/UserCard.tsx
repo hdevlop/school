@@ -6,7 +6,7 @@ import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
 import { getAvatarFallback } from '@/lib/avatar';
 import { NSection, NSectionInfo } from 'najm-kit';
 import { Label } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const UserHeader = ({ user }) => {
   return (

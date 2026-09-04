@@ -5,7 +5,7 @@ import { GoogleMap, MarkerF, useJsApiLoader } from '@react-google-maps/api'
 import type { Libraries } from '@react-google-maps/api'
 import { AlertCircle, LocateFixed, MapPin } from 'lucide-react'
 import { NButton, useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { CASABLANCA_CENTER, type LocationValue } from './types'
 
 const libraries: Libraries = ['places']

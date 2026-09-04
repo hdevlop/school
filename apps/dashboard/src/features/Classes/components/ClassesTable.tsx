@@ -5,7 +5,7 @@ import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { School } from 'lucide-react';
 import ClassForm from './ClassForm';
 import { useClasses } from '../hooks/useClasses';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import ClassCard from './ClassCard';
 import { useClassesTableColumns } from '../hooks/useClassesTableColumns';
 import { useClassesTableFilters } from '../hooks/useClassesTableFilters';

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const formatDate = (value) => {
   if (!value) return null;

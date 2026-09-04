@@ -6,7 +6,7 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { CalendarDays, FileText, User, Activity } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { z } from 'zod'
 
 const staffAttendanceFormSchema = z.object({

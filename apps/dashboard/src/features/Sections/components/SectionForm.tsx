@@ -9,7 +9,7 @@ import { Building, Hash, Users, DoorOpen } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { sectionSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/hooks/useClasses'
 
 const SectionForm = ({ section = null }) => {

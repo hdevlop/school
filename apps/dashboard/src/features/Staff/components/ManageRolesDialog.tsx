@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { Briefcase, Pencil, Plus, Trash2 } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useStaffRoles, useStaffRoleMutations } from '../hooks/useStaffRoles';
 import { toast } from 'sonner';
 

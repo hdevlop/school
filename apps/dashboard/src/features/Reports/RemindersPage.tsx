@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Bell, BellRing, Search, CheckCircle2 } from 'lucide-react';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

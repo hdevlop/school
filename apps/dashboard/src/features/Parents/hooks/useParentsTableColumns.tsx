@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { NAvatar, NBadge, SimpleTooltip } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { personAvatarClassNames } from '@/lib/avatar';
 
 export const useParentsTableColumns = () => {

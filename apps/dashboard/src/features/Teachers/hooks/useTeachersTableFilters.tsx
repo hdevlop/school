@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 export const useTeachersTableFilters = () => {
   const { t } = useTranslation();

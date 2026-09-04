@@ -7,7 +7,7 @@ import React from 'react';
 import AnnouncementForm from './AnnouncementForm';
 import AnnouncementCard from './AnnouncementCard';
 import { useAnnouncements } from '../hooks/useAnnouncements';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useAnnouncementsTableColumns } from '../hooks/useAnnouncementsTableColumns';
 import { useAnnouncementsTableFilters } from '../hooks/useAnnouncementsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

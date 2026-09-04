@@ -5,7 +5,7 @@ import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, Cr
 import { useCallback, useMemo } from 'react';
 import { NCard, NStatCard, NTable } from 'najm-kit';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface FeesTabProps {
   studentId?: string;

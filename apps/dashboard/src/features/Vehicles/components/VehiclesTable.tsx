@@ -8,7 +8,7 @@ import React from 'react';
 import VehicleForm from './VehicleForm';
 import AssignDriverForm from '@/features/Drivers/components/AssignDriverForm';
 import { useVehicles } from '../hooks/useVehicles';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import VehicleCard from './VehicleCard';
 import { useDrivers } from '@/features/Drivers/hooks/useDrivers';
 import { useVehiclesTableColumns } from '../hooks/useVehiclesTableColumns';

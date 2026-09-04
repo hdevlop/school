@@ -5,7 +5,7 @@ import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { Label } from 'najm-kit';
 import { useCallback, useMemo } from 'react';
 import FeeCard from './FeeCard';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useFees } from '../../../hooks/useFees';
 import EditFeeForm from '../../EditFeeForm';
 import { useFeeTypes } from '../../../../FeeTypes/hooks/useFeeTypes';

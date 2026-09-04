@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { auth } from '@/lib/auth'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { AuthHeading } from '../AuthHeading'
 
 // Mirrors najm-auth's `registerDto` password rule exactly. Restating it here is

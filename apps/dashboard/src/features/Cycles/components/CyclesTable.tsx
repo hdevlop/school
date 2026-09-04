@@ -3,7 +3,7 @@
 import { CalendarRange } from 'lucide-react';
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import CycleCard from './CycleCard';
 import CycleForm from './CycleForm';

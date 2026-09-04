@@ -5,7 +5,7 @@ import { GraduationCap, BookOpen, Award, ClipboardList } from 'lucide-react';
 import { NBadge } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { Label } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useStudentReport } from '../hooks/useGrades';
 import PageLoadingState from '@/shared/PageLoadingState';

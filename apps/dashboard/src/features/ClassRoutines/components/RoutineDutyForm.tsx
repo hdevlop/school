@@ -3,7 +3,7 @@
 import { ClipboardList, UserRound } from 'lucide-react';
 import { FormInput, NForm, useDialog } from 'najm-kit';
 import { z } from 'zod';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useRoutineDutyCandidates } from '../hooks/useClassRoutines';
 import type { RoutineDutyFormProps } from '../types';
 import { routinePeriodLabel } from '../utils/labels';

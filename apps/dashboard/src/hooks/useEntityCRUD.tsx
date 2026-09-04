@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useTranslation } from './useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface ApiResponse {
   data: any;

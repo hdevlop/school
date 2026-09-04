@@ -3,7 +3,7 @@
 import React from 'react';
 import { Badge } from 'najm-kit';
 import { KeyRound, Tag, FileText, Boxes, Zap } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const PermissionCard = ({ data }) => {
   const { t } = useTranslation();

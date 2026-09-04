@@ -7,7 +7,7 @@ import { Label } from 'najm-kit';
 import { Badge } from 'najm-kit';
 import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import InfoWidget from '@/features/Dashboard/components/Widgets/Widget';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { User, Users, Briefcase, Calendar } from 'lucide-react';
 import parentsImage from '@/assets/images/parentsImage.png';
 

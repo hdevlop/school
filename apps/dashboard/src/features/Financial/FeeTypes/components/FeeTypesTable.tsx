@@ -6,7 +6,7 @@ import { Tag } from 'lucide-react';
 import React from 'react';
 import FeeTypeForm from './FeeTypeForm';
 import { useFeeTypes } from '../hooks/useFeeTypes';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import FeeTypeCard from './FeeTypeCard';
 import { useFeeTypesTableColumns } from '../hooks/useFeeTypesTableColumns';
 import { useFeeTypesTableFilters } from '../hooks/useFeeTypesTableFilters';

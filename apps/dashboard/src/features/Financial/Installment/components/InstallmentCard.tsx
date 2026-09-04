@@ -6,7 +6,7 @@ import { NSectionInfo } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { formatDate } from '@/lib/utils';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const InstallmentCard = ({ data }: any) => {
   const { t } = useTranslation();

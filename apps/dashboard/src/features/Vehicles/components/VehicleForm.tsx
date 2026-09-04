@@ -9,7 +9,7 @@ import { Car, Hash, Calendar, DollarSign, Gauge, Tag, Truck, Users, Activity, Us
 import { useDialog } from 'najm-kit'
 import { vehicleSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 
 const VehicleForm = ({ vehicle = null, drivers = [] }) => {
 

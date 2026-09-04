@@ -4,7 +4,7 @@ import React from 'react';
 import { Bell, Mail, MessageSquare, GraduationCap, CalendarCheck, Users, Calendar, BookOpen, CreditCard, AlertCircle } from 'lucide-react';
 import { FormInput } from 'najm-kit';
 
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 const NotificationSection: React.FC = () => {
   const { t } = useTranslation();

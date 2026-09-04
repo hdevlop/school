@@ -3,7 +3,7 @@
 import { CalendarDays } from 'lucide-react';
 import { FormInput, NForm, useDialog, useNForm } from 'najm-kit';
 import { z } from 'zod';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { ROUTINE_DAYS } from '../types';
 import type { RoutineDaysFormProps } from '../types';
 import { routineDayLabel } from '../utils/labels';

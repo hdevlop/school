@@ -6,7 +6,7 @@ import { HeartHandshake } from 'lucide-react';
 import React from 'react';
 import ParentForm from './SimpleParentForm';
 import { useParents } from '../hooks/useParents';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import ParentCard from './ParentCard';
 import { useParentsTableColumns } from '../hooks/useParentsTableColumns';
 import { useParentsTableFilters } from '../hooks/useParentsTableFilters';

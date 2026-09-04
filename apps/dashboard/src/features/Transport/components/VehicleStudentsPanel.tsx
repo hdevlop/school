@@ -10,7 +10,7 @@ import { z } from 'zod'
 import { toast } from 'sonner'
 import { LocationField } from '@/components/location/LocationField'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const assignSchema = z.object({
   studentId: z.string().min(1, 'Student is required'),

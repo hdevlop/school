@@ -3,7 +3,7 @@
 import { NTable, NButton } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { usePayments } from '../hooks/usePayments';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PaymentCard from './PaymentCard';
 import PaymentEditForm from './PaymentEditForm';import { usePaymentsTableColumns } from '../hooks/usePaymentsTableColumns';
 import { usePaymentsTableFilters } from '../hooks/usePaymentsTableFilters';

@@ -5,7 +5,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { GraduationCap, LayoutGrid, Tag, CalendarClock, CalendarDays, DollarSign, Percent, FileText } from 'lucide-react'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from '@/hooks/useLanguage'
+import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { classBulkFeeFormSchema } from '@/lib/validations'
 import { useDialog } from 'najm-kit'
 import { useEnum } from '@/hooks/useEnum'

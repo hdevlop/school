@@ -6,7 +6,7 @@ import { UserCog } from 'lucide-react';
 import React from 'react';
 import UserForm from './UserForm';
 import { useUsers } from '../hooks/useUsers';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import UserCard from './UserCard';
 import { useUsersTableColumns } from '../hooks/useUsersTableColumns';
 import { useUsersTableFilters } from '../hooks/useUsersTableFilters';

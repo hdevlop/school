@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 export default function AlertsTab() {
   const { t } = useTranslation();

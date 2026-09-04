@@ -3,7 +3,7 @@
 import { CalendarDays, Clock3, FileText, MapPin, ShieldAlert, UserRound } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
 import { useStudents } from '@/features/Students/hooks/useStudents';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { disciplineSchema } from '@/lib/validations';
 import { DISCIPLINE_CATEGORIES, DISCIPLINE_SEVERITIES, type DisciplineIncident } from '../disciplineConstants';
 

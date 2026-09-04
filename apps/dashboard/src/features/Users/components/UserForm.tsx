@@ -8,7 +8,7 @@ import { useDialog } from 'najm-kit'
 import { usersValidationSchema, updateUsersValidationSchema } from '../config/usersValidateSchema'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useRoles } from '@/features/Roles/hooks/useRoles'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 
 const UserForm = ({ user = null, mode = 'create' }) => {
 

@@ -6,7 +6,7 @@ import { Receipt, Banknote, CreditCard, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceRecentPayments } from '@/features/Dashboard/hooks/useDashboardHooks';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
 
 interface RecentPaymentsProps {

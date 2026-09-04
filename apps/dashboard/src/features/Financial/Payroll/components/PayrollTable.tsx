@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { Banknote, BriefcaseBusiness, CalendarDays, CheckCircle2, Clock, HandCoins, ReceiptText, Timer, Undo2, UserRound, Wallet } from 'lucide-react';
 import { Badge, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets } from 'najm-kit';
 import type { RowSelectionState } from '@tanstack/react-table';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

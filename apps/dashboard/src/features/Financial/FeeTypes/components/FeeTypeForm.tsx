@@ -7,7 +7,7 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { DollarSign, Tag, FileText, Layers, CreditCard } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { feeTypeSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useEnum } from '@/hooks/useEnum'

@@ -4,7 +4,7 @@ import React from 'react';
 import { Shield, Key, AlertTriangle, Users, GraduationCap, Contact } from 'lucide-react';
 import { FormInput } from 'najm-kit';
 
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 
 const SecuritySection: React.FC = () => {

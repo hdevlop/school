@@ -13,7 +13,7 @@ import {
   useDashboardWidgets,
   useFinanceKpis,
 } from '@/features/Dashboard/hooks/useDashboardHooks';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { NSkeletonWidgets, NStatCard } from 'najm-kit';
 import { formatMAD, formatPercent, type SupportedLocale } from '@/lib/format';
 

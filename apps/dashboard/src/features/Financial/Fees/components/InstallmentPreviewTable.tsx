@@ -1,7 +1,7 @@
 'use client'
 
 import { formatMAD } from '@/lib/format'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import type { PreviewInstallment } from '@/lib/utils'
 
 interface InstallmentPreviewTableProps {

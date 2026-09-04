@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useDialog } from 'najm-kit'
 import { FeeTypeDialogContent } from '../../FeeTypes/components/FeeTypeDialog'
 import {

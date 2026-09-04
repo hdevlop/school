@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { useEffect, useMemo } from 'react'
 import { IdCard, User, DollarSign, CalendarClock, CalendarDays, Percent, Wallet } from 'lucide-react'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from '@/hooks/useLanguage'
+import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { bulkFeeFormSchema } from '@/lib/validations'
 import { useDialog } from 'najm-kit'
 import { getFeeTypeDisplayName, injectStudentIdToFees } from '../utils/feeUtils'

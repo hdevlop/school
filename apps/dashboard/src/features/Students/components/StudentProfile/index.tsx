@@ -11,7 +11,7 @@ import AttendanceTab from './Attendance';
 import GradesTab from './Grades';
 import LeftSidebar from './LeftSidebar';
 import { useStudentProfile } from '@/features/Students/hooks/useStudentProfile';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import TransportTab from './Transport';
 
 export { default as LeftSidebar } from './LeftSidebar';

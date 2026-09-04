@@ -5,7 +5,7 @@ import { NIcon, NTable } from 'najm-kit';
 import { Input } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
 import { Award, BookOpen, Briefcase, Calendar, GraduationCap, Hash, ShieldCheck, Users } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface AcademicInfoTabProps {
   teacher: any;

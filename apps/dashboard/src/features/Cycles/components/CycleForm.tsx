@@ -4,7 +4,7 @@ import React from 'react';
 import { z } from 'zod';
 import { CalendarRange, Hash, Languages, ToggleRight } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader as FormSectionHeader, useDialog } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const cycleSchema = z.object({
   id: z.string().optional(),

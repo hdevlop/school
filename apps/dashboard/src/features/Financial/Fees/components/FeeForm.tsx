@@ -4,7 +4,7 @@ import React from 'react'
 import { NForm } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { User } from 'lucide-react'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useDialog } from 'najm-kit'
 import { bulkFeeFormSchema } from '@/lib/validations'
 import { BulkFeeFormContent } from './BulkFeeForm'

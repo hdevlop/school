@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, AlertTriangle, Clock, CheckCircle2, LockKeyhole } from 'lucide-react';
 import { Label, NajmScroll, NTable } from 'najm-kit';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const toAmount = (value: unknown) => Number(value ?? 0) || 0;
 const formatMAD = (value: unknown) => `${toAmount(value).toLocaleString()} MAD`;

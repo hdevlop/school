@@ -4,7 +4,7 @@ import React from 'react';
 import { User, GraduationCap, BookOpen } from 'lucide-react';
 import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { getAvatarFallback, studentAvatarClassNames } from '@/lib/avatar';
 import { Label } from 'najm-kit';
 

@@ -9,7 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
 
 // Min 8 to match the backend's confirmResetPasswordDto password rule.

@@ -1,6 +1,6 @@
 import { useDialog } from 'najm-kit';
 import type { DeleteDialogOptions } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 /**
  * Wraps najm-kit's confirmDelete and injects translated defaults for the

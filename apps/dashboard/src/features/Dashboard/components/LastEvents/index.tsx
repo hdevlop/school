@@ -4,7 +4,7 @@ import { NCard } from 'najm-kit';
 import { cn } from '@/lib/utils';
 import { NSkeletonEventList } from 'najm-kit';
 import { useDelayedLoading } from '@/hooks/useDelayedLoading';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface LastEventsProps {
    className?: string;

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { DISCIPLINE_CATEGORIES, DISCIPLINE_SEVERITIES, DISCIPLINE_STATUSES } from '../disciplineConstants';
 
 export const useDisciplineTableFilters = () => {

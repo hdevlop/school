@@ -10,7 +10,7 @@ import StudentAttendanceChart from './components/StudentAttendanceChart';
 import TeachersAttendance from './components/TeachersAttendance';
 import ExpenseBreakdownChart from '@/features/Reports/components/ExpenseBreakdownChart';
 import OverdueFees from './components/OverdueFees';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 const Dashboard = () => {

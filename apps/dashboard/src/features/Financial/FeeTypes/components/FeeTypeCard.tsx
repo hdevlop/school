@@ -3,7 +3,7 @@
 import React from 'react';
 import { DollarSign, Tag } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 

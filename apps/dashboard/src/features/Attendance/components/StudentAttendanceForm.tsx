@@ -7,7 +7,7 @@ import React from 'react'
 import { CalendarDays, FileText, User, GraduationCap, DoorOpen, BookOpen, Activity } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { attendanceSchema } from '@/lib/validations'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 
 const statusOptions = [
   { label: 'Present', value: 'present' },

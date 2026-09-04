@@ -1,6 +1,6 @@
 import React from 'react';
 import { getGenderColor } from './genderColors';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface LegendProps {
    data: Array<{ gender?: string; name: string; value: number }>;

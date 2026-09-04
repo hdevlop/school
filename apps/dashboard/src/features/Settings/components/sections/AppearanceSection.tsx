@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Card } from 'najm-kit';
 import { NThemeSettings, NThemeSettingsProvider } from 'najm-theme/react';
 
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 /**
  * Appearance, branding, and saved presets — all owned by `najm-theme`.

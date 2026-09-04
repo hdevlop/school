@@ -3,7 +3,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Badge, Checkbox } from 'najm-kit';
 import { Loader2, Search, ShieldCheck } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { usePermissions } from '@/features/Permissions/hooks/usePermissions';
 import { useRolePermissions } from '../hooks/usePermissions';
 

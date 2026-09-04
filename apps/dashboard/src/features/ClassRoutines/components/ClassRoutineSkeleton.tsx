@@ -1,7 +1,7 @@
 'use client';
 
 import { NSkeleton } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const SKELETON_DAYS = Array.from({ length: 5 });
 const SKELETON_PERIODS = Array.from({ length: 6 });

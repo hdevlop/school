@@ -2,7 +2,7 @@
 import { useCallback, useMemo } from 'react';
 import { Button } from 'najm-kit';
 import { ShieldCheck } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 export const useRolesTableColumns = (onManagePermissions?: (role: any) => void) => {
   const { t } = useTranslation();

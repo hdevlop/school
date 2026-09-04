@@ -6,7 +6,7 @@ import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { MapPinned, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useZones } from '../hooks/useZones';
 
 const zoneSchema = z.object({

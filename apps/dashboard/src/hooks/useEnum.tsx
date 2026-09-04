@@ -1,6 +1,6 @@
 // hooks/useEnumOptions.js (or .ts)
 import { useMemo } from 'react'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { ENUMS } from '@/lib/ENUMS'
 
 interface UseEnumOptions {

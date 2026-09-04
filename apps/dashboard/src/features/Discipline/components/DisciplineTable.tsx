@@ -4,7 +4,7 @@ import { Eye, Pencil, ShieldAlert, Trash2 } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import DisciplineCard from './DisciplineCard';
 import DisciplineDetails from './DisciplineDetails';

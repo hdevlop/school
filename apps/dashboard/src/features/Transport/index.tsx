@@ -4,7 +4,7 @@ import { Bus } from 'lucide-react'
 import { NPageHeader, NPageHeaderActions, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
 import { VehicleStudentsPanel } from './components/VehicleStudentsPanel'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions'
 
 const TAB_STYLES =

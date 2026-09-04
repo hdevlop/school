@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { personAvatarClassNames } from '@/lib/avatar';
 
 export const useTeachersTableColumns = () => {

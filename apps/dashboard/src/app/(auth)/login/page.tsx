@@ -9,7 +9,7 @@ import { Loader2, LogIn } from 'lucide-react'
 import { z } from 'zod'
 import { useLogin } from 'najm-auth/client/react'
 import { toast } from 'sonner';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
 
 // `identifier` is Najm Auth v3's wire field. School authenticates by email, so

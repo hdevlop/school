@@ -5,7 +5,7 @@ import { Badge, NButton, NSkeleton, useDialog } from 'najm-kit'
 import { toast } from 'sonner'
 import { useStudentRoutes } from '@/features/Transport/hooks/useStudentRoutes'
 import { TransportAssignmentForm } from '@/features/Transport/components/TransportAssignmentForm'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 
 type Props = {
   studentId?: string

@@ -4,7 +4,7 @@ import React from 'react';
 import { Phone, Mail, Calendar, Clock, Shield, User, UserCheck, Hash, Settings, Key, Activity } from 'lucide-react';
 import { NAvatar, NErrorState, NEmptyState, NStatCard, NBadge } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { getAvatarFallback } from '@/lib/avatar';
 import { Card } from 'najm-kit';
 import { formatDate, getStatusColor, cn } from '@/lib/utils';

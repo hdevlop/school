@@ -2,7 +2,7 @@
 
 import { Clock3, DoorOpen, Plus, UserRound } from 'lucide-react';
 import { NBadge } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import type { RoutineGridProps } from '../types';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
 

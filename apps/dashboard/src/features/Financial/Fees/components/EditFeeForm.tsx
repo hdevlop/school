@@ -5,7 +5,7 @@ import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Tag, CalendarClock, Percent, Activity, Wallet } from 'lucide-react'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { useCallback, useEffect } from 'react'
 import { feeSchema } from '@/lib/validations'

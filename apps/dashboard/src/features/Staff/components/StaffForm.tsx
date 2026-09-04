@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { Activity, Award, Briefcase, Calendar, Car, CreditCard, FileText, Hash, HeartPulse, IdCard, Loader2, Mail, MapPin, Phone, User, UserRound, Wallet } from 'lucide-react';
 import { FormInput, NFormSectionHeader as FormSectionHeader, WizardForm, useDialog } from 'najm-kit';
 import type { StepConfig } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import { useCycles } from '@/features/Cycles/hooks/useCycles';

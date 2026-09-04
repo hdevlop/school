@@ -3,7 +3,7 @@
 import React from 'react';
 import { Car, Hash, Gauge, User } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';

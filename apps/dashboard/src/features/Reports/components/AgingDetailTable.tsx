@@ -6,7 +6,7 @@ import { AlertTriangle, Search } from 'lucide-react';
 import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceAgingDetail } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { cn } from '@/lib/utils';
 import { isPermissionDenied } from '@/lib/queryError';
 

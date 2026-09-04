@@ -7,7 +7,7 @@ import React from 'react';
 import RoleForm from './RoleForm';
 import RolePermissionsDialog from './RolePermissionsDialog';
 import { useRoles } from '../hooks/useRoles';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import RoleCard from './RoleCard';
 import { useRolesTableColumns } from '../hooks/useRolesTableColumns';
 import { useRolesTableFilters } from '../hooks/useRolesTableFilters';

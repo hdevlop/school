@@ -11,6 +11,7 @@ import {
   SCHOOL_FORMATTING_LOCALES,
 } from '@/preferences';
 import { SCHOOL_UI_COOKIES, SCHOOL_UI_COOKIE_OPTIONS } from '@/preferences/cookies';
+import { schoolI18n } from '@sms/server/locales';
 
 function readSource(relativePath: string) {
   return readFileSync(new URL(relativePath, import.meta.url), 'utf8');
@@ -56,7 +57,11 @@ describe('najm-theme adoption — School boundary', () => {
     expect(source).toContain('<NajmAppProvider');
     expect(source).toContain('<NThemeBrandingProvider branding={initialBranding}>');
     expect(source).toContain('<QueryProvider>');
-    expect(source).toContain('translations={translations}');
+    expect(source).toContain('translations={schoolI18n.translations}');
+    expect(source).toContain(
+      'fallbackToDefaultLanguage={schoolI18n.fallbackToDefaultLanguage}',
+    );
+    expect(source).not.toContain('feedbackDefaults=');
     expect(source).toContain('languageEndpoint=');
     expect(source).toContain('currency={preferences.currency}');
     expect(source).not.toContain('QueryClient');
@@ -67,6 +72,15 @@ describe('najm-theme adoption — School boundary', () => {
     expect(source).not.toMatch(/<NajmDesignProvider\b/);
     expect(source).not.toMatch(/<ThemeProvider\b/);
     expect(source).not.toContain('applySmsTypographyVars');
+  });
+
+  test('keeps locale validation, formatting, direction, and translation in one definition', () => {
+    expect(schoolI18n.normalizeLanguage('unknown')).toBe('en');
+    expect(schoolI18n.locale('fr')).toBe('fr-MA');
+    expect(schoolI18n.direction('ar')).toBe('rtl');
+    expect(schoolI18n.translate('fr', 'common.feedback.retryLabel')).not.toBe(
+      'common.feedback.retryLabel',
+    );
   });
 
   test('keeps next-themes out of the workspace entirely', () => {

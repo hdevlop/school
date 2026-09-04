@@ -2,7 +2,7 @@
 
 import { CalendarClock, Clock3, Gavel, MapPin, RotateCcw, School, ShieldCheck, UserRound } from 'lucide-react';
 import { NAvatar, NBadge, NButton } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import {
   ACTION_COLORS,
   SEVERITY_COLORS,

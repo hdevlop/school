@@ -10,7 +10,7 @@ import { BulkParentFormContent } from '@/features/Parents/components/BulkParentF
 import { feesSchema, fullStudentSchema, parentSchema, parentsSchema, studentSchema, transportSchema } from '@/lib/validations'
 import { BulkFeeFormContent } from '@/features/Financial/Fees/components/BulkFeeForm'
 import { FeeFactory } from '@/features/Financial/Fees/utils/feeUtils'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { chance } from '@/fakers/fakers'
 import { StudentTransportFormContent } from '@/features/Transport/components/StudentTransportFormContent'

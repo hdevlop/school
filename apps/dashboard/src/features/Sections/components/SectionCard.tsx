@@ -3,7 +3,7 @@
 import React from 'react';
 import { Building, DoorOpen, Users, GraduationCap } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 
 const SectionCard = ({ data }: any) => {

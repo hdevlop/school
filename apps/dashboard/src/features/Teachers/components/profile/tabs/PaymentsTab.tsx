@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { NTable } from 'najm-kit';
 import { Badge } from 'najm-kit';
 import { Banknote, CalendarDays, Clock, ReceiptText } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface PaymentsTabProps {
   teacher: any;

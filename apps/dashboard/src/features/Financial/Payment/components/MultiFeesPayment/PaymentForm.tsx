@@ -10,7 +10,7 @@ import { useActiveForm } from '@/hooks/useActiveForm';
 import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const paymentDetailsSchema = feePaymentSchema.pick({
     amount: true,

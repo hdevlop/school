@@ -3,7 +3,7 @@
 import React from 'react';
 import { Phone, Mail, Wallet } from 'lucide-react';
 import { Label, NAvatar, NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import { getStaffAvatar } from '../utils/staffAvatar';
 

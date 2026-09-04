@@ -4,7 +4,7 @@ import React from 'react';
 import { Building2, Mail, Phone, Calendar, Clock, Hamburger } from 'lucide-react';
 import { FormInput } from 'najm-kit';
 
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { LocationField } from '@/components/location/LocationField';
 

@@ -16,7 +16,7 @@ import { rag, ragStudio } from 'najm-rag';
 import type { NajmPlugin } from 'najm-core';
 export { themeConfig } from './themeConfig';
 
-import translations from '@server/locales';
+import { schoolI18n } from '@server/locales';
 import { db } from '@server/database/db';
 import { auth, isAuth } from '@server/auth';
 
@@ -242,12 +242,7 @@ export const corsConfig = () =>
     credentials: true,
   });
 
-export const i18nConfig = () =>
-  i18n({
-    translations,
-    defaultLanguage: 'en',
-    supportedLanguages: ['en', 'fr', 'ar', 'es'],
-  });
+export const i18nConfig = () => i18n(schoolI18n.options);
 
 export const mcpConfig = () =>
   mcp({

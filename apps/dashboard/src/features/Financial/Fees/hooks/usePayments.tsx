@@ -9,7 +9,7 @@ import {
   deletePaymentApi,
 } from '@/services/paymentApi'
 import { toast } from 'sonner'
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 export const usePayments = (studentId?: string, feeId?: string) => {
   const { t } = useTranslation();

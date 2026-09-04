@@ -7,23 +7,25 @@
  * class name, time zone, or currency code never becomes application state.
  */
 
-export const SCHOOL_SUPPORTED_LANGUAGES = ['en', 'fr', 'ar', 'es'] as const;
+import { schoolI18n, type SchoolLocale } from '@sms/server/locales';
 
-export type SchoolLanguage = (typeof SCHOOL_SUPPORTED_LANGUAGES)[number];
+export const SCHOOL_SUPPORTED_LANGUAGES = schoolI18n.supportedLanguages;
 
-export const SCHOOL_DEFAULT_LANGUAGE: SchoolLanguage = 'en';
+export type SchoolLanguage = SchoolLocale;
+
+export const SCHOOL_DEFAULT_LANGUAGE = schoolI18n.defaultLanguage;
 
 /**
  * Language is a catalog choice; the formatting locale is a regional one. School
  * is a Moroccan product, so every supported language formats dates, separators,
  * and money the way they are written in Morocco rather than in France or Spain.
  */
-export const SCHOOL_FORMATTING_LOCALES: Readonly<Record<SchoolLanguage, string>> = {
-  ar: 'ar-MA',
-  en: 'en-MA',
-  es: 'es-MA',
-  fr: 'fr-MA',
-};
+export const SCHOOL_FORMATTING_LOCALES = Object.fromEntries(
+  schoolI18n.supportedLanguages.map((language) => [
+    language,
+    schoolI18n.locale(language),
+  ]),
+) as Readonly<Record<SchoolLanguage, string>>;
 
 /**
  * `light | dark` only.
@@ -81,16 +83,15 @@ export type SchoolCurrency = (typeof SCHOOL_SUPPORTED_CURRENCIES)[number];
 
 export const SCHOOL_DEFAULT_CURRENCY: SchoolCurrency = 'MAD';
 
-const schoolLanguageSet: ReadonlySet<string> = new Set(SCHOOL_SUPPORTED_LANGUAGES);
 const schoolTimeZoneSet: ReadonlySet<string> = new Set(SCHOOL_SUPPORTED_TIME_ZONES);
 const schoolCurrencySet: ReadonlySet<string> = new Set(SCHOOL_SUPPORTED_CURRENCIES);
 
 export function isSchoolLanguage(value: unknown): value is SchoolLanguage {
-  return typeof value === 'string' && schoolLanguageSet.has(value);
+  return schoolI18n.isLanguage(value);
 }
 
 export function normalizeSchoolLanguage(value: unknown): SchoolLanguage {
-  return isSchoolLanguage(value) ? value : SCHOOL_DEFAULT_LANGUAGE;
+  return schoolI18n.normalizeLanguage(value);
 }
 
 export function isSchoolTheme(value: unknown): value is SchoolTheme {
@@ -119,10 +120,10 @@ export function normalizeSchoolCurrency(value: unknown): SchoolCurrency {
 
 /** The BCP 47 tag School formats with for a given language. */
 export function schoolFormattingLocale(language: SchoolLanguage): string {
-  return SCHOOL_FORMATTING_LOCALES[language];
+  return schoolI18n.locale(language);
 }
 
 /** Arabic is School's only right-to-left catalog. */
 export function schoolTextDirection(language: SchoolLanguage): 'ltr' | 'rtl' {
-  return language === 'ar' ? 'rtl' : 'ltr';
+  return schoolI18n.direction(language);
 }

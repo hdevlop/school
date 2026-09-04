@@ -4,7 +4,7 @@ import { NBadge, NButton } from 'najm-kit';
 import { STATUS_COLOR_MAP, STATUS_ICON_MAP } from '@/lib/statusBadge';
 import { CreditCard, Eye } from 'lucide-react';
 import { isInstallmentPayable } from '@/features/Financial/Payment/store/paymentStore';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (installment: any) => void; onPay?: (installment: any) => void } = {}) => {
   const { t } = useTranslation();

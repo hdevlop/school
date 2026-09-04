@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import { MapPinned, Navigation } from 'lucide-react'
 import { FormInput, NButton, useDialog } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import type { LocationValue } from './types'
 

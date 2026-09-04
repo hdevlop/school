@@ -6,7 +6,7 @@ import { Bus, CalendarDays, NotebookPen } from 'lucide-react'
 import { FormInput, NForm, useDialog } from 'najm-kit'
 import { LocationField } from '@/components/location/LocationField'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
 
 const assignmentSchema = z.object({

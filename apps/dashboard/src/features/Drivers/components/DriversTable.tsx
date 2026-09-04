@@ -5,7 +5,7 @@ import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { Car } from 'lucide-react';
 import DriverForm from './DriverForm';
 import { useDrivers } from '../hooks/useDrivers';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import DriverCard from './DriverCard';
 import { useDriversTableColumns } from '../hooks/useDriversTableColumns';
 import { useDriversTableFilters } from '../hooks/useDriversTableFilters';

@@ -4,7 +4,7 @@ import { CalendarClock, Clock, Layers3 } from 'lucide-react';
 import PageLoadingState from '@/shared/PageLoadingState';
 import RoutineGrid from '@/features/ClassRoutines/components/RoutineGrid';
 import { useTeacherRoutine } from '@/features/ClassRoutines/hooks/useClassRoutines';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface ScheduleTabProps {
   teacher: any;

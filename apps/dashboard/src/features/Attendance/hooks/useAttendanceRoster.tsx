@@ -2,7 +2,7 @@
 
 import { useMemo, useState, useCallback } from 'react';
 import { toast } from 'sonner';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { shiftLocalISODate, toLocalISODate } from '@/lib/localDate';
 
 export type RosterStatus = 'present' | 'absent' | 'late';

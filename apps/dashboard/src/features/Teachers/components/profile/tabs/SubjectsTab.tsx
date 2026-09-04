@@ -5,7 +5,7 @@ import { NTable } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
 import { BookOpen, GraduationCap } from 'lucide-react';
 import PageLoadingState from '@/shared/PageLoadingState';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface SubjectsTabProps {
   teacher: any;

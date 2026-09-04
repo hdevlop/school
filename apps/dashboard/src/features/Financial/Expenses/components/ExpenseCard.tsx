@@ -3,7 +3,7 @@
 import React from 'react';
 import { DollarSign, Calendar, CreditCard, FileText } from 'lucide-react';
 import { Label, NBadge, NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { getCategoryClass } from '../lib/expenseCategoryStyles';
 
 const ExpenseCard = ({ data: expense }) => {

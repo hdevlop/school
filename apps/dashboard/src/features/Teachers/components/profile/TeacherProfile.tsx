@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { NButton, Tabs, TabsContent, TabsList, TabsTrigger, useNSidebar } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import ProfileSidebar from './ProfileSidebar';
 import AcademicInfoTab from './tabs/AcademicInfoTab';
 import PersonalDetailsTab from './tabs/PersonalDetailsTab';

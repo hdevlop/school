@@ -6,7 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useGrades, useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { Award, BookOpenCheck, GraduationCap, Save, TrendingUp } from 'lucide-react';
 import { NativeProfileSelect } from '../NativeProfileSelect';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const pctColor = (pct?: number | null) => {
   if (pct == null) return 'text-slate-400';

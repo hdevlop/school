@@ -21,7 +21,7 @@ import { useFieldArray, useWatch } from 'react-hook-form';
 import { BookOpen, Coffee, GripVertical, Plus, Trash2 } from 'lucide-react';
 import { FormInput, NButton, NForm, useDialog, useNForm } from 'najm-kit';
 import { z } from 'zod';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import type { RoutineScheduleFormProps, TimelineItem } from '../types';
 import { routinePeriodLabel } from '../utils/labels';
 

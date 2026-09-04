@@ -7,7 +7,7 @@ import IncomeExpensesTrend from '@/features/Dashboard/components/IncomeExpensesT
 import ExpenseBreakdownChart from './components/ExpenseBreakdownChart';
 import CollectionByClassChart from './components/CollectionByClassChart';
 import { getCurrentAcademicYear } from '@/lib/academicYear';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 const ACADEMIC_YEARS = (() => {

@@ -5,7 +5,7 @@ import { Award } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import BehaviorRewardCard from './BehaviorRewardCard';
 import BehaviorRewardDetails from './BehaviorRewardDetails';

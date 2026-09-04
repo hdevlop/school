@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card } from 'najm-kit';
 import { NSectionHeader, NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import {
   User,
   Mail,

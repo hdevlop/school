@@ -12,7 +12,7 @@ import {
 import { useDialog } from 'najm-kit'
 import { gradeSchema } from '@/lib/validations'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects'

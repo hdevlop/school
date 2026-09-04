@@ -5,7 +5,7 @@ import { BookOpen, User, GraduationCap, Layers } from 'lucide-react'
 import { DynamicArray, NForm, useDialog, usePrefix } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { assignmentsSchema } from '@/lib/validations'
 

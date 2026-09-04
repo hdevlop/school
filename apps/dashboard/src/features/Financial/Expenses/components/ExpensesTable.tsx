@@ -6,7 +6,7 @@ import { Receipt } from 'lucide-react';
 import React from 'react';
 import ExpenseForm from './ExpenseForm';
 import { useExpenses } from '../hooks/useExpenses';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import ExpenseCard from './ExpenseCard';
 import { useExpensesTableColumns } from '../hooks/useExpensesTableColumns';
 import { useExpensesTableFilters } from '../hooks/useExpensesTableFilters';

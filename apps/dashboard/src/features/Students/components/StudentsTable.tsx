@@ -6,7 +6,7 @@ import { GraduationCap } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import StudentProfile from './StudentProfile';
 import { useStudents } from '../hooks/useStudents';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import StudentCard from './StudentCard';
 import { useClasses } from '@/hooks/useClasses';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';

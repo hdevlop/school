@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { NBadge, NButton } from 'najm-kit';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { NAvatar } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 const computePercent = (obtained, total) => {
   if (obtained == null || total == null) return null;
   const o = Number(obtained);

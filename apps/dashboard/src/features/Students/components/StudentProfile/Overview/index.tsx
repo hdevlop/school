@@ -24,7 +24,7 @@ import {
 import { Checkbox, ImageInput, Input, NCard, NIcon, Textarea } from 'najm-kit';
 import { NativeProfileSelect } from '../NativeProfileSelect';
 import { Parent, Student } from '../types';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { personAvatarBackgroundClass } from '@/lib/avatar';
 
 type Translate = (key: string, params?: Record<string, unknown> | null) => string;

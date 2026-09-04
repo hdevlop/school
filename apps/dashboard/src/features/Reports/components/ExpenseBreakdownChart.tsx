@@ -13,7 +13,7 @@ import { PieChart as PieIcon } from 'lucide-react';
 import { NSkeletonChart } from 'najm-kit';
 import { useFinanceExpenseBreakdown } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const COLORS = [
   '#1e40af', '#f97316', '#10b981', '#f59e0b', '#8b5cf6',

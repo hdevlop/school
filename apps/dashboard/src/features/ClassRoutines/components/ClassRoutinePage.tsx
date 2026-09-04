@@ -6,7 +6,7 @@ import { NativeSelect, NButton, NPageHeader, NPageHeaderActions, NSkeleton, useD
 import { useAuth } from 'najm-auth/client/react';
 import { useClasses } from '@/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import ClassRoutineSkeleton from './ClassRoutineSkeleton';
 import RoutineEntryForm from './RoutineEntryForm';

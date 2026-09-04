@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card } from 'najm-kit';
 import { NSectionHeader } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Users, GraduationCap, BookOpen } from 'lucide-react';
 import { getParentChildrenApi } from '@/services/parentApi';
 import { Label } from 'najm-kit';

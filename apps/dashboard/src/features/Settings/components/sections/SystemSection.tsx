@@ -4,7 +4,7 @@ import React from 'react';
 import { Settings, Globe, Languages, Palette, Calendar, Clock, DollarSign } from 'lucide-react';
 import { FormInput } from 'najm-kit';
 
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 
 const SystemSection: React.FC = () => {

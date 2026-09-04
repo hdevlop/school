@@ -16,7 +16,7 @@ import { BarChart2 } from 'lucide-react';
 import { NSkeletonChart } from 'najm-kit';
 import { useFinanceCollectionByClass } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 type ClassRow = {
   classId: string | null;

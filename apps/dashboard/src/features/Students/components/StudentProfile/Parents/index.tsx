@@ -13,7 +13,7 @@ import { Textarea } from 'najm-kit';
 import { Checkbox } from 'najm-kit';
 import { ImageInput } from 'najm-kit';
 import { NativeProfileSelect } from '../NativeProfileSelect';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { personAvatarBackgroundClass } from '@/lib/avatar';
 
 // ─── types ───────────────────────────────────────────────────────────────────

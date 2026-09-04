@@ -4,7 +4,7 @@ import React from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { NPageHeader, NPageHeaderActions } from 'najm-kit';
 import AgingDetailTable from './components/AgingDetailTable';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 const AgingReportPage: React.FC = () => {

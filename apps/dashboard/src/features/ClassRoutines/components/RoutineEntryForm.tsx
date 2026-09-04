@@ -3,7 +3,7 @@
 import { BookOpen, DoorOpen, StickyNote } from 'lucide-react';
 import { FormInput, NButton, NForm, useDialog } from 'najm-kit';
 import { z } from 'zod';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import type { RoutineEntryFormProps } from '../types';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
 

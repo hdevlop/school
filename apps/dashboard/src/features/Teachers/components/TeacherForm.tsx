@@ -7,7 +7,7 @@ import type { StepConfig } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormHeader } from 'najm-kit';
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, DollarSign, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import {
   teacherPersonalSchema,
   teacherProfessionalSchema,

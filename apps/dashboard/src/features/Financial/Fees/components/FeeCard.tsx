@@ -8,7 +8,7 @@ import { NBadge } from 'najm-kit';
 import { getAvatarFallback } from '@/lib/avatar';
 import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const FeeCard = ({ data }: any) => {
   const { t } = useTranslation();

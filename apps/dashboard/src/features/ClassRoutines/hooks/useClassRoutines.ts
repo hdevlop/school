@@ -3,7 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import * as routineApi from '@/services/classRoutineApi';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const payload = (response: any, fallback: any) => response?.data ?? fallback;
 const errorMessage = (error: any, fallback: string) => error?.response?.data?.message || error?.message || fallback;

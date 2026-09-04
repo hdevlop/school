@@ -11,7 +11,7 @@ import { useStaffRosterColumns } from '../hooks/useAttendanceTableColumns';
 import { useStaffRosterFilters } from '../hooks/useAttendanceTableFilters';
 import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { useStaffRoles } from '@/features/Staff/hooks/useStaffRoles';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 import { toLocalISODate } from '@/lib/localDate';

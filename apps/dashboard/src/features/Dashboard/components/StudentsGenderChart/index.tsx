@@ -8,7 +8,7 @@ import { useStudentsByGender } from '../../hooks/useDashboardHooks';
 import { UsersIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NSkeletonDonut } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const StudentsChart = ({className=''}) => {
    const { t } = useTranslation();

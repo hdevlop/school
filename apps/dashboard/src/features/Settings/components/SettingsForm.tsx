@@ -16,7 +16,7 @@ import NotificationSection from './sections/NotificationSection';
 import { Separator } from 'najm-kit';
 import { settingsSchema } from '@/lib/validations';
 import { useAdminSettings } from '../hooks/useSettings';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 // ─── Settings Skeleton ────────────────────────────────────────────────────────

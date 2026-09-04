@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { NTable } from 'najm-kit';
 import { Award, FileText } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 interface DocumentsTabProps {
   teacher: any;

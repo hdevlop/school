@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Badge } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 export const useCyclesTableColumns = () => {
   const { t, language } = useTranslation();

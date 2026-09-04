@@ -30,7 +30,7 @@ import { useAnnouncements } from '@/features/Announcements/hooks/useAnnouncement
 import AnnouncementForm from '@/features/Announcements/components/AnnouncementForm';
 import EventForm from '@/features/Events/components/EventForm';
 import { useEvents } from '@/features/Events/hooks/useEvents';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import PageLoadingState from '@/shared/PageLoadingState';
 

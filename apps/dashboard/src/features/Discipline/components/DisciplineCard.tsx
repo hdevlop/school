@@ -2,7 +2,7 @@
 
 import { CalendarClock, School, ShieldAlert } from 'lucide-react';
 import { NAvatar, NBadge, NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import {
   SEVERITY_COLORS,
   STATUS_COLORS,

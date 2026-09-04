@@ -6,7 +6,7 @@ import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, CreditCard, Receip
 import { formatCurrency } from '@/lib/utils';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { NBadge } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const FeeCard = ({ data }) => {
   const { t } = useTranslation();

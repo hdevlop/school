@@ -3,7 +3,7 @@
 import { AlarmClock, Hash, Languages } from 'lucide-react';
 import { FormInput, NForm, useDialog } from 'najm-kit';
 import { z } from 'zod';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import type { RoutinePeriodFormProps } from '../types';
 
 const schema = z.object({

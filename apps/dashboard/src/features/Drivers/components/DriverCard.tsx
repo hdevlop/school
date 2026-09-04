@@ -4,7 +4,7 @@ import React from 'react';
 import { Phone, Calendar, CreditCard, Shield } from 'lucide-react';
 import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { getAvatarFallback } from '@/lib/avatar';
 import { Label } from 'najm-kit';
 

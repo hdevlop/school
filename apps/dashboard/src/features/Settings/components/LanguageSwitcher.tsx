@@ -9,15 +9,17 @@ import {
   DropdownMenuTrigger,
   NButton,
 } from 'najm-kit';
-import { useUpdateLang, useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
+import { useUpdateLang } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
+import type { SchoolLanguage } from '@/preferences';
 
 const languages = [
   { code: 'en', name: 'English', iso2: 'us' },
   { code: 'fr', name: 'Français', iso2: 'fr' },
   { code: 'es', name: 'Español', iso2: 'es' },
   { code: 'ar', name: 'العربية', iso2: 'ma' },
-];
+] satisfies Array<{ code: SchoolLanguage; name: string; iso2: string }>;
 
 /**
  * Language Switcher Component
@@ -28,7 +30,7 @@ const LanguageSwitcher = () => {
   const { language } = useTranslation();
   const { updateLang, isLoading: isUpdatingLang } = useUpdateLang();
 
-  const handleLanguageChange = async (lang: string) => {
+  const handleLanguageChange = async (lang: SchoolLanguage) => {
     try {
       await updateLang(lang);
     } catch (error) {

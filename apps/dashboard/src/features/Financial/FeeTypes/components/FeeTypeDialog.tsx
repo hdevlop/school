@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { Check, DollarSign } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Badge } from 'najm-kit'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
 
 const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {

@@ -3,7 +3,7 @@
 import React from 'react';
 import { CalendarRange, Hash, Languages } from 'lucide-react';
 import { Badge, Label, NSectionInfo } from 'najm-kit';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const CycleCard = ({ data }: any) => {
   const { t, language } = useTranslation();

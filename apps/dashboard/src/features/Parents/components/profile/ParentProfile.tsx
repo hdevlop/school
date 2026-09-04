@@ -41,7 +41,8 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
+import type { TranslationParams } from 'najm-i18n';
 import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
 import { useParentDashboard } from '../../hooks/useParentDashboard';
@@ -94,8 +95,8 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
   const { t, language } = useTranslation();
   const locale = language === 'fr' ? 'fr-FR' : language === 'ar' ? 'ar-MA' : 'en-US';
   const moneyLocale: SupportedLocale = language === 'fr' || language === 'ar' ? language : 'en';
-  const text = (key: string, params?: Record<string, unknown>) =>
-    t(`parents.profile.dashboard.${key}`, params ?? null);
+  const text = (key: string, params?: TranslationParams) =>
+    t(`parents.profile.dashboard.${key}`, params);
 
   const {
     parent,

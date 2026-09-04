@@ -20,7 +20,7 @@ import {
   previewRolloverApi,
 } from '@/services/financialOperationsApi';
 import { formatMAD } from '@/lib/format';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const unwrap = (value: any) => value?.data?.data ?? value?.data ?? value;
 const list = (value: any) => {

@@ -15,7 +15,7 @@ import { DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NSkeletonChart } from 'najm-kit';
 import { useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { formatMAD, type SupportedLocale } from '@/lib/format';
 
 interface IncomeExpensesTrendProps {

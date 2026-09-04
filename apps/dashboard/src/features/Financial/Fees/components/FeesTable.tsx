@@ -7,7 +7,7 @@ import { CircleDollarSign } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import FeeCard from './FeeCard';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';

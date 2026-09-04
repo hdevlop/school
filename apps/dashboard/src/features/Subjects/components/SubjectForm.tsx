@@ -9,7 +9,7 @@ import { BookOpen, Hash, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { subjectSchema } from '@/lib/validations'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { useTranslation } from '@/hooks/useLanguage'
+import { useTranslation } from 'najm-i18n/react'
 
 const SubjectForm = ({ subject = null }) => {
 

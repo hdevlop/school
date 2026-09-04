@@ -7,7 +7,7 @@ import { Layers } from 'lucide-react';
 import React from 'react';
 import SectionForm from './SectionForm';
 import { useSections } from '../hooks/useSections';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import SectionCard from './SectionCard';
 import { useSectionsTableColumns } from '../hooks/useSectionsTableColumns';
 import { useSectionsTableFilters } from '../hooks/useSectionsTableFilters';

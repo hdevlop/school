@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-import { isSchoolLanguage, type SchoolLanguage } from '@/preferences';
+import { schoolI18n } from '@sms/server/locales';
 import { SCHOOL_UI_COOKIES, SCHOOL_UI_COOKIE_OPTIONS } from '@/preferences/cookies';
 
 /**
@@ -23,14 +23,14 @@ export async function POST(request: Request) {
     ? (body as { language?: unknown }).language
     : undefined;
 
-  if (!isSchoolLanguage(language)) {
+  if (!schoolI18n.isLanguage(language)) {
     return NextResponse.json({ message: 'Unsupported language.' }, { status: 400 });
   }
 
   const response = NextResponse.json({ language });
   response.cookies.set(
     SCHOOL_UI_COOKIES.language,
-    language satisfies SchoolLanguage,
+    language,
     SCHOOL_UI_COOKIE_OPTIONS,
   );
   return response;

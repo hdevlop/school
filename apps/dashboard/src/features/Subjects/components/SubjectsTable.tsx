@@ -6,7 +6,7 @@ import { BookOpen } from 'lucide-react';
 import React from 'react';
 import SubjectForm from './SubjectForm';
 import { useSubjects } from '../hooks/useSubjects';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import SubjectCard from './SubjectCard';
 import { useSubjectsTableColumns } from '../hooks/useSubjectsTableColumns';
 import { useSubjectsTableFilters } from '../hooks/useSubjectsTableFilters';

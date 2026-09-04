@@ -6,7 +6,7 @@ import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NSkeletonCalendar } from 'najm-kit';
 import { useDelayedLoading } from '@/hooks/useDelayedLoading';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 
 const CalendarCard = ({ className = '' }) => {
   const { t } = useTranslation();

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { NThemeImage } from 'najm-theme/react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { SCHOOL_APP_NAME } from '@/lib/appName';
 import { ReliableThemeImage } from './ReliableThemeImage';
 

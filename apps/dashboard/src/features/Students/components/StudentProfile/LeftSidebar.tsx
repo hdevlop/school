@@ -17,7 +17,7 @@ import { useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { getAttendanceByStudentApi } from '@/services/attendanceApi';
 import { Student } from './types';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { studentAvatarBackgroundClass } from '@/lib/avatar';
 
 const defaultStudentImage = (gender?: string) =>

@@ -4,7 +4,7 @@ import { Input, Label, NButton, NCard, NumberInput, useDialog } from 'najm-kit';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { AlertTriangle, Database, Eye, EyeOff, GraduationCap, Key, Loader2, Trash2, Upload, Users } from 'lucide-react';
-import { useTranslation } from '@/hooks/useLanguage';
+import { useTranslation } from 'najm-i18n/react';
 import { type SeedDemoOptions } from '@/services/seedApi';
 import { useSeedDemo, useSeedSystem, useClearAllData } from '../../hooks/useSettings';
 
