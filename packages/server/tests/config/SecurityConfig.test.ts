@@ -51,7 +51,7 @@ describe('shared security configuration', () => {
     process.env.NODE_ENV = 'production';
     process.env.REDIS_URL = 'rediss://:test-password@redis.internal:6379/0';
 
-    expect(authInfrastructureConfig()).toEqual({
+    expect(authInfrastructureConfig()).toMatchObject({
       cache: {
         driver: 'redis',
         redis: {
@@ -63,6 +63,7 @@ describe('shared security configuration', () => {
       rateLimit: { trustedProxyHops: 1 },
     });
     const config = resolveCacheConfig();
+    expect(config.redis?.client).toBeDefined();
     const service = new CacheService({
       driver: config.driver ?? 'auto',
       memory: config.memory ?? {},

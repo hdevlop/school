@@ -1,4 +1,5 @@
 import { cors } from 'najm-cors';
+import Redis from 'ioredis';
 import { i18n } from 'najm-i18n';
 import { events } from 'najm-event';
 import { validation } from 'najm-validation';
@@ -67,6 +68,20 @@ function resolveRedisUrl(value: string | undefined, required: boolean) {
   return value;
 }
 
+function redisClient(
+  url: string,
+  keyPrefix: string,
+): NonNullable<CachePluginConfig['redis']>['client'] {
+  const client = new Redis(url, {
+    keyPrefix,
+    lazyConnect: true,
+    maxRetriesPerRequest: 3,
+    retryStrategy: (times) => (times > 3 ? null : Math.min(times * 100, 2_000)),
+  });
+  client.on('error', () => void 0);
+  return client as unknown as NonNullable<CachePluginConfig['redis']>['client'];
+}
+
 export function resolveCacheConfig(): CachePluginConfig {
   // Next evaluates server modules while producing an image. That build phase
   // is not an application runtime and must not contact production services.
@@ -79,7 +94,15 @@ export function resolveCacheConfig(): CachePluginConfig {
   return {
     driver: required || url ? 'redis' : 'memory',
     required,
-    ...(url ? { redis: { keyPrefix: 'school:', url } } : {}),
+    ...(url
+      ? {
+          redis: {
+            client: redisClient(url, 'school:'),
+            keyPrefix: 'school:',
+            url,
+          },
+        }
+      : {}),
   };
 }
 
