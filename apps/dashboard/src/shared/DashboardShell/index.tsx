@@ -38,7 +38,7 @@ import {
 } from 'lucide-react';
 import { Chatbot } from 'najm-chatbot/react';
 import { SignOutButton, useAuth } from 'najm-auth/client/react';
-import { NSidebar, NSidebarProvider, useNSidebar, type NavItem } from 'najm-kit';
+import { NSidebar, NSidebarProvider, type NavItem } from 'najm-kit';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { clearSchoolUiPreferences } from '@/preferences/clearUiPreferences';
@@ -189,13 +189,11 @@ function isSidebarItemActive(item: NavItem, activePath: string) {
   return activePath === item.href || activePath.startsWith(`${item.href}/`);
 }
 
-function SidebarFooterContent() {
+function SidebarFooterContent({ collapsed }: Readonly<{ collapsed: boolean }>) {
   const router = useRouter();
   const { user } = useAuth();
   const { t } = useTranslation();
-  // The provider is the one source for collapsed state, so the footer reads it
-  // rather than being handed an approximation of it from the shell.
-  const isExpanded = !useNSidebar()?.collapsed;
+  const isExpanded = !collapsed;
   const role = (user as any)?.role;
   const canSeeSettings = role === 'admin' || role === 'principal';
   const itemClassName =
@@ -277,7 +275,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         activePath={pathname}
         isActive={isSidebarItemActive}
         linkComponent={LinkAdapter}
-        footer={<SidebarFooterContent />}
+        footer={({ collapsed }) => <SidebarFooterContent collapsed={collapsed} />}
         mobileBreakpoint="lg"
         closeOnNavigate
       />
