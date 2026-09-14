@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import Link from 'next/link'
-import { auth } from '@/lib/auth'
+import { auth } from '@/najm.auth'
 import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
 

@@ -3299,7 +3299,19 @@
   "notifications": {
     "checkDueRun": "Notifications dues vérifiées avec succès",
     "list": "Liste Notification récupérée avec succès",
-    "overdueRun": "Notifications en retard traitées avec succès"
+    "overdueRun": "Notifications en retard traitées avec succès",
+    "inbox": "Notifications",
+    "open": "Ouvrir les notifications",
+    "markAll": "Tout marquer comme lu",
+    "viewAll": "Tout afficher",
+    "empty": "Aucune notification",
+    "loading": "Chargement des notifications…",
+    "pushTitle": "Notifications push",
+    "pushBody": "Recevez les alertes importantes de l'école sur cet appareil.",
+    "pushUnavailable": "Les notifications push ne sont pas disponibles actuellement.",
+    "pushUnsupported": "Ce navigateur ne prend pas en charge le push web.",
+    "pushDenied": "Les notifications sont bloquées dans les réglages du site.",
+    "pushError": "Impossible de modifier les notifications push."
   },
   "permissions": {
     "subtitle": {

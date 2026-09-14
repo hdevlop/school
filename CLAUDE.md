@@ -53,12 +53,15 @@ states that drift — so do not add one without changing the plan first.
   zone, branding, formatting, and `NTable` defaults. Never add
   `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local
   theme wrapper.
-- **One preference source.** `apps/dashboard/src/lib/serverPreferences.ts`
-  resolves cookie → signed-in user → School settings → typed fallback. New
-  preference values belong in `apps/dashboard/src/preferences/`.
-- **One session resolution.** Server components use the `serverAuth` singleton
-  in `apps/dashboard/src/lib/session.ts`. Never call `auth.getSession()`
-  directly from a layout or page, and never build the adapter per request.
+- **One preference source.** `apps/dashboard/src/najm.server.ts` passes School's
+  policy to `createNajmNextServerApp`, which resolves cookie → signed-in user →
+  School settings → typed fallback. New allowlists and normalization helpers
+  belong in `apps/dashboard/src/preferences/`.
+- **One auth definition.** `apps/dashboard/src/najm.auth.ts` derives client,
+  proxy, server-session, and route-handler behavior from `schoolApp.auth`.
+- **One session resolution.** Server components use the module-scope adapter in
+  `apps/dashboard/src/najm.server.ts`. Never call `auth.getSession()` directly
+  from a layout or page, and never build the adapter per request.
 - **One version of each Najm package.** Pinned exactly in every workspace
   manifest; `bun run test:dashboard` fails when a second copy resolves.
 - **One set of words for status and state.** The provider's `badgeDefaults`

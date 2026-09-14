@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/najm.auth';
 import { toFormData, hasFiles } from './formDataHelper';
 
 function buildURL(path: string, params?: Record<string, any>): string {

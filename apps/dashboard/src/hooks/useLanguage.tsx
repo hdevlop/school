@@ -5,7 +5,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { schoolI18n } from '@sms/server/locales';
 import { toast } from 'sonner';
 
-import { auth } from '@/lib/auth';
+import { auth } from '@/najm.auth';
 import type { SchoolLanguage } from '@/preferences';
 import { updateUserLangApi } from '@/services/userApi';
 

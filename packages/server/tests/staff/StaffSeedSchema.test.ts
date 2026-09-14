@@ -48,7 +48,16 @@ describe('seed container and physical staff-assignment schema', () => {
       ),
     ) as { entries: Array<{ idx: number; tag: string }> };
 
-    expect(journal.entries.slice(-2).map(({ idx, tag }) => ({ idx, tag }))).toEqual([
+    const authRepairIndex = journal.entries.findIndex(
+      ({ tag }) => tag === '0044_auth_v3_schema_repair',
+    );
+
+    expect(authRepairIndex).toBeGreaterThanOrEqual(0);
+    expect(
+      journal.entries
+        .slice(authRepairIndex, authRepairIndex + 2)
+        .map(({ idx, tag }) => ({ idx, tag })),
+    ).toEqual([
       { idx: 44, tag: '0044_auth_v3_schema_repair' },
       { idx: 45, tag: '0045_staff_assignment_schema_repair' },
     ]);

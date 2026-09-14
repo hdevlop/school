@@ -12,9 +12,17 @@ function createService() {
     },
     alerts: { create: mock(() => Promise.resolve({ id: 'alert_01' })) },
     audit: { record: mock(() => Promise.resolve({ id: 'audit_01' })) },
+    personalNotifications: {
+      createFinancialReminder: mock(() => Promise.resolve({ created: 1 })),
+    },
   };
   return {
-    service: new NotificationService(deps.repository as any, deps.alerts as any, deps.audit as any),
+    service: new NotificationService(
+      deps.repository as any,
+      deps.alerts as any,
+      deps.audit as any,
+      deps.personalNotifications as any,
+    ),
     deps,
   };
 }

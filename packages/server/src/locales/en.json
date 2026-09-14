@@ -4245,7 +4245,19 @@
   "notifications": {
     "checkDueRun": "Due notifications checked successfully",
     "list": "Notification list retrieved successfully",
-    "overdueRun": "Overdue notifications processed successfully"
+    "overdueRun": "Overdue notifications processed successfully",
+    "inbox": "Notifications",
+    "open": "Open notifications",
+    "markAll": "Mark all read",
+    "viewAll": "View all",
+    "empty": "No notifications yet",
+    "loading": "Loading notifications…",
+    "pushTitle": "Push notifications",
+    "pushBody": "Get important School alerts on this device.",
+    "pushUnavailable": "Push notifications are not available right now.",
+    "pushUnsupported": "This browser does not support web push.",
+    "pushDenied": "Notifications are blocked in this browser's site settings.",
+    "pushError": "Could not update push notifications."
   },
   "refuels": {
     "success": {

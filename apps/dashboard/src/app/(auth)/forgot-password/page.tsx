@@ -7,7 +7,7 @@ import { NForm, NButton, FormInput } from 'najm-kit'
 import { Loader2, Mail, MoveLeft } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { auth } from '@/lib/auth'
+import { auth } from '@/najm.auth'
 import { useTranslation } from 'najm-i18n/react'
 import { AuthHeading } from '../AuthHeading'
 

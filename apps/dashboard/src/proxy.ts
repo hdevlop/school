@@ -1,29 +1,16 @@
-import { auth } from '@/lib/auth';
-import { NextResponse } from 'next/server';
+import { composeNajmProxy } from 'najm-next/security';
 
-function hasRefreshToken(req: Request) {
-  return /(?:^|;\s*)refreshToken=/.test(req.headers.get('cookie') ?? '');
-}
+import { auth } from '@/najm.auth';
+import { schoolApp, schoolLocation } from '@/najm.config';
 
-function isSpeculativePrefetch(req: Request) {
-  const headers = req.headers;
-  const routerStateTree = headers.get('next-router-state-tree') ?? '';
-
-  return (
-    headers.get('next-router-prefetch') === '1' ||
-    headers.get('purpose') === 'prefetch' ||
-    headers.get('sec-purpose')?.includes('prefetch') ||
-    routerStateTree.includes('metadata-only')
-  );
-}
-
-export default async function proxy(req: Request) {
-  if (hasRefreshToken(req) && isSpeculativePrefetch(req)) {
-    return NextResponse.next();
-  }
-
-  return auth.proxy(req);
-}
+export default composeNajmProxy({
+  auth,
+  app: schoolApp,
+  resolveLocationCsp: (env) =>
+    schoolLocation.resolve(env, {
+      isDevelopment: env.NODE_ENV === 'development',
+    }).csp,
+});
 
 export const config = {
   matcher: [

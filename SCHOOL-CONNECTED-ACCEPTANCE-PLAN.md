@@ -1,6 +1,6 @@
 # School connected acceptance plan
 
-Status: **PLANNED — AUTH MUST PASS BEFORE FEATURE PROMOTION**
+Status: **SOURCE REMEDIATION PASSED — CONNECTED AUTH MUST PASS BEFORE FEATURE PROMOTION**
 
 Local application: production-style Next.js on a runner-owned loopback port.
 
@@ -40,8 +40,13 @@ Those contracts require server or real-database tests.
 
 ## 2. Current baseline
 
-- School currently pins a local candidate for `najm-auth@3.2.0` and uses
-  `auth.proxy`, authoritative proxy sessions and `auth.routeHandlers`.
+- School pins the published `najm-auth@4.0.2` and `najm-cache@2.2.0`
+  remediation releases and uses `auth.proxy`, authoritative proxy sessions and
+  `auth.routeHandlers`. The root override keeps one installed Auth/Cache copy
+  across the workspace.
+- The app forwards one fresh nonce through `auth.proxy` on each rendered
+  request, enforces the same CSP on the response, initializes Zod in jitless
+  mode before hydration, and accepts only bounded, sanitized CSP reports.
 - The dedicated production-style Najm upgrade suite currently passes all four
   tests locally, including login/logout, Remember Me, credential setup and the
   role/locale/viewport matrix.
@@ -219,6 +224,18 @@ Password recovery and account invitation must additionally prove:
   password requires a fresh login;
 - the account-invite path uses the same supported reset endpoint without
   creating an authenticated session before completion.
+- adding an ignored `identifier` field cannot change or reset the email-owned
+  forgot-password rate-limit bucket;
+- exactly one of two concurrent valid reset submissions consumes the token.
+
+Session revocation must additionally prove:
+
+- a revoked refresh family is refused by refresh, cookie recovery and bearer
+  verification;
+- an unknown family after cache loss fails closed instead of resurrecting an
+  authenticated session;
+- a successful login creates the positive live-family marker required by both
+  cookie and bearer verification.
 
 Role isolation must cover every seeded login role: `admin`, `principal`,
 `accounting`, `teacher`, `student`, `parent`, `counselor`, `nurse`, `secretary`,
@@ -597,6 +614,17 @@ remain zero.
 
 Current implementation state:
 
+- the Auth 4 consumer migration, nonce CSP, bounded report sink and dependency
+  audit are implemented in the current local worktree;
+- local source gates passed on 2026-09-06: lint (zero errors), dashboard tests
+  (78), server tests (1,164), seed tests (9), `build:all`, `db:check`,
+  `db:generate` with no migration, `git diff --check`, and
+  `bun audit --production` with no vulnerabilities;
+- a production-server loopback probe returned an enforced nonce policy, unique
+  nonces across requests and a 204 report-sink response;
+- connected auth remains `NOT RUN`: the configured local database is not
+  test-named and the legacy suite writes and deletes fixtures. This source
+  checkpoint therefore does not promote Gate A;
 - legacy `test:e2e:najm-upgrade` and `test:e2e:acceptance` commands are not Gate
   A or connected acceptance under this plan;
 - the new connected and remote configs, wrappers and commands are `NOT

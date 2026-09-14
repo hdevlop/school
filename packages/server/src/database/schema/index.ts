@@ -192,6 +192,11 @@ export {
   financialNotificationDeliveries,
 } from '../../modules/financial/notifications/notificationSchema';
 export {
+  notifications,
+  notificationDeliveries,
+  pushSubscriptions,
+} from '../../modules/notifications/notificationSchema';
+export {
   rolloverRuns,
   rolloverRunItems,
   rolloverRunStatusEnum,

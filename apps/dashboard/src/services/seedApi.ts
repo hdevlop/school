@@ -1,5 +1,5 @@
 import { api } from './http';
-import { auth } from '@/lib/auth';
+import { auth } from '@/najm.auth';
 import axios from 'axios';
 
 // Separate axios instance with a 10-minute timeout for long seed operations

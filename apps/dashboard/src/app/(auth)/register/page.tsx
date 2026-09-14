@@ -8,7 +8,7 @@ import { Loader2, UserPlus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { auth } from '@/lib/auth'
+import { auth } from '@/najm.auth'
 import { useTranslation } from 'najm-i18n/react'
 import { AuthHeading } from '../AuthHeading'
 

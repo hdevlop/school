@@ -5,9 +5,7 @@ import "flag-icons/css/flag-icons.min.css";
 import 'najm-theme/styles.css';
 import { Lora, Roboto_Mono } from 'next/font/google'
 import { AppProviders } from './providers';
-import { serverAuth } from '@/lib/session';
-import { loadServerAppearance, loadServerBranding } from '@/lib/serverTheme';
-import { resolveSchoolPreferences } from '@/lib/serverPreferences';
+import { loadUiSnapshot } from '@/najm.server';
 import NajmClientRoot from '@/components/NajmClientRoot';
 
 export const viewport: Viewport = {
@@ -35,18 +33,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Optional by contract: an anonymous render resolves to null. Configuration
-  // and transport failures stay visible instead of being flattened into an
-  // anonymous session.
-  const session = await serverAuth.getSession();
-
-  // Appearance and branding resolve independently of each other and of the
-  // preference snapshot, so one unavailable resource cannot discard the others.
-  const [preferences, appearance, branding] = await Promise.all([
-    resolveSchoolPreferences(session),
-    loadServerAppearance(),
-    loadServerBranding(),
-  ]);
+  const snapshot = await loadUiSnapshot();
+  const { preferences } = snapshot;
 
   return (
     <html
@@ -57,12 +45,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body suppressHydrationWarning className={`${lora.className} ${lora.variable} ${robotoMono.variable} antialiased  h-screen w-screen overflow-hidden`}>
-        <AppProviders
-          initialBranding={branding}
-          initialDesign={appearance.designConfig}
-          initialSession={session}
-          preferences={preferences}
-        >
+        <AppProviders snapshot={snapshot}>
           {children}
           <NajmClientRoot />
           <NajmPwaRegistration />

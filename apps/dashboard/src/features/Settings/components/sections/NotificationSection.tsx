@@ -6,6 +6,7 @@ import { FormInput } from 'najm-kit';
 
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
+import { PushOptIn } from '@/features/Notifications';
 const NotificationSection: React.FC = () => {
   const { t } = useTranslation();
 
@@ -18,6 +19,7 @@ const NotificationSection: React.FC = () => {
       </div>
 
       <div className="flex flex-col gap-3 ">
+        <PushOptIn />
         <FormInput
           type="switch"
           name="academicAlerts"

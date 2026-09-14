@@ -1,112 +1,201 @@
-"use client";
+'use client';
 
-import type { ReactNode } from 'react';
-import type { ServerSession } from 'najm-auth/client/server';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from 'najm-auth/client/react';
 import { NajmAppProvider } from 'najm-kit/app';
-import type { NajmDesignConfig } from 'najm-kit';
-import type { PublicBranding } from 'najm-theme';
-import { NThemeBrandingProvider } from 'najm-theme/react';
-import { schoolI18n } from '@sms/server/locales';
-import { auth } from '@/lib/auth';
-import { STATUS_COLOR_MAP, STATUS_LABEL_KEYS } from '@/lib/statusBadge';
-import { KeyboardProvider } from '@/providers/KeyboardProvider';
-import { QueryProvider } from '@/providers/QueryProvider';
-import type { SchoolPreferenceSnapshot } from '@/lib/serverPreferences';
 import {
-  SCHOOL_FORMATTING_LOCALES,
+  getNajmLocationLabels,
+  type NCoordinates,
+  type NLocationCandidate,
+  type NLocationGeocoderAdapter,
+} from 'najm-kit/location';
+import {
+  NLocationRuntimeProvider,
+  type NLocationRuntimeConfig,
+} from 'najm-kit/location/runtime';
+import {
+  bindNajmNextProvider,
+  NajmNextAppProvider,
+  type NajmNextProviderContext,
+} from 'najm-next/app/react';
+import { NThemeBrandingProvider } from 'najm-theme/react';
+import { useTranslation } from 'najm-i18n/react';
+import { useMemo, type ReactNode } from 'react';
+
+import { schoolI18n } from '@sms/server/locales';
+import { SCHOOL_APP_NAME } from '@/lib/appName';
+import { isDevFill } from '@/lib/devFill';
+import { STATUS_COLOR_MAP, STATUS_LABEL_KEYS } from '@/lib/statusBadge';
+import { auth } from '@/najm.auth';
+import type { SchoolUiSnapshot } from '@/najm.server';
+import {
   normalizeSchoolTimeZone,
 } from '@/preferences';
-import { SCHOOL_UI_PREFERENCE_ENDPOINTS } from '@/preferences/cookies';
-import { isDevFill } from '@/lib/devFill';
-import { SCHOOL_APP_NAME } from '@/lib/appName';
+import { KeyboardProvider } from '@/providers/KeyboardProvider';
 
-/**
- * Module scope on purpose: the provider rebuilds its resolved badge bundle
- * whenever this object's identity changes.
- */
 const SCHOOL_BADGE_DEFAULTS = {
   statusMap: STATUS_COLOR_MAP,
   statusLabelKeys: STATUS_LABEL_KEYS,
 };
 
-type Props = {
-  children: ReactNode;
-  initialBranding: PublicBranding;
-  initialDesign: NajmDesignConfig;
-  initialSession: ServerSession | null;
-  preferences: SchoolPreferenceSnapshot;
-};
+type ProviderContext = NajmNextProviderContext<SchoolUiSnapshot, QueryClient>;
 
-/**
- * School's provider composition.
- *
- * Auth and React Query stay app-owned and above the UI layer — they are not UI
- * concerns and Najm Kit deliberately does not own them. `KeyboardProvider` is
- * kept only for School's own shortcuts; F8 form filling belongs to the package
- * below it.
- *
- * `NajmAppProvider` is the single UI-provider boundary: language, design,
- * light/dark theme, time zone, branding, formatting, and `NTable` defaults. It
- * replaces the `next-themes` provider, the direct `NajmDesignProvider`, the
- * mount-only theme workaround, and the manual typography variable application
- * School used to compose here by hand.
- */
+function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60_000,
+        refetchOnWindowFocus: false,
+        retry: 0,
+      },
+      mutations: { retry: 0 },
+    },
+  });
+}
+
+function createLazyGoogleGeocoder(
+  options: Extract<NLocationRuntimeConfig, { provider: 'google' }>['google'],
+): NLocationGeocoderAdapter {
+  let adapterPromise: Promise<NLocationGeocoderAdapter> | null = null;
+  const load = () => {
+    adapterPromise ??= import('najm-kit/location/google').then(
+      ({ createGooglePlacesGeocoder }) => createGooglePlacesGeocoder(options),
+    );
+    return adapterPromise;
+  };
+
+  return {
+    id: 'school-google-places',
+    async search(query, context) {
+      return (await load()).search(query, context);
+    },
+    async resolve(candidate: NLocationCandidate, signal: AbortSignal) {
+      const adapter = await load();
+      return adapter.resolve ? adapter.resolve(candidate, signal) : candidate;
+    },
+    async reverse(coordinates: NCoordinates, signal: AbortSignal) {
+      const adapter = await load();
+      return adapter.reverse ? adapter.reverse(coordinates, signal) : null;
+    },
+    resetSession() {
+      void adapterPromise?.then((adapter) => adapter.resetSession?.());
+    },
+  };
+}
+
+function SchoolLocationProvider({
+  children,
+  config,
+}: Readonly<{ children: ReactNode; config: NLocationRuntimeConfig }>) {
+  const { language, t } = useTranslation();
+  const localizedConfig = useMemo<NLocationRuntimeConfig>(() => {
+    if (config.provider !== 'google') return config;
+    return {
+      ...config,
+      google: { ...config.google, language },
+    };
+  }, [config, language]);
+  const geocoder = useMemo(
+    () =>
+      localizedConfig.provider === 'google'
+        ? createLazyGoogleGeocoder(localizedConfig.google)
+        : null,
+    [localizedConfig],
+  );
+
+  return (
+    <NLocationRuntimeProvider
+      config={localizedConfig}
+      geocoder={geocoder}
+      labels={getNajmLocationLabels(language)}
+      searchMode="autocomplete"
+      unavailableReason={t('transport.location.unavailableDescription')}
+    >
+      {children}
+    </NLocationRuntimeProvider>
+  );
+}
+
+function SchoolUiProvider({
+  children,
+  snapshot,
+}: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot }>) {
+  return (
+    <NajmAppProvider
+      appName={SCHOOL_APP_NAME}
+      badgeDefaults={SCHOOL_BADGE_DEFAULTS}
+      currency={snapshot.preferences.currency}
+      initialBranding={snapshot.branding}
+      i18n={schoolI18n}
+      initialDesign={snapshot.appearance.designConfig}
+      initialLanguage={snapshot.preferences.language}
+      initialTheme={snapshot.preferences.theme}
+      initialTimeZone={snapshot.preferences.timeZone}
+      normalizeTimeZone={normalizeSchoolTimeZone}
+      formDevTools={isDevFill}
+    >
+      {children}
+    </NajmAppProvider>
+  );
+}
+
+const authProvider = bindNajmNextProvider(
+  AuthProvider,
+  ({ snapshot }: ProviderContext) => ({
+    client: auth.client,
+    initialSession: snapshot.session,
+  }),
+);
+
+const queryProvider = bindNajmNextProvider(
+  QueryClientProvider,
+  ({ queryClient }: ProviderContext) => ({ client: queryClient! }),
+);
+
+const keyboardProvider = bindNajmNextProvider(
+  KeyboardProvider,
+  () => ({}),
+);
+
+const uiProvider = bindNajmNextProvider(
+  SchoolUiProvider,
+  ({ snapshot }: ProviderContext) => ({ snapshot }),
+);
+
+const brandingProvider = bindNajmNextProvider(
+  NThemeBrandingProvider,
+  ({ snapshot }: ProviderContext) => ({ branding: snapshot.branding }),
+);
+
+const locationProvider = bindNajmNextProvider(
+  SchoolLocationProvider,
+  ({ snapshot }: ProviderContext) => ({
+    config: snapshot.settings.locationConfig,
+  }),
+);
+
+const providers = {
+  auth: authProvider,
+  query: queryProvider,
+  ui: uiProvider,
+  branding: brandingProvider,
+  location: locationProvider,
+} as const;
+
+const extensions = { beforeUi: keyboardProvider } as const;
+
 export function AppProviders({
   children,
-  initialBranding,
-  initialDesign,
-  initialSession,
-  preferences,
-}: Props) {
+  snapshot,
+}: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot }>) {
   return (
-    <AuthProvider client={auth.client} initialSession={initialSession}>
-      <QueryProvider>
-        <KeyboardProvider>
-          <NajmAppProvider
-            appName={SCHOOL_APP_NAME}
-            // The one place status badges are taught to speak the interface
-            // language. Without it every `<NBadge status={…} />` in the app
-            // falls through to a humanized English token, whatever the
-            // language — see `STATUS_LABEL_KEYS`.
-            badgeDefaults={SCHOOL_BADGE_DEFAULTS}
-            currency={preferences.currency}
-            endpoints={{
-              theme: SCHOOL_UI_PREFERENCE_ENDPOINTS.theme,
-              timeZone: SCHOOL_UI_PREFERENCE_ENDPOINTS.timeZone,
-            }}
-            // Seeds the marks the kit's own chrome renders. The four managed
-            // slots stay with `NThemeBrandingProvider` below, which is fed the
-            // same server snapshot.
-            initialBranding={{
-              sidebarLogoExpandedPath: initialBranding.slots.sidebarLogoExpanded,
-              sidebarLogoCollapsedPath: initialBranding.slots.sidebarLogoCollapsed,
-            }}
-            initialDesign={initialDesign}
-            initialLanguage={preferences.language}
-            initialTheme={preferences.theme}
-            initialTimeZone={preferences.timeZone}
-            languageEndpoint={SCHOOL_UI_PREFERENCE_ENDPOINTS.language}
-            locales={SCHOOL_FORMATTING_LOCALES}
-            // The provider's own IANA check would accept any valid zone; School
-            // persists only the zones its settings surface offers.
-            normalizeTimeZone={normalizeSchoolTimeZone}
-            translations={schoolI18n.translations}
-            defaultLanguage={schoolI18n.defaultLanguage}
-            fallbackToDefaultLanguage={schoolI18n.fallbackToDefaultLanguage}
-            getLanguageDirection={(language) =>
-              schoolI18n.direction(schoolI18n.normalizeLanguage(language))
-            }
-            // Opt-in only, and never on for a production user: `isDevFill`
-            // reads NEXT_PUBLIC_FORM_FILL_ENABLED, which deployments leave off.
-            formDevTools={isDevFill}
-          >
-            <NThemeBrandingProvider branding={initialBranding}>
-              {children}
-            </NThemeBrandingProvider>
-          </NajmAppProvider>
-        </KeyboardProvider>
-      </QueryProvider>
-    </AuthProvider>
+    <NajmNextAppProvider
+      snapshot={snapshot}
+      createQueryClient={createQueryClient}
+      providers={providers}
+      extensions={extensions}
+    >
+      {children}
+    </NajmNextAppProvider>
   );
 }

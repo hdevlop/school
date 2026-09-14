@@ -5,6 +5,7 @@ import screenfull from 'screenfull';
 import { NButton, toast, useNajmTheme } from 'najm-kit';
 import { Maximize, Moon, Sun } from 'lucide-react';
 import LanguageSwitcher from '@/features/Settings/components/LanguageSwitcher';
+import { NotificationsMenu } from '@/features/Notifications';
 
 const actionButtonClass = 'text-foreground hover:text-foreground [&_svg]:text-foreground [&_svg]:opacity-100';
 
@@ -31,6 +32,7 @@ export default function PageHeaderGlobalActions() {
 
   return (
     <>
+      <NotificationsMenu />
       <LanguageSwitcher />
       <NButton
         type="button"

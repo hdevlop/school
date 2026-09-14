@@ -3122,7 +3122,19 @@
   "notifications": {
     "checkDueRun": "Notificaciones pendientes revisadas correctamente",
     "list": "Lista de Notificación obtenida correctamente",
-    "overdueRun": "Notificaciones vencidas procesadas correctamente"
+    "overdueRun": "Notificaciones vencidas procesadas correctamente",
+    "inbox": "Notificaciones",
+    "open": "Abrir notificaciones",
+    "markAll": "Marcar todo como leído",
+    "viewAll": "Ver todas",
+    "empty": "Todavía no hay notificaciones",
+    "loading": "Cargando notificaciones…",
+    "pushTitle": "Notificaciones push",
+    "pushBody": "Recibe alertas importantes de la escuela en este dispositivo.",
+    "pushUnavailable": "Las notificaciones push no están disponibles ahora.",
+    "pushUnsupported": "Este navegador no admite push web.",
+    "pushDenied": "Las notificaciones están bloqueadas en los ajustes del sitio.",
+    "pushError": "No se pudieron actualizar las notificaciones push."
   },
   "permissions": {
     "subtitle": {

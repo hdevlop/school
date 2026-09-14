@@ -1,4 +1,4 @@
-import { serverAuth } from '@/lib/session';
+import { requireRole } from '@/najm.server';
 
 // Reads the per-request session cookie, so it cannot be prerendered.
 export const dynamic = 'force-dynamic';
@@ -17,7 +17,7 @@ export const dynamic = 'force-dynamic';
  * Backend authorization remains authoritative for the settings data itself.
  */
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
-  await serverAuth.requireRole(['admin', 'principal']);
+  await requireRole(['admin', 'principal']);
 
   return children;
 }

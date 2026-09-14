@@ -39,9 +39,9 @@ import {
 import { Chatbot } from 'najm-chatbot/react';
 import { SignOutButton, useAuth } from 'najm-auth/client/react';
 import { NSidebar, NSidebarProvider, type NavItem } from 'najm-kit';
+import { clearNajmUiPreferences } from 'najm-kit/server';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
-import { clearSchoolUiPreferences } from '@/preferences/clearUiPreferences';
 
 const LinkAdapter = ({
   href,
@@ -82,6 +82,7 @@ const createSidebarItems = (t: (key: string) => string, role: string): NavItem[]
   };
 
 return [
+    { id: '/notifications', label: t('notifications.inbox'), icon: BellRing, href: '/notifications' },
     ...(canUseTeacherRoutes
       ? [
         { id: '/', label: t('navigation.dashboard'), icon: LayoutDashboard, href: '/' },
@@ -195,24 +196,22 @@ function SidebarFooterContent({ collapsed }: Readonly<{ collapsed: boolean }>) {
   const { t } = useTranslation();
   const isExpanded = !collapsed;
   const role = (user as any)?.role;
-  const canSeeSettings = role === 'admin' || role === 'principal';
+  const canManageSettings = role === 'admin' || role === 'principal';
   const itemClassName =
     'flex h-8 w-full cursor-pointer items-center gap-3 rounded-md px-2 text-left text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground';
 
   return (
     <div className="flex flex-col gap-1">
-      {canSeeSettings && (
-        <button type="button" onClick={() => router.push('/settings')} className={itemClassName}>
+      <button type="button" onClick={() => router.push(canManageSettings ? '/settings' : '/preferences')} className={itemClassName}>
           <Settings className="h-4 w-4 shrink-0" />
           {isExpanded && <span>{t('navigation.settings')}</span>}
-        </button>
-      )}
+      </button>
       <SignOutButton
         onSuccess={async () => {
           // The UI preference cookies outrank the signed-in user's stored
           // preferences, so they must not survive into the next person's
           // session on a shared machine.
-          await clearSchoolUiPreferences();
+          await clearNajmUiPreferences();
           router.push('/login');
         }}
       >

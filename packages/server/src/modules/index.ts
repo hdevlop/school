@@ -1,6 +1,7 @@
 export * from './alerts';
 export * from './settings';
 export * from './financial';
+export * from './notifications';
 
 export * from './students';
 export * from './parents';

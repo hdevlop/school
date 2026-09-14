@@ -4,6 +4,7 @@ import { AlertService } from '../../alerts/AlertService';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { formatDateOnly } from '../utils/dateOnly';
 import { getBusinessDate } from '@server/shared/businessDate';
+import { PersonalNotificationService } from '../../notifications';
 
 export const CHECK_DUE_WINDOW_DAYS = 7;
 
@@ -13,6 +14,7 @@ export class NotificationService {
     private notificationRepository: NotificationRepository,
     private alertService: AlertService,
     private auditService: FinancialAuditService,
+    private personalNotifications: PersonalNotificationService,
   ) { }
 
   @Transaction()
@@ -44,6 +46,14 @@ export class NotificationService {
       studentId: input.studentId,
       status: 'active',
     } as any);
+
+    await this.personalNotifications.createFinancialReminder({
+      studentId: input.studentId,
+      sourceKey: `${input.kind}:${input.businessDate}:${input.studentId}`,
+      topic: `financial.${input.kind}`,
+      title: input.title,
+      body: input.message,
+    });
 
     await this.auditService.record({
       entityType: 'notification',

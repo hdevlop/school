@@ -7,6 +7,7 @@ export {
   Headers,
   Injectable,
   Params,
+  Patch,
   Post,
   Put,
   Query,

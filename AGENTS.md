@@ -182,8 +182,9 @@ Single-owner boundaries. A second owner raises no error — it produces two
 states that drift apart — so do not add one without changing the plan first.
 
 - **One UI provider.** `apps/dashboard/src/app/providers.tsx` mounts exactly one `NajmAppProvider` from `najm-kit/app`, owning language, theme, design, time zone, branding, formatting, and `NTable` defaults. Never add `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local theme wrapper.
-- **One preference source.** `apps/dashboard/src/lib/serverPreferences.ts` resolves cookie → signed-in user → School settings → typed fallback. New preference values belong in `apps/dashboard/src/preferences/`.
-- **One session resolution.** Server components use the `serverAuth` singleton in `apps/dashboard/src/lib/session.ts`. Never call `auth.getSession()` directly from a layout or page, and never build the adapter per request.
+- **One preference source.** `apps/dashboard/src/najm.server.ts` passes School's policy to `createNajmNextServerApp`, which resolves cookie → signed-in user → School settings → typed fallback. New allowlists and normalization helpers belong in `apps/dashboard/src/preferences/`.
+- **One auth definition.** `apps/dashboard/src/najm.auth.ts` derives client, proxy, server-session, and route-handler behavior from `schoolApp.auth`. Do not restate that policy at a consumer.
+- **One session resolution.** Server components use the module-scope adapter in `apps/dashboard/src/najm.server.ts`. Never call `auth.getSession()` directly from a layout or page, and never build the adapter per request.
 - **One Next config.** `apps/dashboard/next.config.ts` is the single line `export { default } from "najm-next/config"`. `najm-next` owns the workspace root (pinned for both `turbopack.root` and `outputFileTracingRoot`, because a stray parent lockfile otherwise wins Next's automatic detection), `NAJM_NEXT_DIST_DIR`, `experimental.externalDir`, `poweredByHeader`, the image cache TTL, `reflect-metadata` externalization, and service-worker headers. `allowedDevOrigins` stays empty unless `NAJM_NEXT_DEV_ORIGINS` names hosts. Do not add keys to the file; a genuine divergence uses `defineNajmNextConfig` from `najm-next/configurable`.
 - **Sidebar state** belongs to `NSidebarProvider` from `najm-kit`, read with `useNSidebar()`. School has no sidebar store.
 - **Translations** live in `packages/server/src/locales/` and serve backend and frontend from one catalog. Run `bun run i18n:check` after adding keys.
@@ -256,8 +257,9 @@ Use these files when behavior matters more than documentation:
 - `.claude/skills/najm/SKILL.md`
 - `apps/dashboard/.env.local.example`
 - `apps/dashboard/src/app/providers.tsx`
-- `apps/dashboard/src/lib/session.ts`
-- `apps/dashboard/src/lib/serverPreferences.ts`
+- `apps/dashboard/src/najm.auth.ts`
+- `apps/dashboard/src/najm.config.ts`
+- `apps/dashboard/src/najm.server.ts`
 - `packages/server/src/modules/students/StudentController.ts`
 - `packages/server/src/modules/students/StudentService.ts`
 - `packages/server/src/modules/parents/ParentController.ts`
