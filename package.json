@@ -68,9 +68,9 @@
     "najm-event": "2.0.2",
     "najm-guard": "2.0.2",
     "najm-i18n": "2.1.2",
-    "najm-kit": "2.14.0",
+    "najm-kit": "2.15.0",
     "najm-mcp": "2.1.2",
-    "najm-next": "0.5.0",
+    "najm-next": "0.6.0",
     "najm-rag": "2.0.3",
     "najm-rate": "2.1.1",
     "najm-storage": "2.2.0",
@@ -126,7 +126,6 @@
     "unrs-resolver"
   ],
   "patchedDependencies": {
-    "najm-auth@4.0.4": "patches/najm-auth@4.0.4.patch",
-    "najm-next@0.5.0": "patches/najm-next@0.5.0.patch"
+    "najm-auth@4.0.4": "patches/najm-auth@4.0.4.patch"
   }
 }

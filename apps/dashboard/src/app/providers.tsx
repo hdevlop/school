@@ -1,8 +1,6 @@
 'use client';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from 'najm-auth/client/react';
-import { NajmAppProvider } from 'najm-kit/app';
+import type { QueryClient } from '@tanstack/react-query';
 import {
   getNajmLocationLabels,
   type NCoordinates,
@@ -13,12 +11,12 @@ import {
   NLocationRuntimeProvider,
   type NLocationRuntimeConfig,
 } from 'najm-kit/location/runtime';
+import { NajmAppProvider } from 'najm-next/app/client';
 import {
   bindNajmNextProvider,
-  NajmNextAppProvider,
   type NajmNextProviderContext,
 } from 'najm-next/app/react';
-import { NThemeBrandingProvider } from 'najm-theme/react';
+import { defineNajmTanStackQuery } from 'najm-next/query/tanstack';
 import { useTranslation } from 'najm-i18n/react';
 import { useMemo, type ReactNode } from 'react';
 
@@ -40,18 +38,14 @@ const SCHOOL_BADGE_DEFAULTS = {
 
 type ProviderContext = NajmNextProviderContext<SchoolUiSnapshot, QueryClient>;
 
-function createQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60_000,
-        refetchOnWindowFocus: false,
-        retry: 0,
-      },
-      mutations: { retry: 0 },
-    },
-  });
-}
+const query = defineNajmTanStackQuery({
+  queries: {
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
+    retry: 0,
+  },
+  mutations: { retry: 0 },
+});
 
 function createLazyGoogleGeocoder(
   options: Extract<NLocationRuntimeConfig, { provider: 'google' }>['google'],
@@ -116,70 +110,16 @@ function SchoolLocationProvider({
   );
 }
 
-function SchoolUiProvider({
-  children,
-  snapshot,
-}: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot }>) {
-  return (
-    <NajmAppProvider
-      appName={SCHOOL_APP_NAME}
-      badgeDefaults={SCHOOL_BADGE_DEFAULTS}
-      currency={snapshot.preferences.currency}
-      initialBranding={snapshot.branding}
-      i18n={schoolI18n}
-      initialDesign={snapshot.appearance.designConfig}
-      initialLanguage={snapshot.preferences.language}
-      initialTheme={snapshot.preferences.theme}
-      initialTimeZone={snapshot.preferences.timeZone}
-      normalizeTimeZone={normalizeSchoolTimeZone}
-      formDevTools={isDevFill}
-    >
-      {children}
-    </NajmAppProvider>
-  );
-}
-
-const authProvider = bindNajmNextProvider(
-  AuthProvider,
-  ({ snapshot }: ProviderContext) => ({
-    client: auth.client,
-    initialSession: snapshot.session,
-  }),
-);
-
-const queryProvider = bindNajmNextProvider(
-  QueryClientProvider,
-  ({ queryClient }: ProviderContext) => ({ client: queryClient! }),
-);
-
 const keyboardProvider = bindNajmNextProvider(
   KeyboardProvider,
-  () => ({}),
+  (_context: ProviderContext) => ({}),
 );
 
-const uiProvider = bindNajmNextProvider(
-  SchoolUiProvider,
-  ({ snapshot }: ProviderContext) => ({ snapshot }),
-);
-
-const brandingProvider = bindNajmNextProvider(
-  NThemeBrandingProvider,
-  ({ snapshot }: ProviderContext) => ({ branding: snapshot.branding }),
-);
-
-const locationProvider = bindNajmNextProvider(
-  SchoolLocationProvider,
-  ({ snapshot }: ProviderContext) => ({
+const location = {
+  Provider: SchoolLocationProvider,
+  selectProps: (snapshot: SchoolUiSnapshot) => ({
     config: snapshot.settings.locationConfig,
   }),
-);
-
-const providers = {
-  auth: authProvider,
-  query: queryProvider,
-  ui: uiProvider,
-  branding: brandingProvider,
-  location: locationProvider,
 } as const;
 
 const extensions = { beforeUi: keyboardProvider } as const;
@@ -189,13 +129,20 @@ export function AppProviders({
   snapshot,
 }: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot }>) {
   return (
-    <NajmNextAppProvider
+    <NajmAppProvider
+      authClient={auth.client}
       snapshot={snapshot}
-      createQueryClient={createQueryClient}
-      providers={providers}
+      query={query}
+      location={location}
       extensions={extensions}
+      appName={SCHOOL_APP_NAME}
+      badgeDefaults={SCHOOL_BADGE_DEFAULTS}
+      currency={snapshot.preferences.currency}
+      i18n={schoolI18n}
+      normalizeTimeZone={normalizeSchoolTimeZone}
+      formDevTools={isDevFill}
     >
       {children}
-    </NajmNextAppProvider>
+    </NajmAppProvider>
   );
 }

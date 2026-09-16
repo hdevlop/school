@@ -63,10 +63,12 @@ describe('Najm app integration — School boundary', () => {
   test('uses one composed UI tree with the keyboard extension in the fixed slot', () => {
     const source = readSource('../app/providers.tsx');
 
-    expect(source).toContain('NajmNextAppProvider');
-    expect(source).toContain('NajmAppProvider');
-    expect(source).toContain('NThemeBrandingProvider');
-    expect(source).toContain('QueryClientProvider');
+    expect(source).toContain("import { NajmAppProvider } from 'najm-next/app/client'");
+    expect(source).toContain('<NajmAppProvider');
+    expect(source).not.toContain('NajmNextAppProvider');
+    expect(source).not.toContain('NThemeBrandingProvider');
+    expect(source).not.toContain('QueryClientProvider');
+    expect(source).toContain('defineNajmTanStackQuery');
     expect(source).toContain('const extensions = { beforeUi: keyboardProvider }');
     expect(source).toContain('i18n={schoolI18n}');
     expect(source).toContain('currency={snapshot.preferences.currency}');
