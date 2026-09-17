@@ -46,7 +46,7 @@ describe('the proxy and core config stay free of React-server code', () => {
   it('proxy.ts composes the core auth and shared location policy', () => {
     expect(proxy).toContain("import { auth } from '@/najm.auth'");
     expect(proxy).toContain('composeNajmProxy({');
-    expect(proxy).toContain('resolveLocationCsp');
+    expect(proxy).not.toContain('resolveLocationCsp');
     expect(proxy).not.toContain('@/najm.server');
     expect(proxy).not.toContain('client/server/react');
   });

@@ -5,14 +5,16 @@ import { fileURLToPath } from 'node:url';
 
 import { POST } from '../app/api/csp-report/route';
 import { createNajmCsp, createNajmNonce } from 'najm-next/security';
+import { defineNajmAppLocationRuntime } from 'najm-next/location/server';
 import {
   readNajmBoundedJson,
   sanitizeNajmCspReports,
 } from 'najm-next/security/reports';
-import { schoolApp, schoolLocation } from '../najm.config';
+import { schoolApp } from '../najm.config';
 
 const dashboardRoot = join(fileURLToPath(new URL('.', import.meta.url)), '..', '..');
 const read = (path: string) => readFileSync(join(dashboardRoot, path), 'utf8');
+const schoolLocation = defineNajmAppLocationRuntime(schoolApp)!;
 
 describe('the per-request content security policy', () => {
   const nonce = 'dGVzdC1ub25jZQ==';
@@ -73,7 +75,7 @@ describe('the per-request content security policy', () => {
     const instrumentation = read('src/instrumentation-client.ts');
 
     expect(proxy).toContain('composeNajmProxy');
-    expect(proxy).toContain('resolveLocationCsp');
+    expect(proxy).not.toContain('resolveLocationCsp');
     expect(instrumentation).toContain("import 'najm-next/instrumentation/client'");
   });
 });

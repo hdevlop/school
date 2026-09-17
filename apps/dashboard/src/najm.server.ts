@@ -7,7 +7,7 @@ import type { SchoolUiSettings } from '@sms/server';
 import { schoolI18n } from '@sms/server/locales';
 import { schoolTheme } from '@sms/server/theme';
 import { auth } from '@/najm.auth';
-import { schoolApp, schoolLocation } from '@/najm.config';
+import { schoolApp } from '@/najm.config';
 import {
   SCHOOL_DEFAULT_CURRENCY,
   SCHOOL_DEFAULT_THEME,
@@ -30,10 +30,6 @@ export const schoolPreferences = defineNajmPreferences({
   },
 });
 
-const locationConfig = schoolLocation.resolve(process.env, {
-  isDevelopment: process.env.NODE_ENV === 'development',
-}).config;
-
 const fallbackSchoolSettings: SchoolUiSettings = {
   schoolName: null,
   language: null,
@@ -44,7 +40,6 @@ const fallbackSchoolSettings: SchoolUiSettings = {
 
 export interface SchoolPublicUiSettings {
   school: SchoolUiSettings;
-  locationConfig: typeof locationConfig;
 }
 
 export const najmServer = createNajmNextServerApp({
@@ -67,12 +62,10 @@ export const najmServer = createNajmNextServerApp({
     const { loadSchoolUiSettings } = await import('@sms/server');
     return {
       school: (await loadSchoolUiSettings()) ?? fallbackSchoolSettings,
-      locationConfig,
     };
   },
   fallbackSettings: {
     school: fallbackSchoolSettings,
-    locationConfig,
   },
   onDiagnostic: (diagnostic) => {
     console.warn('[school] public UI settings fallback', diagnostic);

@@ -1,7 +1,10 @@
 import { describe, expect, test } from 'bun:test';
 import { readFileSync } from 'node:fs';
 
-import { schoolLocation } from '../najm.config';
+import { defineNajmAppLocationRuntime } from 'najm-next/location/server';
+import { schoolApp } from '../najm.config';
+
+const schoolLocation = defineNajmAppLocationRuntime(schoolApp)!;
 
 const read = (relativePath: string) =>
   readFileSync(new URL(relativePath, import.meta.url), 'utf8');
@@ -38,13 +41,13 @@ describe('School shared Google location integration', () => {
     ).toBe('disabled');
   });
 
-  test('keeps the Google SDK and Places geocoder behind lazy leaf imports', () => {
+  test('delegates the Google SDK and Places geocoder to the shared app provider', () => {
     const provider = read('../app/providers.tsx');
 
-    expect(provider).toContain("import('najm-kit/location/google')");
-    expect(provider).toContain('createGooglePlacesGeocoder');
-    expect(provider).toContain('searchMode="autocomplete"');
-    expect(provider).toContain("config.provider !== 'google'");
+    expect(provider).toContain('<NajmAppProvider');
+    expect(provider).not.toContain("import('najm-kit/location/google')");
+    expect(provider).not.toContain('createGooglePlacesGeocoder');
+    expect(provider).not.toContain('SchoolLocationProvider');
     expect(provider).not.toContain('@react-google-maps/api');
     expect(provider).not.toContain('process.env');
   });

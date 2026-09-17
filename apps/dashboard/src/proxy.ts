@@ -1,15 +1,11 @@
 import { composeNajmProxy } from 'najm-next/security';
 
 import { auth } from '@/najm.auth';
-import { schoolApp, schoolLocation } from '@/najm.config';
+import { schoolApp } from '@/najm.config';
 
 export default composeNajmProxy({
   auth,
   app: schoolApp,
-  resolveLocationCsp: (env) =>
-    schoolLocation.resolve(env, {
-      isDevelopment: env.NODE_ENV === 'development',
-    }).csp,
 });
 
 export const config = {
