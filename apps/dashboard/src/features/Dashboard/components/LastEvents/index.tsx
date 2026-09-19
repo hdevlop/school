@@ -3,7 +3,7 @@ import { Clock, User, Calendar } from 'lucide-react';
 import { NCard } from 'najm-kit';
 import { cn } from '@/lib/utils';
 import { NSkeletonEventList } from 'najm-kit';
-import { useDelayedLoading } from '@/hooks/useDelayedLoading';
+import { useDelayedLoading } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
 interface LastEventsProps {

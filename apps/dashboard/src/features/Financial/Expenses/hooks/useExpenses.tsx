@@ -1,5 +1,5 @@
 'use client'
-import { useEntityCRUD } from '@/hooks/useEntityCRUD';
+import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as expenseApi from '@/services/expenseApi';
 
 export const useExpenses = (options?) => {

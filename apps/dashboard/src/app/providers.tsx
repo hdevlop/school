@@ -10,7 +10,6 @@ import { defineNajmTanStackQuery } from 'najm-next/query/tanstack';
 import type { ReactNode } from 'react';
 
 import { schoolI18n } from '@sms/server/locales';
-import { SCHOOL_APP_NAME } from '@/lib/appName';
 import { isDevFill } from '@/lib/devFill';
 import { STATUS_COLOR_MAP, STATUS_LABEL_KEYS } from '@/lib/statusBadge';
 import { auth } from '@/najm.auth';
@@ -51,9 +50,7 @@ export function AppProviders({
       snapshot={snapshot}
       query={query}
       extensions={extensions}
-      appName={SCHOOL_APP_NAME}
       badgeDefaults={SCHOOL_BADGE_DEFAULTS}
-      currency={snapshot.preferences.currency}
       i18n={schoolI18n}
       normalizeTimeZone={normalizeSchoolTimeZone}
       formDevTools={isDevFill}

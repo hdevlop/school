@@ -6,7 +6,7 @@ import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NSkeletonChart } from 'najm-kit';
-import { useDelayedLoading } from '@/hooks/useDelayedLoading';
+import { useDelayedLoading } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];

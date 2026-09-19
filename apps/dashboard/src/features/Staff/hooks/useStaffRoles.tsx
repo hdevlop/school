@@ -1,5 +1,5 @@
 'use client';
-import { useEntityCRUD } from '@/hooks/useEntityCRUD';
+import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as staffRolesApi from '@/services/staffRolesApi';
 
 const ROLE_QUERY_KEYS = ['staff-roles', 'staff-roles-active'];

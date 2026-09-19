@@ -1,5 +1,5 @@
 'use client'
-import { useEntityCRUD } from '@/hooks/useEntityCRUD';
+import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as examApi from '@/services/examApi';
 
 export const useExams = (options?) => {

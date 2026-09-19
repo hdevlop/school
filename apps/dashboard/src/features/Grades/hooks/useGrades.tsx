@@ -1,6 +1,6 @@
 'use client'
 import { useCallback, useState } from 'react';
-import { useEntityCRUD } from '@/hooks/useEntityCRUD';
+import { useEntityCRUD } from 'najm-kit/query/crud';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import * as gradeApi from '@/services/gradeApi';
 

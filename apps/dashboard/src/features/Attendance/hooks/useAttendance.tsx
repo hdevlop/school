@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useEntityCRUD } from '@/hooks/useEntityCRUD';
+import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as attendanceApi from '@/services/attendanceApi';
 
 const runRosterBatch = async (items: Array<any & { id?: string }>) => {

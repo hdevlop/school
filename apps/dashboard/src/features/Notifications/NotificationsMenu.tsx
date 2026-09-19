@@ -2,58 +2,128 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Bell } from 'lucide-react';
-import { NButton, NIndicator, Popover, PopoverContent, PopoverTrigger } from 'najm-kit';
+import { useMemo, useState } from 'react';
+import {
+  NNotifyContent,
+  NNotifyFooter,
+  NNotifyHeader,
+  NNotifyList,
+  NNotifyRoot,
+  NNotifyTrigger,
+  type NNotifyItemData,
+  type NNotifyLabels,
+} from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { useState } from 'react';
+import { toast } from 'sonner';
 import { useNotificationCommands, useNotifications, useUnreadCount } from './useNotifications';
+import type { NotificationRecord } from './types';
 
-function NotificationsMenuBody({ close }: Readonly<{ close: () => void }>) {
+/** School rows are already titled, so they map straight across. */
+function toNotifyItem(record: NotificationRecord): NNotifyItemData {
+  return {
+    id: record.id,
+    title: record.title,
+    body: record.body,
+    href: record.href ?? undefined,
+    read: record.readAt !== null,
+    createdAt: record.createdAt,
+  };
+}
+
+function useNotifyLabels(): NNotifyLabels {
   const { t } = useTranslation();
+
+  return useMemo<NNotifyLabels>(
+    () => ({
+      open: t('notifications.open'),
+      unread: (count: number) => t('notifications.unreadBadge', { count }),
+      title: t('notifications.inbox'),
+      loading: t('notifications.loading'),
+      emptyTitle: t('notifications.empty'),
+      emptyDescription: t('notifications.emptyBody'),
+      errorTitle: t('notifications.loadError'),
+      retry: t('common.feedback.retryLabel'),
+      markRead: t('notifications.markRead'),
+      markingRead: t('notifications.marking'),
+      markAllRead: t('notifications.markAll'),
+      markingAll: t('notifications.markingAll'),
+      view: t('common.view'),
+      viewAll: t('notifications.viewAll'),
+      unreadState: t('notifications.stateUnread'),
+      justNow: t('notifications.justNow'),
+    }),
+    [t],
+  );
+}
+
+/**
+ * Connected preview, mounted only while the menu is open so the list query
+ * runs on entry instead of behind a closed bell.
+ */
+function NotificationsMenuBody({
+  labels,
+  onClose,
+}: Readonly<{ labels: NNotifyLabels; onClose: () => void }>) {
   const router = useRouter();
   const list = useNotifications(5);
-  const { markRead, markAll } = useNotificationCommands();
+  const { markAll, markRead } = useNotificationCommands();
 
-  async function openNotification(id: string, href: string | null) {
-    await markRead.mutateAsync(id);
-    close();
-    if (href) router.push(href);
+  const items = useMemo(() => (list.data ?? []).map(toNotifyItem), [list.data]);
+
+  // A rejected read used to reject unhandled and still close the menu, which
+  // read as success. It is now reported, and the menu stays open and usable.
+  function report(error: unknown) {
+    toast.error(error instanceof Error ? error.message : labels.errorTitle);
   }
 
   return (
     <>
-      <div className="flex items-center justify-between px-2 py-1">
-        <p className="font-semibold">{t('notifications.inbox')}</p>
-        <NButton size="sm" variant="ghost" disabled={markAll.isPending} onClick={() => void markAll.mutateAsync()}>{t('notifications.markAll')}</NButton>
-      </div>
-      <div className="max-h-80 space-y-1 overflow-y-auto">
-        {list.isPending ? <p className="p-3 text-sm text-muted-foreground">{t('notifications.loading')}</p> : null}
-        {list.data?.length === 0 ? <p className="p-3 text-sm text-muted-foreground">{t('notifications.empty')}</p> : null}
-        {list.data?.map((item) => (
-          <button key={item.id} type="button" className={`w-full rounded-md p-3 text-start hover:bg-muted ${item.readAt ? '' : 'bg-muted/60'}`} onClick={() => void openNotification(item.id, item.href)}>
-            <span className="block text-sm font-medium">{item.title}</span>
-            <span className="block text-sm text-muted-foreground">{item.body}</span>
-          </button>
-        ))}
-      </div>
-      <div className="border-t px-2 pt-2 text-end"><Link href="/notifications" onClick={close} className="text-sm text-primary">{t('notifications.viewAll')}</Link></div>
+      <NNotifyHeader
+        markAllLabel={labels.markAllRead}
+        markAllPending={markAll.isPending}
+        markingAllLabel={labels.markingAll}
+        onError={report}
+        onMarkAllRead={() => markAll.mutateAsync()}
+        title={labels.title}
+      />
+      <NNotifyList
+        error={list.isError}
+        itemProps={{ onMarkedRead: onClose }}
+        items={items}
+        labels={labels}
+        loading={list.isPending}
+        markReadPendingId={markRead.isPending ? markRead.variables ?? null : null}
+        onError={report}
+        onMarkRead={(id) => markRead.mutateAsync(id)}
+        onOpenItem={(item) => {
+          if (item.href) router.push(item.href);
+        }}
+        onRetry={() => void list.refetch()}
+      />
+      <NNotifyFooter asChild>
+        <Link href="/notifications">{labels.viewAll}</Link>
+      </NNotifyFooter>
     </>
   );
 }
 
 export function NotificationsMenu() {
-  const { t } = useTranslation();
+  const { language } = useTranslation();
   const [open, setOpen] = useState(false);
-  const count = useUnreadCount().data?.count ?? 0;
-  const bell = (
-    <NButton type="button" variant="ghost" size="icon" aria-label={t('notifications.open')}><Bell size={18} /></NButton>
-  );
+  const labels = useNotifyLabels();
+  const unreadCount = useUnreadCount().data?.count ?? 0;
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{count > 0 ? <NIndicator overlay="badge" color="destructive" content={count > 99 ? '99+' : String(count)}>{bell}</NIndicator> : bell}</PopoverTrigger>
-      <PopoverContent align="end" className="w-[min(24rem,calc(100vw-2rem))] p-2">
-        {open ? <NotificationsMenuBody close={() => setOpen(false)} /> : null}
-      </PopoverContent>
-    </Popover>
+    <NNotifyRoot onOpenChange={setOpen} open={open}>
+      <NNotifyTrigger
+        label={labels.open}
+        locale={language ?? 'en'}
+        unreadCount={unreadCount}
+        unreadLabel={labels.unread}
+      />
+      <NNotifyContent>
+        <NotificationsMenuBody labels={labels} onClose={() => setOpen(false)} />
+      </NNotifyContent>
+    </NNotifyRoot>
   );
 }

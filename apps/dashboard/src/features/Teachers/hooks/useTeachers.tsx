@@ -1,5 +1,5 @@
 'use client'
-import { useEntityCRUD } from '@/hooks/useEntityCRUD';
+import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as teacherApi from '@/services/teacherApi';
 
 export const useTeachers = (options?) => {

@@ -1,14 +1,7 @@
 'use client'
 
 import React from 'react';
-import { Languages, Loader2 } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  NButton,
-} from 'najm-kit';
+import { NLanguageMenu, type NLanguageOption } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useUpdateLang } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
@@ -21,60 +14,41 @@ const languages = [
   { code: 'ar', name: 'العربية', iso2: 'ma' },
 ] satisfies Array<{ code: SchoolLanguage; name: string; iso2: string }>;
 
+const options: Array<NLanguageOption<SchoolLanguage>> = languages.map((lang) => ({
+  value: lang.code,
+  label: lang.name,
+  icon: (
+    <span
+      className={cn('fi', `fi-${lang.iso2}`, 'shrink-0 rounded-sm')}
+      style={{ width: '1.25rem', height: '0.9375rem' }}
+    />
+  ),
+}));
+
 /**
  * Language Switcher Component
- * Allows users to change the application language
- * Persists selection to user settings via API
+ *
+ * The dropdown, the selected state and the pending state are Najm Kit's. The
+ * transaction stays School's: `useUpdateLang` writes the authenticated
+ * preference, changes the package language, refreshes the user, invalidates
+ * School queries and raises its own toast.
  */
 const LanguageSwitcher = () => {
   const { language } = useTranslation();
   const { updateLang, isLoading: isUpdatingLang } = useUpdateLang();
 
-  const handleLanguageChange = async (lang: SchoolLanguage) => {
-    try {
-      await updateLang(lang);
-    } catch (error) {
-      console.error('Failed to update language:', error);
-    }
-  };
-
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <NButton
-          type="button"
-          variant="ghost"
-          size="icon"
-          disabled={isUpdatingLang}
-          aria-label="Change language"
-          className="text-foreground hover:text-foreground [&_svg]:text-foreground [&_svg]:opacity-100"
-        >
-          {isUpdatingLang ? (
-            <Loader2 size={18} className="animate-spin" />
-          ) : (
-            <Languages size={18} />
-          )}
-        </NButton>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
-        {languages.map((lang) => (
-          <DropdownMenuItem
-            key={lang.code}
-            onClick={() => handleLanguageChange(lang.code)}
-            className={cn(
-              'flex items-center gap-2 cursor-pointer',
-              language === lang.code && 'bg-primary text-primary-foreground'
-            )}
-          >
-            <span
-              className={cn('fi', `fi-${lang.iso2}`, 'shrink-0 rounded-sm')}
-              style={{ width: '1.25rem', height: '0.9375rem' }}
-            />
-            <span>{lang.name}</span>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <NLanguageMenu
+      contentClassName="w-48"
+      label="Change language"
+      onChange={(next) => updateLang(next)}
+      // `useUpdateLang` already presents its own failure; swallowing the
+      // rejection here keeps it from being reported twice.
+      onError={() => undefined}
+      options={options}
+      pending={isUpdatingLang}
+      value={(language ?? 'en') as SchoolLanguage}
+    />
   );
 };
 

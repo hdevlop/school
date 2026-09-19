@@ -1,6 +1,6 @@
 'use client'
 
-import { useEntityCRUD } from '@/hooks/useEntityCRUD';
+import { useEntityCRUD } from 'najm-kit/query/crud';
 import { seedDemoApi, seedSystemApi, clearAllDataApi, type SeedDemoOptions } from '@/services/seedApi';
 import { getAdminSettingsApi, getPublicSettingsApi, updateSettingsApi } from '@/services/settingApi';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
