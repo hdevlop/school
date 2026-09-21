@@ -5,7 +5,6 @@ import { Phone, GraduationCap, Mail } from 'lucide-react';
 import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import { Label } from 'najm-kit';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 
@@ -31,7 +30,7 @@ const TeacherCard = ({ data }) => {
    return (
       <div className="flex items-start gap-4 p-4">
          <div className="shrink-0">
-            <NAvatar src={teacher?.image} fallback={getAvatarFallback(teacher.name)} size="lg" version={teacher?.updatedAt} classNames={personAvatarClassNames} />
+            <NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={teacher?.updatedAt} />
          </div>
 
          <div className="flex-1 flex flex-col gap-2">

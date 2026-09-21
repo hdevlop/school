@@ -15,7 +15,7 @@ import { NCard } from 'najm-kit';
 import { BarChart2 } from 'lucide-react';
 import { NSkeletonChart } from 'najm-kit';
 import { useFinanceCollectionByClass } from '@/features/Dashboard/hooks/useDashboardHooks';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 
 type ClassRow = {
@@ -38,14 +38,14 @@ const rateColor = (rate: number) => {
   return '#ef4444';
 };
 
-const CustomTooltip = ({ active, payload, locale, t }: any) => {
+const CustomTooltip = ({ active, payload, majorMoney, t }: any) => {
   if (active && payload?.length) {
     const d = payload[0].payload as ClassRow;
     return (
       <div className="bg-white px-3 py-2 rounded shadow border border-gray-200 text-sm space-y-1">
         <p className="font-semibold text-gray-800">{d.className}</p>
-        <p className="text-gray-600">{t('reports.collection.due')} : <span className="font-medium">{formatMAD(d.due, locale)}</span></p>
-        <p className="text-gray-600">{t('reports.collection.paid')} : <span className="font-medium text-green-600">{formatMAD(d.paid, locale)}</span></p>
+        <p className="text-gray-600">{t('reports.collection.due')} : <span className="font-medium">{majorMoney(d.due)}</span></p>
+        <p className="text-gray-600">{t('reports.collection.paid')} : <span className="font-medium text-green-600">{majorMoney(d.paid)}</span></p>
         <p className="text-gray-600">{t('reports.collection.rate')} : <span className="font-medium" style={{ color: rateColor(d.rate) }}>{d.rate.toFixed(1)}%</span></p>
         <p className="text-gray-400">{t('reports.collection.students', { count: d.studentCount })}</p>
       </div>
@@ -55,8 +55,8 @@ const CustomTooltip = ({ active, payload, locale, t }: any) => {
 };
 
 const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' }) => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data, isLoading } = useFinanceCollectionByClass(academicYear);
 
   const rows: ClassRow[] = useMemo(() => Array.isArray(data) ? data : [], [data]);
@@ -95,7 +95,7 @@ const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' 
               tickFormatter={(v) => `${v}%`}
               dx={-4}
             />
-            <Tooltip content={<CustomTooltip locale={locale} t={t} />} />
+            <Tooltip content={<CustomTooltip majorMoney={majorMoney} t={t} />} />
             <Bar dataKey="rate" radius={[4, 4, 0, 0]} maxBarSize={48}>
               {chartData.map((entry, i) => (
                 <Cell key={i} fill={rateColor(entry.rate)} />
@@ -120,8 +120,8 @@ const CollectionByClassChart: React.FC<Props> = ({ academicYear, className = '' 
               {rows.map((r) => (
                 <tr key={r.classId ?? r.className} className="border-b border-border/40 hover:bg-muted/30">
                   <td className="py-1 font-medium">{r.className}</td>
-                  <td className="py-1 text-right tabular-nums">{formatMAD(r.due, locale)}</td>
-                  <td className="py-1 text-right tabular-nums text-green-600">{formatMAD(r.paid, locale)}</td>
+                  <td className="py-1 text-right tabular-nums">{majorMoney(r.due)}</td>
+                  <td className="py-1 text-right tabular-nums text-green-600">{majorMoney(r.paid)}</td>
                   <td className="py-1 text-right tabular-nums font-semibold" style={{ color: rateColor(r.rate) }}>
                     {r.rate.toFixed(1)}%
                   </td>

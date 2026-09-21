@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useRef } from 'react'
 import { FormInput, NFormSectionHeader, NSkeleton } from 'najm-kit'
+import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { Bus, CalendarDays, CircleAlert, NotebookPen } from 'lucide-react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { useTranslation } from 'najm-i18n/react'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings'
-import { LocationField } from '@/components/location/LocationField'
+import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 
 type Props = {
   form?: any
@@ -17,16 +18,19 @@ type Props = {
 export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
   const activeForm = useActiveForm(form)
   const { t } = useTranslation()
+  const { majorMoney } = useSchoolFormat()
   const { vehicles = [], isVehiclesLoading } = useVehicles()
   const { publicSettings, isSettingsLoading } = usePublicSettings()
   const defaultsApplied = useRef(false)
 
   const enabled = Boolean(activeForm.watch('transportEnabled'))
   const selectedVehicleId = activeForm.watch('transportAssignment.vehicleId')
-  const studentAddress = activeForm.watch('address')
+  const studentAddressLocation = activeForm.watch('addressLocation')
   const studentPlaceId = activeForm.watch('addressPlaceId')
-  const studentLatitude = activeForm.watch('addressLatitude')
-  const studentLongitude = activeForm.watch('addressLongitude')
+  const pickup = activeForm.watch('transportAssignment.pickup')
+  const dropoff = activeForm.watch('transportAssignment.dropoff')
+  const pickupPlaceId = activeForm.watch('transportAssignment.pickupPlaceId')
+  const dropoffPlaceId = activeForm.watch('transportAssignment.dropoffPlaceId')
   const enrollmentDate = activeForm.watch('enrollmentDate')
 
   const activeVehicles = useMemo(() => {
@@ -60,19 +64,19 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
     }
     if (defaultsApplied.current || isSettingsLoading) return
 
-    if (!activeForm.getValues('transportAssignment.pickupLocation') && studentAddress) {
-      activeForm.setValue('transportAssignment.pickupLocation', studentAddress)
+    if (!activeForm.getValues('transportAssignment.pickup')?.address && studentAddressLocation?.address) {
+      activeForm.setValue('transportAssignment.pickup', studentAddressLocation)
       activeForm.setValue('transportAssignment.pickupPlaceId', studentPlaceId ?? null)
-      activeForm.setValue('transportAssignment.pickupLatitude', studentLatitude ?? null)
-      activeForm.setValue('transportAssignment.pickupLongitude', studentLongitude ?? null)
     }
 
     const settings = Array.isArray(publicSettings) ? publicSettings[0] : publicSettings
-    if (!activeForm.getValues('transportAssignment.dropoffLocation') && settings?.schoolAddress) {
-      activeForm.setValue('transportAssignment.dropoffLocation', settings.schoolAddress)
+    if (!activeForm.getValues('transportAssignment.dropoff')?.address && settings?.schoolAddress) {
+      activeForm.setValue('transportAssignment.dropoff', normalizeLocationValue({
+        address: settings.schoolAddress,
+        latitude: settings.schoolAddressLatitude,
+        longitude: settings.schoolAddressLongitude,
+      }))
       activeForm.setValue('transportAssignment.dropoffPlaceId', settings.schoolAddressPlaceId ?? null)
-      activeForm.setValue('transportAssignment.dropoffLatitude', settings.schoolAddressLatitude ?? null)
-      activeForm.setValue('transportAssignment.dropoffLongitude', settings.schoolAddressLongitude ?? null)
     }
     if (!activeForm.getValues('transportAssignment.assignmentDate')) {
       activeForm.setValue(
@@ -87,17 +91,13 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
     enrollmentDate,
     isSettingsLoading,
     publicSettings,
-    studentAddress,
-    studentLatitude,
-    studentLongitude,
+    studentAddressLocation,
     studentPlaceId,
   ])
 
   const useHomeAddress = () => {
-    activeForm.setValue('transportAssignment.pickupLocation', studentAddress || '', { shouldDirty: true, shouldValidate: true })
+    activeForm.setValue('transportAssignment.pickup', studentAddressLocation ?? normalizeLocationValue(), { shouldDirty: true, shouldValidate: true })
     activeForm.setValue('transportAssignment.pickupPlaceId', studentPlaceId ?? null, { shouldDirty: true })
-    activeForm.setValue('transportAssignment.pickupLatitude', studentLatitude ?? null, { shouldDirty: true })
-    activeForm.setValue('transportAssignment.pickupLongitude', studentLongitude ?? null, { shouldDirty: true })
   }
 
   return (
@@ -134,34 +134,28 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
 
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="space-y-2">
-              <LocationField
-                form={activeForm}
-                names={{
-                  address: 'transportAssignment.pickupLocation',
-                  placeId: 'transportAssignment.pickupPlaceId',
-                  latitude: 'transportAssignment.pickupLatitude',
-                  longitude: 'transportAssignment.pickupLongitude',
-                }}
-                label={t('transport.form.pickupLocation')}
+              <FormLocationInput
+                name="transportAssignment.pickup"
+                formLabel={t('transport.form.pickupLocation')}
                 placeholder={t('transport.form.pickupPlaceholder')}
                 required
-                compact
+                providerMeta={pickup && pickupPlaceId
+                  ? { provider: 'google', placeId: pickupPlaceId, ...pickup }
+                  : null}
+                onProviderMetaChange={(meta) => activeForm.setValue('transportAssignment.pickupPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
               />
               <button type="button" className="text-xs font-semibold text-primary hover:underline" onClick={useHomeAddress}>
                 {t('transport.form.useHomeAddress')}
               </button>
             </div>
-            <LocationField
-              form={activeForm}
-              names={{
-                address: 'transportAssignment.dropoffLocation',
-                placeId: 'transportAssignment.dropoffPlaceId',
-                latitude: 'transportAssignment.dropoffLatitude',
-                longitude: 'transportAssignment.dropoffLongitude',
-              }}
-              label={t('transport.form.dropoffLocation')}
+            <FormLocationInput
+              name="transportAssignment.dropoff"
+              formLabel={t('transport.form.dropoffLocation')}
               placeholder={t('transport.form.dropoffPlaceholder')}
-              compact
+              providerMeta={dropoff && dropoffPlaceId
+                ? { provider: 'google', placeId: dropoffPlaceId, ...dropoff }
+                : null}
+              onProviderMetaChange={(meta) => activeForm.setValue('transportAssignment.dropoffPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
             />
           </div>
 
@@ -175,7 +169,7 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
               {transportFeeType ? <Bus className="h-4 w-4 text-primary" /> : <CircleAlert className="h-4 w-4 text-destructive" />}
               {t('transport.form.feePreview')}
               {transportFeeType ? (
-                <span className="font-semibold text-primary">{Number(transportFeeType.amount).toLocaleString()} MAD</span>
+                <span className="font-semibold text-primary">{majorMoney(transportFeeType.amount)}</span>
               ) : null}
             </p>
             <p className="mt-1 text-xs text-muted-foreground">

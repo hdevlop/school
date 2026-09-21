@@ -3,8 +3,7 @@ import { Label, SimpleTooltip } from 'najm-kit';
 import { Progress } from 'najm-kit';
 
 import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, CreditCard, ReceiptText } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -12,8 +11,7 @@ const FeeCard = ({ data }) => {
   const { t } = useTranslation();
   const fee = data;
 
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { majorMoney } = useSchoolFormat();
 
   const statusStyles = {
     paid: {
@@ -84,11 +82,11 @@ const FeeCard = ({ data }) => {
             <NBadge look='solid' color='success' size='md' className="gap-1.5 px-2.5 py-1">
               <CheckCircle2 className="h-4 w-4" />
               <span className="font-semibold">PAID</span>
-              {formatCurrency(fee.paidAmount, currency)}
+              {majorMoney(fee.paidAmount)}
             </NBadge>
           ) : (
             <Label className="text-md font-bold text-red-600 tabular-nums">
-              {formatCurrency(fee.balance, currency)}
+              {majorMoney(fee.balance)}
             </Label>
           )}
         </div>
@@ -120,7 +118,7 @@ const FeeCard = ({ data }) => {
       content={
         <div className="flex flex-col gap-0.5">
           <span className="font-semibold">This fee has a discount</span>
-          <span>{formatCurrency(discountAmount, currency)} reduced from the original amount.</span>
+          <span>{majorMoney(discountAmount)} reduced from the original amount.</span>
         </div>
       }
     >

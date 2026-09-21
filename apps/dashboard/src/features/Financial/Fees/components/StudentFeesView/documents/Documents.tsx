@@ -5,9 +5,10 @@ import { NajmScroll, NButton, NSkeleton } from 'najm-kit';
 import { FileText, Printer } from "lucide-react";
 import { usePayments } from "@/features/Financial/Payment/hooks/usePayments";
 import { printReceipt } from "@/features/Financial/Payment/components/ReceiptPrint/printReceipt";
-import { formatDate } from "@/lib/utils";
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const Documents = ({ studentId }) => {
+  const { currency, displayDate, majorMoney } = useSchoolFormat();
   const { studentPayments, isStudentPaymentsLoading } = usePayments({ studentId });
 
   const payments = Array.isArray(studentPayments) ? studentPayments : [];
@@ -20,6 +21,7 @@ export const Documents = ({ studentId }) => {
       studentName: payment.student?.name ?? '',
       studentCode: payment.student?.studentCode ?? '',
       amount: Number(payment.amount),
+      currency,
       paymentMethod: payment.paymentMethod,
       transactionRef: payment.transactionRef ?? undefined,
       checkNumber: payment.checkNumber ?? undefined,
@@ -87,8 +89,8 @@ export const Documents = ({ studentId }) => {
                       Reçu N° {payment.receiptNumber ?? payment.id}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {formatDate(payment.paymentDate)} &nbsp;·&nbsp;{' '}
-                      {Number(payment.amount).toLocaleString('fr-MA')} MAD
+                      {displayDate(payment.paymentDate)} &nbsp;·&nbsp;{' '}
+                      {majorMoney(payment.amount)}
                     </p>
                   </div>
                 </div>

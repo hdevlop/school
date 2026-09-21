@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
 
 export const useSectionsTableColumns = () => {
@@ -111,7 +110,7 @@ export const useSectionsTableColumns = () => {
       enableColumnFilter: true,
       cell: ({ getValue }) => {
         const status = getValue();
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={status} />;
+        return <NBadge status={status} />;
       },
       size: 120,
     },

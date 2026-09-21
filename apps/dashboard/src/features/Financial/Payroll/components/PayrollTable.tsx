@@ -8,11 +8,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-
-const money = (value?: string | number | null) => {
-  const numeric = Number(value || 0);
-  return `${numeric.toLocaleString('en-US', { maximumFractionDigits: 2 })} DH`;
-};
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const calculateStaffPay = (member) => {
   if (member?.compensationMode === 'hourly') {
@@ -32,14 +28,16 @@ const normalizeEmploymentType = (value?: string | null) => {
 // Current period in 'YYYY-MM' (what the backend expects).
 const currentPeriod = () => new Date().toISOString().slice(0, 7);
 
-const formatPeriod = (period: string) => {
+const formatPeriod = (period: string, locale: string) => {
   const [year, month] = period.split('-').map(Number);
   if (!year || !month) return period;
-  return new Date(year, month - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  return new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(Date.UTC(year, month - 1, 1)));
 };
 
 const PayrollTable = () => {
   const { t } = useTranslation();
+  const { locale, majorMoney } = useSchoolFormat();
   const [period, setPeriod] = useState<string>(currentPeriod());
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
@@ -84,13 +82,13 @@ const PayrollTable = () => {
         name: slip?.staffName ?? member.name ?? '-',
         role: slip?.staffRole ?? member.role,
         contractType: normalizeEmploymentType(member?.employmentType),
-        payrollPeriod: formatPeriod(period),
+        payrollPeriod: formatPeriod(period, locale),
         paymentAmount: Number(slip?.netAmount ?? calculateStaffPay(member)),
         paymentStatus: slip ? slip.status : 'notRun',
         payslipNumber: slip?.payslipNumber ?? null,
       };
     });
-  }, [eligibleStaff, payslipByStaff, period]);
+  }, [eligibleStaff, payslipByStaff, period, locale]);
 
   const totalPayroll = summary?.totalNet
     ?? tableRows.reduce((sum, row) => sum + row.paymentAmount, 0);
@@ -193,7 +191,7 @@ const PayrollTable = () => {
       accessorKey: 'paymentAmount',
       header: t('payroll.table.amount'),
       enableSorting: true,
-      cell: ({ getValue }) => <span className="font-semibold text-slate-800">{money(getValue() as number)}</span>,
+      cell: ({ getValue }) => <span className="font-semibold text-slate-800">{majorMoney(getValue() as number)}</span>,
     },
     {
       accessorKey: 'paymentStatus',
@@ -221,7 +219,7 @@ const PayrollTable = () => {
         );
       },
     },
-  ], [t, handlePayOne, handleUnpayOne, statusBadge, typeBadge, isPaying]);
+  ], [t, handlePayOne, handleUnpayOne, statusBadge, typeBadge, isPaying, majorMoney]);
 
   // Last 12 months + next month, newest first — drives the period query (refetch on change).
   const periodOptions = useMemo(() => {
@@ -229,9 +227,9 @@ const PayrollTable = () => {
     return Array.from({ length: 13 }, (_, i) => {
       const d = new Date(base.getFullYear(), base.getMonth() - (i - 1), 1);
       const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      return { value, label: d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) };
+      return { value, label: formatPeriod(value, locale) };
     });
-  }, []);
+  }, [locale]);
 
   const filters = useMemo(() => [
     {
@@ -277,7 +275,7 @@ const PayrollTable = () => {
       <NPageHeader
         icon={Wallet}
         title={t('navigation.payroll')}
-        subtitle={`${t('payroll.subtitle.count', { count: tableRows.length })} · ${formatPeriod(period)}`}
+        subtitle={`${t('payroll.subtitle.count', { count: tableRows.length })} · ${formatPeriod(period, locale)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -291,12 +289,12 @@ const PayrollTable = () => {
           <NStatCard
             icon={CalendarDays}
             label={t('payroll.stats.period')}
-            value={formatPeriod(period)}
+            value={formatPeriod(period, locale)}
           />
           <NStatCard
             icon={Banknote}
             label={t('payroll.stats.payroll')}
-            value={money(totalPayroll)}
+            value={majorMoney(totalPayroll)}
           />
           <NStatCard
             icon={ReceiptText}

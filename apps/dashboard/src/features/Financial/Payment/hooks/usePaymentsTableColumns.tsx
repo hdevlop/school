@@ -1,14 +1,11 @@
 import { useMemo } from 'react';
-import { formatCurrency, formatDate } from '@/lib/utils';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP, STATUS_ICON_MAP } from '@/lib/statusBadge';
 import { useTranslation } from 'najm-i18n/react';
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const usePaymentsTableColumns = () => {
 
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { displayDate, majorMoney } = useSchoolFormat();
   const { t } = useTranslation();
 
   return useMemo(() => [
@@ -34,7 +31,7 @@ export const usePaymentsTableColumns = () => {
       cell: ({ getValue }: any) => (
         <div className="flex items-center gap-2">
           <span>📅</span>
-          <span>{formatDate(getValue())}</span>
+          <span>{displayDate(getValue())}</span>
         </div>
       ),
     },
@@ -46,7 +43,7 @@ export const usePaymentsTableColumns = () => {
         const amount = getValue() || 0;
         return (
           <span className="font-semibold text-green-600 tabular-nums">
-            {formatCurrency(amount,currency)} 
+            {majorMoney(amount)}
           </span>
         );
       },
@@ -87,7 +84,7 @@ export const usePaymentsTableColumns = () => {
       enableColumnFilter: true,
       cell: ({ getValue }: any) => {
         const status = getValue();
-        return <NBadge status={status} statusMap={STATUS_COLOR_MAP} iconMap={STATUS_ICON_MAP} showIcon />;
+        return <NBadge status={status} showIcon />;
       },
       size: 120,
     },
@@ -104,5 +101,5 @@ export const usePaymentsTableColumns = () => {
         );
       },
     },
-  ], [t, currency]);
+  ], [t, displayDate, majorMoney]);
 };

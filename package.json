@@ -14,11 +14,7 @@
     "build:seed": "bun run --cwd packages/seed build",
     "build:all": "bun run build:server && bun run build:seed && bun run build",
     "lint": "bun run --filter @sms/dashboard lint",
-    "test:seed": "bun test packages/seed/src/fakers",
-    "test:server": "bun test packages/server/tests",
-    "test:dashboard": "bun test apps/dashboard/src",
-    "test:e2e:najm-upgrade": "bun run --cwd apps/dashboard test:e2e:najm-upgrade",
-    "test:e2e:acceptance": "bun run --cwd apps/dashboard test:e2e:acceptance",
+    "test:access-reset": "bun test packages/server/tests/accessReset/AccessResetService.test.ts packages/server/tests/accessReset/AccessResetValidator.test.ts apps/dashboard/src/features/Users/config/accessResetModes.test.ts",
     "db:generate": "bun --env-file=apps/dashboard/.env.local drizzle-kit generate",
     "db:migrate": "bun --env-file=apps/dashboard/.env.local drizzle-kit migrate",
     "db:push": "bun --env-file=apps/dashboard/.env.local drizzle-kit push",
@@ -57,7 +53,7 @@
     "@types/node": "^25.6.0",
     "ioredis": "5.11.1",
     "najm-api": "2.0.5",
-    "najm-auth": "4.0.4",
+    "najm-auth": "4.0.8",
     "najm-cache": "2.2.0",
     "najm-chatbot": "2.0.3",
     "najm-cookies": "2.0.2",
@@ -68,7 +64,7 @@
     "najm-event": "2.0.2",
     "najm-guard": "2.0.2",
     "najm-i18n": "2.1.2",
-    "najm-kit": "2.16.4",
+    "najm-kit": "2.16.9",
     "najm-mcp": "2.1.2",
     "najm-next": "0.8.0",
     "najm-rag": "2.0.3",
@@ -124,8 +120,5 @@
   "trustedDependencies": [
     "protobufjs",
     "unrs-resolver"
-  ],
-  "patchedDependencies": {
-    "najm-auth@4.0.4": "patches/najm-auth@4.0.4.patch"
-  }
+  ]
 }

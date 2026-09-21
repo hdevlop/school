@@ -11,7 +11,6 @@ import InfoWidget from '@/features/Dashboard/components/Widgets/Widget';
 import studentImage from '@/assets/images/studentImage.png';
 import { Badge } from 'najm-kit';
 import { NAvatar } from 'najm-kit';
-import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import PageLoadingState from '@/shared/PageLoadingState';
 
 interface ChildrenTabProps {
@@ -136,9 +135,8 @@ const ChildrenTab: React.FC<ChildrenTabProps> = ({ parentId }) => {
                   <div className="flex items-center gap-3 flex-1">
                     <NAvatar
                       src={child.image}
-                      fallback={getAvatarFallback(child.name)}
+                      fallback={child.name}
                       size="md"
-                      classNames={personAvatarClassNames}
                     />
                     <div className="flex-1">
                       <Label className="font-medium block">

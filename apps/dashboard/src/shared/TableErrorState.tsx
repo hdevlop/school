@@ -1,7 +1,7 @@
 "use client";
 
 import { NErrorState, NForbiddenState } from 'najm-kit';
-import { isPermissionDenied } from '@/lib/queryError';
+import { AuthError } from 'najm-auth/client';
 
 /**
  * What a table shows when its list request failed.
@@ -17,7 +17,9 @@ import { isPermissionDenied } from '@/lib/queryError';
  * nothing is worded here and all four languages stay in step.
  */
 export default function TableErrorState({ error }: { error: unknown }) {
-  return isPermissionDenied(error) ? <NForbiddenState /> : <NErrorState />;
+  return error instanceof AuthError && (error.status === 401 || error.status === 403)
+    ? <NForbiddenState />
+    : <NErrorState />;
 }
 
 const renderTableError = (error: unknown) => <TableErrorState error={error} />;

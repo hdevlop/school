@@ -130,12 +130,6 @@ The application will be available at `http://localhost:3000`
 - `bun start` - Start production server
 - `bun run lint` - Run ESLint for code quality
 
-### Tests
-- `bun run test:server` - Backend module tests
-- `bun run test:dashboard` - Dashboard unit and contract tests, including the
-  Najm dependency-resolution guard
-- `bun run test:seed` - Seed data faker tests
-
 ### Runtime Business Date For Testing
 
 The server supports an optional `APP_BUSINESS_DATE=YYYY-MM-DD` override. This lets you test enrollment, billing, installments, transport assignments, and date-based dashboards as if the server were running on that date. It does not change audit timestamps, which continue to use the real clock.
@@ -178,12 +172,6 @@ Leave the academic settings at September through June. July remains available fo
 - `bun run db:push` - Push schema changes to database
 - `bun run db:drop` - Drop database tables (destructive)
 - `bun run db:check` - Validate database schema consistency
-
-### Najm Upgrade Acceptance
-
-- `bun run test:e2e:najm-upgrade` - Run the production-build auth, provider,
-  preference, responsive, RTL, and role acceptance suite. It requires an
-  isolated migrated database and runs automatically in GitHub with pgvector.
 
 ## Project Structure
 
@@ -258,9 +246,8 @@ user → School settings → typed fallback. New preferences belong in
 adapter per request — that re-resolves the session and can cross requests.
 
 **One version of each Najm package.** Versions are pinned exactly in every
-workspace manifest and deduped by the root `overrides` block.
-`bun run test:dashboard` fails when a second copy resolves, including a stale
-nested directory that `bun install` left behind.
+workspace manifest and deduped by the root `overrides` block. If a stale nested
+copy appears, delete it and re-run `bun install` to confirm it is not recreated.
 
 ## Key Features Explained
 
@@ -397,9 +384,8 @@ Translation files located in `src/locales/`
   `apps/dashboard/.env.local`.
 
 **Duplicate `najm-kit` styling or a sidebar that will not open:**
-- Two resolved copies of a Najm package mean two React contexts. Run
-  `bun run test:dashboard`; the resolution guard names the offending path.
-  Delete the nested directory and re-run `bun install` to confirm it is not
+- Two resolved copies of a Najm package mean two React contexts. Delete the
+  nested package directory and re-run `bun install` to confirm it is not
   recreated.
 
 **Authentication issues:**

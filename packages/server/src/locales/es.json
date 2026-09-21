@@ -1,4 +1,25 @@
 {
+  "accessReset": {
+    "success": {
+      "reset": "Restablecimiento de acceso completado"
+    },
+    "errors": {
+      "notFound": "No se encontró ningún usuario con la información proporcionada",
+      "selfReset": "No puedes restablecer tu propio acceso desde esta página",
+      "adminTarget": "Las cuentas de administrador no se pueden restablecer desde esta página",
+      "unknownRole": "El rol de esta cuenta no admite un restablecimiento de acceso",
+      "inactiveAccount": "Solo las cuentas activas o invitadas pueden restablecer su acceso",
+      "profileMissing": "Esta cuenta no tiene un perfil escolar correspondiente, por lo que su acceso no se puede restablecer desde esta página",
+      "profileMismatch": "El perfil escolar de esta cuenta no coincide con la cuenta",
+      "profileNotCurrent": "El registro escolar de esta cuenta ya no está vigente",
+      "staffNoLogin": "Este rol de personal no concede acceso a la aplicación",
+      "teacherChainMismatch": "Este registro de profesor no está vinculado a la cuenta",
+      "parentCinMissing": "Este progenitor no tiene CIN registrada, por lo que no es posible un restablecimiento por CIN",
+      "parentCinInvalid": "La CIN de este progenitor no es válida, por lo que no es posible un restablecimiento por CIN",
+      "staleConfirmation": "Esta cuenta cambió desde que se mostró la confirmación. Recarga la lista e inténtalo de nuevo",
+      "cooldown": "Se acaba de solicitar un restablecimiento de acceso para esta cuenta. Espera antes de volver a intentarlo"
+    }
+  },
   "financialOperations": {
     "updateAcademicYear": "Actualizar el año académico tras el éxito",
     "includeOneTimeFees": "Incluir tarifas únicas",
@@ -120,6 +141,30 @@
     }
   },
   "users": {
+    "accessReset": {
+      "action": "Restablecer acceso",
+      "title": "Restablecer acceso",
+      "confirmButton": "Restablecer acceso",
+      "reasonLabel": "Motivo administrativo",
+      "reasonPlaceholder": "¿Por qué esta cuenta necesita restablecer su acceso?",
+      "reasonTooShort": "Indica un motivo de al menos 3 caracteres",
+      "reasonTooLong": "El motivo no puede superar los 500 caracteres",
+      "pending": "Restableciendo acceso...",
+      "failed": "Error al restablecer el acceso",
+      "unsupported": "El acceso de esta cuenta no se puede restablecer desde aquí.",
+      "unsupportedHint": "Recarga la lista y comprueba el estado, el rol y el perfil de la cuenta.",
+      "modes": {
+        "parentCredentialSetup": "La contraseña del progenitor se sustituirá por la CIN registrada. Inicia sesión con su correo y esa CIN, y después debe elegir una contraseña nueva. Las sesiones activas finalizan de inmediato.",
+        "resetEmailSent": "Se envía un enlace de restablecimiento de un solo uso a la dirección actual de esta cuenta. Las sesiones existentes siguen siendo válidas hasta que se guarde la nueva contraseña.",
+        "invitationResent": "La invitación existente se vuelve a enviar a la dirección actual de esta cuenta. No se crea una segunda cuenta ni un segundo perfil."
+      },
+      "delivery": {
+        "sent": "Se envió un correo de recuperación.",
+        "simulated": "El correo no está configurado en este entorno, así que ningún mensaje llegó realmente al destinatario.",
+        "notSent": "No se pudo enviar el correo. Inténtalo de nuevo.",
+        "notApplicable": "El progenitor ya puede iniciar sesión con su correo y la CIN registrada."
+      }
+    },
     "view": {
       "recentSessions": "Sesiones recientes",
       "recentActivities": "Actividades recientes",
@@ -520,6 +565,7 @@
     "loadingUpdate": "Actualizando...",
     "loadingDelete": "Eliminando...",
     "save": "Guardar",
+    "close": "Cerrar",
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "edit": "Editar",

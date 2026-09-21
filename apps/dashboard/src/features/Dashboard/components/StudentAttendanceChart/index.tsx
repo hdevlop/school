@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NCard } from 'najm-kit';
 import { ClipboardCheck } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStudentAttendanceMonthly } from '../../hooks/useDashboardHooks';

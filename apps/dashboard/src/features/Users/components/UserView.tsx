@@ -2,12 +2,10 @@
 
 import React from 'react';
 import { Phone, Mail, Calendar, Clock, Shield, User, UserCheck, Hash, Settings, Key, Activity } from 'lucide-react';
-import { NAvatar, NErrorState, NEmptyState, NStatCard, NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
+import { cn, NAvatar, NErrorState, NEmptyState, NStatCard, NBadge, statusTextClass } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { getAvatarFallback } from '@/lib/avatar';
 import { Card } from 'najm-kit';
-import { formatDate, getStatusColor, cn } from '@/lib/utils';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { NSection, NSectionInfo } from 'najm-kit';
 import PageLoadingState from '@/shared/PageLoadingState';
 
@@ -16,11 +14,11 @@ import { Label } from 'najm-kit';
 const UserHeader = ({ user }) => {
   return (
     <Card className="flex p-5 items-center flex-col md:flex-row md:gap-4">
-      <NAvatar src={user.image} fallback={getAvatarFallback(user.name)} size='xl' version={user?.updatedAt} />
+      <NAvatar src={user.image} fallback={user.name} size='xl' version={user?.updatedAt} />
       <div className="flex flex-col justify-center items-center md:items-start md:gap-0.5">
         <Label className="text-2xl font-bold ">{user.name}</Label>
         <Label className="text-md ">{user.email}</Label>
-        <NBadge status={user.status} statusMap={STATUS_COLOR_MAP} look="minimal" />
+        <NBadge status={user.status} look="minimal" />
       </div>
     </Card>
   );
@@ -28,6 +26,7 @@ const UserHeader = ({ user }) => {
 
 const UserView = ({ user, isLoading, error, onRetry }) => {
   const { t } = useTranslation();
+  const { displayDate } = useSchoolFormat();
 
     // ---------- Loading/Error Check ----------
   if (isLoading) return <PageLoadingState label={t('common.loading')} fullScreen />;
@@ -134,28 +133,28 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
           <NSectionInfo
             icon={Calendar}
             label="Created"
-            value={formatDate(createdAt, t)}
+            value={displayDate(createdAt)}
           />
         )}
         {updatedAt && (
           <NSectionInfo
             icon={Calendar}
             label="Last Updated"
-            value={formatDate(updatedAt, t)}
+            value={displayDate(updatedAt)}
           />
         )}
         {lastLoginAt && (
           <NSectionInfo
             icon={Key}
             label="Last Login"
-            value={formatDate(lastLoginAt, t)}
+            value={displayDate(lastLoginAt)}
           />
         )}
         <NSectionInfo
           icon={UserCheck}
           label="Status"
           value={status}
-          valueColor={cn("font-medium", getStatusColor(status))}
+          valueColor={cn("font-medium", statusTextClass(status, undefined, 'neutral'))}
         />
       </NSection>
 
@@ -174,7 +173,7 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
                 <div className="flex flex-row justify-between items-start mb-2">
                   <div className="font-medium">{activity.action || 'Activity'}</div>
                   <div className="text-xs text-muted-foreground">
-                    {formatDate(activity.timestamp, t)}
+                    {displayDate(activity.timestamp)}
                   </div>
                 </div>
                 <div className="space-y-1">
@@ -228,14 +227,14 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
                   <NSectionInfo
                     icon={Calendar}
                     label="Started"
-                    value={formatDate(session.startTime, t)}
+                    value={displayDate(session.startTime)}
                     className="text-xs"
                   />
                   {session.endTime && (
                     <NSectionInfo
                       icon={Calendar}
                       label="Ended"
-                      value={formatDate(session.endTime, t)}
+                      value={displayDate(session.endTime)}
                       className="text-xs"
                     />
                   )}

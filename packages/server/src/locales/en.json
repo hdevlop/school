@@ -1,4 +1,25 @@
 {
+  "accessReset": {
+    "success": {
+      "reset": "Access reset completed"
+    },
+    "errors": {
+      "notFound": "No user found with the provided information",
+      "selfReset": "You cannot reset your own access from this page",
+      "adminTarget": "Administrator accounts cannot be reset from this page",
+      "unknownRole": "This account's role does not support an access reset",
+      "inactiveAccount": "Only active or invited accounts can have their access reset",
+      "profileMissing": "This account has no matching school profile, so its access cannot be reset from this page",
+      "profileMismatch": "This account's school profile does not match the account",
+      "profileNotCurrent": "This account's school record is no longer current",
+      "staffNoLogin": "This staff role does not grant app access",
+      "teacherChainMismatch": "This teacher record is not linked to the account",
+      "parentCinMissing": "This parent has no CIN on file, so a CIN credential reset is not possible",
+      "parentCinInvalid": "This parent's CIN is not valid, so a CIN credential reset is not possible",
+      "staleConfirmation": "This account changed since the confirmation was shown. Reload the list and try again",
+      "cooldown": "An access reset for this account was just requested. Please wait before trying again"
+    }
+  },
   "financialOperations": {
     "updateAcademicYear": "Update current academic year after success",
     "includeOneTimeFees": "Include one-time fees",
@@ -120,6 +141,30 @@
     }
   },
   "users": {
+    "accessReset": {
+      "action": "Reset access",
+      "title": "Reset access",
+      "confirmButton": "Reset access",
+      "reasonLabel": "Administrative reason",
+      "reasonPlaceholder": "Why does this account need its access reset?",
+      "reasonTooShort": "Give a reason of at least 3 characters",
+      "reasonTooLong": "The reason may not exceed 500 characters",
+      "pending": "Resetting access...",
+      "failed": "Access reset failed",
+      "unsupported": "This account cannot have its access reset from here.",
+      "unsupportedHint": "Reload the list and check the account status, role and profile.",
+      "modes": {
+        "parentCredentialSetup": "The parent's password will be replaced with the CIN on file. They sign in with their email and that CIN, then must choose a new password. Active sessions end immediately.",
+        "resetEmailSent": "A one-time password reset link is emailed to this account's current address. Existing sessions stay valid until the new password is saved.",
+        "invitationResent": "The existing invitation is emailed again to this account's current address. No second account or profile is created."
+      },
+      "delivery": {
+        "sent": "A recovery email was sent.",
+        "simulated": "Mail is not configured in this environment, so no email actually reached the recipient.",
+        "notSent": "The email could not be sent. Please try again.",
+        "notApplicable": "The parent can now sign in with their email and the CIN on file."
+      }
+    },
     "view": {
       "recentSessions": "Recent Sessions",
       "recentActivities": "Recent Activities",

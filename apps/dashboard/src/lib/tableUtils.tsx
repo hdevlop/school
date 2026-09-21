@@ -1,36 +1,22 @@
 'use client';
 
 import { flexRender } from '@tanstack/react-table';
-import EditableCell from '@/lib/EditableCell';
 
 interface BuildColumnsOptions {
-  onCellEdit?: (row: any, columnId: string, value: any) => any;
   onCellClick?: (columnId: string, row: any) => void;
 }
 
-function isEditableCell(meta: any, row: any) {
-  if (typeof meta?.editable === 'function') return Boolean(meta.editable(row));
-  return Boolean(meta?.editable);
-}
-
 export function buildSmsColumns(columns: any[], opts: BuildColumnsOptions = {}) {
-  const { onCellEdit, onCellClick } = opts;
-  if (!onCellEdit && !onCellClick) return columns;
+  const { onCellClick } = opts;
+  if (!onCellClick && !columns.some((column) => column.onClick)) return columns;
 
   return columns.map((col) => {
-    const meta = col.meta || {};
-    if (!onCellEdit && !onCellClick && !col.onClick) return col;
+    if (!onCellClick && !col.onClick) return col;
 
     return {
       ...col,
-      meta: { ...meta, editable: false },
       cell: (ctx: any) => {
-        const editable = Boolean(onCellEdit) && isEditableCell(meta, ctx.row.original);
         const content = col.cell ? flexRender(col.cell, ctx) : ctx.getValue?.();
-
-        if (editable) {
-          return <EditableCell cell={ctx.cell} onCellEdit={onCellEdit!} renderCell={col.cell} />;
-        }
 
         const clickFn = col.onClick
           ? () => col.onClick(ctx.row.original)

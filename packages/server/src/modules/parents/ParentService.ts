@@ -114,8 +114,11 @@ export class ParentService {
   // ========== UPDATE-METHOD ==========
 
   async update(id: string, data: UpdateParentDto) {
+    // No 'password' here. A routine profile edit must not double as a
+    // credential reset: that path has no audit, forces no replacement and
+    // revokes no session. Recovery goes through the Reset access command.
     const USER_UPDATE_KEYS = [
-      'name', 'email', 'image', 'password'
+      'name', 'email', 'image'
     ];
 
     const PARENT_UPDATE_KEYS = [

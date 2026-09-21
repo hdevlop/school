@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { NAvatar, NBadge, SimpleTooltip } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { personAvatarClassNames } from '@/lib/avatar';
 
 export const useParentsTableColumns = () => {
   const { t } = useTranslation();
@@ -21,7 +20,6 @@ export const useParentsTableColumns = () => {
             size='sm'
             version={parent?.updatedAt}
             className={isOrphaned ? 'opacity-70 grayscale' : undefined}
-            classNames={personAvatarClassNames}
           />
         );
 

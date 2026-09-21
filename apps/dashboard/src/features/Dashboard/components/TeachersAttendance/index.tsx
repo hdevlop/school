@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { UserCheck } from 'lucide-react';
 import { NCard } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaffAttendanceMonthly } from '../../hooks/useDashboardHooks';
 

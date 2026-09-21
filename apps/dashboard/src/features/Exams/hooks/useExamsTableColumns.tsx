@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
 
 const formatDate = (value) => {
@@ -41,7 +40,7 @@ export const useExamsTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const type = getValue() as string;
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={type}>{t(`exams.type.${type}`)}</NBadge>;
+        return <NBadge status={type}>{t(`exams.type.${type}`)}</NBadge>;
       },
     },
     {
@@ -121,7 +120,7 @@ export const useExamsTableColumns = () => {
       enableColumnFilter: true,
       cell: ({ getValue }) => {
         const status = getValue() as string;
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={status}>{t(`exams.status.${status}`)}</NBadge>;
+        return <NBadge status={status}>{t(`exams.status.${status}`)}</NBadge>;
       },
       size: 120,
     },

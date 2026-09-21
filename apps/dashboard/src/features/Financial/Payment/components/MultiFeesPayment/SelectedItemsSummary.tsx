@@ -1,8 +1,10 @@
 import React from 'react';
 import { CheckCircle } from 'lucide-react';
 import { Label } from 'najm-kit';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const SelectedItemsSummary = ({ selectedInstallments, selectedCount }) => {
+    const { majorMoney } = useSchoolFormat();
     if (selectedCount === 0) return null;
 
     return (
@@ -25,9 +27,8 @@ export const SelectedItemsSummary = ({ selectedInstallments, selectedCount }) =>
                         </div>
                         <div className="text-right">
                             <Label className="text-xs font-bold text-green-600 block">
-                                {inst.allocatedAmount.toFixed(2)}
+                                {majorMoney(inst.allocatedAmount)}
                             </Label>
-                            <Label className="text-[10px] text-gray-500 block">MAD</Label>
                         </div>
                     </div>
                 ))}

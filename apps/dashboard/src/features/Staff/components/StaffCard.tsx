@@ -4,10 +4,8 @@ import React from 'react';
 import { Phone, Mail, Wallet } from 'lucide-react';
 import { Label, NAvatar, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import { getStaffAvatar } from '../utils/staffAvatar';
-
-const money = (value?: string | number | null) => `${Number(value || 0).toLocaleString('en-US', { maximumFractionDigits: 2 })} DH`;
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const resolveRoleLabel = (staff, language) => {
   if (!staff?.role) return '-';
@@ -19,6 +17,7 @@ const resolveRoleLabel = (staff, language) => {
 
 const StaffCard = ({ data }) => {
   const { t, language } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const staff = data;
 
   return (
@@ -27,10 +26,9 @@ const StaffCard = ({ data }) => {
         <NAvatar
           src={staff?.image}
           fallbackSrc={getStaffAvatar(staff?.role, staff?.gender)}
-          fallback={getAvatarFallback(staff?.name)}
+          fallback={staff?.name}
           size="lg"
           version={staff?.updatedAt}
-          classNames={personAvatarClassNames}
         />
       </div>
 
@@ -67,7 +65,7 @@ const StaffCard = ({ data }) => {
             icon={Wallet}
             iconColor="text-primary"
             label={t('staff.table.salary')}
-            value={money(staff?.salary)}
+            value={majorMoney(staff?.salary)}
             valueColor="text-primary"
           />
 

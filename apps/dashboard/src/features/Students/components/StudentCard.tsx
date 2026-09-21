@@ -5,7 +5,6 @@ import { User, GraduationCap, BookOpen } from 'lucide-react';
 import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { getAvatarFallback, studentAvatarClassNames } from '@/lib/avatar';
 import { Label } from 'najm-kit';
 
 
@@ -22,10 +21,9 @@ const StudentCard = ({ data }) => {
       <div className="shrink-0">
         <NAvatar
           src={student?.image}
-          fallback={getAvatarFallback(student.name)}
+          fallback={student.name}
           size="lg"
           version={student?.updatedAt}
-          classNames={studentAvatarClassNames}
         />
       </div>
 

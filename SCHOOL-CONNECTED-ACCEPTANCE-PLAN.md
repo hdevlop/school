@@ -253,6 +253,66 @@ Gate A passes only when all ten tests, runner-owned teardown, supported cleanup,
 artifact audit and local repository gates pass together. Only then may feature
 groups start.
 
+## 6.1 Gate A-R — administrative access reset from the Users table
+
+Status: **not executed.** The implementation is in source and passes the local
+source gates; no connected run has been performed. This section states what a
+connected run must prove, not what it has proved.
+
+Gate A-R runs after Gate A and before any feature group. It is serial, admin-only
+and must not select any feature spec.
+
+Planned exact titles:
+
+```text
+school access-reset 01 - active parent CIN credential setup and forced replacement
+school access-reset 02 - parent replay denial and prior session revocation
+school access-reset 03 - active student and teacher reset email single delivery
+school access-reset 04 - pending invitation resend creates no second user or profile
+school access-reset 05 - denial matrix refuses unsupported account classes
+school access-reset 06 - stale confirmation refusal after the account changes
+school access-reset 07 - per-target cooldown across two administrators
+school access-reset 08 - desktop row, card and keyboard reach one same action
+school access-reset 09 - Arabic RTL and narrow-viewport confirmation
+school access-reset diagnostics - no credential, CIN, token or link in any surface
+```
+
+Discovery-only listing must report exactly **10 tests in one file**.
+
+Each applicable journey must prove:
+
+- exactly one `POST /api/admin/access/users/:userId/reset-access` per confirm;
+- a non-admin principal receives the guard's refusal and no mail leaves;
+- an active parent with a valid stored CIN signs in with email + CIN, is routed
+  to `/change-password`, cannot skip it, and signs in with the new password
+  afterwards — the CIN no longer works once replaced;
+- sessions the parent held before the reset are dead immediately after it;
+- an active student, teacher and login-enabled staff member each receive exactly
+  one reset mail in the local mailbox, and their existing sessions stay valid
+  until the new password is saved;
+- a pending account's resend produces one mail and leaves the `users`,
+  `students`, `parents`, `staff` and `teachers` row counts unchanged;
+- every refused class — self, administrator target, inactive, unknown role,
+  profileless account, parent without a valid CIN, orphaned teacher/staff chain,
+  terminated staff — returns its safe status and produces no mail, no credential
+  change and no success audit row;
+- a confirmation raised before the account changed is refused with `409` and the
+  list refreshes, so the next confirmation is built from the account as it is;
+- two administrators clicking the same target inside the cooldown produce one
+  effect and one refusal;
+- the action is reachable from the desktop row menu, the card menu and the
+  keyboard, and reads correctly in Arabic RTL at a narrow viewport;
+- a console/memory transport is reported as simulated and never as delivery, and
+  a refused send keeps the dialog open and is retryable.
+
+Fixture contract: every account this gate touches is created by the gate inside
+its own run namespace and deleted by runner-owned teardown. It must never target
+a seeded demo account it did not create, and never a live account.
+
+Evidence rules: no credential, CIN, token, reset link, email body or audit
+metadata value may appear in any recorded artifact. Audit assertions record only
+that a row exists with the expected actor, target, mode and outcome.
+
 ## 7. Complete feature matrix
 
 Every row is mandatory. A group passes only when every named feature in it has

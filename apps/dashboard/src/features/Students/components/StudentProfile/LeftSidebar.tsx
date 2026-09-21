@@ -12,23 +12,16 @@ import {
   Percent,
   UserRound,
 } from 'lucide-react';
-import { NStatCard } from 'najm-kit';
+import { NAvatar, NStatCard } from 'najm-kit';
 import { useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { getAttendanceByStudentApi } from '@/services/attendanceApi';
 import { Student } from './types';
 import { useTranslation } from 'najm-i18n/react';
-import { studentAvatarBackgroundClass } from '@/lib/avatar';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const defaultStudentImage = (gender?: string) =>
   gender === 'F' ? '/images/student_female.png' : '/images/student_male.png';
-
-const formatMoneyStat = (value: unknown) => {
-  const amount = Number(value ?? 0);
-  if (!Number.isFinite(amount) || amount <= 0) return '0 DH';
-  if (amount >= 1000) return `${Math.round(amount / 100) / 10}k DH`;
-  return `${Math.round(amount)} DH`;
-};
 
 const formatDateStat = (value: string | null | undefined, language: string, noneLabel: string) => {
   if (!value) return noneLabel;
@@ -62,6 +55,7 @@ export default function LeftSidebar({
   isLoading,
 }: LeftSidebarProps) {
   const { t, language } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data: attendanceResponse } = useQuery({
     queryKey: ['attendance', 'student', student?.id, 'sidebar-stats'],
     queryFn: () => getAttendanceByStudentApi(student?.id as string),
@@ -174,12 +168,16 @@ export default function LeftSidebar({
         <div className="relative flex flex-col items-center px-4 pt-8 text-center">
           <div className="relative mb-3">
             <div className="rounded-full bg-gradient-to-br from-primary/40 via-primary/20 to-primary/5 p-[3px] shadow-lg shadow-primary/10">
-              <img
-                src={student?.image || defaultStudentImage(student?.gender)}
+              <NAvatar
+                src={student?.image}
+                fallbackSrc={defaultStudentImage(student?.gender)}
+                fallback={student?.name}
                 alt={student?.name
                   ? t('students.profile.studentAvatarNamed', { name: student.name })
                   : t('students.profile.studentAvatar')}
-                className={`h-24 w-24 rounded-full object-cover ${studentAvatarBackgroundClass}`}
+                size="xl"
+                shape="circle"
+                classNames={{ avatar: 'h-24 w-24 bg-primary/10' }}
               />
             </div>
             {student && (
@@ -257,7 +255,7 @@ export default function LeftSidebar({
             variant="compact"
             icon={Percent}
             label={t('students.profile.due')}
-            value={formatMoneyStat(totalDue)}
+            value={majorMoney(totalDue)}
           />
         </div>
       </div>

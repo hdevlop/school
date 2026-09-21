@@ -3,8 +3,8 @@
 import React from 'react';
 import { Download, Save } from 'lucide-react';
 import { NAvatar, NButton } from 'najm-kit';
-import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import { Label } from 'najm-kit';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface ProfileSidebarProps {
   teacher: any;
@@ -26,13 +26,6 @@ const StatBox = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-const formatMoneyStat = (value: unknown) => {
-  const amount = Number(value ?? 0);
-  if (!Number.isFinite(amount) || amount <= 0) return '0 DH';
-  if (amount >= 1000) return `${Math.round(amount / 100) / 10}k DH`;
-  return `${Math.round(amount)} DH`;
-};
-
 const formatEmployment = (value?: string | null) => {
   if (!value) return '-';
   const normalized = value.replace(/[-_]/g, ' ');
@@ -47,6 +40,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   isSaving = false,
   onSave,
 }) => {
+  const { majorMoney } = useSchoolFormat();
   const source = draft || teacher || {};
   const genderLabel = source?.gender === 'M' ? 'Male' : source?.gender === 'F' ? 'Female' : 'Other';
   const hireYear = source?.hireDate ? new Date(source.hireDate).getFullYear() : '-';
@@ -61,9 +55,8 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           <div className="flex h-28 w-28 items-center justify-center rounded-full border border-slate-100 bg-slate-50 p-1 shadow-sm">
             <NAvatar
               src={source?.image}
-              fallback={getAvatarFallback(source?.name)}
+              fallback={source?.name}
               size="xl"
-              classNames={personAvatarClassNames}
               version={teacher?.updatedAt}
             />
           </div>
@@ -101,7 +94,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           <StatBox label="Subjects" value={String(analytics?.totalSubjects ?? 0)} />
           <StatBox label="Students" value={String(analytics?.totalStudents ?? 0)} />
           <StatBox label="Workload" value={source?.workloadHours ? `${source.workloadHours}h` : '-'} />
-          <StatBox label="Salary" value={formatMoneyStat(source?.salary)} />
+          <StatBox label="Salary" value={majorMoney(source?.salary)} />
           <StatBox label="Experience" value={source?.yearsOfExperience != null ? `${source.yearsOfExperience} yrs` : '-'} />
         </div>
 

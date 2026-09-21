@@ -2,7 +2,6 @@
 
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
-import { buildSmsColumns } from '@/lib/tableUtils';
 import { Layers } from 'lucide-react';
 import React from 'react';
 import SectionForm from './SectionForm';
@@ -104,7 +103,7 @@ function SectionsTable() {
       <NTable
         className='min-h-0 flex-1'
         data={sections}
-        columns={buildSmsColumns(columns, { onCellEdit: handleCellEdit })}
+        columns={columns}
         filters={rawFilters}
         onCreate={handleAddClick}
         onView={handleView}

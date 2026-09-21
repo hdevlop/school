@@ -1,6 +1,6 @@
 'use client';
 
-import { NButton, NCard, NIcon } from 'najm-kit';
+import { NAvatar, NButton, NCard, NIcon } from 'najm-kit';
 
 import React from 'react';
 import {
@@ -14,7 +14,6 @@ import { Checkbox } from 'najm-kit';
 import { ImageInput } from 'najm-kit';
 import { NativeProfileSelect } from '../NativeProfileSelect';
 import { useTranslation } from 'najm-i18n/react';
-import { personAvatarBackgroundClass } from '@/lib/avatar';
 
 // ─── types ───────────────────────────────────────────────────────────────────
 
@@ -280,10 +279,14 @@ const ReadOnlyParentCard = ({ parent }: { parent: Parent }) => {
   return (
     <NCard className="overflow-hidden p-0">
       <div className="flex items-start gap-4 p-4">
-        <img
-          src={parent.image || defaultParentImage(parent.gender)}
+        <NAvatar
+          src={parent.image}
+          fallbackSrc={defaultParentImage(parent.gender)}
+          fallback={parent.name}
           alt={t('students.profile.parentAvatarNamed', { name: parent.name })}
-          className={`h-16 w-16 shrink-0 rounded-lg object-cover ${personAvatarBackgroundClass}`}
+          size="xl"
+          shape="rounded"
+          classNames={{ root: 'shrink-0', avatar: 'bg-primary/10' }}
         />
 
         <div className="min-w-0 flex-1">

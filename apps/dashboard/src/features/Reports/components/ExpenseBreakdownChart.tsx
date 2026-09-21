@@ -12,7 +12,7 @@ import { NCard } from 'najm-kit';
 import { PieChart as PieIcon } from 'lucide-react';
 import { NSkeletonChart } from 'najm-kit';
 import { useFinanceExpenseBreakdown } from '@/features/Dashboard/hooks/useDashboardHooks';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 
 const COLORS = [
@@ -29,13 +29,13 @@ interface Props {
   className?: string;
 }
 
-const CustomTooltip = ({ active, payload, locale, t }: any) => {
+const CustomTooltip = ({ active, payload, majorMoney, t }: any) => {
   if (active && payload?.length) {
     const { name, value, payload: data } = payload[0];
     return (
       <div className="bg-white px-3 py-2 rounded shadow border border-gray-200 text-sm">
         <p className="font-semibold text-gray-800">{name}</p>
-        <p className="text-gray-600">{formatMAD(value, locale)}</p>
+        <p className="text-gray-600">{majorMoney(value)}</p>
         <p className="text-gray-400">{t('dashboard.finance.expenseCount', { count: data.count })}</p>
       </div>
     );
@@ -44,8 +44,8 @@ const CustomTooltip = ({ active, payload, locale, t }: any) => {
 };
 
 const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }) => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data, isLoading } = useFinanceExpenseBreakdown(academicYear);
 
   // Filter out "utilities" to free up a slot in the legend (it rarely ranks in
@@ -94,7 +94,7 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
     >
       <div className="flex flex-col h-full gap-1">
         <p className="text-sm text-muted-foreground">
-          {t('common.total')} : <span className="font-semibold text-foreground">{formatMAD(total, locale)}</span>
+          {t('common.total')} : <span className="font-semibold text-foreground">{majorMoney(total)}</span>
         </p>
         <div className="flex-1 min-h-[160px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -112,7 +112,7 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
                   <Cell key={i} fill={COLORS[i % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip content={<CustomTooltip locale={locale} t={t} />} />
+              <Tooltip content={<CustomTooltip majorMoney={majorMoney} t={t} />} />
             </PieChart>
           </ResponsiveContainer>
         </div>
@@ -127,7 +127,7 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
                 <span className="truncate">{r.name}</span>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <span className="tabular-nums font-medium">{formatMAD(r.value, locale)}</span>
+                <span className="tabular-nums font-medium">{majorMoney(r.value)}</span>
                 <span className="tabular-nums text-muted-foreground w-10 text-right">
                   {total > 0 ? ((r.value / total) * 100).toFixed(0) : 0}%
                 </span>

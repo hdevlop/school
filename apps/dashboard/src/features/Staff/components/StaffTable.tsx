@@ -13,12 +13,7 @@ import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
 import { formatAssignments } from '../utils/staffAssignments';
 import { getStaffAvatar } from '../utils/staffAvatar';
-import { personAvatarClassNames } from '@/lib/avatar';
-
-const money = (value?: string | number | null) => {
-  const numeric = Number(value || 0);
-  return `${numeric.toLocaleString('en-US', { maximumFractionDigits: 2 })} DH`;
-};
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const calculateStaffPay = (row) => {
   if (row?.compensationMode === 'hourly') {
@@ -40,6 +35,7 @@ const STAFF_LIST_EXCLUDED_ROLES = new Set(['teacher']);
 
 const StaffTable = () => {
   const { t, language } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const {
     staff,
     createStaff,
@@ -132,7 +128,6 @@ const StaffTable = () => {
             src={staffMember?.image}
             fallbackSrc={getStaffAvatar(staffMember?.role, staffMember?.gender)}
             title={staffMember?.name || '-'}
-            classNames={personAvatarClassNames}
             size="sm"
             version={staffMember?.updatedAt}
           />
@@ -184,7 +179,7 @@ const StaffTable = () => {
       header: t('staff.table.salary'),
       enableSorting: true,
       cell: ({ getValue }) => (
-        <span className="font-semibold text-slate-800">{money(getValue() as number)}</span>
+        <span className="font-semibold text-slate-800">{majorMoney(getValue() as number)}</span>
       ),
     },
     {
@@ -230,7 +225,7 @@ const StaffTable = () => {
         return <Badge className={`border-transparent text-white shadow-sm ${tone}`}>{status || 'unknown'}</Badge>;
       },
     },
-  ], [t, language]);
+  ], [t, language, majorMoney]);
 
   const roleOptions = useMemo(() => {
     return (activeStaffRoles || [])
@@ -294,7 +289,7 @@ const StaffTable = () => {
           <NStatCard
             icon={Banknote}
             label={t('staff.stats.payroll')}
-            value={money(totalPayroll)}
+            value={majorMoney(totalPayroll)}
           />
           <NStatCard
             icon={Briefcase}

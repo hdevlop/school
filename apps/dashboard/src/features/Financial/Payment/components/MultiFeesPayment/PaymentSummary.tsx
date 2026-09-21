@@ -3,8 +3,10 @@ import { CheckCircle2, AlertCircle, CheckCircle } from 'lucide-react';
 import { Label } from 'najm-kit';
 import { usePaymentStore } from '../../store/paymentStore';
 import { PaymentActions } from './PaymentActions';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
+   const { majorMoney } = useSchoolFormat();
    // Get state from store
    const paymentAmount = usePaymentStore((state) => state.paymentDetails.amount);
    const totalAllocated = usePaymentStore((state) => state.getTotalAllocated());
@@ -46,8 +48,7 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                            Total Selected
                         </Label>
                         <Label className="text-xl font-bold text-white">
-                           {debtSelected.toFixed(2)}
-                           <Label className="text-[10px] text-gray-400">MAD</Label>
+                           {majorMoney(debtSelected)}
                         </Label>
                      </div>
 
@@ -56,8 +57,7 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                            Cash Received
                         </Label>
                         <Label className="text-xl font-bold text-blue-400 ">
-                           {cashReceived.toFixed(2)}
-                           <Label className="text-[10px] text-gray-400">MAD</Label>
+                           {majorMoney(cashReceived)}
                         </Label>
                      </div>
 
@@ -69,11 +69,8 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                            change === 0 ? 'text-green-400' :
                               'text-green-300'
                            }`}>
-                           {Math.abs(change).toFixed(2)}
-                           <Label className={`text-[10px] ${change < 0 ? 'text-red-400' : 'text-gray-400'
-                              }`}>
-                              {change < 0 ? 'SHORT!' : 'MAD'}
-                           </Label>
+                           {majorMoney(Math.abs(change))}
+                           {change < 0 && <Label className="text-[10px] text-red-400">SHORT!</Label>}
                         </Label>
                      </div>
 
@@ -103,9 +100,8 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                               </div>
                               <div className='flex flex-col gap-[0.5] items-center'>
                                  <Label className="text-sm font-bold text-green-400 block">
-                                    {inst.allocatedAmount.toFixed(2)}
+                                    {majorMoney(inst.allocatedAmount)}
                                  </Label>
-                                 <Label className="text-xs text-gray-400 block">MAD</Label>
                               </div>
                            </div>
                         ))}

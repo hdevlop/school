@@ -1,14 +1,12 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP, STATUS_ICON_MAP } from '@/lib/statusBadge';
 import { useTranslation } from 'najm-i18n/react';
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { getCategoryClass } from '../lib/expenseCategoryStyles';
 
 export const useExpensesTableColumns = () => {
   const { t } = useTranslation();
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { majorMoney, displayDate } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -50,7 +48,7 @@ export const useExpensesTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const amount = getValue();
-        return `${Number(amount).toFixed(2)} ${currency}`;
+        return majorMoney(amount);
       },
     },
     {
@@ -61,11 +59,7 @@ export const useExpensesTableColumns = () => {
         const date = getValue();
         return (
           <div className="text-sm">
-            {new Intl.DateTimeFormat('en-US', {
-              year: 'numeric',
-              month: 'short',
-              day: 'numeric',
-            }).format(new Date(date))}
+            {displayDate(date)}
           </div>
         );
       },
@@ -91,8 +85,8 @@ export const useExpensesTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const status = getValue();
-        return <NBadge status={status} statusMap={STATUS_COLOR_MAP} iconMap={STATUS_ICON_MAP} showIcon />;
+        return <NBadge status={status} showIcon />;
       },
     },
-  ], [t, currency]);
+  ], [t, majorMoney, displayDate]);
 };

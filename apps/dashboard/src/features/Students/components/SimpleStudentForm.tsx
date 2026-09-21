@@ -4,13 +4,13 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { NForm, useDialog } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
+import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { studentSchema } from '@/lib/validations'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { useEnum } from '@/hooks/useEnum'
-import { LocationField } from '@/components/location/LocationField'
 
 const getAcademicYearStartDate = (academicYear?: string | null, referenceDate?: string | null) => {
   const startYear = academicYear?.match(/^\d{4}/)?.[0]
@@ -31,10 +31,12 @@ export const getStudentDefaultValues = (student = null, businessDate?: string | 
     name: student?.name ?? '',
     email: student?.email ?? '',
     phone: student?.phone ?? '',
-    address: student?.address ?? '',
+    addressLocation: normalizeLocationValue({
+      address: student?.address,
+      latitude: student?.addressLatitude,
+      longitude: student?.addressLongitude,
+    }),
     addressPlaceId: student?.addressPlaceId ?? null,
-    addressLatitude: student?.addressLatitude ?? null,
-    addressLongitude: student?.addressLongitude ?? null,
     dateOfBirth: student?.dateOfBirth ?? '',
     gender: student?.gender ?? 'M',
     classId: student?.classId ?? '',
@@ -54,7 +56,13 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
   const { pop } = useDialog()
 
   const handleSubmit = async (studentData) => {
-    pop(studentData)
+    const { addressLocation, ...fields } = studentData
+    pop({
+      ...fields,
+      address: addressLocation.address,
+      addressLatitude: addressLocation.latitude ?? null,
+      addressLongitude: addressLocation.longitude ?? null,
+    })
   }
 
   const fill = () => {
@@ -95,6 +103,8 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
   const selectedClassId = activeForm.watch(fieldName('classId'));
   const selectedSectionId = activeForm.watch(fieldName('sectionId'));
   const gender = activeForm.watch(fieldName('gender'))
+  const addressLocation = activeForm.watch(fieldName('addressLocation'))
+  const addressPlaceId = activeForm.watch(fieldName('addressPlaceId'))
 
   const classOptions = classes.map(cls => ({
     value: cls.id,
@@ -197,18 +207,14 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
             icon={Phone}
           />
 
-          <LocationField
-            form={activeForm}
-            names={{
-              address: fieldName('address'),
-              placeId: fieldName('addressPlaceId'),
-              latitude: fieldName('addressLatitude'),
-              longitude: fieldName('addressLongitude'),
-            }}
-            label={t('students.form.address')}
+          <FormLocationInput
+            name={fieldName('addressLocation')}
+            formLabel={t('students.form.address')}
             placeholder={t('students.form.addressPlaceholder')}
-            rows={4}
-            compact
+            providerMeta={addressLocation && addressPlaceId
+              ? { provider: 'google', placeId: addressPlaceId, ...addressLocation }
+              : null}
+            onProviderMetaChange={(meta) => activeForm.setValue(fieldName('addressPlaceId'), meta?.placeId ?? null, { shouldDirty: true })}
           />
 
           <FormInput

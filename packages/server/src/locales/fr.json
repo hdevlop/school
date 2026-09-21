@@ -1,4 +1,25 @@
 {
+  "accessReset": {
+    "success": {
+      "reset": "Réinitialisation de l'accès effectuée"
+    },
+    "errors": {
+      "notFound": "Aucun utilisateur trouvé avec les informations fournies",
+      "selfReset": "Vous ne pouvez pas réinitialiser votre propre accès depuis cette page",
+      "adminTarget": "Les comptes administrateurs ne peuvent pas être réinitialisés depuis cette page",
+      "unknownRole": "Le rôle de ce compte ne permet pas de réinitialiser l'accès",
+      "inactiveAccount": "Seuls les comptes actifs ou invités peuvent voir leur accès réinitialisé",
+      "profileMissing": "Ce compte n'a pas de profil scolaire correspondant ; son accès ne peut pas être réinitialisé depuis cette page",
+      "profileMismatch": "Le profil scolaire de ce compte ne correspond pas au compte",
+      "profileNotCurrent": "Le dossier scolaire de ce compte n'est plus à jour",
+      "staffNoLogin": "Ce rôle du personnel ne donne pas accès à l'application",
+      "teacherChainMismatch": "Cette fiche enseignant n'est pas liée au compte",
+      "parentCinMissing": "Ce parent n'a pas de CIN enregistrée ; une réinitialisation par CIN est impossible",
+      "parentCinInvalid": "La CIN de ce parent n'est pas valide ; une réinitialisation par CIN est impossible",
+      "staleConfirmation": "Ce compte a changé depuis l'affichage de la confirmation. Rechargez la liste puis réessayez",
+      "cooldown": "Une réinitialisation de l'accès vient d'être demandée pour ce compte. Veuillez patienter avant de réessayer"
+    }
+  },
   "financialOperations": {
     "updateAcademicYear": "Mettre à jour l’année scolaire après succès",
     "includeOneTimeFees": "Inclure les frais ponctuels",
@@ -120,6 +141,30 @@
     }
   },
   "users": {
+    "accessReset": {
+      "action": "Réinitialiser l'accès",
+      "title": "Réinitialiser l'accès",
+      "confirmButton": "Réinitialiser l'accès",
+      "reasonLabel": "Motif administratif",
+      "reasonPlaceholder": "Pourquoi cet accès doit-il être réinitialisé ?",
+      "reasonTooShort": "Indiquez un motif d’au moins 3 caractères",
+      "reasonTooLong": "Le motif ne peut pas dépasser 500 caractères",
+      "pending": "Réinitialisation de l'accès...",
+      "failed": "Échec de la réinitialisation de l'accès",
+      "unsupported": "L'accès de ce compte ne peut pas être réinitialisé ici.",
+      "unsupportedHint": "Rechargez la liste et vérifiez le statut, le rôle et le profil du compte.",
+      "modes": {
+        "parentCredentialSetup": "Le mot de passe du parent sera remplacé par la CIN enregistrée. Il se connecte avec son e-mail et cette CIN, puis doit choisir un nouveau mot de passe. Les sessions actives prennent fin immédiatement.",
+        "resetEmailSent": "Un lien de réinitialisation à usage unique est envoyé à l'adresse actuelle de ce compte. Les sessions existantes restent valides jusqu'à l'enregistrement du nouveau mot de passe.",
+        "invitationResent": "L'invitation existante est renvoyée à l'adresse actuelle de ce compte. Aucun second compte ni profil n'est créé."
+      },
+      "delivery": {
+        "sent": "Un e-mail de récupération a été envoyé.",
+        "simulated": "La messagerie n'est pas configurée dans cet environnement : aucun e-mail n'est réellement parvenu au destinataire.",
+        "notSent": "L'e-mail n'a pas pu être envoyé. Veuillez réessayer.",
+        "notApplicable": "Le parent peut désormais se connecter avec son e-mail et la CIN enregistrée."
+      }
+    },
     "view": {
       "recentSessions": "Sessions récentes",
       "recentActivities": "Activités récentes",
@@ -336,6 +381,7 @@
     "loadingUpdate": "Mise à jour...",
     "loadingDelete": "Suppression...",
     "save": "Enregistrer",
+    "close": "Fermer",
     "cancel": "Annuler",
     "delete": "Supprimer",
     "edit": "Modifier",

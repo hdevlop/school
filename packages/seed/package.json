@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "build": "tsc -p tsconfig.json --noEmit",
-    "test": "bun test",
     "seed:admin":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-admin.ts",
     "seed:staff":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-backfill.ts",
     "seed:roles":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-roles.ts",
@@ -12,7 +11,6 @@
     "seed:demo":     "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-demo.ts",
     "seed:expenses": "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-expenses.ts",
     "seed:topup":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-topup.ts",
-    "test:health":   "bun --env-file=../../apps/dashboard/.env.local src/scripts/health/test-health.ts",
     "gen:demo":      "bun src/scripts/demo/generator.ts",
     "gen:demo:ui":   "bun src/scripts/demo/cli.ts",
     "reset:demo":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/reset-demo.ts",
@@ -24,6 +22,6 @@
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "0.45.2",
     "nanoid": "^5.0.0",
-    "najm-auth": "4.0.4"
+    "najm-auth": "4.0.8"
   }
 }

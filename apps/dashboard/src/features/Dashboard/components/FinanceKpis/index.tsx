@@ -15,7 +15,7 @@ import {
 } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import { NSkeletonWidgets, NStatCard } from 'najm-kit';
-import { formatMAD, formatPercent, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 type KpiCardProps = {
   title: string;
@@ -35,8 +35,8 @@ const pickCountByIcon = (widgets: unknown, icon: string): number => {
 };
 
 const FinanceKpis: React.FC = () => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney, percentFromHundred } = useSchoolFormat();
   const { data: widgets, isLoading: widgetsLoading } = useDashboardWidgets();
   const { data: kpis, isLoading: kpisLoading } = useFinanceKpis();
 
@@ -64,22 +64,22 @@ const FinanceKpis: React.FC = () => {
       />
       <KpiCard
         title={t('dashboard.finance.incomeMonth')}
-        value={formatMAD(incomeMonth, locale)}
+        value={majorMoney(incomeMonth)}
         icon={TrendingUp}
       />
       <KpiCard
         title={t('dashboard.finance.expensesMonth')}
-        value={formatMAD(expensesMonth, locale)}
+        value={majorMoney(expensesMonth)}
         icon={TrendingDown}
       />
       <KpiCard
         title={t('dashboard.finance.netBalance')}
-        value={formatMAD(netBalance, locale)}
+        value={majorMoney(netBalance)}
         icon={Wallet}
       />
       <KpiCard
         title={t('dashboard.finance.collectionRateYTD')}
-        value={formatPercent(collectionRateYTD, locale)}
+        value={percentFromHundred(collectionRateYTD)}
         icon={Target}
       />
     </div>

@@ -10,11 +10,13 @@ import { usePaymentsTableFilters } from '../hooks/usePaymentsTableFilters';
 import { printReceipt } from './ReceiptPrint/printReceipt';
 import { Printer } from 'lucide-react';
 import { toast } from 'sonner';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { updateCheckStatusApi, voidPaymentApi } from '@/services/paymentApi';
 
 
 function PaymentsTable({studentId}) {
   const { t } = useTranslation();
+  const { currency } = useSchoolFormat();
   const columns = usePaymentsTableColumns();
   const rawFilters = usePaymentsTableFilters();
 
@@ -40,6 +42,7 @@ function PaymentsTable({studentId}) {
       studentName: payment.student?.name ?? '',
       studentCode: payment.student?.studentCode ?? '',
       amount: Number(payment.amount),
+      currency,
       paymentMethod: payment.paymentMethod,
       transactionRef: payment.transactionRef ?? undefined,
       checkNumber: payment.checkNumber ?? undefined,

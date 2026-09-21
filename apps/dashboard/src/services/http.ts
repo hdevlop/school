@@ -1,4 +1,5 @@
 import { auth } from '@/najm.auth';
+import { AuthError } from 'najm-auth/client';
 import { toFormData, hasFiles } from './formDataHelper';
 
 function buildURL(path: string, params?: Record<string, any>): string {
@@ -92,18 +93,14 @@ async function fetchWithAuth(method: string, url: string, body?: any) {
     });
     if (!retry.ok) {
       const errBody = await retry.json().catch(() => ({}));
-      const err: any = new Error(errBody.message || retry.statusText);
-      err.response = { status: retry.status, data: errBody };
-      throw err;
+      throw new AuthError(retry.status, errBody.message || retry.statusText, errBody);
     }
     return { data: await retry.json() };
   }
 
   if (!res.ok) {
     const errBody = await res.json().catch(() => ({}));
-    const err: any = new Error(errBody.message || res.statusText);
-    err.response = { status: res.status, data: errBody };
-    throw err;
+    throw new AuthError(res.status, errBody.message || res.statusText, errBody);
   }
   return { data: await res.json() };
 }

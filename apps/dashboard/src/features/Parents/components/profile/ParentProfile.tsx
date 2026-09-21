@@ -43,8 +43,7 @@ import {
 } from 'recharts';
 import { useTranslation } from 'najm-i18n/react';
 import type { TranslationParams } from 'najm-i18n';
-import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useParentDashboard } from '../../hooks/useParentDashboard';
 
 interface ParentProfileProps {
@@ -93,8 +92,8 @@ const getAttendanceScore = (rows: any[]) => {
 const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
   const router = useRouter();
   const { t, language } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const locale = language === 'fr' ? 'fr-FR' : language === 'ar' ? 'ar-MA' : 'en-US';
-  const moneyLocale: SupportedLocale = language === 'fr' || language === 'ar' ? language : 'en';
   const text = (key: string, params?: TranslationParams) =>
     t(`parents.profile.dashboard.${key}`, params);
 
@@ -327,10 +326,9 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                       >
                         <NAvatar
                           src={child.image}
-                          fallback={getAvatarFallback(child.name)}
+                          fallback={child.name}
                           size="md"
                           version={child.updatedAt}
-                          classNames={personAvatarClassNames}
                         />
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-semibold">{child.name}</p>
@@ -511,7 +509,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   <div>
                     <p className="text-xs text-muted-foreground">{text('outstandingBalance')}</p>
                     <p className="mt-1 text-2xl font-bold">
-                      {formatMAD(dashboard.outstandingFees, moneyLocale)}
+                      {majorMoney(dashboard.outstandingFees)}
                     </p>
                     <p className="mt-1 text-xs text-muted-foreground">
                       {dashboard.nextFee?.child?.name ?? text('familyAccount')}
@@ -532,12 +530,12 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                     <div className="flex justify-between gap-3 text-xs text-muted-foreground">
                       <span>
                         {text('paidAmount', {
-                          amount: formatMAD(dashboard.totalPaid, moneyLocale),
+                          amount: majorMoney(dashboard.totalPaid),
                         })}
                       </span>
                       <span>
                         {text('totalAmount', {
-                          amount: formatMAD(dashboard.totalFees, moneyLocale),
+                          amount: majorMoney(dashboard.totalFees),
                         })}
                       </span>
                     </div>

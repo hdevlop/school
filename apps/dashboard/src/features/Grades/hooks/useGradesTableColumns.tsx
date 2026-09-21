@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { NBadge, NButton } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 const computePercent = (obtained, total) => {
@@ -152,10 +151,10 @@ export const useGradesTableColumns = ({
                   onToggleStatus(row.original);
                 }}
               >
-                <NBadge statusMap={STATUS_COLOR_MAP} status={v} />
+                <NBadge status={v} />
               </NButton>
             ) : (
-              <NBadge statusMap={STATUS_COLOR_MAP} status={v} />
+              <NBadge status={v} />
             )}
           </div>
         );

@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
-import { personAvatarClassNames } from '@/lib/avatar';
 
 export const useTeachersTableColumns = () => {
   const { t } = useTranslation();
@@ -14,7 +12,7 @@ export const useTeachersTableColumns = () => {
       header: t('teachers.table.name'),
       cell: ({ row }) => {
         const teacher = row.original;
-        return <NAvatar src={teacher?.image} title={teacher.name} size='sm' version={teacher?.updatedAt} classNames={personAvatarClassNames} />;
+        return <NAvatar src={teacher?.image} title={teacher.name} size='sm' version={teacher?.updatedAt} />;
       },
       enableSorting: true,
     },
@@ -71,7 +69,7 @@ export const useTeachersTableColumns = () => {
       enableColumnFilter: true,
       cell: ({ getValue }) => {
         const status = getValue();
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={status} />;
+        return <NBadge status={status} />;
       },
       size: 120,
     },

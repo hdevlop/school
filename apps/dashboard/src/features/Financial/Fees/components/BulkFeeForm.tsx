@@ -11,7 +11,7 @@ import { bulkFeeFormSchema } from '@/lib/validations'
 import { useDialog } from 'najm-kit'
 import { getFeeTypeDisplayName, injectStudentIdToFees } from '../utils/feeUtils'
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import { calculateFeeAmounts, calculateTotalFees, buildInstallmentsPreview } from '@/lib/utils'
+import { calculateFeeAmounts, calculateTotalFees, buildInstallmentsPreview } from '@/features/Financial/Fees/utils/feeUtils'
 import { useAddFees } from '../hooks/useAddFees'
 import { DynamicArray } from 'najm-kit';
 

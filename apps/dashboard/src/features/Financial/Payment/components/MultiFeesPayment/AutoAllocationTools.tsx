@@ -1,8 +1,10 @@
 import React from 'react';
 import { Zap, AlertTriangle, Trash2 } from 'lucide-react';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const AutoAllocationTools = ({ studentFees }) => {
+    const { majorMoney } = useSchoolFormat();
 
     const paymentAmount = usePaymentStore((state) => state.paymentDetails.amount);
     const handleAutoAllocate = usePaymentStore((state) => state.handleAutoAllocate);
@@ -54,7 +56,7 @@ export const AutoAllocationTools = ({ studentFees }) => {
                         className="flex items-center gap-2 rounded-md bg-destructive px-4 py-2 text-xs font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
                     >
                         <AlertTriangle size={14} strokeWidth={2.5} />
-                        <span>Pay All Overdue ({totalOverdue.toFixed(2)} MAD)</span>
+                        <span>Pay All Overdue ({majorMoney(totalOverdue)})</span>
                     </button>
 
                     {/* Oldest First Button */}

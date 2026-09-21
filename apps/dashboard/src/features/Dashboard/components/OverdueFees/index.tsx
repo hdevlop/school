@@ -5,20 +5,19 @@ import { NButton } from 'najm-kit';
 import React from 'react';
 import { NAvatar, NCard } from 'najm-kit';
 import { Clock, Bell } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
-import { getAvatarFallback, getStudentAvatar, personAvatarClassNames } from '@/lib/avatar';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface OverdueFeesProps {
   className?: string;
 }
 
 const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data, isLoading } = useFinanceOverdue(6);
 
   type OverdueRow = {
@@ -54,11 +53,10 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
             <div className="flex items-center gap-2 min-w-0">
               <NAvatar
                 src={row.studentImage}
-                fallbackSrc={getStudentAvatar(row.gender)}
-                fallback={getAvatarFallback(row.studentName)}
+                fallbackSrc={row.gender === 'F' ? '/images/student_female.png' : '/images/student_male.png'}
+                fallback={row.studentName}
                 alt={row.studentName}
                 size="sm"
-                classNames={personAvatarClassNames}
               />
               <div className="flex flex-col min-w-0">
                 <span className="text-sm font-semibold truncate">{row.studentName}</span>
@@ -69,7 +67,7 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
             </div>
             <div className="flex items-center gap-2 shrink-0">
               <span className="text-sm font-semibold text-red-600">
-                {formatMAD(Number(row.totalOverdue ?? 0), locale)}
+                {majorMoney(Number(row.totalOverdue ?? 0))}
               </span>
               <NButton size="sm" variant="outline" className="h-7 px-2">
                 <Bell className="w-3.5 h-3.5" />

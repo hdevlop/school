@@ -1,9 +1,7 @@
 import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
-import { studentAvatarClassNames } from '@/lib/avatar';
 
 export const useStudentsTableColumns = () => {
   const { t } = useTranslation();
@@ -30,7 +28,6 @@ export const useStudentsTableColumns = () => {
             title={student.name}
             size="sm"
             version={student?.updatedAt}
-            classNames={studentAvatarClassNames}
           />
         );
       },
@@ -98,7 +95,7 @@ export const useStudentsTableColumns = () => {
       enableColumnFilter: true,
       cell: ({ getValue }) => {
         const status = getValue();
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={status} />;
+        return <NBadge status={status} />;
       },
       size: 120,
     },

@@ -3,7 +3,6 @@
 import React, { useMemo, useState } from 'react';
 import { GraduationCap, BookOpen, Award, ClipboardList } from 'lucide-react';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { Label } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStudents } from '@/features/Students/hooks/useStudents';
@@ -156,7 +155,7 @@ const StudentReportCard = ({ studentId: initialStudentId = null }: { studentId?:
                                 <span className="text-sm truncate" title={source?.title}>
                                   {source?.title || '—'}
                                 </span>
-                                {source?.type && <NBadge statusMap={STATUS_COLOR_MAP} status={source.type} />}
+                                {source?.type && <NBadge status={source.type} />}
                               </div>
                               <div className="flex items-center gap-2 text-sm shrink-0">
                                 <Award className="w-3.5 h-3.5 text-muted-foreground" />
@@ -165,7 +164,7 @@ const StudentReportCard = ({ studentId: initialStudentId = null }: { studentId?:
                                   <span className="text-muted-foreground"> / {grade.totalMarks}</span>
                                 </span>
                                 <span className={`font-semibold ${pctColor(pct)}`}>{fmtPct(pct)}</span>
-                                {grade.status && <NBadge statusMap={STATUS_COLOR_MAP} status={grade.status} />}
+                                {grade.status && <NBadge status={grade.status} />}
                               </div>
                             </div>
                             {pct != null && (

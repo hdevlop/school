@@ -3,9 +3,9 @@ import { ChevronDown, ChevronUp, AlertTriangle, Clock, CheckCircle2, LockKeyhole
 import { Label, NajmScroll, NTable } from 'najm-kit';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const toAmount = (value: unknown) => Number(value ?? 0) || 0;
-const formatMAD = (value: unknown) => `${toAmount(value).toLocaleString()} MAD`;
 
 const StatusBadge = ({ status, reservedAmount = 0, availableAmount = 0 }) => {
    const isReserved = status !== 'paid' && toAmount(reservedAmount) > 0 && toAmount(availableAmount) <= 0;
@@ -35,6 +35,7 @@ const FeeInstallmentsTable = ({
    updateAllocatedAmount,
 }: any) => {
    const { t } = useTranslation();
+   const { majorMoney } = useSchoolFormat();
    const rows = useMemo(() => (
       fee.installments
          .filter((inst: any) => stats.fullyPaid || inst.status !== 'paid')
@@ -116,16 +117,16 @@ const FeeInstallmentsTable = ({
             return (
                <div className="flex flex-col">
                   <span className={`text-xs font-semibold ${availableAmount > 0 ? 'text-gray-900' : 'text-gray-400'}`}>
-                     {formatMAD(availableAmount)}
+                     {majorMoney(availableAmount)}
                   </span>
                   {reservedAmount > 0 && (
                      <span className="text-[11px] font-medium text-slate-500">
-                        Reserved {formatMAD(reservedAmount)}
+                        Reserved {majorMoney(reservedAmount)}
                      </span>
                   )}
                   {paidAmount > 0 && inst.status !== 'paid' && (
                      <span className="text-[11px] font-medium text-emerald-600">
-                        Paid {formatMAD(paidAmount)}
+                        Paid {majorMoney(paidAmount)}
                      </span>
                   )}
                </div>
@@ -171,7 +172,7 @@ const FeeInstallmentsTable = ({
             </div>
          ),
       },
-   ], [allPayableSelected, fee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, updateAllocatedAmount, t]);
+   ], [allPayableSelected, fee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, updateAllocatedAmount, t, majorMoney]);
 
    return (
       <div className="border-t border-gray-300 bg-muted/20 p-2">

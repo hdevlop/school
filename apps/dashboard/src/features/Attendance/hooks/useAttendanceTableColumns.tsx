@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { NBadge, NAvatar } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
 import { useTranslation } from 'najm-i18n/react';
 import { useStudentsTableColumns } from '@/features/Students/hooks/useStudentsTableColumns';
 import RosterMarks from '../components/RosterMarks';
@@ -181,7 +180,7 @@ export const useStudentAttendanceTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const status = getValue();
-        return <NBadge status={status} statusMap={STATUS_COLOR_MAP} />;
+        return <NBadge status={status} />;
       },
     },
     {
@@ -238,7 +237,7 @@ export const useStaffAttendanceTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const status = getValue();
-        return <NBadge status={status} statusMap={STATUS_COLOR_MAP} />;
+        return <NBadge status={status} />;
       },
     },
     {

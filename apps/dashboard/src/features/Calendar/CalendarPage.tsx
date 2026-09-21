@@ -25,7 +25,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { Card } from 'najm-kit';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { useAnnouncements } from '@/features/Announcements/hooks/useAnnouncements';
 import AnnouncementForm from '@/features/Announcements/components/AnnouncementForm';
 import EventForm from '@/features/Events/components/EventForm';

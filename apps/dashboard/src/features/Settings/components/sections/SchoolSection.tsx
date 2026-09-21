@@ -3,13 +3,17 @@
 import React from 'react';
 import { Building2, Mail, Phone, Calendar, Clock, Hamburger } from 'lucide-react';
 import { FormInput } from 'najm-kit';
+import { FormLocationInput } from 'najm-kit/location';
 
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-import { LocationField } from '@/components/location/LocationField';
+import { useActiveForm } from '@/hooks/useActiveForm';
 
 const SchoolSection: React.FC = () => {
   const { t } = useTranslation();
+  const form = useActiveForm();
+  const schoolLocation = form.watch('schoolLocation');
+  const schoolPlaceId = form.watch('schoolAddressPlaceId');
 
 
   return (
@@ -30,17 +34,15 @@ const SchoolSection: React.FC = () => {
           required={true}
         />
 
-        <LocationField
-          names={{
-            address: 'schoolAddress',
-            placeId: 'schoolAddressPlaceId',
-            latitude: 'schoolAddressLatitude',
-            longitude: 'schoolAddressLongitude',
-          }}
-          label={t('settings.school.schoolAddress')}
+        <FormLocationInput
+          name="schoolLocation"
+          formLabel={t('settings.school.schoolAddress')}
           placeholder="123 Education Street, City, State 12345"
           required
-          compact
+          providerMeta={schoolLocation && schoolPlaceId
+            ? { provider: 'google', placeId: schoolPlaceId, ...schoolLocation }
+            : null}
+          onProviderMetaChange={(meta) => form.setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
 
         <FormInput

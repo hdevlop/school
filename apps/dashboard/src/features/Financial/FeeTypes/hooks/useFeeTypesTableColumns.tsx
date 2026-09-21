@@ -1,13 +1,11 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const useFeeTypesTableColumns = () => {
   const { t } = useTranslation();
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { majorMoney } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -46,7 +44,7 @@ export const useFeeTypesTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }: any) => {
         const amount = getValue();
-        return `${Number(amount).toFixed(2)} ${currency}`;
+        return majorMoney(amount);
       },
     },
     {
@@ -74,9 +72,9 @@ export const useFeeTypesTableColumns = () => {
       enableColumnFilter: true,
       cell: ({ getValue }: any) => {
         const isActive = getValue();
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={isActive ? 'active' : 'inactive'} />;
+        return <NBadge status={isActive ? 'active' : 'inactive'} />;
       },
       size: 120,
     },
-  ], [t, currency]);
+  ], [t, majorMoney]);
 };

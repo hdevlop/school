@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { NCard } from 'najm-kit';
 import { Calendar } from 'najm-kit';
 import { CalendarIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonCalendar } from 'najm-kit';
 import { useDelayedLoading } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';

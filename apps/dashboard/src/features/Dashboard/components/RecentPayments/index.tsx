@@ -3,11 +3,11 @@
 import React from 'react';
 import { NCard } from 'najm-kit';
 import { Receipt, Banknote, CreditCard, FileText } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceRecentPayments } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface RecentPaymentsProps {
   className?: string;
@@ -34,8 +34,8 @@ const formatDate = (d: string | null | undefined) => {
 };
 
 const RecentPayments: React.FC<RecentPaymentsProps> = ({ className = '' }) => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data, isLoading } = useFinanceRecentPayments(6);
 
   type PaymentRow = {
@@ -79,7 +79,7 @@ const RecentPayments: React.FC<RecentPaymentsProps> = ({ className = '' }) => {
                 </div>
               </div>
               <span className="text-sm font-semibold text-emerald-600">
-                {formatMAD(Number(row.amount ?? 0), locale)}
+                {majorMoney(Number(row.amount ?? 0))}
               </span>
             </div>
           );

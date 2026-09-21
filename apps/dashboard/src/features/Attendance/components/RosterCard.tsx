@@ -2,7 +2,6 @@
 
 import { NAvatar } from 'najm-kit';
 import { Label } from 'najm-kit';
-import { getAvatarFallback } from '@/lib/avatar';
 import type { RosterStatus } from '../hooks/useAttendanceRoster';
 import RosterMarks from './RosterMarks';
 
@@ -40,7 +39,7 @@ export default function RosterCard({
       <div className="flex items-center gap-3">
         <NAvatar
           src={avatarSrc ?? data.image}
-          fallback={getAvatarFallback(data.name)}
+          fallback={data.name}
           size="lg"
           version={data.updatedAt}
           classNames={classNames?.avatar}

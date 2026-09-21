@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
 import { useTranslation } from 'najm-i18n/react';
 
 const formatDate = (value) => {
@@ -43,7 +42,7 @@ export const useAnnouncementsTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const audience = getValue() as string;
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={audience} />;
+        return <NBadge status={audience} />;
       },
     },
     {
@@ -82,7 +81,7 @@ export const useAnnouncementsTableColumns = () => {
       cell: ({ getValue }) => {
         const isPublished = getValue();
         const status = isPublished ? 'published' : 'draft';
-        return <NBadge statusMap={STATUS_COLOR_MAP} status={status} />;
+        return <NBadge status={status} />;
       },
       size: 120,
     },

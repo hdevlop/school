@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, User, Calendar } from 'lucide-react';
 import { NCard } from 'najm-kit';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonEventList } from 'najm-kit';
 import { useDelayedLoading } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';

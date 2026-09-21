@@ -2,7 +2,6 @@ import React from 'react';
 
 import { Label } from 'najm-kit';
 import { NAvatar } from 'najm-kit';
-import { getAvatarFallback } from '@/lib/avatar';
 
 export const PaymentHeader = ({ student }) => {
     const studentInfo = student.student;
@@ -13,7 +12,7 @@ export const PaymentHeader = ({ student }) => {
             <div className="flex items-center gap-3">
                 <NAvatar
                     src={studentInfo.image}
-                    fallback={getAvatarFallback(studentInfo.name)}
+                    fallback={studentInfo.name}
                     size="sm"
                     className=" border-2  bg-white "
                 />

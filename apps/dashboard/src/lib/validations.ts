@@ -1,5 +1,14 @@
 import { z } from 'zod';
-import { alertPriorityEnum, alertStatusEnum, alertTypeEnum, assessmentStatusEnum, assessmentTypeEnum, attendanceStatusEnum, calendarSystemEnum, disciplineActionEnum, disciplineCategoryEnum, disciplineSeverityEnum, driverStatusEnum, employmentTypeEnum, eventStatusEnum, eventTypeEnum, eventVisibilityEnum, examStatusEnum, examTypeEnum, expenseCategoryEnum, expenseStatusEnum, feeTypeStatusEnum, fuelTypeEnum, genderEnum, gradeStatusEnum, languageEnum, maritalStatusEnum, participantTypeEnum, paymentMethodEnum, feeInstallmentStatusEnum, paymentTypeEnum, refuelStatusEnum, relationshipTypeEnum, scheduleEnum, sectionStatusEnum, studentStatusEnum, teacherStatusEnum, userStatusEnum, vehicleStatusEnum, vehicleTypeEnum } from './ZodEnum';
+import { NAJM_CURRENCIES, NAJM_TIME_ZONES } from 'najm-kit/server';
+import { schoolI18n } from '@sms/server/locales';
+import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
+import { alertPriorityEnum, alertStatusEnum, alertTypeEnum, assessmentStatusEnum, assessmentTypeEnum, attendanceStatusEnum, calendarSystemEnum, disciplineActionEnum, disciplineCategoryEnum, disciplineSeverityEnum, driverStatusEnum, employmentTypeEnum, eventStatusEnum, eventTypeEnum, eventVisibilityEnum, examStatusEnum, examTypeEnum, expenseCategoryEnum, expenseStatusEnum, feeTypeStatusEnum, fuelTypeEnum, genderEnum, gradeStatusEnum, maritalStatusEnum, participantTypeEnum, paymentMethodEnum, feeInstallmentStatusEnum, paymentTypeEnum, refuelStatusEnum, relationshipTypeEnum, scheduleEnum, sectionStatusEnum, studentStatusEnum, teacherStatusEnum, userStatusEnum, vehicleStatusEnum, vehicleTypeEnum } from './ZodEnum';
+
+export const locationValueSchema = z.object({
+  address: z.string().max(500, 'Address too long'),
+  latitude: z.number().min(-90).max(90).nullable(),
+  longitude: z.number().min(-180).max(180).nullable(),
+});
 
 const requiredId = z.preprocess((val) => val ?? "", z.string().min(1, "ID is required"));
 const optionalId = z.preprocess(
@@ -107,10 +116,8 @@ export const studentSchema = z.object({
   name: nameField,
   email: emailField,
   phone: phoneField.nullish(),
-  address: addressField,
+  addressLocation: locationValueSchema,
   addressPlaceId: z.string().max(255).optional().nullable(),
-  addressLatitude: z.number().min(-90).max(90).optional().nullable(),
-  addressLongitude: z.number().min(-180).max(180).optional().nullable(),
   dateOfBirth: optionalDateField,
   gender: genderEnum,
   enrollmentDate: dateField,
@@ -298,14 +305,10 @@ export const feesSchema = z.object({
 const transportAssignmentSchema = z.object({
   vehicleId: z.string().optional().default(''),
   assignmentDate: optionalDateField,
-  pickupLocation: z.string().max(500).optional().default(''),
+  pickup: locationValueSchema,
   pickupPlaceId: z.string().max(255).optional().nullable(),
-  pickupLatitude: z.number().min(-90).max(90).optional().nullable(),
-  pickupLongitude: z.number().min(-180).max(180).optional().nullable(),
-  dropoffLocation: z.string().max(500).optional().nullable(),
+  dropoff: locationValueSchema,
   dropoffPlaceId: z.string().max(255).optional().nullable(),
-  dropoffLatitude: z.number().min(-90).max(90).optional().nullable(),
-  dropoffLongitude: z.number().min(-180).max(180).optional().nullable(),
   notes: z.string().max(1000).optional().nullable(),
 })
 
@@ -317,8 +320,8 @@ export const transportSchema = z.object({
   if (!value.transportAssignment?.vehicleId) {
     ctx.addIssue({ code: 'custom', path: ['transportAssignment', 'vehicleId'], message: 'Vehicle is required' })
   }
-  if (!value.transportAssignment?.pickupLocation) {
-    ctx.addIssue({ code: 'custom', path: ['transportAssignment', 'pickupLocation'], message: 'Pickup location is required' })
+  if (!value.transportAssignment?.pickup.address) {
+    ctx.addIssue({ code: 'custom', path: ['transportAssignment', 'pickup', 'address'], message: 'Pickup location is required' })
   }
 })
 
@@ -625,10 +628,8 @@ export const refuelSchema = z.object({
 export const settingsSchema = z.object({
   // School Information
   schoolName: z.string().min(2, 'School name must be at least 2 characters').max(200, 'School name too long'),
-  schoolAddress: z.string().max(500, 'School address too long').optional(),
+  schoolLocation: locationValueSchema,
   schoolAddressPlaceId: z.string().max(255).optional().nullable(),
-  schoolAddressLatitude: z.number().min(-90).max(90).optional().nullable(),
-  schoolAddressLongitude: z.number().min(-180).max(180).optional().nullable(),
   schoolPhone: phoneField,
   schoolEmail: emailField,
   schoolWebsite: z.string().url('Must be a valid URL').max(255, 'School website URL too long').optional(), // New
@@ -673,12 +674,12 @@ export const settingsSchema = z.object({
   studentAccessEnabled: z.boolean().default(true),
 
   // System Preferences
-  timeZone: z.string().min(1, 'Time zone is required').default('UTC'),
-  language: languageEnum.default('en'),
+  timeZone: z.enum(NAJM_TIME_ZONES).default(schoolApp.preferences.defaultTimeZone),
+  language: z.enum(schoolI18n.supportedLanguages).default(schoolI18n.defaultLanguage),
   theme: z.enum(['light', 'dark']).default('light'),
   dateFormat: z.enum(['YYYY-MM-DD', 'MM/DD/YYYY', 'DD/MM/YYYY', 'DD-MM-YY', 'DD-MM-YYYY']).default('MM/DD/YYYY'), // Adjusted default to match table
   timeFormat: z.enum(['12', '24']).default('12'),
-  currency: z.string().length(3, 'Currency must be a 3-letter ISO code').regex(/^[A-Z]{3}$/, 'Currency must be uppercase ISO code').default('USD'),
+  currency: z.enum(NAJM_CURRENCIES).default(SCHOOL_DEFAULT_CURRENCY),
 
   // Academic Calendar Settings
   gradingPeriods: num().int('Grading periods must be an integer').min(1, 'Grading periods must be at least 1').max(12, 'Grading periods cannot exceed 12').default(4),

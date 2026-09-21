@@ -6,7 +6,6 @@ import {
 } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 
@@ -45,7 +44,7 @@ const GradeCard = ({ data }: any) => {
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-md font-bold">{studentName || t('common.notAssigned')}</Label>
           {studentCode && <span className="text-xs text-muted-foreground">{studentCode}</span>}
-          {g.status && <NBadge statusMap={STATUS_COLOR_MAP} status={g.status} />}
+          {g.status && <NBadge status={g.status} />}
         </div>
 
         {pct != null && (

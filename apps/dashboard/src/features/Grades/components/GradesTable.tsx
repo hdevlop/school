@@ -4,7 +4,6 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
 import { NPageHeader, NPageHeaderActions, NTable, NTabs } from 'najm-kit';
-import { buildSmsColumns } from '@/lib/tableUtils';
 import GradesHeader from './GradesHeader';
 import { ClipboardList, FileText, GraduationCap } from 'lucide-react';
 import { useGrades } from '../hooks/useGrades';
@@ -403,7 +402,7 @@ function GradesTable() {
       <NTable
         className='min-h-0 flex-1'
         data={roster}
-        columns={buildSmsColumns(columns, { onCellEdit: handleCellEdit })}
+        columns={columns}
         filters={rawFilters}
         headerSlot={(
           <GradesHeader

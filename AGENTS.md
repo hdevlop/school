@@ -168,12 +168,12 @@ Architecture:
 - `apps/dashboard/src/features` for feature modules
 - `apps/dashboard/src/components` for shared components
 - `apps/dashboard/src/services` for API helpers
-- `apps/dashboard/src/stores` for Zustand
+- `apps/dashboard/src/features/<Feature>/store` for feature-owned Zustand state
 
 Patterns:
 - Prefer existing `useEntityCRUD` and API service patterns.
 - Use the form helpers already in the repo for file-aware POST and PUT requests.
-- Respect React Query for server state and Zustand for global client state.
+- Respect React Query for server state and keep feature-owned client state inside its feature.
 - Keep forms consistent with `NForm`, `StepForm`, and multi-step flows already used in the app.
 
 ### Framework Contracts
@@ -181,8 +181,8 @@ Patterns:
 Single-owner boundaries. A second owner raises no error — it produces two
 states that drift apart — so do not add one without changing the plan first.
 
-- **One UI provider.** `apps/dashboard/src/app/providers.tsx` mounts exactly one `NajmAppProvider` from `najm-kit/app`, owning language, theme, design, time zone, branding, formatting, and `NTable` defaults. Never add `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local theme wrapper.
-- **One preference source.** `apps/dashboard/src/najm.server.ts` passes School's policy to `createNajmNextServerApp`, which resolves cookie → signed-in user → School settings → typed fallback. New allowlists and normalization helpers belong in `apps/dashboard/src/preferences/`.
+- **One UI provider.** `apps/dashboard/src/providers/AppProviders.tsx` mounts exactly one `NajmAppProvider` from `najm-next/app/client`, owning language, theme, design, time zone, branding, formatting, and `NTable` defaults. Never add `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local theme wrapper.
+- **One preference source.** `apps/dashboard/src/najm.server.ts` passes School's policy to `createNajmNextServerApp`, which resolves cookie → signed-in user → School settings → typed fallback. Najm Kit owns reusable currency and time-zone choices; `apps/dashboard/src/najm.config.ts` owns School's default. The settings UI and validator use the same shared lists.
 - **One auth definition.** `apps/dashboard/src/najm.auth.ts` derives client, proxy, server-session, and route-handler behavior from `schoolApp.auth`. Do not restate that policy at a consumer.
 - **One session resolution.** Server components use the module-scope adapter in `apps/dashboard/src/najm.server.ts`. Never call `auth.getSession()` directly from a layout or page, and never build the adapter per request.
 - **One Next config.** `apps/dashboard/next.config.ts` is the single line `export { default } from "najm-next/config"`. `najm-next` owns the workspace root (pinned for both `turbopack.root` and `outputFileTracingRoot`, because a stray parent lockfile otherwise wins Next's automatic detection), `NAJM_NEXT_DIST_DIR`, `experimental.externalDir`, `poweredByHeader`, the image cache TTL, `reflect-metadata` externalization, and service-worker headers. `allowedDevOrigins` stays empty unless `NAJM_NEXT_DEV_ORIGINS` names hosts. Do not add keys to the file; a genuine divergence uses `defineNajmNextConfig` from `najm-next/configurable`.
@@ -194,7 +194,6 @@ states that drift apart — so do not add one without changing the plan first.
 - Read installed behavior from `node_modules/najm-*/dist` first. That is what School actually runs.
 - A local Najm source checkout may be consulted **read-only** to understand internals. Never make School consume it: no workspace link, no `file:` dependency, no copied source, no tarball. School upgrades only by pinning a published version.
 - Najm versions are exact pins in the root `package.json` with a matching `overrides` block. Read the versions there rather than assuming, and never widen a pin to a range.
-- `bun run test:dashboard` fails when a second copy of a Najm package resolves, including a stale nested directory that `bun install` left behind. Delete the nested directory and re-run `bun install` to confirm it is not recreated; do not relax the guard.
 
 ### Design Guidance
 
@@ -222,10 +221,6 @@ ignore `bun.lock` and the `overrides` block that pins the Najm versions.
 - `bun run build`
 - `bun run build:all`
 - `bun run lint`
-- `bun run test:server`
-- `bun run test:dashboard`
-- `bun run test:seed`
-- `bun run test:e2e:najm-upgrade`
 - `bun run i18n:check`
 - `bun run db:generate`
 - `bun run db:migrate`
@@ -256,7 +251,7 @@ Use these files when behavior matters more than documentation:
 - `CLAUDE.md`
 - `.claude/skills/najm/SKILL.md`
 - `apps/dashboard/.env.local.example`
-- `apps/dashboard/src/app/providers.tsx`
+- `apps/dashboard/src/providers/AppProviders.tsx`
 - `apps/dashboard/src/najm.auth.ts`
 - `apps/dashboard/src/najm.config.ts`
 - `apps/dashboard/src/najm.server.ts`

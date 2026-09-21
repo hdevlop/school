@@ -2,7 +2,7 @@
 
 import { Check, Clock, X } from 'lucide-react';
 import { NButton } from 'najm-kit';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import type { RosterStatus } from '../hooks/useAttendanceRoster';
 
 const IDLE = 'border-2 border-slate-300 bg-white text-slate-500 shadow-none hover:border-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800';

@@ -5,10 +5,10 @@ import { NCard } from 'najm-kit';
 import { AlertTriangle, Search } from 'lucide-react';
 import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceAgingDetail } from '@/features/Dashboard/hooks/useDashboardHooks';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
-import { cn } from '@/lib/utils';
-import { isPermissionDenied } from '@/lib/queryError';
+import { AuthError } from 'najm-auth/client';
+import { cn } from 'najm-kit';
 
 type AgingRow = {
   studentId: string;
@@ -37,8 +37,8 @@ interface Props {
 }
 
 const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data, error, isLoading } = useFinanceAgingDetail();
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('total');
@@ -122,7 +122,7 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
       errorText={t(
         // `NCard` renders one message and has no forbidden state of its own, so
         // the distinction a table makes with an icon is made here in words.
-        isPermissionDenied(error)
+        error instanceof AuthError && (error.status === 401 || error.status === 403)
           ? 'common.feedback.forbiddenDescription'
           : 'common.feedback.errorMessage',
       )}
@@ -136,7 +136,7 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
           {buckets.map(({ label, value, color }) => (
             <div key={label} className={cn('rounded-lg p-2 text-center', color)}>
               <p className="text-xs font-medium mb-0.5">{label}</p>
-              <p className="text-sm font-bold tabular-nums">{formatMAD(value, locale)}</p>
+              <p className="text-sm font-bold tabular-nums">{majorMoney(value)}</p>
             </div>
           ))}
         </div>
@@ -186,19 +186,19 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
                   </td>
                   <td className="py-2 px-3 text-muted-foreground">{r.className}</td>
                   <td className={cn('py-2 px-3 text-right tabular-nums', bucketColor('current'))}>
-                    {r.current > 0 ? formatMAD(r.current, locale) : '—'}
+                    {r.current > 0 ? majorMoney(r.current) : '—'}
                   </td>
                   <td className={cn('py-2 px-3 text-right tabular-nums', bucketColor('d1_30'))}>
-                    {r.d1_30 > 0 ? formatMAD(r.d1_30, locale) : '—'}
+                    {r.d1_30 > 0 ? majorMoney(r.d1_30) : '—'}
                   </td>
                   <td className={cn('py-2 px-3 text-right tabular-nums', bucketColor('d31_60'))}>
-                    {r.d31_60 > 0 ? formatMAD(r.d31_60, locale) : '—'}
+                    {r.d31_60 > 0 ? majorMoney(r.d31_60) : '—'}
                   </td>
                   <td className={cn('py-2 px-3 text-right tabular-nums', bucketColor('d60plus'))}>
-                    {r.d60plus > 0 ? formatMAD(r.d60plus, locale) : '—'}
+                    {r.d60plus > 0 ? majorMoney(r.d60plus) : '—'}
                   </td>
                   <td className="py-2 px-3 text-right tabular-nums font-semibold text-primary">
-                    {formatMAD(r.total, locale)}
+                    {majorMoney(r.total)}
                   </td>
                 </tr>
               ))}
@@ -209,11 +209,11 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
                   <td className="py-2 px-3" colSpan={2}>
                     {t('reports.aging.totalStudents', { count: sorted.length, plural: sorted.length > 1 ? 's' : '' })}
                   </td>
-                  <td className="py-2 px-3 text-right tabular-nums text-green-600">{formatMAD(totals.current, locale)}</td>
-                  <td className="py-2 px-3 text-right tabular-nums text-yellow-700">{formatMAD(totals.d1_30, locale)}</td>
-                  <td className="py-2 px-3 text-right tabular-nums text-orange-700">{formatMAD(totals.d31_60, locale)}</td>
-                  <td className="py-2 px-3 text-right tabular-nums text-red-700">{formatMAD(totals.d60plus, locale)}</td>
-                  <td className="py-2 px-3 text-right tabular-nums text-primary">{formatMAD(totals.total, locale)}</td>
+                  <td className="py-2 px-3 text-right tabular-nums text-green-600">{majorMoney(totals.current)}</td>
+                  <td className="py-2 px-3 text-right tabular-nums text-yellow-700">{majorMoney(totals.d1_30)}</td>
+                  <td className="py-2 px-3 text-right tabular-nums text-orange-700">{majorMoney(totals.d31_60)}</td>
+                  <td className="py-2 px-3 text-right tabular-nums text-red-700">{majorMoney(totals.d60plus)}</td>
+                  <td className="py-2 px-3 text-right tabular-nums text-primary">{majorMoney(totals.total)}</td>
                 </tr>
               </tfoot>
             )}

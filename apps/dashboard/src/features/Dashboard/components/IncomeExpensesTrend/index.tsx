@@ -12,11 +12,11 @@ import {
 } from 'recharts';
 import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
 import { useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface IncomeExpensesTrendProps {
   className?: string;
@@ -40,7 +40,7 @@ type TooltipPayloadItem = { value: number; payload: { month: string } };
 type TrendTooltipProps = {
   active?: boolean;
   payload?: TooltipPayloadItem[];
-  locale: SupportedLocale;
+  majorMoney: (value: number) => string;
   incomeLabel: string;
   expensesLabel: string;
   todayIncome: number;
@@ -50,7 +50,7 @@ type TrendTooltipProps = {
 const TrendTooltip = ({
   active,
   payload,
-  locale,
+  majorMoney,
   incomeLabel,
   expensesLabel,
   todayIncome,
@@ -64,20 +64,20 @@ const TrendTooltip = ({
       <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
         <p className="text-sm font-semibold text-gray-800">{month}</p>
         <p className="text-sm" style={{ color: INCOME_COLOR }}>
-          {incomeLabel}: <span className="font-bold">{formatMAD(payload[0].value, locale)}</span>
+          {incomeLabel}: <span className="font-bold">{majorMoney(payload[0].value)}</span>
         </p>
         {payload[1] && (
           <p className="text-sm" style={{ color: EXPENSES_COLOR }}>
-            {expensesLabel}: <span className="font-bold">{formatMAD(payload[1].value, locale)}</span>
+            {expensesLabel}: <span className="font-bold">{majorMoney(payload[1].value)}</span>
           </p>
         )}
         {isCurrent && (
           <div className="border-t border-gray-100 mt-1 pt-1">
             <p className="text-sm text-gray-700">
-              {t('dashboard.todayIncome')} {incomeLabel}: <span className="font-bold">{formatMAD(todayIncome, locale)}</span>
+              {t('dashboard.todayIncome')} {incomeLabel}: <span className="font-bold">{majorMoney(todayIncome)}</span>
             </p>
             <p className="text-sm text-gray-700">
-              {t('dashboard.todayExpenses')} {expensesLabel}: <span className="font-bold">{formatMAD(todayExpenses, locale)}</span>
+              {t('dashboard.todayExpenses')} {expensesLabel}: <span className="font-bold">{majorMoney(todayExpenses)}</span>
             </p>
           </div>
         )}
@@ -104,8 +104,8 @@ const TrendLegend = ({ incomeLabel, expensesLabel }: LegendProps) => (
 type TrendRow = { month: string; income: number; expenses: number };
 
 const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '', academicYear }) => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data, isLoading } = useFinanceTrend(academicYear);
   const incomeLabel = t('dashboard.finance.income');
   const expensesLabel = t('dashboard.finance.expenses');
@@ -165,7 +165,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
                 content={(props) => (
                   <TrendTooltip
                     {...(props as unknown as TrendTooltipProps)}
-                    locale={locale}
+                    majorMoney={majorMoney}
                     incomeLabel={incomeLabel}
                     expensesLabel={expensesLabel}
                     todayIncome={todayIncome}

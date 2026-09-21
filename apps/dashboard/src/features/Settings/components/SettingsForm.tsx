@@ -18,6 +18,9 @@ import { settingsSchema } from '@/lib/validations';
 import { useAdminSettings } from '../hooks/useSettings';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { normalizeLocationValue } from 'najm-kit/location';
+import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
+import { schoolI18n } from '@sms/server/locales';
 
 // ─── Settings Skeleton ────────────────────────────────────────────────────────
 
@@ -92,10 +95,12 @@ const SettingsForm: React.FC = () => {
 
   const defaultValues = {
     schoolName: settings?.schoolName || '',
-    schoolAddress: settings?.schoolAddress || '',
+    schoolLocation: normalizeLocationValue({
+      address: settings?.schoolAddress,
+      latitude: settings?.schoolAddressLatitude,
+      longitude: settings?.schoolAddressLongitude,
+    }),
     schoolAddressPlaceId: settings?.schoolAddressPlaceId || null,
-    schoolAddressLatitude: settings?.schoolAddressLatitude ?? null,
-    schoolAddressLongitude: settings?.schoolAddressLongitude ?? null,
     schoolPhone: settings?.schoolPhone || '',
     schoolEmail: settings?.schoolEmail || '',
     currentAcademicYear: settings?.currentAcademicYear || `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
@@ -131,16 +136,22 @@ const SettingsForm: React.FC = () => {
     parentAccessEnabled: settings?.parentAccessEnabled ?? true,
     teacherAccessEnabled: settings?.teacherAccessEnabled ?? true,
     studentAccessEnabled: settings?.studentAccessEnabled ?? true,
-    timeZone: settings?.timeZone || 'UTC',
-    language: settings?.language || 'en' as const,
+    timeZone: settings?.timeZone || schoolApp.preferences.defaultTimeZone,
+    language: settings?.language || schoolI18n.defaultLanguage,
     theme: settings?.theme === 'dark' ? ('dark' as const) : ('light' as const),
     dateFormat: settings?.dateFormat || 'MM/DD/YYYY' as const,
     timeFormat: settings?.timeFormat || '12' as const,
-    currency: settings?.currency || 'USD',
+    currency: settings?.currency || SCHOOL_DEFAULT_CURRENCY,
   };
 
   const handleSubmit = async (data) => {
-    await updateSettings(data);
+    const { schoolLocation, ...fields } = data;
+    await updateSettings({
+      ...fields,
+      schoolAddress: schoolLocation.address,
+      schoolAddressLatitude: schoolLocation.latitude ?? null,
+      schoolAddressLongitude: schoolLocation.longitude ?? null,
+    });
   };
 
   if (isSettingsLoading) {

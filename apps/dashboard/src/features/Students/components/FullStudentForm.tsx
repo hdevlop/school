@@ -14,6 +14,7 @@ import { useTranslation } from 'najm-i18n/react'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { chance } from '@/fakers/fakers'
 import { StudentTransportFormContent } from '@/features/Transport/components/StudentTransportFormContent'
+import { normalizeLocationValue } from 'najm-kit/location'
 
 const ALWAYS_FEE_CATEGORIES = ['registration', 'tuition']
 const OPTIONAL_FEE_PROBABILITY = 0.8
@@ -88,7 +89,7 @@ const FullStudentForm = ({
       const generated = buildFill(parentSchema, {
         gender,
         relationshipType,
-        address: student.address,
+        address: student.addressLocation?.address,
       })
       const [firstName = '', ...lastNameParts] = String(generated.name ?? '').split(' ')
       const lastName = studentLastName || lastNameParts.join(' ')
@@ -169,10 +170,8 @@ const FullStudentForm = ({
       fields: [
         'transportEnabled',
         'transportAssignment',
-        'address',
+        'addressLocation',
         'addressPlaceId',
-        'addressLatitude',
-        'addressLongitude',
         'enrollmentDate',
       ],
       render: ({ form }) => (
@@ -189,20 +188,17 @@ const FullStudentForm = ({
     transportAssignment: {
       vehicleId: '',
       assignmentDate: '',
-      pickupLocation: '',
+      pickup: normalizeLocationValue(),
       pickupPlaceId: null,
-      pickupLatitude: null,
-      pickupLongitude: null,
-      dropoffLocation: '',
+      dropoff: normalizeLocationValue(),
       dropoffPlaceId: null,
-      dropoffLatitude: null,
-      dropoffLongitude: null,
       notes: '',
     },
   }), [defaultFees, initialStudentValues])
 
   const handleSubmit = useCallback(async (data) => {
     const { transportEnabled, ...studentData } = data
+    const { transportAssignment, ...studentFields } = studentData
     const fees = transportEnabled
       ? (studentData.fees || []).filter((fee: any) => {
           const feeType = feeTypes.find((candidate: any) => candidate.id === fee.feeTypeId)
@@ -210,10 +206,29 @@ const FullStudentForm = ({
         })
       : studentData.fees
 
+    const { addressLocation, ...flatStudentFields } = studentFields
+    const flatTransportAssignment = transportEnabled && transportAssignment
+      ? (() => {
+          const { pickup, dropoff, ...fields } = transportAssignment
+          return {
+            ...fields,
+            pickupLocation: pickup.address,
+            pickupLatitude: pickup.latitude ?? null,
+            pickupLongitude: pickup.longitude ?? null,
+            dropoffLocation: dropoff.address,
+            dropoffLatitude: dropoff.latitude ?? null,
+            dropoffLongitude: dropoff.longitude ?? null,
+          }
+        })()
+      : null
+
     const payload = {
-      ...studentData,
+      ...flatStudentFields,
+      address: addressLocation.address,
+      addressLatitude: addressLocation.latitude ?? null,
+      addressLongitude: addressLocation.longitude ?? null,
       fees,
-      transportAssignment: transportEnabled ? studentData.transportAssignment : null,
+      transportAssignment: flatTransportAssignment,
     }
 
     if (submissionPromiseRef.current) {

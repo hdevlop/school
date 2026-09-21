@@ -4,7 +4,6 @@ import React from 'react';
 import { CalendarDays, User, BookOpen, School } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 
@@ -26,7 +25,7 @@ const AttendanceCard = ({ data }: any) => {
           <Label className="text-md font-bold">
             {name || '-'}
           </Label>
-          <NBadge statusMap={STATUS_COLOR_MAP} status={data.status} />
+          <NBadge status={data.status} />
         </div>
 
         <div className="space-y-2">

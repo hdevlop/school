@@ -4,7 +4,6 @@ import React from 'react';
 import { Megaphone, Users, Building, User, Calendar, CalendarOff } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 
@@ -42,7 +41,7 @@ const AnnouncementCard = ({ data }: any) => {
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-md font-bold">{a.title}</Label>
-          <NBadge statusMap={STATUS_COLOR_MAP} status={status} />
+          <NBadge status={status} />
         </div>
 
         {a.content && (

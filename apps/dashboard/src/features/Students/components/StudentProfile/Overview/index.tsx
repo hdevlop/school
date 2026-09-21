@@ -21,11 +21,10 @@ import {
   User,
   Users,
 } from 'lucide-react';
-import { Checkbox, ImageInput, Input, NCard, NIcon, Textarea } from 'najm-kit';
+import { Checkbox, ImageInput, Input, NAvatar, NCard, NIcon, Textarea } from 'najm-kit';
 import { NativeProfileSelect } from '../NativeProfileSelect';
 import { Parent, Student } from '../types';
 import { useTranslation } from 'najm-i18n/react';
-import { personAvatarBackgroundClass } from '@/lib/avatar';
 
 type Translate = (key: string, params?: Record<string, unknown> | null) => string;
 
@@ -153,10 +152,14 @@ const ParentSummaryCard = ({ parent }: { parent: Parent }) => {
   return (
     <NCard className="overflow-hidden p-0">
       <div className="flex min-w-0 items-start gap-4 p-4">
-        <img
-          src={parent.image || defaultParentImage(parent.gender)}
+        <NAvatar
+          src={parent.image}
+          fallbackSrc={defaultParentImage(parent.gender)}
+          fallback={parent.name}
           alt={t('students.profile.parentAvatarNamed', { name: parent.name })}
-          className={`h-16 w-16 shrink-0 rounded-lg object-cover ${personAvatarBackgroundClass}`}
+          size="xl"
+          shape="rounded"
+          classNames={{ root: 'shrink-0', avatar: 'bg-primary/10' }}
         />
         <div className="min-w-0 flex-1">
           <div className="flex min-w-0 flex-wrap items-center gap-2">

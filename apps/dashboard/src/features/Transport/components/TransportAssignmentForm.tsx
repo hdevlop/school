@@ -4,7 +4,8 @@ import { useMemo } from 'react'
 import { z } from 'zod'
 import { Bus, CalendarDays, NotebookPen } from 'lucide-react'
 import { FormInput, NForm, useDialog } from 'najm-kit'
-import { LocationField } from '@/components/location/LocationField'
+import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
+import { locationValueSchema } from '@/lib/validations'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { useTranslation } from 'najm-i18n/react'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
@@ -12,14 +13,10 @@ import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
 const assignmentSchema = z.object({
   vehicleId: z.string().min(1, 'Vehicle is required'),
   assignmentDate: z.string().optional().nullable(),
-  pickupLocation: z.string().min(1, 'Pickup location is required').max(500),
+  pickup: locationValueSchema.refine((value) => Boolean(value.address), { path: ['address'], message: 'Pickup location is required' }),
   pickupPlaceId: z.string().max(255).optional().nullable(),
-  pickupLatitude: z.number().min(-90).max(90).optional().nullable(),
-  pickupLongitude: z.number().min(-180).max(180).optional().nullable(),
-  dropoffLocation: z.string().max(500).optional().nullable(),
+  dropoff: locationValueSchema,
   dropoffPlaceId: z.string().max(255).optional().nullable(),
-  dropoffLatitude: z.number().min(-90).max(90).optional().nullable(),
-  dropoffLongitude: z.number().min(-180).max(180).optional().nullable(),
   notes: z.string().max(1000).optional().nullable(),
 })
 
@@ -31,6 +28,10 @@ type Props = {
 
 function AssignmentFields({ lockVehicleId }: { lockVehicleId?: string }) {
   const form = useActiveForm()
+  const pickup = form.watch('pickup')
+  const dropoff = form.watch('dropoff')
+  const pickupPlaceId = form.watch('pickupPlaceId')
+  const dropoffPlaceId = form.watch('dropoffPlaceId')
   const { t } = useTranslation()
   const { vehicles = [] } = useVehicles()
   const activeVehicles = useMemo(() => {
@@ -67,20 +68,24 @@ function AssignmentFields({ lockVehicleId }: { lockVehicleId?: string }) {
         required
       />
       <div className="grid gap-4 md:grid-cols-2">
-        <LocationField
-          form={form}
-          names={{ address: 'pickupLocation', placeId: 'pickupPlaceId', latitude: 'pickupLatitude', longitude: 'pickupLongitude' }}
-          label={t('transport.form.pickupLocation')}
+        <FormLocationInput
+          name="pickup"
+          formLabel={t('transport.form.pickupLocation')}
           placeholder={t('transport.form.pickupPlaceholder')}
           required
-          compact
+          providerMeta={pickup && pickupPlaceId
+            ? { provider: 'google', placeId: pickupPlaceId, ...pickup }
+            : null}
+          onProviderMetaChange={(meta) => form.setValue('pickupPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
-        <LocationField
-          form={form}
-          names={{ address: 'dropoffLocation', placeId: 'dropoffPlaceId', latitude: 'dropoffLatitude', longitude: 'dropoffLongitude' }}
-          label={t('transport.form.dropoffLocation')}
+        <FormLocationInput
+          name="dropoff"
+          formLabel={t('transport.form.dropoffLocation')}
           placeholder={t('transport.form.dropoffPlaceholder')}
-          compact
+          providerMeta={dropoff && dropoffPlaceId
+            ? { provider: 'google', placeId: dropoffPlaceId, ...dropoff }
+            : null}
+          onProviderMetaChange={(meta) => form.setValue('dropoffPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
       </div>
       <div className="grid gap-4 md:grid-cols-2">
@@ -96,14 +101,18 @@ export function TransportAssignmentForm({ student, assignment, lockVehicleId }: 
   const defaults = {
     vehicleId: lockVehicleId || assignment?.vehicleId || '',
     assignmentDate: assignment?.assignmentDate || new Date().toISOString().slice(0, 10),
-    pickupLocation: assignment?.pickupLocation || student?.address || '',
+    pickup: normalizeLocationValue({
+      address: assignment?.pickupLocation || student?.address,
+      latitude: assignment?.pickupLatitude ?? student?.addressLatitude,
+      longitude: assignment?.pickupLongitude ?? student?.addressLongitude,
+    }),
     pickupPlaceId: assignment?.pickupPlaceId || student?.addressPlaceId || null,
-    pickupLatitude: assignment?.pickupLatitude ?? student?.addressLatitude ?? null,
-    pickupLongitude: assignment?.pickupLongitude ?? student?.addressLongitude ?? null,
-    dropoffLocation: assignment?.dropoffLocation || '',
+    dropoff: normalizeLocationValue({
+      address: assignment?.dropoffLocation,
+      latitude: assignment?.dropoffLatitude,
+      longitude: assignment?.dropoffLongitude,
+    }),
     dropoffPlaceId: assignment?.dropoffPlaceId || null,
-    dropoffLatitude: assignment?.dropoffLatitude ?? null,
-    dropoffLongitude: assignment?.dropoffLongitude ?? null,
     notes: assignment?.notes || '',
   }
 
@@ -112,7 +121,19 @@ export function TransportAssignmentForm({ student, assignment, lockVehicleId }: 
       id="student-transport-assignment-form"
       schema={assignmentSchema}
       defaultValues={defaults}
-      onSubmit={(data) => pop({ ...data, studentId: student.id })}
+      onSubmit={(data) => {
+        const { pickup, dropoff, ...fields } = data
+        pop({
+          ...fields,
+          studentId: student.id,
+          pickupLocation: pickup.address,
+          pickupLatitude: pickup.latitude ?? null,
+          pickupLongitude: pickup.longitude ?? null,
+          dropoffLocation: dropoff.address,
+          dropoffLatitude: dropoff.latitude ?? null,
+          dropoffLongitude: dropoff.longitude ?? null,
+        })
+      }}
     >
       <AssignmentFields lockVehicleId={lockVehicleId} />
     </NForm>

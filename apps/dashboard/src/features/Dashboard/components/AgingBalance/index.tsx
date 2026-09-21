@@ -13,11 +13,11 @@ import {
 } from 'recharts';
 import { NCard } from 'najm-kit';
 import { AlertTriangle } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
 import { useFinanceAging } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface AgingBalanceProps {
   className?: string;
@@ -33,15 +33,15 @@ type TooltipPayloadItem = {
 type AgingTooltipProps = {
   active?: boolean;
   payload?: TooltipPayloadItem[];
-  locale: SupportedLocale;
+  majorMoney: (value: number) => string;
 };
 
-const AgingTooltip = ({ active, payload, locale }: AgingTooltipProps) => {
+const AgingTooltip = ({ active, payload, majorMoney }: AgingTooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
         <p className="text-sm font-semibold text-gray-800">{payload[0].payload.label}</p>
-        <p className="text-sm font-bold">{formatMAD(payload[0].value, locale)}</p>
+        <p className="text-sm font-bold">{majorMoney(payload[0].value)}</p>
       </div>
     );
   }
@@ -49,8 +49,8 @@ const AgingTooltip = ({ active, payload, locale }: AgingTooltipProps) => {
 };
 
 const AgingBalance: React.FC<AgingBalanceProps> = ({ className = '' }) => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { data, isLoading } = useFinanceAging();
 
   const chartData = useMemo(
@@ -87,7 +87,7 @@ const AgingBalance: React.FC<AgingBalanceProps> = ({ className = '' }) => {
               tick={{ fill: '#6b7280', fontSize: 11 }}
             />
             <Tooltip
-              content={(props) => <AgingTooltip {...(props as unknown as AgingTooltipProps)} locale={locale} />}
+              content={(props) => <AgingTooltip {...(props as unknown as AgingTooltipProps)} majorMoney={majorMoney} />}
               cursor={{ fill: 'rgba(0,0,0,0.04)' }}
             />
             <Bar dataKey="value" radius={[6, 6, 0, 0]}>

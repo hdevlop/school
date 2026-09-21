@@ -4,7 +4,7 @@ import "@/styles/globals.css";
 import "flag-icons/css/flag-icons.min.css";
 import 'najm-theme/styles.css';
 import { Lora, Roboto_Mono } from 'next/font/google'
-import { AppProviders } from './providers';
+import { AppProviders } from '@/providers/AppProviders';
 import { loadUiSnapshot } from '@/najm.server';
 import NajmClientRoot from '@/components/NajmClientRoot';
 
@@ -28,11 +28,8 @@ const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
 })
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default async function RootLayout({ children,}: Readonly<{children: React.ReactNode;}>) {
+
   const snapshot = await loadUiSnapshot();
   const { preferences } = snapshot;
 

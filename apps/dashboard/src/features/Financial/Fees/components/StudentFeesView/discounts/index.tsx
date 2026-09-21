@@ -4,8 +4,7 @@ import { Badge, NButton, useDialog } from 'najm-kit'
 import { DollarSign, Pencil, Plus, Tag } from 'lucide-react'
 import { useFees } from '@/features/Financial/Fees/hooks/useFees'
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes'
-import { formatCurrency } from '@/lib/utils'
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings'
+import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 import EditFeeForm from '../../EditFeeForm'
 
 interface DiscountsTabProps {
@@ -17,8 +16,7 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
   const { openDialog } = useDialog()
   const { feeTypes } = useFeeTypes()
   const { updateFee, isUpdating } = useFees()
-  const { publicSettings } = usePublicSettings()
-  const currency = publicSettings?.currency || 'MAD'
+  const { majorMoney } = useSchoolFormat()
 
   const totalDiscount = fees.reduce((sum, fee) => {
     const base = Number(fee.baseAmount) || 0
@@ -66,7 +64,7 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
         </div>
         {totalDiscount > 0 && (
           <Badge variant="secondary" className="border-green-200 bg-green-50 text-green-700">
-            Total saved: {formatCurrency(totalDiscount, currency)}
+            Total saved: {majorMoney(totalDiscount)}
           </Badge>
         )}
       </div>
@@ -105,11 +103,11 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
                     <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
                     <span className="shrink-0 text-muted-foreground">Amount:</span>
                     <span className={hasDiscount ? 'text-muted-foreground line-through' : 'font-semibold text-green-700'}>
-                      {formatCurrency(base || net, currency)}
+                      {majorMoney(base || net)}
                     </span>
                     {hasDiscount && (
                       <Badge variant="secondary" className="shrink-0 border-green-200 bg-green-100 px-2 font-semibold text-green-800">
-                        {formatCurrency(net, currency)}
+                        {majorMoney(net)}
                       </Badge>
                     )}
                     {hasDiscount && (

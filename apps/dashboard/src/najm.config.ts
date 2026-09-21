@@ -2,6 +2,8 @@ import { defineNajmApp } from 'najm-next/app';
 
 import { SCHOOL_APP_NAME } from '@/lib/appName';
 
+export const SCHOOL_DEFAULT_CURRENCY = 'MAD' as const;
+
 export const schoolApp = defineNajmApp({
   id: 'school',
   appName: SCHOOL_APP_NAME,

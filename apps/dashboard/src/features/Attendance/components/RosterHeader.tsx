@@ -3,7 +3,7 @@
 import { NButton } from 'najm-kit';
 
 import { RotateCcw, Loader2, Send, Users, CheckCircle2, XCircle, Clock3 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
 interface Stats { total: number; present: number; absent: number; late: number }

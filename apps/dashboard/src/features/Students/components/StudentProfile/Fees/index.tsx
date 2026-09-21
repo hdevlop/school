@@ -6,6 +6,7 @@ import { useCallback, useMemo } from 'react';
 import { NCard, NStatCard, NTable } from 'najm-kit';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface FeesTabProps {
   studentId?: string;
@@ -16,8 +17,6 @@ const toNumber = (value: unknown) => {
   const amount = Number(value ?? 0);
   return Number.isFinite(amount) ? amount : 0;
 };
-
-const formatMoney = (value: unknown, language: string) => `${Math.round(toNumber(value)).toLocaleString(language)} DH`;
 
 const formatDate = (value: string | null | undefined, language: string) => {
   if (!value) return '—';
@@ -91,6 +90,7 @@ const getFeeStatus = (fee: any, remaining: number, overdueCount: number) => {
 };
 
 export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
+  const { majorMoney } = useSchoolFormat();
   const { t, language } = useTranslation();
   const { studentFees, isStudentFeesLoading } = useFees({ studentId });
 
@@ -208,7 +208,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
       enableSorting: true,
       cell: ({ row }) => (
         <span className="block whitespace-nowrap text-right font-semibold text-slate-700">
-          {formatMoney(row.original.netAmount, language)}
+          {majorMoney(row.original.netAmount)}
         </span>
       ),
     },
@@ -218,7 +218,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
       enableSorting: true,
       cell: ({ row }) => (
         <span className="block whitespace-nowrap text-right font-semibold text-emerald-600">
-          {formatMoney(row.original.paidAmount, language)}
+          {majorMoney(row.original.paidAmount)}
         </span>
       ),
     },
@@ -228,7 +228,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
       enableSorting: true,
       cell: ({ row }) => (
         <span className="block whitespace-nowrap text-right font-bold text-slate-900">
-          {formatMoney(row.original.remaining, language)}
+          {majorMoney(row.original.remaining)}
         </span>
       ),
     },
@@ -242,7 +242,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
         </div>
       ),
     },
-  ], [language, t]);
+  ], [language, t, majorMoney]);
 
   if (!studentId) {
     return (
@@ -278,21 +278,21 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
     {
       icon: CircleDollarSign,
       label: t('common.total'),
-      value: formatMoney(feeData.netAmount, language),
+      value: majorMoney(feeData.netAmount),
       subtext: t('students.profile.feeDetails.assignedCount', { count: feeData.fees.length }),
       iconClassName: 'bg-blue-50 text-blue-600 group-hover:bg-blue-100',
     },
     {
       icon: CheckCircle2,
       label: t('students.profile.feeDetails.paid'),
-      value: formatMoney(feeData.totalPaid, language),
+      value: majorMoney(feeData.totalPaid),
       subtext: t('students.profile.feeDetails.collectedPercent', { count: paidPercent }),
       iconClassName: 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-100',
     },
     {
       icon: AlertTriangle,
       label: t('students.profile.due'),
-      value: formatMoney(feeData.totalDue, language),
+      value: majorMoney(feeData.totalDue),
       subtext: t('students.profile.feeDetails.overdueInstallmentCount', { count: feeData.overdueInstallments.length }),
       iconClassName: feeData.totalDue > 0
         ? 'bg-rose-50 text-rose-600 group-hover:bg-rose-100'

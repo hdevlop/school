@@ -5,7 +5,6 @@ import { Phone, Calendar, CreditCard, Shield } from 'lucide-react';
 import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { getAvatarFallback } from '@/lib/avatar';
 import { Label } from 'najm-kit';
 
 const DriverCard = ({ data }) => {
@@ -15,7 +14,7 @@ const DriverCard = ({ data }) => {
    return (
       <div className="flex items-start gap-4 p-4">
          <div className="shrink-0">
-            <NAvatar src={driver?.image} fallback={getAvatarFallback(driver.name)} size="lg" version={driver?.updatedAt} />
+            <NAvatar src={driver?.image} fallback={driver.name} size="lg" version={driver?.updatedAt} />
          </div>
 
          <div className="flex-1 flex flex-col gap-2">

@@ -19,7 +19,7 @@ import {
   getStudentCreditsApi,
   previewRolloverApi,
 } from '@/services/financialOperationsApi';
-import { formatMAD } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 
 const unwrap = (value: any) => value?.data?.data ?? value?.data ?? value;
@@ -57,6 +57,7 @@ const checkStatusBadge: Record<string, string> = {
 const inputClass = 'h-10 rounded-md border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/30';
 
 export default function FinancialOperationsPage() {
+  const { majorMoney } = useSchoolFormat();
   const { t } = useTranslation();
   const sidebar = useNSidebar();
   const [studentId, setStudentId] = useState('');
@@ -186,7 +187,7 @@ export default function FinancialOperationsPage() {
                     </div>
                     <p className="mt-0.5 text-xs text-muted-foreground">{payment.checkNumber} · due {payment.checkDueDate}</p>
                   </div>
-                  <p className="whitespace-nowrap font-semibold tabular-nums">{formatMAD(Number(payment.amount))}</p>
+                  <p className="whitespace-nowrap font-semibold tabular-nums">{majorMoney(Number(payment.amount))}</p>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
                   {payment.status === 'pending' ? <NButton size="sm" disabled={busy === `check-${payment.id}`} onClick={() => changeCheckStatus(payment, 'deposited')}>Deposit</NButton> : null}
@@ -210,7 +211,7 @@ export default function FinancialOperationsPage() {
           </div>
           <div className="mt-4 rounded-lg bg-muted/50 p-3">
             <p className="text-sm text-muted-foreground">Available balance</p>
-            <p className="text-xl font-semibold">{formatMAD(availableCredit)}</p>
+            <p className="text-xl font-semibold">{majorMoney(availableCredit)}</p>
           </div>
         </Panel>
 

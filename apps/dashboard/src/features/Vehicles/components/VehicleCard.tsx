@@ -6,7 +6,6 @@ import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
 
 const VehicleCard = ({ data }: any) => {
   const { t } = useTranslation();
@@ -62,7 +61,7 @@ const VehicleCard = ({ data }: any) => {
             <Label className="text-sm font-medium text-muted-foreground">
               {t('vehicles.table.status')}:
             </Label>
-            <NBadge look="text" status={data.status} statusMap={STATUS_COLOR_MAP} />
+            <NBadge look="text" status={data.status} />
           </div>
         </div>
       </div>

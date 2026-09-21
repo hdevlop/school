@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
 import { useDelayedLoading } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';

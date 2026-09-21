@@ -2,8 +2,6 @@
 
 import { User, Mail, Shield, Hash, Phone, Calendar } from 'lucide-react';
 import { NAvatar, NStatCard, NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';
-import { getAvatarFallback } from '@/lib/avatar';
 import { NSection, NSectionInfo } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -11,11 +9,11 @@ import { useTranslation } from 'najm-i18n/react';
 const UserHeader = ({ user }) => {
   return (
     <div className="flex flex-col items-center border-none md:flex-row md:gap-4">
-      <NAvatar src={user.image} fallback={getAvatarFallback(user.name)} size="lg" version={user?.updatedAt} />
+      <NAvatar src={user.image} fallback={user.name} size="lg" version={user?.updatedAt} />
       <div className="flex flex-col justify-center items-center md:items-start">
         <Label className="text-md font-bold">{user.name}</Label>
         <Label className="text-sm ">{user.email}</Label>
-        <NBadge status={user.status} statusMap={STATUS_COLOR_MAP} look="minimal" />
+        <NBadge status={user.status} look="minimal" />
       </div>
     </div>
   );

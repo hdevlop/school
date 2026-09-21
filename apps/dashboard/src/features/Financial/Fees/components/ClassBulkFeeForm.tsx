@@ -9,10 +9,10 @@ import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTr
 import { classBulkFeeFormSchema } from '@/lib/validations'
 import { useDialog } from 'najm-kit'
 import { useEnum } from '@/hooks/useEnum'
-import { calculateFeeAmounts, buildInstallmentsPreview } from '@/lib/utils'
+import { calculateFeeAmounts, buildInstallmentsPreview } from '@/features/Financial/Fees/utils/feeUtils'
 import { useQuery } from '@tanstack/react-query'
 import { getClassStudentsApi } from '@/services/classApi'
-import { formatMAD } from '@/lib/format'
+import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 import InstallmentPreviewTable from './InstallmentPreviewTable'
 
 const StudentCount = ({ classId, sectionId }) => {
@@ -76,6 +76,7 @@ const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
 }
 
 export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
+   const { majorMoney } = useSchoolFormat()
    const { watch, setValue } = useActiveForm()
    const { t } = useTranslation()
 
@@ -203,7 +204,7 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
                   {t('fees.form.netAmount') || 'Net Amount'}
                </Label>
                <div className="h-10 flex items-center rounded-md border border-green-700 bg-green-100 px-3 text-sm font-semibold">
-                  {formatMAD(netAmount)}
+                  {majorMoney(netAmount)}
                </div>
             </div>
          </div>

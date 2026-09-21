@@ -1,28 +1,22 @@
 import 'server-only';
 
-import { defineNajmPreferences } from 'najm-kit/server';
+import { defineNajmPreferences, NAJM_CURRENCIES } from 'najm-kit/server';
 import { createNajmNextServerApp } from 'najm-next/app/next';
 
 import type { SchoolUiSettings } from '@sms/server';
 import { schoolI18n } from '@sms/server/locales';
 import { schoolTheme } from '@sms/server/theme';
 import { auth } from '@/najm.auth';
-import { schoolApp } from '@/najm.config';
 import {
+  schoolApp,
   SCHOOL_DEFAULT_CURRENCY,
-  SCHOOL_DEFAULT_THEME,
-  SCHOOL_SUPPORTED_CURRENCIES,
-  SCHOOL_SUPPORTED_TIME_ZONES,
-} from '@/preferences';
+} from '@/najm.config';
 
 export const schoolPreferences = defineNajmPreferences({
   i18n: schoolI18n,
-  timeZones: SCHOOL_SUPPORTED_TIME_ZONES,
-  defaultTimeZone: schoolApp.preferences.defaultTimeZone,
-  defaultTheme: SCHOOL_DEFAULT_THEME,
-  currencies: SCHOOL_SUPPORTED_CURRENCIES,
+  ...schoolApp.preferences,
+  currencies: NAJM_CURRENCIES,
   defaultCurrency: SCHOOL_DEFAULT_CURRENCY,
-  cookieNames: schoolApp.preferences.cookieNames,
   messages: {
     language: 'Unsupported language.',
     theme: 'Unsupported color theme.',

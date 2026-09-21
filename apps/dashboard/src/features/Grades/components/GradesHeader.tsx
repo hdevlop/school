@@ -1,6 +1,6 @@
 import { TrendingUp, TrendingDown, Target, RotateCcw, Loader2, Send } from 'lucide-react';
 import { NButton } from 'najm-kit';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
 interface Stats {

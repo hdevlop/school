@@ -4,14 +4,12 @@ import React from 'react';
 import { Calendar, DollarSign, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
 import { Label } from 'najm-kit';
-import { formatDate } from '@/lib/utils';
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 
 const InstallmentCard = ({ data }: any) => {
   const { t } = useTranslation();
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { displayDate, majorMoney } = useSchoolFormat();
   const installment = data;
 
   const statusConfig = {
@@ -67,7 +65,7 @@ const InstallmentCard = ({ data }: any) => {
             icon={DollarSign}
             iconColor="text-primary"
             label={t('fees.table.amount')}
-            value={`${Number(installment.amount || 0).toLocaleString()} ${currency}`}
+            value={majorMoney(installment.amount || 0)}
             valueColor="text-primary font-semibold tabular-nums"
           />
 
@@ -75,7 +73,7 @@ const InstallmentCard = ({ data }: any) => {
             icon={Calendar}
             iconColor="text-muted-foreground"
             label={t('fees.table.dueDate')}
-            value={formatDate(installment.dueDate)}
+            value={displayDate(installment.dueDate)}
             valueColor="text-muted-foreground"
           />
 
@@ -84,7 +82,7 @@ const InstallmentCard = ({ data }: any) => {
               icon={CheckCircle}
               iconColor="text-green-600"
               label="Paid Date"
-              value={formatDate(installment.paidDate)}
+              value={displayDate(installment.paidDate)}
               valueColor="text-green-600"
             />
           )}

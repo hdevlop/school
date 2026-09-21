@@ -139,15 +139,7 @@ const Login = () => {
           />
 
           <div className="flex w-full items-center justify-between">
-            {/* `label` (not `formLabel`) keeps the caption inline beside the
-                box: `formLabel` renders a FormLabel stacked above the control.
-
-                The caption stays hardcoded English. The browser acceptance
-                suite signs in under every supported language and finds this
-                checkbox by the text of its form item — see
-                `tests/e2e/support/acceptance.ts`. It is also the only checkbox
-                on the page, which `najm-upgrade.spec.ts` relies on, so nothing
-                else here may grow one. */}
+            {/* Keep the checkbox caption inline beside the control. */}
             <FormInput
               name="rememberMe"
               type="checkbox"

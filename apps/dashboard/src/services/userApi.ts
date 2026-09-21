@@ -33,6 +33,17 @@ export const deleteUserApi = async (id) => {
   return res.data;
 };
 
+// Admin resets one account's access. The server picks the consequence from the
+// account as it stands now; `expectedMode` only states which consequence the
+// confirmation explained, so a stale dialog is refused rather than acted on.
+export const resetUserAccessApi = async (
+  userId: string,
+  data: { reason: string; expectedMode: string },
+) => {
+  const res = await api.post(`/admin/access/users/${userId}/reset-access`, data);
+  return res.data;
+};
+
 export const updateUserLangApi = async ({ language }) => {
   const res = await api.post(`/users/lang/${language}`);
   return res.data;

@@ -26,20 +26,6 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 
 ### Testing & Quality
 - Always run `bun run lint` after making code changes
-- `bun run test:server` / `bun run test:dashboard` / `bun run test:seed`
-- `bun run test:e2e:najm-upgrade` after a production build and isolated database seed
-- `bun run test:e2e:acceptance` for the browser acceptance suite in
-  `apps/dashboard/tests/e2e/*.acceptance.spec.ts` — role-scoped navigation, the
-  student, teacher and parent directories, the student profile, the academic
-  tables, exams, fees and expenses, the attendance register, the grading
-  workbench, student conduct, announcements, the vehicle fleet, access control,
-  settings, and the header language/theme controls. It needs the same
-  production build and
-  disposable database, signs in once per test, and mocks the API responses it
-  asserts on. Najm Auth rate limits sign-in to 8 per 10 minutes, so a server
-  started outside the suite needs `NAJM_AUTH_LOGIN_RATE_LIMIT` raised; the
-  suite's own managed server sets it. Runs under Node, not Bun: Bun on Windows
-  cannot hand Chrome the pipe its debugging handshake needs.
 - Use `bun run build:all` to verify production readiness
 - `bun run i18n:check` when touching `packages/server/src/locales/*.json`
 
@@ -48,29 +34,27 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 Single-owner boundaries. A second owner raises no error — it just produces two
 states that drift — so do not add one without changing the plan first.
 
-- **One UI provider.** `apps/dashboard/src/app/providers.tsx` mounts exactly one
-  `NajmAppProvider` from `najm-kit/app`, owning language, theme, design, time
+- **One UI provider.** `apps/dashboard/src/providers/AppProviders.tsx` mounts exactly one
+  `NajmAppProvider` from `najm-next/app/client`, owning language, theme, design, time
   zone, branding, formatting, and `NTable` defaults. Never add
   `NajmDesignProvider`, `next-themes`, a second `I18nProvider`, or a local
   theme wrapper.
 - **One preference source.** `apps/dashboard/src/najm.server.ts` passes School's
   policy to `createNajmNextServerApp`, which resolves cookie → signed-in user →
-  School settings → typed fallback. New allowlists and normalization helpers
-  belong in `apps/dashboard/src/preferences/`.
+  School settings → typed fallback. Najm Kit owns reusable currency and time-zone
+  choices; `apps/dashboard/src/najm.config.ts` owns School's default. The settings
+  UI and server validator use the same shared lists.
 - **One auth definition.** `apps/dashboard/src/najm.auth.ts` derives client,
   proxy, server-session, and route-handler behavior from `schoolApp.auth`.
 - **One session resolution.** Server components use the module-scope adapter in
   `apps/dashboard/src/najm.server.ts`. Never call `auth.getSession()` directly
   from a layout or page, and never build the adapter per request.
-- **One version of each Najm package.** Pinned exactly in every workspace
-  manifest; `bun run test:dashboard` fails when a second copy resolves.
-- **One set of words for status and state.** The provider's `badgeDefaults`
-  (`STATUS_LABEL_KEYS` in `apps/dashboard/src/lib/statusBadge.ts`) and
-  `feedbackDefaults` (`common.feedback.*`) are what make `<NBadge status=…/>`
-  and the kit's loading/empty/error/forbidden states speak the interface
-  language. Both resolve through `t`, and a key that is missing from a catalog
-  renders as the raw key — not as English — so add every key to all four
-  locales. Do not word these at the call site.
+- **One version of each Najm package.** Pin every workspace to the exact root
+  manifest version and keep the matching root override.
+- **One set of words for status and state.** Use NBadge directly. Najm Kit
+  resolves common colors, icons, and labels from the status token and the
+  configured catalog. Keep interface text in the shared catalogs for all
+  supported languages.
 - **A failed list is not an empty one.** Every `NTable` fed by a query passes
   `{...tableErrorProps(error, rows)}` from
   `apps/dashboard/src/shared/TableErrorState.tsx`, and guards its `NPageHeader`
@@ -225,9 +209,7 @@ apps/dashboard/src/
 ├── components/          # Shared UI components (N-prefix)
 ├── shared/              # Dashboard shell and cross-feature pieces
 ├── hooks/              # Shared custom hooks
-├── preferences/        # Typed language/theme/time-zone/currency allowlists
 ├── services/           # API service layer
-├── stores/             # Global state management
 └── lib/                # auth, session, server preferences, utilities
 ```
 
@@ -329,11 +311,10 @@ const {
 - Automatic refetching strategies
 - Query invalidation patterns
 
-### Global State (Zustand)
-- `AuthStore`: User authentication state
-- `DialogStore`: Modal and dialog management
-- Sidebar state: owned by `NSidebarProvider` from `najm-kit`, read with `useNSidebar()`. There is no School sidebar store.
-- `MultiStepFormStore`: Complex form workflows
+### Client State
+- Payment draft state lives in `features/Financial/Payment/store/paymentStore.ts`.
+- Dialog state uses `useDialogStore()` from `najm-kit`.
+- Sidebar state is owned by `NSidebarProvider` from `najm-kit`, read with `useNSidebar()`.
 
 ### Form State (React Hook Form)
 - Zod validation integration

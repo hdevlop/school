@@ -6,6 +6,7 @@ export interface ReceiptData {
   studentName: string;
   studentCode: string;
   amount: number;
+  currency: string;
   paymentMethod: string;
   transactionRef?: string;
   checkNumber?: string;
@@ -43,8 +44,8 @@ function formatDateFR(dateStr: string): string {
   return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
-function formatAmountFR(amount: number): string {
-  return new Intl.NumberFormat('fr-MA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount) + ' MAD';
+function formatAmountFR(amount: number, currency: string): string {
+  return new Intl.NumberFormat('fr-MA', { style: 'currency', currency }).format(amount);
 }
 
 export function printReceipt(data: ReceiptData) {
@@ -53,9 +54,9 @@ export function printReceipt(data: ReceiptData) {
   const phone = data.schoolPhone ?? '';
   const methodFR = METHOD_FR[data.paymentMethod] ?? data.paymentMethod;
   const methodAR = METHOD_AR[data.paymentMethod] ?? data.paymentMethod;
-  const amountWords = amountInWordsFR(data.amount);
+  const amountWords = data.currency === 'MAD' ? amountInWordsFR(data.amount) : '';
   const dateFR = formatDateFR(data.paymentDate);
-  const amountFormatted = formatAmountFR(data.amount);
+  const amountFormatted = formatAmountFR(data.amount, data.currency);
 
   const html = `<!DOCTYPE html>
 <html lang="fr">
@@ -269,7 +270,7 @@ export function printReceipt(data: ReceiptData) {
       <div class="amount-figure">${amountFormatted}</div>
       <div class="amount-ar">المبلغ المدفوع</div>
     </div>
-    <div class="amount-words">${amountWords}</div>
+    ${amountWords ? `<div class="amount-words">${amountWords}</div>` : ''}
   </div>
 
   <!-- Details -->

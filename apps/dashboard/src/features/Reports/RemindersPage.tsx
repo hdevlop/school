@@ -4,9 +4,9 @@ import { NAvatar, NButton, NEmptyState, NPageHeader, NPageHeaderActions, NTable 
 import React, { useCallback, useMemo, useState } from 'react';
 import { Bell, BellRing, Search, CheckCircle2 } from 'lucide-react';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
-import { formatMAD, type SupportedLocale } from '@/lib/format';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { toast } from 'sonner';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
@@ -32,8 +32,8 @@ const urgencyBadge = (days: number) => {
 };
 
 const RemindersPage: React.FC = () => {
-  const { t, language } = useTranslation();
-  const locale = (language as SupportedLocale) ?? 'en';
+  const { t } = useTranslation();
+  const { date, majorMoney } = useSchoolFormat();
   const { data, isLoading } = useFinanceOverdue(100);
   const [search, setSearch] = useState('');
   const [reminded, setReminded] = useState<Set<string>>(new Set());
@@ -117,9 +117,7 @@ const RemindersPage: React.FC = () => {
       enableSorting: true,
       cell: ({ row }: any) => (
         <span className="whitespace-nowrap text-muted-foreground">
-          {row.original.oldestDueDate
-            ? new Date(row.original.oldestDueDate).toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US')
-            : '—'}
+          {date(row.original.oldestDueDate)}
         </span>
       ),
     },
@@ -131,7 +129,7 @@ const RemindersPage: React.FC = () => {
         const done = reminded.has(row.original.studentId);
         return (
           <span className={cn('whitespace-nowrap font-bold tabular-nums', done ? 'text-muted-foreground' : 'text-red-600')}>
-            {formatMAD(row.original.totalOverdue, locale)}
+            {majorMoney(row.original.totalOverdue)}
           </span>
         );
       },
@@ -160,14 +158,14 @@ const RemindersPage: React.FC = () => {
         );
       },
     },
-  ], [handleRemind, language, locale, reminded, t]);
+  ], [handleRemind, date, majorMoney, reminded, t]);
 
   return (
     <div className="flex flex-col gap-2 h-full overflow-hidden">
       <NPageHeader
         icon={BellRing}
         title={t('reports.reminders.title')}
-        subtitle={`${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${formatMAD(totalOverdue, locale)}`}
+        subtitle={`${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${majorMoney(totalOverdue)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -212,7 +210,7 @@ const RemindersPage: React.FC = () => {
               {filtered.length} {t('reports.reminders.studentsOverdue')}
             </span>
             <span className="inline-flex items-center rounded-lg bg-red-50 px-2.5 py-2 text-xs font-semibold text-red-700">
-              {formatMAD(totalOverdue, locale)} {t('reports.reminders.overdueAmount')}
+              {majorMoney(totalOverdue)} {t('reports.reminders.overdueAmount')}
             </span>
             <NButton
               size="sm"

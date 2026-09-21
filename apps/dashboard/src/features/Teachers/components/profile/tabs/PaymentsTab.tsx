@@ -5,15 +5,11 @@ import { NTable } from 'najm-kit';
 import { Badge } from 'najm-kit';
 import { Banknote, CalendarDays, Clock, ReceiptText } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface PaymentsTabProps {
   teacher: any;
 }
-
-const money = (value?: string | number | null) => {
-  const numeric = Number(value || 0);
-  return `${numeric.toLocaleString('en-US', { maximumFractionDigits: 2 })} DH`;
-};
 
 const normalizeEmploymentType = (value?: string | null) => {
   const normalized = (value || '').toLowerCase();
@@ -43,6 +39,7 @@ const StatCard = ({
 
 const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
   const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const contractType = normalizeEmploymentType(teacher?.employmentType);
   const monthlySalary = Number(teacher?.salary || 0);
   const workloadHours = Number(teacher?.workloadHours || 0);
@@ -56,8 +53,8 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
         id: 'current-period',
         period: 'Current period',
         type: 'Hourly',
-        base: workloadHours ? `${workloadHours}h x ${money(hourlyRate)}` : 'Hours not set',
-        amount: workloadHours ? money(workloadHours * hourlyRate) : money(0),
+        base: workloadHours ? `${workloadHours}h x ${majorMoney(hourlyRate)}` : 'Hours not set',
+        amount: workloadHours ? majorMoney(workloadHours * hourlyRate) : majorMoney(0),
         status: 'pending',
       },
     ]
@@ -66,8 +63,8 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
         id: 'current-month',
         period: 'Current month',
         type: 'Monthly salary',
-        base: money(monthlySalary),
-        amount: money(monthlySalary),
+        base: majorMoney(monthlySalary),
+        amount: majorMoney(monthlySalary),
         status: 'pending',
       },
     ];
@@ -118,7 +115,7 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
         <StatCard
           icon={Banknote}
           label={contractType === 'vacataire' ? 'Estimated Rate' : 'Monthly Salary'}
-          value={contractType === 'vacataire' ? money(hourlyRate) : money(monthlySalary)}
+          value={contractType === 'vacataire' ? majorMoney(hourlyRate) : majorMoney(monthlySalary)}
         />
         <StatCard
           icon={Clock}
@@ -128,7 +125,7 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
         <StatCard
           icon={CalendarDays}
           label="Pending"
-          value={sampleRows[0]?.amount || money(0)}
+          value={sampleRows[0]?.amount || majorMoney(0)}
         />
       </div>
 

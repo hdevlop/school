@@ -34,5 +34,6 @@ export * from './transport/maintenance';
 export * from './search';
 export * from './profiles';
 export * from './auth-tools';
+export * from './accessReset';
 export * from './SeedService';
 export * from './SeedController';

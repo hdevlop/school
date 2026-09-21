@@ -6,22 +6,19 @@ import { Badge, NButton, NForm, NSkeleton, useDialog } from 'najm-kit';
 import { useStudentRoutes } from '../hooks/useStudentRoutes'
 import { useStudents } from '@/features/Students/hooks/useStudents'
 import { FormInput } from 'najm-kit';
+import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location';
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { LocationField } from '@/components/location/LocationField'
+import { locationValueSchema } from '@/lib/validations'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { useTranslation } from 'najm-i18n/react';
 
 const assignSchema = z.object({
   studentId: z.string().min(1, 'Student is required'),
-  pickupLocation: z.string().max(500).optional(),
+  pickup: locationValueSchema,
   pickupPlaceId: z.string().max(255).optional().nullable(),
-  pickupLatitude: z.number().min(-90).max(90).optional().nullable(),
-  pickupLongitude: z.number().min(-180).max(180).optional().nullable(),
-  dropoffLocation: z.string().max(500).optional(),
+  dropoff: locationValueSchema,
   dropoffPlaceId: z.string().max(255).optional().nullable(),
-  dropoffLatitude: z.number().min(-90).max(90).optional().nullable(),
-  dropoffLongitude: z.number().min(-180).max(180).optional().nullable(),
   notes: z.string().max(1000).optional(),
 })
 
@@ -29,14 +26,20 @@ const AssignStudentFields = ({ students }) => {
   const { t } = useTranslation();
   const form = useActiveForm()
   const studentId = form.watch('studentId')
+  const pickup = form.watch('pickup')
+  const dropoff = form.watch('dropoff')
+  const pickupPlaceId = form.watch('pickupPlaceId')
+  const dropoffPlaceId = form.watch('dropoffPlaceId')
   const selectedStudent = (students || []).find((student: any) => student.id === studentId)
 
   useEffect(() => {
-    if (!selectedStudent || form.getValues('pickupLocation')) return
-    form.setValue('pickupLocation', selectedStudent.address || '')
+    if (!selectedStudent || form.getValues('pickup')?.address) return
+    form.setValue('pickup', normalizeLocationValue({
+      address: selectedStudent.address,
+      latitude: selectedStudent.addressLatitude,
+      longitude: selectedStudent.addressLongitude,
+    }))
     form.setValue('pickupPlaceId', selectedStudent.addressPlaceId || null)
-    form.setValue('pickupLatitude', selectedStudent.addressLatitude ?? null)
-    form.setValue('pickupLongitude', selectedStudent.addressLongitude ?? null)
   }, [form, selectedStudent])
 
   const studentOptions = (students || []).map((s: any) => ({
@@ -57,19 +60,23 @@ const AssignStudentFields = ({ students }) => {
         required
       />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <LocationField
-          form={form}
-          names={{ address: 'pickupLocation', placeId: 'pickupPlaceId', latitude: 'pickupLatitude', longitude: 'pickupLongitude' }}
-          label="Pickup location"
+        <FormLocationInput
+          name="pickup"
+          formLabel="Pickup location"
           placeholder="e.g. Rue Ibn Battouta"
-          compact
+          providerMeta={pickup && pickupPlaceId
+            ? { provider: 'google', placeId: pickupPlaceId, ...pickup }
+            : null}
+          onProviderMetaChange={(meta) => form.setValue('pickupPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
-        <LocationField
-          form={form}
-          names={{ address: 'dropoffLocation', placeId: 'dropoffPlaceId', latitude: 'dropoffLatitude', longitude: 'dropoffLongitude' }}
-          label="Drop-off location"
+        <FormLocationInput
+          name="dropoff"
+          formLabel="Drop-off location"
           placeholder="e.g. School gate"
-          compact
+          providerMeta={dropoff && dropoffPlaceId
+            ? { provider: 'google', placeId: dropoffPlaceId, ...dropoff }
+            : null}
+          onProviderMetaChange={(meta) => form.setValue('dropoffPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
       </div>
       <FormInput name="notes" type="textarea" formLabel={t('transport.panel.notes')} placeholder={t('transport.panel.notesPlaceholder')} />
@@ -86,17 +93,25 @@ const AssignStudentForm = ({ students, vehicleId }) => {
       schema={assignSchema}
       defaultValues={{
         studentId: '',
-        pickupLocation: '',
+        pickup: normalizeLocationValue(),
         pickupPlaceId: null,
-        pickupLatitude: null,
-        pickupLongitude: null,
-        dropoffLocation: '',
+        dropoff: normalizeLocationValue(),
         dropoffPlaceId: null,
-        dropoffLatitude: null,
-        dropoffLongitude: null,
         notes: '',
       }}
-      onSubmit={(data) => pop({ ...data, vehicleId })}
+      onSubmit={(data) => {
+        const { pickup, dropoff, ...fields } = data
+        pop({
+          ...fields,
+          vehicleId,
+          pickupLocation: pickup.address,
+          pickupLatitude: pickup.latitude ?? null,
+          pickupLongitude: pickup.longitude ?? null,
+          dropoffLocation: dropoff.address,
+          dropoffLatitude: dropoff.latitude ?? null,
+          dropoffLongitude: dropoff.longitude ?? null,
+        })
+      }}
     >
       <AssignStudentFields students={students} />
     </NForm>

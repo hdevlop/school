@@ -1,7 +1,7 @@
 "use client";
 
 import { NLoadingState } from 'najm-kit';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 
 interface PageLoadingStateProps {
   label?: string;

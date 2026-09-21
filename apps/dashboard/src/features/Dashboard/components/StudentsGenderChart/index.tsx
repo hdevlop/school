@@ -6,7 +6,7 @@ import { DonutChart } from './Donut';
 import { Legend } from './Legend';
 import { useStudentsByGender } from '../../hooks/useDashboardHooks';
 import { UsersIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { NSkeletonDonut } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 

@@ -4,8 +4,7 @@ import React from 'react';
 import { Phone, Briefcase } from 'lucide-react';
 import { Label, NAvatar, NBadge, SimpleTooltip } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
-import { cn } from '@/lib/utils';
+import { cn } from 'najm-kit';
 import { useRouter } from 'next/navigation';
 
 const ParentInfoRow = ({ icon: Icon, label, value, muted }) => (
@@ -57,7 +56,7 @@ const ParentCard = ({ data }) => {
     >
 
       <div className="shrink-0">
-        <NAvatar src={data?.image} fallback={getAvatarFallback(parent.name)} size="lg" version={data?.updatedAt} classNames={personAvatarClassNames} />
+        <NAvatar src={data?.image} fallback={parent.name} size="lg" version={data?.updatedAt} />
       </div>
 
       <div className="min-w-0 flex-1 flex flex-col gap-2">

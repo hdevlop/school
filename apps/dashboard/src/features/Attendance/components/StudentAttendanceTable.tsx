@@ -14,7 +14,6 @@ import { useSections } from '@/features/Sections/hooks/useSections';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useTranslation } from 'najm-i18n/react';
-import { studentAvatarClassNames } from '@/lib/avatar';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
@@ -191,7 +190,6 @@ function StudentAttendanceTable() {
           props.data?.studentCode,
           [props.data?.class?.name, props.data?.section?.name].filter(Boolean).join(' - '),
         ].filter(Boolean).join(' | ')}
-        classNames={{ avatar: studentAvatarClassNames }}
       />
     ),
     [roster.getStatus, roster.setStatus],

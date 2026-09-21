@@ -2,9 +2,10 @@
 
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
-import { UserCog } from 'lucide-react';
+import { Eye, KeyRound, Pencil, Trash2, UserCog } from 'lucide-react';
 import React from 'react';
 import UserForm from './UserForm';
+import ResetAccessDialog from './ResetAccessDialog';
 import { useUsers } from '../hooks/useUsers';
 import { useTranslation } from 'najm-i18n/react';
 import UserCard from './UserCard';
@@ -82,6 +83,38 @@ function UsersTable() {
     });
   };
 
+  const handleResetAccess = (user) => {
+    openDialog({
+      title: t('users.accessReset.title'),
+      children: <ResetAccessDialog user={user} />,
+      // The dialog owns its own confirm: it has to stay open and explain itself
+      // when a send fails or the account moved under the confirmation.
+      showButtons: false,
+    });
+  };
+
+  // NTable's built-in View/Edit/Delete items exist only while no `menu.row` is
+  // supplied — providing one replaces them — so they are restated here, which
+  // also gets them translated. One menu now serves the desktop row button, the
+  // card button and right-click alike.
+  const rowMenu = (user) => [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(user) },
+    { label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(user) },
+    {
+      label: t('users.accessReset.action'),
+      icon: KeyRound,
+      separatorBefore: true,
+      onSelect: () => handleResetAccess(user),
+    },
+    {
+      label: t('common.delete'),
+      icon: Trash2,
+      danger: true,
+      separatorBefore: true,
+      onSelect: () => handleDelete(user),
+    },
+  ];
+
   const total = users?.length ?? 0;
 
   return (
@@ -104,6 +137,7 @@ function UsersTable() {
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        menu={{ row: rowMenu }}
         loading={isUsersLoading}
         {...tableErrorProps(error, users)}
         renderCard={UserCard}

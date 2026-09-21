@@ -5,12 +5,11 @@ import { DollarSign, Tag } from 'lucide-react';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const FeeTypeCard = ({ data }: any) => {
   const { t } = useTranslation();
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { majorMoney } = useSchoolFormat();
   const feeType = data;
 
   const categoryMap: Record<string, string> = {
@@ -51,7 +50,7 @@ const FeeTypeCard = ({ data }: any) => {
             icon={DollarSign}
             iconColor="text-muted-foreground"
             label={t('feeTypes.table.amount')}
-            value={`${Number(feeType.amount).toFixed(2)} ${currency}`}
+            value={majorMoney(feeType.amount)}
             valueColor="text-green-600 font-bold"
           />
         </div>

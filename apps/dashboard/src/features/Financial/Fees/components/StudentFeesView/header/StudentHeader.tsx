@@ -1,6 +1,5 @@
 import { Label } from 'najm-kit';
 import { NAvatar, NButton, useNSidebar } from 'najm-kit';
-import { getAvatarFallback } from '@/lib/avatar';
 import { CreditCard, Menu } from 'lucide-react';
 
 export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) => {
@@ -29,7 +28,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
 
             <NAvatar
                src={student.image}
-               fallback={getAvatarFallback(student.name)}
+               fallback={student.name}
                size="sm"
             />
 

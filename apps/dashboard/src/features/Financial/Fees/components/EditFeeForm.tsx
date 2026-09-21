@@ -10,7 +10,7 @@ import { useActiveForm } from '@/hooks/useActiveForm'
 import { useCallback, useEffect } from 'react'
 import { feeSchema } from '@/lib/validations'
 import { useDialog } from 'najm-kit'
-import { calculateFeeAmounts } from '@/lib/utils'
+import { calculateFeeAmounts } from '@/features/Financial/Fees/utils/feeUtils'
 import { usePrefix } from 'najm-kit';
 
 import { useEnum } from '@/hooks/useEnum'

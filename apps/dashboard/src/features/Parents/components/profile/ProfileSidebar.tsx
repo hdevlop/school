@@ -5,7 +5,6 @@ import { Card } from 'najm-kit';
 import { NAvatar } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { Badge } from 'najm-kit';
-import { getAvatarFallback, personAvatarClassNames } from '@/lib/avatar';
 import InfoWidget from '@/features/Dashboard/components/Widgets/Widget';
 import { useTranslation } from 'najm-i18n/react';
 import { User, Users, Briefcase, Calendar } from 'lucide-react';
@@ -58,9 +57,8 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ parent, analytics }) =>
           {/* Avatar */}
           <NAvatar
             src={parent?.image}
-            fallback={getAvatarFallback(parent?.name)}
+            fallback={parent?.name}
             size="xl"
-            classNames={personAvatarClassNames}
           />
 
           {/* Name & CIN */}

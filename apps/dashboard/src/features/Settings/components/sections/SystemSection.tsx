@@ -2,31 +2,20 @@
 
 import React from 'react';
 import { Settings, Globe, Languages, Palette, Calendar, Clock, DollarSign } from 'lucide-react';
-import { FormInput } from 'najm-kit';
+import { FormInput, NAJM_CURRENCY_OPTIONS } from 'najm-kit';
 
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
+import { schoolI18n } from '@sms/server/locales';
 
 const SystemSection: React.FC = () => {
   const { t } = useTranslation();
 
-  const timeZoneOptions = [
-    { value: 'UTC', label: 'UTC' },
-    { value: 'America/New_York', label: 'Eastern Time' },
-    { value: 'America/Chicago', label: 'Central Time' },
-    { value: 'America/Denver', label: 'Mountain Time' },
-    { value: 'America/Los_Angeles', label: 'Pacific Time' },
-    { value: 'Europe/London', label: 'London' },
-    { value: 'Europe/Paris', label: 'Paris' },
-    { value: 'Africa/Casablanca', label: 'Casablanca' },
-  ];
-
-  const languageOptions = [
-    { value: 'en', label: 'English' },
-    { value: 'fr', label: 'Français' },
-    { value: 'ar', label: 'العربية' },
-    { value: 'es', label: 'Español' },
-  ];
+  const languageLabels = { en: 'English', fr: 'Français', ar: 'العربية', es: 'Español' };
+  const languageOptions = schoolI18n.supportedLanguages.map((value) => ({
+    value,
+    label: languageLabels[value],
+  }));
 
   // No `system` option: Najm Kit's mode is `light | dark`, and an option that
   // silently rendered as light would be a lie in the one place a user looks to
@@ -47,21 +36,6 @@ const SystemSection: React.FC = () => {
     { value: '24', label: '24-hour' },
   ];
 
-  const currencyOptions = [
-    { value: 'USD', label: 'USD - US Dollar ($)' },
-    { value: 'EUR', label: 'EUR - Euro (€)' },
-    { value: 'GBP', label: 'GBP - British Pound (£)' },
-    { value: 'CAD', label: 'CAD - Canadian Dollar (C$)' },
-    { value: 'AUD', label: 'AUD - Australian Dollar (A$)' },
-    { value: 'JPY', label: 'JPY - Japanese Yen (¥)' },
-    { value: 'CNY', label: 'CNY - Chinese Yuan (¥)' },
-    { value: 'INR', label: 'INR - Indian Rupee (₹)' },
-    { value: 'MAD', label: 'MAD - Moroccan Dirham (د.م.)' },
-    { value: 'AED', label: 'AED - UAE Dirham (د.إ)' },
-    { value: 'SAR', label: 'SAR - Saudi Riyal (﷼)' },
-    { value: 'EGP', label: 'EGP - Egyptian Pound (E£)' },
-  ];
-
   return (
     <div className='flex flex-col gap-4'>
       <div className="flex items-center gap-2 font-semibold text-sm">
@@ -72,9 +46,8 @@ const SystemSection: React.FC = () => {
       <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
         <FormInput
           name="timeZone"
-          type="select"
+          type="timeZone"
           formLabel={t('settings.system.timeZone') || 'Time Zone'}
-          items={timeZoneOptions}
           icon={Globe}
           iconColor="#3b82f6"
           required={true}
@@ -124,7 +97,7 @@ const SystemSection: React.FC = () => {
           name="currency"
           type="select"
           formLabel={t('settings.system.currency') || 'Currency'}
-          items={currencyOptions}
+          items={NAJM_CURRENCY_OPTIONS}
           icon={DollarSign}
           iconColor="#ef4444"
           required={true}

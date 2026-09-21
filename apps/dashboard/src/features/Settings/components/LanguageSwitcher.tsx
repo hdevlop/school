@@ -4,17 +4,17 @@ import React from 'react';
 import { NLanguageMenu, type NLanguageOption } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useUpdateLang } from '@/hooks/useLanguage';
-import { cn } from '@/lib/utils';
-import type { SchoolLanguage } from '@/preferences';
+import { cn } from 'najm-kit';
+import type { SchoolLocale } from '@sms/server/locales';
 
 const languages = [
   { code: 'en', name: 'English', iso2: 'us' },
   { code: 'fr', name: 'Français', iso2: 'fr' },
   { code: 'es', name: 'Español', iso2: 'es' },
   { code: 'ar', name: 'العربية', iso2: 'ma' },
-] satisfies Array<{ code: SchoolLanguage; name: string; iso2: string }>;
+] satisfies Array<{ code: SchoolLocale; name: string; iso2: string }>;
 
-const options: Array<NLanguageOption<SchoolLanguage>> = languages.map((lang) => ({
+const options: Array<NLanguageOption<SchoolLocale>> = languages.map((lang) => ({
   value: lang.code,
   label: lang.name,
   icon: (
@@ -47,7 +47,7 @@ const LanguageSwitcher = () => {
       onError={() => undefined}
       options={options}
       pending={isUpdatingLang}
-      value={(language ?? 'en') as SchoolLanguage}
+      value={(language ?? 'en') as SchoolLocale}
     />
   );
 };

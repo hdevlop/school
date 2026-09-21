@@ -2,11 +2,10 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'najm-i18n/react';
-import { schoolI18n } from '@sms/server/locales';
+import { schoolI18n, type SchoolLocale } from '@sms/server/locales';
 import { toast } from 'sonner';
 
 import { auth } from '@/najm.auth';
-import type { SchoolLanguage } from '@/preferences';
 import { updateUserLangApi } from '@/services/userApi';
 
 /**
@@ -18,8 +17,8 @@ export const useUpdateLang = () => {
   const { t, changeLanguage } = useTranslation();
 
   const mutation = useMutation({
-    mutationFn: (language: SchoolLanguage) => updateUserLangApi({ language }),
-    onSuccess: async (resp: unknown, language: SchoolLanguage) => {
+    mutationFn: (language: SchoolLocale) => updateUserLangApi({ language }),
+    onSuccess: async (resp: unknown, language: SchoolLocale) => {
       await changeLanguage(language);
       await auth.client.fetchUser();
       queryClient.invalidateQueries({ queryKey: ['user', 'language'] });

@@ -5,15 +5,12 @@ import { NAvatar } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { Progress } from 'najm-kit';
 import { NBadge } from 'najm-kit';
-import { getAvatarFallback } from '@/lib/avatar';
-import { STATUS_COLOR_MAP } from '@/lib/statusBadge';;
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 
 const FeeCard = ({ data }: any) => {
   const { t } = useTranslation();
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { majorMoney } = useSchoolFormat();
 
   const student = data?.student;
   const className = data?.class?.name;
@@ -38,7 +35,7 @@ const FeeCard = ({ data }: any) => {
       <div className="flex items-center gap-3">
         <NAvatar
           src={student?.image}
-          fallback={getAvatarFallback(student?.name)}
+          fallback={student?.name}
           size="sm"
         />
         <div className="flex-1 min-w-0">
@@ -56,11 +53,11 @@ const FeeCard = ({ data }: any) => {
           </div>
         </div>
         {isPaid ? (
-          <NBadge statusMap={STATUS_COLOR_MAP} status="paid" size="md" look="solid" showIcon className="mr-2">
+          <NBadge status="paid" size="md" look="solid" showIcon className="mr-2">
             {t('fees.status.paid') || 'Paid'}
           </NBadge>
         ) : overdueCount > 0 && (
-          <NBadge statusMap={STATUS_COLOR_MAP} status="overdue" size="md" look="solid" showIcon className="mr-2">
+          <NBadge status="overdue" size="md" look="solid" showIcon className="mr-2">
             {overdueCount} {t('fees.status.overdue') || 'Overdue'}
           </NBadge>
         )}
@@ -69,14 +66,14 @@ const FeeCard = ({ data }: any) => {
       <>
         <div className="text-center">
           <p className={`text-xl font-bold tabular-nums ${isPaid ? 'text-green-600' : 'text-red-600'}`}>
-            {isPaid ? netAmount.toFixed(2) : totalDue.toFixed(2)} <span className="text-sm">{currency}</span>
+            {majorMoney(isPaid ? netAmount : totalDue)}
           </p>
         </div>
 
         <div className="space-y-1">
           <Progress value={progress} className="h-2" color={isPaid ? 'success' : 'primary'} />
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>{t('fees.table.paidAmount')}: {totalPaid.toFixed(0)} {currency}</span>
+            <span>{t('fees.table.paidAmount')}: {majorMoney(totalPaid)}</span>
             <span>{Math.round(progress)}%</span>
           </div>
         </div>

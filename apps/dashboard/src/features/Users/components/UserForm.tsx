@@ -3,7 +3,7 @@
 import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import React from 'react'
-import { Mail, Lock, User, Shield } from 'lucide-react'
+import { Mail, User, Shield } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { usersValidationSchema, updateUsersValidationSchema } from '../config/usersValidateSchema'
 import { buildFill, isDevFill } from '@/lib/devFill'
@@ -23,8 +23,6 @@ const UserForm = ({ user = null, mode = 'create' }) => {
       id: user?.id || null,
       name: user?.name || '',
       email: user?.email || '',
-      password: null,
-      confirmPassword: null,
       image: user?.image || null,
       roleId: user?.roleId || '',
    }
@@ -79,29 +77,10 @@ const UserForm = ({ user = null, mode = 'create' }) => {
                   />
                )}
 
-               {/* Password is only set by the admin when editing. On create the
-                   user receives an invite link and chooses their own. */}
-               {isUpdateMode && (
-                  <>
-                     <FormInput
-                        name='password'
-                        type='password'
-                        formLabel={t('users.form.newPassword')}
-                        placeholder={t('users.form.passwordPlaceholder')}
-                        variant='default'
-                        icon={Lock}
-                     />
-
-                     <FormInput
-                        name='confirmPassword'
-                        type='password'
-                        formLabel={t('users.form.confirmPassword')}
-                        placeholder={t('users.form.confirmPasswordPlaceholder')}
-                        variant='default'
-                        icon={Lock}
-                     />
-                  </>
-               )}
+               {/* No password field, on create or on edit. An admin typing a
+                   password here would be a second recovery path with no audit,
+                   no forced replacement and no session revocation — exactly what
+                   the Reset access action in the row menu exists to provide. */}
 
                <FormInput
                   name='roleId'

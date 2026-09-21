@@ -54,10 +54,6 @@ export const ENUMS = {
     values: ['active', 'inactive', 'archived'],
     translationKey: 'sections.status'
   },
-  language: {
-    values: ['en', 'fr', 'ar', 'es'],
-    translationKey: 'common.languages'
-  },
   enrollmentStatus: {
     values: ['enrolled', 'completed', 'dropped', 'failed'],
     translationKey: 'enrollments.status'

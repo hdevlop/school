@@ -62,7 +62,10 @@ export const createStudentDto = studentSchema.omit({ id: true }).extend({
 });
 
 export const createStudentsBulkDto = z.array(createStudentDto);
-export const updateStudentDto = createStudentDto.partial();
+// Credentials are not part of a profile edit. Omitting `password` makes a
+// stray one an explicit rejection rather than a field the service quietly
+// drops, which would leave an admin believing a password had been set.
+export const updateStudentDto = createStudentDto.omit({ password: true }).partial();
 
 export const studentIdParam = z.object({ id: z.string().min(1) });
 export const deleteBulkStudentDto = z.object({

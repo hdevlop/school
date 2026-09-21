@@ -1,13 +1,11 @@
 import { useMemo } from 'react';
 import { NAvatar, NBadge } from 'najm-kit';
-import { STATUS_COLOR_MAP, STATUS_ICON_MAP } from '@/lib/statusBadge';
 import { useTranslation } from 'najm-i18n/react';
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const useFeesTableColumns = () => {
   const { t } = useTranslation();
-  const { publicSettings } = usePublicSettings();
-  const currency = publicSettings?.currency || 'USD';
+  const { majorMoney } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -40,7 +38,7 @@ export const useFeesTableColumns = () => {
       enableSorting: true,
       cell: ({ row }: any) => {
         const amount = row.original.netAmount || '0';
-        return `${Number(amount).toFixed(2)} ${currency}`;
+        return majorMoney(amount);
       },
     },
     {
@@ -51,7 +49,7 @@ export const useFeesTableColumns = () => {
         const amount = row.original.totalPaid || '0';
         return (
           <span className="text-green-600 font-medium">
-            {Number(amount).toFixed(2)} {currency}
+            {majorMoney(amount)}
           </span>
         );
       },
@@ -65,7 +63,7 @@ export const useFeesTableColumns = () => {
         const numAmount = Number(amount);
         return (
           <span className={numAmount > 0 ? 'text-red-600 font-medium' : 'text-gray-500'}>
-            {numAmount.toFixed(2)} {currency}
+            {majorMoney(numAmount)}
           </span>
         );
       },
@@ -85,16 +83,16 @@ export const useFeesTableColumns = () => {
         const totalDue = Number(row.original.totalDue ?? 0);
 
         if (overdue > 0) {
-          return <NBadge status="overdue" statusMap={STATUS_COLOR_MAP} iconMap={STATUS_ICON_MAP} size="md" look="solid" showIcon>{overdue} {t('fees.status.overdue')}</NBadge>;
+          return <NBadge status="overdue" size="md" look="solid" showIcon>{overdue} {t('fees.status.overdue')}</NBadge>;
         }
 
         if (totalDue <= 0) {
-          return <NBadge status="paid" statusMap={STATUS_COLOR_MAP} iconMap={STATUS_ICON_MAP} size="md" look="solid" showIcon>{t('fees.status.paid')}</NBadge>;
+          return <NBadge status="paid" size="md" look="solid" showIcon>{t('fees.status.paid')}</NBadge>;
         }
 
-        return <NBadge status="processing" statusMap={STATUS_COLOR_MAP} iconMap={STATUS_ICON_MAP} size="md" look="solid" showIcon>{t('fees.status.paying') || 'Paying'}</NBadge>;
+        return <NBadge status="processing" size="md" look="solid" showIcon>{t('fees.status.paying') || 'Paying'}</NBadge>;
       },
       size: 160,
     },
-  ], [t, currency]);
+  ], [t, majorMoney]);
 };

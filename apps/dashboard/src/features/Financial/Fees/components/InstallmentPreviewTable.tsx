@@ -1,8 +1,8 @@
 'use client'
 
-import { formatMAD } from '@/lib/format'
+import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 import { useTranslation } from 'najm-i18n/react'
-import type { PreviewInstallment } from '@/lib/utils'
+import type { PreviewInstallment } from '@/features/Financial/Fees/utils/feeUtils'
 
 interface InstallmentPreviewTableProps {
   installments: PreviewInstallment[]
@@ -11,6 +11,7 @@ interface InstallmentPreviewTableProps {
 
 const InstallmentPreviewTable = ({ installments, visible = true }: InstallmentPreviewTableProps) => {
    const { t } = useTranslation()
+   const { majorMoney } = useSchoolFormat()
 
    if (!visible || !installments || installments.length === 0) return null
 
@@ -23,7 +24,7 @@ const InstallmentPreviewTable = ({ installments, visible = true }: InstallmentPr
                {t('fees.form.installmentPreview') || 'Installment Schedule Preview'}
             </h4>
             <p className="text-xs text-muted-foreground">
-               {installments.length} {t('fees.form.installments') || 'installments'} — {t('fees.form.total') || 'Total'}: {formatMAD(total)}
+               {installments.length} {t('fees.form.installments') || 'installments'} — {t('fees.form.total') || 'Total'}: {majorMoney(total)}
             </p>
          </div>
          <div className="max-h-48 overflow-y-auto">
@@ -44,7 +45,7 @@ const InstallmentPreviewTable = ({ installments, visible = true }: InstallmentPr
                      <tr key={inst.number} className="border-b last:border-b-0">
                         <td className="px-3 py-1.5 text-muted-foreground">{inst.number}</td>
                         <td className="px-3 py-1.5">{inst.dueDate}</td>
-                        <td className="px-3 py-1.5 text-right font-medium">{formatMAD(inst.amount)}</td>
+                        <td className="px-3 py-1.5 text-right font-medium">{majorMoney(inst.amount)}</td>
                      </tr>
                   ))}
                </tbody>
