@@ -6,6 +6,7 @@ import { Badge } from 'najm-kit';
 import { Banknote, CalendarDays, Clock, ReceiptText } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface PaymentsTabProps {
   teacher: any;
@@ -137,7 +138,11 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
         showAddButton={false}
         showViewToggle={false}
         showColumnVisibility={false}
-        noDataText="No teacher payments recorded"
+        {...tableEmptyProps({
+          feature: 'payments',
+          title: "No teacher payments recorded",
+          description: null,
+        })}
       />
     </div>
   );

@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { User } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useDialog } from 'najm-kit'
-import { bulkFeeFormSchema } from '@/lib/validations'
+import { bulkFeeFormSchema } from '../config/feeSchemas'
 import { BulkFeeFormContent } from './BulkFeeForm'
 import { injectStudentIdToFees } from '../utils/feeUtils'
 import SimpleFeeForm from './EditFeeForm'

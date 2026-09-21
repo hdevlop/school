@@ -13,6 +13,7 @@ import { useSubjectsTableFilters } from '../hooks/useSubjectsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function SubjectsTable() {
 
   const { t } = useTranslation();
@@ -108,6 +109,11 @@ function SubjectsTable() {
         {...tableErrorProps(error, subjects)}
         renderCard={SubjectCard}
         addButtonText={t('subjects.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'subjects',
+          onCreate: handleAddClick,
+          createLabel: t('subjects.dialogs.createButton'),
+        })}
         defaultMode='table'
       />
     </div>

@@ -3,7 +3,8 @@
 import { useMemo, useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
-import { shiftLocalISODate, toLocalISODate } from '@/lib/localDate';
+import { localDateInput } from 'najm-kit/format';
+import { shiftLocalISODate } from '@/lib/utils';
 
 export type RosterStatus = 'present' | 'absent' | 'late';
 type Kind = 'student' | 'staff';
@@ -37,7 +38,7 @@ export const useAttendanceRoster = ({
   studentContext = null,
 }: Options) => {
   const { t } = useTranslation();
-  const [internalDate, setInternalDate] = useState(toLocalISODate);
+  const [internalDate, setInternalDate] = useState(localDateInput);
   const [draft, setDraft] = useState<Record<string, RosterStatus>>({});
   const selectedDate = controlledDate ?? internalDate;
 
@@ -177,8 +178,8 @@ export const useAttendanceRoster = ({
     [kind, roster, existingByPerson],
   );
   const hasChanges = Object.keys(draft).length > 0 || hasUnrecordedRows;
-  const isToday = selectedDate === toLocalISODate();
-  const goToToday = useCallback(() => goToDate(toLocalISODate()), [goToDate]);
+  const isToday = selectedDate === localDateInput();
+  const goToToday = useCallback(() => goToDate(localDateInput()), [goToDate]);
 
   return {
     selectedDate,

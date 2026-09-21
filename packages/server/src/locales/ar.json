@@ -751,8 +751,10 @@
     "transport": "النقل",
     "classRoutines": "الجدول",
     "studentConduct": "سلوك الطلاب",
+    "studentConductShort": "السلوك",
     "violations": "المخالفات",
-    "behaviorRewards": "السلوك الإيجابي والمكافآت"
+    "behaviorRewards": "السلوك الإيجابي والمكافآت",
+    "behaviorRewardsShort": "المكافآت"
   },
   "classRoutines": {
     "success": {
@@ -3050,6 +3052,7 @@
     },
     "status": {
       "active": "نشط",
+      "inactive": "غير نشط",
       "maintenance": "صيانة",
       "retired": "متقاعد"
     },
@@ -3069,6 +3072,8 @@
     "types": {
       "fullbus": "حافلة كاملة",
       "minibus": "حافلة صغيرة",
+      "sedan": "سيارة سيدان",
+      "shuttle": "حافلة مكوكية",
       "suv": "سيارة دفع رباعي",
       "truck": "شاحنة",
       "van": "شاحنة صغيرة"
@@ -3319,6 +3324,124 @@
       "description": "الوصف",
       "floor": "الطابق",
       "name": "الاسم"
+    }
+  },
+  "emptyStates": {
+    "filtered": {
+      "title": "لا توجد نتائج",
+      "description": "جرّب تعديل عوامل التصفية."
+    },
+    "students": {
+      "title": "لا يوجد تلاميذ بعد",
+      "description": "أضف أول تلميذ للبدء."
+    },
+    "parents": {
+      "title": "لا يوجد أولياء بعد",
+      "description": "أضف أول ولي أمر للبدء."
+    },
+    "teachers": {
+      "title": "لا يوجد أساتذة بعد",
+      "description": "أضف أول أستاذ للبدء."
+    },
+    "staff": {
+      "title": "لا يوجد موظفون بعد",
+      "description": "أضف أول موظف للبدء."
+    },
+    "users": {
+      "title": "لا توجد حسابات مستخدمين بعد",
+      "description": "أضف أول حساب مستخدم للبدء."
+    },
+    "roles": {
+      "title": "لا توجد أدوار بعد",
+      "description": "أضف أول دور للبدء."
+    },
+    "permissions": {
+      "title": "لا توجد صلاحيات بعد",
+      "description": "أضف أول صلاحية للبدء."
+    },
+    "classes": {
+      "title": "لا توجد أقسام بعد",
+      "description": "أضف أول قسم للبدء."
+    },
+    "sections": {
+      "title": "لا توجد أفواج بعد",
+      "description": "أضف أول فوج للبدء."
+    },
+    "cycles": {
+      "title": "لا توجد أسلاك بعد",
+      "description": "أضف أول سلك للبدء."
+    },
+    "subjects": {
+      "title": "لا توجد مواد بعد",
+      "description": "أضف أول مادة للبدء."
+    },
+    "assessments": {
+      "title": "لا توجد تقييمات بعد",
+      "description": "أضف أول تقييم للبدء."
+    },
+    "exams": {
+      "title": "لا توجد امتحانات بعد",
+      "description": "أضف أول امتحان للبدء."
+    },
+    "grades": {
+      "title": "لا توجد نقط مسجلة",
+      "description": "ستظهر النقط هنا بمجرد تسجيلها."
+    },
+    "announcements": {
+      "title": "لا توجد إعلانات بعد",
+      "description": "انشر أول إعلان للبدء."
+    },
+    "discipline": {
+      "title": "لا توجد سجلات انضباط",
+      "description": "أضف أول سجل انضباط للبدء."
+    },
+    "behaviorRewards": {
+      "title": "لا توجد سجلات سلوك بعد",
+      "description": "أضف أول سجل سلوك أو مكافأة للبدء."
+    },
+    "studentAttendance": {
+      "title": "لا يوجد تلاميذ للتسجيل",
+      "description": "سيظهر التلاميذ هنا بعد اختيار القسم والفوج."
+    },
+    "staffAttendance": {
+      "title": "لا يوجد موظفون للتسجيل",
+      "description": "سيظهر الموظفون النشطون هنا بمجرد إضافتهم."
+    },
+    "fees": {
+      "title": "لا توجد رسوم بعد",
+      "description": "أسند أول رسم للبدء."
+    },
+    "feeTypes": {
+      "title": "لا توجد أنواع رسوم بعد",
+      "description": "أضف أول نوع رسم للبدء."
+    },
+    "expenses": {
+      "title": "لا توجد مصاريف بعد",
+      "description": "سجّل أول مصروف للبدء."
+    },
+    "payroll": {
+      "title": "لا توجد سجلات رواتب",
+      "description": "ستظهر سجلات الرواتب هنا بمجرد إنشاء فترة."
+    },
+    "payments": {
+      "title": "لا توجد مدفوعات بعد",
+      "description": "ستظهر المدفوعات هنا بمجرد أداء رسم."
+    },
+    "installments": {
+      "title": "لا توجد أقساط",
+      "description": "ستظهر الأقساط هنا بمجرد إنشاء جدولة أداء."
+    },
+    "vehicles": {
+      "title": "لا توجد مركبات بعد",
+      "description": "أضف أول مركبة للبدء."
+    },
+    "drivers": {
+      "title": "لا يوجد سائقون بعد",
+      "description": "أضف أول سائق للبدء."
+    },
+    "documents": {
+      "title": "لا توجد وثائق مرفوعة",
+      "description": "ارفع وثيقة للبدء."
     }
   }
 }

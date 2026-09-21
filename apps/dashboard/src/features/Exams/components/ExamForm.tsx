@@ -10,10 +10,10 @@ import {
   Calendar, Clock, Award, Activity, Hash,
 } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { examSchema } from '@/lib/validations'
+import { examSchema } from '../config/examSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
-import { useEnum } from '@/hooks/useEnum'
+import { buildExamStatusOptions, buildExamTypeOptions } from '../config/examOptions'
 import { useClasses } from '@/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects'
@@ -94,8 +94,8 @@ const ExamForm = ({ exam = null }) => {
   const { subjects, isSubjectsLoading } = useSubjects();
   const { teachers, isTeachersLoading } = useTeachers();
 
-  const typeOptions = useEnum('examType');
-  const statusOptions = useEnum('examStatus');
+  const typeOptions = buildExamTypeOptions(t);
+  const statusOptions = buildExamStatusOptions(t);
 
   const initialClassId = exam?.classId || exam?.class?.id || '';
   const initialSectionId = exam?.sectionId || exam?.section?.id || '';

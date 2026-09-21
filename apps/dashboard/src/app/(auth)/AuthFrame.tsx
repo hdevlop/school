@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
-import { SCHOOL_APP_NAME } from '@/lib/appName';
+import { schoolApp } from '@/najm.config';
 import { ReliableThemeImage } from './ReliableThemeImage';
 
 /**
@@ -54,10 +54,10 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
               <NThemeImage
                 slot="authLogo"
                 className="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20"
-                alt={SCHOOL_APP_NAME}
+                alt={schoolApp.appName}
               />
               <span className="text-2xl font-semibold tracking-tight sm:text-[1.75rem]">
-                {SCHOOL_APP_NAME}
+                {schoolApp.appName}
               </span>
             </div>
 
@@ -66,7 +66,7 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
             <p className="mt-8 text-center text-xs text-muted-foreground">
               {t('auth.page.rightsReserved', {
                 year: new Date().getFullYear(),
-                app: SCHOOL_APP_NAME,
+                app: schoolApp.appName,
               })}
             </p>
           </div>

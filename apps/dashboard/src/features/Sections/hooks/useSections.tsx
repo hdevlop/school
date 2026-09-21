@@ -19,7 +19,6 @@ export const useSections = (options?) => {
   const { mutateAsync: createSection, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateSection, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteSection, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteSections, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -39,7 +38,6 @@ export const useSections = (options?) => {
     createSection,
     updateSection,
     deleteSection,
-    bulkDeleteSections,
 
     // Loading States
     isSectionsLoading,
@@ -47,6 +45,5 @@ export const useSections = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };

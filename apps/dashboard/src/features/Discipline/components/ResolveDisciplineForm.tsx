@@ -3,7 +3,7 @@
 import { FileCheck2, FileText, Gavel } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { resolveDisciplineSchema } from '@/lib/validations';
+import { resolveDisciplineSchema } from '../config/disciplineSchemas';
 import { DISCIPLINE_ACTIONS } from '../disciplineConstants';
 
 export default function ResolveDisciplineForm() {

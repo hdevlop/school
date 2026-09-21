@@ -12,6 +12,7 @@ import { Printer } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { updateCheckStatusApi, voidPaymentApi } from '@/services/paymentApi';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 
 function PaymentsTable({studentId}) {
@@ -140,7 +141,9 @@ function PaymentsTable({studentId}) {
       onDelete={handleDelete}
       loading={isLoading}
       renderCard={PaymentCard}
-      noDataText={t('payments.table.noPayments') || 'No payments found'}
+      {...tableEmptyProps({
+        feature: 'payments',
+      })}
       loadingText={t('payments.table.loading') || 'Loading payments...'}
       defaultMode='table'
     />

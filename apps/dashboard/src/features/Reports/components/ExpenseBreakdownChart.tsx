@@ -14,6 +14,7 @@ import { NSkeletonChart } from 'najm-kit';
 import { useFinanceExpenseBreakdown } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
+import DashboardEmptyState from '@/features/Dashboard/components/DashboardEmptyState';
 
 const COLORS = [
   '#1e40af', '#f97316', '#10b981', '#f59e0b', '#8b5cf6',
@@ -46,7 +47,7 @@ const CustomTooltip = ({ active, payload, majorMoney, t }: any) => {
 const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }) => {
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
-  const { data, isLoading } = useFinanceExpenseBreakdown(academicYear);
+  const { data, isLoading, error, refetch } = useFinanceExpenseBreakdown(academicYear);
 
   // Filter out "utilities" to free up a slot in the legend (it rarely ranks in
   // the top categories and crowds the chart — its amount still rolls into
@@ -57,6 +58,7 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
   );
 
   const total = rows.reduce((s, r) => s + r.total, 0);
+  const noData = rows.length === 0 || rows.every((row) => Number(row.total ?? 0) === 0);
 
   const top5 = useMemo(() => {
     const sorted = [...rows].sort((a, b) => b.total - a.total);
@@ -88,54 +90,59 @@ const ExpenseBreakdownChart: React.FC<Props> = ({ academicYear, className = '' }
       icon={PieIcon}
       className={`flex w-full h-full ${className}`}
       loading={isLoading}
+      error={error}
+      onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
-      noData={!isLoading && rows.length === 0}
-      noDataText={t('dashboard.finance.noExpensesRecorded')}
+      classNames={{ content: 'flex-1 min-h-0' }}
     >
-      <div className="flex flex-col h-full gap-1">
-        <p className="text-sm text-muted-foreground">
-          {t('common.total')} : <span className="font-semibold text-foreground">{majorMoney(total)}</span>
-        </p>
-        <div className="flex-1 min-h-[160px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={chartData}
-                cx="50%"
-                cy="50%"
-                innerRadius={50}
-                outerRadius={85}
-                paddingAngle={2}
-                dataKey="value"
-              >
-                {chartData.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip content={<CustomTooltip majorMoney={majorMoney} t={t} />} />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="flex flex-col gap-1">
-          {chartData.map((r, i) => (
-            <div key={r.category} className="flex items-center justify-between text-xs">
-              <div className="flex items-center gap-1.5 min-w-0">
-                <span
-                  className="w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                />
-                <span className="truncate">{r.name}</span>
+      {noData ? (
+        <DashboardEmptyState icon={PieIcon} title={t('dashboard.finance.noExpensesRecorded')} />
+      ) : (
+        <div className="flex flex-col h-full gap-1">
+          <p className="text-sm text-muted-foreground">
+            {t('common.total')} : <span className="font-semibold text-foreground">{majorMoney(total)}</span>
+          </p>
+          <div className="flex-1 min-h-[160px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={85}
+                  paddingAngle={2}
+                  dataKey="value"
+                >
+                  {chartData.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip content={<CustomTooltip majorMoney={majorMoney} t={t} />} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="flex flex-col gap-1">
+            {chartData.map((r, i) => (
+              <div key={r.category} className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ backgroundColor: COLORS[i % COLORS.length] }}
+                  />
+                  <span className="truncate">{r.name}</span>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="tabular-nums font-medium">{majorMoney(r.value)}</span>
+                  <span className="tabular-nums text-muted-foreground w-10 text-right">
+                    {total > 0 ? ((r.value / total) * 100).toFixed(0) : 0}%
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="tabular-nums font-medium">{majorMoney(r.value)}</span>
-                <span className="tabular-nums text-muted-foreground w-10 text-right">
-                  {total > 0 ? ((r.value / total) * 100).toFixed(0) : 0}%
-                </span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </NCard>
   );
 };

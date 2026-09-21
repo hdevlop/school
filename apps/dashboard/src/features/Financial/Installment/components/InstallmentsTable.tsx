@@ -5,6 +5,7 @@ import InstallmentCard from './InstallmentCard';
 import { useDialog } from 'najm-kit';
 import { useInstallmentsTableColumns } from '../hooks/useInstallmentsTableColumns';
 import { useInstallmentsTableFilters } from '../hooks/useInstallmentsTableFilters';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 function InstallmentsTable({ fee, className = '', onPayInstallment }) {
 
@@ -34,6 +35,7 @@ function InstallmentsTable({ fee, className = '', onPayInstallment }) {
       renderCard={InstallmentCard}
       defaultMode='table'
       showAddButton={false}
+      {...tableEmptyProps({ feature: 'installments' })}
       showViewToggle={false}
       showPagination
       defaultPagination={{ pageIndex: 0, pageSize: 10 }}

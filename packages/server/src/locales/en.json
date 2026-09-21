@@ -3449,6 +3449,8 @@
     "types": {
       "fullbus": "Full Bus",
       "minibus": "Mini Bus",
+      "sedan": "Sedan",
+      "shuttle": "Shuttle",
       "van": "Van",
       "truck": "Truck",
       "suv": "SUV",
@@ -3604,8 +3606,10 @@
     "staffAttendance": "Staff",
     "classRoutines": "Routine",
     "studentConduct": "Student Conduct",
+    "studentConductShort": "Conduct",
     "violations": "Violations",
-    "behaviorRewards": "Positive Behavior & Rewards"
+    "behaviorRewards": "Positive Behavior & Rewards",
+    "behaviorRewardsShort": "Rewards"
   },
   "classRoutines": {
     "success": {
@@ -4339,6 +4343,124 @@
       "retrieved": "Student route retrieved successfully",
       "unassigned": "Student route unassigned successfully",
       "updated": "Student route updated successfully"
+    }
+  },
+  "emptyStates": {
+    "filtered": {
+      "title": "No results found",
+      "description": "Try adjusting your filters."
+    },
+    "students": {
+      "title": "No students yet",
+      "description": "Add your first student to get started."
+    },
+    "parents": {
+      "title": "No parents yet",
+      "description": "Add your first parent to get started."
+    },
+    "teachers": {
+      "title": "No teachers yet",
+      "description": "Add your first teacher to get started."
+    },
+    "staff": {
+      "title": "No staff members yet",
+      "description": "Add your first staff member to get started."
+    },
+    "users": {
+      "title": "No user accounts yet",
+      "description": "Add your first user account to get started."
+    },
+    "roles": {
+      "title": "No roles yet",
+      "description": "Add your first role to get started."
+    },
+    "permissions": {
+      "title": "No permissions yet",
+      "description": "Add your first permission to get started."
+    },
+    "classes": {
+      "title": "No classes yet",
+      "description": "Add your first class to get started."
+    },
+    "sections": {
+      "title": "No sections yet",
+      "description": "Add your first section to get started."
+    },
+    "cycles": {
+      "title": "No cycles yet",
+      "description": "Add your first cycle to get started."
+    },
+    "subjects": {
+      "title": "No subjects yet",
+      "description": "Add your first subject to get started."
+    },
+    "assessments": {
+      "title": "No assessments yet",
+      "description": "Add your first assessment to get started."
+    },
+    "exams": {
+      "title": "No exams yet",
+      "description": "Add your first exam to get started."
+    },
+    "grades": {
+      "title": "No grades recorded",
+      "description": "Grades appear here once they are recorded."
+    },
+    "announcements": {
+      "title": "No announcements yet",
+      "description": "Publish your first announcement to get started."
+    },
+    "discipline": {
+      "title": "No discipline records",
+      "description": "Add your first discipline record to get started."
+    },
+    "behaviorRewards": {
+      "title": "No behavior records yet",
+      "description": "Add your first behavior record or reward to get started."
+    },
+    "studentAttendance": {
+      "title": "No students to mark",
+      "description": "Students appear here once a class and section are selected."
+    },
+    "staffAttendance": {
+      "title": "No staff to mark",
+      "description": "Active staff members appear here once they are added."
+    },
+    "fees": {
+      "title": "No fees yet",
+      "description": "Assign your first fee to get started."
+    },
+    "feeTypes": {
+      "title": "No fee types yet",
+      "description": "Add your first fee type to get started."
+    },
+    "expenses": {
+      "title": "No expenses yet",
+      "description": "Record your first expense to get started."
+    },
+    "payroll": {
+      "title": "No payroll records",
+      "description": "Payroll records appear here once a period is generated."
+    },
+    "payments": {
+      "title": "No payments yet",
+      "description": "Payments appear here once a fee is paid."
+    },
+    "installments": {
+      "title": "No installments",
+      "description": "Installments appear here once a payment plan is created."
+    },
+    "vehicles": {
+      "title": "No vehicles yet",
+      "description": "Add your first vehicle to get started."
+    },
+    "drivers": {
+      "title": "No drivers yet",
+      "description": "Add your first driver to get started."
+    },
+    "documents": {
+      "title": "No documents uploaded",
+      "description": "Upload a document to get started."
     }
   }
 }

@@ -15,6 +15,7 @@ import { useBehaviorRewardsTableColumns } from '../hooks/useBehaviorRewardsTable
 import { useBehaviorRewardsTableFilters } from '../hooks/useBehaviorRewardsTableFilters';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 const BehaviorRewardsTable = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -115,6 +116,11 @@ const BehaviorRewardsTable = () => {
         {...tableErrorProps(error, tableData)}
         renderCard={BehaviorRewardCard}
         addButtonText={t('behaviorRewards.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'behaviorRewards',
+          onCreate: handleCreate,
+          createLabel: t('behaviorRewards.dialogs.createButton'),
+        })}
         defaultMode="table"
         dynamicHeight
       />

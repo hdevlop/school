@@ -61,10 +61,12 @@ export const createTeacherDto = teacherFullSchema.omit({ id: true }).extend({
   password: z.string().min(8, 'Password must be at least 8 characters long').optional(),
 });
 export const createTeachersBulkDto = z.array(createTeacherDto);
-// Credentials are not part of a profile edit. Omitting `password` makes a
-// stray one an explicit rejection rather than a field the service quietly
-// drops, which would leave an admin believing a password had been set.
-export const updateTeacherDto = createTeacherDto.omit({ password: true }).partial();
+// Credentials are not part of a profile edit. `omit` alone would only strip a
+// password, leaving an admin who sent one believing it had been set, so the
+// field is declared `never`: present means rejected, absent means fine.
+export const updateTeacherDto = createTeacherDto
+  .partial()
+  .extend({ password: z.never('Passwords are not set from a profile edit').optional() });
 
 export const teacherIdParam = z.object({ id: z.string().min(1) });
 export const teacherCinParam = z.object({ cin: cinField });

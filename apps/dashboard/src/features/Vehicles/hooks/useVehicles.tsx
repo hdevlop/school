@@ -20,7 +20,6 @@ export const useVehicles = (options?) => {
   const { mutateAsync: createVehicle, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateVehicle, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteVehicle, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteVehicles, isLoading: isBulkDeleting } = crud.useBulkDelete();
   const { mutateAsync: assignDriver, isLoading: isAssigningDriver } = crud.useCustomMutation('assignDriver');
 
   return {
@@ -41,7 +40,6 @@ export const useVehicles = (options?) => {
     createVehicle,
     updateVehicle,
     deleteVehicle,
-    bulkDeleteVehicles,
 
     // Custom Mutations
     assignDriver,
@@ -52,7 +50,6 @@ export const useVehicles = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
     isAssigningDriver,
   };
 };

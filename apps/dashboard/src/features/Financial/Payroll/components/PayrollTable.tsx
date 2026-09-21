@@ -9,6 +9,7 @@ import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 const calculateStaffPay = (member) => {
   if (member?.compensationMode === 'hourly') {
@@ -340,7 +341,7 @@ const PayrollTable = () => {
         defaultMode='table'
         showColumnVisibility={true}
         loadingText={t('payroll.loading')}
-        noDataText={t('payroll.noData')}
+        {...tableEmptyProps({ feature: 'payroll' })}
       />
     </div>
   );

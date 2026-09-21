@@ -1,0 +1,85 @@
+import * as values from './enums';
+
+/**
+ * Generic lookup over every shared tuple, for the places that need to reach an
+ * enum by key: Drizzle column definitions and the server's Zod adapter.
+ *
+ * It lives apart from `index.ts` on purpose. This object names all sixty-nine
+ * tuples, so anything importing it keeps all of them alive — in a browser
+ * bundle that is every domain's strings on every page that needed one enum.
+ * The dashboard imports named tuples from `@sms/contracts`; only the server
+ * reaches for `@sms/contracts/lookup`.
+ */
+export const enumValues = {
+  userType: values.USER_TYPE_VALUES,
+  userStatus: values.USER_STATUS_VALUES,
+  tokenStatus: values.TOKEN_STATUS_VALUES,
+  tokenType: values.TOKEN_TYPE_VALUES,
+  fileStatus: values.FILE_STATUS_VALUES,
+  gender: values.GENDER_VALUES,
+  studentStatus: values.STUDENT_STATUS_VALUES,
+  teacherStatus: values.TEACHER_STATUS_VALUES,
+  employmentType: values.EMPLOYMENT_TYPE_VALUES,
+  relationshipType: values.RELATIONSHIP_TYPE_VALUES,
+  semester: values.SEMESTER_VALUES,
+  classStatus: values.CLASS_STATUS_VALUES,
+  sectionStatus: values.SECTION_STATUS_VALUES,
+  language: values.LANGUAGE_VALUES,
+  enrollmentStatus: values.ENROLLMENT_STATUS_VALUES,
+  assignmentStatus: values.ASSIGNMENT_STATUS_VALUES,
+  calendarSystem: values.CALENDAR_SYSTEM_VALUES,
+  assessmentType: values.ASSESSMENT_TYPE_VALUES,
+  assessmentStatus: values.ASSESSMENT_STATUS_VALUES,
+  submissionType: values.SUBMISSION_TYPE_VALUES,
+  examType: values.EXAM_TYPE_VALUES,
+  examSecurity: values.EXAM_SECURITY_VALUES,
+  examStatus: values.EXAM_STATUS_VALUES,
+  gradeStatus: values.GRADE_STATUS_VALUES,
+  attendanceStatus: values.ATTENDANCE_STATUS_VALUES,
+  attendanceType: values.ATTENDANCE_TYPE_VALUES,
+  proficiencyLevel: values.PROFICIENCY_LEVEL_VALUES,
+  dayOfWeek: values.DAY_OF_WEEK_VALUES,
+  alertType: values.ALERT_TYPE_VALUES,
+  alertPriority: values.ALERT_PRIORITY_VALUES,
+  alertStatus: values.ALERT_STATUS_VALUES,
+  behaviorRewardCategory: values.BEHAVIOR_REWARD_CATEGORY_VALUES,
+  behaviorRecognitionLevel: values.BEHAVIOR_RECOGNITION_LEVEL_VALUES,
+  behaviorRewardType: values.BEHAVIOR_REWARD_TYPE_VALUES,
+  disciplineCategory: values.DISCIPLINE_CATEGORY_VALUES,
+  disciplineSeverity: values.DISCIPLINE_SEVERITY_VALUES,
+  disciplineStatus: values.DISCIPLINE_STATUS_VALUES,
+  disciplineAction: values.DISCIPLINE_ACTION_VALUES,
+  feeTypeStatus: values.FEE_TYPE_STATUS_VALUES,
+  feeCategory: values.FEE_CATEGORY_VALUES,
+  paymentType: values.PAYMENT_TYPE_VALUES,
+  schedule: values.SCHEDULE_VALUES,
+  feeStatus: values.FEE_STATUS_VALUES,
+  feeInstallmentStatus: values.FEE_INSTALLMENT_STATUS_VALUES,
+  paymentMethod: values.PAYMENT_METHOD_VALUES,
+  paymentStatus: values.PAYMENT_STATUS_VALUES,
+  eventType: values.EVENT_TYPE_VALUES,
+  eventStatus: values.EVENT_STATUS_VALUES,
+  eventVisibility: values.EVENT_VISIBILITY_VALUES,
+  participantType: values.PARTICIPANT_TYPE_VALUES,
+  expenseCategory: values.EXPENSE_CATEGORY_VALUES,
+  expenseStatus: values.EXPENSE_STATUS_VALUES,
+  payslipStatus: values.PAYSLIP_STATUS_VALUES,
+  trackerMode: values.TRACKER_MODE_VALUES,
+  driverStatus: values.DRIVER_STATUS_VALUES,
+  staffRole: values.STAFF_ROLE_VALUES,
+  staffStatus: values.STAFF_STATUS_VALUES,
+  shift: values.SHIFT_VALUES,
+  compensationMode: values.COMPENSATION_MODE_VALUES,
+  vehicleStatus: values.VEHICLE_STATUS_VALUES,
+  vehicleType: values.VEHICLE_TYPE_VALUES,
+  vehicleDocumentType: values.VEHICLE_DOCUMENT_TYPE_VALUES,
+  busStatus: values.BUS_STATUS_VALUES,
+  refuelStatus: values.REFUEL_STATUS_VALUES,
+  fuelType: values.FUEL_TYPE_VALUES,
+  maintenanceType: values.MAINTENANCE_TYPE_VALUES,
+  maintenanceStatus: values.MAINTENANCE_STATUS_VALUES,
+  maritalStatus: values.MARITAL_STATUS_VALUES,
+  llmProvider: values.LLM_PROVIDER_VALUES,
+} as const;
+
+export type EnumKey = keyof typeof enumValues;

@@ -26,8 +26,15 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 
 ### Testing & Quality
 - Always run `bun run lint` after making code changes
-- Use `bun run build:all` to verify production readiness
+- `bun run typecheck` - Typecheck contracts, server and dashboard in dependency
+  order. The dashboard runs two passes: the app (`tsconfig.json`, which excludes
+  tests) and the tests (`tsconfig.test.json`, which adds `bun` types). Neither
+  hides the other.
+- `bun run test:config` - The focused contract, shared-form and feature-config tests
+- `bun run build:all` to verify production readiness
 - `bun run i18n:check` when touching `packages/server/src/locales/*.json`
+- `bun run check` - lint, typecheck, i18n, focused tests, build and `db:check`
+  in one pass. Mutates no database.
 
 ## Framework Contracts
 
@@ -65,6 +72,45 @@ states that drift — so do not add one without changing the plan first.
   failed background refetch from raising an error over records already on
   screen. `NCard`-based lists have no `renderError`, so they pass `errorText`
   instead — see `Reports/components/AgingDetailTable.tsx`.
+
+- **One declaration of every shared value.** Database enum members, API payload
+  values, and the values a select may submit are declared once in
+  `packages/contracts` (`@sms/contracts`) as named readonly tuples
+  (`PAYMENT_METHOD_VALUES`) with their inferred types (`PaymentMethod`).
+  `packages/server/src/shared/enums.ts` is a Zod adapter over them and declares
+  nothing of its own; the dashboard builds `z.enum(SOMETHING_VALUES)` from the
+  same tuples. The package has no dependencies — not Zod, Drizzle, React, Najm,
+  translations, or server runtime — because it is consumed from TypeScript
+  source by both a Bun server build and a Next client bundle. The by-key
+  `enumValues` lookup lives at `@sms/contracts/lookup` and is server-only: it
+  names all sixty-nine tuples, so importing it from a component would keep
+  every domain's strings alive. Adding or removing a value changes what the
+  database accepts; `packages/contracts/tests/enums.test.ts` pins the exact
+  members and order of every persisted enum so a careless edit fails loudly.
+
+- **One owner per form schema, and it is the feature.** Form schemas live in
+  `features/<Feature>/config/<feature>Schemas.ts`, select options in
+  `<feature>Options.ts` as pure builders taking `t`. There is no global
+  validation module and no global enum hook; `apps/dashboard/src/lib` holds
+  cross-cutting, domain-neutral utilities only. Genuinely shared, domain-free
+  pieces — an id field, a coerced number, a map location, the gender select —
+  go in `apps/dashboard/src/shared/forms/`, and that folder stays small. ESLint
+  enforces both boundaries: `@/lib/validations`, `@/lib/ZodEnum`, `@/lib/ENUMS`
+  and `@/hooks/useEnum` are restricted imports, as is any `@server/*` path.
+
+  A form schema improves UX; it is never authorization. The DTO in
+  `packages/server/src/modules/**/**Dto.ts` validates the same payload again
+  and is the only thing that decides what is written. A dashboard schema must
+  not be imported into the server, and a transport DTO must not be bound to a
+  React form.
+
+- **A select may offer less than the API accepts, never more.** Narrowing is
+  done in the feature's own config, with the reason written down and a test
+  pinning it — see `FILTERABLE_PAYMENT_STATUS_VALUES` in
+  `features/Financial/Payment/config/paymentOptions.ts`. Never by editing the
+  shared tuple. Where a stored record can hold a value the list no longer
+  offers, wrap the builder with `withStoredValue` so editing shows what is
+  actually stored instead of silently rewriting it.
 
 Current Najm versions are the pins in the root `package.json`. Read them there
 rather than assuming; they are upgraded deliberately, not by range.
@@ -210,11 +256,15 @@ apps/dashboard/src/
 ├── shared/              # Dashboard shell and cross-feature pieces
 ├── hooks/              # Shared custom hooks
 ├── services/           # API service layer
+├── shared/forms/       # Field primitives + option plumbing (small, domain-neutral)
 └── lib/                # auth, session, server preferences, utilities
 ```
 
 Translations are not here. They live in `packages/server/src/locales/` and
 serve both the backend and the frontend catalog.
+
+Domain values are not here either. They live in `packages/contracts`
+(`@sms/contracts`) — see **One declaration of every shared value** below.
 
 ## Feature Module Structure
 
@@ -230,8 +280,15 @@ features/[Entity]/
 ├── config/
 │   ├── [entity]TableColumns.tsx     # Table column definitions
 │   ├── [entity]TableConfig.tsx      # Table configuration
-│   └── [entity]ValidateSchema.ts    # Zod validation schemas
+│   ├── [entity]Schemas.ts           # Zod form schemas + inferred value types
+│   ├── [entity]Options.ts           # Typed select-option builders
+│   └── [entity]Schemas.test.ts      # Defaults, refinements, option labels
 ```
+
+The `config/` folder is the feature's own. Nothing outside it may declare a
+schema the feature's forms bind to, and nothing inside it may be re-exported
+through a catch-all barrel — a cross-feature import names its owner
+(`@/features/Parents/config/parentSchemas`).
 
 ## Shared Hook Pattern: useEntityCRUD
 

@@ -6,6 +6,7 @@ import { Input } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
 import { Award, BookOpen, Briefcase, Calendar, GraduationCap, Hash, ShieldCheck, Users } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface AcademicInfoTabProps {
   teacher: any;
@@ -183,7 +184,11 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
             showViewToggle={false}
             showColumnVisibility={false}
             loadingText={t('teachers.profile.table.loadingAssignments')}
-            noDataText="No assignments recorded"
+            {...tableEmptyProps({
+              feature: 'classes',
+              title: "No assignments recorded",
+              description: null,
+            })}
           />
         </div>
       </section>

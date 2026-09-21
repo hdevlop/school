@@ -14,6 +14,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 const getParentRowClassName = (parent) => {
   const isOrphaned = parent?.isOrphaned === true || Number(parent?.totalChildren) === 0;
   return isOrphaned
@@ -135,6 +136,11 @@ function ParentsTable() {
         renderCard={ParentCard}
         getRowClassName={getParentRowClassName}
         addButtonText={t('parents.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'parents',
+          onCreate: handleAddClick,
+          createLabel: t('parents.dialogs.createButton'),
+        })}
         defaultMode='cards'
       />
     </div>

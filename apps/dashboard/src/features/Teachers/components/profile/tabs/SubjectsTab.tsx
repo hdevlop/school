@@ -6,6 +6,7 @@ import { getTeacherClassesApi } from '@/services/teacherApi';
 import { BookOpen, GraduationCap } from 'lucide-react';
 import PageLoadingState from '@/shared/PageLoadingState';
 import { useTranslation } from 'najm-i18n/react';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface SubjectsTabProps {
   teacher: any;
@@ -119,7 +120,11 @@ const SubjectsTab: React.FC<SubjectsTabProps> = ({ teacher, teacherId }) => {
         showAddButton={false}
         showViewToggle={false}
         showColumnVisibility={false}
-        noDataText="No subjects assigned"
+        {...tableEmptyProps({
+          feature: 'subjects',
+          title: "No subjects assigned",
+          description: null,
+        })}
       />
     </div>
   );

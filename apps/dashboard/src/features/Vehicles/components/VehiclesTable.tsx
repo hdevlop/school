@@ -3,7 +3,6 @@
 import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { Bus } from 'lucide-react';
-import { buildSmsColumns } from '@/lib/tableUtils';
 import React from 'react';
 import VehicleForm from './VehicleForm';
 import AssignDriverForm from '@/features/Drivers/components/AssignDriverForm';
@@ -16,6 +15,7 @@ import { useVehiclesTableFilters } from '../hooks/useVehiclesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function VehiclesTable() {
 
   const { t } = useTranslation();
@@ -89,7 +89,7 @@ function VehiclesTable() {
     });
   };
 
-  const handleCellClick = async (columnId, vehicle) => {
+  const handleCellClick = async (vehicle, columnId) => {
     if (columnId === 'driver_name') {
       openDialog({
         title: `${t('drivers.form.assignDriver') || 'Assign Driver'} - ${vehicle.name}`,
@@ -122,7 +122,8 @@ function VehiclesTable() {
 
       <NTable
         data={vehicles}
-        columns={buildSmsColumns(columns, { onCellClick: handleCellClick })}
+        columns={columns}
+        onCellClick={handleCellClick}
         filters={rawFilters}
         onCreate={handleAddClick}
         onView={handleView}
@@ -132,6 +133,11 @@ function VehiclesTable() {
         {...tableErrorProps(error, vehicles)}
         renderCard={VehicleCard}
         addButtonText={t('vehicles.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'vehicles',
+          onCreate: handleAddClick,
+          createLabel: t('vehicles.dialogs.createButton'),
+        })}
         defaultMode='cards'
       />
     </div>

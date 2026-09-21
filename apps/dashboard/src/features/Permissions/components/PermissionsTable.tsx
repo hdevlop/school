@@ -13,6 +13,7 @@ import { usePermissionsTableFilters } from '../hooks/usePermissionsTableFilters'
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function PermissionsTable() {
 
   const { t } = useTranslation();
@@ -112,6 +113,11 @@ function PermissionsTable() {
         {...tableErrorProps(error, permissions)}
         renderCard={PermissionCard}
         addButtonText={t('permissions.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'permissions',
+          onCreate: handleAddClick,
+          createLabel: t('permissions.dialogs.createButton'),
+        })}
         defaultMode='table'
       />
     </div>

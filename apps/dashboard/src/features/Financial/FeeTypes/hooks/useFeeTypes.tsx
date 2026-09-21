@@ -19,7 +19,6 @@ export const useFeeTypes = (options?) => {
   const { mutateAsync: createFeeType, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateFeeType, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteFeeType, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteFeeTypes, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -39,7 +38,6 @@ export const useFeeTypes = (options?) => {
     createFeeType,
     updateFeeType,
     deleteFeeType,
-    bulkDeleteFeeTypes,
 
     // Loading States
     isFeeTypesLoading,
@@ -47,6 +45,5 @@ export const useFeeTypes = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };

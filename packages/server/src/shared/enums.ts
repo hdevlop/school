@@ -1,78 +1,18 @@
 import { z } from 'zod';
 
-export const enumValues = {
-  userType: ['admin', 'teacher', 'student', 'parent'],
-  userStatus: ['active', 'inactive', 'pending'],
-  tokenStatus: ['active', 'revoked', 'expired'],
-  tokenType: ['access', 'refresh'],
-  fileStatus: ['active', 'deleted', 'archived'],
-  gender: ['M', 'F'],
-  studentStatus: ['active', 'inactive', 'graduated', 'transferred'],
-  teacherStatus: ['active', 'inactive', 'onLeave'],
-  employmentType: ['fullTime', 'partTime', 'contract', 'temporary'],
-  relationshipType: ['father', 'mother', 'guardian', 'stepparent', 'grandparent', 'other'],
-  semester: ['spring', 'summer', 'fall', 'winter'],
-  classStatus: ['active', 'completed', 'cancelled'],
-  sectionStatus: ['active', 'inactive', 'archived'],
-  language: ['en', 'fr', 'ar', 'es'],
-  enrollmentStatus: ['enrolled', 'completed', 'dropped', 'failed'],
-  assignmentStatus: ['active', 'completed', 'cancelled'],
-  calendarSystem: ['SEMESTER', 'TRIMESTER', 'QUARTER'],
-  assessmentType: ['quiz', 'assignment', 'project', 'participation', 'test', 'presentation'],
-  assessmentStatus: ['scheduled', 'active', 'completed', 'cancelled'],
-  submissionType: ['online', 'paper', 'presentation', 'practical', 'discussion'],
-  examType: ['midterm', 'final', 'standardized'],
-  examSecurity: ['low', 'medium', 'high'],
-  examStatus: ['scheduled', 'active', 'completed', 'cancelled', 'rescheduled'],
-  gradeStatus: ['pending', 'graded', 'missed'],
-  attendanceStatus: ['present', 'absent', 'late'],
-  attendanceType: ['student', 'staff'],
-  proficiencyLevel: ['beginner', 'intermediate', 'advanced', 'expert'],
-  dayOfWeek: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
-  alertType: ['academic', 'attendance', 'behavioral', 'health', 'system', 'announcement', 'reminder', 'emergency'],
-  alertPriority: ['low', 'medium', 'high', 'critical'],
-  alertStatus: ['active', 'acknowledged', 'resolved', 'dismissed'],
-  behaviorRewardCategory: ['academic_effort', 'improvement', 'respect', 'helpfulness', 'leadership', 'teamwork', 'responsibility', 'community_service', 'excellent_attendance', 'other'],
-  behaviorRecognitionLevel: ['appreciation', 'achievement', 'excellence'],
-  behaviorRewardType: ['verbal_praise', 'written_praise', 'merit', 'badge', 'certificate', 'privilege', 'prize', 'other'],
-  disciplineCategory: ['classroom_disruption', 'disrespect', 'bullying', 'fighting', 'cheating', 'vandalism', 'uniform_violation', 'device_misuse', 'prohibited_item', 'other'],
-  disciplineSeverity: ['low', 'medium', 'high', 'critical'],
-  disciplineStatus: ['open', 'resolved'],
-  disciplineAction: ['verbal_warning', 'written_warning', 'detention', 'counseling', 'parent_meeting', 'suspension', 'other'],
-  feeTypeStatus: ['active', 'inactive', 'archived'],
-  feeCategory: ['tuition', 'registration', 'transport', 'cafeteria', 'books', 'sports', 'uniform', 'technology', 'fieldtrip', 'other'],
-  paymentType: ['recurring', 'oneTime'],
-  schedule: ['monthly', 'quarterly', 'semester', 'annually', 'oneTime'],
-  feeStatus: ['pending', 'partiallyPaid', 'paid', 'overdue'],
-  feeInstallmentStatus: ['pending', 'partiallyPaid', 'paid', 'overdue', 'cancelled'],
-  paymentMethod: ['cash', 'bankTransfer', 'check', 'creditCard', 'debitCard', 'online', 'mobilePayment'],
-  paymentStatus: ['completed', 'pending', 'deposited', 'bounced', 'failed', 'refunded', 'voided'],
-  eventType: ['academic', 'sports', 'cultural', 'holiday', 'exam', 'meeting', 'workshop', 'fieldtrip', 'ceremony', 'conference', 'other'],
-  eventStatus: ['scheduled', 'ongoing', 'completed', 'cancelled', 'postponed'],
-  eventVisibility: ['public', 'private', 'teachers', 'students', 'parents', 'staff'],
-  participantType: ['student', 'teacher', 'parent', 'staff'],
-  expenseCategory: ['utilities', 'maintenance', 'supplies', 'equipment', 'transport', 'food', 'security', 'cleaning', 'insurance', 'rent', 'tax', 'marketing', 'training', 'technology', 'miscellaneous'],
-  expenseStatus: ['pending', 'approved', 'paid', 'rejected', 'cancelled'],
-  payslipStatus: ['pending', 'paid', 'cancelled'],
-  trackerMode: ['tracking', 'gprs', 'sms', 'sleepTime', 'sleepShock', 'sleepDeep'],
-  driverStatus: ['active', 'inactive', 'onLeave', 'suspended'],
-  staffRole: ['teacher', 'driver', 'principal', 'secretary', 'receptionist', 'accountant', 'cleaner', 'security', 'librarian', 'itSupport', 'busAssistant', 'assistant', 'other'],
-  staffStatus: ['active', 'inactive', 'onLeave', 'suspended', 'terminated'],
-  shift: ['morning', 'afternoon', 'evening', 'fullDay'],
-  compensationMode: ['monthly', 'hourly'],
-  vehicleStatus: ['active', 'inactive', 'maintenance', 'retired'],
-  vehicleType: ['sedan', 'minibus', 'fullbus', 'shuttle'],
-  vehicleDocumentType: ['insurance', 'registration', 'inspection', 'emission', 'license'],
-  busStatus: ['active', 'inactive', 'maintenance', 'retired'],
-  refuelStatus: ['pending', 'completed', 'cancelled'],
-  fuelType: ['gasoline', 'diesel', 'electric', 'hybrid', 'lpg', 'cng'],
-  maintenanceType: ['scheduled', 'repair', 'inspection', 'oilChange', 'filterChange', 'other'],
-  maintenanceStatus: ['scheduled', 'inProgress', 'completed', 'cancelled', 'overdue'],
-  maritalStatus: ['single', 'married', 'divorced', 'widowed', 'separated'],
-  llmProvider: ['anthropic', 'openai', 'google', 'zai', 'ollama', 'custom'],
-} as const;
+import { enumValues, type EnumKey } from '@sms/contracts/lookup';
 
-export type EnumKey = keyof typeof enumValues;
+/**
+ * Zod adapter over the shared domain values.
+ *
+ * The literals themselves live in `@sms/contracts`, which the dashboard reads
+ * too — this module only dresses them as Zod enums for DTO validation and
+ * hands Drizzle the tuple shape its `pgEnum` builder wants. Nothing is
+ * redeclared here, so the server and the browser cannot disagree about what
+ * the API accepts.
+ */
+export { enumValues, type EnumKey };
+export * from '@sms/contracts';
 
 export const getEnumValues = (enumKey: EnumKey) => enumValues[enumKey] as unknown as [string, ...string[]];
 

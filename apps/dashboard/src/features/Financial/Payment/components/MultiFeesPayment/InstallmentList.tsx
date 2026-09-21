@@ -4,6 +4,7 @@ import { Label, NajmScroll, NTable } from 'najm-kit';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 const toAmount = (value: unknown) => Number(value ?? 0) || 0;
 
@@ -189,7 +190,11 @@ const FeeInstallmentsTable = ({
             showCheckbox={false}
             dynamicHeight={false}
             bordered
-            noDataText="No installments to pay"
+            {...tableEmptyProps({
+              feature: 'installments',
+              title: "No installments to pay",
+              description: null,
+            })}
             className="rounded-md bg-white text-xs [&_tbody_td]:py-2 [&_thead_th]:py-2"
          />
       </div>

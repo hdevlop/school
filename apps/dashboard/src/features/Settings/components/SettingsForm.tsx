@@ -14,7 +14,7 @@ import SystemSection from './sections/SystemSection';
 import SecuritySection from './sections/SecuritySection';
 import NotificationSection from './sections/NotificationSection';
 import { Separator } from 'najm-kit';
-import { settingsSchema } from '@/lib/validations';
+import { settingsSchema } from '../config/settingsSchemas';
 import { useAdminSettings } from '../hooks/useSettings';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

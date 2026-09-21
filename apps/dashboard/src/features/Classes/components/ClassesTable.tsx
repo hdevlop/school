@@ -12,6 +12,7 @@ import { useClassesTableFilters } from '../hooks/useClassesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function ClassesTable() {
 
   const { t } = useTranslation();
@@ -108,6 +109,11 @@ function ClassesTable() {
         {...tableErrorProps(error, classes)}
         renderCard={ClassCard}
         addButtonText={t('classes.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'classes',
+          onCreate: handleAddClick,
+          createLabel: t('classes.dialogs.createButton'),
+        })}
         defaultMode='table'
       />
     </div>

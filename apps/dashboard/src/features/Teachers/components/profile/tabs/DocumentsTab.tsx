@@ -4,6 +4,7 @@ import React, { useMemo } from 'react';
 import { NTable } from 'najm-kit';
 import { Award, FileText } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface DocumentsTabProps {
   teacher: any;
@@ -57,7 +58,11 @@ const DocumentsTab: React.FC<DocumentsTabProps> = () => {
         showAddButton={false}
         showViewToggle={false}
         showColumnVisibility={false}
-        noDataText="No documents uploaded"
+        {...tableEmptyProps({
+          feature: 'documents',
+          title: "No documents uploaded",
+          description: null,
+        })}
       />
     </div>
   );

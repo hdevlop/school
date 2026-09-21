@@ -13,6 +13,7 @@ import { useAssessmentsTableFilters } from '../hooks/useAssessmentsTableFilters'
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function AssessmentsTable() {
   const { t } = useTranslation();
   const columns = useAssessmentsTableColumns();
@@ -108,6 +109,11 @@ function AssessmentsTable() {
         {...tableErrorProps(error, assessments)}
         renderCard={AssessmentCard}
         addButtonText={t('assessments.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'assessments',
+          onCreate: handleAddClick,
+          createLabel: t('assessments.dialogs.createButton'),
+        })}
         defaultMode='table'
         dynamicHeight={true}
       />

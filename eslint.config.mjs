@@ -34,6 +34,56 @@ export default defineConfig([
       "prefer-const": "warn",
     },
   },
+  {
+    // Two boundaries the dashboard spent a long migration establishing, and
+    // which nothing in the type system would stop a future import from
+    // crossing again.
+    files: ["apps/dashboard/src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        paths: [
+          {
+            name: "@/lib/validations",
+            message:
+              "Form schemas are owned by the feature that binds them: features/<Feature>/config/<feature>Schemas.ts. Genuinely shared field primitives go in shared/forms/.",
+          },
+          {
+            name: "@/lib/ZodEnum",
+            message:
+              "Build the Zod enum from the shared tuple instead: z.enum(SOMETHING_VALUES) with SOMETHING_VALUES imported from @sms/contracts.",
+          },
+          {
+            name: "@/lib/ENUMS",
+            message:
+              "Shared domain values live in @sms/contracts. Labels and translation keys belong to the feature that renders them.",
+          },
+          {
+            name: "@/hooks/useEnum",
+            message:
+              "Selects are built by typed, feature-owned option builders: features/<Feature>/config/<feature>Options.ts, using optionsFromValues from shared/forms/enumOptions.",
+          },
+        ],
+        patterns: [
+          {
+            // @sms/contracts is dependency-free and safe in a client bundle;
+            // the server's own modules are not, and reaching into them from a
+            // component pulls Drizzle and the database driver toward the browser.
+            group: ["@server/*", "@sms/server/modules", "@sms/server/modules/*"],
+            message:
+              "Do not import server runtime code from the dashboard. Shared values come from @sms/contracts; translations come from @sms/server/locales.",
+          },
+        ],
+      }],
+    },
+  },
+  {
+    // Tests read the locale catalogs directly to check a label exists in all
+    // four languages, which is a JSON read, not a server runtime import.
+    files: ["apps/dashboard/src/**/*.test.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": "off",
+    },
+  },
   globalIgnores([
     ".next/**",
     "node_modules/**",

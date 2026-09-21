@@ -6,9 +6,9 @@ import { FormInput } from 'najm-kit';
 import { GraduationCap, LayoutGrid, Tag, CalendarClock, CalendarDays, DollarSign, Percent, FileText } from 'lucide-react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
-import { classBulkFeeFormSchema } from '@/lib/validations'
+import { classBulkFeeFormSchema } from '../config/feeSchemas'
+import { buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from 'najm-kit'
-import { useEnum } from '@/hooks/useEnum'
 import { calculateFeeAmounts, buildInstallmentsPreview } from '@/features/Financial/Fees/utils/feeUtils'
 import { useQuery } from '@tanstack/react-query'
 import { getClassStudentsApi } from '@/services/classApi'
@@ -55,7 +55,7 @@ const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
       classId: '',
       sectionId: '',
       feeTypeId: '',
-      schedule: 'monthly',
+      schedule: 'monthly' as const,
       academicYear: undefined,
       baseAmount: undefined,
       discountAmount: 0,
@@ -125,7 +125,7 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
       return buildInstallmentsPreview(netAmount, schedule || 'monthly', { academicYear })
    }, [academicYear, netAmount, schedule, selectedFeeType])
 
-   const scheduleOptions = useEnum('schedule')
+   const scheduleOptions = buildScheduleOptions(t)
 
    return (
       <div className='flex flex-col gap-4'>

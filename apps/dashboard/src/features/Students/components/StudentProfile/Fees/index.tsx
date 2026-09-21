@@ -7,6 +7,7 @@ import { NCard, NStatCard, NTable } from 'najm-kit';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface FeesTabProps {
   studentId?: string;
@@ -354,7 +355,11 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
           dynamicHeight={false}
           onRowClick={onOpenFeeRecord ? handleFeeClick : undefined}
           getRowClassName={() => onOpenFeeRecord ? 'cursor-pointer hover:bg-slate-50' : undefined}
-          noDataText={t('students.profile.feeDetails.noneAssignedShort')}
+          {...tableEmptyProps({
+            feature: 'fees',
+            title: t('students.profile.feeDetails.noneAssignedShort'),
+            description: null,
+          })}
         />
       </div>
     </div>

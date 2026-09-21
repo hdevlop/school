@@ -13,6 +13,7 @@ import { useSectionsTableFilters } from '../hooks/useSectionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function SectionsTable() {
 
   const { t } = useTranslation();
@@ -114,6 +115,11 @@ function SectionsTable() {
         {...tableErrorProps(error, sections)}
         renderCard={SectionCard}
         addButtonText={t('sections.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'sections',
+          onCreate: handleAddClick,
+          createLabel: t('sections.dialogs.createButton'),
+        })}
         defaultMode='table'
         dynamicHeight={true}
       />

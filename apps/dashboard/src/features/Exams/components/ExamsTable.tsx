@@ -13,6 +13,7 @@ import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function ExamsTable() {
   const { t } = useTranslation();
   const columns = useExamsTableColumns();
@@ -108,6 +109,11 @@ function ExamsTable() {
         {...tableErrorProps(error, exams)}
         renderCard={ExamCard}
         addButtonText={t('exams.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'exams',
+          onCreate: handleAddClick,
+          createLabel: t('exams.dialogs.createButton'),
+        })}
         defaultMode='table'
         dynamicHeight={true}
       />

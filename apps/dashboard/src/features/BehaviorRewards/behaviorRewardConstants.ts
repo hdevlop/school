@@ -1,32 +1,12 @@
-export const BEHAVIOR_REWARD_CATEGORIES = [
-  'academic_effort',
-  'improvement',
-  'respect',
-  'helpfulness',
-  'leadership',
-  'teamwork',
-  'responsibility',
-  'community_service',
-  'excellent_attendance',
-  'other',
-] as const;
-
-export const BEHAVIOR_RECOGNITION_LEVELS = [
-  'appreciation',
-  'achievement',
-  'excellence',
-] as const;
-
-export const BEHAVIOR_REWARD_TYPES = [
-  'verbal_praise',
-  'written_praise',
-  'merit',
-  'badge',
-  'certificate',
-  'privilege',
-  'prize',
-  'other',
-] as const;
+/**
+ * Presentation for the behaviour rewards screens.
+ *
+ * The category, recognition-level and reward-type tuples that used to head
+ * this file were a third copy of values the API owns; they now come from
+ * `@sms/contracts` through `config/behaviorRewardOptions.ts`. What is left is
+ * genuinely this feature's own: badge colours and the date formatting the
+ * cards and the form share.
+ */
 
 export const recognitionClasses: Record<string, string> = {
   appreciation: 'border-teal-200 bg-teal-50 text-teal-700 dark:border-teal-800 dark:bg-teal-950/50 dark:text-teal-300',

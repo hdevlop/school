@@ -11,6 +11,7 @@ import EditFeeForm from '../../EditFeeForm';
 import { useFeeTypes } from '../../../../FeeTypes/hooks/useFeeTypes';
 import InstallmentsTable from '@/features/Financial/Installment/components/InstallmentsTable';
 import { CreditCard, Pencil, Trash2 } from 'lucide-react';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 const getFeeBalance = (fee: any) => {
   const explicitBalance = Number(fee?.balance ?? fee?.totalDue ?? fee?.dueAmount);
@@ -115,7 +116,11 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
         showColumnVisibility={false}
         showCheckbox={false}
         selectedRowId={selectedFee?.id ?? null}
-        noDataText="No fees assigned to this student"
+        {...tableEmptyProps({
+          feature: 'fees',
+          title: "No fees assigned to this student",
+          description: null,
+        })}
         loadingText={t('fees.card.loadingStudentFees')}
         dynamicHeight={false}
         bordered={false}

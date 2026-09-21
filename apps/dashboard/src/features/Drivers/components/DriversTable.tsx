@@ -12,6 +12,7 @@ import { useDriversTableFilters } from '../hooks/useDriversTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function DriversTable() {
 
   const { t } = useTranslation();
@@ -126,6 +127,11 @@ function DriversTable() {
         loadingText={t('common.loading')}
         renderCard={DriverCard}
         addButtonText={t('drivers.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'drivers',
+          onCreate: handleAddClick,
+          createLabel: t('drivers.dialogs.createButton'),
+        })}
         defaultMode='cards'
       />
     </div>

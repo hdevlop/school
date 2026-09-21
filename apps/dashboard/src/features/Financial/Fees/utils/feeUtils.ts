@@ -1,4 +1,4 @@
-import { toLocalISODate } from '@/lib/localDate'
+import { localDateInput } from 'najm-kit/format'
 
 // ==================== CONSTANTS ====================
 
@@ -274,7 +274,7 @@ export function buildInstallmentsPreview(
   if (schedule === 'oneTime' || netAmount <= 0) {
     return [{
       number: 1,
-      dueDate: toLocalISODate(start),
+      dueDate: localDateInput(start),
       amount: netAmount,
     }];
   }
@@ -297,7 +297,7 @@ export function buildInstallmentsPreview(
 
     return {
       number: i + 1,
-      dueDate: toLocalISODate(dueDate),
+      dueDate: localDateInput(dueDate),
       amount,
     };
   });

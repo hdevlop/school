@@ -7,7 +7,7 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { GraduationCap, Calendar, FileText, Layers } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { classSchema } from '@/lib/validations'
+import { classSchema } from '../config/classSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 

@@ -15,6 +15,8 @@ const ACTOR = { id: 'actor-1', role: 'admin' };
 
 type Fakes = {
   mode?: string;
+  /** Mode returned by the *second* resolve, standing in for a concurrent edit. */
+  modeOnRecheck?: string;
   temporaryCredential?: string;
   delivery?: { emailSent: boolean; undeliveredLinkLive: boolean };
   resolveThrows?: Error;
@@ -25,11 +27,16 @@ type Fakes = {
 const build = (fakes: Fakes = {}) => {
   const audits: any[] = [];
   const authCalls: any[] = [];
+  const locked: string[] = [];
   const cacheCounts = new Map<string, number>();
 
   const mode = fakes.mode ?? 'reset_email_sent';
+  let resolveCalls = 0;
 
   const repository = {
+    lockTarget: async (userId: string) => {
+      locked.push(userId);
+    },
     recordAudit: async (entry: any) => {
       if (fakes.auditThrows) throw fakes.auditThrows;
       audits.push(entry);
@@ -39,13 +46,19 @@ const build = (fakes: Fakes = {}) => {
   const validator = {
     resolveTarget: async () => {
       if (fakes.resolveThrows) throw fakes.resolveThrows;
+      resolveCalls += 1;
+      const effective = resolveCalls > 1 ? (fakes.modeOnRecheck ?? mode) : mode;
       return {
         account: { id: 'user-1', name: 'Target', email: 'target@example.com', status: 'active', roleName: 'parent' },
-        mode,
+        mode: effective,
         temporaryCredential: fakes.temporaryCredential,
       };
     },
-    ensureConfirmationFresh: () => undefined,
+    // The real one throws on a mismatch; this mirrors that so a re-check that
+    // disagrees with the confirmation is refused in the tests too.
+    ensureConfirmationFresh: (expected: string, resolved: string) => {
+      if (expected !== resolved) throw new Error('staleConfirmation');
+    },
   };
 
   const delivery = fakes.delivery ?? { emailSent: true, undeliveredLinkLive: false };
@@ -85,7 +98,7 @@ const build = (fakes: Fakes = {}) => {
   );
   (service as any).at = (key: string) => key;
 
-  return { service, audits, authCalls, cacheCounts };
+  return { service, audits, authCalls, cacheCounts, locked };
 };
 
 const BODY = { reason: 'Parent lost access after a phone change', expectedMode: 'reset_email_sent' as any };
@@ -130,11 +143,13 @@ describe('AccessResetService — truthful delivery', () => {
     expect(audits[0].status).toBe('failure');
   });
 
-  it('lets a failed send be retried immediately instead of holding the cooldown', async () => {
+  it('keeps the window claimed after a failed send, since the claim is never given back', async () => {
     process.env.EMAIL_PROVIDER = 'console';
     const { service, cacheCounts } = build({ delivery: { emailSent: false, undeliveredLinkLive: false } });
     await service.resetAccess('user-1', BODY, ACTOR);
-    expect([...cacheCounts.keys()]).toHaveLength(0);
+    // Reopening it early cannot be done atomically with this cache, and a
+    // wrongly reopened window means a duplicate send. The administrator waits.
+    expect(cacheCounts.has('access-reset:target:user-1')).toBe(true);
   });
 
   it('marks the CIN path not_applicable — it sends nothing', async () => {
@@ -199,11 +214,35 @@ describe('AccessResetService — per-target cooldown', () => {
     expect([...cacheCounts.keys()]).toHaveLength(0);
   });
 
-  it('reopens the window when the send itself threw and nothing left', async () => {
+  it('keeps the window claimed when the send threw, because it cannot know nothing left', async () => {
     process.env.EMAIL_PROVIDER = 'console';
     const { service, cacheCounts } = build({ authThrows: new Error('no email on this account') });
     await expect(service.resetAccess('user-1', BODY, ACTOR)).rejects.toThrow(/no email/);
+    expect(cacheCounts.has('access-reset:target:user-1')).toBe(true);
+  });
+
+  it('does not spend the window when the re-check refuses a stale mail command', async () => {
+    process.env.EMAIL_PROVIDER = 'console';
+    const { service, cacheCounts, authCalls } = build({
+      mode: 'reset_email_sent',
+      modeOnRecheck: 'invitation_resent',
+    });
+    await expect(service.resetAccess('user-1', BODY, ACTOR)).rejects.toThrow(/staleConfirmation/);
     expect([...cacheCounts.keys()]).toHaveLength(0);
+    expect(authCalls).toHaveLength(0);
+  });
+
+  it('does not spend the window when the locked re-check refuses the parent path', async () => {
+    const { service, cacheCounts, authCalls } = build({
+      mode: 'parent_credential_setup',
+      modeOnRecheck: 'invitation_resent',
+      temporaryCredential: 'bb46123',
+    });
+    await expect(
+      service.resetAccess('user-1', { ...BODY, expectedMode: 'parent_credential_setup' as any }, ACTOR),
+    ).rejects.toThrow(/staleConfirmation/);
+    expect([...cacheCounts.keys()]).toHaveLength(0);
+    expect(authCalls).toHaveLength(0);
   });
 
   it('holds the window when the mail left but the audit write failed', async () => {
@@ -229,6 +268,59 @@ describe('AccessResetService — refusals leave nothing behind', () => {
     const { service, audits } = build({ authThrows: new Error('no email on this account') });
     await expect(service.resetAccess('user-1', BODY, ACTOR)).rejects.toThrow(/no email/);
     expect(audits).toHaveLength(0);
+  });
+});
+
+describe('AccessResetService — the account cannot change under the command', () => {
+  it('locks the account before authorizing the parent credential replacement', async () => {
+    const { service, locked } = build({ mode: 'parent_credential_setup', temporaryCredential: 'bb46123' });
+    await service.resetAccess(
+      'user-1',
+      { ...BODY, expectedMode: 'parent_credential_setup' as any },
+      ACTOR,
+    );
+    expect(locked).toEqual(['user-1']);
+  });
+
+  it('refuses when the account changed between the decision and the credential write', async () => {
+    const { service, authCalls, audits } = build({
+      mode: 'parent_credential_setup',
+      modeOnRecheck: 'invitation_resent',
+      temporaryCredential: 'bb46123',
+    });
+    await expect(
+      service.resetAccess('user-1', { ...BODY, expectedMode: 'parent_credential_setup' as any }, ACTOR),
+    ).rejects.toThrow(/staleConfirmation/);
+    expect(authCalls).toHaveLength(0);
+    expect(audits).toHaveLength(0);
+  });
+
+  it('refuses when the account changed between the decision and the send', async () => {
+    process.env.EMAIL_PROVIDER = 'console';
+    const { service, authCalls, audits } = build({
+      mode: 'reset_email_sent',
+      modeOnRecheck: 'invitation_resent',
+    });
+    await expect(service.resetAccess('user-1', BODY, ACTOR)).rejects.toThrow(/staleConfirmation/);
+    expect(authCalls).toHaveLength(0);
+    expect(audits).toHaveLength(0);
+  });
+});
+
+describe('AccessResetService — SendGrid sandbox is not delivery', () => {
+  it('reports sandbox mode as simulated', async () => {
+    process.env.EMAIL_PROVIDER = 'sendgrid';
+    process.env.SENDGRID_SANDBOX_MODE = 'true';
+    const { service } = build();
+    expect((await service.resetAccess('user-1', BODY, ACTOR)).delivery).toBe('simulated');
+    delete process.env.SENDGRID_SANDBOX_MODE;
+  });
+
+  it('reports a live SendGrid send as sent', async () => {
+    process.env.EMAIL_PROVIDER = 'sendgrid';
+    delete process.env.SENDGRID_SANDBOX_MODE;
+    const { service } = build();
+    expect((await service.resetAccess('user-1', BODY, ACTOR)).delivery).toBe('sent');
   });
 });
 

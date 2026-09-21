@@ -7,21 +7,9 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Calendar, CreditCard, Receipt, Hash, CalendarClock } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
-import { useEnum } from '@/hooks/useEnum'
-import { z } from 'zod'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { paymentMethodEnum } from '@/lib/ZodEnum'
-
-const paymentEditSchema = z.object({
-  id: z.string(),
-  paymentMethod: paymentMethodEnum,
-  paymentDate: z.string().min(1, 'Payment date is required'),
-  checkNumber: z.string().max(50, 'Check number too long').optional().nullable(),
-  checkDueDate: z.string().optional().nullable(),
-  transactionRef: z.string().max(100, 'Transaction reference too long').optional().nullable(),
-  receiptNumber: z.string().max(50, 'Receipt number too long').optional().nullable(),
-  notes: z.string().max(1000, 'Notes too long').optional().nullable(),
-});
+import { paymentEditSchema } from '../config/paymentSchemas'
+import { buildPaymentMethodOptionsFor } from '../config/paymentOptions'
 
 const PaymentEditForm = ({ payment }) => {
   const { pop } = useDialog();
@@ -54,7 +42,8 @@ const PaymentEditFormContent = () => {
 
   const paymentMethod = watch('paymentMethod');
 
-  const paymentMethodOptions = useEnum('paymentMethod');
+  // Keeps a stored method selectable while the paperwork is corrected.
+  const paymentMethodOptions = buildPaymentMethodOptionsFor(t, paymentMethod);
 
   return (
     <>

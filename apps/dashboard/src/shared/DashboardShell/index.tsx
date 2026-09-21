@@ -3,45 +3,14 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import {
-  Award,
-  Banknote,
-  BellRing,
-  BookMarked,
-  BookOpen,
-  Bus,
-  CalendarCheck,
-  CalendarDays,
-  CalendarRange,
-  CalendarClock,
-  ClipboardList,
-  FileText,
-  GraduationCap,
-  HandCoins,
-  KeyRound,
-  LayoutDashboard,
-  LayoutGrid,
-  LineChart,
-  LogOut,
-  Megaphone,
-  Receipt,
-  School,
-  Settings,
-  ShieldCheck,
-  ShieldAlert,
-  Tag,
-  TrendingDown,
-  UserCheck,
-  UserCog,
-  UserRound,
-  UsersRound,
-} from 'lucide-react';
+import { LogOut, Settings } from 'lucide-react';
 import { Chatbot } from 'najm-chatbot/react';
 import { SignOutButton, useAuth } from 'najm-auth/client/react';
 import { NSidebar, NSidebarProvider, type NavItem } from 'najm-kit';
 import { clearNajmUiPreferences } from 'najm-kit/server';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 
 const LinkAdapter = ({
   href,
@@ -82,34 +51,34 @@ const createSidebarItems = (t: (key: string) => string, role: string): NavItem[]
   };
 
 return [
-    { id: '/notifications', label: t('notifications.inbox'), icon: BellRing, href: '/notifications' },
+    { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' },
     ...(canUseTeacherRoutes
       ? [
-        { id: '/', label: t('navigation.dashboard'), icon: LayoutDashboard, href: '/' },
-        { id: '/students', label: t('navigation.students'), icon: UserRound, href: '/students' },
+        { id: '/', label: t('navigation.dashboard'), icon: FEATURE_ICONS.dashboard, href: '/' },
+        { id: '/students', label: t('navigation.students'), icon: FEATURE_ICONS.students, href: '/students' },
       ]
       : []),
-    ...(canUseTeacherRoutes ? [{ id: '/parents', label: t('navigation.parents'), icon: UsersRound, href: '/parents' }] : []),
+    ...(canUseTeacherRoutes ? [{ id: '/parents', label: t('navigation.parents'), icon: FEATURE_ICONS.parents, href: '/parents' }] : []),
     ...(isAdmin
       ? [
-        { id: '/teachers', label: t('navigation.teachers'), icon: GraduationCap, href: '/teachers' },
-        { id: '/staff', label: t('navigation.staff'), icon: UserCog, href: '/staff' },
+        { id: '/teachers', label: t('navigation.teachers'), icon: FEATURE_ICONS.teachers, href: '/teachers' },
+        { id: '/staff', label: t('navigation.staff'), icon: FEATURE_ICONS.staff, href: '/staff' },
       ]
       : []),
-    ...(!isAdmin && role === 'teacher' ? [{ id: '/teachers', label: t('navigation.teachers'), icon: GraduationCap, href: '/teachers' }] : []),
+    ...(!isAdmin && role === 'teacher' ? [{ id: '/teachers', label: t('navigation.teachers'), icon: FEATURE_ICONS.teachers, href: '/teachers' }] : []),
     ...(isAdmin
       ? [
         {
           id: 'financial',
           label: t('navigation.financial'),
-          icon: Banknote,
+          icon: FEATURE_ICONS.financial,
           children: [
-            { id: '/fees', label: t('navigation.fees'), icon: Receipt, href: '/fees' },
-            { id: '/expenses', label: t('navigation.expenses'), icon: TrendingDown, href: '/expenses' },
-            { id: '/payroll', label: t('navigation.payroll'), icon: HandCoins, href: '/payroll' },
-            { id: '/fee-types', label: t('navigation.feeTypes'), icon: Tag, href: '/fee-types' },
-            { id: '/reminders', label: t('navigation.reminders'), icon: BellRing, href: '/reminders' },
-            { id: '/financial-operations', label: 'Operations', icon: LineChart, href: '/financial-operations' },
+            { id: '/fees', label: t('navigation.fees'), icon: FEATURE_ICONS.fees, href: '/fees' },
+            { id: '/expenses', label: t('navigation.expenses'), icon: FEATURE_ICONS.expenses, href: '/expenses' },
+            { id: '/payroll', label: t('navigation.payroll'), icon: FEATURE_ICONS.payroll, href: '/payroll' },
+            { id: '/fee-types', label: t('navigation.feeTypes'), icon: FEATURE_ICONS.feeTypes, href: '/fee-types' },
+            { id: '/reminders', label: t('navigation.reminders'), icon: FEATURE_ICONS.reminders, href: '/reminders' },
+            { id: '/financial-operations', label: 'Operations', icon: FEATURE_ICONS.financialOperations, href: '/financial-operations' },
           ],
         },
       ]
@@ -119,38 +88,38 @@ return [
         {
           id: 'attendance',
           label: t('navigation.attendance'),
-          icon: CalendarCheck,
+          icon: FEATURE_ICONS.attendance,
           children: [
-            { id: '/attendance/students', label: t('navigation.studentAttendance'), icon: UserCheck, href: '/attendance/students' },
+            { id: '/attendance/students', label: t('navigation.studentAttendance'), icon: FEATURE_ICONS.studentAttendance, href: '/attendance/students' },
             ...(isAdmin
-              ? [{ id: '/attendance/staff', label: t('navigation.staffAttendance'), icon: UserCog, href: '/attendance/staff' }]
+              ? [{ id: '/attendance/staff', label: t('navigation.staffAttendance'), icon: FEATURE_ICONS.staffAttendance, href: '/attendance/staff' }]
               : []),
           ],
         },
-        { id: '/announcements', label: t('navigation.announcements'), icon: Megaphone, href: '/announcements' },
+        { id: '/announcements', label: t('navigation.announcements'), icon: FEATURE_ICONS.announcements, href: '/announcements' },
         {
           id: 'student-conduct',
-          label: t('navigation.studentConduct'),
-          icon: ShieldCheck,
+          label: t('navigation.studentConductShort'),
+          icon: FEATURE_ICONS.studentConduct,
           children: [
-            { id: '/discipline', label: t('navigation.discipline'), icon: ShieldAlert, href: '/discipline' },
-            { id: '/behavior-rewards', label: t('navigation.behaviorRewards'), icon: Award, href: '/behavior-rewards' },
+            { id: '/discipline', label: t('navigation.discipline'), icon: FEATURE_ICONS.discipline, href: '/discipline' },
+            { id: '/behavior-rewards', label: t('navigation.behaviorRewardsShort'), icon: FEATURE_ICONS.behaviorRewards, href: '/behavior-rewards' },
           ],
         },
-        { id: '/assessments', label: t('navigation.assessments'), icon: ClipboardList, href: '/assessments' },
-        { id: '/exams', label: t('navigation.exams'), icon: FileText, href: '/exams' },
-        { id: '/grades', label: t('navigation.grades'), icon: Award, href: '/grades' },
-        { id: '/calendar', label: t('navigation.calendar'), icon: CalendarDays, href: '/calendar' },
-        { id: '/class-routines', label: tf('navigation.classRoutines', 'Routine'), icon: CalendarClock, href: '/class-routines' },
+        { id: '/assessments', label: t('navigation.assessments'), icon: FEATURE_ICONS.assessments, href: '/assessments' },
+        { id: '/exams', label: t('navigation.exams'), icon: FEATURE_ICONS.exams, href: '/exams' },
+        { id: '/grades', label: t('navigation.grades'), icon: FEATURE_ICONS.grades, href: '/grades' },
+        { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar' },
+        { id: '/class-routines', label: tf('navigation.classRoutines', 'Routine'), icon: FEATURE_ICONS.classRoutines, href: '/class-routines' },
         {
           id: 'academic',
           label: t('navigation.academic'),
-          icon: BookMarked,
+          icon: FEATURE_ICONS.academic,
           children: [
-            { id: '/classes', label: t('navigation.classes'), icon: School, href: '/classes' },
-            { id: '/sections', label: t('navigation.sections'), icon: LayoutGrid, href: '/sections' },
-            { id: '/cycles', label: t('navigation.cycles'), icon: CalendarRange, href: '/cycles' },
-            { id: '/subjects', label: t('navigation.subjects'), icon: BookOpen, href: '/subjects' },
+            { id: '/classes', label: t('navigation.classes'), icon: FEATURE_ICONS.classes, href: '/classes' },
+            { id: '/sections', label: t('navigation.sections'), icon: FEATURE_ICONS.sections, href: '/sections' },
+            { id: '/cycles', label: t('navigation.cycles'), icon: FEATURE_ICONS.cycles, href: '/cycles' },
+            { id: '/subjects', label: t('navigation.subjects'), icon: FEATURE_ICONS.subjects, href: '/subjects' },
           ],
         },
       ]
@@ -160,9 +129,9 @@ return [
         {
           id: 'transport',
           label: t('navigation.transport'),
-          icon: Bus,
+          icon: FEATURE_ICONS.transport,
           children: [
-            { id: '/vehicles', label: t('navigation.vehicles'), icon: Bus, href: '/vehicles' },
+            { id: '/vehicles', label: t('navigation.vehicles'), icon: FEATURE_ICONS.vehicles, href: '/vehicles' },
           ],
         },
       ]
@@ -172,11 +141,11 @@ return [
         {
           id: 'access-control',
           label: tf('navigation.accessControl', 'Access Control'),
-          icon: ShieldCheck,
+          icon: FEATURE_ICONS.accessControl,
           children: [
-            { id: '/roles', label: t('navigation.roles'), icon: ShieldCheck, href: '/roles' },
-            { id: '/permissions', label: tf('navigation.permissions', 'Permissions'), icon: KeyRound, href: '/permissions' },
-            { id: '/users', label: t('navigation.users'), icon: UserCog, href: '/users' },
+            { id: '/roles', label: t('navigation.roles'), icon: FEATURE_ICONS.roles, href: '/roles' },
+            { id: '/permissions', label: tf('navigation.permissions', 'Permissions'), icon: FEATURE_ICONS.permissions, href: '/permissions' },
+            { id: '/users', label: t('navigation.users'), icon: FEATURE_ICONS.users, href: '/users' },
           ],
         },
       ]

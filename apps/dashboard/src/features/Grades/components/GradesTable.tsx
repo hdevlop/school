@@ -18,6 +18,7 @@ import { useGradesTableColumns } from '../hooks/useGradesTableColumns';
 import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 import { useTranslation } from 'najm-i18n/react';
 
 const PASS_THRESHOLD = 50;
@@ -422,7 +423,11 @@ function GradesTable() {
         showViewToggle={false}
         defaultMode='table'
         dynamicHeight={true}
-        noDataText={noDataText}
+        {...tableEmptyProps({
+          feature: 'grades',
+          title: noDataText,
+          description: null,
+        })}
       />
     </div>
   );

@@ -14,6 +14,7 @@ import { useRolesTableFilters } from '../hooks/useRolesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function RolesTable() {
 
   const { t } = useTranslation();
@@ -123,6 +124,11 @@ function RolesTable() {
         {...tableErrorProps(error, roles)}
         renderCard={RoleCard}
         addButtonText={t('roles.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'roles',
+          onCreate: handleAddClick,
+          createLabel: t('roles.dialogs.createButton'),
+        })}
         defaultMode='table'
       />
     </div>

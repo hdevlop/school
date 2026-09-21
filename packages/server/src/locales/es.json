@@ -737,8 +737,10 @@
     "transport": "Transporte",
     "classRoutines": "Horario",
     "studentConduct": "Conducta estudiantil",
+    "studentConductShort": "Conducta",
     "violations": "Infracciones",
-    "behaviorRewards": "Conducta positiva y recompensas"
+    "behaviorRewards": "Conducta positiva y recompensas",
+    "behaviorRewardsShort": "Recompensas"
   },
   "classRoutines": {
     "success": {
@@ -3036,6 +3038,7 @@
     },
     "status": {
       "active": "Activo",
+      "inactive": "Inactivo",
       "maintenance": "Mantenimiento",
       "retired": "Retirado"
     },
@@ -3055,6 +3058,8 @@
     "types": {
       "fullbus": "Autobús completo",
       "minibus": "Minibús",
+      "sedan": "Sedán",
+      "shuttle": "Lanzadera",
       "suv": "SUV",
       "truck": "Camión",
       "van": "Furgoneta"
@@ -3305,6 +3310,124 @@
       "description": "Descripción",
       "floor": "Planta",
       "name": "Nombre"
+    }
+  },
+  "emptyStates": {
+    "filtered": {
+      "title": "Sin resultados",
+      "description": "Prueba a ajustar los filtros."
+    },
+    "students": {
+      "title": "Aún no hay estudiantes",
+      "description": "Agrega tu primer estudiante para empezar."
+    },
+    "parents": {
+      "title": "Aún no hay padres",
+      "description": "Agrega tu primer padre para empezar."
+    },
+    "teachers": {
+      "title": "Aún no hay profesores",
+      "description": "Agrega tu primer profesor para empezar."
+    },
+    "staff": {
+      "title": "Aún no hay personal",
+      "description": "Agrega tu primer miembro del personal para empezar."
+    },
+    "users": {
+      "title": "Aún no hay cuentas de usuario",
+      "description": "Agrega tu primera cuenta de usuario para empezar."
+    },
+    "roles": {
+      "title": "Aún no hay roles",
+      "description": "Agrega tu primer rol para empezar."
+    },
+    "permissions": {
+      "title": "Aún no hay permisos",
+      "description": "Agrega tu primer permiso para empezar."
+    },
+    "classes": {
+      "title": "Aún no hay clases",
+      "description": "Agrega tu primera clase para empezar."
+    },
+    "sections": {
+      "title": "Aún no hay secciones",
+      "description": "Agrega tu primera sección para empezar."
+    },
+    "cycles": {
+      "title": "Aún no hay ciclos",
+      "description": "Agrega tu primer ciclo para empezar."
+    },
+    "subjects": {
+      "title": "Aún no hay asignaturas",
+      "description": "Agrega tu primera asignatura para empezar."
+    },
+    "assessments": {
+      "title": "Aún no hay evaluaciones",
+      "description": "Agrega tu primera evaluación para empezar."
+    },
+    "exams": {
+      "title": "Aún no hay exámenes",
+      "description": "Agrega tu primer examen para empezar."
+    },
+    "grades": {
+      "title": "No hay calificaciones registradas",
+      "description": "Las calificaciones aparecerán aquí cuando se registren."
+    },
+    "announcements": {
+      "title": "Aún no hay anuncios",
+      "description": "Publica tu primer anuncio para empezar."
+    },
+    "discipline": {
+      "title": "No hay registros de disciplina",
+      "description": "Agrega tu primer registro de disciplina para empezar."
+    },
+    "behaviorRewards": {
+      "title": "Aún no hay registros de conducta",
+      "description": "Agrega tu primer registro de conducta o recompensa para empezar."
+    },
+    "studentAttendance": {
+      "title": "No hay estudiantes que registrar",
+      "description": "Los estudiantes aparecerán aquí al seleccionar una clase y una sección."
+    },
+    "staffAttendance": {
+      "title": "No hay personal que registrar",
+      "description": "El personal activo aparecerá aquí cuando se agregue."
+    },
+    "fees": {
+      "title": "Aún no hay cuotas",
+      "description": "Asigna tu primera cuota para empezar."
+    },
+    "feeTypes": {
+      "title": "Aún no hay tipos de cuota",
+      "description": "Agrega tu primer tipo de cuota para empezar."
+    },
+    "expenses": {
+      "title": "Aún no hay gastos",
+      "description": "Registra tu primer gasto para empezar."
+    },
+    "payroll": {
+      "title": "No hay registros de nómina",
+      "description": "Los registros de nómina aparecerán aquí cuando se genere un periodo."
+    },
+    "payments": {
+      "title": "Aún no hay pagos",
+      "description": "Los pagos aparecerán aquí cuando se abone una cuota."
+    },
+    "installments": {
+      "title": "No hay cuotas programadas",
+      "description": "Las cuotas aparecerán aquí cuando se cree un plan de pago."
+    },
+    "vehicles": {
+      "title": "Aún no hay vehículos",
+      "description": "Agrega tu primer vehículo para empezar."
+    },
+    "drivers": {
+      "title": "Aún no hay conductores",
+      "description": "Agrega tu primer conductor para empezar."
+    },
+    "documents": {
+      "title": "No hay documentos subidos",
+      "description": "Sube un documento para empezar."
     }
   }
 }

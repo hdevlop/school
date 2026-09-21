@@ -1,3 +1,5 @@
+import { localDateInput } from 'najm-kit/format';
+
 export function getCurrentAcademicYear(now: Date = new Date()): string {
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -13,4 +15,11 @@ export function getAcademicYearMonths(year: string): string[] {
     months.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`);
   }
   return months;
+}
+
+export function shiftLocalISODate(value: string, days: number): string {
+  const [year, month, day] = value.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + days);
+  return localDateInput(date);
 }

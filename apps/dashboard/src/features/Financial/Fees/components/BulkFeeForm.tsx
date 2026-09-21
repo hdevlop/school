@@ -7,7 +7,8 @@ import { useEffect, useMemo } from 'react'
 import { IdCard, User, DollarSign, CalendarClock, CalendarDays, Percent, Wallet } from 'lucide-react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
-import { bulkFeeFormSchema } from '@/lib/validations'
+import { bulkFeeFormSchema } from '../config/feeSchemas'
+import { buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from 'najm-kit'
 import { getFeeTypeDisplayName, injectStudentIdToFees } from '../utils/feeUtils'
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
@@ -15,7 +16,6 @@ import { calculateFeeAmounts, calculateTotalFees, buildInstallmentsPreview } fro
 import { useAddFees } from '../hooks/useAddFees'
 import { DynamicArray } from 'najm-kit';
 
-import { useEnum } from '@/hooks/useEnum'
 import { usePrefix } from 'najm-kit';
 
 import InstallmentPreviewTable from './InstallmentPreviewTable'
@@ -104,7 +104,7 @@ const FeeItem = ({
        return buildInstallmentsPreview(netAmount, schedule || 'monthly', calculationContext)
     }, [calculationContext, netAmount, schedule, selectedFeeType])
 
-    const scheduleOptions = useEnum('schedule')
+    const scheduleOptions = buildScheduleOptions(t)
 
     return (
        <div className='flex flex-col gap-3'>

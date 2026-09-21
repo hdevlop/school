@@ -8,7 +8,8 @@ import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, CreditCar
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { driverSchema } from '@/lib/validations'
+import { driverSchema } from '../config/driverSchemas'
+import { DRIVER_LICENSE_TYPE_OPTIONS, buildDriverStatusOptions } from '../config/driverOptions'
 import { buildFill, isDevFill } from '@/lib/devFill'
 
 const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
@@ -62,20 +63,9 @@ const DriverFormContent = () => {
       { value: 'F', label: t('common.female') },
    ]
 
-   const licenseTypeOptions = [
-      { value: 'A', label: 'A (Motorcycle)' },
-      { value: 'B', label: 'B (Car)' },
-      { value: 'C', label: 'C (Truck)' },
-      { value: 'D', label: 'D (Bus)' },
-      { value: 'E', label: 'E (Trailer)' },
-   ]
+   const licenseTypeOptions = DRIVER_LICENSE_TYPE_OPTIONS
 
-   const statusOptions = [
-      { value: 'active', label: t('drivers.status.active') },
-      { value: 'inactive', label: t('drivers.status.inactive') },
-      { value: 'on_leave', label: t('drivers.status.onLeave') },
-      { value: 'suspended', label: t('drivers.status.suspended') },
-   ]
+   const statusOptions = buildDriverStatusOptions(t)
 
    return (
       <>

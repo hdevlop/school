@@ -9,7 +9,7 @@ import { FormInput } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location';
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { locationValueSchema } from '@/lib/validations'
+import { locationValueSchema } from '@/shared/forms/commonSchemas'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { useTranslation } from 'najm-i18n/react';
 

@@ -12,6 +12,7 @@ import { useCyclesTableColumns } from '../hooks/useCyclesTableColumns';
 import { useCyclesTableFilters } from '../hooks/useCyclesTableFilters';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 const sortCycles = (cycles = []) => [...cycles].sort((a, b) => {
   const order = Number(a.sortOrder || 0) - Number(b.sortOrder || 0);
   return order || String(a.name || '').localeCompare(String(b.name || ''));
@@ -98,6 +99,11 @@ function CyclesTable() {
         {...tableErrorProps(error, orderedCycles)}
         renderCard={CycleCard}
         addButtonText={t('cycles.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'cycles',
+          onCreate: handleAddClick,
+          createLabel: t('cycles.dialogs.createButton'),
+        })}
         defaultMode="table"
       />
     </div>

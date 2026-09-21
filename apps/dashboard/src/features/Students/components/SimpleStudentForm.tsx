@@ -8,9 +8,9 @@ import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { studentSchema } from '@/lib/validations'
+import { studentSchema } from '../config/studentSchemas'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { useEnum } from '@/hooks/useEnum'
+import { buildGenderOptions } from '@/shared/forms/genderOptions'
 
 const getAcademicYearStartDate = (academicYear?: string | null, referenceDate?: string | null) => {
   const startYear = academicYear?.match(/^\d{4}/)?.[0]
@@ -127,7 +127,7 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
     activeForm.setValue(fieldName('sectionId'), '');
   }, [activeForm, fieldName, sectionOptions, selectedSectionId]);
 
-  const genderOptions = useEnum('gender')
+  const genderOptions = buildGenderOptions(t)
 
   const defaultImage = gender === 'M'
     ? '/images/student_male.png' : '/images/student_female.png'

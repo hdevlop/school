@@ -7,7 +7,8 @@ import { NFormSectionHeader as FormHeader } from 'najm-kit';
 import React from 'react'
 import { Car, Hash, Calendar, DollarSign, Gauge, Tag, Truck, Users, Activity, User, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { vehicleSchema } from '@/lib/validations'
+import { vehicleSchema } from '../config/vehicleSchemas'
+import { buildVehicleStatusOptions, buildVehicleTypeOptions } from '../config/vehicleOptions'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 
@@ -47,19 +48,9 @@ const VehicleFormContent = ({ drivers }) => {
 
    const { t } = useTranslation();
 
-   const vehicleTypeOptions = [
-      { value: 'fullbus', label: t('vehicles.types.fullbus') },
-      { value: 'minibus', label: t('vehicles.types.minibus') },
-      { value: 'van', label: t('vehicles.types.van') },
-      { value: 'truck', label: t('vehicles.types.truck') },
-      { value: 'suv', label: t('vehicles.types.suv') },
-   ]
+   const vehicleTypeOptions = buildVehicleTypeOptions(t)
 
-   const statusOptions = [
-      { value: 'active', label: t('vehicles.status.active') },
-      { value: 'maintenance', label: t('vehicles.status.maintenance') },
-      { value: 'retired', label: t('vehicles.status.retired') },
-   ]
+   const statusOptions = buildVehicleStatusOptions(t)
 
    const driverOptions = drivers.map((driver) => ({
       value: driver.id,

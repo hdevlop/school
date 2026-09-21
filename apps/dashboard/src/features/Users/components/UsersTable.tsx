@@ -14,6 +14,7 @@ import { useUsersTableFilters } from '../hooks/useUsersTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function UsersTable() {
 
   const { t } = useTranslation();
@@ -142,6 +143,11 @@ function UsersTable() {
         {...tableErrorProps(error, users)}
         renderCard={UserCard}
         addButtonText={t('users.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'users',
+          onCreate: handleAddClick,
+          createLabel: t('users.dialogs.createButton'),
+        })}
         defaultMode='cards'
       />
     </div>

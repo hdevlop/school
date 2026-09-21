@@ -7,8 +7,9 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Layers, Calendar, CreditCard, CalendarClock, Receipt, Hash, Activity } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
-import { useEnum } from '@/hooks/useEnum'
-import { expenseSchema } from '@/lib/validations'
+import { expenseSchema } from '../config/expenseSchemas'
+import { buildExpenseCategoryOptions, buildExpenseStatusOptions } from '../config/expenseOptions'
+import { buildPaymentMethodOptions } from '@/features/Financial/Payment/config/paymentOptions'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useActiveForm } from '@/hooks/useActiveForm'
 
@@ -55,9 +56,9 @@ const ExpenseFormContent = ({ isEdit }) => {
    const paymentMethod = watch('paymentMethod');
 
    // Salaries are recorded via Payroll (payslips), not as expenses — keep them out to avoid double-counting.
-   const expenseCategoryOptions = useEnum('expenseCategory', { filter: (v) => v !== 'salary' });
-   const paymentMethodOptions = useEnum('paymentMethod');
-   const statusOptions = useEnum('expenseStatus');
+   const expenseCategoryOptions = buildExpenseCategoryOptions(t);
+   const paymentMethodOptions = buildPaymentMethodOptions(t);
+   const statusOptions = buildExpenseStatusOptions(t);
 
    return (
       <>

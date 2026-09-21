@@ -16,42 +16,15 @@ import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useDialog } from 'najm-kit';
-import { eventSchema } from '@/lib/validations';
+import { eventSchema } from '../config/eventSchemas';
 import { buildFill, isDevFill } from '@/lib/devFill';
-import { useEnum } from '@/hooks/useEnum';
+import {
+  buildEventStatusOptions,
+  buildEventTypeOptions,
+  buildEventVisibilityOptions,
+} from '../config/eventOptions';
 import { useClasses } from '@/hooks/useClasses';
 import { useTranslation } from 'najm-i18n/react';
-
-const eventTypeLabels = {
-  academic: 'Academic',
-  sports: 'Sports',
-  cultural: 'Cultural',
-  holiday: 'Holiday',
-  exam: 'Exam',
-  meeting: 'Meeting',
-  workshop: 'Workshop',
-  fieldtrip: 'Field Trip',
-  ceremony: 'Ceremony',
-  conference: 'Conference',
-  other: 'Other',
-};
-
-const statusLabels = {
-  scheduled: 'Scheduled',
-  ongoing: 'Ongoing',
-  completed: 'Completed',
-  cancelled: 'Cancelled',
-  postponed: 'Postponed',
-};
-
-const visibilityLabels = {
-  public: 'Public',
-  private: 'Private',
-  teachers: 'Teachers',
-  students: 'Students',
-  parents: 'Parents',
-  staff: 'Staff',
-};
 
 const toDateInput = (value?: string | Date | null) => {
   if (!value) return undefined;
@@ -66,9 +39,9 @@ const EventForm = ({ event = null, initialDate = null }) => {
   const { pop } = useDialog();
   const { classes, isClassesLoading } = useClasses();
 
-  const typeOptions = useEnum('eventType', { customLabels: eventTypeLabels });
-  const statusOptions = useEnum('eventStatus', { customLabels: statusLabels });
-  const visibilityOptions = useEnum('eventVisibility', { customLabels: visibilityLabels });
+  const typeOptions = buildEventTypeOptions(t);
+  const statusOptions = buildEventStatusOptions(t);
+  const visibilityOptions = buildEventVisibilityOptions(t);
 
   const initialClassIds = Array.isArray(event?.classIds) && event.classIds.length > 0
     ? event.classIds

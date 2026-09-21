@@ -12,6 +12,7 @@ import { useFeeTypesTableColumns } from '../hooks/useFeeTypesTableColumns';
 import { useFeeTypesTableFilters } from '../hooks/useFeeTypesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function FeeTypesTable() {
 
   const { t } = useTranslation();
@@ -105,6 +106,11 @@ function FeeTypesTable() {
         loading={isFeeTypesLoading}
         renderCard={FeeTypeCard}
         addButtonText={t('feeTypes.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'feeTypes',
+          onCreate: handleAddClick,
+          createLabel: t('feeTypes.dialogs.createButton'),
+        })}
         defaultMode='table'
       />
     </div>

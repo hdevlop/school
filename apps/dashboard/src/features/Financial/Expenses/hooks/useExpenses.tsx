@@ -19,7 +19,6 @@ export const useExpenses = (options?) => {
   const { mutateAsync: createExpense, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateExpense, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteExpense, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteExpenses, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -39,7 +38,6 @@ export const useExpenses = (options?) => {
     createExpense,
     updateExpense,
     deleteExpense,
-    bulkDeleteExpenses,
 
     // Loading States
     isExpensesLoading,
@@ -47,6 +45,5 @@ export const useExpenses = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };

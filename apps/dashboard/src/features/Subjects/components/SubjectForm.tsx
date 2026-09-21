@@ -7,7 +7,7 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { BookOpen, Hash, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { subjectSchema } from '@/lib/validations'
+import { subjectSchema } from '../config/subjectSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 

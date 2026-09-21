@@ -9,10 +9,13 @@ import { UsersIcon } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { NSkeletonDonut } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import DashboardEmptyState from '../DashboardEmptyState';
 
 const StudentsChart = ({className=''}) => {
    const { t } = useTranslation();
    const { data: studentData, isLoading, error, refetch } = useStudentsByGender();
+   const rows = studentData || [];
+   const noData = rows.length === 0 || rows.every((row: { value?: number }) => Number(row.value ?? 0) === 0);
 
    return (
        <NCard
@@ -21,14 +24,18 @@ const StudentsChart = ({className=''}) => {
           className={cn('flex flex-col h-full',className)}
          loading={isLoading}
          error={error}
-         noData={!studentData || studentData.length === 0}
          onRetry={() => refetch()}
          skeleton={<NSkeletonDonut />}
+         classNames={{ content: 'flex-1 min-h-0' }}
       >
-         <div className="flex flex-col h-full gap-1 min-h-0">
-            <DonutChart data={studentData || []} />
-            <Legend data={studentData || []} />
-         </div>
+         {noData ? (
+            <DashboardEmptyState icon={UsersIcon} title={t('common.feedback.emptyTitle')} />
+         ) : (
+            <div className="flex flex-col h-full gap-1 min-h-0">
+               <DonutChart data={rows} />
+               <Legend data={rows} />
+            </div>
+         )}
       </NCard>
    );
 };

@@ -16,6 +16,7 @@ import { useDisciplineTableFilters } from '../hooks/useDisciplineTableFilters';
 import type { DisciplineIncident } from '../disciplineConstants';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 export default function DisciplineTable() {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -125,6 +126,11 @@ export default function DisciplineTable() {
         }}
         renderCard={DisciplineCard as any}
         addButtonText={t('discipline.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'discipline',
+          onCreate: handleCreate,
+          createLabel: t('discipline.dialogs.createButton'),
+        })}
         defaultMode="table"
         defaultSorting={[{ id: 'incidentAt', desc: true }]}
         dynamicHeight

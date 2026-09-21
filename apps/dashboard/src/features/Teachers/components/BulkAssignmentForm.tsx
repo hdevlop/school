@@ -7,7 +7,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
-import { assignmentsSchema } from '@/lib/validations'
+import { assignmentsSchema } from '../config/teacherSchemas'
 
 // ==================== COMPONENTS ====================
 

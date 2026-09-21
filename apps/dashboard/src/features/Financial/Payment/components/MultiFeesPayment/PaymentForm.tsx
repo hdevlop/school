@@ -5,7 +5,7 @@ import { NForm, useDialog } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { DollarSign, CreditCard, Calendar, Hash, CalendarClock, FileText } from 'lucide-react';
 
-import { feePaymentSchema } from '@/lib/validations';
+import { feePaymentSchema } from '../../config/paymentSchemas';
 import { useActiveForm } from '@/hooks/useActiveForm';
 import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';

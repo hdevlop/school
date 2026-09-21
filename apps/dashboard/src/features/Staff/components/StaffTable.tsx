@@ -9,6 +9,7 @@ import { useStaff } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
 import { formatAssignments } from '../utils/staffAssignments';
@@ -323,6 +324,11 @@ const StaffTable = () => {
         showViewToggle={true}
         renderCard={StaffCard}
         addButtonText={t('staff.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'staff',
+          onCreate: handleAdd,
+          createLabel: t('staff.dialogs.createButton'),
+        })}
         defaultMode='cards'
         showColumnVisibility={true}
         loadingText={t('staff.loading')}

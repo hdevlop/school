@@ -19,7 +19,6 @@ export const useRoles = (options?) => {
   const { mutateAsync: createRole, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateRole, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteRole, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteRoles, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -39,7 +38,6 @@ export const useRoles = (options?) => {
     createRole,
     updateRole,
     deleteRole,
-    bulkDeleteRoles,
 
     // Loading States
     isRolesLoading,
@@ -47,6 +45,5 @@ export const useRoles = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };

@@ -1,3 +1,4 @@
+import type { PaymentMethod } from '@sms/contracts';
 import { create } from 'zustand';
 
 interface Installment {
@@ -22,7 +23,7 @@ interface Fee {
 
 interface PaymentDetails {
   amount: string | number;
-  paymentMethod: string;
+  paymentMethod: PaymentMethod;
   paymentDate: string;
   transactionRef?: string;
   checkNumber?: string;

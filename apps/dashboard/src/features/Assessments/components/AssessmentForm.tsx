@@ -10,10 +10,10 @@ import {
   Calendar, Clock, Award, Activity,
 } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { assessmentSchema } from '@/lib/validations'
+import { assessmentSchema } from '../config/assessmentSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
-import { useEnum } from '@/hooks/useEnum'
+import { buildAssessmentStatusOptions, buildAssessmentTypeOptions } from '../config/assessmentOptions'
 import { useClasses } from '@/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects'
@@ -94,8 +94,8 @@ const AssessmentForm = ({ assessment = null }) => {
   const { subjects, isSubjectsLoading } = useSubjects();
   const { teachers, isTeachersLoading } = useTeachers();
 
-  const typeOptions = useEnum('assessmentType');
-  const statusOptions = useEnum('assessmentStatus');
+  const typeOptions = buildAssessmentTypeOptions(t);
+  const statusOptions = buildAssessmentStatusOptions(t);
 
   const initialClassId = assessment?.classId || assessment?.class?.id || '';
   const initialSectionId = assessment?.sectionId || assessment?.section?.id || '';

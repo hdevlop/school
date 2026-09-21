@@ -6,6 +6,7 @@ import { cn } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStudentAttendanceMonthly } from '../../hooks/useDashboardHooks';
+import DashboardEmptyState from '../DashboardEmptyState';
 
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 const EXCLUDED_MONTH_KEYS = new Set(['jul', 'aug']);
@@ -92,51 +93,55 @@ const StudentAttendanceChart = ({ className }: { className?: string }) => {
       icon={ClipboardCheck}
       loading={isLoading}
       error={error}
-      noData={noData}
       onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
+      classNames={{ content: 'flex-1 min-h-0' }}
     >
-      <div className="flex flex-col flex-1 min-h-0">
-        <Legend t={t} />
-        <div className="flex-1 min-h-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: '#6b7280', fontSize: 12 }}
-                dy={10}
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: '#6b7280', fontSize: 12 }}
-                dx={-10}
-              />
-              <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} t={t} />} />
-              <Line
-                type="monotone"
-                dataKey="absent"
-                stroke={ABSENT_COLOR}
-                strokeWidth={3}
-                dot={false}
-                name={t('dashboard.attendance.absent')}
-              />
-              <Line
-                type="monotone"
-                dataKey="late"
-                stroke={LATE_COLOR}
-                strokeWidth={3}
-                strokeDasharray="5 5"
-                dot={false}
-                name={t('dashboard.attendance.late')}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+      {noData ? (
+        <DashboardEmptyState icon={ClipboardCheck} title={t('common.feedback.emptyTitle')} />
+      ) : (
+        <div className="flex flex-col flex-1 min-h-0">
+          <Legend t={t} />
+          <div className="flex-1 min-h-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={data} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  dy={10}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  dx={-10}
+                />
+                <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} t={t} />} />
+                <Line
+                  type="monotone"
+                  dataKey="absent"
+                  stroke={ABSENT_COLOR}
+                  strokeWidth={3}
+                  dot={false}
+                  name={t('dashboard.attendance.absent')}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="late"
+                  stroke={LATE_COLOR}
+                  strokeWidth={3}
+                  strokeDasharray="5 5"
+                  dot={false}
+                  name={t('dashboard.attendance.late')}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
+      )}
     </NCard>
   );
 };

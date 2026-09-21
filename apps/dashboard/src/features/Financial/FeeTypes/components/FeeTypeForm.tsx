@@ -8,9 +8,9 @@ import React from 'react'
 import { DollarSign, Tag, FileText, Layers, CreditCard } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
-import { feeTypeSchema } from '@/lib/validations'
+import { feeTypeSchema } from '../config/feeTypeSchemas'
+import { buildFeeCategoryOptionsFor, buildPaymentTypeOptions } from '../config/feeTypeOptions'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { useEnum } from '@/hooks/useEnum'
 
 const FeeTypeForm = ({ feeType = null }) => {
 
@@ -26,8 +26,10 @@ const FeeTypeForm = ({ feeType = null }) => {
       paymentType: feeType?.paymentType || 'recurring',
    }
 
-   const categoryOptions = useEnum('feeCategory')
-   const paymentTypeOptions = useEnum('paymentType')
+   // A fee type's category is free text, so whatever this record already
+   // carries stays selectable even when it is not on the shortlist.
+   const categoryOptions = buildFeeCategoryOptionsFor(t, feeType?.category)
+   const paymentTypeOptions = buildPaymentTypeOptions(t)
 
 
    const handleSubmit = async (feeTypeData) => {

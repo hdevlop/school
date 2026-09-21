@@ -6,6 +6,7 @@ import { NSkeletonChart } from 'najm-kit';
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaffAttendanceMonthly } from '../../hooks/useDashboardHooks';
+import DashboardEmptyState from '../DashboardEmptyState';
 
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 const EXCLUDED_MONTH_KEYS = new Set(['jul', 'aug']);
@@ -83,42 +84,48 @@ const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className }) =>
       className={cn('flex w-full h-full', className)}
       loading={isLoading}
       error={error}
-      noData={noData}
       onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
+      classNames={{ content: 'flex-1 min-h-0' }}
     >
-      <div className="flex items-center gap-6 mb-4">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: ABSENT_COLOR }} />
-          <span className="text-sm text-gray-600">{t('dashboard.attendance.absent')}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: LATE_COLOR }} />
-          <span className="text-sm text-gray-600">{t('dashboard.attendance.late')}</span>
-        </div>
-      </div>
+      {noData ? (
+        <DashboardEmptyState icon={UserCheck} title={t('common.feedback.emptyTitle')} />
+      ) : (
+        <>
+          <div className="flex items-center gap-6 mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: ABSENT_COLOR }} />
+              <span className="text-sm text-gray-600">{t('dashboard.attendance.absent')}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: LATE_COLOR }} />
+              <span className="text-sm text-gray-600">{t('dashboard.attendance.late')}</span>
+            </div>
+          </div>
 
-      <div className="flex-1 min-h-0">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-            <XAxis
-              dataKey="month"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#9ca3af', fontSize: 12 }}
-            />
-            <YAxis
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: '#9ca3af', fontSize: 12 }}
-            />
-            <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={todayLate} t={t} />} />
-            <Bar dataKey="absent" name={t('dashboard.attendance.absent')} fill={ABSENT_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
-            <Bar dataKey="late" name={t('dashboard.attendance.late')} fill={LATE_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+          <div className="flex-1 min-h-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={data} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <XAxis
+                  dataKey="month"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#9ca3af', fontSize: 12 }}
+                />
+                <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={todayLate} t={t} />} />
+                <Bar dataKey="absent" name={t('dashboard.attendance.absent')} fill={ABSENT_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
+                <Bar dataKey="late" name={t('dashboard.attendance.late')} fill={LATE_COLOR} radius={[6, 6, 0, 0]} maxBarSize={14} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </>
+      )}
     </NCard>
   );
 };

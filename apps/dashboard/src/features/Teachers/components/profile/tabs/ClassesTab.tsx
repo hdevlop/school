@@ -7,6 +7,7 @@ import { getTeacherClassesApi } from '@/services/teacherApi';
 import { BookOpen, GraduationCap, Users } from 'lucide-react';
 import PageLoadingState from '@/shared/PageLoadingState';
 import { useTranslation } from 'najm-i18n/react';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface ClassesTabProps {
   teacherId: string;
@@ -125,7 +126,11 @@ const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
         showAddButton={false}
         showViewToggle={false}
         showColumnVisibility={false}
-        noDataText="No classes assigned"
+        {...tableEmptyProps({
+          feature: 'classes',
+          title: "No classes assigned",
+          description: null,
+        })}
       />
     </div>
   );

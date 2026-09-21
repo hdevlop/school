@@ -7,6 +7,7 @@ import { useGrades, useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { Award, BookOpenCheck, GraduationCap, Save, TrendingUp } from 'lucide-react';
 import { NativeProfileSelect } from '../NativeProfileSelect';
 import { useTranslation } from 'najm-i18n/react';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 const pctColor = (pct?: number | null) => {
   if (pct == null) return 'text-slate-400';
@@ -258,7 +259,11 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
         showColumnVisibility={false}
         showCheckbox={false}
         loadingText={t('students.profile.gradeDetails.loading')}
-        noDataText={t('students.profile.gradeDetails.noneRecorded')}
+        {...tableEmptyProps({
+          feature: 'grades',
+          title: t('students.profile.gradeDetails.noneRecorded'),
+          description: null,
+        })}
         pagination={{ pageIndex: 0, pageSize: Math.max(rows.length, 1) }}
         showPagination={false}
         dynamicHeight={false}

@@ -19,6 +19,7 @@ import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useState } from 'react';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function StudentsTable() {
 
   const { t } = useTranslation();
@@ -159,6 +160,11 @@ function StudentsTable() {
         loadingText={t('common.loading')}
         renderCard={StudentCard}
         addButtonText={t('students.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'students',
+          onCreate: handleAddClick,
+          createLabel: t('students.dialogs.createButton'),
+        })}
         defaultMode='cards'
         dynamicHeight={true}
       />

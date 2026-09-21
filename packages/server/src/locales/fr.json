@@ -1115,8 +1115,10 @@
     "sections": "Sections",
     "classRoutines": "Planning",
     "studentConduct": "Conduite des élèves",
+    "studentConductShort": "Conduite",
     "violations": "Infractions",
-    "behaviorRewards": "Comportement positif et récompenses"
+    "behaviorRewards": "Comportement positif et récompenses",
+    "behaviorRewardsShort": "Récompenses"
   },
   "classRoutines": {
     "success": {
@@ -3213,6 +3215,7 @@
     },
     "status": {
       "active": "Actif",
+      "inactive": "Inactif",
       "maintenance": "Maintenance",
       "retired": "Retiré"
     },
@@ -3232,6 +3235,8 @@
     "types": {
       "fullbus": "Bus complet",
       "minibus": "Minibus",
+      "sedan": "Berline",
+      "shuttle": "Navette",
       "suv": "SUV",
       "truck": "Camion",
       "van": "Fourgon"
@@ -3482,6 +3487,124 @@
       "description": "Description",
       "floor": "Étage",
       "name": "Nom"
+    }
+  },
+  "emptyStates": {
+    "filtered": {
+      "title": "Aucun résultat",
+      "description": "Essayez d’ajuster vos filtres."
+    },
+    "students": {
+      "title": "Aucun élève",
+      "description": "Ajoutez votre premier élève pour commencer."
+    },
+    "parents": {
+      "title": "Aucun parent",
+      "description": "Ajoutez votre premier parent pour commencer."
+    },
+    "teachers": {
+      "title": "Aucun enseignant",
+      "description": "Ajoutez votre premier enseignant pour commencer."
+    },
+    "staff": {
+      "title": "Aucun membre du personnel",
+      "description": "Ajoutez votre premier membre du personnel pour commencer."
+    },
+    "users": {
+      "title": "Aucun compte utilisateur",
+      "description": "Ajoutez votre premier compte utilisateur pour commencer."
+    },
+    "roles": {
+      "title": "Aucun rôle",
+      "description": "Ajoutez votre premier rôle pour commencer."
+    },
+    "permissions": {
+      "title": "Aucune permission",
+      "description": "Ajoutez votre première permission pour commencer."
+    },
+    "classes": {
+      "title": "Aucune classe",
+      "description": "Ajoutez votre première classe pour commencer."
+    },
+    "sections": {
+      "title": "Aucun groupe",
+      "description": "Ajoutez votre premier groupe pour commencer."
+    },
+    "cycles": {
+      "title": "Aucun cycle",
+      "description": "Ajoutez votre premier cycle pour commencer."
+    },
+    "subjects": {
+      "title": "Aucune matière",
+      "description": "Ajoutez votre première matière pour commencer."
+    },
+    "assessments": {
+      "title": "Aucune évaluation",
+      "description": "Ajoutez votre première évaluation pour commencer."
+    },
+    "exams": {
+      "title": "Aucun examen",
+      "description": "Ajoutez votre premier examen pour commencer."
+    },
+    "grades": {
+      "title": "Aucune note enregistrée",
+      "description": "Les notes apparaîtront ici une fois enregistrées."
+    },
+    "announcements": {
+      "title": "Aucune annonce",
+      "description": "Publiez votre première annonce pour commencer."
+    },
+    "discipline": {
+      "title": "Aucun incident disciplinaire",
+      "description": "Ajoutez votre premier incident pour commencer."
+    },
+    "behaviorRewards": {
+      "title": "Aucun comportement enregistré",
+      "description": "Ajoutez votre premier comportement ou récompense pour commencer."
+    },
+    "studentAttendance": {
+      "title": "Aucun élève à pointer",
+      "description": "Les élèves apparaîtront ici une fois une classe et un groupe sélectionnés."
+    },
+    "staffAttendance": {
+      "title": "Aucun membre du personnel à pointer",
+      "description": "Les membres actifs du personnel apparaîtront ici une fois ajoutés."
+    },
+    "fees": {
+      "title": "Aucun frais",
+      "description": "Attribuez votre premier frais pour commencer."
+    },
+    "feeTypes": {
+      "title": "Aucun type de frais",
+      "description": "Ajoutez votre premier type de frais pour commencer."
+    },
+    "expenses": {
+      "title": "Aucune dépense",
+      "description": "Enregistrez votre première dépense pour commencer."
+    },
+    "payroll": {
+      "title": "Aucune fiche de paie",
+      "description": "Les fiches de paie apparaîtront ici une fois une période générée."
+    },
+    "payments": {
+      "title": "Aucun paiement",
+      "description": "Les paiements apparaîtront ici une fois un frais réglé."
+    },
+    "installments": {
+      "title": "Aucune échéance",
+      "description": "Les échéances apparaîtront ici une fois un échéancier créé."
+    },
+    "vehicles": {
+      "title": "Aucun véhicule",
+      "description": "Ajoutez votre premier véhicule pour commencer."
+    },
+    "drivers": {
+      "title": "Aucun chauffeur",
+      "description": "Ajoutez votre premier chauffeur pour commencer."
+    },
+    "documents": {
+      "title": "Aucun document téléversé",
+      "description": "Téléversez un document pour commencer."
     }
   }
 }

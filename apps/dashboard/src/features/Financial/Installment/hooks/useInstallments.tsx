@@ -19,7 +19,6 @@ export const useInstallments = (options) => {
   const { mutateAsync: createInstallment, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateInstallment, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteInstallment, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteInstallments, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -39,7 +38,6 @@ export const useInstallments = (options) => {
     createInstallment,
     updateInstallment,
     deleteInstallment,
-    bulkDeleteInstallments,
 
     // Loading States
     isInstallmentsLoading,
@@ -47,6 +45,5 @@ export const useInstallments = (options) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };

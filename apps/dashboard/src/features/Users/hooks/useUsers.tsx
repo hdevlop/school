@@ -22,7 +22,6 @@ export const useUsers = (options?) => {
   const { mutateAsync: createUser, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateUser, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteUser, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteUsers, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -42,7 +41,6 @@ export const useUsers = (options?) => {
     createUser,
     updateUser,
     deleteUser,
-    bulkDeleteUsers,
 
     // Loading States
     isUsersLoading,
@@ -50,7 +48,6 @@ export const useUsers = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };
 

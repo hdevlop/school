@@ -14,12 +14,13 @@ import { useStaffRoles } from '@/features/Staff/hooks/useStaffRoles';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
-import { toLocalISODate } from '@/lib/localDate';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
+import { localDateInput } from 'najm-kit/format';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
-  const [selectedDate, setSelectedDate] = useState(toLocalISODate);
+  const [selectedDate, setSelectedDate] = useState(localDateInput);
   const { staff, error: staffError, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
   const { activeStaffRoles, isStaffRolesLoading } = useStaffRoles({ activeOnly: true });
   const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading } = useStaffAttendance({ date: selectedDate });
@@ -84,6 +85,7 @@ function StaffAttendanceTable() {
         }
         loading={isStaffLoading || isAttendanceLoading || isStaffRolesLoading}
         {...tableErrorProps(staffError, staffRows)}
+        {...tableEmptyProps({ feature: 'staffAttendance' })}
         showAddButton={false}
         showCheckbox
         showViewToggle={false}

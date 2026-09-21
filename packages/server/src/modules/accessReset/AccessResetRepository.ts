@@ -10,7 +10,7 @@ import {
   users,
 } from '@server/database/schema';
 import { Repository } from '@server/najm';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 
 export type AccessResetAccount = {
   id: string;
@@ -41,6 +41,49 @@ export type AccessResetAuditEntry = {
 @Repository()
 export class AccessResetRepository {
   declare db: DB;
+
+  /**
+   * Lock every row the eligibility decision is read from.
+   *
+   * Locking `users` alone is not enough: a CIN-only edit updates `parents`
+   * directly and never touches `users`, so it could change the very value
+   * about to be hashed between the re-resolution and the credential write.
+   * The same holds for the student, staff and teacher rows the other modes
+   * are resolved from.
+   *
+   * Rows that do not exist lock nothing, which is the correct no-op. The
+   * order is fixed — users, parents, students, staff, teachers — so two
+   * concurrent commands always take these in the same sequence and cannot
+   * deadlock against each other.
+   */
+  async lockTarget(userId: string) {
+    await this.db.select({ id: users.id }).from(users).where(eq(users.id, userId)).for('update');
+
+    await this.db
+      .select({ id: parents.id })
+      .from(parents)
+      .where(eq(parents.userId, userId))
+      .for('update');
+
+    await this.db
+      .select({ id: students.id })
+      .from(students)
+      .where(eq(students.userId, userId))
+      .for('update');
+
+    await this.db.select({ id: staff.id }).from(staff).where(eq(staff.userId, userId)).for('update');
+
+    await this.db
+      .select({ id: teachers.id })
+      .from(teachers)
+      .where(
+        inArray(
+          teachers.staffId,
+          this.db.select({ id: staff.id }).from(staff).where(eq(staff.userId, userId)),
+        ),
+      )
+      .for('update');
+  }
 
   async getAccount(userId: string): Promise<AccessResetAccount | null> {
     const [row] = await this.db

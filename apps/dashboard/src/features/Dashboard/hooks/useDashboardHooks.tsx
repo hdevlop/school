@@ -15,7 +15,7 @@ import {
   getStudentAttendanceMonthlyApi,
   getStaffAttendanceMonthlyApi,
 } from '@/services/dashboardApi';
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { getCurrentAcademicYear } from '@/lib/utils';
 
 export const useDashboardWidgets = (enabled = true) => {
   return useQuery({

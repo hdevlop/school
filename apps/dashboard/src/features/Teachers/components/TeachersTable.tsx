@@ -16,6 +16,7 @@ import { TeacherProfile } from './profile';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function TeachersTable() {
 
   const { t } = useTranslation();
@@ -133,6 +134,11 @@ function TeachersTable() {
         loadingText={t('common.loading')}
         renderCard={TeacherCard}
         addButtonText={t('teachers.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'teachers',
+          onCreate: handleAddClick,
+          createLabel: t('teachers.dialogs.createButton'),
+        })}
         defaultMode='cards'
       />
     </div>

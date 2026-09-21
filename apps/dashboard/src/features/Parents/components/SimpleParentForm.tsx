@@ -6,11 +6,15 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart, Phone, MapPin, PhoneCall, Wallet } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
-import { parentSchema } from '@/lib/validations'
+import { parentSchema } from '../config/parentSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { usePrefix } from 'najm-kit';
-import { useEnum } from '@/hooks/useEnum'
+import { buildGenderOptions } from '@/shared/forms/genderOptions'
+import {
+   buildMaritalStatusOptionsFor,
+   buildRelationshipTypeOptionsFor,
+} from '../config/parentOptions'
 
 // ==================== DEFAULT VALUES ====================
 
@@ -47,15 +51,18 @@ export const ParentFormContent = ({ form = null }: { form?: any } = {}) => {
 
 
    const prefix = usePrefix();
-   const gender = watch(prefix ? `${prefix}.gender` : "gender");
+   const field = (name: string) => (prefix ? `${prefix}.${name}` : name);
+   const gender = watch(field('gender'));
 
    const defaultImage = gender === 'M'
       ? '/images/parent_male.png'
       : '/images/parent_female.png'
 
-   const genderOptions = useEnum('gender')
-   const relationshipOptions = useEnum('relationshipType')
-   const maritalStatusOptions = useEnum('maritalStatus')
+   const genderOptions = buildGenderOptions(t)
+   // Editing an imported record must not silently rewrite it, so whatever is
+   // already stored stays selectable even when it is no longer offered.
+   const relationshipOptions = buildRelationshipTypeOptionsFor(t, watch(field('relationshipType')))
+   const maritalStatusOptions = buildMaritalStatusOptionsFor(t, watch(field('maritalStatus')))
 
    return (
       <>

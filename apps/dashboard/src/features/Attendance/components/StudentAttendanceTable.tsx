@@ -17,6 +17,7 @@ import { useTranslation } from 'najm-i18n/react';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -336,7 +337,11 @@ function StudentAttendanceTable() {
         showViewToggle={false}
         defaultMode='table'
         renderCard={renderRosterCard}
-        noDataText={noDataText}
+        {...tableEmptyProps({
+          feature: 'studentAttendance',
+          title: noDataText,
+          description: null,
+        })}
       />
     </div>
   );

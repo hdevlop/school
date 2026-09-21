@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { createBulkFeesApi } from '@/services/feeApi';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 
 function FeesTable() {
@@ -240,7 +241,13 @@ function FeesTable() {
           cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
         }}
         addButtonText={t('fees.dialogs.createButton')}
-        noDataText={noDataText}
+        {...tableEmptyProps({
+          feature: 'fees',
+          title: noDataText,
+          description: null,
+          onCreate: handleAddClick,
+          createLabel: t('fees.dialogs.createButton'),
+        })}
         defaultMode='cards'
         showCheckbox
       />

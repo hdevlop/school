@@ -13,6 +13,7 @@ import { useAnnouncementsTableFilters } from '../hooks/useAnnouncementsTableFilt
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function AnnouncementsTable() {
   const { t } = useTranslation();
   const columns = useAnnouncementsTableColumns();
@@ -108,6 +109,11 @@ function AnnouncementsTable() {
         {...tableErrorProps(error, announcements)}
         renderCard={AnnouncementCard}
         addButtonText={t('announcements.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'announcements',
+          onCreate: handleAddClick,
+          createLabel: t('announcements.dialogs.createButton'),
+        })}
         defaultMode='table'
         dynamicHeight={true}
       />

@@ -13,6 +13,7 @@ import { useExpensesTableFilters } from '../hooks/useExpensesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 
+import { tableEmptyProps } from '@/shared/TableEmptyState';
 function ExpensesTable() {
 
   const { t } = useTranslation();
@@ -107,6 +108,11 @@ function ExpensesTable() {
         loading={isExpensesLoading}
         renderCard={ExpenseCard}
         addButtonText={t('expenses.dialogs.createButton')}
+        {...tableEmptyProps({
+          feature: 'expenses',
+          onCreate: handleAddClick,
+          createLabel: t('expenses.dialogs.createButton'),
+        })}
         defaultMode='table'
       />
     </div>

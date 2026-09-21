@@ -19,7 +19,6 @@ export const useSubjects = (options?) => {
   const { mutateAsync: createSubject, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateSubject, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteSubject, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteSubjects, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -39,7 +38,6 @@ export const useSubjects = (options?) => {
     createSubject,
     updateSubject,
     deleteSubject,
-    bulkDeleteSubjects,
 
     // Loading States
     isSubjectsLoading,
@@ -47,6 +45,5 @@ export const useSubjects = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };

@@ -23,6 +23,10 @@ const COOLDOWN_PREFIX = 'access-reset:target:';
 /** Transports that accept a message without anyone receiving mail. */
 const SIMULATED_EMAIL_PROVIDERS = new Set(['console', 'memory']);
 
+/** Matches how School's email config reads its boolean environment flags. */
+const emailFlagEnabled = (value: string | undefined) =>
+  value === '1' || value?.toLowerCase() === 'true';
+
 @Service()
 export class AccessResetService {
   @I18n('accessReset.errors') private at!: (key: string) => string;
@@ -37,11 +41,10 @@ export class AccessResetService {
   /**
    * One administrative action whose consequence the server chooses.
    *
-   * Eligibility is resolved from state loaded now, then checked against the
-   * consequence the dialog explained. Both happen before the cooldown is
-   * claimed, so a refusal never spends an administrator's retry — and before
-   * any mutation or send, so a refused command leaves no mail, no credential
-   * change and no success audit behind.
+   * This first resolution only picks the path. Each path then re-decides
+   * against current state and claims the target's window as the last step
+   * before its irreversible effect, so no refusal anywhere in the chain ever
+   * spends an administrator's retry.
    */
   async resetAccess(
     userId: string,
@@ -51,21 +54,9 @@ export class AccessResetService {
     const target = await this.accessResetValidator.resolveTarget(userId, actor);
     this.accessResetValidator.ensureConfirmationFresh(body.expectedMode, target.mode);
 
-    await this.claimCooldown(target.account.id);
-
     if (target.mode === 'parent_credential_setup') {
-      try {
-        return await this.replaceParentCredential(target, body, actor);
-      } catch (error) {
-        // That path is one transaction, so a failure left nothing behind and
-        // the window must not keep a corrected retry out.
-        await this.releaseCooldown(target.account.id);
-        throw error;
-      }
+      return this.replaceParentCredential(target, body, actor);
     }
-
-    // The mail path decides for itself: a send that never left may be retried
-    // at once, but one that did must not be repeated by a retry.
     return this.sendRecoveryMail(target, body, actor);
   }
 
@@ -81,27 +72,39 @@ export class AccessResetService {
     body: ResetAccessDto,
     actor: AccessResetActor,
   ): Promise<AccessResetResult> {
+    // Lock the account, then decide again on what the lock now guarantees is
+    // stable. The first resolution chose this path; this one authorizes it,
+    // and anything that changed in between — a deactivation, a role change, a
+    // CIN edit — is caught here rather than acted through.
+    await this.accessResetRepository.lockTarget(target.account.id);
+    const fresh = await this.accessResetValidator.resolveTarget(target.account.id, actor);
+    this.accessResetValidator.ensureConfirmationFresh(body.expectedMode, fresh.mode);
+
     // The validator only reaches this mode with a normalized CIN in hand.
     // Checking anyway keeps an empty value from ever being hashed as one.
-    const temporaryCredential = target.temporaryCredential;
+    const temporaryCredential = fresh.temporaryCredential;
     if (!temporaryCredential) Err(409, this.at('parentCinMissing'));
 
+    // Every refusal is now behind us, so this is the first line that spends
+    // the target's window.
+    await this.claimCooldown(fresh.account.id);
+
     await this.authService.resetToTemporaryCredential(
-      target.account.id,
+      fresh.account.id,
       moroccanCinTemporaryCredential(temporaryCredential),
     );
 
     await this.accessResetRepository.recordAudit({
       actorId: actor.id,
       actorRole: actor.role ?? 'admin',
-      targetUserId: target.account.id,
+      targetUserId: fresh.account.id,
       reason: body.reason,
-      mode: target.mode,
+      mode: fresh.mode,
       status: 'success',
       outcome: 'credential_replaced',
     });
 
-    return { userId: target.account.id, mode: target.mode, delivery: 'not_applicable' };
+    return { userId: fresh.account.id, mode: fresh.mode, delivery: 'not_applicable' };
   }
 
   /**
@@ -113,18 +116,21 @@ export class AccessResetService {
     body: ResetAccessDto,
     actor: AccessResetActor,
   ): Promise<AccessResetResult> {
-    let result;
-    try {
-      result =
-        target.mode === 'invitation_resent'
-          ? await this.authService.resendInvitation(target.account.id)
-          : await this.authService.sendPasswordReset(target.account.id);
-    } catch (error) {
-      // Najm discards the token it minted when a send fails, so nothing is
-      // live and the administrator may correct the cause and try again.
-      await this.releaseCooldown(target.account.id);
-      throw error;
-    }
+    // Decide once more against current state. A send cannot be rolled back, so
+    // unlike the parent path this cannot hold a lock across the effect; it
+    // narrows the window between deciding and acting rather than closing it.
+    // The recipient is never taken from here either — Najm reads it from the
+    // account itself at send time.
+    const fresh = await this.accessResetValidator.resolveTarget(target.account.id, actor);
+    this.accessResetValidator.ensureConfirmationFresh(body.expectedMode, fresh.mode);
+
+    // Claimed only once nothing can still refuse, and never given back.
+    await this.claimCooldown(fresh.account.id);
+
+    const result =
+      fresh.mode === 'invitation_resent'
+        ? await this.authService.resendInvitation(fresh.account.id)
+        : await this.authService.sendPasswordReset(fresh.account.id);
 
     const delivery = this.resolveDelivery(result.emailSent);
 
@@ -133,7 +139,7 @@ export class AccessResetService {
       // a usable link exists that nobody received. The flag is value-free — it
       // carries no token — and the anomaly deserves an operator's attention.
       console.error(
-        `[access-reset] undelivered recovery link remains live for user ${target.account.id} (mode ${target.mode})`,
+        `[access-reset] undelivered recovery link remains live for user ${fresh.account.id} (mode ${fresh.mode})`,
       );
     }
 
@@ -141,9 +147,9 @@ export class AccessResetService {
       await this.accessResetRepository.recordAudit({
         actorId: actor.id,
         actorRole: actor.role ?? 'admin',
-        targetUserId: target.account.id,
+        targetUserId: fresh.account.id,
         reason: body.reason,
-        mode: target.mode,
+        mode: fresh.mode,
         status: delivery === 'not_sent' ? 'failure' : 'success',
         outcome: delivery,
         ...(result.undeliveredLinkLive ? { undeliveredLinkLive: true } : {}),
@@ -154,19 +160,13 @@ export class AccessResetService {
       // reconciled, the error reaches the administrator, and the cooldown
       // stays claimed so a reflexive retry does not send a second mail.
       console.error(
-        `[access-reset] delivery '${delivery}' for user ${target.account.id} (mode ${target.mode}) was not recorded in audit_logs`,
+        `[access-reset] delivery '${delivery}' for user ${fresh.account.id} (mode ${fresh.mode}) was not recorded in audit_logs`,
         auditError,
       );
       throw auditError;
     }
 
-    if (delivery === 'not_sent') {
-      // A failed send is a failure the administrator has to retry, never a
-      // success with a quiet caveat. Nothing left, so the window reopens.
-      await this.releaseCooldown(target.account.id);
-    }
-
-    return { userId: target.account.id, mode: target.mode, delivery };
+    return { userId: fresh.account.id, mode: fresh.mode, delivery };
   }
 
   /**
@@ -182,16 +182,36 @@ export class AccessResetService {
    */
   private resolveDelivery(emailSent: boolean): AccessResetDelivery {
     if (!emailSent) return 'not_sent';
+
     const provider = (process.env.EMAIL_PROVIDER?.trim() || 'console').toLowerCase();
-    return SIMULATED_EMAIL_PROVIDERS.has(provider) ? 'simulated' : 'sent';
+    if (SIMULATED_EMAIL_PROVIDERS.has(provider)) return 'simulated';
+
+    // SendGrid's sandbox validates and accepts the request in full and then
+    // delivers nothing. It reports success exactly like a real send, so
+    // without this check School would tell an administrator that a parent had
+    // been emailed when the mail never left.
+    if (provider === 'sendgrid' && emailFlagEnabled(process.env.SENDGRID_SANDBOX_MODE)) {
+      return 'simulated';
+    }
+
+    return 'sent';
   }
 
+  /**
+   * Claim the window for one target. One atomic operation, and never given
+   * back — the window closes only by expiring.
+   *
+   * An earlier version released the claim on failure so an administrator could
+   * retry at once. Doing that safely needs an atomic claim-with-ownership,
+   * which this cache cannot express: `incr` and a separate owner `set` leave a
+   * gap in which a command that has outlived its own TTL deletes a *newer*
+   * command's counter, and a third command then runs beside the second. Since
+   * the primitive for doing it safely does not exist, the claim is simply not
+   * released. The cost is that a failed attempt makes the administrator wait
+   * out the window; the alternative was a duplicate send, which is worse.
+   */
   private async claimCooldown(userId: string) {
     const { count } = await this.cache.incr(`${COOLDOWN_PREFIX}${userId}`, RESET_COOLDOWN_MS);
     if (count > 1) Err(429, this.at('cooldown'));
-  }
-
-  private async releaseCooldown(userId: string) {
-    await this.cache.del(`${COOLDOWN_PREFIX}${userId}`);
   }
 }

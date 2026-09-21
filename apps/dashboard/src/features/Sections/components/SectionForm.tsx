@@ -7,7 +7,7 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { Building, Hash, Users, DoorOpen } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { sectionSchema } from '@/lib/validations'
+import { sectionSchema } from '../config/sectionSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/hooks/useClasses'

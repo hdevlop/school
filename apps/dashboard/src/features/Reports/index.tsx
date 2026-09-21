@@ -6,7 +6,7 @@ import { NPageHeader, NPageHeaderActions } from 'najm-kit';
 import IncomeExpensesTrend from '@/features/Dashboard/components/IncomeExpensesTrend';
 import ExpenseBreakdownChart from './components/ExpenseBreakdownChart';
 import CollectionByClassChart from './components/CollectionByClassChart';
-import { getCurrentAcademicYear } from '@/lib/academicYear';
+import { getCurrentAcademicYear } from '@/lib/utils';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 

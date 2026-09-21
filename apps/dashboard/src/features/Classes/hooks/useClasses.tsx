@@ -19,7 +19,6 @@ export const useClasses = (options?) => {
   const { mutateAsync: createClass, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateClass, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteClass, isLoading: isDeleting } = crud.useDelete();
-  const { mutateAsync: bulkDeleteClasses, isLoading: isBulkDeleting } = crud.useBulkDelete();
 
   return {
     // Data
@@ -39,7 +38,6 @@ export const useClasses = (options?) => {
     createClass,
     updateClass,
     deleteClass,
-    bulkDeleteClasses,
 
     // Loading States
     isClassesLoading,
@@ -47,6 +45,5 @@ export const useClasses = (options?) => {
     isCreating,
     isUpdating,
     isDeleting,
-    isBulkDeleting,
   };
 };

@@ -3,10 +3,10 @@ import { useTranslation } from 'najm-i18n/react';
 import { useClasses } from '@/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import {
-  BEHAVIOR_RECOGNITION_LEVELS,
-  BEHAVIOR_REWARD_CATEGORIES,
-  BEHAVIOR_REWARD_TYPES,
-} from '../behaviorRewardConstants';
+  buildBehaviorRecognitionLevelOptions,
+  buildBehaviorRewardCategoryOptions,
+  buildBehaviorRewardTypeOptions,
+} from '../config/behaviorRewardOptions';
 
 export const useBehaviorRewardsTableFilters = ({
   classFilter,
@@ -34,28 +34,19 @@ export const useBehaviorRewardsTableFilters = ({
       name: 'category',
       placeholder: t('behaviorRewards.filters.category'),
       type: 'select',
-      options: BEHAVIOR_REWARD_CATEGORIES.map((value) => ({
-        value,
-        label: t(`behaviorRewards.categories.${value}`),
-      })),
+      options: buildBehaviorRewardCategoryOptions(t),
     },
     {
       name: 'recognitionLevel',
       placeholder: t('behaviorRewards.filters.recognitionLevel'),
       type: 'select',
-      options: BEHAVIOR_RECOGNITION_LEVELS.map((value) => ({
-        value,
-        label: t(`behaviorRewards.recognitionLevels.${value}`),
-      })),
+      options: buildBehaviorRecognitionLevelOptions(t),
     },
     {
       name: 'rewardType',
       placeholder: t('behaviorRewards.filters.rewardType'),
       type: 'select',
-      options: BEHAVIOR_REWARD_TYPES.map((value) => ({
-        value,
-        label: t(`behaviorRewards.rewardTypes.${value}`),
-      })),
+      options: buildBehaviorRewardTypeOptions(t),
     },
     {
       name: 'classId',

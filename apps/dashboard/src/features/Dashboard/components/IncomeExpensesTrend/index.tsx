@@ -17,6 +17,7 @@ import { NSkeletonChart } from 'najm-kit';
 import { useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import DashboardEmptyState from '../DashboardEmptyState';
 
 interface IncomeExpensesTrendProps {
   className?: string;
@@ -106,7 +107,7 @@ type TrendRow = { month: string; income: number; expenses: number };
 const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '', academicYear }) => {
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
-  const { data, isLoading } = useFinanceTrend(academicYear);
+  const { data, isLoading, error, refetch } = useFinanceTrend(academicYear);
   const incomeLabel = t('dashboard.finance.income');
   const expensesLabel = t('dashboard.finance.expenses');
 
@@ -133,6 +134,8 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
     },
     [payload, t],
   );
+  const noData = chartData.length === 0
+    || chartData.every((row) => row.income === 0 && row.expenses === 0);
 
   return (
     <NCard
@@ -140,61 +143,68 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
       className={cn('flex w-full h-full', className)}
       icon={DollarSign}
       loading={isLoading}
+      error={error}
+      onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
+      classNames={{ content: 'flex-1 min-h-0' }}
     >
-      <div className="flex flex-col flex-1 min-h-0">
-        <TrendLegend incomeLabel={incomeLabel} expensesLabel={expensesLabel} />
-        <div className="flex-1 min-h-0">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
-              <XAxis
-                dataKey="month"
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: '#6b7280', fontSize: 12 }}
-                dy={10}
-              />
-              <YAxis
-                axisLine={false}
-                tickLine={false}
-                tick={{ fill: '#6b7280', fontSize: 12 }}
-                dx={-10}
-              />
-              <Tooltip
-                content={(props) => (
-                  <TrendTooltip
-                    {...(props as unknown as TrendTooltipProps)}
-                    majorMoney={majorMoney}
-                    incomeLabel={incomeLabel}
-                    expensesLabel={expensesLabel}
-                    todayIncome={todayIncome}
-                    todayExpenses={todayExpenses}
-                    t={t}
-                  />
-                )}
-              />
-              <Line
-                type="monotone"
-                dataKey="income"
-                stroke={INCOME_COLOR}
-                strokeWidth={3}
-                dot={false}
-                name={incomeLabel}
-              />
-              <Line
-                type="monotone"
-                dataKey="expenses"
-                stroke={EXPENSES_COLOR}
-                strokeWidth={3}
-                strokeDasharray="5 5"
-                dot={false}
-                name={expensesLabel}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+      {noData ? (
+        <DashboardEmptyState icon={DollarSign} title={t('common.feedback.emptyTitle')} />
+      ) : (
+        <div className="flex flex-col flex-1 min-h-0">
+          <TrendLegend incomeLabel={incomeLabel} expensesLabel={expensesLabel} />
+          <div className="flex-1 min-h-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData} margin={{ top: 5, right: 30, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="0" stroke="#f0f0f0" vertical={false} />
+                <XAxis
+                  dataKey="month"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  dy={10}
+                />
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                  dx={-10}
+                />
+                <Tooltip
+                  content={(props) => (
+                    <TrendTooltip
+                      {...(props as unknown as TrendTooltipProps)}
+                      majorMoney={majorMoney}
+                      incomeLabel={incomeLabel}
+                      expensesLabel={expensesLabel}
+                      todayIncome={todayIncome}
+                      todayExpenses={todayExpenses}
+                      t={t}
+                    />
+                  )}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="income"
+                  stroke={INCOME_COLOR}
+                  strokeWidth={3}
+                  dot={false}
+                  name={incomeLabel}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="expenses"
+                  stroke={EXPENSES_COLOR}
+                  strokeWidth={3}
+                  strokeDasharray="5 5"
+                  dot={false}
+                  name={expensesLabel}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
+      )}
     </NCard>
   );
 };

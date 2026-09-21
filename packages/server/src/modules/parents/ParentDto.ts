@@ -34,10 +34,12 @@ export const createParentDto = parentSchema.omit({ id: true }).extend({
   password: z.string().min(8, 'Password must be at least 8 characters long').optional(),
 });
 export const createParentsBulkDto = z.array(createParentDto);
-// Credentials are not part of a profile edit. Omitting `password` makes a
-// stray one an explicit rejection rather than a field the service quietly
-// drops, which would leave an admin believing a password had been set.
-export const updateParentDto = createParentDto.omit({ password: true }).partial();
+// Credentials are not part of a profile edit. `omit` alone would only strip a
+// password, leaving an admin who sent one believing it had been set, so the
+// field is declared `never`: present means rejected, absent means fine.
+export const updateParentDto = createParentDto
+  .partial()
+  .extend({ password: z.never('Passwords are not set from a profile edit').optional() });
 
 export const parentIdParam = z.object({ id: z.string().min(1) });
 export const parentCinParam = z.object({ cin: cinField });

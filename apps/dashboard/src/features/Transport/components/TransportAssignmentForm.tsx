@@ -1,24 +1,13 @@
 'use client'
 
 import { useMemo } from 'react'
-import { z } from 'zod'
 import { Bus, CalendarDays, NotebookPen } from 'lucide-react'
 import { FormInput, NForm, useDialog } from 'najm-kit'
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
-import { locationValueSchema } from '@/lib/validations'
+import { standaloneTransportAssignmentSchema } from '../config/transportSchemas'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { useTranslation } from 'najm-i18n/react'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
-
-const assignmentSchema = z.object({
-  vehicleId: z.string().min(1, 'Vehicle is required'),
-  assignmentDate: z.string().optional().nullable(),
-  pickup: locationValueSchema.refine((value) => Boolean(value.address), { path: ['address'], message: 'Pickup location is required' }),
-  pickupPlaceId: z.string().max(255).optional().nullable(),
-  dropoff: locationValueSchema,
-  dropoffPlaceId: z.string().max(255).optional().nullable(),
-  notes: z.string().max(1000).optional().nullable(),
-})
 
 type Props = {
   student: any
@@ -119,7 +108,7 @@ export function TransportAssignmentForm({ student, assignment, lockVehicleId }: 
   return (
     <NForm
       id="student-transport-assignment-form"
-      schema={assignmentSchema}
+      schema={standaloneTransportAssignmentSchema}
       defaultValues={defaults}
       onSubmit={(data) => {
         const { pickup, dropoff, ...fields } = data

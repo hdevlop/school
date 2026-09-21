@@ -8,12 +8,12 @@ import { DollarSign, FileText, Tag, CalendarClock, Percent, Activity, Wallet } f
 import { useTranslation } from 'najm-i18n/react'
 import { useActiveForm } from '@/hooks/useActiveForm'
 import { useCallback, useEffect } from 'react'
-import { feeSchema } from '@/lib/validations'
+import { feeSchema } from '../config/feeSchemas'
+import { buildFeeStatusOptions, buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from 'najm-kit'
 import { calculateFeeAmounts } from '@/features/Financial/Fees/utils/feeUtils'
 import { usePrefix } from 'najm-kit';
 
-import { useEnum } from '@/hooks/useEnum'
 
 const EditFeeForm = ({ fee, feeTypes = [] }) => {
    const { pop } = useDialog();
@@ -90,14 +90,11 @@ const SimpleFeeFormContent = ({ feeTypes, isEditMode }) => {
       }
    }, [baseAmount, schedule, discountAmount, selectedFeeType, paymentType, f, feeTypeId, setValue])
 
-   const scheduleOptions = useEnum('schedule')
+   const scheduleOptions = buildScheduleOptions(t)
 
-   const statusOptions = [
-      { value: 'pending', label: t('fees.status.pending') },
-      { value: 'paid', label: t('fees.status.paid') },
-      { value: 'partiallyPaid', label: t('fees.status.partiallyPaid') },
-      { value: 'overdue', label: t('fees.status.overdue') },
-   ]
+   // Shown, never sent: feeSchema has no `status`, so the server keeps
+   // deriving it from the installments and the payments against them.
+   const statusOptions = buildFeeStatusOptions(t)
 
    return (
       <div className='flex flex-col gap-2'>

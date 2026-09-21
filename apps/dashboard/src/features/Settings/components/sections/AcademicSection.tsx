@@ -5,17 +5,17 @@ import { BookOpen, Users, BarChart3, Clock, Award, Calendar, ClipboardCheck } fr
 import { FormInput } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-import { useEnum } from '@/hooks/useEnum';
+import {
+  buildAttendanceModeOptions,
+  buildCalendarSystemOptions,
+} from '../../config/settingsOptions';
 
 const AcademicSection: React.FC = () => {
   const { t } = useTranslation();
 
-  const calendarSystemOptions = useEnum('calendarSystem');
+  const calendarSystemOptions = buildCalendarSystemOptions(t);
 
-  const attendanceModeOptions = [
-    { value: 'daily', label: t('settings.academic.attendanceModeDaily') || 'Daily (first period locks, later teachers correct)' },
-    { value: 'per_class', label: t('settings.academic.attendanceModePerClass') || 'Per class (each teacher records independently)' },
-  ];
+  const attendanceModeOptions = buildAttendanceModeOptions(t);
 
   return (
     <div className='flex flex-col gap-4'>

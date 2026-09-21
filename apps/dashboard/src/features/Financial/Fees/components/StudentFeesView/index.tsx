@@ -16,7 +16,7 @@ import { usePayments } from "@/features/Financial/Payment/hooks/usePayments";
 import { useFeeTypes } from "@/features/Financial/FeeTypes/hooks/useFeeTypes";
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from "@/features/Financial/Payment/store/paymentStore";
 import { BulkFeeFormContent } from "@/features/Financial/Fees/components/BulkFeeForm";
-import { feesSchema } from "@/lib/validations";
+import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
 import { injectStudentIdToFees } from "@/features/Financial/Fees/utils/feeUtils";
 
 const TAB_STYLES = "border-0 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:!border-b-2 data-[state=active]:!border-primary rounded-none px-6 py-3 data-[state=active]:!text-primary text-muted-foreground hover:text-primary transition-colors";

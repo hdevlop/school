@@ -10,7 +10,7 @@ import {
   ListChecks, UserCircle,
 } from 'lucide-react'
 import { useDialog } from 'najm-kit'
-import { gradeSchema } from '@/lib/validations'
+import { gradeSchema } from '../config/gradeSchemas'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/hooks/useClasses'

@@ -7,7 +7,11 @@ import type { StepConfig } from 'najm-kit'
 import { Loader2 } from 'lucide-react'
 import { getStudentDefaultValues, StudentFormContent } from './SimpleStudentForm'
 import { BulkParentFormContent } from '@/features/Parents/components/BulkParentForm'
-import { feesSchema, fullStudentSchema, parentSchema, parentsSchema, studentSchema, transportSchema } from '@/lib/validations'
+import { fullStudentSchema, studentWithTransportSchema } from '../config/fullStudentSchemas'
+import { studentSchema } from '../config/studentSchemas'
+import { parentSchema, parentsSchema } from '@/features/Parents/config/parentSchemas'
+import { feesSchema } from '@/features/Financial/Fees/config/feeSchemas'
+import { transportSchema } from '@/features/Transport/config/transportSchemas'
 import { BulkFeeFormContent } from '@/features/Financial/Fees/components/BulkFeeForm'
 import { FeeFactory } from '@/features/Financial/Fees/utils/feeUtils'
 import { useTranslation } from 'najm-i18n/react'
@@ -19,9 +23,6 @@ import { normalizeLocationValue } from 'najm-kit/location'
 const ALWAYS_FEE_CATEGORIES = ['registration', 'tuition']
 const OPTIONAL_FEE_PROBABILITY = 0.8
 const SECOND_PARENT_PROBABILITY = 0.8
-const studentWithTransportSchema = studentSchema.extend({
-  transportEnabled: fullStudentSchema.shape.transportEnabled,
-})
 
 type StudentWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
   submitLabel?: ReactNode

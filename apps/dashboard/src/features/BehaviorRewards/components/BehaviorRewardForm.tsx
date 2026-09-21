@@ -3,14 +3,14 @@
 import { Award, CalendarClock, FileText, Gift, Star, Trophy, UserRound } from 'lucide-react';
 import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { behaviorRewardSchema } from '@/lib/validations';
+import { behaviorRewardSchema } from '../config/behaviorRewardSchemas';
 import { useStudents } from '@/features/Students/hooks/useStudents';
+import { toLocalDateTimeInput } from '../behaviorRewardConstants';
 import {
-  BEHAVIOR_RECOGNITION_LEVELS,
-  BEHAVIOR_REWARD_CATEGORIES,
-  BEHAVIOR_REWARD_TYPES,
-  toLocalDateTimeInput,
-} from '../behaviorRewardConstants';
+  buildBehaviorRecognitionLevelOptions,
+  buildBehaviorRewardCategoryOptions,
+  buildBehaviorRewardTypeOptions,
+} from '../config/behaviorRewardOptions';
 
 const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any }) => {
   const { t } = useTranslation();
@@ -90,7 +90,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
             icon={Star}
             formLabel={t('behaviorRewards.form.category')}
             placeholder={t('behaviorRewards.form.categoryPlaceholder')}
-            items={BEHAVIOR_REWARD_CATEGORIES.map((value) => ({ value, label: t(`behaviorRewards.categories.${value}`) }))}
+            items={buildBehaviorRewardCategoryOptions(t)}
             required
           />
           <FormInput
@@ -99,7 +99,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
             icon={Trophy}
             formLabel={t('behaviorRewards.form.recognitionLevel')}
             placeholder={t('behaviorRewards.form.recognitionLevelPlaceholder')}
-            items={BEHAVIOR_RECOGNITION_LEVELS.map((value) => ({ value, label: t(`behaviorRewards.recognitionLevels.${value}`) }))}
+            items={buildBehaviorRecognitionLevelOptions(t)}
             required
           />
         </div>
@@ -122,7 +122,7 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
             icon={Gift}
             formLabel={t('behaviorRewards.form.rewardType')}
             placeholder={t('behaviorRewards.form.rewardTypePlaceholder')}
-            items={BEHAVIOR_REWARD_TYPES.map((value) => ({ value, label: t(`behaviorRewards.rewardTypes.${value}`) }))}
+            items={buildBehaviorRewardTypeOptions(t)}
             required
           />
           <FormInput

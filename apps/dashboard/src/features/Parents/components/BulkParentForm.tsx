@@ -6,7 +6,7 @@ import { useTranslation } from 'najm-i18n/react'
 import { DynamicArray } from 'najm-kit';
 
 import { ParentFormContent, getParentDefaultValues } from './SimpleParentForm'
-import { parentsSchema } from '@/lib/validations'
+import { parentsSchema } from '../config/parentSchemas'
 
 export const BulkParentFormContent = ({ form = null }: { form?: any } = {}) => {
 

@@ -13,10 +13,15 @@ import {
   teacherProfessionalSchema,
   assignmentsSchema,
   teacherFullSchema,
-} from '@/lib/validations'
-import { useEnum } from '@/hooks/useEnum'
+} from '../config/teacherSchemas'
+import { buildGenderOptions } from '@/shared/forms/genderOptions'
+import {
+  buildEmploymentTypeOptionsFor,
+  buildTeacherStatusOptionsFor,
+} from '../config/teacherOptions'
 import { AssignmentFormContent } from './BulkAssignmentForm'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
+import { useActiveForm } from '@/hooks/useActiveForm'
 
 type TeacherWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
    submitLabel?: ReactNode
@@ -188,8 +193,10 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
 export const PersonalInfoContent = ({ form }: { form: any }) => {
    const { t } = useTranslation()
    const gender = form.watch('gender')
-   const genderOptions = useEnum('gender')
-   const statusOptions = useEnum('teacherStatus')
+   const genderOptions = buildGenderOptions(t)
+   // A migrated record keeps whatever status it arrived with rather than
+   // being silently reset to one of ours.
+   const statusOptions = buildTeacherStatusOptionsFor(t, form.watch('status'))
 
    const defaultImage = gender === 'M'
       ? '/images/teacher_male.png'
@@ -305,7 +312,8 @@ export const PersonalInfoContent = ({ form }: { form: any }) => {
 // ============================================
 export const ProfessionalInfoContent = () => {
    const { t } = useTranslation()
-   const employmentTypeOptions = useEnum('employmentType')
+   const form = useActiveForm()
+   const employmentTypeOptions = buildEmploymentTypeOptionsFor(t, form.watch('employmentType'))
 
    return (
       <>
