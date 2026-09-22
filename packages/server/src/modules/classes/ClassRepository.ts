@@ -1,6 +1,6 @@
 import { DB } from '../../database/db';
 import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects } from '../../database/schema';
-import { eq, count, and, sql, inArray } from 'drizzle-orm';
+import { eq, count, and, sql } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
 import { jsonAgg } from '../../shared';

@@ -1,7 +1,7 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents } from '../../database/schema';
-import { eq, count, and, inArray, ne } from 'drizzle-orm';
+import { eq, count, and, ne } from 'drizzle-orm';
 import { Owned } from '../../auth';
 import { Section } from './SectionGuards';
 

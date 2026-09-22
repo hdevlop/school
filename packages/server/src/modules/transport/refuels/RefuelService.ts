@@ -111,7 +111,7 @@ export class RefuelService {
       try {
         const refuel = await this.create(refuelData);
         createdRefuels.push(refuel);
-      } catch (error) {
+      } catch {
         continue;
       }
     }

@@ -1,4 +1,4 @@
-import { jsonb, pgTable, text, timestamp, index } from 'drizzle-orm/pg-core';
+import { jsonb, pgTable, text, index } from 'drizzle-orm/pg-core';
 
 import { actionByRef, idField, timestamps } from '../../../database/shared';
 

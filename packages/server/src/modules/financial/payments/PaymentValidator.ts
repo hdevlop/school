@@ -4,7 +4,7 @@ import { StudentValidator } from '../../students/StudentValidator';
 import { InstallmentValidator } from '../installments/InstallmentValidator';
 import { FeeRepository } from '../fees/FeeRepository';
 import { validateAllocationAmount } from '../utils';
-import { AllocationRepository, ACTIVE_RESERVATION_STATUSES } from '../allocations/AllocationRepository';
+import { AllocationRepository } from '../allocations/AllocationRepository';
 import { InstallmentRepository } from '../installments/InstallmentRepository';
 import { createHash } from 'crypto';
 import type { CreatePaymentDto } from './PaymentDto';

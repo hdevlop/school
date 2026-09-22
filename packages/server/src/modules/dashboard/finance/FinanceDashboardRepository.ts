@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { and, desc, eq, gte, lte, sql, sum, count } from 'drizzle-orm';
+import { and, desc, eq, gte, lte, sql } from 'drizzle-orm';
 import {
   expenses,
   feeInstallments,

@@ -1,7 +1,7 @@
 import { DB } from '../../database/db';
-import { settings, users } from '../../database/schema';
+import { settings } from '../../database/schema';
 import { Repository } from '../../najm';
-import { count, eq, desc, sql } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 
 const publicSettings = {
   // School Information

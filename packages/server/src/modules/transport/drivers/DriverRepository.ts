@@ -1,5 +1,5 @@
 import { DB } from '../../../database/db';
-import { drivers, staff, users, vehicles } from '../../../database/schema';
+import { drivers, staff, users } from '../../../database/schema';
 import { count, eq, desc, and, gte, lte, inArray } from 'drizzle-orm';
 import { Repository } from '../../../najm';
 import { getBusinessDate, getBusinessDateOnly } from '../../../shared/businessDate';
@@ -189,10 +189,8 @@ export class DriverRepository {
       .delete(drivers)
       .returning();
 
-    let deletedUsers = [];
-
     if (userIds.length > 0) {
-      deletedUsers = await this.db
+      await this.db
         .delete(users)
         .where(inArray(users.id, userIds))
         .returning();

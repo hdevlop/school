@@ -127,7 +127,7 @@ export class DriverController {
   @Validate(createDriverDto)
   @McpTool('Create a new driver')
   @ResMsg('drivers.success.created')
-  async create(@Body() body: CreateDriverDto) {
+  async create(@Body() _body: CreateDriverDto) {
     Err(410, 'Drivers are created from the unified Staff module');
   }
 
@@ -135,7 +135,7 @@ export class DriverController {
   @isAdmin()
   @Validate(createDriversBulkDto)
   @ResMsg('drivers.success.seeded')
-  async createBulk(@Body() body: CreateDriversBulkDto) {
+  async createBulk(@Body() _body: CreateDriversBulkDto) {
     Err(410, 'Drivers are created from the unified Staff module');
   }
 
@@ -144,7 +144,7 @@ export class DriverController {
   @Validate(updateDriverMcpDto)
   @McpTool('Update a driver by ID')
   @ResMsg('drivers.success.updated')
-  async update(@Body() body: UpdateDriverMcpDto) {
+  async update(@Body() _body: UpdateDriverMcpDto) {
     Err(410, 'Drivers are updated from the unified Staff module');
   }
 
@@ -152,7 +152,7 @@ export class DriverController {
   @isAdmin()
   @Validate({ params: driverIdParam, body: updateDriverDto })
   @ResMsg('drivers.success.updated')
-  async updateDriverRest(@Params('id') id: string, @Body() body: UpdateDriverDto) {
+  async updateDriverRest(@Params('id') _id: string, @Body() _body: UpdateDriverDto) {
     Err(410, 'Drivers are updated from the unified Staff module');
   }
 
@@ -161,7 +161,7 @@ export class DriverController {
   @Validate({ params: driverIdParam, body: updateDriverStatusDto })
   @McpTool('Update driver status')
   @ResMsg('drivers.success.statusUpdated')
-  async updateStatus(@Params('id') id: string, @Body() body: UpdateDriverStatusDto) {
+  async updateStatus(@Params('id') _id: string, @Body() _body: UpdateDriverStatusDto) {
     Err(410, 'Driver status is updated from the unified Staff module');
   }
 
@@ -169,7 +169,7 @@ export class DriverController {
   @isAdmin()
   @Validate({ body: deleteDriversBulkDto })
   @ResMsg('drivers.success.bulkDeleted')
-  async deleteBulk(@Body() body: DeleteDriversBulkDto) {
+  async deleteBulk(@Body() _body: DeleteDriversBulkDto) {
     Err(410, 'Drivers are deleted from the unified Staff module');
   }
 
@@ -178,7 +178,7 @@ export class DriverController {
   @Validate({ params: driverIdParam })
   @McpTool('Delete a driver by ID')
   @ResMsg('drivers.success.deleted')
-  async delete(@Params('id') id: string) {
+  async delete(@Params('id') _id: string) {
     Err(410, 'Drivers are deleted from the unified Staff module');
   }
 

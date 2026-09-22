@@ -24,10 +24,7 @@ export class StudentProfileService {
   ) {}
 
   async getOverview(studentId: string) {
-    const [student, parents] = await Promise.all([
-      this.studentService.getById(studentId),
-      this.parentService ? null : null,
-    ]);
+    const student = await this.studentService.getById(studentId);
     const parentsList = await this.studentService.getParents(studentId);
     return { student, parents: parentsList };
   }

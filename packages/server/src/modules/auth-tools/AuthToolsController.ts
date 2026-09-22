@@ -3,7 +3,7 @@ import { Get, Post, ResMsg } from 'najm-api';
 import { Body, Headers, User } from 'najm-api';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { Validate } from 'najm-validation';
-import { isAuth, isAdmin } from 'najm-auth';
+import { isAuth } from 'najm-auth';
 import { AuthService } from 'najm-auth';
 import {
   createUserDto,

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '../../../najm';
+import { Body, Controller, Get, Params, Post, ResMsg, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { isAdmin } from '../../../auth';
 import { FinancialAuditService } from './FinancialAuditService';

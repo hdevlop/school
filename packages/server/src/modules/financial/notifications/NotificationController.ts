@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Headers, Post, ResMsg } from '../../../najm';
 import { NotificationService, assertCronSecret } from './NotificationService';
-import { runNotificationsDto, type RunNotificationsDto } from './NotificationDto';
+import { type RunNotificationsDto } from './NotificationDto';
 import { isAdmin } from '../../../auth';
 
 @Controller('/financial-notifications')

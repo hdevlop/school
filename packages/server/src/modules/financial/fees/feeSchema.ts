@@ -1,4 +1,4 @@
-import { boolean, date, integer, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
+import { date, integer, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import {
   assignedByRef,

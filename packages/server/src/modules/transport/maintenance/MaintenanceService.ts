@@ -364,7 +364,7 @@ export class MaintenanceService {
       try {
         const createdMaintenance = await this.create(maintenanceRecord);
         createdMaintenances.push(createdMaintenance);
-      } catch (error) {
+      } catch {
         continue;
       }
     }

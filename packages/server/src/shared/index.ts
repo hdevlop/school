@@ -4,7 +4,6 @@ import * as path from 'path';
 import _isEmpty from 'lodash.isempty';
 import { SQL, sql } from 'drizzle-orm';
 import { AnyPgColumn } from 'drizzle-orm/pg-core';
-import { Readable } from 'stream';
 import { getBusinessDate } from './businessDate';
 
 export {
@@ -37,7 +36,7 @@ export const getAvatarFile = async (fileName) => {
     });
     return file;
   }
-  catch (error) {
+  catch {
     return null;
   }
 }

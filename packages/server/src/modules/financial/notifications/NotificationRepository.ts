@@ -2,7 +2,6 @@ import { Repository } from '../../../najm';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import { financialNotificationDeliveries, feeInstallments, fees, students, payments } from '../../../database/schema';
 import { DB } from '../../../database/db';
-import { formatDateOnly } from '../utils/dateOnly';
 
 const CRON_SECRET_ENV = 'FINANCIAL_CRON_SECRET';
 

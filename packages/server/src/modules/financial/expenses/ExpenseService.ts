@@ -237,7 +237,7 @@ export class ExpenseService {
       try {
         const expense = await this.create(expenseData);
         createdExpenses.push(expense);
-      } catch (error) {
+      } catch {
         continue;
       }
     }

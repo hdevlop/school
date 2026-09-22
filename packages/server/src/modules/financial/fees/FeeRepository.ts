@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { eq, desc, asc, and, count, inArray, sql, sum, avg } from 'drizzle-orm';
+import { eq, desc, and, inArray, sql, sum } from 'drizzle-orm';
 import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';

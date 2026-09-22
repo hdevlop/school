@@ -235,7 +235,6 @@ export class PaymentService {
       resolvedAllocations = autoAllocation.allocations;
     }
 
-    const validatedData = { ...data, allocations: resolvedAllocations };
     await this.paymentValidator.validateAllocationStudents(data.studentId, resolvedAllocations);
 
     const isCheck = data.paymentMethod === 'check';
@@ -369,7 +368,7 @@ export class PaymentService {
     return updated;
   }
 
-  async delete(id: string) {
+  async delete(_id: string) {
     Err(400, 'Hard delete of payments is disabled. Use POST /payments/:id/void to mark a payment as voided.');
   }
 
@@ -379,7 +378,7 @@ export class PaymentService {
     return result;
   }
 
-  async deleteBulk(ids: string[]) {
+  async deleteBulk(_ids: string[]) {
     Err(400, 'Hard delete of payments is disabled. Use POST /payments/:id/void to mark a payment as voided.');
   }
 

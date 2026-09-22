@@ -29,7 +29,7 @@ export class VehicleAssignmentValidator {
     return true;
   }
 
-  async validateNewAssignment(vehicleId: string, driverId: string, assignmentDate: string) {
+  async validateNewAssignment(_vehicleId: string, _driverId: string, _assignmentDate: string) {
     // Removed restriction: Allow reassigning drivers to vehicles that already have active assignments
     // The system will handle multiple assignments or the frontend can manage unassignment if needed
 

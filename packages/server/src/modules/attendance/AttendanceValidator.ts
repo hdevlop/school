@@ -150,7 +150,7 @@ export class AttendanceValidator {
     // Daily mode may omit them; fall back to the caller's first teacher
     // assignment in the section. Non-teacher staff get teacherAssignmentId = null.
     let teacherId: string | undefined = data.teacherId;
-    let subjectId: string | undefined = data.subjectId;
+    const subjectId: string | undefined = data.subjectId;
 
     if (mode === 'per_class') {
       if (!teacherId || !subjectId) {

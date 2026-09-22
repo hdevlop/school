@@ -190,7 +190,7 @@ async validateEventDates(
     return this.ensureExists(id);
   }
 
-  async validateClassAndSection(classId?: string, sectionId?: string) {
+  async validateClassAndSection(classId?: string, _sectionId?: string) {
     return this.ensureClassAndSectionValid(classId);
   }
 

@@ -132,15 +132,15 @@ export class DashboardService {
     return await this.studentService.getStudentsByGender();
   }
 
-  async getTeacherWidgets(userId: string) {
+  async getTeacherWidgets(_userId: string) {
     // Get teacher by userId to find teacherId
   }
 
-  async getStudentWidgets(userId: string) {
+  async getStudentWidgets(_userId: string) {
     // Get student by userId to find studentId
   }
 
-  async getParentWidgets(userId: string) {
+  async getParentWidgets(_userId: string) {
     // Get parent by userId to find parentId
   }
 }

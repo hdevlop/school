@@ -3,7 +3,6 @@ import { StudentService } from '../../students/StudentService';
 import { TeacherService } from '../../teachers/TeacherService';
 import { AttendanceRepository } from '../../attendance/AttendanceRepository';
 import { GradeService } from '../../grades/GradeService';
-import { AssessmentService } from '../../assessments/AssessmentService';
 import { GradeRepository } from '../../grades/GradeRepository';
 
 @Injectable()
