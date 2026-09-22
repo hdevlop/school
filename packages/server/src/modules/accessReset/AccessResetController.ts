@@ -1,5 +1,5 @@
-import { Body, Controller, Params, Post, ResMsg, User, Validate } from '@server/najm';
-import { isAdmin } from '@server/auth';
+import { Body, Controller, Params, Post, ResMsg, User, Validate } from '../../najm';
+import { isAdmin } from '../../auth';
 
 import { accessResetUserParam, resetAccessDto, type ResetAccessDto } from './AccessResetDto';
 import { AccessResetService } from './AccessResetService';

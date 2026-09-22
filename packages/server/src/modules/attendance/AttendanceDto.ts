@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { dateField, requiredId } from '@server/shared/fields';
-import { attendanceStatusEnum, attendanceTypeEnum } from '@server/shared/enums';
+import { dateField, requiredId } from '../../shared/fields';
+import { attendanceStatusEnum, attendanceTypeEnum } from '../../shared/enums';
 
 const mcpRequiredId = z.string().min(1, 'ID is required');
 const notesField = z.string().max(500, 'Notes too long').optional();

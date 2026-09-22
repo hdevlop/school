@@ -1,7 +1,7 @@
-import { Controller, Get, t, User, ResMsg } from '@server/najm';
+import { Controller, Get, t, User, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DashboardService } from './DashboardService';
-import { isAuth, isAdmin } from '@server/auth';
+import { isAuth, isAdmin } from '../../auth';
 
 @ToolGroup('dashboard')
 @Controller('/dashboard')

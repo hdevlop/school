@@ -1,7 +1,7 @@
 import { desc } from 'drizzle-orm';
 
-import { db } from '@server/database/db';
-import { settings } from '@server/modules/settings/settingSchema';
+import { db } from './database/db';
+import { settings } from './modules/settings/settingSchema';
 
 /**
  * The five School settings the first server render needs.

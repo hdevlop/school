@@ -1,8 +1,8 @@
-import { Repository } from '@server/najm';
-import { Owned } from '@server/auth';
+import { Repository } from '../../najm';
+import { Owned } from '../../auth';
 import { and, desc, eq, sql, asc, count, inArray, or } from 'drizzle-orm';
-import { exams, grades, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { exams, grades, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
+import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { Exam } from './ExamGuards';
 

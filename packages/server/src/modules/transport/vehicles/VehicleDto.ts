@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { getBusinessDate } from '@server/shared/businessDate';
-import { num, optionalDateField, optionalId } from '@server/shared/fields';
-import { vehicleStatusEnum, vehicleTypeEnum } from '@server/shared/enums';
+import { getBusinessDate } from '../../../shared/businessDate';
+import { num, optionalDateField, optionalId } from '../../../shared/fields';
+import { vehicleStatusEnum, vehicleTypeEnum } from '../../../shared/enums';
 
 const vehicleSchema = z.object({
   id: optionalId,

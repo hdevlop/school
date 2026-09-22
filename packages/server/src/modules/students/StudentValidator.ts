@@ -1,6 +1,6 @@
-import { Service, Err, I18n } from '@server/najm';
+import { Service, Err, I18n } from '../../najm';
 import { StudentRepository } from './StudentRepository';
-import { UserValidator } from '@server/auth';
+import { UserValidator } from '../../auth';
 import { ClassValidator } from '../classes/ClassValidator';
 import { SectionValidator } from '../sections/SectionValidator';
 

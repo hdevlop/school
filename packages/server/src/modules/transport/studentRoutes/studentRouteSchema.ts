@@ -1,8 +1,8 @@
 import { sql } from 'drizzle-orm';
 import { date, doublePrecision, index, pgEnum, pgTable, text, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import { assignedByRef, idField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { assignedByRef, idField, timestamps } from '../../../database/shared';
+import { getEnumValues } from '../../../shared/enums';
 import { students } from '../../students/studentSchema';
 import { vehicles } from '../vehicles/vehicleSchema';
 

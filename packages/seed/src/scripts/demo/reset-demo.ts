@@ -31,7 +31,7 @@ import {
   MaintenanceService,
   DisciplineService,
   BehaviorRewardService,
-} from '@server/modules/seed';
+} from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
 
 runSeedTask('demo reset', async (server) => {

@@ -1,9 +1,9 @@
-import { DB } from '@server/database/db';
-import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects } from '@server/database/schema';
+import { DB } from '../../database/db';
+import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects } from '../../database/schema';
 import { eq, count, and, sql, inArray } from 'drizzle-orm';
-import { Repository } from '@server/najm';
-import { Owned } from '@server/auth';
-import { jsonAgg } from '@server/shared';
+import { Repository } from '../../najm';
+import { Owned } from '../../auth';
+import { jsonAgg } from '../../shared';
 import { Class } from './ClassGuards';
 
 export const classSelect = {

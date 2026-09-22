@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { optionalId } from '@server/shared/fields';
+import { optionalId } from '../../../shared/fields';
 
 export const runNotificationsDto = z.object({
   businessDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format').optional(),

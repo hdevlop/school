@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { TeacherService } from './TeacherService';
 import { Teacher, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './TeacherGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import {
   assignClassDto,
   assignSubjectDto,

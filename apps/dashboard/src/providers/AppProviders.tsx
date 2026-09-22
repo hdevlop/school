@@ -3,7 +3,7 @@
 import { NajmAppProvider } from 'najm-next/app/client';
 import type { ReactNode } from 'react';
 
-import { schoolI18n } from '@sms/server/locales';
+import { schoolI18n } from '@sms/contracts/locales';
 import { isDevFill } from '@/lib/devFill';
 import { auth } from '@/najm.auth';
 import type { SchoolUiSnapshot } from '@/najm.server';

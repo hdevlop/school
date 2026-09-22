@@ -10,11 +10,14 @@ package. Run every command from the repository root.
 
 ### Core Development
 - `bun install` - One root install covers all workspaces
-- `bun run dev` - Start development server with Turbopack (Next.js dev mode)
-- `bun run build` - Build the dashboard
-- `bun run build:all` - Build server, seed, and dashboard
+- `bun run dev` - Start Next.js; it compiles `@sms/server` and `@sms/contracts`
+  from TypeScript source, so server, contract and catalog edits reach the
+  running app without a rebuild step
+- `bun run dev:https` - Same, with local HTTPS
+- `bun run build` - Build the production dashboard (there is no server prebuild)
+- `bun run build:all` - Compatibility alias for `build`
 - `bun start` - Start production server
-- `bun run lint` - Run ESLint for code quality
+- `bun run lint` - ESLint over the dashboard, contracts, server, seed and `scripts/`
 
 ### Database Operations
 All read `apps/dashboard/.env.local`, the monorepo's only env file.
@@ -26,14 +29,18 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 
 ### Testing & Quality
 - Always run `bun run lint` after making code changes
-- `bun run typecheck` - Typecheck contracts, server and dashboard in dependency
-  order. The dashboard runs two passes: the app (`tsconfig.json`, which excludes
-  tests) and the tests (`tsconfig.test.json`, which adds `bun` types). Neither
-  hides the other.
-- `bun run test:config` - The focused contract and feature-config tests
-- `bun run build:all` to verify production readiness
-- `bun run i18n:check` when touching `packages/server/src/locales/*.json`
-- `bun run check` - lint, typecheck, i18n, focused tests, build and `db:check`
+- `bun run typecheck` - Typecheck contracts, server, seed and dashboard from
+  source; nothing is emitted first. The dashboard runs two passes: the app
+  (`tsconfig.json`, which excludes tests) and the tests (`tsconfig.test.json`,
+  which adds `bun` types). Neither hides the other.
+- `bun run test:config` - The focused contract, feature-config and form-fill tests
+- `bun run test:access-reset` - The focused access-recovery suite
+- `bun run test:boundaries` - The boundary checker's regression fixtures, then
+  the checker over the real import graph (`scripts/check-workspace-boundaries.mjs`)
+- `bun run test` - All selected safe tests above
+- `bun run build` to verify production readiness
+- `bun run i18n:check` when touching `packages/contracts/src/locales/*.json`
+- `bun run check` - lint, typecheck, i18n, safe tests, build and `db:check`
   in one pass. Mutates no database.
 
 ## Framework Contracts
@@ -79,9 +86,13 @@ states that drift — so do not add one without changing the plan first.
   (`PAYMENT_METHOD_VALUES`) with their inferred types (`PaymentMethod`).
   `packages/server/src/shared/enums.ts` is a Zod adapter over them and declares
   nothing of its own; the dashboard builds `z.enum(SOMETHING_VALUES)` from the
-  same tuples. The package has no dependencies — not Zod, Drizzle, React, Najm,
-  translations, or server runtime — because it is consumed from TypeScript
-  source by both a Bun server build and a Next client bundle. The by-key
+  same tuples. The tuples module has no dependencies — not Zod, Drizzle, React,
+  Najm, or server runtime — because it is consumed from TypeScript source by
+  both a Bun server and a Next client bundle. The package also owns the
+  translation catalog (`@sms/contracts/locales`) and the shared demo/form-fill
+  generators (`@sms/contracts/fixtures`), and may depend only on the audited
+  portable packages those need (`najm-i18n/define`, `@faker-js/faker`,
+  `nanoid`). The by-key
   `enumValues` lookup lives at `@sms/contracts/lookup` and is server-only: it
   names all sixty-nine tuples, so importing it from a component would keep
   every domain's strings alive. Adding or removing a value changes what the
@@ -96,7 +107,7 @@ states that drift — so do not add one without changing the plan first.
   shapes, and select builders stay with the feature that binds them, matching
   Kafil's self-contained feature configuration. ESLint enforces both
   boundaries: `@/lib/validations`, `@/lib/ZodEnum`, `@/lib/ENUMS` and
-  `@/hooks/useEnum` are restricted imports, as is any `@server/*` path.
+  `@/hooks/useEnum` are restricted imports, as are server and seed paths.
 
   A form schema improves UX; it is never authorization. The DTO in
   `packages/server/src/modules/**/**Dto.ts` validates the same payload again
@@ -111,6 +122,17 @@ states that drift — so do not add one without changing the plan first.
   shared tuple. Where a stored record can hold a value the list no longer
   offers, wrap the builder with `withStoredValue` so editing shows what is
   actually stored instead of silently rewriting it.
+
+- **One direction for every workspace import.** Browser code (every
+  `"use client"` module and everything it imports) reaches `@sms/contracts`
+  only; server components and route handlers may also import `@sms/server`
+  exports; the server imports contracts and never the app or seed; seed
+  imports server and contracts; contracts imports no workspace package. A
+  cross-package import names the package and one of its declared `exports` —
+  never a relative path or alias into another package. Private workspaces
+  export TypeScript source; there is no server `dist` or prebuild.
+  `bun run test:boundaries` enforces this over the resolved import graph; see
+  `docs/architecture/workspace.md` before adding an export or an exception.
 
 Current Najm versions are the pins in the root `package.json`. Read them there
 rather than assuming; they are upgraded deliberately, not by range.
@@ -259,8 +281,8 @@ apps/dashboard/src/
 └── lib/                # auth, session, server preferences, utilities
 ```
 
-Translations are not here. They live in `packages/server/src/locales/` and
-serve both the backend and the frontend catalog.
+Translations are not here. They live in `packages/contracts/src/locales/`
+(`@sms/contracts/locales`) and serve both the backend and the frontend.
 
 Domain values are not here either. They live in `packages/contracts`
 (`@sms/contracts`) — see **One declaration of every shared value** below.
@@ -434,12 +456,12 @@ export const createStudentApi = async (data: CreateStudentData) => {
 # CROSS-CUTTING CONCERNS
 
 ## Internationalization
-- Translation files: `packages/server/src/locales/[lang].json` — one catalog for backend and frontend
+- Translation files: `packages/contracts/src/locales/[lang].json` — one catalog for backend and frontend, exported as `@sms/contracts/locales`
 - Supported languages: English, French, Arabic, Spanish
 - Use `t()` from `najm-i18n` for backend strings
 - Frontend reads the same catalog through `NajmAppProvider`; `useTranslation` in `apps/dashboard/src/hooks/useLanguage.tsx` is a thin facade that adds a per-key English fallback
 - Run `bun run i18n:check` after adding keys: every key must exist in all four locales or `NTable` and forms render raw key strings
-- `@sms/server/locales` resolves to the built `dist`, so run `bun run build:server` before `bun run build` whenever a catalog changes — otherwise the dashboard keeps serving the previous keys
+- The catalog is consumed from source everywhere: a JSON edit reaches `bun run dev`, the server plugin and seed commands with no build step
 
 ## File Upload System
 - `FileService.handleImageUpload()` for profile pictures and documents

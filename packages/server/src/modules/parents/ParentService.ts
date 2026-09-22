@@ -1,11 +1,11 @@
-import { Service, Events, EventService } from '@server/najm';
+import { Service, Events, EventService } from '../../najm';
 import { ParentRepository } from './ParentRepository';
 import { ParentValidator } from './ParentValidator';
-import { AuthService, UserService } from '@server/auth';
+import { AuthService, UserService } from '../../auth';
 import { StorageService } from 'najm-storage';
 import { nanoid } from 'nanoid';
-import { calculateAge, pickProps, isEmpty } from '@server/shared';
-import { resolveUserPassword, isSeeding } from '@server/shared/userPassword';
+import { calculateAge, pickProps, isEmpty } from '../../shared';
+import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import type {
   CreateParentDto,
   CreateParentsBulkDto,

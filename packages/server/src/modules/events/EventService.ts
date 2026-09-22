@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { EventRepository } from './EventRepository';
 import { EventValidator } from './EventValidator';
 import type {

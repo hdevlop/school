@@ -1,4 +1,4 @@
-import { Err, I18n, Service } from '@server/najm';
+import { Err, I18n, Service } from '../../../najm';
 import { FeeRepository } from './FeeRepository';
 import { StudentValidator } from '../../students/StudentValidator';
 import { FeeTypeValidator } from '../feeTypes/FeeTypeValidator';

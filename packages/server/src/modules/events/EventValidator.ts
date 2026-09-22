@@ -1,4 +1,4 @@
-import { Service, Err, I18n, t } from '@server/najm';
+import { Service, Err, I18n, t } from '../../najm';
 import { EventRepository } from './EventRepository';
 import { ClassValidator } from '../classes/ClassValidator';
 

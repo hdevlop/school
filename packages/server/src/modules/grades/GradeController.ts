@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { GradeService } from './GradeService';
 import { Grade, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './GradeGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import {
   assessmentIdParam,
   createGradeDto,

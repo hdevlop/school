@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { num, requiredId } from '@server/shared/fields';
+import { num, requiredId } from '../../../shared/fields';
 
 export const applyCreditDto = z.object({
   studentId: requiredId,

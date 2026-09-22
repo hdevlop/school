@@ -1,7 +1,7 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { and, eq, inArray } from 'drizzle-orm';
-import { rolloverRuns, rolloverRunItems, students, fees, feeTypes } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { rolloverRuns, rolloverRunItems, students, fees, feeTypes } from '../../../database/schema';
+import { DB } from '../../../database/db';
 
 @Repository()
 export class RolloverRepository {

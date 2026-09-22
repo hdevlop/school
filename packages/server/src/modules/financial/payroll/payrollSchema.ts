@@ -7,8 +7,8 @@ import {
   paymentMethodEnum,
   processedByRef,
   timestamps,
-} from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+} from '../../../database/shared';
+import { getEnumValues } from '../../../shared/enums';
 import { staffRef } from '../../staff/staffSchema';
 
 export const payslipStatusEnum = pgEnum('payslipStatus', getEnumValues('payslipStatus'));

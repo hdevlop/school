@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 
-import { AccessResetRepository } from '@server/modules/accessReset/AccessResetRepository';
-import { AccessResetService } from '@server/modules/accessReset/AccessResetService';
-import { AccessResetValidator } from '@server/modules/accessReset/AccessResetValidator';
+import { AccessResetRepository } from '../../src/modules/accessReset/AccessResetRepository';
+import { AccessResetService } from '../../src/modules/accessReset/AccessResetService';
+import { AccessResetValidator } from '../../src/modules/accessReset/AccessResetValidator';
 
 /**
  * Real-PostgreSQL checks for the access-reset command.
@@ -79,13 +79,13 @@ afterAll(async () => {
 /**
  * A container holding only what this command needs.
  *
- * The full `server` from `@server/index` also boots RAG, the chatbot and MCP,
+ * The full `server` from `src/index.ts` also boots RAG, the chatbot and MCP,
  * which reach for an embedding host that has nothing to do with this test and
  * would turn an unrelated outage into a failure here.
  */
 const buildContainer = async () => {
   const { Server } = await import('najm-core');
-  const config = await import('@server/config');
+  const config = await import('../../src/config');
 
   const server = new Server()
     .use(config.databaseConfig())

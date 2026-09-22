@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { Megaphone } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { Megaphone, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import AnnouncementForm from './AnnouncementForm';
 import AnnouncementCard from './AnnouncementCard';
@@ -10,9 +11,8 @@ import { useTranslation } from 'najm-i18n/react';
 import { useAnnouncementsTableColumns } from '../hooks/useAnnouncementsTableColumns';
 import { useAnnouncementsTableFilters } from '../hooks/useAnnouncementsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function AnnouncementsTable() {
   const { t } = useTranslation();
   const columns = useAnnouncementsTableColumns();
@@ -108,14 +108,36 @@ function AnnouncementsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isAnnouncementsLoading}
-        {...tableErrorProps(error, announcements)}
+        error={hasFailedToLoad(error, announcements) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={AnnouncementCard}
         addButtonText={t('announcements.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'announcements',
-          onCreate: handleAddClick,
-          createLabel: t('announcements.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.announcements}
+            title={t('emptyStates.announcements.title')}
+            description={t('emptyStates.announcements.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('announcements.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
         dynamicHeight={true}
       />

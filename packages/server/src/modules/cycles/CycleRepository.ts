@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { DB } from '@server/database/db';
-import { cycles } from '@server/database/schema';
-import { Repository } from '@server/najm';
+import { DB } from '../../database/db';
+import { cycles } from '../../database/schema';
+import { Repository } from '../../najm';
 
 const cycleSelect = {
   id: cycles.id,

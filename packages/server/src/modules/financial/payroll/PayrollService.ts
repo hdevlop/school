@@ -1,4 +1,4 @@
-import { Err, Events, EventService, Service, Transaction } from '@server/najm';
+import { Err, Events, EventService, Service, Transaction } from '../../../najm';
 import { PayrollRepository } from './PayrollRepository';
 import { PayrollValidator } from './PayrollValidator';
 import { StaffRepository } from '../../staff/StaffRepository';
@@ -14,7 +14,7 @@ import type {
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents } from '../utils/money';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 const money = (value: unknown) => Number(value ?? 0);
 const toMoney = (value: number) => fromCents(Math.round(value * 100));

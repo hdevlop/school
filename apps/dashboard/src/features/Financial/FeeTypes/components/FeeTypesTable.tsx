@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { Tag } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NEmptyState, NButton } from 'najm-kit';
+import { Tag, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import FeeTypeForm from './FeeTypeForm';
 import { useFeeTypes } from '../hooks/useFeeTypes';
@@ -11,7 +12,6 @@ import { useFeeTypesTableColumns } from '../hooks/useFeeTypesTableColumns';
 import { useFeeTypesTableFilters } from '../hooks/useFeeTypesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function FeeTypesTable() {
 
   const { t } = useTranslation();
@@ -108,11 +108,28 @@ function FeeTypesTable() {
         loading={isFeeTypesLoading}
         renderCard={FeeTypeCard}
         addButtonText={t('feeTypes.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'feeTypes',
-          onCreate: handleAddClick,
-          createLabel: t('feeTypes.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.feeTypes}
+            title={t('emptyStates.feeTypes.title')}
+            description={t('emptyStates.feeTypes.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('feeTypes.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
       />
     </div>

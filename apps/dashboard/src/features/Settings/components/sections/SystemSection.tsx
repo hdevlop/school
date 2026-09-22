@@ -6,7 +6,7 @@ import { FormInput, NAJM_CURRENCY_OPTIONS } from 'najm-kit';
 
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-import { schoolI18n } from '@sms/server/locales';
+import { schoolI18n } from '@sms/contracts/locales';
 
 const SystemSection: React.FC = () => {
   const { t } = useTranslation();

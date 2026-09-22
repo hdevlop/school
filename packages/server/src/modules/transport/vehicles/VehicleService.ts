@@ -1,4 +1,4 @@
-import { Service, Transaction } from '@server/najm';
+import { Service, Transaction } from '../../../najm';
 import { VehicleRepository } from './VehicleRepository';
 import { VehicleValidator } from './VehicleValidator';
 import { VehicleAssignmentService } from '../vehicleAssignments/VehicleAssignmentService';

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { optionalId } from '@server/shared/fields';
+import { optionalId } from '../../shared/fields';
 
 const announcementSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title too long'),

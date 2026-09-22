@@ -1,10 +1,10 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
-import { NTable } from 'najm-kit';
-import { Award, FileText } from 'lucide-react';
+import { NTable, NEmptyState } from 'najm-kit';
+import { Award, FileText, SearchX } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface DocumentsTabProps {
   teacher: any;
@@ -58,11 +58,21 @@ const DocumentsTab: React.FC<DocumentsTabProps> = () => {
         showAddButton={false}
         showViewToggle={false}
         showColumnVisibility={false}
-        {...tableEmptyProps({
-          feature: 'documents',
-          title: "No documents uploaded",
-          description: null,
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.documents}
+            title={"No documents uploaded"}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
       />
     </div>
   );

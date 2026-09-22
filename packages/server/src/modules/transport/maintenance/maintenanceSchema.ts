@@ -1,7 +1,7 @@
 import { date, numeric, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-import { idField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { idField, timestamps } from '../../../database/shared';
+import { getEnumValues } from '../../../shared/enums';
 import { vehicles } from '../vehicles/vehicleSchema';
 
 export const maintenanceTypeEnum = pgEnum('maintenanceType', getEnumValues('maintenanceType'));

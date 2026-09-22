@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { FileText } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { FileText, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import ExamForm from './ExamForm';
 import ExamCard from './ExamCard';
@@ -10,9 +11,8 @@ import { useTranslation } from 'najm-i18n/react';
 import { useExamsTableColumns } from '../hooks/useExamsTableColumns';
 import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function ExamsTable() {
   const { t } = useTranslation();
   const columns = useExamsTableColumns();
@@ -108,14 +108,36 @@ function ExamsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isExamsLoading}
-        {...tableErrorProps(error, exams)}
+        error={hasFailedToLoad(error, exams) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={ExamCard}
         addButtonText={t('exams.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'exams',
-          onCreate: handleAddClick,
-          createLabel: t('exams.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.exams}
+            title={t('emptyStates.exams.title')}
+            description={t('emptyStates.exams.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('exams.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
         dynamicHeight={true}
       />

@@ -1,8 +1,8 @@
-import { Service } from '@server/najm';
+import { Service } from '../../../najm';
 import { VehicleAssignmentRepository } from './VehicleAssignmentRepository';
 import { VehicleAssignmentValidator } from './VehicleAssignmentValidator';
 import type { CreateVehicleAssignmentDto, UpdateVehicleAssignmentDto } from './VehicleAssignmentDto';
-import { getBusinessDateOnly } from '@server/shared/businessDate';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 @Service()
 export class VehicleAssignmentService {

@@ -7,8 +7,8 @@ import {
   paidByRef,
   paymentMethodEnum,
   timestamps,
-} from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+} from '../../../database/shared';
+import { getEnumValues } from '../../../shared/enums';
 
 export const expenseCategoryEnum = pgEnum('expenseCategory', getEnumValues('expenseCategory'));
 export const expenseStatusEnum = pgEnum('expenseStatus', getEnumValues('expenseStatus'));

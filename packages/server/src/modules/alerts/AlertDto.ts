@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { optionalId } from '@server/shared/fields';
-import { alertPriorityEnum, alertStatusEnum, alertTypeEnum } from '@server/shared/enums';
+import { optionalId } from '../../shared/fields';
+import { alertPriorityEnum, alertStatusEnum, alertTypeEnum } from '../../shared/enums';
 
 const alertSchema = z.object({
   type: alertTypeEnum,

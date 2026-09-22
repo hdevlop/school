@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { GradeRepository } from './GradeRepository';
 import { GradeValidator } from './GradeValidator';
 import { AssessmentRepository } from '../assessments/AssessmentRepository';

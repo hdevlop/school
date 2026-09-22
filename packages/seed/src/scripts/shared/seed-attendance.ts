@@ -1,4 +1,4 @@
-import type { AttendanceService } from '@server/modules/seed';
+import type { AttendanceService } from '@sms/server/modules/seed';
 
 function weightedAttendanceStatus(): string {
   // Realistic distribution: ~92% present. Previously 75% present / 10% late /

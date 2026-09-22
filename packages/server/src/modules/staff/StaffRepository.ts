@@ -1,4 +1,4 @@
-import { DB } from '@server/database/db';
+import { DB } from '../../database/db';
 import {
   accountantAssignments,
   assistantAssignments,
@@ -16,8 +16,8 @@ import {
   vehicleAssignments,
   vehicles,
   zones,
-} from '@server/database/schema';
-import { Repository } from '@server/najm';
+} from '../../database/schema';
+import { Repository } from '../../najm';
 import { and, count, desc, eq, gte, inArray, isNull, lte, notInArray, or, sql } from 'drizzle-orm';
 
 // Roles managed on their own dedicated page, excluded from the unified Staff list.

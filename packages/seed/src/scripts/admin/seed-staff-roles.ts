@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 
-import { db } from '@server/database/db';
-import { staffRoles } from '@server/database/schema';
+import { db } from '@sms/server/database';
+import { staffRoles } from '@sms/server/database/schema';
 
 const ROLES = [
   { code: 'teacher',      label: 'Teacher',         labels: { fr: 'Enseignant', ar: 'أستاذ', es: 'Profesor' },                       category: 'teaching',       sortOrder: 10, isSystem: true  },

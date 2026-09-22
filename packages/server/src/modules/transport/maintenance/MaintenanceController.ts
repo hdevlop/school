@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Query, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Query, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { MaintenanceService } from './MaintenanceService';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 import {
   createMaintenanceDto,
   maintenanceIdParam,

@@ -2,7 +2,7 @@ import { integer, pgTable, text } from 'drizzle-orm/pg-core';
 
 import {
   createRef, idField, timestamps,
-} from '@server/database/shared';
+} from '../../database/shared';
 import { classRef } from '../classes/classSchema';
 import { sectionRef } from '../sections/sectionSchema';
 import { subjectRef } from '../subjects/subjectSchema';

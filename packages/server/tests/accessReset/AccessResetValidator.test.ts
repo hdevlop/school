@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 
-import { AccessResetValidator } from '@server/modules/accessReset/AccessResetValidator';
+import { AccessResetValidator } from '../../src/modules/accessReset/AccessResetValidator';
 
 /**
  * The eligibility matrix, exercised against a fake repository.

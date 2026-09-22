@@ -1,8 +1,8 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { SettingsRepository } from './SettingsRepository';
 import { SettingsValidator } from './SettingsValidator';
 import type { CreateSettingsDto, UpdateSettingsDto } from './SettingsDto';
-import { getBusinessClockInfo } from '@server/shared';
+import { getBusinessClockInfo } from '../../shared';
 
 @Service()
 export class SettingsService {

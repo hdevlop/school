@@ -1,4 +1,4 @@
-import { Can } from '@server/auth';
+import { Can } from '../../auth';
 import { composeGuards } from 'najm-guard';
 
 export const canReadDiscipline = composeGuards(Can('read:discipline'));

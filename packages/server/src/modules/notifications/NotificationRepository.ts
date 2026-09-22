@@ -1,8 +1,8 @@
 import { and, count, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 
-import { Repository } from '@server/najm';
-import { DB } from '@server/database/db';
-import { parents, studentParents } from '@server/database/schema';
+import { Repository } from '../../najm';
+import { DB } from '../../database/db';
+import { parents, studentParents } from '../../database/schema';
 import { NOTIFICATION_BATCH_SIZE, NOTIFICATION_MAX_ATTEMPTS } from './notificationConfig';
 import { notificationDeliveries, notifications, pushSubscriptions } from './notificationSchema';
 

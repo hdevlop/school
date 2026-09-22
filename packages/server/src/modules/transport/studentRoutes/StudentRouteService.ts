@@ -1,10 +1,10 @@
-import { Err, Service, Transaction } from '@server/najm';
+import { Err, Service, Transaction } from '../../../najm';
 import { StudentRouteRepository } from './StudentRouteRepository';
 import { StudentRouteValidator } from './StudentRouteValidator';
 import { FeeService } from '../../financial/fees/FeeService';
 import { FeeTypeRepository } from '../../financial/feeTypes/FeeTypeRepository';
 import type { CreateStudentRouteDto, ReassignStudentRouteDto, UpdateStudentRouteDto } from './StudentRouteDto';
-import { getBusinessDateOnly } from '@server/shared/businessDate';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 @Service()
 export class StudentRouteService {

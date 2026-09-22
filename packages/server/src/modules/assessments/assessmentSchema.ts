@@ -1,7 +1,7 @@
 import { date, integer, jsonb, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, idField, numericField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { createRef, idField, numericField, timestamps } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 import { teacherAssignmentRef } from '../teachers/teacherSchema';
 
 export const assessmentTypeEnum = pgEnum('assessmentType', getEnumValues('assessmentType'));

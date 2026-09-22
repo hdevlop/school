@@ -1,11 +1,12 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
-import { NPageHeader, NPageHeaderActions, NTable, NTabs } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NTable, NTabs, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import GradesHeader from './GradesHeader';
-import { ClipboardList, FileText, GraduationCap } from 'lucide-react';
+import { ClipboardList, FileText, GraduationCap, SearchX } from 'lucide-react';
 import { useGrades } from '../hooks/useGrades';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
@@ -17,8 +18,7 @@ import { useExams } from '@/features/Exams/hooks/useExams';
 import { useGradesTableColumns } from '../hooks/useGradesTableColumns';
 import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import { useTranslation } from 'najm-i18n/react';
 
 const PASS_THRESHOLD = 50;
@@ -418,16 +418,31 @@ function GradesTable() {
         )}
         onCellEdit={handleCellEdit}
         loading={isGradesLoading || isStudentsLoading}
-        {...tableErrorProps(gradesError ?? studentsError, roster)}
+        error={hasFailedToLoad(gradesError ?? studentsError, roster) ? gradesError ?? studentsError : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'
         dynamicHeight={true}
-        {...tableEmptyProps({
-          feature: 'grades',
-          title: noDataText,
-          description: null,
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.grades}
+            title={noDataText}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
       />
     </div>
   );

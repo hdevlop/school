@@ -1,4 +1,4 @@
-import type { Container, Constructor } from '@server/najm';
+import type { Container, Constructor } from '../najm';
 
 export { SettingsService } from './settings/SettingsService';
 export { SettingsRepository } from './settings/SettingsRepository';
@@ -131,7 +131,7 @@ export { BehaviorRewardValidator } from './behaviorRewards/BehaviorRewardValidat
 
 export { HealthService } from './health/HealthService';
 
-import { AuthService, UserService, UserValidator } from '@server/auth';
+import { AuthService, UserService, UserValidator } from '../auth';
 import { RoleService, PermissionService } from 'najm-auth';
 import { StorageService } from 'najm-storage';
 

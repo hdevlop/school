@@ -1,7 +1,8 @@
 'use client';
 
-import { CalendarRange } from 'lucide-react';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { CalendarRange, Plus, SearchX } from 'lucide-react';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import CycleCard from './CycleCard';
@@ -9,9 +10,8 @@ import CycleForm from './CycleForm';
 import { useCycles } from '../hooks/useCycles';
 import { useCyclesTableColumns } from '../hooks/useCyclesTableColumns';
 import { useCyclesTableFilters } from '../hooks/useCyclesTableFilters';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 const sortCycles = (cycles = []) => [...cycles].sort((a, b) => {
   const order = Number(a.sortOrder || 0) - Number(b.sortOrder || 0);
   return order || String(a.name || '').localeCompare(String(b.name || ''));
@@ -98,14 +98,36 @@ function CyclesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isCyclesLoading}
-        {...tableErrorProps(error, orderedCycles)}
+        error={hasFailedToLoad(error, orderedCycles) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={CycleCard}
         addButtonText={t('cycles.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'cycles',
-          onCreate: handleAddClick,
-          createLabel: t('cycles.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.cycles}
+            title={t('emptyStates.cycles.title')}
+            description={t('emptyStates.cycles.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('cycles.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode="table"
       />
     </div>

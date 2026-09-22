@@ -1,7 +1,7 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../najm';
 import { and, eq, gte, lte, or, desc, asc, sql, count } from 'drizzle-orm';
-import { events, eventParticipants, users, classes, sections } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { events, eventParticipants, users, classes, sections } from '../../database/schema';
+import { DB } from '../../database/db';
 
 export const eventSelect = {
   id: events.id,

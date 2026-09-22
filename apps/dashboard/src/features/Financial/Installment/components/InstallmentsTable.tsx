@@ -1,13 +1,16 @@
 "use client"
 
-import { NTable } from 'najm-kit';
+import { SearchX } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { NTable, NEmptyState } from 'najm-kit';
 import InstallmentCard from './InstallmentCard';
 import { useDialog } from 'najm-kit';
+import { useTranslation } from 'najm-i18n/react';
 import { useInstallmentsTableColumns } from '../hooks/useInstallmentsTableColumns';
 import { useInstallmentsTableFilters } from '../hooks/useInstallmentsTableFilters';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 function InstallmentsTable({ fee, className = '', onPayInstallment }) {
+  const { t } = useTranslation();
 
   const rawFilters = useInstallmentsTableFilters();
 
@@ -35,7 +38,22 @@ function InstallmentsTable({ fee, className = '', onPayInstallment }) {
       renderCard={InstallmentCard}
       defaultMode='table'
       showAddButton={false}
-      {...tableEmptyProps({ feature: 'installments' })}
+      renderEmpty={() => (
+        <NEmptyState
+          surface="panel"
+          icon={FEATURE_ICONS.installments}
+          title={t('emptyStates.installments.title')}
+          description={t('emptyStates.installments.description')}
+        />
+      )}
+      renderFilteredEmpty={() => (
+        <NEmptyState
+          surface="panel"
+          icon={SearchX}
+          title={t('emptyStates.filtered.title')}
+          description={t('emptyStates.filtered.description')}
+        />
+      )}
       showViewToggle={false}
       showPagination
       defaultPagination={{ pageIndex: 0, pageSize: 10 }}

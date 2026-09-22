@@ -1,4 +1,4 @@
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 
 export const canAccessVehicle     = isAdmin;
 export const canUpdateVehicle     = isAdmin;

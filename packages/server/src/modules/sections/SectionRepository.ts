@@ -1,8 +1,8 @@
-import { Repository } from '@server/najm';
-import { DB } from '@server/database/db';
-import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents } from '@server/database/schema';
+import { Repository } from '../../najm';
+import { DB } from '../../database/db';
+import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents } from '../../database/schema';
 import { eq, count, and, inArray, ne } from 'drizzle-orm';
-import { Owned } from '@server/auth';
+import { Owned } from '../../auth';
 import { Section } from './SectionGuards';
 
 export const sectionSelect = {

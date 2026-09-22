@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Err, Get, Params, Post, Put, ResMsg, Validate } from '@server/najm';
+import { Body, Controller, Delete, Err, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DriverService } from './DriverService';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 import {
   cinParam,
   createDriverDto,

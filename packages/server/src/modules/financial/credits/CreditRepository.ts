@@ -1,7 +1,7 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
-import { studentCreditLots, studentCreditApplications, paymentAllocations } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { studentCreditLots, studentCreditApplications, paymentAllocations } from '../../../database/schema';
+import { DB } from '../../../database/db';
 
 @Repository()
 export class CreditRepository {

@@ -1,6 +1,6 @@
 import { isMoroccanCin, normalizeMoroccanCin } from 'najm-auth';
 
-import { Err, I18n, Service } from '@server/najm';
+import { Err, I18n, Service } from '../../najm';
 import { AccessResetRepository, type AccessResetAccount } from './AccessResetRepository';
 import type { AccessResetMode } from './AccessResetDto';
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { dateField, num, optionalId, requiredId } from '@server/shared/fields';
-import { assessmentStatusEnum, assessmentTypeEnum } from '@server/shared/enums';
+import { dateField, num, optionalId, requiredId } from '../../shared/fields';
+import { assessmentStatusEnum, assessmentTypeEnum } from '../../shared/enums';
 
 const assessmentSchema = z.object({
   classId: requiredId,

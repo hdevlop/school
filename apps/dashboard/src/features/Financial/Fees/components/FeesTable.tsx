@@ -1,8 +1,9 @@
 "use client"
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useEffect, useMemo, useState } from 'react';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { CircleDollarSign } from 'lucide-react';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NEmptyState, NButton } from 'najm-kit';
+import { CircleDollarSign, Plus, SearchX } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
@@ -16,7 +17,6 @@ import { useRouter } from 'next/navigation';
 import { createBulkFeesApi } from '@/services/feeApi';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 
 function FeesTable() {
@@ -243,13 +243,27 @@ function FeesTable() {
           cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
         }}
         addButtonText={t('fees.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'fees',
-          title: noDataText,
-          description: null,
-          onCreate: handleAddClick,
-          createLabel: t('fees.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.fees}
+            title={noDataText}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('fees.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='cards'
         showCheckbox
       />

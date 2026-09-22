@@ -1,8 +1,8 @@
-import { usersTable as users } from '@server/auth';
+import { usersTable as users } from '../../auth';
 import { pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { idField, numericField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { idField, numericField, timestamps } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 import { assessmentRef } from '../assessments/assessmentSchema';
 import { examRef } from '../exams/examSchema';
 import { studentRef } from '../students/studentSchema';

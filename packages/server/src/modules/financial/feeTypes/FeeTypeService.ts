@@ -1,5 +1,5 @@
-import { Service } from '@server/najm';
-import { pickProps, isEmpty } from '@server/shared';
+import { Service } from '../../../najm';
+import { pickProps, isEmpty } from '../../../shared';
 import { FeeTypeValidator } from './FeeTypeValidator';
 import { FeeTypeRepository } from './FeeTypeRepository';
 import type { CreateFeeTypeDto, UpdateFeeTypeDto } from './FeeTypeDto';

@@ -8,8 +8,8 @@ import {
   num,
   optionalId,
   phoneField,
-} from '@server/shared/fields';
-import { compensationModeEnum, employmentTypeEnum, genderEnum, teacherStatusEnum } from '@server/shared/enums';
+} from '../../shared/fields';
+import { compensationModeEnum, employmentTypeEnum, genderEnum, teacherStatusEnum } from '../../shared/enums';
 
 const teacherPersonalSchema = z.object({
   id: optionalId,

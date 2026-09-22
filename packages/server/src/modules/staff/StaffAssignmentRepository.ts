@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { DB } from '@server/database/db';
-import { accountantAssignments, assistantAssignments, busAssistantAssignments, cleanerAssignments, securityAssignments, staffCredentials } from '@server/database/schema';
-import { Repository } from '@server/najm';
+import { DB } from '../../database/db';
+import { accountantAssignments, assistantAssignments, busAssistantAssignments, cleanerAssignments, securityAssignments, staffCredentials } from '../../database/schema';
+import { Repository } from '../../najm';
 
 type StaffAssignmentInput = {
   zoneId?: string;

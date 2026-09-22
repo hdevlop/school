@@ -1,7 +1,7 @@
 import { boolean, doublePrecision, integer, jsonb, numeric, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { idField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { idField, timestamps } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 
 export const calendarSystemEnum = pgEnum('calendarSystem', getEnumValues('calendarSystem'));
 export const languageEnum = pgEnum('language', getEnumValues('language'));

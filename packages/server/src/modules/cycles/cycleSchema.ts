@@ -1,6 +1,6 @@
 import { boolean, integer, jsonb, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, idField, timestamps } from '@server/database/shared';
+import { createRef, idField, timestamps } from '../../database/shared';
 
 export const cycles = pgTable('cycles', {
   id: idField(),

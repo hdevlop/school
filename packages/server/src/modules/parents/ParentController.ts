@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ParentService } from './ParentService';
 import { Parent, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ParentGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import {
   createParentDto,
   createParentsBulkDto,

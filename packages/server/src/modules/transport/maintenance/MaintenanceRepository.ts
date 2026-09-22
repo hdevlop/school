@@ -1,7 +1,7 @@
-import { DB } from '@server/database/db';
-import { maintenance, vehicles } from '@server/database/schema';
+import { DB } from '../../../database/db';
+import { maintenance, vehicles } from '../../../database/schema';
 import { count, eq, desc, sql, and, asc } from 'drizzle-orm';
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 
 
 const maintenanceSelect = {

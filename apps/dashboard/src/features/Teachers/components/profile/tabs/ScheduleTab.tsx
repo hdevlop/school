@@ -1,7 +1,7 @@
 "use client";
 
+import { NLoadingState } from 'najm-kit';
 import { CalendarClock, Clock, Layers3 } from 'lucide-react';
-import PageLoadingState from '@/shared/PageLoadingState';
 import RoutineGrid from '@/features/ClassRoutines/components/RoutineGrid';
 import { useTeacherRoutine } from '@/features/ClassRoutines/hooks/useClassRoutines';
 import { useTranslation } from 'najm-i18n/react';
@@ -26,7 +26,7 @@ export default function ScheduleTab({ teacher }: ScheduleTabProps) {
     schedules.flatMap((schedule) => schedule.entries.map((entry) => entry.dayOfWeek)),
   ).size;
 
-  if (isPending) return <PageLoadingState label={t('classRoutines.ui.loading.weeklyRoutine')} className="min-h-64" />;
+  if (isPending) return <NLoadingState surface="panel" label={t('classRoutines.ui.loading.weeklyRoutine')} className="min-h-64" />;
 
   return (
     <div className="space-y-5">

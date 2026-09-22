@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { FeeService } from './FeeService';
 import { buildFeeRecalculationResponse } from './buildFeeRecalculationResponse';
-import { isFinancial } from '@server/auth';
+import { isFinancial } from '../../../auth';
 import {
   createFeeDto,
   createFeesBulkDto,

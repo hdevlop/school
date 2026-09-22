@@ -1,7 +1,7 @@
-import { DB } from '@server/database/db';
-import { vehicleAssignments, vehicles, drivers, staff, users } from '@server/database/schema';
+import { DB } from '../../../database/db';
+import { vehicleAssignments, vehicles, drivers, staff, users } from '../../../database/schema';
 import { count, eq, desc, and, inArray } from 'drizzle-orm';
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 
 @Repository()
 export class VehicleAssignmentRepository {

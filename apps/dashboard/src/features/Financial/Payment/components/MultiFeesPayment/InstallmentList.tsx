@@ -1,10 +1,10 @@
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useState, useEffect, useMemo } from 'react';
-import { ChevronDown, ChevronUp, AlertTriangle, Clock, CheckCircle2, LockKeyhole } from 'lucide-react';
-import { Label, NajmScroll, NTable } from 'najm-kit';
+import { ChevronDown, ChevronUp, AlertTriangle, Clock, CheckCircle2, LockKeyhole, SearchX } from 'lucide-react';
+import { Label, NajmScroll, NTable, NEmptyState } from 'najm-kit';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 const toAmount = (value: unknown) => Number(value ?? 0) || 0;
 
@@ -190,11 +190,21 @@ const FeeInstallmentsTable = ({
             showCheckbox={false}
             dynamicHeight={false}
             bordered
-            {...tableEmptyProps({
-              feature: 'installments',
-              title: "No installments to pay",
-              description: null,
-            })}
+            renderEmpty={() => (
+              <NEmptyState
+                surface="panel"
+                icon={FEATURE_ICONS.installments}
+                title={"No installments to pay"}
+              />
+            )}
+            renderFilteredEmpty={() => (
+              <NEmptyState
+                surface="panel"
+                icon={SearchX}
+                title={t('emptyStates.filtered.title')}
+                description={t('emptyStates.filtered.description')}
+              />
+            )}
             className="rounded-md bg-white text-xs [&_tbody_td]:py-2 [&_thead_th]:py-2"
          />
       </div>

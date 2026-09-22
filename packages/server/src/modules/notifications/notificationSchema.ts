@@ -1,8 +1,8 @@
 import { sql } from 'drizzle-orm';
 import { check, index, integer, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import { usersTable } from '@server/auth';
-import { idField, timestamps } from '@server/database/shared';
+import { usersTable } from '../../auth';
+import { idField, timestamps } from '../../database/shared';
 
 export const notifications = pgTable('notifications', {
   id: idField(21),

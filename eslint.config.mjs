@@ -32,6 +32,9 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_", "caughtErrorsIgnorePattern": "^_" }],
       "prefer-const": "warn",
+      // The dashboard is App Router only. With no pages/ directory the rule
+      // has nothing to check and only warns when lint runs from the root.
+      "@next/next/no-html-link-for-pages": "off",
     },
   },
   {
@@ -65,23 +68,17 @@ export default defineConfig([
         ],
         patterns: [
           {
-            // @sms/contracts is dependency-free and safe in a client bundle;
-            // the server's own modules are not, and reaching into them from a
-            // component pulls Drizzle and the database driver toward the browser.
-            group: ["@server/*", "@sms/server/modules", "@sms/server/modules/*"],
+            // @sms/contracts is browser-safe; the server's own modules are
+            // not, and reaching into them from a component pulls Drizzle and
+            // the database driver toward the browser. The complete graph rule
+            // is scripts/check-workspace-boundaries.mjs; this is the fast
+            // editor-time hint for the most common mistake.
+            group: ["@server/*", "@sms/server/modules", "@sms/server/modules/*", "@sms/seed", "@sms/seed/*"],
             message:
-              "Do not import server runtime code from the dashboard. Shared values come from @sms/contracts; translations come from @sms/server/locales.",
+              "Do not import server or seed code from the dashboard. Shared values, catalogs and fixtures come from @sms/contracts (./locales, ./fixtures).",
           },
         ],
       }],
-    },
-  },
-  {
-    // Tests read the locale catalogs directly to check a label exists in all
-    // four languages, which is a JSON read, not a server runtime import.
-    files: ["apps/dashboard/src/**/*.test.{ts,tsx}"],
-    rules: {
-      "no-restricted-imports": "off",
     },
   },
   globalIgnores([

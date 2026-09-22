@@ -1,7 +1,7 @@
-import { Controller, Get, Params, ResMsg, Validate } from '@server/najm';
+import { Controller, Get, Params, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { TeacherProfileService } from './TeacherProfileService';
-import { isAuth } from '@server/auth';
+import { isAuth } from '../../auth';
 import { z } from 'zod';
 
 const teacherIdParam = z.object({ teacherId: z.string().min(1) });

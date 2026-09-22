@@ -1,4 +1,4 @@
-import { DB } from '@server/database/db';
+import { DB } from '../../database/db';
 import {
   behaviorRewards,
   classes,
@@ -8,9 +8,9 @@ import {
   teacherAssignments,
   teachers,
   users,
-} from '@server/database/schema';
-import { Owned } from '@server/auth';
-import { Repository } from '@server/najm';
+} from '../../database/schema';
+import { Owned } from '../../auth';
+import { Repository } from '../../najm';
 import { and, desc, eq } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { BehaviorReward } from './BehaviorRewardGuards';

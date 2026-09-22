@@ -1,4 +1,4 @@
-import { isAuth, Can } from '@server/auth';
+import { isAuth, Can } from '../../auth';
 import { composeGuards } from 'najm-guard';
 
 export const canAccessEvent        = composeGuards(Can('read:events'));

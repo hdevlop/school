@@ -1,9 +1,9 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { eq, and, or, sql, sum, inArray, ne } from 'drizzle-orm';
-import { feeInstallments, paymentAllocations, payments, fees } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { feeInstallments, paymentAllocations, payments, fees } from '../../../database/schema';
+import { DB } from '../../../database/db';
 import { formatDateOnly } from '../utils/dateOnly';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 @Repository()
 export class InstallmentRepository {

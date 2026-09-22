@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { DisciplineRepository } from './DisciplineRepository';
 import { DisciplineValidator, type DisciplineUser } from './DisciplineValidator';
 import type { CreateDisciplineDto, ResolveDisciplineDto, UpdateDisciplineDto } from './DisciplineDto';

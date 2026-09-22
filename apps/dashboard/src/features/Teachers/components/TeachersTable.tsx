@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { Users } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { Users, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import TeacherForm from './TeacherForm';
 import { useTeachers } from '../hooks/useTeachers';
@@ -13,9 +14,8 @@ import { useTeachersTableColumns } from '../hooks/useTeachersTableColumns';
 import { useTeachersTableFilters } from '../hooks/useTeachersTableFilters';
 import { TeacherProfile } from './profile';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function TeachersTable() {
 
   const { t } = useTranslation();
@@ -135,15 +135,37 @@ function TeachersTable() {
         onDelete={handleDelete}
         onBulkDelete={handleBulkDelete}
         loading={isTeachersLoading}
-        {...tableErrorProps(error, teachers)}
+        error={hasFailedToLoad(error, teachers) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         loadingText={t('common.loading')}
         renderCard={TeacherCard}
         addButtonText={t('teachers.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'teachers',
-          onCreate: handleAddClick,
-          createLabel: t('teachers.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.teachers}
+            title={t('emptyStates.teachers.title')}
+            description={t('emptyStates.teachers.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('teachers.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='cards'
       />
     </div>

@@ -1,5 +1,5 @@
-import { Service } from '@server/najm';
-import { pickProps } from '@server/shared';
+import { Service } from '../../najm';
+import { pickProps } from '../../shared';
 import type { CreateBehaviorRewardDto, UpdateBehaviorRewardDto } from './BehaviorRewardDto';
 import { BehaviorRewardRepository } from './BehaviorRewardRepository';
 import { BehaviorRewardValidator, type BehaviorRewardActor } from './BehaviorRewardValidator';

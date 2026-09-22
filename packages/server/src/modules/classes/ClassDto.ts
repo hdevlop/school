@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { academicYearField, optionalId } from '@server/shared/fields';
+import { academicYearField, optionalId } from '../../shared/fields';
 
 const classSchema = z.object({
   id: optionalId,

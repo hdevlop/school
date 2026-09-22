@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isFinancial } from '@server/auth';
+import { isFinancial } from '../../../auth';
 import { CreditService } from './CreditService';
 import { applyCreditDto, creditStudentIdParam, type ApplyCreditDto } from './CreditDto';
 

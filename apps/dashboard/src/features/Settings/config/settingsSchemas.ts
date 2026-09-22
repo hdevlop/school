@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { NAJM_CURRENCIES, NAJM_TIME_ZONES } from 'najm-kit/server';
 import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
-import { schoolI18n } from '@sms/server/locales';
+import { schoolI18n } from '@sms/contracts/locales';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 

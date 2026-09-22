@@ -1,6 +1,6 @@
 import { date, integer, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { idField, timestamps } from '@server/database/shared';
+import { idField, timestamps } from '../../../database/shared';
 import { staff } from '../../staff/staffSchema';
 
 export const drivers = pgTable('drivers', {

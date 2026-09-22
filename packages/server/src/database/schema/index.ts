@@ -9,9 +9,9 @@ export {
   tokensTable as tokens,
   userStatusEnum,
   usersTable as users,
-} from '@server/auth';
+} from '../../auth';
 
-export * from '@server/database/shared';
+export * from '../shared';
 
 export { auditLogs } from './coreSchema';
 
@@ -118,7 +118,7 @@ export {
   payslipStatusEnum,
 } from '../../modules/financial/payroll/payrollSchema';
 export { attendance, attendanceHistory } from '../../modules/attendance/attendanceSchema';
-export { attendanceTypeEnum } from '@server/database/shared';
+export { attendanceTypeEnum } from '../shared';
 export {
   assessments,
   assessmentRef,

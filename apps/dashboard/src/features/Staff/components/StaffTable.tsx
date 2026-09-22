@@ -1,14 +1,14 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
-import { Banknote, Briefcase, Calendar, Hash, IdCard, MapPinned, Phone, UserRound, Wallet } from 'lucide-react';
-import { useDialog, Badge, NAvatar, NTable, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets } from 'najm-kit';
+import { Banknote, Briefcase, Calendar, Hash, IdCard, MapPinned, Phone, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
+import { useDialog, Badge, NAvatar, NTable, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaff } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
 import { formatAssignments } from '../utils/staffAssignments';
@@ -325,15 +325,37 @@ const StaffTable = () => {
         onDelete={handleDelete}
         onBulkDelete={handleBulkDelete}
         loading={isStaffLoading}
-        {...tableErrorProps(isError ? error : null, rows)}
+        error={hasFailedToLoad(isError ? error : null, rows) ? isError ? error : null : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         showViewToggle={true}
         renderCard={StaffCard}
         addButtonText={t('staff.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'staff',
-          onCreate: handleAdd,
-          createLabel: t('staff.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.staff}
+            title={t('emptyStates.staff.title')}
+            description={t('emptyStates.staff.description')}
+            action={(
+              <NButton size="sm" onClick={handleAdd}>
+                <Plus className="h-4 w-4" />
+                {t('staff.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='cards'
         showColumnVisibility={true}
         loadingText={t('staff.loading')}

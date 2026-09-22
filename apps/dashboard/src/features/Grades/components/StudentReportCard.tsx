@@ -2,12 +2,11 @@
 
 import React, { useMemo, useState } from 'react';
 import { GraduationCap, BookOpen, Award, ClipboardList } from 'lucide-react';
-import { NBadge } from 'najm-kit';
+import { NBadge, NLoadingState } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useStudentReport } from '../hooks/useGrades';
-import PageLoadingState from '@/shared/PageLoadingState';
 
 const gpaColor = (gpa) => {
   if (gpa == null) return 'text-gray-400';
@@ -72,7 +71,7 @@ const StudentReportCard = ({ studentId: initialStudentId = null }: { studentId?:
       )}
 
       {studentId && isReportLoading && (
-        <PageLoadingState label={t('common.loading')} className="min-h-64" />
+        <NLoadingState surface="panel" label={t('common.loading')} className="min-h-64" />
       )}
 
       {studentId && !isReportLoading && report && (

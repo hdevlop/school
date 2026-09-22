@@ -1,6 +1,6 @@
-import { Service, Err, I18n, t } from '@server/najm';
+import { Service, Err, I18n, t } from '../../najm';
 import { ParentRepository } from './ParentRepository';
-import { UserValidator } from '@server/auth';
+import { UserValidator } from '../../auth';
 
 @Service()
 export class ParentValidator {

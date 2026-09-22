@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { VehicleAssignmentService } from './VehicleAssignmentService';
-import { isAuth } from '@server/auth';
+import { isAuth } from '../../../auth';
 import {
   assignDriverDto,
   assignmentIdParam,

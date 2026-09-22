@@ -1,9 +1,9 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { eq, desc, asc, and, count, inArray, sql, sum, avg } from 'drizzle-orm';
-import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users } from '../../../database/schema';
+import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
-import { getBusinessDate, jsonAgg } from '@server/shared';
+import { getBusinessDate, jsonAgg } from '../../../shared';
 import { formatDateOnly } from '../utils/dateOnly';
 import {
   getAvgPaymentAmount,

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { optionalDateField, optionalId, requiredId } from '@server/shared/fields';
-import { latitudeDto, longitudeDto, placeIdDto } from '@server/shared/locationDto';
+import { optionalDateField, optionalId, requiredId } from '../../../shared/fields';
+import { latitudeDto, longitudeDto, placeIdDto } from '../../../shared/locationDto';
 
 const studentRouteSchema = z.object({
   id: optionalId,

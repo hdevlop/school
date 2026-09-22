@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uniqueIndex, check, index, foreignKey } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
-import { actionByRef, createRef, idField, moneyField, timestamps } from '@server/database/shared';
+import { actionByRef, createRef, idField, moneyField, timestamps } from '../../../database/shared';
 import { studentRef } from '../../students/studentSchema';
 import { payments } from '../payments/paymentSchema';
 import { paymentAllocations } from '../allocations/allocationSchema';

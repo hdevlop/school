@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { RefuelService } from './RefuelService';
 import { canAccessRefuel, canAccessAllRefuels, canUpdateRefuel, canCreateRefuel, canDeleteRefuel } from './RefuelGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 import {
   createRefuelDto,
   createRefuelsBulkDto,

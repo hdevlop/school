@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ExamService } from './ExamService';
 import { Exam, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ExamGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import {
   createExamDto,
   deleteBulkExamDto,

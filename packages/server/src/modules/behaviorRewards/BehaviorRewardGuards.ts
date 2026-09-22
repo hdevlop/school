@@ -1,4 +1,4 @@
-import { Can } from '@server/auth';
+import { Can } from '../../auth';
 import { own, where } from 'najm-auth';
 import { behaviorRewards } from './behaviorRewardSchema';
 

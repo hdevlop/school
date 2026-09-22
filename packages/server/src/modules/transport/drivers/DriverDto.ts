@@ -7,8 +7,8 @@ import {
   nameField,
   num,
   optionalId,
-} from '@server/shared/fields';
-import { compensationModeEnum, driverStatusEnum, genderEnum } from '@server/shared/enums';
+} from '../../../shared/fields';
+import { compensationModeEnum, driverStatusEnum, genderEnum } from '../../../shared/enums';
 
 const multipartPhoneField = z.coerce.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
 

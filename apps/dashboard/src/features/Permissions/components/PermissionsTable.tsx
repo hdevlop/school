@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { KeyRound } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { KeyRound, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import PermissionForm from './PermissionForm';
 import { usePermissions } from '../hooks/usePermissions';
@@ -10,9 +11,8 @@ import PermissionCard from './PermissionCard';
 import { usePermissionsTableColumns } from '../hooks/usePermissionsTableColumns';
 import { usePermissionsTableFilters } from '../hooks/usePermissionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function PermissionsTable() {
 
   const { t } = useTranslation();
@@ -112,14 +112,36 @@ function PermissionsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isPermissionsLoading}
-        {...tableErrorProps(error, permissions)}
+        error={hasFailedToLoad(error, permissions) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={PermissionCard}
         addButtonText={t('permissions.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'permissions',
-          onCreate: handleAddClick,
-          createLabel: t('permissions.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.permissions}
+            title={t('emptyStates.permissions.title')}
+            description={t('emptyStates.permissions.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('permissions.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
       />
     </div>

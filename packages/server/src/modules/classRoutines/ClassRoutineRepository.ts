@@ -1,6 +1,6 @@
 import { and, asc, desc, eq, gt, inArray, isNull, lt, ne, or, sql } from 'drizzle-orm';
 
-import { DB } from '@server/database/db';
+import { DB } from '../../database/db';
 import {
   classes,
   routineDuties,
@@ -12,8 +12,8 @@ import {
   subjects,
   teacherAssignments,
   teachers,
-} from '@server/database/schema';
-import { Repository } from '@server/najm';
+} from '../../database/schema';
+import { Repository } from '../../najm';
 import type { RoutineListQuery } from './ClassRoutineDto';
 
 @Repository()

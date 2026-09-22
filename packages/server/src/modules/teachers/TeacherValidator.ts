@@ -1,7 +1,7 @@
-import { Service, Err, I18n } from '@server/najm';
+import { Service, Err, I18n } from '../../najm';
 import { TeacherRepository } from './TeacherRepository';
-import { isEmpty } from '@server/shared';
-import { UserValidator } from '@server/auth';
+import { isEmpty } from '../../shared';
+import { UserValidator } from '../../auth';
 import { SectionValidator } from '../sections';
 import { ClassValidator } from '../classes';
 import { SubjectValidator } from '../subjects';

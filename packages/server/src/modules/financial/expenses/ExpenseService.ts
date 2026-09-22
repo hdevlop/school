@@ -1,7 +1,7 @@
-import { Service, Transaction } from '@server/najm';
+import { Service, Transaction } from '../../../najm';
 import { ExpenseRepository } from './ExpenseRepository';
 import { ExpenseValidator } from './ExpenseValidator';
-import { formatDate, pickProps } from '@server/shared'
+import { formatDate, pickProps } from '../../../shared'
 import { getAcademicYearDateRange } from '../utils';
 import type { CreateExpenseDto, ExpenseApprovalDto, ExpensePaymentDto, UpdateExpenseDto } from './ExpenseDto';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';

@@ -6,8 +6,8 @@ import {
   idField,
   moneyField,
   timestamps,
-} from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+} from '../../../database/shared';
+import { getEnumValues } from '../../../shared/enums';
 import { feeTypeRef } from '../feeTypes/feeTypeSchema';
 import { studentRef } from '../../students/studentSchema';
 

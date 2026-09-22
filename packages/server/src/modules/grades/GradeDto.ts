@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { num, optionalId, requiredId } from '@server/shared/fields';
-import { gradeStatusEnum } from '@server/shared/enums';
+import { num, optionalId, requiredId } from '../../shared/fields';
+import { gradeStatusEnum } from '../../shared/enums';
 
 const gradeSchema = z.object({
   assessmentId: optionalId,

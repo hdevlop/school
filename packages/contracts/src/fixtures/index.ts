@@ -1,11 +1,21 @@
-// Export all entity generators
+/**
+ * Fake-but-plausible School records, shared by demo seeding and the
+ * dashboard's development form fill.
+ *
+ * Pure generators over static reference data: no database, filesystem,
+ * environment or CLI code, so the same module runs in a Bun seed command and
+ * in a browser. Imported only through `@sms/contracts/fixtures` — never from
+ * the root barrel, which production UI code loads.
+ */
 export {
    generateParent,
    generateParents,
    generateStudent,
    generateTeacher,
+   generateTeachers,
    generateDriver,
    generateVehicle,
+   generateFamilyUnit,
    generateFee,
    generateFees,
    generateFeeStatus,
@@ -25,6 +35,8 @@ export {
    generatePaymentRef,
    generateCheckNumber,
    generateAllocationRef,
+   getClassByName,
+   getSectionsByClass,
    TUITION_FEE_TYPE,
    TRANSPORT_FEE_TYPE,
    CAFETERIA_FEE_TYPE,
@@ -38,7 +50,6 @@ export {
    OPTIONAL_FEE_TYPES
 } from './entities';
 
-// Export all static data
 export {
    lastNames,
    femaleNames,
@@ -58,8 +69,5 @@ export {
    vehiclesData,
 } from './staticData';
 
-// Export all utility functions
 export * as fake from './fakers';
-export { getNumberOfChildren } from './fakers';
-export { buildFormFill, pick } from './formFill';
-export type { FormFillOverride, FormFillOverrides } from './formFill';
+export { chance, getNumberOfChildren, pickRandom } from './fakers';

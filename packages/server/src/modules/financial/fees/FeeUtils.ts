@@ -1,5 +1,5 @@
-import { feeInstallments, fees, paymentAllocations, payments, students } from '@server/database/schema';
-import { jsonAggSubquery } from '@server/shared';
+import { feeInstallments, fees, paymentAllocations, payments, students } from '../../../database/schema';
+import { jsonAggSubquery } from '../../../shared';
 import { asc, eq, sql } from 'drizzle-orm';
 
 export const getTotalFeesCount = () => {

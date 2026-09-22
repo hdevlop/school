@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 import { StudentRouteService } from './StudentRouteService';
 import {
   createStudentRouteDto,

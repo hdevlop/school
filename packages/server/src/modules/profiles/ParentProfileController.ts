@@ -1,7 +1,7 @@
-import { Controller, Get, Params, ResMsg, Validate } from '@server/najm';
+import { Controller, Get, Params, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ParentProfileService } from './ParentProfileService';
-import { isAuth } from '@server/auth';
+import { isAuth } from '../../auth';
 import { z } from 'zod';
 
 const parentIdParam = z.object({ parentId: z.string().min(1) });

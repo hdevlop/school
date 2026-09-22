@@ -3,7 +3,7 @@ import {
   disciplineActionEnum,
   disciplineCategoryEnum,
   disciplineSeverityEnum,
-} from '@server/shared/enums';
+} from '../../shared/enums';
 
 const requiredId = z.string().min(1, 'ID is required');
 const incidentAt = z.string().datetime({ offset: true, message: 'Incident date must be a valid ISO timestamp' });

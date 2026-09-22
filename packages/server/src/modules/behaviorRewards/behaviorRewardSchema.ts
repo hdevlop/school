@@ -1,8 +1,8 @@
 import { index, integer, pgEnum, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-import { usersTable as users } from '@server/auth';
-import { idField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { usersTable as users } from '../../auth';
+import { idField, timestamps } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 import { classRef } from '../classes/classSchema';
 import { sectionRef } from '../sections/sectionSchema';
 import { studentRef } from '../students/studentSchema';

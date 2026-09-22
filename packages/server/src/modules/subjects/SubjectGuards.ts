@@ -1,6 +1,6 @@
 import { composeGuards } from 'najm-guard';
 import { Can } from 'najm-auth';
-import { isAdministrator } from '@server/auth';
+import { isAdministrator } from '../../auth';
 
 export const canAccessSubject = composeGuards(Can('read:subjects'));
 export const canUpdateSubject = composeGuards(Can('update:subjects'), isAdministrator());

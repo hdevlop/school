@@ -1,5 +1,5 @@
-import { Controller, Post, ResMsg, Body } from '@server/najm';
-import { isAdministrator } from '@server/auth';
+import { Controller, Post, ResMsg, Body } from '../najm';
+import { isAdministrator } from '../auth';
 import { SeedService } from './SeedService';
 
 interface SeedDemoOptions {

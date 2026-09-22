@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { HeartHandshake } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { HeartHandshake, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import ParentForm from './SimpleParentForm';
 import { useParents } from '../hooks/useParents';
@@ -11,9 +12,8 @@ import { useParentsTableColumns } from '../hooks/useParentsTableColumns';
 import { useParentsTableFilters } from '../hooks/useParentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 const getParentRowClassName = (parent) => {
   const isOrphaned = parent?.isOrphaned === true || Number(parent?.totalChildren) === 0;
   return isOrphaned
@@ -136,16 +136,38 @@ function ParentsTable() {
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         loading={isParentsLoading}
-        {...tableErrorProps(error, parents)}
+        error={hasFailedToLoad(error, parents) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         loadingText={t('common.loading')}
         renderCard={ParentCard}
         getRowClassName={getParentRowClassName}
         addButtonText={t('parents.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'parents',
-          onCreate: handleAddClick,
-          createLabel: t('parents.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.parents}
+            title={t('emptyStates.parents.title')}
+            description={t('emptyStates.parents.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('parents.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='cards'
       />
     </div>

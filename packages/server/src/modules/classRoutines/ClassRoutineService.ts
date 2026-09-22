@@ -1,4 +1,4 @@
-import { Err, Service, Transaction } from '@server/najm';
+import { Err, Service, Transaction } from '../../najm';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
 import { ClassRoutineValidator } from './ClassRoutineValidator';
 import type {

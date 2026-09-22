@@ -1,6 +1,6 @@
-import { Err, I18n, Service } from '@server/najm';
+import { Err, I18n, Service } from '../../../najm';
 import { VehicleRepository } from './VehicleRepository';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 
 @Service()

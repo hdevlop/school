@@ -1,4 +1,4 @@
-import { Controller, Get, RawResponse } from '@server/najm';
+import { Controller, Get, RawResponse } from '../../najm';
 import { HealthService } from './HealthService';
 
 @Controller('/health')

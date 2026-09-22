@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { num, optionalId } from '@server/shared/fields';
+import { num, optionalId } from '../../shared/fields';
 
 const subjectSchema = z.object({
   id: optionalId,

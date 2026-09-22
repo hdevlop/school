@@ -529,7 +529,7 @@ Tool name format: `{group}_{method_snake_case}` — e.g. `students_get_student`,
 Next.js only loads `.env` from the app directory, not the monorepo root:
 
 ```bash
-cp .env apps/dashboard/.env.local
+cp apps/dashboard/.env.local.example apps/dashboard/.env.local
 ```
 
 ---

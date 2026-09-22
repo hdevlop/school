@@ -1,4 +1,4 @@
-import { Service, Err, I18n } from '@server/najm';
+import { Service, Err, I18n } from '../../najm';
 import { SubjectRepository } from './SubjectRepository';
 
 @Service()

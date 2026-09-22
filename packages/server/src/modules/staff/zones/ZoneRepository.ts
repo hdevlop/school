@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { DB } from '@server/database/db';
-import { zones } from '@server/database/schema';
-import { Repository } from '@server/najm';
+import { DB } from '../../../database/db';
+import { zones } from '../../../database/schema';
+import { Repository } from '../../../najm';
 
 const zoneSelect = {
   id: zones.id,

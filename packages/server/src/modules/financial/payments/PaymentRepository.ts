@@ -1,10 +1,10 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { eq, desc, and, sql, count, isNotNull } from 'drizzle-orm';
-import { payments, students, users } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { payments, students, users } from '../../../database/schema';
+import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { formatDateOnly } from '../utils/dateOnly';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 @Repository()
 export class PaymentRepository {

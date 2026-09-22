@@ -1,9 +1,10 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { CalendarCheck } from 'lucide-react';
+import { NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { CalendarCheck, SearchX } from 'lucide-react';
 import RosterHeader from './RosterHeader';
 import RosterCard from './RosterCard';
 import { useStudentAttendance } from '../hooks/useAttendance';
@@ -16,8 +17,7 @@ import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useTranslation } from 'najm-i18n/react';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -331,17 +331,32 @@ function StudentAttendanceTable() {
           />
         }
         loading={isStudentsLoading || isSectionsLoading || isClassesLoading}
-        {...tableErrorProps(studentsError, filteredStudents)}
+        error={hasFailedToLoad(studentsError, filteredStudents) ? studentsError : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         showAddButton={false}
         showCheckbox
         showViewToggle={false}
         defaultMode='table'
         renderCard={renderRosterCard}
-        {...tableEmptyProps({
-          feature: 'studentAttendance',
-          title: noDataText,
-          description: null,
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.studentAttendance}
+            title={noDataText}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
       />
     </div>
   );

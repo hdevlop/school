@@ -5,7 +5,7 @@ import { NLanguageMenu, type NLanguageOption } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useUpdateLang } from '../hooks/useUpdateLang';
 import { cn } from 'najm-kit';
-import type { SchoolLocale } from '@sms/server/locales';
+import type { SchoolLocale } from '@sms/contracts/locales';
 
 const languages = [
   { code: 'en', name: 'English', iso2: 'us' },

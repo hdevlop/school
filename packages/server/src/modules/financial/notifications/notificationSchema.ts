@@ -1,6 +1,6 @@
 import { date, jsonb, pgTable, text, uniqueIndex, index } from 'drizzle-orm/pg-core';
 
-import { idField, timestamps } from '@server/database/shared';
+import { idField, timestamps } from '../../../database/shared';
 import { studentRef } from '../../students/studentSchema';
 
 export const financialNotificationDeliveries = pgTable('financial_notification_deliveries', {

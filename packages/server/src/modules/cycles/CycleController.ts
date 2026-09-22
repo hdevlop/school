@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '@server/najm';
-import { isAdmin } from '@server/auth';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../najm';
+import { isAdmin } from '../../auth';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { createCycleDto, cycleIdParam, updateCycleDto, type CreateCycleDto, type UpdateCycleDto } from './CycleDto';
 import { CycleService } from './CycleService';

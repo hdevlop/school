@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '@server/najm';
+import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ClassService } from './ClassService';
 import { Class, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ClassGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import { classIdParam, createClassDto, createClassesBulkDto, updateClassDto, type CreateClassDto, type UpdateClassDto } from './ClassDto';
 
 @ToolGroup('classes')

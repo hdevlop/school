@@ -1,4 +1,4 @@
-import { Injectable, t } from '@server/najm';
+import { Injectable, t } from '../../najm';
 import { StudentService } from '../students/StudentService';
 import { TeacherService } from '../teachers/TeacherService';
 import { ParentService } from '../parents/ParentService';

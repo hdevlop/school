@@ -1,7 +1,7 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { ExamRepository } from './ExamRepository';
 import { ExamValidator } from './ExamValidator';
-import { pickProps } from '@server/shared';
+import { pickProps } from '../../shared';
 import type { CreateExamDto, UpdateExamDto } from './ExamDto';
 
 @Service()

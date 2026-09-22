@@ -6,8 +6,8 @@ import {
   permissionsTable as permissions,
   rolesTable as roles,
   usersTable as users,
-} from '@server/auth';
-import { getEnumValues } from '@server/shared/enums';
+} from '../auth';
+import { getEnumValues } from '../shared/enums';
 
 type ReferenceAction = 'cascade' | 'restrict' | 'no action' | 'set null' | 'set default';
 

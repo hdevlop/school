@@ -1,9 +1,10 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useMemo, useState } from 'react';
-import { Award } from 'lucide-react';
+import { Award, Plus, SearchX } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import BehaviorRewardCard from './BehaviorRewardCard';
@@ -12,9 +13,8 @@ import BehaviorRewardForm from './BehaviorRewardForm';
 import { useBehaviorRewards } from '../hooks/useBehaviorRewards';
 import { useBehaviorRewardsTableColumns } from '../hooks/useBehaviorRewardsTableColumns';
 import { useBehaviorRewardsTableFilters } from '../hooks/useBehaviorRewardsTableFilters';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 const BehaviorRewardsTable = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -115,14 +115,36 @@ const BehaviorRewardsTable = () => {
         onEdit={handleEdit}
         onDelete={canDelete ? handleDelete : undefined}
         loading={isBehaviorRewardsLoading}
-        {...tableErrorProps(error, tableData)}
+        error={hasFailedToLoad(error, tableData) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={BehaviorRewardCard}
         addButtonText={t('behaviorRewards.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'behaviorRewards',
-          onCreate: handleCreate,
-          createLabel: t('behaviorRewards.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.behaviorRewards}
+            title={t('emptyStates.behaviorRewards.title')}
+            description={t('emptyStates.behaviorRewards.description')}
+            action={(
+              <NButton size="sm" onClick={handleCreate}>
+                <Plus className="h-4 w-4" />
+                {t('behaviorRewards.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode="table"
         dynamicHeight
       />

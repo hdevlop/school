@@ -36,7 +36,7 @@ bun-debug.log*
 # env files
 .env*
 # the tracked template — placeholders only, never real values
-!.env.local.example
+!apps/dashboard/.env.local.example
 
 # vercel
 .vercel

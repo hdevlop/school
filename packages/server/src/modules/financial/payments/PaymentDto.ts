@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { academicYearField, dateField, num, optionalDateField, optionalId, requiredId } from '@server/shared/fields';
-import { paymentMethodEnum, paymentStatusEnum } from '@server/shared/enums';
+import { academicYearField, dateField, num, optionalDateField, optionalId, requiredId } from '../../../shared/fields';
+import { paymentMethodEnum, paymentStatusEnum } from '../../../shared/enums';
 
 const paymentAllocationSchema = z.object({
   feeId: requiredId,

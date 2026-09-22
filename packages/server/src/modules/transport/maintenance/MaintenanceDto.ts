@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { maintenanceStatusEnum, maintenanceTypeEnum } from '@server/shared/enums';
+import { maintenanceStatusEnum, maintenanceTypeEnum } from '../../../shared/enums';
 
 export const maintenanceSchema = z.object({
   vehicleId: z.string().min(1),

@@ -1,4 +1,4 @@
-import { Err, Service } from '@server/najm';
+import { Err, Service } from '../../../najm';
 import { ZoneRepository } from './ZoneRepository';
 import type { CreateZoneDto, UpdateZoneDto } from './ZoneDto';
 

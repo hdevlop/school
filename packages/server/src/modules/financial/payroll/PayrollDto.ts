@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { dateField, num } from '@server/shared/fields';
-import { paymentMethodEnum, payslipStatusEnum } from '@server/shared/enums';
+import { dateField, num } from '../../../shared/fields';
+import { paymentMethodEnum, payslipStatusEnum } from '../../../shared/enums';
 
 const periodField = z
   .string()

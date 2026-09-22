@@ -2,18 +2,6 @@ import * as fake from './fakers';
 import { nanoid } from 'nanoid';
 import { feeTypeData, vehiclesData, sectionsData, DISCOUNT_CATALOG, SCHEDULES, classesData, subjectsData } from './staticData';
 import { chance, getNumberOfChildren, getSubjectByName, getSubjectsNames, pickRandom, randomClass, randomSubject } from './fakers';
-import teachersData from '../scripts/demo/data/teachers.json';
-
-type DemoTeacherAssignment = {
-   classId: string;
-   sectionIds: string[];
-   subjectIds: string[];
-};
-
-type DemoTeacher = {
-   id: string;
-   assignments?: DemoTeacherAssignment[];
-};
 
 //=========================================================================//
 // ACADEMIC ENTITIES
@@ -84,19 +72,22 @@ function addDays(dateText: string, days: number): string {
    return dateInputFromDate(date);
 }
 
+/**
+ * A class, section and subject drawn from the static reference data.
+ *
+ * The teacher is left blank: a teacher id only exists in a seeded database,
+ * and every caller pins live relation ids itself — the dashboard's form fill
+ * passes the class, section, subject and teacher its selects actually loaded.
+ */
 function pickAcademicContext() {
-   const teacher = fake.selectRandomElement(teachersData as DemoTeacher[]);
-   const assignment = fake.selectRandomElement<DemoTeacherAssignment>(teacher.assignments || []);
-   const classId = assignment?.classId || fake.randomClass().id;
-   const classSections = assignment?.sectionIds?.length
-      ? assignment.sectionIds
-      : sectionsData.filter((section: any) => section.classId === classId).map((section: any) => section.id);
+   const classId = fake.randomClass().id;
+   const classSections = sectionsData.filter((section: any) => section.classId === classId).map((section: any) => section.id);
 
    return {
       classId,
       sectionId: fake.selectRandomElement(classSections),
-      subjectId: fake.selectRandomElement(assignment?.subjectIds?.length ? assignment.subjectIds : subjectsData.map((subject: any) => subject.id)),
-      teacherId: teacher.id,
+      subjectId: fake.selectRandomElement(subjectsData.map((subject: any) => subject.id)),
+      teacherId: '',
    };
 }
 

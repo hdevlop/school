@@ -1,4 +1,4 @@
-import { Err, Service, Transaction } from '@server/najm';
+import { Err, Service, Transaction } from '../../../najm';
 import { CreditRepository } from './CreditRepository';
 import { AllocationRepository } from '../allocations/AllocationRepository';
 import { AllocationService } from '../allocations/AllocationService';

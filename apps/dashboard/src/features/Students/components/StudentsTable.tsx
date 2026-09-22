@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { GraduationCap } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { GraduationCap, Plus, SearchX } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import StudentProfile from './StudentProfile';
 import { useStudents } from '../hooks/useStudents';
@@ -16,9 +17,8 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useState } from 'react';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function StudentsTable() {
 
   const { t } = useTranslation();
@@ -161,15 +161,37 @@ function StudentsTable() {
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         loading={isStudentsLoading}
-        {...tableErrorProps(error, students)}
+        error={hasFailedToLoad(error, students) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         loadingText={t('common.loading')}
         renderCard={StudentCard}
         addButtonText={t('students.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'students',
-          onCreate: handleAddClick,
-          createLabel: t('students.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.students}
+            title={t('emptyStates.students.title')}
+            description={t('emptyStates.students.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('students.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='cards'
         dynamicHeight={true}
       />

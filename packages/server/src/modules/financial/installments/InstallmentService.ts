@@ -1,4 +1,4 @@
-import { Service, Events, EventService } from '@server/najm';
+import { Service, Events, EventService } from '../../../najm';
 import { InstallmentRepository } from './InstallmentRepository';
 import { InstallmentValidator } from './InstallmentValidator';
 import { SettingsRepository } from '../../settings/SettingsRepository';
@@ -12,7 +12,7 @@ import {
   toCents,
 } from '../utils';
 import type { CreateInstallmentDto, UpdateInstallmentDto } from './InstallmentDto';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 @Service()
 export class InstallmentService {

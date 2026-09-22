@@ -16,9 +16,9 @@ import { rag, ragStudio } from 'najm-rag';
 import type { NajmPlugin } from 'najm-core';
 export { themeConfig } from './themeConfig';
 
-import { schoolI18n } from '@server/locales';
-import { db } from '@server/database/db';
-import { auth, isAuth } from '@server/auth';
+import { schoolI18n } from '@sms/contracts/locales';
+import { db } from '../database/db';
+import { auth, isAuth } from '../auth';
 
 const defaultChatbotSystemPrompt = `You are a helpful AI assistant for a School Management System dashboard.
 You have access to tools to manage students, classes, sections, subjects, teachers, parents, fees, fee types, payments, allocations, attendance, grades, assessments, exams, and more.

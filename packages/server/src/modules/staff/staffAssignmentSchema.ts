@@ -4,7 +4,7 @@ import { classRef } from '../classes/classSchema';
 import { sectionRef } from '../sections/sectionSchema';
 import { cycleRef } from '../cycles/cycleSchema';
 import { staff } from './staffSchema';
-import { idField, timestamps } from '@server/database/shared';
+import { idField, timestamps } from '../../database/shared';
 import { assignmentStatusEnum } from '../transport/vehicleAssignments/vehicleAssignmentSchema';
 import { vehicles } from '../transport/vehicles/vehicleSchema';
 

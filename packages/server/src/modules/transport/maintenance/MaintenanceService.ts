@@ -1,4 +1,4 @@
-import { Err, Service } from '@server/najm';
+import { Err, Service } from '../../../najm';
 import { MaintenanceRepository } from './MaintenanceRepository';
 import { MaintenanceValidator } from './MaintenanceValidator';
 import type { CreateMaintenanceDto, UpdateMaintenanceDto } from './MaintenanceDto';

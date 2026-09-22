@@ -1,4 +1,4 @@
-import { Err, Events, EventService, I18n, Service } from '@server/najm';
+import { Err, Events, EventService, I18n, Service } from '../../../najm';
 import { RoleService, PermissionService } from 'najm-auth';
 import { StaffRoleRepository } from './StaffRoleRepository';
 import type { CreateStaffRoleDto, UpdateStaffRoleDto } from './StaffRoleDto';

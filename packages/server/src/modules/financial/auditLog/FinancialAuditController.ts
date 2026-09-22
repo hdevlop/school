@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 import { FinancialAuditService } from './FinancialAuditService';
 import { auditLogIdParam, auditLogQueryDto, type AuditLogQueryDto } from './AuditLogDto';
 

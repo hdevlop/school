@@ -1,6 +1,6 @@
-import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from '@server/auth';
+import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from '../../auth';
 import { own, join, where } from 'najm-auth';
-import { grades, students, teachers, staff, parents, teacherAssignments, studentParents } from '@server/database/schema';
+import { grades, students, teachers, staff, parents, teacherAssignments, studentParents } from '../../database/schema';
 
 export const Grade = own(grades)
   .for('teacher',

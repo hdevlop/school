@@ -1,4 +1,4 @@
-export { buildFormFill as buildFill, pick } from '@/fakers/formFill';
+export { buildFormFill as buildFill, pick } from './formFill';
 
 const disabledValues = new Set(['0', 'false', 'off', 'no']);
 const enabledValues = new Set(['1', 'true', 'on', 'yes']);

@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 import { CalendarCheck, CalendarDays, CheckCircle2, Clock3, UserX } from 'lucide-react';
 import { getAttendanceByStudentApi } from '@/services/attendanceApi';
 import { useTranslation } from 'najm-i18n/react';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 const formatDate = (value: string | null | undefined, language: string) =>
   value ? new Date(value).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
@@ -149,16 +148,12 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
         showColumnVisibility={false}
         showCheckbox={false}
         loadingText={t('students.profile.attendanceDetails.loading')}
-        {...tableEmptyProps({
-          feature: 'studentAttendance',
-          title: t('students.profile.attendanceDetails.noExceptions'),
-          description: null,
-        })}
         pagination={{ pageIndex: 0, pageSize: Math.max(visibleRows.length, 1) }}
         showPagination={false}
         dynamicHeight={false}
         renderEmpty={() => (
           <NEmptyState
+            surface="panel"
             icon={CalendarDays}
             title={t('students.profile.attendanceDetails.noExceptions')}
             className="min-h-64"
@@ -168,4 +163,3 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
     </div>
   );
 }
-

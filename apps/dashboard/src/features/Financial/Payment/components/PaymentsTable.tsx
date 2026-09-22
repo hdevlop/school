@@ -1,17 +1,17 @@
 "use client"
 
-import { useDialog, NTable, NButton } from 'najm-kit';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NTable, NButton, NEmptyState } from 'najm-kit';
 import { usePayments } from '../hooks/usePayments';
 import { useTranslation } from 'najm-i18n/react';
 import PaymentCard from './PaymentCard';
 import PaymentEditForm from './PaymentEditForm';import { usePaymentsTableColumns } from '../hooks/usePaymentsTableColumns';
 import { usePaymentsTableFilters } from '../hooks/usePaymentsTableFilters';
 import { printReceipt } from './ReceiptPrint/printReceipt';
-import { Printer } from 'lucide-react';
+import { Printer, SearchX } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { updateCheckStatusApi, voidPaymentApi } from '@/services/paymentApi';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 
 function PaymentsTable({studentId}) {
@@ -143,9 +143,22 @@ function PaymentsTable({studentId}) {
       onDelete={handleDelete}
       loading={isLoading}
       renderCard={PaymentCard}
-      {...tableEmptyProps({
-        feature: 'payments',
-      })}
+      renderEmpty={() => (
+        <NEmptyState
+          surface="panel"
+          icon={FEATURE_ICONS.payments}
+          title={t('emptyStates.payments.title')}
+          description={t('emptyStates.payments.description')}
+        />
+      )}
+      renderFilteredEmpty={() => (
+        <NEmptyState
+          surface="panel"
+          icon={SearchX}
+          title={t('emptyStates.filtered.title')}
+          description={t('emptyStates.filtered.description')}
+        />
+      )}
       loadingText={t('payments.table.loading') || 'Loading payments...'}
       defaultMode='table'
     />

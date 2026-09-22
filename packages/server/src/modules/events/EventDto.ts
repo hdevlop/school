@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { dateField, num, optionalDateField, optionalId, timeField } from '@server/shared/fields';
+import { dateField, num, optionalDateField, optionalId, timeField } from '../../shared/fields';
 import {
   attendanceStatusEnum,
   eventStatusEnum,
   eventTypeEnum,
   eventVisibilityEnum,
   participantTypeEnum,
-} from '@server/shared/enums';
+} from '../../shared/enums';
 
 const eventSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title too long'),

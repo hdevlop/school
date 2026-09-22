@@ -4,13 +4,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "types": ["bun", "node"],
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@/fakers/*": ["./src/fakers/*"],
-      "@server/*": ["../server/src/*"]
-    }
+    "ignoreDeprecations": "6.0"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { EVENT_STATUS_VALUES, EVENT_TYPE_VALUES, EVENT_VISIBILITY_VALUES } from '@sms/contracts';
-import ar from '@server/locales/ar.json';
-import en from '@server/locales/en.json';
-import es from '@server/locales/es.json';
-import fr from '@server/locales/fr.json';
+import { ar, en, es, fr } from '@sms/contracts/locales';
 
 import {
   buildEventStatusOptions,

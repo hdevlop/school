@@ -1,8 +1,10 @@
-import classesData from '../school/data/classes.json';
-import feeTypesData from '../school/data/feeTypes.json';
-import sectionsData from '../school/data/sections.json';
+import {
+  classesData,
+  feeTypeData as feeTypesData,
+  sectionsData,
+  subjectsData,
+} from '@sms/contracts/fixtures';
 import settingsData from '../school/data/settings.json';
-import subjectsData from '../school/data/subjects.json';
 
 export const normalizedSettingsData = {
   ...settingsData,

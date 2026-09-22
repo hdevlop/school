@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { School } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { School, Plus, SearchX } from 'lucide-react';
 import ClassForm from './ClassForm';
 import { useClasses } from '../hooks/useClasses';
 import { useTranslation } from 'najm-i18n/react';
@@ -9,9 +10,8 @@ import ClassCard from './ClassCard';
 import { useClassesTableColumns } from '../hooks/useClassesTableColumns';
 import { useClassesTableFilters } from '../hooks/useClassesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function ClassesTable() {
 
   const { t } = useTranslation();
@@ -108,14 +108,36 @@ function ClassesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isClassesLoading}
-        {...tableErrorProps(error, classes)}
+        error={hasFailedToLoad(error, classes) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={ClassCard}
         addButtonText={t('classes.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'classes',
-          onCreate: handleAddClick,
-          createLabel: t('classes.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.classes}
+            title={t('emptyStates.classes.title')}
+            description={t('emptyStates.classes.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('classes.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
       />
     </div>

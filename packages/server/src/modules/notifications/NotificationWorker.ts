@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 
 import { notificationFlags } from './notificationConfig';
 import { PersonalNotificationRepository } from './NotificationRepository';

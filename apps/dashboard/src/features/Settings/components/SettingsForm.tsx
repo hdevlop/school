@@ -20,7 +20,7 @@ import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { normalizeLocationValue } from 'najm-kit/location';
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
-import { schoolI18n } from '@sms/server/locales';
+import { schoolI18n } from '@sms/contracts/locales';
 
 // ─── Settings Skeleton ────────────────────────────────────────────────────────
 

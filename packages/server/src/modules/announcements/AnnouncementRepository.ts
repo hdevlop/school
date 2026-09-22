@@ -1,7 +1,7 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../najm';
 import { eq, desc, and, count, sql, inArray, or, isNull } from 'drizzle-orm';
-import { announcements, users, classes } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { announcements, users, classes } from '../../database/schema';
+import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 
 export const classSelect = {

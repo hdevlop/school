@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { optionalId } from '@server/shared/fields';
+import { optionalId } from '../../../shared/fields';
 
 export const auditLogQueryDto = z.object({
   entityType: z.string().min(1).optional(),

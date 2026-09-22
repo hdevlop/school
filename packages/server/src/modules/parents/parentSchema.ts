@@ -1,7 +1,7 @@
 import { boolean, date, integer, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, genderEnum, idField, timestamps, userRef } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { createRef, genderEnum, idField, timestamps, userRef } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 
 export const relationshipTypeEnum = pgEnum('relationshipType', getEnumValues('relationshipType'));
 export const maritalStatusEnum = pgEnum('maritalStatus', getEnumValues('maritalStatus'));

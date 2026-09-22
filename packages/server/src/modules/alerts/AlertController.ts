@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Query, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Query, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import { AlertService } from './AlertService';
 import {
   announcementAlertDto,

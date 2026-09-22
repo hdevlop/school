@@ -1,6 +1,6 @@
 import { boolean, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-import { idField, timestamps, userRef } from '@server/database/shared';
+import { idField, timestamps, userRef } from '../../database/shared';
 import { classRef } from '../classes/classSchema';
 import { sectionRef } from '../sections/sectionSchema';
 

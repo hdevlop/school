@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { dateField, num, optionalDateField, optionalId } from '@server/shared/fields';
-import { expenseCategoryEnum, expenseStatusEnum, paymentMethodEnum } from '@server/shared/enums';
+import { dateField, num, optionalDateField, optionalId } from '../../../shared/fields';
+import { expenseCategoryEnum, expenseStatusEnum, paymentMethodEnum } from '../../../shared/enums';
 
 const expenseSchema = z.object({
   id: optionalId,

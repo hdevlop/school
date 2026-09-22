@@ -18,7 +18,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SOURCE_ROOTS = [ROOT / "apps" / "dashboard" / "src"]
-DEFAULT_LOCALE_DIR = ROOT / "packages" / "server" / "src" / "locales"
+DEFAULT_LOCALE_DIR = ROOT / "packages" / "contracts" / "src" / "locales"
 SOURCE_EXTENSIONS = {".ts", ".tsx", ".js", ".jsx"}
 
 STATIC_T_PATTERNS = [

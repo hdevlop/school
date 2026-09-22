@@ -1,7 +1,7 @@
 import { boolean, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { idField, timestamps, userRef } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { idField, timestamps, userRef } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 import { classRef } from '../classes/classSchema';
 import { studentRef } from '../students/studentSchema';
 import { subjectRef } from '../subjects/subjectSchema';

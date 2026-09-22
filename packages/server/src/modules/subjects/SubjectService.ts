@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { SubjectRepository } from './SubjectRepository';
 import { SubjectValidator } from './SubjectValidator';
 import type { CreateSubjectDto, CreateSubjectsBulkDto, UpdateSubjectDto } from './SubjectDto';

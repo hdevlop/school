@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { AttendanceService } from './AttendanceService';
 import { Attendance, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AttendanceGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import {
   attendanceDateFilterDto,
   typeQueryParam,

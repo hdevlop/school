@@ -1,13 +1,12 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useEffect, useState } from 'react';
-import { Badge } from 'najm-kit';
+import { Badge, NEmptyState, NLoadingState } from 'najm-kit';
 import { NTable } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
-import { BookOpen, GraduationCap, Users } from 'lucide-react';
-import PageLoadingState from '@/shared/PageLoadingState';
+import { BookOpen, GraduationCap, Users, SearchX } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface ClassesTabProps {
   teacherId: string;
@@ -106,7 +105,7 @@ const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
 
   if (loading) {
     return (
-      <PageLoadingState label="Loading classes" className="min-h-64" />
+      <NLoadingState surface="panel" label="Loading classes" className="min-h-64" />
     );
   }
 
@@ -126,11 +125,21 @@ const ClassesTab: React.FC<ClassesTabProps> = ({ teacherId }) => {
         showAddButton={false}
         showViewToggle={false}
         showColumnVisibility={false}
-        {...tableEmptyProps({
-          feature: 'classes',
-          title: "No classes assigned",
-          description: null,
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.classes}
+            title={"No classes assigned"}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
       />
     </div>
   );

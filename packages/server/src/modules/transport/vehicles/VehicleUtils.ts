@@ -1,4 +1,4 @@
-import { vehicles } from '@server/database/schema';
+import { vehicles } from '../../../database/schema';
 import { sql } from 'drizzle-orm';
 
 // ============================================

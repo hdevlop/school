@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
 
-import { AccessResetService } from '@server/modules/accessReset/AccessResetService';
+import { AccessResetService } from '../../src/modules/accessReset/AccessResetService';
 
 /**
  * What the command reports and records.

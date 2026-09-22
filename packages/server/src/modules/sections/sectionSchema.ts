@@ -1,7 +1,7 @@
 import { integer, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, idField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { createRef, idField, timestamps } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 import { classRef } from '../classes/classSchema';
 
 export const sectionStatusEnum = pgEnum('sectionStatus', getEnumValues('sectionStatus'));

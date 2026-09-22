@@ -1,8 +1,8 @@
 import { sql } from 'drizzle-orm';
 import { date, integer, numeric, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { idField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { idField, timestamps } from '../../../database/shared';
+import { getEnumValues } from '../../../shared/enums';
 
 export const vehicleStatusEnum = pgEnum('vehicleStatus', getEnumValues('vehicleStatus'));
 export const vehicleTypeEnum = pgEnum('vehicleType', getEnumValues('vehicleType'));

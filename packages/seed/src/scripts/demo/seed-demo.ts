@@ -1,8 +1,8 @@
 #!/usr/bin/env bun
 
 import { RoleService } from 'najm-auth';
-import { db } from '@server/database/db';
-import { staffRoles } from '@server/database/schema';
+import { db } from '@sms/server/database';
+import { staffRoles } from '@sms/server/database/schema';
 import {
   SettingsService,
   SubjectService,
@@ -32,7 +32,7 @@ import {
   MaintenanceService,
   DisciplineService,
   BehaviorRewardService,
-} from '@server/modules/seed';
+} from '@sms/server/modules/seed';
 import rolesData from '../admin/data/roles.json';
 import { runSeedTask } from '../shared/run-seed';
 import { schoolSeedData } from '../shared/school-seed-data';

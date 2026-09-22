@@ -2,8 +2,8 @@ import { date, integer, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
 import {
   createRef, employmentTypeEnum, genderEnum, idField, moneyField, timestamps, userRef,
-} from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+} from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 
 export const staffStatusEnum = pgEnum('staffStatus', getEnumValues('staffStatus'));
 export const shiftEnum = pgEnum('shift', getEnumValues('shift'));

@@ -1,6 +1,6 @@
 'use client';
 
-import { useDialog, NButton, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
+import { useDialog, NButton, NPageHeader, NPageHeaderActions, NTabs, NLoadingState } from 'najm-kit';
 
 import React, { useCallback, useMemo, useState } from 'react';
 import {
@@ -31,7 +31,6 @@ import EventForm from '@/features/Events/components/EventForm';
 import { useEvents } from '@/features/Events/hooks/useEvents';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import PageLoadingState from '@/shared/PageLoadingState';
 
 type CalendarItemType = 'event' | 'announcement';
 
@@ -347,7 +346,7 @@ export default function CalendarPage() {
         </div>
 
         {isLoading ? (
-          <PageLoadingState label="Loading calendar..." className="min-h-0 flex-1" />
+          <NLoadingState surface="panel" label="Loading calendar..." className="min-h-0 flex-1" />
         ) : (
           <div className="flex min-h-0 flex-1 overflow-auto">
             <div className="flex min-w-[780px] flex-1 flex-col">

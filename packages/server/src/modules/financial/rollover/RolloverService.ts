@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { Err, Service, Transaction } from '@server/najm';
+import { Err, Service, Transaction } from '../../../najm';
 import { RolloverRepository } from './RolloverRepository';
 import { FeeService } from '../fees/FeeService';
 import { SettingsRepository } from '../../settings/SettingsRepository';

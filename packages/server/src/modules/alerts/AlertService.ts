@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { AlertRepository } from './AlertRepository';
 import { AlertValidator } from './AlertValidator';
 import type { CreateAlertDto, UpdateAlertDto } from './AlertDto';

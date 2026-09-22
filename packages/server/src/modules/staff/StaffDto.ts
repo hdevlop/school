@@ -8,14 +8,14 @@ import {
   num,
   optionalId,
   phoneField,
-} from '@server/shared/fields';
+} from '../../shared/fields';
 import {
   compensationModeEnum,
   employmentTypeEnum,
   genderEnum,
   shiftEnum,
   staffStatusEnum,
-} from '@server/shared/enums';
+} from '../../shared/enums';
 
 // Role-specific support profile. Driver is the only structured support table in v1
 // (see STAFF_ROLES_REFACTOR_PLAN.md §7). New roles add their own optional block here.

@@ -1,7 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { boolean, index, integer, jsonb, pgEnum, pgTable, text, time, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import { actionByRef, createRef, idField, timestamps } from '@server/database/shared';
+import { actionByRef, createRef, idField, timestamps } from '../../database/shared';
 import { sectionRef } from '../sections/sectionSchema';
 import { staffRef } from '../staff/staffSchema';
 import { teacherAssignmentRef } from '../teachers/teacherSchema';

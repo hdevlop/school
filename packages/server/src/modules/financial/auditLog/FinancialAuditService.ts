@@ -1,4 +1,4 @@
-import { Err, Service } from '@server/najm';
+import { Err, Service } from '../../../najm';
 import { AuditLogRepository } from './AuditLogRepository';
 
 export type RecordAuditInput = {

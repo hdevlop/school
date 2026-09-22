@@ -1,15 +1,15 @@
-import { Service, Transaction, Events, EventService, Err } from '@server/najm';
+import { Service, Transaction, Events, EventService, Err } from '../../najm';
 import { TeacherRepository } from './TeacherRepository';
 import { TeacherValidator } from './TeacherValidator';
-import { AuthService, UserService } from '@server/auth';
+import { AuthService, UserService } from '../../auth';
 import { StorageService } from 'najm-storage';
-import { formatDate, isEmpty, pickProps } from '@server/shared';
-import { resolveUserPassword, isSeeding } from '@server/shared/userPassword';
+import { formatDate, isEmpty, pickProps } from '../../shared';
+import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { nanoid } from 'nanoid';
 import { StaffService } from '../staff/StaffService';
 import { eq } from 'drizzle-orm';
-import { teachers as teachersTable, staff as staffTable } from '@server/database/schema';
-import { db } from '@server/database/db';
+import { teachers as teachersTable, staff as staffTable } from '../../database/schema';
+import { db } from '../../database/db';
 import type {
   AssignClassDto,
   CreateTeacherDto,

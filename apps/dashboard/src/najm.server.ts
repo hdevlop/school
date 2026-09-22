@@ -4,7 +4,7 @@ import { defineNajmPreferences, NAJM_CURRENCIES } from 'najm-kit/server';
 import { createNajmNextServerApp } from 'najm-next/app/next';
 
 import type { SchoolUiSettings } from '@sms/server';
-import { schoolI18n } from '@sms/server/locales';
+import { schoolI18n } from '@sms/contracts/locales';
 import { schoolTheme } from '@sms/server/theme';
 import { auth } from '@/najm.auth';
 import {

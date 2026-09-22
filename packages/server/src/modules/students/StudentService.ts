@@ -1,13 +1,13 @@
-import { Service, Transaction, Events, EventService } from '@server/najm';
+import { Service, Transaction, Events, EventService } from '../../najm';
 import { StudentRepository } from './StudentRepository';
 import { StudentValidator } from './StudentValidator';
-import { AuthService, UserService } from '@server/auth';
+import { AuthService, UserService } from '../../auth';
 import { ParentService } from '../parents/ParentService';
 import { FeeService } from '../financial/fees/FeeService';
 import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
 import { StorageService } from 'najm-storage';
-import { calculateAge, pickProps } from '@server/shared';
-import { resolveUserPassword, isSeeding } from '@server/shared/userPassword';
+import { calculateAge, pickProps } from '../../shared';
+import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { nanoid } from 'nanoid';
 import type {
   CreateStudentDto,

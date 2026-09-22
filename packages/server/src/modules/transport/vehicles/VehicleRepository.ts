@@ -1,7 +1,7 @@
-import { DB } from '@server/database/db';
-import { vehicles } from '@server/database/schema';
+import { DB } from '../../../database/db';
+import { vehicles } from '../../../database/schema';
 import { count, eq, desc, sql } from 'drizzle-orm';
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { getVehicleBaseFields, getVehicleComputedFields } from './VehicleUtils';
 
 @Repository()

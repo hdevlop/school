@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import { Server } from '@server/najm';
+import { Server } from './najm';
 import {
   databaseConfig,
   cacheConfig,
@@ -18,11 +18,11 @@ import {
   studioAssistantConfig,
   ragStudioConfig,
   themeConfig,
-} from '@server/config';
+} from './config';
 
-import * as modulesModule from '@server/modules';
+import * as modulesModule from './modules';
 
-export { loadSchoolUiSettings, type SchoolUiSettings } from '@server/uiSettings';
+export { loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 
 export {
   databaseConfig,

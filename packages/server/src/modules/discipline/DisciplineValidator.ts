@@ -1,4 +1,4 @@
-import { Err, I18n, Service } from '@server/najm';
+import { Err, I18n, Service } from '../../najm';
 import { DisciplineRepository } from './DisciplineRepository';
 
 export type DisciplineUser = { id: string; role?: string };

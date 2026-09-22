@@ -14,10 +14,23 @@
     "./lookup": {
       "types": "./src/lookup.ts",
       "default": "./src/lookup.ts"
+    },
+    "./locales": {
+      "types": "./src/locales/index.ts",
+      "default": "./src/locales/index.ts"
+    },
+    "./fixtures": {
+      "types": "./src/fixtures/index.ts",
+      "default": "./src/fixtures/index.ts"
     }
   },
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "bun test tests"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.6.0",
+    "najm-i18n": "2.1.2",
+    "nanoid": "^5.0.0"
   }
 }

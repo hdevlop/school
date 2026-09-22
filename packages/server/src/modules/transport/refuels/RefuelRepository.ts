@@ -1,8 +1,8 @@
-import { Repository } from '@server/najm';
-import { DB } from '@server/database/db';
-import { refuels, vehicles, drivers, staff, users } from '@server/database/schema';
+import { Repository } from '../../../najm';
+import { DB } from '../../../database/db';
+import { refuels, vehicles, drivers, staff, users } from '../../../database/schema';
 import { eq, desc, sql, and, gte, lte, isNotNull, avg, sum, max, min, count } from 'drizzle-orm';
-import { getBusinessDate, getBusinessDateOnly } from '@server/shared/businessDate';
+import { getBusinessDate, getBusinessDateOnly } from '../../../shared/businessDate';
 
 const refuelSelect = {
   id: refuels.id,

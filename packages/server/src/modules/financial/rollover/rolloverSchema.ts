@@ -1,7 +1,7 @@
 import { boolean, integer, jsonb, pgEnum, pgTable, text, timestamp, uniqueIndex, index } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
-import { actionByRef, createRef, idField, timestamps } from '@server/database/shared';
+import { actionByRef, createRef, idField, timestamps } from '../../../database/shared';
 import { studentRef } from '../../students/studentSchema';
 import { feeTypeRef } from '../feeTypes/feeTypeSchema';
 import { fees } from '../fees/feeSchema';

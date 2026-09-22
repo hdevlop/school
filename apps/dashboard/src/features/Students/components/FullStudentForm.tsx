@@ -16,7 +16,7 @@ import { BulkFeeFormContent } from '@/features/Financial/Fees/components/BulkFee
 import { FeeFactory } from '@/features/Financial/Fees/utils/feeUtils'
 import { useTranslation } from 'najm-i18n/react'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { chance } from '@/fakers/fakers'
+import { chance } from '@sms/contracts/fixtures'
 import { StudentTransportFormContent } from '@/features/Transport/components/StudentTransportFormContent'
 import { normalizeLocationValue } from 'najm-kit/location'
 

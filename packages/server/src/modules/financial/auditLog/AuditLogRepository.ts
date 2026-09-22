@@ -1,7 +1,7 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import { financialAuditLogs } from './auditLogSchema';
-import { DB } from '@server/database/db';
+import { DB } from '../../../database/db';
 
 @Repository()
 export class AuditLogRepository {

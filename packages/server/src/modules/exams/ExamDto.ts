@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { dateField, num, optionalId, requiredId, timeField } from '@server/shared/fields';
-import { examStatusEnum, examTypeEnum } from '@server/shared/enums';
+import { dateField, num, optionalId, requiredId, timeField } from '../../shared/fields';
+import { examStatusEnum, examTypeEnum } from '../../shared/enums';
 
 const examSchema = z.object({
   classId: optionalId,

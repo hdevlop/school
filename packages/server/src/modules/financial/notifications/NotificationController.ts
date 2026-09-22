@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Headers, Post, ResMsg } from '@server/najm';
+import { Body, Controller, Get, Headers, Post, ResMsg } from '../../../najm';
 import { NotificationService, assertCronSecret } from './NotificationService';
 import { runNotificationsDto, type RunNotificationsDto } from './NotificationDto';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 
 @Controller('/financial-notifications')
 export class NotificationController {

@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { ClipboardList } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { ClipboardList, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import AssessmentForm from './AssessmentForm';
 import AssessmentCard from './AssessmentCard';
@@ -10,9 +11,8 @@ import { useTranslation } from 'najm-i18n/react';
 import { useAssessmentsTableColumns } from '../hooks/useAssessmentsTableColumns';
 import { useAssessmentsTableFilters } from '../hooks/useAssessmentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function AssessmentsTable() {
   const { t } = useTranslation();
   const columns = useAssessmentsTableColumns();
@@ -108,14 +108,36 @@ function AssessmentsTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isAssessmentsLoading}
-        {...tableErrorProps(error, assessments)}
+        error={hasFailedToLoad(error, assessments) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={AssessmentCard}
         addButtonText={t('assessments.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'assessments',
-          onCreate: handleAddClick,
-          createLabel: t('assessments.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.assessments}
+            title={t('emptyStates.assessments.title')}
+            description={t('emptyStates.assessments.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('assessments.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
         dynamicHeight={true}
       />

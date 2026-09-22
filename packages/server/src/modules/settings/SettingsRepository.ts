@@ -1,6 +1,6 @@
-import { DB } from '@server/database/db';
-import { settings, users } from '@server/database/schema';
-import { Repository } from '@server/najm';
+import { DB } from '../../database/db';
+import { settings, users } from '../../database/schema';
+import { Repository } from '../../najm';
 import { count, eq, desc, sql } from 'drizzle-orm';
 
 const publicSettings = {

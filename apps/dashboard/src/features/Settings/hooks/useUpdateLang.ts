@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'najm-i18n/react';
-import { schoolI18n, type SchoolLocale } from '@sms/server/locales';
+import { schoolI18n, type SchoolLocale } from '@sms/contracts/locales';
 import { toast } from 'sonner';
 
 import { auth } from '@/najm.auth';

@@ -1,8 +1,8 @@
-import { DB } from '@server/database/db';
-import { parents, users, students, studentParents } from '@server/database/schema';
+import { DB } from '../../database/db';
+import { parents, users, students, studentParents } from '../../database/schema';
 import { count, eq, desc, and, inArray, ilike, or, sql } from 'drizzle-orm';
-import { Repository } from '@server/najm';
-import { Owned } from '@server/auth';
+import { Repository } from '../../najm';
+import { Owned } from '../../auth';
 import { Parent } from './ParentGuards';
 
 export const parentSelect = {

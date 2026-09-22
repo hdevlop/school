@@ -1,7 +1,7 @@
-import { DB } from '@server/database/db';
-import { students, classes, sections, users, parents, studentParents } from '@server/database/schema';
-import { Repository, t } from '@server/najm';
-import { Owned } from '@server/auth';
+import { DB } from '../../database/db';
+import { students, classes, sections, users, parents, studentParents } from '../../database/schema';
+import { Repository, t } from '../../najm';
+import { Owned } from '../../auth';
 import { count, eq, desc,inArray } from 'drizzle-orm';
 import { Student } from './StudentGuards';
 import { parentSelect } from '../parents/ParentRepository';

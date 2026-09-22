@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { SectionRepository } from './SectionRepository';
 import { SectionValidator } from './SectionValidator';
 import type { CreateSectionDto, CreateSectionsBulkDto, UpdateSectionDto } from './SectionDto';

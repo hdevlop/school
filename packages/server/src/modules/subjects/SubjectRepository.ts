@@ -1,6 +1,6 @@
-import { Repository } from '@server/najm';
-import { DB } from '@server/database/db';
-import { subjects } from '@server/database/schema';
+import { Repository } from '../../najm';
+import { DB } from '../../database/db';
+import { subjects } from '../../database/schema';
 import { eq } from 'drizzle-orm';
 
 export const subjectSelect = {

@@ -1,8 +1,8 @@
-import { DB } from '@server/database/db';
-import { students, vehicles, users } from '@server/database/schema';
+import { DB } from '../../../database/db';
+import { students, vehicles, users } from '../../../database/schema';
 import { studentRoutes } from './studentRouteSchema';
 import { count, eq, desc, and, sql } from 'drizzle-orm';
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 
 @Repository()
 export class StudentRouteRepository {

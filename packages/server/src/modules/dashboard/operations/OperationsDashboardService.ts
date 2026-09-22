@@ -1,4 +1,4 @@
-import { Injectable } from '@server/najm';
+import { Injectable } from '../../../najm';
 import { EventService } from '../../events/EventService';
 import { AlertService } from '../../alerts/AlertService';
 import { AnnouncementService } from '../../announcements/AnnouncementService';

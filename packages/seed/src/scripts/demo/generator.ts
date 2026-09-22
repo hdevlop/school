@@ -1,8 +1,21 @@
 import { join } from 'path';
 import { mkdirSync, rmSync } from 'fs';
-import { classesData, sectionsData, subjectsData, vehiclesData, generateFees } from '@/fakers/index';
-import { generateDriver, generateFamilyUnit, generateStudent, generateTeacher, generateTeachers, generateVehicle, getClassByName, getSectionsByClass } from '@/fakers/entities';
-import { generateExpenses } from '@/fakers/entities';
+import {
+   classesData,
+   generateDriver,
+   generateExpenses,
+   generateFamilyUnit,
+   generateFees,
+   generateStudent,
+   generateTeacher,
+   generateTeachers,
+   generateVehicle,
+   getClassByName,
+   getSectionsByClass,
+   sectionsData,
+   subjectsData,
+   vehiclesData,
+} from '@sms/contracts/fixtures';
 
 // ============================================
 // ⚙️ CONFIGURATION

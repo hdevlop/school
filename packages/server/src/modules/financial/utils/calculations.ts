@@ -4,7 +4,7 @@ import {
   resolveAcademicPeriodStart,
 } from './academicYear';
 import { fromCents, toCents } from './money';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 export function roundAmount(amount: number): number {
   return Number(amount.toFixed(2));

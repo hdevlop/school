@@ -227,7 +227,7 @@ export function randomDriver(drivers) {
   if (!drivers || drivers.length === 0) {
     return null;
   }
-  //@ts-ignore
+  // @ts-expect-error -- arrayElement returns unknown for an untyped list.
   return faker.helpers.arrayElement(drivers)?.id;
 }
 

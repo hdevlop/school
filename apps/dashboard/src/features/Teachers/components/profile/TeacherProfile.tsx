@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { NButton, Tabs, TabsContent, TabsList, TabsTrigger, useNSidebar } from 'najm-kit';
+import { NButton, Tabs, TabsContent, TabsList, TabsTrigger, useNSidebar, NLoadingState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import ProfileSidebar from './ProfileSidebar';
 import AcademicInfoTab from './tabs/AcademicInfoTab';
@@ -12,7 +12,6 @@ import PaymentsTab from './tabs/PaymentsTab';
 import { getTeacherByIdApi } from '@/services/teacherApi';
 import { useTeachers } from '@/features/Teachers/hooks/useTeachers';
 import { Label } from 'najm-kit';
-import PageLoadingState from '@/shared/PageLoadingState';
 import {
   GraduationCap,
   User,
@@ -155,7 +154,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacherId }) => {
 
   if (loading) {
     return (
-      <PageLoadingState label={`${t('common.loading')}...`} className="min-h-80" />
+      <NLoadingState surface="panel" label={`${t('common.loading')}...`} className="min-h-80" />
     );
   }
 

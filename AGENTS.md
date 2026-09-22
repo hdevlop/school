@@ -187,7 +187,8 @@ states that drift apart — so do not add one without changing the plan first.
 - **One session resolution.** Server components use the module-scope adapter in `apps/dashboard/src/najm.server.ts`. Never call `auth.getSession()` directly from a layout or page, and never build the adapter per request.
 - **One Next config.** `apps/dashboard/next.config.ts` is the single line `export { default } from "najm-next/config"`. `najm-next` owns the workspace root (pinned for both `turbopack.root` and `outputFileTracingRoot`, because a stray parent lockfile otherwise wins Next's automatic detection), `NAJM_NEXT_DIST_DIR`, `experimental.externalDir`, `poweredByHeader`, the image cache TTL, `reflect-metadata` externalization, and service-worker headers. `allowedDevOrigins` stays empty unless `NAJM_NEXT_DEV_ORIGINS` names hosts. Do not add keys to the file; a genuine divergence uses `defineNajmNextConfig` from `najm-next/configurable`.
 - **Sidebar state** belongs to `NSidebarProvider` from `najm-kit`, read with `useNSidebar()`. School has no sidebar store.
-- **Translations** live in `packages/server/src/locales/` and serve backend and frontend from one catalog. Run `bun run i18n:check` after adding keys.
+- **Translations** live in `packages/contracts/src/locales/` (`@sms/contracts/locales`) and serve backend and frontend from one catalog, consumed from source with no build step. Run `bun run i18n:check` after adding keys.
+- **One direction for workspace imports.** Browser code reaches `@sms/contracts` only; server components and route handlers may also import `@sms/server` exports; server never imports app or seed; contracts imports no workspace package. Cross-package imports use declared package `exports`, never relative paths or aliases. `bun run test:boundaries` enforces this; `docs/architecture/workspace.md` is the reference.
 
 ### Local Najm Package Sources
 
@@ -217,10 +218,12 @@ Use the actual root scripts from `package.json`. Bun only — npm, yarn, and pnp
 ignore `bun.lock` and the `overrides` block that pins the Najm versions.
 
 - `bun install`
-- `bun run dev`
-- `bun run build`
-- `bun run build:all`
+- `bun run dev` / `bun run dev:https`
+- `bun run build` (`build:all` is an alias)
 - `bun run lint`
+- `bun run typecheck`
+- `bun run test`
+- `bun run check`
 - `bun run i18n:check`
 - `bun run db:generate`
 - `bun run db:migrate`

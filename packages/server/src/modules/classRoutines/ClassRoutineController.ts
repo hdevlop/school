@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAuth, isAdministrator } from '@server/auth';
+import { isAuth, isAdministrator } from '../../auth';
 import { ClassRoutineService } from './ClassRoutineService';
 import {
   createRoutineEntryDto,

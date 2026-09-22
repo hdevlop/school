@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DisciplineService } from './DisciplineService';
 import {

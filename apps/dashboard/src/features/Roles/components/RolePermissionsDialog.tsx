@@ -9,8 +9,8 @@ import { useRolePermissions } from '../hooks/usePermissions';
 
 const RolePermissionsDialog = ({ role }) => {
   const { t } = useTranslation();
-  // Fall back to plain English while new i18n keys are not yet compiled
-  // into @sms/server/locales (a server rebuild publishes them).
+  // Fall back to plain English for a key the shared catalog
+  // (@sms/contracts/locales) does not define yet.
   const tf = useCallback((key: string, fallback: string) => {
     const value = t(key);
     return value === key ? fallback : value;

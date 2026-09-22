@@ -1,7 +1,7 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { AnnouncementRepository } from './AnnouncementRepository';
 import { AnnouncementValidator } from './AnnouncementValidator';
-import { pickProps } from '@server/shared';
+import { pickProps } from '../../shared';
 import type { CreateAnnouncementDto, CreateAnnouncementsBulkDto, DeleteBulkAnnouncementDto, UpdateAnnouncementDto } from './AnnouncementDto';
 
 @Service()

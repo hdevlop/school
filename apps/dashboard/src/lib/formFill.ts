@@ -1,5 +1,5 @@
-import * as fake from './fakers';
 import {
+  fake,
   generateAnnouncement,
   generateAssessment,
   generateClass,
@@ -14,7 +14,7 @@ import {
   generateSubject,
   generateTeacher,
   generateVehicle,
-} from './entities';
+} from '@sms/contracts/fixtures';
 
 export type FormFillOverride = unknown | ((key: string) => unknown);
 export type FormFillOverrides = Record<string, FormFillOverride>;

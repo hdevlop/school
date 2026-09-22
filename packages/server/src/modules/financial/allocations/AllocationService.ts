@@ -1,4 +1,4 @@
-import { Err, Service, Transaction, Events, EventService } from '@server/najm';
+import { Err, Service, Transaction, Events, EventService } from '../../../najm';
 import { AllocationRepository } from './AllocationRepository';
 import { InstallmentRepository } from '../installments/InstallmentRepository';
 import { AllocationValidator } from './AllocationValidator';

@@ -1,7 +1,7 @@
 import { count, eq } from 'drizzle-orm';
-import { Repository } from '@server/najm';
-import { staff, staffRoles, users } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { Repository } from '../../../najm';
+import { staff, staffRoles, users } from '../../../database/schema';
+import { DB } from '../../../database/db';
 
 const staffRoleSelect = {
   code: staffRoles.code,

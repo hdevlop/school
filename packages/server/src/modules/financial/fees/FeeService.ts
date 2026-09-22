@@ -1,6 +1,6 @@
-import { Err, Service, Transaction, Events, EventService } from '@server/najm';
+import { Err, Service, Transaction, Events, EventService } from '../../../najm';
 import { FeeValidator } from './FeeValidator';
-import { getBusinessDate, isEmpty, pickProps } from '@server/shared';
+import { getBusinessDate, isEmpty, pickProps } from '../../../shared';
 import { FeeRepository } from './FeeRepository';
 import {
   amountToString,

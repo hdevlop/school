@@ -1,6 +1,5 @@
+import { sectionsData, subjectsData } from '@sms/contracts/fixtures';
 import settingsData from '../school/data/settings.json';
-import subjectsData from '../school/data/subjects.json';
-import sectionsData from '../school/data/sections.json';
 
 export const normalizedSettingsData = {
   ...settingsData,

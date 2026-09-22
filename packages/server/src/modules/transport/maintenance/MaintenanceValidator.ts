@@ -1,8 +1,8 @@
-import { Err, I18n, Service } from '@server/najm';
+import { Err, I18n, Service } from '../../../najm';
 import { MaintenanceRepository } from './MaintenanceRepository';
-import { VehicleRepository } from '@server/modules/transport/vehicles/VehicleRepository';
-import { getEnumValues } from '@server/shared/enums';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { VehicleRepository } from '../vehicles/VehicleRepository';
+import { getEnumValues } from '../../../shared/enums';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 @Service()
 export class MaintenanceValidator {

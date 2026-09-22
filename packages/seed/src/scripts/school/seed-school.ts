@@ -10,7 +10,7 @@ import {
   TeacherService,
   StudentService,
   AttendanceService,
-} from '@server/modules/seed';
+} from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
 import { schoolSeedData } from '../shared/school-seed-data';
 import { seedAttendance } from '../shared/seed-attendance';

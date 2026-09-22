@@ -1,13 +1,13 @@
 'use client';
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import Link from 'next/link';
-import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText } from 'lucide-react';
+import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText, SearchX } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
-import { NCard, NStatCard, NTable } from 'najm-kit';
+import { NCard, NStatCard, NTable, NEmptyState } from 'najm-kit';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface FeesTabProps {
   studentId?: string;
@@ -355,11 +355,21 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
           dynamicHeight={false}
           onRowClick={onOpenFeeRecord ? handleFeeClick : undefined}
           getRowClassName={() => onOpenFeeRecord ? 'cursor-pointer hover:bg-slate-50' : undefined}
-          {...tableEmptyProps({
-            feature: 'fees',
-            title: t('students.profile.feeDetails.noneAssignedShort'),
-            description: null,
-          })}
+          renderEmpty={() => (
+            <NEmptyState
+              surface="panel"
+              icon={FEATURE_ICONS.fees}
+              title={t('students.profile.feeDetails.noneAssignedShort')}
+            />
+          )}
+          renderFilteredEmpty={() => (
+            <NEmptyState
+              surface="panel"
+              icon={SearchX}
+              title={t('emptyStates.filtered.title')}
+              description={t('emptyStates.filtered.description')}
+            />
+          )}
         />
       </div>
     </div>

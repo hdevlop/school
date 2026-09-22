@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { ClassRepository } from './ClassRepository';
 import { ClassValidator } from './ClassValidator';
 import type { CreateClassDto, CreateClassesBulkDto, UpdateClassDto } from './ClassDto';

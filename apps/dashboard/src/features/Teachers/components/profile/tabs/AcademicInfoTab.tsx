@@ -1,12 +1,12 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useEffect, useMemo, useState } from 'react';
-import { NIcon, NTable } from 'najm-kit';
+import { NIcon, NTable, NEmptyState } from 'najm-kit';
 import { Input } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
-import { Award, BookOpen, Briefcase, Calendar, GraduationCap, Hash, ShieldCheck, Users } from 'lucide-react';
+import { Award, BookOpen, Briefcase, Calendar, GraduationCap, Hash, ShieldCheck, Users, SearchX } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface AcademicInfoTabProps {
   teacher: any;
@@ -184,11 +184,21 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
             showViewToggle={false}
             showColumnVisibility={false}
             loadingText={t('teachers.profile.table.loadingAssignments')}
-            {...tableEmptyProps({
-              feature: 'classes',
-              title: "No assignments recorded",
-              description: null,
-            })}
+            renderEmpty={() => (
+              <NEmptyState
+                surface="panel"
+                icon={FEATURE_ICONS.classes}
+                title={"No assignments recorded"}
+              />
+            )}
+            renderFilteredEmpty={() => (
+              <NEmptyState
+                surface="panel"
+                icon={SearchX}
+                title={t('emptyStates.filtered.title')}
+                description={t('emptyStates.filtered.description')}
+              />
+            )}
           />
         </div>
       </section>

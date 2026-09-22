@@ -1,8 +1,8 @@
-import { Service } from '@server/najm';
+import { Service } from '../../../najm';
 import { RefuelRepository } from './RefuelRepository';
 import { RefuelValidator } from './RefuelValidator';
 import type { CreateRefuelDto, UpdateRefuelDto } from './RefuelDto';
-import { getBusinessDateOnly } from '@server/shared/businessDate';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 @Service()
 export class RefuelService {

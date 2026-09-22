@@ -1,7 +1,7 @@
 import { date, doublePrecision, integer, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, genderEnum, idField, timestamps, userRef } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { createRef, genderEnum, idField, timestamps, userRef } from '../../database/shared';
+import { getEnumValues } from '../../shared/enums';
 import { classRef } from '../classes/classSchema';
 import { parentRef } from '../parents/parentSchema';
 import { sectionRef } from '../sections/sectionSchema';

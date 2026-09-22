@@ -1,9 +1,9 @@
-import { Service, Err, I18n, t } from '@server/najm';
+import { Service, Err, I18n, t } from '../../najm';
 import { AlertRepository } from './AlertRepository';
-import { StudentRepository } from '@server/modules/students/StudentRepository';
-import { TeacherRepository } from '@server/modules/teachers/TeacherRepository';
-import { ClassRepository } from '@server/modules/classes/ClassRepository';
-import { SubjectRepository } from '@server/modules/subjects/SubjectRepository';
+import { StudentRepository } from '../students/StudentRepository';
+import { TeacherRepository } from '../teachers/TeacherRepository';
+import { ClassRepository } from '../classes/ClassRepository';
+import { SubjectRepository } from '../subjects/SubjectRepository';
 
 @Service()
 export class AlertValidator {

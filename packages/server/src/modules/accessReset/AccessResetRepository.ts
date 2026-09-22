@@ -1,4 +1,4 @@
-import { DB } from '@server/database/db';
+import { DB } from '../../database/db';
 import {
   auditLogs,
   parents,
@@ -8,8 +8,8 @@ import {
   students,
   teachers,
   users,
-} from '@server/database/schema';
-import { Repository } from '@server/najm';
+} from '../../database/schema';
+import { Repository } from '../../najm';
 import { eq, inArray } from 'drizzle-orm';
 
 export type AccessResetAccount = {

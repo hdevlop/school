@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "seed:admin":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-admin.ts",
     "seed:staff":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-backfill.ts",
     "seed:roles":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-roles.ts",
@@ -17,11 +17,10 @@
     "seed:full":     "bun run seed:admin && bun run gen:demo && bun run reset:demo && bun run seed:demo"
   },
   "dependencies": {
+    "@sms/contracts": "workspace:*",
     "@sms/server": "workspace:*",
-    "@faker-js/faker": "^10.6.0",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "0.45.2",
-    "nanoid": "^5.0.0",
     "najm-auth": "4.0.8"
   }
 }

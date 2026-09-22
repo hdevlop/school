@@ -1,6 +1,6 @@
-import { DB } from '@server/database/db';
-import { alerts, classes, students, subjects, teachers, staff } from '@server/database/schema';
-import { Repository } from '@server/najm';
+import { DB } from '../../database/db';
+import { alerts, classes, students, subjects, teachers, staff } from '../../database/schema';
+import { Repository } from '../../najm';
 import { count, eq, desc, sql, and, or } from 'drizzle-orm';
 
 @Repository()

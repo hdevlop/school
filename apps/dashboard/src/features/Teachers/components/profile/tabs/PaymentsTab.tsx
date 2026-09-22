@@ -1,12 +1,12 @@
 "use client";
 
+import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
-import { NTable } from 'najm-kit';
+import { NTable, NEmptyState } from 'najm-kit';
 import { Badge } from 'najm-kit';
-import { Banknote, CalendarDays, Clock, ReceiptText } from 'lucide-react';
+import { Banknote, CalendarDays, Clock, ReceiptText, SearchX } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 
 interface PaymentsTabProps {
   teacher: any;
@@ -138,11 +138,21 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
         showAddButton={false}
         showViewToggle={false}
         showColumnVisibility={false}
-        {...tableEmptyProps({
-          feature: 'payments',
-          title: "No teacher payments recorded",
-          description: null,
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.payments}
+            title={"No teacher payments recorded"}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
       />
     </div>
   );

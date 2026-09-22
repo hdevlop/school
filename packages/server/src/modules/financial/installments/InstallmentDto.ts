@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { dateField, num, optionalId } from '@server/shared/fields';
-import { feeInstallmentStatusEnum } from '@server/shared/enums';
+import { dateField, num, optionalId } from '../../../shared/fields';
+import { feeInstallmentStatusEnum } from '../../../shared/enums';
 
 const feeInstallmentSchema = z.object({
   feeId: optionalId,

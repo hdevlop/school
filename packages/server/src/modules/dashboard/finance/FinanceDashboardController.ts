@@ -1,5 +1,5 @@
-import { Controller, Get, ResMsg, Query, Validate } from '@server/najm';
-import { isAuth } from '@server/auth';
+import { Controller, Get, ResMsg, Query, Validate } from '../../../najm';
+import { isAuth } from '../../../auth';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { FinanceDashboardService } from './FinanceDashboardService';
 import {

@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 // One-off: wipe every table (keep schema/enums) so a clean reseed doesn't hit
 // misleading FK/duplicate errors from partial prior state.
-import { db } from '@server/database/db';
+import { db } from '@sms/server/database';
 import { sql } from 'drizzle-orm';
 
 await db.execute(sql`

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { requiredId } from '@server/shared/fields';
-import { academicYearField } from '@server/shared/fields';
+import { requiredId } from '../../../shared/fields';
+import { academicYearField } from '../../../shared/fields';
 
 export const rolloverDto = z.object({
   fromYear: academicYearField,

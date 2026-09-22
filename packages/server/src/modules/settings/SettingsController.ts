@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Put, Params, Body, Validate, ResMsg } from '@server/najm';
+import { Controller, Get, Post, Put, Params, Body, Validate, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SettingsService } from './SettingsService';
-import { isAuth, isAdministrator } from '@server/auth';
+import { isAuth, isAdministrator } from '../../auth';
 import {
   createSettingsDto,
   updateSettingsDto,

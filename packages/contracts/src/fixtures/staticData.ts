@@ -170,10 +170,10 @@ export const SCHEDULES = ['monthly', 'quarterly', 'semester', 'annually', 'oneTi
 // SEED DATA — imported from JSON (single source of truth)
 // ============================================
 
-import _classesData from '../scripts/school/data/classes.json';
-import _sectionsData from '../scripts/school/data/sections.json';
-import _subjectsData from '../scripts/school/data/subjects.json';
-import _feeTypeData from '../scripts/school/data/feeTypes.json';
+import _classesData from './data/classes.json';
+import _sectionsData from './data/sections.json';
+import _subjectsData from './data/subjects.json';
+import _feeTypeData from './data/feeTypes.json';
 
 export const classesData = _classesData;
 export const sectionsData = _sectionsData;

@@ -1,4 +1,4 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { and, desc, eq, gte, lte, sql, sum, count } from 'drizzle-orm';
 import {
   expenses,
@@ -9,10 +9,10 @@ import {
   students,
   classes,
   users,
-} from '@server/database/schema';
-import { DB } from '@server/database/db';
+} from '../../../database/schema';
+import { DB } from '../../../database/db';
 import { formatDateOnly } from '../../financial/utils/dateOnly';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 @Repository()
 export class FinanceDashboardRepository {

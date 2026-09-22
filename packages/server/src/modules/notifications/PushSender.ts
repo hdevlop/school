@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../../najm';
 import { vapidConfig } from './notificationConfig';
 
 export type PushOutcome = { result: 'sent' | 'gone' | 'transient' | 'failed'; code?: string };

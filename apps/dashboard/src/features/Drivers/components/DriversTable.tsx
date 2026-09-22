@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { Car } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { Car, Plus, SearchX } from 'lucide-react';
 import DriverForm from './DriverForm';
 import { useDrivers } from '../hooks/useDrivers';
 import { useTranslation } from 'najm-i18n/react';
@@ -9,9 +10,8 @@ import DriverCard from './DriverCard';
 import { useDriversTableColumns } from '../hooks/useDriversTableColumns';
 import { useDriversTableFilters } from '../hooks/useDriversTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function DriversTable() {
 
   const { t } = useTranslation();
@@ -128,15 +128,37 @@ function DriversTable() {
         onDelete={handleDelete}
         onBulkDelete={handleBulkDelete}
         loading={isDriversLoading}
-        {...tableErrorProps(error, drivers)}
+        error={hasFailedToLoad(error, drivers) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         loadingText={t('common.loading')}
         renderCard={DriverCard}
         addButtonText={t('drivers.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'drivers',
-          onCreate: handleAddClick,
-          createLabel: t('drivers.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.drivers}
+            title={t('emptyStates.drivers.title')}
+            description={t('emptyStates.drivers.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('drivers.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='cards'
       />
     </div>

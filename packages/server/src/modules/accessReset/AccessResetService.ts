@@ -1,8 +1,8 @@
 import { CacheService } from 'najm-cache';
 import { moroccanCinTemporaryCredential } from 'najm-auth';
 
-import { AuthService } from '@server/auth';
-import { Err, I18n, Service, Transaction } from '@server/najm';
+import { AuthService } from '../../auth';
+import { Err, I18n, Service, Transaction } from '../../najm';
 import type { AccessResetDelivery, AccessResetResult, ResetAccessDto } from './AccessResetDto';
 import { AccessResetRepository } from './AccessResetRepository';
 import {

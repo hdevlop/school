@@ -1,9 +1,9 @@
-import { Err, Events, EventService, Service, Transaction } from '@server/najm';
+import { Err, Events, EventService, Service, Transaction } from '../../najm';
 import { nanoid } from 'nanoid';
 
-import { AuthService, UserService } from '@server/auth';
+import { AuthService, UserService } from '../../auth';
 import { StorageService } from 'najm-storage';
-import { resolveUserPassword, isSeeding } from '@server/shared/userPassword';
+import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { DriverRepository } from '../transport/drivers/DriverRepository';
 import { VehicleAssignmentRepository } from '../transport/vehicleAssignments/VehicleAssignmentRepository';
 import { StaffAssignmentRepository } from './StaffAssignmentRepository';

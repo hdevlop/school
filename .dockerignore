@@ -1,7 +1,8 @@
 .git
 .github
 .env*
-!.env.local.example
+**/.env*
+!apps/dashboard/.env.local.example
 node_modules
 **/node_modules
 **/.next
@@ -12,7 +13,6 @@ playwright-report
 test-results
 apps/dashboard/test-results
 docs
-scripts
 datasets
 *.md
 !README.md

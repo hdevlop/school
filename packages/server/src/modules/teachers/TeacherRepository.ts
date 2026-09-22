@@ -1,7 +1,7 @@
-import { DB } from '@server/database/db';
-import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff } from '@server/database/schema';
-import { Repository } from '@server/najm';
-import { Owned } from '@server/auth';
+import { DB } from '../../database/db';
+import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff } from '../../database/schema';
+import { Repository } from '../../najm';
+import { Owned } from '../../auth';
 import { count, eq, desc, sql, and, inArray } from 'drizzle-orm';
 import { Teacher } from './TeacherGuards';
 

@@ -7,7 +7,7 @@
     "build": "node ./scripts/next-build.mjs",
     "start": "next start -p 3102",
     "lint": "eslint src",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
+    "typecheck": "next typegen && tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.test.json",
     "https": "next dev --experimental-https -p 3102"
   },
   "dependencies": {
@@ -24,7 +24,6 @@
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@faker-js/faker": "^10.6.0",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@googlemaps/js-api-loader": "2.1.1",

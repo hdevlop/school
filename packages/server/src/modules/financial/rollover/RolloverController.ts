@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '@server/najm';
+import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../../auth';
 import { RolloverService } from './RolloverService';
 import { commitRolloverDto, rolloverDto, type CommitRolloverDto, type RolloverDto } from './RolloverDto';
 

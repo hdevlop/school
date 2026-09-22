@@ -1,8 +1,9 @@
 'use client';
 
-import { Eye, Pencil, ShieldAlert, Trash2 } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { Eye, Pencil, ShieldAlert, Trash2, Plus, SearchX } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import DisciplineCard from './DisciplineCard';
@@ -13,9 +14,8 @@ import { useDiscipline } from '../hooks/useDiscipline';
 import { useDisciplineTableColumns } from '../hooks/useDisciplineTableColumns';
 import { useDisciplineTableFilters } from '../hooks/useDisciplineTableFilters';
 import type { DisciplineIncident } from '../disciplineConstants';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 export default function DisciplineTable() {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -115,7 +115,12 @@ export default function DisciplineTable() {
         columns={columns}
         filters={filters}
         loading={isDisciplineLoading}
-        {...tableErrorProps(error, incidents || [])}
+        error={hasFailedToLoad(error, incidents || []) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         onCreate={handleCreate}
         onRowClick={handleView}
         menuButton
@@ -128,11 +133,28 @@ export default function DisciplineTable() {
         }}
         renderCard={DisciplineCard as any}
         addButtonText={t('discipline.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'discipline',
-          onCreate: handleCreate,
-          createLabel: t('discipline.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.discipline}
+            title={t('emptyStates.discipline.title')}
+            description={t('emptyStates.discipline.description')}
+            action={(
+              <NButton size="sm" onClick={handleCreate}>
+                <Plus className="h-4 w-4" />
+                {t('discipline.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode="table"
         defaultSorting={[{ id: 'incidentAt', desc: true }]}
         dynamicHeight

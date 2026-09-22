@@ -44,7 +44,7 @@ const LinkAdapter = ({
 const createSidebarItems = (t: (key: string) => string, role: string): NavItem[] => {
   const isAdmin = role === 'admin';
   const canUseTeacherRoutes = role === 'teacher' || isAdmin;
-  // Fall back to English until new nav keys are compiled into the server locales.
+  // Fall back to English for a nav key the shared catalog does not define yet.
   const tf = (key: string, fallback: string) => {
     const value = t(key);
     return value === key ? fallback : value;

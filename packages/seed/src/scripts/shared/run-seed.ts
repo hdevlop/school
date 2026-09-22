@@ -1,9 +1,9 @@
 
-import { Server } from '@server/najm';
-import * as seedModules from '@server/modules/seed';
-import { auth, isAuth } from '@server/auth';
-import { db } from '@server/database/db';
-import translations from '@server/locales';
+import { Server } from '@sms/server/najm';
+import * as seedModules from '@sms/server/modules/seed';
+import { auth, isAuth } from '@sms/server/auth';
+import { db } from '@sms/server/database';
+import translations from '@sms/contracts/locales';
 import { cors } from 'najm-cors';
 import { database } from 'najm-database';
 import { email } from 'najm-email';
@@ -81,7 +81,7 @@ export async function runSeed(label: string, SeedCls: SeedClass) {
   let exitCode = 0;
 
   try {
-    const appModules = await import('@server/modules');
+    const appModules = await import('@sms/server/modules');
     await createSeedServer(appModules)
       .load(SeedCls)
       .init();

@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '@server/najm';
+import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SectionService } from './SectionService';
 import { Section, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './SectionGuards';
-import { isAdmin } from '@server/auth';
+import { isAdmin } from '../../auth';
 import { sectionIdParam, createSectionDto, createSectionsBulkDto, updateSectionDto, type CreateSectionDto, type UpdateSectionDto } from './SectionDto';
 
 @ToolGroup('sections')

@@ -3,7 +3,7 @@ import {
   behaviorRecognitionLevelEnum,
   behaviorRewardCategoryEnum,
   behaviorRewardTypeEnum,
-} from '@server/shared/enums';
+} from '../../shared/enums';
 
 const behaviorRewardInput = z.object({
   studentId: z.string().min(1, 'Student is required'),

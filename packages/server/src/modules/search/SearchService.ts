@@ -1,4 +1,4 @@
-import { Injectable } from '@server/najm';
+import { Injectable } from '../../najm';
 import { SearchRepository } from './SearchRepository';
 
 @Injectable()

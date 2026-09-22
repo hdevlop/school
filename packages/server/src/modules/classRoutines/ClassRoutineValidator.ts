@@ -1,4 +1,4 @@
-import { Err, Service } from '@server/najm';
+import { Err, Service } from '../../najm';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
 
 @Service()

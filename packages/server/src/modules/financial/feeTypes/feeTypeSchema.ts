@@ -1,7 +1,7 @@
 import { pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, idField, moneyField, timestamps } from '@server/database/shared';
-import { getEnumValues } from '@server/shared/enums';
+import { createRef, idField, moneyField, timestamps } from '../../../database/shared';
+import { getEnumValues } from '../../../shared/enums';
 
 export const feeTypeStatusEnum = pgEnum('feeTypeStatus', getEnumValues('feeTypeStatus'));
 export const paymentTypeEnum = pgEnum('paymentType', getEnumValues('paymentType'));

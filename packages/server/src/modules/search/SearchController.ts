@@ -1,7 +1,7 @@
-import { Controller, Get, Query, ResMsg, Validate } from '@server/najm';
+import { Controller, Get, Query, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SearchService } from './SearchService';
-import { isAuth } from '@server/auth';
+import { isAuth } from '../../auth';
 import { z } from 'zod';
 
 const searchQueryDto = z.object({

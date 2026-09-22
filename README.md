@@ -119,16 +119,23 @@ bun run seed:admin
 bun run dev
 ```
 
-The application will be available at `http://localhost:3000`
+The application will be available at `http://localhost:3102`.
 
 ## Development Commands
 
 ### Core Development
-- `bun run dev` - Start development server with Turbopack
-- `bun run build` - Build the dashboard
-- `bun run build:all` - Build server, seed, and dashboard
+- `bun run dev` - Start the dashboard; Next compiles the server and contracts packages from TypeScript source, so their edits apply without a rebuild step
+- `bun run dev:https` - The same with local HTTPS
+- `bun run build` - Build the production dashboard (no server prebuild exists)
+- `bun run build:all` - Compatibility alias for `build`
 - `bun start` - Start production server
-- `bun run lint` - Run ESLint for code quality
+- `bun run lint` - ESLint over the dashboard, contracts, server, seed, and `scripts/`
+- `bun run typecheck` - Check contracts, server, seed, dashboard, and dashboard tests from source
+- `bun run test` - Run the selected safe config, access-reset, and workspace-boundary suites
+- `bun run check` - Run the complete non-destructive repository gate
+
+The root command contract and package boundaries are documented in
+[`docs/architecture/workspace.md`](docs/architecture/workspace.md).
 
 ### Runtime Business Date For Testing
 
@@ -195,11 +202,15 @@ school/
 │   │   ├── src/stores/        # Zustand stores
 │   │   └── src/lib/           # auth, session, server preferences, utilities
 ├── packages/
-│   ├── server/                # Najm backend
+│   ├── contracts/             # Browser-safe shared code, exported as TypeScript source
+│   │   ├── src/enums.ts       # Shared domain values (@sms/contracts)
+│   │   ├── src/locales/       # Source of truth for en/fr/ar/es translations
+│   │   └── src/fixtures/      # Demo/form-fill generators and reference data
+│   ├── server/                # Najm backend, exported as TypeScript source
 │   │   ├── src/modules/       # Controller → Service → Repository → Validator
 │   │   ├── src/database/      # Drizzle schema and migrations
-│   │   └── src/locales/       # Source of truth for en/fr/ar/es translations
-│   └── seed/                  # Seed and demo-data scripts
+│   │   └── src/workers/       # Notification worker entrypoints
+│   └── seed/                  # Seed and demo-data commands
 └── ...config files
 ```
 
@@ -330,7 +341,7 @@ Supported languages:
 - Arabic (ar)
 - Spanish (es)
 
-Translation files located in `src/locales/`
+Translation files are located in `packages/contracts/src/locales/` and imported as `@sms/contracts/locales` by the dashboard, the server's i18n plugin, and seed commands. Run `bun run i18n:check` after adding keys.
 
 ## Contributing
 

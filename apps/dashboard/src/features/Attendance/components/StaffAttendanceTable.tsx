@@ -1,7 +1,8 @@
 'use client';
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { CalendarCheck } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { CalendarCheck, SearchX } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import RosterHeader from './RosterHeader';
 import RosterCard from './RosterCard';
@@ -13,8 +14,7 @@ import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { useStaffRoles } from '@/features/Staff/hooks/useStaffRoles';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import { localDateInput } from 'najm-kit/format';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 
@@ -84,8 +84,28 @@ function StaffAttendanceTable() {
           />
         }
         loading={isStaffLoading || isAttendanceLoading || isStaffRolesLoading}
-        {...tableErrorProps(staffError, staffRows)}
-        {...tableEmptyProps({ feature: 'staffAttendance' })}
+        error={hasFailedToLoad(staffError, staffRows) ? staffError : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.staffAttendance}
+            title={t('emptyStates.staffAttendance.title')}
+            description={t('emptyStates.staffAttendance.description')}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         showAddButton={false}
         showCheckbox
         showViewToggle={false}

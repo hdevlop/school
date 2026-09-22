@@ -7,14 +7,12 @@
 // endMonth) — but installments from those months can still be paid late,
 // which is what this script simulates for the income side.
 
-import { db } from '@server/database/db';
-import { expenses, feeInstallments, fees, payments } from '@server/database/schema';
+import { db } from '@sms/server/database';
+import { expenses, feeInstallments, fees, payments } from '@sms/server/database/schema';
 import { and, eq, gte, lte, sql } from 'drizzle-orm';
-import { ExpenseService, PaymentService, PayrollService } from '@server/modules/seed';
+import { ExpenseService, PaymentService, PayrollService } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
-import { generateExpense } from '@/fakers/entities';
-import * as fake from '@/fakers/fakers';
-import { pickRandom } from '@/fakers/fakers';
+import { fake, generateExpense, pickRandom } from '@sms/contracts/fixtures';
 
 const LATE_PAYMENT_METHODS = ['cash', 'bankTransfer', 'creditCard', 'debitCard', 'online'];
 

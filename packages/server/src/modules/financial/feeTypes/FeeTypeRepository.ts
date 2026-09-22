@@ -1,7 +1,7 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { eq, desc, count } from 'drizzle-orm';
-import { feeTypes } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { feeTypes } from '../../../database/schema';
+import { DB } from '../../../database/db';
 
 const feeTypeSelect = {
   id: feeTypes.id,

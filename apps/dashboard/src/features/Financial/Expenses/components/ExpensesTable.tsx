@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { Receipt } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NEmptyState, NButton } from 'najm-kit';
+import { Receipt, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import ExpenseForm from './ExpenseForm';
 import { useExpenses } from '../hooks/useExpenses';
@@ -12,7 +13,6 @@ import { useExpensesTableFilters } from '../hooks/useExpensesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function ExpensesTable() {
 
   const { t } = useTranslation();
@@ -110,11 +110,28 @@ function ExpensesTable() {
         loading={isExpensesLoading}
         renderCard={ExpenseCard}
         addButtonText={t('expenses.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'expenses',
-          onCreate: handleAddClick,
-          createLabel: t('expenses.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.expenses}
+            title={t('emptyStates.expenses.title')}
+            description={t('emptyStates.expenses.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('expenses.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
       />
     </div>

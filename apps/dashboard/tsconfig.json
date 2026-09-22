@@ -9,9 +9,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@server/*": ["../../packages/server/src/*"],
-      "@/fakers/*": ["../../packages/seed/src/fakers/*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [

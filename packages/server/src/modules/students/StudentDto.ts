@@ -8,9 +8,9 @@ import {
   optionalId,
   phoneField,
   requiredId,
-} from '@server/shared/fields';
-import { genderEnum, studentStatusEnum } from '@server/shared/enums';
-import { latitudeDto, longitudeDto, placeIdDto } from '@server/shared/locationDto';
+} from '../../shared/fields';
+import { genderEnum, studentStatusEnum } from '../../shared/enums';
+import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
 
 const transportAssignmentDto = z.object({
   vehicleId: z.string().min(1),

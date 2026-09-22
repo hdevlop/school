@@ -1,5 +1,5 @@
-import { Repository } from '@server/najm';
-import { DB } from '@server/database/db';
+import { Repository } from '../../najm';
+import { DB } from '../../database/db';
 import {
   classes,
   disciplineIncidents,
@@ -9,7 +9,7 @@ import {
   teacherAssignments,
   teachers,
   users,
-} from '@server/database/schema';
+} from '../../database/schema';
 import { and, desc, eq } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 

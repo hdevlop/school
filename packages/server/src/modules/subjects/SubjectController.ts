@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '@server/najm';
+import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SubjectService } from './SubjectService';
 import { canAccessSubject, canUpdateSubject, canCreateSubject, canDeleteSubject } from './SubjectGuards';

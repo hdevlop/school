@@ -1,15 +1,15 @@
-import { Service, Transaction, Events, EventService } from '@server/najm';
+import { Service, Transaction, Events, EventService } from '../../../najm';
 import { DriverRepository } from './DriverRepository';
 import { DriverValidator } from './DriverValidator';
-import { UserService } from '@server/auth';
+import { UserService } from '../../../auth';
 import { StorageService } from 'najm-storage';
-import { pickProps } from '@server/shared';
-import { resolveUserPassword } from '@server/shared/userPassword';
+import { pickProps } from '../../../shared';
+import { resolveUserPassword } from '../../../shared/userPassword';
 import { nanoid } from 'nanoid';
 import { eq } from 'drizzle-orm';
 import { StaffService } from '../../staff/StaffService';
-import { drivers as driversTable, staff as staffTable } from '@server/database/schema';
-import { db } from '@server/database/db';
+import { drivers as driversTable, staff as staffTable } from '../../../database/schema';
+import { db } from '../../../database/db';
 import type {
   CreateDriverDto,
   CreateDriversBulkDto,

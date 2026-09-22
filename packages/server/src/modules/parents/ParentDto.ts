@@ -7,8 +7,8 @@ import {
   optionalDateField,
   optionalId,
   phoneField,
-} from '@server/shared/fields';
-import { genderEnum, maritalStatusEnum, relationshipTypeEnum } from '@server/shared/enums';
+} from '../../shared/fields';
+import { genderEnum, maritalStatusEnum, relationshipTypeEnum } from '../../shared/enums';
 
 const parentSchema = z.object({
   id: optionalId,

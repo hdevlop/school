@@ -2,12 +2,11 @@
 
 import React from 'react';
 import { Phone, Mail, Calendar, Clock, Shield, User, UserCheck, Hash, Settings, Key, Activity } from 'lucide-react';
-import { cn, NAvatar, NErrorState, NEmptyState, NStatCard, NBadge, statusTextClass } from 'najm-kit';
+import { cn, NAvatar, NErrorState, NEmptyState, NStatCard, NBadge, statusTextClass, NLoadingState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Card } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { NSection, NSectionInfo } from 'najm-kit';
-import PageLoadingState from '@/shared/PageLoadingState';
 
 import { Label } from 'najm-kit';
 
@@ -29,7 +28,7 @@ const UserView = ({ user, isLoading, error, onRetry }) => {
   const { displayDate } = useSchoolFormat();
 
     // ---------- Loading/Error Check ----------
-  if (isLoading) return <PageLoadingState label={t('common.loading')} fullScreen />;
+  if (isLoading) return <NLoadingState label={t('common.loading')} fullScreen />;
   if (error) return <NErrorState message={typeof error === 'string' ? error : error?.message} onRetry={onRetry} />;
   if (!user) return <NEmptyState title={t('users.errors.notFound')} />;
 

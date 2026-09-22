@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Headers, Params, Patch, Post, Query, ResMsg, User, Validate } from '@server/najm';
-import { isAuth } from '@server/auth';
+import { Body, Controller, Delete, Get, Headers, Params, Patch, Post, Query, ResMsg, User, Validate } from '../../najm';
+import { isAuth } from '../../auth';
 
 import { notificationIdParams, notificationListQuery, pushSubscriptionDto, pushUnsubscribeDto, type NotificationListQuery, type PushSubscriptionDto, type PushUnsubscribeDto } from './notificationDto';
 import { PersonalNotificationService } from './NotificationService';

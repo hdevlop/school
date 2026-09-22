@@ -1,4 +1,4 @@
-import { Service } from '@server/najm';
+import { Service } from '../najm';
 import { RoleService } from 'najm-auth';
 
 import { AllocationService } from './financial/allocations/AllocationService';

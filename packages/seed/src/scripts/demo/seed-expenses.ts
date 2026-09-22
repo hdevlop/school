@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { ExpenseService } from '@server/modules/seed';
+import { ExpenseService } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
 import expensesData from './data/expenses.json';
 

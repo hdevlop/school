@@ -9,9 +9,9 @@ import {
   SCHOOL_HERO_MAX_BYTES,
   SCHOOL_LOGO_MAX_BYTES,
 } from '@sms/server/theme';
-import { isAdministrator } from '@server/auth';
-import { db } from '@server/database/db';
-import { auditLogs } from '@server/database/schema/coreSchema';
+import { isAdministrator } from '../auth';
+import { db } from '../database/db';
+import { auditLogs } from '../database/schema/coreSchema';
 
 const themeAudit: ThemeAuditSink = {
   async record(event) {

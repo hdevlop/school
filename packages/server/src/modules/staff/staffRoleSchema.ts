@@ -1,6 +1,6 @@
 import { boolean, integer, jsonb, pgTable, text } from 'drizzle-orm/pg-core';
-import { rolesTable as roles } from '@server/auth';
-import { timestamps } from '@server/database/shared';
+import { rolesTable as roles } from '../../auth';
+import { timestamps } from '../../database/shared';
 
 export const staffRoles = pgTable('staff_roles', {
   code: text('code').primaryKey(),

@@ -1,6 +1,7 @@
 "use client"
 
-import { useDialog, NTable } from 'najm-kit';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NTable, NEmptyState } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useCallback, useMemo } from 'react';
 import FeeCard from './FeeCard';
@@ -9,8 +10,7 @@ import { useFees } from '../../../hooks/useFees';
 import EditFeeForm from '../../EditFeeForm';
 import { useFeeTypes } from '../../../../FeeTypes/hooks/useFeeTypes';
 import InstallmentsTable from '@/features/Financial/Installment/components/InstallmentsTable';
-import { CreditCard, Pencil, Trash2 } from 'lucide-react';
-import { tableEmptyProps } from '@/shared/TableEmptyState';
+import { CreditCard, Pencil, Trash2, SearchX } from 'lucide-react';
 
 const getFeeBalance = (fee: any) => {
   const explicitBalance = Number(fee?.balance ?? fee?.totalDue ?? fee?.dueAmount);
@@ -118,11 +118,21 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
         showColumnVisibility={false}
         showCheckbox={false}
         selectedRowId={selectedFee?.id ?? null}
-        {...tableEmptyProps({
-          feature: 'fees',
-          title: "No fees assigned to this student",
-          description: null,
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.fees}
+            title={"No fees assigned to this student"}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         loadingText={t('fees.card.loadingStudentFees')}
         dynamicHeight={false}
         bordered={false}

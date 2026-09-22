@@ -1,6 +1,6 @@
-import { Repository } from '@server/najm';
-import { DB } from '@server/database/db';
-import { students, teachers, staff, parents, users } from '@server/database/schema';
+import { Repository } from '../../najm';
+import { DB } from '../../database/db';
+import { students, teachers, staff, parents, users } from '../../database/schema';
 import { ilike, or, sql } from 'drizzle-orm';
 
 @Repository()

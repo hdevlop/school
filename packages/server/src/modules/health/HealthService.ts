@@ -1,5 +1,5 @@
-import { Service } from '@server/najm';
-import { db } from '@server/database/db';
+import { Service } from '../../najm';
+import { db } from '../../database/db';
 import { sql } from 'drizzle-orm';
 import { CacheService } from 'najm-cache';
 

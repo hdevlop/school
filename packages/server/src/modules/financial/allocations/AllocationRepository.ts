@@ -1,7 +1,7 @@
-import { Repository } from '@server/najm';
+import { Repository } from '../../../najm';
 import { eq, desc, and, sum, sql, inArray, count } from 'drizzle-orm';
-import { paymentAllocations, payments, fees, feeInstallments, students } from '@server/database/schema';
-import { DB } from '@server/database/db';
+import { paymentAllocations, payments, fees, feeInstallments, students } from '../../../database/schema';
+import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 
 export const ACTIVE_RESERVATION_STATUSES = ['pending', 'deposited'] as const;

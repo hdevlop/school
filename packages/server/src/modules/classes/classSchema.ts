@@ -1,6 +1,6 @@
 import { pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, idField, timestamps } from '@server/database/shared';
+import { createRef, idField, timestamps } from '../../database/shared';
 import { cycleRef } from '../cycles/cycleSchema';
 
 export const classes = pgTable('classes', {

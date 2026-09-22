@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { academicYearField, emailField, num, phoneField } from '@server/shared/fields';
-import { calendarSystemEnum, languageEnum } from '@server/shared/enums';
-import { latitudeDto, longitudeDto, placeIdDto } from '@server/shared/locationDto';
+import { academicYearField, emailField, num, phoneField } from '../../shared/fields';
+import { calendarSystemEnum, languageEnum } from '../../shared/enums';
+import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
 
 const settingsSchema = z.object({
   schoolName: z.string().min(2, 'School name must be at least 2 characters').max(200, 'School name too long'),

@@ -1,7 +1,7 @@
-import { Err, I18n, Service } from '@server/najm';
+import { Err, I18n, Service } from '../../../najm';
 import { DriverRepository } from './DriverRepository';
-import { UserValidator } from '@server/auth';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { UserValidator } from '../../../auth';
+import { getBusinessDate } from '../../../shared/businessDate';
 
 @Service()
 export class DriverValidator {

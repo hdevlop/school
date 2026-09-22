@@ -1,7 +1,7 @@
-import { Service, Err, I18n, Transaction } from '@server/najm';
+import { Service, Err, I18n, Transaction } from '../../najm';
 import { AttendanceRepository } from './AttendanceRepository';
 import { AttendanceValidator } from './AttendanceValidator';
-import { pickProps } from '@server/shared';
+import { pickProps } from '../../shared';
 import type {
   CreateAttendanceDto,
   UpdateAttendanceDto,

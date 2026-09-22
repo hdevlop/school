@@ -1,7 +1,7 @@
-import { Err, Service, Transaction, Events, EventService } from '@server/najm';
+import { Err, Service, Transaction, Events, EventService } from '../../../najm';
 import { PaymentRepository } from './PaymentRepository';
 import { PaymentValidator, computeIdempotencyHash } from './PaymentValidator';
-import { pickProps } from '@server/shared';
+import { pickProps } from '../../../shared';
 import { generateReceiptNumber } from '../utils';
 import { AllocationService } from '../allocations/AllocationService';
 import { AllocationRepository } from '../allocations/AllocationRepository';
@@ -11,7 +11,7 @@ import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { CreditService } from '../credits/CreditService';
 import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents, toCents } from '../utils/money';
-import { getBusinessDate } from '@server/shared/businessDate';
+import { getBusinessDate } from '../../../shared/businessDate';
 import type {
   CreatePaymentDto,
   UpdatePaymentDto,

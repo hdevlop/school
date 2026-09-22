@@ -1,4 +1,4 @@
-import { Err, Service, Transaction } from '@server/najm';
+import { Err, Service, Transaction } from '../../najm';
 
 import { notificationFlags, vapidConfig } from './notificationConfig';
 import { notificationListQuery, pushSubscriptionDto, pushUnsubscribeDto, type NotificationListQuery, type PushSubscriptionDto, type PushUnsubscribeDto } from './notificationDto';

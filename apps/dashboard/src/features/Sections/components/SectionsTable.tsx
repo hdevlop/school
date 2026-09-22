@@ -1,7 +1,8 @@
 "use client"
 
-import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { Layers } from 'lucide-react';
+import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { Layers, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import SectionForm from './SectionForm';
 import { useSections } from '../hooks/useSections';
@@ -10,9 +11,8 @@ import SectionCard from './SectionCard';
 import { useSectionsTableColumns } from '../hooks/useSectionsTableColumns';
 import { useSectionsTableFilters } from '../hooks/useSectionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, tableErrorProps } from '@/shared/TableErrorState';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
-import { tableEmptyProps } from '@/shared/TableEmptyState';
 function SectionsTable() {
 
   const { t } = useTranslation();
@@ -114,14 +114,36 @@ function SectionsTable() {
         onDelete={handleDelete}
         onCellEdit={handleCellEdit}
         loading={isSectionsLoading}
-        {...tableErrorProps(error, sections)}
+        error={hasFailedToLoad(error, sections) ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={SectionCard}
         addButtonText={t('sections.dialogs.createButton')}
-        {...tableEmptyProps({
-          feature: 'sections',
-          onCreate: handleAddClick,
-          createLabel: t('sections.dialogs.createButton'),
-        })}
+        renderEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={FEATURE_ICONS.sections}
+            title={t('emptyStates.sections.title')}
+            description={t('emptyStates.sections.description')}
+            action={(
+              <NButton size="sm" onClick={handleAddClick}>
+                <Plus className="h-4 w-4" />
+                {t('sections.dialogs.createButton')}
+              </NButton>
+            )}
+          />
+        )}
+        renderFilteredEmpty={() => (
+          <NEmptyState
+            surface="panel"
+            icon={SearchX}
+            title={t('emptyStates.filtered.title')}
+            description={t('emptyStates.filtered.description')}
+          />
+        )}
         defaultMode='table'
         dynamicHeight={true}
       />

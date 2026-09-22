@@ -1,6 +1,6 @@
 import { jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 
-import { idField, userRef } from '@server/database/shared';
+import { idField, userRef } from '../shared';
 
 export const auditLogs = pgTable('audit_logs', {
   id: idField(),

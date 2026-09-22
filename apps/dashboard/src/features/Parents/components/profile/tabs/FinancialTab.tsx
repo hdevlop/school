@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { Card } from 'najm-kit';
+import { Card, NLoadingState } from 'najm-kit';
 import { NSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { DollarSign, Users, Calendar } from 'lucide-react';
@@ -11,7 +11,6 @@ import { Label } from 'najm-kit';
 import InfoWidget from '@/features/Dashboard/components/Widgets/Widget';
 import feesImage from '@/assets/images/feesImage.png';
 import { Badge } from 'najm-kit';
-import PageLoadingState from '@/shared/PageLoadingState';
 
 interface FinancialTabProps {
   parentId: string;
@@ -105,7 +104,7 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
 
   if (loading) {
     return (
-      <PageLoadingState label={`${t('common.loading')}...`} className="min-h-64" />
+      <NLoadingState surface="panel" label={`${t('common.loading')}...`} className="min-h-64" />
     );
   }
 

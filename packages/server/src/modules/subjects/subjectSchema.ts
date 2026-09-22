@@ -1,6 +1,6 @@
 import { pgTable, text } from 'drizzle-orm/pg-core';
 
-import { createRef, idField, timestamps } from '@server/database/shared';
+import { createRef, idField, timestamps } from '../../database/shared';
 
 export const subjects = pgTable('subjects', {
   id: idField(),

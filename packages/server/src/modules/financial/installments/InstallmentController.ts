@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '@server/najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { InstallmentService } from './InstallmentService';
-import { isFinancial } from '@server/auth';
+import { isFinancial } from '../../../auth';
 import {
   createInstallmentDto,
   feeIdParam,

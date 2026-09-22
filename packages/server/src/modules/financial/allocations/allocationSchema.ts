@@ -1,6 +1,6 @@
 import { pgTable, text } from 'drizzle-orm/pg-core';
 
-import { idField, moneyField, timestamps } from '@server/database/shared';
+import { idField, moneyField, timestamps } from '../../../database/shared';
 import { feeInstallmentRef, feeRef } from '../fees/feeSchema';
 import { paymentRef } from '../payments/paymentSchema';
 
