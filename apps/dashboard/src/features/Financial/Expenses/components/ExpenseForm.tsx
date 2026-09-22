@@ -11,7 +11,7 @@ import { expenseSchema } from '../config/expenseSchemas'
 import { buildExpenseCategoryOptions, buildExpenseStatusOptions } from '../config/expenseOptions'
 import { buildPaymentMethodOptions } from '@/features/Financial/Payment/config/paymentOptions'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useWatch } from 'react-hook-form'
 
 const ExpenseForm = ({ expense = null }) => {
    const { pop } = useDialog();
@@ -51,9 +51,7 @@ const ExpenseForm = ({ expense = null }) => {
 
 const ExpenseFormContent = ({ isEdit }) => {
    const { t } = useTranslation();
-   const { watch } = useActiveForm();
-
-   const paymentMethod = watch('paymentMethod');
+   const paymentMethod = useWatch({ name: 'paymentMethod' });
 
    // Salaries are recorded via Payroll (payslips), not as expenses — keep them out to avoid double-counting.
    const expenseCategoryOptions = buildExpenseCategoryOptions(t);

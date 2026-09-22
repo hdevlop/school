@@ -8,7 +8,7 @@ import GradesHeader from './GradesHeader';
 import { ClipboardList, FileText, GraduationCap } from 'lucide-react';
 import { useGrades } from '../hooks/useGrades';
 import { useStudents } from '@/features/Students/hooks/useStudents';
-import { useClasses } from '@/hooks/useClasses';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
 import { useTeachers } from '@/features/Teachers/hooks/useTeachers';

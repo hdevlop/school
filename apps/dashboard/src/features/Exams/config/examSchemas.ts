@@ -1,13 +1,35 @@
 import { z } from 'zod';
 import { EXAM_STATUS_VALUES, EXAM_TYPE_VALUES } from '@sms/contracts';
 
-import {
-  dateField,
-  num,
-  optionalId,
-  requiredId,
-  timeField,
-} from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const requiredId = z.preprocess(
+  (value) => value ?? '',
+  z.string().min(1, 'ID is required'),
+);
+const dateField = z.string().regex(
+  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
+);
+const timePattern = /^([01]?[0-9]|2[0-3]):([0-5][0-9])(?::[0-5][0-9])?$/;
+const timeField = z
+  .union([
+    z.literal('').transform(() => undefined),
+    z.string().regex(timePattern, 'Time must be in HH:MM format').transform((value) => {
+      const match = value.trim().match(timePattern);
+      return match ? `${match[1].padStart(2, '0')}:${match[2]}` : value;
+    }),
+  ])
+  .optional()
+  .nullable();
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * What the exam form accepts.
@@ -30,10 +52,10 @@ export const examSchema = z.object({
   date: dateField,
   startTime: timeField,
   endTime: timeField,
-  duration: num().int().min(30, 'Exam duration must be at least 30 minutes').max(480, 'Duration cannot exceed 8 hours'),
-  totalMarks: num().positive('Total marks must be greater than 0').max(1000, 'Total marks cannot exceed 1000'),
-  passingMarks: num().min(0, 'Passing marks must be non-negative').max(1000, 'Passing marks cannot exceed 1000'),
-  roomNumber: num().max(50, 'Room number too long').optional().nullable(),
+  duration: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(30, 'Exam duration must be at least 30 minutes').max(480, 'Duration cannot exceed 8 hours')),
+  totalMarks: numberField(z.number({ error: 'Must be a valid number' }).positive('Total marks must be greater than 0').max(1000, 'Total marks cannot exceed 1000')),
+  passingMarks: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Passing marks must be non-negative').max(1000, 'Passing marks cannot exceed 1000')),
+  roomNumber: numberField(z.number({ error: 'Must be a valid number' }).max(50, 'Room number too long')).optional().nullable(),
   instructions: z.string().max(2000, 'Instructions too long').optional().nullable(),
   status: z.enum(EXAM_STATUS_VALUES).default('scheduled'),
 });

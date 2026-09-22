@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { HeartHandshake } from 'lucide-react';
 import React from 'react';
 import ParentForm from './SimpleParentForm';
@@ -44,7 +43,7 @@ function ParentsTable() {
     isDeleting
   } = useParents();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -84,6 +83,9 @@ function ParentsTable() {
 
   const handleDelete = (parent) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: parent.name,
       confirmText: t('parents.dialogs.deleteButton'),
       loading: isDeleting,
@@ -95,6 +97,9 @@ function ParentsTable() {
 
   const handleBulkDelete = (ids) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: t('parents.dialogs.bulkDeleteItemName', { count: ids.length }),
       confirmText: t('parents.dialogs.deleteButton'),
       loading: isBulkDeleting,

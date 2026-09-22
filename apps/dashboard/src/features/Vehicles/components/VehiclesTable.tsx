@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { Bus } from 'lucide-react';
 import React from 'react';
 import VehicleForm from './VehicleForm';
@@ -37,7 +36,7 @@ function VehiclesTable() {
     isDeleting
   } = useVehicles();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -80,6 +79,9 @@ function VehiclesTable() {
 
   const handleDelete = (vehicle) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: vehicle.name,
       confirmText: t('vehicles.dialogs.deleteButton'),
       loading: isDeleting,

@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { Shield } from 'lucide-react';
 import React from 'react';
 import RoleForm from './RoleForm';
@@ -24,7 +23,7 @@ function RolesTable() {
     return value === key ? fallback : value;
   };
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleManagePermissions = (role) => {
     openDialog({
@@ -89,6 +88,9 @@ function RolesTable() {
 
   const handleDelete = (role) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: role.name,
       confirmText: t('roles.dialogs.deleteButton'),
       loading: isDeleting,

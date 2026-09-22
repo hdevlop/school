@@ -5,7 +5,7 @@ import { FormInput } from 'najm-kit';
 
 import { useEffect, useMemo } from 'react'
 import { IdCard, User, DollarSign, CalendarClock, CalendarDays, Percent, Wallet } from 'lucide-react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { bulkFeeFormSchema } from '../config/feeSchemas'
 import { buildScheduleOptions } from '../config/feeOptions'
@@ -24,9 +24,7 @@ import InstallmentPreviewTable from './InstallmentPreviewTable'
 
 const TotalFeesBadge = () => {
    const { t } = useTranslation()
-   const { watch } = useActiveForm()
-
-   const feesData = watch('fees') || []
+   const feesData = useWatch({ name: 'fees' }) || []
    const totalFees = calculateTotalFees(feesData)
 
    if (feesData.length === 0) return null
@@ -49,16 +47,16 @@ const FeeItem = ({
    showEffectiveDateField = true,
    studentEnrollmentDate = null,
 }) => {
-    const { setValue, watch } = useActiveForm();
+    const { setValue } = useFormContext();
     const { t } = useTranslation();
     const prefix = usePrefix();
 
-    const feeTypeId = watch(`${prefix}.feeTypeId`)
-    const baseAmount = watch(`${prefix}.baseAmount`) || 0
-    const discountAmount = watch(`${prefix}.discountAmount`) || 0
-    const schedule = watch(`${prefix}.schedule`)
-    const effectiveDate = watch(`${prefix}.effectiveDate`) || studentEnrollmentDate
-    const academicYear = watch(`${prefix}.academicYear`)
+    const feeTypeId = useWatch({ name: `${prefix}.feeTypeId` })
+    const baseAmount = useWatch({ name: `${prefix}.baseAmount` }) || 0
+    const discountAmount = useWatch({ name: `${prefix}.discountAmount` }) || 0
+    const schedule = useWatch({ name: `${prefix}.schedule` })
+    const effectiveDate = useWatch({ name: `${prefix}.effectiveDate` }) || studentEnrollmentDate
+    const academicYear = useWatch({ name: `${prefix}.academicYear` })
     const calculationContext = useMemo(
        () => ({ effectiveDate, academicYear }),
        [academicYear, effectiveDate],
@@ -169,24 +167,21 @@ const FeeItem = ({
 export const BulkFeeFormContent = ({
    feeTypes,
    showInstallmentPreview = true,
-   form = null,
    students = [],
    enrollmentDate = null,
    showEffectiveDateField = true,
 }: {
    feeTypes: any[]
    showInstallmentPreview?: boolean
-   form?: any
    students?: any[]
    enrollmentDate?: string | null
    showEffectiveDateField?: boolean
 }) => {
-   const activeForm = useActiveForm(form)
    const { t, language } = useTranslation()
 
-   const feesData = activeForm.watch('fees') || []
-   const selectedStudentId = activeForm.watch('studentId')
-   const formEnrollmentDate = activeForm.watch('enrollmentDate')
+   const feesData = useWatch({ name: 'fees' }) || []
+   const selectedStudentId = useWatch({ name: 'studentId' })
+   const formEnrollmentDate = useWatch({ name: 'enrollmentDate' })
    const selectedStudent = students.find((student) => student.id === selectedStudentId)
    const resolvedEnrollmentDate = enrollmentDate || selectedStudent?.enrollmentDate || formEnrollmentDate || null
 

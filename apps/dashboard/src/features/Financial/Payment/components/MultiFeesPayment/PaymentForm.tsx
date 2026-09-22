@@ -4,9 +4,9 @@ import React, { useEffect, useRef } from 'react';
 import { NForm, useDialog } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { DollarSign, CreditCard, Calendar, Hash, CalendarClock, FileText } from 'lucide-react';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { feePaymentSchema } from '../../config/paymentSchemas';
-import { useActiveForm } from '@/hooks/useActiveForm';
 import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -134,9 +134,9 @@ export const PaymentForm = ({ studentId }) => {
 
 const PaymentDetailsFormContent = () => {
     const { t } = useTranslation();
-    const { watch } = useActiveForm();
+    const { watch } = useFormContext();
     const setPaymentDetails = usePaymentStore((state) => state.setPaymentDetails);
-    const paymentMethod = watch('paymentMethod');
+    const paymentMethod = useWatch({ name: 'paymentMethod' });
 
     useEffect(() => {
         const subscription = watch((value) => {

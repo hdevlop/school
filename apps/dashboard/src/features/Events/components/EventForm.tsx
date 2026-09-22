@@ -23,7 +23,7 @@ import {
   buildEventTypeOptions,
   buildEventVisibilityOptions,
 } from '../config/eventOptions';
-import { useClasses } from '@/hooks/useClasses';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useTranslation } from 'najm-i18n/react';
 
 const toDateInput = (value?: string | Date | null) => {

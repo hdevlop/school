@@ -1,6 +1,17 @@
 import { z } from 'zod';
 
-import { dateField, optionalId, requiredId } from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const requiredId = z.preprocess(
+  (value) => value ?? '',
+  z.string().min(1, 'ID is required'),
+);
+const dateField = z.string().regex(
+  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
+);
 
 /**
  * Who an announcement is for.

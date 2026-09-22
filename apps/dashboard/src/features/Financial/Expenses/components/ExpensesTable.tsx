@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { Receipt } from 'lucide-react';
 import React from 'react';
 import ExpenseForm from './ExpenseForm';
@@ -31,7 +30,7 @@ function ExpensesTable() {
     isDeleting
   } = useExpenses();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -74,6 +73,9 @@ function ExpensesTable() {
 
   const handleDelete = (expense) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: expense.title,
       confirmText: t('expenses.dialogs.deleteButton'),
       loading: isDeleting,

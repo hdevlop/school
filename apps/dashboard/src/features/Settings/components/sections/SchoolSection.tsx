@@ -7,13 +7,13 @@ import { FormLocationInput } from 'najm-kit/location';
 
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-import { useActiveForm } from '@/hooks/useActiveForm';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 const SchoolSection: React.FC = () => {
   const { t } = useTranslation();
-  const form = useActiveForm();
-  const schoolLocation = form.watch('schoolLocation');
-  const schoolPlaceId = form.watch('schoolAddressPlaceId');
+  const { setValue } = useFormContext();
+  const schoolLocation = useWatch({ name: 'schoolLocation' });
+  const schoolPlaceId = useWatch({ name: 'schoolAddressPlaceId' });
 
 
   return (
@@ -42,7 +42,7 @@ const SchoolSection: React.FC = () => {
           providerMeta={schoolLocation && schoolPlaceId
             ? { provider: 'google', placeId: schoolPlaceId, ...schoolLocation }
             : null}
-          onProviderMetaChange={(meta) => form.setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
+          onProviderMetaChange={(meta) => setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
 
         <FormInput

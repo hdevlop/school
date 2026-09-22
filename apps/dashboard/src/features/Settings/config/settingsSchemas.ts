@@ -4,13 +4,24 @@ import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
 import { schoolI18n } from '@sms/server/locales';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
-import { locationValueSchema } from '@/shared/forms/commonSchemas';
-import {
-  academicYearField,
-  emailField,
-  num,
-  phoneField,
-} from '@/shared/forms/fieldPrimitives';
+
+const emailField = z.string().email('Invalid email format').or(z.literal(''));
+const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
+const academicYearField = z
+  .string()
+  .min(9, 'Academic year is required')
+  .regex(/^\d{4}-\d{4}$/, 'Academic year must be in YYYY-YYYY format');
+const locationValueSchema = z.object({
+  address: z.string().max(500, 'Address too long'),
+  latitude: z.number().min(-90).max(90).nullable(),
+  longitude: z.number().min(-180).max(180).nullable(),
+});
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * The whole school-settings form, in one schema, because it is one form: a
@@ -57,11 +68,11 @@ export const settingsSchema = z.object({
 
   // Academic Settings
   gradingScale: z.any().optional(),
-  attendanceRequirement: num().min(0, 'Attendance requirement must be non-negative').max(100, 'Attendance requirement cannot exceed 100').default(75.00),
+  attendanceRequirement: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Attendance requirement must be non-negative').max(100, 'Attendance requirement cannot exceed 100')).default(75.00),
   attendanceMode: z.enum(ATTENDANCE_MODE_VALUES).default('daily'),
-  maxClassSize: num().int('Max class size must be an integer').min(1, 'Max class size must be at least 1').max(200, 'Max class size cannot exceed 200').default(34),
-  minimumPassingGrade: num().min(0, 'Minimum passing grade must be non-negative').max(100, 'Minimum passing grade cannot exceed 100').default(60.00),
-  defaultExamDuration: num().int('Default exam duration must be in minutes').min(15, 'Exam duration must be at least 15 minutes').max(480, 'Exam duration cannot exceed 480 minutes').default(120),
+  maxClassSize: numberField(z.number({ error: 'Must be a valid number' }).int('Max class size must be an integer').min(1, 'Max class size must be at least 1').max(200, 'Max class size cannot exceed 200')).default(34),
+  minimumPassingGrade: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Minimum passing grade must be non-negative').max(100, 'Minimum passing grade cannot exceed 100')).default(60.00),
+  defaultExamDuration: numberField(z.number({ error: 'Must be a valid number' }).int('Default exam duration must be in minutes').min(15, 'Exam duration must be at least 15 minutes').max(480, 'Exam duration cannot exceed 480 minutes')).default(120),
   calendarSystem: z.enum(CALENDAR_SYSTEM_VALUES).default('SEMESTER'),
   startMonth: z.string().default('september'),
   endMonth: z.string().default('june'),
@@ -101,10 +112,10 @@ export const settingsSchema = z.object({
   currency: z.enum(NAJM_CURRENCIES).default(SCHOOL_DEFAULT_CURRENCY),
 
   // Academic Calendar Settings
-  gradingPeriods: num().int('Grading periods must be an integer').min(1, 'Grading periods must be at least 1').max(12, 'Grading periods cannot exceed 12').default(4),
+  gradingPeriods: numberField(z.number({ error: 'Must be a valid number' }).int('Grading periods must be an integer').min(1, 'Grading periods must be at least 1').max(12, 'Grading periods cannot exceed 12')).default(4),
   schoolStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid start time format (HH:MM)').default('08:00'),
   schoolEndTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid end time format (HH:MM)').default('15:00'),
-  lunchBreakDuration: num().int('Lunch break duration must be in minutes').min(15, 'Lunch break must be at least 15 minutes').max(120, 'Lunch break cannot exceed 120 minutes').default(30),
+  lunchBreakDuration: numberField(z.number({ error: 'Must be a valid number' }).int('Lunch break duration must be in minutes').min(15, 'Lunch break must be at least 15 minutes').max(120, 'Lunch break cannot exceed 120 minutes')).default(30),
 
   // Maintenance & Backup Settings
   maintenanceMode: z.boolean().default(false),

@@ -1,7 +1,6 @@
 "use client"
 
-import { NTable, NButton } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NTable, NButton } from 'najm-kit';
 import { usePayments } from '../hooks/usePayments';
 import { useTranslation } from 'najm-i18n/react';
 import PaymentCard from './PaymentCard';
@@ -31,7 +30,7 @@ function PaymentsTable({studentId}) {
     refetch,
   } = usePayments({ studentId });
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const data = studentId ? studentPayments : payments;
   const isLoading = studentId ? isStudentPaymentsLoading : isPaymentsLoading;
@@ -120,6 +119,9 @@ function PaymentsTable({studentId}) {
 
   const handleDelete = (payment) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: payment.receiptNumber,
       confirmText: t('payments.dialogs.deleteButton'),
       onConfirm: async () => {

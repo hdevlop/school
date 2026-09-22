@@ -4,7 +4,7 @@ import { useEffect, useMemo } from 'react'
 import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { GraduationCap, LayoutGrid, Tag, CalendarClock, CalendarDays, DollarSign, Percent, FileText } from 'lucide-react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { classBulkFeeFormSchema } from '../config/feeSchemas'
 import { buildScheduleOptions } from '../config/feeOptions'
@@ -77,16 +77,16 @@ const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
 
 export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
    const { majorMoney } = useSchoolFormat()
-   const { watch, setValue } = useActiveForm()
+   const { setValue } = useFormContext()
    const { t } = useTranslation()
 
-   const classId = watch('classId')
-   const sectionId = watch('sectionId')
-   const feeTypeId = watch('feeTypeId')
-   const baseAmount = watch('baseAmount') || 0
-   const discountAmount = watch('discountAmount') || 0
-   const schedule = watch('schedule')
-   const academicYear = watch('academicYear')
+   const classId = useWatch({ name: 'classId' })
+   const sectionId = useWatch({ name: 'sectionId' })
+   const feeTypeId = useWatch({ name: 'feeTypeId' })
+   const baseAmount = useWatch({ name: 'baseAmount' }) || 0
+   const discountAmount = useWatch({ name: 'discountAmount' }) || 0
+   const schedule = useWatch({ name: 'schedule' })
+   const academicYear = useWatch({ name: 'academicYear' })
 
    const selectedClass = classes.find(cls => cls.id === classId)
    const sectionOptions = useMemo(() => selectedClass?.sections?.map(s => ({

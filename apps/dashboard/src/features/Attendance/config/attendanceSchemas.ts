@@ -1,7 +1,14 @@
 import { z } from 'zod';
 import { ATTENDANCE_STATUS_VALUES } from '@sms/contracts';
 
-import { dateField, requiredId } from '@/shared/forms/fieldPrimitives';
+const requiredId = z.preprocess(
+  (value) => value ?? '',
+  z.string().min(1, 'ID is required'),
+);
+const dateField = z.string().regex(
+  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
+);
 
 /**
  * A single attendance record, as the manual entry form submits it. Bulk

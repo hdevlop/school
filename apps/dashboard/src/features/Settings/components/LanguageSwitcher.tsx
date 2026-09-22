@@ -3,7 +3,7 @@
 import React from 'react';
 import { NLanguageMenu, type NLanguageOption } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { useUpdateLang } from '@/hooks/useLanguage';
+import { useUpdateLang } from '../hooks/useUpdateLang';
 import { cn } from 'najm-kit';
 import type { SchoolLocale } from '@sms/server/locales';
 

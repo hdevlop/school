@@ -1,12 +1,24 @@
 import { z } from 'zod';
 import { ASSESSMENT_STATUS_VALUES, ASSESSMENT_TYPE_VALUES } from '@sms/contracts';
 
-import {
-  dateField,
-  num,
-  optionalId,
-  requiredId,
-} from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const requiredId = z.preprocess(
+  (value) => value ?? '',
+  z.string().min(1, 'ID is required'),
+);
+const dateField = z.string().regex(
+  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
+);
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * What the assessment form accepts.
@@ -31,9 +43,9 @@ export const assessmentSchema = z.object({
   description: z.string().max(1000, 'Description too long').optional().nullable(),
   type: z.enum(ASSESSMENT_TYPE_VALUES).default('quiz'),
   date: dateField,
-  duration: num().int().min(1, 'Duration must be at least 1 minute').max(480, 'Duration cannot exceed 8 hours'),
-  totalMarks: num().positive('Total marks must be greater than 0').max(1000, 'Total marks cannot exceed 1000').default(20),
-  passingMarks: num().min(0, 'Passing marks must be non-negative').max(1000, 'Passing marks cannot exceed 1000').default(10),
+  duration: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(1, 'Duration must be at least 1 minute').max(480, 'Duration cannot exceed 8 hours')),
+  totalMarks: numberField(z.number({ error: 'Must be a valid number' }).positive('Total marks must be greater than 0').max(1000, 'Total marks cannot exceed 1000')).default(20),
+  passingMarks: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Passing marks must be non-negative').max(1000, 'Passing marks cannot exceed 1000')).default(10),
   instructions: z.string().max(2000, 'Instructions too long').optional().nullable(),
   status: z.enum(ASSESSMENT_STATUS_VALUES).default('scheduled'),
   assessmentId: optionalId,

@@ -1,6 +1,6 @@
 'use client'
 
-import { NForm, useNForm } from 'najm-kit'
+import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart, Phone, MapPin, PhoneCall, Wallet } from 'lucide-react'
@@ -8,10 +8,10 @@ import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { parentSchema } from '../config/parentSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
-import { useActiveForm } from '@/hooks/useActiveForm'
 import { usePrefix } from 'najm-kit';
-import { buildGenderOptions } from '@/shared/forms/genderOptions'
+import { useWatch } from 'react-hook-form'
 import {
+   buildGenderOptions,
    buildMaritalStatusOptionsFor,
    buildRelationshipTypeOptionsFor,
 } from '../config/parentOptions'
@@ -45,14 +45,13 @@ export const getMotherDefaultValues = (parent = null) =>
 
 // ==================== FORM CONTENT ====================
 
-export const ParentFormContent = ({ form = null }: { form?: any } = {}) => {
+export const ParentFormContent = () => {
    const { t } = useTranslation()
-   const { watch } = useActiveForm(form);
-
-
    const prefix = usePrefix();
    const field = (name: string) => (prefix ? `${prefix}.${name}` : name);
-   const gender = watch(field('gender'));
+   const gender = useWatch({ name: field('gender') });
+   const relationshipType = useWatch({ name: field('relationshipType') });
+   const maritalStatus = useWatch({ name: field('maritalStatus') });
 
    const defaultImage = gender === 'M'
       ? '/images/parent_male.png'
@@ -61,8 +60,8 @@ export const ParentFormContent = ({ form = null }: { form?: any } = {}) => {
    const genderOptions = buildGenderOptions(t)
    // Editing an imported record must not silently rewrite it, so whatever is
    // already stored stays selectable even when it is no longer offered.
-   const relationshipOptions = buildRelationshipTypeOptionsFor(t, watch(field('relationshipType')))
-   const maritalStatusOptions = buildMaritalStatusOptionsFor(t, watch(field('maritalStatus')))
+   const relationshipOptions = buildRelationshipTypeOptionsFor(t, relationshipType)
+   const maritalStatusOptions = buildMaritalStatusOptionsFor(t, maritalStatus)
 
    return (
       <>
@@ -216,10 +215,6 @@ export const ParentFormContent = ({ form = null }: { form?: any } = {}) => {
 const SimpleParentForm = ({ parent = null }) => {
    const { pop } = useDialog()
    const defaultValues = getParentDefaultValues(parent)
-   const form = useNForm({
-      schema: parentSchema,
-      defaultValues,
-   })
 
    const handleSubmit = async (parentData) => {
       pop(parentData)
@@ -230,11 +225,10 @@ const SimpleParentForm = ({ parent = null }) => {
          id='parent-form'
          schema={parentSchema}
          defaultValues={defaultValues}
-         form={form}
          onSubmit={handleSubmit}
          devTools={{ enabled: isDevFill, fill: () => buildFill(parentSchema) }}
       >
-         <ParentFormContent form={form} />
+         <ParentFormContent />
       </NForm>
    )
 }

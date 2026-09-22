@@ -1,7 +1,6 @@
 'use client';
 
-import { NButton, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NButton, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
 
 import React, { useCallback, useMemo, useState } from 'react';
 import {
@@ -121,7 +120,7 @@ export default function CalendarPage() {
     isDeleting: isDeletingAnnouncement,
   } = useAnnouncements();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const calendarItems = useMemo<CalendarItem[]>(() => {
     const eventItems = (events || [])
@@ -255,6 +254,9 @@ export default function CalendarPage() {
 
   const handleDeleteItem = (item: CalendarItem) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: item.title,
       confirmText: item.source === 'event' ? 'Delete Event' : 'Delete Announcement',
       loading: item.source === 'event' ? isDeletingEvent : isDeletingAnnouncement,

@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'bun:test';
-import { DRIVER_STATUS_VALUES } from '@sms/contracts';
+import { DRIVER_STATUS_VALUES, GENDER_VALUES } from '@sms/contracts';
 
 import { driverSchema } from './driverSchemas';
-import { DRIVER_LICENSE_TYPE_OPTIONS, buildDriverStatusOptions } from './driverOptions';
+import {
+  DRIVER_LICENSE_TYPE_OPTIONS,
+  buildDriverStatusOptions,
+  buildGenderOptions,
+} from './driverOptions';
 
 const echo = (key: string) => key;
 
@@ -50,6 +54,14 @@ describe('driver status options', () => {
       value: 'onLeave',
       label: 'drivers.status.onLeave',
     });
+  });
+});
+
+describe('driver gender options', () => {
+  it('uses the same contract values and translation family as the other person forms', () => {
+    expect(buildGenderOptions(echo)).toEqual(
+      GENDER_VALUES.map((value) => ({ value, label: `common.gender.${value}` })),
+    );
   });
 });
 

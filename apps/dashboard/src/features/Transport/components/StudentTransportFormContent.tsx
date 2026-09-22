@@ -4,34 +4,33 @@ import { useEffect, useMemo, useRef } from 'react'
 import { FormInput, NFormSectionHeader, NSkeleton } from 'najm-kit'
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { Bus, CalendarDays, CircleAlert, NotebookPen } from 'lucide-react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 
 type Props = {
-  form?: any
   feeTypes?: any[]
 }
 
-export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
-  const activeForm = useActiveForm(form)
+export function StudentTransportFormContent({ feeTypes = [] }: Props) {
+  const form = useFormContext()
   const { t } = useTranslation()
   const { majorMoney } = useSchoolFormat()
   const { vehicles = [], isVehiclesLoading } = useVehicles()
   const { publicSettings, isSettingsLoading } = usePublicSettings()
   const defaultsApplied = useRef(false)
 
-  const enabled = Boolean(activeForm.watch('transportEnabled'))
-  const selectedVehicleId = activeForm.watch('transportAssignment.vehicleId')
-  const studentAddressLocation = activeForm.watch('addressLocation')
-  const studentPlaceId = activeForm.watch('addressPlaceId')
-  const pickup = activeForm.watch('transportAssignment.pickup')
-  const dropoff = activeForm.watch('transportAssignment.dropoff')
-  const pickupPlaceId = activeForm.watch('transportAssignment.pickupPlaceId')
-  const dropoffPlaceId = activeForm.watch('transportAssignment.dropoffPlaceId')
-  const enrollmentDate = activeForm.watch('enrollmentDate')
+  const enabled = Boolean(useWatch({ name: 'transportEnabled' }))
+  const selectedVehicleId = useWatch({ name: 'transportAssignment.vehicleId' })
+  const studentAddressLocation = useWatch({ name: 'addressLocation' })
+  const studentPlaceId = useWatch({ name: 'addressPlaceId' })
+  const pickup = useWatch({ name: 'transportAssignment.pickup' })
+  const dropoff = useWatch({ name: 'transportAssignment.dropoff' })
+  const pickupPlaceId = useWatch({ name: 'transportAssignment.pickupPlaceId' })
+  const dropoffPlaceId = useWatch({ name: 'transportAssignment.dropoffPlaceId' })
+  const enrollmentDate = useWatch({ name: 'enrollmentDate' })
 
   const activeVehicles = useMemo(() => {
     const uniqueVehicles = new Map<string, any>()
@@ -64,29 +63,29 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
     }
     if (defaultsApplied.current || isSettingsLoading) return
 
-    if (!activeForm.getValues('transportAssignment.pickup')?.address && studentAddressLocation?.address) {
-      activeForm.setValue('transportAssignment.pickup', studentAddressLocation)
-      activeForm.setValue('transportAssignment.pickupPlaceId', studentPlaceId ?? null)
+    if (!form.getValues('transportAssignment.pickup')?.address && studentAddressLocation?.address) {
+      form.setValue('transportAssignment.pickup', studentAddressLocation)
+      form.setValue('transportAssignment.pickupPlaceId', studentPlaceId ?? null)
     }
 
     const settings = Array.isArray(publicSettings) ? publicSettings[0] : publicSettings
-    if (!activeForm.getValues('transportAssignment.dropoff')?.address && settings?.schoolAddress) {
-      activeForm.setValue('transportAssignment.dropoff', normalizeLocationValue({
+    if (!form.getValues('transportAssignment.dropoff')?.address && settings?.schoolAddress) {
+      form.setValue('transportAssignment.dropoff', normalizeLocationValue({
         address: settings.schoolAddress,
         latitude: settings.schoolAddressLatitude,
         longitude: settings.schoolAddressLongitude,
       }))
-      activeForm.setValue('transportAssignment.dropoffPlaceId', settings.schoolAddressPlaceId ?? null)
+      form.setValue('transportAssignment.dropoffPlaceId', settings.schoolAddressPlaceId ?? null)
     }
-    if (!activeForm.getValues('transportAssignment.assignmentDate')) {
-      activeForm.setValue(
+    if (!form.getValues('transportAssignment.assignmentDate')) {
+      form.setValue(
         'transportAssignment.assignmentDate',
         enrollmentDate || settings?.businessDate || new Date().toISOString().slice(0, 10),
       )
     }
     defaultsApplied.current = true
   }, [
-    activeForm,
+    form,
     enabled,
     enrollmentDate,
     isSettingsLoading,
@@ -96,8 +95,8 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
   ])
 
   const useHomeAddress = () => {
-    activeForm.setValue('transportAssignment.pickup', studentAddressLocation ?? normalizeLocationValue(), { shouldDirty: true, shouldValidate: true })
-    activeForm.setValue('transportAssignment.pickupPlaceId', studentPlaceId ?? null, { shouldDirty: true })
+    form.setValue('transportAssignment.pickup', studentAddressLocation ?? normalizeLocationValue(), { shouldDirty: true, shouldValidate: true })
+    form.setValue('transportAssignment.pickupPlaceId', studentPlaceId ?? null, { shouldDirty: true })
   }
 
   return (
@@ -142,7 +141,7 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
                 providerMeta={pickup && pickupPlaceId
                   ? { provider: 'google', placeId: pickupPlaceId, ...pickup }
                   : null}
-                onProviderMetaChange={(meta) => activeForm.setValue('transportAssignment.pickupPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
+                onProviderMetaChange={(meta) => form.setValue('transportAssignment.pickupPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
               />
               <button type="button" className="text-xs font-semibold text-primary hover:underline" onClick={useHomeAddress}>
                 {t('transport.form.useHomeAddress')}
@@ -155,7 +154,7 @@ export function StudentTransportFormContent({ form, feeTypes = [] }: Props) {
               providerMeta={dropoff && dropoffPlaceId
                 ? { provider: 'google', placeId: dropoffPlaceId, ...dropoff }
                 : null}
-              onProviderMetaChange={(meta) => activeForm.setValue('transportAssignment.dropoffPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
+              onProviderMetaChange={(meta) => form.setValue('transportAssignment.dropoffPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
             />
           </div>
 

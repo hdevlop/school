@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { ClipboardList } from 'lucide-react';
 import React from 'react';
 import AssessmentForm from './AssessmentForm';
@@ -31,7 +30,7 @@ function AssessmentsTable() {
     isDeleting,
   } = useAssessments();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -73,6 +72,9 @@ function AssessmentsTable() {
 
   const handleDelete = (assessment) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: assessment.title,
       confirmText: t('assessments.dialogs.deleteButton'),
       loading: isDeleting,

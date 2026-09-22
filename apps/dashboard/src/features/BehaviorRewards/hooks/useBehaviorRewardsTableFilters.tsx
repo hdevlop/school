@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
-import { useClasses } from '@/hooks/useClasses';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import {
   buildBehaviorRecognitionLevelOptions,

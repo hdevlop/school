@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { Layers } from 'lucide-react';
 import React from 'react';
 import SectionForm from './SectionForm';
@@ -32,7 +31,7 @@ function SectionsTable() {
     isDeleting
   } = useSections();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -74,6 +73,9 @@ function SectionsTable() {
 
   const handleDelete = (section) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: `Section ${section.name}`,
       confirmText: t('sections.dialogs.deleteButton'),
       loading: isDeleting,

@@ -2,8 +2,7 @@
 
 import { Eye, Pencil, ShieldAlert, Trash2 } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import DisciplineCard from './DisciplineCard';
@@ -25,7 +24,7 @@ export default function DisciplineTable() {
   const isAdmin = role === 'admin';
   const columns = useDisciplineTableColumns();
   const filters = useDisciplineTableFilters();
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
   const {
     incidents, createIncident, updateIncident, deleteIncident, resolveIncident, reopenIncident,
     error, isDisciplineLoading, isCreating, isUpdating, isDeleting, isResolving, isReopening,
@@ -92,6 +91,9 @@ export default function DisciplineTable() {
   });
 
   const handleDelete = (incident: DisciplineIncident) => confirmDelete({
+    title: t('common.delete'),
+    warningText: t('common.deleteConfirm'),
+    cancelText: t('common.cancel'),
     itemName: incident.student?.name || t(`discipline.categories.${incident.category}`),
     confirmText: t('discipline.dialogs.deleteButton'),
     loading: isDeleting,

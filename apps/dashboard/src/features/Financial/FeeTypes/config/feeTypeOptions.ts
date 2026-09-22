@@ -1,12 +1,28 @@
 import { FEE_CATEGORY_VALUES, PAYMENT_TYPE_VALUES } from '@sms/contracts';
 import type { FeeCategory, PaymentType } from '@sms/contracts';
 
-import {
-  optionsFromValues,
-  withStoredValue,
-  type EnumOption,
-  type Translate,
-} from '@/shared/forms/enumOptions';
+type Translate = (key: string, ...args: any[]) => string;
+
+type EnumOption<Value extends string = string> = {
+  readonly value: Value;
+  readonly label: string;
+};
+
+const optionsFromValues = <Value extends string>(
+  values: readonly Value[],
+  t: Translate,
+  translationPrefix: string,
+): readonly EnumOption<Value>[] =>
+  values.map((value) => ({ value, label: t(`${translationPrefix}.${value}`) }));
+
+const withStoredValue = <Value extends string>(
+  options: readonly EnumOption<Value>[],
+  storedValue: string | null | undefined,
+  label: (value: string) => string,
+): readonly EnumOption<Value>[] => {
+  if (!storedValue || options.some((option) => option.value === storedValue)) return options;
+  return [...options, { value: storedValue as Value, label: label(storedValue) }];
+};
 
 /** The selects on the fee-type form. */
 

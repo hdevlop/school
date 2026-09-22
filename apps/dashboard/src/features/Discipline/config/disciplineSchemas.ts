@@ -5,13 +5,20 @@ import {
   DISCIPLINE_SEVERITY_VALUES,
 } from '@sms/contracts';
 
-import { optionalId, requiredId } from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const requiredId = z.preprocess(
+  (value) => value ?? '',
+  z.string().min(1, 'ID is required'),
+);
 
 /**
  * Recording an incident.
  *
  * The date and time are validated with their own patterns rather than the
- * shared `dateField`: an incident is logged from a date and a time input that
+ * broader date inputs: an incident is logged from a date and a time input that
  * both emit one fixed format, and a half-remembered date is worse here than a
  * rejected one.
  */

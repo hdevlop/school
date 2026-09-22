@@ -1,13 +1,29 @@
 import { z } from 'zod';
 import { SCHEDULE_VALUES } from '@sms/contracts';
 
-import {
-  academicYearField,
-  num,
-  optionalDateField,
-  optionalId,
-  requiredId,
-} from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const requiredId = z.preprocess(
+  (value) => value ?? '',
+  z.string().min(1, 'ID is required'),
+);
+const optionalDateField = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+  .nullable()
+  .optional();
+const academicYearField = z
+  .string()
+  .min(9, 'Academic year is required')
+  .regex(/^\d{4}-\d{4}$/, 'Academic year must be in YYYY-YYYY format');
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * Fees owed by a student.
@@ -32,8 +48,8 @@ export const feeSchema = z.object({
   academicYear: academicYearField.optional(),
   effectiveDate: optionalDateField,
   schedule: z.enum(SCHEDULE_VALUES),
-  baseAmount: num().positive('Base amount must be positive').optional(),
-  discountAmount: num().min(0, 'Discount cannot be negative').optional(),
+  baseAmount: numberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')).optional(),
+  discountAmount: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Discount cannot be negative')).optional(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
   assignedBy: optionalId.nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
@@ -62,8 +78,8 @@ export const classBulkFeeFormSchema = z.object({
   feeTypeId: requiredId,
   schedule: z.enum(SCHEDULE_VALUES),
   academicYear: academicYearField.optional(),
-  baseAmount: num().positive('Base amount must be positive').optional(),
-  discountAmount: num().min(0, 'Discount cannot be negative').optional(),
+  baseAmount: numberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')).optional(),
+  discountAmount: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Discount cannot be negative')).optional(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
 });

@@ -1,12 +1,25 @@
 import { z } from 'zod';
 import { EXPENSE_CATEGORY_VALUES, EXPENSE_STATUS_VALUES, PAYMENT_METHOD_VALUES } from '@sms/contracts';
 
-import {
-  dateField,
-  num,
-  optionalDateField,
-  optionalId,
-} from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const dateField = z.string().regex(
+  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
+);
+const optionalDateField = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+  .nullable()
+  .optional();
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * What the school spends.
@@ -18,7 +31,7 @@ export const expenseSchema = z.object({
   id: optionalId,
   category: z.enum(EXPENSE_CATEGORY_VALUES),
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title too long'),
-  amount: num().positive('Amount must be greater than 0').max(10000000, 'Amount too large'),
+  amount: numberField(z.number({ error: 'Must be a valid number' }).positive('Amount must be greater than 0').max(10000000, 'Amount too large')),
   expenseDate: dateField,
   paymentMethod: z.enum(PAYMENT_METHOD_VALUES).optional().nullable(),
   paymentDate: optionalDateField.nullable(),

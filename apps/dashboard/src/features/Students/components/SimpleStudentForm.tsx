@@ -7,10 +7,10 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { studentSchema } from '../config/studentSchemas'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { buildGenderOptions } from '@/shared/forms/genderOptions'
+import { buildGenderOptions } from '../config/studentOptions'
 
 const getAcademicYearStartDate = (academicYear?: string | null, referenceDate?: string | null) => {
   const startYear = academicYear?.match(/^\d{4}/)?.[0]
@@ -87,24 +87,23 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
     </NForm>
   )
 }
-export const StudentFormContent = ({ classes = [], prefix = '', student: _student = null, form = null, showTransportToggle = false, onTransportToggle }: {
+export const StudentFormContent = ({ classes = [], prefix = '', student: _student = null, showTransportToggle = false, onTransportToggle }: {
   classes?: any[]
   prefix?: string
   student?: any
-  form?: any
   showTransportToggle?: boolean
   onTransportToggle?: (enabled: boolean) => void
 }) => {
 
   const { t } = useTranslation();
-  const activeForm = useActiveForm(form);
+  const { setValue } = useFormContext();
   const fieldName = useCallback((field) => prefix ? `${prefix}.${field.charAt(0)}${field.slice(1)}` : field, [prefix]);
 
-  const selectedClassId = activeForm.watch(fieldName('classId'));
-  const selectedSectionId = activeForm.watch(fieldName('sectionId'));
-  const gender = activeForm.watch(fieldName('gender'))
-  const addressLocation = activeForm.watch(fieldName('addressLocation'))
-  const addressPlaceId = activeForm.watch(fieldName('addressPlaceId'))
+  const selectedClassId = useWatch({ name: fieldName('classId') });
+  const selectedSectionId = useWatch({ name: fieldName('sectionId') });
+  const gender = useWatch({ name: fieldName('gender') })
+  const addressLocation = useWatch({ name: fieldName('addressLocation') })
+  const addressPlaceId = useWatch({ name: fieldName('addressPlaceId') })
 
   const classOptions = classes.map(cls => ({
     value: cls.id,
@@ -124,8 +123,8 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
       return;
     }
 
-    activeForm.setValue(fieldName('sectionId'), '');
-  }, [activeForm, fieldName, sectionOptions, selectedSectionId]);
+    setValue(fieldName('sectionId'), '');
+  }, [fieldName, sectionOptions, selectedSectionId, setValue]);
 
   const genderOptions = buildGenderOptions(t)
 
@@ -214,7 +213,7 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
             providerMeta={addressLocation && addressPlaceId
               ? { provider: 'google', placeId: addressPlaceId, ...addressLocation }
               : null}
-            onProviderMetaChange={(meta) => activeForm.setValue(fieldName('addressPlaceId'), meta?.placeId ?? null, { shouldDirty: true })}
+            onProviderMetaChange={(meta) => setValue(fieldName('addressPlaceId'), meta?.placeId ?? null, { shouldDirty: true })}
           />
 
           <FormInput

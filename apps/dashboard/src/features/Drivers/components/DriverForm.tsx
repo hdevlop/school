@@ -7,9 +7,13 @@ import React from 'react'
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, CreditCard, Car, Calendar, CalendarCheck, Award, DollarSign, Phone, MapPin, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useWatch } from 'react-hook-form'
 import { driverSchema } from '../config/driverSchemas'
-import { DRIVER_LICENSE_TYPE_OPTIONS, buildDriverStatusOptions } from '../config/driverOptions'
+import {
+   DRIVER_LICENSE_TYPE_OPTIONS,
+   buildDriverStatusOptions,
+   buildGenderOptions,
+} from '../config/driverOptions'
 import { buildFill, isDevFill } from '@/lib/devFill'
 
 const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
@@ -51,17 +55,13 @@ const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
 const DriverFormContent = () => {
 
    const { t } = useTranslation();
-   const { watch } = useActiveForm()
-   const gender = watch('gender')
+   const gender = useWatch({ name: 'gender' })
 
    const defaultImage = gender === 'M'
       ? '/images/driver_male.png'
       : '/images/driver_female.png'
 
-   const genderOptions = [
-      { value: 'M', label: t('common.male') },
-      { value: 'F', label: t('common.female') },
-   ]
+   const genderOptions = buildGenderOptions(t)
 
    const licenseTypeOptions = DRIVER_LICENSE_TYPE_OPTIONS
 

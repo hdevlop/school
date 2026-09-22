@@ -1,8 +1,7 @@
 'use client';
 
 import { CalendarRange } from 'lucide-react';
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import CycleCard from './CycleCard';
@@ -23,7 +22,7 @@ function CyclesTable() {
   const columns = useCyclesTableColumns();
   const rawFilters = useCyclesTableFilters();
   const { cycles, createCycle, updateCycle, deleteCycle, error, isCyclesLoading } = useCycles();
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const orderedCycles = sortCycles(cycles || []);
 
@@ -65,6 +64,9 @@ function CyclesTable() {
 
   const handleDelete = (cycle) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: cycle.name,
       confirmText: t('cycles.dialogs.deleteButton'),
       onConfirm: async () => {

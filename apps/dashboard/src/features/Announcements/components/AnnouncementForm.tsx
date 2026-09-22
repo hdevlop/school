@@ -4,13 +4,13 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useWatch } from 'react-hook-form'
 import { Megaphone, FileText, Users, Building, Calendar } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { announcementSchema } from '../config/announcementSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
-import { useClasses } from '@/hooks/useClasses'
+import { useClasses } from '@/features/Classes/hooks/useClasses'
 
 const toIsoOrUndefined = (value) => {
   if (!value) return undefined;
@@ -26,10 +26,9 @@ const toDateInput = (value) => {
 
 const ClassTargetFields = () => {
   const { t } = useTranslation();
-  const { watch } = useActiveForm();
   const { classes, isClassesLoading } = useClasses();
 
-  const targetAudience = watch('targetAudience');
+  const targetAudience = useWatch({ name: 'targetAudience' });
 
   if (targetAudience !== 'class') return null;
 

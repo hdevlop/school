@@ -1,16 +1,28 @@
 import { z } from 'zod';
 import { EMPLOYMENT_TYPE_VALUES, GENDER_VALUES, TEACHER_STATUS_VALUES } from '@sms/contracts';
 
-import {
-  addressField,
-  cinField,
-  dateField,
-  emailField,
-  nameField,
-  num,
-  optionalId,
-  phoneField,
-} from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const emailField = z.string().email('Invalid email format').or(z.literal(''));
+const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
+const nameField = z
+  .string()
+  .min(2, 'Name must be at least 2 characters')
+  .max(100, 'Name too long');
+const dateField = z.string().regex(
+  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
+);
+const cinField = z.string().min(8, 'CIN must be at least 8 characters').max(20, 'CIN too long');
+const addressField = z.string().max(500, 'Address too long').optional();
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * Hiring a teacher, in the three steps the wizard walks through.
@@ -39,12 +51,12 @@ export const teacherPersonalSchema = z.object({
 /** Step 2 — the terms of their employment. */
 export const teacherProfessionalSchema = z.object({
   specialization: z.string().max(100, 'Specialization too long').optional(),
-  yearsOfExperience: num().int().min(0, 'Years of experience must be non-negative').optional(),
-  salary: num().positive('Salary must be positive').optional(),
+  yearsOfExperience: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Years of experience must be non-negative')).optional(),
+  salary: numberField(z.number({ error: 'Must be a valid number' }).positive('Salary must be positive')).optional(),
   hireDate: dateField,
   bankAccount: z.coerce.string().max(100, { message: 'Bank account too long' }).optional(),
   employmentType: z.enum(EMPLOYMENT_TYPE_VALUES).optional(),
-  workloadHours: num().int().min(0, 'Workload hours must be non-negative').max(60, 'Workload hours cannot exceed 60').optional(),
+  workloadHours: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Workload hours must be non-negative').max(60, 'Workload hours cannot exceed 60')).optional(),
   academicDegrees: z.string().max(500, 'Academic degrees description too long').optional(),
 });
 

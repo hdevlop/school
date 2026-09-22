@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { School } from 'lucide-react';
 import ClassForm from './ClassForm';
 import { useClasses } from '../hooks/useClasses';
@@ -31,7 +30,7 @@ function ClassesTable() {
     isDeleting
   } = useClasses();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -74,6 +73,9 @@ function ClassesTable() {
 
   const handleDelete = (classData) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: classData.name,
       confirmText: t('classes.dialogs.deleteButton'),
       loading: isDeleting,

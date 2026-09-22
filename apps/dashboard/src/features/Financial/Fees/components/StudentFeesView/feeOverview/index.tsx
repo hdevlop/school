@@ -1,7 +1,6 @@
 "use client"
 
-import { NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NTable } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useCallback, useMemo } from 'react';
 import FeeCard from './FeeCard';
@@ -25,7 +24,7 @@ const getFeeBalance = (fee: any) => {
 export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayInstallment, fullWidth = false }) => {
 
   const { t } = useTranslation();
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
   const { feeTypes } = useFeeTypes();
 
   const {
@@ -53,6 +52,9 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
 
   const handleDelete = useCallback((fee) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: fee.name,
       confirmText: t('fees.dialogs.deleteButton'),
       loading: isDeleting,

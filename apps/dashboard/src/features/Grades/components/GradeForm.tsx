@@ -4,7 +4,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React, { useEffect, useMemo, useRef } from 'react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import {
   GraduationCap, ClipboardList, Building, DoorOpen, BookOpen, User, Award,
   ListChecks, UserCircle,
@@ -13,7 +13,7 @@ import { useDialog } from 'najm-kit'
 import { gradeSchema } from '../config/gradeSchemas'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
-import { useClasses } from '@/hooks/useClasses'
+import { useClasses } from '@/features/Classes/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects'
 import { useTeachers } from '@/features/Teachers/hooks/useTeachers'
@@ -22,10 +22,10 @@ import { useAssessments } from '@/features/Assessments/hooks/useAssessments'
 
 const SectionDropdown = ({ initialClassId, isEdit }) => {
   const { t } = useTranslation();
-  const { watch, setValue, getValues } = useActiveForm();
+  const { setValue, getValues } = useFormContext();
   const { sections, isSectionsLoading } = useSections();
 
-  const classId = watch('classId');
+  const classId = useWatch({ name: 'classId' });
 
   const hydratedRef = useRef(false);
   useEffect(() => {
@@ -66,8 +66,8 @@ const getAssessmentSubjectId = (assessment) => assessment?.subjectId || assessme
 const getAssessmentTeacherId = (assessment) => assessment?.teacherId || assessment?.teacher?.id || '';
 
 const AssessmentContextSync = ({ assessments, isEdit }) => {
-  const { watch, setValue } = useActiveForm();
-  const assessmentId = watch('assessmentId');
+  const { setValue } = useFormContext();
+  const assessmentId = useWatch({ name: 'assessmentId' });
 
   useEffect(() => {
     if (isEdit || !assessmentId) return;
@@ -90,8 +90,7 @@ const AssessmentContextSync = ({ assessments, isEdit }) => {
 
 const MarksRefHelper = ({ assessments }) => {
   const { t } = useTranslation();
-  const { watch } = useActiveForm();
-  const assessmentId = watch('assessmentId');
+  const assessmentId = useWatch({ name: 'assessmentId' });
   const selected = useMemo(
     () => (assessments || []).find((a) => a.id === assessmentId),
     [assessments, assessmentId]

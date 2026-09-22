@@ -2,8 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { Banknote, Briefcase, Calendar, Hash, IdCard, MapPinned, Phone, UserRound, Wallet } from 'lucide-react';
-import { Badge, NAvatar, NTable, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, Badge, NAvatar, NTable, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaff } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
@@ -50,7 +49,7 @@ const StaffTable = () => {
     isBulkDeleting,
   } = useStaff();
   const { activeStaffRoles } = useStaffRoles({ activeOnly: true });
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
   const rows = useMemo(() => Array.isArray(staff) ? staff : [], [staff]);
 
   const totalPayroll = rows.reduce((sum, row) => sum + calculateStaffPay(row), 0);
@@ -90,6 +89,9 @@ const StaffTable = () => {
 
   const handleDelete = (staffMember) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: staffMember.name,
       confirmText: t('staff.dialogs.deleteButton'),
       loading: isDeleting,
@@ -99,6 +101,9 @@ const StaffTable = () => {
 
   const handleBulkDelete = (ids) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: t('staff.dialogs.bulkDeleteItemName', { count: ids.length }),
       confirmText: t('staff.dialogs.deleteButton'),
       loading: isBulkDeleting,

@@ -5,7 +5,7 @@ import { Bus, CalendarDays, NotebookPen } from 'lucide-react'
 import { FormInput, NForm, useDialog } from 'najm-kit'
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { standaloneTransportAssignmentSchema } from '../config/transportSchemas'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react'
 import { useVehicles } from '@/features/Vehicles/hooks/useVehicles'
 
@@ -16,11 +16,11 @@ type Props = {
 }
 
 function AssignmentFields({ lockVehicleId }: { lockVehicleId?: string }) {
-  const form = useActiveForm()
-  const pickup = form.watch('pickup')
-  const dropoff = form.watch('dropoff')
-  const pickupPlaceId = form.watch('pickupPlaceId')
-  const dropoffPlaceId = form.watch('dropoffPlaceId')
+  const form = useFormContext()
+  const pickup = useWatch({ name: 'pickup' })
+  const dropoff = useWatch({ name: 'dropoff' })
+  const pickupPlaceId = useWatch({ name: 'pickupPlaceId' })
+  const dropoffPlaceId = useWatch({ name: 'dropoffPlaceId' })
   const { t } = useTranslation()
   const { vehicles = [] } = useVehicles()
   const activeVehicles = useMemo(() => {

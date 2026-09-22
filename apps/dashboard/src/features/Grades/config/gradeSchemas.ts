@@ -1,7 +1,20 @@
 import { z } from 'zod';
 import { GRADE_STATUS_VALUES } from '@sms/contracts';
 
-import { num, optionalId, requiredId } from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const requiredId = z.preprocess(
+  (value) => value ?? '',
+  z.string().min(1, 'ID is required'),
+);
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * What the grade form accepts.
@@ -22,7 +35,7 @@ export const gradeSchema = z
     classId: optionalId,
     gradeId: optionalId,
     assessmentTitle: z.string().min(3, 'Assessment title must be at least 3 characters').max(200, 'Assessment title too long').optional(),
-    marksObtained: num().min(0, 'Marks obtained must be non-negative').max(1000, 'Marks obtained cannot exceed 1000'),
+    marksObtained: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Marks obtained must be non-negative').max(1000, 'Marks obtained cannot exceed 1000')),
     feedback: z.string().max(1000, 'Feedback too long').optional().nullable(),
     status: z.enum(GRADE_STATUS_VALUES).default('graded'),
   })

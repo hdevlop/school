@@ -4,7 +4,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React, { useEffect, useRef } from 'react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import {
   GraduationCap, FileText, Tag, Building, DoorOpen, BookOpen, User,
   Calendar, Clock, Award, Activity, Hash,
@@ -14,17 +14,17 @@ import { examSchema } from '../config/examSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { buildExamStatusOptions, buildExamTypeOptions } from '../config/examOptions'
-import { useClasses } from '@/hooks/useClasses'
+import { useClasses } from '@/features/Classes/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects'
 import { useTeachers } from '@/features/Teachers/hooks/useTeachers'
 
 const SectionsMultiselect = ({ initialClassId }) => {
   const { t } = useTranslation();
-  const { watch, setValue } = useActiveForm();
+  const { setValue } = useFormContext();
   const { sections, isSectionsLoading } = useSections();
 
-  const classId = watch('classId');
+  const classId = useWatch({ name: 'classId' });
 
   const hydratedRef = useRef(false);
   useEffect(() => {

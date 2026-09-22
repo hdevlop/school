@@ -3,8 +3,7 @@
 import { useMemo, useState } from 'react';
 import { Award } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import BehaviorRewardCard from './BehaviorRewardCard';
@@ -30,7 +29,7 @@ const BehaviorRewardsTable = () => {
     sectionFilter,
     onSectionFilterChange: setSectionFilter,
   });
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
   const {
     behaviorRewards,
     createBehaviorReward,
@@ -83,6 +82,9 @@ const BehaviorRewardsTable = () => {
   });
 
   const handleDelete = (reward) => confirmDelete({
+    title: t('common.delete'),
+    warningText: t('common.deleteConfirm'),
+    cancelText: t('common.cancel'),
     itemName: reward.student?.name || reward.id,
     confirmText: t('behaviorRewards.dialogs.deleteButton'),
     loading: isDeleting,

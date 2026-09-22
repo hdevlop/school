@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from 'react';
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { CircleDollarSign } from 'lucide-react';
 import FeeForm from './FeeForm';
 import EditFeeForm from './EditFeeForm';
@@ -24,7 +23,7 @@ function FeesTable() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const { students } = useStudents();
   const { feeTypes } = useFeeTypes();
@@ -197,6 +196,9 @@ function FeesTable() {
 
   const handleDelete = (fee) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: fee.name,
       confirmText: t('fees.dialogs.deleteButton'),
       loading: isDeleting,

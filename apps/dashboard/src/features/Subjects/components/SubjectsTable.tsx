@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { BookOpen } from 'lucide-react';
 import React from 'react';
 import SubjectForm from './SubjectForm';
@@ -32,7 +31,7 @@ function SubjectsTable() {
     isDeleting
   } = useSubjects();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -74,6 +73,9 @@ function SubjectsTable() {
 
   const handleDelete = (subject) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: subject.name,
       confirmText: t('subjects.dialogs.deleteButton'),
       loading: isDeleting,

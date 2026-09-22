@@ -7,7 +7,7 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Calendar, CreditCard, Receipt, Hash, CalendarClock } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useWatch } from 'react-hook-form'
 import { paymentEditSchema } from '../config/paymentSchemas'
 import { buildPaymentMethodOptionsFor } from '../config/paymentOptions'
 
@@ -38,9 +38,7 @@ const PaymentEditForm = ({ payment }) => {
 
 const PaymentEditFormContent = () => {
   const { t } = useTranslation();
-  const { watch } = useActiveForm();
-
-  const paymentMethod = watch('paymentMethod');
+  const paymentMethod = useWatch({ name: 'paymentMethod' });
 
   // Keeps a stored method selectable while the paperwork is corrected.
   const paymentMethodOptions = buildPaymentMethodOptionsFor(t, paymentMethod);

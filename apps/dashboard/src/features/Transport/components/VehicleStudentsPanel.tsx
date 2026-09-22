@@ -9,8 +9,8 @@ import { FormInput } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location';
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { locationValueSchema } from '@/shared/forms/commonSchemas'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { locationValueSchema } from '../config/transportSchemas'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react';
 
 const assignSchema = z.object({
@@ -24,12 +24,12 @@ const assignSchema = z.object({
 
 const AssignStudentFields = ({ students }) => {
   const { t } = useTranslation();
-  const form = useActiveForm()
-  const studentId = form.watch('studentId')
-  const pickup = form.watch('pickup')
-  const dropoff = form.watch('dropoff')
-  const pickupPlaceId = form.watch('pickupPlaceId')
-  const dropoffPlaceId = form.watch('dropoffPlaceId')
+  const form = useFormContext()
+  const studentId = useWatch({ name: 'studentId' })
+  const pickup = useWatch({ name: 'pickup' })
+  const dropoff = useWatch({ name: 'dropoff' })
+  const pickupPlaceId = useWatch({ name: 'pickupPlaceId' })
+  const dropoffPlaceId = useWatch({ name: 'dropoffPlaceId' })
   const selectedStudent = (students || []).find((student: any) => student.id === studentId)
 
   useEffect(() => {

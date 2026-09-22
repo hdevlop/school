@@ -1,14 +1,13 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { GraduationCap } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import StudentProfile from './StudentProfile';
 import { useStudents } from '../hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
 import StudentCard from './StudentCard';
-import { useClasses } from '@/hooks/useClasses';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import SimpleStudentForm from './SimpleStudentForm';
 import { useStudentsTableColumns } from '../hooks/useStudentsTableColumns';
@@ -44,7 +43,7 @@ function StudentsTable() {
     isBulkDeleting
   } = useStudents();
 
-  const { openDialog, confirmDelete, pop } = useConfirmDelete();
+  const { openDialog, confirmDelete, pop } = useDialog();
 
   const handleAddClick = async () => {
     const resolvedBusinessDate = isBusinessDateLoading
@@ -107,6 +106,9 @@ function StudentsTable() {
 
   const handleDelete = (student) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: student.name,
       confirmText: t('students.dialogs.deleteButton'),
       loading: isDeleting,
@@ -118,6 +120,9 @@ function StudentsTable() {
 
   const handleBulkDelete = (ids) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: t('students.dialogs.bulkDeleteItemName', { count: ids.length }),
       confirmText: t('students.dialogs.deleteButton'),
       loading: isBulkDeleting,

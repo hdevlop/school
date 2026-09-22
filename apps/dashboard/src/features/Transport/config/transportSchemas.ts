@@ -1,7 +1,16 @@
 import { z } from 'zod';
 
-import { locationValueSchema } from '@/shared/forms/commonSchemas';
-import { optionalDateField } from '@/shared/forms/fieldPrimitives';
+export const locationValueSchema = z.object({
+  address: z.string().max(500, 'Address too long'),
+  latitude: z.number().min(-90).max(90).nullable(),
+  longitude: z.number().min(-180).max(180).nullable(),
+});
+
+const optionalDateField = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+  .nullable()
+  .optional();
 
 /**
  * Putting a student on a bus.

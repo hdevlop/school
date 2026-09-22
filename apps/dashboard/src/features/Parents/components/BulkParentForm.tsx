@@ -1,6 +1,6 @@
 'use client'
 
-import { NForm, useNForm } from 'najm-kit'
+import { NForm } from 'najm-kit'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { DynamicArray } from 'najm-kit';
@@ -8,7 +8,7 @@ import { DynamicArray } from 'najm-kit';
 import { ParentFormContent, getParentDefaultValues } from './SimpleParentForm'
 import { parentsSchema } from '../config/parentSchemas'
 
-export const BulkParentFormContent = ({ form = null }: { form?: any } = {}) => {
+export const BulkParentFormContent = () => {
 
   const { t } = useTranslation()
 
@@ -30,7 +30,7 @@ export const BulkParentFormContent = ({ form = null }: { form?: any } = {}) => {
       className="[&>button]:order-first"
     >
       <div className='flex flex-col gap-4'>
-      <ParentFormContent form={form} />
+      <ParentFormContent />
       </div>
     </DynamicArray>
   )
@@ -44,11 +44,6 @@ const BulkParentForm = () => {
   const defaultValues = {
     parents: []
   }
-  const form = useNForm({
-    schema: parentsSchema,
-    defaultValues,
-  })
-
   const handleSubmit = async (data) => {
     pop(data)
   }
@@ -58,10 +53,9 @@ const BulkParentForm = () => {
       id='parent-form'
       schema={parentsSchema}
       defaultValues={defaultValues}
-      form={form}
       onSubmit={handleSubmit}
     >
-      <BulkParentFormContent form={form} />
+      <BulkParentFormContent />
     </NForm>
   )
 }

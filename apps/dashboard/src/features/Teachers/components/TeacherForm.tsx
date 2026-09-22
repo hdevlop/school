@@ -14,14 +14,14 @@ import {
   assignmentsSchema,
   teacherFullSchema,
 } from '../config/teacherSchemas'
-import { buildGenderOptions } from '@/shared/forms/genderOptions'
 import {
+  buildGenderOptions,
   buildEmploymentTypeOptionsFor,
   buildTeacherStatusOptionsFor,
 } from '../config/teacherOptions'
 import { AssignmentFormContent } from './BulkAssignmentForm'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useWatch } from 'react-hook-form'
 
 type TeacherWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
    submitLabel?: ReactNode
@@ -109,9 +109,9 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
          title: 'Personal Information',
          schema: teacherPersonalSchema,
          fields: Object.keys(teacherPersonalSchema.shape),
-         render: ({ form }) => (
+         render: () => (
             <>
-               <PersonalInfoContent form={form} />
+               <PersonalInfoContent />
             </>
          ),
       },
@@ -190,13 +190,14 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
 // ============================================
 // Step 1: Personal Information
 // ============================================
-export const PersonalInfoContent = ({ form }: { form: any }) => {
+export const PersonalInfoContent = () => {
    const { t } = useTranslation()
-   const gender = form.watch('gender')
+   const gender = useWatch({ name: 'gender' })
+   const status = useWatch({ name: 'status' })
    const genderOptions = buildGenderOptions(t)
    // A migrated record keeps whatever status it arrived with rather than
    // being silently reset to one of ours.
-   const statusOptions = buildTeacherStatusOptionsFor(t, form.watch('status'))
+   const statusOptions = buildTeacherStatusOptionsFor(t, status)
 
    const defaultImage = gender === 'M'
       ? '/images/teacher_male.png'
@@ -312,8 +313,8 @@ export const PersonalInfoContent = ({ form }: { form: any }) => {
 // ============================================
 export const ProfessionalInfoContent = () => {
    const { t } = useTranslation()
-   const form = useActiveForm()
-   const employmentTypeOptions = buildEmploymentTypeOptionsFor(t, form.watch('employmentType'))
+   const employmentType = useWatch({ name: 'employmentType' })
+   const employmentTypeOptions = buildEmploymentTypeOptionsFor(t, employmentType)
 
    return (
       <>

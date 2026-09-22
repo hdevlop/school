@@ -76,7 +76,7 @@ identical. Contract values were proved byte-identical to the pre-migration
 server enums, and `drizzle-kit check` reports no schema change.
 
 Final state: `bun run lint`, `bun run typecheck`, `bun run i18n:check`,
-`bun run test:config` (198 tests), `bun run test:access-reset` (60 tests),
+`bun run test:config` (181 tests), `bun run test:access-reset` (60 tests),
 `bun run build:all` and `bun run db:check` all pass. No server runtime
 (`drizzle-orm`, `pgEnum`, `reflect-metadata`, `diject`, `postgres`, `ioredis`)
 appears in any client chunk. The pre-existing access-reset and DTO work in the
@@ -167,7 +167,7 @@ export const enumValues = {
 - Preserve current defaults, optional/nullable behavior, transforms, messages, and cross-field refinements during the move. Do not "clean up" behavior in the same commit unless a characterization test proves and documents the intended change.
 - Keep API DTO schemas in `packages/server/src/modules/**/**Dto.ts`. A dashboard form schema must not be imported into the server, and a transport DTO must not be used as a React form schema.
 - Multi-feature workflows may compose public schemas from the owning feature. For example, the full student form may compose the student, parent, transport, and fee form schemas. Keep the composition in `Students/config/fullStudentSchemas.ts`; do not recreate another global validation module.
-- Avoid circular feature dependencies. If two features truly share a form primitive, move only that primitive to `apps/dashboard/src/shared/forms/`, not back to `lib/validations.ts`.
+- Avoid circular feature dependencies. Keep small form primitives local to each owning feature rather than recreating a global validation module.
 
 ### Feature-owned options
 
@@ -208,7 +208,7 @@ This table is the initial routing map. Phase 0 must confirm every export and con
 | grade and exam schemas | corresponding `Grades` and `Exams` config folders |
 | announcement, discipline, alert, behavior-reward, and event schemas | each corresponding feature config folder |
 | settings schema | `features/Settings/config/settingsSchemas.ts` |
-| truly generic ID, pagination, or date-range schemas | keep only if used; otherwise delete. If shared, place in `shared/forms/commonSchemas.ts` |
+| generic ID, pagination, or date-range schemas | keep only if used and define them beside the feature schema that binds them |
 
 Do not create empty config barrels or move unused exports mechanically. An unused schema should be deleted after repository-wide confirmation rather than given a new home.
 
@@ -350,7 +350,7 @@ bun run db:check
 | Translation regressions | Feature option tests plus `bun run i18n:check` across all four locales |
 | Schema behavior changes during file moves | Characterization tests for defaults, transforms, nullable fields, and refinements before migration |
 | Client bundle imports backend runtime code | Dependency-free contracts package, import restriction, and production bundle verification |
-| Feature cycles appear during schema composition | One-way ownership, explicit public schemas, and a very small `shared/forms` escape hatch |
+| Feature cycles appear during schema composition | One-way ownership, explicit public schemas, and local feature primitives |
 | Full student flow is split into multiple requests | Preserve current nested multipart/request composition and test normalized payloads |
 | Existing access-reset/DTO work is overwritten | Recheck dirty diff before overlapping phases and keep migration commits narrow |
 | A new global registry replaces the old one | Allow shared values only; keep schemas, labels, filters, and builders feature-owned |

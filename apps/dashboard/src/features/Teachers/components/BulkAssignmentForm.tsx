@@ -6,18 +6,18 @@ import { DynamicArray, NForm, useDialog, usePrefix } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { assignmentsSchema } from '../config/teacherSchemas'
 
 // ==================== COMPONENTS ====================
 
 const AssignmentItem = ({ classes, subjects }) => {
    const { t } = useTranslation()
-   const { setValue, watch } = useActiveForm()
+   const { setValue } = useFormContext()
    const prefix = usePrefix()
    const prevClassIdRef = useRef(null)
 
-   const selectedClassId = watch(`${prefix}.classId`)
+   const selectedClassId = useWatch({ name: `${prefix}.classId` })
 
    const classOptions = classes.map(cls => ({
       value: cls.id,

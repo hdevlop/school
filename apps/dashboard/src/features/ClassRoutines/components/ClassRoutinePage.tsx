@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { CalendarClock, CalendarDays, Clock3, Plus } from 'lucide-react';
 import { NativeSelect, NButton, NPageHeader, NPageHeaderActions, NSkeleton, useDialog } from 'najm-kit';
 import { useAuth } from 'najm-auth/client/react';
-import { useClasses } from '@/hooks/useClasses';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

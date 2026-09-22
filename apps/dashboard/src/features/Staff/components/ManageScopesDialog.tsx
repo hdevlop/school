@@ -2,10 +2,9 @@
 
 import React, { useMemo } from 'react';
 import { z } from 'zod';
-import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { useDialog, Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { MapPinned, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
 import { useTranslation } from 'najm-i18n/react';
 import { useZones } from '../hooks/useZones';
 
@@ -54,7 +53,7 @@ const ZoneEditorForm = ({ zone = null, formId, onSubmit }) => {
 const ManageScopesDialog = () => {
   const { t } = useTranslation();
   const { zones, refetch: refetchZones, createZone, updateZone, deleteZone } = useZones();
-  const { openDialog, confirmDelete, pop } = useConfirmDelete();
+  const { openDialog, confirmDelete, pop } = useDialog();
 
   const orderedZones = useMemo(() => [...(zones || [])].sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''))), [zones]);
 
@@ -83,6 +82,9 @@ const ManageScopesDialog = () => {
 
   const confirmZoneDelete = (zone) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: zone.name,
       confirmText: t('staffScopes.dialogs.deleteZone'),
       onConfirm: async () => {

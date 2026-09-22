@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Tag, CalendarClock, Percent, Activity, Wallet } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
-import { useActiveForm } from '@/hooks/useActiveForm'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { useCallback, useEffect } from 'react'
 import { feeSchema } from '../config/feeSchemas'
 import { buildFeeStatusOptions, buildScheduleOptions } from '../config/feeOptions'
@@ -52,14 +52,14 @@ const EditFeeForm = ({ fee, feeTypes = [] }) => {
 
 const SimpleFeeFormContent = ({ feeTypes, isEditMode }) => {
    const { t } = useTranslation()
-   const { watch, setValue, register } = useActiveForm()
+   const { setValue, register } = useFormContext()
    const prefix = usePrefix();
    const f = useCallback((name: string) => prefix != null ? `${prefix}.${name}` : name, [prefix]);
 
-   const feeTypeId = watch(f('feeTypeId'))
-   const baseAmount = watch(f('baseAmount')) || 0
-   const discountAmount = watch(f('discountAmount')) || 0
-   const schedule = watch(f('schedule'))
+   const feeTypeId = useWatch({ name: f('feeTypeId') })
+   const baseAmount = useWatch({ name: f('baseAmount') }) || 0
+   const discountAmount = useWatch({ name: f('discountAmount') }) || 0
+   const schedule = useWatch({ name: f('schedule') })
 
    const selectedFeeType = feeTypes.find(ft => ft.id === feeTypeId)
    const feeTypeAmount = selectedFeeType?.amount || 0

@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { KeyRound } from 'lucide-react';
 import React from 'react';
 import PermissionForm from './PermissionForm';
@@ -36,7 +35,7 @@ function PermissionsTable() {
     isDeleting
   } = usePermissions();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -78,6 +77,9 @@ function PermissionsTable() {
 
   const handleDelete = (permission) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: permission.name,
       confirmText: t('permissions.dialogs.deleteButton'),
       loading: isDeleting,

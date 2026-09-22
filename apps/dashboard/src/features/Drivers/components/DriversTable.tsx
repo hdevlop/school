@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { Car } from 'lucide-react';
 import DriverForm from './DriverForm';
 import { useDrivers } from '../hooks/useDrivers';
@@ -34,7 +33,7 @@ function DriversTable() {
   } = useDrivers();
 
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -79,6 +78,9 @@ function DriversTable() {
 
   const handleDelete = (driver) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: driver.name,
       confirmText: t('drivers.dialogs.deleteButton'),
       loading: isDeleting,
@@ -90,6 +92,9 @@ function DriversTable() {
 
   const handleBulkDelete = (ids) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: t('drivers.dialogs.bulkDeleteItemName', { count: ids.length }),
       confirmText: t('drivers.dialogs.deleteButton'),
       loading: isBulkDeleting,

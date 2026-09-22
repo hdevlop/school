@@ -132,10 +132,9 @@ const FullStudentForm = ({
       title: studentStepTitle,
       schema: studentWithTransportSchema,
       fields: Object.keys(studentWithTransportSchema.shape),
-      render: ({ form }) => (
+      render: () => (
         <StudentFormContent
           classes={classes}
-          form={form}
           showTransportToggle
           onTransportToggle={setTransportSelected}
         />
@@ -146,8 +145,8 @@ const FullStudentForm = ({
       title: parentsStepTitle,
       schema: parentsSchema,
       fields: ['parents'],
-      render: ({ form }) => (
-        <BulkParentFormContent form={form} />
+      render: () => (
+        <BulkParentFormContent />
       ),
     },
     {
@@ -155,12 +154,11 @@ const FullStudentForm = ({
       title: feesStepTitle,
       schema: feesSchema,
       fields: ['fees'],
-      render: ({ form }) => (
+      render: () => (
         <BulkFeeFormContent
           feeTypes={feeTypes}
           showInstallmentPreview={false}
           showEffectiveDateField={false}
-          form={form}
         />
       ),
     },
@@ -175,8 +173,8 @@ const FullStudentForm = ({
         'addressPlaceId',
         'enrollmentDate',
       ],
-      render: ({ form }) => (
-        <StudentTransportFormContent form={form} feeTypes={feeTypes} />
+      render: () => (
+        <StudentTransportFormContent feeTypes={feeTypes} />
       ),
     }] : []),
   ], [classes, feeTypes, feesStepTitle, parentsStepTitle, studentStepTitle, transportSelected, transportStepTitle])

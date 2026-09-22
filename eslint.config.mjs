@@ -45,7 +45,7 @@ export default defineConfig([
           {
             name: "@/lib/validations",
             message:
-              "Form schemas are owned by the feature that binds them: features/<Feature>/config/<feature>Schemas.ts. Genuinely shared field primitives go in shared/forms/.",
+              "Form schemas and their field primitives are owned by the feature that binds them: features/<Feature>/config/<feature>Schemas.ts.",
           },
           {
             name: "@/lib/ZodEnum",
@@ -60,7 +60,7 @@ export default defineConfig([
           {
             name: "@/hooks/useEnum",
             message:
-              "Selects are built by typed, feature-owned option builders: features/<Feature>/config/<feature>Options.ts, using optionsFromValues from shared/forms/enumOptions.",
+              "Selects are built by typed, self-contained feature option builders in features/<Feature>/config/<feature>Options.ts.",
           },
         ],
         patterns: [

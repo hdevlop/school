@@ -30,7 +30,7 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
   order. The dashboard runs two passes: the app (`tsconfig.json`, which excludes
   tests) and the tests (`tsconfig.test.json`, which adds `bun` types). Neither
   hides the other.
-- `bun run test:config` - The focused contract, shared-form and feature-config tests
+- `bun run test:config` - The focused contract and feature-config tests
 - `bun run build:all` to verify production readiness
 - `bun run i18n:check` when touching `packages/server/src/locales/*.json`
 - `bun run check` - lint, typecheck, i18n, focused tests, build and `db:check`
@@ -92,11 +92,11 @@ states that drift — so do not add one without changing the plan first.
   `features/<Feature>/config/<feature>Schemas.ts`, select options in
   `<feature>Options.ts` as pure builders taking `t`. There is no global
   validation module and no global enum hook; `apps/dashboard/src/lib` holds
-  cross-cutting, domain-neutral utilities only. Genuinely shared, domain-free
-  pieces — an id field, a coerced number, a map location, the gender select —
-  go in `apps/dashboard/src/shared/forms/`, and that folder stays small. ESLint
-  enforces both boundaries: `@/lib/validations`, `@/lib/ZodEnum`, `@/lib/ENUMS`
-  and `@/hooks/useEnum` are restricted imports, as is any `@server/*` path.
+  cross-cutting, domain-neutral utilities only. Field primitives, location
+  shapes, and select builders stay with the feature that binds them, matching
+  Kafil's self-contained feature configuration. ESLint enforces both
+  boundaries: `@/lib/validations`, `@/lib/ZodEnum`, `@/lib/ENUMS` and
+  `@/hooks/useEnum` are restricted imports, as is any `@server/*` path.
 
   A form schema improves UX; it is never authorization. The DTO in
   `packages/server/src/modules/**/**Dto.ts` validates the same payload again
@@ -256,7 +256,6 @@ apps/dashboard/src/
 ├── shared/              # Dashboard shell and cross-feature pieces
 ├── hooks/              # Shared custom hooks
 ├── services/           # API service layer
-├── shared/forms/       # Field primitives + option plumbing (small, domain-neutral)
 └── lib/                # auth, session, server preferences, utilities
 ```
 

@@ -1,7 +1,6 @@
 "use client"
 
-import { NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import { Megaphone } from 'lucide-react';
 import React from 'react';
 import AnnouncementForm from './AnnouncementForm';
@@ -31,7 +30,7 @@ function AnnouncementsTable() {
     isDeleting,
   } = useAnnouncements();
 
-  const { openDialog, confirmDelete } = useConfirmDelete();
+  const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
     openDialog({
@@ -73,6 +72,9 @@ function AnnouncementsTable() {
 
   const handleDelete = (announcement) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: announcement.title,
       confirmText: t('announcements.dialogs.deleteButton'),
       loading: isDeleting,

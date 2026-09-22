@@ -1,12 +1,25 @@
 import { z } from 'zod';
 import { PAYMENT_METHOD_VALUES } from '@sms/contracts';
 
-import {
-  dateField,
-  num,
-  optionalDateField,
-  optionalId,
-} from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const dateField = z.string().regex(
+  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
+  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
+);
+const optionalDateField = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+  .nullable()
+  .optional();
+const numberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => {
+    if (typeof value !== 'string') return value;
+    const trimmed = value.trim();
+    return trimmed === '' ? value : Number(trimmed);
+  }, schema);
 
 /**
  * Taking a payment, and correcting one that was already taken.
@@ -23,7 +36,7 @@ import {
  */
 export const feePaymentSchema = z.object({
   studentId: optionalId,
-  amount: num().positive('Amount must be greater than 0').max(1_000_000, 'Amount too large').optional(),
+  amount: numberField(z.number({ error: 'Must be a valid number' }).positive('Amount must be greater than 0').max(1_000_000, 'Amount too large')).optional(),
   paymentMethod: z.enum(PAYMENT_METHOD_VALUES),
   paymentDate: dateField,
   checkNumber: z.preprocess((val) => (val === '' ? null : val), z.string().max(50, 'Check number too long').optional().nullable()),
@@ -37,7 +50,7 @@ export const feePaymentSchema = z.object({
       z.object({
         feeId: optionalId,
         number: z.number().int().positive('Installment must be a positive number'),
-        amount: num().positive('Amount must be greater than 0'),
+        amount: numberField(z.number({ error: 'Must be a valid number' }).positive('Amount must be greater than 0')),
       }),
     )
     .optional()
@@ -51,8 +64,8 @@ export const feePaymentSchema = z.object({
  * for is a reallocation, not an edit, and it goes through its own flow. This
  * form fixes the paperwork — the method, the date, the reference numbers.
  *
- * `paymentDate` is checked only for presence rather than with the shared
- * `dateField`, which is how this dialog has always behaved; the value comes
+ * `paymentDate` is checked only for presence rather than with the create form's
+ * date pattern, which is how this dialog has always behaved; the value comes
  * back from the API already normalized.
  */
 export const paymentEditSchema = z.object({

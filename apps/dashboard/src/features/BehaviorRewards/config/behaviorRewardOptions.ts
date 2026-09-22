@@ -9,7 +9,19 @@ import type {
   BehaviorRewardType,
 } from '@sms/contracts';
 
-import { optionsFromValues, type EnumOption, type Translate } from '@/shared/forms/enumOptions';
+type Translate = (key: string, ...args: any[]) => string;
+
+type EnumOption<Value extends string = string> = {
+  readonly value: Value;
+  readonly label: string;
+};
+
+const optionsFromValues = <Value extends string>(
+  values: readonly Value[],
+  t: Translate,
+  translationPrefix: string,
+): readonly EnumOption<Value>[] =>
+  values.map((value) => ({ value, label: t(`${translationPrefix}.${value}`) }));
 
 /**
  * The three selects on the reward form, and the three matching table filters.

@@ -2,8 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { z } from 'zod';
-import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
-import { useConfirmDelete } from '@/hooks/useConfirmDelete';
+import { useDialog, Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
 import { Briefcase, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaffRoles, useStaffRoleMutations } from '../hooks/useStaffRoles';
@@ -75,7 +74,7 @@ const ManageRolesDialog = () => {
   const { t } = useTranslation();
   const { staffRoles, refetch } = useStaffRoles();
   const { create: createRole, update: updateRole, remove: removeRole } = useStaffRoleMutations();
-  const { openDialog, confirmDelete, pop } = useConfirmDelete();
+  const { openDialog, confirmDelete, pop } = useDialog();
 
   const items = useMemo(() => (staffRoles || []).map((role) => ({
     code: role.code,
@@ -125,6 +124,9 @@ const ManageRolesDialog = () => {
 
   const onDelete = (role) => {
     confirmDelete({
+      title: t('common.delete'),
+      warningText: t('common.deleteConfirm'),
+      cancelText: t('common.cancel'),
       itemName: role.label || role.code,
       confirmText: t('staffRoles.dialogs.deleteButton'),
       onConfirm: async () => {

@@ -10,7 +10,7 @@ import { useDialog } from 'najm-kit'
 import { sectionSchema } from '../config/sectionSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
-import { useClasses } from '@/hooks/useClasses'
+import { useClasses } from '@/features/Classes/hooks/useClasses'
 
 const SectionForm = ({ section = null }) => {
 

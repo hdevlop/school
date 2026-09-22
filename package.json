@@ -14,7 +14,7 @@
     "build:seed": "bun run --cwd packages/seed build",
     "build:all": "bun run build:server && bun run build:seed && bun run build",
     "typecheck": "bun run --cwd packages/contracts typecheck && bun run --cwd packages/server typecheck && bun run --cwd apps/dashboard typecheck",
-    "test:config": "bun test packages/contracts/tests apps/dashboard/src/shared/forms apps/dashboard/src/features",
+    "test:config": "bun test packages/contracts/tests apps/dashboard/src/features",
     "check": "bun run lint && bun run typecheck && bun run i18n:check && bun run test:config && bun run build:all && bun run db:check",
     "lint": "bun run --filter @sms/dashboard lint",
     "test:access-reset": "bun test packages/server/tests/accessReset/AccessResetService.test.ts packages/server/tests/accessReset/AccessResetValidator.test.ts apps/dashboard/src/features/Users/config/accessResetModes.test.ts",

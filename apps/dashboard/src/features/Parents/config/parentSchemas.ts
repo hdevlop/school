@@ -1,15 +1,23 @@
 import { z } from 'zod';
 import { GENDER_VALUES, MARITAL_STATUS_VALUES, RELATIONSHIP_TYPE_VALUES } from '@sms/contracts';
 
-import {
-  addressField,
-  cinField,
-  emailField,
-  nameField,
-  optionalDateField,
-  optionalId,
-  phoneField,
-} from '@/shared/forms/fieldPrimitives';
+const optionalId = z.preprocess(
+  (value) => (value === '' ? undefined : value),
+  z.string().min(1, 'ID cannot be empty').nullish().optional(),
+);
+const emailField = z.string().email('Invalid email format').or(z.literal(''));
+const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
+const nameField = z
+  .string()
+  .min(2, 'Name must be at least 2 characters')
+  .max(100, 'Name too long');
+const optionalDateField = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+  .nullable()
+  .optional();
+const cinField = z.string().min(8, 'CIN must be at least 8 characters').max(20, 'CIN too long');
+const addressField = z.string().max(500, 'Address too long').optional();
 
 /**
  * One parent or guardian.
