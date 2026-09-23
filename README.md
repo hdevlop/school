@@ -107,9 +107,12 @@ confirmation in an interactive terminal. In a non-interactive run, set explicit
 the injected database environment when `.env.local` is absent and updates an
 existing account with that email, including its password and admin role, so do
 not run it just to inspect credentials. Production rejects missing, template,
-or local-default admin passwords. `bun seed` opens the seed command menu in a
-development terminal and starts the administrator prompt in a production
-terminal. Use `bun run gen:demo:ui` for the previous demo generator shortcut.
+or local-default admin passwords. Admin passwords must be at least 8 characters,
+at most 72 bytes, and contain uppercase and lowercase letters plus a number.
+`bun seed` opens the seed command menu in both development and production
+terminals. Choose `admin`, `demo`, or `reset-demo`; the reset option asks for
+confirmation before deleting school data. Use `bun run gen:demo:ui` for the
+previous demo generator shortcut.
 
 4. **Set up the database**
 ```bash

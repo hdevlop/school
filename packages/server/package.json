@@ -50,7 +50,7 @@
     "hono": "^4.12.31",
     "ioredis": "5.11.1",
     "lodash.isempty": "^4.4.0",
-    "najm-auth": "4.0.8",
+    "najm-auth": "4.0.9",
     "najm-cache": "2.2.0",
     "najm-core": "2.0.6",
     "najm-cors": "2.0.2",

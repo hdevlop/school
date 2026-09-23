@@ -15,14 +15,12 @@ export function resolveAdminSeedCredentials(env: SeedEnvironment = process.env) 
   if (!password) {
     throw new Error('ADMIN_PASSWORD must be set before seeding an admin.');
   }
-  if (production) {
-    if (password === LOCAL_ADMIN_PASSWORD || password === TEMPLATE_ADMIN_PASSWORD) {
-      throw new Error('ADMIN_PASSWORD must not use a local or template password in production.');
-    }
-    if (password.length < 8 || password.length > 72 || !/[A-Z]/.test(password) ||
-        !/[a-z]/.test(password) || !/\d/.test(password)) {
-      throw new Error('ADMIN_PASSWORD must be 8–72 characters and contain upper- and lowercase letters and a number.');
-    }
+  if (production && (password === LOCAL_ADMIN_PASSWORD || password === TEMPLATE_ADMIN_PASSWORD)) {
+    throw new Error('ADMIN_PASSWORD must not use a local or template password in production.');
+  }
+  if (password.length < 8 || new TextEncoder().encode(password).length > 72 ||
+      !/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/\d/.test(password)) {
+    throw new Error('ADMIN_PASSWORD must be at least 8 characters, at most 72 bytes, and contain upper- and lowercase letters and a number.');
   }
 
   return { email, password };

@@ -29,7 +29,23 @@ describe('admin seed credentials', () => {
       NODE_ENV: 'production',
       ADMIN_EMAIL: 'admin@school.test',
       ADMIN_PASSWORD: 'short',
-    })).toThrow('8–72 characters');
+    })).toThrow('at least 8 characters');
+  });
+
+  test('accepts an eight-character production password', () => {
+    expect(resolveAdminSeedCredentials({
+      NODE_ENV: 'production',
+      ADMIN_EMAIL: 'admin@school.test',
+      ADMIN_PASSWORD: 'Abcdefg1',
+    })).toEqual({ email: 'admin@school.test', password: 'Abcdefg1' });
+  });
+
+  test('rejects passwords over the bcrypt byte limit before seeding', () => {
+    expect(() => resolveAdminSeedCredentials({
+      NODE_ENV: 'production',
+      ADMIN_EMAIL: 'admin@school.test',
+      ADMIN_PASSWORD: `Abcdefg1${'é'.repeat(33)}`,
+    })).toThrow('at most 72 bytes');
   });
 
   test('accepts and normalizes explicit production credentials', () => {
