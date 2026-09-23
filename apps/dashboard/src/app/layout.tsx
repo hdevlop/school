@@ -3,7 +3,7 @@ import { NajmPwaRegistration } from 'najm-next/pwa/react';
 import "@/styles/globals.css";
 import "flag-icons/css/flag-icons.min.css";
 import 'najm-theme/styles.css';
-import { Lora, Roboto_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import { AppProviders } from '@/providers/AppProviders';
 import { loadUiSnapshot } from '@/najm.server';
 import NajmClientRoot from '@/components/NajmClientRoot';
@@ -16,15 +16,17 @@ export const viewport: Viewport = {
   viewportFit: 'cover'
 }
 
-const lora = Lora({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
+const lora = localFont({
+  src: './fonts/Lora.ttf',
+  weight: '400 700',
+  display: 'swap',
   variable: '--font-lora',
 })
 
-const robotoMono = Roboto_Mono({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
+const robotoMono = localFont({
+  src: './fonts/RobotoMono.ttf',
+  weight: '400 700',
+  display: 'swap',
   variable: '--font-roboto-mono',
 })
 
