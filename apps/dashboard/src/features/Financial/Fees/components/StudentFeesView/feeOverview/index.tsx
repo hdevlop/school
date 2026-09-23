@@ -65,7 +65,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
   }, [t, confirmDelete, isDeleting, deleteFee]);
 
   const cardsClassName = fullWidth
-    ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 items-start overflow-y-auto gap-3 p-1.5'
+    ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 items-start gap-3 p-1.5'
     : 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 items-start gap-3 p-1.5';
 
   const renderFeeCard = useMemo(() => ({ data }: any) => {
@@ -101,7 +101,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
   }, [handleDelete, handleEdit, onPayFee]);
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-2">
+    <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden">
       <NTable
         data={fees}
         columns={[]}
@@ -136,7 +136,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
         loadingText={t('fees.card.loadingStudentFees')}
         dynamicHeight={false}
         bordered={false}
-        className='h-fit flex-none'
+        className='h-fit max-h-[30vh] flex-none'
       />
 
       {selectedFee && (
@@ -146,6 +146,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
             Fee Installments
           </Label>
           <InstallmentsTable
+            key={selectedFee.id}
             fee={selectedFee.installments}
             className="min-h-0 flex-1"
             onPayInstallment={onPayInstallment}

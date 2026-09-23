@@ -121,7 +121,12 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   const selectInstallments = usePaymentStore((state) => state.selectInstallments);
   const setPaymentDetails = usePaymentStore((state) => state.setPaymentDetails);
   const loadingClassName = hideHeader ? 'min-h-64' : 'min-h-[calc(100vh-12rem)]';
-  const selectedFee = studentFees?.fees?.find(fee => fee.id === selectedFeeId) || null;
+  // Select the first fee in the same render as the loaded data. Waiting for an
+  // effect first mounts the cards without the installment table, then changes
+  // the height that NTable measures for its automatic page size.
+  const selectedFee = studentFees?.fees?.find(fee => fee.id === selectedFeeId)
+    || studentFees?.fees?.[0]
+    || null;
   const hasPayableBalance = Boolean(
     studentFees?.fees?.some((fee: any) => getFeeBalance(fee) > 0)
   );
@@ -141,18 +146,8 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     }
   }, [initialFeeId]);
 
-  useEffect(() => {
-    const fees = studentFees?.fees || [];
-    if (fees.length === 0) return;
-
-    const selectedFeeExists = selectedFeeId && fees.some((fee: any) => fee.id === selectedFeeId);
-    if (!selectedFeeExists) {
-      setSelectedFeeId(fees[0].id);
-    }
-  }, [studentFees, selectedFeeId]);
-
   const handleFeeClick = (fee) => {
-    setSelectedFeeId(selectedFeeId === fee.id ? null : fee.id);
+    setSelectedFeeId(selectedFee?.id === fee.id ? null : fee.id);
   };
 
   const handleAddFee = () => {
@@ -319,7 +314,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   ];
 
   return (
-    <div className="flex flex-col gap-2 h-full">
+    <div className="flex h-full min-h-0 flex-col gap-2">
       {!hideHeader && (
         <StudentHeader
           studentFees={studentFees}
@@ -328,7 +323,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         />
       )}
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">
         <div className="flex items-center justify-between border-b border-gray-200">
           <TabsList className="bg-transparent rounded-none justify-start h-auto p-0 border-0">
             {tabConfig.map(({ value, label, icon: Icon }) => (
@@ -381,7 +376,13 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         </div>
 
         {tabConfig.map(({ value, content }) => (
-          <TabsContent key={value} value={value} className="flex-1 h-full min-h-0">
+          <TabsContent
+            key={value}
+            value={value}
+            className={value === 'overview'
+              ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
+              : 'min-h-0 flex-1 overflow-y-auto'}
+          >
             {content}
           </TabsContent>
         ))}
