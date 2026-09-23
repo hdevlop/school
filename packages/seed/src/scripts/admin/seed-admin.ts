@@ -1,12 +1,20 @@
 #!/usr/bin/env bun
 
-import { RoleService, PermissionService, UserService } from 'najm-auth';
 import permissionsData from './data/permissions.json';
 import rolePermissionsData from './data/rolePermissions.json';
 import rolesData from './data/roles.json';
-import { runSeedTask } from '../shared/run-seed';
+import { readAdminSeedCredentials } from './adminSeedPrompt';
 
-runSeedTask('admin seed', async (server) => {
+// Validate before initializing the server or writing any roles or permissions.
+const credentials = await readAdminSeedCredentials();
+if (!credentials) process.exit(0);
+const { email, password } = credentials;
+const [{ RoleService, PermissionService, UserService }, { runSeedTask }] = await Promise.all([
+  import('najm-auth'),
+  import('../shared/run-seed'),
+]);
+
+await runSeedTask('admin seed', async (server) => {
   const roleService = await server.container.resolve(RoleService);
   const permissionService = await server.container.resolve(PermissionService);
   const userService = await server.container.resolve(UserService);
@@ -22,8 +30,6 @@ runSeedTask('admin seed', async (server) => {
   await permissionService.seedDefaultRolePermissions(rolePermissionsData);
   console.log('✅ Role permissions assigned');
 
-  const email = process.env.ADMIN_EMAIL || 'admin@admin.com';
-  const password = process.env.ADMIN_PASSWORD || 'ChangeMe123456';
   const existingAdmin = await userService.findByEmail(email);
 
   if (existingAdmin) {

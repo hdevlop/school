@@ -100,6 +100,17 @@ The template documents the optional values, including `NAJM_SESSION_SECRET`
 and `NAJM_AUTH_INTERNAL_URL` for server-side session recovery. Never commit
 `.env.local`; only the `.example` template is tracked.
 
+To create or reset the production administrator, run `bun run seed:admin` in
+the deployed app container. It prompts for the email and a hidden password with
+confirmation in an interactive terminal. In a non-interactive run, set explicit
+`ADMIN_EMAIL` and `ADMIN_PASSWORD` environment values first. The command uses
+the injected database environment when `.env.local` is absent and updates an
+existing account with that email, including its password and admin role, so do
+not run it just to inspect credentials. Production rejects missing, template,
+or local-default admin passwords. `bun seed` opens the seed command menu in a
+development terminal and starts the administrator prompt in a production
+terminal. Use `bun run gen:demo:ui` for the previous demo generator shortcut.
+
 4. **Set up the database**
 ```bash
 # Generate migrations from schema changes

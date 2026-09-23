@@ -71,8 +71,8 @@ ENV HOSTNAME=0.0.0.0 \
 # - notifications worker (`bun run notifications:worker`): the root scripts,
 #   server and contracts source, and the root tsconfig's decorator settings;
 # - migrate (`bun x drizzle-kit migrate`): drizzle.config.ts, the server schema
-#   source and its migrations, and the contracts it imports.
-# The seed package is operational tooling and is not part of the image.
+#   source and its migrations, and the contracts it imports;
+# - seed:admin: the seed source and the production environment injected at runtime.
 COPY --from=build --chown=bun:bun /app/package.json /app/bun.lock /app/tsconfig.json /app/drizzle.config.ts ./
 COPY --from=build --chown=bun:bun /app/node_modules ./node_modules
 COPY --from=build --chown=bun:bun /app/apps/dashboard/package.json /app/apps/dashboard/next.config.ts ./apps/dashboard/
@@ -81,6 +81,7 @@ COPY --from=build --chown=bun:bun /app/apps/dashboard/public ./apps/dashboard/pu
 COPY --from=build --chown=bun:bun /app/apps/dashboard/node_modules ./apps/dashboard/node_modules
 COPY --from=build --chown=bun:bun /app/packages/contracts ./packages/contracts
 COPY --from=build --chown=bun:bun /app/packages/server ./packages/server
+COPY --from=build --chown=bun:bun /app/packages/seed ./packages/seed
 
 USER bun
 EXPOSE 3000

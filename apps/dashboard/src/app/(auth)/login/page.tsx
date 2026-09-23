@@ -101,8 +101,8 @@ const Login = () => {
   });
 
   const defaultValues = {
-    identifier: 'admin@admin.com',
-    password: 'ChangeMe123456',
+    identifier: '',
+    password: '',
     rememberMe: false
   }
 

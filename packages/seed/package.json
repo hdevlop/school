@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "seed": "bun --env-file=../../apps/dashboard/.env.local src/cli.ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "seed:admin":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-admin.ts",
     "seed:staff":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-backfill.ts",
@@ -17,6 +18,7 @@
     "seed:full":     "bun run seed:admin && bun run gen:demo && bun run reset:demo && bun run seed:demo"
   },
   "dependencies": {
+    "@clack/prompts": "^1.7.0",
     "@sms/contracts": "workspace:*",
     "@sms/server": "workspace:*",
     "bcryptjs": "^3.0.3",
