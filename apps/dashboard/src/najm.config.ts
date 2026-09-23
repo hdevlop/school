@@ -34,6 +34,8 @@ export const schoolApp = defineNajmApp({
   },
   csp: {
     reportPath: '/api/csp-report',
+    // react-international-phone (NajmKit PhoneInput) loads its flags from here.
+    extraImgSrc: ['https://cdnjs.cloudflare.com'],
     extraConnectSrc: ['https://*.google.com'],
     frameSrc: ["'self'", 'https://www.google.com'],
   },

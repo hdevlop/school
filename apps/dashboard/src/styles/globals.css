@@ -176,3 +176,22 @@ body {
 .grades-filter-no-icon span:first-child:has(svg.lucide-filter) {
   display: none;
 }
+
+/* NajmKit's PhoneInput sizes its parts with `height: 100%`, but the library's
+   flex row has no height of its own, so those percentages collapse: the row
+   shrinks to the 24px flag and the input sits at its top, above the flag's
+   centre. Giving the row the field's height lets every part fill and centre.
+   The gap between the arrow and the number is the button's 10px inline
+   padding plus the arrow margin plus the input padding; drop the last two. */
+.react-international-phone-input-container {
+  height: 100%;
+  align-items: center;
+}
+
+.react-international-phone-input-container .react-international-phone-country-selector-button__dropdown-arrow {
+  margin-inline-end: 0;
+}
+
+.react-international-phone-input-container .react-international-phone-input {
+  padding-inline-start: 6px;
+}
