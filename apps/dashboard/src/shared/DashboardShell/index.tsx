@@ -51,10 +51,12 @@ const createSidebarItems = (t: (key: string) => string, role: string): NavItem[]
   };
 
 return [
+    ...(canUseTeacherRoutes
+      ? [{ id: '/', label: t('navigation.dashboard'), icon: FEATURE_ICONS.dashboard, href: '/' }]
+      : []),
     { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' },
     ...(canUseTeacherRoutes
       ? [
-        { id: '/', label: t('navigation.dashboard'), icon: FEATURE_ICONS.dashboard, href: '/' },
         { id: '/students', label: t('navigation.students'), icon: FEATURE_ICONS.students, href: '/students' },
       ]
       : []),
@@ -140,7 +142,7 @@ return [
       ? [
         {
           id: 'access-control',
-          label: tf('navigation.accessControl', 'Access Control'),
+          label: tf('navigation.accessControl', 'AccessControle'),
           icon: FEATURE_ICONS.accessControl,
           children: [
             { id: '/roles', label: t('navigation.roles'), icon: FEATURE_ICONS.roles, href: '/roles' },
