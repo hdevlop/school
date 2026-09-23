@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useMemo } from 'react'
-import { NForm, useDialog } from 'najm-kit';
+import { AvatarFormInput, NForm, useDialog } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
@@ -101,7 +101,6 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
 
   const selectedClassId = useWatch({ name: fieldName('classId') });
   const selectedSectionId = useWatch({ name: fieldName('sectionId') });
-  const gender = useWatch({ name: fieldName('gender') })
   const addressLocation = useWatch({ name: fieldName('addressLocation') })
   const addressPlaceId = useWatch({ name: fieldName('addressPlaceId') })
 
@@ -128,9 +127,6 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
 
   const genderOptions = buildGenderOptions(t)
 
-  const defaultImage = gender === 'M'
-    ? '/images/student_male.png' : '/images/student_female.png'
-
   return (
     <>
 
@@ -141,18 +137,13 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
       />
 
       <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6'>
-        <div className='flex items-start justify-center'>
-          <FormInput
-            name='image'
-            type='image'
-            formLabel={t('students.form.studentImage')}
-            showPreview={true}
-            previewPosition='top'
-            imageSize='lg'
-            allowClear={true}
-            defaultImage={defaultImage}
-          />
-        </div>
+        <AvatarFormInput
+          name='image'
+          formLabel={t('students.form.studentImage')}
+          radius='xl'
+          allowClear
+          previewStyle={{ width: 180, height: 200 }}
+        />
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
           <FormInput

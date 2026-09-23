@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react'
 import { WizardForm, useDialog } from 'najm-kit'
 import type { StepConfig } from 'najm-kit'
-import { FormInput } from 'najm-kit';
+import { AvatarFormInput, FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormHeader } from 'najm-kit';
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, DollarSign, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
@@ -192,16 +192,11 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
 // ============================================
 export const PersonalInfoContent = () => {
    const { t } = useTranslation()
-   const gender = useWatch({ name: 'gender' })
    const status = useWatch({ name: 'status' })
    const genderOptions = buildGenderOptions(t)
    // A migrated record keeps whatever status it arrived with rather than
    // being silently reset to one of ours.
    const statusOptions = buildTeacherStatusOptionsFor(t, status)
-
-   const defaultImage = gender === 'M'
-      ? '/images/teacher_male.png'
-      : '/images/teacher_female.png'
 
    return (
       <>
@@ -211,18 +206,13 @@ export const PersonalInfoContent = () => {
          />
 
          <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4'>
-            <div className='flex items-start justify-center'>
-               <FormInput
-                  name='image'
-                  type='image'
-                  formLabel={t('teachers.form.image')}
-                  showPreview={true}
-                  previewPosition='top'
-                  imageSize='xl'
-                  allowClear={true}
-                  defaultImage={defaultImage}
-               />
-            </div>
+            <AvatarFormInput
+               name='image'
+               formLabel={t('teachers.form.image')}
+               radius='xl'
+               allowClear
+               previewStyle={{ width: 180, height: 200 }}
+            />
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4'>
                <FormInput

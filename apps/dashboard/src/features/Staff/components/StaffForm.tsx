@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react';
 import { z } from 'zod';
 import { Activity, Award, Briefcase, Calendar, Car, CreditCard, FileText, Hash, HeartPulse, IdCard, Loader2, Mail, MapPin, Phone, User, UserRound, Wallet } from 'lucide-react';
-import { FormInput, NFormSectionHeader as FormSectionHeader, WizardForm, useDialog } from 'najm-kit';
+import { AvatarFormInput, FormInput, NFormSectionHeader as FormSectionHeader, WizardForm, useDialog } from 'najm-kit';
 import type { StepConfig } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
@@ -12,7 +12,6 @@ import { useStaffRoles } from '../hooks/useStaffRoles';
 import { useCycles } from '@/features/Cycles/hooks/useCycles';
 import { useZones } from '../hooks/useZones';
 import { useVehicles } from '../hooks/useVehicles';
-import { getStaffAvatar } from '../utils/staffAvatar';
 import { buildFill, isDevFill, pick } from '@/lib/devFill';
 
 type StaffWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
@@ -468,7 +467,6 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
 const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
   const { t, language } = useTranslation();
   const { activeStaffRoles } = useStaffRoles({ activeOnly: true });
-  const gender = form.watch('gender');
   const role = form.watch('role');
 
   useEffect(() => {
@@ -493,24 +491,17 @@ const PersonalStep = ({ form, lockedRole, onRoleChange }) => {
   const statusOptions = STAFF_STATUS_VALUES
     .map((status) => ({ value: status, label: t(`staff.status.${status}`) }));
 
-  const defaultImage = getStaffAvatar(role, gender);
-
   return (
     <>
       <FormSectionHeader icon={UserRound} title={t('staff.form.personalInformation')} />
       <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4">
-        <div className="flex items-start justify-center">
-          <FormInput
-            name="image"
-            type="image"
-            formLabel={t('teachers.form.image')}
-            showPreview={true}
-            previewPosition="top"
-            imageSize="xl"
-            allowClear={true}
-            defaultImage={defaultImage}
-          />
-        </div>
+        <AvatarFormInput
+          name="image"
+          formLabel={t('teachers.form.image')}
+          radius="xl"
+          allowClear
+          previewStyle={{ width: 180, height: 200 }}
+        />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
           <FormInput name="name" type="text" formLabel={t('staff.table.name')} placeholder={t('staff.form.namePlaceholder')} icon={User} required />
           <FormInput name="employeeCode" type="text" formLabel={t('staff.table.employeeCode')} placeholder={t('staff.form.employeeCodePlaceholder')} icon={Hash} />

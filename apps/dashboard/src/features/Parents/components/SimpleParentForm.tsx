@@ -1,9 +1,9 @@
 'use client'
 
-import { NForm } from 'najm-kit'
+import { AvatarFormInput, NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart, Phone, MapPin, PhoneCall, Wallet } from 'lucide-react'
+import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart, Phone, MapPin } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { parentSchema } from '../config/parentSchemas'
@@ -49,13 +49,8 @@ export const ParentFormContent = () => {
    const { t } = useTranslation()
    const prefix = usePrefix();
    const field = (name: string) => (prefix ? `${prefix}.${name}` : name);
-   const gender = useWatch({ name: field('gender') });
    const relationshipType = useWatch({ name: field('relationshipType') });
    const maritalStatus = useWatch({ name: field('maritalStatus') });
-
-   const defaultImage = gender === 'M'
-      ? '/images/parent_male.png'
-      : '/images/parent_female.png'
 
    const genderOptions = buildGenderOptions(t)
    // Editing an imported record must not silently rewrite it, so whatever is
@@ -71,18 +66,13 @@ export const ParentFormContent = () => {
          />
 
          <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4'>
-            <div className='flex items-start justify-center'>
-               <FormInput
-                  name='image'
-                  type='image'
-                  formLabel={t('parents.form.parentImage')}
-                  showPreview={true}
-                  previewPosition='top'
-                  imageSize='lg'
-                  allowClear={true}
-                  defaultImage={defaultImage}
-               />
-            </div>
+            <AvatarFormInput
+               name='image'
+               formLabel={t('parents.form.parentImage')}
+               radius='xl'
+               allowClear
+               previewStyle={{ width: 180, height: 200 }}
+            />
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                <FormInput
@@ -188,21 +178,19 @@ export const ParentFormContent = () => {
 
          />
 
-         <div className='flex '>
+         <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <FormInput
                name='isEmergencyContact'
                type='checkbox'
-               formLabel={t('parents.form.isEmergencyContact')}
+               label={t('parents.form.isEmergencyContact')}
                variant='ghost'
-               icon={PhoneCall}
             />
 
             <FormInput
                name='financialResponsibility'
                type='checkbox'
-               formLabel={t('parents.form.financialResponsibility')}
+               label={t('parents.form.financialResponsibility')}
                variant='ghost'
-               icon={Wallet}
             />
          </div>
 

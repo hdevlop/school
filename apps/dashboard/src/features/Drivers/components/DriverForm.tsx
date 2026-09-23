@@ -1,13 +1,12 @@
 'use client'
 
-import { NForm } from 'najm-kit'
+import { AvatarFormInput, NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, CreditCard, Car, Calendar, CalendarCheck, Award, DollarSign, Phone, MapPin, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
-import { useWatch } from 'react-hook-form'
 import { driverSchema } from '../config/driverSchemas'
 import {
    DRIVER_LICENSE_TYPE_OPTIONS,
@@ -55,12 +54,6 @@ const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
 const DriverFormContent = () => {
 
    const { t } = useTranslation();
-   const gender = useWatch({ name: 'gender' })
-
-   const defaultImage = gender === 'M'
-      ? '/images/driver_male.png'
-      : '/images/driver_female.png'
-
    const genderOptions = buildGenderOptions(t)
 
    const licenseTypeOptions = DRIVER_LICENSE_TYPE_OPTIONS
@@ -77,18 +70,13 @@ const DriverFormContent = () => {
 
          <div className='grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4'>
 
-            <div className='flex items-start justify-center'>
-               <FormInput
-                  name='image'
-                  type='image'
-                  formLabel={t('drivers.form.image')}
-                  showPreview={true}
-                  previewPosition='top'
-                  imageSize='xl'
-                  allowClear={true}
-                  defaultImage={defaultImage}
-               />
-            </div>
+            <AvatarFormInput
+               name='image'
+               formLabel={t('drivers.form.image')}
+               radius='xl'
+               allowClear
+               previewStyle={{ width: 180, height: 200 }}
+            />
 
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                <FormInput

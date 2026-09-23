@@ -33,7 +33,6 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
     description: behaviorReward?.description || '',
     rewardType: behaviorReward?.rewardType || 'verbal_praise',
     points: behaviorReward?.points ?? 0,
-    rewardNote: behaviorReward?.rewardNote || '',
   };
 
   const handleSubmit = async (formData) => {
@@ -42,7 +41,6 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
       ...payload,
       behaviorAt: new Date(`${behaviorDate}T${behaviorTime}`).toISOString(),
       points: Number(formData.points || 0),
-      rewardNote: formData.rewardNote || null,
     });
   };
 
@@ -104,17 +102,6 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
           />
         </div>
 
-        <FormInput
-          name="description"
-          type="textarea"
-          icon={FileText}
-          formLabel={t('behaviorRewards.form.description')}
-          placeholder={t('behaviorRewards.form.descriptionPlaceholder')}
-          required
-        />
-
-        <NFormSectionHeader icon={Award} title={t('behaviorRewards.form.rewardSection')} />
-
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormInput
             name="rewardType"
@@ -135,11 +122,12 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
         </div>
 
         <FormInput
-          name="rewardNote"
+          name="description"
           type="textarea"
           icon={FileText}
-          formLabel={t('behaviorRewards.form.rewardNote')}
-          placeholder={t('behaviorRewards.form.rewardNotePlaceholder')}
+          formLabel={t('behaviorRewards.form.description')}
+          placeholder={t('behaviorRewards.form.descriptionPlaceholder')}
+          required
         />
       </div>
     </NForm>
