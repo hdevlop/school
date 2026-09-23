@@ -1,6 +1,6 @@
 # Archived workspace standardization v1
 
-Archived: 2026-09-22. Historical plan and implementation record, superseded by [the v2 plan](../../WORKSPACE-STRUCTURE-STANDARDIZATION-PLAN.md). The original document follows unchanged apart from line-ending normalization. Its completed checks apply to v1 only; pending Docker and runtime evidence remains pending.
+Archived: 2026-09-22. Historical plan and implementation record, superseded by [the v2 plan](WORKSPACE-STRUCTURE-STANDARDIZATION-PLAN.md). The original document follows unchanged apart from line-ending normalization. Its completed checks apply to v1 only; pending Docker and runtime evidence remains pending.
 
 ---
 

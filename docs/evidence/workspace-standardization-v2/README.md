@@ -1,6 +1,6 @@
 # Workspace standardization v2 — School evidence
 
-Plan: [`WORKSPACE-STRUCTURE-STANDARDIZATION-PLAN.md`](../../../WORKSPACE-STRUCTURE-STANDARDIZATION-PLAN.md).
+Plan: [`WORKSPACE-STRUCTURE-STANDARDIZATION-PLAN.md`](../../plans/WORKSPACE-STRUCTURE-STANDARDIZATION-PLAN.md).
 Recorded 2026-09-22 on the maintainer's Windows workstation. Secret-free: every
 runtime probe used a throwaway PostgreSQL cluster and synthetic values, and no
 value from `apps/dashboard/.env.local` was read or printed.

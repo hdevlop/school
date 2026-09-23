@@ -3,7 +3,7 @@
 Version: 2 — 2026-09-22.
 Status: implemented locally in both repositories on 2026-09-22; source gates, clean-snapshot gates and focused School browser acceptance pass. Docker image, Redis-backed production runtime and Linux signal gates remain blocked on this workstation. Evidence: `docs/evidence/workspace-standardization-v2/` in each repository. Nothing was committed, pushed or deployed.
 Scope: School, sibling Kafil, and the standard to follow for future Bun + Next.js + Najm applications.
-Coordinating file: this document in School's root.
+Coordinating file: this document in School's `docs/plans/` directory.
 
 ## 1. Decision and scope
 
@@ -21,7 +21,7 @@ This supersedes v1's decisions to retain School's compiled server exports, defer
 
 The current request authorizes rewriting this plan. It does not execute the v2 code migration. A later implementation request covers the repository changes described here. Commits, pushes, package publication, deployments, production configuration changes, and operations on existing databases remain separate actions.
 
-Preserve v1's useful environment, test, CI, and Docker improvements. The [archived v1 plan](docs/plans/workspace-standardization-v1.md) retains the original text, implementation evidence, rollback history, and open verification obligations.
+Preserve v1's useful environment, test, CI, and Docker improvements. The [archived v1 plan](workspace-standardization-v1.md) retains the original text, implementation evidence, rollback history, and open verification obligations.
 
 ## 2. Canonical structure
 
