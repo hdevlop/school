@@ -249,6 +249,33 @@ function createProgressLogger(label: string, total: number, stepPercent = 5) {
   };
 }
 
+const TOTAL_SEED_PHASES = 29;
+let completedSeedPhases = 0;
+
+async function seedPhase<T>(label: string, task: () => Promise<T>): Promise<T> {
+  const phase = completedSeedPhases + 1;
+  const startedAt = performance.now();
+  console.log(`  [${phase}/${TOTAL_SEED_PHASES}] ${label}: starting`);
+  const heartbeat = setInterval(() => {
+    const elapsedSeconds = Math.floor((performance.now() - startedAt) / 1000);
+    console.log(`  [${phase}/${TOTAL_SEED_PHASES}] ${label}: still running (${elapsedSeconds}s)`);
+  }, 15_000);
+
+  try {
+    const result = await task();
+    completedSeedPhases++;
+    const percent = Math.round(completedSeedPhases / TOTAL_SEED_PHASES * 100);
+    const elapsedSeconds = ((performance.now() - startedAt) / 1000).toFixed(1);
+    console.log(`  [${completedSeedPhases}/${TOTAL_SEED_PHASES}] ${percent}% complete: ${label} (${elapsedSeconds}s)`);
+    return result;
+  } catch (error) {
+    console.error(`  [${phase}/${TOTAL_SEED_PHASES}] ${label}: failed`);
+    throw error;
+  } finally {
+    clearInterval(heartbeat);
+  }
+}
+
 async function seedPayments(feeService: FeeService, paymentService: PaymentService) {
   // getAll() returns the student-grouped overview — we only need the student IDs
   const studentRows = await feeService.getAll();
@@ -401,14 +428,39 @@ async function seedPayments(feeService: FeeService, paymentService: PaymentServi
   return { paymentCount, skippedCount, latePaymentCount, latePaymentTotal };
 }
 
-async function createSequential<T>(items: T[], create: (item: T) => Promise<any>) {
+async function createSequential<T>(label: string, items: T[], create: (item: T) => Promise<any>) {
   const created = [];
-  for (const item of items) {
+  const logProgress = createProgressLogger(label, items.length, 10);
+  logProgress(0, 'created 0, skipped 0');
+  for (const [index, item] of items.entries()) {
     try {
       created.push(await create(item));
     } catch (error: any) {
       console.warn(`  ⚠️  Seed item skipped: ${error?.message || error}`);
+    } finally {
+      logProgress(index + 1, `created ${created.length}, skipped ${index + 1 - created.length}`);
     }
+  }
+  return created;
+}
+
+async function createRequiredSequential<T extends { studentId: string }>(items: T[], create: (item: T) => Promise<any>) {
+  const created = [];
+  const failures: unknown[] = [];
+  const logProgress = createProgressLogger('Student routes', items.length, 10);
+  logProgress(0, 'created 0, failed 0');
+  for (const [index, item] of items.entries()) {
+    try {
+      created.push(await create(item));
+    } catch (error) {
+      failures.push(error);
+      console.error(`  Student route failed for ${item.studentId}: ${error instanceof Error ? error.message : String(error)}`);
+    } finally {
+      logProgress(index + 1, `created ${created.length}, failed ${failures.length}`);
+    }
+  }
+  if (failures.length > 0) {
+    throw new AggregateError(failures, `${failures.length}/${items.length} student routes failed to seed`);
   }
   return created;
 }
@@ -422,45 +474,51 @@ async function seedConductRecords(
   let disciplineCount = 0;
   let resolvedCount = 0;
   let rewardCount = 0;
+  const logDisciplineProgress = createProgressLogger('Discipline incidents', disciplineIncidentsData.length, 10);
+  logDisciplineProgress(0, 'created 0');
 
-  for (const item of disciplineIncidentsData) {
+  for (const [index, item] of disciplineIncidentsData.entries()) {
     const teacher = teachersById.get(item.teacherId) as any;
-    if (!teacher?.userId) continue;
-
-    const { teacherId: _teacherId, resolution, ...input } = item;
-    try {
-      const incident = await disciplineService.create(input as any, {
-        id: teacher.userId,
-        role: 'teacher',
-      });
-      disciplineCount++;
-
-      if (resolution && incident?.id) {
-        await disciplineService.resolve(incident.id, resolution as any, {
+    if (teacher?.userId) {
+      const { teacherId: _teacherId, resolution, ...input } = item;
+      try {
+        const incident = await disciplineService.create(input as any, {
           id: teacher.userId,
           role: 'teacher',
         });
-        resolvedCount++;
+        disciplineCount++;
+
+        if (resolution && incident?.id) {
+          await disciplineService.resolve(incident.id, resolution as any, {
+            id: teacher.userId,
+            role: 'teacher',
+          });
+          resolvedCount++;
+        }
+      } catch (error: any) {
+        console.warn(`  ⚠️  Discipline seed skipped for student ${item.studentId}: ${error?.message || error}`);
       }
-    } catch (error: any) {
-      console.warn(`  ⚠️  Discipline seed skipped for student ${item.studentId}: ${error?.message || error}`);
     }
+    logDisciplineProgress(index + 1, `created ${disciplineCount}, resolved ${resolvedCount}`);
   }
 
-  for (const item of behaviorRewardsData) {
+  const logRewardProgress = createProgressLogger('Behavior rewards', behaviorRewardsData.length, 10);
+  logRewardProgress(0, 'created 0');
+  for (const [index, item] of behaviorRewardsData.entries()) {
     const teacher = teachersById.get(item.teacherId) as any;
-    if (!teacher?.userId) continue;
-
-    const { teacherId: _teacherId, ...input } = item;
-    try {
-      await behaviorRewardService.create(input as any, {
-        id: teacher.userId,
-        role: 'teacher',
-      });
-      rewardCount++;
-    } catch (error: any) {
-      console.warn(`  ⚠️  Behavior reward seed skipped for student ${item.studentId}: ${error?.message || error}`);
+    if (teacher?.userId) {
+      const { teacherId: _teacherId, ...input } = item;
+      try {
+        await behaviorRewardService.create(input as any, {
+          id: teacher.userId,
+          role: 'teacher',
+        });
+        rewardCount++;
+      } catch (error: any) {
+        console.warn(`  ⚠️  Behavior reward seed skipped for student ${item.studentId}: ${error?.message || error}`);
+      }
     }
+    logRewardProgress(index + 1, `created ${rewardCount}`);
   }
 
   return { disciplineCount, resolvedCount, rewardCount };
@@ -571,97 +629,102 @@ runSeedTask('demo seed', async (server) => {
 
   console.log('🌱 Starting school demo data seeding...');
 
-  await roleService.seedDefaultRoles(rolesData);
+  await seedPhase('Roles', () => roleService.seedDefaultRoles(rolesData));
   console.log('✅ Roles ready');
 
-  const staffRolesCount = await seedStaffRoles();
+  const staffRolesCount = await seedPhase('Staff roles', () => seedStaffRoles());
   console.log(`✅ Staff roles ready (${staffRolesCount} roles)`);
 
-  await settingsService.create(schoolSeedData.settingsData);
+  await seedPhase('Settings', () => settingsService.create(schoolSeedData.settingsData));
   console.log('✅ Settings seeded');
 
-  await subjectService.seedDemoSubjects(schoolSeedData.subjectsData);
+  await seedPhase('Subjects', () => subjectService.seedDemoSubjects(schoolSeedData.subjectsData));
   console.log('✅ Subjects seeded');
 
-  await classService.seedDemoClasses(selectedClassesData);
+  await seedPhase('Classes', () => classService.seedDemoClasses(selectedClassesData));
   console.log(`✅ Classes seeded (${selectedClassesData.length} records)`);
 
-  await sectionService.seedDemoSections(selectedSectionsData);
+  await seedPhase('Sections', () => sectionService.seedDemoSections(selectedSectionsData));
   console.log(`✅ Sections seeded (${selectedSectionsData.length} records)`);
 
-  await feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData);
+  await seedPhase('Fee types', () => feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData));
   console.log('✅ Fee types seeded');
 
-  await parentService.createBulk(parentsData);
+  await seedPhase('Parents', () => parentService.createBulk(parentsData));
   console.log('✅ Parents seeded');
 
-  await driverService.createBulk(driversData);
+  await seedPhase('Drivers', () => driverService.createBulk(driversData));
   console.log('✅ Drivers seeded');
 
-  await vehicleService.createBulk(normalizedVehiclesData);
+  await seedPhase('Vehicles', () => vehicleService.createBulk(normalizedVehiclesData));
   console.log('✅ Vehicles seeded');
 
-  const createdAssignments = await createSequential(
-    vehicleAssignmentsData,
+  const createdAssignments = await seedPhase('Vehicle assignments', () => createSequential(
+    'Vehicle assignments', vehicleAssignmentsData,
     (item: any) => vehicleAssignmentService.create(item),
-  );
+  ));
   console.log(`✅ Vehicle assignments seeded (${createdAssignments.length} records)`);
 
-  const createdTeachers = await teacherService.createBulk(teachersData);
+  const createdTeachers = await seedPhase('Teachers', () => teacherService.createBulk(teachersData));
   console.log(`✅ Teachers seeded (${createdTeachers.length} records)`);
 
-  const createdStaff = await createSequential(staffData, (item) => staffService.create(item));
+  const createdStaff = await seedPhase('Extra staff', () => createSequential(
+    'Extra staff', staffData, (item) => staffService.create(item),
+  ));
   console.log(`✅ Extra staff seeded (${createdStaff.length} records)`);
 
-  const createdStudents = await studentService.createBulk(studentsData);
+  const createdStudents = await seedPhase('Students', () => studentService.createBulk(studentsData));
   console.log(`✅ Students seeded (${createdStudents.length} records)`);
 
-  const availableTeachers = await teacherService.getAll();
-  const conductResult = await seedConductRecords(
-    disciplineService,
-    behaviorRewardService,
-    availableTeachers,
-  );
+  const conductResult = await seedPhase('Student conduct', async () => {
+    const availableTeachers = await teacherService.getAll();
+    return seedConductRecords(disciplineService, behaviorRewardService, availableTeachers);
+  });
   console.log(
     `✅ Student conduct seeded (${conductResult.disciplineCount} discipline incidents, ${conductResult.resolvedCount} resolved, ${conductResult.rewardCount} behavior rewards)`,
   );
 
-  const createdStudentRoutes = await createSequential(
+  const createdStudentRoutes = await seedPhase('Student routes', () => createRequiredSequential(
     studentRoutesData,
     (item: any) => studentRouteService.assign(item),
-  );
+  ));
   console.log(`✅ Student routes seeded (${createdStudentRoutes.length} records)`);
 
-  const createdFees = await seedUniqueFees(feeService, uniqueFeesData);
+  const createdFees = await seedPhase('Fees + installments', () => seedUniqueFees(feeService, uniqueFeesData));
   console.log(`✅ Fees + installments seeded (${createdFees.length} records)`);
 
   console.log('💳 Recording payments...');
-  const { paymentCount, skippedCount, latePaymentCount, latePaymentTotal } = await seedPayments(feeService, paymentService);
+  const { paymentCount, skippedCount, latePaymentCount, latePaymentTotal } = await seedPhase(
+    'Payments', () => seedPayments(feeService, paymentService),
+  );
   console.log(
     `✅ Payments seeded (${paymentCount} records, ${skippedCount} students left unpaid, ${latePaymentCount} late summer payments totaling ${latePaymentTotal} MAD)`,
   );
 
   console.log('💸 Seeding expenses...');
-  const createdExpenses = await expenseService.seedDemoExpenses(expensesData);
+  const createdExpenses = await seedPhase('Expenses', () => expenseService.seedDemoExpenses(expensesData));
   console.log(`✅ Expenses seeded (${createdExpenses.length} records)`);
 
   console.log('🧾 Seeding payroll...');
-  const payrollResult = await seedPayroll(payrollService, payrollPeriods);
+  const payrollResult = await seedPhase('Payroll', () => seedPayroll(payrollService, payrollPeriods));
   console.log(`✅ Payroll seeded (${payrollResult.createdCount} payslips, ${payrollResult.paidCount} paid)`);
 
-  const createdAnnouncements = await announcementService.createBulk(announcementsData);
+  const createdAnnouncements = await seedPhase('Announcements', () => announcementService.createBulk(announcementsData));
   console.log(`✅ Announcements seeded (${createdAnnouncements.length} records)`);
 
-  const createdEvents = await createSequential(eventsData, (item) => eventService.create(item));
+  const createdEvents = await seedPhase('Events', () => createSequential(
+    'Events', eventsData, (item) => eventService.create(item),
+  ));
   console.log(`✅ Events seeded (${createdEvents.length} records)`);
 
-  const createdAssessments = await createSequential(
-    assessmentsData,
-    (item) => assessmentService.create(item),
-  );
+  const createdAssessments = await seedPhase('Assessments', () => createSequential(
+    'Assessments', assessmentsData, (item) => assessmentService.create(item),
+  ));
   console.log(`✅ Assessments seeded (${createdAssessments.length} records)`);
 
-  const createdExams = await createSequential(examsData, (item) => examService.create(item));
+  const createdExams = await seedPhase('Exams', () => createSequential(
+    'Exams', examsData, (item) => examService.create(item),
+  ));
   console.log(`✅ Exams seeded (${createdExams.length} records)`);
 
   const assessmentContexts = assessmentsData
@@ -679,31 +742,35 @@ runSeedTask('demo seed', async (server) => {
     }))
     .filter((exam) => exam.id);
   console.log('🧮 Seeding grades...');
-  const { grades: gradesData } = gradesPack(
-    createdStudents.length ? createdStudents : studentsData,
-    assessmentContexts,
-    examContexts,
-  );
-  const assessmentGradeCount = gradesData.filter((grade: any) => grade.assessmentId).length;
-  const examGradeCount = gradesData.filter((grade: any) => grade.examId).length;
-  console.log(
-    `  Grade generation: prepared ${gradesData.length} records ` +
-    `(${assessmentGradeCount} assessment, ${examGradeCount} exam)`,
-  );
-  const createdGrades = await gradeService.seedDemoGrades(gradesData);
+  const createdGrades = await seedPhase('Grades', async () => {
+    const { grades: gradesData } = gradesPack(
+      createdStudents.length ? createdStudents : studentsData,
+      assessmentContexts,
+      examContexts,
+    );
+    const assessmentGradeCount = gradesData.filter((grade: any) => grade.assessmentId).length;
+    const examGradeCount = gradesData.filter((grade: any) => grade.examId).length;
+    console.log(
+      `  Grade generation: prepared ${gradesData.length} records ` +
+      `(${assessmentGradeCount} assessment, ${examGradeCount} exam)`,
+    );
+    return gradeService.seedDemoGrades(gradesData);
+  });
   console.log(`✅ Grades seeded (${createdGrades.length} records)`);
 
   console.log('📋 Seeding attendance...');
-  const { studentCount, staffCount } = await seedAttendance(attendanceService, studentService, teacherService, staffService);
+  const { studentCount, staffCount } = await seedPhase('Attendance', () =>
+    seedAttendance(attendanceService, studentService, teacherService, staffService),
+  );
   console.log(`✅ Attendance seeded (${studentCount} student records, ${staffCount} staff records)`);
 
-  const createdAlerts = await alertService.seedDemoAlerts(alertsData);
+  const createdAlerts = await seedPhase('Alerts', () => alertService.seedDemoAlerts(alertsData));
   console.log(`✅ Alerts seeded (${createdAlerts.length} records)`);
 
-  const createdRefuels = await refuelService.seedDemoRefuels(refuelsData);
+  const createdRefuels = await seedPhase('Refuels', () => refuelService.seedDemoRefuels(refuelsData));
   console.log(`✅ Refuels seeded (${createdRefuels.length} records)`);
 
-  const createdMaintenance = await maintenanceService.seedDemoMaintenances(maintenanceData);
+  const createdMaintenance = await seedPhase('Maintenance', () => maintenanceService.seedDemoMaintenances(maintenanceData));
   console.log(`✅ Maintenance seeded (${createdMaintenance.length} records)`);
 
   console.log('\n✨ Demo seed completed successfully!');

@@ -16,6 +16,7 @@ import {
    subjectsData,
    vehiclesData,
 } from '@sms/contracts/fixtures';
+import settingsData from '../school/data/settings.json';
 
 // ============================================
 // ⚙️ CONFIGURATION
@@ -34,7 +35,7 @@ function getCliArg(long: string, short?: string): string | undefined {
 }
 
 export const DEFAULT_DEMO_COUNTS = {
-   students: 500,
+   students: 100,
    teachers: 50,
    announcements: 12,
    events: 12,
@@ -642,16 +643,39 @@ export function vehicleAssignmentsPack(vehicles: any[], drivers: any[], count = 
 }
 
 export function studentRoutesPack(students: any[], vehicles: any[], count = featureCounts.studentRoutes) {
+   const months = [
+      'january', 'february', 'march', 'april', 'may', 'june',
+      'july', 'august', 'september', 'october', 'november', 'december',
+   ];
+   const startMonth = months.indexOf(settingsData.startMonth);
+   const endMonth = months.indexOf(settingsData.endMonth);
+   const startYear = Number(settingsData.currentAcademicYear.split('-')[0]);
+   const endYear = endMonth < startMonth ? startYear + 1 : startYear;
+   const yearStart = dateOnly(new Date(Date.UTC(startYear, startMonth, 1)));
+   const yearEnd = dateOnly(new Date(Date.UTC(endYear, endMonth + 1, 0)));
+   const eligibleStudents = students.filter((student: any) =>
+      student.status === 'active' && student.enrollmentDate && student.enrollmentDate <= yearEnd,
+   );
+   const activeVehicles = vehicles.filter((vehicle: any) => vehicle.status === 'active');
+
+   if (count > 0 && eligibleStudents.length > 0 && activeVehicles.length === 0) {
+      throw new Error('Cannot generate student routes without an active vehicle');
+   }
+
    return {
-      studentRoutes: sample(students, count).map((student: any, i) => ({
-         studentId: student.id,
-         vehicleId: vehicles[i % vehicles.length]?.id,
-         assignmentDate: dateOnly(offsetDate(-60 + i)),
-         status: 'active',
-         pickupLocation: student.address,
-         dropoffLocation: 'School main gate',
-         notes: 'Generated student transport route.',
-      })).filter((route: any) => route.studentId && route.vehicleId),
+      studentRoutes: sample(eligibleStudents, count).map((student: any, i) => {
+         const scheduledDate = dateOnly(new Date(Date.UTC(startYear, startMonth, 1 + i * 7)));
+         return {
+            studentId: student.id,
+            vehicleId: activeVehicles[i % activeVehicles.length].id,
+            assignmentDate: [yearStart, student.enrollmentDate, scheduledDate > yearEnd ? yearEnd : scheduledDate]
+               .sort().at(-1)!,
+            status: 'active',
+            pickupLocation: student.address,
+            dropoffLocation: 'School main gate',
+            notes: 'Generated student transport route.',
+         };
+      }),
    };
 }
 

@@ -58,6 +58,15 @@ const seedStorageConfig = () =>
 type SeedClass = new (...args: any[]) => { onInit(): Promise<void> };
 type SeedTask = (server: Server) => Promise<void>;
 
+function seedHeartbeat(label: string) {
+  const startedAt = performance.now();
+  const interval = setInterval(() => {
+    const elapsedSeconds = Math.floor((performance.now() - startedAt) / 1000);
+    console.log(`  ${label}: still running (${elapsedSeconds}s elapsed)`);
+  }, 30_000);
+  return () => clearInterval(interval);
+}
+
 function createSeedServer(modulesToLoad: Record<string, unknown>) {
   return new Server()
     .use(seedCorsConfig())
@@ -79,6 +88,7 @@ export async function runSeed(label: string, SeedCls: SeedClass) {
   process.env.SEED_MODE = 'true';
 
   let exitCode = 0;
+  const stopHeartbeat = seedHeartbeat(label);
 
   try {
     const appModules = await import('@sms/server/modules');
@@ -89,6 +99,8 @@ export async function runSeed(label: string, SeedCls: SeedClass) {
     exitCode = 1;
     const message = error instanceof Error ? error.message : String(error);
     console.error('\n❌ Seed failed:', message);
+  } finally {
+    stopHeartbeat();
   }
 
   process.exit(exitCode);
@@ -100,6 +112,7 @@ export async function runSeedTask(label: string, task: SeedTask) {
   process.env.SEED_MODE = 'true';
 
   let exitCode = 0;
+  const stopHeartbeat = seedHeartbeat(label);
 
   try {
     const server = createSeedServer(seedModules);
@@ -110,6 +123,8 @@ export async function runSeedTask(label: string, task: SeedTask) {
     exitCode = 1;
     const message = error instanceof Error ? error.message : String(error);
     console.error('\n❌ Seed failed:', message);
+  } finally {
+    stopHeartbeat();
   }
 
   process.exit(exitCode);
