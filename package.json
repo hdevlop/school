@@ -19,7 +19,7 @@
     "check": "bun run lint && bun run typecheck && bun run i18n:check && bun run test && bun run build && bun run db:check",
     "lint": "eslint apps/dashboard/src packages/contracts/src packages/contracts/tests packages/server/src packages/server/tests packages/seed/src scripts",
     "test:access-reset": "bun test packages/server/tests/accessReset/AccessResetService.test.ts packages/server/tests/accessReset/AccessResetValidator.test.ts apps/dashboard/src/features/Users/config/accessResetModes.test.ts",
-    "test:routines": "bun test packages/server/tests/classRoutines/ClassRoutineDto.test.ts packages/server/tests/classRoutines/ClassRoutineService.test.ts",
+    "test:routines": "bun test packages/server/tests/classRoutines/ClassRoutineDto.test.ts packages/server/tests/classRoutines/ClassRoutineService.test.ts packages/server/tests/classRoutines/SeedResetOrder.test.ts",
     "db:generate": "bun --env-file=apps/dashboard/.env.local drizzle-kit generate",
     "db:migrate": "bun --env-file=apps/dashboard/.env.local drizzle-kit migrate",
     "db:push": "bun --env-file=apps/dashboard/.env.local drizzle-kit push",

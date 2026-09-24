@@ -34,4 +34,12 @@ The configured database host was confirmed to be loopback. Before migration, its
 - Browser review of the reference layouts, Arabic and French, long labels, narrow screens, keyboard and touch, 200% zoom, both themes, and break duty editing.
 - Disposable PostgreSQL migration and concurrency checks against representative data.
 
-The local app was not listening on `127.0.0.1:3000` during this check. No connected API or browser result is claimed. No other database was migrated and no commit, push, CI, or deployment was performed.
+The local app was not listening on `127.0.0.1:3000` during this check. No connected API or browser result is claimed from the local check.
+
+## Production schema incident, 2026-09-24
+
+The user reported a failed `routine_entries` query on `https://myscolai.com/class-routines`. Production served revision `2e9b59bf465f0feb8a68b3af8e5f923e8e97c396`, and its GitHub deployment workflow had succeeded. Read-only inspection of the production Postgres container showed 47 applied migrations through 0046, no `content_groups` or `version` columns, and zero Routine entries. The deployed app image contained migration 0047. The deployment workflow had no migration step; its health endpoint checked connectivity but not schema currency.
+
+`docker exec school-school-lghkg3-app-1 bun x drizzle-kit migrate` applied 0047 against the production app's configured database. A direct production catalog query then showed 48 migrations with 0047 latest, both non-null columns with their expected defaults, both new check constraints, and still zero Routine entries. `https://myscolai.com/api/health/status` returned HTTP 200 with database and cache ready. An anonymous request to `/class-routines` redirected to login, so authenticated timetable behavior remains unverified.
+
+`compose.production.yml` now makes the app and notifications worker depend on successful completion of its existing `migrate` service. Docker Compose 2.40.3 accepted the revised configuration and resolved both dependencies to `service_completed_successfully`. This prevention change is local and has not been committed, pushed, or deployed.

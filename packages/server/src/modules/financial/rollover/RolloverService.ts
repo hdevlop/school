@@ -53,6 +53,11 @@ export class RolloverService {
     private auditService: FinancialAuditService,
   ) { }
 
+  @Transaction()
+  async clearForSeedReset() {
+    await this.rolloverRepository.clearForSeedReset();
+  }
+
   private async resolveContext() {
     const settings = await this.settingsRepository.getAdminSettings();
     return {

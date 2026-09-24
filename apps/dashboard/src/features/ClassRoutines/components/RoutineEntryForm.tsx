@@ -2,7 +2,7 @@
 
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { ArrowDown, ArrowUp, BookOpen, DoorOpen, Plus, StickyNote, Trash2 } from 'lucide-react';
-import { FormInput, NButton, NForm, useDialog, useNForm } from 'najm-kit';
+import { FormInput, NButton, NForm, useNForm } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { z } from 'zod';
 import { MAX_ROUTINE_CONTENT_GROUPS, MAX_ROUTINE_CONTENT_LABEL_LENGTH, type RoutineContentGroup } from '@sms/contracts/routines';
@@ -16,9 +16,10 @@ export default function RoutineEntryForm({
   period,
   entry,
   defaultRoom,
+  onSubmit,
   onDelete,
+  busy = false,
 }: RoutineEntryFormProps) {
-  const { pop } = useDialog();
   const { t } = useTranslation();
   const label = z.string().trim().min(1, t('classRoutines.ui.validation.contentLabelRequired'))
     .max(MAX_ROUTINE_CONTENT_LABEL_LENGTH, t('classRoutines.ui.validation.contentLabelMax'));
@@ -68,7 +69,7 @@ export default function RoutineEntryForm({
       schema={schema}
       form={form}
       variant="compact"
-      onSubmit={(data) => pop({ ...data, expectedVersion: entry?.version })}
+      onSubmit={onSubmit}
     >
       <div className="space-y-4">
         <div className="rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
@@ -139,7 +140,7 @@ export default function RoutineEntryForm({
 
         {entry && onDelete ? (
           <div className="border-t pt-3">
-            <NButton type="button" variant="destructive" onClick={async () => { await onDelete(); pop(null); }}>
+            <NButton type="button" variant="destructive" onClick={onDelete} disabled={busy}>
               {t('classRoutines.ui.actions.removeLesson')}
             </NButton>
           </div>

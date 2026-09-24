@@ -7,6 +7,11 @@ import { DB } from '../../../database/db';
 export class RolloverRepository {
   declare db: DB;
 
+  async clearForSeedReset() {
+    await this.db.delete(rolloverRunItems);
+    await this.db.delete(rolloverRuns);
+  }
+
   async getActiveStudents(classIds?: string[]) {
     const conditions = [eq(students.status, 'active')];
     if (classIds?.length) conditions.push(inArray(students.classId, classIds));

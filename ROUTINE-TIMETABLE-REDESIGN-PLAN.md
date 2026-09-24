@@ -1,6 +1,6 @@
 # Routine timetable redesign and flexible nested-subject plan
 
-Status: **SOURCE IMPLEMENTED — LOCAL MIGRATION APPLIED; CONNECTED ACCEPTANCE OPEN**
+Status: **SOURCE DEPLOYED — PRODUCTION MIGRATION APPLIED; CONNECTED ACCEPTANCE OPEN**
 
 Source review and requirements update: **2026-09-24**
 
@@ -22,7 +22,7 @@ The requested timetable supports:
 - A fixed nested subject alongside a pair of alternatives: **A + (B OR C)**.
 - A recurring weekly template in which the teacher manages time allocation and rotation without entering a weekly calendar or exact timings for each nested subject.
 
-The plan remains in the repository root. Its additive migration was applied to the loopback development database; connected app acceptance and any other environment remain separate steps. The supplied screenshots are conversation references, and their relevant behavior is captured below. `CHATBOT-LATENCY-PLAN.md` is a separate plan.
+The plan remains in the repository root. Its additive migration was applied to the loopback development and production databases; authenticated app acceptance remains a separate step. The supplied screenshots are conversation references, and their relevant behavior is captured below. `CHATBOT-LATENCY-PLAN.md` is a separate plan.
 
 ## 2. Teaching meaning and reference examples
 
@@ -432,14 +432,14 @@ Implementation is complete when the user can reproduce the references with untim
 | --- | --- |
 | User's timing/rotation clarification | Incorporated: no nested times; teacher manages time and weekly alternatives |
 | Plan revision | Complete |
-| Source implementation | Implemented locally; additive migration prepared |
+| Source implementation | Committed and deployed in revision `2e9b59b`; Compose migration startup guard prepared locally |
 | Static checks/unit tests for implementation | Passed locally: lint, typecheck, i18n, root tests, build, db:check |
 | Disposable PostgreSQL migration/persistence/version proof | Not run |
 | Internal API acceptance | Not run |
 | Browser/RTL/mobile acceptance | Not run |
 | Loopback development database migration | Applied 0047; no Routine entries existed to exercise preservation |
-| Other environment migration | Not performed |
-| Commit/push/CI/deployment | Not requested or performed |
+| Production database migration | Applied 0047 on 2026-09-24; no Routine entries existed to exercise preservation |
+| Commit/push/CI/deployment | Routine revision `2e9b59b` published and served; the new Compose startup guard is local only |
 
 Report future completion against these boundaries. The revised plan replaces the earlier timed-segment design in full.
 
@@ -449,4 +449,5 @@ Report future completion against these boundaries. The revised plan replaces the
 - `bun run typecheck`, `bun run lint`, `bun run i18n:check`, `bun run db:check`, and the final `bun run build`: passed.
 - Migration `0047_pink_rafael_vega.sql` adds two Routine columns and two checks only. Snapshot comparison with `0046_snapshot.json` confirms `public.routine_entries` is the only changed table. An unrelated generated roles index was excluded.
 - `bun run db:migrate` applied migration 0047 to the loopback development database. The migration journal now has 48 records, with 0047 latest; both new columns are non-null with their expected defaults. This database had zero Routine entries, so existing-entry preservation remains unproven.
-- Internal API, browser, and disposable PostgreSQL acceptance remain open. No other database migration, commit, push, or deployment was performed. See `docs/tests/routine-timetable.md`.
+- Subsequent production evidence: revision `2e9b59b` was serving while production still had 47 migrations and lacked both columns. Migration 0047 was applied from that image; production now has 48 migrations, both columns and checks, and a ready health endpoint. The authenticated timetable flow remains unverified. The Compose startup guard is local and unpublished. See `docs/tests/routine-timetable.md`.
+- A later production `bun seed` reset stopped at section deletion because one Routine schedule still referenced a section. Earlier reset steps had already succeeded. Routine and rollover cleanup were added locally before their referenced records are deleted; the reset repair is not deployed or rerun. See `docs/tests/seed-reset-routine.md`.

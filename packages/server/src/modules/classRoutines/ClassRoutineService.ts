@@ -33,6 +33,11 @@ export class ClassRoutineService {
     private validator: ClassRoutineValidator,
   ) {}
 
+  @Transaction()
+  async clearForSeedReset() {
+    await this.repository.clearForSeedReset();
+  }
+
   async getPeriods(includeInactive = false) {
     return this.repository.getPeriods(includeInactive);
   }

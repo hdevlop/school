@@ -16,6 +16,10 @@ export { SectionService } from './sections/SectionService';
 export { SectionRepository } from './sections/SectionRepository';
 export { SectionValidator } from './sections/SectionValidator';
 
+export { ClassRoutineService } from './classRoutines/ClassRoutineService';
+export { ClassRoutineRepository } from './classRoutines/ClassRoutineRepository';
+export { ClassRoutineValidator } from './classRoutines/ClassRoutineValidator';
+
 export { FeeTypeService } from './financial/feeTypes/FeeTypeService';
 export { FeeTypeRepository } from './financial/feeTypes/FeeTypeRepository';
 export { FeeTypeValidator } from './financial/feeTypes/FeeTypeValidator';
@@ -46,6 +50,9 @@ export { PayrollValidator } from './financial/payroll/PayrollValidator';
 
 export { FinancialAuditService } from './financial/auditLog/FinancialAuditService';
 export { AuditLogRepository } from './financial/auditLog/AuditLogRepository';
+
+export { RolloverService } from './financial/rollover/RolloverService';
+export { RolloverRepository } from './financial/rollover/RolloverRepository';
 
 export { CreditService } from './financial/credits/CreditService';
 export { CreditRepository } from './financial/credits/CreditRepository';
@@ -151,6 +158,10 @@ import { SectionService } from './sections/SectionService';
 import { SectionRepository } from './sections/SectionRepository';
 import { SectionValidator } from './sections/SectionValidator';
 
+import { ClassRoutineService } from './classRoutines/ClassRoutineService';
+import { ClassRoutineRepository } from './classRoutines/ClassRoutineRepository';
+import { ClassRoutineValidator } from './classRoutines/ClassRoutineValidator';
+
 import { FeeTypeService } from './financial/feeTypes/FeeTypeService';
 import { FeeTypeRepository } from './financial/feeTypes/FeeTypeRepository';
 import { FeeTypeValidator } from './financial/feeTypes/FeeTypeValidator';
@@ -181,6 +192,9 @@ import { PayrollValidator } from './financial/payroll/PayrollValidator';
 
 import { FinancialAuditService } from './financial/auditLog/FinancialAuditService';
 import { AuditLogRepository } from './financial/auditLog/AuditLogRepository';
+
+import { RolloverService } from './financial/rollover/RolloverService';
+import { RolloverRepository } from './financial/rollover/RolloverRepository';
 
 import { CreditService } from './financial/credits/CreditService';
 import { CreditRepository } from './financial/credits/CreditRepository';
@@ -281,6 +295,9 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, SectionValidator, [SectionRepository, ClassRepository]);
   registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator]);
 
+  registerSeedDeps(seedContainer, ClassRoutineValidator, [ClassRoutineRepository]);
+  registerSeedDeps(seedContainer, ClassRoutineService, [ClassRoutineRepository, ClassRoutineValidator]);
+
   registerSeedDeps(seedContainer, FeeTypeValidator, [FeeTypeRepository]);
   registerSeedDeps(seedContainer, FeeTypeService, [FeeTypeRepository, FeeTypeValidator]);
 
@@ -328,6 +345,8 @@ export function configureSeedContainer(seedContainer: Container) {
   ]);
 
   registerSeedDeps(seedContainer, FinancialAuditService, [AuditLogRepository]);
+
+  registerSeedDeps(seedContainer, RolloverService, [RolloverRepository, FeeService, SettingsRepository, FinancialAuditService]);
 
   registerSeedDeps(seedContainer, FeeValidator, [FeeRepository, StudentValidator, FeeTypeValidator, SettingsRepository]);
   registerSeedDeps(seedContainer, FeeService, [FeeRepository, FeeValidator, InstallmentService, SettingsRepository, ClassRepository, StudentRepository, FinancialAuditService]);

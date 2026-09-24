@@ -23,9 +23,9 @@ export default function RoutineGrid({ days, periods, entries, duties = [], defau
               {t('classRoutines.ui.fields.teachingDays')}
             </th>
             {periods.map((period) => (
-              <th key={period.id} scope="col" className={`border-e border-white/25 px-2 py-2 text-center text-[11px] font-semibold last:border-e-0 ${period.isBreak ? 'w-32 min-w-32' : 'w-48 min-w-48'}`}>
-                <span className="block">{routinePeriodLabel(period.name, t)}</span>
-                <span className="block font-normal tabular-nums opacity-85" dir="ltr">{period.startTime.slice(0, 5)}–{period.endTime.slice(0, 5)}</span>
+              <th key={period.id} scope="col" className={`border-e border-white/25 px-2 py-2 text-center font-semibold last:border-e-0 ${period.isBreak ? 'w-32 min-w-32' : 'w-48 min-w-48'}`}>
+                {period.isBreak && <span className="block text-xs">{routinePeriodLabel(period.name, t)}</span>}
+                <span className="block text-base font-medium tabular-nums md:text-lg" dir="ltr">{period.startTime.slice(0, 5)}–{period.endTime.slice(0, 5)}</span>
               </th>
             ))}
           </tr>
@@ -48,7 +48,7 @@ export default function RoutineGrid({ days, periods, entries, duties = [], defau
                   return (
                     <td key={period.id} className="h-24 border-e border-slate-300 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,rgba(148,163,184,0.10)_5px,rgba(148,163,184,0.10)_10px)] text-center text-slate-600 last:border-e-0 dark:border-border dark:text-muted-foreground">
                       {editable && onDutyClick ? (
-                        <button type="button" onClick={() => onDutyClick(day, period, duty)} className="flex h-full min-h-24 w-full items-center justify-center p-1.5 hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${duty?.staffName || t('classRoutines.ui.actions.addSupervisor')}`}>
+                        <button type="button" onClick={() => onDutyClick(day, period, duty)} className="flex h-full min-h-24 w-full cursor-pointer items-center justify-center p-1.5 hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${duty?.staffName || t('classRoutines.ui.actions.addSupervisor')}`}>
                           {content}
                         </button>
                       ) : <div className="flex min-h-24 items-center justify-center p-1.5">{content}</div>}
@@ -66,7 +66,7 @@ export default function RoutineGrid({ days, periods, entries, duties = [], defau
                 return (
                   <td key={period.id} className="h-24 border-e border-slate-300 p-0.5 last:border-e-0 dark:border-border">
                     {editable && onCellClick ? (
-                      <button type="button" onClick={() => onCellClick(day, period, entry)} className="group block h-full min-h-24 w-full text-start hover:ring-2 hover:ring-inset hover:ring-primary/40 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${lessonLabel}`}>
+                      <button type="button" onClick={() => onCellClick(day, period, entry)} className="group block h-full min-h-24 w-full cursor-pointer text-start hover:ring-2 hover:ring-inset hover:ring-primary/40 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${lessonLabel}`}>
                         {entry ? lesson : <span className="flex min-h-24 items-center justify-center gap-1.5 text-xs text-muted-foreground"><Plus className="hidden h-4 w-4 group-hover:block group-focus-visible:block" />—</span>}
                       </button>
                     ) : entry ? (

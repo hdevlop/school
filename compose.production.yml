@@ -40,6 +40,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     ports:
       - 127.0.0.1:${SCHOOL_LOOPBACK_PORT:-3400}:3000
     healthcheck:
@@ -51,7 +53,6 @@ services:
 
   migrate:
     <<: *app
-    profiles: [tools]
     restart: "no"
     depends_on:
       postgres:
@@ -67,6 +68,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
     command: ["bun", "run", "notifications:worker"]

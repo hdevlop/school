@@ -31,6 +31,8 @@ import {
   MaintenanceService,
   DisciplineService,
   BehaviorRewardService,
+  ClassRoutineService,
+  RolloverService,
 } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
 
@@ -65,9 +67,17 @@ runSeedTask('demo reset', async (server) => {
   const feeTypeService = await server.container.resolve(FeeTypeService);
   const settingsService = await server.container.resolve(SettingsService);
   const expenseService = await server.container.resolve(ExpenseService);
+  const classRoutineService = await server.container.resolve(ClassRoutineService);
+  const rolloverService = await server.container.resolve(RolloverService);
 
   console.log('⚠️  WARNING: This will delete all school data!\n');
   console.log('🧹 Clearing all school data...');
+
+  await classRoutineService.clearForSeedReset();
+  console.log('✅ Routines cleared');
+
+  await rolloverService.clearForSeedReset();
+  console.log('✅ Academic rollovers cleared');
 
   await allocationService.clearForSeedReset();
   console.log('✅ Allocations cleared');

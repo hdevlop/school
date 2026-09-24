@@ -20,6 +20,13 @@ import type { RoutineListQuery } from './ClassRoutineDto';
 export class ClassRoutineRepository {
   declare db: DB;
 
+  async clearForSeedReset() {
+    await this.db.delete(routineEntries);
+    await this.db.delete(routineDuties);
+    await this.db.delete(routinePeriods);
+    await this.db.delete(routineSchedules);
+  }
+
   async getPeriods(includeInactive = false, scheduleId?: string) {
     const conditions = [scheduleId
       ? eq(routinePeriods.scheduleId, scheduleId)

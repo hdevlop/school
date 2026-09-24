@@ -67,11 +67,11 @@ function SortableTimelineRow({
     <div
       ref={setNodeRef}
       style={{
-        gridTemplateColumns: '1.75rem 11rem minmax(12rem, 1fr) 8rem 8rem 2rem',
+        gridTemplateColumns: '1.75rem 11rem minmax(10rem, 14rem) 8rem 8rem 2rem',
         transform: CSS.Transform.toString(transform),
         transition,
       }}
-      className={`relative grid min-w-[46rem] items-end gap-2 rounded-lg border p-2 shadow-xs transition-[box-shadow,background-color,border-color] ${isBreak ? 'border-amber-300 bg-amber-50/60 dark:border-amber-800 dark:bg-amber-950/15' : 'bg-card'} ${isDragging ? 'z-10 shadow-lg ring-2 ring-primary/25' : ''}`}
+      className={`relative grid min-w-[46rem] items-end justify-between gap-2 rounded-lg border p-2 shadow-xs transition-[box-shadow,background-color,border-color] ${isBreak ? 'border-amber-300 bg-amber-50/60 dark:border-amber-800 dark:bg-amber-950/15' : index % 2 === 0 ? 'bg-card' : 'bg-muted/35 dark:bg-muted/20'} ${isDragging ? 'z-10 shadow-lg ring-2 ring-primary/25' : ''}`}
     >
       <button
         type="button"

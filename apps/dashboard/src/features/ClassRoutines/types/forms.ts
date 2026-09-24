@@ -5,6 +5,7 @@ import type {
   RoutineEntry,
   RoutinePeriod,
 } from './routine';
+import type { RoutineContentGroup } from '@sms/contracts/routines';
 
 export interface TimelineItem {
   type: 'lesson' | 'break';
@@ -25,7 +26,16 @@ export interface RoutineEntryFormProps {
   period: RoutinePeriod;
   entry?: RoutineEntry | null;
   defaultRoom?: string | null;
+  onSubmit: (data: RoutineEntryFormValues) => Promise<void>;
   onDelete?: () => Promise<void>;
+  busy?: boolean;
+}
+
+export interface RoutineEntryFormValues {
+  teacherAssignmentId: string;
+  roomNumber?: string;
+  notes?: string;
+  contentGroups: RoutineContentGroup[];
 }
 
 export interface RoutineGridProps {

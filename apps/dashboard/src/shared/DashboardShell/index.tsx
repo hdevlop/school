@@ -54,7 +54,6 @@ return [
     ...(canUseTeacherRoutes
       ? [{ id: '/', label: t('navigation.dashboard'), icon: FEATURE_ICONS.dashboard, href: '/' }]
       : []),
-    { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' },
     ...(canUseTeacherRoutes
       ? [
         { id: '/students', label: t('navigation.students'), icon: FEATURE_ICONS.students, href: '/students' },
@@ -152,6 +151,7 @@ return [
         },
       ]
       : []),
+    { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' },
   ];
 };
 

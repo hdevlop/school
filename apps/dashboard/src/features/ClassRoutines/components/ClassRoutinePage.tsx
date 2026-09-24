@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { CalendarClock, CalendarDays, Clock3, Plus } from 'lucide-react';
-import { NativeSelect, NButton, NPageHeader, NPageHeaderActions, NSkeleton, useDialog } from 'najm-kit';
+import { BookOpen, CalendarClock, CalendarDays, Clock3, Plus } from 'lucide-react';
+import { NativeSelect, NButton, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, useDialog } from 'najm-kit';
 import { useAuth } from 'najm-auth/client/react';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
@@ -21,6 +21,7 @@ import {
   useRoutineMutations,
 } from '../hooks/useClassRoutines';
 import type { RoutineDay, RoutineDuty, RoutineEntry, RoutinePeriod } from '../types';
+import type { RoutineEntryFormValues } from '../types/forms';
 import { routinePeriodLabel } from '../utils/labels';
 
 export default function ClassRoutinePage() {
@@ -36,6 +37,13 @@ export default function ClassRoutinePage() {
   const [classId, setClassId] = useState('');
   const [sectionId, setSectionId] = useState('');
   const [scheduleId, setScheduleId] = useState('');
+  const [selectedLesson, setSelectedLesson] = useState<{
+    scheduleId: string;
+    day: RoutineDay;
+    period: RoutinePeriod;
+    entry?: RoutineEntry;
+    defaultRoom?: string | null;
+  } | null>(null);
 
   const classSections = useMemo(
     () => (sections || []).filter((section) => !classId || section.classId === classId),
@@ -88,7 +96,7 @@ export default function ClassRoutinePage() {
     openDialog({
       title: t('classRoutines.ui.dialogs.periodsTitle'),
       description: t('classRoutines.ui.dialogs.periodsDescription'),
-      width: '5xl',
+      width: '4xl',
       height: 'full',
       children: <RoutineScheduleForm periods={routine.periods} />,
       primaryButton: {
@@ -115,35 +123,34 @@ export default function ClassRoutinePage() {
 
   const openEntry = (day: RoutineDay, period: RoutinePeriod, entry?: RoutineEntry) => {
     if (!routine) return;
-    openDialog({
-      title: entry ? t('classRoutines.ui.dialogs.editLesson') : t('classRoutines.ui.dialogs.addLesson'),
-      width: '5xl',
-      height: 'full',
-      children: (
-        <RoutineEntryForm
-          assignmentOptions={assignments}
-          day={day}
-          period={period}
-          entry={entry}
-          defaultRoom={routine.roomNumber}
-          onDelete={entry ? async () => {
-            await mutations.deleteEntry.mutateAsync({ scheduleId: routine.id, id: entry.id, expectedVersion: entry.version });
-          } : undefined}
-        />
-      ),
-      primaryButton: {
-        form: 'routine-entry-form',
-        text: entry ? t('classRoutines.ui.actions.updateLesson') : t('classRoutines.ui.actions.addLesson'),
-        onClick: async (data) => {
-          if (!data) return;
-          const next = { ...data, dayOfWeek: day, periodId: period.id, scheduleId: routine.id };
-          if (entry) await mutations.updateEntry.mutateAsync({ ...next, id: entry.id });
-          else await mutations.createEntry.mutateAsync(next);
-        },
-      },
-      secondaryButton: { text: t('common.cancel') },
-    });
+    setSelectedLesson({ scheduleId: routine.id, day, period, entry, defaultRoom: routine.roomNumber });
   };
+
+  const saveLesson = async (data: RoutineEntryFormValues) => {
+    if (!selectedLesson) return;
+    const { scheduleId: selectedScheduleId, day, period, entry } = selectedLesson;
+    const next = { ...data, dayOfWeek: day, periodId: period.id, scheduleId: selectedScheduleId };
+    try {
+      if (entry) await mutations.updateEntry.mutateAsync({ ...next, id: entry.id, expectedVersion: entry.version });
+      else await mutations.createEntry.mutateAsync(next);
+    } catch {
+      return;
+    }
+    setSelectedLesson(null);
+  };
+
+  const deleteLesson = async () => {
+    if (!selectedLesson?.entry) return;
+    const { scheduleId: selectedScheduleId, entry } = selectedLesson;
+    try {
+      await mutations.deleteEntry.mutateAsync({ scheduleId: selectedScheduleId, id: entry.id, expectedVersion: entry.version });
+    } catch {
+      return;
+    }
+    setSelectedLesson(null);
+  };
+
+  const lessonBusy = mutations.createEntry.isPending || mutations.updateEntry.isPending || mutations.deleteEntry.isPending;
 
   const openDuty = (day: RoutineDay, period: RoutinePeriod, duty?: RoutineDuty) => {
     if (!routine) return;
@@ -262,6 +269,36 @@ export default function ClassRoutinePage() {
           </div>
         </div>
       )}
+      <NSheet
+        open={Boolean(selectedLesson)}
+        onOpenChange={(open) => { if (!open && !lessonBusy) setSelectedLesson(null); }}
+        icon={BookOpen}
+        title={selectedLesson?.entry ? t('classRoutines.ui.dialogs.editLesson') : t('classRoutines.ui.dialogs.addLesson')}
+        width={560}
+        classNames={{ content: 'max-w-full bg-background', body: 'p-4' }}
+        footer={selectedLesson ? (
+          <div className="flex w-full justify-end gap-2">
+            <NButton type="button" variant="outline" onClick={() => setSelectedLesson(null)} disabled={lessonBusy}>{t('common.cancel')}</NButton>
+            <NButton type="submit" form="routine-entry-form" disabled={lessonBusy}>
+              {selectedLesson.entry ? t('classRoutines.ui.actions.updateLesson') : t('classRoutines.ui.actions.addLesson')}
+            </NButton>
+          </div>
+        ) : null}
+      >
+        {selectedLesson ? (
+          <RoutineEntryForm
+            key={`${selectedLesson.scheduleId}:${selectedLesson.day}:${selectedLesson.period.id}:${selectedLesson.entry?.id || 'new'}`}
+            assignmentOptions={assignments}
+            day={selectedLesson.day}
+            period={selectedLesson.period}
+            entry={selectedLesson.entry}
+            defaultRoom={selectedLesson.defaultRoom}
+            onSubmit={saveLesson}
+            onDelete={selectedLesson.entry ? deleteLesson : undefined}
+            busy={lessonBusy}
+          />
+        ) : null}
+      </NSheet>
     </div>
   );
 }
