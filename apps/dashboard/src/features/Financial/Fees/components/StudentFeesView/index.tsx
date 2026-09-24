@@ -18,6 +18,8 @@ import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } 
 import { BulkFeeFormContent } from "@/features/Financial/Fees/components/BulkFeeForm";
 import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
 import { injectStudentIdToFees } from "@/features/Financial/Fees/utils/feeUtils";
+import { usePublicSettings } from "@/features/Settings/hooks/useSettings";
+import { getCurrentAcademicYear } from "@/lib/utils";
 
 const TAB_STYLES = "border-0 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:!border-b-2 data-[state=active]:!border-primary rounded-none px-6 py-3 data-[state=active]:!text-primary text-muted-foreground hover:text-primary transition-colors";
 
@@ -112,10 +114,30 @@ const StudentFeesViewSkeleton = ({ className, hideHeader = false }: { className:
 
 export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = null }) => {
   const { studentFees, isStudentFeesLoading, createBulkFees, isBulkCreating } = useFees({ studentId });
+  const { publicSettings } = usePublicSettings();
   const { createPayment } = usePayments();
   const { feeTypes } = useFeeTypes();
   const [selectedFeeId, setSelectedFeeId] = useState(initialFeeId);
   const [activeTab, setActiveTab] = useState("overview");
+  const [yearOverride, setYearOverride] = useState<string | null>(null);
+  const activeYear = publicSettings?.currentAcademicYear || getCurrentAcademicYear();
+  const initialFeeYear = studentFees?.fees?.find((fee: any) => fee.id === initialFeeId)?.academicYear;
+  const selectedYear = yearOverride ?? initialFeeYear ?? activeYear;
+  const yearOptions = useMemo(() => Array.from(new Set([
+    activeYear,
+    ...(studentFees?.fees || []).map((fee: any) => fee.academicYear).filter(Boolean),
+  ])).sort().reverse(), [activeYear, studentFees?.fees]);
+  const visibleFees = useMemo(() => selectedYear === 'all'
+    ? (studentFees?.fees || [])
+    : (studentFees?.fees || []).filter((fee: any) => fee.academicYear === selectedYear),
+    [selectedYear, studentFees?.fees]);
+  const visibleStudentFees = useMemo(() => studentFees ? { ...studentFees, fees: visibleFees } : null, [studentFees, visibleFees]);
+  const overdueCount = visibleFees.reduce((sum: number, fee: any) => sum + Number(fee.overdueInstallments || 0), 0);
+  const visibleAlerts = {
+    hasOverdueFees: overdueCount > 0,
+    overdueCount,
+    message: overdueCount > 0 ? `${overdueCount} Overdue Payments` : '',
+  };
   const { openDialog } = useDialog();
   const resetPayment = usePaymentStore((state) => state.reset);
   const selectInstallments = usePaymentStore((state) => state.selectInstallments);
@@ -124,21 +146,21 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   // Select the first fee in the same render as the loaded data. Waiting for an
   // effect first mounts the cards without the installment table, then changes
   // the height that NTable measures for its automatic page size.
-  const selectedFee = studentFees?.fees?.find(fee => fee.id === selectedFeeId)
-    || studentFees?.fees?.[0]
+  const selectedFee = visibleFees.find((fee: any) => fee.id === selectedFeeId)
+    || visibleFees[0]
     || null;
   const hasPayableBalance = Boolean(
-    studentFees?.fees?.some((fee: any) => getFeeBalance(fee) > 0)
+    visibleFees.some((fee: any) => getFeeBalance(fee) > 0)
   );
   const addableFeeTypes = useMemo(() => {
     const assignedFeeTypeIds = new Set(
-      (studentFees?.fees || [])
+      (studentFees?.fees || []).filter((fee: any) => fee.academicYear === activeYear)
         .map((fee: any) => fee?.feeTypeId)
         .filter(Boolean)
     );
 
     return (feeTypes || []).filter((feeType: any) => !assignedFeeTypeIds.has(feeType.id));
-  }, [feeTypes, studentFees?.fees]);
+  }, [activeYear, feeTypes, studentFees?.fees]);
 
   useEffect(() => {
     if (initialFeeId) {
@@ -180,20 +202,20 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   const buildPaymentTarget = useCallback((target?: { fee?: any; installment?: any }) => {
     const hasScopedTarget = Boolean(target?.fee || target?.installment);
 
-    if (!studentFees || !hasScopedTarget) {
+    if (!visibleStudentFees || !hasScopedTarget) {
       return {
-        paymentStudentFees: studentFees,
+        paymentStudentFees: visibleStudentFees,
         selectedTargets: [],
       };
     }
 
-    const sourceFee = target?.fee || studentFees.fees?.find((fee: any) =>
+    const sourceFee = target?.fee || visibleFees.find((fee: any) =>
       fee.installments?.some((installment: any) => installment.id === target?.installment?.id)
     );
 
     if (!sourceFee) {
       return {
-        paymentStudentFees: studentFees,
+        paymentStudentFees: visibleStudentFees,
         selectedTargets: [],
       };
     }
@@ -203,7 +225,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       : sourceFee.installments;
 
     const paymentStudentFees = {
-      ...studentFees,
+      ...visibleStudentFees,
       fees: [
         {
           ...sourceFee,
@@ -218,10 +240,10 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       paymentStudentFees,
       selectedTargets,
     };
-  }, [decorateInstallmentsForPayment, studentFees]);
+  }, [decorateInstallmentsForPayment, visibleFees, visibleStudentFees]);
 
   const handlePayClick = async (target?: { fee?: any; installment?: any }) => {
-    if (!studentFees) return;
+    if (!visibleStudentFees) return;
 
     const scopedTarget = target?.fee || target?.installment ? target : undefined;
     const { paymentStudentFees, selectedTargets } = buildPaymentTarget(scopedTarget);
@@ -284,7 +306,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       icon: Receipt,
       content: (
         <FeesOverview
-          fees={studentFees.fees}
+          fees={visibleFees}
           selectedFee={selectedFee}
           onFeeClick={handleFeeClick}
           onPayFee={(fee: any) => handlePayClick({ fee })}
@@ -297,17 +319,17 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       value: "discounts",
       label: "Discounts",
       icon: Tag,
-      content: <DiscountsTab fees={studentFees.fees} studentId={studentId} />,
+      content: <DiscountsTab fees={visibleFees} studentId={studentId} />,
     },
     {
       value: "history",
-      label: "Payment History",
+      label: "Payment History (all years)",
       icon: History,
       content: <PaymentHistory studentId={studentId} studentFees={studentFees} />,
     },
     {
       value: "documents",
-      label: "Documents",
+      label: "Documents (all years)",
       icon: FileText,
       content: <Documents studentId={studentId} />,
     },
@@ -317,11 +339,25 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     <div className="flex h-full min-h-0 flex-col gap-2">
       {!hideHeader && (
         <StudentHeader
-          studentFees={studentFees}
+          studentFees={{ ...visibleStudentFees, alerts: visibleAlerts }}
           onPayClick={() => handlePayClick()}
           payDisabled={!hasPayableBalance}
         />
       )}
+
+      <div className="flex flex-wrap items-center gap-2 px-1 text-sm">
+        <label htmlFor="student-fees-year" className="font-medium">Academic year</label>
+        <select
+          id="student-fees-year"
+          value={selectedYear}
+          onChange={(event) => { setYearOverride(event.target.value); setSelectedFeeId(null); }}
+          className="rounded-md border border-border bg-background px-3 py-1.5"
+        >
+          {yearOptions.map((year) => <option key={year} value={year}>{year}</option>)}
+          <option value="all">All years</option>
+        </select>
+        <span className="text-muted-foreground">September–June billing · previous year closeout July 1–14</span>
+      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">
         <div className="flex items-center justify-between border-b border-gray-200">
@@ -336,7 +372,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
 
           {(activeTab === "overview" || hideHeader) && (
             <div className="flex items-center gap-2 pb-1 pr-1">
-              {activeTab === "overview" && (
+              {activeTab === "overview" && selectedYear === activeYear && (
                 <NButton
                   onClick={handleAddFee}
                   size="sm"
@@ -351,11 +387,11 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
 
               {hideHeader && (
                 <>
-                  {studentFees.alerts?.hasOverdueFees && (
+                  {visibleAlerts.hasOverdueFees && (
                     <div className="flex items-center gap-1.5 bg-destructive/10 border border-destructive/20 rounded-full px-3 py-1">
                       <span className="w-1.5 h-1.5 bg-destructive rounded-full" />
                       <span className="text-xs font-medium text-destructive">
-                        {studentFees.alerts.message}
+                        {visibleAlerts.message}
                       </span>
                     </div>
                   )}

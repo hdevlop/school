@@ -17,6 +17,7 @@ import {
    vehiclesData,
 } from '@sms/contracts/fixtures';
 import settingsData from '../school/data/settings.json';
+import { seedAcademicYear } from '../shared/school-seed-data';
 
 // ============================================
 // ⚙️ CONFIGURATION
@@ -180,11 +181,13 @@ export async function studentsPack() {
                   classId: classObj.id,
                   sectionId: sectionObj.id,
                   parentIds: family.parentIds,
+                  academicYear: seedAcademicYear,
                });
 
                const fees = generateFees({
                   studentId: student.id,
-                  policy: CONFIG.FEE_POLICY
+                  policy: CONFIG.FEE_POLICY,
+                  academicYear: seedAcademicYear,
                });
 
                db.fees.push(...fees);
@@ -649,7 +652,7 @@ export function studentRoutesPack(students: any[], vehicles: any[], count = feat
    ];
    const startMonth = months.indexOf(settingsData.startMonth);
    const endMonth = months.indexOf(settingsData.endMonth);
-   const startYear = Number(settingsData.currentAcademicYear.split('-')[0]);
+   const startYear = Number(seedAcademicYear.split('-')[0]);
    const endYear = endMonth < startMonth ? startYear + 1 : startYear;
    const yearStart = dateOnly(new Date(Date.UTC(startYear, startMonth, 1)));
    const yearEnd = dateOnly(new Date(Date.UTC(endYear, endMonth + 1, 0)));
@@ -758,7 +761,7 @@ export function staffPack(count = featureCounts.staff) {
 // expense profile instead of making the current-month KPI look like regular term.
 function academicYearPeriods(): string[] {
    const now = new Date();
-   const startYear = 2025;
+   const startYear = Number(seedAcademicYear.split('-')[0]);
    const startMonth = 8; // September (0-indexed)
    const endYear = now.getFullYear();
    const endMonth = now.getMonth();

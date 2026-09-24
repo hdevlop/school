@@ -182,7 +182,9 @@ export function enrollmentDate(before?: string | Date) {
   // FeeService rejects it ("Student was not enrolled in the target academic
   // year"). Callers pass the academic-year end as an upper bound; default to
   // now when unbounded.
-  const to = before ? new Date(before) : new Date();
+  const today = new Date();
+  const requestedEnd = before ? new Date(before) : today;
+  const to = requestedEnd < today ? requestedEnd : today;
   const from = new Date(to);
   from.setFullYear(from.getFullYear() - 5);
   return faker.date.between({ from, to }).toISOString().split('T')[0];
@@ -404,7 +406,7 @@ export function expenseAmount(category?: string) {
 }
 
 /**
- * Returns a random date within the academic year (Sep 2025 – current month).
+ * Returns a random date within the current academic year, from September to today.
  * If a specific month/year is provided, returns a random day in that month.
  */
 export function expenseDate(month?: number, year?: number) {
@@ -413,8 +415,9 @@ export function expenseDate(month?: number, year?: number) {
     const day = faker.number.int({ min: 1, max: lastDay });
     return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   }
-  // Default: random date within Sep 2025 – Apr 2026
-  const start = new Date(2025, 8, 1);  // Sep 1
+  const currentYear = new Date().getFullYear();
+  const startYear = new Date().getMonth() >= 8 ? currentYear : currentYear - 1;
+  const start = new Date(startYear, 8, 1);
   const end = new Date();               // now
   const date = faker.date.between({ from: start, to: end });
   return date.toISOString().split('T')[0];

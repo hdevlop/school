@@ -13,6 +13,7 @@ import { and, eq, gte, lte, sql } from 'drizzle-orm';
 import { ExpenseService, PaymentService, PayrollService } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
 import { fake, generateExpense, pickRandom } from '@sms/contracts/fixtures';
+import { isDemoCollectionDay } from '../shared/academic-year';
 
 const LATE_PAYMENT_METHODS = ['cash', 'bankTransfer', 'creditCard', 'debitCard', 'online'];
 
@@ -166,16 +167,22 @@ runSeedTask('finance top-up', async (server) => {
 
   const todayStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
-  const [{ count: existingLatePayments }] = await db
-    .select({ count: sql<string>`COUNT(*)` })
-    .from(payments)
-    .where(and(gte(payments.paymentDate, start), lte(payments.paymentDate, end)));
-
-  if (Number(existingLatePayments) > 0) {
-    console.log(`⏭️  Payments already exist for ${period} (${existingLatePayments} rows) — skipping late-payment generation.`);
+  // July 1-14 is the prior year's payment closeout. Vacation starts July 15.
+  // Real debt remains collectable later; this only controls synthetic payments.
+  if (!isDemoCollectionDay(now)) {
+    console.log('⏭️  Summer closeout ended; skipping generated late payments.');
   } else {
-    const { paymentCount, studentsPaid } = await seedLatePayments(paymentService, todayStr);
-    console.log(`✅ Late payments seeded (${paymentCount} payments across ${studentsPaid} students, dated ${todayStr})`);
+    const [{ count: existingLatePayments }] = await db
+      .select({ count: sql<string>`COUNT(*)` })
+      .from(payments)
+      .where(and(gte(payments.paymentDate, start), lte(payments.paymentDate, end)));
+
+    if (Number(existingLatePayments) > 0) {
+      console.log(`⏭️  Payments already exist for ${period} (${existingLatePayments} rows) — skipping late-payment generation.`);
+    } else {
+      const { paymentCount, studentsPaid } = await seedLatePayments(paymentService, todayStr);
+      console.log(`✅ Late payments seeded (${paymentCount} payments across ${studentsPaid} students, dated ${todayStr})`);
+    }
   }
 
   console.log('\n✨ Finance top-up completed successfully!');

@@ -21,6 +21,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { normalizeLocationValue } from 'najm-kit/location';
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import { schoolI18n } from '@sms/contracts/locales';
+import { getCurrentAcademicYear } from '@/lib/utils';
 
 // ─── Settings Skeleton ────────────────────────────────────────────────────────
 
@@ -103,7 +104,7 @@ const SettingsForm: React.FC = () => {
     schoolAddressPlaceId: settings?.schoolAddressPlaceId || null,
     schoolPhone: settings?.schoolPhone || '',
     schoolEmail: settings?.schoolEmail || '',
-    currentAcademicYear: settings?.currentAcademicYear || `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`,
+    currentAcademicYear: settings?.currentAcademicYear || getCurrentAcademicYear(),
     gradingScale: settings?.gradingScale || '',
     attendanceRequirement: settings?.attendanceRequirement || 75,
     attendanceMode: (settings?.attendanceMode as 'daily' | 'per_class') || 'daily',

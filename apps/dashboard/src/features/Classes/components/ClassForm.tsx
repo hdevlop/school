@@ -1,6 +1,6 @@
 'use client'
 
-import { NForm } from 'najm-kit'
+import { NForm, NSkeleton } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
@@ -10,16 +10,19 @@ import { useDialog } from 'najm-kit'
 import { classSchema } from '../config/classSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
+import { usePublicSettings } from '@/features/Settings/hooks/useSettings'
+import { getCurrentAcademicYear } from '@/lib/utils'
 
 const ClassForm = ({ classData = null}) => {
 
    const { t } = useTranslation();
    const { pop } = useDialog();
+   const { publicSettings, isSettingsLoading } = usePublicSettings();
 
    const defaultValues = {
       ...(classData?.id && { id: classData.id }),
       name: classData?.name || 'CE1',
-      academicYear: classData?.academicYear || '2024-2025',
+      academicYear: classData?.academicYear || publicSettings?.currentAcademicYear || getCurrentAcademicYear(),
       level: classData?.level || 'Middle',
       description: classData?.description || 'asdasd',
    }
@@ -27,6 +30,8 @@ const ClassForm = ({ classData = null}) => {
    const handleSubmit = async (formData) => {
       pop(formData);
    }
+
+   if (isSettingsLoading && !classData) return <NSkeleton className="h-64 w-full" />;
 
    return (
       <div className='flex flex-col justify-center items-center w-full'>

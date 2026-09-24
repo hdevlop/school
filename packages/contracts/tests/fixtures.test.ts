@@ -10,6 +10,7 @@ import {
   generateAssessment,
   generateExam,
   generateStudent,
+  generateFees,
   sectionsData,
   subjectsData,
 } from '../src/fixtures';
@@ -47,5 +48,18 @@ describe('fixtures', () => {
     expect(student.name).toMatch(/\S+ \S+/);
     const section = sectionsData.find((entry) => entry.id === student.sectionId);
     expect(section?.classId).toBe(student.classId);
+  });
+
+  it('uses the requested school year for every generated fee and never enrolls students in the future', () => {
+    const academicYear = '2026-2027';
+    const student = generateStudent({ academicYear });
+    const fees = generateFees({ studentId: student.id, academicYear });
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+    expect(student.enrollmentDate <= today).toBe(true);
+    expect(fees.length).toBeGreaterThan(0);
+    expect(fees.every((fee) => fee.academicYear === academicYear)).toBe(true);
+    expect(fees.every((fee) => fee.effectiveDate === '2026-09-01')).toBe(true);
   });
 });

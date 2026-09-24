@@ -552,7 +552,7 @@ export function generateStudent(options = null) {
       sectionId: newSection,
       enrollmentDate: options?.enrollmentDate || fake.enrollmentDate(
          // Cap at the fee's academic-year end so the fee's enrollment check passes.
-         `${Number((classesData[0]?.academicYear || '2025-2026').split('-')[0]) + 1}-06-30`,
+         `${Number((options?.academicYear || classesData[0]?.academicYear || '2025-2026').split('-')[0]) + 1}-06-30`,
       ),
       graduationDate: null,
       medicalConditions: fake.medicalConditions(),
@@ -692,7 +692,7 @@ const DEFAULT_FEES_POLICY = {
    },
 };
 
-export function generateFees({ studentId, policy } = { studentId: undefined, policy: DEFAULT_FEES_POLICY }) {
+export function generateFees({ studentId, policy, academicYear }: { studentId?: string; policy?: typeof DEFAULT_FEES_POLICY; academicYear?: string } = {}) {
    policy = policy ?? DEFAULT_FEES_POLICY;
    const fees = [];
 
@@ -700,6 +700,7 @@ export function generateFees({ studentId, policy } = { studentId: undefined, pol
       return generateFee({
          studentId,
          feeType,
+         academicYear,
          schedule: resolveSchedule(feeType, policy),
       });
    }
@@ -743,13 +744,13 @@ export function generateExpense(options = null) {
 }
 
 /**
- * Generate realistic monthly school expenses from Sep 2025 to current month.
+ * Generate realistic monthly school expenses from this September school year to today.
  * Each month gets a core set of recurring expenses (rent, salaries, utilities)
  * plus some variable ones (maintenance, supplies, etc.).
  */
 export function generateExpenses(count = 30, options: any = {}) {
    const now = new Date();
-   const startYear = 2025;
+   const startYear = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
    const startMonth = 8; // September (0-indexed)
    const endYear = now.getFullYear();
    const endMonth = now.getMonth();

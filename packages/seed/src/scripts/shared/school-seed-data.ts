@@ -5,9 +5,13 @@ import {
   subjectsData,
 } from '@sms/contracts/fixtures';
 import settingsData from '../school/data/settings.json';
+import { getConfiguredSeedAcademicYear } from './academic-year';
+
+export const seedAcademicYear = getConfiguredSeedAcademicYear();
 
 export const normalizedSettingsData = {
   ...settingsData,
+  currentAcademicYear: seedAcademicYear,
   calendarSystem: settingsData.calendarSystem as 'SEMESTER' | 'TRIMESTER' | 'QUARTER',
   language: settingsData.language as 'en' | 'fr' | 'ar' | 'es',
   theme: settingsData.theme as 'light' | 'dark',
@@ -28,7 +32,7 @@ export const normalizedSectionsData = sectionsData.map((section) => ({
 }));
 
 export const schoolSeedData = {
-  classesData,
+  classesData: classesData.map((schoolClass) => ({ ...schoolClass, academicYear: seedAcademicYear })),
   feeTypesData,
   settingsData: normalizedSettingsData,
   sectionsData: normalizedSectionsData,
