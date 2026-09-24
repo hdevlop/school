@@ -32,7 +32,7 @@ export default function DisciplineDetails({
   onReopen: () => void;
   resolving?: boolean;
 }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const resolved = incident.status === 'resolved';
   return (
     <div className="space-y-5">
@@ -63,7 +63,7 @@ export default function DisciplineDetails({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <DetailItem label={t('discipline.table.violation')}>{t(`discipline.categories.${incident.category}`)}</DetailItem>
-        <DetailItem label={t('discipline.table.incidentAt')}><CalendarClock className="me-1 inline h-4 w-4" />{formatDisciplineDate(incident.incidentAt)}</DetailItem>
+        <DetailItem label={t('discipline.table.incidentAt')}><CalendarClock className="me-1 inline h-4 w-4" />{formatDisciplineDate(incident.incidentAt, language)}</DetailItem>
         <DetailItem label={t('discipline.form.location')}><MapPin className="me-1 inline h-4 w-4" />{incident.location || '—'}</DetailItem>
         <DetailItem label={t('discipline.table.reportedBy')}><UserRound className="me-1 inline h-4 w-4" />{incident.reporter?.name || incident.reporter?.email || '—'}</DetailItem>
       </div>
@@ -71,11 +71,6 @@ export default function DisciplineDetails({
       <DetailItem label={t('discipline.form.description')}>
         <p className="whitespace-pre-wrap leading-6">{incident.description}</p>
       </DetailItem>
-
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <DetailItem label={t('discipline.table.createdAt')}>{formatDisciplineDate(incident.createdAt)}</DetailItem>
-        <DetailItem label={t('discipline.table.updatedAt')}>{formatDisciplineDate(incident.updatedAt)}</DetailItem>
-      </div>
 
       {resolved && (
         <div className="space-y-3 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-4">
@@ -87,7 +82,7 @@ export default function DisciplineDetails({
           <DetailItem label={t('discipline.form.resolutionNote')}>{incident.resolutionNote}</DetailItem>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <DetailItem label={t('discipline.table.resolvedBy')}>{incident.resolver?.name || incident.resolver?.email || '—'}</DetailItem>
-            <DetailItem label={t('discipline.table.resolvedAt')}><Clock3 className="me-1 inline h-4 w-4" />{formatDisciplineDate(incident.resolvedAt)}</DetailItem>
+            <DetailItem label={t('discipline.table.resolvedAt')}><Clock3 className="me-1 inline h-4 w-4" />{formatDisciplineDate(incident.resolvedAt, language)}</DetailItem>
           </div>
         </div>
       )}

@@ -11,18 +11,31 @@ import {
 } from '../disciplineConstants';
 
 export const useDisciplineTableColumns = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
 
   return useMemo(() => [
     {
       id: 'studentSearch',
-      accessorFn: (row: DisciplineIncident) => `${row.student?.name || ''} ${row.student?.studentCode || ''} ${row.description || ''}`,
-      header: t('discipline.table.student'),
+      accessorFn: (row: DisciplineIncident) => row.student?.studentCode || '',
+      header: t('students.table.studentCode'),
+      cell: ({ getValue }) => <span className="text-sm font-medium">{getValue() || '—'}</span>,
+      enableSorting: true,
+      filterFn: (row: { original: DisciplineIncident }, _columnId: string, value: unknown) => {
+        const search = String(value ?? '').toLowerCase().trim();
+        if (!search) return true;
+        const incident = row.original;
+        return [incident.student?.name, incident.student?.studentCode, incident.description]
+          .some((field) => String(field ?? '').toLowerCase().includes(search));
+      },
+    },
+    {
+      id: 'studentName',
+      accessorFn: (row: DisciplineIncident) => row.student?.name || '',
+      header: t('students.table.name'),
       cell: ({ row }) => (
         <NAvatar
           src={row.original.student?.image}
           title={row.original.student?.name || '—'}
-          subtitle={row.original.student?.studentCode}
           size="sm"
         />
       ),
@@ -32,12 +45,10 @@ export const useDisciplineTableColumns = () => {
       id: 'classSection',
       accessorFn: (row: DisciplineIncident) => `${row.class?.name || ''} ${row.section?.name || ''}`,
       header: t('discipline.table.classSection'),
-      cell: ({ row }) => (
-        <div className="text-sm">
-          <div className="font-medium">{row.original.class?.name || '—'}</div>
-          <div className="text-xs text-muted-foreground">{row.original.section?.name || '—'}</div>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const classSection = [row.original.class?.name, row.original.section?.name].filter(Boolean).join(' / ');
+        return <span className="whitespace-nowrap text-sm font-medium">{classSection || '—'}</span>;
+      },
     },
     {
       accessorKey: 'category',
@@ -70,7 +81,10 @@ export const useDisciplineTableColumns = () => {
     {
       accessorKey: 'incidentAt',
       header: t('discipline.table.incidentAt'),
-      cell: ({ getValue }) => <span className="whitespace-nowrap text-sm">{formatDisciplineDate(String(getValue()))}</span>,
+      cell: ({ getValue }) => {
+        const value = String(getValue() || '');
+        return <time dateTime={value} className="block min-w-max whitespace-nowrap text-sm">{formatDisciplineDate(value, language)}</time>;
+      },
       enableSorting: true,
     },
     {
@@ -92,5 +106,5 @@ export const useDisciplineTableColumns = () => {
         </div>
       ),
     },
-  ], [t]);
+  ], [t, language]);
 };

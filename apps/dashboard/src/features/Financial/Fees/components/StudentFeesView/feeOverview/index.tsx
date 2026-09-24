@@ -136,7 +136,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
         loadingText={t('fees.card.loadingStudentFees')}
         dynamicHeight={false}
         bordered={false}
-        className='h-fit max-h-[30vh] flex-none'
+        className='h-fit  flex-none'
       />
 
       {selectedFee && (

@@ -1,11 +1,21 @@
 import { Service, Err, I18n } from '../../najm';
 import { ClassRepository } from './ClassRepository';
+import { SettingsRepository } from '../settings/SettingsRepository';
+import { getCurrentAcademicYear } from '../financial/utils';
 
 @Service()
 export class ClassValidator {
   @I18n('classes.errors') private t!: (key: string) => string;
 
-  constructor(private classRepository: ClassRepository) { }
+  constructor(
+    private classRepository: ClassRepository,
+    private settingsRepository: SettingsRepository,
+  ) { }
+
+  private async activeAcademicYear() {
+    const settings = await this.settingsRepository.getPublicSettings();
+    return settings?.currentAcademicYear || getCurrentAcademicYear();
+  }
 
   async ensureExists(id: string) {
     const existingClass = await this.classRepository.getById(id);
@@ -16,15 +26,15 @@ export class ClassValidator {
   }
 
   async ensureExistsByName(name: string) {
-    const existingClass = await this.classRepository.getByName(name);
+    const existingClass = await this.classRepository.getByName(name, await this.activeAcademicYear());
     if (!existingClass) {
       Err(404, this.t('notFound'));
     }
     return existingClass;
   }
 
-  async ensureNameUnique(name: string, excludeId?: string) {
-    const existing = await this.classRepository.getByName(name);
+  async ensureNameUnique(name: string, academicYear?: string, excludeId?: string) {
+    const existing = await this.classRepository.getByName(name, academicYear || await this.activeAcademicYear());
     if (existing && existing.id !== excludeId) {
       Err(409, this.t('nameExists'));
     }
@@ -67,7 +77,8 @@ export class ClassValidator {
 
   async checkNameUniqueForUpdate(id: string, name?: string) {
     if (!name) return;
-    return this.ensureNameUnique(name, id);
+    const currentClass = await this.ensureExists(id);
+    return this.ensureNameUnique(name, currentClass.academicYear, id);
   }
 
   async checkHasNoSections(classId: string) {

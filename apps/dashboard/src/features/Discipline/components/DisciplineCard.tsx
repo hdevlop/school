@@ -12,7 +12,7 @@ import {
 } from '../disciplineConstants';
 
 export default function DisciplineCard({ data }: { data: DisciplineIncident }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   return (
     <div className="flex items-start gap-3 p-3">
       <NAvatar src={data.student?.image} title={data.student?.name || '—'} subtitle={data.student?.studentCode} size="md" />
@@ -31,7 +31,7 @@ export default function DisciplineCard({ data }: { data: DisciplineIncident }) {
         <NSectionInfo
           icon={CalendarClock}
           label={t('discipline.table.incidentAt')}
-          value={formatDisciplineDate(data.incidentAt)}
+          value={formatDisciplineDate(data.incidentAt, language)}
           valueColor="text-foreground font-medium"
         />
         <NSectionInfo

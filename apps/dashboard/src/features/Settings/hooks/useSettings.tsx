@@ -1,10 +1,9 @@
 'use client'
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { seedDemoApi, seedSystemApi, clearAllDataApi, type SeedDemoOptions } from '@/services/seedApi';
 import { getAdminSettingsApi, getPublicSettingsApi, updateSettingsApi } from '@/services/settingApi';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { getCurrentAcademicYear } from '@/lib/utils';
 
 const getLocalDateOnly = () => {
   const today = new Date();
@@ -30,6 +29,14 @@ export const usePublicSettings = (enabled = true) => {
     isError,
     error,
     refetch,
+  };
+};
+
+export const useActiveAcademicYear = () => {
+  const { publicSettings, isSettingsLoading } = usePublicSettings();
+  return {
+    academicYear: normalizeSettings(publicSettings)?.currentAcademicYear || getCurrentAcademicYear(),
+    isAcademicYearLoading: isSettingsLoading,
   };
 };
 
@@ -59,7 +66,13 @@ export const useAdminSettings = (enabled = true) => {
   });
 
   const { data: settings, isLoading: isSettingsLoading, isError, error, refetch } = crud.useGetAll(enabled);
-  const { mutateAsync: updateSettings, isLoading: isUpdating } = crud.useUpdate();
+  const { mutateAsync: saveSettings, isLoading: isUpdating } = crud.useUpdate();
+  const queryClient = useQueryClient();
+  const updateSettings = async (data: Parameters<typeof saveSettings>[0]) => {
+    const result = await saveSettings(data);
+    await queryClient.invalidateQueries();
+    return result;
+  };
 
   return {
     settings,
@@ -70,77 +83,4 @@ export const useAdminSettings = (enabled = true) => {
     updateSettings,
     isUpdating,
   };
-};
-
-export const useSeedDemo = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: (opts: SeedDemoOptions) => seedDemoApi(opts),
-    onSuccess: (response) => {
-      queryClient.clear();
-      toast.success(response?.message);
-    },
-    onError: (error) => {
-      toast.error(getError(error));
-    },
-  });
-
-  return {
-    mutate: mutation.mutate,
-    mutateAsync: mutation.mutateAsync,
-    isLoading: mutation.isPending,
-    isError: mutation.isError,
-    error: mutation.error,
-  };
-};
-
-export const useSeedSystem = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: seedSystemApi,
-    onSuccess: (response) => {
-      queryClient.clear();
-      toast.success(response?.message);
-    },
-    onError: (error) => {
-      toast.error(getError(error));
-    },
-  });
-
-  return {
-    mutate: mutation.mutate,
-    mutateAsync: mutation.mutateAsync,
-    isLoading: mutation.isPending,
-    isError: mutation.isError,
-    error: mutation.error,
-  };
-};
-
-export const useClearAllData = () => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: clearAllDataApi,
-    onSuccess: (response) => {
-      queryClient.clear();
-      toast.success(response?.message);
-    },
-    onError: (error) => {
-      toast.error(getError(error));
-    },
-  });
-
-  return {
-    mutate: mutation.mutate,
-    mutateAsync: mutation.mutateAsync,
-    isLoading: mutation.isPending,
-    isError: mutation.isError,
-    error: mutation.error,
-  };
-};
-
-const getError = (error) => {
-  return error?.response?.data?.message;
 };

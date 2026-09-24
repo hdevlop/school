@@ -5,24 +5,23 @@ import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
-import { GraduationCap, Calendar, FileText, Layers } from 'lucide-react'
+import { GraduationCap, FileText, Layers } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { classSchema } from '../config/classSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
-import { usePublicSettings } from '@/features/Settings/hooks/useSettings'
-import { getCurrentAcademicYear } from '@/lib/utils'
+import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings'
 
 const ClassForm = ({ classData = null}) => {
 
    const { t } = useTranslation();
    const { pop } = useDialog();
-   const { publicSettings, isSettingsLoading } = usePublicSettings();
+   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
 
    const defaultValues = {
       ...(classData?.id && { id: classData.id }),
       name: classData?.name || 'CE1',
-      academicYear: classData?.academicYear || publicSettings?.currentAcademicYear || getCurrentAcademicYear(),
+      academicYear: classData?.academicYear || academicYear,
       level: classData?.level || 'Middle',
       description: classData?.description || 'asdasd',
    }
@@ -31,7 +30,7 @@ const ClassForm = ({ classData = null}) => {
       pop(formData);
    }
 
-   if (isSettingsLoading && !classData) return <NSkeleton className="h-64 w-full" />;
+   if (isAcademicYearLoading && !classData) return <NSkeleton className="h-64 w-full" />;
 
    return (
       <div className='flex flex-col justify-center items-center w-full'>
@@ -58,15 +57,6 @@ const ClassForm = ({ classData = null}) => {
                         formLabel={t('classes.form.className')}
                         placeholder={t('classes.form.classNamePlaceholder')}
                         icon={GraduationCap}
-                        required={true}
-                     />
-
-                     <FormInput
-                        name='academicYear'
-                        type='text'
-                        formLabel={t('classes.form.academicYear')}
-                        placeholder={t('classes.form.academicYearPlaceholder')}
-                        icon={Calendar}
                         required={true}
                      />
 

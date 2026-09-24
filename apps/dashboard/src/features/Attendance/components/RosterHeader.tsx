@@ -2,7 +2,7 @@
 
 import { NButton } from 'najm-kit';
 
-import { RotateCcw, Loader2, Send, Users, CheckCircle2, XCircle, Clock3 } from 'lucide-react';
+import { Loader2, Send, Users, CheckCircle2, XCircle, Clock3 } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -12,7 +12,6 @@ interface Props {
   hasChanges: boolean;
   isSubmitting?: boolean;
   stats: Stats;
-  onReset: () => void;
   onSubmit: () => void;
   canSubmit?: boolean;
   submitTitle?: string;
@@ -47,7 +46,7 @@ function StatItem({
 
 export default function RosterHeader({
   hasChanges, isSubmitting, stats,
-  onReset, onSubmit,
+  onSubmit,
   canSubmit = true, submitTitle,
 }: Props) {
   const { t } = useTranslation();
@@ -64,18 +63,6 @@ export default function RosterHeader({
         <span className="h-4 w-px bg-border shrink-0" />
         <StatItem icon={Clock3} label={t('attendance.roster.late')} value={stats.late} tone="amber" />
       </div>
-      {hasChanges && (
-        <NButton
-          variant="outline"
-          onClick={onReset}
-          disabled={isSubmitting}
-          aria-label={t('attendance.roster.reset')}
-          title={t('attendance.roster.reset')}
-          className="h-10 w-10 cursor-pointer p-0 border border-slate-900 bg-white text-slate-900 shadow-sm hover:bg-slate-900 hover:text-white disabled:cursor-not-allowed disabled:border-slate-300 disabled:bg-slate-50 disabled:text-slate-300 disabled:shadow-none"
-        >
-          <RotateCcw className="h-4 w-4" />
-        </NButton>
-      )}
       <NButton
         onClick={onSubmit}
         disabled={isSubmitting || !hasChanges || !canSubmit}

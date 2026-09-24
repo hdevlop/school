@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from 'react'
 import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
-import { GraduationCap, LayoutGrid, Tag, CalendarClock, CalendarDays, DollarSign, Percent, FileText } from 'lucide-react'
+import { GraduationCap, LayoutGrid, Tag, CalendarClock, DollarSign, Percent, FileText } from 'lucide-react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { classBulkFeeFormSchema } from '../config/feeSchemas'
@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getClassStudentsApi } from '@/services/classApi'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 import InstallmentPreviewTable from './InstallmentPreviewTable'
+import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings'
 
 const StudentCount = ({ classId, sectionId }) => {
    const { t } = useTranslation()
@@ -76,6 +77,8 @@ const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
 }
 
 export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
+   const { academicYear } = useActiveAcademicYear()
+   const activeClasses = useMemo(() => classes.filter((cls) => cls.academicYear === academicYear), [classes, academicYear])
    const { majorMoney } = useSchoolFormat()
    const { setValue } = useFormContext()
    const { t } = useTranslation()
@@ -86,9 +89,8 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
    const baseAmount = useWatch({ name: 'baseAmount' }) || 0
    const discountAmount = useWatch({ name: 'discountAmount' }) || 0
    const schedule = useWatch({ name: 'schedule' })
-   const academicYear = useWatch({ name: 'academicYear' })
 
-   const selectedClass = classes.find(cls => cls.id === classId)
+   const selectedClass = activeClasses.find(cls => cls.id === classId)
    const sectionOptions = useMemo(() => selectedClass?.sections?.map(s => ({
       value: s.id,
       label: s.name,
@@ -136,7 +138,7 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
                icon={GraduationCap}
                formLabel={t('fees.form.class') || 'Class'}
                placeholder={t('fees.form.classPlaceholder') || 'Select class'}
-               items={useMemo(() => classes.map(cls => ({ value: cls.id, label: cls.name })), [classes])}
+               items={activeClasses.map(cls => ({ value: cls.id, label: cls.name }))}
                required
             />
             <FormInput
@@ -173,13 +175,6 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
                items={scheduleOptions}
                required
                disabled={isScheduleDisabled}
-            />
-            <FormInput
-               name='academicYear'
-               type='text'
-               icon={CalendarDays}
-               formLabel={t('fees.form.academicYear') || 'Academic year'}
-               placeholder='2026-2027'
             />
          </div>
 

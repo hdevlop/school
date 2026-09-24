@@ -78,7 +78,6 @@ function StaffAttendanceTable() {
             hasChanges={roster.hasChanges}
             isSubmitting={isSubmittingRoster}
             stats={roster.stats}
-            onReset={roster.resetDraft}
             onSubmit={roster.handleSubmit}
             canSubmit={!isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading}
           />

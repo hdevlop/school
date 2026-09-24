@@ -1,9 +1,12 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as sectionApi from '@/services/sectionApi';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
+import { useMemo } from 'react';
 
 export const useSections = (options?) => {
-  const { sectionId, enabled = true } = options || {};
+  const { sectionId, enabled = true, allYears = false } = options || {};
+  const { classes, isClassesLoading } = useClasses({ enabled, allYears });
 
   const crud = useEntityCRUD('sections', {
     getAll: sectionApi.getSectionsApi,
@@ -13,7 +16,13 @@ export const useSections = (options?) => {
     delete: sectionApi.deleteSectionApi,
   });
 
-  const { data: sections, isLoading: isSectionsLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: allSections, isLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const activeClassIds = useMemo(() => new Set((classes || []).map((schoolClass) => schoolClass.id)), [classes]);
+  const sections = useMemo(() => allYears
+    ? allSections
+    : allSections?.filter((section) => activeClassIds.has(section.classId)),
+  [allYears, allSections, activeClassIds]);
+  const isSectionsLoading = isLoading || (!allYears && isClassesLoading);
   const { data: section, isLoading: isSectionLoading } = crud.useGetById(sectionId, !!sectionId);
 
   const { mutateAsync: createSection, isLoading: isCreating } = crud.useCreate();

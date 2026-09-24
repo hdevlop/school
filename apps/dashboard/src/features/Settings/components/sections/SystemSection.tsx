@@ -37,13 +37,13 @@ const SystemSection: React.FC = () => {
   ];
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-3'>
       <div className="flex items-center gap-2 font-semibold text-sm">
         <Settings className="h-5 w-5" />
         <Label className='text-lg'> {t('settings.system.title')} </Label>
       </div>
 
-      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-2 sm:grid-cols-2">
         <FormInput
           name="timeZone"
           type="timeZone"

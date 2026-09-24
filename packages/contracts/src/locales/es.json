@@ -636,6 +636,20 @@
     "amount": "Importe",
     "inactive": "Inactivo",
     "none": "Ninguno",
+    "table": {
+      "settings": "Configuración de la tabla",
+      "view": "Vista",
+      "columns": "Columnas",
+      "modeTable": "Tabla",
+      "modeCards": "Tarjetas",
+      "modeJson": "JSON",
+      "modeFiles": "Archivos",
+      "modeOption": "Cambiar a vista {{mode}}",
+      "filters": "Filtros",
+      "filterRegion": "Filtros de la tabla",
+      "allOption": "Todos",
+      "create": "Añadir"
+    },
     "pagination": {
       "rowsPerPage": "Filas/página",
       "pagination": "Paginación",
@@ -691,6 +705,11 @@
     "teachers": "Profesores",
     "transferred": "Transferido"
   },
+  "themeSheets": {
+    "discardTitle": "¿Descartar los cambios del tema?",
+    "discardDescription": "Se perderán los cambios no guardados del tema o la identidad visual.",
+    "discard": "Descartar cambios"
+  },
   "navigation": {
     "dashboard": "Panel",
     "fields": "Campos",
@@ -706,6 +725,9 @@
     "permissions": "Permisos",
     "accessControl": "Control de acceso",
     "settings": "Configuración",
+    "appearance": "Apariencia",
+    "theme": "Tema",
+    "branding": "Identidad visual",
     "logout": "Cerrar Sesión",
     "academic": "Académico",
     "attendance": "Asistencia",
@@ -1933,6 +1955,7 @@
     },
     "errors": {
       "selectSource": "Selecciona una evaluación o examen antes de guardar las notas.",
+      "saveFailed": "No se pudieron guardar todas las notas. Inténtalo de nuevo.",
       "marksExceedTotal": "Las notas exceden el total",
       "sourceRequired": "Seleccione una evaluación o un examen"
     },
@@ -2555,10 +2578,6 @@
       "confirmTitle": "Confirmar acción",
       "warningMessage": "Esta es una acción destructiva",
       "success": "Clear completado correctamente"
-    },
-    "database": {
-      "description": "Descripción",
-      "title": "Título"
     },
     "notifications": {
       "academicAlerts": "Alertas académicas",

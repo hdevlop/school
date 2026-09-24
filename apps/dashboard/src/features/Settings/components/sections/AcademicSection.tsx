@@ -5,6 +5,8 @@ import { BookOpen, Users, BarChart3, Clock, Award, Calendar, ClipboardCheck } fr
 import { FormInput } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
+import { useWatch } from 'react-hook-form';
+import { getCurrentAcademicYear } from '@/lib/utils';
 import {
   buildAttendanceModeOptions,
   buildCalendarSystemOptions,
@@ -16,15 +18,31 @@ const AcademicSection: React.FC = () => {
   const calendarSystemOptions = buildCalendarSystemOptions(t);
 
   const attendanceModeOptions = buildAttendanceModeOptions(t);
+  const selectedYear = useWatch({ name: 'currentAcademicYear' });
+  const currentStartYear = Number(getCurrentAcademicYear().slice(0, 4));
+  const academicYears = Array.from(new Set([
+    ...Array.from({ length: 5 }, (_, index) => currentStartYear + 1 - index),
+    Number(selectedYear?.slice(0, 4)),
+  ].filter(Number.isInteger))).sort((a, b) => b - a);
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-3'>
       <div className="flex items-center gap-2 font-semibold text-sm">
         <BookOpen className="h-5 w-5" />
         <Label className='text-lg'> {t('settings.academic.title')} </Label>
       </div>
 
-      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-2">
+        <FormInput
+          name="currentAcademicYear"
+          type="select"
+          formLabel={t('settings.school.currentAcademicYear')}
+          icon={Calendar}
+          iconColor="#ec4899"
+          items={academicYears.map((year) => ({ value: `${year}-${year + 1}`, label: `${year}-${year + 1}` }))}
+          required={true}
+        />
+
         <FormInput
           name="attendanceRequirement"
           type="text"

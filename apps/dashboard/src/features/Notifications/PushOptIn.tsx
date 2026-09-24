@@ -1,7 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import { Switch } from 'najm-kit';
+import { useCallback, useEffect, useId, useState } from 'react';
+import { BaseInput, Label, Switch } from 'najm-kit';
+import { Bell } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useNotificationCommands, usePushConfig } from './useNotifications';
 
@@ -19,6 +20,7 @@ const toBase64Url = (buffer: ArrayBuffer | null) => {
 
 export function PushOptIn() {
   const { t } = useTranslation();
+  const explanationId = useId();
   const config = usePushConfig();
   const commands = useNotificationCommands();
   const [enabled, setEnabled] = useState(false);
@@ -65,14 +67,21 @@ export function PushOptIn() {
   else if (status === 'unsupported') text = t('notifications.pushUnsupported');
   else if (status === 'denied') text = t('notifications.pushDenied');
   if (error) text = error;
+  const showHelp = Boolean(error) || status !== 'ready' || config.data?.enabled === false;
+  const explanation = showHelp ? text : undefined;
 
   return (
-    <div className="space-y-2">
-      <p className="text-sm font-medium">{t('notifications.pushTitle')}</p>
-      <div className="flex min-h-10 items-center justify-between gap-3 rounded-md border border-input bg-background px-3 py-2">
-        <p aria-live="polite" className={status === 'denied' || error ? 'text-sm text-destructive' : 'text-sm'}>{text}</p>
-        <Switch aria-label={t('notifications.pushTitle')} checked={enabled} disabled={status !== 'ready' || config.isPending || config.data?.enabled === false} onCheckedChange={(next) => void toggle(next)} />
+    <BaseInput variant="ghost" className="gap-2 justify-between items-center" title={explanation}>
+      <div className="flex min-w-0 flex-col gap-1">
+        <Label htmlFor="push-notifications" className="flex items-center gap-2">
+          <span className="h-4 w-4 shrink-0"><Bell className="h-4 w-4" /></span>
+          <span className="truncate">{t('notifications.pushTitle')}</span>
+        </Label>
+        <span id={explanationId} role="status" className="sr-only">{explanation}</span>
       </div>
-    </div>
+      <div className="flex shrink-0 items-center gap-2">
+        <Switch id="push-notifications" aria-label={t('notifications.pushTitle')} aria-describedby={explanation ? explanationId : undefined} checked={enabled} disabled={status !== 'ready' || config.isPending || config.data?.enabled === false} onCheckedChange={(next) => void toggle(next)} />
+      </div>
+    </BaseInput>
   );
 }

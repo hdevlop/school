@@ -6,6 +6,7 @@ import { NativeSelect, NButton, NPageHeader, NPageHeaderActions, NSheet, NSkelet
 import { useAuth } from 'najm-auth/client/react';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
+import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import ClassRoutineSkeleton from './ClassRoutineSkeleton';
@@ -31,6 +32,11 @@ export default function ClassRoutinePage() {
   const canEdit = role === 'admin' || role === 'principal';
   const { openDialog } = useDialog();
   const { classes, isClassesLoading } = useClasses();
+  const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const activeClasses = useMemo(
+    () => (classes || []).filter((schoolClass) => schoolClass.academicYear === academicYear),
+    [classes, academicYear],
+  );
   const { sections, isSectionsLoading } = useSections();
   const mutations = useRoutineMutations();
 
@@ -49,7 +55,7 @@ export default function ClassRoutinePage() {
     () => (sections || []).filter((section) => !classId || section.classId === classId),
     [sections, classId],
   );
-  const selectedClass = (classes || []).find((item) => item.id === classId);
+  const selectedClass = activeClasses.find((item) => item.id === classId);
   const { data: schedules = [], isPending: schedulesPending } = useRoutineList(
     { sectionId, academicYear: selectedClass?.academicYear },
     Boolean(sectionId),
@@ -60,8 +66,10 @@ export default function ClassRoutinePage() {
   const { data: assignments = [] } = useRoutineAssignments(sectionId);
 
   useEffect(() => {
-    if (!classId && classes?.length) setClassId(classes[0].id);
-  }, [classId, classes]);
+    setClassId((current) => activeClasses.some((item) => item.id === current)
+      ? current
+      : (activeClasses[0]?.id || ''));
+  }, [activeClasses]);
 
   useEffect(() => {
     setSectionId((current) => classSections.some((section) => section.id === current)
@@ -185,7 +193,7 @@ export default function ClassRoutinePage() {
     });
   };
 
-  const busy = isClassesLoading || isSectionsLoading;
+  const busy = isClassesLoading || isSectionsLoading || isAcademicYearLoading;
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-3">
@@ -212,7 +220,7 @@ export default function ClassRoutinePage() {
               placeholder={t('classRoutines.ui.fields.class')}
               value={classId}
               onChange={(event) => setClassId(event.target.value)}
-              options={(classes || []).map((item) => ({ value: item.id, label: item.name }))}
+              options={activeClasses.map((item) => ({ value: item.id, label: item.name }))}
               className="min-w-44 font-medium"
             />
             <NativeSelect

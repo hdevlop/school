@@ -13,7 +13,7 @@ const TeacherCard = ({ data }) => {
    const teacher = data;
 
    // Fetch classes and subjects from cache
-   const { classes = [] } = useClasses();
+   const { classes = [] } = useClasses({ allYears: true });
 
    const getClassName = (classId) => {
       const classItem = classes.find(c => c.id === classId);

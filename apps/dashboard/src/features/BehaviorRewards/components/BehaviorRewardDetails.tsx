@@ -13,15 +13,13 @@ import {
 const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
   const { t, language } = useTranslation();
   const reward = behaviorReward;
-  const awardedBy = reward.awardedByUser?.name || reward.awardedByUser?.email || '—';
+  const awardedBy = reward.awardedByUser?.name || '—';
 
   return (
     <div className="space-y-5 p-1">
       <div className="flex items-center gap-4 rounded-xl border border-emerald-100 bg-emerald-50/70 p-4 dark:border-emerald-900 dark:bg-emerald-950/30">
-        <NAvatar src={reward.student?.image} title={reward.student?.name} size="lg" version={reward.updatedAt} />
+        <NAvatar src={reward.student?.image} title={reward.student?.name} subtitle={reward.student?.studentCode || '—'} size="lg" version={reward.updatedAt} />
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-lg font-semibold text-foreground">{reward.student?.name || '—'}</h3>
-          <p className="text-sm text-muted-foreground">{reward.student?.studentCode || '—'}</p>
           <div className="mt-2 flex flex-wrap gap-2">
             <span className={tagClass(recognitionClasses, reward.recognitionLevel)}>
               {t(`behaviorRewards.recognitionLevels.${reward.recognitionLevel}`)}

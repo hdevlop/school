@@ -1,7 +1,6 @@
-import { TrendingUp, TrendingDown, Target, RotateCcw, Loader2, Send } from 'lucide-react';
+import { TrendingUp, TrendingDown, Target, Loader2, Send } from 'lucide-react';
 import { NButton } from 'najm-kit';
 import { cn } from 'najm-kit';
-import { useTranslation } from 'najm-i18n/react';
 
 interface Stats {
   total: number;
@@ -15,7 +14,6 @@ interface Props {
   stats: Stats;
   hasChanges?: boolean;
   isSubmitting?: boolean;
-  onReset?: () => void;
   onSubmit?: () => void;
   canSubmit?: boolean;
   submitTitle?: string;
@@ -52,12 +50,10 @@ export default function GradesHeader({
   stats,
   hasChanges = false,
   isSubmitting = false,
-  onReset,
   onSubmit,
   canSubmit = true,
   submitTitle = 'Save grades',
 }: Props) {
-  const { t } = useTranslation();
   const fmt = (v: number | null) => (v == null ? '—' : `${v}%`);
   return (
     <div className="flex w-full items-stretch justify-end gap-2">
@@ -68,18 +64,6 @@ export default function GradesHeader({
         <span className="h-4 w-px bg-border shrink-0" />
         <StatItem icon={Target} label="Pass Rate" value={`${stats.passRate}%`} tone="amber" />
       </div>
-      {hasChanges && (
-        <NButton
-          variant="outline"
-          onClick={onReset}
-          disabled={isSubmitting}
-          aria-label="Reset changes"
-          title={t('grades.messages.resetChanges')}
-          className="h-10 w-10 cursor-pointer p-0 border border-slate-900 bg-white text-slate-900 shadow-sm hover:bg-slate-900 hover:text-white disabled:cursor-not-allowed disabled:border-slate-300 disabled:bg-slate-50 disabled:text-slate-300 disabled:shadow-none"
-        >
-          <RotateCcw className="h-4 w-4" />
-        </NButton>
-      )}
       <NButton
         onClick={onSubmit}
         disabled={isSubmitting || !hasChanges || !canSubmit}

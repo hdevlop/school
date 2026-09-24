@@ -1,36 +1,29 @@
 'use client'
 
 import React from 'react';
-import { Building2, Mail, Phone, Calendar, Clock, Hamburger } from 'lucide-react';
+import { Building2, Mail, Phone, Clock, Hamburger } from 'lucide-react';
 import { FormInput } from 'najm-kit';
 import { FormLocationInput } from 'najm-kit/location';
 
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { getCurrentAcademicYear } from '@/lib/utils';
 
 const SchoolSection: React.FC = () => {
   const { t } = useTranslation();
   const { setValue } = useFormContext();
   const schoolLocation = useWatch({ name: 'schoolLocation' });
   const schoolPlaceId = useWatch({ name: 'schoolAddressPlaceId' });
-  const selectedYear = useWatch({ name: 'currentAcademicYear' });
-  const currentStartYear = Number(getCurrentAcademicYear().slice(0, 4));
-  const academicYears = Array.from(new Set([
-    ...Array.from({ length: 5 }, (_, index) => currentStartYear + 1 - index),
-    Number(selectedYear?.slice(0, 4)),
-  ].filter(Number.isInteger))).sort((a, b) => b - a);
 
 
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-3'>
       <div className="flex items-center gap-2 font-semibold text-sm">
         <Building2 className="h-5 w-5" />
         <Label className='text-lg'> {t('settings.school.title')} </Label>
       </div>
 
-      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-2 sm:grid-cols-2">
         <FormInput
           name="schoolName"
           type="text"
@@ -89,16 +82,6 @@ const SchoolSection: React.FC = () => {
           formLabel={t('settings.school.schoolEndTime') }
           icon={Clock}
           iconColor="#f59e0b"
-          required={true}
-        />
-
-        <FormInput
-          name="currentAcademicYear"
-          type="select"
-          formLabel={t('settings.school.currentAcademicYear')}
-          icon={Calendar}
-          iconColor="#ec4899"
-          items={academicYears.map((year) => ({ value: `${year}-${year + 1}`, label: `${year}-${year + 1}` }))}
           required={true}
         />
 

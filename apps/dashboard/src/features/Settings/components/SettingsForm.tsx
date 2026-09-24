@@ -6,14 +6,11 @@ import { NSkeleton as Skeleton } from 'najm-kit';
 import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
 
 import { NForm, NButton } from 'najm-kit';
-import AppearanceSection from './sections/AppearanceSection';
-import DatabaseSection from './sections/DatabaseSection';
 import SchoolSection from './sections/SchoolSection';
 import AcademicSection from './sections/AcademicSection';
 import SystemSection from './sections/SystemSection';
 import SecuritySection from './sections/SecuritySection';
 import NotificationSection from './sections/NotificationSection';
-import { Separator } from 'najm-kit';
 import { settingsSchema } from '../config/settingsSchemas';
 import { useAdminSettings } from '../hooks/useSettings';
 import { useTranslation } from 'najm-i18n/react';
@@ -25,62 +22,40 @@ import { getCurrentAcademicYear } from '@/lib/utils';
 
 // ─── Settings Skeleton ────────────────────────────────────────────────────────
 
-const SectionBlock = ({ rows = 3, hasLabel = true }: { rows?: number; hasLabel?: boolean }) => (
-  <div className="flex flex-col gap-3 w-full">
-    {hasLabel && <Skeleton className="h-4 w-28" />}
-    {Array.from({ length: rows }).map((_, i) => (
-      <div key={i} className="flex flex-col gap-1.5">
-        <Skeleton className="h-3 w-20" />
-        <Skeleton className="h-9 w-full rounded-md" />
-      </div>
-    ))}
+const SectionBlock = ({ rows = 3, switches = false, wide = false }: { rows?: number; switches?: boolean; wide?: boolean }) => (
+  <div className="flex w-full flex-col gap-3">
+    <Skeleton className="h-4 w-28" />
+    <div className={wide ? 'grid gap-2 sm:grid-cols-2 min-[1500px]:grid-cols-3' : 'grid gap-2 sm:grid-cols-2'}>
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="flex flex-col gap-1.5">
+          {switches
+            ? <Skeleton className="h-8 w-full rounded-md" />
+            : <><Skeleton className="h-3 w-20" /><Skeleton className="h-9 w-full rounded-md" /></>
+          }
+        </div>
+      ))}
+    </div>
   </div>
 );
 
 
 const SettingsSkeleton: React.FC = () => (
-  <div className="grid grid-cols-8 gap-2">
-    {/* Database column */}
-    <Card className="flex flex-col p-4 gap-4 col-span-2">
-      <div className="flex items-center gap-2">
-        <Skeleton className="h-5 w-5 rounded" />
-        <Skeleton className="h-5 w-32" />
-      </div>
-      <Skeleton className="h-3 w-48" />
-      <div className="flex flex-col gap-2">
-        <Skeleton className="h-9 w-full rounded-md" />
-        <Skeleton className="h-9 w-full rounded-md" />
-        <Skeleton className="h-9 w-full rounded-md" />
-      </div>
-      <Skeleton className="h-px w-full" />
-      <div className="flex flex-col gap-1.5">
-        <Skeleton className="h-3 w-16" />
-        <div className="flex gap-2">
-          <Skeleton className="h-9 flex-1 rounded-md" />
-          <Skeleton className="h-9 w-9 rounded-md" />
-        </div>
-        <Skeleton className="h-3 w-40" />
-      </div>
+  <div className="grid grid-cols-1 gap-2 min-[1100px]:grid-cols-2 min-[1500px]:grid-cols-3">
+    <Card className="flex min-w-0 flex-col gap-3 p-3">
+      <SectionBlock rows={7} />
     </Card>
-
-    {/* Main form columns */}
-    <div className="col-span-6 grid grid-cols-6 gap-2">
-      {/* Left big card */}
-      <Card className="flex flex-col p-4 gap-4 col-span-4">
-        <SectionBlock rows={4} />
-        <Skeleton className="h-px w-full" />
-        <SectionBlock rows={4} />
-        <Skeleton className="h-px w-full" />
-        <SectionBlock rows={3} />
-      </Card>
-
-      {/* Right small card */}
-      <Card className="flex flex-col p-4 gap-4 col-span-2">
-        <SectionBlock rows={3} />
-        <Skeleton className="h-px w-full" />
-        <SectionBlock rows={5} />
-      </Card>
-    </div>
+    <Card className="flex min-w-0 flex-col gap-3 p-3">
+      <SectionBlock rows={8} />
+    </Card>
+    <Card className="flex min-w-0 flex-col gap-3 p-3">
+      <SectionBlock rows={6} />
+    </Card>
+    <Card className="flex min-w-0 flex-col gap-3 p-3">
+      <SectionBlock rows={6} switches />
+    </Card>
+    <Card className="flex min-w-0 flex-col gap-3 p-3 min-[1100px]:col-span-2">
+      <SectionBlock rows={13} switches wide />
+    </Card>
   </div>
 );
 
@@ -192,38 +167,33 @@ const SettingsForm: React.FC = () => {
         </NPageHeaderActions>
       </NPageHeader>
 
-      <div className='grid grid-cols-8 gap-2'>
-        {/* DatabaseSection is intentionally outside NForm — its buttons must not submit settings */}
-        <div className="flex flex-col col-span-2 gap-2">
-          <DatabaseSection />
-        </div>
+      <NForm
+        id="settings-form"
+        schema={settingsSchema}
+        defaultValues={defaultValues}
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 gap-2 min-[1100px]:grid-cols-2 min-[1500px]:grid-cols-3"
+      >
+        <Card className="flex min-w-0 flex-col gap-3 p-3">
+          <SchoolSection />
+        </Card>
 
-        <NForm
-          id="settings-form"
-          schema={settingsSchema}
-          defaultValues={defaultValues}
-          onSubmit={handleSubmit}
-          className="col-span-6 grid grid-cols-6 gap-2"
-        >
-          <Card className="flex p-4 gap-3 col-span-4">
-            <SchoolSection />
-            <Separator className='bg-tertiary' />
-            <AcademicSection />
-            <Separator className='bg-tertiary' />
-            <SystemSection />
-          </Card>
+        <Card className="flex min-w-0 flex-col gap-3 p-3">
+          <AcademicSection />
+        </Card>
 
-          <Card className="flex p-4 gap-3 col-span-2">
-            <SecuritySection />
-            <Separator className='bg-tertiary' />
-            <NotificationSection />
-          </Card>
-        </NForm>
-      </div>
+        <Card className="flex min-w-0 flex-col gap-3 p-3">
+          <SystemSection />
+        </Card>
 
-      {/* Outside the settings form on purpose: najm-theme owns its own
-          persistence, revisions, and Save. */}
-      <AppearanceSection />
+        <Card className="flex min-w-0 flex-col gap-3 p-3">
+          <SecuritySection />
+        </Card>
+
+        <Card className="flex min-w-0 flex-col gap-3 p-3 min-[1100px]:col-span-2">
+          <NotificationSection />
+        </Card>
+      </NForm>
     </div>
   );
 };

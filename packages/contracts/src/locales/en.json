@@ -590,6 +590,20 @@
     },
     "deleteConfirm": "Are you sure you want to delete?",
     "inactive": "Inactive",
+    "table": {
+      "settings": "Table settings",
+      "view": "View",
+      "columns": "Columns",
+      "modeTable": "Table",
+      "modeCards": "Cards",
+      "modeJson": "JSON",
+      "modeFiles": "Files",
+      "modeOption": "Switch to {{mode}} view",
+      "filters": "Filters",
+      "filterRegion": "Table filters",
+      "allOption": "All",
+      "create": "Add"
+    },
     "pagination": {
       "rowsPerPage": "Rows/page",
       "pagination": "Pagination",
@@ -677,10 +691,6 @@
       "invalidTimeZone": "Invalid time zone specified",
       "noSettingsToDelete": "No settings found to delete",
       "userSettingsNotFound": "User settings not found"
-    },
-    "database": {
-      "title": "Database Management",
-      "description": "Manage database operations and demo data seeding."
     },
     "system": {
       "title": "System Settings",
@@ -2799,6 +2809,7 @@
     },
     "errors": {
       "selectSource": "Select an assessment or exam before saving grades.",
+      "saveFailed": "Could not save all grades. Please try again.",
       "notFound": "Grade not found",
       "idExists": "Grade ID already exists",
       "alreadyExists": "Grade already exists for this student and source",
@@ -3563,6 +3574,11 @@
       "unassignButton": "Unassign Driver"
     }
   },
+  "themeSheets": {
+    "discardTitle": "Discard theme changes?",
+    "discardDescription": "Unsaved theme or branding changes will be lost.",
+    "discard": "Discard changes"
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "students": "Students",
@@ -3591,6 +3607,9 @@
     "permissions": "Permissions",
     "accessControl": "AccessControle",
     "settings": "Settings",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "branding": "Branding",
     "logout": "LogOut",
     "academic": "Academic",
     "bus": "Bus",

@@ -1,6 +1,8 @@
 import { Service, Err, I18n, t } from '../../najm';
 import { SectionRepository } from './SectionRepository';
 import { ClassRepository } from '../classes/ClassRepository';
+import { SettingsRepository } from '../settings/SettingsRepository';
+import { getCurrentAcademicYear } from '../financial/utils';
 
 @Service()
 export class SectionValidator {
@@ -8,7 +10,8 @@ export class SectionValidator {
 
   constructor(
     private sectionRepository: SectionRepository,
-    private classRepository: ClassRepository
+    private classRepository: ClassRepository,
+    private settingsRepository: SettingsRepository,
   ) {}
 
   async ensureExists(id: string) {
@@ -68,7 +71,10 @@ export class SectionValidator {
 
     let resolvedClassId = classId;
     if (!resolvedClassId && className) {
-      const classEntity = await this.classRepository.getByName(className);
+      const settings = await this.settingsRepository.getPublicSettings();
+      const classEntity = await this.classRepository.getByName(
+        className, settings?.currentAcademicYear || getCurrentAcademicYear(),
+      );
       if (!classEntity) {
         Err(404, t('classes.errors.notFound'));
       }

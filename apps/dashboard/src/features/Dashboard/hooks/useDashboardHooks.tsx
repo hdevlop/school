@@ -15,7 +15,7 @@ import {
   getStudentAttendanceMonthlyApi,
   getStaffAttendanceMonthlyApi,
 } from '@/services/dashboardApi';
-import { getCurrentAcademicYear } from '@/lib/utils';
+import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 
 export const useDashboardWidgets = (enabled = true) => {
   return useQuery({
@@ -42,10 +42,12 @@ export const useStudentsByGender = (enabled = true) => {
 const FINANCE_STALE = 2 * 60 * 1000;
 
 export const useFinanceKpis = (academicYear?: string) => {
-  const year = academicYear ?? getCurrentAcademicYear();
+  const { academicYear: activeYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const year = academicYear ?? activeYear;
   return useQuery({
     queryKey: ['dashboard', 'finance', 'kpis', year],
     queryFn: () => getFinanceKpisApi(year),
+    enabled: !isAcademicYearLoading,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
@@ -53,10 +55,12 @@ export const useFinanceKpis = (academicYear?: string) => {
 };
 
 export const useFinanceTrend = (academicYear?: string) => {
-  const year = academicYear ?? getCurrentAcademicYear();
+  const { academicYear: activeYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const year = academicYear ?? activeYear;
   return useQuery({
     queryKey: ['dashboard', 'finance', 'trend', year],
     queryFn: () => getFinanceTrendApi(year),
+    enabled: !isAcademicYearLoading,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
@@ -94,10 +98,12 @@ export const useFinanceRecentPayments = (limit = 10) => {
 };
 
 export const useFinanceExpenseBreakdown = (academicYear?: string) => {
-  const year = academicYear ?? getCurrentAcademicYear();
+  const { academicYear: activeYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const year = academicYear ?? activeYear;
   return useQuery({
     queryKey: ['dashboard', 'finance', 'expense-breakdown', year],
     queryFn: () => getFinanceExpenseBreakdownApi(year),
+    enabled: !isAcademicYearLoading,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
@@ -105,10 +111,12 @@ export const useFinanceExpenseBreakdown = (academicYear?: string) => {
 };
 
 export const useFinanceCollectionByClass = (academicYear?: string) => {
-  const year = academicYear ?? getCurrentAcademicYear();
+  const { academicYear: activeYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const year = academicYear ?? activeYear;
   return useQuery({
     queryKey: ['dashboard', 'finance', 'collection-by-class', year],
     queryFn: () => getFinanceCollectionByClassApi(year),
+    enabled: !isAcademicYearLoading,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,

@@ -64,16 +64,24 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
       header: t('installments.table.status'),
       enableSorting: true,
       enableColumnFilter: true,
-      cell: ({ getValue }: any) => {
+      cell: ({ getValue, row }: any) => {
         const status = getValue();
+        const unavailableReason = status === 'paid' || isInstallmentPayable(row.original)
+          ? null
+          : Number(row.original.reservedAmount || 0) > 0
+            ? 'Payment in progress'
+            : 'No available balance';
 
         return (
-          <NBadge
-            status={status}
-            showIcon
-            size="md"
-            look="solid"
-          />
+          <div className="flex flex-col items-start gap-1">
+            <NBadge
+              status={status}
+              showIcon
+              size="md"
+              look="solid"
+            />
+            {unavailableReason && <span className="text-xs text-amber-700">{unavailableReason}</span>}
+          </div>
         );
       },
     },
@@ -84,6 +92,13 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
       cell: ({ row }: any) => {
         const installment = row.original;
         const payable = isInstallmentPayable(installment);
+        const payTitle = payable
+          ? 'Pay this installment'
+          : installment.status === 'paid'
+            ? 'Already paid'
+            : Number(installment.reservedAmount || 0) > 0
+              ? 'A pending or deposited payment reserves this installment'
+              : 'No available balance';
 
         return (
           <div className="flex justify-start gap-2">
@@ -100,20 +115,21 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
               <Eye className="h-3.5 w-3.5" />
               View
             </NButton>
-            <NButton
-              type="button"
-              size="sm"
-              className="h-8 gap-1.5 px-2.5 text-xs"
-              disabled={!payable}
-              title={payable ? 'Pay this installment' : 'No available balance'}
-              onClick={(event: any) => {
-                event.stopPropagation();
-                onPay?.(installment);
-              }}
-            >
-              <CreditCard className="h-3.5 w-3.5" />
-              Pay
-            </NButton>
+            <span className="inline-flex" title={payTitle}>
+              <NButton
+                type="button"
+                size="sm"
+                className="h-8 gap-1.5 px-2.5 text-xs"
+                disabled={!payable}
+                onClick={(event: any) => {
+                  event.stopPropagation();
+                  onPay?.(installment);
+                }}
+              >
+                <CreditCard className="h-3.5 w-3.5" />
+                Pay
+              </NButton>
+            </span>
           </div>
         );
       },

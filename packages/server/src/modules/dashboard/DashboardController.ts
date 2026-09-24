@@ -2,6 +2,8 @@ import { Controller, Get, t, User, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DashboardService } from './DashboardService';
 import { isAuth, isAdmin } from '../../auth';
+import { SettingsRepository } from '../settings/SettingsRepository';
+import { getCurrentAcademicYear } from '../financial/utils';
 
 @ToolGroup('dashboard')
 @Controller('/dashboard')
@@ -9,6 +11,7 @@ import { isAuth, isAdmin } from '../../auth';
 export class DashboardController {
   constructor(
     private dashboardService: DashboardService,
+    private settingsRepository: SettingsRepository,
   ) { }
 
   @Get('/today')
@@ -60,19 +63,18 @@ export class DashboardController {
 
   @Get('/attendance/students-monthly')
   async getStudentAttendanceMonthly() {
-    const data = await this.dashboardService.getAttendanceMonthly('student', this.currentAcademicYear());
+    const data = await this.dashboardService.getAttendanceMonthly('student', await this.currentAcademicYear());
     return { data, message: t('dashboards.success.retrieved'), status: 'success' };
   }
 
   @Get('/attendance/staff-monthly')
   async getStaffAttendanceMonthly() {
-    const data = await this.dashboardService.getAttendanceMonthly('staff', this.currentAcademicYear());
+    const data = await this.dashboardService.getAttendanceMonthly('staff', await this.currentAcademicYear());
     return { data, message: t('dashboards.success.retrieved'), status: 'success' };
   }
 
-  private currentAcademicYear(): string {
-    const now = new Date();
-    const start = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
-    return `${start}-${start + 1}`;
+  private async currentAcademicYear(): Promise<string> {
+    const settings = await this.settingsRepository.getPublicSettings();
+    return settings?.currentAcademicYear || getCurrentAcademicYear();
   }
 }

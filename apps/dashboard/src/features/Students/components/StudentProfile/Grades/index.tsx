@@ -1,12 +1,12 @@
 'use client';
 
-import { Input, NButton, NEmptyState, NStatCard, NTable } from 'najm-kit';
+import { NButton, NEmptyState, NStatCard, NTable } from 'najm-kit';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useGrades, useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { Award, BookOpenCheck, GraduationCap, Save, TrendingUp } from 'lucide-react';
-import { NativeProfileSelect } from '../NativeProfileSelect';
 import { useTranslation } from 'najm-i18n/react';
+import { toast } from 'sonner';
 
 const pctColor = (pct?: number | null) => {
   if (pct == null) return 'text-slate-400';
@@ -17,13 +17,16 @@ const pctColor = (pct?: number | null) => {
 
 const fmtPct = (value?: number | null) => (value == null ? '-' : `${Math.round(value)}%`);
 const fmtGpa = (value?: number | null) => (value == null ? '-' : Number(value).toFixed(2));
+const gradePercentage = (marks: number | null | undefined, total: number | null | undefined) =>
+  marks == null || !total ? null : Number(marks) / Number(total) * 100;
 
 export default function GradesTab({ studentId }: { studentId?: string }) {
   const { t } = useTranslation();
   const { data: reportResponse, isLoading } = useStudentReport(studentId || null);
-  const { updateGrade, isUpdating } = useGrades({ enabled: false });
+  const { updateGrade } = useGrades({ enabled: false });
   const queryClient = useQueryClient();
-  const [drafts, setDrafts] = useState<Record<string, any>>({});
+  const [drafts, setDrafts] = useState<Record<string, Record<string, any>>>({});
+  const [isSaving, setIsSaving] = useState(false);
   const report = reportResponse?.data ?? reportResponse;
   const gradeStatusOptions = useMemo(() => [
     { value: 'graded', label: t('students.profile.gradeDetails.graded') },
@@ -31,53 +34,9 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
     { value: 'missed', label: t('students.profile.gradeDetails.missed') },
   ], [t]);
 
-  useEffect(() => {
-    if (!report?.subjects) return;
+  useEffect(() => setDrafts({}), [studentId]);
 
-    const nextDrafts: Record<string, any> = {};
-    report.subjects.forEach((subject) => {
-      (subject.grades || []).forEach((grade) => {
-        nextDrafts[grade.id] = {
-          marksObtained: grade.marksObtained ?? '',
-          feedback: grade.feedback ?? '',
-          status: grade.status || 'pending',
-        };
-      });
-    });
-    setDrafts(nextDrafts);
-  }, [report]);
-
-  const handleDraftChange = useCallback((gradeId: string, field: string, value: any) => {
-    setDrafts((current) => ({
-      ...current,
-      [gradeId]: {
-        ...current[gradeId],
-        [field]: value,
-      },
-    }));
-  }, []);
-
-  const handleSaveGrade = useCallback(async (grade: any) => {
-    const draft = drafts[grade.id];
-    if (!draft) return;
-
-    const payload: any = {
-      id: grade.id,
-      status: draft.status,
-      feedback: draft.feedback ?? '',
-    };
-
-    if (draft.status === 'missed') {
-      payload.marksObtained = 0;
-    } else if (draft.marksObtained !== '') {
-      payload.marksObtained = Number(draft.marksObtained);
-    }
-
-    await updateGrade(payload);
-    await queryClient.invalidateQueries({ queryKey: ['grades', 'student', studentId, 'report'] });
-  }, [drafts, queryClient, studentId, updateGrade]);
-
-  const rows = useMemo(
+  const baseRows = useMemo(
     () => (report?.subjects || []).flatMap((subject: any) =>
       (subject.grades || []).map((grade: any) => ({
         ...grade,
@@ -88,6 +47,58 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
     ),
     [report],
   );
+
+  const rows = useMemo(() => baseRows.map((grade: any) => {
+    const draft = drafts[grade.id];
+    if (!draft) return grade;
+    const merged = { ...grade, ...draft };
+    return {
+      ...merged,
+      percentage: gradePercentage(merged.status === 'missed' ? 0 : merged.marksObtained, merged.totalMarks),
+    };
+  }), [baseRows, drafts]);
+  const changedGrades = useMemo(() => Object.entries(drafts).filter(([id, draft]) => {
+    const original = baseRows.find((grade: any) => grade.id === id);
+    return original && Object.entries(draft).some(([field, value]) => original[field] !== value);
+  }), [baseRows, drafts]);
+
+  const handleCellEdit = useCallback((grade: any, field: string, value: any) => {
+    setDrafts((current) => ({
+      ...current,
+      [grade.id]: {
+        ...current[grade.id],
+        [field]: value,
+        ...(field === 'marksObtained' ? { status: 'graded' } : {}),
+        ...(field === 'status' && value === 'missed' ? { marksObtained: 0 } : {}),
+      },
+    }));
+  }, []);
+
+  const handleSaveAll = useCallback(async () => {
+    if (!changedGrades.length || isSaving) return;
+
+    setIsSaving(true);
+    try {
+      const results = await Promise.allSettled(changedGrades.map(([id, draft]) =>
+        updateGrade({ id, ...draft })
+      ));
+      const savedIds = changedGrades.flatMap(([id], index) => results[index].status === 'fulfilled' ? [id] : []);
+      if (savedIds.length) {
+        setDrafts((current) => {
+          const next = { ...current };
+          savedIds.forEach((id) => delete next[id]);
+          return next;
+        });
+        await queryClient.invalidateQueries({ queryKey: ['grades', 'student', studentId, 'report'] });
+      }
+      if (savedIds.length === changedGrades.length) toast.success(t('grades.success.saved'));
+      else toast.error(t('grades.errors.saveFailed'));
+    } catch {
+      toast.error(t('grades.errors.saveFailed'));
+    } finally {
+      setIsSaving(false);
+    }
+  }, [changedGrades, isSaving, queryClient, studentId, t, updateGrade]);
 
   const columns = useMemo(() => [
     {
@@ -120,79 +131,33 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
       accessorKey: 'marksObtained',
       header: t('students.profile.gradeDetails.marks'),
       enableSorting: true,
-      cell: ({ row }: any) => {
-        const grade = row.original;
-        const draft = drafts[grade.id] || {
-          marksObtained: grade.marksObtained ?? '',
-          feedback: grade.feedback ?? '',
-          status: grade.status || 'pending',
-        };
-
-        return (
-          <div className="flex min-w-[130px] items-center gap-2">
-            <Input
-              aria-label={t('students.profile.gradeDetails.marksFor', {
-                assessment: grade.assessment?.title || t('students.profile.gradeDetails.assessment').toLowerCase(),
-              })}
-              type="number"
-              min={0}
-              max={grade.totalMarks ?? undefined}
-              value={draft.marksObtained}
-              onChange={(event) => handleDraftChange(grade.id, 'marksObtained', event.target.value)}
-              className="h-9 w-20"
-            />
-            <span className="whitespace-nowrap text-sm text-slate-400">/ {grade.totalMarks ?? '—'}</span>
-          </div>
-        );
+      meta: {
+        editable: !isSaving,
+        editor: 'number',
+        min: 0,
+        max: (grade: any) => grade.totalMarks ?? 1000,
+        validate: (value: number | null, grade: any) =>
+          value == null ? t('validation.general.requiredFieldMissing')
+            : value < 0 || (grade.totalMarks != null && value > grade.totalMarks)
+              ? t('validation.general.valueOutOfRange') : null,
       },
+      cell: ({ row }: any) => (
+        <div className="min-w-[110px] whitespace-nowrap font-medium text-slate-800">
+          {row.original.marksObtained ?? '—'}
+          <span className="ml-1 text-sm font-normal text-slate-400">/ {row.original.totalMarks ?? '—'}</span>
+        </div>
+      ),
     },
     {
       accessorKey: 'status',
       header: t('students.profile.attendanceDetails.status'),
       enableSorting: true,
-      cell: ({ row }: any) => {
-        const grade = row.original;
-        const draft = drafts[grade.id] || {
-          marksObtained: grade.marksObtained ?? '',
-          feedback: grade.feedback ?? '',
-          status: grade.status || 'pending',
-        };
-
-        return (
-          <div className="min-w-[130px]">
-            <NativeProfileSelect
-              value={draft.status}
-              onValueChange={(value) => handleDraftChange(grade.id, 'status', value)}
-              options={gradeStatusOptions}
-            />
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: 'feedback',
-      header: t('students.profile.gradeDetails.feedback'),
-      enableSorting: false,
-      cell: ({ row }: any) => {
-        const grade = row.original;
-        const draft = drafts[grade.id] || {
-          marksObtained: grade.marksObtained ?? '',
-          feedback: grade.feedback ?? '',
-          status: grade.status || 'pending',
-        };
-
-        return (
-          <Input
-            aria-label={t('students.profile.gradeDetails.feedbackFor', {
-              assessment: grade.assessment?.title || t('students.profile.gradeDetails.assessment').toLowerCase(),
-            })}
-            value={draft.feedback}
-            placeholder={t('students.profile.gradeDetails.feedback')}
-            onChange={(event) => handleDraftChange(grade.id, 'feedback', event.target.value)}
-            className="h-9 min-w-[220px]"
-          />
-        );
-      },
+      meta: { editable: !isSaving, editor: 'select', options: gradeStatusOptions },
+      cell: ({ getValue }: any) => (
+        <span className="font-medium text-slate-700">
+          {gradeStatusOptions.find((option) => option.value === getValue())?.label || gradeStatusOptions[1].label}
+        </span>
+      ),
     },
     {
       accessorKey: 'percentage',
@@ -207,26 +172,10 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
         </div>
       ),
     },
-    {
-      id: 'actions',
-      header: t('common.actions'),
-      enableSorting: false,
-      cell: ({ row }: any) => (
-        <NButton
-          type="button"
-          size="sm"
-          onClick={() => handleSaveGrade(row.original)}
-          disabled={isUpdating}
-        >
-          <Save className="mr-2 h-4 w-4" />
-          {t('common.save')}
-        </NButton>
-      ),
-    },
-  ], [drafts, gradeStatusOptions, handleDraftChange, handleSaveGrade, isUpdating, t]);
+  ], [gradeStatusOptions, isSaving, t]);
 
   return (
-    <div className="space-y-4">
+    <div className="flex min-h-full flex-col gap-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <NStatCard
           icon={GraduationCap}
@@ -249,8 +198,11 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
       </div>
 
       <NTable
+        className="min-h-0 flex-1"
         data={rows}
+        getRowId={(grade: any) => grade.id}
         columns={columns}
+        onCellEdit={handleCellEdit}
         loading={isLoading}
         defaultMode="table"
         availableModes={['table']}
@@ -270,6 +222,12 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
           />
         )}
       />
+      <div className="flex shrink-0 justify-end border-t border-slate-200 bg-white pt-3">
+        <NButton type="button" onClick={handleSaveAll} disabled={isSaving || !changedGrades.length}>
+          <Save className="mr-2 h-4 w-4" />
+          {t('common.save')}
+        </NButton>
+      </div>
     </div>
   );
 }

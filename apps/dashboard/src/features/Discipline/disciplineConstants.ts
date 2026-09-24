@@ -51,8 +51,17 @@ export type DisciplineIncident = {
   resolver?: { id?: string | null; name?: string | null; email?: string | null; image?: string | null };
 };
 
-export const formatDisciplineDate = (value?: string | null) => {
-  if (!value) return '—';
+export const formatDisciplineDateParts = (value?: string | null, language = 'en') => {
+  if (!value) return null;
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleString();
+  if (Number.isNaN(date.getTime())) return null;
+  return {
+    date: new Intl.DateTimeFormat(language, { dateStyle: 'medium' }).format(date),
+    time: new Intl.DateTimeFormat(language, { timeStyle: 'short' }).format(date),
+  };
+};
+
+export const formatDisciplineDate = (value?: string | null, language = 'en') => {
+  const parts = formatDisciplineDateParts(value, language);
+  return parts ? `${parts.date}, ${parts.time}` : '—';
 };

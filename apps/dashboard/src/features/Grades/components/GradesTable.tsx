@@ -410,7 +410,6 @@ function GradesTable() {
             stats={stats}
             hasChanges={hasChanges}
             isSubmitting={isSubmittingBatch}
-            onReset={resetDraft}
             onSubmit={handleSubmit}
             canSubmit={canSubmit}
             submitTitle={canSubmit ? 'Save grades' : 'Select an assessment or exam first'}

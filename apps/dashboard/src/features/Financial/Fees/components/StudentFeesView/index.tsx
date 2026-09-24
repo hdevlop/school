@@ -18,8 +18,7 @@ import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } 
 import { BulkFeeFormContent } from "@/features/Financial/Fees/components/BulkFeeForm";
 import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
 import { injectStudentIdToFees } from "@/features/Financial/Fees/utils/feeUtils";
-import { usePublicSettings } from "@/features/Settings/hooks/useSettings";
-import { getCurrentAcademicYear } from "@/lib/utils";
+import { useActiveAcademicYear } from "@/features/Settings/hooks/useSettings";
 
 const TAB_STYLES = "border-0 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:!border-b-2 data-[state=active]:!border-primary rounded-none px-6 py-3 data-[state=active]:!text-primary text-muted-foreground hover:text-primary transition-colors";
 
@@ -114,23 +113,14 @@ const StudentFeesViewSkeleton = ({ className, hideHeader = false }: { className:
 
 export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = null }) => {
   const { studentFees, isStudentFeesLoading, createBulkFees, isBulkCreating } = useFees({ studentId });
-  const { publicSettings } = usePublicSettings();
+  const { academicYear: activeYear, isAcademicYearLoading } = useActiveAcademicYear();
   const { createPayment } = usePayments();
   const { feeTypes } = useFeeTypes();
   const [selectedFeeId, setSelectedFeeId] = useState(initialFeeId);
   const [activeTab, setActiveTab] = useState("overview");
-  const [yearOverride, setYearOverride] = useState<string | null>(null);
-  const activeYear = publicSettings?.currentAcademicYear || getCurrentAcademicYear();
-  const initialFeeYear = studentFees?.fees?.find((fee: any) => fee.id === initialFeeId)?.academicYear;
-  const selectedYear = yearOverride ?? initialFeeYear ?? activeYear;
-  const yearOptions = useMemo(() => Array.from(new Set([
-    activeYear,
-    ...(studentFees?.fees || []).map((fee: any) => fee.academicYear).filter(Boolean),
-  ])).sort().reverse(), [activeYear, studentFees?.fees]);
-  const visibleFees = useMemo(() => selectedYear === 'all'
-    ? (studentFees?.fees || [])
-    : (studentFees?.fees || []).filter((fee: any) => fee.academicYear === selectedYear),
-    [selectedYear, studentFees?.fees]);
+  const visibleFees = useMemo(() => (studentFees?.fees || []).filter(
+    (fee: any) => fee.academicYear === activeYear || getFeeBalance(fee) > 0,
+  ), [activeYear, studentFees?.fees]);
   const visibleStudentFees = useMemo(() => studentFees ? { ...studentFees, fees: visibleFees } : null, [studentFees, visibleFees]);
   const overdueCount = visibleFees.reduce((sum: number, fee: any) => sum + Number(fee.overdueInstallments || 0), 0);
   const visibleAlerts = {
@@ -287,7 +277,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     }
   };
 
-  if (isStudentFeesLoading) {
+  if (isStudentFeesLoading || isAcademicYearLoading) {
     return <StudentFeesViewSkeleton className={loadingClassName} hideHeader={hideHeader} />;
   }
 
@@ -345,20 +335,6 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         />
       )}
 
-      <div className="flex flex-wrap items-center gap-2 px-1 text-sm">
-        <label htmlFor="student-fees-year" className="font-medium">Academic year</label>
-        <select
-          id="student-fees-year"
-          value={selectedYear}
-          onChange={(event) => { setYearOverride(event.target.value); setSelectedFeeId(null); }}
-          className="rounded-md border border-border bg-background px-3 py-1.5"
-        >
-          {yearOptions.map((year) => <option key={year} value={year}>{year}</option>)}
-          <option value="all">All years</option>
-        </select>
-        <span className="text-muted-foreground">September–June billing · previous year closeout July 1–14</span>
-      </div>
-
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">
         <div className="flex items-center justify-between border-b border-gray-200">
           <TabsList className="bg-transparent rounded-none justify-start h-auto p-0 border-0">
@@ -372,7 +348,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
 
           {(activeTab === "overview" || hideHeader) && (
             <div className="flex items-center gap-2 pb-1 pr-1">
-              {activeTab === "overview" && selectedYear === activeYear && (
+              {activeTab === "overview" && (
                 <NButton
                   onClick={handleAddFee}
                   size="sm"

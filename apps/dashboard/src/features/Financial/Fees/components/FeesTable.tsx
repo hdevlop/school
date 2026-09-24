@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { createBulkFeesApi } from '@/services/feeApi';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 
 
 function FeesTable() {
@@ -29,8 +30,9 @@ function FeesTable() {
   const { feeTypes } = useFeeTypes();
   const { classes } = useClasses();
   const { sections } = useSections();
+  const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
 
-  const [selectedClassId, setSelectedClassId] = useState('');
+  const [selectedClassId, setSelectedClassId] = useState('all');
   const [selectedSectionId, setSelectedSectionId] = useState('');
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('__all__');
@@ -47,8 +49,8 @@ function FeesTable() {
   const isAllClasses = selectedClassId === 'all';
 
   useEffect(() => {
-    if (!selectedClassId && classes?.length > 0) {
-      setSelectedClassId(classes[0].id);
+    if (selectedClassId !== 'all' && !classes?.some((schoolClass) => schoolClass.id === selectedClassId)) {
+      setSelectedClassId(classes?.[0]?.id || '');
     }
   }, [classes, selectedClassId]);
 
@@ -68,6 +70,7 @@ function FeesTable() {
     if (!fees) return [];
 
     return fees.filter((row: any) => {
+      if (row.academicYear !== academicYear && Number(row.totalDue ?? 0) <= 0) return false;
       if (!isAllClasses && selectedClassId && row.class?.id !== selectedClassId) return false;
 
       if (!isAllClasses && selectedSectionId && row.section?.id !== selectedSectionId) return false;
@@ -90,7 +93,7 @@ function FeesTable() {
 
       return true;
     });
-  }, [fees, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
+  }, [fees, academicYear, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
 
   const classOptions = useMemo(
     () => [
@@ -237,7 +240,7 @@ function FeesTable() {
         onRowClick={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
-        loading={isFeesLoading}
+        loading={isFeesLoading || isAcademicYearLoading}
         renderCard={FeeCard}
         classNames={{
           cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',

@@ -650,6 +650,20 @@
     "amount": "المبلغ",
     "inactive": "غير نشط",
     "none": "لا يوجد",
+    "table": {
+      "settings": "إعدادات الجدول",
+      "view": "عرض",
+      "columns": "الأعمدة",
+      "modeTable": "جدول",
+      "modeCards": "بطاقات",
+      "modeJson": "JSON",
+      "modeFiles": "ملفات",
+      "modeOption": "التبديل إلى عرض {{mode}}",
+      "filters": "عوامل التصفية",
+      "filterRegion": "عوامل تصفية الجدول",
+      "allOption": "الكل",
+      "create": "إضافة"
+    },
     "pagination": {
       "rowsPerPage": "صفوف/صفحة",
       "pagination": "ترقيم الصفحات",
@@ -705,6 +719,11 @@
     "teachers": "الأساتذة",
     "transferred": "منقول"
   },
+  "themeSheets": {
+    "discardTitle": "تجاهل تغييرات المظهر؟",
+    "discardDescription": "ستفقد التغييرات غير المحفوظة على المظهر أو الهوية البصرية.",
+    "discard": "تجاهل التغييرات"
+  },
   "navigation": {
     "dashboard": "لوحة التحكم",
     "fields": "الحقول",
@@ -720,6 +739,9 @@
     "permissions": "الصلاحيات",
     "accessControl": "التحكم بالوصول",
     "settings": "الإعدادات",
+    "appearance": "المظهر",
+    "theme": "السمة",
+    "branding": "الهوية البصرية",
     "logout": "تسجيل الخروج",
     "academic": "أكاديمي",
     "fees": "الرسوم",
@@ -1947,6 +1969,7 @@
     },
     "errors": {
       "selectSource": "اختر تقييماً أو امتحاناً قبل حفظ النقط.",
+      "saveFailed": "تعذر حفظ جميع النقط. يرجى المحاولة مرة أخرى.",
       "marksExceedTotal": "النقاط تتجاوز المجموع",
       "sourceRequired": "اختر تقييما أو امتحانا"
     },
@@ -2569,10 +2592,6 @@
       "confirmTitle": "تأكيد الإجراء",
       "warningMessage": "هذا إجراء مدمر",
       "success": "تم إكمال Clear بنجاح"
-    },
-    "database": {
-      "description": "الوصف",
-      "title": "العنوان"
     },
     "notifications": {
       "academicAlerts": "التنبيهات الأكاديمية",

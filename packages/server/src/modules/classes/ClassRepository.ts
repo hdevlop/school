@@ -144,9 +144,9 @@ export class ClassRepository {
     return result;
   }
 
-  async getByName(name) {
+  async getByName(name: string, academicYear: string) {
     const [result] = await this.buildClassQuery()
-      .where(eq(classes.name, name))
+      .where(and(eq(classes.name, name), eq(classes.academicYear, academicYear)))
       .limit(1);
     return result;
   }
@@ -261,8 +261,8 @@ export class ClassRepository {
     return result;
   }
 
-  async getStudentsByClassName(className, sectionName = null) {
-    const whereConditions = [eq(classes.name, className)];
+  async getStudentsByClassName(className: string, sectionName: string | null, academicYear: string) {
+    const whereConditions = [eq(classes.name, className), eq(classes.academicYear, academicYear)];
 
     if (sectionName) {
       whereConditions.push(eq(sections.name, sectionName));

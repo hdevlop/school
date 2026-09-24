@@ -19,13 +19,13 @@ export const useBehaviorRewardsTableColumns = () => {
       cell: ({ row }) => {
         const student = row.original.student;
         return (
-          <div className="flex min-w-52 items-center gap-3">
-            <NAvatar src={student?.image} title={student?.name} size="sm" version={row.original.updatedAt} />
-            <div className="min-w-0">
-              <div className="truncate text-sm font-semibold text-foreground">{student?.name || '—'}</div>
-              <div className="truncate text-xs text-muted-foreground">{student?.studentCode || '—'}</div>
-            </div>
-          </div>
+          <NAvatar
+            src={student?.image}
+            title={student?.name || '—'}
+            subtitle={student?.studentCode || '—'}
+            size="sm"
+            version={row.original.updatedAt}
+          />
         );
       },
     },
@@ -90,14 +90,7 @@ export const useBehaviorRewardsTableColumns = () => {
     {
       accessorKey: 'awardedByUser',
       header: t('behaviorRewards.table.awardedBy'),
-      cell: ({ row }) => (
-        <div className="max-w-44 text-sm">
-          <div className="truncate font-medium">{row.original.awardedByUser?.name || row.original.awardedByUser?.email || '—'}</div>
-          {row.original.awardedByUser?.name && row.original.awardedByUser?.email ? (
-            <div className="truncate text-xs text-muted-foreground">{row.original.awardedByUser.email}</div>
-          ) : null}
-        </div>
-      ),
+      cell: ({ row }) => <span className="block max-w-44 truncate text-sm font-medium">{row.original.awardedByUser?.name || '—'}</span>,
     },
   ], [language, t]);
 };

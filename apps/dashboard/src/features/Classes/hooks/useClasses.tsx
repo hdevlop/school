@@ -1,9 +1,12 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as classApi from '@/services/classApi';
+import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
+import { useMemo } from 'react';
 
 export const useClasses = (options?) => {
-  const { classId, enabled = true } = options || {};
+  const { classId, enabled = true, allYears = false } = options || {};
+  const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
 
   const crud = useEntityCRUD('classes', {
     getAll: classApi.getClassesApi,
@@ -13,7 +16,12 @@ export const useClasses = (options?) => {
     delete: classApi.deleteClassApi,
   });
 
-  const { data: classes, isLoading: isClassesLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: allClasses, isLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const classes = useMemo(() => allYears
+    ? allClasses
+    : allClasses?.filter((schoolClass) => schoolClass.academicYear === academicYear),
+  [allYears, allClasses, academicYear]);
+  const isClassesLoading = isLoading || (!allYears && isAcademicYearLoading);
   const { data: classData, isLoading: isClassLoading } = crud.useGetById(classId, !!classId);
 
   const { mutateAsync: createClass, isLoading: isCreating } = crud.useCreate();

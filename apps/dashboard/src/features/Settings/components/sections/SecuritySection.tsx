@@ -12,13 +12,13 @@ const SecuritySection: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center gap-2 font-semibold text-sm">
         <Shield className="h-4 w-4" />
         <Label className='text-lg'> {t('settings.security.title')} </Label>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="grid gap-2 sm:grid-cols-2">
         <FormInput
           type="switch"
           name="twoFactorEnabled"
@@ -28,7 +28,7 @@ const SecuritySection: React.FC = () => {
           variant="ghost"
         />
 
-<FormInput
+        <FormInput
           type="switch"
           name="passwordRequireSymbols"
           label={t('settings.security.passwordExpiry')}

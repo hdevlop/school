@@ -446,6 +446,20 @@
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ?",
     "amount": "Montant",
     "inactive": "Inactif",
+    "table": {
+      "settings": "Paramètres du tableau",
+      "view": "Affichage",
+      "columns": "Colonnes",
+      "modeTable": "Tableau",
+      "modeCards": "Cartes",
+      "modeJson": "JSON",
+      "modeFiles": "Fichiers",
+      "modeOption": "Afficher en mode {{mode}}",
+      "filters": "Filtres",
+      "filterRegion": "Filtres du tableau",
+      "allOption": "Tous",
+      "create": "Ajouter"
+    },
     "pagination": {
       "rowsPerPage": "Lignes/page",
       "pagination": "Pagination",
@@ -775,10 +789,6 @@
       "warningMessage": "Cette action supprimera tous les véhicules, opérateurs, opérations, enregistrements de maintenance, alertes et données utilisateur.",
       "success": "Clear terminé avec succès"
     },
-    "database": {
-      "description": "Gérer les opérations de base de données et l'initialisation des données de démonstration.",
-      "title": "Gestion de Base de Données"
-    },
     "academic": {
       "semesterPlaceholder": "Semestre",
       "attendanceMode": "Mode de présence",
@@ -1066,6 +1076,11 @@
       "systemSeeded": "Système initialisé avec succès"
     }
   },
+  "themeSheets": {
+    "discardTitle": "Ignorer les modifications du thème ?",
+    "discardDescription": "Les modifications du thème ou de l'identité visuelle non enregistrées seront perdues.",
+    "discard": "Ignorer les modifications"
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "fields": "Champs",
@@ -1081,6 +1096,9 @@
     "permissions": "Autorisations",
     "accessControl": "Contrôle d’accès",
     "settings": "Paramètres",
+    "appearance": "Apparence",
+    "theme": "Thème",
+    "branding": "Identité visuelle",
     "logout": "Déconnecter",
     "map": "Carte",
     "academic": "Académique",
@@ -2415,6 +2433,7 @@
     },
     "errors": {
       "selectSource": "Sélectionnez une évaluation ou un examen avant d’enregistrer les notes.",
+      "saveFailed": "Impossible d’enregistrer toutes les notes. Veuillez réessayer.",
       "marksExceedTotal": "Les notes dépassent le total",
       "sourceRequired": "Sélectionnez une évaluation ou un examen"
     },

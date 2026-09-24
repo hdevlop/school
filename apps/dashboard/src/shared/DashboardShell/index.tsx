@@ -1,16 +1,20 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LogOut, Settings } from 'lucide-react';
+import { ImageIcon, LogOut, Palette, Settings } from 'lucide-react';
 import { Chatbot } from 'najm-chatbot/react';
 import { SignOutButton, useAuth } from 'najm-auth/client/react';
-import { NSidebar, NSidebarProvider, type NavItem } from 'najm-kit';
+import { NSidebar, NSidebarProvider, useNSidebar, type NavItem } from 'najm-kit';
 import { clearNajmUiPreferences } from 'najm-kit/server';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
+
+const THEME_SETTINGS_NAV_ID = 'settings:theme';
+const BRANDING_SETTINGS_NAV_ID = 'settings:branding';
 
 const LinkAdapter = ({
   href,
@@ -151,6 +155,17 @@ return [
         },
       ]
       : []),
+    ...(isAdmin
+      ? [{
+        id: 'appearance',
+        label: t('navigation.appearance'),
+        icon: Palette,
+        children: [
+          { id: THEME_SETTINGS_NAV_ID, label: t('navigation.theme'), icon: Palette },
+          { id: BRANDING_SETTINGS_NAV_ID, label: t('navigation.branding'), icon: ImageIcon },
+        ],
+      }]
+      : []),
     { id: '/notifications', label: t('notifications.inbox'), icon: FEATURE_ICONS.notifications, href: '/notifications' },
   ];
 };
@@ -211,13 +226,16 @@ export default function DashboardShell({ children }: { children: React.ReactNode
 
 function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const sidebar = useNSidebar();
   const { user } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role ?? 'teacher';
 
   const navItems: NavItem[] = useMemo(() => createSidebarItems(t, role), [role, t]);
+  const [activeThemeSheet, setActiveThemeSheet] = useState<ThemeSettingsSheet | null>(null);
 
   return (
+    <>
     <div className="flex h-screen w-full overflow-hidden  gap-2 bg-background font-sans">
       <NSidebar
         // The render prop, rather than a second reading of the sidebar state:
@@ -245,6 +263,12 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         activePath={pathname}
         isActive={isSidebarItemActive}
         linkComponent={LinkAdapter}
+        onNavigate={(target) => {
+          if (target === THEME_SETTINGS_NAV_ID || target === BRANDING_SETTINGS_NAV_ID) {
+            sidebar?.closeMobile();
+            setActiveThemeSheet(target === THEME_SETTINGS_NAV_ID ? 'theme' : 'branding');
+          }
+        }}
         footer={({ collapsed }) => <SidebarFooterContent collapsed={collapsed} />}
         mobileBreakpoint="lg"
         closeOnNavigate
@@ -269,5 +293,11 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         theme={{ primary: 'var(--primary)', radius: 'var(--radius)' }}
       />
     </div>
+    <ThemeSettingsSheets
+      activeSheet={activeThemeSheet}
+      onActiveSheetChange={setActiveThemeSheet}
+      role={role}
+    />
+    </>
   );
 }

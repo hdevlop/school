@@ -324,7 +324,6 @@ function StudentAttendanceTable() {
             hasChanges={roster.hasChanges}
             isSubmitting={isSubmitting}
             stats={roster.stats}
-            onReset={resetDraft}
             onSubmit={roster.handleSubmit}
             canSubmit={canSubmit}
             submitTitle={submitTitle}

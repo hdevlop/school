@@ -2,13 +2,16 @@ import { Service } from '../../najm';
 import { ClassRepository } from './ClassRepository';
 import { ClassValidator } from './ClassValidator';
 import type { CreateClassDto, CreateClassesBulkDto, UpdateClassDto } from './ClassDto';
+import { SettingsRepository } from '../settings/SettingsRepository';
+import { getCurrentAcademicYear } from '../financial/utils';
 
 @Service()
 export class ClassService {
 
   constructor(
     private classRepository: ClassRepository,
-    private classValidator: ClassValidator
+    private classValidator: ClassValidator,
+    private settingsRepository: SettingsRepository,
   ) { }
 
   async getAll() {
@@ -59,19 +62,26 @@ export class ClassService {
 
   async getStudentsByName(className: string, sectionName: string | null = null) {
     await this.classValidator.ensureExistsByName(className);
-    return await this.classRepository.getStudentsByClassName(className, sectionName);
+    const settings = await this.settingsRepository.getPublicSettings();
+    return await this.classRepository.getStudentsByClassName(
+      className, sectionName, settings?.currentAcademicYear || getCurrentAcademicYear(),
+    );
   }
 
   async create(data: CreateClassDto) {
-    await this.classValidator.ensureNameUnique(data.name);
+    await this.classValidator.ensureNameUnique(data.name, data.academicYear);
     return await this.classRepository.create(data);
   }
 
   async update(id: string, data: UpdateClassDto) {
-    await this.classValidator.ensureExists(id);
+    const currentClass = await this.classValidator.ensureExists(id);
 
-    if (data.name) {
-      await this.classValidator.ensureNameUnique(data.name, id);
+    if (data.name || data.academicYear) {
+      await this.classValidator.ensureNameUnique(
+        data.name || currentClass.name,
+        data.academicYear || currentClass.academicYear,
+        id,
+      );
     }
 
     return await this.classRepository.update(id, data);

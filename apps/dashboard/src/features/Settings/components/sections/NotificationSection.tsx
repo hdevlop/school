@@ -11,14 +11,14 @@ const NotificationSection: React.FC = () => {
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
 
       <div className="flex items-center gap-2 font-semibold text-sm">
         <Bell className="h-5 w-5" />
         <Label className='text-lg'> {t('settings.notifications.title')} </Label>
       </div>
 
-      <div className="flex flex-col gap-3 ">
+      <div className="grid gap-2 sm:grid-cols-2 min-[1500px]:grid-cols-3">
         <PushOptIn />
         <FormInput
           type="switch"
