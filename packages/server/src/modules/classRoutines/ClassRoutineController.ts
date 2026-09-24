@@ -8,6 +8,7 @@ import {
   createRoutinePeriodDto,
   createRoutineScheduleDto,
   routineEntryParams,
+  routineEntryDeleteQuery,
   routineDutyParams,
   routineIdParam,
   routineListQuery,
@@ -24,6 +25,7 @@ import {
   type RoutineListQuery,
   type RoutineLayoutDto,
   type UpdateRoutineEntryDto,
+  type RoutineEntryDeleteQuery,
   type UpdateRoutineDutyDto,
   type UpdateRoutinePeriodDto,
   type UpdateRoutineScheduleDto,
@@ -119,10 +121,10 @@ export class ClassRoutineController {
 
   @Delete('/:id/entries/:entryId')
   @isAdministrator()
-  @Validate({ params: routineEntryParams })
+  @Validate({ params: routineEntryParams, query: routineEntryDeleteQuery })
   @ResMsg('classRoutines.success.entryDeleted')
-  async deleteEntry(@Params('id') id: string, @Params('entryId') entryId: string) {
-    return this.service.deleteEntry(id, entryId);
+  async deleteEntry(@Params('id') id: string, @Params('entryId') entryId: string, @Query() query: RoutineEntryDeleteQuery = {}) {
+    return this.service.deleteEntry(id, entryId, query.expectedVersion);
   }
 
   @Post('/:id/duties')

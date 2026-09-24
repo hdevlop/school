@@ -22,8 +22,8 @@ export const createRoutineEntryApi = async ({ scheduleId, ...data }) =>
   (await api.post(`/class-routines/${scheduleId}/entries`, data)).data;
 export const updateRoutineEntryApi = async ({ scheduleId, id, ...data }) =>
   (await api.put(`/class-routines/${scheduleId}/entries/${id}`, data)).data;
-export const deleteRoutineEntryApi = async ({ scheduleId, id }) =>
-  (await api.delete(`/class-routines/${scheduleId}/entries/${id}`)).data;
+export const deleteRoutineEntryApi = async ({ scheduleId, id, expectedVersion }) =>
+  (await api.delete(`/class-routines/${scheduleId}/entries/${id}${expectedVersion ? `?expectedVersion=${expectedVersion}` : ''}`)).data;
 export const createRoutineDutyApi = async ({ scheduleId, ...data }) =>
   (await api.post(`/class-routines/${scheduleId}/duties`, data)).data;
 export const updateRoutineDutyApi = async ({ scheduleId, id, ...data }) =>

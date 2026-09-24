@@ -758,6 +758,7 @@
       "notFound": "Horario no encontrado",
       "notEditable": "Solo se pueden editar borradores",
       "entryNotFound": "Clase no encontrada",
+      "staleEntry": "Esta clase ha cambiado. Recárgala antes de guardar.",
       "periodNotFound": "Periodo no encontrado",
       "periodInactive": "Este periodo está inactivo",
       "breakPeriod": "No se pueden asignar clases durante un descanso",
@@ -810,8 +811,15 @@
       "noAssignments": "No hay asignaciones de profesores para esta sección."
     },
     "grid": { "noRoom": "Sin aula" },
+    "content": {
+      "title": "Submaterias", "help": "El docente organiza el periodo y alterna las opciones según sea necesario, sin horarios separados.",
+      "item": "Materia {{number}}", "label": "Materia o actividad", "or": "O",
+      "optionA": "Opción A", "optionB": "Opción B", "addSubject": "Añadir materia", "addAlternative": "Añadir alternativa",
+      "useOne": "Usar una materia", "remove": "Quitar materia", "moveUp": "Subir materia", "moveDown": "Bajar materia", "preview": "Vista previa del horario"
+    },
     "validation": {
       "chooseAssignment": "Elige un profesor y una asignatura", "notesMax": "Las notas no pueden superar los 500 caracteres",
+      "contentLabelRequired": "Introduce una materia o actividad", "contentLabelMax": "Limita cada nombre a 100 caracteres", "alternativesDiffer": "Las dos alternativas deben ser diferentes",
       "chooseSupervisor": "Elige un supervisor", "selectDay": "Selecciona al menos un día lectivo", "timeFormat": "Usa HH:mm",
       "nameRequired": "Introduce un nombre", "teachingPeriodRequired": "Añade al menos un periodo lectivo",
       "endAfterStart": "La hora de fin debe ser posterior a la de inicio", "noOverlap": "Los periodos no pueden solaparse"

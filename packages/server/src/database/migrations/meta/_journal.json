@@ -330,6 +330,13 @@
       "when": 1788963502789,
       "tag": "0046_elite_leader",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1790264137444,
+      "tag": "0047_pink_rafael_vega",
+      "breakpoints": true
     }
   ]
 }

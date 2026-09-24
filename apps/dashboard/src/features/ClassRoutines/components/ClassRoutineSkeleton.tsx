@@ -3,47 +3,33 @@
 import { NSkeleton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
-const SKELETON_DAYS = Array.from({ length: 5 });
-const SKELETON_PERIODS = Array.from({ length: 6 });
-const gridTemplate = { gridTemplateColumns: '9rem repeat(5, minmax(12rem, 1fr))' };
+const DAYS = Array.from({ length: 5 });
+const PERIODS = Array.from({ length: 7 });
 
 export default function ClassRoutineSkeleton() {
   const { t } = useTranslation();
   return (
-    <div
-      aria-label={t('classRoutines.ui.loading.timetable')}
-      aria-busy="true"
-      className="overflow-auto rounded-2xl border bg-card shadow-sm"
-    >
-      <div>
-        <div className="grid min-w-max border-b bg-muted/45" style={gridTemplate}>
-          <div className="flex items-center border-r px-3 py-2">
-            <NSkeleton className="h-4 w-20" />
-          </div>
-          {SKELETON_DAYS.map((_, dayIndex) => (
-            <div key={dayIndex} className="border-r px-3 py-2 last:border-r-0">
-              <NSkeleton className="h-4 w-24" />
-            </div>
-          ))}
-        </div>
-
-        {SKELETON_PERIODS.map((_, periodIndex) => (
-          <div key={periodIndex} className="grid min-w-max border-b last:border-b-0" style={gridTemplate}>
-            <div className="flex min-h-16 flex-col justify-center gap-2 border-r px-3 py-2">
-              <NSkeleton className="h-4 w-20" />
-              <NSkeleton className="h-3 w-24" />
-            </div>
-            {SKELETON_DAYS.map((_, dayIndex) => (
-              <div key={dayIndex} className="min-h-16 border-r p-1.5 last:border-r-0">
-                <div className="flex h-full flex-col justify-center gap-2 rounded-lg border px-2.5 py-1.5">
-                  <NSkeleton className="h-4 w-3/5" />
-                  <NSkeleton className="h-3 w-4/5" />
-                </div>
-              </div>
+    <div aria-label={t('classRoutines.ui.loading.timetable')} aria-busy="true" className="overflow-auto rounded-xl border bg-card">
+      <table className="w-max min-w-full table-fixed border-collapse">
+        <thead className="bg-slate-800">
+          <tr>
+            <th className="w-28 min-w-28 border-e border-white/20 p-2"><NSkeleton className="h-4 w-16" /></th>
+            {PERIODS.map((_, index) => (
+              <th key={index} className="w-48 min-w-48 border-e border-white/20 p-2"><NSkeleton className="h-4 w-28" /></th>
             ))}
-          </div>
-        ))}
-      </div>
+          </tr>
+        </thead>
+        <tbody>
+          {DAYS.map((_, day) => (
+            <tr key={day} className="border-t">
+              <th className="border-e bg-muted/30 p-2"><NSkeleton className="h-4 w-16" /></th>
+              {PERIODS.map((_, period) => (
+                <td key={period} className="h-24 border-e p-2"><NSkeleton className="h-16 w-full" /></td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

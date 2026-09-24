@@ -772,6 +772,7 @@
       "notFound": "جدول الحصص غير موجود",
       "notEditable": "يمكن تعديل المسودات فقط",
       "entryNotFound": "الحصة غير موجودة",
+      "staleEntry": "تغيّرت هذه الحصة. أعد تحميلها قبل الحفظ.",
       "periodNotFound": "الفترة غير موجودة",
       "periodInactive": "هذه الفترة غير مفعلة",
       "breakPeriod": "لا يمكن إضافة حصة خلال فترة الاستراحة",
@@ -824,8 +825,15 @@
       "noAssignments": "لا توجد تكليفات أساتذة لهذا الفوج."
     },
     "grid": { "noRoom": "دون قاعة" },
+    "content": {
+      "title": "المواد الفرعية", "help": "ينظم الأستاذ وقت الحصة ويبدّل بين الخيارات حسب الحاجة، دون تحديد أوقات فرعية.",
+      "item": "مادة {{number}}", "label": "المادة أو النشاط", "or": "أو",
+      "optionA": "الخيار أ", "optionB": "الخيار ب", "addSubject": "إضافة مادة", "addAlternative": "إضافة بديل",
+      "useOne": "الاكتفاء بمادة واحدة", "remove": "حذف المادة", "moveUp": "نقل المادة للأعلى", "moveDown": "نقل المادة للأسفل", "preview": "معاينة الجدول"
+    },
     "validation": {
       "chooseAssignment": "اختر أستاذاً ومادة", "notesMax": "يجب ألا تتجاوز الملاحظات 500 حرف",
+      "contentLabelRequired": "أدخل مادة أو نشاطاً", "contentLabelMax": "لا تتجاوز 100 حرف لكل عنوان", "alternativesDiffer": "يجب أن يختلف البديلان",
       "chooseSupervisor": "اختر مشرفاً", "selectDay": "اختر يوماً دراسياً واحداً على الأقل", "timeFormat": "استخدم الصيغة HH:mm",
       "nameRequired": "أدخل اسماً", "teachingPeriodRequired": "أضف حصة دراسية واحدة على الأقل",
       "endAfterStart": "يجب أن يكون وقت النهاية بعد وقت البداية", "noOverlap": "لا يمكن أن تتداخل الحصص الزمنية"

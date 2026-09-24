@@ -3627,6 +3627,7 @@
       "notFound": "Class routine not found",
       "notEditable": "Only draft routines can be edited",
       "entryNotFound": "Routine lesson not found",
+      "staleEntry": "This lesson changed. Reload it before saving again.",
       "periodNotFound": "Routine period not found",
       "periodInactive": "This routine period is inactive",
       "breakPeriod": "Lessons cannot be assigned to a break period",
@@ -3679,8 +3680,15 @@
       "noAssignments": "No teacher assignments for this section."
     },
     "grid": { "noRoom": "No room" },
+    "content": {
+      "title": "Nested subjects", "help": "The teacher divides this period and rotates alternatives as needed; no separate times are required.",
+      "item": "Subject {{number}}", "label": "Subject or activity", "or": "OR",
+      "optionA": "Option A", "optionB": "Option B", "addSubject": "Add subject", "addAlternative": "Add alternative",
+      "useOne": "Use one subject", "remove": "Remove subject", "moveUp": "Move subject up", "moveDown": "Move subject down", "preview": "Timetable preview"
+    },
     "validation": {
       "chooseAssignment": "Choose a teacher and subject", "notesMax": "Notes cannot exceed 500 characters",
+      "contentLabelRequired": "Enter a subject or activity", "contentLabelMax": "Keep each label under 100 characters", "alternativesDiffer": "The two alternatives must differ",
       "chooseSupervisor": "Choose a supervisor", "selectDay": "Select at least one teaching day", "timeFormat": "Use HH:mm",
       "nameRequired": "Enter a name", "teachingPeriodRequired": "Add at least one teaching period",
       "endAfterStart": "End time must be after start time", "noOverlap": "Timeline rows cannot overlap"

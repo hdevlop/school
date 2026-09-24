@@ -39,6 +39,8 @@ export interface RoutineEntry {
   teacherAssignmentId: string;
   roomNumber?: string | null;
   notes?: string | null;
+  contentGroups: RoutineContentGroup[];
+  version: number;
   teacherId: string;
   teacherName: string;
   subjectId: string;
@@ -82,3 +84,4 @@ export interface RoutineSchedule {
   entries: RoutineEntry[];
   duties: RoutineDuty[];
 }
+import type { RoutineContentGroup } from '@sms/contracts/routines';

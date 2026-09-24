@@ -117,6 +117,8 @@ export default function ClassRoutinePage() {
     if (!routine) return;
     openDialog({
       title: entry ? t('classRoutines.ui.dialogs.editLesson') : t('classRoutines.ui.dialogs.addLesson'),
+      width: '5xl',
+      height: 'full',
       children: (
         <RoutineEntryForm
           assignmentOptions={assignments}
@@ -125,7 +127,7 @@ export default function ClassRoutinePage() {
           entry={entry}
           defaultRoom={routine.roomNumber}
           onDelete={entry ? async () => {
-            await mutations.deleteEntry.mutateAsync({ scheduleId: routine.id, id: entry.id });
+            await mutations.deleteEntry.mutateAsync({ scheduleId: routine.id, id: entry.id, expectedVersion: entry.version });
           } : undefined}
         />
       ),

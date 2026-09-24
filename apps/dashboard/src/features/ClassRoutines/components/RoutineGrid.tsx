@@ -1,115 +1,94 @@
 'use client';
 
-import { Clock3, DoorOpen, Plus, UserRound } from 'lucide-react';
+import { Plus, UserRound } from 'lucide-react';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { describeRoutineContent } from '@sms/contracts/routines';
 import type { RoutineGridProps } from '../types';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
+import RoutineCell from './RoutineCell';
 
-const accents = [
-  'border-l-sky-500 bg-sky-50 text-sky-950 dark:bg-sky-950/30 dark:text-sky-100',
-  'border-l-amber-500 bg-amber-50 text-amber-950 dark:bg-amber-950/30 dark:text-amber-100',
-  'border-l-emerald-500 bg-emerald-50 text-emerald-950 dark:bg-emerald-950/30 dark:text-emerald-100',
-  'border-l-rose-500 bg-rose-50 text-rose-950 dark:bg-rose-950/30 dark:text-rose-100',
-  'border-l-indigo-500 bg-indigo-50 text-indigo-950 dark:bg-indigo-950/30 dark:text-indigo-100',
-];
-
-const hash = (value: string) => [...value].reduce((total, char) => total + char.charCodeAt(0), 0);
 export default function RoutineGrid({ days, periods, entries, duties = [], defaultRoom, editable, onCellClick, onDutyClick }: RoutineGridProps) {
   const { t } = useTranslation();
   const entryMap = new Map(entries.map((entry) => [`${entry.dayOfWeek}:${entry.periodId}`, entry]));
   const dutyMap = new Map(duties.map((duty) => [`${duty.dayOfWeek}:${duty.periodId}`, duty]));
-  const template = { gridTemplateColumns: `9rem repeat(${days.length}, minmax(12rem, 1fr))` };
 
   return (
-    <div className="overflow-auto rounded-2xl border bg-card shadow-sm">
-      <div className="grid min-w-max border-b bg-muted/45" style={template}>
-        <div className="sticky left-0 z-20 flex items-center gap-2 border-r bg-muted px-3 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          <Clock3 className="h-4 w-4" /> {t('classRoutines.ui.fields.period')}
-        </div>
-        {days.map((day) => (
-          <div key={day} className="border-r px-3 py-2 text-sm font-semibold last:border-r-0">{routineDayLabel(day, t)}</div>
-        ))}
-      </div>
-
-      {periods.map((period) => (
-        <div key={period.id} className="grid min-w-max border-b last:border-b-0" style={template}>
-          <div className={`sticky left-0 z-10 flex min-h-16 flex-col justify-center border-r px-3 py-2 ${period.isBreak ? 'bg-amber-50/60 dark:bg-amber-950/15' : 'bg-card'}`}>
-            <p className="text-sm font-semibold">{routinePeriodLabel(period.name, t)}</p>
-            <p className="mt-0.5 text-xs tabular-nums text-muted-foreground">
-              {period.startTime.slice(0, 5)}–{period.endTime.slice(0, 5)}
-            </p>
-          </div>
-          {days.map((day) => {
-            const entry = entryMap.get(`${day}:${period.id}`);
-            if (period.isBreak) {
-              const duty = dutyMap.get(`${day}:${period.id}`);
-              const content = duty ? (
-                <NBadge
-                  color="primary"
-                  look="dash"
-                  size="lg"
-                  icon={UserRound}
-                  className="border-primary/50 text-primary normal-case tracking-normal"
-                >
-                  {duty.staffName}
-                </NBadge>
-              ) : <span>{routinePeriodLabel(period.name, t)}</span>;
-              if (editable && onDutyClick) {
+    <div className="overflow-auto rounded-xl border border-slate-300 bg-card shadow-sm dark:border-border">
+      <table className="w-max min-w-full table-fixed border-collapse text-sm">
+        <caption className="sr-only">{t('classRoutines.ui.title')}</caption>
+        <thead className="sticky top-0 z-20">
+          <tr className="bg-slate-800 text-white dark:bg-slate-900">
+            <th scope="col" className="sticky start-0 z-20 w-28 min-w-28 border-e border-white/25 bg-slate-800 px-2 py-2 text-start text-xs dark:bg-slate-900">
+              {t('classRoutines.ui.fields.teachingDays')}
+            </th>
+            {periods.map((period) => (
+              <th key={period.id} scope="col" className={`border-e border-white/25 px-2 py-2 text-center text-[11px] font-semibold last:border-e-0 ${period.isBreak ? 'w-32 min-w-32' : 'w-48 min-w-48'}`}>
+                <span className="block">{routinePeriodLabel(period.name, t)}</span>
+                <span className="block font-normal tabular-nums opacity-85" dir="ltr">{period.startTime.slice(0, 5)}–{period.endTime.slice(0, 5)}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {days.map((day) => (
+            <tr key={day} className="border-t border-slate-300 dark:border-border">
+              <th scope="row" className="sticky start-0 z-10 border-e border-slate-300 bg-slate-50 px-2 text-start text-xs font-bold text-slate-700 dark:border-border dark:bg-card dark:text-foreground">
+                {routineDayLabel(day, t)}
+              </th>
+              {periods.map((period) => {
+                const entry = entryMap.get(`${day}:${period.id}`);
+                const duty = dutyMap.get(`${day}:${period.id}`);
+                if (period.isBreak) {
+                  const content = duty ? (
+                    <NBadge color="primary" look="dash" size="lg" icon={UserRound} className="max-w-full whitespace-normal text-center normal-case tracking-normal">
+                      {duty.staffName}
+                    </NBadge>
+                  ) : <span className="text-xs font-medium">{routinePeriodLabel(period.name, t)}</span>;
+                  return (
+                    <td key={period.id} className="h-24 border-e border-slate-300 bg-[repeating-linear-gradient(45deg,transparent,transparent_5px,rgba(148,163,184,0.10)_5px,rgba(148,163,184,0.10)_10px)] text-center text-slate-600 last:border-e-0 dark:border-border dark:text-muted-foreground">
+                      {editable && onDutyClick ? (
+                        <button type="button" onClick={() => onDutyClick(day, period, duty)} className="flex h-full min-h-24 w-full items-center justify-center p-1.5 hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${duty?.staffName || t('classRoutines.ui.actions.addSupervisor')}`}>
+                          {content}
+                        </button>
+                      ) : <div className="flex min-h-24 items-center justify-center p-1.5">{content}</div>}
+                    </td>
+                  );
+                }
+                const lesson = entry ? (
+                  <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} teacherName={entry.teacherName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
+                ) : <span className="text-muted-foreground">—</span>;
+                const lessonLabel = entry
+                  ? entry.contentGroups?.length
+                    ? `${entry.subjectName}: ${describeRoutineContent(entry.contentGroups, entry.subjectName, t('classRoutines.ui.content.or'))}`
+                    : entry.subjectName
+                  : t('classRoutines.ui.actions.addLesson');
                 return (
-                  <button
-                    key={day}
-                    type="button"
-                    onClick={() => onDutyClick(day, period, duty)}
-                    className="group grid min-h-16 cursor-pointer border-r bg-amber-50/60 p-1.5 text-[11px] font-medium uppercase tracking-widest text-muted-foreground transition-colors hover:bg-amber-100/70 last:border-r-0 dark:bg-amber-950/15 dark:hover:bg-amber-950/25"
-                  >
-                    {duty ? (
-                      <span className="flex h-full items-center justify-center">{content}</span>
-                    ) : (
-                      <span className="flex h-full w-full items-center justify-center gap-1.5 rounded-xl border border-dashed text-xs normal-case tracking-normal opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-                        <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addSupervisor')}
-                      </span>
-                    )}
-                  </button>
+                  <td key={period.id} className="h-24 border-e border-slate-300 p-0.5 last:border-e-0 dark:border-border">
+                    {editable && onCellClick ? (
+                      <button type="button" onClick={() => onCellClick(day, period, entry)} className="group block h-full min-h-24 w-full text-start hover:ring-2 hover:ring-inset hover:ring-primary/40 focus-visible:outline-2 focus-visible:outline-primary" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${lessonLabel}`}>
+                        {entry ? lesson : <span className="flex min-h-24 items-center justify-center gap-1.5 text-xs text-muted-foreground"><Plus className="hidden h-4 w-4 group-hover:block group-focus-visible:block" />—</span>}
+                      </button>
+                    ) : entry ? (
+                      <details className="min-h-24">
+                        <summary className="list-none cursor-pointer focus-visible:outline-2 focus-visible:outline-primary [&::-webkit-details-marker]:hidden" aria-label={`${routineDayLabel(day, t)} ${routinePeriodLabel(period.name, t)}: ${lessonLabel}`}>
+                          {lesson}
+                        </summary>
+                        <div className="border-t px-2 py-1.5 text-xs leading-relaxed">
+                          <p className="font-medium">{entry.subjectName} · {entry.teacherName}</p>
+                          <p>{entry.roomNumber || defaultRoom || t('classRoutines.ui.grid.noRoom')}</p>
+                          {entry.contentGroups?.length ? <p>{lessonLabel}</p> : null}
+                          {entry.notes ? <p>{entry.notes}</p> : null}
+                        </div>
+                      </details>
+                    ) : <div className="flex min-h-24 items-center justify-center">{lesson}</div>}
+                  </td>
                 );
-              }
-              return (
-                <div key={day} className="flex min-h-16 items-center justify-center border-r bg-amber-50/60 px-2 text-[11px] font-medium uppercase tracking-widest text-muted-foreground last:border-r-0 dark:bg-amber-950/15">
-                  {content}
-                </div>
-              );
-            }
-            return (
-              <button
-                key={day}
-                type="button"
-                disabled={!editable}
-                onClick={() => onCellClick?.(day, period, entry)}
-                className="group min-h-16 border-r p-1.5 text-left transition-colors last:border-r-0 enabled:cursor-pointer enabled:hover:bg-primary/[0.035] disabled:cursor-default"
-              >
-                {entry ? (
-                  <div className={`h-full rounded-lg border border-l-4 px-2.5 py-1.5 shadow-xs transition-transform group-enabled:group-hover:-translate-y-0.5 ${accents[hash(entry.subjectId) % accents.length]}`}>
-                    <p className="text-sm font-semibold leading-tight">{entry.subjectName}</p>
-                    <div className="mt-1 flex min-w-0 items-center gap-2.5 text-[11px] leading-none opacity-75">
-                      <span className="flex min-w-0 items-center gap-1.5">
-                        <UserRound className="h-3.5 w-3.5 shrink-0" />
-                        <span className="truncate">{entry.teacherName}</span>
-                      </span>
-                      <span className="flex shrink-0 items-center gap-1.5">
-                        <DoorOpen className="h-3.5 w-3.5" /> {entry.roomNumber || defaultRoom || t('classRoutines.ui.grid.noRoom')}
-                      </span>
-                    </div>
-                  </div>
-                ) : editable ? (
-                  <span className="flex h-full items-center justify-center gap-1.5 rounded-xl border border-dashed text-xs font-medium text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-                    <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addLesson')}
-                  </span>
-                ) : null}
-              </button>
-            );
-          })}
-        </div>
-      ))}
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

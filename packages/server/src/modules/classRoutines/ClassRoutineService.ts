@@ -164,21 +164,42 @@ export class ClassRoutineService {
 
   async addEntry(scheduleId: string, data: CreateRoutineEntryDto) {
     await this.validator.validateEntry(scheduleId, data);
-    const entry = await this.repository.createEntry({ scheduleId, ...data });
+    const entry = await this.repository.createEntry({
+      scheduleId,
+      ...data,
+      roomNumber: data.roomNumber || null,
+      contentGroups: data.contentGroups ?? [],
+    });
     return entry;
   }
 
   async updateEntry(scheduleId: string, entryId: string, data: UpdateRoutineEntryDto) {
     const current = await this.validator.ensureEntry(scheduleId, entryId);
+    if (data.contentGroups !== undefined && data.expectedVersion === undefined) {
+      Err(409, 'classRoutines.errors.staleEntry');
+    }
+    if (data.expectedVersion !== undefined && data.expectedVersion !== current.version) {
+      Err(409, 'classRoutines.errors.staleEntry');
+    }
     const merged = { ...current, ...data };
     await this.validator.validateEntry(scheduleId, merged, entryId);
-    return this.repository.updateEntry(entryId, data);
+    const { expectedVersion: _expectedVersion, ...changes } = data;
+    if (changes.roomNumber !== undefined) changes.roomNumber = changes.roomNumber || null;
+    const updated = await this.repository.updateEntryIfVersion(entryId, current.version, changes);
+    if (!updated) Err(409, 'classRoutines.errors.staleEntry');
+    return updated;
   }
 
-  async deleteEntry(scheduleId: string, entryId: string) {
+  async deleteEntry(scheduleId: string, entryId: string, expectedVersion?: number) {
     await this.validator.ensureSchedule(scheduleId);
-    await this.validator.ensureEntry(scheduleId, entryId);
-    return this.repository.deleteEntry(entryId);
+    const current = await this.validator.ensureEntry(scheduleId, entryId);
+    if ((current.contentGroups.length > 0 && expectedVersion === undefined)
+      || (expectedVersion !== undefined && expectedVersion !== current.version)) {
+      Err(409, 'classRoutines.errors.staleEntry');
+    }
+    const deleted = await this.repository.deleteEntryIfVersion(entryId, current.version);
+    if (!deleted) Err(409, 'classRoutines.errors.staleEntry');
+    return deleted;
   }
 
   async addDuty(scheduleId: string, data: CreateRoutineDutyDto) {

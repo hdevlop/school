@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["bun", "node"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "tests/classRoutines/**/*.test.ts"
+  ],
+  "exclude": ["node_modules"]
+}

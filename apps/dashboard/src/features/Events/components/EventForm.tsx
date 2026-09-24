@@ -60,7 +60,6 @@ const EventForm = ({ event = null, initialDate = null }) => {
     startTime: event?.startTime || undefined,
     endTime: event?.endTime || undefined,
     location: event?.location || '',
-    venue: event?.venue || '',
     classIds: initialClassIds,
     classId: initialClassIds[0] || undefined,
     sectionId: undefined,
@@ -91,7 +90,6 @@ const EventForm = ({ event = null, initialDate = null }) => {
       startTime: emptyToUndefined(formData.startTime),
       endTime: emptyToUndefined(formData.endTime),
       location: emptyToUndefined(formData.location),
-      venue: emptyToUndefined(formData.venue),
       capacity: emptyToUndefined(formData.capacity),
       registrationDeadline: emptyToUndefined(formData.registrationDeadline),
       description: emptyToUndefined(formData.description),
@@ -106,7 +104,7 @@ const EventForm = ({ event = null, initialDate = null }) => {
       <div className="flex flex-col gap-4">
         <FormSectionHeader icon={Calendar} title={t('events.sections.eventDetails')} />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             name="title"
             type="text"
@@ -148,7 +146,6 @@ const EventForm = ({ event = null, initialDate = null }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput name="location" type="text" formLabel={t('events.form.location')} placeholder={t('events.form.locationPlaceholder')} icon={MapPin} />
-          <FormInput name="venue" type="text" formLabel={t('events.form.venue')} placeholder={t('events.form.venuePlaceholder')} icon={Building} />
           <FormInput
             name="classIds"
             type="multiselect"

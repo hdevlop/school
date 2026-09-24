@@ -1136,6 +1136,7 @@
       "notFound": "Emploi du temps introuvable",
       "notEditable": "Seuls les brouillons peuvent être modifiés",
       "entryNotFound": "Cours introuvable",
+      "staleEntry": "Ce cours a changé. Rechargez-le avant de l'enregistrer.",
       "periodNotFound": "Période introuvable",
       "periodInactive": "Cette période est inactive",
       "breakPeriod": "Un cours ne peut pas être ajouté pendant une pause",
@@ -1188,8 +1189,15 @@
       "noAssignments": "Aucune affectation d’enseignant pour cette section."
     },
     "grid": { "noRoom": "Aucune salle" },
+    "content": {
+      "title": "Sous-matières", "help": "L'enseignant organise cette période et alterne les options selon les besoins, sans horaires séparés.",
+      "item": "Matière {{number}}", "label": "Matière ou activité", "or": "OU",
+      "optionA": "Option A", "optionB": "Option B", "addSubject": "Ajouter une matière", "addAlternative": "Ajouter une alternative",
+      "useOne": "Garder une matière", "remove": "Retirer la matière", "moveUp": "Monter la matière", "moveDown": "Descendre la matière", "preview": "Aperçu de l'emploi du temps"
+    },
     "validation": {
       "chooseAssignment": "Choisissez un enseignant et une matière", "notesMax": "Les notes ne peuvent pas dépasser 500 caractères",
+      "contentLabelRequired": "Saisissez une matière ou activité", "contentLabelMax": "Limitez chaque libellé à 100 caractères", "alternativesDiffer": "Les deux alternatives doivent être différentes",
       "chooseSupervisor": "Choisissez un surveillant", "selectDay": "Sélectionnez au moins un jour de cours", "timeFormat": "Utilisez HH:mm",
       "nameRequired": "Saisissez un nom", "teachingPeriodRequired": "Ajoutez au moins une période de cours",
       "endAfterStart": "L’heure de fin doit être postérieure à l’heure de début", "noOverlap": "Les périodes ne peuvent pas se chevaucher"

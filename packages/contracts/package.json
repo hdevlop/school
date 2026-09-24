@@ -19,6 +19,10 @@
       "types": "./src/locales/index.ts",
       "default": "./src/locales/index.ts"
     },
+    "./routines": {
+      "types": "./src/routines.ts",
+      "default": "./src/routines.ts"
+    },
     "./fixtures": {
       "types": "./src/fixtures/index.ts",
       "default": "./src/fixtures/index.ts"

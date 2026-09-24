@@ -1,10 +1,11 @@
 import { sql } from 'drizzle-orm';
-import { boolean, index, integer, jsonb, pgEnum, pgTable, text, time, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import { boolean, check, index, integer, jsonb, pgEnum, pgTable, text, time, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
 import { actionByRef, createRef, idField, timestamps } from '../../database/shared';
 import { sectionRef } from '../sections/sectionSchema';
 import { staffRef } from '../staff/staffSchema';
 import { teacherAssignmentRef } from '../teachers/teacherSchema';
+import type { RoutineContentGroup } from '@sms/contracts/routines';
 
 export const routineStatusEnum = pgEnum('routineStatus', ['draft', 'published', 'archived']);
 export const routineDayEnum = pgEnum('routineDay', [
@@ -94,10 +95,14 @@ export const routineEntries = pgTable('routine_entries', {
   teacherAssignmentId: teacherAssignmentRef('restrict'),
   roomNumber: text('room_number'),
   notes: text('notes'),
+  contentGroups: jsonb('content_groups').$type<RoutineContentGroup[]>().notNull().default(sql`'[]'::jsonb`),
+  version: integer('version').notNull().default(1),
   ...timestamps,
 }, (table) => ({
   scheduleDayPeriodUnique: uniqueIndex('routine_entries_schedule_day_period_unique')
     .on(table.scheduleId, table.dayOfWeek, table.periodId),
   scheduleIdx: index('routine_entries_schedule_idx').on(table.scheduleId),
   assignmentIdx: index('routine_entries_assignment_idx').on(table.teacherAssignmentId),
+  contentGroupsArrayCheck: check('routine_entries_content_groups_array_check', sql`jsonb_typeof(${table.contentGroups}) = 'array'`),
+  versionPositiveCheck: check('routine_entries_version_positive_check', sql`${table.version} > 0`),
 }));

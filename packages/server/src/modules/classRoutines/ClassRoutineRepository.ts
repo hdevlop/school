@@ -120,6 +120,8 @@ export class ClassRoutineRepository {
       teacherAssignmentId: routineEntries.teacherAssignmentId,
       roomNumber: routineEntries.roomNumber,
       notes: routineEntries.notes,
+      contentGroups: routineEntries.contentGroups,
+      version: routineEntries.version,
       teacherId: teachers.id,
       teacherName: staff.name,
       subjectId: subjects.id,
@@ -264,6 +266,14 @@ export class ClassRoutineRepository {
     return updated;
   }
 
+  async updateEntryIfVersion(id: string, version: number, data: Partial<typeof routineEntries.$inferInsert>) {
+    const [updated] = await this.db.update(routineEntries)
+      .set({ ...data, version: sql`${routineEntries.version} + 1` })
+      .where(and(eq(routineEntries.id, id), eq(routineEntries.version, version)))
+      .returning();
+    return updated;
+  }
+
   async updateEntryPeriod(id: string, periodId: string) {
     const [updated] = await this.db.update(routineEntries)
       .set({ periodId })
@@ -294,6 +304,13 @@ export class ClassRoutineRepository {
 
   async deleteEntry(id: string) {
     const [deleted] = await this.db.delete(routineEntries).where(eq(routineEntries.id, id)).returning();
+    return deleted;
+  }
+
+  async deleteEntryIfVersion(id: string, version: number) {
+    const [deleted] = await this.db.delete(routineEntries)
+      .where(and(eq(routineEntries.id, id), eq(routineEntries.version, version)))
+      .returning();
     return deleted;
   }
 
