@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { MAX_ROUTINE_CONTENT_GROUPS, MAX_ROUTINE_CONTENT_LABEL_LENGTH } from '@sms/contracts/routines';
 import type { RoutineContentGroup } from '@sms/contracts/routines';
+import { academicYearField } from '../../shared/fields';
 
 const id = z.string().min(1);
 export const routineDayDto = z.enum([
@@ -24,7 +25,7 @@ export const routineTeacherParam = z.object({ teacherId: id });
 export const routineListQuery = z.object({
   classId: id.optional(),
   sectionId: id.optional(),
-  academicYear: z.string().min(4).optional(),
+  academicYear: academicYearField.optional(),
   status: routineStatusDto.optional(),
 });
 

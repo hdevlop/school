@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { dateField, num, optionalId, requiredId } from '../../shared/fields';
+import { academicYearField, dateField, num, optionalId, requiredId } from '../../shared/fields';
 import { assessmentStatusEnum, assessmentTypeEnum } from '../../shared/enums';
 
 const assessmentSchema = z.object({
@@ -43,8 +43,10 @@ export const classIdParam = z.object({ classId: z.string().min(1) });
 export const sectionIdParam = z.object({ sectionId: z.string().min(1) });
 export const subjectIdParam = z.object({ subjectId: z.string().min(1) });
 export const teacherIdParam = z.object({ teacherId: z.string().min(1) });
+export const assessmentListQuery = z.object({ academicYear: academicYearField.optional() });
 
 export type CreateAssessmentDto = z.infer<typeof createAssessmentDto>;
 export type UpdateAssessmentDto = z.infer<typeof updateAssessmentDto>;
 export type SeedAssessmentDto = z.input<typeof seedAssessmentDto>;
 export type DeleteBulkAssessmentDto = z.infer<typeof deleteBulkAssessmentDto>;
+export type AssessmentListQuery = z.infer<typeof assessmentListQuery>;

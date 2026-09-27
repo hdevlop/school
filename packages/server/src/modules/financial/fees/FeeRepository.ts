@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
-import { eq, desc, and, inArray, sql, sum } from 'drizzle-orm';
-import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users } from '../../../database/schema';
+import { eq, desc, and, inArray, isNotNull, or, sql, sum } from 'drizzle-orm';
+import { fees, feeInstallments, feeTypes, paymentAllocations, payments, students, classes, sections, users, studentEnrollments, studentEnrollmentPlacements } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { getBusinessDate, jsonAgg } from '../../../shared';
@@ -91,7 +91,9 @@ export class FeeRepository {
   // Public Methods
   // ============================================
 
-  async getAll() {
+  // Every year's fees, one row per student with the student's current class.
+  // An explicit all-year read: year-scoped lists use getAll.
+  async getAllYears() {
     const result = await this.db
       .select({
         studentId: students.id,
@@ -114,6 +116,7 @@ export class FeeRepository {
         fees: jsonAgg({
           id: fees.id,
           feeTypeName: feeTypes.name,
+          academicYear: fees.academicYear,
         }).as('fees'),
       })
       .from(students)
@@ -153,6 +156,107 @@ export class FeeRepository {
     }));
   }
 
+  async getAll(academicYearId: string, academicYear: string, studentId?: string) {
+    // Pick one placement per enrollment before joining fees. Joining every
+    // transfer would multiply each fee and inflate the financial aggregates.
+    const lastPlacement = this.db.selectDistinctOn(
+      [studentEnrollmentPlacements.enrollmentId], {
+        enrollmentId: studentEnrollmentPlacements.enrollmentId,
+        id: studentEnrollmentPlacements.id,
+        classId: studentEnrollmentPlacements.classId,
+        sectionId: studentEnrollmentPlacements.sectionId,
+      },
+    ).from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(eq(studentEnrollments.academicYearId, academicYearId))
+      .orderBy(
+        studentEnrollmentPlacements.enrollmentId,
+        desc(studentEnrollmentPlacements.validFrom),
+        desc(studentEnrollmentPlacements.id),
+      ).as('fee_year_last_placement');
+
+    const completedAllocatedForFee = sql`
+      coalesce((
+        select sum(${paymentAllocations.amount}::numeric)
+        from ${paymentAllocations}
+        inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
+        where ${paymentAllocations.feeId} = ${fees.id}
+          and ${payments.status} = 'completed'
+      ), 0)
+    `;
+
+    const result = await this.db.select({
+      studentId: students.id,
+      studentName: students.name,
+      studentCode: students.studentCode,
+      studentImage: users.image,
+      enrollmentId: studentEnrollments.id,
+      placementId: lastPlacement.id,
+      classId: classes.id,
+      className: classes.name,
+      sectionId: sections.id,
+      sectionName: sections.name,
+      totalFees: getTotalFeesCount().as('totalFees'),
+      netAmount: getNetAmountSum().as('netAmount'),
+      totalPaid: sql<string>`coalesce(sum(${completedAllocatedForFee}), 0)::text`.as('totalPaid'),
+      totalDiscount: getTotalDiscountSum().as('totalDiscount'),
+      totalDue: sql<string>`coalesce(sum(${fees.netAmount}::numeric - ${completedAllocatedForFee}), 0)::text`.as('totalDue'),
+      paidCount: getStatusCount('paid').as('paidCount'),
+      pendingCount: getStatusCount('pending').as('pendingCount'),
+      partiallyPaidCount: getStatusCount('partiallyPaid').as('partiallyPaidCount'),
+      overdueCount: getStatusCount('overdue').as('overdueCount'),
+      fees: sql<Array<{ id: string; feeTypeName: string }>>`
+        coalesce(json_agg(json_build_object('id', ${fees.id}, 'feeTypeName', ${feeTypes.name}))
+          filter (where ${fees.id} is not null), '[]'::json)
+      `.as('fees'),
+    }).from(students)
+      .leftJoin(users, eq(students.userId, users.id))
+      .leftJoin(studentEnrollments, and(
+        eq(studentEnrollments.studentId, students.id),
+        eq(studentEnrollments.academicYearId, academicYearId),
+      ))
+      .leftJoin(lastPlacement, eq(lastPlacement.enrollmentId, studentEnrollments.id))
+      .leftJoin(classes, and(eq(lastPlacement.classId, classes.id), eq(classes.academicYear, academicYear)))
+      .leftJoin(sections, and(eq(lastPlacement.sectionId, sections.id), eq(sections.classId, classes.id)))
+      .leftJoin(fees, and(eq(fees.studentId, students.id), eq(fees.academicYear, academicYear)))
+      .leftJoin(feeTypes, eq(fees.feeTypeId, feeTypes.id))
+      // Keep a fee with unresolved enrollment visible, with unknown class.
+      .where(and(
+        studentId ? eq(students.id, studentId) : undefined,
+        or(isNotNull(studentEnrollments.id), isNotNull(fees.id)),
+      ))
+      .groupBy(
+        students.id, students.name, students.studentCode, users.image,
+        studentEnrollments.id, lastPlacement.id,
+        classes.id, classes.name, sections.id, sections.name,
+      )
+      .orderBy(desc(getMaxCreatedAt()), students.name);
+
+    return result.map((student) => ({
+      academicYear,
+      student: {
+        id: student.studentId,
+        name: student.studentName,
+        studentCode: student.studentCode,
+        image: student.studentImage,
+      },
+      enrollmentId: student.enrollmentId,
+      placementId: student.placementId,
+      class: { id: student.classId, name: student.className },
+      section: { id: student.sectionId, name: student.sectionName },
+      totalFees: student.totalFees,
+      netAmount: student.netAmount,
+      totalPaid: student.totalPaid,
+      totalDiscount: student.totalDiscount,
+      totalDue: student.totalDue,
+      paidCount: student.paidCount,
+      pendingCount: student.pendingCount,
+      partiallyPaidCount: student.partiallyPaidCount,
+      overdueCount: student.overdueCount,
+      fees: student.fees || [],
+    }));
+  }
+
   async getByIds(ids) {
     if (!ids || ids.length === 0) return [];
 
@@ -177,7 +281,26 @@ export class FeeRepository {
     return null;
   }
 
-  async getByStudent(studentId: string) {
+  private async listStudentFeeRows(studentId: string, academicYear?: string) {
+    return this.db.select({
+      ...getFeeBaseFields(),
+      ...getFeeComputedFields(),
+      ...getFeeRelations(),
+      feeTypeName: feeTypes.name,
+      feeTypeCategory: feeTypes.category,
+      feeTypeAmount: feeTypes.amount,
+      assignedBy: fees.assignedBy,
+      assignerEmail: sql`${users.email}`.as('assignerEmail'),
+    }).from(fees)
+      .leftJoin(feeTypes, eq(fees.feeTypeId, feeTypes.id))
+      .leftJoin(users, eq(fees.assignedBy, users.id))
+      .where(and(eq(fees.studentId, studentId), academicYear ? eq(fees.academicYear, academicYear) : undefined))
+      .orderBy(desc(fees.academicYear), desc(fees.createdAt));
+  }
+
+  // Every year's fees of one student: an explicit all-year read for trusted
+  // callers (seeding, cross-year debt); year-scoped screens use getByStudent.
+  async getByStudentAllYears(studentId: string) {
     // Get overview data
     const [overview] = await this.db
       .select({
@@ -216,24 +339,14 @@ export class FeeRepository {
 
     if (!overview) return null;
 
-    const feesList = await this.db
-      .select({
-        ...getFeeBaseFields(),
-        ...getFeeComputedFields(),
-        ...getFeeRelations(),
+    const feesList = await this.listStudentFeeRows(studentId);
+    return this.formatStudentFeeResponse(overview, feesList);
+  }
 
-        feeTypeName: feeTypes.name,
-        feeTypeCategory: feeTypes.category,
-        feeTypeAmount: feeTypes.amount,
-        assignedBy: fees.assignedBy,
-        assignerEmail: sql`${users.email}`.as('assignerEmail'),
-      })
-      .from(fees)
-      .leftJoin(feeTypes, eq(fees.feeTypeId, feeTypes.id))
-      .leftJoin(users, eq(fees.assignedBy, users.id))
-      .where(eq(fees.studentId, studentId))
-      .orderBy(desc(fees.academicYear), desc(fees.createdAt));
-
+  private formatStudentFeeResponse(
+    overview: any,
+    feesList: Awaited<ReturnType<FeeRepository['listStudentFeeRows']>>,
+  ) {
     const totalOverdueInstallments = feesList.reduce(
       (sum, fee) => sum + Number(fee.overdueInstallments || 0),
       0,
@@ -337,6 +450,87 @@ export class FeeRepository {
     };
   }
 
+  async getByStudent(studentId: string, academicYearId: string, academicYear: string) {
+    const [annual] = await this.getAll(academicYearId, academicYear, studentId);
+    if (!annual) return null;
+
+    // These metrics must follow the fee year, including allocations made by a
+    // receipt dated in another year. Money stays numeric in PostgreSQL here.
+    const [metricsRows, feesList] = await Promise.all([
+      this.db.select({
+        totalOverdueAmount: sql<string>`coalesce((
+          select sum(${feeInstallments.amount}::numeric)
+          from ${feeInstallments}
+          inner join ${fees} on ${feeInstallments.feeId} = ${fees.id}
+          where ${fees.studentId} = ${studentId}
+            and ${fees.academicYear} = ${academicYear}
+            and ${feeInstallments.status} = 'overdue'
+        ), 0)::text`,
+        totalUnpaidAmount: sql<string>`coalesce((
+          select sum(${feeInstallments.amount}::numeric)
+          from ${feeInstallments}
+          inner join ${fees} on ${feeInstallments.feeId} = ${fees.id}
+          where ${fees.studentId} = ${studentId}
+            and ${fees.academicYear} = ${academicYear}
+            and ${feeInstallments.status} not in ('paid', 'cancelled')
+        ), 0)::text`,
+        avgPaymentAmount: sql<string>`coalesce((
+          select round(avg(year_receipt_allocations.amount), 2)
+          from (
+            select sum(${paymentAllocations.amount}::numeric) as amount
+            from ${paymentAllocations}
+            inner join ${fees} on ${paymentAllocations.feeId} = ${fees.id}
+            inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
+            where ${fees.studentId} = ${studentId}
+              and ${fees.academicYear} = ${academicYear}
+              and ${payments.status} = 'completed'
+            group by ${payments.id}
+          ) year_receipt_allocations
+        ), 0)::text`,
+        lastPayment: sql<string | null>`(
+          select max(${payments.paymentDate})
+          from ${paymentAllocations}
+          inner join ${fees} on ${paymentAllocations.feeId} = ${fees.id}
+          inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
+          where ${fees.studentId} = ${studentId}
+            and ${fees.academicYear} = ${academicYear}
+            and ${payments.status} = 'completed'
+        )`,
+      }).from(students).where(eq(students.id, studentId)).limit(1),
+      this.listStudentFeeRows(studentId, academicYear),
+    ]);
+
+    const metrics = metricsRows[0];
+    const response = this.formatStudentFeeResponse({
+      studentId: annual.student.id,
+      studentName: annual.student.name,
+      studentCode: annual.student.studentCode,
+      studentImage: annual.student.image,
+      classId: annual.class.id,
+      className: annual.class.name,
+      sectionId: annual.section.id,
+      sectionName: annual.section.name,
+      totalFees: annual.totalFees,
+      netAmount: annual.netAmount,
+      totalPaid: annual.totalPaid,
+      totalDiscount: annual.totalDiscount,
+      totalDue: annual.totalDue,
+      paidCount: annual.paidCount,
+      pendingCount: annual.pendingCount,
+      overdueCount: annual.overdueCount,
+      totalOverdueAmount: metrics?.totalOverdueAmount ?? '0',
+      totalUnpaidAmount: metrics?.totalUnpaidAmount ?? '0',
+      avgPaymentAmount: metrics?.avgPaymentAmount ?? '0',
+      lastPayment: metrics?.lastPayment ?? null,
+    }, feesList);
+    return {
+      academicYear,
+      enrollmentId: annual.enrollmentId,
+      placementId: annual.placementId,
+      ...response,
+    };
+  }
+
   async getByStudentAndYear(studentId, academicYear, feeTypeId) {
     const [fee] = await this.buildFeeQuery()
       .where(
@@ -427,98 +621,147 @@ export class FeeRepository {
     return result.map(fee => fee.id);
   }
 
-  async getOverdue() {
+  async getOverdue(academicYearId: string, academicYear: string) {
     const today = formatDateOnly(getBusinessDate());
-    const aliasUser = alias(users, 'alias_user');
+    const aliasUser = alias(users, 'overdue_year_user');
+    const overdue = sql`EXISTS (
+      SELECT 1 FROM ${feeInstallments}
+      WHERE ${feeInstallments.feeId} = ${fees.id}
+        AND ${feeInstallments.dueDate} < ${today}
+        AND ${feeInstallments.status} NOT IN ('paid', 'cancelled')
+    )`;
+    const completedAllocated = sql<string>`coalesce((
+      SELECT sum(${paymentAllocations.amount}::numeric)
+      FROM ${paymentAllocations}
+      INNER JOIN ${payments} ON ${paymentAllocations.paymentId} = ${payments.id}
+      WHERE ${paymentAllocations.feeId} = ${fees.id}
+        AND ${payments.status} = 'completed'
+    ), 0)::text`;
 
-    return await this.db
-      .select({
-        id: fees.id,
-        studentId: fees.studentId,
-        feeTypeId: fees.feeTypeId,
-        schedule: fees.schedule,
-        academicYear: fees.academicYear,
-        baseAmount: fees.baseAmount,
-        grossAmount: fees.grossAmount,
-        netAmount: fees.netAmount,
-        paidAmount: fees.paidAmount,
-        discountAmount: fees.discountAmount,
-        status: fees.status,
-        notes: fees.notes,
-        createdAt: fees.createdAt,
-        updatedAt: fees.updatedAt,
-        student: {
-          id: students.id,
-          name: students.name,
-          studentCode: students.studentCode,
-          image: aliasUser.image,
-        },
-        feeType: {
-          id: feeTypes.id,
-          name: feeTypes.name,
-          category: feeTypes.category,
-          amount: feeTypes.amount,
-        },
-        class: {
-          id: classes.id,
-          name: classes.name,
-        },
-        section: {
-          id: sections.id,
-          name: sections.name,
-        },
-        overdueInstallments: sql<number>`(
-          SELECT COUNT(*)::int
-          FROM ${feeInstallments}
-          WHERE ${feeInstallments.feeId} = ${fees.id}
-          AND ${feeInstallments.status} != 'paid'
+    const rows = await this.db.select({
+      id: fees.id,
+      studentId: fees.studentId,
+      feeTypeId: fees.feeTypeId,
+      schedule: fees.schedule,
+      academicYear: fees.academicYear,
+      effectiveDate: fees.effectiveDate,
+      baseAmount: fees.baseAmount,
+      grossAmount: fees.grossAmount,
+      netAmount: fees.netAmount,
+      paidAmount: completedAllocated.as('completed_paid_amount'),
+      discountAmount: fees.discountAmount,
+      status: fees.status,
+      notes: fees.notes,
+      createdAt: fees.createdAt,
+      updatedAt: fees.updatedAt,
+      student: {
+        id: students.id,
+        name: students.name,
+        studentCode: students.studentCode,
+        image: aliasUser.image,
+      },
+      feeType: {
+        id: feeTypes.id,
+        name: feeTypes.name,
+        category: feeTypes.category,
+        amount: feeTypes.amount,
+      },
+      overdueInstallments: sql<number>`(
+        SELECT count(*)::int FROM ${feeInstallments}
+        WHERE ${feeInstallments.feeId} = ${fees.id}
           AND ${feeInstallments.dueDate} < ${today}
-        )`.as('overdue_installments'),
-      })
-      .from(fees)
+          AND ${feeInstallments.status} NOT IN ('paid', 'cancelled')
+      )`.as('overdue_installments'),
+    }).from(fees)
       .leftJoin(students, eq(fees.studentId, students.id))
       .leftJoin(aliasUser, eq(students.userId, aliasUser.id))
       .leftJoin(feeTypes, eq(fees.feeTypeId, feeTypes.id))
-      .leftJoin(classes, eq(students.classId, classes.id))
-      .leftJoin(sections, eq(students.sectionId, sections.id))
-      .where(
-        sql`EXISTS (
-          SELECT 1 FROM ${feeInstallments}
-          WHERE ${feeInstallments.feeId} = ${fees.id}
-          AND ${feeInstallments.dueDate} < ${today}
-          AND ${feeInstallments.status} != 'paid'
-        )`
-      )
+      .where(and(eq(fees.academicYear, academicYear), overdue))
       .orderBy(desc(fees.createdAt));
+
+    const studentIds = [...new Set(rows.map((row) => row.studentId).filter((id): id is string => !!id))];
+    const placements = studentIds.length ? await this.db.select({
+      studentId: studentEnrollments.studentId,
+      classId: classes.id,
+      className: classes.name,
+      sectionId: sections.id,
+      sectionName: sections.name,
+      validFrom: studentEnrollmentPlacements.validFrom,
+      validTo: studentEnrollmentPlacements.validTo,
+    }).from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .innerJoin(classes, and(
+        eq(studentEnrollmentPlacements.classId, classes.id),
+        eq(classes.academicYear, academicYear),
+      ))
+      .innerJoin(sections, and(
+        eq(studentEnrollmentPlacements.sectionId, sections.id),
+        eq(sections.classId, classes.id),
+      ))
+      .where(and(
+        eq(studentEnrollments.academicYearId, academicYearId),
+        inArray(studentEnrollments.studentId, studentIds),
+      ))
+      .orderBy(desc(studentEnrollmentPlacements.validFrom), desc(studentEnrollmentPlacements.id)) : [];
+
+    const placementsByStudent = new Map<string, typeof placements>();
+    for (const placement of placements) {
+      const list = placementsByStudent.get(placement.studentId) ?? [];
+      list.push(placement);
+      placementsByStudent.set(placement.studentId, list);
+    }
+
+    return rows.map((row) => {
+      const placement = row.effectiveDate ? placementsByStudent.get(row.studentId)?.find((candidate) =>
+        candidate.validFrom <= row.effectiveDate! &&
+        (candidate.validTo === null || row.effectiveDate! < candidate.validTo)
+      ) : undefined;
+      return {
+        ...row,
+        class: { id: placement?.classId ?? null, name: placement?.className ?? null },
+        section: { id: placement?.sectionId ?? null, name: placement?.sectionName ?? null },
+      };
+    });
   }
 
-  async getOverdueSummary() {
+  async getOverdueSummary(academicYear: string) {
     const today = formatDateOnly(getBusinessDate());
-    const [result] = await this.db
-      .select({
-        overdueCount: sql<number>`COUNT(DISTINCT ${fees.id})`,
-        overdueAmount: sql<number>`COALESCE(SUM(${fees.netAmount}::numeric - ${fees.paidAmount}::numeric), 0)`,
-        affectedStudents: sql<number>`COUNT(DISTINCT ${fees.studentId})`,
-      })
-      .from(fees)
-      .where(
-        sql`EXISTS (
-          SELECT 1 FROM ${feeInstallments}
-          WHERE ${feeInstallments.feeId} = ${fees.id}
-          AND ${feeInstallments.dueDate} < ${today}
-          AND ${feeInstallments.status} != 'paid'
-        )`
-      );
-
+    const [result] = await this.db.select({
+      overdueCount: sql<number>`count(${fees.id})::int`,
+      overdueAmount: sql<string>`coalesce(sum(greatest(
+        "fees"."net_amount"::numeric - coalesce((
+          SELECT sum("payment_allocations"."amount"::numeric)
+          FROM ${paymentAllocations}
+          INNER JOIN ${payments} ON "payment_allocations"."payment_id" = "payments"."id"
+          WHERE "payment_allocations"."fee_id" = "fees"."id"
+            AND "payments"."status" = 'completed'
+        ), 0), 0)), 0)::text`,
+      affectedStudents: sql<number>`count(distinct ${fees.studentId})::int`,
+    }).from(fees).where(and(
+      eq(fees.academicYear, academicYear),
+      sql`EXISTS (
+        SELECT 1 FROM ${feeInstallments}
+        WHERE "fee_installments"."fee_id" = "fees"."id"
+          AND "fee_installments"."due_date" < ${today}
+          AND "fee_installments"."status" NOT IN ('paid', 'cancelled')
+      )`,
+    ));
     return {
       overdueCount: Number(result.overdueCount),
-      overdueAmount: Number(result.overdueAmount),
+      overdueAmount: result.overdueAmount,
       affectedStudents: Number(result.affectedStudents),
     };
   }
 
-  async getOverdueByStudent(studentId: string) {
+  async getOverdueByStudent(studentId: string, academicYear: string) {
     const today = formatDateOnly(getBusinessDate());
+    const paidAmount = sql<string>`coalesce((
+      SELECT sum(${paymentAllocations.amount}::numeric)
+      FROM ${paymentAllocations}
+      INNER JOIN ${payments} ON ${paymentAllocations.paymentId} = ${payments.id}
+      WHERE ${paymentAllocations.feeId} = ${fees.id}
+        AND ${payments.status} = 'completed'
+    ), 0)::text`;
     return await this.db
       .select({
         id: fees.id,
@@ -529,7 +772,7 @@ export class FeeRepository {
         baseAmount: fees.baseAmount,
         grossAmount: fees.grossAmount,
         netAmount: fees.netAmount,
-        paidAmount: fees.paidAmount,
+        paidAmount,
         discountAmount: fees.discountAmount,
         status: fees.status,
         notes: fees.notes,
@@ -547,14 +790,16 @@ export class FeeRepository {
       .where(
         and(
           eq(fees.studentId, studentId),
+          eq(fees.academicYear, academicYear),
           sql`EXISTS (
             SELECT 1 FROM ${feeInstallments}
             WHERE ${feeInstallments.feeId} = ${fees.id}
             AND ${feeInstallments.dueDate} < ${today}
-            AND ${feeInstallments.status} != 'paid'
+            AND ${feeInstallments.status} NOT IN ('paid', 'cancelled')
           )`
         )
       )
       .orderBy(desc(fees.createdAt));
   }
+
 }

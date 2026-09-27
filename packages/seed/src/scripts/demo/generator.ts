@@ -183,6 +183,11 @@ export async function studentsPack() {
                   parentIds: family.parentIds,
                   academicYear: seedAcademicYear,
                });
+               // Synthetic fixtures know when this year's placement begins;
+               // the permanent admission date can belong to an older year.
+               const yearStart = `${seedAcademicYear.slice(0, 4)}-09-01`;
+               student.yearEnrolledOn = student.enrollmentDate > yearStart
+                  ? student.enrollmentDate : yearStart;
 
                const fees = generateFees({
                   studentId: student.id,
@@ -393,6 +398,12 @@ export function eventsPack(count = featureCounts.events) {
    };
 }
 
+function withinInstructionYear(date: string) {
+   const startsOn = `${seedAcademicYear.slice(0, 4)}-09-01`;
+   const endsOn = `${seedAcademicYear.slice(5)}-06-30`;
+   return date < startsOn ? startsOn : date > endsOn ? endsOn : date;
+}
+
 export function assessmentsPack(teachers: any[], count = featureCounts.assessments) {
    const contexts = teacherContexts(teachers);
    const types = ['quiz', 'assignment', 'project', 'participation', 'test', 'presentation'];
@@ -406,7 +417,7 @@ export function assessmentsPack(teachers: any[], count = featureCounts.assessmen
             title: ['Weekly quiz', 'Unit test', 'Class project', 'Oral presentation'][i % 4],
             description: 'Generated assessment for demo academic history.',
             type: types[i % types.length],
-            date: dateOnly(offsetDate(i % 3 === 0 ? -20 - i : 7 + i)),
+            date: withinInstructionYear(dateOnly(offsetDate(i % 3 === 0 ? -20 - i : 7 + i))),
             duration: [30, 45, 60, 90][i % 4],
             totalMarks,
             passingMarks: Math.floor(totalMarks / 2),
@@ -431,7 +442,7 @@ export function examsPack(teachers: any[], count = featureCounts.exams) {
             title: ['Mathematics exam', 'Language exam', 'Science exam', 'History exam'][i % 4],
             description: 'Generated exam for demo academic records.',
             type: types[i % types.length],
-            date: dateOnly(offsetDate(i % 3 === 0 ? -30 - i : 14 + i)),
+            date: withinInstructionYear(dateOnly(offsetDate(i % 3 === 0 ? -30 - i : 14 + i))),
             startTime: `${String(hour).padStart(2, '0')}:00`,
             endTime: `${String(hour + 2).padStart(2, '0')}:00`,
             duration: 120,
@@ -467,7 +478,8 @@ export function gradesPack(
 
    const grades = [];
    for (const source of completedSources) {
-      const sectionStudents = students.filter((student: any) => student.sectionId === source.sectionId);
+      const sectionStudents = students.filter((student: any) =>
+         student.sectionId === source.sectionId && student.yearEnrolledOn <= source.date);
       for (const student of sectionStudents) {
          const missed = Math.random() < 0.08;
          const max = Number(source.totalMarks || 20);

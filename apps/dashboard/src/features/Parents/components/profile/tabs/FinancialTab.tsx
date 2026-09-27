@@ -6,6 +6,8 @@ import { NSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { DollarSign, Users, Calendar } from 'lucide-react';
 import { getParentChildrenApi } from '@/services/parentApi';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { getFeesByStudentApi } from '@/services/feeApi';
 import { Label } from 'najm-kit';
 import InfoWidget from '@/features/Dashboard/components/Widgets/Widget';
@@ -21,24 +23,26 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
   const [children, setChildren] = useState<any[]>([]);
   const [childrenFees, setChildrenFees] = useState<{[key: string]: any[]}>({});
   const [loading, setLoading] = useState(true);
+  // The children's classes and fees in the viewed year.
+  const { viewingYear } = useViewingAcademicYear();
 
   useEffect(() => {
     const fetchFinancialData = async () => {
       try {
         setLoading(true);
-        const childrenData = await getParentChildrenApi(parentId);
+        const childrenData = await withAcademicYear(viewingYear, () => getParentChildrenApi(parentId));
         const childrenList = childrenData?.data || [];
         setChildren(childrenList);
 
         // Fetch fees for each child
-        const feesPromises = childrenList.map(async (child: any) => {
+        const feesPromises = withAcademicYear(viewingYear, () => childrenList.map(async (child: any) => {
           try {
             const feesData = await getFeesByStudentApi(child.id);
             return { studentId: child.id, fees: feesData?.data || [] };
           } catch {
              return { studentId: child.id, fees: [] };
            }
-        });
+        }));
 
         const allFees = await Promise.all(feesPromises);
         const feesMap: {[key: string]: any[]} = {};
@@ -53,10 +57,10 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
       }
     };
 
-    if (parentId) {
+    if (parentId && viewingYear) {
       fetchFinancialData();
     }
-  }, [parentId]);
+  }, [parentId, viewingYear]);
 
   const calculateFinancialStats = () => {
     let totalFees = 0;

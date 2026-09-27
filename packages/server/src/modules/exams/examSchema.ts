@@ -1,8 +1,9 @@
-import { date, integer, jsonb, pgEnum, pgTable, text, time } from 'drizzle-orm/pg-core';
+import { date, index, integer, jsonb, pgEnum, pgTable, text, time } from 'drizzle-orm/pg-core';
 
 import { createRef, idField, numericField, timestamps } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
 import { teacherAssignmentRef } from '../teachers/teacherSchema';
+import { academicYears } from '../academicYears/AcademicYearSchema';
 
 export const examTypeEnum = pgEnum('examType', getEnumValues('examType'));
 export const examStatusEnum = pgEnum('examStatus', getEnumValues('examStatus'));
@@ -10,7 +11,8 @@ export const examSecurityEnum = pgEnum('examSecurity', getEnumValues('examSecuri
 
 export const exams = pgTable('exams', {
   id: idField(),
-  teacherAssignmentId: teacherAssignmentRef(),
+  teacherAssignmentId: teacherAssignmentRef('restrict'),
+  academicYearId: text('academic_year_id').references(() => academicYears.id, { onDelete: 'restrict' }),
   title: text('title').notNull(),
   description: text('description'),
   type: examTypeEnum('type').notNull().default('midterm'),
@@ -25,6 +27,6 @@ export const exams = pgTable('exams', {
   status: examStatusEnum('status').notNull().default('scheduled'),
   sectionIds: jsonb('section_ids').$type<string[]>(),
   ...timestamps,
-});
+}, (table) => [index('exams_year_date_idx').on(table.academicYearId, table.date)]);
 
 export const examRef = createRef('exam_id', () => exams.id);

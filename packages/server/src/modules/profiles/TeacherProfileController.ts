@@ -3,6 +3,9 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { TeacherProfileService } from './TeacherProfileService';
 import { isAuth } from '../../auth';
 import { z } from 'zod';
+import { Year } from '../academicYears/requestYear';
+import { academicYearQuery } from '../academicYears/AcademicYearDto';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 const teacherIdParam = z.object({ teacherId: z.string().min(1) });
 
@@ -21,26 +24,26 @@ export class TeacherProfileController {
   }
 
   @Get('/:teacherId/schedule-today')
-  @Validate({ params: teacherIdParam })
+  @Validate({ params: teacherIdParam, query: academicYearQuery })
   @McpTool('Get teacher schedule for today')
   @ResMsg('teachers.success.retrieved')
-  async getScheduleToday(@Params('teacherId') teacherId: string) {
-    return this.teacherProfileService.getScheduleToday(teacherId);
+  async getScheduleToday(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
+    return this.teacherProfileService.getScheduleToday(teacherId, year);
   }
 
   @Get('/:teacherId/pending-grading')
-  @Validate({ params: teacherIdParam })
+  @Validate({ params: teacherIdParam, query: academicYearQuery })
   @McpTool('Get assessments with pending grading for a teacher')
   @ResMsg('teachers.success.retrieved')
-  async getPendingGrading(@Params('teacherId') teacherId: string) {
-    return this.teacherProfileService.getPendingGrading(teacherId);
+  async getPendingGrading(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
+    return this.teacherProfileService.getPendingGrading(teacherId, year);
   }
 
   @Get('/:teacherId/students')
-  @Validate({ params: teacherIdParam })
+  @Validate({ params: teacherIdParam, query: academicYearQuery })
   @McpTool('Get all students across assigned classes for a teacher')
   @ResMsg('teachers.success.retrieved')
-  async getMyStudents(@Params('teacherId') teacherId: string) {
-    return this.teacherProfileService.getMyStudents(teacherId);
+  async getMyStudents(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
+    return this.teacherProfileService.getMyStudents(teacherId, year);
   }
 }

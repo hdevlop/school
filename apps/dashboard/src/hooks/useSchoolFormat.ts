@@ -43,8 +43,10 @@ export function useSchoolFormat() {
   }).resolvedOptions().maximumFractionDigits, [format.locale, currency]);
   const majorMoney = useCallback((amount: number | string | null | undefined) =>
     money(toMinorUnits(amount, fractionDigits)), [money, fractionDigits]);
-  const displayDate = useCallback((value: Date | number | string | null | undefined) =>
-    date(calendarDateValue(value)), [date]);
+  const displayDate = useCallback((
+    value: Date | number | string | null | undefined,
+    options?: Intl.DateTimeFormatOptions,
+  ) => date(calendarDateValue(value), options), [date]);
   const percentFromHundred = useCallback((value: number | null | undefined) =>
     percent(value == null ? null : value / 100, 1), [percent]);
 

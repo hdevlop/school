@@ -1,5 +1,4 @@
-import { Can } from '../../auth';
-import { own, where } from 'najm-auth';
+import { Can, own, where } from '../../auth';
 import { behaviorRewards } from './behaviorRewardSchema';
 
 export const BehaviorReward = own(behaviorRewards)

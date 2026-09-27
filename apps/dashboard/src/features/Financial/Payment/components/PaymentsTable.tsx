@@ -12,12 +12,17 @@ import { Printer, SearchX } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { updateCheckStatusApi, voidPaymentApi } from '@/services/paymentApi';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 
 function PaymentsTable({studentId}) {
   const { t } = useTranslation();
   const { currency } = useSchoolFormat();
-  const columns = usePaymentsTableColumns();
+  const { viewingYear } = useViewingAcademicYear();
+  // The per-student history includes every year. Only the school-wide list
+  // returns the portion of each receipt allocated to a selected fee year.
+  const feeYear = studentId ? undefined : viewingYear;
+  const columns = usePaymentsTableColumns(feeYear);
   const rawFilters = usePaymentsTableFilters();
 
   const {
@@ -42,6 +47,8 @@ function PaymentsTable({studentId}) {
       studentName: payment.student?.name ?? '',
       studentCode: payment.student?.studentCode ?? '',
       amount: Number(payment.amount),
+      feeYear,
+      yearAllocatedAmount: feeYear ? Number(payment.yearAllocatedAmount) : undefined,
       currency,
       paymentMethod: payment.paymentMethod,
       transactionRef: payment.transactionRef ?? undefined,
@@ -72,7 +79,7 @@ function PaymentsTable({studentId}) {
       title: t('payments.dialogs.viewTitle'),
       children: (
         <div className="flex flex-col gap-4">
-          <PaymentCard data={payment} />
+          <PaymentCard data={payment} feeYear={feeYear} />
           {payment.status === 'completed' && (
             <NButton
               variant="outline"
@@ -142,7 +149,7 @@ function PaymentsTable({studentId}) {
       onEdit={handleEdit}
       onDelete={handleDelete}
       loading={isLoading}
-      renderCard={PaymentCard}
+      renderCard={(props: any) => <PaymentCard {...props} feeYear={feeYear} />}
       renderEmpty={() => (
         <NEmptyState
           surface="panel"

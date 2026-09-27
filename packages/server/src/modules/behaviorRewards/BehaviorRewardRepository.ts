@@ -11,7 +11,7 @@ import {
 } from '../../database/schema';
 import { Owned } from '../../auth';
 import { Repository } from '../../najm';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { BehaviorReward } from './BehaviorRewardGuards';
 
@@ -19,7 +19,7 @@ import { BehaviorReward } from './BehaviorRewardGuards';
 @Repository()
 export class BehaviorRewardRepository {
   declare db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   private buildQuery() {
     const studentUsers = alias(users, 'behavior_reward_student_users');
@@ -66,13 +66,14 @@ export class BehaviorRewardRepository {
   }
 
   async getAll() {
-    return this.scope(this.buildQuery())
+    return this.buildQuery()
+      .where(this.ownershipCondition())
       .orderBy(desc(behaviorRewards.behaviorAt), desc(behaviorRewards.createdAt));
   }
 
   async getById(id: string) {
-    const [record] = await this.scope(this.buildQuery())
-      .where(eq(behaviorRewards.id, id))
+    const [record] = await this.buildQuery()
+      .where(and(this.ownershipCondition(), eq(behaviorRewards.id, id)))
       .limit(1);
     return record;
   }

@@ -46,6 +46,11 @@ export const deleteFeesBulkDto = z.preprocess(
 
 export const feeIdParam = z.object({ id: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
+export const feeListQuery = z.object({ academicYear: academicYearField.optional() });
+export type FeeListQuery = z.infer<typeof feeListQuery>;
+// The year comes from @Year() (the `academicYear` query value or header).
+export const overdueStudentBody = studentIdParam;
+export type OverdueStudentBody = z.infer<typeof overdueStudentBody>;
 
 export const classBulkFeeDto = z.object({
   classId: requiredId,
@@ -53,6 +58,7 @@ export const classBulkFeeDto = z.object({
   feeTypeId: requiredId,
   schedule: scheduleEnum,
   academicYear: academicYearField.optional(),
+  effectiveDate: optionalDateField,
   baseAmount: num().positive('Base amount must be positive').optional(),
   discountAmount: num().min(0, 'Discount cannot be negative').optional(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),

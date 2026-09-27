@@ -6,13 +6,14 @@ import { NPageHeader, NPageHeaderActions } from 'najm-kit';
 import IncomeExpensesTrend from '@/features/Dashboard/components/IncomeExpensesTrend';
 import ExpenseBreakdownChart from './components/ExpenseBreakdownChart';
 import CollectionByClassChart from './components/CollectionByClassChart';
-import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
+import { useDashboardYear } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 
 const ReportsPage: React.FC = () => {
   const { t } = useTranslation();
-  const { academicYear: year } = useActiveAcademicYear();
+  // The viewed year, or the active one with history off.
+  const { year } = useDashboardYear();
 
   return (
     <div className="flex flex-col gap-2 h-full overflow-auto pb-4">

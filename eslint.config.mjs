@@ -81,6 +81,34 @@ export default defineConfig([
       }],
     },
   },
+  {
+    // Drizzle's .where() replaces the previous condition instead of adding to
+    // it. najm-auth's scope() applied ownership that way, so a following
+    // .where() silently dropped it. Najm's Owned exposes ownershipCondition()
+    // for the caller's single .where(and(...)).
+    files: ["packages/server/src/**/*.ts"],
+    ignores: ["packages/server/src/auth.ts"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        paths: [{
+          name: "najm-auth",
+          importNames: ["own", "Owned"],
+          message:
+            "Import own and Owned from src/auth.ts: own applies School's roles; Najm's shared Owned exposes ownershipCondition() for one .where().",
+        }],
+      }],
+    },
+  },
+  {
+    files: ["packages/server/src/**/*.ts", "packages/seed/src/**/*.ts"],
+    rules: {
+      "no-restricted-syntax": ["error", {
+        selector: "CallExpression[callee.property.name='where'][callee.object.type='CallExpression'][callee.object.callee.property.name='where']",
+        message:
+          "A second .where() replaces the first in Drizzle and drops its conditions (ownership included). Combine them with and(...) in one .where().",
+      }],
+    },
+  },
   globalIgnores([
     ".next/**",
     "node_modules/**",

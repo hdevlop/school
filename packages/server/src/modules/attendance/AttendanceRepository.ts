@@ -1,10 +1,13 @@
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
-import { and, desc, eq, asc, or, gte, lte, sql, inArray, isNull } from 'drizzle-orm';
+import { and, desc, eq, asc, or, gte, lte, sql, inArray, isNull, type SQL, isNotNull } from 'drizzle-orm';
 import { attendance, attendanceHistory, settings, students, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
 import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
-import { Attendance } from './AttendanceGuards';
+import { inReportingYear, type ReportingYear } from '../academicYears/academicRecordYear';
+import { monthsBetween } from '@sms/contracts/academic-years';
+import { Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment } from './AttendanceGuards';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 
 export const attendanceSelect = {
   id: attendance.id,
@@ -14,6 +17,7 @@ export const attendanceSelect = {
   teacherId: attendance.teacherId,
   teacherAssignmentId: attendance.teacherAssignmentId,
   sectionId: attendance.sectionId,
+  academicYearId: attendance.academicYearId,
   date: attendance.date,
   status: attendance.status,
   notes: attendance.notes,
@@ -22,11 +26,22 @@ export const attendanceSelect = {
   updatedAt: attendance.updatedAt,
 };
 
-@Owned(Attendance)
+const inYear = (year?: ReportingYear) =>
+  year ? inReportingYear(attendance.academicYearId, attendance.date, year) : undefined;
+
+export type AttendanceListFilters = {
+  year: ReportingYear;
+  type?: string;
+  sectionId?: string;
+  studentId?: string;
+  staffId?: string;
+};
+
+@Owned(Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment)
 @Repository()
 export class AttendanceRepository {
   declare db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -100,50 +115,42 @@ export class AttendanceRepository {
       .leftJoin(markedByUsers, eq(attendance.markedBy, markedByUsers.id));
   }
 
-  async getAll(type?: string) {
-    const query = this.scope(this.buildAttendanceQuery());
-    if (type) {
-      return await query.where(eq(attendance.type, type)).orderBy(desc(attendance.createdAt));
-    }
-    return await query.orderBy(desc(attendance.createdAt));
+  // The year's marks the user may read (stored year, else the date in the
+  // year's reporting interval), optionally of one type, section, student or
+  // staff member. Year, filters and ownership are one WHERE.
+  async getAll({ year, type, sectionId, studentId, staffId }: AttendanceListFilters) {
+    return await this.buildAttendanceQuery()
+      .where(and(
+        this.ownershipCondition(),
+        inReportingYear(attendance.academicYearId, attendance.date, year),
+        type ? eq(attendance.type, type) : undefined,
+        sectionId ? eq(sections.id, sectionId) : undefined,
+        studentId ? and(eq(attendance.studentId, studentId), eq(attendance.type, 'student')) : undefined,
+        staffId ? and(eq(attendance.staffId, staffId), eq(attendance.type, 'staff')) : undefined,
+      ))
+      .orderBy(...(sectionId
+        ? [desc(attendance.date), asc(students.name)]
+        : studentId || staffId ? [desc(attendance.date)] : [desc(attendance.createdAt)]));
   }
 
   async getById(id) {
-    const [result] = await this.scope(this.buildAttendanceQuery())
-      .where(eq(attendance.id, id))
+    const [result] = await this.buildAttendanceQuery()
+      .where(and(this.ownershipCondition(), eq(attendance.id, id)))
       .limit(1);
 
     return result;
   }
 
-  async getByDate(date, type?: string) {
+  async getByDate(date, type?: string, year?: ReportingYear) {
     const conditions = [eq(attendance.date, date)];
     if (type) conditions.push(eq(attendance.type, type));
 
-    return await this.scope(this.buildAttendanceQuery())
-      .where(and(...conditions))
+    return await this.buildAttendanceQuery()
+      .where(and(this.ownershipCondition(), ...conditions, inYear(year)))
       .orderBy(asc(classes.name), asc(sections.name), asc(students.name));
   }
 
-  async getBySection(sectionId) {
-    return await this.scope(this.buildAttendanceQuery())
-      .where(eq(teacherAssignments.sectionId, sectionId))
-      .orderBy(desc(attendance.date), asc(students.name));
-  }
-
-  async getByStudent(studentId) {
-    return await this.scope(this.buildAttendanceQuery())
-      .where(and(eq(attendance.studentId, studentId), eq(attendance.type, 'student')))
-      .orderBy(desc(attendance.date));
-  }
-
-  async getByStaff(staffId: string) {
-    return await this.scope(this.buildAttendanceQuery())
-      .where(and(eq(attendance.staffId, staffId), eq(attendance.type, 'staff')))
-      .orderBy(desc(attendance.date));
-  }
-
-  async getByTeacher(teacherId) {
+  async getByTeacher(teacherId: string, year: ReportingYear) {
     const [teacher] = await this.db
       .select({ staffId: teachers.staffId })
       .from(teachers)
@@ -155,23 +162,19 @@ export class AttendanceRepository {
       conditions.push(eq(attendance.staffId, teacher.staffId));
     }
 
-    return await this.scope(this.buildAttendanceQuery())
-      .where(or(...conditions))
+    return await this.buildAttendanceQuery()
+      .where(and(this.ownershipCondition(), or(...conditions), inReportingYear(attendance.academicYearId, attendance.date, year)))
       .orderBy(desc(attendance.date));
   }
 
   async getByTeacherId(teacherId) {
-    return await this.scope(this.buildAttendanceQuery())
-      .where(eq(teacherAssignments.teacherId, teacherId))
+    return await this.buildAttendanceQuery()
+      .where(and(this.ownershipCondition(), eq(teacherAssignments.teacherId, teacherId)))
       .orderBy(desc(attendance.date), asc(students.name));
   }
 
   async getToday(type?: string) {
-    const today = new Date();
-    today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-
-    const todayDate = today.toISOString().split('T')[0];
-    return await this.getByDate(todayDate, type);
+    return await this.getByDate(getBusinessDateOnly(), type);
   }
 
   async create(attendanceData) {
@@ -202,12 +205,14 @@ export class AttendanceRepository {
   async upsertStaffRoster(
     items: Array<{ staffId: string; date: string; status: string; notes?: string | null }>,
     userId: string,
+    academicYearId: string,
   ) {
     const rows = await this.db
       .insert(attendance)
       .values(items.map((item) => ({
         type: 'staff' as const,
         staffId: item.staffId,
+        academicYearId,
         date: item.date,
         status: item.status as 'present' | 'absent' | 'late',
         notes: item.notes ?? null,
@@ -219,6 +224,7 @@ export class AttendanceRepository {
         set: {
           status: sql`excluded.status`,
           notes: sql`excluded.notes`,
+          academicYearId: sql`excluded.academic_year_id`,
           lastUpdatedBy: userId,
           updatedAt: sql`CURRENT_TIMESTAMP`,
         },
@@ -287,46 +293,34 @@ export class AttendanceRepository {
     return existing;
   }
 
-  async getMonthlyStats(type: 'student' | 'staff', academicYear: string) {
-    const startYear = Number(academicYear.split('-')[0]);
-    const windowStart = `${startYear}-09-01`;
-    const windowEnd = `${startYear + 1}-08-31`;
-
+  // School-wide monthly counts for a registered year, by the stored-year-or-
+  // date rule the year lists use, over the year's own
+  // reporting months. A registered row dated outside its year is omitted from
+  // the monthly chart because the year has no corresponding reporting month.
+  async getMonthlyStatsForYear(type: 'student' | 'staff', year: ReportingYear) {
+    const month = sql<string>`TO_CHAR(${attendance.date}, 'YYYY-MM')`;
     const rows = await this.db
       .select({
-        month: sql<string>`TO_CHAR(${attendance.date}, 'YYYY-MM')`,
+        month,
         present: sql<string>`COUNT(*) FILTER (WHERE ${attendance.status} = 'present')`,
         absent: sql<string>`COUNT(*) FILTER (WHERE ${attendance.status} = 'absent')`,
         late: sql<string>`COUNT(*) FILTER (WHERE ${attendance.status} = 'late')`,
         total: sql<string>`COUNT(*)`,
       })
       .from(attendance)
-      .where(
-        and(
-          eq(attendance.type, type),
-          gte(attendance.date, windowStart),
-          lte(attendance.date, windowEnd),
-        ),
-      )
-      .groupBy(sql`TO_CHAR(${attendance.date}, 'YYYY-MM')`);
+      .where(and(eq(attendance.type, type), inYear(year)))
+      .groupBy(month);
 
-    const map = new Map(
-      rows.map((r) => [r.month, {
-        present: Number(r.present),
-        absent: Number(r.absent),
-        late: Number(r.late),
-        total: Number(r.total),
-      }]),
-    );
-
-    const result: { month: string; present: number; absent: number; late: number; total: number }[] = [];
-    for (let i = 0; i < 12; i++) {
-      const d = new Date(startYear, 8 + i, 1);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      const v = map.get(key) ?? { present: 0, absent: 0, late: 0, total: 0 };
-      result.push({ month: key, ...v });
-    }
-    return result;
+    const byMonth = new Map(rows.map((r) => [r.month, {
+      present: Number(r.present),
+      absent: Number(r.absent),
+      late: Number(r.late),
+      total: Number(r.total),
+    }]));
+    return monthsBetween(year.reportingStartsOn, year.reportingEndsOn).map((key) => ({
+      month: key,
+      ...(byMonth.get(key) ?? { present: 0, absent: 0, late: 0, total: 0 }),
+    }));
   }
 
   async getPresentCountInRange(type: 'student' | 'staff', startDate: string, endDate: string) {
@@ -432,6 +426,15 @@ export class AttendanceRepository {
     return !!row;
   }
 
+  async teacherIdForUser(userId: string) {
+    const [row] = await this.db.select({ id: teachers.id })
+      .from(teachers)
+      .innerJoin(staff, eq(teachers.staffId, staff.id))
+      .where(eq(staff.userId, userId))
+      .limit(1);
+    return row?.id ?? null;
+  }
+
   // School-wide attendance mode: first settings row (admin-owned).
   // Fallback to 'daily' when no settings exist yet (fresh install).
   async getAttendanceMode(): Promise<'daily' | 'per_class'> {
@@ -455,4 +458,12 @@ export class AttendanceRepository {
 
     return existing;
   }
+
+  async hasRegisteredYear(id: string) {
+    const [row] = await this.db.select({ id: attendance.id }).from(attendance)
+      .where(and(eq(attendance.id, id), isNotNull(attendance.academicYearId)))
+      .limit(1);
+    return Boolean(row);
+  }
+
 }

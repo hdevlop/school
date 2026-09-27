@@ -3,7 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { CalendarCheck, SearchX } from 'lucide-react';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import RosterHeader from './RosterHeader';
 import RosterCard from './RosterCard';
 import { useStaffAttendance } from '../hooks/useAttendance';
@@ -17,10 +17,11 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import { localDateInput } from 'najm-kit/format';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
+import { useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
-  const [selectedDate, setSelectedDate] = useState(localDateInput);
+  const [selectedDate, setSelectedDate] = useViewingYearDate(localDateInput);
   const { staff, error: staffError, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
   const { activeStaffRoles, isStaffRolesLoading } = useStaffRoles({ activeOnly: true });
   const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading } = useStaffAttendance({ date: selectedDate });

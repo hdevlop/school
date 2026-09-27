@@ -1,19 +1,17 @@
 import { Service, Transaction, Events, EventService } from '../../najm';
+import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmentService';
+import type {CreateStudentDto, CreateStudentsBulkDto, UpdateStudentDto,} from './StudentDto';
+import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
+import { FeeService } from '../financial/fees/FeeService';
+import { ParentService } from '../parents/ParentService';
 import { StudentRepository } from './StudentRepository';
+import { calculateAge, pickProps } from '../../shared';
 import { StudentValidator } from './StudentValidator';
 import { AuthService, UserService } from '../../auth';
-import { ParentService } from '../parents/ParentService';
-import { FeeService } from '../financial/fees/FeeService';
-import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
 import { StorageService } from 'najm-storage';
-import { calculateAge, pickProps } from '../../shared';
-import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { nanoid } from 'nanoid';
-import type {
-  CreateStudentDto,
-  CreateStudentsBulkDto,
-  UpdateStudentDto,
-} from './StudentDto';
 
 @Service()
 export class StudentService {
@@ -27,28 +25,50 @@ export class StudentService {
     private parentService: ParentService,
     private feeService: FeeService,
     private studentRouteService: StudentRouteService,
+    private studentEnrollments: StudentEnrollmentService,
     private storage: StorageService,
   ) { }
 
-  async getCount() {
-    return await this.studentRepository.getCount();
+  async getCount(year: ResolvedAcademicYear) {
+    return this.studentRepository.getCount(year.id);
   }
 
-  async getStudentsByGender() {
-    return await this.studentRepository.getStudentsByGender();
+  async getStudentsByGender(year: ResolvedAcademicYear) {
+    return this.studentRepository.getStudentsByGender(year.id);
   }
 
-  async getAll() {
-    return await this.studentRepository.getAll();
+  async getAll(year: ResolvedAcademicYear, onDate?: string) {
+    if (onDate) this.studentValidator.ensureRosterDateWithinYear(onDate, year);
+    return this.studentRepository.getAll({ academicYearId: year.id, onDate });
   }
 
-  async getById(id: string) {
+  async getById(id: string, year: ResolvedAcademicYear) {
+    const student = await this.studentValidator.ensureExists(id);
+    const [enrolled] = await this.studentRepository.getAll({ academicYearId: year.id, studentId: id });
+    return enrolled ?? {
+      ...student,
+      classId: null,
+      sectionId: null,
+      class: null,
+      section: null,
+      enrollment: null,
+      placement: null,
+    };
+  }
+
+  /** The student through ownership, independent of any year; 404 when not readable. */
+  async ensureReadable(id: string) {
     return this.studentValidator.ensureExists(id);
   }
 
   async getParents(id: string) {
     await this.studentValidator.ensureExists(id);
     return this.studentRepository.getParentsByStudentId(id);
+  }
+
+  async getEnrollments(id: string) {
+    await this.studentValidator.ensureExists(id);
+    return this.studentEnrollments.listByStudent(id);
   }
 
   @Transaction()
@@ -64,6 +84,10 @@ export class StudentService {
     await this.studentValidator.ensureEmailUnique(data.email);
     await this.studentValidator.ensurePhoneUnique(data.phone ?? undefined);
     await this.studentValidator.ensureClassAndSectionValid(data.classId, data.sectionId);
+    this.studentValidator.ensureCreateAllowed(data);
+    const year = await this.studentEnrollments.resolveNewStudentPlacement(
+      data.classId, data.sectionId, data.yearEnrolledOn,
+    );
 
     const studentId = data.id || nanoid(5);
 
@@ -105,8 +129,16 @@ export class StudentService {
       status: data.status,
     });
 
+    await this.studentEnrollments.create({
+      studentId: student.id,
+      academicYearId: year.id,
+      classId: data.classId,
+      sectionId: data.sectionId,
+      enrolledOn: data.yearEnrolledOn,
+    }, actorId || user.id);
+
     await this.parentService.processParents(student, parentsToProcess);
-    await this.feeService.processFees(student, data.fees as any, { id: actorId || user.id });
+    await this.feeService.processFees(student, data.fees as any, { id: actorId || user.id }, data.yearEnrolledOn);
 
     if (data.transportAssignment) {
       await this.studentRouteService.assign({
@@ -135,6 +167,7 @@ export class StudentService {
     ];
 
     const student = await this.studentValidator.ensureExists(id);
+    await this.studentValidator.ensureProfileUpdateAllowed(student, data);
     await this.studentValidator.ensureCodeUnique(data.studentCode, id);
     await this.studentValidator.ensureEmailUnique(data.email, id);
     await this.studentValidator.ensurePhoneUnique(data.phone ?? undefined, id);
@@ -166,12 +199,14 @@ export class StudentService {
 
   async delete(id: string) {
     await this.studentValidator.ensureExists(id);
+    await this.studentValidator.ensureCanDelete(id);
     const result = await this.studentRepository.delete(id);
     this.storage.delete('students', `${id}_avatar.png`).catch(() => {});
     return result;
   }
 
   async deleteAll() {
+    await this.studentValidator.ensureCanDeleteAll();
     return await this.studentRepository.deleteAll();
   }
 
@@ -192,11 +227,8 @@ export class StudentService {
       try {
         const student = await this.create(studentData);
         createdStudents.push(student);
-      } catch (error: any) {
-        if (error?.status === 409) continue;
-        const identifier = studentData.studentCode || studentData.id || studentData.name || `at index ${index}`;
-        const message = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to create student ${identifier}: ${message}`);
+      } catch (error) {
+        this.studentValidator.handleBulkCreateFailure(error, studentData, index);
       }
     }
 

@@ -4,6 +4,8 @@ import { useEntityCRUD } from 'najm-kit/query/crud';
 import { getAdminSettingsApi, getPublicSettingsApi, updateSettingsApi } from '@/services/settingApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { getCurrentAcademicYear } from '@/lib/utils';
+import { useRenderedActiveAcademicYear } from '../context/RenderedActiveAcademicYear';
+import { activeAcademicYearState } from '../utils/activeAcademicYear';
 
 const getLocalDateOnly = () => {
   const today = new Date();
@@ -34,10 +36,14 @@ export const usePublicSettings = (enabled = true) => {
 
 export const useActiveAcademicYear = () => {
   const { publicSettings, isSettingsLoading } = usePublicSettings();
-  return {
-    academicYear: normalizeSettings(publicSettings)?.currentAcademicYear || getCurrentAcademicYear(),
-    isAcademicYearLoading: isSettingsLoading,
-  };
+  // The label the server rendered this page with stands in until the public
+  // settings load, so nothing waits for that request just to learn the year.
+  return activeAcademicYearState(
+    normalizeSettings(publicSettings)?.currentAcademicYear,
+    isSettingsLoading,
+    useRenderedActiveAcademicYear(),
+    getCurrentAcademicYear,
+  );
 };
 
 export const useBusinessDate = () => {

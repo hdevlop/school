@@ -3,7 +3,7 @@ import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
-export const usePaymentsTableColumns = () => {
+export const usePaymentsTableColumns = (feeYear?: string) => {
 
   const { displayDate, majorMoney } = useSchoolFormat();
   const { t } = useTranslation();
@@ -36,15 +36,19 @@ export const usePaymentsTableColumns = () => {
       ),
     },
     {
-      accessorKey: "amount",
-      header: t('payments.table.amount'),
+      id: "amount",
+      accessorFn: (payment: any) => Number(feeYear ? payment.yearAllocatedAmount : payment.amount) || 0,
+      header: feeYear ? t('payments.table.allocatedToYear', { year: feeYear }) : t('payments.table.amount'),
       enableSorting: true,
-      cell: ({ getValue }: any) => {
-        const amount = getValue() || 0;
+      cell: ({ getValue, row }: any) => {
+        const amount = getValue();
         return (
-          <span className="font-semibold text-green-600 tabular-nums">
-            {majorMoney(amount)}
-          </span>
+          <div className="flex flex-col">
+            <span className="font-semibold text-green-600 tabular-nums">{majorMoney(amount || 0)}</span>
+            {feeYear && <span className="text-xs text-muted-foreground">
+              {t('payments.table.fullReceipt')}: {majorMoney(row.original.amount || 0)}
+            </span>}
+          </div>
         );
       },
     },
@@ -101,5 +105,5 @@ export const usePaymentsTableColumns = () => {
         );
       },
     },
-  ], [t, displayDate, majorMoney]);
+  ], [t, displayDate, majorMoney, feeYear]);
 };

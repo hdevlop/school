@@ -7,6 +7,8 @@ import localFont from 'next/font/local'
 import { AppProviders } from '@/providers/AppProviders';
 import { loadUiSnapshot } from '@/najm.server';
 import NajmClientRoot from '@/components/NajmClientRoot';
+import { AcademicYearSelectionOwner } from '@/features/AcademicYears/components/AcademicYearSelectionOwner';
+import { RenderedActiveAcademicYearProvider } from '@/features/Settings/context/RenderedActiveAcademicYear';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -33,7 +35,7 @@ const robotoMono = localFont({
 export default async function RootLayout({ children,}: Readonly<{children: React.ReactNode;}>) {
 
   const snapshot = await loadUiSnapshot();
-  const { preferences } = snapshot;
+  const { preferences, settings } = snapshot;
 
   return (
     <html
@@ -45,8 +47,15 @@ export default async function RootLayout({ children,}: Readonly<{children: React
     >
       <body suppressHydrationWarning className={`${lora.className} ${lora.variable} ${robotoMono.variable} antialiased  h-screen w-screen overflow-hidden`}>
         <AppProviders snapshot={snapshot}>
-          {children}
-          <NajmClientRoot />
+          {/* The active year's label comes from the per-request School
+              settings read, so the first render already knows it. The
+              selection owner holds the tab's viewing year for pages and for
+              the dialogs NajmClientRoot renders alike. */}
+          <RenderedActiveAcademicYearProvider value={settings.activeAcademicYear}>
+            <AcademicYearSelectionOwner />
+            {children}
+            <NajmClientRoot />
+          </RenderedActiveAcademicYearProvider>
           <NajmPwaRegistration />
         </AppProviders>
       </body>

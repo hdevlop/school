@@ -1,6 +1,7 @@
 import { Err, Service, Transaction } from '../../najm';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
 import { ClassRoutineValidator } from './ClassRoutineValidator';
+import { AcademicYearValidator, type ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import type {
   CreateRoutineEntryDto,
   CreateRoutineDutyDto,
@@ -31,6 +32,7 @@ export class ClassRoutineService {
   constructor(
     private repository: ClassRoutineRepository,
     private validator: ClassRoutineValidator,
+    private academicYears: AcademicYearValidator,
   ) {}
 
   @Transaction()
@@ -58,13 +60,15 @@ export class ClassRoutineService {
     return this.repository.updatePeriod(id, data);
   }
 
-  async list(filters: RoutineListQuery) {
-    return this.repository.list(filters);
+  // Schedules filter by their stored year label.
+  async list(filters: RoutineListQuery, year: ResolvedAcademicYear) {
+    return this.repository.list({ ...filters, academicYear: year.label });
   }
 
-  async getById(id: string) {
-    const [schedule, schedulePeriods, defaultPeriods] = await Promise.all([
-      this.validator.ensureSchedule(id),
+  async getById(id: string, role?: string) {
+    const schedule = await this.validator.ensureSchedule(id);
+    await this.academicYears.resolve(schedule.academicYear, role);
+    const [schedulePeriods, defaultPeriods] = await Promise.all([
       this.repository.getPeriods(false, id),
       this.repository.getPeriods(),
     ]);
@@ -76,11 +80,10 @@ export class ClassRoutineService {
     return { ...schedule, periods, entries, duties };
   }
 
-  async getAssignments(sectionId: string) {
-    await this.validator.ensureSectionAcademicYear(
-      sectionId,
-      (await this.repository.getSection(sectionId))?.classAcademicYear ?? '',
-    );
+  async getAssignments(sectionId: string, role?: string) {
+    const academicYear = (await this.repository.getSection(sectionId))?.classAcademicYear ?? '';
+    await this.validator.ensureSectionAcademicYear(sectionId, academicYear);
+    await this.academicYears.resolve(academicYear, role);
     return this.repository.getAssignmentsForSection(sectionId);
   }
 
@@ -91,7 +94,7 @@ export class ClassRoutineService {
   async create(data: CreateRoutineScheduleDto) {
     await this.validator.ensureSectionAcademicYear(data.sectionId, data.academicYear);
     const existing = await this.repository.getPublishedForSection(data.sectionId, data.academicYear);
-    if (existing) return this.getById(existing.id);
+    if (existing) return this.getById(existing.id, 'admin');
     const schedule = await this.repository.createSchedule({
       ...data,
       status: 'published',
@@ -103,7 +106,7 @@ export class ClassRoutineService {
   async update(id: string, data: UpdateRoutineScheduleDto) {
     await this.validator.ensureSchedule(id);
     await this.repository.updateSchedule(id, data);
-    return this.getById(id);
+    return this.getById(id, 'admin');
   }
 
   @Transaction()
@@ -164,7 +167,7 @@ export class ClassRoutineService {
     for (const period of created) {
       await this.repository.updatePeriod(period.id, { sortOrder: period.sortOrder - 1000 });
     }
-    return this.getById(id);
+    return this.getById(id, 'admin');
   }
 
   async addEntry(scheduleId: string, data: CreateRoutineEntryDto) {
@@ -237,13 +240,13 @@ export class ClassRoutineService {
       publishedAt: new Date().toISOString(),
       publishedBy: userId,
     });
-    return this.getById(id);
+    return this.getById(id, 'admin');
   }
 
   async archive(id: string) {
     await this.validator.ensureSchedule(id);
     await this.repository.updateSchedule(id, { status: 'archived' });
-    return this.getById(id);
+    return this.getById(id, 'admin');
   }
 
   async delete(id: string) {
@@ -251,21 +254,21 @@ export class ClassRoutineService {
     return this.repository.deleteSchedule(id);
   }
 
-  async getPublishedForSection(sectionId: string, academicYear?: string) {
-    const schedule = await this.repository.getPublishedForSection(sectionId, academicYear);
-    return schedule ? this.getById(schedule.id) : null;
+  async getPublishedForSection(sectionId: string, year: ResolvedAcademicYear, role?: string) {
+    const schedule = await this.repository.getPublishedForSection(sectionId, year.label);
+    return schedule ? this.getById(schedule.id, role) : null;
   }
 
   async getTeacherSchedule(
     teacherId: string,
-    academicYear?: string,
+    year: ResolvedAcademicYear,
     user?: { role?: string; teacherId?: string },
   ) {
     if (user && !['admin', 'principal'].includes(user.role ?? '') && user.teacherId !== teacherId) {
       Err(403, 'classRoutines.errors.forbidden');
     }
-    const ids = await this.repository.getTeacherScheduleIds(teacherId, academicYear);
-    const schedules = await Promise.all(ids.map((id) => this.getById(id)));
+    const ids = await this.repository.getTeacherScheduleIds(teacherId, year.label);
+    const schedules = await Promise.all(ids.map((id) => this.getById(id, user?.role)));
     return schedules.map((schedule) => ({
       ...schedule,
       entries: schedule.entries.filter((entry) => entry.teacherId === teacherId),

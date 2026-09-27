@@ -2,9 +2,8 @@
 
 import { NEmptyState, NStatCard, NTable } from 'najm-kit';
 import { useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { CalendarCheck, CalendarDays, CheckCircle2, Clock3, UserX } from 'lucide-react';
-import { getAttendanceByStudentApi } from '@/services/attendanceApi';
+import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
 import { useTranslation } from 'najm-i18n/react';
 
 const formatDate = (value: string | null | undefined, language: string) =>
@@ -40,11 +39,7 @@ const getClassLabel = (row: any, student: any) => {
 
 export default function AttendanceTab({ studentId, student }: { studentId?: string; student?: any }) {
   const { t, language } = useTranslation();
-  const { data, isLoading } = useQuery({
-    queryKey: ['attendance', 'student', studentId],
-    queryFn: () => getAttendanceByStudentApi(studentId as string),
-    enabled: !!studentId,
-  });
+  const { data, isLoading } = useStudentAttendanceRecords(studentId);
 
   const rows = useMemo(() => {
     const rowsRaw = data?.data ?? data ?? [];

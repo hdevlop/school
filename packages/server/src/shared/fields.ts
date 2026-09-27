@@ -31,7 +31,9 @@ export const addressField = z.string().max(500, 'Address too long').optional();
 export const academicYearField = z
   .string()
   .min(9, 'Academic year is required')
-  .regex(/^\d{4}-\d{4}$/, 'Academic year must be in YYYY-YYYY format');
+  .regex(/^\d{4}-\d{4}$/, 'Academic year must be in YYYY-YYYY format')
+  .refine((value) => Number(value.slice(5)) === Number(value.slice(0, 4)) + 1,
+    'Academic year must contain consecutive years');
 
 type ZodNumChainable = z.ZodNumber & {
   positive: (msg?: string) => ZodNumChainable;

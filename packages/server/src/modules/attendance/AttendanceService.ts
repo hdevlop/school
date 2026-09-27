@@ -1,7 +1,10 @@
 import { Service, Err, I18n, Transaction } from '../../najm';
-import { AttendanceRepository } from './AttendanceRepository';
+import { AttendanceRepository, type AttendanceListFilters } from './AttendanceRepository';
 import { AttendanceValidator } from './AttendanceValidator';
+import { AcademicYearValidator, type ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { SectionRepository } from '../sections/SectionRepository';
 import { pickProps } from '../../shared';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 import type {
   CreateAttendanceDto,
   UpdateAttendanceDto,
@@ -16,42 +19,67 @@ export class AttendanceService {
   constructor(
     private attendanceRepository: AttendanceRepository,
     private attendanceValidator: AttendanceValidator,
+    private years: AcademicYearValidator,
+    private sections: SectionRepository,
   ) { }
 
-  async getAll(type?: string) {
-    return await this.attendanceRepository.getAll(type);
+  private async teacherIdForUser(user: { id: string; role?: string; teacherId?: string }) {
+    return user.role === 'teacher'
+      ? await this.attendanceRepository.teacherIdForUser(user.id) : user.teacherId;
   }
 
-  async getById(id: string) {
-    return this.attendanceValidator.ensureExists(id);
+  // The registered year a new mark is stored under.
+  async yearForStudentMark(sectionId: string, date: string) {
+    const [section] = await this.sections.listYearContexts([sectionId]);
+    if (!section) Err(404, 'Attendance section not found');
+    const year = await this.years.requireLabel(section!.academicYear);
+    if (date < year.reportingStartsOn || date > year.reportingEndsOn) {
+      Err(409, 'Attendance date is outside the section academic year');
+    }
+    if (year.status === 'draft') Err(409, 'Attendance cannot be marked in a draft year');
+    return year.id;
   }
 
-  async getByDate(date: string, type?: string) {
-    return await this.attendanceRepository.getByDate(date, type);
+  async yearForStaffMark(date: string) {
+    const year = await this.years.findForDate(date);
+    if (!year) Err(409, 'Attendance date is outside registered academic years');
+    if (year!.status === 'draft') Err(409, 'Attendance cannot be marked in a draft year');
+    return year!.id;
   }
 
-  async getBySection(sectionId: string) {
-    await this.attendanceValidator.ensureSectionExists(sectionId);
-    return await this.attendanceRepository.getBySection(sectionId);
+  // The year's marks, optionally of one type, section, student or staff
+  // member; a filter naming a missing record is a 404 before the list is read.
+  async getAll(year: ResolvedAcademicYear, filters: Omit<AttendanceListFilters, 'year'> = {}) {
+    if (filters.sectionId) await this.attendanceValidator.ensureSectionExists(filters.sectionId);
+    if (filters.studentId) await this.attendanceValidator.ensureStudentExists(filters.studentId);
+    if (filters.staffId) await this.attendanceValidator.ensureStaffExists(filters.staffId);
+    return await this.attendanceRepository.getAll({ year, ...filters });
   }
 
-  async getByStudent(studentId: string) {
-    await this.attendanceValidator.ensureStudentExists(studentId);
-    return await this.attendanceRepository.getByStudent(studentId);
+  // A mark belongs to its stored year, else its date's year; the role must be
+  // allowed that year.
+  async getById(id: string, role?: string) {
+    const record = await this.attendanceValidator.ensureExists(id);
+    await this.years.resolveRecord(record.academicYearId, record.date, role);
+    return record;
   }
 
-  async getByStaff(staffId: string) {
-    await this.attendanceValidator.ensureStaffExists(staffId);
-    return await this.attendanceRepository.getByStaff(staffId);
+  // A day's marks belong to the year holding that date, whichever is viewed.
+  async getByDate(date: string, type?: string, role?: string) {
+    const year = await this.years.resolveRecord(undefined, date, role);
+    return await this.attendanceRepository.getByDate(date, type, year ?? undefined);
   }
 
-  async getByTeacher(teacherId: string) {
+  async getByTeacher(teacherId: string, year: ResolvedAcademicYear) {
     await this.attendanceValidator.ensureTeacherExists(teacherId);
-    return await this.attendanceRepository.getByTeacher(teacherId);
+    return await this.attendanceRepository.getByTeacher(teacherId, year);
   }
 
-  async getToday(type?: string) {
-    return await this.attendanceRepository.getToday(type);
+  // Today's marks exist only in the year holding today; another year has none.
+  async getToday(year: ResolvedAcademicYear, type?: string) {
+    const records = await this.attendanceRepository.getToday(type);
+    return records.filter((record) => record.academicYearId === year.id ||
+      (!record.academicYearId && record.date >= year.reportingStartsOn && record.date <= year.reportingEndsOn));
   }
 
   async mark(data: CreateAttendanceDto, user: { id: string; role?: string; teacherId?: string }) {
@@ -65,6 +93,15 @@ export class AttendanceService {
     data: Extract<CreateAttendanceDto, { type: 'student' }>,
     user: { id: string; role?: string; teacherId?: string },
   ) {
+    const academicYearId = await this.yearForStudentMark(data.sectionId, data.date);
+    await this.years.resolveRecord(academicYearId, data.date, user.role);
+    const teacherId = await this.teacherIdForUser(user);
+    if (user.role === 'teacher') {
+      if (!teacherId || (data.teacherId && data.teacherId !== teacherId) ||
+        !await this.attendanceRepository.isTeacherInSection(teacherId, data.sectionId)) {
+        Err(403, this.at('notAuthorizedForSection'));
+      }
+    }
     const mode = await this.attendanceRepository.getAttendanceMode();
 
     if (mode === 'daily') {
@@ -87,13 +124,13 @@ export class AttendanceService {
     // secretary, …) legitimately mark with teacherAssignmentId = null.
     const teacherAssignmentId = await this.attendanceValidator.validateStudentAttendance(
       data,
-      { mode, user },
+      { mode, user: { ...user, teacherId } },
     );
-
     return await this.attendanceRepository.create({
       type: 'student',
       studentId: data.studentId,
       sectionId: data.sectionId,
+      academicYearId,
       teacherAssignmentId,
       date: data.date,
       status: data.status,
@@ -110,12 +147,10 @@ export class AttendanceService {
     { studentId, sectionId, status, note, date }: UpdateAttendanceStatusDto,
     user: { id: string; role?: string; teacherId?: string },
   ) {
-    let targetDate = date;
-    if (!targetDate) {
-      const today = new Date();
-      today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-      targetDate = today.toISOString().split('T')[0];
-    }
+    const targetDate = date ?? getBusinessDateOnly();
+
+    const academicYearId = await this.yearForStudentMark(sectionId, targetDate);
+    await this.years.resolveRecord(academicYearId, targetDate, user.role);
 
     const existing = await this.attendanceRepository.findSameDayForStudentInSection(
       studentId, sectionId, targetDate,
@@ -124,9 +159,11 @@ export class AttendanceService {
       Err(404, this.at('noRecordToday'));
     }
 
-    const isAdmin = user.role === 'admin';
+    await this.attendanceValidator.validateAttendanceDate(targetDate, user.role);
+    const isAdmin = user.role === 'admin' || user.role === 'principal';
+    const teacherId = await this.teacherIdForUser(user);
     const isTeacherOfSection = await this.attendanceRepository.isTeacherInSection(
-      user.teacherId ?? '', sectionId,
+      teacherId ?? '', sectionId,
     );
     if (!isTeacherOfSection && !isAdmin) {
       Err(403, this.at('notAuthorizedForSection'));
@@ -158,17 +195,21 @@ export class AttendanceService {
     return await this.attendanceRepository.getById(existing.id);
   }
 
-  async getHistory(id: string) {
-    await this.attendanceValidator.ensureExists(id);
+  async getHistory(id: string, role?: string) {
+    await this.getById(id, role);
     return await this.attendanceRepository.getHistory(id);
   }
 
-  private async markStaffAttendance(data: Extract<CreateAttendanceDto, { type: 'staff' }>, user: { id: string }) {
-    await this.attendanceValidator.validateStaffAttendance(data);
+  private async markStaffAttendance(data: Extract<CreateAttendanceDto, { type: 'staff' }>, user: { id: string; role?: string }) {
+    if (user.role !== 'admin' && user.role !== 'principal') Err(403, 'Staff attendance requires an administrator');
+    const academicYearId = await this.yearForStaffMark(data.date);
+    await this.years.resolveRecord(academicYearId, data.date, user.role);
+    await this.attendanceValidator.validateStaffAttendance(data, user.role);
 
     return await this.attendanceRepository.create({
       type: 'staff',
       staffId: data.staffId,
+      academicYearId,
       date: data.date,
       status: data.status,
       notes: data.notes,
@@ -177,7 +218,7 @@ export class AttendanceService {
   }
 
   @Transaction()
-  async upsertStaffRoster(data: UpsertStaffAttendanceRosterDto, user: { id: string }) {
+  async upsertStaffRoster(data: UpsertStaffAttendanceRosterDto, user: { id: string; role?: string }) {
     const staffIds = data.items.map((item) => item.staffId);
     if (new Set(staffIds).size !== staffIds.length) {
       Err(400, this.at('duplicateStaffInRoster') || 'Each staff member may appear only once in a roster');
@@ -189,22 +230,29 @@ export class AttendanceService {
     }
 
     const [date] = dates;
-    await this.attendanceValidator.validateAttendanceDate(date);
+    await this.attendanceValidator.validateAttendanceDate(date, user.role);
     await this.attendanceValidator.ensureStaffRosterEligible(staffIds, date);
+    const academicYearId = await this.yearForStaffMark(date);
+    await this.years.resolveRecord(academicYearId, date, user.role);
 
-    return this.attendanceRepository.upsertStaffRoster(data.items, user.id);
+    return this.attendanceRepository.upsertStaffRoster(data.items, user.id, academicYearId);
   }
 
-  async update(id: string, data: UpdateAttendanceDto) {
+  async update(id: string, data: UpdateAttendanceDto, user: { id: string; role?: string; teacherId?: string }) {
     const ATTENDANCE_UPDATE_KEYS = ['status', 'notes'];
     const attendanceData = pickProps(data, ATTENDANCE_UPDATE_KEYS);
 
-    await this.attendanceValidator.ensureExists(id);
+    const record = await this.getById(id, user.role);
+    const teacherId = await this.teacherIdForUser(user);
+    if (user.role === 'teacher' && (record.type !== 'student' || !teacherId || !record.sectionId ||
+      !await this.attendanceRepository.isTeacherInSection(teacherId, record.sectionId))) {
+      Err(403, this.at('notAuthorizedForSection'));
+    }
     return await this.attendanceRepository.update(id, attendanceData);
   }
 
-  async delete(id: string) {
-    await this.attendanceValidator.ensureExists(id);
+  async delete(id: string, role?: string) {
+    await this.getById(id, role);
     return await this.attendanceRepository.delete(id);
   }
 
@@ -226,4 +274,5 @@ export class AttendanceService {
 
     return createdAttendance;
   }
+
 }

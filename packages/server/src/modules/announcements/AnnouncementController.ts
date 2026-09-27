@@ -113,11 +113,11 @@ export class AnnouncementController {
   @ResMsg('announcements.success.retrieved')
   async getActiveForAudience(
     @Params('targetAudience') targetAudience: AnnouncementDtoShape['targetAudience'],
-    @Query() query: ActiveAnnouncementQueryDto = {},
+    @Query() query: ActiveAnnouncementQueryDto,
   ) {
     return this.announcementService.getActiveForAudience(
       targetAudience,
-      query.classId ?? undefined,
+      query?.classId ?? undefined,
     );
   }
 

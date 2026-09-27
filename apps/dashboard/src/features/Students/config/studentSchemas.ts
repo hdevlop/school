@@ -62,3 +62,17 @@ export const studentSchema = z.object({
 });
 
 export type StudentFormValues = z.input<typeof studentSchema>;
+
+/**
+ * The profile edit. Class, section and enrollment status belong to the dated
+ * enrollment records, which the server refuses to change through a profile
+ * edit, so they are shown read-only and not required: a student viewed in a
+ * year without a placement has none.
+ */
+export const studentProfileEditSchema = studentSchema.extend({
+  classId: optionalId,
+  sectionId: optionalId,
+});
+
+/** The fields a profile edit leaves to the enrollment records. */
+export const PLACEMENT_FIELDS = ['classId', 'sectionId', 'status'] as const;

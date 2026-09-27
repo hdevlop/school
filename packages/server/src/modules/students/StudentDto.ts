@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  academicYearField,
   addressField,
   dateField,
   emailField,
@@ -11,6 +12,7 @@ import {
 } from '../../shared/fields';
 import { genderEnum, studentStatusEnum } from '../../shared/enums';
 import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
+import { isDateOnly } from '@sms/contracts/academic-years';
 
 const transportAssignmentDto = z.object({
   vehicleId: z.string().min(1),
@@ -53,6 +55,7 @@ export const createStudentDto = studentSchema.omit({ id: true }).extend({
   password: z.string().min(8, 'Password must be at least 8 characters long').optional(),
   classId: z.string().min(1),
   sectionId: z.string().min(1),
+  yearEnrolledOn: z.string().refine(isDateOnly, 'A real YYYY-MM-DD yearly enrollment date is required'),
   gradeLevel: z.number().optional(),
   graduationDate: z.string().optional().nullable(),
   parents: z.array(z.unknown()).optional(),
@@ -67,9 +70,20 @@ export const createStudentsBulkDto = z.array(createStudentDto);
 // field is declared `never`: present means rejected, absent means fine.
 export const updateStudentDto = createStudentDto
   .partial()
-  .extend({ password: z.never('Passwords are not set from a profile edit').optional() });
+  .extend({
+    password: z.never('Passwords are not set from a profile edit').optional(),
+    yearEnrolledOn: z.never('Use the enrollment operations for yearly placement').optional(),
+  });
 
 export const studentIdParam = z.object({ id: z.string().min(1) });
+// `academicYear` stays declared so MCP tools advertise it; the route reads the
+// validated year through @Year(), which also accepts the X-Academic-Year header.
+export const studentYearQuery = z.object({ academicYear: academicYearField.optional() });
+// `onDate` narrows the year list to the students enrolled and placed on that
+// day, each with the class and section valid then: the roster a register marks.
+export const studentListQuery = studentYearQuery.extend({
+  onDate: z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date').optional(),
+});
 export const deleteBulkStudentDto = z.object({
   ids: z.array(z.string().min(1)),
 });
@@ -78,3 +92,5 @@ export type CreateStudentDto = z.input<typeof createStudentDto>;
 export type UpdateStudentDto = z.input<typeof updateStudentDto>;
 export type CreateStudentsBulkDto = z.input<typeof createStudentsBulkDto>;
 export type DeleteBulkStudentDto = z.infer<typeof deleteBulkStudentDto>;
+export type StudentYearQuery = z.infer<typeof studentYearQuery>;
+export type StudentListQuery = z.infer<typeof studentListQuery>;

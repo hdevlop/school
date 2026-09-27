@@ -8,7 +8,7 @@ import { Label } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
-const PaymentCard = ({ data }) => {
+const PaymentCard = ({ data, feeYear }: { data: any; feeYear?: string }) => {
   const { t } = useTranslation();
   const { displayDate, majorMoney } = useSchoolFormat();
   const payment = data;
@@ -19,8 +19,11 @@ const PaymentCard = ({ data }) => {
       <div className="flex items-start justify-between">
         <div className="flex flex-col">
           <Label className="text-lg font-bold text-green-600">
-            {majorMoney(payment.amount || 0)}
+            {majorMoney(feeYear ? payment.yearAllocatedAmount ?? 0 : payment.amount || 0)}
           </Label>
+          {feeYear && <Label className="text-xs text-gray-500">
+            {t('payments.table.allocatedToYear', { year: feeYear })} · {t('payments.table.fullReceipt')}: {majorMoney(payment.amount || 0)}
+          </Label>}
           <Label className="text-sm text-gray-500">
             {payment.receiptNumber || t('common.notAvailable')}
           </Label>

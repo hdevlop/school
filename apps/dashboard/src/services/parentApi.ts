@@ -30,6 +30,7 @@ export const searchParentsApi = async (query) => {
   return res.data
 }
 
+// Each child carries the request year's class and section.
 export const getParentChildrenApi = async (parentId) => {
   const res = await api.get(`/parents/${parentId}/children`)
   return res.data

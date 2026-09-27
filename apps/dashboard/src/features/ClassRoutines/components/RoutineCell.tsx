@@ -1,6 +1,6 @@
 'use client';
 
-import { DoorOpen, UserRound } from 'lucide-react';
+import { DoorOpen } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { describeRoutineContent, type RoutineContentGroup } from '@sms/contracts/routines';
 
@@ -18,14 +18,12 @@ const colorFor = (subjectId: string) => accents[[...subjectId].reduce((total, ch
 export default function RoutineCell({
   subjectId,
   subjectName,
-  teacherName,
   roomNumber,
   defaultRoom,
   contentGroups = [],
 }: {
   subjectId: string;
   subjectName: string;
-  teacherName?: string;
   roomNumber?: string | null;
   defaultRoom?: string | null;
   contentGroups?: RoutineContentGroup[];
@@ -38,7 +36,7 @@ export default function RoutineCell({
       {contentGroups.length ? (
         <div className="flex min-h-16 flex-1 items-stretch divide-x divide-dotted divide-current/35 rtl:divide-x-reverse" aria-label={summary}>
           {contentGroups.map((group, index) => group.kind === 'fixed' ? (
-            <span key={index} dir="auto" className="flex min-w-0 flex-1 items-center justify-center break-words px-1.5 py-2 text-center text-[11px] font-semibold leading-tight">
+            <span key={index} dir="auto" className="flex min-w-0 flex-1 items-center justify-center break-words px-1.5 py-2 text-center text-base font-semibold leading-tight">
               {group.label}
             </span>
           ) : (
@@ -46,19 +44,18 @@ export default function RoutineCell({
               <svg className="pointer-events-none absolute inset-0 h-full w-full text-current/45" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                 <line x1="0" y1="0" x2="100" y2="100" stroke="currentColor" strokeWidth="0.8" />
               </svg>
-              <span dir="auto" className="absolute inset-x-1 top-1 max-h-[42%] overflow-hidden break-words text-end text-[10px] font-semibold leading-tight">{group.options[0]}</span>
+              <span dir="auto" className="absolute inset-x-1 top-1 max-h-[42%] overflow-hidden break-words text-end text-sm font-semibold leading-tight">{group.options[0]}</span>
               <span className="sr-only">{t('classRoutines.ui.content.or')}</span>
-              <span dir="auto" className="absolute inset-x-1 bottom-1 max-h-[42%] overflow-hidden break-words text-start text-[10px] font-semibold leading-tight">{group.options[1]}</span>
+              <span dir="auto" className="absolute inset-x-1 bottom-1 max-h-[42%] overflow-hidden break-words text-start text-sm font-semibold leading-tight">{group.options[1]}</span>
             </span>
           ))}
         </div>
       ) : (
-        <span dir="auto" className="flex min-h-16 flex-1 items-center justify-center px-2 text-center text-xs font-bold leading-tight">{subjectName}</span>
+        <span dir="auto" className="flex min-h-16 flex-1 items-center justify-center px-2 text-center text-base font-bold leading-tight">{subjectName}</span>
       )}
-      {teacherName ? (
-        <div className="flex items-center gap-2 border-t border-current/15 px-1.5 py-1 text-[10px] opacity-75">
-          <span className="flex min-w-0 items-center gap-1"><UserRound className="h-3 w-3 shrink-0" /><span className="truncate">{teacherName}</span></span>
-          <span className="ms-auto flex shrink-0 items-center gap-1"><DoorOpen className="h-3 w-3" />{roomNumber || defaultRoom || t('classRoutines.ui.grid.noRoom')}</span>
+      {roomNumber || defaultRoom ? (
+        <div className="flex items-center justify-end border-t border-current/15 px-1.5 py-1 text-xs opacity-75">
+          <span className="flex items-center gap-1"><DoorOpen className="h-3 w-3" />{roomNumber || defaultRoom}</span>
         </div>
       ) : null}
     </div>

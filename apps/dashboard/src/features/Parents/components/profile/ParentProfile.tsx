@@ -44,6 +44,7 @@ import {
 import { useTranslation } from 'najm-i18n/react';
 import type { TranslationParams } from 'najm-i18n';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useParentDashboard } from '../../hooks/useParentDashboard';
 
 interface ParentProfileProps {
@@ -93,6 +94,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
   const router = useRouter();
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
+  const { viewingYear } = useViewingAcademicYear();
   const locale = language === 'fr' ? 'fr-FR' : language === 'ar' ? 'ar-MA' : 'en-US';
   const text = (key: string, params?: TranslationParams) =>
     t(`parents.profile.dashboard.${key}`, params);
@@ -100,6 +102,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
   const {
     parent,
     children,
+    currentChildren,
     childData,
     assessments,
     events,
@@ -129,8 +132,9 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
       : null;
     const overallAttendance = getAttendanceScore(attendanceRows);
 
-    const childClassIds = new Set(children.map((child) => child.classId).filter(Boolean));
-    const childSectionIds = new Set(children.map((child) => child.sectionId).filter(Boolean));
+    // Upcoming assessments and events are today's, so they match today's classes.
+    const childClassIds = new Set(currentChildren.map((child) => child.classId).filter(Boolean));
+    const childSectionIds = new Set(currentChildren.map((child) => child.sectionId).filter(Boolean));
 
     const pendingAssessments = assessments
       .filter((assessment) => {
@@ -208,7 +212,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
       nextFee,
       attendanceChart,
     };
-  }, [assessments, childData, children, events, locale]);
+  }, [assessments, childData, currentChildren, events, locale]);
 
   if (isLoading) {
     return (
@@ -333,7 +337,10 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm font-semibold">{child.name}</p>
                           <p className="truncate text-xs text-muted-foreground">
-                            {child.class?.name ?? text('class')}
+                            {/* A viewed year's read carries enrollment: null when not enrolled that year. */}
+                            {child.enrollment === null
+                              ? t('academicYearViewing.notEnrolled', { year: viewingYear ?? '' })
+                              : child.class?.name ?? text('class')}
                             {child.section?.name ? ` · ${child.section.name}` : ''}
                           </p>
                           <div className="mt-1 flex flex-wrap items-center gap-2">

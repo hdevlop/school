@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
 import { eq, desc, and, sql, count, isNotNull } from 'drizzle-orm';
-import { payments, students, users } from '../../../database/schema';
+import { fees, paymentAllocations, payments, students, users } from '../../../database/schema';
 import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { formatDateOnly } from '../utils/dateOnly';
@@ -10,12 +10,16 @@ import { getBusinessDate } from '../../../shared/businessDate';
 export class PaymentRepository {
   declare db: DB;
 
-  private buildPaymentQuery() {
+  // Receipt columns shared by the payment lists; the year list adds the part
+  // of each receipt allocated to that year's fees.
+  private paymentColumns() {
     const processorUsers = alias(users, 'processor_users');
     const studentUsers = alias(users, 'student_users');
 
-    return this.db
-      .select({
+    return {
+      processorUsers,
+      studentUsers,
+      columns: {
         id: payments.id,
         studentId: payments.studentId,
         amount: payments.amount,
@@ -48,11 +52,45 @@ export class PaymentRepository {
           studentCode: students.studentCode,
           image: studentUsers.image,
         },
-      })
+      },
+    };
+  }
+
+  private buildPaymentQuery() {
+    const { processorUsers, studentUsers, columns } = this.paymentColumns();
+    return this.db
+      .select(columns)
       .from(payments)
       .leftJoin(processorUsers, eq(payments.processedBy, processorUsers.id))
       .leftJoin(students, eq(payments.studentId, students.id))
       .leftJoin(studentUsers, eq(students.userId, studentUsers.id));
+  }
+
+  // Each receipt with any allocation to a fee charged to the year, once.
+  // `amount` stays the full receipt; `yearAllocatedAmount` is the exact part
+  // allocated to that year's fees, whatever the receipt's status. Unallocated
+  // credit belongs to no year.
+  async getAll(label: string) {
+    const yearAllocations = this.db
+      .select({
+        paymentId: paymentAllocations.paymentId,
+        amount: sql<string>`sum(${paymentAllocations.amount})::text`.as('year_allocated_amount'),
+      })
+      .from(paymentAllocations)
+      .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
+      .where(eq(fees.academicYear, label))
+      .groupBy(paymentAllocations.paymentId)
+      .as('year_allocations');
+    const { processorUsers, studentUsers, columns } = this.paymentColumns();
+
+    return await this.db
+      .select({ ...columns, yearAllocatedAmount: yearAllocations.amount })
+      .from(payments)
+      .innerJoin(yearAllocations, eq(yearAllocations.paymentId, payments.id))
+      .leftJoin(processorUsers, eq(payments.processedBy, processorUsers.id))
+      .leftJoin(students, eq(payments.studentId, students.id))
+      .leftJoin(studentUsers, eq(students.userId, studentUsers.id))
+      .orderBy(desc(payments.paymentDate));
   }
 
   async getById(id) {
@@ -199,11 +237,6 @@ export class PaymentRepository {
         )
       );
     return { total: Number(result.total), count: result.count };
-  }
-
-  async getAll() {
-    return await this.buildPaymentQuery()
-      .orderBy(desc(payments.paymentDate));
   }
 
   async getByReceiptNumber(receiptNumber) {

@@ -1,9 +1,14 @@
 export * from './alerts';
 export * from './settings';
+export * from './academicYears';
+export * from './academicYearTransitions';
+export * from './academicYearMigrationIssues';
+export * from './academicSources';
 export * from './financial';
 export * from './notifications';
 
 export * from './students';
+export * from './studentEnrollments';
 export * from './parents';
 export * from './staff';
 export * from './teachers';

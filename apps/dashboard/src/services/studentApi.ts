@@ -5,6 +5,13 @@ export const getStudentsApi = async () => {
   return res.data;
 };
 
+// The students enrolled and placed on one day of the year, each with the
+// class and section valid that day.
+export const getStudentsOnDateApi = async (onDate: string) => {
+  const res = await api.get('/students', { params: { onDate } });
+  return res.data;
+};
+
 export const getStudentByIdApi = async (id) => {
   const res = await api.get(`/students/${id}`);
   return res.data;

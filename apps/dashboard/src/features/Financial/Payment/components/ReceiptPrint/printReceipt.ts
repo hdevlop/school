@@ -6,6 +6,8 @@ export interface ReceiptData {
   studentName: string;
   studentCode: string;
   amount: number;
+  feeYear?: string;
+  yearAllocatedAmount?: number;
   currency: string;
   paymentMethod: string;
   transactionRef?: string;
@@ -48,7 +50,7 @@ function formatAmountFR(amount: number, currency: string): string {
   return new Intl.NumberFormat('fr-MA', { style: 'currency', currency }).format(amount);
 }
 
-export function printReceipt(data: ReceiptData) {
+export function buildReceiptHtml(data: ReceiptData) {
   const school = data.schoolName ?? 'École Privée';
   const address = data.schoolAddress ?? '';
   const phone = data.schoolPhone ?? '';
@@ -277,6 +279,10 @@ export function printReceipt(data: ReceiptData) {
   <div>
     <div class="section-title">Détails / التفاصيل</div>
     <table class="details-table">
+      ${data.feeYear && data.yearAllocatedAmount !== undefined
+        ? `<tr><td>Année scolaire / السنة الدراسية</td><td>${data.feeYear}</td></tr>
+           <tr><td>Affecté à cette année / المخصص لهذه السنة</td><td>${formatAmountFR(data.yearAllocatedAmount, data.currency)}</td></tr>`
+        : ''}
       ${data.transactionRef ? `<tr><td>Référence / المرجع</td><td>${data.transactionRef}</td></tr>` : ''}
       ${data.checkNumber ? `<tr><td>N° Chèque / رقم الشيك</td><td>${data.checkNumber}</td></tr>` : ''}
       ${data.notes ? `<tr><td>Notes / ملاحظات</td><td>${data.notes}</td></tr>` : ''}
@@ -304,8 +310,12 @@ export function printReceipt(data: ReceiptData) {
 </body>
 </html>`;
 
+  return html;
+}
+
+export function printReceipt(data: ReceiptData) {
   const win = window.open('', '_blank', 'width=700,height=900');
   if (!win) return;
-  win.document.write(html);
+  win.document.write(buildReceiptHtml(data));
   win.document.close();
 }

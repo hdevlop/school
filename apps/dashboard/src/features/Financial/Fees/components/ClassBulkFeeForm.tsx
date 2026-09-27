@@ -11,35 +11,49 @@ import { buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from 'najm-kit'
 import { calculateFeeAmounts, buildInstallmentsPreview } from '@/features/Financial/Fees/utils/feeUtils'
 import { useQuery } from '@tanstack/react-query'
-import { getClassStudentsApi } from '@/services/classApi'
+import { getStudentsOnDateApi } from '@/services/studentApi'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 import InstallmentPreviewTable from './InstallmentPreviewTable'
-import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings'
+import { useViewingAcademicYear, useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope'
+import { localDateInput } from 'najm-kit/format'
+import type { AcademicYearOption } from '@sms/contracts/academic-years'
 
-const StudentCount = ({ classId, sectionId }) => {
+function billingDate(date: string, year: AcademicYearOption | undefined) {
+   if (!year) return date
+   if (date < year.instructionStartsOn) return year.instructionStartsOn
+   if (date > year.instructionEndsOn) return year.instructionEndsOn
+   return date
+}
+
+const StudentCount = ({ classId, sectionId, academicYear, effectiveDate }) => {
    const { t } = useTranslation()
 
-   const { data: students } = useQuery({
-      queryKey: ['class-students', classId],
-      queryFn: () => getClassStudentsApi(classId),
-      enabled: !!classId,
+   // The students placed in the class on the roster date of the fee year.
+   const { data: students, isError, isLoading } = useQuery({
+      queryKey: ['students', 'academicYear', academicYear, 'onDate', effectiveDate],
+      queryFn: () => withAcademicYear(academicYear, () => getStudentsOnDateApi(effectiveDate)),
+      enabled: !!classId && !!academicYear && !!effectiveDate,
    })
 
     const filtered = useMemo(() => {
        const studentsList = students?.data ?? []
-       if (sectionId) return studentsList.filter(s => s.sectionId === sectionId)
-       return studentsList
-    }, [students, sectionId])
+       return studentsList.filter((student) =>
+          student.classId === classId &&
+          (!sectionId || student.sectionId === sectionId))
+    }, [students, classId, sectionId])
 
    if (!classId) return null
 
    return (
       <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2">
          <Label className="text-sm font-medium">
-            {t('fees.form.studentsInClass') || 'Students in class'}
+            {t('fees.classBulk.studentsOnDate')}
          </Label>
          <Badge variant="secondary" className="font-semibold">
-            {filtered.length} {t('fees.form.students') || 'students'}
+            {isError
+               ? t('fees.classBulk.rosterUnavailable')
+               : isLoading ? t('common.loading') : `${filtered.length} ${t('fees.form.students')}`}
          </Badge>
       </div>
    )
@@ -47,6 +61,8 @@ const StudentCount = ({ classId, sectionId }) => {
 
 const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
    const { pop } = useDialog()
+   const { viewingYear } = useViewingAcademicYear()
+   const yearCalendar = useViewingYearCalendar()
 
    const handleSubmit = async (data) => {
       pop(data)
@@ -57,7 +73,8 @@ const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
       sectionId: '',
       feeTypeId: '',
       schedule: 'monthly' as const,
-      academicYear: undefined,
+      academicYear: viewingYear,
+      effectiveDate: viewingYear ? billingDate(localDateInput(), yearCalendar) : undefined,
       baseAmount: undefined,
       discountAmount: 0,
       discountReason: '',
@@ -77,10 +94,12 @@ const ClassBulkFeeForm = ({ classes = [], feeTypes = [] }) => {
 }
 
 export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
-   const { academicYear } = useActiveAcademicYear()
+   const { viewingYear } = useViewingAcademicYear()
+   const yearCalendar = useViewingYearCalendar()
+   const academicYear = viewingYear
    const activeClasses = useMemo(() => classes.filter((cls) => cls.academicYear === academicYear), [classes, academicYear])
    const { majorMoney } = useSchoolFormat()
-   const { setValue } = useFormContext()
+   const { getValues, setValue } = useFormContext()
    const { t } = useTranslation()
 
    const classId = useWatch({ name: 'classId' })
@@ -89,6 +108,16 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
    const baseAmount = useWatch({ name: 'baseAmount' }) || 0
    const discountAmount = useWatch({ name: 'discountAmount' }) || 0
    const schedule = useWatch({ name: 'schedule' })
+   const effectiveDate = useWatch({ name: 'effectiveDate' })
+
+   useEffect(() => {
+      setValue('academicYear', viewingYear)
+      if (viewingYear && yearCalendar) {
+         const current = getValues('effectiveDate')
+         const inYear = current && current >= yearCalendar.instructionStartsOn && current <= yearCalendar.instructionEndsOn
+         if (!inYear) setValue('effectiveDate', billingDate(current || localDateInput(), yearCalendar))
+      }
+   }, [getValues, setValue, viewingYear, yearCalendar])
 
    const selectedClass = activeClasses.find(cls => cls.id === classId)
    const sectionOptions = useMemo(() => selectedClass?.sections?.map(s => ({
@@ -119,13 +148,13 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
    }, [classId, sectionId, sectionOptions, setValue])
 
    const netAmount = selectedFeeType
-      ? calculateFeeAmounts(paymentType, baseAmount, schedule, discountAmount, { academicYear }).netAmount
+      ? calculateFeeAmounts(paymentType, baseAmount, schedule, discountAmount, { academicYear, effectiveDate }).netAmount
       : 0
 
    const previewInstallments = useMemo(() => {
       if (!selectedFeeType || netAmount <= 0) return []
-      return buildInstallmentsPreview(netAmount, schedule || 'monthly', { academicYear })
-   }, [academicYear, netAmount, schedule, selectedFeeType])
+      return buildInstallmentsPreview(netAmount, schedule || 'monthly', { academicYear, effectiveDate })
+   }, [academicYear, effectiveDate, netAmount, schedule, selectedFeeType])
 
    const scheduleOptions = buildScheduleOptions(t)
 
@@ -151,9 +180,22 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
             />
          </div>
 
-         <StudentCount classId={classId} sectionId={sectionId} />
+         <FormInput
+            name='effectiveDate'
+            type='date'
+            icon={CalendarClock}
+            formLabel={t('fees.classBulk.rosterDate')}
+            required
+         />
+
+         <StudentCount
+            classId={classId}
+            sectionId={sectionId}
+            academicYear={viewingYear}
+            effectiveDate={effectiveDate}
+         />
          <p className="text-sm text-muted-foreground">
-            Billing starts from each student&apos;s enrollment date. The preview uses the academic-year start; the backend calculates each student independently.
+            {t('fees.classBulk.previewNote')}
          </p>
 
          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

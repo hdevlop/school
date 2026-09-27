@@ -7,6 +7,7 @@ import { useAuth } from 'najm-auth/client/react';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import ClassRoutineSkeleton from './ClassRoutineSkeleton';
@@ -25,7 +26,7 @@ import type { RoutineDay, RoutineDuty, RoutineEntry, RoutinePeriod } from '../ty
 import type { RoutineEntryFormValues } from '../types/forms';
 import { routinePeriodLabel } from '../utils/labels';
 
-export default function ClassRoutinePage() {
+function ClassRoutinePageForYear() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role;
@@ -33,9 +34,12 @@ export default function ClassRoutinePage() {
   const { openDialog } = useDialog();
   const { classes, isClassesLoading } = useClasses();
   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
+  // The viewing year when whole-school history is on; otherwise the active one.
+  const { viewingYear } = useViewingAcademicYear();
+  const listedYear = viewingYear ?? academicYear;
   const activeClasses = useMemo(
-    () => (classes || []).filter((schoolClass) => schoolClass.academicYear === academicYear),
-    [classes, academicYear],
+    () => (classes || []).filter((schoolClass) => schoolClass.academicYear === listedYear),
+    [classes, listedYear],
   );
   const { sections, isSectionsLoading } = useSections();
   const mutations = useRoutineMutations();
@@ -309,4 +313,10 @@ export default function ClassRoutinePage() {
       </NSheet>
     </div>
   );
+}
+
+export default function ClassRoutinePage() {
+  const { viewingYear, isResolving } = useViewingAcademicYear();
+  if (isResolving) return <ClassRoutineSkeleton />;
+  return <ClassRoutinePageForYear key={`year:${viewingYear ?? 'all'}`} />;
 }

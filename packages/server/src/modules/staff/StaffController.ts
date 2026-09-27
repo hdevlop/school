@@ -43,8 +43,8 @@ export class StaffController {
   @Validate({ query: staffAttendanceRosterQueryDto })
   @McpTool('List staff for attendance roster')
   @ResMsg('staff.success.retrieved')
-  async getAttendanceRoster(@Query() query: StaffAttendanceRosterQueryDto = {}) {
-    return this.staffService.getAttendanceRoster(query.date);
+  async getAttendanceRoster(@Query() query: StaffAttendanceRosterQueryDto) {
+    return this.staffService.getAttendanceRoster(query?.date);
   }
 
   @Get('/role/:role')

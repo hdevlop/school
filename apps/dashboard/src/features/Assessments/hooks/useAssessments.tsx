@@ -1,5 +1,6 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import * as assessmentApi from '@/services/assessmentApi';
 
 export const useAssessments = (options?) => {
@@ -14,7 +15,7 @@ export const useAssessments = (options?) => {
     deleteBulk: assessmentApi.deleteBulkAssessmentsApi,
   });
 
-  const { data: assessments, isLoading: isAssessmentsLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: assessments, isLoading: isAssessmentsLoading, isError, error, refetch } = useYearScopedList({ resource: 'assessments', fetch: assessmentApi.getAssessmentsApi, enabled: enabled });
   const { data: assessment, isLoading: isAssessmentLoading } = crud.useGetById(assessmentId, !!assessmentId);
 
   const { mutateAsync: createAssessment, isLoading: isCreating } = crud.useCreate();

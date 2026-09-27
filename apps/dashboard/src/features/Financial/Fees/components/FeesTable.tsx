@@ -2,9 +2,10 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useEffect, useMemo, useState } from 'react';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NTable, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
 import { CircleDollarSign, Plus, SearchX } from 'lucide-react';
 import FeeForm from './FeeForm';
+import ClassBulkFeeForm from './ClassBulkFeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
@@ -14,63 +15,98 @@ import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useRouter } from 'next/navigation';
-import { createBulkFeesApi } from '@/services/feeApi';
+import { createBulkClassFeesApi, createBulkFeesApi } from '@/services/feeApi';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { withFeeYear } from '../utils/feeUtils';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
+type FeeScope = 'year' | 'outstanding';
 
-function FeesTable() {
+function FeesTableForYear() {
 
   const { t } = useTranslation();
   const router = useRouter();
   const { openDialog, confirmDelete } = useDialog();
+  const queryClient = useQueryClient();
 
   const { students } = useStudents();
   const { feeTypes } = useFeeTypes();
   const { classes } = useClasses();
   const { sections } = useSections();
-  const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const { isAcademicYearLoading } = useActiveAcademicYear();
+  const { viewingYear } = useViewingAcademicYear();
 
   const [selectedClassId, setSelectedClassId] = useState('all');
   const [selectedSectionId, setSelectedSectionId] = useState('');
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('__all__');
+  const [feeScope, setFeeScope] = useState<FeeScope>('year');
+  // The list holds only the viewed year's fees. The outstanding scope keeps
+  // other years' debts discoverable without adding them to that year's rows
+  // and totals.
+  const showOutstanding = feeScope === 'outstanding';
 
   const {
     fees,
+    error,
     isFeesLoading,
     updateFee,
     deleteFee,
     isUpdating,
     isDeleting,
-  } = useFees();
+  } = useFees({ allYears: showOutstanding });
+
+  // All-year rows carry each student's current class, so that scope filters
+  // on the classes its rows name rather than on the viewed year's classes.
+  const filterClasses = useMemo(() => {
+    if (!showOutstanding) return classes;
+    const byId = new Map<string, { id: string; name: string }>();
+    for (const row of fees || []) {
+      if (row.class?.id) byId.set(row.class.id, { id: row.class.id, name: row.class.name });
+    }
+    return [...byId.values()];
+  }, [showOutstanding, classes, fees]);
+
+  const filterSections = useMemo(() => {
+    if (!showOutstanding) return sections;
+    const byId = new Map<string, { id: string; name: string; classId: string }>();
+    for (const row of fees || []) {
+      if (row.section?.id) byId.set(row.section.id, { id: row.section.id, name: row.section.name, classId: row.class?.id });
+    }
+    return [...byId.values()];
+  }, [showOutstanding, sections, fees]);
 
   const isAllClasses = selectedClassId === 'all';
 
   useEffect(() => {
-    if (selectedClassId !== 'all' && !classes?.some((schoolClass) => schoolClass.id === selectedClassId)) {
-      setSelectedClassId(classes?.[0]?.id || '');
+    if (selectedClassId !== 'all' && !filterClasses?.some((schoolClass) => schoolClass.id === selectedClassId)) {
+      setSelectedClassId(filterClasses?.[0]?.id || '');
     }
-  }, [classes, selectedClassId]);
+  }, [filterClasses, selectedClassId]);
 
   useEffect(() => {
     if (isAllClasses) {
       setSelectedSectionId('');
       return;
     }
-    if (selectedClassId && sections?.length > 0) {
-      const classSections = sections.filter((s: any) => s.classId === selectedClassId);
+    if (selectedClassId && filterSections?.length > 0) {
+      const classSections = filterSections.filter((s: any) => s.classId === selectedClassId);
       const sectionA = classSections.find((s: any) => s.name?.toUpperCase() === 'A');
       setSelectedSectionId(sectionA?.id || classSections[0]?.id || '');
     }
-  }, [selectedClassId, sections, isAllClasses]);
+  }, [selectedClassId, filterSections, isAllClasses]);
 
   const filteredFees = useMemo(() => {
     if (!fees) return [];
 
     return fees.filter((row: any) => {
-      if (row.academicYear !== academicYear && Number(row.totalDue ?? 0) <= 0) return false;
+      // The server already limits the year scope to the viewed year.
+      if (showOutstanding && Number(row.totalDue ?? 0) <= 0) return false;
       if (!isAllClasses && selectedClassId && row.class?.id !== selectedClassId) return false;
 
       if (!isAllClasses && selectedSectionId && row.section?.id !== selectedSectionId) return false;
@@ -93,28 +129,43 @@ function FeesTable() {
 
       return true;
     });
-  }, [fees, academicYear, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
+  }, [fees, showOutstanding, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
 
   const classOptions = useMemo(
     () => [
       { value: 'all', label: t('common.all') || 'All' },
-      ...(classes || []).map((c: any) => ({ value: c.id, label: c.name })),
+      ...(filterClasses || []).map((c: any) => ({ value: c.id, label: c.name })),
     ],
-    [classes, t],
+    [filterClasses, t],
   );
 
   const sectionOptions = useMemo(
     () => isAllClasses
       ? []
-      : (sections || [])
+      : (filterSections || [])
           .filter((s: any) => s.classId === selectedClassId)
           .map((s: any) => ({ value: s.id, label: s.name })),
-    [sections, selectedClassId, isAllClasses],
+    [filterSections, selectedClassId, isAllClasses],
   );
 
   const columns = useFeesTableColumns();
 
   const filters = useMemo(() => [
+    {
+      name: 'scope',
+      type: 'select',
+      placeholder: t('fees.historyView.scope'),
+      value: feeScope,
+      onChange: (scope: FeeScope) => {
+        setFeeScope(scope);
+        setSelectedClassId('all');
+      },
+      options: [
+        { value: 'year', label: t('fees.historyView.scopeYear', { year: viewingYear ?? '' }) },
+        { value: 'outstanding', label: t('fees.historyView.scopeOutstanding') },
+      ],
+      className: 'w-full lg:w-56',
+    },
     {
       name: 'class',
       type: 'combobox',
@@ -160,7 +211,7 @@ function FeesTable() {
       ],
       className: 'w-full lg:w-36',
     },
-  ], [t, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions, isAllClasses]);
+  ], [t, feeScope, viewingYear, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions, isAllClasses]);
 
   const handleAddClick = () => {
     openDialog({
@@ -171,9 +222,32 @@ function FeesTable() {
         form: 'bulk-fee-form',
         text: t('fees.dialogs.createButton'),
         onClick: async (feeData) => {
-          return await createBulkFeesApi(feeData);
+          return await createBulkFeesApi(withFeeYear(feeData, viewingYear));
         }
       }
+    });
+  };
+
+  const handleClassFeeClick = () => {
+    openDialog({
+      title: t('fees.classBulk.title'),
+      children: <ClassBulkFeeForm classes={classes} feeTypes={feeTypes} />,
+      width: '6xl',
+      primaryButton: {
+        form: 'class-bulk-fee-form',
+        text: t('fees.classBulk.action'),
+        onClick: async (feeData) => {
+          const response = await createBulkClassFeesApi(feeData);
+          const result = response?.data ?? response;
+          await queryClient.invalidateQueries({ queryKey: ['fees'] });
+          toast[result.errors?.length ? 'warning' : 'success'](t('fees.classBulk.result', {
+            created: result.created ?? 0,
+            skipped: result.skipped ?? 0,
+            failed: result.errors?.length ?? 0,
+          }));
+          return response;
+        },
+      },
     });
   };
 
@@ -211,23 +285,33 @@ function FeesTable() {
     });
   };
 
-  const noDataText = !selectedClassId
-    ? (t('fees.noData.selectClass') || 'Select a class to view fees')
-    : filteredFees.length === 0 && fees?.length > 0
-      ? (t('fees.noData.noResults') || 'No students match the current filters')
-      : (t('fees.noData.noFees') || 'No fees data available');
+  const noDataText = showOutstanding
+    ? t('fees.historyView.noOutstanding')
+    : !selectedClassId
+      ? (t('fees.noData.selectClass') || 'Select a class to view fees')
+      : filteredFees.length === 0 && fees?.length > 0
+        ? (t('fees.noData.noResults') || 'No students match the current filters')
+        : (t('fees.noData.noFees') || 'No fees data available');
 
   const total = filteredFees.length;
+  const failedToLoad = hasFailedToLoad(error, fees);
 
   return (
     <div className='flex flex-col gap-2 w-full h-full'>
       <NPageHeader
         icon={CircleDollarSign}
         title={t('navigation.fees')}
-        subtitle={t('fees.subtitle.count', { count: total })}
+        subtitle={failedToLoad
+          ? undefined
+          : t(showOutstanding ? 'fees.historyView.outstandingCount' : 'fees.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
+          {!showOutstanding && viewingYear && (
+            <NButton size="sm" variant="outline" onClick={handleClassFeeClick} disabled={!classes?.length}>
+              {t('fees.classBulk.action')}
+            </NButton>
+          )}
         </NPageHeaderActions>
       </NPageHeader>
 
@@ -241,6 +325,12 @@ function FeesTable() {
         onEdit={handleEdit}
         onDelete={handleDelete}
         loading={isFeesLoading || isAcademicYearLoading}
+        error={failedToLoad ? error : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         renderCard={FeeCard}
         classNames={{
           cards: 'grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
@@ -274,4 +364,7 @@ function FeesTable() {
   );
 }
 
-export default FeesTable;
+export default function FeesTable() {
+  const { viewingYear, isResolving } = useViewingAcademicYear();
+  return <FeesTableForYear key={isResolving ? 'resolving' : `year:${viewingYear ?? 'all'}`} />;
+}

@@ -10,6 +10,7 @@ import { PayrollService } from './financial/payroll/PayrollService';
 import { ExpenseService } from './financial/expenses/ExpenseService';
 
 import { StudentService } from './students/StudentService';
+import { StudentEnrollmentService } from './studentEnrollments/StudentEnrollmentService';
 import { TeacherService } from './teachers/TeacherService';
 import { StaffService } from './staff/StaffService';
 import { ParentService } from './parents/ParentService';
@@ -33,6 +34,9 @@ import { SectionService } from './sections/SectionService';
 import { ClassService } from './classes/ClassService';
 import { SubjectService } from './subjects/SubjectService';
 import { SettingsService } from './settings/SettingsService';
+import { AcademicYearRepository } from './academicYears/AcademicYearRepository';
+import { AcademicYearTransitionRepository } from './academicYearTransitions/AcademicYearTransitionRepository';
+import { AcademicYearMigrationIssueRepository } from './academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 
 // ─── static seed data ────────────────────────────────────────────────────────
 import rolesData from './seed-data/admin/roles.json';
@@ -85,6 +89,7 @@ export class SeedService {
     private schoolEventService: SchoolEventService,
     private alertService: AlertService,
     private studentService: StudentService,
+    private studentEnrollmentService: StudentEnrollmentService,
     private teacherService: TeacherService,
     private staffService: StaffService,
     private studentRouteService: StudentRouteService,
@@ -98,6 +103,9 @@ export class SeedService {
     private classService: ClassService,
     private subjectService: SubjectService,
     private settingsService: SettingsService,
+    private academicYears: AcademicYearRepository,
+    private yearTransitions: AcademicYearTransitionRepository,
+    private migrationIssues: AcademicYearMigrationIssueRepository,
   ) {}
 
   /** Seed school structure only (settings, subjects, classes, sections, feeTypes, roles) */
@@ -118,7 +126,18 @@ export class SeedService {
     const studentLimit = opts.students ?? studentsData.length;
     const teacherLimit = opts.teachers ?? Math.min(DEFAULT_TEACHER_LIMIT, teachersData.length);
 
-    const selectedStudents = (studentsData as any[]).slice(0, studentLimit);
+    const yearByClassId = new Map((classesData as { id: string; academicYear: string }[])
+      .map((schoolClass) => [schoolClass.id, schoolClass.academicYear]));
+    const selectedStudents = (studentsData as any[]).slice(0, studentLimit).map((student) => {
+      const label = yearByClassId.get(student.classId);
+      if (!label) throw new Error(`Seed student ${student.id} references an unknown class year`);
+      const yearStart = `${label.slice(0, 4)}-09-01`;
+      return {
+        ...student,
+        // Explicit synthetic placement date; original admission remains intact.
+        yearEnrolledOn: student.enrollmentDate > yearStart ? student.enrollmentDate : yearStart,
+      };
+    });
 
     // keep only parents referenced by the selected students
     const neededParentIds = new Set(
@@ -165,6 +184,9 @@ export class SeedService {
     await this.maintenanceService.deleteAll();
     await this.studentRouteService.deleteAll();
     await this.vehicleAssignmentService.deleteAll();
+    await this.yearTransitions.clearForSeedReset();
+    await this.migrationIssues.clearForSeedReset();
+    await this.studentEnrollmentService.clearForSeedReset();
     await this.studentService.deleteAll();
     await this.teacherService.deleteAll();
     await this.vehicleService.deleteAll();
@@ -176,5 +198,6 @@ export class SeedService {
     await this.subjectService.deleteAll();
     await this.feeTypeService.deleteAll();
     await this.settingsService.deleteAll();
+    await this.academicYears.clearForSeedReset();
   }
 }

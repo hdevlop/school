@@ -1,46 +1,35 @@
-import { Service } from '../../najm';
-import { AssessmentRepository } from './AssessmentRepository';
+import { Err, Service } from '../../najm';
+import { AssessmentRepository, type AssessmentListFilters } from './AssessmentRepository';
 import { AssessmentValidator } from './AssessmentValidator';
 import { pickProps } from '../../shared';
 import type { CreateAssessmentDto, DeleteBulkAssessmentDto, UpdateAssessmentDto } from './AssessmentDto';
+import { AcademicSourceService } from '../academicSources/AcademicSourceService';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class AssessmentService {
   constructor(
     private assessmentRepository: AssessmentRepository,
     private assessmentValidator: AssessmentValidator,
+    private sources: AcademicSourceService
   ) { }
 
-  async getAll() {
-    return await this.assessmentRepository.getAll();
+  // The year's assessments, optionally for one section, subject or teacher or class;
+  // a filter naming a missing record is a 404 before the list is read.
+  async getAll(year: ResolvedAcademicYear, filters: Omit<AssessmentListFilters, 'year'> = {}) {
+    if (filters.sectionId) await this.assessmentValidator.ensureSectionExists(filters.sectionId);
+    if (filters.subjectId) await this.assessmentValidator.ensureSubjectExists(filters.subjectId);
+    if (filters.teacherId) await this.assessmentValidator.ensureTeacherExists(filters.teacherId);
+    if (filters.classId) await this.assessmentValidator.ensureClassExists(filters.classId);
+    return this.assessmentRepository.getAll({ year, ...filters });
   }
 
   async getById(id: string) {
     return this.assessmentValidator.ensureExists(id);
   }
 
-  async getBySection(sectionId: string) {
-    await this.assessmentValidator.ensureSectionExists(sectionId);
-    return await this.assessmentRepository.getBySection(sectionId);
-  }
-
-  async getBySubject(subjectId: string) {
-    await this.assessmentValidator.ensureSubjectExists(subjectId);
-    return await this.assessmentRepository.getBySubject(subjectId);
-  }
-
-  async getByTeacher(teacherId: string) {
-    await this.assessmentValidator.ensureTeacherExists(teacherId);
-    return await this.assessmentRepository.getByTeacher(teacherId);
-  }
-
   async getTodayAssessments() {
     return await this.assessmentRepository.getTodayAssessments();
-  }
-
-  async getByClass(classId: string) {
-    await this.assessmentValidator.ensureClassExists(classId);
-    return await this.assessmentRepository.getByClass(classId);
   }
 
   async getUpcoming() {
@@ -87,6 +76,7 @@ export class AssessmentService {
 
   async create(data: CreateAssessmentDto) {
     const normalizedData = this.normalizeSectionTargets(data);
+    const year = await this.sources.ensureTargetsValid(normalizedData.sectionIds ?? [], normalizedData.date);
     const ASSESSMENT_CREATE_KEYS = [
       'title', 'description', 'type', 'date', 'duration', 'totalMarks',
       'passingMarks', 'instructions', 'status', 'sectionIds'
@@ -94,6 +84,7 @@ export class AssessmentService {
 
     const assessmentDetails: Record<string, unknown> = {
       ...pickProps(normalizedData, ASSESSMENT_CREATE_KEYS),
+      academicYearId: year.id,
       teacherId: normalizedData.teacherId,
       sectionId: normalizedData.sectionId,
       subjectId: normalizedData.subjectId,
@@ -114,6 +105,26 @@ export class AssessmentService {
   async update(id: string, data: UpdateAssessmentDto) {
     const current = await this.assessmentValidator.ensureExists(id);
     const normalizedData = this.normalizeSectionTargets(data);
+    const currentTargetIds = current.sectionIds?.length
+      ? current.sectionIds : current.section?.id ? [current.section.id] : [];
+    const targetIds = data.sectionIds !== undefined || data.sectionId !== undefined
+      ? normalizedData.sectionIds ?? [] : currentTargetIds;
+    const yearTargetsChanged = [...targetIds].sort().join('\0') !== [...currentTargetIds].sort().join('\0');
+    const contextChanged = (data.date !== undefined && data.date !== current.date) || yearTargetsChanged ||
+      (data.teacherId !== undefined && data.teacherId !== current.teacher?.id) ||
+      (data.subjectId !== undefined && data.subjectId !== current.subject?.id);
+    let targetYearId: string | undefined;
+    if (contextChanged) {
+      await this.assessmentValidator.ensureNotInUse(id);
+      const year = await this.sources.ensureTargetsValid(
+        targetIds,
+        normalizedData.date ?? current.date,
+      );
+      if (current.academicYearId && current.academicYearId !== year.id) {
+        Err(409, 'Assessment academic year cannot be changed');
+      }
+      targetYearId = year.id;
+    }
     await this.assessmentValidator.validate(normalizedData, id);
 
     const ASSESSMENT_UPDATE_KEYS = [
@@ -122,17 +133,15 @@ export class AssessmentService {
     ];
 
     const assessmentData: Record<string, unknown> = pickProps(normalizedData, ASSESSMENT_UPDATE_KEYS);
-    const sectionIds = normalizedData.sectionIds
-      ?? (current.sectionIds?.length
-        ? current.sectionIds
-        : current.section?.id
-          ? [current.section.id]
-          : []);
+    if (targetYearId && !current.academicYearId) assessmentData.academicYearId = targetYearId;
+    const sectionIds = normalizedData.sectionIds ?? currentTargetIds;
     const teacherId = normalizedData.teacherId ?? current.teacher?.id;
     const subjectId = normalizedData.subjectId ?? current.subject?.id;
-    const targetsChanged = 'sectionIds' in data || 'sectionId' in data || 'teacherId' in data || 'subjectId' in data;
+    const assignmentChanged = yearTargetsChanged ||
+      (data.teacherId !== undefined && data.teacherId !== current.teacher?.id) ||
+      (data.subjectId !== undefined && data.subjectId !== current.subject?.id);
 
-    if (targetsChanged && sectionIds.length && teacherId && subjectId) {
+    if (assignmentChanged && sectionIds.length && teacherId && subjectId) {
       const [teacherAssignmentId] = await this.getTeacherAssignmentIds({
         teacherId,
         subjectId,

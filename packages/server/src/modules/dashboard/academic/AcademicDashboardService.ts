@@ -4,6 +4,7 @@ import { TeacherService } from '../../teachers/TeacherService';
 import { AttendanceRepository } from '../../attendance/AttendanceRepository';
 import { GradeService } from '../../grades/GradeService';
 import { GradeRepository } from '../../grades/GradeRepository';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 @Injectable()
 export class AcademicDashboardService {
@@ -12,20 +13,25 @@ export class AcademicDashboardService {
     private teacherService: TeacherService,
     private attendanceRepository: AttendanceRepository,
     private gradeService: GradeService,
-    private gradeRepository: GradeRepository,
+    private gradeRepository: GradeRepository
   ) {}
 
-  async getKpis() {
+  // The year's students and grades; today's attendance only counts in the
+  // year that holds today.
+  async getKpis(year: ResolvedAcademicYear) {
     const [
       studentsCount,
       teachersCount,
       todayAttendance,
       allGrades,
     ] = await Promise.all([
-      this.studentService.getCount().catch(() => ({ count: 0 })),
+      this.studentService.getCount(year).catch(() => ({ count: 0 })),
       this.teacherService.getCount().catch(() => ({ count: 0 })),
-      this.attendanceRepository.getToday('student').catch(() => []),
-      this.gradeService.getAll().catch(() => []),
+      this.attendanceRepository.getToday('student')
+        .then((records) => records.filter((record) => record.academicYearId === year.id ||
+          (!record.academicYearId && record.date >= year.reportingStartsOn && record.date <= year.reportingEndsOn)))
+        .catch(() => []),
+      this.gradeService.getAll(year).catch(() => []),
     ]);
 
     const attendanceRecords = todayAttendance as any[];

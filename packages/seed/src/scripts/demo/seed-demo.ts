@@ -5,6 +5,8 @@ import { db } from '@sms/server/database';
 import { staffRoles } from '@sms/server/database/schema';
 import {
   SettingsService,
+  AcademicYearService,
+  AcademicYearValidator,
   SubjectService,
   ClassService,
   SectionService,
@@ -35,7 +37,7 @@ import {
 } from '@sms/server/modules/seed';
 import rolesData from '../admin/data/roles.json';
 import { runSeedTask } from '../shared/run-seed';
-import { schoolSeedData } from '../shared/school-seed-data';
+import { schoolSeedData, seedAcademicYear } from '../shared/school-seed-data';
 import { seedAttendance } from '../shared/seed-attendance';
 import {
   alertsPack,
@@ -278,7 +280,7 @@ async function seedPhase<T>(label: string, task: () => Promise<T>): Promise<T> {
 
 async function seedPayments(feeService: FeeService, paymentService: PaymentService) {
   // getAll() returns the student-grouped overview — we only need the student IDs
-  const studentRows = await feeService.getAll();
+  const studentRows = await feeService.getAllYears();
   const today = new Date().toISOString().split('T')[0];
   const lateSummerPaymentDate = getLateSummerPaymentDate(today);
   const lateSummerPaymentLimit = Math.max(1, Math.ceil(studentRows.length * LATE_SUMMER_PAYMENT_RATE));
@@ -304,7 +306,7 @@ async function seedPayments(feeService: FeeService, paymentService: PaymentServi
       }
 
       // Fetch full fee list with installments for this student
-      const studentData = await feeService.getByStudent(studentId);
+      const studentData = await feeService.getByStudentAllYears(studentId);
       if (!studentData) continue;
 
       // Collect all installments to pay, keyed by their due-date month
@@ -387,7 +389,7 @@ async function seedPayments(feeService: FeeService, paymentService: PaymentServi
     if (latePaymentCount >= lateSummerPaymentLimit || latePaymentTotal >= LATE_SUMMER_PAYMENT_CAP) break;
 
     try {
-      const studentData = await feeService.getByStudent(studentId);
+      const studentData = await feeService.getByStudentAllYears(studentId);
       if (!studentData) continue;
 
       const installment = getFirstUnpaidPastDueInstallment(studentData, lateSummerPaymentDate);
@@ -535,7 +537,7 @@ async function seedUniqueFees(feeService: FeeService, fees: any[]) {
     try {
       let knownKeys = knownKeysByStudent.get(fee.studentId);
       if (!knownKeys) {
-        const existing = await feeService.getByStudent(fee.studentId);
+        const existing = await feeService.getByStudentAllYears(fee.studentId);
         knownKeys = new Set(
           (existing?.fees || []).map((existingFee: any) =>
             `${existingFee.academicYear}:${existingFee.feeTypeId}`,
@@ -599,6 +601,8 @@ async function seedPayroll(payrollService: PayrollService, periods: string[]) {
 runSeedTask('demo seed', async (server) => {
   const roleService = await server.container.resolve(RoleService);
   const settingsService = await server.container.resolve(SettingsService);
+  const academicYearService = await server.container.resolve(AcademicYearService);
+  const academicYearValidator = await server.container.resolve(AcademicYearValidator);
   const subjectService = await server.container.resolve(SubjectService);
   const classService = await server.container.resolve(ClassService);
   const sectionService = await server.container.resolve(SectionService);
@@ -636,16 +640,23 @@ runSeedTask('demo seed', async (server) => {
   console.log(`✅ Staff roles ready (${staffRolesCount} roles)`);
 
   await seedPhase('Settings', () => settingsService.create(schoolSeedData.settingsData));
+  const { activeAcademicYearId } = await academicYearService.list('admin');
+  if (!activeAcademicYearId) throw new Error('Demo seed did not register its active academic year');
+  await academicYearService.verifyCalendar(
+    activeAcademicYearId,
+    'Verified synthetic calendar from the explicit demo seed academic year and September-June settings',
+    'school-seed',
+  );
   console.log('✅ Settings seeded');
 
   await seedPhase('Subjects', () => subjectService.seedDemoSubjects(schoolSeedData.subjectsData));
   console.log('✅ Subjects seeded');
 
-  await seedPhase('Classes', () => classService.seedDemoClasses(selectedClassesData));
-  console.log(`✅ Classes seeded (${selectedClassesData.length} records)`);
+  const createdClasses = await seedPhase('Classes', () => classService.seedDemoClasses(selectedClassesData));
+  console.log(`✅ Classes seeded (${createdClasses.length} records)`);
 
-  await seedPhase('Sections', () => sectionService.seedDemoSections(selectedSectionsData));
-  console.log(`✅ Sections seeded (${selectedSectionsData.length} records)`);
+  const createdSections = await seedPhase('Sections', () => sectionService.seedDemoSections(selectedSectionsData));
+  console.log(`✅ Sections seeded (${createdSections.length} records)`);
 
   await seedPhase('Fee types', () => feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData));
   console.log('✅ Fee types seeded');
@@ -717,34 +728,31 @@ runSeedTask('demo seed', async (server) => {
   ));
   console.log(`✅ Events seeded (${createdEvents.length} records)`);
 
+  const assessmentContexts: any[] = [];
   const createdAssessments = await seedPhase('Assessments', () => createSequential(
-    'Assessments', assessmentsData, (item) => assessmentService.create(item),
+    'Assessments', assessmentsData, async (item) => {
+      const created = await assessmentService.create(item);
+      assessmentContexts.push({ ...item, id: created.id });
+      return created;
+    },
   ));
   console.log(`✅ Assessments seeded (${createdAssessments.length} records)`);
 
+  const examContexts: any[] = [];
   const createdExams = await seedPhase('Exams', () => createSequential(
-    'Exams', examsData, (item) => examService.create(item),
+    'Exams', examsData, async (item) => {
+      const created = await examService.create(item);
+      examContexts.push({ ...item, id: created.id });
+      return created;
+    },
   ));
   console.log(`✅ Exams seeded (${createdExams.length} records)`);
 
-  const assessmentContexts = assessmentsData
-    .slice(0, createdAssessments.length)
-    .map((assessment, index) => ({
-      ...assessment,
-      id: createdAssessments[index]?.id,
-    }))
-    .filter((assessment) => assessment.id);
-  const examContexts = examsData
-    .slice(0, createdExams.length)
-    .map((exam, index) => ({
-      ...exam,
-      id: createdExams[index]?.id,
-    }))
-    .filter((exam) => exam.id);
+  const createdStudentIds = new Set(createdStudents.map((student) => student.id));
   console.log('🧮 Seeding grades...');
   const createdGrades = await seedPhase('Grades', async () => {
     const { grades: gradesData } = gradesPack(
-      createdStudents.length ? createdStudents : studentsData,
+      studentsData.filter((student) => createdStudentIds.has(student.id)),
       assessmentContexts,
       examContexts,
     );
@@ -759,8 +767,8 @@ runSeedTask('demo seed', async (server) => {
   console.log(`✅ Grades seeded (${createdGrades.length} records)`);
 
   console.log('📋 Seeding attendance...');
-  const { studentCount, staffCount } = await seedPhase('Attendance', () =>
-    seedAttendance(attendanceService, studentService, teacherService, staffService),
+  const { studentCount, staffCount } = await seedPhase('Attendance', async () =>
+    seedAttendance(await academicYearValidator.resolve(seedAcademicYear, 'admin'), attendanceService, studentService, teacherService, staffService),
   );
   console.log(`✅ Attendance seeded (${studentCount} student records, ${staffCount} staff records)`);
 

@@ -5,10 +5,10 @@ import { AvatarFormInput, NForm, useDialog } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
-import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
+import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, CalendarDays, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { studentSchema } from '../config/studentSchemas'
+import { PLACEMENT_FIELDS, studentProfileEditSchema, studentSchema } from '../config/studentSchemas'
 import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { buildGenderOptions } from '../config/studentOptions'
 
@@ -57,6 +57,9 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
 
   const handleSubmit = async (studentData) => {
     const { addressLocation, ...fields } = studentData
+    // Class, section and enrollment status change through the School years
+    // tab's dated records; the server refuses them in a profile edit.
+    for (const field of PLACEMENT_FIELDS) delete fields[field]
     pop({
       ...fields,
       address: addressLocation.address,
@@ -78,20 +81,22 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
   return (
     <NForm
       id='student-form'
-      schema={studentSchema}
+      schema={studentProfileEditSchema}
       defaultValues={getStudentDefaultValues(student)}
       onSubmit={handleSubmit}
       devTools={{ enabled: isDevFill, fill }}
     >
-      <StudentFormContent classes={classes} student={student} />
+      <StudentFormContent classes={classes} student={student} placementReadOnly />
     </NForm>
   )
 }
-export const StudentFormContent = ({ classes = [], prefix = '', student: _student = null, showTransportToggle = false, onTransportToggle }: {
+export const StudentFormContent = ({ classes = [], prefix = '', student: _student = null, showTransportToggle = false, showYearEnrollmentDate = false, placementReadOnly = false, onTransportToggle }: {
   classes?: any[]
+  placementReadOnly?: boolean
   prefix?: string
   student?: any
   showTransportToggle?: boolean
+  showYearEnrollmentDate?: boolean
   onTransportToggle?: (enabled: boolean) => void
 }) => {
 
@@ -231,7 +236,8 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
           placeholder={t('students.form.classPlaceholder')}
           items={classOptions}
           icon={GraduationCap}
-          required={true}
+          required={!placementReadOnly}
+          disabled={placementReadOnly}
         />
 
         <FormInput
@@ -241,9 +247,12 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
           placeholder={t('students.form.sectionPlaceholder')}
           items={sectionOptions}
           icon={DoorOpen}
-          disabled={!selectedClassId || sectionOptions.length === 0}
-          required={true}
+          disabled={placementReadOnly || !selectedClassId || sectionOptions.length === 0}
+          required={!placementReadOnly}
         />
+        {placementReadOnly && (
+          <p className='text-xs text-muted-foreground md:col-span-2'>{t('students.form.placementReadOnly')}</p>
+        )}
 
         <FormInput
           name='enrollmentDate'
@@ -253,6 +262,15 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
           icon={CalendarCheck}
           required={true}
         />
+        {showYearEnrollmentDate ? (
+          <FormInput
+            name='yearEnrolledOn'
+            type='date'
+            formLabel={t('students.form.yearEnrolledOn')}
+            icon={CalendarDays}
+            required
+          />
+        ) : null}
         <FormInput
           name='previousSchool'
           type='text'

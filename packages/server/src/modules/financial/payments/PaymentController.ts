@@ -2,11 +2,14 @@ import { Body, Controller, Get, Params, Post, Put, ResMsg, User, Validate } from
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { PaymentService } from './PaymentService';
 import { isFinancial } from '../../../auth';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import {
   checkStatusDto,
   createPaymentDto,
   monthlyRevenueQueryDto,
   paymentIdParam,
+  paymentListQuery,
   receiptNumberParam,
   refundPaymentDto,
   revenueQueryDto,
@@ -18,7 +21,6 @@ import {
   type CreatePaymentDto,
   type MonthlyRevenueQueryDto,
   type RefundPaymentDto,
-  type RevenueQueryDto,
   type TopPayingStudentsQueryDto,
   type UpdatePaymentDto,
   type VoidPaymentDto,
@@ -34,10 +36,11 @@ export class PaymentController {
 
   @Get()
   @isFinancial()
+  @Validate({ query: paymentListQuery })
   @McpTool('List all payments')
   @ResMsg('fees.success.paymentsRetrieved')
-  async getAll() {
-    return this.paymentService.getAll();
+  async getAll(@Year() year: ResolvedAcademicYear) {
+    return this.paymentService.getAll(year);
   }
 
   @Get('/today')
@@ -82,51 +85,48 @@ export class PaymentController {
 
   @Post('/stats/revenue')
   @isFinancial()
-  @Validate({ body: revenueQueryDto })
-  @McpTool('Get total revenue, optionally filtered by academic year')
+  @Validate({ body: revenueQueryDto, query: paymentListQuery })
+  @McpTool('Get total revenue allocated to fees of the academic year')
   @ResMsg('fees.success.revenueRetrieved')
-  async getTotalRevenue(@Body() body: RevenueQueryDto = {}) {
-    const revenue = await this.paymentService.getTotalRevenue(body.academicYear);
+  async getTotalRevenue(@Year() year: ResolvedAcademicYear) {
+    const revenue = await this.paymentService.getTotalRevenue(year.label);
     return { revenue };
   }
 
   @Post('/stats/revenue-by-payment-method')
   @isFinancial()
-  @Validate({ body: revenueQueryDto })
+  @Validate({ body: revenueQueryDto, query: paymentListQuery })
   @McpTool('Get revenue breakdown by payment method')
   @ResMsg('fees.success.revenueRetrieved')
-  async getRevenueByPaymentMethod(@Body() body: RevenueQueryDto = {}) {
-    return this.paymentService.getRevenueByPaymentMethod(body.academicYear);
+  async getRevenueByPaymentMethod(@Year() year: ResolvedAcademicYear) {
+    return this.paymentService.getRevenueByPaymentMethod(year.label);
   }
 
   @Post('/stats/monthly-revenue')
   @isFinancial()
-  @Validate({ body: monthlyRevenueQueryDto })
+  @Validate({ body: monthlyRevenueQueryDto, query: paymentListQuery })
   @McpTool('Get monthly revenue for a given year')
   @ResMsg('fees.success.revenueRetrieved')
-  async getMonthlyRevenue(@Body() body: MonthlyRevenueQueryDto) {
-    return this.paymentService.getMonthlyRevenue(body.year, body.academicYear);
+  async getMonthlyRevenue(@Body() body: MonthlyRevenueQueryDto, @Year() year: ResolvedAcademicYear) {
+    return this.paymentService.getMonthlyRevenue(body.year, year.label);
   }
 
   @Post('/stats/revenue-stats')
   @isFinancial()
-  @Validate({ body: revenueQueryDto })
+  @Validate({ body: revenueQueryDto, query: paymentListQuery })
   @McpTool('Get full revenue statistics')
   @ResMsg('fees.success.statsRetrieved')
-  async getRevenueStats(@Body() body: RevenueQueryDto = {}) {
-    return this.paymentService.getRevenueStats(body.academicYear);
+  async getRevenueStats(@Year() year: ResolvedAcademicYear) {
+    return this.paymentService.getRevenueStats(year.label);
   }
 
   @Post('/stats/top-paying-students')
   @isFinancial()
-  @Validate({ body: topPayingStudentsQueryDto })
+  @Validate({ body: topPayingStudentsQueryDto, query: paymentListQuery })
   @McpTool('Get top paying students')
   @ResMsg('fees.success.dataRetrieved')
-  async getTopPayingStudents(@Body() body: TopPayingStudentsQueryDto = {}) {
-    return this.paymentService.getTopPayingStudents(
-      body.limit ?? 10,
-      body.academicYear
-    );
+  async getTopPayingStudents(@Body() body: TopPayingStudentsQueryDto, @Year() year: ResolvedAcademicYear) {
+    return this.paymentService.getTopPayingStudents(body?.limit ?? 10, year.label);
   }
 
   @Get('/:id')

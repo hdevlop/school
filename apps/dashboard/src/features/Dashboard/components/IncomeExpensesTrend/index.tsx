@@ -14,7 +14,7 @@ import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
-import { useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
+import { useDashboardYear, useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import DashboardEmptyState from '../DashboardEmptyState';
@@ -46,6 +46,7 @@ type TrendTooltipProps = {
   expensesLabel: string;
   todayIncome: number;
   todayExpenses: number;
+  showToday: boolean;
 };
 
 const TrendTooltip = ({
@@ -56,11 +57,13 @@ const TrendTooltip = ({
   expensesLabel,
   todayIncome,
   todayExpenses,
+  showToday,
   t,
 }: TrendTooltipProps & { t: (k: string) => string }) => {
   if (active && payload && payload.length) {
     const month = payload[0].payload.month;
-    const isCurrent = month === t(`common.monthsShort.${CURRENT_MONTH_KEY}`);
+    // Today belongs to the active year; another year's same month is not today.
+    const isCurrent = showToday && month === t(`common.monthsShort.${CURRENT_MONTH_KEY}`);
     return (
       <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
         <p className="text-sm font-semibold text-gray-800">{month}</p>
@@ -108,6 +111,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const { data, isLoading, error, refetch } = useFinanceTrend(academicYear);
+  const { isOtherYear } = useDashboardYear(academicYear);
   const incomeLabel = t('dashboard.finance.income');
   const expensesLabel = t('dashboard.finance.expenses');
 
@@ -179,6 +183,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
                       expensesLabel={expensesLabel}
                       todayIncome={todayIncome}
                       todayExpenses={todayExpenses}
+                      showToday={!isOtherYear}
                       t={t}
                     />
                   )}

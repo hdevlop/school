@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useEntityCRUD } from 'najm-kit/query/crud';
+import { useYearScopedList, useYearScopedQuery } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import * as attendanceApi from '@/services/attendanceApi';
 
 const runRosterBatch = async (items: Array<any & { id?: string }>) => {
@@ -38,7 +39,9 @@ export const useStudentAttendance = (options?) => {
     delete: attendanceApi.deleteAttendanceApi,
   });
 
-  const { data: attendance, isLoading: isAttendanceLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: attendance, isLoading: isAttendanceLoading, isError, error, refetch } = useYearScopedList({
+    resource: 'attendance', parts: ['student'], fetch: attendanceApi.getStudentAttendanceApi, enabled,
+  });
 
   const { mutateAsync: createRaw, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateAttendance, isLoading: isUpdating } = crud.useUpdate();
@@ -106,6 +109,17 @@ export const useStudentAttendance = (options?) => {
   };
 };
 
+/** One student's attendance in the viewed year. */
+export const useStudentAttendanceRecords = (studentId?: string) => {
+  const records = useYearScopedList({
+    resource: 'attendance',
+    parts: ['student', studentId],
+    fetch: () => attendanceApi.getAttendanceByStudentApi(studentId as string),
+    enabled: !!studentId,
+  });
+  return { ...records, data: { data: records.data } };
+};
+
 export const useAttendanceHistory = (attendanceId: string, enabled = true) => {
   const query = useQuery({
     queryKey: ['attendance', attendanceId, 'history'],
@@ -136,15 +150,16 @@ export const useStaffAttendance = (options?) => {
     delete: attendanceApi.deleteAttendanceApi,
   });
 
-  const attendanceQuery = useQuery({
-    queryKey: ['attendance-staff', date || 'all'],
-    queryFn: () => date
+  // Without a date, the viewed year's marks; a day's marks belong to the
+  // year holding that day, so the key still names the viewed year it was
+  // read under.
+  const { query: attendanceQuery } = useYearScopedQuery({
+    resource: 'attendance-staff',
+    parts: [date || 'all'],
+    fetch: () => date
       ? attendanceApi.getAttendanceByDateApi(date, 'staff')
       : attendanceApi.getStaffAttendanceApi(),
     enabled,
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
-    staleTime: 0,
   });
   const attendance = attendanceQuery.data?.data || [];
 
@@ -179,12 +194,12 @@ export const useStaffAttendance = (options?) => {
         status: item.status,
         notes: item.notes ?? null,
       })));
-      await queryClient.refetchQueries({ queryKey: ['attendance-staff', date || 'all'] });
+      await queryClient.refetchQueries({ queryKey: ['attendance-staff'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard', 'attendance'] });
     } finally {
       setIsSubmittingRoster(false);
     }
-  }, [date, queryClient]);
+  }, [queryClient]);
 
   return {
     attendance,

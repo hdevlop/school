@@ -79,6 +79,23 @@ export const injectStudentIdToFees = (fees: Fee[], studentId: string): Fee[] => 
    }));
 };
 
+/**
+ * Charges new fees to the viewed school year, so a fee added while viewing a
+ * past year stays in that year. A fee that already names its year keeps it;
+ * without a viewed year the server uses the active one.
+ */
+export const withFeeYear = <T extends { fees?: object[] }>(data: T, academicYear?: string): T => (
+   academicYear
+      ? {
+         ...data,
+         fees: (data.fees ?? []).map((fee) => ({
+            ...fee,
+            academicYear: (fee as { academicYear?: string | null }).academicYear || academicYear,
+         })),
+      }
+      : data
+);
+
 export const prepareBulkFeesForSubmission = (formData: { fees?: Fee[] }, studentId: string) => {
    if (!formData.fees || !Array.isArray(formData.fees)) {
       return { fees: [] };

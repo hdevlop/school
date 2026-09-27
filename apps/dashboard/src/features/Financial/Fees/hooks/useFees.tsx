@@ -1,14 +1,27 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
+import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import * as feeApi from '@/services/feeApi';
 
-export const useFees = (options?) => {
-  const { feeId, studentId, enabled = true } = options || {};
+type UseFeesOptions = {
+  feeId?: string;
+  studentId?: string;
+  enabled?: boolean;
+  /** The students owing fees of any year: the fees table's outstanding view. */
+  allYears?: boolean;
+  /** The student's fees of this year instead of the viewed one. */
+  studentYear?: string;
+  /** Also read the student's fees of every year (other years' unpaid fees). */
+  studentAllYears?: boolean;
+};
+
+export const useFees = (options?: UseFeesOptions) => {
+  const { feeId, studentId, enabled = true, allYears = false, studentYear, studentAllYears = false } = options || {};
 
   const crud = useEntityCRUD(['fees', 'installments', 'payments'], {
     getAll: feeApi.getFeesApi,
-    getById: feeApi.getFeeByIdApi,
-    getByStudent: feeApi.getFeesByStudentApi,
+    getByScope: feeApi.getOutstandingFeesApi,
+    getByStudentAllYears: feeApi.getFeesByStudentAllYearsApi,
     create: feeApi.createFeeApi,
     update: feeApi.updateFeeApi,
     delete: feeApi.deleteFeeApi,
@@ -16,9 +29,30 @@ export const useFees = (options?) => {
     createBulk: feeApi.createBulkFeesApi,
   });
 
-  const { data: fees, isLoading: isFeesLoading, isError, error, refetch } = crud.useGetAll(enabled);
-  const { data: fee, isLoading: isFeeLoading } = crud.useGetById(feeId, !!feeId);
-  const { data: studentFees, isLoading: isStudentFeesLoading } = crud.useGetByParam('student', studentId, !!studentId);
+  // The list follows the viewed year. `allYears` reads the students owing
+  // fees of any year, which the outstanding view needs whatever year is viewed.
+  const yearFees = useYearScopedList({ resource: 'fees', fetch: feeApi.getFeesApi, enabled: enabled && !allYears });
+  const allYearFees = crud.useGetByParam('scope', allYears ? 'outstanding' : undefined, enabled && allYears);
+  const { data: fees, isLoading: isFeesLoading, isError, error, refetch } = allYears ? allYearFees : yearFees;
+  // A fee belongs to its year: outside the viewed year the server has none.
+  const { data: fee, isLoading: isFeeLoading } = useYearScopedDetail({
+    resource: 'fees', parts: [feeId], fetch: () => feeApi.getFeeByIdApi(feeId), enabled: !!feeId,
+  });
+  // The student's fees, totals and payment metrics for one fee year.
+  const {
+    data: studentFees,
+    isLoading: isStudentFeesLoading,
+    error: studentFeesError,
+  } = useYearScopedDetail({
+    resource: 'fees',
+    parts: ['student', studentId],
+    fetch: () => feeApi.getFeesByStudentApi(studentId),
+    enabled: !!studentId,
+    academicYear: studentYear,
+  });
+  const { data: studentAllYearFees } = crud.useGetByParam(
+    'studentAllYears', studentAllYears ? studentId : undefined, studentAllYears && !!studentId,
+  );
   const { mutateAsync: createFee, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateFee, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteFee, isLoading: isDeleting } = crud.useDelete();
@@ -30,15 +64,16 @@ export const useFees = (options?) => {
     fees,
     fee,
     studentFees,
+    studentAllYearFees,
 
     // Status
     isError,
     error,
     refetch,
+    studentFeesError,
 
     // Query Functions
     getAllFees: crud.useGetAll,
-    getFeeById: crud.useGetById,
     getStudentFees: crud.useGetByParam,
 
     // Mutations

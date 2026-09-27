@@ -111,31 +111,6 @@ export class AssessmentValidator {
     }
   }
 
-  async ensureDateNotTooOld(date: Date, maxYears: number = 1) {
-    const minDate = new Date();
-    minDate.setFullYear(minDate.getFullYear() - maxYears);
-    minDate.setHours(0, 0, 0, 0);
-
-    if (date < minDate) {
-      Err(400, this.at('dateTooOld'));
-    }
-  }
-
-  async ensureDateNotTooFarInFuture(date: Date, maxYears: number = 1) {
-    const maxDate = new Date();
-    maxDate.setFullYear(maxDate.getFullYear() + maxYears);
-    maxDate.setHours(23, 59, 59, 999);
-
-    if (date > maxDate) {
-      Err(400, this.at('dateTooFarInFuture'));
-    }
-  }
-
-  async validateAssessmentDate(date: Date) {
-    await this.ensureDateNotTooOld(date, 1);
-    await this.ensureDateNotTooFarInFuture(date, 1);
-  }
-
   async validate(data, excludeId: string = null) {
     const isUpdate = excludeId !== null;
 
@@ -151,7 +126,6 @@ export class AssessmentValidator {
       subjectId,
       passingMarks,
       totalMarks,
-      date,
     } = data;
 
     if (!isUpdate && id) {
@@ -177,10 +151,6 @@ export class AssessmentValidator {
       const actualPassingMarks = passingMarks !== undefined ? passingMarks : assessment.passingMarks;
       const actualTotalMarks = totalMarks !== undefined ? totalMarks : assessment.totalMarks;
       await this.ensurePassingMarksValid(actualPassingMarks, actualTotalMarks);
-    }
-
-    if (date) {
-      await this.validateAssessmentDate(new Date(date));
     }
 
     return data;

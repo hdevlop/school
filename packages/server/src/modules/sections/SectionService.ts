@@ -2,49 +2,60 @@ import { Service } from '../../najm';
 import { SectionRepository } from './SectionRepository';
 import { SectionValidator } from './SectionValidator';
 import type { CreateSectionDto, CreateSectionsBulkDto, UpdateSectionDto } from './SectionDto';
+import { AcademicYearValidator, type ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class SectionService {
   constructor(
     private sectionRepository: SectionRepository,
-    private sectionValidator: SectionValidator
+    private sectionValidator: SectionValidator,
+    private academicYears: AcademicYearValidator,
   ) { }
 
-  async getAll() {
-    return await this.sectionRepository.getAll();
+  async getAll(year: ResolvedAcademicYear) {
+    return this.sectionRepository.getAll(year.label);
   }
 
-  async getById(id: string) {
-    return await this.sectionValidator.ensureExists(id);
+  async getById(id: string, role?: string) {
+    return (await this.getWithYear(id, role)).section;
   }
 
-  async getStudents(sectionId: string) {
-    await this.sectionValidator.ensureExists(sectionId);
-    return await this.sectionRepository.getStudents(sectionId);
+  // A section belongs to its class's year: that year decides whether the role
+  // may read it and which placements its students and parents come from.
+  private async getWithYear(id: string, role?: string) {
+    const section = await this.sectionValidator.ensureExists(id);
+    const year = await this.academicYears.resolve(section.class.academicYear, role);
+    return { section, year };
   }
 
-  async getAnalytics(sectionId: string) {
-    await this.sectionValidator.ensureExists(sectionId);
-    return await this.sectionRepository.getAnalytics(sectionId);
+  async getStudents(sectionId: string, role?: string) {
+    const { year } = await this.getWithYear(sectionId, role);
+    return await this.sectionRepository.getStudents(sectionId, year.id);
   }
 
-  async getClasses(sectionId: string) {
-    await this.sectionValidator.ensureExists(sectionId);
+  async getAnalytics(sectionId: string, role?: string) {
+    const { year } = await this.getWithYear(sectionId, role);
+    return await this.sectionRepository.getAnalytics(sectionId, year.id);
+  }
+
+  async getClasses(sectionId: string, role?: string) {
+    await this.getWithYear(sectionId, role);
     return await this.sectionRepository.getClasses(sectionId);
   }
 
-  async getTeachers(sectionId: string) {
-    await this.sectionValidator.ensureExists(sectionId);
+  async getTeachers(sectionId: string, role?: string) {
+    await this.getWithYear(sectionId, role);
     return await this.sectionRepository.getTeachers(sectionId);
   }
 
-  async getParents(sectionId: string) {
-    await this.sectionValidator.ensureExists(sectionId);
-    return await this.sectionRepository.getParents(sectionId);
+  async getParents(sectionId: string, role?: string) {
+    const { year } = await this.getWithYear(sectionId, role);
+    return await this.sectionRepository.getParents(sectionId, year.id);
   }
 
-  async create(data: CreateSectionDto) {
-    await this.sectionValidator.ensureClassExists(data.classId);
+  async create(data: CreateSectionDto, role?: string) {
+    const schoolClass = await this.sectionValidator.ensureClassExists(data.classId);
+    await this.academicYears.resolve(schoolClass.academicYear, role);
     await this.sectionValidator.ensureNameUniqueInClass(
       data.classId,
       data.name
@@ -52,11 +63,16 @@ export class SectionService {
     return await this.sectionRepository.create(data);
   }
 
-  async update(id: string, data: UpdateSectionDto) {
-    await this.sectionValidator.ensureExists(id);
+  async update(id: string, data: UpdateSectionDto, role?: string) {
+    const currentSection = await this.sectionValidator.ensureExists(id);
+
+    if (data.classId && data.classId !== currentSection.classId) {
+      const schoolClass = await this.sectionValidator.ensureClassExists(data.classId);
+      await this.academicYears.resolve(schoolClass.academicYear, role);
+      await this.sectionValidator.ensureHasNoStudents(id);
+    }
 
     if (data.name || data.classId) {
-      const currentSection = await this.sectionRepository.getById(id);
       const classId = data.classId || currentSection.classId;
       const name = data.name || currentSection.name;
       await this.sectionValidator.ensureNameUniqueInClass(classId, name, id);
@@ -83,8 +99,10 @@ export class SectionService {
       try {
         const sectionEntity = await this.create(sectionData);
         createdSections.push(sectionEntity);
-      } catch {
-        continue;
+      } catch (error: any) {
+        if (error?.status === 409) continue;
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`Failed to seed section ${sectionData.name}: ${message}`);
       }
     }
 

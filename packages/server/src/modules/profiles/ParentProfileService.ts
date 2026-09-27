@@ -1,4 +1,5 @@
 import { Injectable } from '../../najm';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { ParentService } from '../parents/ParentService';
 import { FeeService } from '../financial/fees/FeeService';
 import { EventService } from '../events/EventService';
@@ -14,7 +15,7 @@ export class ParentProfileService {
   ) {}
 
   async getUnreadAlerts(parentId: string) {
-    const children = await this.parentService.getChildren(parentId);
+    const children = await this.parentService.getLinkedChildren(parentId);
     const perChild = await Promise.all(
       (children || []).map(async (child: any) => {
         const alerts = await this.alertService.getByStudentId(child.id).catch(() => []);
@@ -28,22 +29,24 @@ export class ParentProfileService {
     return { totalUnread, perChild };
   }
 
-  async getChildren(parentId: string) {
-    const children = await this.parentService.getChildren(parentId);
+  // Each child's class and fees in the year.
+  async getChildren(parentId: string, year: ResolvedAcademicYear) {
+    const children = await this.parentService.getChildren(parentId, year);
     const childrenWithFees = await Promise.all(
       (children || []).map(async (child: any) => {
-        const fees = await this.feeService.getByStudent(child.id).catch(() => null);
+        const fees = await this.feeService.getByStudent(child.id, year).catch(() => null);
         return { ...child, fees };
       })
     );
     return childrenWithFees;
   }
 
+  // Cross-year debt discovery: every year's fees of each child linked now.
   async getFeesDue(parentId: string) {
-    const children = await this.parentService.getChildren(parentId);
+    const children = await this.parentService.getLinkedChildren(parentId);
     const allFees = await Promise.all(
       (children || []).map(async (child: any) => {
-        const feeData = await this.feeService.getByStudent(child.id).catch(() => null);
+        const feeData = await this.feeService.getByStudentAllYears(child.id).catch(() => null);
         return { studentId: child.id, studentName: child.name, fees: feeData };
       })
     );
@@ -52,7 +55,7 @@ export class ParentProfileService {
 
   async getUpcomingEvents(parentId: string) {
     const [children, events] = await Promise.all([
-      this.parentService.getChildren(parentId),
+      this.parentService.getLinkedChildren(parentId),
       this.eventService.getUpcoming().catch(() => []),
     ]);
     const childrenSections = (children || []).map((c: any) => c.sectionId).filter(Boolean);

@@ -24,8 +24,7 @@ export default function RoutineGrid({ days, periods, entries, duties = [], defau
             </th>
             {periods.map((period) => (
               <th key={period.id} scope="col" className={`border-e border-white/25 px-2 py-2 text-center font-semibold last:border-e-0 ${period.isBreak ? 'w-32 min-w-32' : 'w-48 min-w-48'}`}>
-                {period.isBreak && <span className="block text-xs">{routinePeriodLabel(period.name, t)}</span>}
-                <span className="block text-base font-medium tabular-nums md:text-lg" dir="ltr">{period.startTime.slice(0, 5)}–{period.endTime.slice(0, 5)}</span>
+                <span className="block whitespace-nowrap text-base font-medium tabular-nums" dir="ltr">{period.startTime.slice(0, 5)}–{period.endTime.slice(0, 5)}</span>
               </th>
             ))}
           </tr>
@@ -56,7 +55,7 @@ export default function RoutineGrid({ days, periods, entries, duties = [], defau
                   );
                 }
                 const lesson = entry ? (
-                  <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} teacherName={entry.teacherName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
+                  <RoutineCell subjectId={entry.subjectId} subjectName={entry.subjectName} roomNumber={entry.roomNumber} defaultRoom={defaultRoom} contentGroups={entry.contentGroups} />
                 ) : <span className="text-muted-foreground">—</span>;
                 const lessonLabel = entry
                   ? entry.contentGroups?.length
@@ -75,7 +74,7 @@ export default function RoutineGrid({ days, periods, entries, duties = [], defau
                           {lesson}
                         </summary>
                         <div className="border-t px-2 py-1.5 text-xs leading-relaxed">
-                          <p className="font-medium">{entry.subjectName} · {entry.teacherName}</p>
+                          <p className="font-medium">{entry.subjectName}</p>
                           <p>{entry.roomNumber || defaultRoom || t('classRoutines.ui.grid.noRoom')}</p>
                           {entry.contentGroups?.length ? <p>{lessonLabel}</p> : null}
                           {entry.notes ? <p>{entry.notes}</p> : null}

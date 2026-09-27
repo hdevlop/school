@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { SCHEDULE_VALUES } from '@sms/contracts';
+import { defaultSchoolYearCalendar, isDateOnly, parseSchoolYearLabel } from '@sms/contracts/academic-years';
 
 const optionalId = z.preprocess(
   (value) => (value === '' ? undefined : value),
@@ -78,10 +79,27 @@ export const classBulkFeeFormSchema = z.object({
   feeTypeId: requiredId,
   schedule: z.enum(SCHEDULE_VALUES),
   academicYear: academicYearField.optional(),
+  effectiveDate: optionalDateField,
   baseAmount: numberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')).optional(),
   discountAmount: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Discount cannot be negative')).optional(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
+}).superRefine((data, context) => {
+  if (data.academicYear && (!data.effectiveDate || !isDateOnly(data.effectiveDate))) {
+    context.addIssue({
+      code: 'custom', path: ['effectiveDate'],
+      message: 'Select a valid date for the class roster in this academic year',
+    });
+  }
+  if (data.academicYear && data.effectiveDate && isDateOnly(data.effectiveDate) && parseSchoolYearLabel(data.academicYear)) {
+    const calendar = defaultSchoolYearCalendar(data.academicYear);
+    if (data.effectiveDate < calendar.instructionStartsOn || data.effectiveDate > calendar.instructionEndsOn) {
+      context.addIssue({
+        code: 'custom', path: ['effectiveDate'],
+        message: 'Choose a charge date during the September to June school term',
+      });
+    }
+  }
 });
 
 export type FeeFormValues = z.input<typeof feeSchema>;

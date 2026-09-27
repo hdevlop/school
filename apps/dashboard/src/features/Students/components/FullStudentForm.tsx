@@ -51,7 +51,10 @@ const FullStudentForm = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
   const initialStudentValues = useMemo(
-    () => getStudentDefaultValues(null, businessDate),
+    () => ({
+      ...getStudentDefaultValues(null, businessDate),
+      yearEnrolledOn: businessDate ?? new Date().toISOString().slice(0, 10),
+    }),
     [businessDate],
   )
 
@@ -70,6 +73,7 @@ const FullStudentForm = ({
       classId: selectedClass?.id ?? '',
       sectionId: selectedSection?.id ?? '',
       enrollmentDate: getAcademicYearStartDate(selectedClass?.academicYear, businessDate),
+      yearEnrolledOn: getAcademicYearStartDate(selectedClass?.academicYear, businessDate),
     })
   }, [businessDate, classes])
 
@@ -136,6 +140,7 @@ const FullStudentForm = ({
         <StudentFormContent
           classes={classes}
           showTransportToggle
+          showYearEnrollmentDate
           onTransportToggle={setTransportSelected}
         />
       ),

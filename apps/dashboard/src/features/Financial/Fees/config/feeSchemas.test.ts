@@ -93,4 +93,13 @@ describe('the bulk variants', () => {
     expect(classBulkFeeFormSchema.parse({ ...classFee, sectionId: '' }).sectionId).toBeUndefined();
     expect(classBulkFeeFormSchema.safeParse({ ...classFee, classId: '' }).success).toBe(false);
   });
+
+  it('requires a real roster date when a school year is selected', () => {
+    const classFee = { classId: 'cls1', feeTypeId: 'ft1', schedule: 'monthly', academicYear: '2025-2026' };
+
+    expect(classBulkFeeFormSchema.safeParse(classFee).success).toBe(false);
+    expect(classBulkFeeFormSchema.safeParse({ ...classFee, effectiveDate: '2025-02-30' }).success).toBe(false);
+    expect(classBulkFeeFormSchema.safeParse({ ...classFee, effectiveDate: '2025-10-01' }).success).toBe(true);
+    expect(classBulkFeeFormSchema.safeParse({ ...classFee, effectiveDate: '2026-07-10' }).success).toBe(false);
+  });
 });

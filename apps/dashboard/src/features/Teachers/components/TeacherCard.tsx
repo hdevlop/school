@@ -7,13 +7,15 @@ import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 const TeacherCard = ({ data }) => {
    const { t } = useTranslation();
    const teacher = data;
 
-   // Fetch classes and subjects from cache
-   const { classes = [] } = useClasses({ allYears: true });
+   // Assignments are current, so they name the active year's classes.
+   const { activeYear } = useViewingAcademicYear();
+   const { classes = [] } = useClasses({ academicYear: activeYear, enabled: !!activeYear });
 
    const getClassName = (classId) => {
       const classItem = classes.find(c => c.id === classId);

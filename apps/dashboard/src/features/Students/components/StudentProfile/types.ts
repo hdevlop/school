@@ -48,4 +48,9 @@ export interface Student {
   updatedAt: string;
   class: { id: string; name: string } | null;
   section: { id: string; name: string } | null;
+  /**
+   * Present only on a viewed-year read (`GET /students/:id?academicYear=`):
+   * that year's enrollment, or null when the student was not enrolled then.
+   */
+  enrollment?: { id: string; status: string; enrolledOn: string; leftOn: string | null } | null;
 }

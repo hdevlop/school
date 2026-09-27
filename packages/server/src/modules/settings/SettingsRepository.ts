@@ -16,6 +16,7 @@ const publicSettings = {
   schoolWebsite: settings.schoolWebsite,
   schoolLogo: settings.schoolLogo,
   currentAcademicYear: settings.currentAcademicYear,
+  activeAcademicYearId: settings.activeAcademicYearId,
 
   // Academic Settings
   gradingScale: settings.gradingScale,
@@ -110,6 +111,17 @@ export class SettingsRepository {
       .values(data)
       .returning();
     return newSettings;
+  }
+
+  // Moves the active-year pointer only from the year the caller checked, so
+  // two activations can never both succeed. Returns null when it moved first.
+  async switchActiveYear(fromYearId: string, to: { id: string; label: string }) {
+    const [row] = await this.db
+      .update(settings)
+      .set({ activeAcademicYearId: to.id, currentAcademicYear: to.label, updatedAt: sql`CURRENT_TIMESTAMP` })
+      .where(eq(settings.activeAcademicYearId, fromYearId))
+      .returning({ id: settings.id });
+    return row ?? null;
   }
 
   async update(id, data) {

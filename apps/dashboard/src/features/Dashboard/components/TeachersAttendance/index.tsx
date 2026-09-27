@@ -19,10 +19,11 @@ interface TeachersAttendanceProps {
   className?: string;
 }
 
-const CustomTooltip = ({ active = null, payload = null, todayAbsent = 0, todayLate = 0, t }: any) => {
+const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, todayLate = null, t }: any) => {
   if (active && payload && payload.length) {
     const month = payload[0].payload.month;
-    const isCurrent = month === CURRENT_MONTH_KEY;
+    // Another school year has no today: the server sends no figures for it.
+    const isCurrent = month === CURRENT_MONTH_KEY && todayAbsent != null;
     const absent = payload.find((p: any) => p.dataKey === 'absent')?.value ?? 0;
     const late = payload.find((p: any) => p.dataKey === 'late')?.value ?? 0;
     return (
@@ -72,8 +73,8 @@ const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className }) =>
       });
   }, [payload, t]);
 
-  const todayAbsent = payload?.todayAbsent ?? 0;
-  const todayLate = payload?.todayLate ?? 0;
+  const todayAbsent = payload?.todayAbsent ?? null;
+  const todayLate = payload?.todayLate ?? null;
 
   const noData = !data.length || data.every((d) => d.absent === 0 && d.late === 0);
 

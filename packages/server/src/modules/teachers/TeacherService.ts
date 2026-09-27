@@ -7,6 +7,7 @@ import { formatDate, isEmpty, pickProps } from '../../shared';
 import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { nanoid } from 'nanoid';
 import { StaffService } from '../staff/StaffService';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { eq } from 'drizzle-orm';
 import { teachers as teachersTable, staff as staffTable } from '../../database/schema';
 import { db } from '../../database/db';
@@ -31,7 +32,7 @@ export class TeacherService {
     private userService: UserService,
     private authService: AuthService,
     private storage: StorageService,
-    private staffService: StaffService,
+    private staffService: StaffService
   ) { }
 
   async getAll() {
@@ -67,9 +68,19 @@ export class TeacherService {
     return await this.teacherRepository.getClasses(id);
   }
 
-  async getStudents(id: string) {
+  async getStudents(id: string, year: ResolvedAcademicYear, onDate?: string, role?: string) {
     await this.teacherValidator.ensureExists(id);
-    return await this.teacherRepository.getStudents(id);
+    if (onDate) {
+      // Assignment rows have no valid-from/to dates yet. Until those dates are
+      // captured, this is an administrator review roster, not teacher access.
+      if (role !== 'admin' && role !== 'principal') {
+        Err(403, 'Dated teacher rosters require reviewed assignment history');
+      }
+      if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) {
+        Err(400, 'Date is outside the academic year reporting interval');
+      }
+    }
+    return this.teacherRepository.getStudents(id, year, onDate);
   }
 
   async assignSubject(data: { teacherId: string; classId: string; sectionId: string; subjectId: string }) {

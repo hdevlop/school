@@ -5,6 +5,8 @@ import { StaffValidator } from '../staff/StaffValidator';
 import { TeacherValidator } from '../teachers/TeacherValidator';
 import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
+import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
+import { getBusinessDate } from '../../shared/businessDate';
 
 function toLocalDateOnly(date: Date | string) {
   if (typeof date === 'string') {
@@ -22,11 +24,11 @@ function getLocalToday(now: Date = new Date()) {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 }
 
-export function isFutureAttendanceDate(date: Date | string, now: Date = new Date()) {
+export function isFutureAttendanceDate(date: Date | string, now: Date = getBusinessDate()) {
   return toLocalDateOnly(date) > getLocalToday(now);
 }
 
-export function isAttendanceDateTooOld(date: Date | string, maxDaysOld: number = 30, now: Date = new Date()) {
+export function isAttendanceDateTooOld(date: Date | string, maxDaysOld: number = 30, now: Date = getBusinessDate()) {
   const minDate = getLocalToday(now);
   minDate.setDate(minDate.getDate() - maxDaysOld);
 
@@ -44,6 +46,7 @@ export class AttendanceValidator {
     private teacherValidator: TeacherValidator,
     private sectionValidator: SectionValidator,
     private subjectValidator: SubjectValidator,
+    private enrollments: StudentEnrollmentRepository,
   ) { }
 
   async ensureExists(id: string) {
@@ -80,6 +83,17 @@ export class AttendanceValidator {
 
   async ensureStudentInSection(studentId: string, sectionId: string) {
     return this.studentValidator.ensureInSection(studentId, sectionId);
+  }
+
+  async ensureStudentPlacedInSectionOnDate(studentId: string, sectionId: string, date: string) {
+    if (!await this.enrollments.hasAnyForStudent(studentId)) {
+      // Undated legacy students remain on their existing current-section rule
+      // until their historical enrollment is reviewed and recorded.
+      return this.ensureStudentInSection(studentId, sectionId);
+    }
+    if (!await this.enrollments.isPlacedInSectionOnDate(studentId, sectionId, date)) {
+      Err(409, 'Student has no dated placement in this section on the attendance date');
+    }
   }
 
   async ensureTeacherInSection(teacherId: string, sectionId: string) {
@@ -129,9 +143,13 @@ export class AttendanceValidator {
     }
   }
 
-  async validateAttendanceDate(date: Date | string) {
+  async validateAttendanceDate(date: Date | string, role?: string) {
     await this.ensureDateNotInFuture(date);
-    await this.ensureDateNotTooOld(date, 30);
+    // Administrators can correct a past year's register through the normal
+    // attendance workflow. Other roles keep the existing 30-day entry limit.
+    if (role !== 'admin' && role !== 'principal') {
+      await this.ensureDateNotTooOld(date, 30);
+    }
   }
 
   async validateStudentAttendance(
@@ -144,7 +162,7 @@ export class AttendanceValidator {
 
     await this.ensureStudentExists(studentId);
     await this.ensureSectionExists(sectionId);
-    await this.ensureStudentInSection(studentId, sectionId);
+    await this.ensureStudentPlacedInSectionOnDate(studentId, sectionId, date);
 
     // Resolve teacherId/subjectId. Per_class requires both on the payload.
     // Daily mode may omit them; fall back to the caller's first teacher
@@ -182,7 +200,7 @@ export class AttendanceValidator {
     }
 
     if (date) {
-      await this.validateAttendanceDate(date);
+      await this.validateAttendanceDate(date, user.role);
       // Per_class mode enforces no duplicate per (student, assignment, date).
       // Daily mode is guarded separately in the service via findSameDayForStudentInSection.
       if (mode === 'per_class' && teacherAssignmentId) {
@@ -193,13 +211,13 @@ export class AttendanceValidator {
     return teacherAssignmentId;
   }
 
-  async validateStaffAttendance(data) {
+  async validateStaffAttendance(data, role?: string) {
     const { staffId, date } = data;
 
     await this.ensureStaffExists(staffId);
 
     if (date) {
-      await this.validateAttendanceDate(date);
+      await this.validateAttendanceDate(date, role);
       await this.ensureNoDuplicateStaffAttendance(staffId, date);
     }
   }

@@ -2,6 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as routineApi from '@/services/classRoutineApi';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -28,9 +29,11 @@ export const useRoutineDutyCandidates = (enabled = true) => useQuery({
   enabled,
 });
 
-export const useRoutineList = (filters: Record<string, any>, enabled = true) => useQuery({
-  queryKey: ['class-routines', 'list', filters],
-  queryFn: () => routineApi.getClassRoutinesApi(filters),
+// The year travels as X-Academic-Year: a query value that disagreed with
+// the header would be refused.
+export const useRoutineList = ({ academicYear, ...filters }: Record<string, any>, enabled = true) => useQuery({
+  queryKey: ['class-routines', 'list', academicYear, filters],
+  queryFn: () => withAcademicYear(academicYear, () => routineApi.getClassRoutinesApi(filters)),
   select: (response) => payload(response, []),
   enabled,
 });
@@ -44,7 +47,7 @@ export const useRoutine = (id?: string) => useQuery({
 
 export const useTeacherRoutine = (teacherId?: string, academicYear?: string) => useQuery({
   queryKey: ['class-routines', 'teacher', teacherId, academicYear],
-  queryFn: () => routineApi.getTeacherRoutineApi(teacherId, academicYear),
+  queryFn: () => withAcademicYear(academicYear, () => routineApi.getTeacherRoutineApi(teacherId)),
   select: (response) => payload(response, []),
   enabled: Boolean(teacherId),
 });

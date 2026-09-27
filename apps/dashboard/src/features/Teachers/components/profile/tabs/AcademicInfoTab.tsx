@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { NIcon, NTable, NEmptyState } from 'najm-kit';
 import { Input } from 'najm-kit';
 import { getTeacherClassesApi } from '@/services/teacherApi';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { Award, BookOpen, Briefcase, Calendar, GraduationCap, Hash, ShieldCheck, Users, SearchX } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -49,6 +50,9 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
   const { t } = useTranslation();
   const [classRows, setClassRows] = useState<any[]>([]);
   const [loadingClasses, setLoadingClasses] = useState(true);
+  // Teaching assignments are not dated yet, so another year still lists today's.
+  const { viewingYear, activeYear } = useViewingAcademicYear();
+  const showsCurrentAssignments = Boolean(viewingYear && viewingYear !== activeYear);
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -173,6 +177,12 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
               <div className="mt-1 text-xl font-bold text-slate-800">{totalStudents}</div>
             </div>
           </div>
+
+          {showsCurrentAssignments ? (
+            <p className="rounded-md border border-border bg-muted px-3 py-2 text-sm text-foreground">
+              {t('academicYearViewing.currentAssignments', { year: activeYear ?? '' })}
+            </p>
+          ) : null}
 
           <NTable
             data={tableRows}

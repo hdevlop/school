@@ -7,6 +7,7 @@ import {
   calculateFeeAmounts,
   calculateFeeStatus,
   FeeEffectiveDateError,
+  formatDateOnly,
   getCurrentAcademicYear,
   isValidDateOnly,
   parseDateOnly,
@@ -16,6 +17,8 @@ import { InstallmentService } from '../installments/InstallmentService';
 import { SettingsRepository } from '../../settings/SettingsRepository';
 import { ClassRepository } from '../../classes/ClassRepository';
 import { StudentRepository } from '../../students/StudentRepository';
+import { StudentEnrollmentRepository } from '../../studentEnrollments/StudentEnrollmentRepository';
+import { AcademicYearValidator, type ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import type { CreateFeeDto, UpdateFeeDto, ClassBulkFeeDto } from './FeeDto';
 
@@ -49,31 +52,59 @@ export class FeeService {
     private classRepository: ClassRepository,
     private studentRepository: StudentRepository,
     private auditService: FinancialAuditService,
+    private enrollments: StudentEnrollmentRepository,
+    private academicYears: AcademicYearValidator,
   ) { }
 
-  async getAll() {
-    return await this.feeRepository.getAll();
+  async getAll(year: ResolvedAcademicYear) {
+    return this.feeRepository.getAll(year.id, year.label);
   }
 
-  async getOverdue() {
-    return await this.feeRepository.getOverdue();
+  /**
+   * Students owing fees of any school year, whichever year is viewed: the
+   * explicit all-year read behind the fees table's outstanding scope. Each
+   * row sums every year's fees, so it never mixes into one year's totals.
+   */
+  async getOutstanding() {
+    const rows = await this.feeRepository.getAllYears();
+    return rows.filter((row) => Number(row.totalDue ?? 0) > 0);
   }
 
-  async getOverdueSummary() {
-    return await this.feeRepository.getOverdueSummary();
+  /** Every year's fees, one row per student: an explicit all-year read for trusted callers. */
+  async getAllYears() {
+    return this.feeRepository.getAllYears();
   }
 
-  async getOverdueByStudent(studentId: string) {
-    return await this.feeRepository.getOverdueByStudent(studentId);
+  async getOverdue(year: ResolvedAcademicYear) {
+    return this.feeRepository.getOverdue(year.id, year.label);
   }
 
-  async getById(id: string) {
+  async getOverdueSummary(year: ResolvedAcademicYear) {
+    return this.feeRepository.getOverdueSummary(year.label);
+  }
+
+  async getOverdueByStudent(studentId: string, year: ResolvedAcademicYear) {
+    return this.feeRepository.getOverdueByStudent(studentId, year.label);
+  }
+
+  // A fee belongs to the year it charges; outside the selected year it is
+  // not found, so a detail never shows under another year's heading.
+  async getById(id: string, year: ResolvedAcademicYear) {
     await this.feeValidator.checkExists(id);
-    return await this.feeRepository.getById(id);
+    const fee = await this.feeRepository.getById(id);
+    if (fee?.academicYear !== year.label) {
+      Err(404, 'Fee not found in selected academic year');
+    }
+    return fee;
   }
 
-  async getByStudent(studentId: string) {
-    return await this.feeRepository.getByStudent(studentId);
+  async getByStudent(studentId: string, year: ResolvedAcademicYear) {
+    return this.feeRepository.getByStudent(studentId, year.id, year.label);
+  }
+
+  /** One student's fees of every year: an explicit all-year read (cross-year debt, seeding). */
+  async getByStudentAllYears(studentId: string) {
+    return this.feeRepository.getByStudentAllYears(studentId);
   }
 
   private async getFeeResolutionContext(
@@ -96,8 +127,20 @@ export class FeeService {
     };
   }
 
+  private async requireWritableYear(label: string, role?: string) {
+    const year = role
+      ? await this.academicYears.resolve(label, role)
+      : await this.academicYears.requireLabel(label);
+    // Explicit administrative preparation (such as rollover) calls this
+    // service without a request role; ordinary fee screens cannot charge drafts.
+    if (role && year.status === 'draft') Err(409, 'Fees cannot be charged to a draft academic year');
+    return year;
+  }
+
   @Transaction()
-  async create(data: CreateFeeDto, assignedBy?: string) {
+  // `requestYear` is the year the request works in (the form's captured
+  // year); it charges a fee that names no year of its own.
+  async create(data: CreateFeeDto, assignedBy?: string, role?: string, requestYear?: ResolvedAcademicYear) {
     await this.feeValidator.validate(data);
 
     const [feeType, student, settings] = await Promise.all([
@@ -114,8 +157,10 @@ export class FeeService {
     const endMonth = settings?.endMonth || 'june';
     const academicYear =
       data.academicYear ||
+      requestYear?.label ||
       settings?.currentAcademicYear ||
       getCurrentAcademicYear(startMonth);
+    await this.requireWritableYear(academicYear, role);
 
     if (!isValidDateOnly(student.enrollmentDate)) {
       Err(400, 'Student is missing a valid enrollment date');
@@ -188,11 +233,17 @@ export class FeeService {
     return recalculated;
   }
 
-  async createBulk(fees: CreateFeeDto[], assignedBy?: string) {
+  async createBulk(fees: CreateFeeDto[], assignedBy?: string, role?: string, requestYear?: ResolvedAcademicYear) {
+    const settings = await this.settingsRepository.getAdminSettings();
+    const defaultYear = requestYear?.label || settings?.currentAcademicYear ||
+      getCurrentAcademicYear(settings?.startMonth || 'september');
+    for (const label of new Set(fees.map((fee) => fee.academicYear || defaultYear))) {
+      await this.requireWritableYear(label, role);
+    }
     const createdFees = [];
     for (const feeData of fees) {
       try {
-        const fee = await this.create(feeData, assignedBy);
+        const fee = await this.create(feeData, assignedBy, role, requestYear);
         createdFees.push(fee);
       } catch (error: any) {
         if (error?.status === 409) continue;
@@ -202,12 +253,33 @@ export class FeeService {
     return createdFees;
   }
 
-  async createClassBulk(data: ClassBulkFeeDto, assignedBy?: string) {
-    const classStudents = await this.classRepository.getClassStudents(data.classId);
-
-    const filteredStudents = data.sectionId
-      ? classStudents.filter((s: any) => s.sectionId === data.sectionId)
-      : classStudents;
+  // Charges the students on the class's dated roster in the fee's year: the
+  // year the fee names, else the request's. The roster date is the fee's
+  // effective date, or today when the year holds today.
+  async createClassBulk(data: ClassBulkFeeDto, requestYear: ResolvedAcademicYear, assignedBy?: string, role?: string) {
+    const year = await this.requireWritableYear(data.academicYear || requestYear.label, role);
+    const rosterDate = data.effectiveDate || formatDateOnly(getBusinessDate());
+    if (!isValidDateOnly(rosterDate) || rosterDate < year.reportingStartsOn || rosterDate > year.reportingEndsOn) {
+      Err(422, data.effectiveDate
+        ? 'Bulk fee effective date must belong to the selected academic year'
+        : 'Year-targeted class fees require an effective date for the dated roster');
+    }
+    const yearClasses = await this.classRepository.getByAcademicYear(year.label);
+    if (!yearClasses.some((schoolClass: { id: string }) => schoolClass.id === data.classId)) {
+      Err(422, 'Bulk fee class must belong to the selected academic year');
+    }
+    if (data.sectionId) {
+      const classSections = await this.classRepository.getClassSections(data.classId);
+      if (!classSections.some((section: { id: string }) => section.id === data.sectionId)) {
+        Err(422, 'Bulk fee section must belong to the selected class');
+      }
+    }
+    const roster = await this.enrollments.listRosterAtDate(year.id, rosterDate);
+    const matchingStudents = roster
+      .filter((row) => row.classId === data.classId &&
+        (!data.sectionId || row.sectionId === data.sectionId))
+      .map((row) => ({ id: row.studentId, name: row.studentName }));
+    const filteredStudents = [...new Map(matchingStudents.map((student) => [student.id, student])).values()];
 
     const results = {
       created: 0,
@@ -222,11 +294,12 @@ export class FeeService {
           feeTypeId: data.feeTypeId,
           schedule: data.schedule,
           baseAmount: data.baseAmount,
-          academicYear: data.academicYear,
+          academicYear: year.label,
+          effectiveDate: data.effectiveDate,
           discountAmount: data.discountAmount,
           discountReason: data.discountReason,
           notes: data.notes,
-        }, assignedBy);
+        }, assignedBy, role);
         results.created++;
       } catch (error: any) {
         if (error?.status === 409) {
@@ -244,7 +317,7 @@ export class FeeService {
     return results;
   }
 
-  async processFees(student?, fees?: CreateFeeDto[], user?) {
+  async processFees(student?, fees?: CreateFeeDto[], user?, yearEnrolledOn?: string) {
     if (isEmpty(fees)) return;
 
     const studentId = student?.id;
@@ -254,19 +327,23 @@ export class FeeService {
     const newFees = fees.map((fee) => ({
       ...fee,
       studentId,
-      effectiveDate: fee.effectiveDate ?? studentEnrollmentDate,
+      effectiveDate: fee.effectiveDate ?? yearEnrolledOn ?? studentEnrollmentDate,
     }));
 
-    const createdFees = await this.createBulk(newFees, assignedBy);
+    const createdFees = await this.createBulk(newFees, assignedBy, user?.role);
 
     return createdFees.map((fee) => fee.id);
   }
 
   @Transaction()
-  async update(id: string, data: UpdateFeeDto, actorId?: string) {
+  async update(id: string, data: UpdateFeeDto, actorId?: string, role?: string) {
     await this.feeValidator.validate(data, id);
 
     const existingFee = await this.feeRepository.getById(id);
+    await this.requireWritableYear(existingFee.academicYear, role);
+    if (data.academicYear && data.academicYear !== existingFee.academicYear) {
+      await this.requireWritableYear(data.academicYear, role);
+    }
     const feeData: Record<string, any> = pickProps(data, FEE_UPDATE_KEYS);
 
     const needsRecalculation =
@@ -381,8 +458,9 @@ export class FeeService {
   }
 
   @Transaction()
-  async delete(id: string, actorId?: string) {
+  async delete(id: string, actorId?: string, role?: string) {
     const existing = await this.feeValidator.checkExists(id);
+    await this.requireWritableYear(existing.academicYear, role);
     const deletedFee = await this.feeRepository.delete(id);
     await this.auditService.record({
       entityType: 'fee',
@@ -400,9 +478,16 @@ export class FeeService {
     return await this.feeRepository.deleteAll();
   }
 
-  async deleteBulk(ids: string[], actorId?: string) {
+  async deleteBulk(ids: string[], actorId?: string, role?: string) {
+    if (role) {
+      // Authorize the whole request before deleting any of its fees.
+      const fees = await Promise.all(ids.map((id) => this.feeValidator.checkExists(id)));
+      for (const label of new Set(fees.map((fee) => fee.academicYear))) {
+        await this.requireWritableYear(label, role);
+      }
+    }
     const results = await Promise.all(
-      ids.map((id) => this.delete(id, actorId))
+      ids.map((id) => this.delete(id, actorId, role))
     );
     return {
       deletedCount: results.length,
@@ -410,9 +495,10 @@ export class FeeService {
     };
   }
 
-  async recalculate(id: string) {
+  async recalculate(id: string, role?: string) {
     if (!id) return;
-    await this.feeValidator.checkExists(id);
+    const existing = await this.feeValidator.checkExists(id);
+    if (role) await this.requireWritableYear(existing.academicYear, role);
     const totalAllocated = await this.feeRepository.getAllocatedTotal(id);
     const fee = await this.feeRepository.getById(id);
     const netAmount = Number(fee.netAmount) || 0;

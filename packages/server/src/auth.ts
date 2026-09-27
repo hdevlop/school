@@ -17,8 +17,8 @@ import {
   rolePermissionsTable,
   credentialSetupSessionsTable,
   credentialSetupRequirementsTable,
-  own, join, where,
-  Owned, ScopeContext,
+  own as najmOwn, Owned, ownershipCondition, join, where,
+  ScopeContext, type OwnershipToken,
   Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete,
 } from 'najm-auth';
 
@@ -41,8 +41,8 @@ export {
   credentialSetupRequirementsTable,
 };
 
-// Scoped ownership API
-export { own, join, where, Owned, ScopeContext, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };
+// Shared ownership engine from najm-auth; `own` below applies School's roles.
+export { Owned, ownershipCondition, join, where, ScopeContext, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };
 
 // ============================================================================
 // App roles — defineRoles generates isAdmin, isPrincipal, isTeacher… + utilities
@@ -90,3 +90,24 @@ export const isStaff = createGroupGuard([
   'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'TEACHER',
   'COUNSELOR', 'NURSE', 'SECRETARY', 'LIBRARIAN', 'ASSISTANT',
 ]);
+
+// ============================================================================
+// Ownership (repository reads)
+// ============================================================================
+
+/**
+ * Roles whose reads of an owned resource are school-wide. Their route
+ * permissions (`read:students`, …) still decide what they can reach.
+ * Teacher, parent and student reads are limited by each resource's `.for()`
+ * rules, and any other role — including one created later in the roles
+ * screen — sees no owned rows until it is listed here or given a rule.
+ */
+export const SCHOOL_WIDE_ROLES: readonly string[] = [
+  ROLES.ADMIN, ROLES.PRINCIPAL, ROLES.ACCOUNTING, ROLES.COUNSELOR,
+  ROLES.NURSE, ROLES.SECRETARY, ROLES.LIBRARIAN, ROLES.DRIVER, ROLES.ASSISTANT,
+];
+
+/** najm-auth's `own`, with School's school-wide roles. */
+export function own(table: unknown): OwnershipToken {
+  return najmOwn(table, { adminRoles: [...SCHOOL_WIDE_ROLES] });
+}

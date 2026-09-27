@@ -1,7 +1,8 @@
 "use client"
 
-import { NButton, NForm, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { NButton, NErrorState, NForbiddenState, NForm, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 
+import { useTranslation } from "najm-i18n/react";
 import { StudentHeader } from "./header";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useDialog } from "najm-kit";
@@ -17,8 +18,10 @@ import { useFeeTypes } from "@/features/Financial/FeeTypes/hooks/useFeeTypes";
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from "@/features/Financial/Payment/store/paymentStore";
 import { BulkFeeFormContent } from "@/features/Financial/Fees/components/BulkFeeForm";
 import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
-import { injectStudentIdToFees } from "@/features/Financial/Fees/utils/feeUtils";
+import { injectStudentIdToFees, withFeeYear } from "@/features/Financial/Fees/utils/feeUtils";
 import { useActiveAcademicYear } from "@/features/Settings/hooks/useSettings";
+import { useSetViewingYear, useViewingAcademicYear } from "@/features/AcademicYears/hooks/useViewingAcademicYear";
+import { hasFailedToLoad, isAuthorizationError } from "@/services/apiError";
 
 const TAB_STYLES = "border-0 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:!border-b-2 data-[state=active]:!border-primary rounded-none px-6 py-3 data-[state=active]:!text-primary text-muted-foreground hover:text-primary transition-colors";
 
@@ -112,15 +115,41 @@ const StudentFeesViewSkeleton = ({ className, hideHeader = false }: { className:
 );
 
 export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = null }) => {
-  const { studentFees, isStudentFeesLoading, createBulkFees, isBulkCreating } = useFees({ studentId });
-  const { academicYear: activeYear, isAcademicYearLoading } = useActiveAcademicYear();
+  const { t } = useTranslation();
+  const { viewingYear } = useViewingAcademicYear();
+  const setViewingYear = useSetViewingYear();
+  // The viewed year's fees, with the totals and payment metrics the server
+  // computes for that fee year, and every year's fees for other years'
+  // unpaid balances.
+  const {
+    studentFees,
+    studentFeesError,
+    isStudentFeesLoading,
+    studentAllYearFees,
+    createBulkFees,
+    isBulkCreating,
+  } = useFees({ studentId, studentAllYears: true, enabled: false });
+  const { isAcademicYearLoading } = useActiveAcademicYear();
   const { createPayment } = usePayments();
   const { feeTypes } = useFeeTypes();
   const [selectedFeeId, setSelectedFeeId] = useState(initialFeeId);
   const [activeTab, setActiveTab] = useState("overview");
-  const visibleFees = useMemo(() => (studentFees?.fees || []).filter(
-    (fee: any) => fee.academicYear === activeYear || getFeeBalance(fee) > 0,
-  ), [activeYear, studentFees?.fees]);
+  // The server has already limited the fees to the viewed year.
+  const visibleFees = useMemo(() => studentFees?.fees || [], [studentFees?.fees]);
+  // Other years' unpaid fees stay reachable without entering this year's
+  // fees or totals.
+  const otherYearDebts = useMemo(() => {
+    if (!viewingYear) return [];
+    const unpaidByYear = new Map<string, number>();
+    for (const fee of studentAllYearFees?.fees || []) {
+      if (fee.academicYear && fee.academicYear !== viewingYear && getFeeBalance(fee) > 0) {
+        unpaidByYear.set(fee.academicYear, (unpaidByYear.get(fee.academicYear) ?? 0) + 1);
+      }
+    }
+    return [...unpaidByYear]
+      .sort(([left], [right]) => right.localeCompare(left))
+      .map(([year, count]) => ({ year, count }));
+  }, [viewingYear, studentAllYearFees?.fees]);
   const visibleStudentFees = useMemo(() => studentFees ? { ...studentFees, fees: visibleFees } : null, [studentFees, visibleFees]);
   const overdueCount = visibleFees.reduce((sum: number, fee: any) => sum + Number(fee.overdueInstallments || 0), 0);
   const visibleAlerts = {
@@ -142,15 +171,17 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   const hasPayableBalance = Boolean(
     visibleFees.some((fee: any) => getFeeBalance(fee) > 0)
   );
+  // New fees are charged to the viewed year, so a type is addable once per that year.
+  const feeYear = viewingYear;
   const addableFeeTypes = useMemo(() => {
     const assignedFeeTypeIds = new Set(
-      (studentFees?.fees || []).filter((fee: any) => fee.academicYear === activeYear)
+      (studentFees?.fees || []).filter((fee: any) => fee.academicYear === feeYear)
         .map((fee: any) => fee?.feeTypeId)
         .filter(Boolean)
     );
 
     return (feeTypes || []).filter((feeType: any) => !assignedFeeTypeIds.has(feeType.id));
-  }, [activeYear, feeTypes, studentFees?.fees]);
+  }, [feeYear, feeTypes, studentFees?.fees]);
 
   useEffect(() => {
     if (initialFeeId) {
@@ -173,7 +204,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         text: 'Add Fees',
         loading: isBulkCreating,
         onClick: async (bulkData: any) => {
-          await createBulkFees(bulkData);
+          await createBulkFees(withFeeYear(bulkData, viewingYear));
         }
       }
     });
@@ -281,6 +312,13 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     return <StudentFeesViewSkeleton className={loadingClassName} hideHeader={hideHeader} />;
   }
 
+  // A refused or failed read is not a student without fees.
+  if (hasFailedToLoad(studentFeesError, studentFees?.fees)) {
+    return isAuthorizationError(studentFeesError)
+      ? <NForbiddenState surface="panel" />
+      : <NErrorState surface="panel" />;
+  }
+
   if (!studentFees) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -315,7 +353,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       value: "history",
       label: "Payment History (all years)",
       icon: History,
-      content: <PaymentHistory studentId={studentId} studentFees={studentFees} />,
+      content: <PaymentHistory studentId={studentId} studentFees={studentAllYearFees} />,
     },
     {
       value: "documents",
@@ -333,6 +371,25 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
           onPayClick={() => handlePayClick()}
           payDisabled={!hasPayableBalance}
         />
+      )}
+
+      {otherYearDebts.length > 0 && (
+        <div
+          role="status"
+          className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-md border border-border bg-muted px-3 py-2 text-sm text-foreground"
+        >
+          <span className="font-medium">{t('fees.historyView.otherYearDebts')}</span>
+          {otherYearDebts.map(({ year, count }) => (
+            <button
+              key={year}
+              type="button"
+              onClick={() => setViewingYear(year)}
+              className="font-medium text-primary underline-offset-2 hover:underline"
+            >
+              {t('fees.historyView.otherYearDebt', { year, count })}
+            </button>
+          ))}
+        </div>
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">

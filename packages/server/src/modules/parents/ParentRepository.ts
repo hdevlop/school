@@ -1,6 +1,6 @@
 import { DB } from '../../database/db';
-import { parents, users, students, studentParents } from '../../database/schema';
-import { count, eq, desc, and, inArray, ilike, or, sql } from 'drizzle-orm';
+import { parents, users, students, studentParents, classes, sections, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
+import { count, eq, desc, and, inArray, ilike, or, sql, type SQL } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
 import { Parent } from './ParentGuards';
@@ -53,7 +53,7 @@ export const studentSelect = {
 export class ParentRepository {
 
   db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -85,6 +85,8 @@ export class ParentRepository {
     return this.db
       .select({
         ...studentSelect,
+        class: { id: classes.id, name: classes.name },
+        section: { id: sections.id, name: sections.name },
         isEmergencyContact: parents.isEmergencyContact,
         financialResponsibility: parents.financialResponsibility,
         relationshipType: parents.relationshipType,
@@ -92,7 +94,9 @@ export class ParentRepository {
       .from(studentParents)
       .innerJoin(students, eq(studentParents.studentId, students.id))
       .innerJoin(parents, eq(studentParents.parentId, parents.id))
-      .leftJoin(users, eq(students.userId, users.id));
+      .leftJoin(users, eq(students.userId, users.id))
+      .leftJoin(classes, eq(students.classId, classes.id))
+      .leftJoin(sections, eq(students.sectionId, sections.id));
   }
 
   // ========================================
@@ -107,28 +111,30 @@ export class ParentRepository {
   }
 
   async getAll() {
-    return await this.scope(this.buildParentQuery())
+    return await this.buildParentQuery()
+      .where(this.ownershipCondition())
       .orderBy(desc(parents.createdAt));
   }
 
   async search(query: string, limit = 20) {
     const pattern = `%${query}%`;
-    return await this.scope(this.buildParentQuery())
-      .where(
+    return await this.buildParentQuery()
+      .where(and(
+        this.ownershipCondition(),
         or(
           ilike(parents.name, pattern),
           ilike(parents.cin, pattern),
           ilike(parents.phone, pattern),
           ilike(users.email, pattern)
-        )
-      )
+        ),
+      ))
       .orderBy(parents.name)
       .limit(limit);
   }
 
   async getById(id) {
-    const [existingParent] = await this.scope(this.buildParentQuery())
-      .where(eq(parents.id, id))
+    const [existingParent] = await this.buildParentQuery()
+      .where(and(this.ownershipCondition(), eq(parents.id, id)))
       .limit(1);
 
     return existingParent;
@@ -155,9 +161,25 @@ export class ParentRepository {
     return existingParent;
   }
 
+  // Lookups a user makes by CIN or phone only find parents they may read.
+  // getByCin/getByPhone above stay unscoped for uniqueness checks.
+  async getReadableByCin(cin: string) {
+    const [existingParent] = await this.buildParentQuery()
+      .where(and(this.ownershipCondition(), eq(parents.cin, cin)))
+      .limit(1);
+    return existingParent;
+  }
+
+  async getReadableByPhone(phone: string) {
+    const [existingParent] = await this.buildParentQuery()
+      .where(and(this.ownershipCondition(), eq(parents.phone, phone)))
+      .limit(1);
+    return existingParent;
+  }
+
   async getByUserId(userId: string) {
-    const [existingParent] = await this.scope(this.buildParentQuery())
-      .where(eq(parents.userId, userId))
+    const [existingParent] = await this.buildParentQuery()
+      .where(and(this.ownershipCondition(), eq(parents.userId, userId)))
       .limit(1);
     return existingParent;
   }
@@ -174,10 +196,45 @@ export class ParentRepository {
       .orderBy(parents.name);
   }
 
-  async getChildren(parentId) {
+  // The children linked now, with their current class: for current-link
+  // features (alerts, events). Year views use getChildren.
+  async getLinkedChildren(parentId: string) {
     return await this.buildChildrenQuery()
       .where(eq(studentParents.parentId, parentId))
       .orderBy(students.name);
+  }
+
+  async getChildren(parentId: string, academicYearId: string) {
+    return await this.db
+      .selectDistinctOn([students.name, students.id], {
+        ...studentSelect,
+        classId: studentEnrollmentPlacements.classId,
+        sectionId: studentEnrollmentPlacements.sectionId,
+        class: { id: classes.id, name: classes.name },
+        section: { id: sections.id, name: sections.name },
+        enrollment: {
+          id: studentEnrollments.id,
+          status: studentEnrollments.status,
+          enrolledOn: studentEnrollments.enrolledOn,
+          leftOn: studentEnrollments.leftOn,
+        },
+        isEmergencyContact: parents.isEmergencyContact,
+        financialResponsibility: parents.financialResponsibility,
+        relationshipType: parents.relationshipType,
+      })
+      .from(studentParents)
+      .innerJoin(students, eq(studentParents.studentId, students.id))
+      .innerJoin(parents, eq(studentParents.parentId, parents.id))
+      .leftJoin(users, eq(students.userId, users.id))
+      .leftJoin(studentEnrollments, and(
+        eq(studentEnrollments.studentId, students.id),
+        eq(studentEnrollments.academicYearId, academicYearId),
+      ))
+      .leftJoin(studentEnrollmentPlacements, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .leftJoin(classes, eq(studentEnrollmentPlacements.classId, classes.id))
+      .leftJoin(sections, eq(studentEnrollmentPlacements.sectionId, sections.id))
+      .where(eq(studentParents.parentId, parentId))
+      .orderBy(students.name, students.id, desc(studentEnrollmentPlacements.validFrom));
   }
 
   async checkStudentExists(studentId) {

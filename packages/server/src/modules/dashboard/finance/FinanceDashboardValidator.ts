@@ -10,6 +10,7 @@ export type AcademicYearQueryDto = z.infer<typeof academicYearQueryDto>;
 
 export const overdueQueryDto = z.object({
   limit: z.coerce.number().int().positive().max(100).optional().default(20),
+  academicYear: academicYearQueryDto.shape.academicYear,
 });
 export type OverdueQueryDto = z.infer<typeof overdueQueryDto>;
 

@@ -2,6 +2,7 @@ import { Service, Events, EventService } from '../../najm';
 import { ParentRepository } from './ParentRepository';
 import { ParentValidator } from './ParentValidator';
 import { AuthService, UserService } from '../../auth';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { StorageService } from 'najm-storage';
 import { nanoid } from 'nanoid';
 import { calculateAge, pickProps, isEmpty } from '../../shared';
@@ -21,7 +22,7 @@ export class ParentService {
     private parentValidator: ParentValidator,
     private userService: UserService,
     private authService: AuthService,
-    private storage: StorageService,
+    private storage: StorageService
   ) { }
 
   // ========== RETRIEVAL METHODS ==========
@@ -47,7 +48,7 @@ export class ParentService {
   }
 
   async checkCinExists(cin: string) {
-    const parent = await this.parentRepository.getByCin(cin);
+    const parent = await this.parentRepository.getReadableByCin(cin);
     return !!parent;
   }
 
@@ -55,9 +56,19 @@ export class ParentService {
     return await this.parentValidator.ensurePhoneExists(phone);
   }
 
-  async getChildren(id: string) {
+  /**
+   * Each linked child with that year's class and section from its latest
+   * placement, or none when the child was not enrolled that year.
+   */
+  async getChildren(id: string, year: ResolvedAcademicYear) {
     await this.parentValidator.ensureExists(id);
-    return await this.parentRepository.getChildren(id);
+    return await this.parentRepository.getChildren(id, year.id);
+  }
+
+  /** The children linked now, with their current class; no year. */
+  async getLinkedChildren(id: string) {
+    await this.parentValidator.ensureExists(id);
+    return await this.parentRepository.getLinkedChildren(id);
   }
 
   // ========== CREATE-METHOD ==========

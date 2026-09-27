@@ -1,11 +1,32 @@
 import { describe, expect, it } from 'bun:test';
 import settingsData from '../school/data/settings.json';
-import { DEFAULT_DEMO_COUNTS, studentRoutesPack, studentsPack } from './generator';
+import { DEFAULT_DEMO_COUNTS, assessmentsPack, examsPack, gradesPack, studentRoutesPack, studentsPack, teachersPack } from './generator';
+import { seedAcademicYear } from '../shared/school-seed-data';
 
 it('generates 100 students by default', async () => {
   expect(DEFAULT_DEMO_COUNTS.students).toBe(100);
   const { students } = await studentsPack();
   expect(students).toHaveLength(100);
+});
+
+it('keeps demo academic sources in the teaching year and grades students after entry', async () => {
+  const { teachers } = await teachersPack();
+  const { students } = await studentsPack();
+  const { assessments } = assessmentsPack(teachers);
+  const { exams } = examsPack(teachers);
+  const startsOn = `${seedAcademicYear.slice(0, 4)}-09-01`;
+  const endsOn = `${seedAcademicYear.slice(5)}-06-30`;
+  for (const source of [...assessments, ...exams]) {
+    expect(source.date >= startsOn && source.date <= endsOn).toBe(true);
+  }
+  const { grades } = gradesPack(students, assessments, exams);
+  const sources = new Map([...assessments, ...exams].map((source) => [source.id, source]));
+  const studentsById = new Map(students.map((student: any) => [student.id, student]));
+  for (const grade of grades) {
+    const student = studentsById.get(grade.studentId);
+    const source = sources.get(grade.assessmentId ?? grade.examId);
+    expect(student?.yearEnrolledOn <= source?.date).toBe(true);
+  }
 });
 
 describe('student route demo data', () => {

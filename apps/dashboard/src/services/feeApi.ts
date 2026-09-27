@@ -1,8 +1,15 @@
 import { api } from './http';
 
-// Default: Returns student-centric grouped view (one row per student)
+// One row per student for fees charged to the request's school year.
 export const getFeesApi = async () => {
   const res = await api.get('/fees');
+  return res.data;
+};
+
+// Students owing fees of any school year, one row per student with every
+// year summed: an explicit all-year read, whatever year the tab views.
+export const getOutstandingFeesApi = async () => {
+  const res = await api.get('/fees/outstanding');
   return res.data;
 };
 
@@ -17,6 +24,14 @@ export const getFeeByIdApi = async (id) => {
   return res.data;
 };
 
+// Every year's fees of one student: an explicit all-year read, used to show
+// other years' unpaid fees whatever year the tab views.
+export const getFeesByStudentAllYearsApi = async (studentId: string) => {
+  const res = await api.get(`/fees/student/${studentId}/all-years`);
+  return res.data;
+};
+
+// The student's fees, totals and payment metrics for the request's fee year.
 export const getFeesByStudentApi = async (studentId) => {
   const res = await api.get(`/fees/student/${studentId}`);
   return res.data;

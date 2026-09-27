@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react';
+import Link from 'next/link';
 import { Card, NPageHeader, NPageHeaderActions } from 'najm-kit';
 import { NSkeleton as Skeleton } from 'najm-kit';
 import { Loader2, Save, Settings as SettingsIcon } from 'lucide-react';
@@ -153,6 +154,9 @@ const SettingsForm: React.FC = () => {
         title={t('navigation.settings')}
       >
         <NPageHeaderActions>
+          <Link href="/academic-year-migration" className="rounded-md border px-3 py-2 text-sm font-medium hover:bg-muted">
+            {t('academicYearMigration.title')}
+          </Link>
           <NButton
             type="submit"
             form="settings-form"

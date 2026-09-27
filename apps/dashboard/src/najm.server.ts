@@ -32,9 +32,13 @@ const fallbackSchoolSettings: SchoolUiSettings = {
   currency: null,
 };
 
-export interface SchoolPublicUiSettings {
+// A type alias, not an interface: the client snapshot requires settings
+// assignable to Readonly<Record<string, unknown>>, which interfaces are not.
+export type SchoolPublicUiSettings = {
   school: SchoolUiSettings;
-}
+  /** The active school year's label; see `RenderedActiveAcademicYearProvider`. */
+  activeAcademicYear: string | null;
+};
 
 export const najmServer = createNajmNextServerApp({
   app: schoolApp,
@@ -53,13 +57,22 @@ export const najmServer = createNajmNextServerApp({
     locale: schoolI18n.locale(preferences.language),
   }),
   readSettings: async (): Promise<SchoolPublicUiSettings> => {
-    const { loadSchoolUiSettings } = await import('@sms/server');
+    const { loadActiveAcademicYearLabel, loadSchoolUiSettings } = await import('@sms/server');
+    // The year label is a convenience for the first render: when it cannot be
+    // read the dashboard waits for the public settings as before, so its
+    // failure must not replace the UI settings with the fallback.
+    const [school, activeAcademicYear] = await Promise.all([
+      loadSchoolUiSettings(),
+      loadActiveAcademicYearLabel().catch(() => null),
+    ]);
     return {
-      school: (await loadSchoolUiSettings()) ?? fallbackSchoolSettings,
+      school: school ?? fallbackSchoolSettings,
+      activeAcademicYear,
     };
   },
   fallbackSettings: {
     school: fallbackSchoolSettings,
+    activeAcademicYear: null,
   },
   onDiagnostic: (diagnostic) => {
     console.warn('[school] public UI settings fallback', diagnostic);

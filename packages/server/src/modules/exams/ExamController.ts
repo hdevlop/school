@@ -3,10 +3,13 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { ExamService } from './ExamService';
 import { Exam, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ExamGuards';
 import { isAdmin } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   createExamDto,
   deleteBulkExamDto,
   examIdParam,
+  examListQuery,
   seedExamsBulkDto,
   sectionIdParam,
   subjectIdParam,
@@ -26,10 +29,11 @@ export class ExamController {
 
   @Get()
   @CanList()
+  @Validate({ query: examListQuery })
   @McpTool('List all exams')
   @ResMsg('exams.success.retrieved')
-  async getAll() {
-    return this.examService.getAll();
+  async getAll(@Year() year: ResolvedAcademicYear) {
+    return this.examService.getAll(year);
   }
 
   @Get('/today')
@@ -50,29 +54,29 @@ export class ExamController {
 
   @Get('/section/:sectionId')
   @CanList()
-  @Validate({ params: sectionIdParam })
+  @Validate({ params: sectionIdParam, query: examListQuery })
   @McpTool('Get exams by section')
   @ResMsg('exams.success.retrieved')
-  async getBySection(@Params('sectionId') sectionId: string) {
-    return this.examService.getBySection(sectionId);
+  async getBySection(@Params('sectionId') sectionId: string, @Year() year: ResolvedAcademicYear) {
+    return this.examService.getAll(year, { sectionId });
   }
 
   @Get('/subject/:subjectId')
   @CanList()
-  @Validate({ params: subjectIdParam })
+  @Validate({ params: subjectIdParam, query: examListQuery })
   @McpTool('Get exams by subject')
   @ResMsg('exams.success.retrieved')
-  async getBySubject(@Params('subjectId') subjectId: string) {
-    return this.examService.getBySubject(subjectId);
+  async getBySubject(@Params('subjectId') subjectId: string, @Year() year: ResolvedAcademicYear) {
+    return this.examService.getAll(year, { subjectId });
   }
 
   @Get('/teacher/:teacherId')
   @CanList()
-  @Validate({ params: teacherIdParam })
+  @Validate({ params: teacherIdParam, query: examListQuery })
   @McpTool('Get exams by teacher')
   @ResMsg('exams.success.retrieved')
-  async getByTeacher(@Params('teacherId') teacherId: string) {
-    return this.examService.getByTeacher(teacherId);
+  async getByTeacher(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
+    return this.examService.getAll(year, { teacherId });
   }
 
   @Get('/:id')

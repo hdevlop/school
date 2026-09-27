@@ -1,10 +1,16 @@
 import { DB } from '../../database/db';
-import { students, classes, sections, users, parents, studentParents } from '../../database/schema';
+import { students, classes, sections, users, parents, studentParents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
 import { Repository, t } from '../../najm';
 import { Owned } from '../../auth';
-import { count, eq, desc,inArray } from 'drizzle-orm';
+import { count, eq, desc, inArray, and, or, gt, lte, isNull, type SQL } from 'drizzle-orm';
 import { Student } from './StudentGuards';
 import { parentSelect } from '../parents/ParentRepository';
+
+export type StudentListFilters = {
+  academicYearId: string;
+  studentId?: string;
+  onDate?: string;
+};
 
 export const studentSelect = {
   id: students.id,
@@ -36,7 +42,7 @@ export const studentSelect = {
 export class StudentRepository {
 
   declare db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -65,13 +71,64 @@ export class StudentRepository {
   // ALL_METHODS
   // ========================================
 
-  async getAll() {
-    return this.scope(this.buildStudentQuery()).orderBy(desc(students.createdAt));
+  /**
+   * One row per enrollment in the year, class and section from its latest
+   * placement in that year, never from the current projection; without a
+   * placement they stay null. With `onDate`, only the enrollments and
+   * placements covering that day (half-open, so a same-day transfer gives the
+   * new section): the roster a register marks. Year, filters and ownership
+   * are one WHERE.
+   */
+  async getAll({ academicYearId, studentId, onDate }: StudentListFilters) {
+    return this.db
+      .selectDistinctOn([students.createdAt, studentEnrollments.id], {
+        ...studentSelect,
+        classId: studentEnrollmentPlacements.classId,
+        sectionId: studentEnrollmentPlacements.sectionId,
+        class: {
+          id: classes.id,
+          name: classes.name,
+        },
+        section: {
+          id: sections.id,
+          name: sections.name,
+        },
+        enrollment: {
+          id: studentEnrollments.id,
+          status: studentEnrollments.status,
+          enrolledOn: studentEnrollments.enrolledOn,
+          leftOn: studentEnrollments.leftOn,
+        },
+        placement: {
+          id: studentEnrollmentPlacements.id,
+          validFrom: studentEnrollmentPlacements.validFrom,
+          validTo: studentEnrollmentPlacements.validTo,
+        },
+      })
+      .from(studentEnrollments)
+      .innerJoin(students, eq(studentEnrollments.studentId, students.id))
+      .leftJoin(users, eq(students.userId, users.id))
+      .leftJoin(studentEnrollmentPlacements, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .leftJoin(classes, eq(studentEnrollmentPlacements.classId, classes.id))
+      .leftJoin(sections, eq(studentEnrollmentPlacements.sectionId, sections.id))
+      .where(and(
+        eq(studentEnrollments.academicYearId, academicYearId),
+        studentId ? eq(students.id, studentId) : undefined,
+        ...(onDate ? [
+          lte(studentEnrollments.enrolledOn, onDate),
+          or(isNull(studentEnrollments.leftOn), gt(studentEnrollments.leftOn, onDate)),
+          lte(studentEnrollmentPlacements.validFrom, onDate),
+          or(isNull(studentEnrollmentPlacements.validTo), gt(studentEnrollmentPlacements.validTo, onDate)),
+        ] : []),
+        this.ownershipCondition(),
+      ))
+      .orderBy(desc(students.createdAt), studentEnrollments.id, desc(studentEnrollmentPlacements.validFrom));
   }
 
+  /** The student's identity and current class, through ownership; no year. */
   async getById(id) {
-    const [existingStudent] = await this.scope(this.buildStudentQuery())
-      .where(eq(students.id, id))
+    const [existingStudent] = await this.buildStudentQuery()
+      .where(and(this.ownershipCondition(), eq(students.id, id)))
       .limit(1);
 
     if (!existingStudent) return null;
@@ -100,8 +157,8 @@ export class StudentRepository {
   }
 
   async getByUserId(userId: string) {
-    const [existingStudent] = await this.scope(this.buildStudentQuery())
-      .where(eq(students.userId, userId))
+    const [existingStudent] = await this.buildStudentQuery()
+      .where(and(this.ownershipCondition(), eq(students.userId, userId)))
       .limit(1);
     return existingStudent;
   }
@@ -175,21 +232,26 @@ export class StudentRepository {
       .orderBy(parents.name);
   }
 
-  async getCount() {
-    const [studentsCount] = await this.db
+  // School-wide counts for one year over that year's enrollments (one per
+  // student), so a year's figures match its student list, including students
+  // who left during the year.
+  async getCount(academicYearId: string) {
+    const [row] = await this.db
       .select({ count: count() })
-      .from(students);
-    return studentsCount;
+      .from(studentEnrollments)
+      .where(eq(studentEnrollments.academicYearId, academicYearId));
+    return row;
   }
 
-  async getStudentsByGender() {
+  async getStudentsByGender(academicYearId: string) {
     const genderCounts = await this.db
       .select({
         gender: students.gender,
-        count: count(students.id),
+        count: count(studentEnrollments.id),
       })
-      .from(students)
-      .where(eq(students.status, 'active'))
+      .from(studentEnrollments)
+      .innerJoin(students, eq(studentEnrollments.studentId, students.id))
+      .where(eq(studentEnrollments.academicYearId, academicYearId))
       .groupBy(students.gender);
 
     return genderCounts
@@ -200,6 +262,5 @@ export class StudentRepository {
         value: Number(item.count) || 0,
       }));
   }
-
 
 }

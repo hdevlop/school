@@ -11,6 +11,7 @@ import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks'
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import DashboardEmptyState from '../DashboardEmptyState';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 interface OverdueFeesProps {
   className?: string;
@@ -20,6 +21,7 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const { data, isLoading, error, refetch } = useFinanceOverdue(6);
+  const { viewingYear } = useViewingAcademicYear();
 
   type OverdueRow = {
     studentId: string;
@@ -35,6 +37,7 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
   return (
     <NCard
       title={t('dashboard.finance.overdueFees')}
+      description={viewingYear ? t('reports.year', { year: viewingYear }) : undefined}
       icon={Clock}
       className={cn('flex w-full h-full', className)}
       loading={isLoading}

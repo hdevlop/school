@@ -1,8 +1,8 @@
 import { DB } from '../../database/db';
-import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff } from '../../database/schema';
+import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
-import { count, eq, desc, sql, and, inArray } from 'drizzle-orm';
+import { count, eq, desc, sql, and, inArray, gt, isNull, lte, or, type SQL } from 'drizzle-orm';
 import { Teacher } from './TeacherGuards';
 
 export const teacherSelect = {
@@ -89,7 +89,7 @@ export const subjectSelect = {
 export class TeacherRepository {
 
   declare db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -147,13 +147,14 @@ export class TeacherRepository {
   }
 
   async getAll() {
-    return await this.scope(this.buildTeacherQuery())
+    return await this.buildTeacherQuery()
+      .where(this.ownershipCondition())
       .orderBy(desc(teachers.createdAt));
   }
 
   async getById(id: string) {
-    const [teacher] = await this.scope(this.buildTeacherQuery())
-      .where(eq(teachers.id, id))
+    const [teacher] = await this.buildTeacherQuery()
+      .where(and(this.ownershipCondition(), eq(teachers.id, id)))
       .limit(1);
     if (!teacher) return null;
     return teacher
@@ -193,26 +194,51 @@ export class TeacherRepository {
   }
 
   async getByUserId(userId: string) {
-    const [teacher] = await this.scope(this.buildTeacherQuery())
-      .where(eq(staff.userId, userId))
+    const [teacher] = await this.buildTeacherQuery()
+      .where(and(this.ownershipCondition(), eq(staff.userId, userId)))
       .limit(1);
     return teacher;
   }
 
-  async getStudents(teacherId) {
-    return await this.db
-      .select(studentSelect)
-      .from(teacherAssignments)
+  // The students placed that year in the teacher's assigned sections of that
+  // year's classes; with `onDate`, those enrolled and placed there that day.
+  // The assignment's class and the student's placement must both belong to
+  // the year: a student's current section never authorizes history.
+  async getStudents(teacherId: string, year: { id: string; label: string }, onDate?: string) {
+    return this.db.selectDistinctOn([students.name, students.id], {
+      ...studentSelect,
+      classId: studentEnrollmentPlacements.classId,
+      sectionId: studentEnrollmentPlacements.sectionId,
+      status: studentEnrollments.status,
+      enrollmentId: studentEnrollments.id,
+      placementId: studentEnrollmentPlacements.id,
+      academicYear: classes.academicYear,
+      ...(onDate ? { onDate: sql<string>`${onDate}` } : {}),
+    }).from(teacherAssignments)
       .innerJoin(sections, eq(teacherAssignments.sectionId, sections.id))
-      .innerJoin(students, eq(sections.id, students.sectionId))
+      .innerJoin(classes, and(
+        eq(sections.classId, classes.id),
+        eq(teacherAssignments.classId, classes.id),
+      ))
+      .innerJoin(studentEnrollmentPlacements, and(
+        eq(studentEnrollmentPlacements.sectionId, sections.id),
+        eq(studentEnrollmentPlacements.classId, classes.id),
+      ))
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .innerJoin(students, eq(studentEnrollments.studentId, students.id))
       .leftJoin(users, eq(students.userId, users.id))
-      .where(
-        and(
-          eq(teacherAssignments.teacherId, teacherId),
-          eq(students.status, 'active')
-        )
-      )
-      .orderBy(students.name);
+      .where(and(
+        eq(teacherAssignments.teacherId, teacherId),
+        eq(classes.academicYear, year.label),
+        eq(studentEnrollments.academicYearId, year.id),
+        ...(onDate ? [
+          lte(studentEnrollments.enrolledOn, onDate),
+          or(isNull(studentEnrollments.leftOn), gt(studentEnrollments.leftOn, onDate)),
+          lte(studentEnrollmentPlacements.validFrom, onDate),
+          or(isNull(studentEnrollmentPlacements.validTo), gt(studentEnrollmentPlacements.validTo, onDate)),
+        ] : []),
+      ))
+      .orderBy(students.name, students.id, desc(studentEnrollmentPlacements.validFrom));
   }
 
   async getClasses(teacherId) {

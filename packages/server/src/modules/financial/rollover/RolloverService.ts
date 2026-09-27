@@ -282,8 +282,6 @@ export class RolloverService {
     skippedCount: number;
     errorCount: number;
     actorId?: string;
-    updateSettings: boolean;
-    toYear: string;
   }) {
     const completed = await this.rolloverRepository.completeRun(input.run.id, {
       status: input.status,
@@ -291,10 +289,6 @@ export class RolloverService {
       totalSkipped: input.skippedCount,
       totalErrors: input.errorCount,
     });
-    if (input.status === 'committed' && input.updateSettings) {
-      const settings = await this.settingsRepository.getAdminSettings();
-      if (settings) await this.settingsRepository.update(settings.id, { currentAcademicYear: input.toYear });
-    }
     await this.auditService.record({
       entityType: 'rollover',
       entityId: input.run.id,
@@ -306,13 +300,16 @@ export class RolloverService {
         successCount: input.successCount,
         skippedCount: input.skippedCount,
         errorCount: input.errorCount,
-        settingsUpdated: input.status === 'committed' && input.updateSettings,
+        settingsUpdated: false,
       },
     });
     return completed;
   }
 
   async commit(dto: CommitRolloverDto, actorId?: string) {
+    if (dto.confirmSettingsUpdate) {
+      Err(409, 'Activate the academic year separately after academic preparation');
+    }
     const payloadHash = hashPayload(dto);
     const existing = await this.rolloverRepository.getRunByIdempotencyKey(dto.idempotencyKey);
     if (!existing) Err(400, 'No preview exists for this idempotency key');
@@ -368,8 +365,6 @@ export class RolloverService {
       skippedCount,
       errorCount,
       actorId,
-      updateSettings: dto.confirmSettingsUpdate,
-      toYear: dto.toYear,
     });
     return { runId: existing!.id, status, successCount, skippedCount, errorCount };
   }

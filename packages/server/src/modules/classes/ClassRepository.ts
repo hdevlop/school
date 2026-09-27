@@ -1,6 +1,6 @@
 import { DB } from '../../database/db';
-import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects } from '../../database/schema';
-import { eq, count, and, sql } from 'drizzle-orm';
+import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
+import { eq, count, countDistinct, and, desc, inArray, sql, type SQL } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
 import { jsonAgg } from '../../shared';
@@ -103,7 +103,7 @@ export const parentSelect = {
 @Repository()
 export class ClassRepository {
   declare db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -125,8 +125,10 @@ export class ClassRepository {
 
   // ============ GET ALL METHODS ============ //
 
-  async getAll() {
-    return await this.scope(this.buildClassQuery())
+  // The classes of one registered year the user may read.
+  async getAll(academicYear: string) {
+    return await this.buildClassQuery()
+      .where(and(this.ownershipCondition(), eq(classes.academicYear, academicYear)))
       .orderBy(classes.createdAt, classes.name);
   }
 
@@ -138,8 +140,8 @@ export class ClassRepository {
   }
 
   async getById(id) {
-    const [result] = await this.scope(this.buildClassQuery())
-      .where(eq(classes.id, id))
+    const [result] = await this.buildClassQuery()
+      .where(and(this.ownershipCondition(), eq(classes.id, id)))
       .limit(1);
     return result;
   }
@@ -165,14 +167,37 @@ export class ClassRepository {
       .orderBy(sections.name);
   }
 
-  async getClassStudents(classId) {
+  // The students placed in the class during its year, from their enrollment
+  // placements, never the current projection: a past class lists who sat in
+  // it then. Class and section are those of the latest placement in the class.
+  async getClassStudents(classId: string, academicYearId: string) {
     return await this.db
-      .select(studentSelect)
-      .from(students)
+      .selectDistinctOn([students.name, students.id], {
+        ...studentSelect,
+        classId: studentEnrollmentPlacements.classId,
+        sectionId: studentEnrollmentPlacements.sectionId,
+      })
+      .from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .innerJoin(students, eq(studentEnrollments.studentId, students.id))
       .leftJoin(users, eq(students.userId, users.id))
-      .innerJoin(sections, eq(students.sectionId, sections.id))
-      .where(eq(sections.classId, classId))
-      .orderBy(students.name);
+      .where(this.placedInClass(classId, academicYearId))
+      .orderBy(students.name, students.id, desc(studentEnrollmentPlacements.validFrom));
+  }
+
+  private placedInClass(classId: string, academicYearId: string) {
+    return and(
+      eq(studentEnrollments.academicYearId, academicYearId),
+      eq(studentEnrollmentPlacements.classId, classId),
+    );
+  }
+
+  private studentsPlacedInClass(classId: string, academicYearId: string) {
+    return this.db
+      .select({ studentId: studentEnrollments.studentId })
+      .from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(this.placedInClass(classId, academicYearId));
   }
 
   async getTeachers(classId) {
@@ -204,29 +229,28 @@ export class ClassRepository {
       .orderBy(subjects.name);
   }
 
-  async getParents(classId) {
+  // The parents of the students placed in the class during its year, once each.
+  async getParents(classId: string, academicYearId: string) {
     return await this.db
-      .select(parentSelect)
+      .selectDistinctOn([parents.name, parents.id], parentSelect)
       .from(studentParents)
-      .innerJoin(students, eq(studentParents.studentId, students.id))
-      .innerJoin(sections, eq(students.sectionId, sections.id))
       .innerJoin(parents, eq(studentParents.parentId, parents.id))
       .leftJoin(users, eq(parents.userId, users.id))
-      .where(eq(sections.classId, classId))
-      .orderBy(parents.name);
+      .where(inArray(studentParents.studentId, this.studentsPlacedInClass(classId, academicYearId)))
+      .orderBy(parents.name, parents.id);
   }
 
-  async getAnalytics(classId) {
+  async getAnalytics(classId: string, academicYearId: string) {
     const [sectionsCount] = await this.db
       .select({ count: count() })
       .from(sections)
       .where(eq(sections.classId, classId));
 
     const [studentsCount] = await this.db
-      .select({ count: count() })
-      .from(students)
-      .innerJoin(sections, eq(students.sectionId, sections.id))
-      .where(eq(sections.classId, classId));
+      .select({ count: countDistinct(studentEnrollments.studentId) })
+      .from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(this.placedInClass(classId, academicYearId));
 
     return {
       totalSections: sectionsCount.count || 0,

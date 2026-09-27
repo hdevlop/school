@@ -4,4 +4,3 @@ export * from './ClassRoutineRepository';
 export * from './ClassRoutineValidator';
 export * from './ClassRoutineService';
 export * from './ClassRoutineController';
-

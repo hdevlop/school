@@ -3,6 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useSearchParams } from 'next/navigation';
 import { NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { CalendarCheck, SearchX } from 'lucide-react';
 import RosterHeader from './RosterHeader';
@@ -10,7 +11,7 @@ import RosterCard from './RosterCard';
 import { useStudentAttendance } from '../hooks/useAttendance';
 import { useAttendanceRoster } from '../hooks/useAttendanceRoster';
 import { useStudentRosterColumns } from '../hooks/useAttendanceTableColumns';
-import { useStudents } from '@/features/Students/hooks/useStudents';
+import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
@@ -18,6 +19,8 @@ import { useTranslation } from 'najm-i18n/react';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { localDateInput } from 'najm-kit/format';
+import { useViewingAcademicYear, useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -31,16 +34,25 @@ type SectionTeacherAssignment = {
 const getSectionClassId = (section: any) => section?.classId ?? section?.class?.id ?? '';
 const getStudentSectionId = (student: any) => student?.sectionId ?? student?.section?.id ?? '';
 
-function StudentAttendanceTable() {
+function StudentAttendanceTableForYear() {
   const { t } = useTranslation();
-  const { students, error: studentsError, isStudentsLoading } = useStudents();
   const { sections, isSectionsLoading } = useSections();
   const { classes, isClassesLoading } = useClasses();
   const { attendance, submitRoster, isSubmittingRoster } = useStudentAttendance();
+  // Marks are read for the viewed year only, so the register stays on its days.
+  const [selectedDate, setSelectedDate] = useViewingYearDate(localDateInput);
+  // With a viewing year the register lists the students enrolled and placed on
+  // that day, in that day's section.
+  const { students, error: studentsError, isStudentsLoading } = useStudentsOnDate(selectedDate);
   const { publicSettings } = usePublicSettings();
   const attendanceMode: 'daily' | 'per_class' = (publicSettings?.attendanceMode as 'daily' | 'per_class') || 'daily';
   const isDailyMode = attendanceMode === 'daily';
-  const [selectedClassId, setSelectedClassId] = useState('');
+  // A lesson link (the teacher dashboard's "Take attendance") opens the
+  // register on that class, section and assignment once they are listed.
+  const searchParams = useSearchParams();
+  const requestedSectionId = searchParams.get('sectionId') ?? '';
+  const requestedAssignmentId = searchParams.get('assignmentId') ?? '';
+  const [selectedClassId, setSelectedClassId] = useState(() => searchParams.get('classId') ?? '');
   const [selectedSectionId, setSelectedSectionId] = useState('');
   const [selectedAssignmentId, setSelectedAssignmentId] = useState('');
   const isAllClasses = selectedClassId === 'all';
@@ -67,10 +79,12 @@ function StudentAttendanceTable() {
       return;
     }
 
-    setSelectedAssignmentId((current) =>
-      sectionAssignments.some((assignment) => assignment.teacherAssignmentId === current) ? current : ''
-    );
-  }, [selectedSectionId, sectionAssignments]);
+    setSelectedAssignmentId((current) => {
+      const listed = (id: string) => sectionAssignments.some((assignment) => assignment.teacherAssignmentId === id);
+      if (listed(current)) return current;
+      return listed(requestedAssignmentId) ? requestedAssignmentId : '';
+    });
+  }, [selectedSectionId, sectionAssignments, requestedAssignmentId]);
 
   const selectedAssignment = useMemo(
     () => sectionAssignments.find((assignment) => assignment.teacherAssignmentId === selectedAssignmentId) ?? null,
@@ -86,7 +100,10 @@ function StudentAttendanceTable() {
   );
 
   useEffect(() => {
-    if (selectedClassId || isClassesLoading || !classes?.length) {
+    if (isClassesLoading || !classes?.length) {
+      return;
+    }
+    if (selectedClassId === 'all' || classes.some((cls) => cls.id === selectedClassId)) {
       return;
     }
 
@@ -126,13 +143,17 @@ function StudentAttendanceTable() {
     }
 
     setSelectedSectionId((current) => {
-      if (sectionOptions.some((section) => section.value === current)) {
+      const listed = (id: string) => sectionOptions.some((section) => section.value === id);
+      if (listed(current)) {
         return current;
+      }
+      if (listed(requestedSectionId)) {
+        return requestedSectionId;
       }
 
       return sectionOptions[0]?.value ?? '';
     });
-  }, [selectedClassId, sectionOptions, isAllClasses]);
+  }, [selectedClassId, sectionOptions, isAllClasses, requestedSectionId]);
 
   const assignmentOptions = useMemo(
     () =>
@@ -157,6 +178,8 @@ function StudentAttendanceTable() {
     roster: filteredStudents,
     existingAttendance: attendance || [],
     onSubmitBatch: submitRoster,
+    selectedDate,
+    onDateChange: setSelectedDate,
     attendanceMode,
     allSections: isAllClasses,
     studentContext: !isAllClasses && selectedSectionId
@@ -361,4 +384,7 @@ function StudentAttendanceTable() {
   );
 }
 
-export default StudentAttendanceTable;
+export default function StudentAttendanceTable() {
+  const { viewingYear, isResolving } = useViewingAcademicYear();
+  return <StudentAttendanceTableForYear key={isResolving ? 'resolving' : `year:${viewingYear ?? 'all'}`} />;
+}

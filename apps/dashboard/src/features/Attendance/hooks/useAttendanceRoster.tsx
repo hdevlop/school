@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { localDateInput } from 'najm-kit/format';
@@ -46,6 +46,12 @@ export const useAttendanceRoster = ({
     if (controlledDate === undefined) setInternalDate(date);
     onDateChange?.(date);
   }, [controlledDate, onDateChange]);
+
+  // Unsaved marks belong to the day they were made for. A controlled date can
+  // also move without goToDate, e.g. when the viewed school year changes.
+  useEffect(() => {
+    setDraft({});
+  }, [selectedDate]);
 
   const fkKey = kind === 'student' ? 'studentId' : 'staffId';
 

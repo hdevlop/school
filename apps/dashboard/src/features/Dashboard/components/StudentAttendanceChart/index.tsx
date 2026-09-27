@@ -17,10 +17,11 @@ const LATE_COLOR = '#F1B814';
 
 type Row = { month: string; absent: number; late: number };
 
-const CustomTooltip = ({ active = null, payload = null, todayAbsent = 0, todayLate = 0, t }: any) => {
+const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, todayLate = null, t }: any) => {
   if (active && payload && payload.length) {
     const month = payload[0].payload.month;
-    const isCurrent = month === CURRENT_MONTH_KEY;
+    // Another school year has no today: the server sends no figures for it.
+    const isCurrent = month === CURRENT_MONTH_KEY && todayAbsent != null;
     return (
       <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
         <p className="text-sm font-semibold text-gray-800">{month}</p>
@@ -83,7 +84,7 @@ const StudentAttendanceChart = ({ className }: { className?: string }) => {
       });
   }, [payload, t]);
 
-  const todayAbsent = payload?.todayAbsent ?? 0;
+  const todayAbsent = payload?.todayAbsent ?? null;
   const noData = !data.length || data.every((d) => d.absent === 0 && d.late === 0);
 
   return (
@@ -119,7 +120,7 @@ const StudentAttendanceChart = ({ className }: { className?: string }) => {
                   tick={{ fill: '#6b7280', fontSize: 12 }}
                   dx={-10}
                 />
-                <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} t={t} />} />
+                <Tooltip content={<CustomTooltip todayAbsent={todayAbsent} todayLate={payload?.todayLate ?? null} t={t} />} />
                 <Line
                   type="monotone"
                   dataKey="absent"

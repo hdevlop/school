@@ -31,5 +31,5 @@ export const updateRoutineDutyApi = async ({ scheduleId, id, ...data }) =>
 export const deleteRoutineDutyApi = async ({ scheduleId, id }) =>
   (await api.delete(`/class-routines/${scheduleId}/duties/${id}`)).data;
 
-export const getTeacherRoutineApi = async (teacherId, academicYear?: string) =>
-  (await api.get(`/class-routines/teachers/${teacherId}`, { params: { academicYear } })).data;
+export const getTeacherRoutineApi = async (teacherId) =>
+  (await api.get(`/class-routines/teachers/${teacherId}`)).data;

@@ -6,6 +6,8 @@ import { NSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Users, GraduationCap, BookOpen } from 'lucide-react';
 import { getParentChildrenApi } from '@/services/parentApi';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { Label } from 'najm-kit';
 import InfoWidget from '@/features/Dashboard/components/Widgets/Widget';
 import studentImage from '@/assets/images/studentImage.png';
@@ -20,12 +22,14 @@ const ChildrenTab: React.FC<ChildrenTabProps> = ({ parentId }) => {
   const { t } = useTranslation();
   const [children, setChildren] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  // Each child's class and section in the viewed year.
+  const { viewingYear } = useViewingAcademicYear();
 
   useEffect(() => {
     const fetchChildren = async () => {
       try {
         setLoading(true);
-        const data = await getParentChildrenApi(parentId);
+        const data = await withAcademicYear(viewingYear, () => getParentChildrenApi(parentId));
         setChildren(data?.data || []);
       } catch {
       } finally {
@@ -33,10 +37,10 @@ const ChildrenTab: React.FC<ChildrenTabProps> = ({ parentId }) => {
       }
     };
 
-    if (parentId) {
+    if (parentId && viewingYear) {
       fetchChildren();
     }
-  }, [parentId]);
+  }, [parentId, viewingYear]);
 
   const calculateStats = () => {
     if (!children || children.length === 0) {

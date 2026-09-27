@@ -11,17 +11,19 @@ import { classSchema } from '../config/classSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings'
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 
 const ClassForm = ({ classData = null}) => {
 
    const { t } = useTranslation();
    const { pop } = useDialog();
    const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
+   const { viewingYear, isResolving } = useViewingAcademicYear();
 
    const defaultValues = {
       ...(classData?.id && { id: classData.id }),
       name: classData?.name || 'CE1',
-      academicYear: classData?.academicYear || academicYear,
+      academicYear: classData?.academicYear || viewingYear || academicYear,
       level: classData?.level || 'Middle',
       description: classData?.description || 'asdasd',
    }
@@ -30,7 +32,7 @@ const ClassForm = ({ classData = null}) => {
       pop(formData);
    }
 
-   if (isAcademicYearLoading && !classData) return <NSkeleton className="h-64 w-full" />;
+   if ((isAcademicYearLoading || isResolving) && !classData) return <NSkeleton className="h-64 w-full" />;
 
    return (
       <div className='flex flex-col justify-center items-center w-full'>

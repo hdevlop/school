@@ -1,6 +1,5 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import {
   Award,
   BookOpen,
@@ -15,7 +14,8 @@ import {
 import { NAvatar, NStatCard } from 'najm-kit';
 import { useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
-import { getAttendanceByStudentApi } from '@/services/attendanceApi';
+import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { Student } from './types';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -56,13 +56,11 @@ export default function LeftSidebar({
 }: LeftSidebarProps) {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
-  const { data: attendanceResponse } = useQuery({
-    queryKey: ['attendance', 'student', student?.id, 'sidebar-stats'],
-    queryFn: () => getAttendanceByStudentApi(student?.id as string),
-    enabled: !!student?.id,
-  });
+  // The viewed year's attendance, grades and fees; every year's with history off.
+  const { viewingYear } = useViewingAcademicYear();
+  const { data: attendanceResponse } = useStudentAttendanceRecords(student?.id);
   const { data: reportResponse } = useStudentReport(student?.id || null);
-  const { studentFees } = useFees({ studentId: student?.id, enabled: false });
+  const { studentFees } = useFees({ studentId: student?.id, studentYear: viewingYear, enabled: false });
 
   const attendanceRowsRaw = attendanceResponse?.data ?? attendanceResponse ?? [];
   const attendanceRows = Array.isArray(attendanceRowsRaw) ? attendanceRowsRaw : [];
@@ -200,6 +198,12 @@ export default function LeftSidebar({
             {student?.class && (
               <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
                 {student.class.name}{student.section ? ` · ${student.section.name}` : ''}
+              </span>
+            )}
+            {/* A viewed-year read carries enrollment; null means none that year. */}
+            {viewingYear && student && student.enrollment === null && (
+              <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">
+                {t('academicYearViewing.notEnrolled', { year: viewingYear })}
               </span>
             )}
             <span

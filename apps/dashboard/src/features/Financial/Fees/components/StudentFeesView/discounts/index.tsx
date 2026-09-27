@@ -15,7 +15,7 @@ interface DiscountsTabProps {
 export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
   const { openDialog } = useDialog()
   const { feeTypes } = useFeeTypes()
-  const { updateFee, isUpdating } = useFees()
+  const { updateFee, isUpdating } = useFees({ enabled: false })
   const { majorMoney } = useSchoolFormat()
 
   const totalDiscount = fees.reduce((sum, fee) => {

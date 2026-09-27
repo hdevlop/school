@@ -6,6 +6,7 @@ import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, Cr
 import { useCallback, useMemo } from 'react';
 import { NCard, NStatCard, NTable, NEmptyState } from 'najm-kit';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
@@ -93,7 +94,9 @@ const getFeeStatus = (fee: any, remaining: number, overdueCount: number) => {
 export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
   const { majorMoney } = useSchoolFormat();
   const { t, language } = useTranslation();
-  const { studentFees, isStudentFeesLoading } = useFees({ studentId });
+  // The viewed year's fees, totals and installments; every year's with history off.
+  const { viewingYear } = useViewingAcademicYear();
+  const { studentFees, isStudentFeesLoading } = useFees({ studentId, studentYear: viewingYear, enabled: false });
 
   const feeData = useMemo(() => {
     const fees = Array.isArray(studentFees?.fees) ? studentFees.fees : [];

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { num, optionalId, requiredId } from '../../shared/fields';
+import { academicYearField, num, optionalId, requiredId } from '../../shared/fields';
 import { gradeStatusEnum } from '../../shared/enums';
 
 const gradeSchema = z.object({
@@ -19,11 +19,20 @@ const gradeSchema = z.object({
 const requireSingleGradeSource = (data: { assessmentId?: string | null; examId?: string | null }) =>
   Boolean(data.assessmentId) !== Boolean(data.examId);
 
-export const createGradeDto = gradeSchema.omit({ gradeId: true }).refine(requireSingleGradeSource, {
+export const createGradeDto = gradeSchema.omit({ gradeId: true }).extend({
+  // These are form selections. The saved relationship comes from the source.
+  teacherId: optionalId,
+  subjectId: optionalId,
+  sectionId: optionalId,
+}).refine(requireSingleGradeSource, {
   message: 'Select either an assessment or an exam',
   path: ['assessmentId'],
 });
-export const updateGradeDto = gradeSchema.omit({ gradeId: true }).partial();
+export const updateGradeDto = z.object({
+  marksObtained: gradeSchema.shape.marksObtained.optional(),
+  feedback: gradeSchema.shape.feedback.optional(),
+  status: gradeStatusEnum.optional(),
+}).strict();
 export const seedGradeDto = z.object({
   id: requiredId.optional(),
   studentId: requiredId,
@@ -47,8 +56,10 @@ export const studentIdParam = z.object({ studentId: z.string().min(1) });
 export const sectionIdParam = z.object({ sectionId: z.string().min(1) });
 export const subjectIdParam = z.object({ subjectId: z.string().min(1) });
 export const teacherIdParam = z.object({ teacherId: z.string().min(1) });
+export const gradeListQuery = z.object({ academicYear: academicYearField.optional() });
 
 export type CreateGradeDto = z.infer<typeof createGradeDto>;
 export type UpdateGradeDto = z.infer<typeof updateGradeDto>;
 export type SeedGradeDto = z.input<typeof seedGradeDto>;
 export type DeleteBulkGradeDto = z.infer<typeof deleteBulkGradeDto>;
+export type GradeListQuery = z.infer<typeof gradeListQuery>;

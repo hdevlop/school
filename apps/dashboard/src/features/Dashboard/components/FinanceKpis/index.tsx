@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import {
   useDashboardWidgets,
+  useDashboardYear,
   useFinanceKpis,
 } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
@@ -37,6 +38,7 @@ const pickCountByIcon = (widgets: unknown, icon: string): number => {
 const FinanceKpis: React.FC = () => {
   const { t } = useTranslation();
   const { majorMoney, percentFromHundred } = useSchoolFormat();
+  const { year, isOtherYear } = useDashboardYear();
   const { data: widgets, isLoading: widgetsLoading } = useDashboardWidgets();
   const { data: kpis, isLoading: kpisLoading } = useFinanceKpis();
 
@@ -45,40 +47,43 @@ const FinanceKpis: React.FC = () => {
   const totalStudents = pickCountByIcon(widgets, 'studentImage');
   const totalTeachers = pickCountByIcon(widgets, 'teacherImage');
 
-  const incomeMonth = Number(kpis?.incomeMonth ?? 0);
-  const expensesMonth = Number(kpis?.expensesMonth ?? 0);
-  const netBalance = Number(kpis?.netBalance ?? 0);
+  // A year other than the active one has no "this month": its cards show the
+  // whole year's cash instead, and name the year. Teachers are not recorded
+  // per year yet, so that card says it shows today's count.
+  const income = Number((isOtherYear ? kpis?.incomeYear : kpis?.incomeMonth) ?? 0);
+  const expenses = Number((isOtherYear ? kpis?.expensesYear : kpis?.expensesMonth) ?? 0);
+  const netBalance = Number((isOtherYear ? kpis?.netBalanceYear : kpis?.netBalance) ?? 0);
   const collectionRateYTD = Number(kpis?.collectionRateYTD ?? 0);
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
       <KpiCard
-        title={t('dashboard.finance.totalStudents')}
+        title={isOtherYear ? t('dashboard.finance.studentsYear', { year }) : t('dashboard.finance.totalStudents')}
         value={totalStudents}
         icon={Users}
       />
       <KpiCard
-        title={t('dashboard.finance.totalTeachers')}
+        title={isOtherYear ? t('dashboard.finance.teachersCurrent') : t('dashboard.finance.totalTeachers')}
         value={totalTeachers}
         icon={GraduationCap}
       />
       <KpiCard
-        title={t('dashboard.finance.incomeMonth')}
-        value={majorMoney(incomeMonth)}
+        title={isOtherYear ? t('dashboard.finance.incomeYear', { year }) : t('dashboard.finance.incomeMonth')}
+        value={majorMoney(income)}
         icon={TrendingUp}
       />
       <KpiCard
-        title={t('dashboard.finance.expensesMonth')}
-        value={majorMoney(expensesMonth)}
+        title={isOtherYear ? t('dashboard.finance.expensesYear', { year }) : t('dashboard.finance.expensesMonth')}
+        value={majorMoney(expenses)}
         icon={TrendingDown}
       />
       <KpiCard
-        title={t('dashboard.finance.netBalance')}
+        title={isOtherYear ? t('dashboard.finance.netBalanceYear', { year }) : t('dashboard.finance.netBalance')}
         value={majorMoney(netBalance)}
         icon={Wallet}
       />
       <KpiCard
-        title={t('dashboard.finance.collectionRateYTD')}
+        title={isOtherYear ? t('dashboard.finance.collectionRateYear', { year }) : t('dashboard.finance.collectionRateYTD')}
         value={percentFromHundred(collectionRateYTD)}
         icon={Target}
       />

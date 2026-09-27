@@ -2,6 +2,7 @@ import { boolean, doublePrecision, integer, jsonb, numeric, pgEnum, pgTable, tex
 
 import { idField, timestamps } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
+import { academicYears } from '../academicYears/AcademicYearSchema';
 
 export const calendarSystemEnum = pgEnum('calendarSystem', getEnumValues('calendarSystem'));
 export const languageEnum = pgEnum('language', getEnumValues('language'));
@@ -18,6 +19,7 @@ export const settings = pgTable('settings', {
   schoolWebsite: text('school_website'),
   schoolLogo: text('school_logo'),
   currentAcademicYear: text('current_academic_year').notNull(),
+  activeAcademicYearId: text('active_academic_year_id').references(() => academicYears.id, { onDelete: 'restrict' }),
   gradingScale: jsonb('grading_scale'),
   attendanceRequirement: numeric('attendance_requirement', { precision: 5, scale: 2 }).default('75.00'),
   // 'daily' = first period locks, later teachers may correct with audit trail.

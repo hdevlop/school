@@ -1,7 +1,7 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
-import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents } from '../../database/schema';
-import { eq, count, and, ne } from 'drizzle-orm';
+import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
+import { eq, count, countDistinct, and, desc, ne, type SQL, inArray } from 'drizzle-orm';
 import { Owned } from '../../auth';
 import { Section } from './SectionGuards';
 
@@ -80,7 +80,7 @@ export const parentSelect = {
 @Repository()
 export class SectionRepository {
   db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
   // ========================================
   // QUERY_BUILDERS (Reusable)
   // ========================================
@@ -97,14 +97,18 @@ export class SectionRepository {
 
   // ============ GET ALL METHODS ============ //
 
-  async getAll() {
-    return await this.scope(this.buildSectionQuery())
+  // The sections the user may read, limited to one registered year's label
+  // (through their class) when one is given.
+  // The sections of one registered year's classes the user may read.
+  async getAll(academicYear: string) {
+    return await this.buildSectionQuery()
+      .where(and(this.ownershipCondition(), eq(classes.academicYear, academicYear)))
       .orderBy(classes.createdAt, classes.name, sections.name);
   }
 
   async getById(id) {
-    const [result] = await this.scope(this.buildSectionQuery())
-      .where(eq(sections.id, id))
+    const [result] = await this.buildSectionQuery()
+      .where(and(this.ownershipCondition(), eq(sections.id, id)))
       .limit(1);
     return result;
   }
@@ -117,6 +121,14 @@ export class SectionRepository {
       .orderBy(sections.name);
   }
 
+  async getByAcademicYear(academicYear: string) {
+    return this.db.select({ ...sectionSelect, class: classSelect })
+      .from(sections)
+      .innerJoin(classes, eq(sections.classId, classes.id))
+      .where(eq(classes.academicYear, academicYear))
+      .orderBy(classes.name, sections.name);
+  }
+
   async getByTeacherId(teacherId) {
     return await this.buildSectionQuery()
       .innerJoin(teacherAssignments, eq(sections.id, teacherAssignments.sectionId))
@@ -124,9 +136,11 @@ export class SectionRepository {
       .orderBy(classes.academicYear, classes.name, sections.name);
   }
 
-  async getStudents(sectionId) {
+  // The students placed in the section during its class's year, from their
+  // enrollment placements rather than the current projection.
+  async getStudents(sectionId: string, academicYearId: string) {
     return await this.db
-      .select({
+      .selectDistinctOn([students.name, students.id], {
         id: students.id,
         studentCode: students.studentCode,
         name: students.name,
@@ -134,27 +148,35 @@ export class SectionRepository {
         status: students.status,
         enrollmentDate: students.enrollmentDate,
       })
-      .from(students)
-      .where(eq(students.sectionId, sectionId))
+      .from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .innerJoin(students, eq(studentEnrollments.studentId, students.id))
       .innerJoin(users, eq(students.userId, users.id))
-      .orderBy(students.name);
+      .where(this.placedInSection(sectionId, academicYearId))
+      .orderBy(students.name, students.id, desc(studentEnrollmentPlacements.validFrom));
   }
 
-  async getAnalytics(sectionId) {
-    // Get total students count
-    const [studentsCount] = await this.db
-      .select({ count: count() })
-      .from(students)
-      .where(eq(students.sectionId, sectionId));
+  private placedInSection(sectionId: string, academicYearId: string) {
+    return and(
+      eq(studentEnrollments.academicYearId, academicYearId),
+      eq(studentEnrollmentPlacements.sectionId, sectionId),
+    );
+  }
 
-    // Get active students count
+  async getAnalytics(sectionId: string, academicYearId: string) {
+    // Students placed in the section that year, and those whose enrollment
+    // is still active.
+    const [studentsCount] = await this.db
+      .select({ count: countDistinct(studentEnrollments.studentId) })
+      .from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(this.placedInSection(sectionId, academicYearId));
+
     const [activeStudentsCount] = await this.db
-      .select({ count: count() })
-      .from(students)
-      .where(and(
-        eq(students.sectionId, sectionId),
-        eq(students.status, 'active')
-      ));
+      .select({ count: countDistinct(studentEnrollments.studentId) })
+      .from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(and(this.placedInSection(sectionId, academicYearId), eq(studentEnrollments.status, 'active')));
 
     // Get section capacity
     const [sectionInfo] = await this.db
@@ -205,7 +227,13 @@ export class SectionRepository {
       .orderBy(staff.name, subjects.name);
   }
 
-  async getParents(sectionId) {
+  // One row per parent and child placed in the section during its year.
+  async getParents(sectionId: string, academicYearId: string) {
+    const placed = this.db
+      .select({ studentId: studentEnrollments.studentId })
+      .from(studentEnrollmentPlacements)
+      .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(this.placedInSection(sectionId, academicYearId));
     return await this.db
       .select({
         ...parentSelect,
@@ -214,8 +242,7 @@ export class SectionRepository {
       .from(parents)
       .leftJoin(users, eq(parents.userId, users.id))
       .innerJoin(studentParents, eq(parents.id, studentParents.parentId))
-      .innerJoin(students, eq(studentParents.studentId, students.id))
-      .where(eq(students.sectionId, sectionId))
+      .where(inArray(studentParents.studentId, placed))
       .orderBy(parents.name);
   }
 
@@ -281,4 +308,18 @@ export class SectionRepository {
 
     return result;
   }
+
+  // School-wide context read for validating a section's year during writes.
+
+  async listYearContexts(ids: string[]) {
+    if (!ids.length) return [];
+    return this.db.select({
+      id: sections.id,
+      classId: sections.classId,
+      academicYear: classes.academicYear,
+    }).from(sections)
+      .innerJoin(classes, eq(sections.classId, classes.id))
+      .where(inArray(sections.id, ids));
+  }
+
 }

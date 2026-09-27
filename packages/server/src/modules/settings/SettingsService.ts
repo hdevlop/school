@@ -1,14 +1,36 @@
-import { Service } from '../../najm';
+import { Err, Service, Transaction } from '../../najm';
 import { SettingsRepository } from './SettingsRepository';
 import { SettingsValidator } from './SettingsValidator';
 import type { CreateSettingsDto, UpdateSettingsDto } from './SettingsDto';
 import { getBusinessClockInfo } from '../../shared';
+import { defaultSchoolYearCalendar, isValidSchoolYearCalendar, parseSchoolYearLabel } from '@sms/contracts/academic-years';
+import { AcademicYearRepository } from '../academicYears/AcademicYearRepository';
+
+const MONTHS = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+
+function initialCalendar(label: string, startMonth?: string, endMonth?: string) {
+  const defaults = defaultSchoolYearCalendar(label);
+  const years = parseSchoolYearLabel(label)!;
+  const start = MONTHS.indexOf((startMonth || 'september').toLowerCase());
+  const end = MONTHS.indexOf((endMonth || 'june').toLowerCase());
+  if (start < 0 || end < 0) Err(400, 'Invalid academic calendar month');
+  const endYear = end < start ? years.endYear : years.startYear;
+  const lastDay = new Date(Date.UTC(endYear, end + 1, 0)).getUTCDate();
+  const calendar = {
+    ...defaults,
+    instructionStartsOn: `${years.startYear}-${String(start + 1).padStart(2, '0')}-01`,
+    instructionEndsOn: `${endYear}-${String(end + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`,
+  };
+  if (!isValidSchoolYearCalendar(label, calendar)) Err(400, 'Invalid academic calendar');
+  return calendar;
+}
 
 @Service()
 export class SettingsService {
   constructor(
     private settingsRepository: SettingsRepository,
     private settingsValidator: SettingsValidator,
+    private academicYears: AcademicYearRepository,
   ) { }
 
   async getAll() {
@@ -30,9 +52,21 @@ export class SettingsService {
     return settings ? { ...settings, ...getBusinessClockInfo() } : settings;
   }
 
+  @Transaction()
   async create(data: CreateSettingsDto) {
     if (data.id) {
       await this.settingsValidator.ensureIdUnique(data.id);
+    }
+
+    let activeYear = await this.academicYears.findByLabel(data.currentAcademicYear);
+    if (!activeYear) {
+      activeYear = await this.academicYears.create({
+        label: data.currentAcademicYear,
+        ...initialCalendar(data.currentAcademicYear, data.startMonth, data.endMonth),
+        status: 'open',
+        provenance: 'assumed',
+        provenanceNote: 'Imported from initial School settings; calendar requires review',
+      });
     }
 
     const settingsDetails = {
@@ -49,6 +83,7 @@ export class SettingsService {
       schoolWebsite: data.schoolWebsite,
       schoolLogo: data.schoolLogo,
       currentAcademicYear: data.currentAcademicYear,
+      activeAcademicYearId: activeYear.id,
 
       // Academic Settings
       gradingScale: data.gradingScale,
@@ -109,9 +144,23 @@ export class SettingsService {
     return await this.settingsRepository.create(settingsDetails);
   }
 
+  @Transaction()
   async update(data: UpdateSettingsDto) {
-    const { id } = await this.settingsRepository.getAdminSettings()
+    const current = await this.settingsRepository.getAdminSettings();
+    if (!current) Err(404, 'School settings are missing');
+    const { id } = current!;
     await this.settingsValidator.ensureExists(id);
+    // Registered years own their calendars and the active year moves only
+    // through activation, so an ordinary Settings edit can change neither.
+    if (
+      (data.startMonth !== undefined && data.startMonth !== current!.startMonth) ||
+      (data.endMonth !== undefined && data.endMonth !== current!.endMonth)
+    ) {
+      Err(409, 'Registered year calendars require a reviewed correction');
+    }
+    if (data.currentAcademicYear && data.currentAcademicYear !== current!.currentAcademicYear) {
+      Err(409, 'Activate the registered year through academic-year operations');
+    }
     return await this.settingsRepository.update(id, data);
   }
 

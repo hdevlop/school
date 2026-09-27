@@ -32,7 +32,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
     updateFee,
     isUpdating,
     isDeleting,
-  } = useFees();
+  } = useFees({ enabled: false });
 
   const handleEdit = useCallback((fee: any) => {
     openDialog({

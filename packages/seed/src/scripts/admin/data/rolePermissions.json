@@ -119,7 +119,10 @@
       "create:discipline",
       "read:discipline",
       "update:discipline",
-      "manage:attendance"
+      "manage:attendance",
+      "create:attendance",
+      "read:attendance",
+      "update:attendance"
     ]
   },
   {

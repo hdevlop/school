@@ -1,5 +1,6 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import * as paymentApi from '@/services/paymentApi';
 
 
@@ -16,7 +17,7 @@ export const usePayments = (options?) => {
     delete: paymentApi.deletePaymentApi,
   });
 
-  const { data: payments, isLoading: isPaymentsLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: payments, isLoading: isPaymentsLoading, isError, error, refetch } = useYearScopedList({ resource: 'payments', fetch: paymentApi.getAllPaymentsApi, enabled: enabled });
   const { data: payment, isLoading: isPaymentLoading } = crud.useGetById(paymentId, !!paymentId);
   const { data: studentPayments, isLoading: isStudentPaymentsLoading } = crud.useGetByParam('student', studentId, !!studentId);
   const { data: feePayments, isLoading: isFeePaymentsLoading } = crud.useGetByParam('fee', feeId, !!feeId);

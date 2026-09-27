@@ -1,4 +1,5 @@
-import type { AttendanceService } from '@sms/server/modules/seed';
+import type { AttendanceService, AcademicYearValidator } from '@sms/server/modules/seed';
+import { seedAcademicYear } from './school-seed-data';
 
 function weightedAttendanceStatus(): string {
   // Realistic distribution: ~92% present. Previously 75% present / 10% late /
@@ -42,35 +43,41 @@ function createProgressLogger(label: string, total: number, stepPercent = 10) {
   };
 }
 
+type SeedYear = Awaited<ReturnType<AcademicYearValidator['resolve']>>;
+
+// `year` is the explicit seed year; its enrolled students are marked from
+// their placement in that year.
 export async function seedAttendance(
+  year: SeedYear,
   attendanceService: AttendanceService,
   studentService: any,
   teacherService: any,
   staffService?: any,
 ) {
   const now = new Date();
-  const academicYearStart = new Date(now.getFullYear(), 8, 1);
-  if (academicYearStart > now) {
-    academicYearStart.setFullYear(academicYearStart.getFullYear() - 1);
-  }
-
-  const schoolDays = getSchoolDays(academicYearStart, now);
+  const yearStart = `${seedAcademicYear.slice(0, 4)}-09-01`;
+  const academicYearStart = new Date(`${yearStart}T12:00:00.000Z`);
+  const instructionEnd = new Date(`${seedAcademicYear.slice(5)}-06-30T12:00:00.000Z`);
+  const schoolDays = getSchoolDays(academicYearStart, now < instructionEnd ? now : instructionEnd);
   if (schoolDays.length === 0) return { studentCount: 0, teacherCount: 0 };
 
   const sampledDays = schoolDays.filter(() => Math.random() < 0.6);
 
-  const allStudents = await studentService.getAll();
+  const allStudents = await studentService.getAll(year);
   const studentAttendanceData: any[] = [];
   console.log(`  Attendance plan: ${sampledDays.length} sampled days, ${allStudents.length} students`);
   const logStudentBuildProgress = createProgressLogger('Student attendance generation', allStudents.length);
   logStudentBuildProgress(0, 'prepared 0 records');
 
   for (const [index, student] of allStudents.entries()) {
-    const studentDays = sampledDays.filter(() => Math.random() < 0.6);
+    const studentDays = sampledDays.filter((date) =>
+      date >= (student.enrollmentDate > yearStart ? student.enrollmentDate : yearStart) &&
+      Math.random() < 0.6);
     for (const date of studentDays) {
       studentAttendanceData.push({
         type: 'student',
         studentId: student.id,
+        sectionId: student.sectionId,
         date,
         status: weightedAttendanceStatus(),
         notes: Math.random() < 0.05 ? 'Seed generated attendance' : undefined,
@@ -98,7 +105,10 @@ export async function seedAttendance(
   logStaffBuildProgress(0, 'prepared 0 records');
 
   for (const [index, staffMember] of allStaff.entries()) {
-    const staffDays = sampledDays.filter(() => Math.random() < 0.85);
+    const staffDays = sampledDays.filter((date) =>
+      (!staffMember.hireDate || staffMember.hireDate <= date) &&
+      (!staffMember.endDate || date <= staffMember.endDate) &&
+      Math.random() < 0.85);
     for (const date of staffDays) {
       staffAttendanceData.push({
         type: 'staff',

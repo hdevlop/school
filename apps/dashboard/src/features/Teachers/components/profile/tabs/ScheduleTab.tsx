@@ -4,6 +4,7 @@ import { NLoadingState } from 'najm-kit';
 import { CalendarClock, Clock, Layers3 } from 'lucide-react';
 import RoutineGrid from '@/features/ClassRoutines/components/RoutineGrid';
 import { useTeacherRoutine } from '@/features/ClassRoutines/hooks/useClassRoutines';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
 
 interface ScheduleTabProps {
@@ -20,7 +21,8 @@ const StatCard = ({ label, value, icon: Icon }: { label: string; value: string; 
 
 export default function ScheduleTab({ teacher }: ScheduleTabProps) {
   const { t } = useTranslation();
-  const { data: schedules = [], isPending, isError } = useTeacherRoutine(teacher?.id);
+  const { viewingYear } = useViewingAcademicYear();
+  const { data: schedules = [], isPending, isError } = useTeacherRoutine(teacher?.id, viewingYear);
   const lessonCount = schedules.reduce((total, schedule) => total + schedule.entries.length, 0);
   const teachingDays = new Set(
     schedules.flatMap((schedule) => schedule.entries.map((entry) => entry.dayOfWeek)),

@@ -1,5 +1,4 @@
-import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from '../../auth';
-import { join, own, where } from 'najm-auth';
+import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, join, own, where } from '../../auth';
 import { staff, teachers } from '../../database/schema';
 
 export const Teacher = own(teachers)

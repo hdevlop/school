@@ -10,9 +10,10 @@ import {
   TeacherService,
   StudentService,
   AttendanceService,
+  AcademicYearValidator,
 } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
-import { schoolSeedData } from '../shared/school-seed-data';
+import { schoolSeedData, seedAcademicYear } from '../shared/school-seed-data';
 import { seedAttendance } from '../shared/seed-attendance';
 import { studentsPack, teachersPack } from '../demo/generator';
 
@@ -57,7 +58,8 @@ runSeedTask('school seed', async (server) => {
   console.log('✅ Students seeded');
 
   console.log('📋 Seeding attendance...');
-  const { studentCount, staffCount } = await seedAttendance(attendanceService, studentService, teacherService);
+  const seedYear = await (await server.container.resolve(AcademicYearValidator)).resolve(seedAcademicYear, 'admin');
+  const { studentCount, staffCount } = await seedAttendance(seedYear, attendanceService, studentService, teacherService);
   console.log(`✅ Attendance seeded (${studentCount} student records, ${staffCount} staff records)`);
 
   console.log('\n✨ School structure seeded successfully!');

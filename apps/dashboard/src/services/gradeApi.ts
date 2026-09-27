@@ -46,12 +46,16 @@ export const getGradesByTeacherApi = async (teacherId: string) => {
 };
 
 export const createGradeApi = async (data) => {
-  const res = await api.post('/grades', data);
+  const { studentId, assessmentId, examId, sectionId, marksObtained, status, feedback } = data;
+  const res = await api.post('/grades', {
+    studentId, assessmentId, examId, sectionId, marksObtained, status, feedback,
+  });
   return res.data;
 };
 
 export const updateGradeApi = async (data) => {
-  const res = await api.put(`/grades/${data.id}`, data);
+  const { marksObtained, status, feedback } = data;
+  const res = await api.put(`/grades/${data.id}`, { marksObtained, status, feedback });
   return res.data;
 };
 

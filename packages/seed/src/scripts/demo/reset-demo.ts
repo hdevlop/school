@@ -6,6 +6,7 @@ import {
   InstallmentService,
   FeeService,
   StudentService,
+  StudentEnrollmentService,
   TeacherService,
   StaffService,
   PayrollService,
@@ -19,6 +20,9 @@ import {
   SubjectService,
   FeeTypeService,
   SettingsService,
+  AcademicYearRepository,
+  AcademicYearTransitionRepository,
+  AcademicYearMigrationIssueRepository,
   ExpenseService,
   GradeService,
   AssessmentService,
@@ -55,6 +59,7 @@ runSeedTask('demo reset', async (server) => {
   const behaviorRewardService = await server.container.resolve(BehaviorRewardService);
   const studentRouteService = await server.container.resolve(StudentRouteService);
   const studentService = await server.container.resolve(StudentService);
+  const studentEnrollmentService = await server.container.resolve(StudentEnrollmentService);
   const teacherService = await server.container.resolve(TeacherService);
   const staffService = await server.container.resolve(StaffService);
   const vehicleAssignmentService = await server.container.resolve(VehicleAssignmentService);
@@ -66,6 +71,9 @@ runSeedTask('demo reset', async (server) => {
   const subjectService = await server.container.resolve(SubjectService);
   const feeTypeService = await server.container.resolve(FeeTypeService);
   const settingsService = await server.container.resolve(SettingsService);
+  const academicYearRepository = await server.container.resolve(AcademicYearRepository);
+  const yearTransitionRepository = await server.container.resolve(AcademicYearTransitionRepository);
+  const migrationIssueRepository = await server.container.resolve(AcademicYearMigrationIssueRepository);
   const expenseService = await server.container.resolve(ExpenseService);
   const classRoutineService = await server.container.resolve(ClassRoutineService);
   const rolloverService = await server.container.resolve(RolloverService);
@@ -136,6 +144,9 @@ runSeedTask('demo reset', async (server) => {
   await vehicleAssignmentService.deleteAll();
   console.log('✅ Vehicle assignments cleared');
 
+  await yearTransitionRepository.clearForSeedReset();
+  await migrationIssueRepository.clearForSeedReset();
+  await studentEnrollmentService.clearForSeedReset();
   await studentService.deleteAll();
   console.log('✅ Students cleared');
 
@@ -167,6 +178,8 @@ runSeedTask('demo reset', async (server) => {
   console.log('✅ Fee types cleared');
 
   await settingsService.deleteAll();
+  await academicYearRepository.clearForSeedReset();
+  console.log('Academic-year registry cleared');
   console.log('✅ Settings cleared');
 
   console.log('\n✨ All school data cleared successfully!');

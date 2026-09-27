@@ -42,3 +42,19 @@ export async function loadSchoolUiSettings(): Promise<SchoolUiSettings | null> {
 
   return row ?? null;
 }
+
+/**
+ * The active school year's label, or `null` when the installation has no
+ * settings row yet. The first server render hands it to the dashboard so
+ * screens that need the active year do not wait for the browser to load the
+ * public settings first. It is public: the public settings return it too.
+ */
+export async function loadActiveAcademicYearLabel(): Promise<string | null> {
+  const [row] = await db
+    .select({ label: settings.currentAcademicYear })
+    .from(settings)
+    .orderBy(desc(settings.createdAt))
+    .limit(1);
+
+  return row?.label ?? null;
+}

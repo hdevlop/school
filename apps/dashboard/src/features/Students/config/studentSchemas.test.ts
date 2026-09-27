@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { GENDER_VALUES, STUDENT_STATUS_VALUES } from '@sms/contracts';
 
-import { studentSchema } from './studentSchemas';
+import { PLACEMENT_FIELDS, studentProfileEditSchema, studentSchema } from './studentSchemas';
 
 const somewhere = { address: '12 Rue des Écoles', latitude: 33.57, longitude: -7.59 };
 
@@ -72,5 +72,21 @@ describe('studentSchema', () => {
       expect(studentSchema.safeParse({ ...student, enrollmentDate }).success).toBe(true);
     }
     expect(studentSchema.safeParse({ ...student, enrollmentDate: 'September' }).success).toBe(false);
+  });
+});
+
+describe('studentProfileEditSchema', () => {
+  it('edits a profile without a class or section, as for a year without a placement', () => {
+    const { classId: _classId, sectionId: _sectionId, ...profile } = student;
+    expect(studentProfileEditSchema.safeParse(profile).success).toBe(true);
+    expect(studentProfileEditSchema.safeParse({ ...profile, classId: null, sectionId: null }).success).toBe(true);
+  });
+
+  it('still validates the identity fields', () => {
+    expect(studentProfileEditSchema.safeParse({ ...student, name: 'A' }).success).toBe(false);
+  });
+
+  it('names the fields the enrollment records own', () => {
+    expect([...PLACEMENT_FIELDS]).toEqual(['classId', 'sectionId', 'status']);
   });
 });

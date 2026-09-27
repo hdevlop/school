@@ -1,13 +1,42 @@
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
-import { and, desc, eq, sql, asc, count, inArray } from 'drizzle-orm';
+import { and, desc, eq, sql, asc, count, inArray, type SQL, isNotNull, isNull, or } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { grades, students, assessments, exams, teacherAssignments, subjects, teachers, staff, classes, sections, users } from '../../database/schema';
+import { inReportingInterval, type ReportingYear } from '../academicYears/academicRecordYear';
 import { DB } from '../../database/db';
 import { Grade } from './GradeGuards';
 
+/**
+ * A legacy grade takes its date from exactly one joined source. A grade with
+ * no source, two, or an orphaned link stays out of every year and in the
+ * administrator unassigned-source review. The query must left join
+ * assessments and exams on the grade's source ids.
+ */
+export type GradeListFilters = {
+  year: ReportingYear;
+  studentId?: string;
+  sectionId?: string;
+  subjectId?: string;
+  teacherId?: string;
+};
+
+export function gradeInReportingYear(year: ReportingYear): SQL {
+  return or(
+    eq(grades.academicYearId, year.id),
+    and(
+      isNull(grades.academicYearId),
+      or(
+        and(isNotNull(grades.assessmentId), isNull(grades.examId), inReportingInterval(assessments.date, year)),
+        and(isNotNull(grades.examId), isNull(grades.assessmentId), inReportingInterval(exams.date, year)),
+      ),
+    ),
+  )!;
+}
+
 export const gradeSelect = {
   id: grades.id,
+  academicYearId: grades.academicYearId,
   assessmentId: grades.assessmentId,
   examId: grades.examId,
   studentId: grades.studentId,
@@ -23,7 +52,7 @@ export const gradeSelect = {
 @Repository()
 export class GradeRepository {
   declare db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -103,59 +132,45 @@ export class GradeRepository {
       .leftJoin(gradedByUsers, eq(grades.gradedBy, gradedByUsers.id));
   }
 
-  async getAll() {
-    return await this.scope(this.buildGradeQuery())
-      .orderBy(desc(grades.createdAt));
+  // The year's grades the user may read, optionally for one student, section,
+  // subject or teacher. Year, filters and ownership are one WHERE. A filtered
+  // list reads newest source first; the whole year, newest grade first.
+  async getAll({ year, studentId, sectionId, subjectId, teacherId }: GradeListFilters) {
+    const filtered = Boolean(studentId || sectionId || subjectId || teacherId);
+    return await this.buildGradeQuery()
+      .where(and(
+        this.ownershipCondition(),
+        gradeInReportingYear(year),
+        studentId ? eq(grades.studentId, studentId) : undefined,
+        sectionId ? eq(teacherAssignments.sectionId, sectionId) : undefined,
+        subjectId ? eq(teacherAssignments.subjectId, subjectId) : undefined,
+        teacherId ? eq(teacherAssignments.teacherId, teacherId) : undefined,
+      ))
+      .orderBy(...(filtered
+        ? [desc(sql`coalesce(${assessments.date}, ${exams.date})`), asc(students.name)]
+        : [desc(grades.createdAt)]));
   }
 
   async getById(id) {
-    const [result] = await this.scope(this.buildGradeQuery())
-      .where(eq(grades.id, id))
+    const [result] = await this.buildGradeQuery()
+      .where(and(this.ownershipCondition(), eq(grades.id, id)))
       .limit(1);
 
     return result;
   }
 
-  async getByAssessment(assessmentId) {
+  // Every grade of one source; the source's own year decides access.
+  async getByAssessment(assessmentId: string) {
     return await this.buildGradeQuery()
-      .where(eq(grades.assessmentId, assessmentId))
+      .where(and(this.ownershipCondition(), eq(grades.assessmentId, assessmentId)))
       .orderBy(asc(students.name));
   }
 
-  async getByExam(examId) {
+  // Every grade of one source; the source's own year decides access.
+  async getByExam(examId: string) {
     return await this.buildGradeQuery()
-      .where(eq(grades.examId, examId))
+      .where(and(this.ownershipCondition(), eq(grades.examId, examId)))
       .orderBy(asc(students.name));
-  }
-
-  async getByStudent(studentId) {
-    return await this.buildGradeQuery()
-      .where(eq(grades.studentId, studentId))
-      .orderBy(desc(sql`coalesce(${assessments.date}, ${exams.date})`));
-  }
-
-  async getBySection(sectionId) {
-    return await this.buildGradeQuery()
-      .where(eq(teacherAssignments.sectionId, sectionId))
-      .orderBy(desc(sql`coalesce(${assessments.date}, ${exams.date})`), asc(students.name));
-  }
-
-  async getByTeacherAssignment(teacherAssignmentId) {
-    return await this.buildGradeQuery()
-      .where(eq(teacherAssignments.id, teacherAssignmentId))
-      .orderBy(desc(sql`coalesce(${assessments.date}, ${exams.date})`), asc(students.name));
-  }
-
-  async getBySubject(subjectId) {
-    return await this.buildGradeQuery()
-      .where(eq(teacherAssignments.subjectId, subjectId))
-      .orderBy(desc(sql`coalesce(${assessments.date}, ${exams.date})`), asc(students.name));
-  }
-
-  async getByTeacher(teacherId) {
-    return await this.buildGradeQuery()
-      .where(eq(teacherAssignments.teacherId, teacherId))
-      .orderBy(desc(sql`coalesce(${assessments.date}, ${exams.date})`), asc(students.name));
   }
 
   async getCount() {
@@ -164,6 +179,15 @@ export class GradeRepository {
       .from(grades);
 
     return result;
+  }
+
+  async teacherIdForUser(userId: string) {
+    const [row] = await this.db.select({ id: teachers.id })
+      .from(teachers)
+      .innerJoin(staff, eq(teachers.staffId, staff.id))
+      .where(eq(staff.userId, userId))
+      .limit(1);
+    return row?.id ?? null;
   }
 
   async create(gradeData) {
@@ -231,6 +255,34 @@ export class GradeRepository {
       .limit(1);
 
     return existing;
+  }
+
+  // These grades have no unique source date, so they cannot be attributed to a
+  // school year. Keep them in a global administrator review queue.
+  async listUnassignedSources() {
+    return this.db.select({
+      id: grades.id,
+      studentId: grades.studentId,
+      assessmentId: grades.assessmentId,
+      examId: grades.examId,
+      createdAt: grades.createdAt,
+    }).from(grades)
+      .leftJoin(assessments, eq(grades.assessmentId, assessments.id))
+      .leftJoin(exams, eq(grades.examId, exams.id))
+      .where(or(
+        and(isNull(grades.assessmentId), isNull(grades.examId)),
+        and(isNotNull(grades.assessmentId), isNotNull(grades.examId)),
+        and(isNotNull(grades.assessmentId), isNull(assessments.id)),
+        and(isNotNull(grades.examId), isNull(exams.id)),
+      ))
+      .orderBy(grades.id);
+  }
+
+  async hasRegisteredYear(id: string) {
+    const [row] = await this.db.select({ id: grades.id }).from(grades)
+      .where(and(eq(grades.id, id), isNotNull(grades.academicYearId)))
+      .limit(1);
+    return Boolean(row);
   }
 
 }

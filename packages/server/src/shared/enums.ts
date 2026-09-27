@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { enumValues, type EnumKey } from '@sms/contracts/lookup';
+import { STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES } from '@sms/contracts';
 
 /**
  * Zod adapter over the shared domain values.
@@ -34,6 +35,9 @@ export const classStatusEnum = createZodEnum('classStatus');
 export const sectionStatusEnum = createZodEnum('sectionStatus');
 export const languageEnum = createZodEnum('language');
 export const enrollmentStatusEnum = createZodEnum('enrollmentStatus');
+// Built over its tuple directly so the end command keeps the literal statuses
+// the enrollment service and repository are typed with.
+export const studentYearEnrollmentEndStatusEnum = z.enum(STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES);
 export const assignmentStatusEnum = createZodEnum('assignmentStatus');
 export const calendarSystemEnum = createZodEnum('calendarSystem');
 

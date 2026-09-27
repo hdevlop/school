@@ -25,6 +25,7 @@ function ParentsTable() {
 
   const { t } = useTranslation();
   const router = useRouter();
+  // Opening a parent keeps an explicitly viewed year.
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
   const columns = useParentsTableColumns();
   const rawFilters = useParentsTableFilters();

@@ -8,7 +8,7 @@ import { NPageHeader, NPageHeaderActions, NTable, NTabs, NErrorState, NForbidden
 import GradesHeader from './GradesHeader';
 import { ClipboardList, FileText, GraduationCap, SearchX } from 'lucide-react';
 import { useGrades } from '../hooks/useGrades';
-import { useStudents } from '@/features/Students/hooks/useStudents';
+import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
@@ -18,6 +18,7 @@ import { useExams } from '@/features/Exams/hooks/useExams';
 import { useGradesTableColumns } from '../hooks/useGradesTableColumns';
 import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -56,14 +57,13 @@ const resolveGradeStatus = (marksObtained, fallback = 'pending') => {
   return marksObtained == null || marksObtained === '' ? 'pending' : 'graded';
 };
 
-function GradesTable() {
+function GradesTableForYear() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const role = (user as any)?.role;
   const isAdminOrPrincipal = role === 'admin' || role === 'principal';
 
   const { grades, error: gradesError, submitGrades, isSubmittingBatch, isGradesLoading } = useGrades();
-  const { students, error: studentsError, isStudentsLoading } = useStudents();
   const { classes, isClassesLoading } = useClasses();
   const { sections, isSectionsLoading } = useSections();
   const { subjects, isSubjectsLoading } = useSubjects();
@@ -186,6 +186,10 @@ function GradesTable() {
     },
     [assessments, exams, sourceType, sourceId]
   );
+
+  // With a viewing year, a chosen source's roster is the students placed in
+  // the section on its date, the placement the server checks when saving.
+  const { students, error: studentsError, isStudentsLoading } = useStudentsOnDate(selectedSource?.date);
 
   useEffect(() => {
     if (!selectedSource) return;
@@ -447,4 +451,7 @@ function GradesTable() {
   );
 }
 
-export default GradesTable;
+export default function GradesTable() {
+  const { viewingYear, isResolving } = useViewingAcademicYear();
+  return <GradesTableForYear key={isResolving ? 'resolving' : `year:${viewingYear ?? 'all'}`} />;
+}

@@ -35,6 +35,8 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
   which adds `bun` types). Neither hides the other.
 - `bun run test:config` - The focused contract, feature-config and form-fill tests
 - `bun run test:access-reset` - The focused access-recovery suite
+- `bun run test:ownership` - Repository ownership: the school-wide role list,
+  per-role rules, and the generated SQL of every owned read
 - `bun run test:boundaries` - The boundary checker's regression fixtures, then
   the checker over the real import graph (`scripts/check-workspace-boundaries.mjs`)
 - `bun run test` - All selected safe tests above
@@ -79,6 +81,17 @@ states that drift — so do not add one without changing the plan first.
   failed background refetch from raising an error over records already on
   screen. `NCard`-based lists have no `renderError`, so they pass `errorText`
   instead — see `Reports/components/AgingDetailTable.tsx`.
+- **Ownership is one condition inside the query's one `.where()`.** Owned
+  repositories take `own` and `Owned` from `packages/server/src/auth.ts`, never
+  from najm-auth, and read with `.where(and(this.ownershipCondition(), ...))`.
+  Drizzle's `.where()` replaces the previous one, which is how najm-auth's
+  `scope(query).where(filter)` silently dropped ownership. `SCHOOL_WIDE_ROLES`
+  read every row, still limited by their route permissions; teacher, parent and
+  student follow each token's `.for()` rules; any other role sees no owned rows.
+  A najm rule is one join chain, so alternatives are extra tokens passed to
+  `@Owned` and OR-ed (see `AttendanceGuards.ts`). Uniqueness and duplicate
+  lookups stay unscoped. ESLint rejects `x.where(a).where(b)` and najm-auth's
+  `own`/`Owned` in server code.
 
 - **One declaration of every shared value.** Database enum members, API payload
   values, and the values a select may submit are declared once in
@@ -94,7 +107,7 @@ states that drift — so do not add one without changing the plan first.
   portable packages those need (`najm-i18n/define`, `@faker-js/faker`,
   `nanoid`). The by-key
   `enumValues` lookup lives at `@sms/contracts/lookup` and is server-only: it
-  names all sixty-nine tuples, so importing it from a component would keep
+  names all seventy-one tuples, so importing it from a component would keep
   every domain's strings alive. Adding or removing a value changes what the
   database accepts; `packages/contracts/tests/enums.test.ts` pins the exact
   members and order of every persisted enum so a careless edit fails loudly.

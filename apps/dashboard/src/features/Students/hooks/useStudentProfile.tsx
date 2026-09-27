@@ -2,13 +2,16 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { getStudentByIdApi, getStudentParentsApi } from '@/services/studentApi';
+import { useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
 export const useStudentProfile = (studentId: string | undefined) => {
-  const studentQuery = useQuery({
-    queryKey: ['students', studentId],
-    queryFn: () => getStudentByIdApi(studentId),
+  // The profile shows the viewed year's class and section, or none when the
+  // student was not enrolled that year.
+  const studentQuery = useYearScopedDetail({
+    resource: 'students',
+    parts: [studentId],
+    fetch: () => getStudentByIdApi(studentId),
     enabled: !!studentId,
-    staleTime: 30_000,
   });
 
   const parentsQuery = useQuery({
@@ -19,8 +22,8 @@ export const useStudentProfile = (studentId: string | undefined) => {
   });
 
   return {
-    student: studentQuery.data?.data ?? null,
-    isStudentLoading: studentQuery.isPending && !!studentId,
+    student: studentQuery.data,
+    isStudentLoading: studentQuery.isLoading && !!studentId,
     isStudentError: studentQuery.isError,
 
     parents: parentsQuery.data?.data ?? [],

@@ -68,6 +68,15 @@ export type Language = (typeof LANGUAGE_VALUES)[number];
 export const ENROLLMENT_STATUS_VALUES = ['enrolled', 'completed', 'dropped', 'failed'] as const;
 export type EnrollmentStatus = (typeof ENROLLMENT_STATUS_VALUES)[number];
 
+// A student's enrollment in one school year (`student_enrollments.status`,
+// held by a CHECK constraint): active until ended with one of the others.
+export const STUDENT_YEAR_ENROLLMENT_STATUS_VALUES = ['active', 'withdrawn', 'graduated', 'transferred'] as const;
+export type StudentYearEnrollmentStatus = (typeof STUDENT_YEAR_ENROLLMENT_STATUS_VALUES)[number];
+
+// The statuses the end-enrollment command accepts.
+export const STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES = ['withdrawn', 'graduated', 'transferred'] as const;
+export type StudentYearEnrollmentEndStatus = (typeof STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES)[number];
+
 export const ASSIGNMENT_STATUS_VALUES = ['active', 'completed', 'cancelled'] as const;
 export type AssignmentStatus = (typeof ASSIGNMENT_STATUS_VALUES)[number];
 

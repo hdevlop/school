@@ -5,7 +5,9 @@
   },
   "include": [
     "src/**/*.ts",
-    "tests/classRoutines/**/*.test.ts"
+    "tests/classRoutines/**/*.test.ts",
+    "tests/academicYears/**/*.test.ts",
+    "tests/teacherDashboard/**/*.test.ts"
   ],
   "exclude": ["node_modules"]
 }

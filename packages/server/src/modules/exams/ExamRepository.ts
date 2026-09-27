@@ -1,16 +1,25 @@
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
-import { and, desc, eq, sql, asc, count, inArray, or } from 'drizzle-orm';
+import { and, desc, eq, sql, asc, count, inArray, or, type SQL, isNotNull } from 'drizzle-orm';
 import { exams, grades, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
+import { inReportingYear, type ReportingYear } from '../academicYears/academicRecordYear';
 import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { Exam } from './ExamGuards';
+import { sourceAssignmentColumns, sourceTeachingColumns } from '../academicSources/academicSourceContext';
+
+export type ExamListFilters = {
+  year: ReportingYear;
+  sectionId?: string;
+  subjectId?: string;
+  teacherId?: string;
+};
 
 @Owned(Exam)
 @Repository()
 export class ExamRepository {
   declare db: DB;
-  declare scope: (query: any) => any;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -22,6 +31,7 @@ export class ExamRepository {
     return this.db
       .select({
         id: exams.id,
+        academicYearId: exams.academicYearId,
         teacherAssignmentId: exams.teacherAssignmentId,
         title: exams.title,
         description: exams.description,
@@ -67,14 +77,29 @@ export class ExamRepository {
       .leftJoin(classes, eq(sections.classId, classes.id));
   }
 
-  async getAll() {
-    return await this.scope(this.buildExamQuery())
+  // The year's exams the user may read: the stored year, else the date
+  // in the year's reporting interval. Year, filters and ownership are one WHERE.
+  async getAll({ year, sectionId, subjectId, teacherId }: ExamListFilters) {
+    return await this.buildExamQuery()
+      .where(and(
+        this.ownershipCondition(),
+        inReportingYear(exams.academicYearId, exams.date, year),
+        sectionId ? or(
+          eq(teacherAssignments.sectionId, sectionId),
+          sql`EXISTS (
+            SELECT 1 FROM jsonb_array_elements_text(COALESCE(${exams.sectionIds}, '[]'::jsonb)) AS target_section_id
+            WHERE target_section_id = ${sectionId}
+          )`,
+        ) : undefined,
+        subjectId ? eq(teacherAssignments.subjectId, subjectId) : undefined,
+        teacherId ? eq(teacherAssignments.teacherId, teacherId) : undefined,
+      ))
       .orderBy(desc(exams.date));
   }
 
   async getById(id) {
-    const [result] = await this.scope(this.buildExamQuery())
-      .where(eq(exams.id, id))
+    const [result] = await this.buildExamQuery()
+      .where(and(this.ownershipCondition(), eq(exams.id, id)))
       .limit(1);
 
     return result;
@@ -82,57 +107,33 @@ export class ExamRepository {
 
   async getByType(type) {
     return await this.buildExamQuery()
-      .where(eq(exams.type, type))
+      .where(and(this.ownershipCondition(), eq(exams.type, type)))
       .orderBy(desc(exams.date));
   }
 
   async getByStatus(status) {
     return await this.buildExamQuery()
-      .where(eq(exams.status, status))
-      .orderBy(desc(exams.date));
-  }
-
-  async getBySection(sectionId) {
-    return await this.buildExamQuery()
-      .where(or(
-        eq(teacherAssignments.sectionId, sectionId),
-        sql`EXISTS (
-          SELECT 1 FROM jsonb_array_elements_text(COALESCE(${exams.sectionIds}, '[]'::jsonb)) AS target_section_id
-          WHERE target_section_id = ${sectionId}
-        )`,
-      ))
+      .where(and(this.ownershipCondition(), eq(exams.status, status)))
       .orderBy(desc(exams.date));
   }
 
   async getByTeacherAssignment(teacherAssignmentId) {
     return await this.buildExamQuery()
-      .where(eq(exams.teacherAssignmentId, teacherAssignmentId))
-      .orderBy(desc(exams.date));
-  }
-
-  async getBySubject(subjectId) {
-    return await this.buildExamQuery()
-      .where(eq(teacherAssignments.subjectId, subjectId))
-      .orderBy(desc(exams.date));
-  }
-
-  async getByTeacher(teacherId) {
-    return await this.buildExamQuery()
-      .where(eq(teacherAssignments.teacherId, teacherId))
+      .where(and(this.ownershipCondition(), eq(exams.teacherAssignmentId, teacherAssignmentId)))
       .orderBy(desc(exams.date));
   }
 
   async getTodayExams() {
     const today = new Date().toISOString().split('T')[0];
     return await this.buildExamQuery()
-      .where(eq(exams.date, today))
+      .where(and(this.ownershipCondition(), eq(exams.date, today)))
       .orderBy(asc(exams.startTime));
   }
 
   async getUpcomingExams() {
     const today = new Date().toISOString().split('T')[0];
     return await this.buildExamQuery()
-      .where(sql`${exams.date} >= ${today}`)
+      .where(and(this.ownershipCondition(), sql`${exams.date} >= ${today}`))
       .orderBy(asc(exams.date), asc(exams.startTime));
   }
 
@@ -241,6 +242,32 @@ export class ExamRepository {
       .where(eq(grades.examId, examId));
 
     return result.count > 0;
+  }
+
+  // School-wide context reads used to validate grade writes and migration issues.
+
+  /** The context a grade is checked against when it is recorded for this exam. */
+  async getSourceContext(id: string) {
+    const [row] = await this.db.select({
+      id: exams.id,
+      academicYearId: exams.academicYearId,
+      date: exams.date,
+      sectionIds: exams.sectionIds,
+      ...sourceAssignmentColumns,
+      ...sourceTeachingColumns,
+    }).from(exams)
+      .leftJoin(teacherAssignments, eq(exams.teacherAssignmentId, teacherAssignments.id))
+      .leftJoin(sections, eq(teacherAssignments.sectionId, sections.id))
+      .leftJoin(classes, eq(sections.classId, classes.id))
+      .where(eq(exams.id, id)).limit(1);
+    return row ?? null;
+  }
+
+  async hasRegisteredYear(id: string) {
+    const [row] = await this.db.select({ id: exams.id }).from(exams)
+      .where(and(eq(exams.id, id), isNotNull(exams.academicYearId)))
+      .limit(1);
+    return Boolean(row);
   }
 
 }

@@ -3,11 +3,14 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { ParentService } from './ParentService';
 import { Parent, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ParentGuards';
 import { isAdmin } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   createParentDto,
   createParentsBulkDto,
   deleteBulkParentDto,
   linkStudentDto,
+  parentChildrenQuery,
   parentCinParam,
   parentIdParam,
   parentPhoneParam,
@@ -74,11 +77,11 @@ export class ParentController {
 
   @Get('/:id/children')
   @CanRead()
-  @Validate({ params: parentIdParam })
+  @Validate({ params: parentIdParam, query: parentChildrenQuery })
   @McpTool('Get children linked to a parent')
   @ResMsg('parents.success.retrieved')
-  async getChildren(@Params('id') id: string) {
-    return this.parentService.getChildren(id);
+  async getChildren(@Params('id') id: string, @Year() year: ResolvedAcademicYear) {
+    return this.parentService.getChildren(id, year);
   }
 
   @Get('/:id')

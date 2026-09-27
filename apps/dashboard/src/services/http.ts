@@ -1,5 +1,6 @@
 import { auth } from '@/najm.auth';
 import { AuthError } from 'najm-auth/client';
+import { captureRequestHeaders } from '@/lib/requestHeaders';
 import { toFormData, hasFiles } from './formDataHelper';
 
 function buildURL(path: string, params?: Record<string, any>): string {
@@ -16,6 +17,17 @@ function buildURL(path: string, params?: Record<string, any>): string {
 
 function wrap(body: any): { data: any } {
   return { data: body };
+}
+
+/**
+ * The scoped headers of a request, read once, synchronously, as it starts (see
+ * `lib/requestHeaders`). Authentication endpoints get none. The same object is
+ * reused for the request's retries, so a retry keeps the request's headers.
+ */
+function headersFor(url: string): Record<string, string> | undefined {
+  if (url.startsWith('/auth/')) return undefined;
+  const headers = captureRequestHeaders();
+  return Object.keys(headers).length ? { ...headers } : undefined;
 }
 
 let pendingAccessTokenRefresh: Promise<void> | null = null;
@@ -36,42 +48,46 @@ async function ensureAccessToken(url: string) {
 export const api = {
   async get(url: string, opts?: { params?: Record<string, any> }): Promise<{ data: any }> {
     const path = buildURL(url, opts?.params);
+    const headers = headersFor(path);
     await ensureAccessToken(path);
-    const result = await auth.api.get(path);
+    const result = await auth.api.get(path, headers ? { headers } : undefined);
     return wrap(result);
   },
 
   async post(url: string, data?: any): Promise<{ data: any }> {
+    const headers = headersFor(url);
     await ensureAccessToken(url);
-    const result = await auth.api.post(url, data !== undefined ? { body: data } : undefined);
+    const result = await auth.api.post(url, { body: data, headers });
     return wrap(result);
   },
 
   async put(url: string, data?: any): Promise<{ data: any }> {
+    const headers = headersFor(url);
     await ensureAccessToken(url);
-    const result = await auth.api.put(url, data !== undefined ? { body: data } : undefined);
+    const result = await auth.api.put(url, { body: data, headers });
     return wrap(result);
   },
 
   async patch(url: string, data?: any): Promise<{ data: any }> {
+    const headers = headersFor(url);
     await ensureAccessToken(url);
-    const result = await auth.api.patch(url, data !== undefined ? { body: data } : undefined);
+    const result = await auth.api.patch(url, { body: data, headers });
     return wrap(result);
   },
 
   async delete(url: string, opts?: { data?: any }): Promise<{ data: any }> {
+    const headers = headersFor(url);
     await ensureAccessToken(url);
-    const fetchOpts: any = {};
-    if (opts?.data !== undefined) fetchOpts.body = opts.data;
-    const result = await auth.api.delete(url, Object.keys(fetchOpts).length ? fetchOpts : undefined);
+    const result = await auth.api.delete(url, { body: opts?.data, headers });
     return wrap(result);
   },
 };
 
 async function fetchWithAuth(method: string, url: string, body?: any) {
+  const scoped = headersFor(url);
   await ensureAccessToken(url);
   const token = auth.client.getAccessToken();
-  const headers: Record<string, string> = { Accept: 'application/json' };
+  const headers: Record<string, string> = { Accept: 'application/json', ...scoped };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
   const res = await fetch(`/api${url}`, {

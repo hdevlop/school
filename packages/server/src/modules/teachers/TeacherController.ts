@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { TeacherService } from './TeacherService';
 import { Teacher, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './TeacherGuards';
 import { isAdmin } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   assignClassDto,
   assignSubjectDto,
@@ -13,6 +15,7 @@ import {
   teacherEmailParam,
   teacherIdParam,
   teacherPhoneParam,
+  teacherStudentsQuery,
   unassignClassDto,
   unassignSubjectDto,
   updateTeacherDto,
@@ -22,6 +25,7 @@ import {
   type DeleteBulkTeacherDto,
   type UnassignClassDto,
   type UpdateTeacherDto,
+  type TeacherStudentsQuery,
 } from './TeacherDto';
 
 @ToolGroup('teachers')
@@ -85,11 +89,16 @@ export class TeacherController {
 
   @Get('/:id/students')
   @CanRead()
-  @Validate({ params: teacherIdParam })
+  @Validate({ params: teacherIdParam, query: teacherStudentsQuery })
   @McpTool('Get students taught by a teacher')
   @ResMsg('teachers.success.retrieved')
-  async getStudents(@Params('id') id: string) {
-    return this.teacherService.getStudents(id);
+  async getStudents(
+    @Params('id') id: string,
+    @Year() year: ResolvedAcademicYear,
+    @Query('onDate') onDate: TeacherStudentsQuery['onDate'],
+    @User() user: { role?: string },
+  ) {
+    return this.teacherService.getStudents(id, year, onDate, user.role);
   }
 
   @Post('/assign-subject')

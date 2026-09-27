@@ -3,8 +3,11 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { AssessmentService } from './AssessmentService';
 import { Assessment, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AssessmentGuards';
 import { isAdmin } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   assessmentIdParam,
+  assessmentListQuery,
   classIdParam,
   createAssessmentDto,
   deleteBulkAssessmentDto,
@@ -27,10 +30,11 @@ export class AssessmentController {
 
   @Get()
   @CanList()
+  @Validate({ query: assessmentListQuery })
   @McpTool('List all assessments')
   @ResMsg('assessments.success.retrieved')
-  async getAll() {
-    return this.assessmentService.getAll();
+  async getAll(@Year() year: ResolvedAcademicYear) {
+    return this.assessmentService.getAll(year);
   }
 
   @Get('/today')
@@ -67,38 +71,38 @@ export class AssessmentController {
 
   @Get('/class/:classId')
   @CanList()
-  @Validate({ params: classIdParam })
+  @Validate({ params: classIdParam, query: assessmentListQuery })
   @McpTool('Get assessments by class')
   @ResMsg('assessments.success.retrieved')
-  async getByClass(@Params('classId') classId: string) {
-    return this.assessmentService.getByClass(classId);
+  async getByClass(@Params('classId') classId: string, @Year() year: ResolvedAcademicYear) {
+    return this.assessmentService.getAll(year, { classId });
   }
 
   @Get('/section/:sectionId')
   @CanList()
-  @Validate({ params: sectionIdParam })
+  @Validate({ params: sectionIdParam, query: assessmentListQuery })
   @McpTool('Get assessments by section')
   @ResMsg('assessments.success.retrieved')
-  async getBySection(@Params('sectionId') sectionId: string) {
-    return this.assessmentService.getBySection(sectionId);
+  async getBySection(@Params('sectionId') sectionId: string, @Year() year: ResolvedAcademicYear) {
+    return this.assessmentService.getAll(year, { sectionId });
   }
 
   @Get('/subject/:subjectId')
   @CanList()
-  @Validate({ params: subjectIdParam })
+  @Validate({ params: subjectIdParam, query: assessmentListQuery })
   @McpTool('Get assessments by subject')
   @ResMsg('assessments.success.retrieved')
-  async getBySubject(@Params('subjectId') subjectId: string) {
-    return this.assessmentService.getBySubject(subjectId);
+  async getBySubject(@Params('subjectId') subjectId: string, @Year() year: ResolvedAcademicYear) {
+    return this.assessmentService.getAll(year, { subjectId });
   }
 
   @Get('/teacher/:teacherId')
   @CanList()
-  @Validate({ params: teacherIdParam })
+  @Validate({ params: teacherIdParam, query: assessmentListQuery })
   @McpTool('Get assessments by teacher')
   @ResMsg('assessments.success.retrieved')
-  async getByTeacher(@Params('teacherId') teacherId: string) {
-    return this.assessmentService.getByTeacher(teacherId);
+  async getByTeacher(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
+    return this.assessmentService.getAll(year, { teacherId });
   }
 
   @Get('/:id')

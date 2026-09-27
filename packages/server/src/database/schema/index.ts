@@ -25,6 +25,10 @@ export { classes, classRef } from '../../modules/classes/classSchema';
 export { cycles, cycleRef } from '../../modules/cycles/cycleSchema';
 export { subjects, subjectRef } from '../../modules/subjects/subjectSchema';
 export { settings, calendarSystemEnum, languageEnum } from '../../modules/settings/settingSchema';
+export { academicYears } from '../../modules/academicYears/AcademicYearSchema';
+export { academicYearTransitionRuns } from '../../modules/academicYearTransitions/AcademicYearTransitionSchema';
+export { academicYearMigrationIssues } from '../../modules/academicYearMigrationIssues/AcademicYearMigrationIssueSchema';
+export { studentEnrollments, studentEnrollmentPlacements } from '../../modules/studentEnrollments/StudentEnrollmentSchema';
 export {
   feeTypes,
   feeTypeRef,

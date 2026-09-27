@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { dateField, requiredId } from '../../shared/fields';
+import { academicYearField, dateField, requiredId } from '../../shared/fields';
 import { attendanceStatusEnum, attendanceTypeEnum } from '../../shared/enums';
 
 const mcpRequiredId = z.string().min(1, 'ID is required');
@@ -100,8 +100,9 @@ export const studentIdParam = z.object({ studentId: z.string().min(1) });
 export const staffIdParam = z.object({ staffId: z.string().min(1) });
 export const teacherIdParam = z.object({ teacherId: z.string().min(1) });
 export const typeQueryParam = z.object({ type: attendanceTypeEnum.optional() });
+export const attendanceYearQuery = z.object({ academicYear: academicYearField.optional() });
+export const attendanceListQuery = typeQueryParam.merge(attendanceYearQuery);
 export const attendanceDateFilterDto = attendanceDateParam.merge(typeQueryParam);
-
 type AttendanceStatus = z.infer<typeof attendanceStatusEnum>;
 
 export type StudentAttendanceDto = {
@@ -130,4 +131,6 @@ export type StaffAttendanceRosterItemDto = z.infer<typeof staffAttendanceRosterI
 export type UpsertStaffAttendanceRosterDto = z.infer<typeof upsertStaffAttendanceRosterDto>;
 export type SeedAttendanceDto = z.input<typeof seedAttendanceDto>;
 export type AttendanceTypeQueryDto = z.infer<typeof typeQueryParam>;
+export type AttendanceYearQueryDto = z.infer<typeof attendanceYearQuery>;
+export type AttendanceListQueryDto = z.infer<typeof attendanceListQuery>;
 export type AttendanceDateFilterDto = z.infer<typeof attendanceDateFilterDto>;

@@ -7,6 +7,8 @@ import { getEventsApi } from '@/services/eventApi';
 import { getFeesByStudentApi } from '@/services/feeApi';
 import { getGradesByStudentApi } from '@/services/gradeApi';
 import { getParentByIdApi, getParentChildrenApi } from '@/services/parentApi';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
 const responseData = <T,>(response: any, fallback: T): T =>
   response?.data ?? fallback;
@@ -41,20 +43,29 @@ export interface ParentChildDashboardData {
 }
 
 export function useParentDashboard(parentId: string) {
+  const { viewingYear, activeYear, isResolving } = useViewingAcademicYear();
+  // Upcoming items are matched against today's classes, so another year also
+  // reads each child's current placement.
+  const otherYear = Boolean(viewingYear && viewingYear !== activeYear);
+
   const familyQuery = useQuery({
-    queryKey: ['parents', parentId, 'dashboard-family'],
+    queryKey: ['parents', parentId, 'dashboard-family', viewingYear ?? null, otherYear],
     queryFn: async () => {
-      const [parent, children] = await Promise.all([
+      // Each request sends the year its key names.
+      const [parent, children, currentChildren] = await Promise.all([
         getParentByIdApi(parentId),
-        getParentChildrenApi(parentId),
+        withAcademicYear(viewingYear, () => getParentChildrenApi(parentId)),
+        otherYear ? withAcademicYear(activeYear, () => getParentChildrenApi(parentId)) : null,
       ]);
+      const yearChildren = responseData<any[]>(children, []);
 
       return {
         parent: responseData(parent, null),
-        children: responseData<any[]>(children, []),
+        children: yearChildren,
+        currentChildren: currentChildren ? responseData<any[]>(currentChildren, []) : yearChildren,
       };
     },
-    enabled: Boolean(parentId),
+    enabled: Boolean(parentId) && !isResolving,
     staleTime: 30_000,
   });
 
@@ -62,8 +73,8 @@ export function useParentDashboard(parentId: string) {
   const childIds = children.map((child: any) => child.id).filter(Boolean);
 
   const childDataQuery = useQuery({
-    queryKey: ['parents', parentId, 'dashboard-children', childIds],
-    queryFn: () =>
+    queryKey: ['parents', parentId, 'dashboard-children', childIds, viewingYear ?? null],
+    queryFn: () => withAcademicYear(viewingYear, () =>
       Promise.all(
         children.map(async (child: any): Promise<ParentChildDashboardData> => {
           const [attendance, grades, fees] = await Promise.all([
@@ -74,7 +85,7 @@ export function useParentDashboard(parentId: string) {
 
           return { child, attendance, grades, fees };
         }),
-      ),
+      )),
     enabled: familyQuery.isSuccess && children.length > 0,
     staleTime: 30_000,
   });
@@ -100,6 +111,7 @@ export function useParentDashboard(parentId: string) {
   return {
     parent: familyQuery.data?.parent ?? null,
     children,
+    currentChildren: familyQuery.data?.currentChildren ?? [],
     childData: childDataQuery.data ?? [],
     assessments: schoolQuery.data?.assessments ?? [],
     events: schoolQuery.data?.events ?? [],

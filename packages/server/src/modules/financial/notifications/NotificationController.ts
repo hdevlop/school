@@ -29,9 +29,9 @@ export class NotificationController {
 
   @Post('/list-recent')
   @ResMsg('notifications.list')
-  async listRecent(@Body() body: { limit?: number } = {}, @Headers('x-cron-secret') secret: string) {
+  async listRecent(@Body() body: { limit?: number }, @Headers('x-cron-secret') secret: string) {
     assertCronSecret(secret);
-    return this.notificationService.listRecent(body.limit ?? 50);
+    return this.notificationService.listRecent(body?.limit ?? 50);
   }
 
   @Get('/recent')

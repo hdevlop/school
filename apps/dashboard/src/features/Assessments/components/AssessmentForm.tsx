@@ -1,6 +1,6 @@
 'use client'
 
-import { NForm } from 'najm-kit'
+import { NErrorState, NForm, NLoadingState } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React, { useEffect, useRef } from 'react'
@@ -18,6 +18,9 @@ import { useClasses } from '@/features/Classes/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects'
 import { useTeachers } from '@/features/Teachers/hooks/useTeachers'
+import { localDateInput } from 'najm-kit/format'
+import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
+import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear'
 
 const SectionsMultiselect = ({ initialClassId }) => {
   const { t } = useTranslation();
@@ -89,6 +92,9 @@ const mergeDescriptionAndInstructions = (description?: string, instructions?: st
 const AssessmentForm = ({ assessment = null }) => {
   const { t } = useTranslation();
   const { pop } = useDialog();
+  const { viewingYear, isResolving } = useViewingAcademicYear();
+  const { data: registeredYears, isPending: isYearsPending } = useAcademicYearOptions();
+  const calendar = registeredYears?.years.find((year) => year.label === viewingYear);
 
   const { classes, isClassesLoading } = useClasses();
   const { subjects, isSubjectsLoading } = useSubjects();
@@ -117,7 +123,7 @@ const AssessmentForm = ({ assessment = null }) => {
     sectionIds: initialSectionIds,
     subjectId: initialSubjectId,
     teacherId: initialTeacherId,
-    date: assessment?.date || undefined,
+    date: assessment?.date || (calendar ? teachingDateWithinYear(localDateInput(), calendar) : undefined),
     duration: assessment?.duration ?? 60,
     totalMarks: assessment?.totalMarks ?? 100,
     passingMarks: assessment?.passingMarks ?? 50,
@@ -160,10 +166,18 @@ const AssessmentForm = ({ assessment = null }) => {
     });
   };
 
+  if (isResolving || isYearsPending) {
+    return <NLoadingState surface="panel" label={t('common.loading')} className="min-h-64" />;
+  }
+  if (!calendar) {
+    return <NErrorState surface="panel" />;
+  }
+
   return (
     <div className='flex flex-col justify-center items-center w-full'>
       <div className='flex flex-col h-full w-full gap-4'>
         <NForm
+          key={viewingYear}
           id='assessment-form'
           schema={assessmentSchema}
           defaultValues={defaultValues}

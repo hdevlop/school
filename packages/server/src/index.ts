@@ -22,7 +22,7 @@ import {
 
 import * as modulesModule from './modules';
 
-export { loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
+export { loadActiveAcademicYearLabel, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 
 export {
   databaseConfig,

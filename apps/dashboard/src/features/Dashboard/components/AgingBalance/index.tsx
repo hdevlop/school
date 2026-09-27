@@ -18,6 +18,7 @@ import { NSkeletonChart } from 'najm-kit';
 import { useFinanceAging } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 interface AgingBalanceProps {
   className?: string;
@@ -51,7 +52,8 @@ const AgingTooltip = ({ active, payload, majorMoney }: AgingTooltipProps) => {
 const AgingBalance: React.FC<AgingBalanceProps> = ({ className = '' }) => {
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
-  const { data, isLoading } = useFinanceAging();
+  const { viewingYear } = useViewingAcademicYear();
+  const { data, isLoading, error, refetch } = useFinanceAging();
 
   const chartData = useMemo(
     () => [
@@ -66,9 +68,12 @@ const AgingBalance: React.FC<AgingBalanceProps> = ({ className = '' }) => {
   return (
     <NCard
       title={t('dashboard.finance.agingBalance')}
+      description={viewingYear ? t('reports.year', { year: viewingYear }) : undefined}
       icon={AlertTriangle}
       className={cn('flex w-full h-full', className)}
       loading={isLoading}
+      error={error}
+      onRetry={() => refetch()}
       skeleton={<NSkeletonChart />}
     >
       <div className="flex flex-col">

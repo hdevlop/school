@@ -48,6 +48,7 @@ export class SectionValidator {
     if (!existingClass) {
       Err(404, t('classes.errors.notFound'));
     }
+    return existingClass;
   }
 
   async ensureNameUniqueInClass(classId: string, name: string, excludeId?: string) {

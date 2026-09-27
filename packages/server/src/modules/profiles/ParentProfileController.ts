@@ -3,6 +3,9 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { ParentProfileService } from './ParentProfileService';
 import { isAuth } from '../../auth';
 import { z } from 'zod';
+import { Year } from '../academicYears/requestYear';
+import { academicYearQuery } from '../academicYears/AcademicYearDto';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 const parentIdParam = z.object({ parentId: z.string().min(1) });
 
@@ -21,11 +24,11 @@ export class ParentProfileController {
   }
 
   @Get('/:parentId/children')
-  @Validate({ params: parentIdParam })
-  @McpTool('Get children for a parent with summary')
+  @Validate({ params: parentIdParam, query: academicYearQuery })
+  @McpTool('Get children for a parent with their class and fees in the academic year')
   @ResMsg('parents.success.retrieved')
-  async getChildren(@Params('parentId') parentId: string) {
-    return this.parentProfileService.getChildren(parentId);
+  async getChildren(@Params('parentId') parentId: string, @Year() year: ResolvedAcademicYear) {
+    return this.parentProfileService.getChildren(parentId, year);
   }
 
   @Get('/:parentId/fees-due')

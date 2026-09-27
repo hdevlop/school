@@ -12,6 +12,7 @@ import { CreditService } from '../credits/CreditService';
 import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents, toCents } from '../utils/money';
 import { getBusinessDate } from '../../../shared/businessDate';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import type {
   CreatePaymentDto,
   UpdatePaymentDto,
@@ -55,11 +56,13 @@ export class PaymentService {
     private feeService: FeeService,
     private installmentRepository: InstallmentRepository,
     private auditService: FinancialAuditService,
-    private creditService: CreditService,
+    private creditService: CreditService
   ) { }
 
-  async getAll() {
-    return await this.paymentRepository.getAll();
+  // The receipts allocated to fees charged to the year, each once with its
+  // allocated portion beside the full amount.
+  async getAll(year: ResolvedAcademicYear) {
+    return await this.paymentRepository.getAll(year.label);
   }
 
   async getToday() {

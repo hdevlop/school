@@ -6,6 +6,9 @@ import { transportAssignmentSchema } from '@/features/Transport/config/transport
 
 import { studentSchema } from './studentSchemas';
 
+const yearEnrolledOn = z.string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Use YYYY-MM-DD for this academic year enrollment');
+
 /**
  * Enrolment: a student, their guardians, their fees and — if the family wants
  * it — a seat on a bus, submitted as one request.
@@ -22,6 +25,7 @@ import { studentSchema } from './studentSchemas';
  */
 export const fullStudentSchema = z.object({
   ...studentSchema.shape,
+  yearEnrolledOn,
   ...parentsSchema.shape,
   ...feesSchema.shape,
   transportEnabled: z.boolean().optional().default(false),
@@ -37,6 +41,7 @@ export const fullStudentSchema = z.object({
  * the component, so the step and the whole form cannot disagree about it.
  */
 export const studentWithTransportSchema = studentSchema.extend({
+  yearEnrolledOn,
   transportEnabled: fullStudentSchema.shape.transportEnabled,
 });
 

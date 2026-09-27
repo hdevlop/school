@@ -4,7 +4,7 @@ import * as values from './enums';
  * Generic lookup over every shared tuple, for the places that need to reach an
  * enum by key: Drizzle column definitions and the server's Zod adapter.
  *
- * It lives apart from `index.ts` on purpose. This object names all sixty-nine
+ * It lives apart from `index.ts` on purpose. This object names all seventy-one
  * tuples, so anything importing it keeps all of them alive — in a browser
  * bundle that is every domain's strings on every page that needed one enum.
  * The dashboard imports named tuples from `@sms/contracts`; only the server
@@ -26,6 +26,8 @@ export const enumValues = {
   sectionStatus: values.SECTION_STATUS_VALUES,
   language: values.LANGUAGE_VALUES,
   enrollmentStatus: values.ENROLLMENT_STATUS_VALUES,
+  studentYearEnrollmentStatus: values.STUDENT_YEAR_ENROLLMENT_STATUS_VALUES,
+  studentYearEnrollmentEndStatus: values.STUDENT_YEAR_ENROLLMENT_END_STATUS_VALUES,
   assignmentStatus: values.ASSIGNMENT_STATUS_VALUES,
   calendarSystem: values.CALENDAR_SYSTEM_VALUES,
   assessmentType: values.ASSESSMENT_TYPE_VALUES,

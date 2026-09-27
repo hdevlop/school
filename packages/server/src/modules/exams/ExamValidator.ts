@@ -105,26 +105,6 @@ export class ExamValidator {
     }
   }
 
-  async ensureDateNotTooOld(date: Date, maxMonths: number = 6) {
-    const minDate = new Date();
-    minDate.setMonth(minDate.getMonth() - maxMonths);
-    minDate.setHours(0, 0, 0, 0);
-
-    if (date < minDate) {
-      Err(400, this.et('dateTooOld'));
-    }
-  }
-
-  async ensureDateNotTooFarInFuture(date: Date, maxYears: number = 1) {
-    const maxDate = new Date();
-    maxDate.setFullYear(maxDate.getFullYear() + maxYears);
-    maxDate.setHours(23, 59, 59, 999);
-
-    if (date > maxDate) {
-      Err(400, this.et('dateTooFarInFuture'));
-    }
-  }
-
   async ensureEndTimeAfterStartTime(startTime: string, endTime: string) {
     const start = startTime.split(':').map(Number);
     const end = endTime.split(':').map(Number);
@@ -135,11 +115,6 @@ export class ExamValidator {
     if (endMinutes <= startMinutes) {
       Err(400, this.et('endTimeBeforeStart'));
     }
-  }
-
-  async validateExamDate(date: Date) {
-    await this.ensureDateNotTooOld(date, 6);
-    await this.ensureDateNotTooFarInFuture(date, 1);
   }
 
   async validate(data, excludeId: string = null) {
@@ -157,7 +132,6 @@ export class ExamValidator {
       subjectId,
       passingMarks,
       totalMarks,
-      date,
       startTime,
       endTime,
     } = data;
@@ -185,10 +159,6 @@ export class ExamValidator {
       const actualPassingMarks = passingMarks !== undefined ? passingMarks : exam.passingMarks;
       const actualTotalMarks = totalMarks !== undefined ? totalMarks : exam.totalMarks;
       await this.ensurePassingMarksValid(actualPassingMarks, actualTotalMarks);
-    }
-
-    if (date) {
-      await this.validateExamDate(new Date(date));
     }
 
     if (startTime && endTime) {

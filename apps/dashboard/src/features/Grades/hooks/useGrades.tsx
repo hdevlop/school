@@ -1,7 +1,8 @@
 'use client'
 import { useCallback, useState } from 'react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useQueryClient } from '@tanstack/react-query';
 import * as gradeApi from '@/services/gradeApi';
 
 const runGradesBatch = async (items: Array<any & { id?: string }>) => {
@@ -26,7 +27,7 @@ export const useGrades = (options?) => {
     deleteBulk: gradeApi.deleteBulkGradesApi,
   });
 
-  const { data: grades, isLoading: isGradesLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: grades, isLoading: isGradesLoading, isError, error, refetch } = useYearScopedList({ resource: 'grades', fetch: gradeApi.getGradesApi, enabled: enabled });
   const { data: grade, isLoading: isGradeLoading } = crud.useGetById(gradeId, !!gradeId);
 
   const { mutateAsync: createGrade, isLoading: isCreating } = crud.useCreate();
@@ -74,10 +75,13 @@ export const useGrades = (options?) => {
   };
 };
 
+// The student's report for the viewed year.
 export const useStudentReport = (studentId: string | null) => {
-  return useQuery({
-    queryKey: ['grades', 'student', studentId, 'report'],
-    queryFn: () => gradeApi.getStudentReportApi(studentId as string),
+  const report = useYearScopedDetail({
+    resource: 'grades',
+    parts: ['student', studentId, 'report'],
+    fetch: () => gradeApi.getStudentReportApi(studentId as string),
     enabled: !!studentId,
   });
+  return report;
 };

@@ -1,12 +1,11 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as sectionApi from '@/services/sectionApi';
-import { useClasses } from '@/features/Classes/hooks/useClasses';
-import { useMemo } from 'react';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
-export const useSections = (options?) => {
-  const { sectionId, enabled = true, allYears = false } = options || {};
-  const { classes, isClassesLoading } = useClasses({ enabled, allYears });
+// The sections of the viewed year's classes, or of `academicYear` when named.
+export const useSections = (options?: { sectionId?: string; enabled?: boolean; academicYear?: string }) => {
+  const { sectionId, enabled = true, academicYear } = options || {};
 
   const crud = useEntityCRUD('sections', {
     getAll: sectionApi.getSectionsApi,
@@ -16,13 +15,9 @@ export const useSections = (options?) => {
     delete: sectionApi.deleteSectionApi,
   });
 
-  const { data: allSections, isLoading, isError, error, refetch } = crud.useGetAll(enabled);
-  const activeClassIds = useMemo(() => new Set((classes || []).map((schoolClass) => schoolClass.id)), [classes]);
-  const sections = useMemo(() => allYears
-    ? allSections
-    : allSections?.filter((section) => activeClassIds.has(section.classId)),
-  [allYears, allSections, activeClassIds]);
-  const isSectionsLoading = isLoading || (!allYears && isClassesLoading);
+  const {
+    data: sections, isLoading: isSectionsLoading, isError, error, refetch,
+  } = useYearScopedList({ resource: 'sections', fetch: sectionApi.getSectionsApi, enabled, academicYear });
   const { data: section, isLoading: isSectionLoading } = crud.useGetById(sectionId, !!sectionId);
 
   const { mutateAsync: createSection, isLoading: isCreating } = crud.useCreate();

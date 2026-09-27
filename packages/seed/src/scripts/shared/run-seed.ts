@@ -118,7 +118,7 @@ export async function runSeedTask(label: string, task: SeedTask) {
     const server = createSeedServer(seedModules);
     await server.init();
     seedModules.configureSeedContainer(server.container);
-    await task(server);
+    await server.runAs({ id: 'school-seed', role: 'admin' }, () => task(server));
   } catch (error) {
     exitCode = 1;
     const message = error instanceof Error ? error.message : String(error);

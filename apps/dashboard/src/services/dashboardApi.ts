@@ -1,5 +1,13 @@
 import { api } from './http';
+import type {
+  TeacherAttendanceTrend,
+  TeacherDashboardOverview,
+  TeacherTrendRange,
+} from '@sms/contracts/teacher-dashboard';
 
+type ApiEnvelope<T> = { data: T; message?: string; status?: string };
+
+// Every read covers the year its request sends as X-Academic-Year.
 export const getWidgetsApi = async () => {
   const res = await api.get('/dashboard/widgets');
   return res.data;
@@ -24,17 +32,24 @@ export const getStaffAttendanceMonthlyApi = async () => {
   return res.data;
 };
 
-export const getFinanceKpisApi = async (academicYear?: string) => {
-  const res = await api.get('/dashboard/finance/kpis', {
-    params: academicYear ? { academicYear } : undefined,
-  });
+// The signed-in teacher's own home page; the server resolves the teacher.
+export const getTeacherDashboardOverviewApi = async (): Promise<ApiEnvelope<TeacherDashboardOverview>> => {
+  const res = await api.get('/dashboard/teacher/overview');
   return res.data;
 };
 
-export const getFinanceTrendApi = async (academicYear?: string) => {
-  const res = await api.get('/dashboard/finance/trend', {
-    params: academicYear ? { academicYear } : undefined,
-  });
+export const getTeacherAttendanceTrendApi = async (range: TeacherTrendRange): Promise<ApiEnvelope<TeacherAttendanceTrend>> => {
+  const res = await api.get('/dashboard/teacher/attendance-trend', { params: { range } });
+  return res.data;
+};
+
+export const getFinanceKpisApi = async () => {
+  const res = await api.get('/dashboard/finance/kpis');
+  return res.data;
+};
+
+export const getFinanceTrendApi = async () => {
+  const res = await api.get('/dashboard/finance/trend');
   return res.data;
 };
 
@@ -53,17 +68,13 @@ export const getFinanceRecentPaymentsApi = async (limit = 10) => {
   return res.data;
 };
 
-export const getFinanceExpenseBreakdownApi = async (academicYear?: string) => {
-  const res = await api.get('/dashboard/finance/reports/expense-breakdown', {
-    params: academicYear ? { academicYear } : undefined,
-  });
+export const getFinanceExpenseBreakdownApi = async () => {
+  const res = await api.get('/dashboard/finance/reports/expense-breakdown');
   return res.data;
 };
 
-export const getFinanceCollectionByClassApi = async (academicYear?: string) => {
-  const res = await api.get('/dashboard/finance/reports/collection-by-class', {
-    params: academicYear ? { academicYear } : undefined,
-  });
+export const getFinanceCollectionByClassApi = async () => {
+  const res = await api.get('/dashboard/finance/reports/collection-by-class');
   return res.data;
 };
 

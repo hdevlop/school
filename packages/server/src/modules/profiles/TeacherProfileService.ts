@@ -1,4 +1,5 @@
 import { Injectable } from '../../najm';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { TeacherService } from '../teachers/TeacherService';
 import { AssessmentService } from '../assessments/AssessmentService';
 import { GradeService } from '../grades/GradeService';
@@ -19,10 +20,12 @@ export class TeacherProfileService {
     return { teacher, classes };
   }
 
-  async getScheduleToday(teacherId: string) {
+  // Today's assessments exist only in the year that holds today; another
+  // year's view has none.
+  async getScheduleToday(teacherId: string, year: ResolvedAcademicYear) {
     const teacher = await this.teacherService.getById(teacherId);
     const classes = await this.teacherService.getClasses(teacherId);
-    const todayAssessments = await this.assessmentService.getByTeacher(teacherId)
+    const todayAssessments = await this.assessmentService.getAll(year, { teacherId })
       .then((a: any[]) => {
         const today = new Date().toISOString().split('T')[0];
         return (a || []).filter((ass: any) => ass.date === today);
@@ -31,10 +34,10 @@ export class TeacherProfileService {
     return { teacher, classes, todayAssessments };
   }
 
-  async getPendingGrading(teacherId: string) {
+  async getPendingGrading(teacherId: string, year: ResolvedAcademicYear) {
     const [assessments, grades] = await Promise.all([
-      this.assessmentService.getByTeacher(teacherId).catch(() => []),
-      this.gradeService.getByTeacher(teacherId).catch(() => []),
+      this.assessmentService.getAll(year, { teacherId }).catch(() => []),
+      this.gradeService.getAll(year, { teacherId }).catch(() => []),
     ]);
 
     const gradedAssessmentIds = new Set(
@@ -48,10 +51,10 @@ export class TeacherProfileService {
     return { pendingCount: pending.length, pendingAssessments: pending };
   }
 
-  async getMyStudents(teacherId: string) {
+  async getMyStudents(teacherId: string, year: ResolvedAcademicYear) {
     const [teacher, students] = await Promise.all([
       this.teacherService.getById(teacherId),
-      this.teacherService.getStudents(teacherId),
+      this.teacherService.getStudents(teacherId, year),
     ]);
     return { teacher, students };
   }

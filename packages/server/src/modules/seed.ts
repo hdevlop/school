@@ -3,6 +3,13 @@ import type { Container, Constructor } from '../najm';
 export { SettingsService } from './settings/SettingsService';
 export { SettingsRepository } from './settings/SettingsRepository';
 export { SettingsValidator } from './settings/SettingsValidator';
+export { AcademicYearRepository } from './academicYears/AcademicYearRepository';
+export { AcademicYearValidator } from './academicYears/AcademicYearValidator';
+export { AcademicYearService } from './academicYears/AcademicYearService';
+export { AcademicYearTransitionRepository } from './academicYearTransitions/AcademicYearTransitionRepository';
+export { AcademicYearTransitionService } from './academicYearTransitions/AcademicYearTransitionService';
+export { AcademicYearMigrationIssueRepository } from './academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
+export { AcademicSourceService } from './academicSources/AcademicSourceService';
 
 export { SubjectService } from './subjects/SubjectService';
 export { SubjectRepository } from './subjects/SubjectRepository';
@@ -75,6 +82,8 @@ export { TeacherValidator } from './teachers/TeacherValidator';
 export { StudentService } from './students/StudentService';
 export { StudentRepository } from './students/StudentRepository';
 export { StudentValidator } from './students/StudentValidator';
+export { StudentEnrollmentService } from './studentEnrollments/StudentEnrollmentService';
+export { StudentEnrollmentRepository } from './studentEnrollments/StudentEnrollmentRepository';
 
 export { DriverService } from './transport/drivers/DriverService';
 export { DriverRepository } from './transport/drivers/DriverRepository';
@@ -145,6 +154,13 @@ import { StorageService } from 'najm-storage';
 import { SettingsService } from './settings/SettingsService';
 import { SettingsRepository } from './settings/SettingsRepository';
 import { SettingsValidator } from './settings/SettingsValidator';
+import { AcademicYearRepository } from './academicYears/AcademicYearRepository';
+import { AcademicYearValidator } from './academicYears/AcademicYearValidator';
+import { AcademicYearService } from './academicYears/AcademicYearService';
+import { AcademicYearTransitionRepository } from './academicYearTransitions/AcademicYearTransitionRepository';
+import { AcademicYearTransitionService } from './academicYearTransitions/AcademicYearTransitionService';
+import { AcademicYearMigrationIssueRepository } from './academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
+import { AcademicSourceService } from './academicSources/AcademicSourceService';
 
 import { SubjectService } from './subjects/SubjectService';
 import { SubjectRepository } from './subjects/SubjectRepository';
@@ -215,6 +231,8 @@ import { TeacherRepository } from './teachers/TeacherRepository';
 import { TeacherValidator } from './teachers/TeacherValidator';
 
 import { StudentService } from './students/StudentService';
+import { StudentEnrollmentRepository } from './studentEnrollments/StudentEnrollmentRepository';
+import { StudentEnrollmentService } from './studentEnrollments/StudentEnrollmentService';
 import { StudentRepository } from './students/StudentRepository';
 import { StudentValidator } from './students/StudentValidator';
 
@@ -284,19 +302,24 @@ function registerSeedDeps(seedContainer: Container, token: Constructor, deps: Co
 
 export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, SettingsValidator, [SettingsRepository]);
-  registerSeedDeps(seedContainer, SettingsService, [SettingsRepository, SettingsValidator]);
+  registerSeedDeps(seedContainer, SettingsService, [SettingsRepository, SettingsValidator, AcademicYearRepository]);
+  registerSeedDeps(seedContainer, AcademicYearValidator, [AcademicYearRepository]);
+  registerSeedDeps(seedContainer, AcademicYearTransitionService, [AcademicYearValidator, SettingsRepository, StudentEnrollmentRepository, SectionRepository, AcademicYearMigrationIssueRepository, AcademicYearTransitionRepository]);
+  registerSeedDeps(seedContainer, AcademicYearService, [AcademicYearRepository, AcademicYearValidator, SettingsRepository, AcademicYearTransitionService, StudentEnrollmentService]);
+  registerSeedDeps(seedContainer, StudentEnrollmentService, [StudentEnrollmentRepository, AcademicYearValidator, SettingsRepository, AcademicYearMigrationIssueRepository]);
+  registerSeedDeps(seedContainer, AcademicSourceService, [AcademicYearValidator, SectionRepository]);
 
   registerSeedDeps(seedContainer, SubjectValidator, [SubjectRepository]);
   registerSeedDeps(seedContainer, SubjectService, [SubjectRepository, SubjectValidator]);
 
-  registerSeedDeps(seedContainer, ClassValidator, [ClassRepository]);
-  registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator]);
+  registerSeedDeps(seedContainer, ClassValidator, [ClassRepository, SettingsRepository]);
+  registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository, AcademicYearValidator]);
 
-  registerSeedDeps(seedContainer, SectionValidator, [SectionRepository, ClassRepository]);
-  registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator]);
+  registerSeedDeps(seedContainer, SectionValidator, [SectionRepository, ClassRepository, SettingsRepository]);
+  registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator, AcademicYearValidator]);
 
   registerSeedDeps(seedContainer, ClassRoutineValidator, [ClassRoutineRepository]);
-  registerSeedDeps(seedContainer, ClassRoutineService, [ClassRoutineRepository, ClassRoutineValidator]);
+  registerSeedDeps(seedContainer, ClassRoutineService, [ClassRoutineRepository, ClassRoutineValidator, AcademicYearValidator]);
 
   registerSeedDeps(seedContainer, FeeTypeValidator, [FeeTypeRepository]);
   registerSeedDeps(seedContainer, FeeTypeService, [FeeTypeRepository, FeeTypeValidator]);
@@ -332,6 +355,7 @@ export function configureSeedContainer(seedContainer: Container) {
     UserValidator,
     ClassValidator,
     SectionValidator,
+    StudentEnrollmentRepository,
   ]);
   registerSeedDeps(seedContainer, StudentService, [
     StudentRepository,
@@ -341,6 +365,7 @@ export function configureSeedContainer(seedContainer: Container) {
     ParentService,
     FeeService,
     StudentRouteService,
+    StudentEnrollmentService,
     StorageService,
   ]);
 
@@ -349,7 +374,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, RolloverService, [RolloverRepository, FeeService, SettingsRepository, FinancialAuditService]);
 
   registerSeedDeps(seedContainer, FeeValidator, [FeeRepository, StudentValidator, FeeTypeValidator, SettingsRepository]);
-  registerSeedDeps(seedContainer, FeeService, [FeeRepository, FeeValidator, InstallmentService, SettingsRepository, ClassRepository, StudentRepository, FinancialAuditService]);
+  registerSeedDeps(seedContainer, FeeService, [FeeRepository, FeeValidator, InstallmentService, SettingsRepository, ClassRepository, StudentRepository, FinancialAuditService, StudentEnrollmentRepository, AcademicYearValidator]);
 
   registerSeedDeps(seedContainer, InstallmentValidator, [InstallmentRepository, FeeValidator]);
   registerSeedDeps(seedContainer, InstallmentService, [
@@ -388,7 +413,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, PayrollValidator, [PayrollRepository]);
   registerSeedDeps(seedContainer, PayrollService, [PayrollRepository, PayrollValidator, StaffRepository, FinancialAuditService]);
 
-  registerSeedDeps(seedContainer, PaymentValidator, [PaymentRepository, StudentValidator, InstallmentValidator, FeeRepository]);
+  registerSeedDeps(seedContainer, PaymentValidator, [PaymentRepository, StudentValidator, InstallmentValidator, FeeRepository, AllocationRepository, InstallmentRepository]);
   registerSeedDeps(seedContainer, PaymentService, [
     PaymentRepository,
     PaymentValidator,
@@ -403,16 +428,17 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, AttendanceValidator, [
     AttendanceRepository,
     StudentValidator,
+    StaffValidator,
     TeacherValidator,
     SectionValidator,
     SubjectValidator,
+    StudentEnrollmentRepository,
   ]);
-  registerSeedDeps(seedContainer, AttendanceService, [AttendanceRepository, AttendanceValidator]);
+  registerSeedDeps(seedContainer, AttendanceService, [AttendanceRepository, AttendanceValidator, AcademicYearValidator, SectionRepository]);
 
   registerSeedDeps(seedContainer, AnnouncementValidator, [
     AnnouncementRepository,
     ClassValidator,
-    SectionValidator,
   ]);
   registerSeedDeps(seedContainer, AnnouncementService, [AnnouncementRepository, AnnouncementValidator]);
 
@@ -430,7 +456,7 @@ export function configureSeedContainer(seedContainer: Container) {
     SubjectValidator,
     ClassValidator,
   ]);
-  registerSeedDeps(seedContainer, AssessmentService, [AssessmentRepository, AssessmentValidator]);
+  registerSeedDeps(seedContainer, AssessmentService, [AssessmentRepository, AssessmentValidator, AcademicSourceService]);
 
   registerSeedDeps(seedContainer, ExamValidator, [
     ExamRepository,
@@ -439,7 +465,7 @@ export function configureSeedContainer(seedContainer: Container) {
     SectionValidator,
     SubjectValidator,
   ]);
-  registerSeedDeps(seedContainer, ExamService, [ExamRepository, ExamValidator]);
+  registerSeedDeps(seedContainer, ExamService, [ExamRepository, ExamValidator, AcademicSourceService]);
 
   registerSeedDeps(seedContainer, GradeValidator, [
     GradeRepository,
@@ -448,8 +474,9 @@ export function configureSeedContainer(seedContainer: Container) {
     SectionValidator,
     SubjectValidator,
     AssessmentValidator,
+    ExamValidator,
   ]);
-  registerSeedDeps(seedContainer, GradeService, [GradeRepository, GradeValidator, AssessmentRepository]);
+  registerSeedDeps(seedContainer, GradeService, [GradeRepository, GradeValidator, AssessmentRepository, AcademicYearValidator, ExamRepository, AcademicSourceService, StudentEnrollmentRepository]);
 
   registerSeedDeps(seedContainer, AlertValidator, [
     AlertRepository,

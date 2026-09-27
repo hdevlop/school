@@ -13,7 +13,7 @@ implements the same contract with `apps/web` and `@kafil/*`.
 | Package | Owns | Exports |
 | --- | --- | --- |
 | `apps/dashboard` (`@sms/dashboard`) | Routes, UI, feature-owned client state, product policy, Najm composition (`AppProviders.tsx`, `najm.config.ts`, `najm.auth.ts`, `najm.server.ts`) | Nothing; it is the application |
-| `packages/contracts` (`@sms/contracts`) | Browser-safe shared code: domain value tuples, the translation catalog, demo/form-fill fixtures | `.`, `./lookup` (server-only), `./locales`, `./fixtures` |
+| `packages/contracts` (`@sms/contracts`) | Browser-safe shared code: domain value tuples, the translation catalog, demo/form-fill fixtures | `.`, `./lookup` (server-only), `./locales`, `./fixtures`, `./teacher-dashboard` |
 | `packages/server` (`@sms/server`) | Persistence, domain services, backend configuration, workers, theme assets | `.`, `./najm`, `./auth`, `./database`, `./database/schema`, `./theme`, `./modules`, `./modules/seed` |
 | `packages/seed` (`@sms/seed`) | Setup, fixtures loading and maintenance commands | Nothing; commands only |
 

@@ -18,12 +18,19 @@ import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useState } from 'react';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 function StudentsTable() {
 
   const { t } = useTranslation();
   const router = useRouter();
   const { classes } = useClasses();
+  // A new student is placed in the active year, as the server requires,
+  // whichever year is viewed, so the form offers the active year's classes.
+  const { viewingYear, activeYear } = useViewingAcademicYear();
+  const viewsOtherYear = !!viewingYear && !!activeYear && viewingYear !== activeYear;
+  const { classes: activeYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
+  const newStudentClasses = viewsOtherYear ? activeYearClasses : classes;
   const { feeTypes } = useFeeTypes();
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
@@ -51,10 +58,12 @@ function StudentsTable() {
       : businessDate;
 
     openDialog({
-      title: t('students.dialogs.createTitle'),
+      title: viewsOtherYear
+        ? t('students.dialogs.createTitleForYear', { year: activeYear })
+        : t('students.dialogs.createTitle'),
       children: (
         <FullStudentForm
-          classes={classes}
+          classes={newStudentClasses}
           feeTypes={feeTypes || []}
           businessDate={resolvedBusinessDate}
           onSubmitStudent={createStudent}

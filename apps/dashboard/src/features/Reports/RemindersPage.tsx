@@ -2,13 +2,14 @@
 
 import { NAvatar, NButton, NEmptyState, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Bell, BellRing, Search, CheckCircle2 } from 'lucide-react';
+import { Bell, BellRing, Search, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 import { cn } from 'najm-kit';
 import { toast } from 'sonner';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 type OverdueRow = {
   studentId: string;
@@ -34,7 +35,9 @@ const urgencyBadge = (days: number) => {
 const RemindersPage: React.FC = () => {
   const { t } = useTranslation();
   const { date, majorMoney } = useSchoolFormat();
-  const { data, isLoading } = useFinanceOverdue(100);
+  const { viewingYear } = useViewingAcademicYear();
+  const { data, error, isLoading } = useFinanceOverdue(100);
+  const yearKey = viewingYear ?? 'all';
   const [search, setSearch] = useState('');
   const [reminded, setReminded] = useState<Set<string>>(new Set());
 
@@ -46,19 +49,18 @@ const RemindersPage: React.FC = () => {
   }, [rows, search]);
 
   const handleRemind = useCallback((studentId: string, name: string) => {
-    setReminded((prev) => new Set(prev).add(studentId));
+    setReminded((prev) => new Set(prev).add(`${yearKey}:${studentId}`));
     toast.success(t('reports.reminders.toastReminded', { name }), {
       description: t('reports.reminders.toastSmsComingSoon'),
     });
-  }, [t]);
+  }, [t, yearKey]);
 
   const handleRemindAll = useCallback(() => {
-    const ids = new Set(filtered.map((r) => r.studentId));
-    setReminded(ids);
+    setReminded((prev) => new Set([...prev, ...filtered.map((r) => `${yearKey}:${r.studentId}`)]));
     toast.success(t('reports.reminders.toastRemindedAll', { count: filtered.length }), {
       description: t('reports.reminders.toastSmsComingSoon'),
     });
-  }, [filtered, t]);
+  }, [filtered, t, yearKey]);
 
   const totalOverdue = filtered.reduce((s, r) => s + r.totalOverdue, 0);
 
@@ -79,7 +81,7 @@ const RemindersPage: React.FC = () => {
       header: t('reports.aging.student') || 'Student',
       enableSorting: true,
       cell: ({ row }: any) => {
-        const done = reminded.has(row.original.studentId);
+        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return (
           <NAvatar
             src={row.original.studentImage}
@@ -95,7 +97,7 @@ const RemindersPage: React.FC = () => {
       header: t('reports.reminders.overdueAmount') || 'Overdue',
       enableSorting: true,
       cell: ({ row }: any) => {
-        const done = reminded.has(row.original.studentId);
+        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return (
           <span
             className={cn(
@@ -126,7 +128,7 @@ const RemindersPage: React.FC = () => {
       header: t('common.amount') || 'Amount',
       enableSorting: true,
       cell: ({ row }: any) => {
-        const done = reminded.has(row.original.studentId);
+        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return (
           <span className={cn('whitespace-nowrap font-bold tabular-nums', done ? 'text-muted-foreground' : 'text-red-600')}>
             {majorMoney(row.original.totalOverdue)}
@@ -139,7 +141,7 @@ const RemindersPage: React.FC = () => {
       header: t('reports.reminders.remind') || 'Reminder',
       enableSorting: false,
       cell: ({ row }: any) => {
-        const done = reminded.has(row.original.studentId);
+        const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return done ? (
           <div className="flex items-center gap-1.5 whitespace-nowrap text-xs font-semibold text-green-600">
             <CheckCircle2 className="h-4 w-4" />
@@ -158,21 +160,23 @@ const RemindersPage: React.FC = () => {
         );
       },
     },
-  ], [handleRemind, date, majorMoney, reminded, t]);
+  ], [handleRemind, date, majorMoney, reminded, t, yearKey]);
 
   return (
     <div className="flex flex-col gap-2 h-full overflow-hidden">
       <NPageHeader
         icon={BellRing}
         title={t('reports.reminders.title')}
-        subtitle={`${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${majorMoney(totalOverdue)}`}
+        subtitle={`${viewingYear ? `${t('reports.year', { year: viewingYear })} · ` : ''}${t('reports.reminders.studentsOverdueCount', { count: filtered.length })} · ${majorMoney(totalOverdue)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
-      <NTable
+      {error && !isLoading ? (
+        <NEmptyState icon={AlertTriangle} title={t('common.feedback.errorMessage')} className="min-h-64" />
+      ) : <NTable
         data={filtered}
         columns={columns}
         filters={filters}
@@ -180,7 +184,7 @@ const RemindersPage: React.FC = () => {
         getRowId={(row) => row.studentId}
         getRowClassName={(row) => cn(
           'border-l-4',
-          reminded.has(row.studentId) ? 'border-l-muted opacity-60' : urgencyRowColor(row.daysOverdue),
+          reminded.has(`${yearKey}:${row.studentId}`) ? 'border-l-muted opacity-60' : urgencyRowColor(row.daysOverdue),
         )}
         defaultSorting={[{ id: 'daysOverdue', desc: true }]}
         defaultMode="table"
@@ -224,7 +228,7 @@ const RemindersPage: React.FC = () => {
             </NButton>
           </div>
         )}
-      />
+      />}
     </div>
   );
 };

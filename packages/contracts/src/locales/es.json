@@ -1,4 +1,57 @@
 {
+  "academicYearMigration": {
+    "title": "Revisión de datos escolares",
+    "description": "Revisa los registros cuyo año o asignación histórica necesita pruebas antes de activar el historial de toda la escuela.",
+    "statusFilter": "Estado de revisión",
+    "open": "Abierto",
+    "resolved": "Resuelto",
+    "dismissed": "Descartado",
+    "openCount": "Incidencias abiertas",
+    "loading": "Cargando incidencias…",
+    "loadFailed": "No se pudieron cargar las incidencias.",
+    "retry": "Reintentar",
+    "empty": "No hay incidencias con este estado.",
+    "unknownYear": "Año desconocido",
+    "openStudent": "Abrir estudiante",
+    "review": "Revisar incidencia",
+    "pagination": "Páginas de incidencias",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "note": "Nota de revisión",
+    "resolutionHelp": "Resuelve una fecha de matrícula desconocida solo después de registrar la asignación fechada y confirmada.",
+    "cancel": "Cancelar",
+    "save": "Guardar revisión",
+    "reviewSaved": "Revisión guardada"
+  },
+  "academicYearViewing": {
+    "issues": {
+      "title": "{{count}} registros de este año tienen un contexto sin verificar:",
+      "showAll": "Mostrar todo",
+      "missingAssignmentContext": "Sin asignación docente",
+      "assignmentClassMismatch": "La clase de la asignación y la de la sección no coinciden",
+      "assignmentYearMismatch": "Asignación de otro año",
+      "assignmentSectionNotTargeted": "La sección de la asignación no está incluida",
+      "missingTargetSection": "Falta la sección destinataria",
+      "targetYearMismatch": "Sección destinataria de otro año",
+      "sourceDateOutsideYear": "Fecha fuera de este año",
+      "missingStudent": "Falta el estudiante",
+      "missingDatedPlacement": "Sin ubicación fechada ese día",
+      "studentSectionNotTargeted": "La sección del estudiante no está incluida",
+      "missingSourceDate": "Sin fecha de evaluación o examen",
+      "ambiguousGradeSource": "Necesita exactamente una evaluación o un examen",
+      "gradeSourceYearMismatch": "Evaluación o examen guardado en otro año",
+      "yearContextUnavailable": "No se pudo verificar"
+    },
+    "notEnrolled": "No matriculado en {{year}}",
+    "currentAssignments": "Las asignaciones docentes aún no se registran por año, así que esta lista muestra las asignaciones actuales de {{year}}.",
+    "label": "Año escolar",
+    "activeOption": "{{year}} (activo)",
+    "viewing": "Consultando el año escolar {{year}}",
+    "active": "Año activo: {{year}}",
+    "returnToActive": "Volver al año activo",
+    "unavailable": "No se pudieron cargar los años escolares",
+    "resetToActive": "El año escolar guardado para esta cuenta no está abierto a su rol, así que se muestra el año activo {{year}}."
+  },
   "accessReset": {
     "success": {
       "reset": "Restablecimiento de acceso completado"
@@ -461,6 +514,70 @@
     }
   },
   "dashboard": {
+    "teacher": {
+      "title": "Panel del docente",
+      "kpis": {
+        "totalStudents": "Total de alumnos",
+        "classesToday": "Clases de hoy",
+        "pendingTasks": "Tareas pendientes",
+        "attendance": "Asistencia",
+        "notifications": "Notificaciones sin leer"
+      },
+      "duration": {
+        "minutes": "{{minutes}} min",
+        "hoursMinutes": "{{hours}} h {{minutes}} min"
+      },
+      "nextClass": {
+        "title": "Próxima clase",
+        "current": "Clase actual",
+        "viewAll": "Ver todo",
+        "startsIn": "Empieza en {{time}}",
+        "room": "Aula {{room}}",
+        "noRoom": "Sin aula",
+        "takeAttendance": "Pasar lista",
+        "attendanceTaken": "Asistencia registrada",
+        "empty": "No quedan clases hoy"
+      },
+      "schedule": {
+        "title": "Horario de hoy",
+        "viewTimetable": "Ver horario",
+        "empty": "No hay clases programadas hoy"
+      },
+      "attention": {
+        "title": "Requiere atención",
+        "missingAttendance": "Asistencia pendiente",
+        "missingAttendanceHint": "Clases de hoy sin registro",
+        "missingGrades": "Notas pendientes",
+        "missingGradesHint": "Evaluaciones realizadas sin calificar del todo",
+        "notifications": "Notificaciones",
+        "notificationsHint": "Notificaciones sin leer",
+        "concerns": "Seguimiento de alumnos",
+        "concernsHint": "Incidencias abiertas en tus secciones"
+      },
+      "classes": {
+        "title": "Mis clases",
+        "viewAll": "Ver todo",
+        "students": "alumnos",
+        "empty": "No tienes clases asignadas este año"
+      },
+      "assessments": {
+        "title": "Evaluaciones y calificación",
+        "viewAll": "Ver todo",
+        "due": "Fecha: {{date}}",
+        "empty": "No hay evaluaciones este año"
+      },
+      "trend": {
+        "title": "Tendencia de asistencia",
+        "range7d": "Últimos 7 días",
+        "range30d": "Últimos 30 días",
+        "overall": "Asistencia global",
+        "vsPrevious": "vs periodo anterior",
+        "classesHeld": "Clases impartidas",
+        "outOf": "de {{count}} programadas",
+        "rate": "Asistencia",
+        "empty": "No hay asistencia registrada en este periodo"
+      }
+    },
     "widgets": {
       "totalLiters": "Total Litros",
       "totalFields": "Total Campos",
@@ -488,6 +605,12 @@
       "agingBalance": "Saldo por antigüedad",
       "agingCurrent": "Actual",
       "collectionRateYTD": "Tasa de cobro del año",
+      "studentsYear": "Estudiantes ({{year}})",
+      "teachersCurrent": "Profesores (actuales)",
+      "incomeYear": "Ingresos ({{year}})",
+      "expensesYear": "Gastos ({{year}})",
+      "netBalanceYear": "Saldo neto ({{year}})",
+      "collectionRateYear": "Tasa de cobro ({{year}})",
       "daysOverdue": "Días de retraso",
       "expenseCount": "Cantidad de gastos",
       "expenses": "Expenses",
@@ -665,6 +788,7 @@
     }
   },
   "status": {
+    "upcoming": "Próximo",
     "active": "Activo",
     "inactive": "Inactivo",
     "pending": "Pendiente",
@@ -1049,6 +1173,24 @@
     }
   },
   "fees": {
+    "classBulk": {
+      "action": "Cobrar a una clase",
+      "title": "Cobrar a una clase en el año escolar mostrado",
+      "rosterDate": "Fecha de matrícula y comienzo del cobro",
+      "studentsOnDate": "Estudiantes de la clase en esta fecha",
+      "rosterUnavailable": "No se pudo cargar la lista",
+      "previewNote": "La vista previa usa la fecha elegida. El cobro final también respeta la fecha de matrícula de cada estudiante.",
+      "result": "Creados: {{created}}, omitidos: {{skipped}}, fallidos: {{failed}}"
+    },
+    "historyView": {
+      "scope": "Cuotas mostradas",
+      "scopeYear": "Año escolar {{year}}",
+      "scopeOutstanding": "Impagadas, todos los años escolares",
+      "outstandingCount": "{{count}} estudiantes con cuotas impagadas en cualquier año escolar",
+      "noOutstanding": "No hay cuotas impagadas en ningún año escolar",
+      "otherYearDebts": "Cuotas impagadas de otros años escolares:",
+      "otherYearDebt": "{{year}} ({{count}} impagadas)"
+    },
     "card": {
       "overdueInstallments": "Cuotas vencidas",
       "payments": "Pagos",
@@ -2266,6 +2408,8 @@
       "refunded": "Reembolsado"
     },
     "table": {
+      "allocatedToYear": "Asignado a {{year}}",
+      "fullReceipt": "Recibo completo",
       "amount": "Monto",
       "checkDueDate": "Fecha de vencimiento del cheque",
       "checkNumber": "Número de cheque",
@@ -2656,6 +2800,35 @@
     }
   },
   "students": {
+    "enrollment": {
+      "title": "Años escolares",
+      "help": "La clase y la sección del estudiante en cada año escolar, según registros fechados. Editar el perfil no las cambia.",
+      "empty": "No hay ninguna matrícula anual registrada para este estudiante.",
+      "enrollIn": "Matricular en {{year}}",
+      "enrollAction": "Matricular",
+      "enrolled": "Matrícula registrada",
+      "transfer": "Cambiar de clase o sección",
+      "transferAction": "Cambiar asignación",
+      "transferred": "Asignación cambiada",
+      "end": "Finalizar matrícula",
+      "endAction": "Finalizar matrícula",
+      "ended": "Matrícula finalizada",
+      "failed": "No se pudo cambiar la matrícula",
+      "enrolledOn": "Matriculado el",
+      "validFrom": "En la nueva clase desde",
+      "reason": "Motivo",
+      "reasonPlaceholder": "Por qué cambia el estudiante",
+      "leftOn": "Ya no matriculado desde",
+      "outcome": "Resultado",
+      "currentPlacement": "Actualmente en {{className}} – {{sectionName}} desde el {{date}}.",
+      "fromUntil": "Del {{from}} hasta el {{to}}",
+      "fromOngoing": "Desde el {{from}}, en curso",
+      "endStatus": {
+        "withdrawn": "Retirado",
+        "graduated": "Graduado",
+        "transferred": "Trasladado a otro centro"
+      }
+    },
     "success": {
       "retrieved": "Estudiante obtenido correctamente",
       "created": "Estudiante creado correctamente",
@@ -2669,6 +2842,7 @@
       "count": "{{count}} estudiantes en total"
     },
     "dialogs": {
+      "createTitleForYear": "Añadir un estudiante a {{year}}",
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear estudiante",
       "createTitle": "Crear un nuevo estudiante",
@@ -2683,6 +2857,7 @@
       "searchByName": "Buscar por nombre..."
     },
     "form": {
+      "placementReadOnly": "La clase y la sección se cambian en la pestaña Años escolares del perfil del estudiante.",
       "academicInformation": "Información académica",
       "studentInformation": "Información del estudiante",
       "parentsInformation": "Información de los padres",
@@ -2695,8 +2870,9 @@
       "dateOfBirthPlaceholder": "Seleccione la fecha de nacimiento",
       "email": "Correo electrónico",
       "emailPlaceholder": "Ingrese el correo electrónico",
-      "enrollmentDate": "Fecha de inscripción",
+      "enrollmentDate": "Fecha de primera inscripción",
       "enrollmentDatePlaceholder": "Seleccione la fecha de inscripción",
+      "yearEnrolledOn": "Fecha de inscripción para este curso escolar",
       "feesInformation": "Información de cuotas",
       "fullName": "Nombre completo",
       "fullNamePlaceholder": "Ingrese el nombre completo",
@@ -2784,7 +2960,7 @@
       "saveParents": "Guardar padres",
       "alertsPlaceholder": "El contenido de las alertas aparecerá aquí",
       "academicsPlaceholder": "El contenido académico aparecerá aquí",
-      "tabs": { "overview": "Resumen", "attendance": "Asistencia", "grades": "Notas", "fees": "Cuotas", "transport": "Transporte", "alerts": "Alertas" },
+      "tabs": { "schoolYears": "Años escolares", "overview": "Resumen", "attendance": "Asistencia", "grades": "Notas", "fees": "Cuotas", "transport": "Transporte", "alerts": "Alertas" },
       "genders": { "M": "Masculino", "F": "Femenino", "Other": "Otro" },
       "relationships": { "father": "Padre", "mother": "Madre", "guardian": "Tutor", "stepparent": "Padrastro/Madrastra", "grandparent": "Abuelo/a", "other": "Otro" },
       "maritalStatuses": { "single": "Soltero/a", "married": "Casado/a", "divorced": "Divorciado/a", "widowed": "Viudo/a", "separated": "Separado/a" },

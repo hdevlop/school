@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  academicYearField,
   addressField,
   cinField,
   dateField,
@@ -10,6 +11,7 @@ import {
   phoneField,
 } from '../../shared/fields';
 import { compensationModeEnum, employmentTypeEnum, genderEnum, teacherStatusEnum } from '../../shared/enums';
+import { isDateOnly } from '@sms/contracts/academic-years';
 
 const teacherPersonalSchema = z.object({
   id: optionalId,
@@ -72,6 +74,11 @@ export const teacherIdParam = z.object({ id: z.string().min(1) });
 export const teacherCinParam = z.object({ cin: cinField });
 export const teacherEmailParam = z.object({ email: z.string().email('Invalid email format') });
 export const teacherPhoneParam = z.object({ phone: phoneField });
+export const teacherStudentsQuery = z.object({
+  academicYear: academicYearField.optional(),
+  onDate: z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date').optional(),
+});
+export type TeacherStudentsQuery = z.infer<typeof teacherStudentsQuery>;
 export const deleteBulkTeacherDto = z.array(z.string().min(1));
 
 export const assignSubjectDto = z.object({

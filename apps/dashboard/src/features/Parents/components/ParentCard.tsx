@@ -20,6 +20,7 @@ const ParentInfoRow = ({ icon: Icon, label, value, muted }) => (
 const ParentCard = ({ data }) => {
   const { t } = useTranslation();
   const router = useRouter();
+  // Opening the parent keeps an explicitly viewed year.
   const parent = data;
 
   const relationshipLabels = {

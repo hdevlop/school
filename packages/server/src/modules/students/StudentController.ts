@@ -1,17 +1,22 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { StudentService } from './StudentService';
 import { Student, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './StudentGuards';
-import { isAdmin } from '../../auth';
+import { isAdmin, isAdministrator } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   createStudentDto,
   createStudentsBulkDto,
   deleteBulkStudentDto,
   studentIdParam,
+  studentListQuery,
+  studentYearQuery,
   updateStudentDto,
   type CreateStudentsBulkDto,
   type CreateStudentDto,
   type DeleteBulkStudentDto,
+  type StudentListQuery,
   type UpdateStudentDto,
 } from './StudentDto';
 
@@ -23,19 +28,20 @@ export class StudentController {
 
   @Get()
   @CanList()
+  @Validate({ query: studentListQuery })
   @McpTool('List all students')
   @ResMsg('students.success.retrieved')
-  async getStudents() {
-    return this.studentService.getAll();
+  async getStudents(@Year() year: ResolvedAcademicYear, @Query('onDate') onDate?: StudentListQuery['onDate']) {
+    return this.studentService.getAll(year, onDate);
   }
 
   @Get('/:id')
   @CanRead()
-  @Validate({ params: studentIdParam })
+  @Validate({ params: studentIdParam, query: studentYearQuery })
   @McpTool('Get a student by ID')
   @ResMsg('students.success.retrieved')
-  async getStudent(@Params('id') id: string) {
-    return this.studentService.getById(id);
+  async getStudent(@Params('id') id: string, @Year() year: ResolvedAcademicYear) {
+    return this.studentService.getById(id, year);
   }
 
   @Get('/:id/parents')
@@ -45,6 +51,14 @@ export class StudentController {
   @ResMsg('students.success.retrieved')
   async getStudentParents(@Params('id') id: string) {
     return this.studentService.getParents(id);
+  }
+
+  @Get('/:id/enrollments')
+  @isAdministrator()
+  @Validate({ params: studentIdParam })
+  @ResMsg('students.success.retrieved')
+  async getStudentEnrollments(@Params('id') id: string) {
+    return this.studentService.getEnrollments(id);
   }
 
   @Post()

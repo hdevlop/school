@@ -3,6 +3,12 @@ import { StudentRepository } from './StudentRepository';
 import { UserValidator } from '../../auth';
 import { ClassValidator } from '../classes/ClassValidator';
 import { SectionValidator } from '../sections/SectionValidator';
+import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
+import { isDateOnly } from '@sms/contracts/academic-years';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import type { CreateStudentDto, UpdateStudentDto } from './StudentDto';
+
+type ExistingStudent = NonNullable<Awaited<ReturnType<StudentRepository['getById']>>>;
 
 @Service()
 export class StudentValidator {
@@ -13,7 +19,58 @@ export class StudentValidator {
     private userValidator: UserValidator,
     private classValidator: ClassValidator,
     private sectionValidator: SectionValidator,
+    private studentEnrollments: StudentEnrollmentRepository,
   ) { }
+
+  ensureRosterDateWithinYear(onDate: string, year: ResolvedAcademicYear) {
+    if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) {
+      Err(400, 'Date is outside the academic year reporting interval');
+    }
+  }
+
+  ensureCreateAllowed(data: CreateStudentDto) {
+    if (data.status && data.status !== 'active') {
+      Err(422, 'Create an active student, then end the yearly enrollment if needed');
+    }
+    if (isDateOnly(data.enrollmentDate) && data.yearEnrolledOn < data.enrollmentDate) {
+      Err(422, 'Yearly enrollment cannot predate the original admission date');
+    }
+  }
+
+  async ensureProfileUpdateAllowed(student: ExistingStudent, data: UpdateStudentDto) {
+    if (
+      (data.classId !== undefined && data.classId !== student.classId) ||
+      (data.sectionId !== undefined && data.sectionId !== student.sectionId) ||
+      (data.status !== undefined && data.status !== student.status)
+    ) {
+      Err(409, 'Use the dated enrollment operations to change placement or enrollment status');
+    }
+    if (data.enrollmentDate !== undefined && data.enrollmentDate !== student.enrollmentDate) {
+      const earliest = await this.studentEnrollments.earliestEnrolledOn(student.id);
+      if (earliest && (!isDateOnly(data.enrollmentDate) || data.enrollmentDate > earliest)) {
+        Err(422, 'Original admission date cannot follow a recorded yearly enrollment');
+      }
+    }
+  }
+
+  async ensureCanDelete(id: string) {
+    if (await this.studentEnrollments.hasAnyForStudent(id)) {
+      Err(409, 'A student with yearly enrollment history cannot be deleted');
+    }
+  }
+
+  async ensureCanDeleteAll() {
+    if (await this.studentEnrollments.hasAny()) {
+      Err(409, 'Yearly enrollment history must be retained');
+    }
+  }
+
+  handleBulkCreateFailure(error: unknown, studentData: CreateStudentDto, index: number) {
+    if ((error as { status?: unknown } | null)?.status === 409) return;
+    const identifier = studentData.studentCode || studentData.id || studentData.name || `at index ${index}`;
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to create student ${identifier}: ${message}`);
+  }
 
   async ensureUserIdUnique(id: string) {
     await this.userValidator.checkUserIdIsUnique(id);

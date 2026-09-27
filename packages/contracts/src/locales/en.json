@@ -1,4 +1,57 @@
 {
+  "academicYearMigration": {
+    "title": "Academic year data review",
+    "description": "Review records whose historical year or placement needs evidence before switching school-wide history on.",
+    "statusFilter": "Review status",
+    "open": "Open",
+    "resolved": "Resolved",
+    "dismissed": "Dismissed",
+    "openCount": "Open issues",
+    "loading": "Loading issues…",
+    "loadFailed": "Could not load migration issues.",
+    "retry": "Retry",
+    "empty": "No issues in this status.",
+    "unknownYear": "Unknown year",
+    "openStudent": "Open student",
+    "review": "Review issue",
+    "pagination": "Issue pages",
+    "previous": "Previous",
+    "next": "Next",
+    "note": "Review note",
+    "resolutionHelp": "Resolve an unknown enrollment date only after recording the confirmed dated placement.",
+    "cancel": "Cancel",
+    "save": "Save review",
+    "reviewSaved": "Review saved"
+  },
+  "academicYearViewing": {
+    "issues": {
+      "title": "{{count}} records in this year have unverified context:",
+      "showAll": "Show all",
+      "missingAssignmentContext": "No teaching assignment",
+      "assignmentClassMismatch": "Assignment and section classes differ",
+      "assignmentYearMismatch": "Assignment belongs to another year",
+      "assignmentSectionNotTargeted": "Assignment's section not targeted",
+      "missingTargetSection": "Target section missing",
+      "targetYearMismatch": "Target section in another year",
+      "sourceDateOutsideYear": "Date outside this year",
+      "missingStudent": "Student missing",
+      "missingDatedPlacement": "No dated placement on that day",
+      "studentSectionNotTargeted": "Student's section not targeted",
+      "missingSourceDate": "No assessment or exam date",
+      "ambiguousGradeSource": "Needs exactly one assessment or exam",
+      "gradeSourceYearMismatch": "Assessment or exam saved in another year",
+      "yearContextUnavailable": "Could not be checked"
+    },
+    "notEnrolled": "Not enrolled in {{year}}",
+    "currentAssignments": "Teaching assignments are not recorded per year yet, so this list shows the current assignments of {{year}}.",
+    "label": "School year",
+    "activeOption": "{{year}} (active)",
+    "viewing": "Viewing school year {{year}}",
+    "active": "Active year: {{year}}",
+    "returnToActive": "Return to the active year",
+    "unavailable": "School years could not be loaded",
+    "resetToActive": "The school year saved for this account is not open to your role, so the active year {{year}} is shown."
+  },
   "accessReset": {
     "success": {
       "reset": "Access reset completed"
@@ -418,6 +471,70 @@
     }
   },
   "dashboard": {
+    "teacher": {
+      "title": "Teacher Dashboard",
+      "kpis": {
+        "totalStudents": "Total Students",
+        "classesToday": "Classes Today",
+        "pendingTasks": "Pending Tasks",
+        "attendance": "Attendance",
+        "notifications": "Unread Notifications"
+      },
+      "duration": {
+        "minutes": "{{minutes}} min",
+        "hoursMinutes": "{{hours}} h {{minutes}} min"
+      },
+      "nextClass": {
+        "title": "Next Class",
+        "current": "Current Class",
+        "viewAll": "View All",
+        "startsIn": "Starts in {{time}}",
+        "room": "Room {{room}}",
+        "noRoom": "No room set",
+        "takeAttendance": "Take Attendance",
+        "attendanceTaken": "Attendance Taken",
+        "empty": "No more classes today"
+      },
+      "schedule": {
+        "title": "Today's Schedule",
+        "viewTimetable": "View Timetable",
+        "empty": "No classes scheduled today"
+      },
+      "attention": {
+        "title": "Needs Attention",
+        "missingAttendance": "Missing Attendance",
+        "missingAttendanceHint": "Today's classes without a register",
+        "missingGrades": "Missing Grades",
+        "missingGradesHint": "Held assessments not fully graded",
+        "notifications": "Notifications",
+        "notificationsHint": "Unread notifications",
+        "concerns": "Student Concerns",
+        "concernsHint": "Open incidents in your sections"
+      },
+      "classes": {
+        "title": "My Classes",
+        "viewAll": "View All",
+        "students": "students",
+        "empty": "No classes assigned this year"
+      },
+      "assessments": {
+        "title": "Assessments & Grading",
+        "viewAll": "View All",
+        "due": "Due {{date}}",
+        "empty": "No assessments this year"
+      },
+      "trend": {
+        "title": "Attendance Trend",
+        "range7d": "Last 7 days",
+        "range30d": "Last 30 days",
+        "overall": "Overall Attendance",
+        "vsPrevious": "vs previous period",
+        "classesHeld": "Classes Held",
+        "outOf": "out of {{count}} scheduled",
+        "rate": "Attendance",
+        "empty": "No attendance recorded in this period"
+      }
+    },
     "widgets": {
       "totalStudents": "Total Students",
       "totalTeachers": "Total Teachers",
@@ -432,6 +549,12 @@
       "expensesMonth": "Expenses (month)",
       "netBalance": "Net Balance",
       "collectionRateYTD": "Collection Rate YTD",
+      "studentsYear": "Students ({{year}})",
+      "teachersCurrent": "Teachers (current)",
+      "incomeYear": "Income ({{year}})",
+      "expensesYear": "Expenses ({{year}})",
+      "netBalanceYear": "Net Balance ({{year}})",
+      "collectionRateYear": "Collection Rate ({{year}})",
       "studentsByGender": "Students by Gender",
       "incomeVsExpenses": "Income vs Expenses",
       "income": "Income",
@@ -619,6 +742,7 @@
     }
   },
   "status": {
+    "upcoming": "Upcoming",
     "active": "Active",
     "inactive": "Inactive",
     "pending": "Pending",
@@ -915,6 +1039,24 @@
     }
   },
   "fees": {
+    "classBulk": {
+      "action": "Charge a class",
+      "title": "Charge a class in the viewed school year",
+      "rosterDate": "Roster and charge date",
+      "studentsOnDate": "Students in class on this date",
+      "rosterUnavailable": "Roster unavailable",
+      "previewNote": "The preview uses the selected date. Each student's final charge also respects their enrollment date.",
+      "result": "Created {{created}}, skipped {{skipped}}, failed {{failed}}"
+    },
+    "historyView": {
+      "scope": "Fees shown",
+      "scopeYear": "School year {{year}}",
+      "scopeOutstanding": "Unpaid, all school years",
+      "outstandingCount": "{{count}} students with unpaid fees in any school year",
+      "noOutstanding": "No unpaid fees in any school year",
+      "otherYearDebts": "Unpaid fees in other school years:",
+      "otherYearDebt": "{{year}} ({{count}} unpaid)"
+    },
     "subtitle": {
       "count": "{{count}} students total"
     },
@@ -1200,6 +1342,35 @@
     }
   },
   "students": {
+    "enrollment": {
+      "title": "School years",
+      "help": "The student's class and section in each school year, from dated records. Editing the profile does not change them.",
+      "empty": "No school-year enrollment is recorded for this student.",
+      "enrollIn": "Enrol in {{year}}",
+      "enrollAction": "Enrol",
+      "enrolled": "Enrollment recorded",
+      "transfer": "Change class or section",
+      "transferAction": "Change placement",
+      "transferred": "Placement changed",
+      "end": "End enrollment",
+      "endAction": "End enrollment",
+      "ended": "Enrollment ended",
+      "failed": "The enrollment could not be changed",
+      "enrolledOn": "Enrolled on",
+      "validFrom": "In the new class from",
+      "reason": "Reason",
+      "reasonPlaceholder": "Why the student is moving",
+      "leftOn": "No longer enrolled from",
+      "outcome": "Outcome",
+      "currentPlacement": "Currently in {{className}} – {{sectionName}} since {{date}}.",
+      "fromUntil": "From {{from}} until {{to}}",
+      "fromOngoing": "From {{from}}, ongoing",
+      "endStatus": {
+        "withdrawn": "Withdrawn",
+        "graduated": "Graduated",
+        "transferred": "Transferred to another school"
+      }
+    },
     "success": {
       "retrieved": "Student retrieved successfully",
       "allRetrieved": "All students retrieved successfully",
@@ -1235,6 +1406,7 @@
       "feesData": "Fees Data"
     },
     "form": {
+      "placementReadOnly": "Class and section are changed in the School years tab of the student's profile.",
       "personalData": "Personal Data",
       "studentInformation": "Student Information",
       "parentsInformation": "Parents Information",
@@ -1259,8 +1431,9 @@
       "classPlaceholder": "Select a class",
       "section": "Section",
       "sectionPlaceholder": "Select a section",
-      "enrollmentDate": "Enrollment Date",
+      "enrollmentDate": "Original admission date",
       "enrollmentDatePlaceholder": "Enter date",
+      "yearEnrolledOn": "Enrollment date for this academic year",
       "previousSchool": "Previous School",
       "previousSchoolPlaceholder": "Enter previous school name",
       "email": "Email",
@@ -1338,6 +1511,7 @@
       "existingParentFoundDescription": "We found an existing parent with the same {field}. Would you like to link this parent instead of creating a new one?"
     },
     "dialogs": {
+      "createTitleForYear": "Add a student to {{year}}",
       "createTitle": "Create New Student",
       "createButton": "Create Student",
       "viewTitle": "Student Details",
@@ -1491,6 +1665,7 @@
       "alertsPlaceholder": "Alerts content goes here",
       "academicsPlaceholder": "Academics content goes here",
       "tabs": {
+        "schoolYears": "School years",
         "overview": "Overview",
         "attendance": "Attendance",
         "grades": "Grades",
@@ -2439,6 +2614,8 @@
       "confirmRefundDescription": "This action will refund the payment amount. Continue?"
     },
     "table": {
+      "allocatedToYear": "Allocated to {{year}}",
+      "fullReceipt": "Full receipt",
       "selectAll": "Select all",
       "selectRow": "Select row",
       "id": "Payment ID",

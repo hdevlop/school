@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { NButton, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
-import { AlertTriangle, Bus, CalendarCheck, DollarSign, Download, GraduationCap, User, X } from 'lucide-react';
+import { AlertTriangle, Bus, CalendarCheck, CalendarRange, DollarSign, Download, GraduationCap, User, X } from 'lucide-react';
+import { useAuth } from 'najm-auth/client/react';
 import { StudentProfileTabsProps } from './types';
 import OverviewTab from './Overview';
 import FeesTab from './Fees';
@@ -13,6 +14,7 @@ import LeftSidebar from './LeftSidebar';
 import { useStudentProfile } from '@/features/Students/hooks/useStudentProfile';
 import { useTranslation } from 'najm-i18n/react';
 import TransportTab from './Transport';
+import EnrollmentTab from './Enrollment';
 
 export { default as LeftSidebar } from './LeftSidebar';
 export { default as OverviewTab } from './Overview';
@@ -21,6 +23,10 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
   const [activeTab, setActiveTab] = useState<string>('overview');
   const { student, isStudentLoading, parents, isParentsLoading } = useStudentProfile(studentId);
   const { t } = useTranslation();
+  const { user } = useAuth();
+  // The enrollment history and its commands are administrator/principal routes.
+  const role = (user as { role?: string } | null)?.role;
+  const canManageEnrollment = role === 'admin' || role === 'principal';
 
   const sharedTabProps = {
     studentId,
@@ -32,6 +38,9 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
 
   const tabItems = [
     { value: 'overview', icon: User, label: t('students.profile.tabs.overview'), content: <OverviewTab {...sharedTabProps} /> },
+    ...(canManageEnrollment
+      ? [{ value: 'enrollment', icon: CalendarRange, label: t('students.profile.tabs.schoolYears'), content: <EnrollmentTab studentId={studentId} /> }]
+      : []),
     { value: 'attendance', icon: CalendarCheck, label: t('students.profile.tabs.attendance'), content: <AttendanceTab {...sharedTabProps} /> },
     { value: 'grades', icon: GraduationCap, label: t('students.profile.tabs.grades'), content: <GradesTab {...sharedTabProps} /> },
     { value: 'fees', icon: DollarSign, label: t('students.profile.tabs.fees'), content: <FeesTab {...sharedTabProps} onOpenFeeRecord={onOpenFeeRecord} /> },

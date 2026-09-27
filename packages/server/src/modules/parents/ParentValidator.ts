@@ -93,7 +93,7 @@ export class ParentValidator {
   }
 
   async ensureCinExists(cin: string) {
-    const parent = await this.parentRepository.getByCin(cin);
+    const parent = await this.parentRepository.getReadableByCin(cin);
     if (!parent) {
       Err(404, this.pt('notFound'));
     }
@@ -101,7 +101,7 @@ export class ParentValidator {
   }
 
   async ensurePhoneExists(phone: string) {
-    const parent = await this.parentRepository.getByPhone(phone);
+    const parent = await this.parentRepository.getReadableByPhone(phone);
     if (!parent) {
       Err(404, this.pt('notFound'));
     }

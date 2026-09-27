@@ -23,6 +23,14 @@
       "types": "./src/routines.ts",
       "default": "./src/routines.ts"
     },
+    "./academic-years": {
+      "types": "./src/academicYears.ts",
+      "default": "./src/academicYears.ts"
+    },
+    "./teacher-dashboard": {
+      "types": "./src/teacherDashboard.ts",
+      "default": "./src/teacherDashboard.ts"
+    },
     "./fixtures": {
       "types": "./src/fixtures/index.ts",
       "default": "./src/fixtures/index.ts"

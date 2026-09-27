@@ -1,37 +1,30 @@
-import { Service } from '../../najm';
-import { ExamRepository } from './ExamRepository';
+import { Err, Service } from '../../najm';
+import { ExamRepository, type ExamListFilters } from './ExamRepository';
 import { ExamValidator } from './ExamValidator';
 import { pickProps } from '../../shared';
 import type { CreateExamDto, UpdateExamDto } from './ExamDto';
+import { AcademicSourceService } from '../academicSources/AcademicSourceService';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class ExamService {
   constructor(
     private examRepository: ExamRepository,
     private examValidator: ExamValidator,
+    private sources: AcademicSourceService
   ) { }
 
-  async getAll() {
-    return await this.examRepository.getAll();
+  // The year's exams, optionally for one section, subject or teacher;
+  // a filter naming a missing record is a 404 before the list is read.
+  async getAll(year: ResolvedAcademicYear, filters: Omit<ExamListFilters, 'year'> = {}) {
+    if (filters.sectionId) await this.examValidator.ensureSectionExists(filters.sectionId);
+    if (filters.subjectId) await this.examValidator.ensureSubjectExists(filters.subjectId);
+    if (filters.teacherId) await this.examValidator.ensureTeacherExists(filters.teacherId);
+    return this.examRepository.getAll({ year, ...filters });
   }
 
   async getById(id: string) {
     return this.examValidator.ensureExists(id);
-  }
-
-  async getBySection(sectionId: string) {
-    await this.examValidator.ensureSectionExists(sectionId);
-    return await this.examRepository.getBySection(sectionId);
-  }
-
-  async getBySubject(subjectId: string) {
-    await this.examValidator.ensureSubjectExists(subjectId);
-    return await this.examRepository.getBySubject(subjectId);
-  }
-
-  async getByTeacher(teacherId: string) {
-    await this.examValidator.ensureTeacherExists(teacherId);
-    return await this.examRepository.getByTeacher(teacherId);
   }
 
   async getTodayExams() {
@@ -74,6 +67,7 @@ export class ExamService {
 
   async create(data: CreateExamDto) {
     const normalizedData = this.normalizeSectionTargets(data);
+    const year = await this.sources.ensureTargetsValid(normalizedData.sectionIds ?? [], normalizedData.date);
     const EXAM_CREATE_KEYS = [
       'title', 'description', 'type', 'date', 'startTime', 'endTime', 'duration',
       'totalMarks', 'passingMarks', 'roomNumber', 'instructions', 'status', 'sectionIds'
@@ -81,6 +75,7 @@ export class ExamService {
 
     const examDetails: Record<string, unknown> = {
       ...pickProps(normalizedData, EXAM_CREATE_KEYS),
+      academicYearId: year.id,
       teacherId: normalizedData.teacherId,
       sectionId: normalizedData.sectionId,
       subjectId: normalizedData.subjectId,
@@ -101,6 +96,26 @@ export class ExamService {
   async update(id: string, data: UpdateExamDto) {
     const current = await this.examValidator.ensureExists(id);
     const normalizedData = this.normalizeSectionTargets(data);
+    const currentTargetIds = current.sectionIds?.length
+      ? current.sectionIds : current.section?.id ? [current.section.id] : [];
+    const targetIds = data.sectionIds !== undefined || data.sectionId !== undefined
+      ? normalizedData.sectionIds ?? [] : currentTargetIds;
+    const yearTargetsChanged = [...targetIds].sort().join('\0') !== [...currentTargetIds].sort().join('\0');
+    const contextChanged = (data.date !== undefined && data.date !== current.date) || yearTargetsChanged ||
+      (data.teacherId !== undefined && data.teacherId !== current.teacher?.id) ||
+      (data.subjectId !== undefined && data.subjectId !== current.subject?.id);
+    let targetYearId: string | undefined;
+    if (contextChanged) {
+      await this.examValidator.ensureNotInUse(id);
+      const year = await this.sources.ensureTargetsValid(
+        targetIds,
+        normalizedData.date ?? current.date,
+      );
+      if (current.academicYearId && current.academicYearId !== year.id) {
+        Err(409, 'Exam academic year cannot be changed');
+      }
+      targetYearId = year.id;
+    }
     await this.examValidator.validate(normalizedData, id);
 
     const EXAM_UPDATE_KEYS = [
@@ -109,17 +124,15 @@ export class ExamService {
     ];
 
     const examData: Record<string, unknown> = pickProps(normalizedData, EXAM_UPDATE_KEYS);
-    const sectionIds = normalizedData.sectionIds
-      ?? (current.sectionIds?.length
-        ? current.sectionIds
-        : current.section?.id
-          ? [current.section.id]
-          : []);
+    if (targetYearId && !current.academicYearId) examData.academicYearId = targetYearId;
+    const sectionIds = normalizedData.sectionIds ?? currentTargetIds;
     const teacherId = normalizedData.teacherId ?? current.teacher?.id;
     const subjectId = normalizedData.subjectId ?? current.subject?.id;
-    const targetsChanged = 'sectionIds' in data || 'sectionId' in data || 'teacherId' in data || 'subjectId' in data;
+    const assignmentChanged = yearTargetsChanged ||
+      (data.teacherId !== undefined && data.teacherId !== current.teacher?.id) ||
+      (data.subjectId !== undefined && data.subjectId !== current.subject?.id);
 
-    if (targetsChanged && sectionIds.length && teacherId && subjectId) {
+    if (assignmentChanged && sectionIds.length && teacherId && subjectId) {
       const [teacherAssignmentId] = await this.getTeacherAssignmentIds({
         teacherId,
         subjectId,

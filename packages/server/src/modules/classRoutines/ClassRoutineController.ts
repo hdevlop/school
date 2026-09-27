@@ -1,6 +1,8 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { isAuth, isAdministrator } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { ClassRoutineService } from './ClassRoutineService';
 import {
   createRoutineEntryDto,
@@ -60,7 +62,9 @@ export class ClassRoutineController {
   @isAuth()
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.retrieved')
-  async getAssignments(@Params('id') sectionId: string) { return this.service.getAssignments(sectionId); }
+  async getAssignments(@Params('id') sectionId: string, @User() user: { role?: string }) {
+    return this.service.getAssignments(sectionId, user.role);
+  }
 
   @Get('/duty-candidates')
   @isAdministrator()
@@ -70,29 +74,35 @@ export class ClassRoutineController {
   @Get('/teachers/:teacherId')
   @isAuth()
   @Validate({ params: routineTeacherParam, query: routineListQuery.pick({ academicYear: true }) })
-  @McpTool('Get the current weekly routine for a teacher')
+  @McpTool("Get a teacher's weekly routine in the academic year")
   @ResMsg('classRoutines.success.retrieved')
   async getTeacherRoutine(
     @Params('teacherId') teacherId: string,
-    @Query('academicYear') academicYear: string | undefined,
+    @Year() year: ResolvedAcademicYear,
     @User() user: { role?: string; teacherId?: string },
   ) {
-    return this.service.getTeacherSchedule(teacherId, academicYear, user);
+    return this.service.getTeacherSchedule(teacherId, year, user);
   }
 
   @Get('/sections/:id/published')
   @isAuth()
   @Validate({ params: routineIdParam, query: routineListQuery.pick({ academicYear: true }) })
   @ResMsg('classRoutines.success.retrieved')
-  async getPublished(@Params('id') sectionId: string, @Query('academicYear') academicYear?: string) {
-    return this.service.getPublishedForSection(sectionId, academicYear);
+  async getPublished(
+    @Params('id') sectionId: string,
+    @Year() year: ResolvedAcademicYear,
+    @User() user: { role?: string },
+  ) {
+    return this.service.getPublishedForSection(sectionId, year, user.role);
   }
 
   @Get()
   @isAuth()
   @Validate({ query: routineListQuery })
   @ResMsg('classRoutines.success.retrieved')
-  async list(@Query() query: RoutineListQuery = {}) { return this.service.list(query); }
+  async list(@Query() query: RoutineListQuery, @Year() year: ResolvedAcademicYear) {
+    return this.service.list(query ?? {}, year);
+  }
 
   @Post()
   @isAdministrator()
@@ -123,8 +133,8 @@ export class ClassRoutineController {
   @isAdministrator()
   @Validate({ params: routineEntryParams, query: routineEntryDeleteQuery })
   @ResMsg('classRoutines.success.entryDeleted')
-  async deleteEntry(@Params('id') id: string, @Params('entryId') entryId: string, @Query() query: RoutineEntryDeleteQuery = {}) {
-    return this.service.deleteEntry(id, entryId, query.expectedVersion);
+  async deleteEntry(@Params('id') id: string, @Params('entryId') entryId: string, @Query() query: RoutineEntryDeleteQuery) {
+    return this.service.deleteEntry(id, entryId, query?.expectedVersion);
   }
 
   @Post('/:id/duties')
@@ -185,7 +195,9 @@ export class ClassRoutineController {
   @isAuth()
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.retrieved')
-  async getById(@Params('id') id: string) { return this.service.getById(id); }
+  async getById(@Params('id') id: string, @User() user: { role?: string }) {
+    return this.service.getById(id, user.role);
+  }
 
   @Delete('/:id')
   @isAdministrator()

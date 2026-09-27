@@ -61,12 +61,12 @@ export class ClassRoutineRepository {
     return this.db.delete(routinePeriods).where(inArray(routinePeriods.id, ids)).returning();
   }
 
-  async list(filters: RoutineListQuery = {}) {
+  async list(filters: RoutineListQuery = {}, includeArchived = false) {
     const conditions = [];
     if (filters.sectionId) conditions.push(eq(routineSchedules.sectionId, filters.sectionId));
     if (filters.academicYear) conditions.push(eq(routineSchedules.academicYear, filters.academicYear));
     if (filters.status) conditions.push(eq(routineSchedules.status, filters.status));
-    else conditions.push(inArray(routineSchedules.status, ['draft', 'published']));
+    else if (!includeArchived) conditions.push(inArray(routineSchedules.status, ['draft', 'published']));
     if (filters.classId) conditions.push(eq(sections.classId, filters.classId));
 
     return this.db.select({
@@ -83,6 +83,7 @@ export class ClassRoutineRepository {
       sectionName: sections.name,
       classId: classes.id,
       className: classes.name,
+      classAcademicYear: classes.academicYear,
       roomNumber: sections.roomNumber,
     })
       .from(routineSchedules)
@@ -321,12 +322,12 @@ export class ClassRoutineRepository {
     return deleted;
   }
 
-  async getPublishedForSection(sectionId: string, academicYear?: string) {
+  async getPublishedForSection(sectionId: string, academicYear: string) {
     const conditions = [
       eq(routineSchedules.sectionId, sectionId),
       inArray(routineSchedules.status, ['draft', 'published']),
     ];
-    if (academicYear) conditions.push(eq(routineSchedules.academicYear, academicYear));
+    conditions.push(eq(routineSchedules.academicYear, academicYear));
     const [schedule] = await this.db.select({ id: routineSchedules.id })
       .from(routineSchedules)
       .where(and(...conditions))
@@ -338,12 +339,12 @@ export class ClassRoutineRepository {
     return schedule;
   }
 
-  async getTeacherScheduleIds(teacherId: string, academicYear?: string) {
+  async getTeacherScheduleIds(teacherId: string, academicYear: string) {
     const conditions = [
       eq(teacherAssignments.teacherId, teacherId),
       inArray(routineSchedules.status, ['draft', 'published']),
     ];
-    if (academicYear) conditions.push(eq(routineSchedules.academicYear, academicYear));
+    conditions.push(eq(routineSchedules.academicYear, academicYear));
     const rows = await this.db.select({
       id: routineSchedules.id,
       sectionId: routineSchedules.sectionId,
@@ -368,7 +369,7 @@ export class ClassRoutineRepository {
       eq(teachers.id, teacherId),
       inArray(routineSchedules.status, ['draft', 'published']),
     ];
-    if (academicYear) dutyConditions.push(eq(routineSchedules.academicYear, academicYear));
+    dutyConditions.push(eq(routineSchedules.academicYear, academicYear));
     const dutyRows = await this.db.select({
       id: routineSchedules.id,
       sectionId: routineSchedules.sectionId,

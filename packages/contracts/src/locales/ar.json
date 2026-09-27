@@ -1,4 +1,57 @@
 {
+  "academicYearMigration": {
+    "title": "مراجعة بيانات السنة الدراسية",
+    "description": "راجع السجلات التي تحتاج سنتها أو قسمها السابق إلى دليل قبل تفعيل عرض تاريخ المدرسة.",
+    "statusFilter": "حالة المراجعة",
+    "open": "مفتوحة",
+    "resolved": "تم حلها",
+    "dismissed": "مستبعدة",
+    "openCount": "المشكلات المفتوحة",
+    "loading": "جار تحميل المشكلات…",
+    "loadFailed": "تعذر تحميل مشكلات الترحيل.",
+    "retry": "إعادة المحاولة",
+    "empty": "لا توجد مشكلات بهذه الحالة.",
+    "unknownYear": "سنة غير معروفة",
+    "openStudent": "فتح ملف الطالب",
+    "review": "مراجعة المشكلة",
+    "pagination": "صفحات المشكلات",
+    "previous": "السابق",
+    "next": "التالي",
+    "note": "ملاحظة المراجعة",
+    "resolutionHelp": "لا تحل مشكلة تاريخ التسجيل المجهول إلا بعد تسجيل القسم المؤكد مع تاريخه.",
+    "cancel": "إلغاء",
+    "save": "حفظ المراجعة",
+    "reviewSaved": "حُفظت المراجعة"
+  },
+  "academicYearViewing": {
+    "issues": {
+      "title": "{{count}} سجلات في هذه السنة سياقها غير متحقق منه:",
+      "showAll": "عرض الكل",
+      "missingAssignmentContext": "لا يوجد إسناد تدريس",
+      "assignmentClassMismatch": "قسم الإسناد يختلف عن قسم الشعبة",
+      "assignmentYearMismatch": "الإسناد تابع لسنة أخرى",
+      "assignmentSectionNotTargeted": "شعبة الإسناد غير مستهدفة",
+      "missingTargetSection": "الشعبة المستهدفة غير موجودة",
+      "targetYearMismatch": "الشعبة المستهدفة تابعة لسنة أخرى",
+      "sourceDateOutsideYear": "التاريخ خارج هذه السنة",
+      "missingStudent": "التلميذ غير موجود",
+      "missingDatedPlacement": "لا يوجد تسكين مؤرخ في ذلك اليوم",
+      "studentSectionNotTargeted": "شعبة التلميذ غير مستهدفة",
+      "missingSourceDate": "لا يوجد تاريخ تقييم أو امتحان",
+      "ambiguousGradeSource": "يلزم تقييم واحد أو امتحان واحد بالضبط",
+      "gradeSourceYearMismatch": "التقييم أو الامتحان مسجل في سنة أخرى",
+      "yearContextUnavailable": "تعذر التحقق"
+    },
+    "notEnrolled": "غير مسجل في {{year}}",
+    "currentAssignments": "لا تُسجَّل إسنادات التدريس حسب السنة بعد، لذلك تعرض هذه القائمة الإسنادات الحالية لسنة {{year}}.",
+    "label": "السنة الدراسية",
+    "activeOption": "{{year}} (الحالية)",
+    "viewing": "عرض السنة الدراسية {{year}}",
+    "active": "السنة الحالية: {{year}}",
+    "returnToActive": "العودة إلى السنة الحالية",
+    "unavailable": "تعذر تحميل السنوات الدراسية",
+    "resetToActive": "السنة الدراسية المحفوظة لهذا الحساب غير متاحة لدورك، لذلك تُعرض السنة النشطة {{year}}."
+  },
   "accessReset": {
     "success": {
       "reset": "تمت إعادة تعيين الوصول"
@@ -472,6 +525,70 @@
     }
   },
   "dashboard": {
+    "teacher": {
+      "title": "لوحة تحكم الأستاذ",
+      "kpis": {
+        "totalStudents": "مجموع التلاميذ",
+        "classesToday": "حصص اليوم",
+        "pendingTasks": "مهام معلقة",
+        "attendance": "الحضور",
+        "notifications": "إشعارات غير مقروءة"
+      },
+      "duration": {
+        "minutes": "{{minutes}} د",
+        "hoursMinutes": "{{hours}} س {{minutes}} د"
+      },
+      "nextClass": {
+        "title": "الحصة التالية",
+        "current": "الحصة الحالية",
+        "viewAll": "عرض الكل",
+        "startsIn": "تبدأ بعد {{time}}",
+        "room": "القاعة {{room}}",
+        "noRoom": "بدون قاعة",
+        "takeAttendance": "تسجيل الحضور",
+        "attendanceTaken": "تم تسجيل الحضور",
+        "empty": "لا توجد حصص أخرى اليوم"
+      },
+      "schedule": {
+        "title": "برنامج اليوم",
+        "viewTimetable": "عرض استعمال الزمن",
+        "empty": "لا توجد حصص مبرمجة اليوم"
+      },
+      "attention": {
+        "title": "يتطلب الانتباه",
+        "missingAttendance": "حضور غير مسجل",
+        "missingAttendanceHint": "حصص اليوم بدون تسجيل الحضور",
+        "missingGrades": "نقط ناقصة",
+        "missingGradesHint": "تقييمات منجزة لم تُنقط بالكامل",
+        "notifications": "الإشعارات",
+        "notificationsHint": "إشعارات غير مقروءة",
+        "concerns": "متابعة التلاميذ",
+        "concernsHint": "حوادث مفتوحة في أقسامك"
+      },
+      "classes": {
+        "title": "أقسامي",
+        "viewAll": "عرض الكل",
+        "students": "تلاميذ",
+        "empty": "لا توجد أقسام مسندة هذه السنة"
+      },
+      "assessments": {
+        "title": "التقييمات والتنقيط",
+        "viewAll": "عرض الكل",
+        "due": "بتاريخ {{date}}",
+        "empty": "لا توجد تقييمات هذه السنة"
+      },
+      "trend": {
+        "title": "منحنى الحضور",
+        "range7d": "آخر 7 أيام",
+        "range30d": "آخر 30 يومًا",
+        "overall": "نسبة الحضور العامة",
+        "vsPrevious": "مقارنة بالفترة السابقة",
+        "classesHeld": "الحصص المنجزة",
+        "outOf": "من أصل {{count}} مبرمجة",
+        "rate": "الحضور",
+        "empty": "لا يوجد حضور مسجل في هذه الفترة"
+      }
+    },
     "widgets": {
       "totalLiters": "إجمالي اللترات",
       "totalFields": "إجمالي الحقول",
@@ -489,6 +606,12 @@
       "expensesMonth": "المصروفات (الشهر)",
       "netBalance": "الرصيد الصافي",
       "collectionRateYTD": "معدل التحصيل منذ بداية السنة",
+      "studentsYear": "التلاميذ ({{year}})",
+      "teachersCurrent": "المعلمون (حاليًا)",
+      "incomeYear": "الإيرادات ({{year}})",
+      "expensesYear": "المصروفات ({{year}})",
+      "netBalanceYear": "الرصيد الصافي ({{year}})",
+      "collectionRateYear": "معدل التحصيل ({{year}})",
       "studentsByGender": "الطلاب حسب الجنس",
       "incomeVsExpenses": "الإيرادات مقابل المصروفات",
       "income": "الإيرادات",
@@ -679,6 +802,7 @@
     }
   },
   "status": {
+    "upcoming": "قادم",
     "active": "نشط",
     "inactive": "غير نشط",
     "pending": "قيد الانتظار",
@@ -1063,6 +1187,24 @@
     }
   },
   "fees": {
+    "classBulk": {
+      "action": "فرض رسوم على فصل",
+      "title": "فرض رسوم على فصل في السنة الدراسية المعروضة",
+      "rosterDate": "تاريخ قائمة الطلاب وبدء الرسوم",
+      "studentsOnDate": "طلاب الفصل في هذا التاريخ",
+      "rosterUnavailable": "تعذر تحميل قائمة الطلاب",
+      "previewNote": "تعتمد المعاينة على التاريخ المحدد. وتراعي الرسوم النهائية لكل طالب تاريخ تسجيله أيضًا.",
+      "result": "تم الإنشاء: {{created}}، تم التجاوز: {{skipped}}، فشل: {{failed}}"
+    },
+    "historyView": {
+      "scope": "الرسوم المعروضة",
+      "scopeYear": "السنة الدراسية {{year}}",
+      "scopeOutstanding": "غير المدفوعة، كل السنوات الدراسية",
+      "outstandingCount": "{{count}} طالب لديهم رسوم غير مدفوعة في أي سنة دراسية",
+      "noOutstanding": "لا توجد رسوم غير مدفوعة في أي سنة دراسية",
+      "otherYearDebts": "رسوم غير مدفوعة في سنوات دراسية أخرى:",
+      "otherYearDebt": "{{year}} ({{count}} غير مدفوعة)"
+    },
     "card": {
       "overdueInstallments": "أقساط متأخرة",
       "payments": "المدفوعات",
@@ -2280,6 +2422,8 @@
       "refunded": "مسترد"
     },
     "table": {
+      "allocatedToYear": "المخصص للسنة {{year}}",
+      "fullReceipt": "الإيصال الكامل",
       "amount": "المبلغ",
       "checkDueDate": "تاريخ استحقاق الشيك",
       "checkNumber": "رقم الشيك",
@@ -2670,6 +2814,35 @@
     }
   },
   "students": {
+    "enrollment": {
+      "title": "السنوات الدراسية",
+      "help": "قسم الطالب وفوجه في كل سنة دراسية، من سجلات مؤرخة. تعديل الملف الشخصي لا يغيّرهما.",
+      "empty": "لا يوجد تسجيل سنوي مسجَّل لهذا الطالب.",
+      "enrollIn": "تسجيل في {{year}}",
+      "enrollAction": "تسجيل",
+      "enrolled": "تم حفظ التسجيل",
+      "transfer": "تغيير القسم أو الفوج",
+      "transferAction": "تغيير التوزيع",
+      "transferred": "تم تغيير التوزيع",
+      "end": "إنهاء التسجيل",
+      "endAction": "إنهاء التسجيل",
+      "ended": "تم إنهاء التسجيل",
+      "failed": "تعذّر تعديل التسجيل",
+      "enrolledOn": "تاريخ التسجيل",
+      "validFrom": "في القسم الجديد ابتداءً من",
+      "reason": "السبب",
+      "reasonPlaceholder": "سبب انتقال الطالب",
+      "leftOn": "لم يعد مسجَّلًا ابتداءً من",
+      "outcome": "النتيجة",
+      "currentPlacement": "حاليًا في {{className}} – {{sectionName}} منذ {{date}}.",
+      "fromUntil": "من {{from}} إلى {{to}}",
+      "fromOngoing": "من {{from}}، مستمر",
+      "endStatus": {
+        "withdrawn": "منسحب",
+        "graduated": "متخرّج",
+        "transferred": "منقول إلى مؤسسة أخرى"
+      }
+    },
     "success": {
       "retrieved": "تم جلب التلميذ بنجاح",
       "created": "تم إنشاء التلميذ بنجاح",
@@ -2683,6 +2856,7 @@
       "count": "{{count}} طالب إجمالاً"
     },
     "dialogs": {
+      "createTitleForYear": "إضافة طالب إلى {{year}}",
       "bulkDeleteItemName": "العنصر",
       "createButton": "إنشاء الطالب",
       "createTitle": "إنشاء طالب جديد",
@@ -2697,6 +2871,7 @@
       "searchByName": "ابحث بالاسم..."
     },
     "form": {
+      "placementReadOnly": "يُغيَّر القسم والفوج من تبويب السنوات الدراسية في ملف الطالب.",
       "academicInformation": "المعلومات الأكاديمية",
       "studentInformation": "معلومات التلميذ",
       "parentsInformation": "معلومات أولياء الأمور",
@@ -2709,8 +2884,9 @@
       "dateOfBirthPlaceholder": "اختر تاريخ الازدياد",
       "email": "البريد الإلكتروني",
       "emailPlaceholder": "أدخل البريد الإلكتروني",
-      "enrollmentDate": "تاريخ التسجيل",
+      "enrollmentDate": "تاريخ التسجيل الأول",
       "enrollmentDatePlaceholder": "اختر تاريخ التسجيل",
+      "yearEnrolledOn": "تاريخ التسجيل في هذه السنة الدراسية",
       "feesInformation": "معلومات الرسوم",
       "fullName": "الاسم الكامل",
       "fullNamePlaceholder": "أدخل الاسم الكامل",
@@ -2798,7 +2974,7 @@
       "saveParents": "حفظ أولياء الأمور",
       "alertsPlaceholder": "سيظهر محتوى التنبيهات هنا",
       "academicsPlaceholder": "سيظهر المحتوى الدراسي هنا",
-      "tabs": { "overview": "نظرة عامة", "attendance": "الحضور", "grades": "النقط", "fees": "الرسوم", "transport": "النقل", "alerts": "التنبيهات" },
+      "tabs": { "schoolYears": "السنوات الدراسية", "overview": "نظرة عامة", "attendance": "الحضور", "grades": "النقط", "fees": "الرسوم", "transport": "النقل", "alerts": "التنبيهات" },
       "genders": { "M": "ذكر", "F": "أنثى", "Other": "آخر" },
       "relationships": { "father": "الأب", "mother": "الأم", "guardian": "الوصي", "stepparent": "زوج/زوجة الوالد", "grandparent": "الجد/الجدة", "other": "آخر" },
       "maritalStatuses": { "single": "أعزب", "married": "متزوج", "divorced": "مطلق", "widowed": "أرمل", "separated": "منفصل" },

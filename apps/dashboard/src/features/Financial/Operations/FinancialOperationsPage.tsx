@@ -66,7 +66,6 @@ export default function FinancialOperationsPage() {
   const [toYear, setToYear] = useState('2026-2027');
   const [copyDiscounts, setCopyDiscounts] = useState(false);
   const [includeOneTimeFees, setIncludeOneTimeFees] = useState(false);
-  const [confirmSettingsUpdate, setConfirmSettingsUpdate] = useState(false);
   const [rolloverKey, setRolloverKey] = useState(() => crypto.randomUUID());
   const [rolloverRun, setRolloverRun] = useState<any>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -146,7 +145,7 @@ export default function FinancialOperationsPage() {
     const result = await run('rollover-commit', () => commitRolloverApi({
       ...rolloverPayload,
       runId: rolloverRun.id,
-      confirmSettingsUpdate,
+      confirmSettingsUpdate: false,
     }), 'Rollover completed');
     setRolloverRun(unwrap(result));
     setRolloverKey(crypto.randomUUID());
@@ -223,7 +222,6 @@ export default function FinancialOperationsPage() {
           <div className="mt-3 flex flex-wrap gap-4 text-sm">
             <label className="flex items-center gap-2"><input type="checkbox" checked={copyDiscounts} onChange={(event) => setCopyDiscounts(event.target.checked)} /> {t('financialOperations.copyDiscounts')}</label>
             <label className="flex items-center gap-2"><input type="checkbox" checked={includeOneTimeFees} onChange={(event) => setIncludeOneTimeFees(event.target.checked)} /> {t('financialOperations.includeOneTimeFees')}</label>
-            <label className="flex items-center gap-2"><input type="checkbox" checked={confirmSettingsUpdate} onChange={(event) => setConfirmSettingsUpdate(event.target.checked)} /> {t('financialOperations.updateAcademicYear')}</label>
           </div>
           <div className="mt-4 flex gap-2">
             <NButton variant="outline" disabled={busy === 'rollover-preview'} onClick={previewRollover}>Preview</NButton>
