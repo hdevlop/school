@@ -155,7 +155,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@sms/contracts": "workspace:*",
-        "diject": "0.1.8",
+        "diject": "0.1.9",
         "drizzle-orm": "0.45.2",
         "drizzle-zod": "^0.8.3",
         "hono": "^4.12.31",
@@ -200,7 +200,7 @@
     "body-parser": "2.3.0",
     "brace-expansion": "5.0.9",
     "browserslist": "4.28.9",
-    "diject": "0.1.8",
+    "diject": "0.1.9",
     "drizzle-orm": "0.45.2",
     "esbuild": "0.25.12",
     "fast-uri": "3.1.7",
@@ -1028,7 +1028,7 @@
 
     "devlop": ["devlop@1.1.0", "", { "dependencies": { "dequal": "^2.0.0" } }, "sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA=="],
 
-    "diject": ["diject@0.1.8", "", { "peerDependencies": { "reflect-metadata": "^0.2.0" } }, "sha512-tv2FFf7jEF14HJ1PSNb/KfEqFCwU7e7B4R2sVBaC5UfCSHA62lbhc+RGt6hP1/jMIiouQ+2JoRID3BqsQbyiGA=="],
+    "diject": ["diject@0.1.9", "", { "peerDependencies": { "reflect-metadata": "^0.2.0" } }, "sha512-wmQDpS798To4FI/tSb5wpzeMsLEz+Y4lL6iMgte7cVTh75DoIbo95nEIwUrmVTDP1hx8RRK79Mjof0lkOyBQGQ=="],
 
     "doctrine": ["doctrine@2.1.0", "", { "dependencies": { "esutils": "^2.0.2" } }, "sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw=="],
 
