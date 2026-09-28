@@ -54,6 +54,11 @@ export class EventValidator {
     return true;
   }
 
+  /** An event is written in the year the request selected: its dates must overlap it. */
+  ensureInSelectedYear(startDate: string, endDate: string) {
+    if (!this.eventRepository.overlapsSelectedYear(startDate, endDate)) Err(409, this.et('outsideSelectedYear'));
+  }
+
   async ensureRegistrationDeadlineValid(eventId: string) {
     const event = await this.ensureExists(eventId);
 

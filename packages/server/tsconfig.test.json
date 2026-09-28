@@ -7,6 +7,8 @@
     "src/**/*.ts",
     "tests/classRoutines/**/*.test.ts",
     "tests/academicYears/**/*.test.ts",
+    "tests/academicYears/fixtures/**/*.ts",
+    "tests/acceptance/**/*.test.ts",
     "tests/teacherDashboard/**/*.test.ts"
   ],
   "exclude": ["node_modules"]

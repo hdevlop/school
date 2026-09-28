@@ -14,14 +14,13 @@ export class ParentProfileService {
     private alertService: AlertService,
   ) {}
 
+  // Each child's active alerts in the request's year that the reader may see.
   async getUnreadAlerts(parentId: string) {
     const children = await this.parentService.getLinkedChildren(parentId);
     const perChild = await Promise.all(
       (children || []).map(async (child: any) => {
-        const alerts = await this.alertService.getByStudentId(child.id).catch(() => []);
-        const unread = Array.isArray(alerts)
-          ? alerts.filter((a: any) => a.status === 'active')
-          : [];
+        const alerts = await this.alertService.getByStudentId(child.id);
+        const unread = alerts.filter((alert) => alert.status === 'active');
         return { studentId: child.id, studentName: child.name, alerts: unread };
       })
     );
@@ -34,7 +33,7 @@ export class ParentProfileService {
     const children = await this.parentService.getChildren(parentId, year);
     const childrenWithFees = await Promise.all(
       (children || []).map(async (child: any) => {
-        const fees = await this.feeService.getByStudent(child.id, year).catch(() => null);
+        const fees = await this.feeService.getByStudent(child.id).catch(() => null);
         return { ...child, fees };
       })
     );

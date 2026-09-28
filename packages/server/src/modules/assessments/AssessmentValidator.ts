@@ -5,9 +5,12 @@ import { TeacherValidator } from '../teachers/TeacherValidator';
 import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { ClassValidator } from '../classes/ClassValidator';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class AssessmentValidator {
+  @Year() private readonly year!: ResolvedAcademicYear;
   @I18n('assessments.errors') private at!: (key: string) => string;
 
   constructor(
@@ -71,6 +74,15 @@ export class AssessmentValidator {
     if (inUse) {
       Err(409, this.at('inUse'));
     }
+  }
+
+  /** An assessment is written in the year the request selected: its target sections' year must be that one. */
+  ensureSelectedYear(yearId: string) {
+    if (yearId !== this.year.id) Err(409, this.at('outsideSelectedYear'));
+  }
+
+  ensureSameYear(currentYearId: string | null, yearId: string) {
+    if (currentYearId && currentYearId !== yearId) Err(409, this.at('yearCannotChange'));
   }
 
   async ensureStudentInAssessment(studentId: string, assessmentId: string) {

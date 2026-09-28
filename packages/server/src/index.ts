@@ -21,6 +21,8 @@ import {
 } from './config';
 
 import * as modulesModule from './modules';
+import { registerYearPropertyInjector, registerYearRequestScope } from './modules/academicYears/requestYear';
+import { yearScopedModules } from './config/yearScope';
 
 export { loadActiveAcademicYearLabel, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 
@@ -62,5 +64,8 @@ export const server = new Server()
   .use(ragStudioConfig())
   .base('/api')
   .load(modulesModule);
+
+registerYearPropertyInjector(server.container);
+registerYearRequestScope(server.container, Object.values(yearScopedModules));
 
 export default server;

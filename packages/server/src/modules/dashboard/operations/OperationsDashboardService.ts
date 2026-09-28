@@ -14,16 +14,16 @@ export class OperationsDashboardService {
   async getKpis() {
     const [todayEvents, activeAlerts, criticalAlerts, activeAnnouncements] = await Promise.all([
       this.eventService.getTodayEvents().catch(() => []),
-      this.alertService.getActiveAlerts().catch(() => []),
-      this.alertService.getCriticalAlerts().catch(() => []),
-      this.announcementService.getPublished().catch(() => []),
+      this.alertService.getActiveAlerts(),
+      this.alertService.getCriticalAlerts(),
+      this.announcementService.getPublished(),
     ]);
 
     return {
       activeEventsToday: (todayEvents as any[]).length,
-      activeAlertsCount: (activeAlerts as any[]).length,
-      criticalAlertsCount: (criticalAlerts as any[]).length,
-      activeAnnouncementsCount: (activeAnnouncements as any[]).length,
+      activeAlertsCount: activeAlerts.length,
+      criticalAlertsCount: criticalAlerts.length,
+      activeAnnouncementsCount: activeAnnouncements.length,
     };
   }
 }

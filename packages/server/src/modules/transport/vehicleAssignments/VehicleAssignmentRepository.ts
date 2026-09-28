@@ -1,11 +1,29 @@
 import { DB } from '../../../database/db';
 import { vehicleAssignments, vehicles, drivers, staff, users } from '../../../database/schema';
-import { count, eq, desc, and, inArray } from 'drizzle-orm';
+import { count, eq, desc, and, inArray, lte, gt, isNull, or, lt, ne } from 'drizzle-orm';
 import { Repository } from '../../../najm';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { assignmentOverlapsYear } from '../assignmentInterval';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 @Repository()
 export class VehicleAssignmentRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return assignmentOverlapsYear(
+      vehicleAssignments.assignmentDate, vehicleAssignments.unassignmentDate, this.year,
+    );
+  }
+
+  private activeToday() {
+    const today = getBusinessDateOnly();
+    return and(eq(vehicleAssignments.status, 'active'),
+      lte(vehicleAssignments.assignmentDate, today),
+      or(isNull(vehicleAssignments.unassignmentDate), gt(vehicleAssignments.unassignmentDate, today)))!;
+  }
 
   // ========================================
   // QUERY BUILDERS (Reusable)
@@ -57,6 +75,7 @@ export class VehicleAssignmentRepository {
 
   private async getAllAssignments() {
     return await this.buildAssignmentQuery()
+      .where(this.inSelectedYear())
       .orderBy(desc(vehicleAssignments.createdAt));
   }
 
@@ -64,13 +83,13 @@ export class VehicleAssignmentRepository {
     if (!ids || ids.length === 0) return [];
 
     return await this.buildAssignmentQuery()
-      .where(inArray(vehicleAssignments.id, ids))
+      .where(and(inArray(vehicleAssignments.id, ids), this.inSelectedYear()))
       .orderBy(desc(vehicleAssignments.createdAt));
   }
 
   async getById(id: string) {
     const [assignment] = await this.buildAssignmentQuery()
-      .where(eq(vehicleAssignments.id, id))
+      .where(and(eq(vehicleAssignments.id, id), this.inSelectedYear()))
       .limit(1);
 
     return assignment || null;
@@ -78,22 +97,22 @@ export class VehicleAssignmentRepository {
 
   async getByVehicleId(vehicleId: string) {
     return await this.buildAssignmentQuery()
-      .where(eq(vehicleAssignments.vehicleId, vehicleId))
+      .where(and(eq(vehicleAssignments.vehicleId, vehicleId), this.inSelectedYear()))
       .orderBy(desc(vehicleAssignments.createdAt));
   }
 
   async getByDriverId(driverId: string) {
     return await this.buildAssignmentQuery()
-      .where(eq(vehicleAssignments.driverId, driverId))
+      .where(and(eq(vehicleAssignments.driverId, driverId), this.inSelectedYear()))
       .orderBy(desc(vehicleAssignments.createdAt));
   }
 
-  async getActiveAssignmentByVehicle(vehicleId: string) {
+  async getActiveAssignmentByVehicleAcrossYears(vehicleId: string) {
     const [assignment] = await this.buildAssignmentQuery()
       .where(
         and(
           eq(vehicleAssignments.vehicleId, vehicleId),
-          eq(vehicleAssignments.status, 'active')
+          this.activeToday()
         )
       )
       .limit(1);
@@ -101,12 +120,12 @@ export class VehicleAssignmentRepository {
     return assignment || null;
   }
 
-  async getActiveAssignmentByDriver(driverId: string) {
+  async getActiveAssignmentByDriverAcrossYears(driverId: string) {
     const [assignment] = await this.buildAssignmentQuery()
       .where(
         and(
           eq(vehicleAssignments.driverId, driverId),
-          eq(vehicleAssignments.status, 'active')
+          this.activeToday()
         )
       )
       .limit(1);
@@ -116,15 +135,29 @@ export class VehicleAssignmentRepository {
 
   async getByStatus(status: string) {
     return await this.buildAssignmentQuery()
-      .where(eq(vehicleAssignments.status, status))
+      .where(and(eq(vehicleAssignments.status, status), this.inSelectedYear()))
       .orderBy(desc(vehicleAssignments.createdAt));
   }
 
   async getCount() {
     const [result] = await this.db
       .select({ count: count() })
-      .from(vehicleAssignments);
+      .from(vehicleAssignments)
+      .where(this.inSelectedYear());
     return result;
+  }
+
+  async getOverlappingByVehicleAcrossYears(
+    vehicleId: string, start: string, end?: string | null, excludeId?: string,
+  ) {
+    const [row] = await this.db.select({ id: vehicleAssignments.id }).from(vehicleAssignments)
+      .where(and(
+        eq(vehicleAssignments.vehicleId, vehicleId), ne(vehicleAssignments.status, 'cancelled'),
+        end ? lt(vehicleAssignments.assignmentDate, end) : undefined,
+        or(isNull(vehicleAssignments.unassignmentDate), gt(vehicleAssignments.unassignmentDate, start)),
+        excludeId ? ne(vehicleAssignments.id, excludeId) : undefined,
+      )).limit(1);
+    return row ?? null;
   }
 
   // ========================================
@@ -147,7 +180,7 @@ export class VehicleAssignmentRepository {
     const [updatedAssignment] = await this.db
       .update(vehicleAssignments)
       .set(data)
-      .where(eq(vehicleAssignments.id, id))
+      .where(and(eq(vehicleAssignments.id, id), this.inSelectedYear()))
       .returning();
     return updatedAssignment;
   }
@@ -159,12 +192,12 @@ export class VehicleAssignmentRepository {
   async delete(id: string) {
     const [deletedAssignment] = await this.db
       .delete(vehicleAssignments)
-      .where(eq(vehicleAssignments.id, id))
+      .where(and(eq(vehicleAssignments.id, id), this.inSelectedYear()))
       .returning();
     return deletedAssignment;
   }
 
-  async deleteByDriverId(driverId: string) {
+  async deleteByDriverIdAcrossYears(driverId: string) {
     return await this.db
       .delete(vehicleAssignments)
       .where(eq(vehicleAssignments.driverId, driverId))
@@ -174,11 +207,26 @@ export class VehicleAssignmentRepository {
   async deleteAll() {
     const deletedAssignments = await this.db
       .delete(vehicleAssignments)
+      .where(this.inSelectedYear())
       .returning();
 
     return {
       deletedCount: deletedAssignments.length,
       deletedAssignments: deletedAssignments
     };
+  }
+
+  /** Closing the current assignment can touch a row begun in an earlier year. */
+  async closeActiveAssignmentAcrossYears(id: string, unassignmentDate: string) {
+    const [row] = await this.db.update(vehicleAssignments)
+      .set({ status: 'completed', unassignmentDate })
+      .where(and(eq(vehicleAssignments.id, id), this.activeToday()))
+      .returning();
+    return row ?? null;
+  }
+
+  async clearForSeedReset() {
+    const rows = await this.db.delete(vehicleAssignments).returning();
+    return { deletedCount: rows.length, deletedAssignments: rows };
   }
 }

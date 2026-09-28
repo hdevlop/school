@@ -19,11 +19,16 @@ import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useState } from 'react';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useViewerRole } from '@/shared/useViewerRole';
 
 function StudentsTable() {
 
   const { t } = useTranslation();
   const router = useRouter();
+  // A parent sees their children here and a student themselves, read-only.
+  const { role, isFamily } = useViewerRole();
+  const title = role === 'parent' ? t('navigation.myChildren')
+    : role === 'student' ? t('navigation.myProfile') : t('navigation.students');
   const { classes } = useClasses();
   // A new student is placed in the active year, as the server requires,
   // whichever year is viewed, so the form offers the active year's classes.
@@ -31,7 +36,7 @@ function StudentsTable() {
   const viewsOtherYear = !!viewingYear && !!activeYear && viewingYear !== activeYear;
   const { classes: activeYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
   const newStudentClasses = viewsOtherYear ? activeYearClasses : classes;
-  const { feeTypes } = useFeeTypes();
+  const { feeTypes } = useFeeTypes({ enabled: !isFamily });
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const columns = useStudentsTableColumns();
@@ -148,7 +153,7 @@ function StudentsTable() {
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
       <NPageHeader
         icon={GraduationCap}
-        title={t('navigation.students')}
+        title={title}
         subtitle={hasFailedToLoad(error, students) ? undefined : t('students.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
@@ -161,14 +166,14 @@ function StudentsTable() {
         data={students}
         columns={columns}
         filters={rawFilters}
-        onCreate={handleAddClick}
+        onCreate={isFamily ? undefined : handleAddClick}
         onView={handleView}
         onRowClick={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onBulkDelete={handleBulkDelete}
-        rowSelection={rowSelection}
-        onRowSelectionChange={setRowSelection}
+        onEdit={isFamily ? undefined : handleEdit}
+        onDelete={isFamily ? undefined : handleDelete}
+        onBulkDelete={isFamily ? undefined : handleBulkDelete}
+        rowSelection={isFamily ? undefined : rowSelection}
+        onRowSelectionChange={isFamily ? undefined : setRowSelection}
         loading={isStudentsLoading}
         error={hasFailedToLoad(error, students) ? error : null}
         renderError={(currentError) => (
@@ -185,7 +190,7 @@ function StudentsTable() {
             icon={FEATURE_ICONS.students}
             title={t('emptyStates.students.title')}
             description={t('emptyStates.students.description')}
-            action={(
+            action={isFamily ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('students.dialogs.createButton')}

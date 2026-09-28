@@ -1,7 +1,11 @@
 import { Controller, Get, Query, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SearchService } from './SearchService';
-import { isAuth } from '../../auth';
+import { Can } from '../../auth';
+import { Student } from '../students/StudentGuards';
+import { Teacher } from '../teachers/TeacherGuards';
+import { Parent } from '../parents/ParentGuards';
+import { Policy, CanList } from '../../auth';
 import { z } from 'zod';
 
 const searchQueryDto = z.object({
@@ -11,11 +15,14 @@ const searchQueryDto = z.object({
 
 @ToolGroup('search')
 @Controller('/search')
-@isAuth()
+@Policy(Student)
 export class SearchController {
   constructor(private searchService: SearchService) {}
 
   @Get()
+  @Can('read:students')
+  @Can('read:teachers')
+  @Can('read:parents')
   @Validate({ query: searchQueryDto })
   @McpTool('Search globally across students, teachers, and parents')
   @ResMsg('search.success')
@@ -24,6 +31,7 @@ export class SearchController {
   }
 
   @Get('/students')
+  @CanList(Student)
   @Validate({ query: searchQueryDto })
   @McpTool('Search students by name, code, CIN, email, or phone')
   @ResMsg('search.success')
@@ -32,6 +40,7 @@ export class SearchController {
   }
 
   @Get('/teachers')
+  @CanList(Teacher)
   @Validate({ query: searchQueryDto })
   @McpTool('Search teachers by name, CIN, email, phone, or specialization')
   @ResMsg('search.success')
@@ -40,6 +49,7 @@ export class SearchController {
   }
 
   @Get('/parents')
+  @CanList(Parent)
   @Validate({ query: searchQueryDto })
   @McpTool('Search parents by name, CIN, email, or phone')
   @ResMsg('search.success')

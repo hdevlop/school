@@ -2,13 +2,9 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, 
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { AttendanceService } from './AttendanceService';
 import { Attendance, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AttendanceGuards';
-import { Year } from '../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { isAdmin } from '../../auth';
 import {
   attendanceDateFilterDto,
-  attendanceListQuery,
-  attendanceYearQuery,
   typeQueryParam,
   attendanceDateParam,
   attendanceIdParam,
@@ -19,7 +15,6 @@ import {
   studentIdParam,
   teacherIdParam,
   type AttendanceDateFilterDto,
-  type AttendanceListQueryDto,
   type AttendanceTypeQueryDto,
   type SeedAttendanceDto,
   updateAttendanceDto,
@@ -39,62 +34,60 @@ export class AttendanceController {
 
   @Get()
   @CanList()
-  @Validate({ query: attendanceListQuery })
+  @Validate({ query: typeQueryParam })
   @ResMsg('attendance.success.retrieved')
-  async listAll(@Query('type') type: AttendanceListQueryDto['type'], @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getAll(year, { type });
+  async listAll(@Query('type') type: AttendanceTypeQueryDto['type']) {
+    return this.attendanceService.getAll({ type });
   }
 
   @Post('/mcp/all')
   @CanList()
-  @Validate({ body: typeQueryParam, query: attendanceYearQuery })
+  @Validate({ body: typeQueryParam })
   @McpTool('List all attendance records')
   @ResMsg('attendance.success.retrieved')
-  async getAll(@Body() body: AttendanceTypeQueryDto, @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getAll(year, { type: body?.type });
+  async getAll(@Body() body: AttendanceTypeQueryDto) {
+    return this.attendanceService.getAll({ type: body?.type });
   }
 
   @Get('/today')
   @CanList()
-  @Validate({ query: attendanceListQuery })
+  @Validate({ query: typeQueryParam })
   @ResMsg('attendance.success.retrieved')
-  async listToday(@Query('type') type: AttendanceTypeQueryDto['type'], @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getToday(year, type);
+  async listToday(@Query('type') type: AttendanceTypeQueryDto['type']) {
+    return this.attendanceService.getToday(type);
   }
 
   @Post('/mcp/today')
   @CanList()
-  @Validate({ body: typeQueryParam, query: attendanceYearQuery })
+  @Validate({ body: typeQueryParam })
   @McpTool("List today's attendance records")
   @ResMsg('attendance.success.retrieved')
-  async getToday(@Body() body: AttendanceTypeQueryDto, @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getToday(year, body?.type);
+  async getToday(@Body() body: AttendanceTypeQueryDto) {
+    return this.attendanceService.getToday(body?.type);
   }
 
   @Post('/mcp/today/students')
-  @Validate({ query: attendanceYearQuery })
   @CanList()
   @McpTool("List today's student attendance records")
   @ResMsg('attendance.success.retrieved')
-  async getTodayStudents(@Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getToday(year, 'student');
+  async getTodayStudents() {
+    return this.attendanceService.getToday('student');
   }
 
   @Post('/mcp/today/staff')
-  @Validate({ query: attendanceYearQuery })
   @CanList()
   @McpTool("List today's staff attendance records")
   @ResMsg('attendance.success.retrieved')
-  async getTodayStaff(@Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getToday(year, 'staff');
+  async getTodayStaff() {
+    return this.attendanceService.getToday('staff');
   }
 
   @Get('/date/:date')
   @CanList()
   @Validate({ params: attendanceDateParam, query: typeQueryParam })
   @ResMsg('attendance.success.retrieved')
-  async listByDate(@Params('date') date: string, @Query() query: AttendanceTypeQueryDto, @User() user: { role?: string }) {
-    return this.attendanceService.getByDate(date, query?.type, user.role);
+  async listByDate(@Params('date') date: string, @Query() query: AttendanceTypeQueryDto) {
+    return this.attendanceService.getByDate(date, query?.type);
   }
 
   @Post('/mcp/date')
@@ -102,44 +95,44 @@ export class AttendanceController {
   @Validate({ body: attendanceDateFilterDto })
   @McpTool('Get attendance records for a specific date')
   @ResMsg('attendance.success.retrieved')
-  async getByDate(@Body() body: AttendanceDateFilterDto, @User() user: { role?: string }) {
-    return this.attendanceService.getByDate(body.date, body.type, user.role);
+  async getByDate(@Body() body: AttendanceDateFilterDto) {
+    return this.attendanceService.getByDate(body.date, body.type);
   }
 
   @Get('/section/:sectionId')
   @CanList()
-  @Validate({ params: sectionIdParam, query: attendanceYearQuery })
+  @Validate({ params: sectionIdParam })
   @McpTool('Get attendance records for a section')
   @ResMsg('attendance.success.retrieved')
-  async getBySection(@Params('sectionId') sectionId: string, @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getAll(year, { sectionId });
+  async getBySection(@Params('sectionId') sectionId: string) {
+    return this.attendanceService.getAll({ sectionId });
   }
 
   @Get('/student/:studentId')
   @CanList()
-  @Validate({ params: studentIdParam, query: attendanceYearQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get attendance records for a student')
   @ResMsg('attendance.success.retrieved')
-  async getByStudent(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getAll(year, { studentId });
+  async getByStudent(@Params('studentId') studentId: string) {
+    return this.attendanceService.getAll({ studentId });
   }
 
   @Get('/staff/:staffId')
   @CanList()
-  @Validate({ params: staffIdParam, query: attendanceYearQuery })
+  @Validate({ params: staffIdParam })
   @McpTool('Get attendance records for a staff member')
   @ResMsg('attendance.success.retrieved')
-  async getByStaff(@Params('staffId') staffId: string, @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getAll(year, { staffId });
+  async getByStaff(@Params('staffId') staffId: string) {
+    return this.attendanceService.getAll({ staffId });
   }
 
   @Get('/teacher/:teacherId')
   @CanList()
-  @Validate({ params: teacherIdParam, query: attendanceYearQuery })
+  @Validate({ params: teacherIdParam })
   @McpTool('Get attendance records for a teacher through their staff profile')
   @ResMsg('attendance.success.retrieved')
-  async getByTeacher(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
-    return this.attendanceService.getByTeacher(teacherId, year);
+  async getByTeacher(@Params('teacherId') teacherId: string) {
+    return this.attendanceService.getByTeacher(teacherId);
   }
 
   @Get('/:id')

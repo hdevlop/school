@@ -14,11 +14,19 @@ import {
   teachers,
 } from '../../database/schema';
 import { Repository } from '../../najm';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import type { RoutineListQuery } from './ClassRoutineDto';
 
 @Repository()
 export class ClassRoutineRepository {
   declare db: DB;
+  @Year() private readonly year!: ResolvedAcademicYear;
+
+  // A timetable belongs to the year stored on it, its class's year.
+  private inSelectedYear() {
+    return eq(routineSchedules.academicYear, this.year.label);
+  }
 
   async clearForSeedReset() {
     await this.db.delete(routineEntries);
@@ -62,9 +70,8 @@ export class ClassRoutineRepository {
   }
 
   async list(filters: RoutineListQuery = {}, includeArchived = false) {
-    const conditions = [];
+    const conditions = [this.inSelectedYear()];
     if (filters.sectionId) conditions.push(eq(routineSchedules.sectionId, filters.sectionId));
-    if (filters.academicYear) conditions.push(eq(routineSchedules.academicYear, filters.academicYear));
     if (filters.status) conditions.push(eq(routineSchedules.status, filters.status));
     else if (!includeArchived) conditions.push(inArray(routineSchedules.status, ['draft', 'published']));
     if (filters.classId) conditions.push(eq(sections.classId, filters.classId));
@@ -89,7 +96,7 @@ export class ClassRoutineRepository {
       .from(routineSchedules)
       .innerJoin(sections, eq(routineSchedules.sectionId, sections.id))
       .innerJoin(classes, eq(sections.classId, classes.id))
-      .where(conditions.length ? and(...conditions) : undefined)
+      .where(and(...conditions))
       .orderBy(desc(routineSchedules.updatedAt));
   }
 
@@ -114,7 +121,7 @@ export class ClassRoutineRepository {
       .from(routineSchedules)
       .innerJoin(sections, eq(routineSchedules.sectionId, sections.id))
       .innerJoin(classes, eq(sections.classId, classes.id))
-      .where(eq(routineSchedules.id, id))
+      .where(and(eq(routineSchedules.id, id), this.inSelectedYear()))
       .limit(1);
     return schedule;
   }
@@ -249,18 +256,22 @@ export class ClassRoutineRepository {
       .orderBy(asc(subjects.name), asc(staff.name));
   }
 
-  async createSchedule(data: typeof routineSchedules.$inferInsert) {
-    const [created] = await this.db.insert(routineSchedules).values(data).returning();
+  // A new timetable takes the selected year.
+  async createSchedule(data: Omit<typeof routineSchedules.$inferInsert, 'academicYear'>) {
+    const [created] = await this.db.insert(routineSchedules)
+      .values({ ...data, academicYear: this.year.label }).returning();
     return created;
   }
 
   async updateSchedule(id: string, data: Partial<typeof routineSchedules.$inferInsert>) {
-    const [updated] = await this.db.update(routineSchedules).set(data).where(eq(routineSchedules.id, id)).returning();
+    const [updated] = await this.db.update(routineSchedules).set(data)
+      .where(and(eq(routineSchedules.id, id), this.inSelectedYear())).returning();
     return updated;
   }
 
   async deleteSchedule(id: string) {
-    const [deleted] = await this.db.delete(routineSchedules).where(eq(routineSchedules.id, id)).returning();
+    const [deleted] = await this.db.delete(routineSchedules)
+      .where(and(eq(routineSchedules.id, id), this.inSelectedYear())).returning();
     return deleted;
   }
 
@@ -322,12 +333,13 @@ export class ClassRoutineRepository {
     return deleted;
   }
 
-  async getPublishedForSection(sectionId: string, academicYear: string) {
+  // The section's current timetable in the selected year.
+  async getPublishedForSection(sectionId: string) {
     const conditions = [
       eq(routineSchedules.sectionId, sectionId),
       inArray(routineSchedules.status, ['draft', 'published']),
+      this.inSelectedYear(),
     ];
-    conditions.push(eq(routineSchedules.academicYear, academicYear));
     const [schedule] = await this.db.select({ id: routineSchedules.id })
       .from(routineSchedules)
       .where(and(...conditions))
@@ -339,6 +351,11 @@ export class ClassRoutineRepository {
     return schedule;
   }
 
+  async getTeacherScheduleIdsInSelectedYear(teacherId: string) {
+    return this.getTeacherScheduleIds(teacherId, this.year.label);
+  }
+
+  // A named year: the teacher dashboard reads the active year's week.
   async getTeacherScheduleIds(teacherId: string, academicYear: string) {
     const conditions = [
       eq(teacherAssignments.teacherId, teacherId),

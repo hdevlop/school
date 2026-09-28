@@ -2,17 +2,16 @@ import { describe, expect, it } from 'bun:test';
 
 import { classSchema } from './classSchemas';
 
-const valid = { name: '6A', academicYear: '2025-2026', level: 'primary' };
+const valid = { name: '6A', level: 'primary' };
 
 describe('classSchema', () => {
-  it('accepts a class for a full academic year', () => {
+  it('accepts a class without a year, which the viewed year supplies', () => {
     expect(classSchema.safeParse(valid).success).toBe(true);
   });
 
-  it('refuses an academic year that is not YYYY-YYYY', () => {
-    for (const academicYear of ['2025', '2025/2026', '25-26']) {
-      expect(classSchema.safeParse({ ...valid, academicYear }).success).toBe(false);
-    }
+  it('never submits a year of its own', () => {
+    const parsed = classSchema.parse({ ...valid, academicYear: '2020-2021' });
+    expect(parsed).not.toHaveProperty('academicYear');
   });
 
   it('needs a level, because the year rollover groups classes by it', () => {

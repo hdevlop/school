@@ -1,11 +1,18 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { students, teachers, staff, parents, users } from '../../database/schema';
-import { ilike, or, sql } from 'drizzle-orm';
+import { and, ilike, or, sql, type SQL } from 'drizzle-orm';
+import { Owned, ownershipCondition, type ScopeContext } from '../../auth';
+import { Student } from '../students/StudentGuards';
+import { Teacher } from '../teachers/TeacherGuards';
+import { Parent } from '../parents/ParentGuards';
 
+@Owned(Student)
 @Repository()
 export class SearchRepository {
   declare db: DB;
+  declare _scopeCtx: ScopeContext;
+  declare ownershipCondition: () => SQL | undefined;
 
   async searchStudents(query: string, limit = 20) {
     const pattern = `%${query}%`;
@@ -23,12 +30,12 @@ export class SearchRepository {
       .from(students)
       .leftJoin(users, sql`${students.userId} = ${users.id}`)
       .where(
-        or(
+        and(this.ownershipCondition(), or(
           ilike(students.name, pattern),
           ilike(students.studentCode, pattern),
           ilike(students.phone, pattern),
           ilike(users.email, pattern),
-        )
+        ))
       )
       .limit(limit);
   }
@@ -51,13 +58,13 @@ export class SearchRepository {
       .innerJoin(staff, sql`${teachers.staffId} = ${staff.id}`)
       .leftJoin(users, sql`${staff.userId} = ${users.id}`)
       .where(
-        or(
+        and(ownershipCondition(this.db, [Teacher], this._scopeCtx), or(
           ilike(staff.name, pattern),
           ilike(staff.cin, pattern),
           ilike(staff.phone, pattern),
           ilike(users.email, pattern),
           ilike(teachers.specialization, pattern),
-        )
+        ))
       )
       .limit(limit);
   }
@@ -78,12 +85,12 @@ export class SearchRepository {
       .from(parents)
       .leftJoin(users, sql`${parents.userId} = ${users.id}`)
       .where(
-        or(
+        and(ownershipCondition(this.db, [Parent], this._scopeCtx), or(
           ilike(parents.name, pattern),
           ilike(parents.cin, pattern),
           ilike(parents.phone, pattern),
           ilike(users.email, pattern),
-        )
+        ))
       )
       .limit(limit);
   }

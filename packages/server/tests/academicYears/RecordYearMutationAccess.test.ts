@@ -18,20 +18,21 @@ describe('record year access', () => {
     expect((await years.resolveRecord(undefined, '2027-09-01', 'teacher'))?.id).toBe(activeYear.id);
   });
 
-  it('checks an old grade before a teacher can update it', async () => {
+  // A teacher works in the active year only (the year middleware refuses them
+  // another), and the year-scoped read does not find an old year's grade there.
+  it('does not update a grade the selected year does not hold', async () => {
     let updated = false;
     const grade = new GradeService(
       { update: async () => { updated = true; } } as any,
-      { ensureExists: async () => ({ id: 'grade-1', academicYearId: oldYear.id,
-        assessment: { date: '2027-05-10' } }) } as any,
+      { ensureExists: async () => { throw new Error('Grade not found'); } } as any,
       {} as any,
-      { resolveRecord: async () => { throw new Error('Other school years are restricted'); } } as any,
+      {} as any,
       {} as any,
       {} as any,
       {} as any,
     );
     await expect(grade.update('grade-1', { feedback: 'changed' },
-      { id: 'user-1', role: 'teacher' })).rejects.toThrow('Other school years are restricted');
+      { id: 'user-1', role: 'teacher' })).rejects.toThrow('Grade not found');
     expect(updated).toBe(false);
   });
 
@@ -79,7 +80,7 @@ describe('record year access', () => {
     let validated = false;
     const attendance = new AttendanceService(
       { create: async () => { throw new Error('created'); } } as any,
-      { validateStudentAttendance: async () => { validated = true; } } as any,
+      { ensureSelectedYear: () => {}, validateStudentAttendance: async () => { validated = true; } } as any,
       { resolveRecord: async () => { throw new Error('Other school years are restricted'); },
         requireLabel: async () => oldYear } as any,
       { listYearContexts: async () => [{ id: 'section-1', academicYear: oldYear.label }] } as any,
@@ -98,7 +99,7 @@ describe('record year access', () => {
           teacherId === 'teacher-1' && sectionId === 'section-1',
         getAttendanceMode: async () => 'per_class',
         create: async (row: unknown) => row } as any,
-      { validateStudentAttendance: async (_data: unknown, context: any) => {
+      { ensureSelectedYear: () => {}, validateStudentAttendance: async (_data: unknown, context: any) => {
         validatedTeacherId = context.user.teacherId;
         return 'assignment-1';
       } } as any,

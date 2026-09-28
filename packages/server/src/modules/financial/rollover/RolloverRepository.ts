@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
 import { and, eq, inArray } from 'drizzle-orm';
-import { rolloverRuns, rolloverRunItems, students, fees, feeTypes } from '../../../database/schema';
+import { rolloverRuns, rolloverRunItems, students, fees, feeTypes, studentEnrollments, academicYears, studentEnrollmentPlacements } from '../../../database/schema';
 import { DB } from '../../../database/db';
 
 @Repository()
@@ -12,19 +12,35 @@ export class RolloverRepository {
     await this.db.delete(rolloverRuns);
   }
 
-  async getActiveStudents(classIds?: string[]) {
-    const conditions = [eq(students.status, 'active')];
-    if (classIds?.length) conditions.push(inArray(students.classId, classIds));
+  async getActiveStudents(fromYear: string, classIds?: string[]) {
+    const conditions = [eq(students.status, 'active'), eq(academicYears.label, fromYear)];
+    if (classIds?.length) {
+      conditions.push(inArray(studentEnrollmentPlacements.classId, classIds));
+    }
     return await this.db
-      .select({
+      .selectDistinct({
         id: students.id,
         name: students.name,
-        classId: students.classId,
-        enrollmentDate: students.enrollmentDate,
+        enrollmentDate: studentEnrollments.enrolledOn,
         status: students.status,
       })
       .from(students)
+      .innerJoin(studentEnrollments, eq(studentEnrollments.studentId, students.id))
+      .innerJoin(academicYears, eq(studentEnrollments.academicYearId, academicYears.id))
+      .leftJoin(studentEnrollmentPlacements, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
       .where(and(...conditions));
+  }
+
+  async getTargetEnrollments(toYear: string, studentIds: string[]) {
+    if (studentIds.length === 0) return [];
+    return this.db.select({
+      studentId: studentEnrollments.studentId,
+      enrolledOn: studentEnrollments.enrolledOn,
+      leftOn: studentEnrollments.leftOn,
+      status: studentEnrollments.status,
+    }).from(studentEnrollments)
+      .innerJoin(academicYears, eq(studentEnrollments.academicYearId, academicYears.id))
+      .where(and(eq(academicYears.label, toYear), inArray(studentEnrollments.studentId, studentIds)));
   }
 
   async getExistingFeeIdsForYear(studentIds: string[], academicYear: string, feeTypeIds?: string[]) {

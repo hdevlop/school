@@ -1,4 +1,5 @@
 import {
+  AlertTriangle,
   Award,
   Banknote,
   BellRing,
@@ -47,6 +48,7 @@ import {
 export const FEATURE_ICONS = {
   dashboard: LayoutDashboard,
   notifications: BellRing,
+  alerts: AlertTriangle,
 
   students: UserRound,
   parents: UsersRound,

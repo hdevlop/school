@@ -37,20 +37,21 @@ export class StudentProfileService {
     await this.studentService.ensureReadable(studentId);
   }
 
-  async getAcademic(studentId: string, year: ResolvedAcademicYear) {
+  async getAcademic(studentId: string, _year: ResolvedAcademicYear) {
     await this.ensureReadable(studentId);
-    const [grades, assessments, exams] = await Promise.all([
-      this.gradeService.getByStudent(studentId, year).catch(() => []),
-      this.assessmentService.getAll(year).catch(() => []),
-      this.examService.getAll(year).catch(() => []),
+    // The student's own assessments and exams: those of the section they sat in on
+    // each date, not everything the reader may see.
+    const [grades, assessments, upcomingExams] = await Promise.all([
+      this.gradeService.getByStudent(studentId),
+      this.assessmentService.getForStudent(studentId),
+      this.examService.getForStudent(studentId, { upcoming: true }),
     ]);
-    const upcomingExams = Array.isArray(exams) ? exams.filter((e: any) => new Date(e.examDate) >= new Date()) : [];
     return { grades, upcomingExams, assessments };
   }
 
-  async getAttendanceSummary(studentId: string, year: ResolvedAcademicYear) {
+  async getAttendanceSummary(studentId: string, _year: ResolvedAcademicYear) {
     await this.ensureReadable(studentId);
-    const records = await this.attendanceRepository.getAll({ year, studentId }).catch(() => []);
+    const records = await this.attendanceRepository.getAll({ studentId });
     const total = Array.isArray(records) ? records.length : 0;
     const present = Array.isArray(records) ? records.filter((r: any) => r.status === 'present').length : 0;
     const absent = Array.isArray(records) ? records.filter((r: any) => r.status === 'absent').length : 0;
@@ -59,9 +60,9 @@ export class StudentProfileService {
     return { total, present, absent, late, percentage };
   }
 
-  async getFinancial(studentId: string, year: ResolvedAcademicYear) {
+  async getFinancial(studentId: string, _year: ResolvedAcademicYear) {
     await this.ensureReadable(studentId);
-    return await this.feeService.getByStudent(studentId, year);
+    return await this.feeService.getByStudent(studentId);
   }
 
   async getTransport(studentId: string) {

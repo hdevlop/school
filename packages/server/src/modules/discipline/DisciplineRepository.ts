@@ -10,14 +10,34 @@ import {
   teachers,
   users,
 } from '../../database/schema';
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
+import { Owned } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { occurredInReportingInterval } from '../academicYears/academicRecordYear';
+import { studentPlacementOn } from '../studentEnrollments/placementOnDay';
+import { Discipline } from './DisciplineGuards';
 
+@Owned(Discipline)
 @Repository()
 export class DisciplineRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+  declare ownershipCondition: () => SQL | undefined;
 
-  private buildJoinedQuery() {
+  // An incident belongs to the year whose reporting interval holds its school-local day.
+  private inSelectedYear() {
+    return occurredInReportingInterval(disciplineIncidents.incidentAt, this.year);
+  }
+
+  /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
+  private readCondition(...filters: (SQL | undefined)[]) {
+    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+  }
+
+  // Never chain another .where() on this: it would replace the read condition.
+  private buildJoinedQuery(...filters: (SQL | undefined)[]) {
     const studentUsers = alias(users, 'discipline_student_users');
     const reporterUsers = alias(users, 'discipline_reporter_users');
     const resolverUsers = alias(users, 'discipline_resolver_users');
@@ -73,31 +93,23 @@ export class DisciplineRepository {
       .innerJoin(reporterUsers, eq(disciplineIncidents.reportedBy, reporterUsers.id))
       .leftJoin(reporterStaff, eq(reporterStaff.userId, reporterUsers.id))
       .leftJoin(resolverUsers, eq(disciplineIncidents.resolvedBy, resolverUsers.id))
-      .leftJoin(resolverStaff, eq(resolverStaff.userId, resolverUsers.id));
+      .leftJoin(resolverStaff, eq(resolverStaff.userId, resolverUsers.id))
+      .where(this.readCondition(...filters));
   }
 
-  async list(reportedBy?: string) {
-    const query = this.buildJoinedQuery();
-    if (reportedBy) {
-      return query.where(eq(disciplineIncidents.reportedBy, reportedBy))
-        .orderBy(desc(disciplineIncidents.incidentAt), desc(disciplineIncidents.createdAt));
-    }
-    return query.orderBy(desc(disciplineIncidents.incidentAt), desc(disciplineIncidents.createdAt));
+  async list() {
+    return this.buildJoinedQuery()
+      .orderBy(desc(disciplineIncidents.incidentAt), desc(disciplineIncidents.createdAt));
   }
 
   async getById(id: string) {
-    const [record] = await this.buildJoinedQuery().where(eq(disciplineIncidents.id, id)).limit(1);
+    const [record] = await this.buildJoinedQuery(eq(disciplineIncidents.id, id)).limit(1);
     return record;
   }
 
-  async getStudentSnapshot(studentId: string) {
-    const [student] = await this.db.select({
-      id: students.id,
-      status: students.status,
-      classId: students.classId,
-      sectionId: students.sectionId,
-    }).from(students).where(eq(students.id, studentId)).limit(1);
-    return student;
+  /** The student's class and section on the incident's day; see `studentPlacementOn`. */
+  async getStudentPlacementOn(studentId: string, incidentAt: string) {
+    return studentPlacementOn(this.db, studentId, incidentAt, this.year);
   }
 
   async isTeacherAssignedToSection(userId: string, sectionId: string) {
@@ -116,18 +128,19 @@ export class DisciplineRepository {
   }
 
   async update(id: string, data: Partial<typeof disciplineIncidents.$inferInsert>) {
-    await this.db.update(disciplineIncidents).set(data).where(eq(disciplineIncidents.id, id));
+    await this.db.update(disciplineIncidents).set(data)
+      .where(and(eq(disciplineIncidents.id, id), this.inSelectedYear()));
     return this.getById(id);
   }
 
   async delete(id: string) {
     const [record] = await this.db.delete(disciplineIncidents)
-      .where(eq(disciplineIncidents.id, id))
+      .where(and(eq(disciplineIncidents.id, id), this.inSelectedYear()))
       .returning({ id: disciplineIncidents.id });
     return record;
   }
 
-  /** Internal reset support only; intentionally not exposed by the controller. */
+  /** Trusted demo reset only, every year's incidents; intentionally not exposed by the controller. */
   async deleteAll() {
     return this.db.delete(disciplineIncidents).returning({ id: disciplineIncidents.id });
   }

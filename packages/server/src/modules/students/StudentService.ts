@@ -138,7 +138,7 @@ export class StudentService {
     }, actorId || user.id);
 
     await this.parentService.processParents(student, parentsToProcess);
-    await this.feeService.processFees(student, data.fees as any, { id: actorId || user.id }, data.yearEnrolledOn);
+    await this.feeService.processFees(student, data.fees as any, { id: actorId || user.id }, data.yearEnrolledOn, year.label);
 
     if (data.transportAssignment) {
       await this.studentRouteService.assign({

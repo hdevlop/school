@@ -30,6 +30,7 @@ import {
   ExamService,
   GradeService,
   AlertService,
+  runWithResolvedYear,
   RefuelService,
   MaintenanceService,
   DisciplineService,
@@ -687,10 +688,12 @@ runSeedTask('demo seed', async (server) => {
   const createdStudents = await seedPhase('Students', () => studentService.createBulk(studentsData));
   console.log(`✅ Students seeded (${createdStudents.length} records)`);
 
-  const conductResult = await seedPhase('Student conduct', async () => {
-    const availableTeachers = await teacherService.getAll();
-    return seedConductRecords(disciplineService, behaviorRewardService, availableTeachers);
-  });
+  // Discipline incidents and behavior rewards belong to the year holding their date.
+  const conductResult = await seedPhase('Student conduct', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'), async () => {
+      const availableTeachers = await teacherService.getAll();
+      return seedConductRecords(disciplineService, behaviorRewardService, availableTeachers);
+    }));
   console.log(
     `✅ Student conduct seeded (${conductResult.disciplineCount} discipline incidents, ${conductResult.resolvedCount} resolved, ${conductResult.rewardCount} behavior rewards)`,
   );
@@ -713,39 +716,43 @@ runSeedTask('demo seed', async (server) => {
   );
 
   console.log('💸 Seeding expenses...');
-  const createdExpenses = await seedPhase('Expenses', () => expenseService.seedDemoExpenses(expensesData));
+  const createdExpenses = await seedPhase('Expenses', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => expenseService.seedDemoExpenses(expensesData)));
   console.log(`✅ Expenses seeded (${createdExpenses.length} records)`);
 
   console.log('🧾 Seeding payroll...');
   const payrollResult = await seedPhase('Payroll', () => seedPayroll(payrollService, payrollPeriods));
   console.log(`✅ Payroll seeded (${payrollResult.createdCount} payslips, ${payrollResult.paidCount} paid)`);
 
-  const createdAnnouncements = await seedPhase('Announcements', () => announcementService.createBulk(announcementsData));
+  const createdAnnouncements = await seedPhase('Announcements', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => announcementService.createBulk(announcementsData)));
   console.log(`✅ Announcements seeded (${createdAnnouncements.length} records)`);
 
-  const createdEvents = await seedPhase('Events', () => createSequential(
-    'Events', eventsData, (item) => eventService.create(item),
-  ));
+  const createdEvents = await seedPhase('Events', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => createSequential('Events', eventsData, (item) => eventService.create(item))));
   console.log(`✅ Events seeded (${createdEvents.length} records)`);
 
   const assessmentContexts: any[] = [];
-  const createdAssessments = await seedPhase('Assessments', () => createSequential(
-    'Assessments', assessmentsData, async (item) => {
-      const created = await assessmentService.create(item);
-      assessmentContexts.push({ ...item, id: created.id });
-      return created;
-    },
-  ));
+  const createdAssessments = await seedPhase('Assessments', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => createSequential('Assessments', assessmentsData, async (item) => {
+        const created = await assessmentService.create(item);
+        assessmentContexts.push({ ...item, id: created.id });
+        return created;
+      })));
   console.log(`✅ Assessments seeded (${createdAssessments.length} records)`);
 
   const examContexts: any[] = [];
-  const createdExams = await seedPhase('Exams', () => createSequential(
-    'Exams', examsData, async (item) => {
-      const created = await examService.create(item);
-      examContexts.push({ ...item, id: created.id });
-      return created;
-    },
-  ));
+  const createdExams = await seedPhase('Exams', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => createSequential('Exams', examsData, async (item) => {
+        const created = await examService.create(item);
+        examContexts.push({ ...item, id: created.id });
+        return created;
+      })));
   console.log(`✅ Exams seeded (${createdExams.length} records)`);
 
   const createdStudentIds = new Set(createdStudents.map((student) => student.id));
@@ -767,18 +774,26 @@ runSeedTask('demo seed', async (server) => {
   console.log(`✅ Grades seeded (${createdGrades.length} records)`);
 
   console.log('📋 Seeding attendance...');
-  const { studentCount, staffCount } = await seedPhase('Attendance', async () =>
-    seedAttendance(await academicYearValidator.resolve(seedAcademicYear, 'admin'), attendanceService, studentService, teacherService, staffService),
-  );
+  const { studentCount, staffCount } = await seedPhase('Attendance', async () => {
+    const year = await academicYearValidator.resolve(seedAcademicYear, 'admin');
+    return runWithResolvedYear(server.container, year,
+      () => seedAttendance(year, attendanceService, studentService, teacherService, staffService));
+  });
   console.log(`✅ Attendance seeded (${studentCount} student records, ${staffCount} staff records)`);
 
-  const createdAlerts = await seedPhase('Alerts', () => alertService.seedDemoAlerts(alertsData));
+  const createdAlerts = await seedPhase('Alerts', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => alertService.seedDemoAlerts(alertsData)));
   console.log(`✅ Alerts seeded (${createdAlerts.length} records)`);
 
-  const createdRefuels = await seedPhase('Refuels', () => refuelService.seedDemoRefuels(refuelsData));
+  const createdRefuels = await seedPhase('Refuels', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => refuelService.seedDemoRefuels(refuelsData)));
   console.log(`✅ Refuels seeded (${createdRefuels.length} records)`);
 
-  const createdMaintenance = await seedPhase('Maintenance', () => maintenanceService.seedDemoMaintenances(maintenanceData));
+  const createdMaintenance = await seedPhase('Maintenance', async () =>
+    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
+      () => maintenanceService.seedDemoMaintenances(maintenanceData)));
   console.log(`✅ Maintenance seeded (${createdMaintenance.length} records)`);
 
   console.log('\n✨ Demo seed completed successfully!');

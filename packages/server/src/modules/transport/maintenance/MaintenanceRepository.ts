@@ -1,7 +1,10 @@
 import { DB } from '../../../database/db';
 import { maintenance, vehicles } from '../../../database/schema';
-import { count, eq, desc, sql, and, asc } from 'drizzle-orm';
+import { count, eq, desc, sql, and, asc, or, ne, isNull, isNotNull } from 'drizzle-orm';
 import { Repository } from '../../../najm';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { inReportingInterval, occurredInReportingInterval } from '../../academicYears/academicRecordYear';
 
 
 const maintenanceSelect = {
@@ -25,13 +28,26 @@ const maintenanceSelect = {
 
 @Repository()
 export class MaintenanceRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return or(
+      and(eq(maintenance.status, 'completed'),
+        or(occurredInReportingInterval(maintenance.completedAt, this.year),
+          and(isNull(maintenance.completedAt), inReportingInterval(maintenance.scheduledDate, this.year)))),
+      and(or(ne(maintenance.status, 'completed'), isNull(maintenance.status)),
+        or(inReportingInterval(maintenance.scheduledDate, this.year),
+          and(isNull(maintenance.scheduledDate), isNull(maintenance.completedAt)))),
+    )!;
+  }
 
   async getAll() {
     return await this.db
       .select(maintenanceSelect)
       .from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
+      .where(this.inSelectedYear())
       .orderBy(desc(maintenance.createdAt));
   }
 
@@ -40,7 +56,7 @@ export class MaintenanceRepository {
       .select(maintenanceSelect)
       .from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
-      .where(eq(maintenance.id, id))
+      .where(and(eq(maintenance.id, id), this.inSelectedYear()))
       .limit(1);
     return m;
   }
@@ -49,6 +65,14 @@ export class MaintenanceRepository {
     return await this.db
       .select(maintenanceSelect)
       .from(maintenance)
+      .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
+      .where(and(eq(maintenance.vehicleId, vehicleId), this.inSelectedYear()))
+      .orderBy(desc(maintenance.createdAt));
+  }
+
+  // Duplicate checks and mileage alerts concern the vehicle's live workload.
+  async getByVehicleIdAcrossYears(vehicleId: string) {
+    return await this.db.select(maintenanceSelect).from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
       .where(eq(maintenance.vehicleId, vehicleId))
       .orderBy(desc(maintenance.createdAt));
@@ -59,7 +83,7 @@ export class MaintenanceRepository {
       .select(maintenanceSelect)
       .from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
-      .where(eq(maintenance.status, status))
+      .where(and(eq(maintenance.status, status), this.inSelectedYear()))
       .orderBy(desc(maintenance.createdAt));
   }
 
@@ -68,7 +92,7 @@ export class MaintenanceRepository {
       .select(maintenanceSelect)
       .from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
-      .where(eq(maintenance.type, type))
+      .where(and(eq(maintenance.type, type), this.inSelectedYear()))
       .orderBy(desc(maintenance.createdAt));
   }
 
@@ -77,7 +101,7 @@ export class MaintenanceRepository {
       .select(maintenanceSelect)
       .from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
-      .where(eq(maintenance.priority, priority))
+      .where(and(eq(maintenance.priority, priority), this.inSelectedYear()))
       .orderBy(desc(maintenance.createdAt));
   }
 
@@ -86,7 +110,7 @@ export class MaintenanceRepository {
       .select(maintenanceSelect)
       .from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
-      .where(eq(maintenance.assignedTo, assignedTo))
+      .where(and(eq(maintenance.assignedTo, assignedTo), this.inSelectedYear()))
       .orderBy(desc(maintenance.createdAt));
   }
 
@@ -95,7 +119,7 @@ export class MaintenanceRepository {
       .select(maintenanceSelect)
       .from(maintenance)
       .leftJoin(vehicles, eq(maintenance.vehicleId, vehicles.id))
-      .where(eq(maintenance.status, 'scheduled'))
+      .where(and(eq(maintenance.status, 'scheduled'), this.inSelectedYear()))
       .orderBy(asc(maintenance.scheduledDate), desc(maintenance.priority), desc(maintenance.createdAt));
   }
 
@@ -139,7 +163,8 @@ export class MaintenanceRepository {
   async getCount() {
     const [maintenanceCount] = await this.db
       .select({ count: count() })
-      .from(maintenance);
+      .from(maintenance)
+      .where(this.inSelectedYear());
     return maintenanceCount;
   }
 
@@ -150,6 +175,7 @@ export class MaintenanceRepository {
         count: sql<number>`count(*)`,
       })
       .from(maintenance)
+      .where(this.inSelectedYear())
       .groupBy(maintenance.status)
       .orderBy(maintenance.status);
 
@@ -166,6 +192,7 @@ export class MaintenanceRepository {
         count: sql<number>`count(*)`,
       })
       .from(maintenance)
+      .where(this.inSelectedYear())
       .groupBy(maintenance.priority)
       .orderBy(maintenance.priority);
 
@@ -182,6 +209,7 @@ export class MaintenanceRepository {
         count: sql<number>`count(*)`,
       })
       .from(maintenance)
+      .where(this.inSelectedYear())
       .groupBy(maintenance.type)
       .orderBy(maintenance.type);
 
@@ -201,7 +229,7 @@ export class MaintenanceRepository {
         count: sql<number>`COUNT(*)`
       })
       .from(maintenance)
-      .where(sql`${maintenance.cost} IS NOT NULL AND ${maintenance.cost} != ''`);
+      .where(and(this.inSelectedYear(), isNotNull(maintenance.cost)));
 
     const [analytics] = result;
     return {
@@ -225,7 +253,7 @@ export class MaintenanceRepository {
     const [updatedMaintenance] = await this.db
       .update(maintenance)
       .set(data)
-      .where(eq(maintenance.id, id))
+      .where(and(eq(maintenance.id, id), this.inSelectedYear()))
       .returning();
     return updatedMaintenance;
   }
@@ -233,7 +261,7 @@ export class MaintenanceRepository {
   async delete(id: string) {
     const [deletedMaintenance] = await this.db
       .delete(maintenance)
-      .where(eq(maintenance.id, id))
+      .where(and(eq(maintenance.id, id), this.inSelectedYear()))
       .returning();
     return deletedMaintenance;
   }
@@ -241,12 +269,17 @@ export class MaintenanceRepository {
   async deleteAll() {
     const deletedMaintenances = await this.db
       .delete(maintenance)
+      .where(this.inSelectedYear())
       .returning();
 
     return {
       deletedCount: deletedMaintenances.length,
       deletedMaintenances: deletedMaintenances,
     };
+  }
+
+  async clearForSeedReset() {
+    return await this.db.delete(maintenance);
   }
 
   async markAsCompleted(id: string) {
@@ -256,9 +289,14 @@ export class MaintenanceRepository {
         status: 'completed',
         completedAt: new Date().toISOString(),
       })
-      .where(eq(maintenance.id, id))
+      .where(and(eq(maintenance.id, id), this.inSelectedYear()))
       .returning();
     return updatedMaintenance;
+  }
+
+  async markOverdueByIdForOperationalAlert(id: string) {
+    await this.db.update(maintenance).set({ status: 'overdue' })
+      .where(and(eq(maintenance.id, id), eq(maintenance.status, 'scheduled')));
   }
 
   async markAsOverdue() {

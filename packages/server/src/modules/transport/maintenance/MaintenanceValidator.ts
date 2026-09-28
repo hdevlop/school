@@ -2,10 +2,12 @@ import { Err, I18n, Service } from '../../../najm';
 import { MaintenanceRepository } from './MaintenanceRepository';
 import { VehicleRepository } from '../vehicles/VehicleRepository';
 import { getEnumValues } from '../../../shared/enums';
-import { getBusinessDate } from '../../../shared/businessDate';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 @Service()
 export class MaintenanceValidator {
+  @Year() private readonly year!: ResolvedAcademicYear;
   @I18n('maintenance.errors') private mt!: (key: string) => string;
   @I18n('vehicles.errors') private vt!: (key: string) => string;
 
@@ -60,21 +62,13 @@ export class MaintenanceValidator {
 
   validateScheduledDate(scheduledDate: string) {
     if (!scheduledDate) return true;
-
-    // Check if it's a valid date string
-    const date = new Date(scheduledDate);
-    if (isNaN(date.getTime())) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate)
+      || Number.isNaN(Date.parse(scheduledDate))
+      || new Date(scheduledDate).toISOString().slice(0, 10) !== scheduledDate) {
       Err(400, 'Invalid date');
     }
-
-    // Check if the date is not in the past (allow today)
-    const today = getBusinessDate();
-    today.setHours(0, 0, 0, 0); // Reset time to start of day
-    const scheduledDateObj = new Date(scheduledDate);
-    scheduledDateObj.setHours(0, 0, 0, 0);
-
-    if (scheduledDateObj < today) {
-      Err(400, this.mt('scheduledDateInPast'));
+    if (scheduledDate < this.year.reportingStartsOn || scheduledDate > this.year.reportingEndsOn) {
+      Err(409, 'Maintenance date is outside the selected school year');
     }
 
     return true;
@@ -149,7 +143,7 @@ export class MaintenanceValidator {
   }
 
   async checkNoDuplicateMaintenance(vehicleId: string, type: string, dueHours: string | number, excludeId?: string) {
-    const existingMaintenances = await this.maintenanceRepository.getByVehicleId(vehicleId);
+    const existingMaintenances = await this.maintenanceRepository.getByVehicleIdAcrossYears(vehicleId);
     
     const duplicate = existingMaintenances.find(m => 
       m.type === type && 

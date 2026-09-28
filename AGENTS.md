@@ -13,6 +13,7 @@ Use this file as the default entry point. Read the deeper files only when a task
 
 1. Read this file first.
 2. For live data operations, or for backend modules, MCP exposure, storage, validation, or Najm package internals, load the `najm` skill.
+3. Before changing a backend module's academic-year handling or ownership, read section 0 of `SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md`. It has the step-by-step recipe, the next module in the queue, and the traps already found.
 
 ## Working Modes
 
@@ -144,7 +145,15 @@ Use a smaller module shape when the feature is lightweight and does not need eve
 - Use `@Validate(...)` for request validation.
 - Use `@McpTool(...)` only when the route should be exposed to MCP.
 - Use `@ToolGroup(...)` to group MCP tool names when needed.
-- Keep authorization in controller and policy layers, not repositories.
+- Keep authorization rules in `*Guards.ts` and controller decorators. Repositories only apply them through `this.ownershipCondition()`.
+
+### Academic Year And Ownership
+
+- **Ownership.** Owned repositories take `own`/`Owned` from `packages/server/src/auth.ts`, never from `najm-auth`. Every read is one `.where(and(this.ownershipCondition(), ...))`; a second `.where()` replaces the first and drops ownership. Controllers use `@Policy(Token)` with `@CanList/@CanRead/@CanCreate/@CanUpdate/@CanDelete`.
+- **Year.** A converted repository reads the selected year from `@Year() private readonly year!: ResolvedAcademicYear` and filters on it in that same `.where()`. Services and controllers do not pass the year.
+- **Registration.** Every controller whose routes reach a converted repository, directly or through another module's service, is registered once in `packages/server/src/config/yearScope.ts`, keyed by its `@ToolGroup` name. Outside that scope the read throws.
+- **No duplicate input.** A registered controller must not declare `academicYear` in its own params, query or body schemas; najm-mcp then refuses to start the server. `packages/server/tests/academicYears/YearScopedModules.test.ts` checks this.
+- **No silent catches.** Do not wrap a scoped read in `.catch(() => [])`; it turns a failure into an empty result.
 
 ### Validation And Files
 

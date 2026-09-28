@@ -125,7 +125,6 @@ function ClassRoutinePageForYear() {
     const selectedSection = classSections.find((item) => item.id === sectionId);
     const response: any = await mutations.createSchedule.mutateAsync({
       sectionId,
-      academicYear: selectedClass.academicYear,
       name: `${selectedClass.name} · ${selectedSection?.name || t('classRoutines.ui.title')}`,
       activeDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
     });

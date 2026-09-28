@@ -10,6 +10,7 @@ import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 const calculateStaffPay = (member) => {
   if (member?.compensationMode === 'hourly') {
@@ -41,6 +42,24 @@ const PayrollTable = () => {
   const { locale, majorMoney } = useSchoolFormat();
   const [period, setPeriod] = useState<string>(currentPeriod());
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const year = useViewingYearCalendar();
+  const periodOptions = useMemo(() => {
+    if (!year) return [];
+    const start = year.reportingStartsOn.slice(0, 7);
+    const end = year.reportingEndsOn.slice(0, 7);
+    const [startYear, startMonth] = start.split('-').map(Number);
+    const [endYear, endMonth] = end.split('-').map(Number);
+    const months: Array<{ value: string; label: string }> = [];
+    for (let index = startYear * 12 + startMonth - 1; index <= endYear * 12 + endMonth - 1; index++) {
+      const value = `${Math.floor(index / 12)}-${String(index % 12 + 1).padStart(2, '0')}`;
+      if (`${value}-01` >= year.reportingStartsOn && `${value}-01` <= year.reportingEndsOn) {
+        months.push({ value, label: formatPeriod(value, locale) });
+      }
+    }
+    return months.reverse();
+  }, [year, locale]);
+  const effectivePeriod = periodOptions.some((item) => item.value === period)
+    ? period : periodOptions[0]?.value ?? period;
 
   const { staff, isStaffLoading } = useStaff();
   const {
@@ -53,7 +72,7 @@ const PayrollTable = () => {
     payStaffBulk,
     unpayStaff,
     isPaying,
-  } = usePayroll({ period });
+  } = usePayroll({ period: effectivePeriod, enabled: !!year });
 
   const isLoading = isStaffLoading || isPayrollLoading;
 
@@ -74,7 +93,7 @@ const PayrollTable = () => {
   }, [payslips]);
 
   const tableRows = useMemo(() => {
-    return eligibleStaff.map((member) => {
+    const currentRows = eligibleStaff.map((member) => {
       const slip = payslipByStaff.get(member.id);
       return {
         id: slip?.id ?? `staff-${member.id}`,
@@ -83,13 +102,31 @@ const PayrollTable = () => {
         name: slip?.staffName ?? member.name ?? '-',
         role: slip?.staffRole ?? member.role,
         contractType: normalizeEmploymentType(member?.employmentType),
-        payrollPeriod: formatPeriod(period, locale),
+        payrollPeriod: formatPeriod(effectivePeriod, locale),
         paymentAmount: Number(slip?.netAmount ?? calculateStaffPay(member)),
         paymentStatus: slip ? slip.status : 'notRun',
         payslipNumber: slip?.payslipNumber ?? null,
       };
     });
-  }, [eligibleStaff, payslipByStaff, period, locale]);
+    // A historical payslip remains visible when its staff member has left or
+    // no longer has an active salary in today's staff catalog.
+    const currentIds = new Set(currentRows.map((row) => row.staffId));
+    const historicalRows = (Array.isArray(payslips) ? payslips : [])
+      .filter((slip) => !currentIds.has(slip.staffId))
+      .map((slip) => ({
+        id: slip.id,
+        payslipId: slip.id,
+        staffId: slip.staffId,
+        name: slip.staffName,
+        role: slip.staffRole,
+        contractType: normalizeEmploymentType(slip.staff?.employmentType),
+        payrollPeriod: formatPeriod(effectivePeriod, locale),
+        paymentAmount: Number(slip.netAmount),
+        paymentStatus: slip.status,
+        payslipNumber: slip.payslipNumber,
+      }));
+    return [...currentRows, ...historicalRows];
+  }, [eligibleStaff, payslipByStaff, payslips, effectivePeriod, locale]);
 
   const totalPayroll = summary?.totalNet
     ?? tableRows.reduce((sum, row) => sum + row.paymentAmount, 0);
@@ -108,17 +145,17 @@ const PayrollTable = () => {
 
   // One click: create the payslip (if needed) and mark it paid. Salaries default to bank transfer.
   const handlePayOne = useCallback(async (staffId: string) => {
-    await payStaff({ staffId, period, paymentMethod: 'bankTransfer' });
-  }, [payStaff, period]);
+    await payStaff({ staffId, period: effectivePeriod, paymentMethod: 'bankTransfer' });
+  }, [payStaff, effectivePeriod]);
 
   // Toggle off — undo a payment made by mistake (keeps the payslip history, back to pending).
   const handleUnpayOne = useCallback(async (staffId: string) => {
-    await unpayStaff({ staffId, period });
-  }, [unpayStaff, period]);
+    await unpayStaff({ staffId, period: effectivePeriod });
+  }, [unpayStaff, effectivePeriod]);
 
   const handlePaySelected = useCallback(async (staffIds: string[]) => {
     if (staffIds.length === 0) return;
-    await payStaffBulk({ staffIds, period, paymentMethod: 'bankTransfer' });
+    await payStaffBulk({ staffIds, period: effectivePeriod, paymentMethod: 'bankTransfer' });
     setRowSelection((current) => {
       const next = { ...current };
       tableRows.forEach((row) => {
@@ -126,7 +163,7 @@ const PayrollTable = () => {
       });
       return next;
     });
-  }, [payStaffBulk, period, tableRows]);
+  }, [payStaffBulk, effectivePeriod, tableRows]);
 
   const typeBadge = useCallback((type: string) => {
     const isVacataire = type === 'vacataire';
@@ -222,21 +259,11 @@ const PayrollTable = () => {
     },
   ], [t, handlePayOne, handleUnpayOne, statusBadge, typeBadge, isPaying, majorMoney]);
 
-  // Last 12 months + next month, newest first — drives the period query (refetch on change).
-  const periodOptions = useMemo(() => {
-    const base = new Date();
-    return Array.from({ length: 13 }, (_, i) => {
-      const d = new Date(base.getFullYear(), base.getMonth() - (i - 1), 1);
-      const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-      return { value, label: formatPeriod(value, locale) };
-    });
-  }, [locale]);
-
   const filters = useMemo(() => [
     {
       name: 'period',
       type: 'select',
-      value: period,
+      value: effectivePeriod,
       onChange: (value: string) => setPeriod(value || currentPeriod()),
       placeholder: t('payroll.stats.period'),
       className: 'w-full lg:w-44',
@@ -269,14 +296,14 @@ const PayrollTable = () => {
         { value: 'notRun', label: t('payroll.status.notSet') },
       ],
     },
-  ], [t, period, periodOptions]);
+  ], [t, effectivePeriod, periodOptions]);
 
   return (
     <div className="flex flex-col gap-2 w-full h-full">
       <NPageHeader
         icon={Wallet}
         title={t('navigation.payroll')}
-        subtitle={`${t('payroll.subtitle.count', { count: tableRows.length })} · ${formatPeriod(period, locale)}`}
+        subtitle={`${t('payroll.subtitle.count', { count: tableRows.length })} · ${formatPeriod(effectivePeriod, locale)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -290,7 +317,7 @@ const PayrollTable = () => {
           <NStatCard
             icon={CalendarDays}
             label={t('payroll.stats.period')}
-            value={formatPeriod(period, locale)}
+            value={formatPeriod(effectivePeriod, locale)}
           />
           <NStatCard
             icon={Banknote}

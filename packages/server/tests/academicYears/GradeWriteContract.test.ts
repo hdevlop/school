@@ -8,7 +8,7 @@ const year = {
   reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31',
 };
 
-function gradeService(teacherIdForUser = async () => 'teacher-1') {
+function gradeService(teacherIdForUser = async () => 'teacher-1', ensureSelectedYear = (_yearId: string) => {}) {
   let inserted: Record<string, unknown> | null = null;
   const source = {
     id: 'exam-1', academicYearId: year.id, date: '2025-10-15',
@@ -22,10 +22,10 @@ function gradeService(teacherIdForUser = async () => 'teacher-1') {
     {
       ensureStudentExists: allowed, ensureSingleGradeSource: allowed,
       ensureExamExists: allowed, ensureNoDuplicateGrade: allowed,
-      ensureTeacherAssignmentExists: allowed,
+      ensureTeacherAssignmentExists: allowed, ensureSelectedYear,
     } as any,
     {} as any,
-    { resolveRecord: allowed, requireLabel: async () => year } as any,
+    { requireLabel: async () => year } as any,
     { getSourceContext: async () => source } as any,
     new AcademicSourceService(
       {} as any,
@@ -50,6 +50,15 @@ describe('grade write contract', () => {
     expect(inserted()).not.toHaveProperty('teacherId');
     expect(inserted()).not.toHaveProperty('subjectId');
     expect(inserted()).not.toHaveProperty('sectionId');
+  });
+
+  it("refuses a grade whose source's year is not the selected one, before writing", async () => {
+    const { service, inserted } = gradeService(undefined, (yearId) => {
+      throw new Error(`Grade source year ${yearId} is not the selected year`);
+    });
+    await expect(service.create({ studentId: 'student-1', examId: 'exam-1', marksObtained: 16, status: 'graded' },
+      { id: 'admin-1' })).rejects.toThrow('Grade source year year-1 is not the selected year');
+    expect(inserted()).toBeNull();
   });
 
   it('rejects client IDs that disagree with the linked source', async () => {

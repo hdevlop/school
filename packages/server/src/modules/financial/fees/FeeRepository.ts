@@ -5,6 +5,8 @@ import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { getBusinessDate, jsonAgg } from '../../../shared';
 import { formatDateOnly } from '../utils/dateOnly';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import {
   getAvgPaymentAmount,
   getFeeBaseFields,
@@ -28,7 +30,12 @@ import {
 
 @Repository()
 export class FeeRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return eq(fees.academicYear, this.year.label);
+  }
 
   // ============================================
   // Shared Field Builders
@@ -156,7 +163,8 @@ export class FeeRepository {
     }));
   }
 
-  async getAll(academicYearId: string, academicYear: string, studentId?: string) {
+  async getAll(studentId?: string) {
+    const { id: academicYearId, label: academicYear } = this.year;
     // Pick one placement per enrollment before joining fees. Joining every
     // transfer would multiply each fee and inflate the financial aggregates.
     const lastPlacement = this.db.selectDistinctOn(
@@ -261,13 +269,22 @@ export class FeeRepository {
     if (!ids || ids.length === 0) return [];
 
     return await this.buildFeeQuery()
-      .where(inArray(fees.id, ids))
+      .where(and(inArray(fees.id, ids), this.inSelectedYear()))
       .orderBy(desc(fees.createdAt));
   }
 
   async getById(id: string) {
+    return this.getByIdWhere(id, true);
+  }
+
+  /** Internal payment, allocation and recalculation work may cross fee years. */
+  async getByIdAllYears(id: string) {
+    return this.getByIdWhere(id, false);
+  }
+
+  private async getByIdWhere(id: string, selectedYear: boolean) {
     const [fee] = await this.buildFeeQuery()
-      .where(eq(fees.id, id))
+      .where(and(eq(fees.id, id), selectedYear ? this.inSelectedYear() : undefined))
       .limit(1);
 
     if (fee) {
@@ -450,8 +467,9 @@ export class FeeRepository {
     };
   }
 
-  async getByStudent(studentId: string, academicYearId: string, academicYear: string) {
-    const [annual] = await this.getAll(academicYearId, academicYear, studentId);
+  async getByStudent(studentId: string) {
+    const academicYear = this.year.label;
+    const [annual] = await this.getAll(studentId);
     if (!annual) return null;
 
     // These metrics must follow the fee year, including allocations made by a
@@ -459,42 +477,42 @@ export class FeeRepository {
     const [metricsRows, feesList] = await Promise.all([
       this.db.select({
         totalOverdueAmount: sql<string>`coalesce((
-          select sum(${feeInstallments.amount}::numeric)
+          select sum("fee_installments"."amount"::numeric)
           from ${feeInstallments}
-          inner join ${fees} on ${feeInstallments.feeId} = ${fees.id}
-          where ${fees.studentId} = ${studentId}
-            and ${fees.academicYear} = ${academicYear}
-            and ${feeInstallments.status} = 'overdue'
+          inner join ${fees} on "fee_installments"."fee_id" = "fees"."id"
+          where "fees"."student_id" = ${studentId}
+            and "fees"."academic_year" = ${academicYear}
+            and "fee_installments"."status" = 'overdue'
         ), 0)::text`,
         totalUnpaidAmount: sql<string>`coalesce((
-          select sum(${feeInstallments.amount}::numeric)
+          select sum("fee_installments"."amount"::numeric)
           from ${feeInstallments}
-          inner join ${fees} on ${feeInstallments.feeId} = ${fees.id}
-          where ${fees.studentId} = ${studentId}
-            and ${fees.academicYear} = ${academicYear}
-            and ${feeInstallments.status} not in ('paid', 'cancelled')
+          inner join ${fees} on "fee_installments"."fee_id" = "fees"."id"
+          where "fees"."student_id" = ${studentId}
+            and "fees"."academic_year" = ${academicYear}
+            and "fee_installments"."status" not in ('paid', 'cancelled')
         ), 0)::text`,
         avgPaymentAmount: sql<string>`coalesce((
           select round(avg(year_receipt_allocations.amount), 2)
           from (
-            select sum(${paymentAllocations.amount}::numeric) as amount
+            select sum("payment_allocations"."amount"::numeric) as amount
             from ${paymentAllocations}
-            inner join ${fees} on ${paymentAllocations.feeId} = ${fees.id}
-            inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
-            where ${fees.studentId} = ${studentId}
-              and ${fees.academicYear} = ${academicYear}
-              and ${payments.status} = 'completed'
-            group by ${payments.id}
+            inner join ${fees} on "payment_allocations"."fee_id" = "fees"."id"
+            inner join ${payments} on "payment_allocations"."payment_id" = "payments"."id"
+            where "fees"."student_id" = ${studentId}
+              and "fees"."academic_year" = ${academicYear}
+              and "payments"."status" = 'completed'
+            group by "payments"."id"
           ) year_receipt_allocations
         ), 0)::text`,
         lastPayment: sql<string | null>`(
-          select max(${payments.paymentDate})
+          select max("payments"."payment_date")
           from ${paymentAllocations}
-          inner join ${fees} on ${paymentAllocations.feeId} = ${fees.id}
-          inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
-          where ${fees.studentId} = ${studentId}
-            and ${fees.academicYear} = ${academicYear}
-            and ${payments.status} = 'completed'
+          inner join ${fees} on "payment_allocations"."fee_id" = "fees"."id"
+          inner join ${payments} on "payment_allocations"."payment_id" = "payments"."id"
+          where "fees"."student_id" = ${studentId}
+            and "fees"."academic_year" = ${academicYear}
+            and "payments"."status" = 'completed'
         )`,
       }).from(students).where(eq(students.id, studentId)).limit(1),
       this.listStudentFeeRows(studentId, academicYear),
@@ -568,10 +586,19 @@ export class FeeRepository {
   }
 
   async update(id, data) {
+    return this.updateWhere(id, data, true);
+  }
+
+  /** Trusted allocation, rollover and transport maintenance can update its source fee. */
+  async updateAllYears(id, data) {
+    return this.updateWhere(id, data, false);
+  }
+
+  private async updateWhere(id, data, selectedYear: boolean) {
     const [updatedFee] = await this.db
       .update(fees)
       .set(data)
-      .where(eq(fees.id, id))
+      .where(and(eq(fees.id, id), selectedYear ? this.inSelectedYear() : undefined))
       .returning();
     return updatedFee;
   }
@@ -579,7 +606,7 @@ export class FeeRepository {
   async delete(id) {
     const [deletedFee] = await this.db
       .delete(fees)
-      .where(eq(fees.id, id))
+      .where(and(eq(fees.id, id), this.inSelectedYear()))
       .returning();
     return deletedFee;
   }
@@ -621,7 +648,8 @@ export class FeeRepository {
     return result.map(fee => fee.id);
   }
 
-  async getOverdue(academicYearId: string, academicYear: string) {
+  async getOverdue() {
+    const { id: academicYearId, label: academicYear } = this.year;
     const today = formatDateOnly(getBusinessDate());
     const aliasUser = alias(users, 'overdue_year_user');
     const overdue = sql`EXISTS (
@@ -724,7 +752,7 @@ export class FeeRepository {
     });
   }
 
-  async getOverdueSummary(academicYear: string) {
+  async getOverdueSummary() {
     const today = formatDateOnly(getBusinessDate());
     const [result] = await this.db.select({
       overdueCount: sql<number>`count(${fees.id})::int`,
@@ -738,7 +766,7 @@ export class FeeRepository {
         ), 0), 0)), 0)::text`,
       affectedStudents: sql<number>`count(distinct ${fees.studentId})::int`,
     }).from(fees).where(and(
-      eq(fees.academicYear, academicYear),
+      this.inSelectedYear(),
       sql`EXISTS (
         SELECT 1 FROM ${feeInstallments}
         WHERE "fee_installments"."fee_id" = "fees"."id"
@@ -753,7 +781,7 @@ export class FeeRepository {
     };
   }
 
-  async getOverdueByStudent(studentId: string, academicYear: string) {
+  async getOverdueByStudent(studentId: string) {
     const today = formatDateOnly(getBusinessDate());
     const paidAmount = sql<string>`coalesce((
       SELECT sum(${paymentAllocations.amount}::numeric)
@@ -790,7 +818,7 @@ export class FeeRepository {
       .where(
         and(
           eq(fees.studentId, studentId),
-          eq(fees.academicYear, academicYear),
+          this.inSelectedYear(),
           sql`EXISTS (
             SELECT 1 FROM ${feeInstallments}
             WHERE ${feeInstallments.feeId} = ${fees.id}

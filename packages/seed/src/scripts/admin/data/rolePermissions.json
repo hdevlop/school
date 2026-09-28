@@ -122,7 +122,11 @@
       "manage:attendance",
       "create:attendance",
       "read:attendance",
-      "update:attendance"
+      "update:attendance",
+      "read:alerts",
+      "update:alerts",
+      "read:announcements",
+      "read:events"
     ]
   },
   {
@@ -132,7 +136,17 @@
       "read:parents",
       "read:classes",
       "read:subjects",
-      "read:grades"
+      "read:grades",
+      "read:alerts",
+      "update:alerts",
+      "read:announcements",
+      "read:assessments",
+      "read:exams",
+      "read:attendance",
+      "read:behavior-rewards",
+      "read:discipline",
+      "read:sections",
+      "read:events"
     ]
   },
   {
@@ -142,7 +156,17 @@
       "read:students",
       "read:classes",
       "read:subjects",
-      "read:grades"
+      "read:grades",
+      "read:alerts",
+      "update:alerts",
+      "read:announcements",
+      "read:assessments",
+      "read:exams",
+      "read:attendance",
+      "read:behavior-rewards",
+      "read:discipline",
+      "read:sections",
+      "read:events"
     ]
   },
   {

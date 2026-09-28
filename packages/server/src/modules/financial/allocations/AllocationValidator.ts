@@ -40,7 +40,7 @@ export class AllocationValidator {
   }
 
   async checkFeeExists(feeId) {
-    const fee = await this.feeRepository.getById(feeId);
+    const fee = await this.feeRepository.getByIdAllYears(feeId);
     if (!fee) {
       Err(404, this.t('feeNotFound'));
     }
@@ -48,7 +48,7 @@ export class AllocationValidator {
   }
 
   async checkInstallmentExists(installmentId) {
-    const installment = await this.installmentRepository.getById(installmentId);
+    const installment = await this.installmentRepository.getByIdAllYears(installmentId);
     if (!installment) {
       Err(404, this.t('installmentNotFound'));
     }

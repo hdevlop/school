@@ -54,7 +54,7 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
           <span className="absolute -right-2 -top-1 h-1.5 w-1.5 rounded-full bg-red-500" />
         </span>
       ),
-      content: <AlertsTab />,
+      content: <AlertsTab studentId={studentId} />,
     },
   ];
   const resolvedActiveTab = tabItems.some((item) => item.value === activeTab) ? activeTab : 'overview';

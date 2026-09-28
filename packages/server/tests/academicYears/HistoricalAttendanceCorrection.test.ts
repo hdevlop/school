@@ -29,9 +29,10 @@ describe('historical attendance correction', () => {
       {
         getAttendanceMode: async () => 'per_class',
         create: async (row: unknown) => row,
-        upsertStaffRoster: async () => [],
+        upsertStaffRoster: async () => ({ savedCount: 1, ids: ['attendance-1'] }),
       } as any,
       {
+        ensureSelectedYear: (id: string) => expect(id).toBe(markYear.id),
         validateStudentAttendance: async (_data: unknown, context: { user: { role?: string } }) => {
           seen.push(context.user.role);
           return null;

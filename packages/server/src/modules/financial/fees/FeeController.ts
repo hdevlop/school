@@ -3,8 +3,6 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { FeeService } from './FeeService';
 import { buildFeeRecalculationResponse } from './buildFeeRecalculationResponse';
 import { isFinancial } from '../../../auth';
-import { Year } from '../../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import {
   createFeeDto,
   createFeesBulkDto,
@@ -12,7 +10,6 @@ import {
   deleteFeesBulkInputDto,
   deleteFeesBulkDto,
   feeIdParam,
-  feeListQuery,
   overdueStudentBody,
   studentIdParam,
   updateFeeDto,
@@ -33,11 +30,10 @@ export class FeeController {
 
   @Get()
   @isFinancial()
-  @Validate({ query: feeListQuery })
   @McpTool('List all fees')
   @ResMsg('fees.success.retrieved')
-  async getFees(@Year() year: ResolvedAcademicYear) {
-    return this.feeService.getAll(year);
+  async getFees() {
+    return this.feeService.getAll();
   }
 
   @Get('/outstanding')
@@ -50,29 +46,27 @@ export class FeeController {
 
   @Get('/overdue')
   @isFinancial()
-  @Validate({ query: feeListQuery })
   @McpTool('List all overdue fees with student info')
   @ResMsg('fees.success.retrieved')
-  async getOverdue(@Year() year: ResolvedAcademicYear) {
-    return this.feeService.getOverdue(year);
+  async getOverdue() {
+    return this.feeService.getOverdue();
   }
 
   @Get('/overdue/summary')
   @isFinancial()
-  @Validate({ query: feeListQuery })
   @McpTool('Get overdue fees summary for dashboard')
   @ResMsg('fees.success.retrieved')
-  async getOverdueSummary(@Year() year: ResolvedAcademicYear) {
-    return this.feeService.getOverdueSummary(year);
+  async getOverdueSummary() {
+    return this.feeService.getOverdueSummary();
   }
 
   @Post('/mcp/overdue/student')
   @isFinancial()
-  @Validate({ body: overdueStudentBody, query: feeListQuery })
+  @Validate({ body: overdueStudentBody })
   @McpTool('Get overdue fees for a specific student')
   @ResMsg('fees.success.retrieved')
-  async getOverdueByStudent(@Body() body: OverdueStudentBody, @Year() year: ResolvedAcademicYear) {
-    return this.feeService.getOverdueByStudent(body.studentId, year);
+  async getOverdueByStudent(@Body() body: OverdueStudentBody) {
+    return this.feeService.getOverdueByStudent(body.studentId);
   }
 
   // Every year's fees of one student: the explicit all-year read behind
@@ -88,20 +82,20 @@ export class FeeController {
 
   @Get('/student/:studentId')
   @isFinancial()
-  @Validate({ params: studentIdParam, query: feeListQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get fees for a student by student ID')
   @ResMsg('fees.success.retrieved')
-  async getByStudent(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {
-    return this.feeService.getByStudent(studentId, year);
+  async getByStudent(@Params('studentId') studentId: string) {
+    return this.feeService.getByStudent(studentId);
   }
 
   @Get('/:id')
   @isFinancial()
-  @Validate({ params: feeIdParam, query: feeListQuery })
+  @Validate({ params: feeIdParam })
   @McpTool('Get a fee by ID')
   @ResMsg('fees.success.retrieved')
-  async getFee(@Params('id') id: string, @Year() year: ResolvedAcademicYear) {
-    return this.feeService.getById(id, year);
+  async getFee(@Params('id') id: string) {
+    return this.feeService.getById(id);
   }
 
   @Post()
@@ -109,8 +103,8 @@ export class FeeController {
   @Validate(createFeeDto)
   @McpTool({ description: 'Create a new fee', confirm: { level: 'warning', message: 'confirm.fees.create' } })
   @ResMsg('fees.success.created')
-  async create(@Body() body: CreateFeeDto, @User() user: { id: string; role?: string }, @Year() year: ResolvedAcademicYear) {
-    return this.feeService.create(body, user.id, user.role, year);
+  async create(@Body() body: CreateFeeDto, @User() user: { id: string; role?: string }) {
+    return this.feeService.create(body, user.id, user.role);
   }
 
   @Post('/bulk')
@@ -118,8 +112,8 @@ export class FeeController {
   @Validate(createFeesBulkDto)
   @McpTool({ description: 'Create multiple fees in bulk', confirm: { level: 'warning', message: 'confirm.fees.bulkCreate' } })
   @ResMsg('fees.success.bulkCreated')
-  async createBulk(@Body() body: CreateFeesBulkDto, @User() user: { id: string; role?: string }, @Year() year: ResolvedAcademicYear) {
-    return this.feeService.createBulk(body.fees, user.id, user.role, year);
+  async createBulk(@Body() body: CreateFeesBulkDto, @User() user: { id: string; role?: string }) {
+    return this.feeService.createBulk(body.fees, user.id, user.role);
   }
 
   @Post('/bulk-class')
@@ -127,8 +121,8 @@ export class FeeController {
   @Validate(classBulkFeeDto)
   @McpTool({ description: 'Assign a fee to all students in a class', confirm: { level: 'warning', message: 'confirm.fees.bulkClass' } })
   @ResMsg('fees.success.bulkCreated')
-  async createClassBulk(@Body() body: ClassBulkFeeDto, @User() user: { id: string; role?: string }, @Year() year: ResolvedAcademicYear) {
-    return this.feeService.createClassBulk(body, year, user.id, user.role);
+  async createClassBulk(@Body() body: ClassBulkFeeDto, @User() user: { id: string; role?: string }) {
+    return this.feeService.createClassBulk(body, user.id, user.role);
   }
 
   @Put('/:id')

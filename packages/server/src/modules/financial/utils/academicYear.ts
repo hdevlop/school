@@ -58,9 +58,13 @@ export function parseAcademicYear(academicYear?: string | null) {
   const match = academicYear.match(/^(\d{4})-(\d{4})$/);
   if (!match) return null;
 
+  const startYear = Number(match[1]);
+  const endYear = Number(match[2]);
+  if (endYear !== startYear + 1) return null;
+
   return {
-    startYear: Number(match[1]),
-    endYear: Number(match[2]),
+    startYear,
+    endYear,
   };
 }
 
@@ -72,12 +76,12 @@ export function getAcademicYearRange(
 ) {
   const startIdx = normalizeMonthIndex(startMonth, DEFAULT_START_MONTH);
   const endIdx = normalizeMonthIndex(endMonth, DEFAULT_END_MONTH);
-  const parsedAcademicYear =
-    parseAcademicYear(academicYear) ||
-    parseAcademicYear(getCurrentAcademicYear(startMonth, referenceDate));
+  const parsedAcademicYear = parseAcademicYear(
+    academicYear ?? getCurrentAcademicYear(startMonth, referenceDate),
+  );
 
   if (!parsedAcademicYear) {
-    throw new Error('Unable to resolve academic year');
+    throw new RangeError('Expected consecutive academic year YYYY-YYYY');
   }
 
   const startYear = parsedAcademicYear.startYear;

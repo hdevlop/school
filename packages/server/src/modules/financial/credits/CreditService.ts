@@ -7,9 +7,12 @@ import { FeeService } from '../fees/FeeService';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import type { ApplyCreditDto } from './CreditDto';
 import { fromCents, toCents } from '../utils/money';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 @Service()
 export class CreditService {
+  @Year() private readonly year!: ResolvedAcademicYear;
   constructor(
     private creditRepository: CreditRepository,
     private allocationRepository: AllocationRepository,
@@ -74,7 +77,11 @@ export class CreditService {
       Err(400, `Requested credit ${dto.amount} exceeds available balance ${(totalAvailable / 100).toFixed(2)}`);
     }
 
-    const installments = await this.installmentRepository.getByStudentForAutoAllocationForUpdate(dto.studentId);
+    // A credit lot itself has no school year. Applying it targets only fees
+    // charged to the selected year, including a different year from its receipt.
+    const installments = await this.installmentRepository.getByStudentForAutoAllocationForUpdate(
+      dto.studentId, this.year.label,
+    );
     if (!installments || installments.length === 0) {
       Err(400, 'No installments available to apply credit to');
     }

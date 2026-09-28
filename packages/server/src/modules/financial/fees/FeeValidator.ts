@@ -41,6 +41,12 @@ export class FeeValidator {
     return feeExists;
   }
 
+  async checkExistsAllYears(id: string) {
+    const fee = await this.feeRepository.getByIdAllYears(id);
+    if (!fee) Err(404, this.t('notFound'));
+    return fee;
+  }
+
   async checkFeeIsUnique(
     studentId,
     feeTypeId,
@@ -89,7 +95,7 @@ export class FeeValidator {
     return await this.feeTypeValidator.checkExists(feeTypeId);
   }
 
-  async validate(data, excludeId = null) {
+  async validate(data, excludeId = null, defaultAcademicYear?: string) {
     const isUpdate = excludeId !== null;
     const existingFee = isUpdate
       ? await this.checkExists(excludeId)
@@ -115,7 +121,7 @@ export class FeeValidator {
     const targetStudentId = studentId || existingFee?.studentId;
     const targetFeeTypeId = existingFee?.feeTypeId || feeTypeId;
     const targetAcademicYear = await this.resolveAcademicYear(
-      academicYear || existingFee?.academicYear,
+      academicYear || existingFee?.academicYear || defaultAcademicYear,
     );
 
     if (targetStudentId && targetFeeTypeId && targetAcademicYear) {

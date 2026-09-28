@@ -3,6 +3,9 @@ import { DB } from '../../../database/db';
 import { refuels, vehicles, drivers, staff, users } from '../../../database/schema';
 import { eq, desc, sql, and, gte, lte, isNotNull, avg, sum, max, min, count } from 'drizzle-orm';
 import { getBusinessDate, getBusinessDateOnly } from '../../../shared/businessDate';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { occurredInReportingInterval, schoolLocalDay } from '../../academicYears/academicRecordYear';
 
 const refuelSelect = {
   id: refuels.id,
@@ -49,7 +52,17 @@ const nestSelect = <T extends Record<string, unknown>>(selection: T) => {
 
 @Repository()
 export class RefuelRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return occurredInReportingInterval(refuels.datetime, this.year);
+  }
+
+  async schoolDayOf(datetime: string) {
+    const [result] = await this.db.execute(sql`select ${schoolLocalDay(sql`${datetime}::timestamptz`)} as day`);
+    return String(result.day);
+  }
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -76,38 +89,46 @@ export class RefuelRepository {
   async getCount() {
     const [result] = await this.db
       .select({ count: count() })
-      .from(refuels);
+      .from(refuels)
+      .where(this.inSelectedYear());
     return result;
   }
 
   async getAll() {
     return await this.buildRefuelQuery()
+      .where(this.inSelectedYear())
       .orderBy(desc(refuels.datetime));
   }
 
   async getById(id) {
     const [result] = await this.buildRefuelQuery()
-      .where(eq(refuels.id, id))
+      .where(and(eq(refuels.id, id), this.inSelectedYear()))
       .limit(1);
     return result || null;
   }
 
   async getByVehicleId(vehicleId) {
     return await this.buildRefuelQuery()
-      .where(eq(refuels.vehicleId, vehicleId))
+      .where(and(eq(refuels.vehicleId, vehicleId), this.inSelectedYear()))
       .orderBy(desc(refuels.datetime));
   }
 
   async getByDriverId(driverId) {
     return await this.buildRefuelQuery()
-      .where(eq(refuels.drivers, driverId))
+      .where(and(eq(refuels.drivers, driverId), this.inSelectedYear()))
       .orderBy(desc(refuels.datetime));
   }
 
   async getByVoucherNumber(voucherNumber) {
     const [result] = await this.buildRefuelQuery()
-      .where(eq(refuels.voucherNumber, voucherNumber))
+      .where(and(eq(refuels.voucherNumber, voucherNumber), this.inSelectedYear()))
       .limit(1);
+    return result || null;
+  }
+
+  async getByVoucherNumberAcrossYears(voucherNumber: string) {
+    const [result] = await this.db.select({ id: refuels.id }).from(refuels)
+      .where(eq(refuels.voucherNumber, voucherNumber)).limit(1);
     return result || null;
   }
 
@@ -118,6 +139,7 @@ export class RefuelRepository {
     return await this.buildRefuelQuery()
       .where(
         and(
+          this.inSelectedYear(),
           gte(refuels.datetime, startOfDay),
           lte(refuels.datetime, endOfDay)
         )
@@ -127,6 +149,7 @@ export class RefuelRepository {
 
   async getRecentRecords(limit: number = 20) {
     return await this.buildRefuelQuery()
+      .where(this.inSelectedYear())
       .orderBy(desc(refuels.datetime))
       .limit(limit);
   }
@@ -151,7 +174,7 @@ export class RefuelRepository {
     const [updatedRefuel] = await this.db
       .update(refuels)
       .set(data)
-      .where(eq(refuels.id, id))
+      .where(and(eq(refuels.id, id), this.inSelectedYear()))
       .returning();
     return updatedRefuel;
   }
@@ -163,7 +186,7 @@ export class RefuelRepository {
   async delete(id) {
     const [deletedRefuel] = await this.db
       .delete(refuels)
-      .where(eq(refuels.id, id))
+      .where(and(eq(refuels.id, id), this.inSelectedYear()))
       .returning();
     return deletedRefuel;
   }
@@ -171,11 +194,16 @@ export class RefuelRepository {
   async deleteAll() {
     const deletedRefuels = await this.db
       .delete(refuels)
+      .where(this.inSelectedYear())
       .returning();
     return {
       deletedCount: deletedRefuels.length,
       deletedRefuels: deletedRefuels
     };
+  }
+
+  async clearForSeedReset() {
+    return await this.db.delete(refuels);
   }
 
   // ========================================
@@ -196,7 +224,7 @@ export class RefuelRepository {
       })
       .from(refuels)
       .leftJoin(vehicles, eq(refuels.vehicleId, vehicles.id))
-      .where(isNotNull(refuels.liters))
+      .where(and(this.inSelectedYear(), isNotNull(refuels.liters)))
       .groupBy(refuels.vehicleId, vehicles.name, vehicles.type)
       .orderBy(desc(sum(refuels.liters)));
 
@@ -209,7 +237,7 @@ export class RefuelRepository {
         avgCostPerLiter: avg(refuels.costPerLiter),
       })
       .from(refuels)
-      .where(isNotNull(refuels.liters))
+      .where(and(this.inSelectedYear(), isNotNull(refuels.liters)))
       .groupBy(sql`to_char(${refuels.datetime}, 'Mon')`)
       .orderBy(sql`to_char(${refuels.datetime}, 'Mon')`);
 
@@ -235,6 +263,7 @@ export class RefuelRepository {
       .leftJoin(vehicles, eq(refuels.vehicleId, vehicles.id))
       .where(
         and(
+          this.inSelectedYear(),
           isNotNull(refuels.liters),
           isNotNull(refuels.mileageAtRefuel)
         )
@@ -271,7 +300,7 @@ export class RefuelRepository {
       })
       .from(refuels)
       .leftJoin(vehicles, eq(refuels.vehicleId, vehicles.id))
-      .where(isNotNull(refuels.totalCost))
+      .where(and(this.inSelectedYear(), isNotNull(refuels.totalCost)))
       .groupBy(vehicles.type)
       .orderBy(desc(sum(refuels.totalCost)));
 
@@ -294,7 +323,8 @@ export class RefuelRepository {
         uniqueVehicles: sql<number>`count(distinct ${refuels.vehicleId})`,
         uniqueDrivers: sql<number>`count(distinct ${refuels.drivers})`,
       })
-      .from(refuels);
+      .from(refuels)
+      .where(this.inSelectedYear());
 
     const today = getBusinessDateOnly();
     const [todaySummary] = await this.db
@@ -305,7 +335,7 @@ export class RefuelRepository {
       })
       .from(refuels)
       .where(
-        sql`date(${refuels.datetime}) = ${today}`
+        and(this.inSelectedYear(), sql`date(${refuels.datetime}) = ${today}`)
       );
 
     const monthStart = getBusinessDate();
@@ -320,7 +350,7 @@ export class RefuelRepository {
       })
       .from(refuels)
       .where(
-        gte(refuels.datetime, monthStart.toISOString())
+        and(this.inSelectedYear(), gte(refuels.datetime, monthStart.toISOString()))
       );
 
     return {
@@ -340,6 +370,7 @@ export class RefuelRepository {
       .from(refuels)
       .where(
         and(
+          this.inSelectedYear(),
           eq(refuels.vehicleId, vehicleId),
           isNotNull(refuels.liters)
         )
@@ -381,7 +412,7 @@ export class RefuelRepository {
         attendant: refuels.attendant,
       })
       .from(refuels)
-      .where(eq(refuels.vehicleId, vehicleId))
+      .where(and(eq(refuels.vehicleId, vehicleId), this.inSelectedYear()))
       .orderBy(desc(refuels.datetime));
   }
 
@@ -397,7 +428,7 @@ export class RefuelRepository {
         uniqueVehicles: sql<number>`count(distinct ${refuels.vehicleId})`,
       })
       .from(refuels)
-      .where(isNotNull(refuels.liters))
+      .where(and(this.inSelectedYear(), isNotNull(refuels.liters)))
       .groupBy(
         sql`to_char(${refuels.datetime}, 'Mon')`,
         sql`extract(month from ${refuels.datetime})`
@@ -419,6 +450,7 @@ export class RefuelRepository {
       .where(
         and(
           eq(refuels.vehicleId, vehicleId),
+          this.inSelectedYear(),
           gte(refuels.datetime, startDate),
           lte(refuels.datetime, endDate),
           isNotNull(refuels.liters)
@@ -492,6 +524,7 @@ export class RefuelRepository {
       .from(refuels)
       .where(
         and(
+          this.inSelectedYear(),
           gte(refuels.datetime, startDate),
           lte(refuels.datetime, endDate)
         )
@@ -509,6 +542,7 @@ export class RefuelRepository {
       .from(refuels)
       .where(
         and(
+          this.inSelectedYear(),
           gte(refuels.datetime, startDate),
           lte(refuels.datetime, endDate),
           isNotNull(refuels.totalCost)
@@ -530,6 +564,7 @@ export class RefuelRepository {
       .leftJoin(vehicles, eq(refuels.vehicleId, vehicles.id))
       .where(
         and(
+          this.inSelectedYear(),
           gte(refuels.datetime, startDate),
           lte(refuels.datetime, endDate),
           isNotNull(refuels.mileageAtRefuel)
@@ -550,6 +585,7 @@ export class RefuelRepository {
       .from(refuels)
       .where(
         and(
+          this.inSelectedYear(),
           gte(refuels.datetime, startDate),
           lte(refuels.datetime, endDate)
         )
@@ -570,6 +606,7 @@ export class RefuelRepository {
       .from(refuels)
       .where(
         and(
+          this.inSelectedYear(),
           eq(refuels.drivers, driverId),
           isNotNull(refuels.liters)
         )

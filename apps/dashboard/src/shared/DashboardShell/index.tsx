@@ -51,6 +51,10 @@ const LinkAdapter = ({
 const createSidebarItems = (t: (key: string) => string, role: string): NavItem[] => {
   const isAdmin = role === 'admin';
   const canUseTeacherRoutes = role === 'teacher' || isAdmin;
+  // Parents and students read their own or their children's records; the
+  // server shows each of them only those. Grades and attendance are in the
+  // child's profile, reached from "My children" or "My profile".
+  const isFamily = role === 'parent' || role === 'student';
   // Fall back to English for a nav key the shared catalog does not define yet.
   const tf = (key: string, fallback: string) => {
     const value = t(key);
@@ -67,6 +71,31 @@ return [
       ]
       : []),
     ...(canUseTeacherRoutes ? [{ id: '/parents', label: t('navigation.parents'), icon: FEATURE_ICONS.parents, href: '/parents' }] : []),
+    ...(isFamily
+      ? [
+        {
+          id: '/students',
+          label: role === 'parent' ? t('navigation.myChildren') : t('navigation.myProfile'),
+          icon: FEATURE_ICONS.students,
+          href: '/students',
+        },
+        { id: '/alerts', label: t('navigation.alerts'), icon: FEATURE_ICONS.alerts, href: '/alerts' },
+        { id: '/announcements', label: t('navigation.announcements'), icon: FEATURE_ICONS.announcements, href: '/announcements' },
+        {
+          id: 'student-conduct',
+          label: t('navigation.studentConductShort'),
+          icon: FEATURE_ICONS.studentConduct,
+          children: [
+            { id: '/behavior-rewards', label: t('navigation.behaviorRewardsShort'), icon: FEATURE_ICONS.behaviorRewards, href: '/behavior-rewards' },
+            { id: '/discipline', label: t('navigation.discipline'), icon: FEATURE_ICONS.discipline, href: '/discipline' },
+          ],
+        },
+        { id: '/assessments', label: t('navigation.assessments'), icon: FEATURE_ICONS.assessments, href: '/assessments' },
+        { id: '/exams', label: t('navigation.exams'), icon: FEATURE_ICONS.exams, href: '/exams' },
+        { id: '/calendar', label: t('navigation.calendar'), icon: FEATURE_ICONS.calendar, href: '/calendar' },
+        { id: '/class-routines', label: tf('navigation.classRoutines', 'Routine'), icon: FEATURE_ICONS.classRoutines, href: '/class-routines' },
+      ]
+      : []),
     ...(isAdmin
       ? [
         { id: '/teachers', label: t('navigation.teachers'), icon: FEATURE_ICONS.teachers, href: '/teachers' },
@@ -104,6 +133,7 @@ return [
               : []),
           ],
         },
+        { id: '/alerts', label: t('navigation.alerts'), icon: FEATURE_ICONS.alerts, href: '/alerts' },
         { id: '/announcements', label: t('navigation.announcements'), icon: FEATURE_ICONS.announcements, href: '/announcements' },
         {
           id: 'student-conduct',

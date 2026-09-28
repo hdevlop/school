@@ -89,9 +89,23 @@ states that drift — so do not add one without changing the plan first.
   read every row, still limited by their route permissions; teacher, parent and
   student follow each token's `.for()` rules; any other role sees no owned rows.
   A najm rule is one join chain, so alternatives are extra tokens passed to
-  `@Owned` and OR-ed (see `AttendanceGuards.ts`). Uniqueness and duplicate
+  `@Owned` and OR-ed (see `AttendanceGuards.ts`). School's `when(...)` step
+  narrows a chain by a condition on the row, or on its own is the rule for
+  rows that belong to an audience rather than one person (see `AlertGuards.ts`,
+  `AnnouncementGuards.ts`). Uniqueness and duplicate
   lookups stay unscoped. ESLint rejects `x.where(a).where(b)` and najm-auth's
   `own`/`Owned` in server code.
+
+- **One year scope per operation.** A converted repository reads the selected
+  year from its `@Year()` property; services and controllers do not pass it.
+  Every controller whose routes reach such a repository, directly or through
+  another module's service, is registered once in
+  `packages/server/src/config/yearScope.ts` under its `@ToolGroup` name.
+  Outside that scope the read throws. A registered controller must not declare
+  `academicYear` in its own params, query or body, or najm-mcp refuses to
+  start. `tests/academicYears/YearScopedModules.test.ts` checks the keys and
+  the duplicate input, not whether every consumer is registered. The
+  per-module recipe is section 0 of `SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md`.
 
 - **One declaration of every shared value.** Database enum members, API payload
   values, and the values a select may submit are declared once in

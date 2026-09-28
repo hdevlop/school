@@ -2,10 +2,13 @@ import { Service, Err, I18n } from '../../najm';
 import { ClassRepository } from './ClassRepository';
 import { SettingsRepository } from '../settings/SettingsRepository';
 import { getCurrentAcademicYear } from '../financial/utils';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class ClassValidator {
   @I18n('classes.errors') private t!: (key: string) => string;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private classRepository: ClassRepository,
@@ -17,6 +20,16 @@ export class ClassValidator {
     return settings?.currentAcademicYear || getCurrentAcademicYear();
   }
 
+  // The selected year's class; another year's reads as not found.
+  async ensureInSelectedYear(id: string) {
+    const existingClass = await this.classRepository.getInSelectedYear(id);
+    if (!existingClass) {
+      Err(404, this.t('notFound'));
+    }
+    return existingClass;
+  }
+
+  // Any year's class, for modules that apply their own year rule to it.
   async ensureExists(id: string) {
     const existingClass = await this.classRepository.getById(id);
     if (!existingClass) {
@@ -33,8 +46,9 @@ export class ClassValidator {
     return existingClass;
   }
 
-  async ensureNameUnique(name: string, academicYear?: string, excludeId?: string) {
-    const existing = await this.classRepository.getByName(name, academicYear || await this.activeAcademicYear());
+  // Unique within one year: the selected year unless a trusted seed names one.
+  async ensureNameUnique(name: string, academicYear = this.year.label, excludeId?: string) {
+    const existing = await this.classRepository.getByName(name, academicYear);
     if (existing && existing.id !== excludeId) {
       Err(409, this.t('nameExists'));
     }

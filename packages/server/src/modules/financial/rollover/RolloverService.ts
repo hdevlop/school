@@ -4,6 +4,8 @@ import { RolloverRepository } from './RolloverRepository';
 import { FeeService } from '../fees/FeeService';
 import { SettingsRepository } from '../../settings/SettingsRepository';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
+import { AcademicYearValidator, type ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { Year } from '../../academicYears/requestYear';
 import {
   calculateFeeAmounts,
   formatDateOnly,
@@ -46,12 +48,20 @@ function hashPayload(dto: RolloverDto): string {
 
 @Service()
 export class RolloverService {
+  @Year() private readonly year!: ResolvedAcademicYear;
   constructor(
     private rolloverRepository: RolloverRepository,
     private feeService: FeeService,
     private settingsRepository: SettingsRepository,
     private auditService: FinancialAuditService,
+    private academicYears: AcademicYearValidator,
   ) { }
+
+  private async validateYears(dto: RolloverDto) {
+    if (dto.toYear !== this.year.label) Err(409, 'Rollover target must match the selected school year');
+    if (dto.fromYear >= dto.toYear) Err(409, 'Rollover source must precede the target school year');
+    await this.academicYears.requireLabel(dto.fromYear);
+  }
 
   @Transaction()
   async clearForSeedReset() {
@@ -69,9 +79,13 @@ export class RolloverService {
 
   private async buildPreview(dto: RolloverDto) {
     const { startMonth, endMonth } = await this.resolveContext();
-    const students = await this.rolloverRepository.getActiveStudents(dto.classIds);
+    const students = await this.rolloverRepository.getActiveStudents(dto.fromYear, dto.classIds);
     const studentIds = students.map((student) => student.id);
     const studentMap = new Map(students.map((student) => [student.id, student]));
+    const targetEnrollments = new Map(
+      (await this.rolloverRepository.getTargetEnrollments(dto.toYear, studentIds))
+        .map((row) => [row.studentId, row]),
+    );
     const sourceFees = await this.rolloverRepository.getSourceFeesForRollover(
       dto.fromYear,
       studentIds,
@@ -101,6 +115,18 @@ export class RolloverService {
     for (const sourceFee of sourceFees) {
       const student = studentMap.get(sourceFee.studentId);
       if (!student) continue;
+      const targetEnrollment = targetEnrollments.get(student.id);
+      if (!targetEnrollment || targetEnrollment.status !== 'active' || targetEnrollment.leftOn) {
+        if (!invalidStudents.has(student.id)) {
+          studentsNotEnrolled.push({
+            studentId: student.id,
+            name: student.name,
+            reason: 'Student has no active enrollment in the target academic year',
+          });
+          invalidStudents.add(student.id);
+        }
+        continue;
+      }
 
       if (sourceFee.feeTypeStatus !== 'active') {
         inactiveFeeTypes.set(sourceFee.feeTypeId, {
@@ -117,7 +143,7 @@ export class RolloverService {
         });
         continue;
       }
-      if (!isValidDateOnly(student.enrollmentDate)) {
+      if (!isValidDateOnly(targetEnrollment.enrolledOn)) {
         if (!invalidStudents.has(student.id)) {
           validationErrors.push({
             studentId: student.id,
@@ -128,7 +154,7 @@ export class RolloverService {
         }
         continue;
       }
-      if (student.enrollmentDate > rangeEnd) {
+      if (targetEnrollment.enrolledOn > rangeEnd) {
         if (!invalidStudents.has(student.id)) {
           studentsNotEnrolled.push({
             studentId: student.id,
@@ -153,7 +179,7 @@ export class RolloverService {
       try {
         const effectiveDate = resolveFeeEffectiveDate({
           requestedDate: null,
-          enrollmentDate: student.enrollmentDate,
+          enrollmentDate: targetEnrollment.enrolledOn,
           startMonth,
           endMonth,
           academicYear: dto.toYear,
@@ -218,6 +244,7 @@ export class RolloverService {
 
   @Transaction()
   async preview(dto: RolloverDto, actorId?: string) {
+    await this.validateYears(dto);
     const payloadHash = hashPayload(dto);
     const existing = await this.rolloverRepository.getRunByIdempotencyKey(dto.idempotencyKey);
     if (existing) {
@@ -310,6 +337,7 @@ export class RolloverService {
     if (dto.confirmSettingsUpdate) {
       Err(409, 'Activate the academic year separately after academic preparation');
     }
+    await this.validateYears(dto);
     const payloadHash = hashPayload(dto);
     const existing = await this.rolloverRepository.getRunByIdempotencyKey(dto.idempotencyKey);
     if (!existing) Err(400, 'No preview exists for this idempotency key');

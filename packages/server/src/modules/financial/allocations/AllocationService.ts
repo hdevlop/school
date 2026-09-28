@@ -45,7 +45,7 @@ export class AllocationService {
 
   async getByPaymentId(paymentId: string) {
     await this.allocationValidator.checkPaymentExists(paymentId);
-    return this.allocationRepository.getByPaymentId(paymentId);
+    return this.allocationRepository.getByPaymentId(paymentId, 'selected');
   }
 
   async getByStudentId(studentId: string) {
@@ -71,7 +71,7 @@ export class AllocationService {
     const allocations = data.allocations;
     const feeIds = [...new Set(allocations.map((alloc) => alloc.feeId))];
     const allInstallmentsArrays = await Promise.all(
-      feeIds.map((feeId) => this.installmentRepository.getByFeeId(feeId))
+      feeIds.map((feeId) => this.installmentRepository.getByFeeIdAllYears(feeId))
     );
     const feeInstallmentsMap = new Map();
     feeIds.forEach((feeId, index) => {
@@ -199,7 +199,11 @@ export class AllocationService {
   @Transaction()
   async delete(id: string, actorId?: string) {
     const existing = await this.allocationValidator.checkExists(id);
+    if (await this.allocationRepository.hasCreditApplication(id)) {
+      Err(409, 'A credit application uses this allocation; reverse the source payment instead');
+    }
     const result = await this.allocationRepository.delete(id);
+    if (!result) Err(404, 'Payment allocation not found in the selected academic year');
     await this.auditService.record({
       entityType: 'payment_allocation',
       entityId: id,

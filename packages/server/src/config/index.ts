@@ -19,6 +19,8 @@ export { themeConfig } from './themeConfig';
 import { schoolI18n } from '@sms/contracts/locales';
 import { db } from '../database/db';
 import { auth, isAuth } from '../auth';
+import { schoolMcpYearHooks } from '../modules/academicYears/requestYear';
+import { yearScopedModules } from './yearScope';
 
 const defaultChatbotSystemPrompt = `You are a helpful AI assistant for a School Management System dashboard.
 You have access to tools to manage students, classes, sections, subjects, teachers, parents, fees, fee types, payments, allocations, attendance, grades, assessments, exams, and more.
@@ -252,6 +254,7 @@ export const mcpConfig = () =>
     auth: { type: 'najm-auth' },
     cors: false,
     exposeErrorDetails: false,
+    ...schoolMcpYearHooks(Object.keys(yearScopedModules)),
   });
 
 export const ragConfig = (): NajmPlugin =>

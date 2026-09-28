@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { UserPlus, UserMinus, Bus, Users, MapPin } from 'lucide-react'
+import { UserPlus, UserMinus, Bus, Users, MapPin, CalendarDays } from 'lucide-react'
 import { Badge, NButton, NForm, NSkeleton, useDialog } from 'najm-kit';
 import { useStudentRoutes } from '../hooks/useStudentRoutes'
 import { useStudents } from '@/features/Students/hooks/useStudents'
@@ -12,9 +12,11 @@ import { toast } from 'sonner'
 import { locationValueSchema } from '../config/transportSchemas'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react';
+import { useYearSelectionStore } from '@/features/AcademicYears/store/yearSelectionStore';
 
 const assignSchema = z.object({
   studentId: z.string().min(1, 'Student is required'),
+  assignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
   pickup: locationValueSchema,
   pickupPlaceId: z.string().max(255).optional().nullable(),
   dropoff: locationValueSchema,
@@ -59,6 +61,8 @@ const AssignStudentFields = ({ students }) => {
         items={studentOptions}
         required
       />
+      <FormInput name="assignmentDate" type="date" formLabel={t('transport.form.startDate')}
+        icon={CalendarDays} required />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <FormLocationInput
           name="pickup"
@@ -93,6 +97,7 @@ const AssignStudentForm = ({ students, vehicleId }) => {
       schema={assignSchema}
       defaultValues={{
         studentId: '',
+        assignmentDate: new Date().toISOString().slice(0, 10),
         pickup: normalizeLocationValue(),
         pickupPlaceId: null,
         dropoff: normalizeLocationValue(),
@@ -124,14 +129,17 @@ interface VehicleStudentsPanelProps {
 
 export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => {
   const { t } = useTranslation();
-  const { routes = [], isLoading, assignStudent, isAssigning, unassignStudent } = useStudentRoutes({ vehicleId: vehicle.id })
+  const { routes = [], isLoading, academicYear, assignStudent, isAssigning, unassignStudent } = useStudentRoutes({ vehicleId: vehicle.id })
+  const activeLabel = useYearSelectionStore((state) => state.activeLabel)
   const { students } = useStudents()
   const { openDialog } = useDialog()
 
-  const assignedStudentIds = new Set((routes as any[]).map((r: any) => r.studentId))
+  const currentRoutes = (routes as any[]).filter((route: any) => route.status === 'active')
+  const assignedStudentIds = new Set(currentRoutes.map((route: any) => route.studentId))
   const availableStudents = (students || []).filter((s: any) => !assignedStudentIds.has(s.id))
 
   const handleAssign = () => {
+    const openedYear = academicYear
     openDialog({
       title: `Assign Student to ${vehicle.name}`,
       children: <AssignStudentForm students={availableStudents} vehicleId={vehicle.id} />,
@@ -141,13 +149,14 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
         text: 'Assign & Create Transport Fee',
         loading: isAssigning,
         onClick: async (data: any) => {
-          await assignStudent(data)
+          await assignStudent(data, openedYear)
         },
       },
     })
   }
 
   const handleUnassign = (route: any) => {
+    const openedYear = academicYear
     openDialog({
       title: 'Unassign Student',
       children: (
@@ -161,14 +170,14 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
         variant: 'destructive',
         loading: false,
         onClick: async () => {
-          await unassignStudent(route.id)
+          await unassignStudent(route.id, openedYear)
           toast.success(`${route.student?.name} unassigned from ${vehicle.name}`)
         },
       },
     })
   }
 
-  const occupancy = routes.length
+  const occupancy = Number(vehicle.activeStudentCount || 0)
   const capacity = vehicle.capacity || 0
   const pct = capacity > 0 ? Math.round((occupancy / capacity) * 100) : 0
 

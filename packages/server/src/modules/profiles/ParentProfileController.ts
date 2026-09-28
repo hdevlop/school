@@ -4,7 +4,6 @@ import { ParentProfileService } from './ParentProfileService';
 import { isAuth } from '../../auth';
 import { z } from 'zod';
 import { Year } from '../academicYears/requestYear';
-import { academicYearQuery } from '../academicYears/AcademicYearDto';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 const parentIdParam = z.object({ parentId: z.string().min(1) });
@@ -23,8 +22,9 @@ export class ParentProfileController {
     return this.parentProfileService.getUnreadAlerts(parentId);
   }
 
+  // The year hook declares `academicYear` for every tool of this controller.
   @Get('/:parentId/children')
-  @Validate({ params: parentIdParam, query: academicYearQuery })
+  @Validate({ params: parentIdParam })
   @McpTool('Get children for a parent with their class and fees in the academic year')
   @ResMsg('parents.success.retrieved')
   async getChildren(@Params('parentId') parentId: string, @Year() year: ResolvedAcademicYear) {

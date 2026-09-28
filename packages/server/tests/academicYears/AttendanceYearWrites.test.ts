@@ -13,6 +13,7 @@ describe('normal attendance year writes', () => {
         create: async (row: Record<string, unknown>) => { created.push(row); return row; },
       } as any,
       {
+        ensureSelectedYear: (id: string) => expect(id).toBe(year.id),
         validateStudentAttendance: async () => 'assignment-1',
         validateStaffAttendance: async () => {},
       } as any,

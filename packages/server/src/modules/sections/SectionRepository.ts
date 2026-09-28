@@ -4,6 +4,8 @@ import { sections, classes, students, teacherAssignments, teachers, staff, subje
 import { eq, count, countDistinct, and, desc, ne, type SQL, inArray } from 'drizzle-orm';
 import { Owned } from '../../auth';
 import { Section } from './SectionGuards';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 export const sectionSelect = {
   id: sections.id,
@@ -81,34 +83,56 @@ export const parentSelect = {
 export class SectionRepository {
   db: DB;
   declare ownershipCondition: () => SQL | undefined;
+  @Year() private readonly year!: ResolvedAcademicYear;
+
+  // A section belongs to its class's year.
+  private classesInSelectedYear() {
+    return this.db.select({ id: classes.id }).from(classes)
+      .where(eq(classes.academicYear, this.year.label));
+  }
+
+  // Needs the builder's join on classes.
+  private readCondition(...filters: (SQL | undefined)[]) {
+    return and(this.ownershipCondition(), eq(classes.academicYear, this.year.label), ...filters);
+  }
+
   // ========================================
   // QUERY_BUILDERS (Reusable)
   // ========================================
 
-  private buildSectionQuery() {
+  // Takes the whole condition: reference lookups pass their own.
+  private selectSections(where: SQL | undefined) {
     return this.db
       .select({
         ...sectionSelect,
         class: classSelect,
       })
       .from(sections)
-      .innerJoin(classes, eq(sections.classId, classes.id));
+      .innerJoin(classes, eq(sections.classId, classes.id))
+      .where(where);
+  }
+
+  // The selected year's sections the user may read.
+  private buildSectionQuery(...filters: (SQL | undefined)[]) {
+    return this.selectSections(this.readCondition(...filters));
   }
 
   // ============ GET ALL METHODS ============ //
 
-  // The sections the user may read, limited to one registered year's label
-  // (through their class) when one is given.
-  // The sections of one registered year's classes the user may read.
-  async getAll(academicYear: string) {
+  async getAll() {
     return await this.buildSectionQuery()
-      .where(and(this.ownershipCondition(), eq(classes.academicYear, academicYear)))
       .orderBy(classes.createdAt, classes.name, sections.name);
   }
 
+  async getInSelectedYear(id: string) {
+    const [result] = await this.buildSectionQuery(eq(sections.id, id)).limit(1);
+    return result;
+  }
+
+  // A reference lookup in any year, for modules that check a section they
+  // were given against their own year rules.
   async getById(id) {
-    const [result] = await this.buildSectionQuery()
-      .where(and(this.ownershipCondition(), eq(sections.id, id)))
+    const [result] = await this.selectSections(and(this.ownershipCondition(), eq(sections.id, id)))
       .limit(1);
     return result;
   }
@@ -129,16 +153,10 @@ export class SectionRepository {
       .orderBy(classes.name, sections.name);
   }
 
-  async getByTeacherId(teacherId) {
-    return await this.buildSectionQuery()
-      .innerJoin(teacherAssignments, eq(sections.id, teacherAssignments.sectionId))
-      .where(eq(teacherAssignments.teacherId, teacherId))
-      .orderBy(classes.academicYear, classes.name, sections.name);
-  }
-
-  // The students placed in the section during its class's year, from their
-  // enrollment placements rather than the current projection.
-  async getStudents(sectionId: string, academicYearId: string) {
+  // The students placed in the section during the selected year, which is its
+  // class's, from their enrollment placements rather than the current
+  // projection.
+  async getStudents(sectionId: string) {
     return await this.db
       .selectDistinctOn([students.name, students.id], {
         id: students.id,
@@ -152,31 +170,31 @@ export class SectionRepository {
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
       .innerJoin(students, eq(studentEnrollments.studentId, students.id))
       .innerJoin(users, eq(students.userId, users.id))
-      .where(this.placedInSection(sectionId, academicYearId))
+      .where(this.placedInSection(sectionId))
       .orderBy(students.name, students.id, desc(studentEnrollmentPlacements.validFrom));
   }
 
-  private placedInSection(sectionId: string, academicYearId: string) {
+  private placedInSection(sectionId: string) {
     return and(
-      eq(studentEnrollments.academicYearId, academicYearId),
+      eq(studentEnrollments.academicYearId, this.year.id),
       eq(studentEnrollmentPlacements.sectionId, sectionId),
     );
   }
 
-  async getAnalytics(sectionId: string, academicYearId: string) {
+  async getAnalytics(sectionId: string) {
     // Students placed in the section that year, and those whose enrollment
     // is still active.
     const [studentsCount] = await this.db
       .select({ count: countDistinct(studentEnrollments.studentId) })
       .from(studentEnrollmentPlacements)
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
-      .where(this.placedInSection(sectionId, academicYearId));
+      .where(this.placedInSection(sectionId));
 
     const [activeStudentsCount] = await this.db
       .select({ count: countDistinct(studentEnrollments.studentId) })
       .from(studentEnrollmentPlacements)
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
-      .where(and(this.placedInSection(sectionId, academicYearId), eq(studentEnrollments.status, 'active')));
+      .where(and(this.placedInSection(sectionId), eq(studentEnrollments.status, 'active')));
 
     // Get section capacity
     const [sectionInfo] = await this.db
@@ -228,12 +246,12 @@ export class SectionRepository {
   }
 
   // One row per parent and child placed in the section during its year.
-  async getParents(sectionId: string, academicYearId: string) {
+  async getParents(sectionId: string) {
     const placed = this.db
       .select({ studentId: studentEnrollments.studentId })
       .from(studentEnrollmentPlacements)
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
-      .where(this.placedInSection(sectionId, academicYearId));
+      .where(this.placedInSection(sectionId));
     return await this.db
       .select({
         ...parentSelect,
@@ -258,7 +276,7 @@ export class SectionRepository {
     const [updatedSection] = await this.db
       .update(sections)
       .set(data)
-      .where(eq(sections.id, id))
+      .where(and(eq(sections.id, id), inArray(sections.classId, this.classesInSelectedYear())))
       .returning();
     return updatedSection;
   }
@@ -266,7 +284,7 @@ export class SectionRepository {
   async delete(id) {
     const [deletedSection] = await this.db
       .delete(sections)
-      .where(eq(sections.id, id))
+      .where(and(eq(sections.id, id), inArray(sections.classId, this.classesInSelectedYear())))
       .returning();
     return deletedSection;
   }
@@ -274,6 +292,7 @@ export class SectionRepository {
   async deleteAll() {
     const deletedSections = await this.db
       .delete(sections)
+      .where(inArray(sections.classId, this.classesInSelectedYear()))
       .returning();
     return {
       deletedCount: deletedSections.length,
@@ -281,13 +300,25 @@ export class SectionRepository {
     };
   }
 
+  // Every year's sections, for the trusted seed reset only.
+  async clearForSeedReset() {
+    await this.db.delete(sections);
+  }
+
+  // A student sits in the section now, or was ever placed in it: a past
+  // year's section has no current students but keeps its placements.
   async checkHasStudents(sectionId) {
-    const [result] = await this.db
+    const [current] = await this.db
       .select({ count: count() })
       .from(students)
       .where(eq(students.sectionId, sectionId))
       .limit(1);
-    return result.count > 0;
+    const [placed] = await this.db
+      .select({ count: count() })
+      .from(studentEnrollmentPlacements)
+      .where(eq(studentEnrollmentPlacements.sectionId, sectionId))
+      .limit(1);
+    return current.count > 0 || placed.count > 0;
   }
 
   async checkNameExistsInClass(classId, name, excludeId?) {

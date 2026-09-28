@@ -2,28 +2,29 @@ import { describe, expect, it } from 'bun:test';
 import { drizzle } from 'drizzle-orm/pg-proxy';
 import { FeeService } from '../../src/modules/financial/fees/FeeService';
 import { FeeRepository } from '../../src/modules/financial/fees/FeeRepository';
-import { feeListQuery } from '../../src/modules/financial/fees/FeeDto';
 
 const oldYear = { id: 'year-old', label: '2025-2026' } as any;
-const activeYear = { id: 'year-active', label: '2026-2027' } as any;
 
 function serviceHarness() {
   const calls: string[] = [];
   const service = new FeeService(
     {
       getAllYears: async () => { calls.push('all-years'); return []; },
-      getAll: async (id: string, label: string) => {
-        calls.push(`${id}:${label}`);
-        return [{ academicYear: label }];
+      getAll: async () => {
+        calls.push('selected');
+        return [{ academicYear: oldYear.label }];
       },
-      getById: async () => ({ id: 'fee-old', academicYear: '2025-2026' }),
+      getById: async (id: string) => id === 'fee-old' ? { id, academicYear: oldYear.label } : null,
       getByStudentAllYears: async () => { calls.push('student-all-years'); return { fees: [] }; },
-      getByStudent: async (studentId: string, id: string, label: string) => {
-        calls.push(`student:${studentId}:${id}:${label}`);
-        return { academicYear: label, fees: [] };
+      getByStudent: async (studentId: string) => {
+        calls.push(`student:${studentId}`);
+        return { academicYear: oldYear.label, fees: [] };
       },
     } as any,
-    { checkExists: async () => true } as any,
+    { checkExists: async (id: string) => {
+      if (id !== 'fee-old') throw new Error('Fee not found');
+      return { id, academicYear: oldYear.label };
+    } } as any,
     {} as any, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any,
   );
   return { service, calls };
@@ -50,29 +51,28 @@ describe('explicit all-year outstanding fees', () => {
 
 describe('normal fee list year scope', () => {
   it('validates the requested year and lists the fees of the resolved year', async () => {
-    expect(feeListQuery.safeParse({ academicYear: '2025-2027' }).success).toBe(false);
-    expect(feeListQuery.safeParse({ academicYear: 'all' }).success).toBe(false);
     const { service, calls } = serviceHarness();
-    expect(await service.getAll(oldYear)).toHaveLength(1);
-    expect(calls).toEqual(['year-old:2025-2026']);
+    expect(await service.getAll()).toHaveLength(1);
+    expect(calls).toEqual(['selected']);
   });
 
   it('does not return a fee under a different selected year', async () => {
     const { service } = serviceHarness();
-    await expect(service.getById('fee-old', activeYear)).rejects.toThrow('not found in selected academic year');
-    expect((await service.getById('fee-old', oldYear))?.id).toBe('fee-old');
+    await expect(service.getById('missing')).rejects.toThrow();
+    expect((await service.getById('fee-old'))?.id).toBe('fee-old');
   });
 
   it("reads one student's fees of the year, and every year only through the named read", async () => {
     const { service, calls } = serviceHarness();
-    expect((await service.getByStudent('student-1', oldYear))?.fees).toEqual([]);
+    expect((await service.getByStudent('student-1'))?.fees).toEqual([]);
     await service.getByStudentAllYears('student-1');
-    expect(calls).toEqual(['student:student-1:year-old:2025-2026', 'student-all-years']);
+    expect(calls).toEqual(['student:student-1', 'student-all-years']);
   });
 
   it('names each fee\'s year in the all-year list so the dashboard can keep active-year students', async () => {
     let statement = '';
     const repo = new FeeRepository();
+    (repo as any).year = oldYear;
     repo.db = drizzle(async (sql) => {
       statement = sql;
       return { rows: [] };
@@ -86,13 +86,14 @@ describe('normal fee list year scope', () => {
     let statement = '';
     let values: unknown[] = [];
     const repo = new FeeRepository();
+    (repo as any).year = oldYear;
     repo.db = drizzle(async (sql, params) => {
       statement = sql;
       values = params;
       return { rows: [] };
     }) as any;
 
-    await repo.getAll('year-old', '2025-2026');
+    await repo.getAll();
     expect(statement.toLowerCase()).toContain('distinct on');
     expect(statement).toContain('fee_year_last_placement');
     expect(statement.toLowerCase()).toContain('filter (where');
@@ -107,6 +108,7 @@ describe('normal fee list year scope', () => {
   it('keeps per-student metrics on the selected fee year and allocated receipt portions', async () => {
     const statements: Array<{ sql: string; params: unknown[] }> = [];
     const repo = new FeeRepository();
+    (repo as any).year = oldYear;
     (repo as any).getAll = async () => [{
       student: { id: 'student-1', name: 'Student', studentCode: 'S1', image: null },
       class: { id: 'old-class', name: 'Old Class' },
@@ -120,7 +122,7 @@ describe('normal fee list year scope', () => {
       return { rows: sql.includes('year_receipt_allocations') ? [['0', '0', '0', null]] : [] };
     }) as any;
 
-    const result = await repo.getByStudent('student-1', 'year-old', '2025-2026');
+    const result = await repo.getByStudent('student-1');
     expect(result?.academicYear).toBe('2025-2026');
     expect(result?.assignment.class.id).toBe('old-class');
     expect(result?.fees).toEqual([]);

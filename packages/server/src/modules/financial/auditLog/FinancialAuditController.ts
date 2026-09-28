@@ -7,6 +7,8 @@ import { auditLogIdParam, auditLogQueryDto, type AuditLogQueryDto } from './Audi
 @ToolGroup('audit-logs')
 @Controller('/financial-audit-logs')
 export class FinancialAuditController {
+  // Audit history is an all-year ledger. Do not register this controller in
+  // yearScope: a selected-year header must never hide old financial events.
   constructor(private service: FinancialAuditService) {}
 
   @Post('/list')

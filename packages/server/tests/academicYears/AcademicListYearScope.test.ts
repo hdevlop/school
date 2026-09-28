@@ -48,13 +48,13 @@ function gradeService(repository: Record<string, unknown>, validator: Record<str
 }
 
 describe('normal academic list year scope', () => {
-  it('passes the resolved year and filters to the assessment and exam reads', async () => {
+  it('passes assessment and exam filters plainly; their repositories read the year themselves', async () => {
     const received: unknown[] = [];
     const read = async (filters: unknown) => { received.push(filters); return []; };
     const validator = { ensureTeacherExists: async () => {}, ensureSectionExists: async () => {} };
-    await new AssessmentService({ getAll: read } as any, validator as any, {} as any).getAll(year2025 as any);
-    await new ExamService({ getAll: read } as any, validator as any, {} as any).getAll(year2025 as any, { teacherId: 't1' });
-    expect(received).toEqual([{ year: year2025 }, { year: year2025, teacherId: 't1' }]);
+    await new AssessmentService({ getAll: read } as any, validator as any, {} as any).getAll();
+    await new ExamService({ getAll: read } as any, validator as any, {} as any).getAll({ teacherId: 't1' });
+    expect(received).toEqual([{}, { teacherId: 't1' }]);
   });
 
   it('checks a filtered record exists before reading the list', async () => {
@@ -64,42 +64,40 @@ describe('normal academic list year scope', () => {
       { ensureSectionExists: async () => { throw new Error('Section not found'); } } as any,
       {} as any,
     );
-    await expect(service.getAll(year2025 as any, { sectionId: 'missing' })).rejects.toThrow('Section not found');
+    await expect(service.getAll({ sectionId: 'missing' })).rejects.toThrow('Section not found');
     expect(read).toBe(false);
   });
 
-  it('passes the resolved grade year to the list read', async () => {
+  it('passes grade filters plainly; the repository reads the year itself', async () => {
     const received: unknown[] = [];
-    await gradeService({ getAll: async (filters: unknown) => { received.push(filters); return []; } }).getAll(year2025 as any);
-    expect(received).toEqual([{ year: year2025 }]);
+    await gradeService({ getAll: async (filters: unknown) => { received.push(filters); return []; } }).getAll();
+    expect(received).toEqual([{}]);
   });
 
-  it("limits one student's grades and report to the year after checking the student", async () => {
+  it("checks the student before reading one student's grades and report", async () => {
     const calls: unknown[] = [];
     const service = gradeService(
       { getAll: async (filters: unknown) => { calls.push(['read', filters]); return []; } },
       { ensureStudentExists: async (id: string) => { calls.push(['exists', id]); } },
     );
-    await service.getByStudent('student-1', year2025 as any);
-    const report = await service.getStudentReport('student-1', year2025 as any);
+    await service.getByStudent('student-1');
+    const report = await service.getStudentReport('student-1');
     expect(report).toBeDefined();
     expect(calls).toEqual([
-      ['exists', 'student-1'], ['read', { year: year2025, studentId: 'student-1' }],
-      ['exists', 'student-1'], ['read', { year: year2025, studentId: 'student-1' }],
+      ['exists', 'student-1'], ['read', { studentId: 'student-1' }],
+      ['exists', 'student-1'], ['read', { studentId: 'student-1' }],
     ]);
   });
 
-  it("reads a source's grades after checking the role may use the source's year", async () => {
+  // The source's existence check reads the selected year, so another year's source is a 404.
+  it("reads a source's grades after finding the source in the selected year", async () => {
     const calls: unknown[] = [];
-    const service = new GradeService(
-      { getByAssessment: async (id: string) => { calls.push(['read', id]); return []; } } as any,
-      { ensureAssessmentExists: async () => ({}) } as any,
-      { getSourceContext: async () => ({ academicYearId: 'year-2025', date: '2025-10-01' }) } as any,
-      { resolveRecord: async (id: string, date: string, role?: string) => { calls.push(['year', id, date, role]); return year2025; } } as any,
-      {} as any, {} as any, {} as any,
+    const service = gradeService(
+      { getByAssessment: async (id: string) => { calls.push(['read', id]); return []; } },
+      { ensureAssessmentExists: async (id: string) => { calls.push(['exists', id]); } },
     );
-    await service.getByAssessment('assessment-1', 'teacher');
-    expect(calls).toEqual([['year', 'year-2025', '2025-10-01', 'teacher'], ['read', 'assessment-1']]);
+    await service.getByAssessment('assessment-1');
+    expect(calls).toEqual([['exists', 'assessment-1'], ['read', 'assessment-1']]);
   });
 });
 
@@ -108,13 +106,15 @@ describe('year-scoped academic list queries', () => {
     let captured = { sql: '', params: [] as unknown[] };
     repo.db = drizzle(async (sql, params) => { captured = { sql, params }; return { rows: [] }; });
     repo._scopeCtx = { hasActiveContext: () => true, getUser: () => ({ id: 'user-1', role }) };
-    await repo.getAll({ year: year2025 });
+    Object.defineProperty(repo, 'year', { value: year2025 });
+    await repo.getAll({});
     return captured;
   }
 
   it('keeps ownership and the year in one WHERE for assessments', async () => {
     const { sql, params } = await statement(new AssessmentRepository(), 'parent');
-    expect(sql).toContain('where ("assessments"."id" in (select "assessments"."id" from "assessments"');
+    expect(sql).toContain('where ("assessments"."id" in (select "id" from "assessments" where exists (');
+    expect(sql).toContain('join student_enrollment_placements placement');
     expect(sql).toContain(') and ("assessments"."academic_year_id" = $2 or ("assessments"."academic_year_id" is null and ("assessments"."date" >= $3 and "assessments"."date" <= $4))))');
     expect(params).toEqual(['user-1', 'year-2025', '2025-09-01', '2026-08-31']);
   });
@@ -131,7 +131,8 @@ describe('year-scoped academic list queries', () => {
     const repo: any = new GradeRepository();
     repo.db = drizzle(async (sql, params) => { captured = { sql, params }; return { rows: [] }; });
     repo._scopeCtx = { hasActiveContext: () => true, getUser: () => ({ id: 'user-1', role: 'parent' }) };
-    await repo.getAll({ year: year2025, studentId: 'student-1' });
+    Object.defineProperty(repo, 'year', { value: year2025 });
+    await repo.getAll({ studentId: 'student-1' });
     expect(captured.sql).toContain('where ("grades"."id" in (select "grades"."id" from "grades"');
     expect(captured.sql).toContain(') and ("grades"."academic_year_id" = $2 or');
     expect(captured.sql).toContain(') and "grades"."student_id" = $7)');

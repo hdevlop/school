@@ -10,25 +10,24 @@ export class DisciplineService {
     private validator: DisciplineValidator,
   ) {}
 
-  async list(user: DisciplineUser) {
-    return this.repository.list(user.role === 'teacher' ? user.id : undefined);
+  // The repository's ownership decides who sees which incidents.
+  async list() {
+    return this.repository.list();
   }
 
-  async getById(id: string, user: DisciplineUser) {
-    const record = await this.validator.ensureExists(id);
-    this.validator.ensureReadable(record, user);
-    return record;
+  async getById(id: string) {
+    return this.validator.ensureExists(id);
   }
 
   async create(input: CreateDisciplineDto, user: DisciplineUser) {
     this.validator.ensureIncidentDate(input.incidentAt);
-    const student = await this.validator.ensureStudentReady(input.studentId);
-    await this.validator.ensureTeacherMayReport(user, student.sectionId);
+    const placement = await this.validator.ensureStudentPlacedOn(input.studentId, input.incidentAt);
+    await this.validator.ensureTeacherMayReport(user, placement.sectionId);
 
     return this.repository.create({
       studentId: input.studentId,
-      classId: student.classId,
-      sectionId: student.sectionId,
+      classId: placement.classId,
+      sectionId: placement.sectionId,
       reportedBy: user.id,
       incidentAt: input.incidentAt,
       category: input.category,
@@ -49,16 +48,17 @@ export class DisciplineService {
     this.validator.ensureEditable(record, user);
 
     const changes: Record<string, unknown> = {};
-    if (input.studentId !== undefined) {
-      const student = await this.validator.ensureStudentReady(input.studentId);
-      await this.validator.ensureTeacherMayReport(user, student.sectionId);
-      changes.studentId = input.studentId;
-      changes.classId = student.classId;
-      changes.sectionId = student.sectionId;
-    }
-    if (input.incidentAt !== undefined) {
-      this.validator.ensureIncidentDate(input.incidentAt);
-      changes.incidentAt = input.incidentAt;
+    if (input.incidentAt !== undefined) this.validator.ensureIncidentDate(input.incidentAt);
+    // The student or date decides the placement, and the date must stay in the selected year.
+    if (input.studentId !== undefined || input.incidentAt !== undefined) {
+      const studentId = input.studentId ?? record.studentId;
+      const incidentAt = input.incidentAt ?? record.incidentAt;
+      const placement = await this.validator.ensureStudentPlacedOn(studentId, incidentAt);
+      await this.validator.ensureTeacherMayReport(user, placement.sectionId);
+      changes.studentId = studentId;
+      changes.incidentAt = incidentAt;
+      changes.classId = placement.classId;
+      changes.sectionId = placement.sectionId;
     }
     if (input.category !== undefined) changes.category = input.category;
     if (input.severity !== undefined) changes.severity = input.severity;

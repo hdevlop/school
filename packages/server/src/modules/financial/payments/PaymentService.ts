@@ -13,6 +13,7 @@ import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents, toCents } from '../utils/money';
 import { getBusinessDate } from '../../../shared/businessDate';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { Year } from '../../academicYears/requestYear';
 import type {
   CreatePaymentDto,
   UpdatePaymentDto,
@@ -47,6 +48,7 @@ function isUniqueViolation(error: any): boolean {
 @Service()
 export class PaymentService {
   @Events() private events!: EventService;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private paymentRepository: PaymentRepository,
@@ -61,8 +63,8 @@ export class PaymentService {
 
   // The receipts allocated to fees charged to the year, each once with its
   // allocated portion beside the full amount.
-  async getAll(year: ResolvedAcademicYear) {
-    return await this.paymentRepository.getAll(year.label);
+  async getAll() {
+    return await this.paymentRepository.getAll();
   }
 
   async getToday() {
@@ -99,6 +101,11 @@ export class PaymentService {
     return this.paymentRepository.getByStudent(studentId);
   }
 
+  async getByFeeId(feeId: string) {
+    await this.feeService.getById(feeId);
+    return this.paymentRepository.getByFeeId(feeId);
+  }
+
   async getByReceiptNumber(receiptNumber: string) {
     return this.paymentValidator.checkReceiptNumberExists(receiptNumber);
   }
@@ -111,8 +118,8 @@ export class PaymentService {
     return await this.paymentRepository.getOverdueChecks();
   }
 
-  async getTotalRevenue(academicYear?: string) {
-    return this.allocationRepository.getTotalRevenue(academicYear);
+  async getTotalRevenue() {
+    return this.allocationRepository.getTotalRevenue(this.year.label);
   }
 
   async getRevenueByAcademicYear(academicYear: string) {
@@ -123,20 +130,20 @@ export class PaymentService {
     return this.allocationRepository.getRevenueByDateRange(startDate, endDate);
   }
 
-  async getRevenueByPaymentMethod(academicYear?: string) {
-    return this.allocationRepository.getRevenueByPaymentMethod(academicYear);
+  async getRevenueByPaymentMethod() {
+    return this.allocationRepository.getRevenueByPaymentMethod(this.year.label);
   }
 
-  async getMonthlyRevenue(year: number, academicYear?: string) {
-    return this.allocationRepository.getMonthlyRevenue(year, academicYear);
+  async getMonthlyRevenue(year: number) {
+    return this.allocationRepository.getMonthlyRevenue(year, this.year.label);
   }
 
-  async getRevenueStats(academicYear?: string) {
-    return this.allocationRepository.getRevenueStats(academicYear);
+  async getRevenueStats() {
+    return this.allocationRepository.getRevenueStats(this.year.label);
   }
 
-  async getTopPayingStudents(limit: number = 10, academicYear?: string) {
-    return this.allocationRepository.getTopPayingStudents(limit, academicYear);
+  async getTopPayingStudents(limit: number = 10) {
+    return this.allocationRepository.getTopPayingStudents(limit, this.year.label);
   }
 
   private async getImpactedStudentIds(paymentId?: string, primaryStudentId?: string) {

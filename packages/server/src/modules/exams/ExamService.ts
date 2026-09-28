@@ -1,10 +1,9 @@
-import { Err, Service } from '../../najm';
+import { Service } from '../../najm';
 import { ExamRepository, type ExamListFilters } from './ExamRepository';
 import { ExamValidator } from './ExamValidator';
 import { pickProps } from '../../shared';
 import type { CreateExamDto, UpdateExamDto } from './ExamDto';
 import { AcademicSourceService } from '../academicSources/AcademicSourceService';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class ExamService {
@@ -16,15 +15,20 @@ export class ExamService {
 
   // The year's exams, optionally for one section, subject or teacher;
   // a filter naming a missing record is a 404 before the list is read.
-  async getAll(year: ResolvedAcademicYear, filters: Omit<ExamListFilters, 'year'> = {}) {
+  async getAll(filters: ExamListFilters = {}) {
     if (filters.sectionId) await this.examValidator.ensureSectionExists(filters.sectionId);
     if (filters.subjectId) await this.examValidator.ensureSubjectExists(filters.subjectId);
     if (filters.teacherId) await this.examValidator.ensureTeacherExists(filters.teacherId);
-    return this.examRepository.getAll({ year, ...filters });
+    return this.examRepository.getAll(filters);
   }
 
   async getById(id: string) {
     return this.examValidator.ensureExists(id);
+  }
+
+  /** The year's exams one student sat, or will sit, in their section of the day; today's and later ones when `upcoming`. */
+  async getForStudent(studentId: string, { upcoming = false } = {}) {
+    return this.examRepository.getForStudent(studentId, upcoming ? new Date().toISOString().slice(0, 10) : undefined);
   }
 
   async getTodayExams() {
@@ -68,6 +72,7 @@ export class ExamService {
   async create(data: CreateExamDto) {
     const normalizedData = this.normalizeSectionTargets(data);
     const year = await this.sources.ensureTargetsValid(normalizedData.sectionIds ?? [], normalizedData.date);
+    this.examValidator.ensureSelectedYear(year.id);
     const EXAM_CREATE_KEYS = [
       'title', 'description', 'type', 'date', 'startTime', 'endTime', 'duration',
       'totalMarks', 'passingMarks', 'roomNumber', 'instructions', 'status', 'sectionIds'
@@ -111,9 +116,8 @@ export class ExamService {
         targetIds,
         normalizedData.date ?? current.date,
       );
-      if (current.academicYearId && current.academicYearId !== year.id) {
-        Err(409, 'Exam academic year cannot be changed');
-      }
+      this.examValidator.ensureSelectedYear(year.id);
+      this.examValidator.ensureSameYear(current.academicYearId, year.id);
       targetYearId = year.id;
     }
     await this.examValidator.validate(normalizedData, id);
@@ -153,6 +157,11 @@ export class ExamService {
 
   async deleteAll() {
     return await this.examRepository.deleteAll();
+  }
+
+  /** Trusted demo reset: every year's exams. */
+  async clearForSeedReset() {
+    return this.examRepository.clearForSeedReset();
   }
 
   async deleteBulk(ids: string[]) {

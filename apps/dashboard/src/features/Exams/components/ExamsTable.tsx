@@ -8,6 +8,7 @@ import ExamForm from './ExamForm';
 import ExamCard from './ExamCard';
 import { useExams } from '../hooks/useExams';
 import { useTranslation } from 'najm-i18n/react';
+import { useViewerRole } from '@/shared/useViewerRole';
 import { useExamsTableColumns } from '../hooks/useExamsTableColumns';
 import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -15,6 +16,8 @@ import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
 function ExamsTable() {
   const { t } = useTranslation();
+  // Parents and students read these records; they change none of them.
+  const { isFamily } = useViewerRole();
   const columns = useExamsTableColumns();
   const rawFilters = useExamsTableFilters();
 
@@ -103,10 +106,10 @@ function ExamsTable() {
         data={exams}
         columns={columns}
         filters={rawFilters}
-        onCreate={handleAddClick}
+        onCreate={isFamily ? undefined : handleAddClick}
         onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
+        onEdit={isFamily ? undefined : handleEdit}
+        onDelete={isFamily ? undefined : handleDelete}
         loading={isExamsLoading}
         error={hasFailedToLoad(error, exams) ? error : null}
         renderError={(currentError) => (
@@ -121,8 +124,8 @@ function ExamsTable() {
             surface="panel"
             icon={FEATURE_ICONS.exams}
             title={t('emptyStates.exams.title')}
-            description={t('emptyStates.exams.description')}
-            action={(
+            description={isFamily ? t('emptyStates.familyDescription') : t('emptyStates.exams.description')}
+            action={isFamily ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('exams.dialogs.createButton')}

@@ -1,7 +1,7 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
-import { subjects } from '../../database/schema';
-import { eq } from 'drizzle-orm';
+import { alerts, subjects, teacherAssignments } from '../../database/schema';
+import { and, count, eq, exists, or, type SQLWrapper } from 'drizzle-orm';
 
 export const subjectSelect = {
   id: subjects.id,
@@ -60,6 +60,30 @@ export class SubjectRepository {
     return result;
   }
 
+  // A subject is shared by every year. Any year's teacher assignment or alert
+  // that names it keeps it: deleting it would cascade the assignments away,
+  // with the lessons, marks and attendance they explain, or fail on them.
+  private usedBy(subjectId: string | SQLWrapper) {
+    return or(
+      exists(this.db.select({ id: teacherAssignments.id }).from(teacherAssignments)
+        .where(eq(teacherAssignments.subjectId, subjectId))),
+      exists(this.db.select({ id: alerts.id }).from(alerts)
+        .where(eq(alerts.subjectId, subjectId))),
+    );
+  }
+
+  async isInUse(id: string) {
+    const [row] = await this.db.select({ id: subjects.id }).from(subjects)
+      .where(and(eq(subjects.id, id), this.usedBy(id))).limit(1);
+    return !!row;
+  }
+
+  async countInUse() {
+    const [row] = await this.db.select({ count: count() }).from(subjects)
+      .where(this.usedBy(subjects.id));
+    return row.count;
+  }
+
   // ========================================
   // CREATE_METHODS
   // ========================================
@@ -105,5 +129,10 @@ export class SubjectRepository {
       deletedCount: deletedSubjects.length,
       deletedSubjects: deletedSubjects
     };
+  }
+
+  // The trusted seed reset, after teachers and their assignments are gone.
+  async clearForSeedReset() {
+    await this.db.delete(subjects);
   }
 }

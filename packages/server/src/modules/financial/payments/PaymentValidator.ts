@@ -84,7 +84,7 @@ export class PaymentValidator {
   ) { }
 
   async isInstallmentExists(id) {
-    return await this.installmentValidator.isExists(id);
+    return !!(await this.installmentRepository.getByIdAllYears(id));
   }
 
   async isExists(id) {
@@ -109,7 +109,9 @@ export class PaymentValidator {
   }
 
   async checkInstallmentExists(id) {
-    return await this.installmentValidator.checkExists(id);
+    const installment = await this.installmentRepository.getByIdAllYears(id);
+    if (!installment) Err(404, this.ft('installmentNotFound'));
+    return installment;
   }
 
   async checkReceiptNumberUnique(receiptNumber, excludeId = null) {
@@ -178,7 +180,7 @@ export class PaymentValidator {
     const feeIds = [...new Set(allocations.map((allocation) => allocation.feeId))];
     const fees = await Promise.all(
       feeIds.map(async (feeId) => {
-        const fee = await this.feeRepository.getById(feeId);
+        const fee = await this.feeRepository.getByIdAllYears(feeId);
         if (!fee) {
           Err(404, this.ft('feeNotFound'));
         }

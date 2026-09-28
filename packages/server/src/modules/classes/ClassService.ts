@@ -4,7 +4,6 @@ import { ClassValidator } from './ClassValidator';
 import type { CreateClassDto, CreateClassesBulkDto, UpdateClassDto } from './ClassDto';
 import { SettingsRepository } from '../settings/SettingsRepository';
 import { getCurrentAcademicYear } from '../financial/utils';
-import { AcademicYearValidator, type ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class ClassService {
@@ -13,62 +12,50 @@ export class ClassService {
     private classRepository: ClassRepository,
     private classValidator: ClassValidator,
     private settingsRepository: SettingsRepository,
-    private academicYears: AcademicYearValidator,
   ) { }
 
-  async getAll(year: ResolvedAcademicYear) {
-    return this.classRepository.getAll(year.label);
+  // The selected year's classes. A class belongs to the year it was
+  // registered for, so its students, parents and counts come from that year.
+  async getAll() {
+    return this.classRepository.getAll();
   }
 
   async getCount() {
     return await this.classRepository.getCount();
   }
 
-  async getById(id: string, role?: string) {
-    return (await this.getWithYear(id, role)).schoolClass;
+  async getById(id: string) {
+    return this.classValidator.ensureInSelectedYear(id);
   }
 
-  // A class belongs to the year it was registered for: that year, not the
-  // selected one, decides whether the role may read it and what its students,
-  // parents and counts are.
-  private async getWithYear(id: string, role?: string) {
-    const schoolClass = await this.classValidator.ensureExists(id);
-    const year = await this.academicYears.resolve(schoolClass.academicYear, role);
-    return { schoolClass, year };
-  }
-
-  async getByAcademicYear(academicYear: string) {
-    return await this.classRepository.getByAcademicYear(academicYear);
-  }
-
-  async getSections(classId: string, role?: string) {
-    await this.getWithYear(classId, role);
+  async getSections(classId: string) {
+    await this.classValidator.ensureInSelectedYear(classId);
     return await this.classRepository.getClassSections(classId);
   }
 
-  async getStudents(classId: string, role?: string) {
-    const { year } = await this.getWithYear(classId, role);
-    return await this.classRepository.getClassStudents(classId, year.id);
+  async getStudents(classId: string) {
+    await this.classValidator.ensureInSelectedYear(classId);
+    return await this.classRepository.getClassStudents(classId);
   }
 
-  async getTeachers(classId: string, role?: string) {
-    await this.getWithYear(classId, role);
+  async getTeachers(classId: string) {
+    await this.classValidator.ensureInSelectedYear(classId);
     return await this.classRepository.getTeachers(classId);
   }
 
-  async getSubjects(classId: string, role?: string) {
-    await this.getWithYear(classId, role);
+  async getSubjects(classId: string) {
+    await this.classValidator.ensureInSelectedYear(classId);
     return await this.classRepository.getClassSubjects(classId);
   }
 
-  async getParents(classId: string, role?: string) {
-    const { year } = await this.getWithYear(classId, role);
-    return await this.classRepository.getParents(classId, year.id);
+  async getParents(classId: string) {
+    await this.classValidator.ensureInSelectedYear(classId);
+    return await this.classRepository.getParents(classId);
   }
 
-  async getAnalytics(classId: string, role?: string) {
-    const { year } = await this.getWithYear(classId, role);
-    return await this.classRepository.getAnalytics(classId, year.id);
+  async getAnalytics(classId: string) {
+    await this.classValidator.ensureInSelectedYear(classId);
+    return await this.classRepository.getAnalytics(classId);
   }
 
   async getStudentsByName(className: string, sectionName: string | null = null) {
@@ -79,46 +66,43 @@ export class ClassService {
     );
   }
 
-  async create(data: CreateClassDto, role?: string) {
-    await this.academicYears.resolve(data.academicYear, role);
-    await this.classValidator.ensureNameUnique(data.name, data.academicYear);
+  // A new class takes the selected year; the repository stamps it.
+  async create(data: CreateClassDto) {
+    await this.classValidator.ensureNameUnique(data.name);
     return await this.classRepository.create(data);
   }
 
-  async update(id: string, data: UpdateClassDto, role?: string) {
-    const currentClass = await this.classValidator.ensureExists(id);
-
-    if (data.academicYear && data.academicYear !== currentClass.academicYear) {
-      await this.academicYears.resolve(data.academicYear, role);
-      await this.classValidator.ensureHasNoSections(id);
+  // A class keeps its year: only the selected year's classes can be edited.
+  async update(id: string, data: UpdateClassDto) {
+    await this.classValidator.ensureInSelectedYear(id);
+    if (data.name) {
+      await this.classValidator.ensureNameUnique(data.name, undefined, id);
     }
-
-    if (data.name || data.academicYear) {
-      await this.classValidator.ensureNameUnique(
-        data.name || currentClass.name,
-        data.academicYear || currentClass.academicYear,
-        id,
-      );
-    }
-
     return await this.classRepository.update(id, data);
   }
 
   async delete(id: string) {
-    await this.classValidator.ensureExists(id);
+    await this.classValidator.ensureInSelectedYear(id);
     await this.classValidator.ensureHasNoSections(id);
     return await this.classRepository.delete(id);
   }
 
+  // The selected year's classes only.
   async deleteAll() {
     return await this.classRepository.deleteAll();
   }
 
+  async clearForSeedReset() {
+    await this.classRepository.clearForSeedReset();
+  }
+
+  // Trusted seed data: each class names its own year.
   async seedDemoClasses(classesData: CreateClassesBulkDto) {
     const createdClasses = [];
     for (const classData of classesData) {
       try {
-        const classEntity = await this.create(classData);
+        await this.classValidator.ensureNameUnique(classData.name, classData.academicYear);
+        const classEntity = await this.classRepository.createForSeed(classData);
         createdClasses.push(classEntity);
       } catch (error: any) {
         if (error?.status === 409) continue;

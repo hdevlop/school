@@ -1,8 +1,12 @@
 import { Repository } from '../../najm';
-import { eq, desc, and, count, sql, inArray, or, isNull } from 'drizzle-orm';
+import { Owned } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { eq, desc, and, count, sql, inArray, or, isNull, type SQL } from 'drizzle-orm';
 import { announcements, users, classes } from '../../database/schema';
 import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
+import { Announcement, AnnouncementByAuthor, AnnouncementForClass, isLive } from './AnnouncementGuards';
 
 export const classSelect = {
   id: classes.id,
@@ -14,20 +18,42 @@ export const classSelect = {
   updatedAt: classes.updatedAt,
 };
 
+/** Legacy rows without a provable academic year remain outside year views. */
+export const announcementInYear = (yearId: string) => eq(announcements.academicYearId, yearId);
+
+/** The announcement names this class, directly or in its class list. */
+const targetsClass = (classId: string) => or(
+  eq(announcements.classId, classId),
+  sql`EXISTS (
+    SELECT 1 FROM jsonb_array_elements_text(COALESCE(${announcements.classIds}, '[]'::jsonb)) AS target_class_id
+    WHERE target_class_id = ${classId}
+  )`,
+);
+
+@Owned(Announcement, AnnouncementForClass, AnnouncementByAuthor)
 @Repository()
 export class AnnouncementRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+  declare ownershipCondition: () => SQL | undefined;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
   // ========================================
 
-  private buildAnnouncementQuery() {
+  /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
+  private readCondition(...filters: (SQL | undefined)[]) {
+    return and(this.ownershipCondition(), announcementInYear(this.year.id), ...filters);
+  }
+
+  // Never chain another .where() on this: it would replace the read condition.
+  private buildAnnouncementQuery(...filters: (SQL | undefined)[]) {
     const authorUsers = alias(users, 'author_users');
 
     return this.db
       .select({
         id: announcements.id,
+        academicYearId: announcements.academicYearId,
         title: announcements.title,
         content: announcements.content,
         authorId: announcements.authorId,
@@ -48,7 +74,8 @@ export class AnnouncementRepository {
       })
       .from(announcements)
       .leftJoin(authorUsers, eq(announcements.authorId, authorUsers.id))
-      .leftJoin(classes, eq(announcements.classId, classes.id));
+      .leftJoin(classes, eq(announcements.classId, classes.id))
+      .where(this.readCondition(...filters));
   }
 
   // ========================================
@@ -58,7 +85,8 @@ export class AnnouncementRepository {
   async getCount() {
     const [announcementsCount] = await this.db
       .select({ count: count() })
-      .from(announcements);
+      .from(announcements)
+      .where(this.readCondition());
     return announcementsCount;
   }
 
@@ -80,7 +108,8 @@ export class AnnouncementRepository {
           AND ${announcements.expiryDate} <= ${now}
           THEN 1 END`),
       })
-      .from(announcements);
+      .from(announcements)
+      .where(this.readCondition());
 
     return stats;
   }
@@ -91,124 +120,55 @@ export class AnnouncementRepository {
   }
 
   async getRecent(limit = 10) {
-    return await this.buildAnnouncementQuery()
-      .orderBy(desc(announcements.createdAt))
-      .limit(limit);
+    return await this.buildAnnouncementQuery().orderBy(desc(announcements.createdAt)).limit(limit);
   }
 
   async getById(id: string) {
-    const [announcement] = await this.buildAnnouncementQuery()
-      .where(eq(announcements.id, id))
-      .limit(1);
-
+    const [announcement] = await this.buildAnnouncementQuery(eq(announcements.id, id)).limit(1);
     return announcement;
   }
 
   async getByAuthor(authorId: string) {
-    return await this.buildAnnouncementQuery()
-      .where(eq(announcements.authorId, authorId))
+    return await this.buildAnnouncementQuery(eq(announcements.authorId, authorId))
       .orderBy(desc(announcements.createdAt));
   }
 
   async getByTargetAudience(targetAudience: string) {
-    return await this.buildAnnouncementQuery()
-      .where(eq(announcements.targetAudience, targetAudience))
+    return await this.buildAnnouncementQuery(eq(announcements.targetAudience, targetAudience))
       .orderBy(desc(announcements.publishDate));
   }
 
   async getByClass(classId: string) {
-    return await this.buildAnnouncementQuery()
-      .where(or(
-        eq(announcements.classId, classId),
-        sql`EXISTS (
-          SELECT 1 FROM jsonb_array_elements_text(COALESCE(${announcements.classIds}, '[]'::jsonb)) AS target_class_id
-          WHERE target_class_id = ${classId}
-        )`,
-      ))
+    return await this.buildAnnouncementQuery(targetsClass(classId))
       .orderBy(desc(announcements.publishDate));
   }
 
   async getPublished() {
-    const now = new Date().toISOString();
-
-    return await this.buildAnnouncementQuery()
-      .where(
-        and(
-          eq(announcements.isPublished, true),
-          or(
-            isNull(announcements.publishDate),
-            sql`${announcements.publishDate} <= ${now}`
-          ),
-          or(
-            isNull(announcements.expiryDate),
-            sql`${announcements.expiryDate} > ${now}`
-          )
-        )
-      )
-      .orderBy(desc(announcements.publishDate));
+    return await this.buildAnnouncementQuery(isLive()).orderBy(desc(announcements.publishDate));
   }
 
-  async getActiveForAudience(targetAudience: string, classId?: string) {
-    const now = new Date().toISOString();
-
-    const whereConditions = [
-      eq(announcements.isPublished, true),
-      or(
-        eq(announcements.targetAudience, targetAudience),
-        eq(announcements.targetAudience, 'all')
-      ),
-      or(
-        isNull(announcements.publishDate),
-        sql`${announcements.publishDate} <= ${now}`
-      ),
-      or(
-        isNull(announcements.expiryDate),
-        sql`${announcements.expiryDate} > ${now}`
-      )
-    ];
-
-    if (classId) {
-      whereConditions.push(
-        or(
-          isNull(announcements.classIds),
-          eq(announcements.classId, classId),
-          sql`EXISTS (
-            SELECT 1 FROM jsonb_array_elements_text(COALESCE(${announcements.classIds}, '[]'::jsonb)) AS target_class_id
-            WHERE target_class_id = ${classId}
-          )`,
-        )
-      );
-    }
-
-    return await this.buildAnnouncementQuery()
-      .where(and(...whereConditions))
-      .orderBy(desc(announcements.publishDate));
+  async getActiveForAudience(targetAudience: string, classId: string | undefined) {
+    return await this.buildAnnouncementQuery(
+      isLive(),
+      or(eq(announcements.targetAudience, targetAudience), eq(announcements.targetAudience, 'all')),
+      classId ? or(isNull(announcements.classIds), targetsClass(classId)) : undefined,
+    ).orderBy(desc(announcements.publishDate));
   }
 
   async getUpcoming() {
     const now = new Date().toISOString();
-
-    return await this.buildAnnouncementQuery()
-      .where(
-        and(
-          eq(announcements.isPublished, false),
-          sql`${announcements.publishDate} > ${now}`
-        )
-      )
-      .orderBy(announcements.publishDate);
+    return await this.buildAnnouncementQuery(
+      eq(announcements.isPublished, false),
+      sql`${announcements.publishDate} > ${now}`,
+    ).orderBy(announcements.publishDate);
   }
 
   async getExpired() {
     const now = new Date().toISOString();
-
-    return await this.buildAnnouncementQuery()
-      .where(
-        and(
-          eq(announcements.isPublished, true),
-          sql`${announcements.expiryDate} <= ${now}`
-        )
-      )
-      .orderBy(desc(announcements.expiryDate));
+    return await this.buildAnnouncementQuery(
+      eq(announcements.isPublished, true),
+      sql`${announcements.expiryDate} <= ${now}`,
+    ).orderBy(desc(announcements.expiryDate));
   }
 
   // ========================================
@@ -218,7 +178,7 @@ export class AnnouncementRepository {
   async create(data) {
     const [newAnnouncement] = await this.db
       .insert(announcements)
-      .values(data)
+      .values({ ...data, academicYearId: this.year.id })
       .returning();
     return await this.getById(newAnnouncement.id);
   }
@@ -231,7 +191,7 @@ export class AnnouncementRepository {
     const [updatedAnnouncement] = await this.db
       .update(announcements)
       .set(data)
-      .where(eq(announcements.id, id))
+      .where(and(eq(announcements.id, id), announcementInYear(this.year.id)))
       .returning();
     return updatedAnnouncement;
   }
@@ -243,7 +203,7 @@ export class AnnouncementRepository {
         isPublished: true,
         publishDate: new Date().toISOString()
       })
-      .where(eq(announcements.id, id))
+      .where(and(eq(announcements.id, id), announcementInYear(this.year.id)))
       .returning();
     return published;
   }
@@ -252,7 +212,7 @@ export class AnnouncementRepository {
     const [unpublished] = await this.db
       .update(announcements)
       .set({ isPublished: false })
-      .where(eq(announcements.id, id))
+      .where(and(eq(announcements.id, id), announcementInYear(this.year.id)))
       .returning();
     return unpublished;
   }
@@ -264,7 +224,7 @@ export class AnnouncementRepository {
   async delete(id) {
     const [deletedAnnouncement] = await this.db
       .delete(announcements)
-      .where(eq(announcements.id, id))
+      .where(and(eq(announcements.id, id), announcementInYear(this.year.id)))
       .returning();
     return deletedAnnouncement;
   }
@@ -272,6 +232,7 @@ export class AnnouncementRepository {
   async deleteAll() {
     const deletedAnnouncements = await this.db
       .delete(announcements)
+      .where(announcementInYear(this.year.id))
       .returning();
 
     return {
@@ -283,12 +244,24 @@ export class AnnouncementRepository {
   async deleteBulk(ids: string[]) {
     const deletedAnnouncements = await this.db
       .delete(announcements)
-      .where(inArray(announcements.id, ids))
+      .where(and(inArray(announcements.id, ids), announcementInYear(this.year.id)))
       .returning();
 
     return {
       deletedCount: deletedAnnouncements.length,
       deletedAnnouncements: deletedAnnouncements
     };
+  }
+
+  async classesInYear(classIds: string[]) {
+    if (classIds.length === 0) return true;
+    const rows = await this.db.select({ id: classes.id }).from(classes)
+      .where(and(inArray(classes.id, classIds), eq(classes.academicYear, this.year.label)));
+    return rows.length === classIds.length;
+  }
+
+  /** Trusted full seed reset; user-facing deletion always names a year. */
+  async clearForSeedReset() {
+    await this.db.delete(announcements);
   }
 }

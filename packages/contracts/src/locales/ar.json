@@ -412,6 +412,48 @@
     }
   },
   "alerts": {
+    "page": {
+      "title": "التنبيهات",
+      "subtitle": "{{count}} تنبيه",
+      "about": "بخصوص",
+      "schoolWide": "الجميع",
+      "emptyTitle": "لا توجد تنبيهات",
+      "emptyDescription": "ستظهر هنا التنبيهات المتعلقة بك أو بأبنائك.",
+      "columns": {
+        "title": "التنبيه",
+        "type": "النوع",
+        "priority": "الأولوية",
+        "status": "الحالة",
+        "date": "التاريخ"
+      },
+      "actions": {
+        "acknowledge": "تأكيد الاطلاع",
+        "resolve": "حل",
+        "dismiss": "تجاهل"
+      },
+      "types": {
+        "academic": "دراسي",
+        "attendance": "الحضور",
+        "behavioral": "السلوك",
+        "health": "الصحة",
+        "system": "النظام",
+        "announcement": "إعلان",
+        "reminder": "تذكير",
+        "emergency": "طارئ"
+      },
+      "priorities": {
+        "low": "منخفضة",
+        "medium": "متوسطة",
+        "high": "مرتفعة",
+        "critical": "حرجة"
+      },
+      "statuses": {
+        "active": "نشط",
+        "acknowledged": "تم الاطلاع",
+        "resolved": "تم الحل",
+        "dismissed": "متجاهل"
+      }
+    },
     "success": {
       "retrieved": "تم استرجاع التنبيهات بنجاح",
       "created": "تم إنشاء التنبيه بنجاح",
@@ -441,7 +483,10 @@
       "noAlertsSelected": "لم يتم تحديد تنبيهات للعملية الجماعية",
       "noAlertsToDelete": "لا توجد تنبيهات للحذف",
       "invalidStatusTransition": "انتقال حالة غير صالح من {{from}} إلى {{to}}",
-      "atLeastOneTargetRequired": "يجب تحديد هدف واحد على الأقل (مركبة، مشغل، أو مستخدم)"
+      "atLeastOneTargetRequired": "يجب تحديد هدف واحد على الأقل (مركبة، مشغل، أو مستخدم)",
+      "sharedNoticeStaffOnly": "يمكن للموظفين فقط تغيير حالة تنبيه موجّه لقسم أو للمدرسة كلها",
+      "acknowledgeOnly": "يمكنك فقط إقرار هذا التنبيه",
+      "editStaffOnly": "يمكن للموظفين فقط تعديل التنبيه؛ يمكنك تحديث حالته"
     },
     "validation": {
       "titleMinLength": "العنوان يجب أن يكون على الأقل حرفين",
@@ -900,7 +945,10 @@
     "studentConductShort": "السلوك",
     "violations": "المخالفات",
     "behaviorRewards": "السلوك الإيجابي والمكافآت",
-    "behaviorRewardsShort": "المكافآت"
+    "behaviorRewardsShort": "المكافآت",
+    "alerts": "التنبيهات",
+    "myChildren": "أبنائي",
+    "myProfile": "ملفي"
   },
   "classRoutines": {
     "success": {
@@ -938,7 +986,8 @@
       "teacherNotFound": "الأستاذ غير موجود",
       "layoutPastMidnight": "لا يمكن أن يمتد الجدول بعد منتصف الليل",
       "layoutRemovesLessons": "احذف الحصص من الفترات التي ستزال قبل تغيير الإعدادات",
-    "layoutRemovesDuties": "احذف مهام الإشراف من الاستراحات التي ستزال قبل تغيير الإعدادات"
+    "layoutRemovesDuties": "احذف مهام الإشراف من الاستراحات التي ستزال قبل تغيير الإعدادات",
+    "outsideSelectedYear": "يجب أن تنتمي شعبة جدول الحصص إلى السنة الدراسية المحددة"
   },
   "ui": {
     "title": "الجدول",
@@ -1428,6 +1477,8 @@
       "studentNotFound": "الطالب غير موجود",
       "studentInactive": "يمكن تقدير الطلاب النشطين فقط",
       "studentAcademicContextMissing": "يجب أن يكون للطالب فصل وشعبة",
+      "outsideSelectedYear": "تاريخ السلوك خارج السنة الدراسية المحددة",
+      "notPlacedOnDate": "لم يكن الطالب مسجلاً في فصل وشعبة في ذلك التاريخ",
       "studentNotAssigned": "يمكنك تقدير طلاب الشعب المسندة إليك فقط",
       "notOwner": "يمكن للمعلم تعديل التقديرات التي منحها فقط",
       "deleteAdminOnly": "يمكن للمسؤولين فقط حذف سجلات التقدير",
@@ -1565,6 +1616,9 @@
     }
   },
   "announcements": {
+    "errors": {
+      "authorOnly": "يمكن للموظفين أو لكاتب الإعلان فقط تعديله"
+    },
     "subtitle": {
       "count": "{{count}} إعلان إجمالاً"
     },
@@ -1719,6 +1773,17 @@
       "retrieved": "تم جلب التقييم بنجاح",
       "seeded": "تم إنشاء بيانات التقييم بنجاح",
       "updated": "تم تحديث التقييم بنجاح"
+    },
+    "errors": {
+      "notFound": "التقييم غير موجود",
+      "idExists": "يوجد تقييم بهذا المعرف بالفعل",
+      "inUse": "هذا التقييم يحتوي على نقط بالفعل",
+      "noSection": "هذا التقييم ليس له شعبة مستهدفة",
+      "studentNotInSection": "التلميذ ليس في شعبة يستهدفها هذا التقييم",
+      "teacherRequired": "الأستاذ مطلوب",
+      "passingMarksExceedsTotal": "لا يمكن أن تتجاوز نقطة النجاح النقطة الكاملة",
+      "outsideSelectedYear": "يجب أن تنتمي شعب التقييم إلى السنة الدراسية المحددة",
+      "yearCannotChange": "لا يمكن نقل التقييم إلى سنة دراسية أخرى"
     }
   },
   "discipline": {
@@ -1731,9 +1796,17 @@
     "actions": { "verbal_warning": "إنذار شفهي", "written_warning": "إنذار كتابي", "detention": "احتجاز مدرسي", "counseling": "إرشاد", "parent_meeting": "اجتماع مع ولي الأمر", "suspension": "توقيف", "other": "أخرى" },
     "dialogs": { "createTitle": "إضافة مخالفة", "createButton": "إضافة مخالفة", "viewTitle": "تفاصيل المخالفة", "editTitle": "تعديل المخالفة", "updateButton": "تحديث", "deleteButton": "حذف", "resolveTitle": "معالجة المخالفة", "resolveDescription": "سجّل الإجراء التأديبي وملخص المعالجة.", "resolveButton": "معالجة", "resolutionTitle": "المعالجة", "reopenTitle": "إعادة فتح المخالفة", "reopenDescription": "إعادة الفتح تعيد السجل إلى الحالة المفتوحة.", "reopenWarning": "سيتم مسح الإجراء والمعالجة الحاليين لأن سجل التغييرات غير متاح في هذا الإصدار.", "reopenButton": "إعادة الفتح" },
     "success": { "retrieved": "تم جلب سجلات الانضباط", "created": "تم إنشاء المخالفة", "updated": "تم تحديث المخالفة", "resolved": "تمت معالجة المخالفة", "reopened": "تمت إعادة فتح المخالفة", "deleted": "تم حذف المخالفة" },
-    "errors": { "notFound": "سجل الانضباط غير موجود", "studentNotFound": "التلميذ غير موجود", "studentInactive": "لا يمكن تسجيل مخالفة إلا لتلميذ نشط", "studentAcademicPlacementRequired": "يجب أن يكون التلميذ مسجلاً في قسم وشعبة", "teacherStudentForbidden": "أنت غير مكلّف بشعبة هذا التلميذ", "recordForbidden": "لا يمكنك الوصول إلى هذا السجل", "recordNotOpen": "لا يمكن تعديل أو معالجة إلا المخالفات المفتوحة", "recordNotResolved": "لا يمكن إعادة فتح إلا المخالفات المعالجة", "adminRequired": "صلاحية المدير مطلوبة", "invalidIncidentDate": "تاريخ الواقعة غير صالح", "futureIncidentDate": "لا يمكن أن يكون تاريخ الواقعة في المستقبل" }
+    "errors": { "notFound": "سجل الانضباط غير موجود", "studentNotFound": "التلميذ غير موجود", "outsideSelectedYear": "تاريخ الحادثة خارج السنة الدراسية المحددة", "notPlacedOnDate": "لم يكن التلميذ مسجلاً في قسم وشعبة في ذلك التاريخ", "teacherStudentForbidden": "أنت غير مكلّف بشعبة هذا التلميذ", "recordForbidden": "لا يمكنك الوصول إلى هذا السجل", "recordNotOpen": "لا يمكن تعديل أو معالجة إلا المخالفات المفتوحة", "recordNotResolved": "لا يمكن إعادة فتح إلا المخالفات المعالجة", "adminRequired": "صلاحية المدير مطلوبة", "invalidIncidentDate": "تاريخ الواقعة غير صالح", "futureIncidentDate": "لا يمكن أن يكون تاريخ الواقعة في المستقبل" }
   },
   "classes": {
+    "errors": {
+      "idExists": "معرّف القسم موجود مسبقاً",
+      "notFound": "القسم غير موجود",
+      "nameExists": "يوجد قسم بهذا الاسم مسبقاً",
+      "invalidAcademicYear": "صيغة السنة الدراسية غير صالحة",
+      "hasSections": "احذف شعب هذا القسم قبل حذفه",
+      "classRequired": "القسم مطلوب"
+    },
     "subtitle": {
       "count": "{{count}} قسم إجمالاً"
     },
@@ -1945,6 +2018,18 @@
       "retrieved": "تم جلب الامتحان بنجاح",
       "seeded": "تم إنشاء بيانات الامتحان بنجاح",
       "updated": "تم تحديث الامتحان بنجاح"
+    },
+    "errors": {
+      "notFound": "الامتحان غير موجود",
+      "idExists": "يوجد امتحان بهذا المعرف بالفعل",
+      "inUse": "هذا الامتحان يحتوي على نقط بالفعل",
+      "noSection": "هذا الامتحان ليس له شعبة مستهدفة",
+      "studentNotInSection": "التلميذ ليس في شعبة يستهدفها هذا الامتحان",
+      "teacherRequired": "الأستاذ مطلوب",
+      "passingMarksExceedsTotal": "لا يمكن أن تتجاوز نقطة النجاح النقطة الكاملة",
+      "endTimeBeforeStart": "يجب أن يكون وقت النهاية بعد وقت البداية",
+      "outsideSelectedYear": "يجب أن تنتمي شعب الامتحان إلى السنة الدراسية المحددة",
+      "yearCannotChange": "لا يمكن نقل الامتحان إلى سنة دراسية أخرى"
     }
   },
   "expenses": {
@@ -2110,6 +2195,7 @@
       "count": "{{count}} طالب"
     },
     "errors": {
+      "outsideSelectedYear": "التقييم أو الامتحان الخاص بهذه النقطة ينتمي إلى سنة دراسية أخرى",
       "selectSource": "اختر تقييماً أو امتحاناً قبل حفظ النقط.",
       "saveFailed": "تعذر حفظ جميع النقط. يرجى المحاولة مرة أخرى.",
       "marksExceedTotal": "النقاط تتجاوز المجموع",
@@ -2486,6 +2572,17 @@
     "year": "السنة"
   },
   "sections": {
+    "errors": {
+      "notFound": "الشعبة غير موجودة",
+      "nameExists": "توجد شعبة بهذا الاسم مسبقاً في هذا القسم",
+      "classRequired": "القسم مطلوب",
+      "notInClass": "الشعبة لا تنتمي إلى القسم المحدد",
+      "nameExistsInClass": "توجد شعبة بهذا الاسم مسبقاً",
+      "hasStudents": "في هذه الشعبة تلاميذ؛ انقلهم قبل حذفها أو نقلها",
+      "sectionRequired": "الشعبة مطلوبة",
+      "validationFailed": "تعذّر تحديد الشعبة",
+      "classOutsideSelectedYear": "يجب أن ينتمي قسم الشعبة إلى السنة الدراسية المحددة"
+    },
     "subtitle": {
       "count": "{{count}} شعبة إجمالاً"
     },
@@ -3000,6 +3097,11 @@
     "title": "العنوان"
   },
   "cycles": {
+    "errors": {
+      "notFound": "السلك غير موجود",
+      "nameExists": "يوجد سلك بهذا الاسم مسبقاً",
+      "inUse": "تستخدم أقسام أو محاسبون في إحدى السنوات الدراسية هذا السلك. عطّله بدلاً من حذفه"
+    },
     "subtitle": {
       "count": "{{count}} سلك إجمالاً"
     },
@@ -3032,6 +3134,15 @@
     }
   },
   "subjects": {
+    "errors": {
+      "idExists": "المادة موجودة مسبقاً",
+      "notFound": "المادة غير موجودة",
+      "codeExists": "توجد مادة بهذا الرمز مسبقاً",
+      "nameExists": "توجد مادة بهذا الاسم مسبقاً",
+      "required": "المادة مطلوبة لتكليف الأستاذ",
+      "inUse": "يستخدم أساتذة أو تنبيهات في إحدى السنوات الدراسية هذه المادة، لذا لا يمكن حذفها",
+      "someInUse": "بعض المواد يستخدمها أساتذة أو تنبيهات، لذا لا يمكن حذفها كلها"
+    },
     "subtitle": {
       "count": "{{count}} مادة إجمالاً"
     },
@@ -3362,6 +3473,18 @@
       "retrieved": "تم جلب الحدث بنجاح",
       "started": "تم بدء الحدث بنجاح",
       "updated": "تم تحديث الحدث بنجاح"
+    },
+    "errors": {
+      "notFound": "الحدث غير موجود",
+      "capacityFull": "الحدث ممتلئ (تم حجز {{current}} من أصل {{capacity}} مقعد)",
+      "registrationClosed": "التسجيل في هذا الحدث مغلق",
+      "alreadyRegistered": "هذا المشارك مسجل بالفعل",
+      "someAlreadyRegistered": "{{count}} مشاركين مسجلون بالفعل",
+      "invalidStatus": "هذا الإجراء غير مسموح والحدث في حالة {{current}} (المسموح: {{allowed}})",
+      "endDateBeforeStart": "لا يمكن أن يسبق تاريخ النهاية تاريخ البداية",
+      "endTimeBeforeStart": "يجب أن يكون وقت النهاية بعد وقت البداية",
+      "registrationDeadlineAfterStart": "لا يمكن أن يتجاوز آخر أجل للتسجيل تاريخ البداية",
+      "outsideSelectedYear": "يجب أن تقع تواريخ الحدث في السنة الدراسية المحددة"
     }
   },
   "auditLog": {
@@ -3530,6 +3653,7 @@
     }
   },
   "emptyStates": {
+    "familyDescription": "لم يُسجَّل أي شيء لك أو لأبنائك بعد.",
     "filtered": {
       "title": "لا توجد نتائج",
       "description": "جرّب تعديل عوامل التصفية."
@@ -3592,7 +3716,8 @@
     },
     "announcements": {
       "title": "لا توجد إعلانات بعد",
-      "description": "انشر أول إعلان للبدء."
+      "description": "انشر أول إعلان للبدء.",
+      "readerDescription": "ستظهر هنا الإعلانات الموجّهة إليك."
     },
     "discipline": {
       "title": "لا توجد سجلات انضباط",

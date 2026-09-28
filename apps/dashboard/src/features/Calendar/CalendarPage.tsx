@@ -31,6 +31,7 @@ import EventForm from '@/features/Events/components/EventForm';
 import { useEvents } from '@/features/Events/hooks/useEvents';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useViewerRole } from '@/shared/useViewerRole';
 
 type CalendarItemType = 'event' | 'announcement';
 
@@ -93,6 +94,9 @@ const getItemDate = (item: CalendarItem) => item.date;
 
 export default function CalendarPage() {
   const { t } = useTranslation();
+  // Everyone reads the calendar; only administrators add, change or delete on it.
+  const { role } = useViewerRole();
+  const canManage = role === 'admin' || role === 'principal';
   const [currentDate, setCurrentDate] = useState(startOfDay(new Date()));
   const [selectedDate, setSelectedDate] = useState<Date | null>(startOfDay(new Date()));
   const [viewMode, setViewMode] = useState<ViewMode>('month');
@@ -334,14 +338,18 @@ export default function CalendarPage() {
                 { value: 'week', label: 'Week view', icon: Clock, content: null },
               ]}
             />
-            <NButton size="sm" onClick={() => openEventDialog()} className="h-8 px-3">
-              <Plus className="size-3.5" />
-              Add event
-            </NButton>
-            <NButton size="sm" variant="tertiary" onClick={() => openAnnouncementDialog()} className="h-8 px-3">
-              <Bell className="size-3.5" />
-              Add announcement
-            </NButton>
+            {canManage && (
+              <>
+                <NButton size="sm" onClick={() => openEventDialog()} className="h-8 px-3">
+                  <Plus className="size-3.5" />
+                  Add event
+                </NButton>
+                <NButton size="sm" variant="tertiary" onClick={() => openAnnouncementDialog()} className="h-8 px-3">
+                  <Bell className="size-3.5" />
+                  Add announcement
+                </NButton>
+              </>
+            )}
           </div>
         </div>
 
@@ -419,8 +427,8 @@ export default function CalendarPage() {
                               <Icon className={cn('size-3 shrink-0', style.text)} />
                               <button
                                 type="button"
-                                onClick={() => handleEditItem(item)}
-                                className={cn('min-w-0 flex-1 cursor-pointer truncate text-left font-medium', style.text)}
+                                onClick={canManage ? () => handleEditItem(item) : undefined}
+                                className={cn('min-w-0 flex-1 truncate text-left font-medium', canManage && 'cursor-pointer', style.text)}
                                 title={item.title}
                               >
                                 {item.title}
@@ -430,14 +438,16 @@ export default function CalendarPage() {
                                   {item.time.split(' - ')[0]}
                                 </span>
                               )}
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteItem(item)}
-                                className="hidden shrink-0 cursor-pointer text-muted-foreground transition-colors hover:text-destructive group-hover/item:block"
-                                aria-label={`Delete ${item.title}`}
-                              >
-                                <Trash2 className="size-3" />
-                              </button>
+                              {canManage && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteItem(item)}
+                                  className="hidden shrink-0 cursor-pointer text-muted-foreground transition-colors hover:text-destructive group-hover/item:block"
+                                  aria-label={`Delete ${item.title}`}
+                                >
+                                  <Trash2 className="size-3" />
+                                </button>
+                              )}
                             </div>
                           );
                         })}

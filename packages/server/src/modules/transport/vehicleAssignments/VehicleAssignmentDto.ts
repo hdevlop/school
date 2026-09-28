@@ -13,7 +13,7 @@ export const createVehicleAssignmentDto = z.object({
 export const updateVehicleAssignmentDto = createVehicleAssignmentDto.partial();
 
 export const unassignVehicleAssignmentDto = z.object({
-  unassignmentDate: z.string().optional().nullable(),
+  unassignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format').optional().nullable(),
 });
 
 export const assignDriverDto = z.object({

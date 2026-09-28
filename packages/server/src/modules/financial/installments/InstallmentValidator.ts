@@ -30,6 +30,10 @@ export class InstallmentValidator {
     return this.feeValidator.checkExists(id)
   }
 
+  async validateSourceFeeExists(id: string) {
+    return this.feeValidator.checkExistsAllYears(id);
+  }
+
 
   async validatePayment(installmentId) {
     const installment = await this.checkExists(installmentId);
@@ -65,19 +69,20 @@ export class InstallmentValidator {
 
   async validate(data, excludeId= null) {
     const isUpdate = excludeId !== null;
-
-    if (isUpdate) {
-      await this.checkExists(excludeId);
-    }
+    const existing = isUpdate ? await this.checkExists(excludeId) : null;
 
     const { feeId, number } = data;
 
-    if (feeId) {
-      await this.feeValidator.checkExists(feeId);
+    const targetFeeId = feeId ?? existing?.feeId;
+    if (!targetFeeId) Err(400, this.t('feeNotFound'));
+    await this.feeValidator.checkExists(targetFeeId);
+
+    if (existing && feeId && feeId !== existing.feeId) {
+      Err(400, this.t('installmentDoesNotBelongToFee'));
     }
 
-    if (feeId && number) {
-      await this.validateInstallmentNumberUnique(feeId, number, excludeId);
+    if (number) {
+      await this.validateInstallmentNumberUnique(targetFeeId, number, excludeId);
     }
 
     return data;

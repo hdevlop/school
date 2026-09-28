@@ -21,6 +21,8 @@ import {
 } from '@/services/financialOperationsApi';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
 const unwrap = (value: any) => value?.data?.data ?? value?.data ?? value;
 const list = (value: any) => {
@@ -57,6 +59,7 @@ const checkStatusBadge: Record<string, string> = {
 const inputClass = 'h-10 rounded-md border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/30';
 
 export default function FinancialOperationsPage() {
+  const { viewingYear, isResolving } = useViewingAcademicYear();
   const { majorMoney } = useSchoolFormat();
   const { t } = useTranslation();
   const sidebar = useNSidebar();
@@ -70,7 +73,11 @@ export default function FinancialOperationsPage() {
   const [rolloverRun, setRolloverRun] = useState<any>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
-  const studentsQuery = useQuery({ queryKey: ['students', 'financial-operations'], queryFn: getStudentsApi });
+  const studentsQuery = useQuery({
+    queryKey: ['students', 'financial-operations', viewingYear ?? null],
+    queryFn: () => withAcademicYear(viewingYear, getStudentsApi),
+    enabled: !isResolving,
+  });
   const checksQuery = useQuery({ queryKey: ['payments', 'pending-checks'], queryFn: getPendingChecksApi });
   const auditQuery = useQuery({ queryKey: ['financial-audit'], queryFn: () => getFinancialAuditApi() });
   const notificationsQuery = useQuery({ queryKey: ['financial-notifications'], queryFn: getFinancialNotificationsApi });
@@ -121,7 +128,8 @@ export default function FinancialOperationsPage() {
   const applyCredit = async () => {
     const amount = Number(creditAmount);
     if (!studentId || !(amount > 0)) return toast.error(t('financialOperations.selectStudentAmount'));
-    await run('credit', () => applyStudentCreditApi(studentId, amount), 'Student credit applied');
+    if (!viewingYear) return;
+    await run('credit', () => withAcademicYear(viewingYear, () => applyStudentCreditApi(studentId, amount)), 'Student credit applied');
     setCreditAmount('');
     await Promise.all([creditsQuery.refetch(), auditQuery.refetch()]);
   };
@@ -136,17 +144,17 @@ export default function FinancialOperationsPage() {
   };
 
   const previewRollover = async () => {
-    const result = await run('rollover-preview', () => previewRolloverApi(rolloverPayload), 'Rollover preview created');
+    const result = await run('rollover-preview', () => withAcademicYear(toYear, () => previewRolloverApi(rolloverPayload)), 'Rollover preview created');
     setRolloverRun(unwrap(result));
   };
 
   const commitRollover = async () => {
     if (!rolloverRun?.id) return toast.error(t('financialOperations.createPreviewFirst'));
-    const result = await run('rollover-commit', () => commitRolloverApi({
+    const result = await run('rollover-commit', () => withAcademicYear(toYear, () => commitRolloverApi({
       ...rolloverPayload,
       runId: rolloverRun.id,
       confirmSettingsUpdate: false,
-    }), 'Rollover completed');
+    })), 'Rollover completed');
     setRolloverRun(unwrap(result));
     setRolloverKey(crypto.randomUUID());
     await auditQuery.refetch();
@@ -200,13 +208,14 @@ export default function FinancialOperationsPage() {
         </Panel>
 
         <Panel title={t('financialOperations.creditTitle')} description={t('financialOperations.creditDescription')} icon={Banknote}>
+          <p className="mb-3 text-sm text-muted-foreground">Apply to fees charged in {viewingYear ?? 'the selected school year'}. Available credit remains shared across years.</p>
           <div className="grid gap-3 md:grid-cols-[1fr_150px_auto]">
             <select className={inputClass} value={studentId} onChange={(event) => setStudentId(event.target.value)}>
               <option value="">Select student</option>
               {students.map((student: any) => <option key={student.id} value={student.id}>{student.name} · {student.studentCode}</option>)}
             </select>
             <input className={inputClass} type="number" min="0.01" step="0.01" placeholder={t('financialOperations.amountPlaceholder')} value={creditAmount} onChange={(event) => setCreditAmount(event.target.value)} />
-            <NButton disabled={busy === 'credit'} onClick={applyCredit}>Apply credit</NButton>
+            <NButton disabled={busy === 'credit' || isResolving} onClick={applyCredit}>Apply credit</NButton>
           </div>
           <div className="mt-4 rounded-lg bg-muted/50 p-3">
             <p className="text-sm text-muted-foreground">Available balance</p>
@@ -245,7 +254,7 @@ export default function FinancialOperationsPage() {
 
         <section className="rounded-xl border bg-card p-5 shadow-sm xl:col-span-2">
           <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-start gap-3"><div className="rounded-lg bg-primary/10 p-2 text-primary"><History className="h-5 w-5" /></div><div><h2 className="font-semibold">Financial audit history</h2><p className="text-sm text-muted-foreground">Append-only records for money mutations.</p></div></div>
+            <div className="flex items-start gap-3"><div className="rounded-lg bg-primary/10 p-2 text-primary"><History className="h-5 w-5" /></div><div><h2 className="font-semibold">Financial audit history</h2><p className="text-sm text-muted-foreground">Latest records across all school years.</p></div></div>
             <NButton size="sm" variant="outline" onClick={() => auditQuery.refetch()}><RefreshCw className="mr-2 h-4 w-4" />Refresh</NButton>
           </div>
           <div className="max-h-80 overflow-auto rounded-lg border">

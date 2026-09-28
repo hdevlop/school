@@ -1,6 +1,8 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import * as feeApi from '@/services/feeApi';
 
 type UseFeesOptions = {
@@ -17,6 +19,8 @@ type UseFeesOptions = {
 
 export const useFees = (options?: UseFeesOptions) => {
   const { feeId, studentId, enabled = true, allYears = false, studentYear, studentAllYears = false } = options || {};
+  const { viewingYear } = useViewingAcademicYear();
+  const mutationYear = studentYear ?? viewingYear;
 
   const crud = useEntityCRUD(['fees', 'installments', 'payments'], {
     getAll: feeApi.getFeesApi,
@@ -77,11 +81,26 @@ export const useFees = (options?: UseFeesOptions) => {
     getStudentFees: crud.useGetByParam,
 
     // Mutations
-    createFee,
-    createBulkFees,
-    updateFee,
-    deleteFee,
-    bulkDeleteFees,
+    createFee: (data: Parameters<typeof createFee>[0]) => {
+      if (!mutationYear) throw new Error('Academic year is still loading');
+      return withAcademicYear(mutationYear, () => createFee(data));
+    },
+    createBulkFees: (data: Parameters<typeof createBulkFees>[0]) => {
+      if (!mutationYear) throw new Error('Academic year is still loading');
+      return withAcademicYear(mutationYear, () => createBulkFees(data));
+    },
+    updateFee: (data: Parameters<typeof updateFee>[0]) => {
+      if (!mutationYear) throw new Error('Academic year is still loading');
+      return withAcademicYear(mutationYear, () => updateFee(data));
+    },
+    deleteFee: (id: Parameters<typeof deleteFee>[0]) => {
+      if (!mutationYear) throw new Error('Academic year is still loading');
+      return withAcademicYear(mutationYear, () => deleteFee(id));
+    },
+    bulkDeleteFees: (data: Parameters<typeof bulkDeleteFees>[0]) => {
+      if (!mutationYear) throw new Error('Academic year is still loading');
+      return withAcademicYear(mutationYear, () => bulkDeleteFees(data));
+    },
 
     // Loading States
     isFeesLoading,

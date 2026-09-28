@@ -19,6 +19,7 @@ import { createBulkClassFeesApi, createBulkFeesApi } from '@/services/feeApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { withFeeYear } from '../utils/feeUtils';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
@@ -214,6 +215,8 @@ function FeesTableForYear() {
   ], [t, feeScope, viewingYear, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions, isAllClasses]);
 
   const handleAddClick = () => {
+    if (!viewingYear) return;
+    const openedYear = viewingYear;
     openDialog({
       title: t('fees.dialogs.createTitle'),
       children: <FeeForm students={students} feeTypes={feeTypes} />,
@@ -222,13 +225,15 @@ function FeesTableForYear() {
         form: 'bulk-fee-form',
         text: t('fees.dialogs.createButton'),
         onClick: async (feeData) => {
-          return await createBulkFeesApi(withFeeYear(feeData, viewingYear));
+          return await withAcademicYear(openedYear, () => createBulkFeesApi(withFeeYear(feeData, openedYear)));
         }
       }
     });
   };
 
   const handleClassFeeClick = () => {
+    if (!viewingYear) return;
+    const openedYear = viewingYear;
     openDialog({
       title: t('fees.classBulk.title'),
       children: <ClassBulkFeeForm classes={classes} feeTypes={feeTypes} />,
@@ -237,7 +242,7 @@ function FeesTableForYear() {
         form: 'class-bulk-fee-form',
         text: t('fees.classBulk.action'),
         onClick: async (feeData) => {
-          const response = await createBulkClassFeesApi(feeData);
+          const response = await withAcademicYear(openedYear, () => createBulkClassFeesApi(feeData));
           const result = response?.data ?? response;
           await queryClient.invalidateQueries({ queryKey: ['fees'] });
           toast[result.errors?.length ? 'warning' : 'success'](t('fees.classBulk.result', {
@@ -322,8 +327,8 @@ function FeesTableForYear() {
         onCreate={handleAddClick}
         onView={handleView}
         onRowClick={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
+        onEdit={showOutstanding ? undefined : handleEdit}
+        onDelete={showOutstanding ? undefined : handleDelete}
         loading={isFeesLoading || isAcademicYearLoading}
         error={failedToLoad ? error : null}
         renderError={(currentError) => (

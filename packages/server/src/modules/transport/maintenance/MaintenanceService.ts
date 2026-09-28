@@ -171,6 +171,8 @@ export class MaintenanceService {
 
       if (data.status === 'completed') {
         updateData.completedAt = new Date().toISOString();
+      } else {
+        updateData.completedAt = null;
       }
     }
 
@@ -217,7 +219,10 @@ export class MaintenanceService {
     }
 
     if (Object.keys(updateData).length > 0) {
-      await this.maintenanceRepository.update(id, updateData);
+      const updated = await this.maintenanceRepository.update(id, updateData);
+      // Completion is recorded today and may move a planned job into another
+      // reporting year. Return the mutation result when it leaves this view.
+      if (data.status === 'completed') return updated;
     }
 
     return await this.getById(id);
@@ -231,6 +236,8 @@ export class MaintenanceService {
     
     if (status === 'completed') {
       updateData.completedAt = new Date().toISOString();
+    } else {
+      updateData.completedAt = null;
     }
 
     return await this.maintenanceRepository.update(id, updateData);
@@ -250,6 +257,10 @@ export class MaintenanceService {
     return await this.maintenanceRepository.deleteAll();
   }
 
+  async clearForSeedReset() {
+    return await this.maintenanceRepository.clearForSeedReset();
+  }
+
   async markOverdueMaintenances() {
     return await this.maintenanceRepository.markAsOverdue();
   }
@@ -267,7 +278,7 @@ export class MaintenanceService {
   }
 
   async checkOverdueMaintenanceAlert(vehicleId: string, currentHours: string | number) {
-    const maintenanceRecords = await this.getByVehicleId(vehicleId);
+    const maintenanceRecords = await this.maintenanceRepository.getByVehicleIdAcrossYears(vehicleId);
     const numericHours = parseFloat(currentHours.toString());
     let mostOverdue = null;
 
@@ -289,7 +300,7 @@ export class MaintenanceService {
           };
         }
 
-        await this.updateStatus(maintenanceRecord.id, 'overdue');
+        await this.maintenanceRepository.markOverdueByIdForOperationalAlert(maintenanceRecord.id);
       }
     }
 
@@ -310,7 +321,7 @@ export class MaintenanceService {
   }
 
   async checkDueSoonMaintenanceAlert(vehicleId: string, currentHours: string | number) {
-    const maintenanceRecords = await this.getByVehicleId(vehicleId);
+    const maintenanceRecords = await this.maintenanceRepository.getByVehicleIdAcrossYears(vehicleId);
     const numericHours = parseFloat(currentHours.toString());
     let mostUrgent = null;
 

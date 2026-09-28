@@ -11,7 +11,7 @@ export const getNetAmountSum = () => {
 };
 
 export const getTotalPaidSum = () => {
-   return sql`COALESCE(SUM(${fees.paidAmount}::numeric), 0)::text`;
+   return sql`COALESCE(SUM(${getPaidAmount()}::numeric), 0)::text`;
 };
 
 export const getTotalDiscountSum = () => {
@@ -19,7 +19,7 @@ export const getTotalDiscountSum = () => {
 };
 
 export const getTotalDueSum = () => {
-   return sql`COALESCE(SUM((${fees.netAmount}::numeric - ${fees.paidAmount}::numeric)), 0)::text`;
+   return sql`COALESCE(SUM(GREATEST(${fees.netAmount}::numeric - ${getPaidAmount()}::numeric, 0)), 0)::text`;
 };
 
 export const getStatusCount = (status: 'paid' | 'pending' | 'overdue' | 'partiallyPaid') => {
@@ -31,7 +31,7 @@ export const getMaxCreatedAt = () => {
 };
 
 export const getTotalDue = () => {
-   return sql`(${fees.netAmount}::numeric - ${fees.paidAmount}::numeric)::text`;
+   return sql`GREATEST(${fees.netAmount}::numeric - ${getPaidAmount()}::numeric, 0)::text`;
 };
 
 export const getTotalInstallments = () => {

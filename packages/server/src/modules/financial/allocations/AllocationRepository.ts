@@ -1,12 +1,15 @@
 import { Repository } from '../../../najm';
 import { eq, desc, and, sum, sql, inArray, count } from 'drizzle-orm';
-import { paymentAllocations, payments, fees, feeInstallments, students } from '../../../database/schema';
+import { paymentAllocations, payments, fees, feeInstallments, students, studentCreditApplications } from '../../../database/schema';
 import { DB } from '../../../database/db';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 export const ACTIVE_RESERVATION_STATUSES = ['pending', 'deposited'] as const;
 
 @Repository()
 export class AllocationRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
 
   private typeAllocationInsert(data: Partial<typeof paymentAllocations.$inferInsert>) {
@@ -57,7 +60,7 @@ export class AllocationRepository {
 
   async getById(id: string) {
     const [allocation] = await this.buildAllocationQuery()
-      .where(eq(paymentAllocations.id, id))
+      .where(and(eq(paymentAllocations.id, id), eq(fees.academicYear, this.year.label)))
       .limit(1);
 
     return allocation;
@@ -65,12 +68,18 @@ export class AllocationRepository {
 
   async getAll() {
     return await this.buildAllocationQuery()
+      .where(eq(fees.academicYear, this.year.label))
       .orderBy(desc(paymentAllocations.createdAt));
   }
 
-  async getByPaymentId(paymentId: string) {
+  // Payment mutations need every portion of a receipt, including portions
+  // charged to other years. Only the allocation API requests selected scope.
+  async getByPaymentId(paymentId: string, scope: 'all' | 'selected' = 'all') {
     return await this.buildAllocationQuery()
-      .where(eq(paymentAllocations.paymentId, paymentId))
+      .where(and(
+        eq(paymentAllocations.paymentId, paymentId),
+        scope === 'selected' ? eq(fees.academicYear, this.year.label) : undefined,
+      ))
       .orderBy(paymentAllocations.createdAt);
   }
 
@@ -112,8 +121,16 @@ export class AllocationRepository {
       .leftJoin(payments, eq(paymentAllocations.paymentId, payments.id))
       .leftJoin(fees, eq(paymentAllocations.feeId, fees.id))
       .leftJoin(students, eq(fees.studentId, students.id))
-      .where(eq(fees.studentId, studentId))
+      .where(and(eq(fees.studentId, studentId), eq(fees.academicYear, this.year.label)))
       .orderBy(desc(paymentAllocations.createdAt));
+  }
+
+  async hasCreditApplication(allocationId: string) {
+    const [application] = await this.db.select({ id: studentCreditApplications.id })
+      .from(studentCreditApplications)
+      .where(eq(studentCreditApplications.paymentAllocationId, allocationId))
+      .limit(1);
+    return Boolean(application);
   }
 
   async getTotalAllocatedForPayment(paymentId: string) {
@@ -264,7 +281,13 @@ export class AllocationRepository {
   async delete(id: string) {
     const [deleted] = await this.db
       .delete(paymentAllocations)
-      .where(eq(paymentAllocations.id, id))
+      .where(and(
+        eq(paymentAllocations.id, id),
+        inArray(
+          paymentAllocations.feeId,
+          this.db.select({ id: fees.id }).from(fees).where(eq(fees.academicYear, this.year.label)),
+        ),
+      ))
       .returning();
 
     return deleted;

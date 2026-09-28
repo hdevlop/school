@@ -3,6 +3,7 @@ import { vehicles } from '../../../database/schema';
 import { count, eq, desc, sql } from 'drizzle-orm';
 import { Repository } from '../../../najm';
 import { getVehicleBaseFields, getVehicleComputedFields } from './VehicleUtils';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 @Repository()
 export class VehicleRepository {
@@ -30,6 +31,8 @@ export class VehicleRepository {
           FROM vehicle_assignments AS assignment
           WHERE assignment.vehicle_id = "vehicles"."id"
             AND assignment.status = 'active'
+            AND assignment.assignment_date <= ${getBusinessDateOnly()}
+            AND (assignment.unassignment_date IS NULL OR assignment.unassignment_date > ${getBusinessDateOnly()})
           ORDER BY assignment.assignment_date DESC, assignment.created_at DESC
           LIMIT 1
         )`.as('active_assignment'),
@@ -49,6 +52,8 @@ export class VehicleRepository {
           LEFT JOIN users AS assigned_user ON assigned_staff.user_id = assigned_user.id
           WHERE assignment.vehicle_id = "vehicles"."id"
             AND assignment.status = 'active'
+            AND assignment.assignment_date <= ${getBusinessDateOnly()}
+            AND (assignment.unassignment_date IS NULL OR assignment.unassignment_date > ${getBusinessDateOnly()})
           ORDER BY assignment.assignment_date DESC, assignment.created_at DESC
           LIMIT 1
         )`.as('driver'),

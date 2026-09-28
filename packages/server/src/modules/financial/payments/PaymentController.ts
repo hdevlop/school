@@ -2,14 +2,12 @@ import { Body, Controller, Get, Params, Post, Put, ResMsg, User, Validate } from
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { PaymentService } from './PaymentService';
 import { isFinancial } from '../../../auth';
-import { Year } from '../../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import {
   checkStatusDto,
   createPaymentDto,
   monthlyRevenueQueryDto,
   paymentIdParam,
-  paymentListQuery,
+  feeIdParam,
   receiptNumberParam,
   refundPaymentDto,
   revenueQueryDto,
@@ -36,11 +34,10 @@ export class PaymentController {
 
   @Get()
   @isFinancial()
-  @Validate({ query: paymentListQuery })
   @McpTool('List all payments')
   @ResMsg('fees.success.paymentsRetrieved')
-  async getAll(@Year() year: ResolvedAcademicYear) {
-    return this.paymentService.getAll(year);
+  async getAll() {
+    return this.paymentService.getAll();
   }
 
   @Get('/today')
@@ -85,48 +82,48 @@ export class PaymentController {
 
   @Post('/stats/revenue')
   @isFinancial()
-  @Validate({ body: revenueQueryDto, query: paymentListQuery })
+  @Validate(revenueQueryDto)
   @McpTool('Get total revenue allocated to fees of the academic year')
   @ResMsg('fees.success.revenueRetrieved')
-  async getTotalRevenue(@Year() year: ResolvedAcademicYear) {
-    const revenue = await this.paymentService.getTotalRevenue(year.label);
+  async getTotalRevenue() {
+    const revenue = await this.paymentService.getTotalRevenue();
     return { revenue };
   }
 
   @Post('/stats/revenue-by-payment-method')
   @isFinancial()
-  @Validate({ body: revenueQueryDto, query: paymentListQuery })
+  @Validate(revenueQueryDto)
   @McpTool('Get revenue breakdown by payment method')
   @ResMsg('fees.success.revenueRetrieved')
-  async getRevenueByPaymentMethod(@Year() year: ResolvedAcademicYear) {
-    return this.paymentService.getRevenueByPaymentMethod(year.label);
+  async getRevenueByPaymentMethod() {
+    return this.paymentService.getRevenueByPaymentMethod();
   }
 
   @Post('/stats/monthly-revenue')
   @isFinancial()
-  @Validate({ body: monthlyRevenueQueryDto, query: paymentListQuery })
+  @Validate(monthlyRevenueQueryDto)
   @McpTool('Get monthly revenue for a given year')
   @ResMsg('fees.success.revenueRetrieved')
-  async getMonthlyRevenue(@Body() body: MonthlyRevenueQueryDto, @Year() year: ResolvedAcademicYear) {
-    return this.paymentService.getMonthlyRevenue(body.year, year.label);
+  async getMonthlyRevenue(@Body() body: MonthlyRevenueQueryDto) {
+    return this.paymentService.getMonthlyRevenue(body.year);
   }
 
   @Post('/stats/revenue-stats')
   @isFinancial()
-  @Validate({ body: revenueQueryDto, query: paymentListQuery })
+  @Validate(revenueQueryDto)
   @McpTool('Get full revenue statistics')
   @ResMsg('fees.success.statsRetrieved')
-  async getRevenueStats(@Year() year: ResolvedAcademicYear) {
-    return this.paymentService.getRevenueStats(year.label);
+  async getRevenueStats() {
+    return this.paymentService.getRevenueStats();
   }
 
   @Post('/stats/top-paying-students')
   @isFinancial()
-  @Validate({ body: topPayingStudentsQueryDto, query: paymentListQuery })
+  @Validate(topPayingStudentsQueryDto)
   @McpTool('Get top paying students')
   @ResMsg('fees.success.dataRetrieved')
-  async getTopPayingStudents(@Body() body: TopPayingStudentsQueryDto, @Year() year: ResolvedAcademicYear) {
-    return this.paymentService.getTopPayingStudents(body?.limit ?? 10, year.label);
+  async getTopPayingStudents(@Body() body: TopPayingStudentsQueryDto) {
+    return this.paymentService.getTopPayingStudents(body?.limit ?? 10);
   }
 
   @Get('/:id')
@@ -145,6 +142,15 @@ export class PaymentController {
   @ResMsg('fees.success.paymentsRetrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.paymentService.getByStudent(studentId);
+  }
+
+  @Get('/fee/:feeId')
+  @isFinancial()
+  @Validate({ params: feeIdParam })
+  @McpTool('Get receipts allocated to a fee in the selected year')
+  @ResMsg('fees.success.paymentsRetrieved')
+  async getByFeeId(@Params('feeId') feeId: string) {
+    return this.paymentService.getByFeeId(feeId);
   }
 
   @Get('/receipt/:receiptNumber')

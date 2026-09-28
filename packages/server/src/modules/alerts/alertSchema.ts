@@ -1,4 +1,4 @@
-import { boolean, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
+import { boolean, index, pgEnum, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { idField, timestamps, userRef } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
@@ -6,6 +6,7 @@ import { classRef } from '../classes/classSchema';
 import { studentRef } from '../students/studentSchema';
 import { subjectRef } from '../subjects/subjectSchema';
 import { teacherAssignmentRef, teacherRef } from '../teachers/teacherSchema';
+import { academicYears } from '../academicYears/AcademicYearSchema';
 
 export const alertTypeEnum = pgEnum('alertType', getEnumValues('alertType'));
 export const alertPriorityEnum = pgEnum('alertPriority', getEnumValues('alertPriority'));
@@ -17,6 +18,7 @@ export const alerts = pgTable('alerts', {
   studentId: studentRef('set null'),
   teacherId: teacherRef('set null'),
   teacherAssignmentId: teacherAssignmentRef('set null'),
+  academicYearId: text('academic_year_id').references(() => academicYears.id, { onDelete: 'restrict' }),
   classId: classRef('set null'),
   subjectId: subjectRef('set null'),
   type: alertTypeEnum('type').notNull(),
@@ -27,4 +29,6 @@ export const alerts = pgTable('alerts', {
   targetAudience: text('target_audience'),
   isRead: boolean('is_read').default(false),
   ...timestamps,
-});
+}, (table) => [
+  index('alerts_academic_year_idx').on(table.academicYearId),
+]);

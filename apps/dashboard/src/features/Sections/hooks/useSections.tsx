@@ -1,7 +1,7 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as sectionApi from '@/services/sectionApi';
-import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
 // The sections of the viewed year's classes, or of `academicYear` when named.
 export const useSections = (options?: { sectionId?: string; enabled?: boolean; academicYear?: string }) => {
@@ -18,7 +18,10 @@ export const useSections = (options?: { sectionId?: string; enabled?: boolean; a
   const {
     data: sections, isLoading: isSectionsLoading, isError, error, refetch,
   } = useYearScopedList({ resource: 'sections', fetch: sectionApi.getSectionsApi, enabled, academicYear });
-  const { data: section, isLoading: isSectionLoading } = crud.useGetById(sectionId, !!sectionId);
+  // One record of the viewed year; another year's reads as not found.
+  const { data: section, isLoading: isSectionLoading } = useYearScopedDetail({
+    resource: 'sections', parts: ['detail', sectionId], fetch: () => sectionApi.getSectionByIdApi(sectionId!), enabled: !!sectionId,
+  });
 
   const { mutateAsync: createSection, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateSection, isLoading: isUpdating } = crud.useUpdate();

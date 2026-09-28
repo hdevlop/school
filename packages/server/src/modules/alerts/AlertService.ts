@@ -1,7 +1,7 @@
 import { Service } from '../../najm';
 import { AlertRepository } from './AlertRepository';
-import { AlertValidator } from './AlertValidator';
-import type { CreateAlertDto, UpdateAlertDto } from './AlertDto';
+import { AlertValidator, type AlertActor } from './AlertValidator';
+import { createAlertDto, type CreateAlertDto, type UpdateAlertDto, type UpdateAlertStatusDto } from './AlertDto';
 
 @Service()
 export class AlertService {
@@ -15,7 +15,7 @@ export class AlertService {
   }
 
   async getById(id: string) {
-    return await this.alertRepository.getById(id);
+    return await this.alertValidator.ensureAlertExists(id);
   }
 
   async getByType(type: CreateAlertDto['type']) {
@@ -84,20 +84,10 @@ export class AlertService {
   }
 
   async create(data: CreateAlertDto) {
-    if (data.studentId) {
-      await this.alertValidator.ensureStudentExists(data.studentId);
-    }
-    if (data.teacherId) {
-      await this.alertValidator.ensureTeacherExists(data.teacherId);
-    }
-    if (data.classId) {
-      await this.alertValidator.ensureClassExists(data.classId);
-    }
-    if (data.subjectId) {
-      await this.alertValidator.ensureSubjectExists(data.subjectId);
-    }
-    await this.alertValidator.ensureNoDuplicateActiveAlert(
+    const academicYearId = await this.alertValidator.ensureYearScope(data);
+    await this.alertValidator.ensureNoDuplicateActiveAlertInScope(
       data.type,
+      academicYearId,
       data.studentId,
       data.teacherId,
       data.classId,
@@ -106,34 +96,46 @@ export class AlertService {
 
     const alertData = {
       ...data,
-      status: 'active'
+      status: 'active',
+      academicYearId,
     };
 
     const newAlert = await this.alertRepository.create(alertData);
     return await this.getById(newAlert.id);
   }
 
-  async update(id: string, data: UpdateAlertDto) {
-    await this.alertValidator.ensureAlertExists(id);
+  /** Trusted financial job: the charged fee, not an HTTP selection, owns this reminder. */
+  async createFromFeeSource(feeId: string, input: {
+    studentId: string; title: string; message: string; priority: 'high' | 'medium';
+  }) {
+    const year = await this.alertValidator.ensureFeeSource(feeId, input.studentId);
+    const data = createAlertDto.parse({ ...input, type: 'reminder' });
+    await this.alertValidator.ensureNoDuplicateActiveAlertInScope('reminder', year.id, input.studentId);
+    return this.alertRepository.createFromSourceYear({ ...data, status: 'active' }, year.id);
+  }
 
-    if (data.studentId) {
-      await this.alertValidator.ensureStudentExists(data.studentId);
+  async update(id: string, data: UpdateAlertDto, actor: AlertActor) {
+    this.alertValidator.ensureCanEdit(actor);
+    const existing = await this.alertValidator.ensureAlertExists(id);
+    const changesTarget = (['type', 'studentId', 'teacherId', 'classId', 'subjectId'] as const)
+      .some((field) => data[field] !== undefined && data[field] !== existing![field]);
+    if (changesTarget) {
+      const merged = {
+        type: data.type ?? existing!.type,
+        studentId: data.studentId === undefined ? existing!.studentId : data.studentId,
+        teacherId: data.teacherId === undefined ? existing!.teacherId : data.teacherId,
+        classId: data.classId === undefined ? existing!.classId : data.classId,
+        subjectId: data.subjectId === undefined ? existing!.subjectId : data.subjectId,
+      } as CreateAlertDto;
+      const nextYearId = await this.alertValidator.ensureYearScope(merged);
+      await this.alertValidator.ensureScopeUnchanged(existing!.academicYearId, nextYearId);
     }
-    if (data.teacherId) {
-      await this.alertValidator.ensureTeacherExists(data.teacherId);
-    }
-    if (data.classId) {
-      await this.alertValidator.ensureClassExists(data.classId);
-    }
-    if (data.subjectId) {
-      await this.alertValidator.ensureSubjectExists(data.subjectId);
-    }
-
     return await this.alertRepository.update(id, data);
   }
 
-  async updateStatus(id: string, status: string) {
-    await this.alertValidator.ensureAlertExists(id);
+  async updateStatus(id: string, status: UpdateAlertStatusDto['status'], actor: AlertActor) {
+    const alert = await this.alertValidator.ensureAlertExists(id);
+    this.alertValidator.ensureCanHandle(alert, status, actor);
     return await this.alertRepository.updateStatus(id, status);
   }
 

@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
+import { and, eq, exists, or } from 'drizzle-orm';
 import { DB } from '../../database/db';
-import { cycles } from '../../database/schema';
+import { accountantAssignments, classes, cycles } from '../../database/schema';
 import { Repository } from '../../najm';
 
 const cycleSelect = {
@@ -37,6 +37,18 @@ export class CycleRepository {
   async getByName(name: string) {
     const [row] = await this.buildQuery().where(eq(cycles.name, name)).limit(1);
     return row || null;
+  }
+
+  // A cycle is shared by every year. A class of any year, or an accountant's
+  // assignment, that names it keeps it; deleting it would quietly unlink past
+  // years' classes, or fail on the assignment.
+  async isInUse(id: string) {
+    const [row] = await this.db.select({ id: cycles.id }).from(cycles).where(and(eq(cycles.id, id), or(
+      exists(this.db.select({ id: classes.id }).from(classes).where(eq(classes.cycleId, id))),
+      exists(this.db.select({ id: accountantAssignments.id }).from(accountantAssignments)
+        .where(eq(accountantAssignments.cycleId, id))),
+    ))).limit(1);
+    return !!row;
   }
 
   async create(data: typeof cycles.$inferInsert) {

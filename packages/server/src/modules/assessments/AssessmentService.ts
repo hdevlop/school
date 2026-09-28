@@ -1,10 +1,9 @@
-import { Err, Service } from '../../najm';
+import { Service } from '../../najm';
 import { AssessmentRepository, type AssessmentListFilters } from './AssessmentRepository';
 import { AssessmentValidator } from './AssessmentValidator';
 import { pickProps } from '../../shared';
 import type { CreateAssessmentDto, DeleteBulkAssessmentDto, UpdateAssessmentDto } from './AssessmentDto';
 import { AcademicSourceService } from '../academicSources/AcademicSourceService';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class AssessmentService {
@@ -16,16 +15,21 @@ export class AssessmentService {
 
   // The year's assessments, optionally for one section, subject or teacher or class;
   // a filter naming a missing record is a 404 before the list is read.
-  async getAll(year: ResolvedAcademicYear, filters: Omit<AssessmentListFilters, 'year'> = {}) {
+  async getAll(filters: AssessmentListFilters = {}) {
     if (filters.sectionId) await this.assessmentValidator.ensureSectionExists(filters.sectionId);
     if (filters.subjectId) await this.assessmentValidator.ensureSubjectExists(filters.subjectId);
     if (filters.teacherId) await this.assessmentValidator.ensureTeacherExists(filters.teacherId);
     if (filters.classId) await this.assessmentValidator.ensureClassExists(filters.classId);
-    return this.assessmentRepository.getAll({ year, ...filters });
+    return this.assessmentRepository.getAll(filters);
   }
 
   async getById(id: string) {
     return this.assessmentValidator.ensureExists(id);
+  }
+
+  /** The year's assessments of one student's section on each date. */
+  async getForStudent(studentId: string) {
+    return this.assessmentRepository.getForStudent(studentId);
   }
 
   async getTodayAssessments() {
@@ -77,6 +81,7 @@ export class AssessmentService {
   async create(data: CreateAssessmentDto) {
     const normalizedData = this.normalizeSectionTargets(data);
     const year = await this.sources.ensureTargetsValid(normalizedData.sectionIds ?? [], normalizedData.date);
+    this.assessmentValidator.ensureSelectedYear(year.id);
     const ASSESSMENT_CREATE_KEYS = [
       'title', 'description', 'type', 'date', 'duration', 'totalMarks',
       'passingMarks', 'instructions', 'status', 'sectionIds'
@@ -120,9 +125,8 @@ export class AssessmentService {
         targetIds,
         normalizedData.date ?? current.date,
       );
-      if (current.academicYearId && current.academicYearId !== year.id) {
-        Err(409, 'Assessment academic year cannot be changed');
-      }
+      this.assessmentValidator.ensureSelectedYear(year.id);
+      this.assessmentValidator.ensureSameYear(current.academicYearId, year.id);
       targetYearId = year.id;
     }
     await this.assessmentValidator.validate(normalizedData, id);
@@ -162,6 +166,10 @@ export class AssessmentService {
 
   async deleteAll() {
     return await this.assessmentRepository.deleteAll();
+  }
+
+  async clearForSeedReset() {
+    return this.assessmentRepository.clearForSeedReset();
   }
 
   async deleteBulk(ids: DeleteBulkAssessmentDto) {

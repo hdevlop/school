@@ -1,14 +1,202 @@
-# Academic-year history: shared @Year() context and simpler data access
+# Academic-year history: repository @Year() context and simpler data access
 
-Status: **REVISED PLAN — SERVICE PROPERTY INTEGRATION NOT YET VERIFIED**. The existing [inventory](docs/plans/academic-year-scope-inventory.md) records the earlier controller-parameter integration and published package adoption. Those results do not prove the new ALS-backed service property. Application rollout starts with **Alerts**, then proceeds alphabetically, completing implementation and acceptance for each module before starting the next. No new test result is claimed by this edit.
+Status: **MODULES 01-08, 10-27, 30, 31, 36 AND 38-43 SOURCE IMPLEMENTED OR VERIFIED; DATABASE AND AUTHENTICATED REST/MCP CHECKS PASSED WHERE APPLICABLE; OWNER REVIEW OPEN.** School pins published `najm-mcp@2.2.1` and `najm-api@2.0.6`. Alerts (`0058`) and Announcements (`0059`) have year and ownership policies. Assessments, Attendance, Behavior Rewards, Classes, Class routines, Discipline, Events, Exams, Grades, Sections, finance rows 13-24, shared Health, shared personal Notifications, shared identity Search, and transport rows 38-43 have completed their source slices. Rows 09, 28, 29, 32-35 and 37 remain in the academic implementation lane. Cycles and Subjects (rows 08 and 36) are verified shared catalogs. Finance row 24 is utility-only; Health has public REST routes and no MCP tools. Evidence is in [the ledger](docs/tests/academic-year-history.md). No production migration or deployment is claimed. **A new implementer starts at section 0.**
 
-Prepared: **2026-09-25** · Rewritten: **2026-09-27**
+Prepared: **2026-09-25** · Rewritten: **2026-09-27** · Handoff section added: **2026-09-27**
 
-This is the authoritative forward plan for the existing whole-school history feature. The owner requested this rewrite after choosing the `@Year()` design. This documentation edit implements no application behavior and runs no migration or deployment.
+This is the authoritative forward plan for the existing whole-school history feature. The owner chose repository `@Year()` context to remove repeated year arguments from domain calls. This supersedes the initial service-property forwarding design. The later implementation checkpoint below supersedes the original preparation notes; no production migration or deployment is claimed.
 
-The immediately preceding parameter-based plan is preserved byte-for-byte in [this reference](docs/plans/reference/academic-year-history-before-als-service-property-2026-09-27.md). Its controller-to-service year arguments and Students-first rollout are superseded here. **Do not run lint, build, tests or seed operations for this documentation change.** During implementation, prepare each module and its tests for the owner's visual review before executing that module's verification; then record results before advancing.
+The earlier parameter-based plan is preserved byte-for-byte in [this reference](docs/plans/reference/academic-year-history-before-als-service-property-2026-09-27.md). Its controller-to-service year arguments and Students-first rollout are superseded here. The owner later authorized lint, build, tests and fixture seeding; record results before advancing.
 
 The previous plan is preserved byte-for-byte as [historical reference](docs/plans/reference/academic-year-history-before-year-context-2026-09-27.md). Its URL-owned selection, feature-switch rollout, `/year-review` routes and list-time context-issue notices are superseded. Its unresolved historical-data, integrity and acceptance obligations remain in force through this plan. Existing dated results remain in the [evidence ledger](docs/tests/academic-year-history.md); they are not acceptance of the new transport or decorator.
+
+## 0. Handoff: start here
+
+For whoever implements the next modules. Sections 1–8 explain the design and why. This section says how to apply it to one module, what already exists, and the traps already found. Section 9 sets the order and the gates.
+
+### 0.1 Where things stand (2026-09-28)
+
+| Area | State |
+| --- | --- |
+| Year flow: repository/service `@Year()` property, REST middleware, MCP hook | Done for `alerts`, `announcements`, `assessments`, `attendance`, `behaviorRewards`, `classes`, `classRoutines`, `discipline`, `events`, `exams`, `grades`, `sections`, `financial/allocations`, `financial/credits` apply, `financial/expenses`, `financial/fees`, `financial/installments`, fee-year payment list/analytics and `financial/payroll`. Financial audit, fee types and personal notifications remain explicitly all-year. |
+| Ownership flow: `@Owned` reads, `@Policy`/`@Can*` routes | Done for `alerts` and `announcements`. Reads were already owned in `assessments`, `attendance`, `behaviorRewards`, `classes`, `exams`, `grades`, `parents`, `sections`, `students` and `teachers`; `discipline` and shared identity `search` now apply the matching ownership rules. **Parents and students read** their own or their children's alerts, announcements, assessments, attendance, behavior rewards, discipline, exams, grades and notifications, and change none of them (owner decision 2026-09-27). |
+| Controllers registered for the year (`config/yearScope.ts`) | The migrated business controllers plus consumers such as `operations-dashboard`, `parent-profile`, `student-profile`, `teacher-profile`, `grades`, `dashboard` and `academic-dashboard`, because those routes read a converted repository or apply credit in a selected year. |
+| Other year-dependent controllers | Still on the older flow until their module turn. Registered consumers may retain a `@Year() year` parameter for their other repositories; their duplicate `academicYear` query declarations were removed. |
+| Source control | Nothing committed since `b397b57`. The working tree holds all of this plus the owner's other uncommitted work. |
+| Open | Owner visual/browser review of modules 01-08, 10-12, 25, 27, 31, 36 and 15-17, owner source/UI review of 13-14; production migration of `0058`/`0059`. |
+
+**Finance lane 13-24, shared Health row 26 and identity Search row 30 are source complete** (section 9.3). Modules 13-23 passed source/database/transport checks; row 24 passed focused utility tests and the configured suite. Health's fixture-backed REST checks passed without a year scope or code change. Search kept identity results all-year and now applies per-entity ownership and permissions; its PostgreSQL-backed REST/MCP checks passed. Owner review remains open. The owner explicitly requested continuation through the financial lane on 2026-09-27; this allowed implementation to advance while review stayed open, without marking those slices accepted. In the academic lane, rows 06-08, 10-12, 25, 27, 31 and 36 are done; row 09 and parent work remain, and their evidence and status are updated there.
+
+### 0.2 Ground rules
+
+- Use `bun`, never npm/yarn/pnpm, and run commands from the repository root.
+- The Najm source at `C:\Users\hdevlop\Desktop\najm` is **read-only reference**. School uses only the published versions pinned in the root `package.json`. Never link, copy or publish Najm.
+- Do not commit, push, reset, stash, restore or clean unless the owner asks. The tree contains work that is not yours; change only what the current module needs.
+- `apps/dashboard/.env.local` holds secrets, including the fixture database URL and passwords. Never print, log or commit its values.
+- Database tests and fixture seeds run only against the local `school_history_test` database, and the scripts refuse any other. Never use `seed:full`, `reset:demo`, `db:push` or `db:drop` for acceptance.
+- `bun run db:migrate` targets the **application** database named in `.env.local`. To migrate the fixture, run `drizzle-kit migrate` with `DB_URL` set to the fixture URL, and confirm the target is `school_history_test` before and after.
+- Many files have CRLF line endings. Use an editor or patch tool. A script that replaces `\n`-based strings silently skips CRLF files, and Git Bash `grep`/`sed` hide the `\r`.
+- Finish one module (code, tests, real database and transport checks, ledger entry) before starting the next. Do not batch modules and test at the end.
+
+### 0.3 Year flow: convert one module
+
+What happens on each request:
+
+```text
+X-Academic-Year header, or academicYear query / MCP tool input (missing = active year)
+  -> auth guards (order 40) -> DTO validation (45)
+  -> year middleware (50): AcademicYearValidator.resolveSelection(), then runWithResolvedYear(...)
+  -> controller -> service -> repository reads this.year
+```
+
+1. **Repository.** Declare the property and use it in every read, write and create:
+
+   ```ts
+   @Owned(Thing)                 // only if the module has ownership (section 0.4)
+   @Repository()
+   export class ThingRepository {
+     @Year() private readonly year!: ResolvedAcademicYear;
+     declare db: DB;
+     declare ownershipCondition: () => SQL | undefined;
+
+     async getAll() {
+       return this.baseQuery()
+         .where(and(this.ownershipCondition(), thingInYear(this.year.id)))
+         .orderBy(desc(things.createdAt));
+     }
+
+     async create(data: NewThing) {
+       const [row] = await this.db.insert(things)
+         .values({ ...data, academicYearId: this.year.id }).returning();
+       return this.getById(row.id);
+     }
+
+     async update(id: string, data: Partial<NewThing>) {
+       const [row] = await this.db.update(things).set(data)
+         .where(and(eq(things.id, id), thingInYear(this.year.id))).returning();
+       return row;
+     }
+   }
+   ```
+
+   The year predicate is each module's own rule; do not invent a generic one:
+   - A row that stores its year: `eq(table.academicYearId, yearId)`, as in `announcementInYear` in `AnnouncementRepository.ts`.
+   - Year rows plus rows shared across years: `alertVisibleInYear` in `AlertRepository.ts`.
+   - A stored year, or the date when the year is missing: `inReportingYear(table.academicYearId, table.date, this.year)` from `academicYears/academicRecordYear.ts`. Assessments and Exams use this.
+   - A dated event with no year column (a timestamp): `occurredInReportingInterval(table.at, this.year)` from the same file. It compares the school-local day (`settings.time_zone`) with the year's reporting interval. Behavior rewards and Discipline use this.
+   - Students, enrollments and placements: the rules in section 3.3.
+
+   A dated record that concerns a student takes its class and section from where the student was **on that day**, never from the current `students.class_id`/`section_id` projection. Use the shared helpers instead of writing another placement query:
+   - `studentPlacementOn(db, studentId, at, year)` in `studentEnrollments/placementOnDay.ts`: the placement on the school-local day of `at`, and whether that day is in `year`. See Behavior rewards and Discipline.
+   - `placedOnSourceDate(source, userId, parent)` and `studentPlacedOnSourceDate(source, studentId)` in `academicSources/placedOnSourceDate.ts`: an assessment or exam belongs to a student who sat in one of its target sections on its date. The first is the family ownership rule, the second one student's list. See `ExamGuards.ts` and `ExamRepository.getForStudent`.
+
+   Outside a scope, `this.year` throws `Resolved academic year is missing from the current operation`. This is intended. Never turn it into an empty result.
+
+2. **Service and validator.** Remove ordinary year-forwarding parameters and call repository methods plainly. A service or validator declares `@Year()` when its own business rule needs the resolved year: `CreditService` uses it to select the target fee year on apply, and `AlertValidator` uses it to decide between shared and year-owned alerts. Trusted cross-year work keeps explicitly named methods with explicit years, such as `createFromSourceYear`, `checkDuplicateAlertInScope` and `clearForSeedReset`.
+
+3. **Controller.** Remove the `@Year() year` parameters. Remove `academicYear` from the route's `@Validate` params, query and body schemas: the hook declares it for MCP, and REST middleware still reads `?academicYear=` directly. Keep `@User()`, `@Params()` and the other parameters.
+
+4. **Register the controller** in `packages/server/src/config/yearScope.ts`, keyed by its `@ToolGroup` name. That one line puts every route of the controller in REST year scope, and adds the optional `academicYear` input to every MCP tool of the group.
+
+5. **Register every consumer.** Search for callers: `grep -rn "ThingService\|ThingRepository" packages/server/src/modules`. Every controller whose route reaches the converted repository must also be in `yearScope.ts`, and its own `academicYear` declarations must go (step 3). It may keep its `@Year()` parameters until its own turn; they resolve the same year. For Assessments, check `GradeController`, `StudentProfileController` and `TeacherProfileController`. `GradeService` calls `getSourceContext` and `getAssessmentByParams`; it needs registering only if those methods end up reading `this.year`. The student profile reads `assessmentService.getForStudent` and `examService.getForStudent` (the student's own sources, not everything the reader may see); the teacher profile reads `assessmentService.getAll({ teacherId })`. Remove any `.catch(() => [])` around a scoped read, the pattern that hid the 2026-09-27 bug. Jobs and seeds do not go through `yearScope.ts`. They enter a scope through a trusted runner (`runWithResolvedYear` after validation, or the seed's `runSeedTask`, which runs as admin), or call an explicitly named explicit-year method.
+
+6. **Schema, only if the table has no year column.** Add a minimal migration like `0058`/`0059`: a nullable `academic_year_id` referencing `academic_years.id` with `ON DELETE restrict`, plus an index. Generate it with `bun run db:generate`. Then delete unrelated generated statements from both the SQL and the snapshot; the generator keeps adding a `roles_name_unique` index. Leave legacy rows with no provable year null, and hidden from year views. Never infer a year from `createdAt`.
+
+### 0.4 Ownership flow: every owned module
+
+1. **Guards file `<Module>Guards.ts`.** Define the rule as `own(table).for(role, join(...), ..., where(<column holding the user id>))`.
+   - Import `own`, `join`, `where`, `when`, `Policy` and `Can*` from `packages/server/src/auth.ts`, never from `najm-auth`. ESLint enforces this.
+   - A najm rule is one join chain. Alternatives are extra tokens, OR-ed by `@Owned(A, B, C)`; see `AlertGuards.ts` and `AttendanceGuards.ts`.
+   - `when(condition)` after a chain narrows it by a condition on the row, such as the alert's audience. On its own, it is the whole rule for rows that belong to an audience rather than one person, such as every live announcement for parents. See `AnnouncementGuards.ts`.
+   - `ownedIds(Token, role, userId)` returns the ids a user owns as a subquery; class announcements use it.
+2. **Repository.** Put `@Owned(...)` above `@Repository()`, add `declare ownershipCondition: () => SQL | undefined;`, and give every read one `.where(and(this.ownershipCondition(), yearPredicate, ...filters))`. A second `.where()` replaces the first and silently drops ownership; ESLint rejects `x.where(a).where(b)`. Duplicate and uniqueness lookups stay unscoped.
+3. **Who sees what.**
+   - `SCHOOL_WIDE_ROLES` (admin, principal, accounting, counselor, nurse, secretary, librarian, driver, assistant) read every row, still limited by their route permissions.
+   - teacher, parent and student follow the token's rules.
+   - Any other role sees no owned rows.
+   - A scope with no signed-in user sees nothing (`1 = 0`).
+4. **Controller.**
+   - Put `@Policy(Token)` on the class. `@CanList()`, `@CanRead()`, `@CanCreate()`, `@CanUpdate()` and `@CanDelete()` require `read`, `create`, `update` or `delete:<table name>`.
+   - School-wide bulk operations keep `@isAdmin()`.
+   - A refused permission returns **401**, the same as the old role guards.
+5. **Writes.** The service first loads the target through the owned read, which returns 404 when the actor cannot see it. It then applies the write rule with the actor from `@User()`; see `AlertValidator.ensureCanHandle` and `AnnouncementValidator.ensureChangeable`. Seeing a row never grants permission to change it.
+6. **Grants.** Add role permissions in `packages/seed/src/scripts/admin/data/rolePermissions.json`. `bun run seed:admin` adds any missing grants to an existing database.
+7. **Screens.** Hide actions a role cannot perform (see `canManage` in `AnnouncementsTable.tsx`), and add every new text to all four locale catalogs. Parents and students are read-only everywhere: give their roles only `read:` grants, and check `useViewerRole().isFamily` (`apps/dashboard/src/shared/useViewerRole.ts`) to hide create, edit and delete. A module whose records concern a student needs `.for('parent', ...)` and `.for('student', ...)` rules so they see only their own or their children's; see `BehaviorRewardGuards.ts` and `DisciplineGuards.ts`. When the record belongs to a section on a date (assessments, exams), the rule is placement on that date through `placedOnSourceDate`, not the current section; see `ExamGuards.ts`. The same holds for teachers: `GradeGuards.ts` gives a teacher the grades of their own sources and of students placed in a section they teach on the source date.
+
+### 0.5 Traps already hit
+
+1. **A duplicate `academicYear` input stops the server from starting.** najm-mcp refuses to boot if a tool's params, query or body already declares an input that the year hook adds. `tests/academicYears/YearScopedModules.test.ts` checks every registered controller without booting, so run it after each registration. Section 0.6 lists the current declarations.
+2. **Unregistered consumers.** A route outside the scope that reaches a converted repository throws. `/profiles/parents/:id/unread-alerts` and `/dashboard/operations/kpis` did this until 2026-09-27; see section 0.3, step 5.
+3. **Swallowed errors.** `.catch(() => [])` around a scoped read turns a failure into "0 results". Remove it when you touch the call.
+4. **A chained `.where()`** drops ownership or the year predicate.
+5. **Repository tests need a signed-in actor.** `scopedHistoryRepository(Repo, db)` returns `{ repo, inYear }`. `inYear(yearId, run, actor?)` runs as the fixture admin unless you pass `{ id, role }`. The helper already registers `ScopeContext`, which `@Owned` repositories need.
+6. **Fixture parents need a user row.** `parents.user_id` is NOT NULL in the database. Create a `users` row first and delete it in `finally`.
+7. **`createZodEnum` infers `string`.** Type service parameters from the DTO instead, for example `UpdateAlertStatusDto['status']`.
+8. **najm-guard metadata:** `AuthGuard` params are `undefined`, not `null`.
+9. **Transport suites.** Run them one at a time against the shared fixture; their test servers use separate local ports. Ports 5496-5512 are taken; pick the next free one.
+10. **The current section is not history.** `students.section_id` is today's projection. A read or check for a past date through it hides a transferred student's records and shows them another section's. Exams' family rule did this until 2026-09-28. Use the placement helpers in section 0.3.
+11. **Academic sources must target their assignment's section.** The database trigger `school_validate_academic_source_year` rejects an assessment or exam whose `section_ids` omit its teacher assignment's section. Fixture rows must include it; the fixture has one assignment per year, for section A.
+12. **Error catalogs can be missing.** A validator's `@I18n('<module>.errors')` shows raw keys such as `exams.errors.notFound` when the catalog has no such block; `i18n:check` does not catch it. Check the block exists in all four locales when you touch a module. `exams.errors` and `assessments.errors` were added on 2026-09-28.
+13. **A route with no guard is public.** Nothing in School's server protects routes by default. A controller needs `@isAuth()` on the class, or a guard on every route. Events answered ten read routes, and matching MCP tools, without sign-in until 2026-09-28. When you take a module, check that every route has a guard.
+14. **`Err` does not translate.** `Err(409, 'module.errors.key')` sends the key itself to the user. Translate it with `t('module.errors.key')` from `../../najm`, or a validator's `@I18n('module.errors')`. Class routines sent all 32 of their errors as keys until 2026-09-28.
+15. **A catalog delete reaches every year.** Subjects, cycles and other shared rows are referenced by many years' records, often through `cascade` or `set null` foreign keys. Deleting one can silently erase or unlink past years' history. Refuse the delete while anything references the row, and offer deactivation where the catalog has it.
+
+### 0.6 `academicYear` declared by MCP tools today
+
+A scan of every MCP tool on 2026-09-27, updated 2026-09-28: `exams`, `fees` and `payments` are now registered, and `YearScopedModules.test.ts` confirms none of their tools declares `academicYear`. Before a controller is registered, remove its **query** declarations. Rows marked **body** are record data, not a year selection. Decide each with the owner before registering: either the record takes the selected year, as Alerts and Announcements creates do, or the field is kept under another name. Do not rename a public field without the owner.
+
+| Tool group | Tools |
+| --- | --- |
+| `class-routines` | getTeacherRoutine; **body:** create |
+| `classes` | getClasses; **body:** create, update (the class's own year label) |
+| `finance-dashboard` | getAging, getAgingDetail, getCollectionByClass, getExpenseBreakdown, getKpis, getOverdue, getTrend |
+| `parents` | getChildren |
+| `sections` | getSections |
+| `students` | getStudent, getStudents |
+| `teachers` | getStudents |
+
+REST-only routes are not in this scan. They cannot stop the server, but they should still lose their `year` parameters when their module is converted.
+
+### 0.7 Tests for one module
+
+- **Safe suite (`bun run test`).**
+  - Update `tests/ownership/OwnershipPolicy.test.ts` for new or changed rules, and add an entry to `OwnedRepositoryReads.test.ts` for each owned read.
+  - Put the module's year tests in `tests/academicYears/`.
+  - `YearScopedModules.test.ts` must pass.
+- **Fixture.**
+  - Add the module's cases to `tests/academicYears/fixtures/alertsHistoryManifest.ts`. Despite its name, it is the shared manifest. Keep exactly ten students.
+  - Add a guarded, idempotent seed stage `seed<Module>HistoryCases.ts`, modelled on `seedAnnouncementsHistoryCases.ts`: it checks the database name, marker and student count, and grants the permissions it needs.
+  - Add root scripts `seed:history:<module>`, `test:history:<module>:db` and `test:history:<module>:transport`.
+- **Database suite** (`tests/acceptance/<Module>HistoryDatabase.test.ts`).
+  - Assert exact ids per year for list, detail, counts and filters; other years' ids are absent.
+  - Cover restricted roles through `inYear(..., actor)`, including an unknown role that sees nothing.
+  - Run writes inside a transaction that is rolled back.
+- **Transport suite** (`tests/acceptance/<Module>HistoryTransport.test.ts`).
+  - Boot the real server, then cover:
+    - the admin in a past year and in the default year;
+    - a role without the permission;
+    - an invalid year, and a header/query conflict (400);
+    - cross-year ids (404);
+    - one MCP call with the year in the header and one with it as tool input.
+  - Delete anything created, in `finally`.
+- **Prove the test catches the bug.** Temporarily undo the fix, watch the assertion fail, then restore the fix.
+- **Commands** (fixture commands need the env file):
+
+  ```text
+  bun run test:academic-years && bun run test:ownership
+  bun --env-file=apps/dashboard/.env.local run seed:history:<module>     # run twice; must be idempotent
+  bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/<Module>HistoryDatabase.test.ts
+  bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/<Module>HistoryTransport.test.ts
+  bun run lint && bun run typecheck && bun run test && bun run build
+  bun run i18n:check        # when locales changed
+  bun run db:check          # when the schema changed
+  ```
+
+  When a shared piece changes (`auth.ts`, `requestYear.ts`, `yearScope.ts`, fixtures), re-run the Alerts and Announcements acceptance suites too.
+
+### 0.8 Finishing a module
+
+Fill in the evidence checklist in section 9.2, update the module's row in section 9.3, and add an entry at the top of `docs/tests/academic-year-history.md` with commands and pass counts, no secrets. Then stop for the owner's review, unless the owner has said to continue.
 
 ## 1. Accepted target
 
@@ -17,8 +205,9 @@ Use one selector, one remembered viewing preference, one shared request mechanis
 - Remove `ACADEMIC_YEAR_HISTORY_ENABLED` and runtime branches when the complete refactor is ready. Keep the year selector; remove the enable/disable feature switch.
 - Every normal year-dependent read uses a validated year. Missing selection means active year for all roles, including administrators; it never means all years.
 - The shared HTTP layer automatically supplies `X-Academic-Year`. Features stop repeating `?academicYear=` and duplicate `get...ForYearApi` helpers.
-- `@Year()` on a service property reads the validated year from Najm's existing request ALS store through a dynamic getter. Resolve asynchronously once per authenticated operation before entering the service. `AcademicYearValidator` owns resolution/validation; `AcademicYearService` keeps lifecycle operations.
-- Controllers call ordinary service methods without repeated year arguments. Services read their year property at operation entry; repositories receive explicit required year filters. Consolidate `getAll()` and `getAllForYear()` where they represent the same list. Explicit source/target years remain for cross-year operations.
+- `@Year()` on a repository property reads the validated year from Najm's existing request ALS store through a dynamic getter. A validator or service may also read it when a business rule needs the calendar or status. The decorator only installs a getter; it never wraps methods or resolves request input. `AcademicYearValidator` owns resolution/access checks; `AcademicYearService` keeps lifecycle operations.
+- Controllers, services and validators call ordinary repository methods without forwarding `this.year.id`. Each scoped repository uses its own `@Year()` getter in explicit SQL predicates and stamps the selected year on ordinary creates. Consolidate `getAll()` and `getAllForYear()` where they represent the same list. Explicit source/target years remain for trusted source operations and cross-year workflows.
+- Register each migrated controller/tool group once in `config/yearScope.ts`, along with every controller that reaches a migrated repository through another module's service. REST middleware resolves the year after guards and DTO validation and holds the ALS scope through the awaited controller. Najm's MCP invocation hook applies the same rules per tool call. No extra year argument or decorator is needed on each handler or service method.
 - Reuse the existing ALS store; do not introduce another store, a global selected year, constructor-captured year, or container lookups in domain services.
 - Implement, visually review and test one module at a time, starting with Alerts. Each module includes real PostgreSQL and authenticated acceptance against the three-year, ten-student fixture in section 9.
 - Centralize year-aware cache keys and request binding. Remembering selection is separate from caching response data.
@@ -32,14 +221,14 @@ Reinspect the working tree before implementation: substantial uncommitted work e
 | Current source | Refactor consequence |
 | --- | --- |
 | `AcademicYearValidator.ts` owns selection/access resolution; `AcademicYearService.ts` retains lifecycle operations | Reuse the validator and preserve the combined registry/active-pointer lookup. The registered active ID is authoritative; label fallback applies only when that pointer is absent. |
-| Existing `requestYear.ts` uses `createParamDecorator(resolveRequestYear)` | This resolves controller parameters today. A service property requires a separately proved dynamic getter and pre-handler resolver; do not assume the current decorator supports properties. |
+| `requestYear.ts` supports a getter-only `@Year()` property and the legacy parameter form | Migrated modules use a separate REST scope middleware and MCP invocation hook. Remaining parameter consumers migrate in their own module turn. |
 | Record-year helpers and remaining flag-dependent callers are being refactored | Re-inventory current helpers, including `academicRecordYear.ts`, before changing/removing them; earlier filenames and progress are not current proof. |
 | `StudentRepository.ts` has annual/daily enrollment-placement reads alongside current-student reads | Reuse historical SQL; consolidate equivalent methods without substituting current class joins. |
 | `features/AcademicYears/store/yearSelectionStore.ts` already owns browser selection and shared HTTP defaults | Extend this single owner where needed; audit remaining URL/provider/dual-path callers rather than creating a second store. |
 | `services/http.ts` has JSON methods plus multipart fetch and authentication retry | All paths must capture and retain the same request year, including retry. |
 | Remaining flag/layout/dialog integration must be checked in the current tree | Remove obsolete branches when covered; retain one context reaching pages and dialogs. |
 | Installed Najm/DI has an existing `AlsStore`; normal property injection assigns a resolved value during construction | Reuse the store with a dynamic property getter. Ordinary token injection into a singleton would capture a request value and is insufficient. |
-| Installed MCP `invokeTool` inherits its caller's ALS scope rather than creating one | Establish a fresh child scope per tool invocation, including batches/direct calls, before resolving a year. |
+| Published MCP `invokeTool` creates a child scope and supports `invocationScope`/`aroundInvoke` | School clears inherited year state and resolves each migrated tool's own selection after its guards, including batches/direct calls. |
 | Administrator `/year-review` endpoints and list-time context-issue notices were removed | Keep them removed. Migration-issue review remains the reconciliation workflow. |
 
 The evidence ledger reports local PostgreSQL migrations/reconciliation, synthetic and dated-demo transitions, partial authenticated REST/MCP checks and source/build checks. Browser acceptance was blocked by unavailable infrastructure; other role/mutation and rollback cases remain open. Those are dated reports, not freshly rerun results or production proof. This rewrite does not claim live revision, database or deployment verification.
@@ -120,12 +309,13 @@ Year registry, auth, Settings and genuinely shared routes need no selected-year 
 | Owner | Responsibility |
 | --- | --- |
 | Controller and existing guards | Route permissions and authenticated actor |
-| Shared request/tool adapter | After authentication and policy, normalize input, await validator, put an immutable resolved year in this operation's existing ALS scope |
-| Service property `@Year()` | Synchronously read that operation's resolved year through a read-only dynamic getter |
+| `config/yearScope.ts` | One registration, keyed by MCP tool group, per migrated controller and per controller that consumes one; used by both REST and MCP |
+| Shared request/tool adapter | After authentication, policy and DTO validation, normalize input, await validator, put an immutable resolved year in this operation's existing ALS scope |
+| Repository property `@Year()` | Synchronously read that operation's resolved year through a read-only dynamic getter; no resolution or method wrapping |
 | `AcademicYearValidator` | Resolve selection/default/record year; validate Settings, registry and existing access policy |
 | `AcademicYearService` | Create, verify, activate, close and lifecycle orchestration |
-| Domain service | Read `this.year` at operation entry; business rules, record/date consistency, writes; no container/store handling |
-| Domain repository | Required year/domain filters and ownership SQL; no headers/storage/preferences |
+| Domain service/validator | Business rules, record/date consistency and orchestration; use `@Year()` only when the rule itself needs the year; no container/store handling or routine year forwarding |
+| Domain repository | Read `this.year` for required year/domain predicates, selected-year create attribution and existing ownership SQL; no headers/storage/preferences or access-policy resolution |
 
 Reuse existing resolution and record-year access checks in the validator without losing `findWithActivePointer()` behavior. It performs no lifecycle writes. Preserve errors: malformed year 400; missing Settings 409; unknown year 404; hidden draft 404; disallowed other year 403. Pin actual HTTP/MCP status mapping, including DTO validation failures.
 
@@ -133,11 +323,13 @@ Store the resolved value only within an authenticated request/tool invocation, b
 
 ### 5.2 Prove supported decorator integration first
 
-The service-property form of `@Year()` is a proposed School integration. The current parameter decorator is not proof of it. The small infrastructure prerequisite must prove all of the following before the Alerts slice:
+The getter was first proved on services. The owner subsequently chose repository context to remove repeated service-to-repository year arguments. Alerts and Announcements now use a getter-only injector plus separate REST/MCP boundaries. The earlier parameter decorator alone was insufficient; these are the retained proof requirements:
 
-- Reuse the actual server container's existing `AlsStore` and a dedicated academic-year key. Infrastructure may bind to that store through supported injection; domain services do not call `Container`, store accessors or static default containers. Do not construct another `AsyncLocalStorage`.
+- Reuse the actual server container's existing `AlsStore` and a dedicated academic-year key. Infrastructure may bind to that store through supported injection; domain services, validators and repositories do not call `Container`, store accessors or static default containers. Do not construct another `AsyncLocalStorage`.
 - Auth/route policy and request validation complete before domain execution. Asynchronous year resolution completes before scoped reads or writes. The wrapper surrounds the **awaited handler and nested calls**; a guard that exits its child scope before invoking the handler is insufficient.
 - Install a read-only getter that reads the current ALS scope on every access. Do not use ordinary `@Inject(ALS_TOKEN)`, a constructor argument, or an initializer that snapshots the first request. Verify TypeScript property emit does not shadow the getter with an own `undefined` field.
+- Keep injection separate from transport resolution. In the installed Najm, guards run at order 40 and validation at 45; the registered REST year middleware runs at 50. It awaits `next()` inside `runWithResolvedYear`. Test this ordering and one resolution per request. MCP uses the published `invocationScope` and `aroundInvoke` hooks; it does not rely on REST middleware.
+- The property injector must not replace any method, change synchronous helper returns, or impose a selected year on explicitly shared/source/reset operations. Preserve handler metadata and arity by leaving handlers untouched.
 - A missing context fails with an explicit internal/context error. The getter never silently resolves active year, performs asynchronous work, or accepts a client-supplied trusted object. Active fallback happens only at the validated transport boundary.
 - Shared/auth/health/settings/catalog routes do not acquire compulsory year resolution. Declare scoped route groups through one supported integration and inventory exceptions; do not replace repeated parameters with repeated manual resolver calls.
 - On the same singleton instance, concurrent admin 2025–2026 and principal 2026–2027 operations retain their own years through delayed awaits and nested service/repository calls. Also prove parallel requests from the same account with different headers.
@@ -145,7 +337,7 @@ The service-property form of `@Year()` is a proposed School integration. The cur
 - Use real boot/container and authenticated REST/MCP paths. Preserve existing parameter decorators such as `@User()`, handler arity, tool schemas and error mapping while removing year parameters.
 - Use public supported DI/metadata/context extension points. Do not monkey-patch private injection/resolver internals or manufacture undocumented metadata.
 
-A `@Headers()` alias only extracts text. If the installed public hooks cannot support the getter or scoped execution, record the missing Najm extension as a blocking prerequisite. School consumes only a published exact version with overrides/lockfile; the sibling Najm checkout remains read-only here. Package changes/publication require a separate workstream. Do not quietly substitute constructor injection or claim parameter-decorator results prove this design.
+A `@Headers()` alias only extracts text. Najm's published public hooks now support the getter and scoped execution. School consumes exact published versions with overrides/lockfile; the authorized sibling Najm publication was a separate workstream. Do not substitute constructor injection or claim parameter-decorator results alone prove this design.
 
 ### 5.3 Target Student flow
 
@@ -161,24 +353,25 @@ async getStudents() {
 
 // StudentService
 export class StudentService {
-  @Year()
-  private readonly year!: ResolvedAcademicYear;
-
-  async getAll() {
-    const year = this.year;
-    return this.studentRepository.getAll({ academicYearId: year.id });
+  async getAll(filters: StudentListFilters = {}) {
+    return this.studentRepository.getAll(filters);
   }
 }
 
 // StudentRepository
-async getAll(filters: StudentListFilters) {
-  // Existing enrollment/placement SQL; latest placement for annual reads.
-  // One WHERE combines year, other filters and ownershipCondition().
-  // No fallback to students.classId for historical class.
+export class StudentRepository {
+  @Year()
+  private readonly year!: ResolvedAcademicYear;
+
+  async getAll(filters: StudentListFilters = {}) {
+    const year = this.year;
+    // Existing enrollment/placement SQL; latest placement for annual reads.
+    // One WHERE combines year.id, filters and the existing ownership condition.
+    // No fallback to students.classId for historical class.
+  }
 }
 
 type StudentListFilters = {
-  academicYearId: string;
   studentId?: string;
   classId?: string;
   sectionId?: string;
@@ -193,7 +386,7 @@ Client captures selected year + cache key
   -> HTTP header / MCP academicYear input
   -> authentication + existing permissions + request validation
   -> operation ALS scope -> AcademicYearValidator -> store resolved year
-  -> Controller -> Service.this.year getter -> Repository({ academicYearId })
+  -> Controller -> Service -> Repository @Year() getter -> explicit year SQL
   -> response + resolved-year metadata -> original captured cache key
 
 Admin request:     scope A -> 2025–2026 -> same singleton service -> 2025–2026 rows
@@ -203,6 +396,8 @@ Principal request: scope B -> 2026–2027 -> same singleton service -> 2026–20
 The principal example applies only to routes the principal can already access. A selected year never changes route permissions.
 
 Consolidate equivalent `getAllForYear`, `getByIdForYear` and old no-year methods into normal filtered methods. Audit internal callers, jobs, seeds and uniqueness lookups: identity uniqueness must not become year-scoped accidentally. Keep real all-year operations explicitly named. Each domain owns its SQL; do not create a generic repository that guesses all domain year rules.
+
+The migrated examples are `AlertRepository` and `AnnouncementRepository`: normal methods are `getAll()`, `getById(id)`, `update(id, data)` and `deleteAll()`. Services no longer declare a year property just to forward it. `AlertValidator` reads the context to determine shared versus year-owned attribution. `checkDuplicateAlertInScope` deliberately accepts a nullable scope because shared notices and fee-source reminders use it. `createFromFeeSource` validates the fee's persisted year and calls `createFromSourceYear`; trusted seed cleanup uses `clearForSeedReset`. These named exceptions neither infer a year from missing context nor weaken ordinary CRUD filters.
 
 ### 5.4 Writes
 
@@ -219,6 +414,56 @@ Keep the existing Student Edit workflow. Shared identity/contact changes remain 
 For multiple placements, require the actual enrollment/placement being corrected and validated effective dates. Do not turn a correction into an invented transfer. Enforce non-overlap, class/section/year agreement, one enrollment per student/year, concurrent-edit protection and transactional actor/before/after/reason audit. Check impacts on linked attendance, grades and other dated records. Missing historical enrollment stays unresolved until an explicit justified repair.
 
 Authorized admin/principal corrections in 2024–2025 or 2025–2026 use normal permissions, including closed-year rules, without reopening or an age-only approval. Editing old enrollment must leave the current 2026–2027 projection unchanged. Corrections to the current year maintain the projection through its existing single owner. The Students slice must explicitly remove any blanket DTO/validator rejection that prevents these legitimate edits while preserving shared-field and enrollment integrity.
+
+### 5.6 Shared read builders within each module
+
+**Forward requirement; implementation and verification pending.** Apply this pattern during each module's migration, including a focused follow-up for Alerts and Announcements before advancing to Assessments. Earlier passing evidence remains evidence for its reviewed implementation; it does not prove this refactor.
+
+Centralize a module's ordinary read visibility conditions in its existing query builder. Accept additional method filters as arguments, and compose ownership, the domain's year predicate and those filters in exactly one `.where(and(...))`. List/detail methods supply their business filters, ordering and pagination without repeating ownership/year expressions. Keep policy definitions in guards and Najm's `@Owned(...)`; the repository only applies their SQL condition.
+
+Illustrative target for Alerts, retaining its existing selection and joins:
+
+```ts
+private readCondition(...filters: (SQL | undefined)[]) {
+  return and(
+    this.ownershipCondition(),
+    alertVisibleInYear(this.year.id),
+    ...filters,
+  );
+}
+
+private baseQuery(...filters: (SQL | undefined)[]) {
+  return this.db
+    .select(this.alertSelect)
+    .from(alerts)
+    // Retain all existing display joins here.
+    .where(this.readCondition(...filters));
+}
+
+async getAll() {
+  return this.baseQuery().orderBy(desc(alerts.createdAt));
+}
+
+async getById(id: string) {
+  const [alert] = await this.baseQuery(eq(alerts.id, id)).limit(1);
+  return alert;
+}
+
+async getCount() {
+  const [result] = await this.db.select({ count: count() }).from(alerts)
+    .where(this.readCondition());
+  return result;
+}
+```
+
+- Extract `readCondition(...)` when aggregates or other read shapes need the same predicates. Otherwise compose them directly inside the existing builder. Counts, statistics, search, dropdowns and exports use the same visibility rules for equivalent scopes; preserve distinct counting and domain-specific report semantics. A helper that depends on outer joins requires those joins in every consuming query.
+- Modules using ownership and year include both. Ownership-only modules include ownership; year-only modules include year. Shared catalogs keep their existing business filters and do not gain compulsory `@Owned(...)` or `@Year()`. Historical predicates must retain enrollment/placement and source-year rules; a universal table-year equality is insufficient.
+- Never chain another `.where(...)` after the filtered builder; it can replace the visibility predicate. Pass every extra filter into the builder/helper. Evaluate request-dependent conditions per call, never in singleton field initializers or shared caches.
+- Installed Najm `findMany({ where })` / `findOne({ where })` may serve simple owned reads when their projection and return contracts fit; include the relevant year condition in their options. Joined queries keep their module-local builders. Do not introduce a universal base repository, database proxy, automatic query interception or new ownership engine for this refactor.
+- Writes retain their own permission, target-year, attribution and bulk-operation rules. Read visibility does not grant write access. In particular, Alerts bulk deletion must continue to exclude shared system rows even though ordinary reads include them.
+- Preserve explicitly named all-year, source-year, identity-uniqueness and trusted seed/job operations. Inventory their callers and retain validated context/actor requirements; do not turn missing request context into an ordinary read bypass.
+
+Acceptance for each migrated module: use distinguishable records across actors and years to assert exact list/detail IDs and aggregate counts, including extra business filters. Cover school-wide and restricted roles, unknown-role denial for owned reads, shared-row exceptions, out-of-scope IDs, and concurrent actor/year calls on the same singleton. Verify an extra filter narrows results without losing ownership/year restrictions. Keep authenticated REST/MCP and real PostgreSQL gates from section 9; confirm write and named-exception behavior remains correct. The expected benefit is less repeated code and fewer omitted predicates; claim a SQL performance improvement only with measured evidence.
 
 ## 6. Cross-module scope matrix
 
@@ -271,25 +516,35 @@ SSR cannot read browser storage. Initial HTML can render shell/loading; scoped d
 
 ## 9. Sequential implementation and module checklist
 
-**Finish one module, including its tests and real database checks, before starting the next. Alerts is first.** Do not implement several business modules and postpone tests to the end. Preserve dirty work and show a small reviewable diff for each slice. This plan does not authorize executing tests before the owner's requested visual review.
+**Finish one module, including its tests and real database checks, before starting the next. Alerts is first.** Do not implement several business modules and postpone tests to the end. Preserve dirty work and show a reviewable diff for each slice. The owner's later instruction authorized verification before the final visual review.
 
 ### 9.1 Limited prerequisites before Alerts
 
 1. Refresh endpoint/tool/internal-caller inventory, installed package versions, existing failures and scope classifications. Keep the prior inventory as dated evidence; the order below supersedes its Students-first rollout.
-2. Implement only the shared infrastructure required by Alerts: supported service property, authenticated REST/tool scope wrapper, existing validator integration and minimal shared transport/query binding. Write its focused tests. Complete visual review, then prove section 5.2 with real container/transport execution.
+2. Implement only the shared infrastructure required by Alerts: supported repository getter, authenticated REST/tool scope boundary, existing validator integration and minimal shared transport/query binding. Write its focused tests. Complete visual review, then prove section 5.2 with real container/transport execution.
 3. Prepare the dedicated PostgreSQL fixture and module test harness in section 9.4; review seed code/target, then run migrations and seed only on that explicitly designated disposable database. Record idempotency, migration head and manifest checks.
 
 Academic registry/resolution, auth context and seed infrastructure are necessary dependencies, not an excuse to migrate other business modules first. Existing Students/other-module changes remain preserved and unaccepted for the new design until their turn. If public framework support is missing, report that gate as BLOCKED and resolve the published dependency before rollout.
 
+**Current checkpoint (2026-09-27):** School pins published `najm-mcp@2.2.1` and `najm-api@2.0.6`. Alerts and Announcements now read `@Year()` in repositories, with separate REST middleware and the published MCP hook supplying their operation context. The marked `school_history_test` database is at `0059`, with three years, ten students, seven Alerts and five Announcements. The latest commands and results are in the evidence ledger. School source remains uncommitted; production migration, deployment, owner visual and browser acceptance are open.
+
+**Later the same day:** Alerts and Announcements gained ownership, so each person reads only their own alerts and announcements reach only their audience. The two controllers that read them through other modules (`operations-dashboard`, `parent-profile`) were registered for the year after their routes were found returning empty results. Section 0 is the handoff for the remaining modules.
+
+The former `najm-mcp@2.2.0` hook gap is closed by the published release above. The implementation uses its public `toolInput`, `invocationScope` and `aroundInvoke` options; no private framework patch was needed.
+
+A controller method wrapper was inspected as a School-only alternative before Najm publication. That historical design note explains why the published hook was required; it is no longer a blocked gate.
+
+Najm's published contract: `toolInput(tool)` declares optional selected-year tool input; `invocationScope(tool)` clears the application year in a child ALS scope; `aroundInvoke(context, next)` receives validated input and transport headers **after** guards, then awaits the handler. School's callback calls `AcademicYearValidator.resolveSelection()` with the same conflict rules as REST. `config/yearScope.ts` is the authoritative, growing list of controller tool groups, including academic records, their profile/dashboard consumers and the selected-year finance routes. The Najm direct/HTTP tests and School's real REST/MCP tests passed, including concurrent actor/year isolation; expand registration by module as its turn arrives.
+
 ### 9.2 Mandatory cycle for every module
 
 1. **Inspect:** enumerate every endpoint/tool, internal caller, list/detail/count, export, bulk/nested mutation and current/shared/all-year exception. Decide its year basis from actual schema and business rules.
-2. **Implement this module:** thin controller; `@Year()` property only where needed; business orchestration in service; reusable domain assertions/errors in validator; DTO validation in `*Dto.ts`; explicit year/ownership predicates in repository. Preserve response contracts and permissions.
+2. **Implement this module:** thin controller; `@Year()` property only where needed; business orchestration in service; reusable domain assertions/errors in validator; DTO validation in `*Dto.ts`; module-local read builders applying year/ownership predicates once, with shared conditions for equivalent aggregate reads (section 5.6). Preserve response contracts, permissions, write rules and named scope exceptions.
 3. **Write its tests in the same slice:** targeted unit/contract tests plus real PostgreSQL fixtures and authenticated REST/MCP cases. Add only this module's fixture records to the ten existing students. A genuinely shared module gets tests proving its shared semantics remain unchanged.
-4. **Owner visual review:** present implementation, test code, schema changes if any and expected fixture results. Until visual approval, mark execution NOT RUN; do not lint, build, test or run new seed changes. Fix requested changes within this module.
-5. **Execute after approval:** focused tests first, then that module's real PostgreSQL and authenticated transport cases. Verify actual rows/amounts and nonselected-year data before/after. Run the smallest applicable lint/type/build/locale gates permitted by that review and needed for the change. Never substitute mocks for the database gate.
+4. **Owner visual review:** present implementation, test code, schema changes if any and expected fixture results. Record review as OPEN until the owner approves the specific slice. The owner's 2026-09-27 continuation request allowed work to advance through the finance lane with earlier reviews still open; it did not approve them.
+5. **Execute verification:** focused tests first, then that module's real PostgreSQL and authenticated transport cases. Verify actual rows/amounts and nonselected-year data before/after. Run the smallest applicable lint/type/build/locale gates needed for the change. Never substitute mocks for the database gate.
 6. **Review UI where affected:** record manual owner/browser acceptance separately. Missing browser infrastructure is BLOCKED/NOT RUN; missing database or transport access blocks that gate. An applicable blocked gate prevents moving on, unless the owner explicitly changes the acceptance scope and the deferred obligation is recorded.
-7. **Record and advance:** append commands, revision/diff identity, fixture manifest, expected/actual results, cleanup and outstanding issues to the evidence ledger; update this plan's row. Advance only when the current module's required gates pass and the review checkpoint is satisfied.
+7. **Record and advance:** append commands, revision/diff identity, fixture manifest, expected/actual results, cleanup and outstanding issues to the evidence ledger; update this plan's row. Advance when the current module's required automated/database/transport gates pass and the review checkpoint is satisfied, or when the owner explicitly directs continuation with the open review recorded. Continuation is not acceptance or permission to deploy.
 
 Use this evidence checklist for each module (link its completed entry from the table):
 
@@ -297,6 +552,7 @@ Use this evidence checklist for each module (link its completed entry from the t
 Module:
 Scope and endpoint/tool inventory:
 Implementation + test files:
+Read builder/condition coverage: list, detail, aggregates, other read shapes and named exceptions
 Visual review: PENDING / APPROVED (owner, date, reviewed diff)
 Focused tests: NOT RUN / PASS / FAIL / BLOCKED
 PostgreSQL: database fixture ID, migration head, selected/nonselected assertions
@@ -315,55 +571,63 @@ Order is case-insensitive by module folder, beginning at `alerts`; financial and
 
 | # | Module | Focus | Status / evidence |
 | --- | --- | --- | --- |
-| 01 | `alerts` | First complete slice; type/scope decision, reads, counts, status and bulk writes | PENDING |
-| 02 | `announcements` | Audience, dates/year basis, visibility and mutations | PENDING |
-| 03 | `assessments` | Source/year, assignments, sections and graded-source restrictions | PENDING |
-| 04 | `attendance` | Dated roster, stored year, corrections and transfer boundaries | PENDING |
-| 05 | `behaviorRewards` | Event/student context and history | PENDING |
-| 06 | `classes` | Registered year, references and safe historical edits | PENDING |
-| 07 | `classRoutines` | Schedule year, assignments and publication | PENDING |
-| 08 | `cycles` | Establish shared catalog semantics and consumers | PENDING |
-| 09 | `dashboard` | Every submodule/metric with documented academic or financial basis | PENDING |
-| 10 | `discipline` | Event dates, student context and corrections | PENDING |
-| 11 | `events` | Calendar/reporting scope and shared exceptions | PENDING |
-| 12 | `exams` | Registered year, sections and grade source integrity | PENDING |
-| 13 | `financial/allocations` | Target fee years, partial amounts and atomic writes | PENDING |
-| 14 | `financial/auditLog` | Audit access/retention; no history hidden by accidental filtering | PENDING |
-| 15 | `financial/credits` | Unallocated balances and explicit cross-year use | PENDING |
-| 16 | `financial/expenses` | Business-date reporting and corrections | PENDING |
-| 17 | `financial/fees` | Charged year, fee-only students and closed-year debt | PENDING |
-| 18 | `financial/feeTypes` | Shared catalog and global constraints | PENDING |
-| 19 | `financial/installments` | Fee year, cancellation and schedule integrity | PENDING |
-| 20 | `financial/notifications` | Debt scope and notification behavior | PENDING |
-| 21 | `financial/payments` | Mixed receipts, cash basis, status and exact decimals | PENDING |
-| 22 | `financial/payroll` | Period/assignment reporting and shared exceptions | PENDING |
-| 23 | `financial/rollover` | Explicit source/target, preview, idempotency and rollback | PENDING |
-| 24 | `financial/utils` | Supporting calculations/callers; no invented CRUD endpoints | PENDING |
-| 25 | `grades` | Valid source year, teacher ownership and historical correction | PENDING |
-| 26 | `health` | Verify actual route/model scope; shared infrastructure stays shared | PENDING |
-| 27 | `notifications` | Recipient/ownership, history and current/shared delivery state | PENDING |
+| 01 | `alerts` | First complete slice; type/scope decision, reads, counts, status and bulk writes | IMPLEMENTED (year + ownership + section 5.6 read condition); year/ownership database/REST/MCP and source gates PASS; signed-in alerts inbox page now exists, with teacher/parent/student actions shaped by role; page-specific browser review and owner visual review OPEN |
+| 02 | `announcements` | Audience, dates/year basis, visibility and mutations | IMPLEMENTED (year + audience ownership + section 5.6 read condition; dashboard list keyed by year); real database/REST/MCP suites PASS; lint/typecheck/test/build/db:check PASS; owner visual/browser review OPEN |
+| 03 | `assessments` | Source/year, assignments, sections and graded-source restrictions | IMPLEMENTED; PostgreSQL 4/4 and REST/MCP 4/4 PASS; dated student/parent and multi-section ownership plus profile consumers PASS; owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 04 | `attendance` | Dated roster, stored year, corrections and transfer boundaries | IMPLEMENTED; PostgreSQL 2/2 and REST/MCP 5/5 PASS; transfer/correction and dashboard/profile consumers PASS; owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 05 | `behaviorRewards` | Event/student context and history | IMPLEMENTED (dated: the school-local day of `behaviorAt` in the year's reporting interval, no migration; class/section from that day's placement); PostgreSQL 3/3 and REST/MCP 3/3 PASS; owner visual/browser review OPEN; students read their own rewards and parents their children's (owner decision 2026-09-27). [Evidence](docs/tests/academic-year-history.md) |
+| 06 | `classes` | Registered year, references and safe historical edits | IMPLEMENTED: a class belongs to the year label stored on it; repository `@Year()` with one read condition (ownership and year) for list, detail and related reads; students, parents and analytics from the selected year's placements. A new class takes the selected year: the body field is gone and a class never moves between years (owner decision 2026-09-28). Changes stay in the year; trusted seeds name each class's year. Other modules keep the any-year reference lookup. French, Arabic and Spanish error messages added. PostgreSQL 4/4 and REST/MCP 6/6 PASS (shared with 07 and 31); owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 07 | `classRoutines` | Schedule year, assignments and publication | IMPLEMENTED: a timetable belongs to its stored year label, its section's class year. List, detail, the section's published timetable, the teacher's week and every change are limited to the selected year (404 otherwise). Create takes the selected year and refuses another year's section (409); so does the lesson-assignment list. The teacher dashboard still names the active year for its week. Routine errors reached users as raw keys; they are now translated. Registered as `class-routines`. PostgreSQL and REST/MCP PASS; owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 08 | `cycles` | Establish shared catalog semantics and consumers | VERIFIED SHARED CATALOG: every year reads the same cycles; no year scope or registration, and no MCP year input. Deleting a cycle that any year's class or an accountant assignment uses is now refused (409, deactivate instead); it used to unlink every year's classes, or fail with a 500 on the assignment. Errors were hard-coded English; now translated in four locales. REST/MCP 4/4 PASS (shared with 36); owner review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 09 | `dashboard` | Every submodule/metric with documented academic or financial basis | PENDING. `operations`, root `dashboard` and `academic-dashboard` are registered as consumers; their own metric inventory remains open |
+| 10 | `discipline` | Event dates, student context and corrections | IMPLEMENTED (dated like Behavior rewards: the school-local day of `incidentAt` in the year's reporting interval, no migration; class/section from that day's placement through the shared `studentPlacementOn`); ownership 2026-09-27 (teachers what they reported, students their own, parents their children's); PostgreSQL 3/3 + ownership 1/1 and REST/MCP 3/3 PASS; owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 11 | `events` | Calendar/reporting scope and shared exceptions | IMPLEMENTED: an event belongs to every year whose reporting interval its dates overlap (the shared exception: one spanning the boundary shows in both), no migration; repository `@Year()` with one read condition, writes inside the year, creates and date changes must overlap the selected year (409). Security fix: ten read routes answered without sign-in; every route now needs sign-in and a permission, participant reads need `manage:participants`. New audience ownership from `visibility`; teacher, parent and student gained `read:events`. PostgreSQL 3/3 and REST/MCP 4/4 PASS; owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 12 | `exams` | Registered year, sections and grade source integrity | IMPLEMENTED (stored year, else the date in the reporting interval, as Assessments; repository `@Year()` and one read condition; create stamps the selected year and refuses other years' sections with 409; students and parents by placement on the exam date through the shared `placedOnSourceDate`); PostgreSQL 3/3 and REST/MCP 4/4 PASS, including the student profile's own assessments and upcoming exams (2026-09-28); owner visual/browser review OPEN; grading already checks placement on the source date. [Evidence](docs/tests/academic-year-history.md) |
+| 13 | `financial/allocations` | Target fee years, partial amounts and atomic writes | IMPLEMENTED: allocation API reads and deletes use the selected target-fee year; payment/credit internals retain all-year receipt access; direct credit-backed allocation deletion returns 409. PostgreSQL 1/1 and authenticated REST/MCP 3/3 PASS, including normal mixed-year payment write; owner source review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 14 | `financial/auditLog` | Audit access/retention; no history hidden by accidental filtering | VERIFIED SHARED ALL-YEAR: admin-only, append-only list/detail stay independent of selected year; PostgreSQL 1/1 and authenticated REST/MCP 2/2 PASS; owner UI review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 15 | `financial/credits` | Unallocated balances and explicit cross-year use | IMPLEMENTED: credit lots remain shared; applying credit targets only installments charged to the selected year, while source receipt keeps its date; direct deletion of credit-backed allocations is refused. PostgreSQL 1/1 and authenticated REST/MCP 1/1 PASS; owner UI review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 16 | `financial/expenses` | Business-date reporting and corrections | IMPLEMENTED: the selected year's reporting interval filters expense lists/details, pending reads, counts and summaries by `expenseDate`; create/date corrections must stay in that interval, while `paymentDate` retains the actual cash date. Invoice/receipt/check uniqueness and seed reset stay all-year. The expense UI keys reads by year and captures the opened form's year for writes; demo seeding enters its seed year. PostgreSQL 1/1 and authenticated REST/MCP 1/1 PASS; source/type/lint/build gates PASS; owner UI/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 17 | `financial/fees` | Charged year, fee-only students and closed-year debt | IMPLEMENTED: repository/service normal reads and writes use the selected charged year; fee-only students remain visible with unknown historical class; explicit all-year debt and internal source-fee paths remain. Completed allocations drive annual and all-year balances even when the receipt date is later. Fees nested in student creation use the resolved enrollment year. Fee write bodies retain `academicYear`; in MCP that field also selects the year, while REST rejects a body/header mismatch. PostgreSQL 1/1 and authenticated REST/MCP 1/1 PASS; source/type/lint/build gates PASS; owner UI/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 18 | `financial/feeTypes` | Shared catalog and global constraints | VERIFIED SHARED ALL-YEAR: the catalog has no `@Year()` scope; identity, count, status/category reads and mutations are global, and the service rejects duplicate names across selected years. PostgreSQL 1/1 and authenticated REST/MCP 1/1 PASS; test typecheck/lint PASS. Name uniqueness is enforced by the service but has no database unique index, so concurrent duplicate creates remain a separate integrity review. Owner UI review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 19 | `financial/installments` | Fee year, cancellation and schedule integrity | IMPLEMENTED: ordinary list/detail/status/stats and writes use the fee's selected charged year; trusted payment/allocation/recalculation paths retain explicit all-year access. Public writes cannot change payment state or edit/delete an allocated installment, and a recalculation retains cancelled status. The dashboard hook keys reads by year and captures mutation year. PostgreSQL 1/1 and authenticated REST/MCP 1/1 PASS; type/lint checks PASS; owner UI/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 20 | `financial/notifications` | Debt scope and notification behavior | VERIFIED OPERATIONAL ALL-YEAR: overdue cron groups debt by the fee's charged year and emits a source-year alert; cancelled installments are excluded. Check groups with no single source year retain personal delivery but have no academic alert. Admin delivery history is shared; cron jobs remain all-year so old debt can be reminded. PostgreSQL 1/1 and authenticated admin/cron REST 1/1 PASS; test typecheck PASS; owner review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 21 | `financial/payments` | Mixed receipts, cash basis, status and exact decimals | IMPLEMENTED: the normal receipt list uses repository year context and returns each mixed receipt once with its exact allocated portion for selected fee year. Fee-specific receipt history now has a matching route and year guard. Revenue uses selected fee year; monthly cash reporting retains actual settlement/payment date. Receipt detail, student history and check/status/void/refund operations remain shared across years. PostgreSQL 1/1 and authenticated REST/MCP 1/1 PASS; academic-year 258/258, type/lint checks PASS; owner UI/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 22 | `financial/payroll` | Period/assignment reporting and shared exceptions | IMPLEMENTED: payslips belong to the registered year containing the first day of `period`; list/detail/staff/period/summary and SQL mutations use that year, while payment date stays the actual cash date. Create, run and unpay reject an out-of-year period. The payroll view offers that year's periods, keys data by year plus period, and keeps historical payslip snapshots visible when staff are no longer active. PostgreSQL 1/1 and authenticated REST/MCP 1/1 PASS; academic-year 258/258 and server/dashboard typechecks PASS; owner UI/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 23 | `financial/rollover` | Explicit source/target, preview, idempotency and rollback | IMPLEMENTED: source roster/class filter uses source-year enrollment and placement; target must be the selected registered year and students need active target enrollment. Target enrollment date drives proposed fee effective date. Preview/commit remain explicit, idempotent and separate from year activation; the UI sends target-year context. A committed fee can be retried without duplication; a post-preview duplicate yields a failed item/run and stable retry. PostgreSQL 1/1 and authenticated REST/MCP 2/2 PASS; test typecheck/lint PASS. Full concurrent-commit and mid-write rollback proof remains OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 24 | `financial/utils` | Supporting calculations/callers; no invented CRUD endpoints | VERIFIED/IMPLEMENTED: fee, installment and rollover callers pass explicit charged/target years into September-June calculations. An invalid explicit year now fails rather than falling back to the current year; consecutive labels are required. Utility tests pin two historical ranges, ten monthly installments, exact minor-unit totals, July closeout outside the billable interval and invalid labels. No API or schema change. Focused tests 3/3, configured test suite, workspace typechecks, lint and production build PASS; owner review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 25 | `grades` | Valid source year, teacher ownership and historical correction | IMPLEMENTED (stored year, else the source's date: repository `@Year()` and one read condition for lists, filters, detail, by-source reads and count; update, delete, bulk and admin delete-all inside the year, `clearForSeedReset` for resets; a new grade's source year must be the selected one, 409 `outsideSelectedYear`). Teachers now read the grades of their own sources and of students placed in a section they teach on the source date, not by the current `students.section_id`. PostgreSQL 3/3 and REST/MCP 3/3 PASS; owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 26 | `health` | Verify actual route/model scope; shared infrastructure stays shared | VERIFIED SHARED INFRASTRUCTURE: public `/health`, `/health/ping` and `/health/status` contain no academic data, stay outside `yearScopedModules`, and return the same results with omitted, historical, invalid and conflicting year selections. Readiness checks actual fixture PostgreSQL and cache; its independent failure outcomes are covered. No MCP tools, schema or production code changes. Fixture-backed REST 2/2 PASS, test typecheck and lint PASS; owner review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 27 | `notifications` | Recipient/ownership, history and current/shared delivery state | VERIFIED SHARED ALL-YEAR: a personal inbox keyed by recipient, with no year of its own; the source (a financial reminder, row 20) carries the year. REST-only, no MCP tools, not registered for the year; the dashboard keys it without a year. REST 2/2 PASS (same inbox and count under every year; only the recipient marks read); no code change. Owner UI review OPEN. [Evidence](docs/tests/academic-year-history.md) |
 | 28 | `parents` | Shared identity, current links and selected-year child context | PENDING |
-| 29 | `profiles` | Shared identity plus explicitly scoped related data | PENDING |
-| 30 | `search` | Year/ownership consistency across result types | PENDING |
-| 31 | `sections` | Parent class year, references and placement integrity | PENDING |
+| 29 | `profiles` | Shared identity plus explicitly scoped related data | PENDING. `ParentProfileController` is registered for the year (unread alerts); its routes still pass a year parameter. Student `/academic` lists the student's own assessments and upcoming exams by placement on each date; student `/transport` now reads selected-year route intervals through the already registered profile controller. Other tabs are not reviewed. |
+| 30 | `search` | Year/ownership consistency across result types | IMPLEMENTED SHARED IDENTITY SEARCH: student, teacher and parent queries return shared identity results across years, with each entity's existing ownership condition in the same WHERE as its term. Typed routes require the matching read permission; global search requires all three read permissions. Search stays outside `yearScopedModules`. SQL ownership 3/3 and fixture-backed authenticated REST/MCP 2/2 PASS, including a disposable limited actor, admin historical/invalid/conflicting year requests and cleanup. Configured tests, typechecks, lint and production build PASS; owner review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 31 | `sections` | Parent class year, references and placement integrity | IMPLEMENTED: a section belongs to its class's year; list, detail, students, parents and analytics in the selected year from that year's placements. Create or move only into a class of the selected year (409). Delete refuses a section that ever held a placement; a past section used to fail with a 500 on the placement foreign key. Other modules keep the any-year reference lookup. PostgreSQL and REST/MCP PASS; owner visual/browser review OPEN. [Evidence](docs/tests/academic-year-history.md) |
 | 32 | `settings` | Shared settings; active pointer only through lifecycle | PENDING |
 | 33 | `staff` | Shared identity; classify dated relationships | PENDING |
 | 34 | `studentEnrollments` | Dated placement, corrections, audit and projection ownership | PENDING |
 | 35 | `students` | Shared identity and same-form historical corrections, section 5.5 | PENDING |
-| 36 | `subjects` | Shared catalog/assignment distinction and grade references | PENDING |
+| 36 | `subjects` | Shared catalog/assignment distinction and grade references | VERIFIED SHARED CATALOG: every year reads the same subjects; year history lives in teacher assignments, not the catalog. Deleting a subject that any year's teacher assignment or alert uses is now refused (409); it used to cascade away every year's assignments, or fail with a 500 on their lessons, exams and attendance. Delete-all is refused while any is in use; the seed reset has a named method. French, Arabic and Spanish errors added. REST/MCP 4/4 PASS; owner review OPEN. [Evidence](docs/tests/academic-year-history.md) |
 | 37 | `teachers` | Shared identity, assignment years and ownership | PENDING |
-| 38 | `transport/drivers` | Shared identity and assignment history | PENDING |
-| 39 | `transport/maintenance` | Dated reporting and vehicle references | PENDING |
-| 40 | `transport/refuels` | Dated reporting, amounts and vehicle references | PENDING |
-| 41 | `transport/studentRoutes` | Enrollment/route year and historical corrections | PENDING |
-| 42 | `transport/vehicleAssignments` | Dated assignment intervals and ownership | PENDING |
-| 43 | `transport/vehicles` | Shared vehicle identity and historical references | PENDING |
+| 38 | `transport/drivers` | Shared identity and assignment history | VERIFIED SHARED IDENTITY: driver license and Staff identity remain accessible across selected years; status and license-expiry views retain present-time meaning. Driver mutations through this controller remain retired with 410; Staff owns writes. Dated vehicle assignments are row 42. No year scope, schema or production change. Fixture PostgreSQL and authenticated admin REST/MCP 2/2 PASS with two temporary staff/drivers, historic/invalid year headers, retired delete refusal and cleanup; test typecheck and focused lint PASS; owner review OPEN. [Evidence](docs/tests/academic-year-history.md) |
+| 39 | `transport/maintenance` | Dated reporting and vehicle references | SOURCE/LOCAL TRANSPORT PASS; OWNER REVIEW OPEN. Planned jobs use `scheduledDate`; completed jobs use school-local `completedAt` (legacy completed rows without it fall back to scheduled date). Undated mileage-only open jobs are shared operational work. Normal list/detail/count/analytics and mutations use the selected year; live mileage alerts, duplicate checks, and mark-overdue inspect all years. Seed reset has a named all-year method. Past-year scheduling corrections are allowed within the selected interval. Fixture PostgreSQL plus authenticated REST/MCP 2/2 PASS, 37 assertions; test typecheck and focused lint PASS. [Evidence](docs/tests/academic-year-history.md) |
+| 40 | `transport/refuels` | Dated reporting, amounts and vehicle references | SOURCE/LOCAL TRANSPORT PASS; OWNER REVIEW OPEN. `datetime` belongs to the selected reporting year by school-local day. List/detail/filter/count/aggregates/reports and normal mutations are scoped; create and datetime edit reject another year. Voucher uniqueness checks all years. The 90-day fuel-needs prediction remains an explicit live operational calculation. Seed reset has a named all-year method and demo seed resolves its year. PostgreSQL and authenticated REST/MCP 2/2 PASS, 30 assertions; server test typecheck PASS. [Evidence](docs/tests/academic-year-history.md) |
+| 41 | `transport/studentRoutes` | Enrollment/route year and historical corrections | SOURCE/LOCAL TRANSPORT PASS; OWNER POLICY AND BROWSER REVIEW OPEN. Continuous dated intervals overlap each selected reporting year; `unassignmentDate` is exclusive. List/detail/student history/count and ordinary writes use the interval. Global live capacity and active-route checks use the business day; all-year overlap validation prevents double assignment. Reassignment closes the old row and inserts a new row without replacing history. Create checks selected-year date plus student enrollment and placement. Selected-year transport fee create/end/resume cannot change another year's fee; explicit dated unassignment supports correction. Seed reset has a named all-year method; the UI keys routes and write context by year. Fixture PostgreSQL and authenticated REST/MCP 2/2 PASS, 37 assertions; full test, typecheck, lint and isolated production build PASS. No schema migration. [Evidence](docs/tests/academic-year-history.md) |
+| 42 | `transport/vehicleAssignments` | Dated assignment intervals and ownership | SOURCE/LOCAL TRANSPORT PASS; OWNER POLICY AND BROWSER REVIEW OPEN. Continuous dated intervals overlap each selected reporting year for normal list/detail/vehicle/driver/count and writes. Present-day active lookup and shared vehicle driver stay business-day based; reassignment closes the old row and inserts a new row. Create/edit check interval, status and vehicle overlap. Vehicle creation derives an optional assignment's year from its date, leaving vehicle identity shared. Staff driver deletion and seed reset use named all-year paths. Assignment routes now require admin. Fixture PostgreSQL and authenticated REST/MCP 2/2 PASS, 30 assertions; full test, typecheck, lint and isolated production build PASS. No schema migration. Existing overlapping legacy rows and concurrent overlap races still require integrity review. [Evidence](docs/tests/academic-year-history.md) |
+| 43 | `transport/vehicles` | Shared vehicle identity and historical references | VERIFIED SHARED IDENTITY: vehicle identifiers, plates, purchase date, status and current mileage remain shared across selected years; current driver assignment is a present-time computed field. Row 42 now makes that computed driver date-aware and resolves a vehicle-create driver assignment from its own date. No vehicle year scope or schema migration. Original shared-identity fixture PostgreSQL and authenticated admin REST/MCP 2/2 PASS, 29 assertions; row 42's transport test covers the current-driver and create side effects. Owner/browser review remains OPEN. [Evidence](docs/tests/academic-year-history.md) |
 
 Audit every folder against this queue before coding. Supporting modules `academicSources`, `academicYearMigrationIssues`, `academicYears`, `academicYearTransitions`, `accessReset`, `auth-tools` and `seed-data` belong to the prerequisite/support inventory and final lifecycle/security/reconciliation acceptance; their relevant tests accompany any dependency change. They are not silently excluded or permission to start several business slices. Audit module-root handlers as well as listed children. Add newly discovered business modules in their alphabetical position.
 
 Earlier slices may use existing later-module APIs and baseline fixtures. If a dependency must change to finish the current slice, keep that change minimal, test the affected contract now and record it; leave the dependent module's broader migration for its own turn. A dependency cannot justify postponing the current module's database gate.
 
 #### Alerts first: exact acceptance scope
+
+**Superseded on 2026-09-27 by ownership:** Alert routes are no longer admin-only. `AlertController` uses `@Policy(Alert)` with `@Can*` permissions, and `AlertGuards.ts` limits reads per person. Teachers set any status on alerts about their students or addressed to them; parents and students may only acknowledge alerts about themselves or their child. Class-wide and school-wide notices, content edits and bulk operations stay with staff. The paragraph and bullets below record the original slice.
+
+**Original year-only implementation checkpoint, superseded by the ownership update above:** `AlertController` originally retained admin-only REST/MCP routes and unchanged permissions. The transport boundary resolves the year; `AlertRepository` reads `@Year()` for list/detail/count/write predicates. `AlertService` forwards ordinary arguments, and the validator handles shared/source attribution. The new nullable `alerts.academic_year_id` has a foreign key and index in `0058`; unresolved legacy year-owned rows remain hidden. Shared system and untargeted emergency rows appear in each selected-year list/count. Selected-year `deleteAll` and `deleteResolved` affect only year-owned rows; a separately named repository reset clears all years for trusted seed cleanup. Two generator endpoints remain no-op placeholders, as before.
+
+**Attribution policy:** academic, attendance, behavioral, health, announcement and ordinary reminder Alerts belong to the selected registered year, even when audience is `all`. A system notice is shared and cannot carry academic references (400); an emergency is shared only without academic targets. Student enrollment, class year and student placement are checked before a targeted write. A trusted financial reminder uses its fee's charged year through `createFromFeeSource`, including fee-only students. Overdue financial queries group by charged year. A check notification with no unique fee source keeps its personal notification but creates no academic-year Alert. On edit, stored scope stays fixed; content/status corrections work for historical fee-only reminders. Changing scope requires matching selected-year targets; an explicit cross-year correction API remains future work. Legacy rows with no provable source year are hidden, with no date/current-class inference.
+
+**Fixture:** `alertsHistoryManifest.ts` pins three calendars, one class and two sections per year, exactly ten student identities, 23 enrollments, 24 placements, S05's transfer, S07's withdrawal and S04's graduation. The marked local `school_history_test` database contains Aya's 2025-2026 fee without an enrollment and five year-owned plus two shared Alert cases. The guarded base and Alert seed stages are idempotent. Migration `0058` ran only on this fixture, then ten base/Alert PostgreSQL and authenticated REST/MCP cases passed. The normal `db:migrate` command uses the app environment and was not used for this fixture migration.
 
 - Inspect all Alert routes/tools: list/detail, active/critical/recent, counters/groupings/dashboard, entity filters, typed creation, edit/status, delete and bulk/delete-all. Preserve `@isAdmin()`; principal access currently denied must remain denied. Test admin/principal parallel year isolation through a route/probe both may legitimately use, separately from Alerts permission checks.
 - Current Alert schema has no `academicYearId`. Decide per type whether it belongs to an academic year, a documented business-date interval, or current/shared system state. Do not infer historical academic attribution from row creation time or pretend a year column already exists. If year-owned Alerts need a column, include a minimal reviewed migration, attribution rule and unresolved-legacy behavior in this slice.
@@ -411,7 +675,7 @@ Database/runner contract:
 6. Prove simultaneous admin historical and principal current requests retain independent years on the same singleton, including delayed nested awaits. Repeat with the same admin making requests for two years. Preserve route permissions when choosing the concurrency endpoint.
 7. Record fixture ID, nonsecret database identity, schema/migration head, source revision plus dirty-diff identity, commands, expected/actual results and cleanup. Missing PostgreSQL or MCP must never yield a skipped-but-green required gate.
 
-Proposed artifacts **to create, not existing runnable commands**: a dedicated acceptance seed under `packages/seed/src/scripts/academicYears/`, a shared fixture manifest, a PostgreSQL/transport harness and per-module suites beginning with Alerts. Add documented Bun root scripts for seeding this fixture and running one named module after verifying the repository's actual runner conventions. The first application suite executed is Alerts; infrastructure/fixture checks are prerequisites.
+The fixture and acceptance suites are under `packages/server/tests/academicYears/fixtures/` and `packages/server/tests/acceptance/`; root scripts include `seed:history:base`, `seed:history:alerts`, `seed:history:announcements`, `seed:history:academic-records` and corresponding database/transport test scripts. The dedicated local `school_history_test` database is migrated through `0059` (60 journal entries). The added Assessment and Attendance cases use the same ten-student fixture; their seed stage is idempotent. Current module status is in section 9.3.
 
 ### 9.5 Final integration and release gates
 
@@ -441,7 +705,7 @@ Carry forward:
 ### 11.1 Automated cases
 
 - Validator: active default for every role; malformed/unknown/draft/closed years; missing Settings; pointer consistency; record mismatch; unchanged role/error contracts.
-- Decorator: dynamic service getter with real boot/container/auth/tool execution, async failure before query, field-emission compatibility, preserved non-year parameter arity, missing-context failure, singleton reuse and parallel users/years with no leakage. Prove independent nested/batched/direct tool scopes and restored parent scope after success/failure.
+- Decorator/boundary: dynamic repository getter with real boot/container/auth/tool execution; no automatic method wrapping; one resolution after guards/DTO validation; async failure before query; field-emission compatibility; preserved non-year parameter arity; missing-context failure; singleton reuse and parallel users/years with no leakage. Prove independent nested/batched/direct tool scopes and restored parent scope after success/failure. Test explicit source/shared/reset paths without an HTTP year.
 - Compatibility: header/query/tool inputs, equal/conflicting values, invalid `all`, explicit all-year routes, omitted defaults.
 - Repository: annual/latest and dated placement, single ownership/year predicate, list/detail/count agreement, fee-only/unenrolled cases, global uniqueness remains global.
 - Selection: per-user/tab restore, active mode, storage failure, invalid preference, entry links, role/account change, no initial wrong-year query.
@@ -512,24 +776,31 @@ Use actual root scripts and Bun. Database migrations/backfills and connected sui
 | Sequential acceptance | Section 9's alphabetical ledger, dedicated ten-student/three-year seed and per-module PostgreSQL/REST/MCP suites, beginning with Alerts |
 | Evidence | Append new results to `docs/tests/academic-year-history.md`; retain dated results and explain superseded transport/flag claims |
 
-No gate below is closed by this rewrite:
+Implementation checkpoint for the forward gates (whole-school completion is still open):
 
-- [ ] Endpoint/tool/internal-caller inventory covers all scoped, adjacent, shared and all-year surfaces.
-- [ ] Supported `@Year()` service property uses the existing ALS store, dynamic getter and pre-handler resolution; no singleton snapshot or domain container access.
-- [ ] Concurrent users/tabs and nested/batched/direct MCP calls have isolated years under the same singleton services.
-- [ ] Dedicated real PostgreSQL seed is reviewed and idempotent: exactly ten students, three years and 7/8/8 baseline enrollment membership.
+- [x] Endpoint/tool/internal-caller inventory covers all scoped, adjacent, shared and all-year surfaces for the initial classification; refresh each module when its turn arrives.
+- [x] Supported repository `@Year()` property uses the existing ALS store and a dynamic getter; separate REST/MCP boundaries resolve before the handler, with no method wrapping, singleton snapshot or domain container access.
+- [x] Concurrent users/tabs and nested/batched/direct MCP calls have isolated years under the same singleton services in focused infrastructure and Alerts acceptance.
+- [x] Dedicated real PostgreSQL seed is idempotent: exactly ten students, three years and 7/8/8 baseline enrollment membership.
 - [ ] Alerts completes implementation, test writing, visual approval and real database/transport acceptance before Announcements begins.
+  - Progress 2026-09-28: implementation, tests, PostgreSQL 4/4 and REST/MCP 5/5 are done; the owner's visual approval is still open. Later modules started before it at the owner's request (2026-09-27).
 - [ ] Every subsequent module completes section 9's cycle alphabetically; no required test deferred until after a multi-module implementation batch.
+  - Progress 2026-09-28: rows 01-08, 10-27, 30, 31, 36 and 38-43 each finished their cycle, with PostgreSQL and REST/MCP suites, before the next module in their lane. The order is no longer strictly alphabetical: the owner split an academic and a financial lane on 2026-09-27. Rows 09, 28, 29, 32-35 and 37 are open.
 - [ ] One validator owns resolution/access; lifecycle and repository responsibilities stay separate.
+  - Progress 2026-09-28: `AcademicYearValidator.resolveSelection` resolves and checks the year for REST and MCP in every converted module; unconverted modules still resolve it through their old `@Year()` parameters.
 - [ ] Normal scoped reads require a validated year; omitted selection means active for all roles.
+  - Progress 2026-09-28: holds for the converted modules (a read outside the scope throws; no selection means the active year). Unconverted modules are not covered yet.
 - [ ] Equivalent methods and duplicate frontend year wrappers are consolidated; authorized all-year operations remain explicit.
 - [ ] Remembered selection and shared infrastructure keep key/header/form/retry aligned across users/tabs.
+  - Progress 2026-09-28: converted lists are keyed by year with `useYearScopedList`, whose request carries the key's year. No cross-tab or browser check has been run.
 - [ ] Flag and old unscoped-default branches are gone without removing lifecycle or permission checks.
 - [ ] Enrollment/placement/source history, migration issues and exact financial invariants are preserved.
+  - Progress 2026-09-28: dated records take the placement of their own day (`studentPlacementOn`, `placedOnSourceDate`) instead of the current section, in Behavior rewards, Discipline, Assessments and Exams. Financial invariants are recorded per slice in the ledger.
 - [ ] Normal permitted closed-year actions retain existing permissions and business-date semantics.
 - [ ] Normal Student Edit supports authorized past-year enrollment/placement corrections without changing active projections or inventing history.
 - [ ] Remaining target-data, role/mutation, retention and rollback obligations have explicit outcomes.
 - [ ] Automated, PostgreSQL, authenticated REST/MCP and browser acceptance are recorded separately for this refactor.
+  - Progress 2026-09-28: automated, PostgreSQL and REST/MCP results are recorded per module in the ledger. Browser acceptance has not started.
 - [ ] Release/rollback compatibility and exact live revision/readiness are verified when deployment is undertaken.
 
 The historical reference preserves earlier progress and detailed obligations. This file defines the target; the evidence ledger records what has actually been proved. A working decorator or selector alone does not complete the feature.

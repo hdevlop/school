@@ -3,7 +3,6 @@ import { AttendanceController } from '../../src/modules/attendance/AttendanceCon
 import { DashboardController } from '../../src/modules/dashboard/DashboardController';
 import { FinanceDashboardController } from '../../src/modules/dashboard/finance/FinanceDashboardController';
 import { FeeController } from '../../src/modules/financial/fees/FeeController';
-import { PaymentController } from '../../src/modules/financial/payments/PaymentController';
 import { ClassRoutineController } from '../../src/modules/classRoutines/ClassRoutineController';
 import { StaffController } from '../../src/modules/staff/StaffController';
 import { NotificationController } from '../../src/modules/financial/notifications/NotificationController';
@@ -15,12 +14,11 @@ describe('Najm decorated request parameter resolution', () => {
     // A default on an earlier parameter truncates Function.length, so Najm
     // omits later @User() or @Year() values or an optional body query at runtime.
     const handlers: Array<[string, (...args: any[]) => unknown, number]> = [
-      ['attendance list', AttendanceController.prototype.listAll, 2],
+      ['attendance list', AttendanceController.prototype.listAll, 1],
       ['dashboard widgets', DashboardController.prototype.getWidgets, 2],
       ['finance KPI', FinanceDashboardController.prototype.getKpis, 1],
-      ['fee create', FeeController.prototype.create, 3],
-      ['payment revenue', PaymentController.prototype.getTotalRevenue, 1],
-      ['routine list', ClassRoutineController.prototype.list, 2],
+      ['fee create', FeeController.prototype.create, 2],
+      ['routine list', ClassRoutineController.prototype.list, 1],
       ['staff roster', StaffController.prototype.getAttendanceRoster, 1],
       ['notification cron list', NotificationController.prototype.listRecent, 2],
       ['student list', StudentController.prototype.getStudents, 2],

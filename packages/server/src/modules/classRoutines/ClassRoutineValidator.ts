@@ -1,59 +1,66 @@
-import { Err, Service } from '../../najm';
+import { Err, Service, t } from '../../najm';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
 
 @Service()
 export class ClassRoutineValidator {
+  @Year() private readonly year!: ResolvedAcademicYear;
+
   constructor(private repository: ClassRoutineRepository) {}
 
+  // The selected year's timetable; another year's reads as not found.
   async ensureSchedule(id: string) {
     const schedule = await this.repository.getSchedule(id);
-    if (!schedule) Err(404, 'classRoutines.errors.notFound');
+    if (!schedule) Err(404, t('classRoutines.errors.notFound'));
     return schedule;
   }
 
   async ensureDraft(id: string) {
     const schedule = await this.ensureSchedule(id);
-    if (schedule.status !== 'draft') Err(409, 'classRoutines.errors.notEditable');
+    if (schedule.status !== 'draft') Err(409, t('classRoutines.errors.notEditable'));
     return schedule;
   }
 
   async ensureEntry(scheduleId: string, entryId: string) {
     const entry = await this.repository.getEntry(entryId);
-    if (!entry || entry.scheduleId !== scheduleId) Err(404, 'classRoutines.errors.entryNotFound');
+    if (!entry || entry.scheduleId !== scheduleId) Err(404, t('classRoutines.errors.entryNotFound'));
     return entry;
   }
 
   async ensureDuty(scheduleId: string, dutyId: string) {
     const duty = await this.repository.getDuty(dutyId);
-    if (!duty || duty.scheduleId !== scheduleId) Err(404, 'classRoutines.errors.dutyNotFound');
+    if (!duty || duty.scheduleId !== scheduleId) Err(404, t('classRoutines.errors.dutyNotFound'));
     return duty;
   }
 
   async ensurePeriod(id: string, allowBreak = false, scheduleId?: string) {
     const period = await this.repository.getPeriod(id);
-    if (!period) Err(404, 'classRoutines.errors.periodNotFound');
+    if (!period) Err(404, t('classRoutines.errors.periodNotFound'));
     if (scheduleId && period.scheduleId && period.scheduleId !== scheduleId) {
-      Err(409, 'classRoutines.errors.periodNotFound');
+      Err(409, t('classRoutines.errors.periodNotFound'));
     }
-    if (!period.isActive) Err(409, 'classRoutines.errors.periodInactive');
-    if (!allowBreak && period.isBreak) Err(409, 'classRoutines.errors.breakPeriod');
+    if (!period.isActive) Err(409, t('classRoutines.errors.periodInactive'));
+    if (!allowBreak && period.isBreak) Err(409, t('classRoutines.errors.breakPeriod'));
     return period;
   }
 
   async ensurePeriodTimes(startTime: string, endTime: string, excludeId?: string) {
-    if (startTime >= endTime) Err(400, 'classRoutines.errors.invalidPeriodTime');
+    if (startTime >= endTime) Err(400, t('classRoutines.errors.invalidPeriodTime'));
     const periods = await this.repository.getPeriods(true);
     const overlap = periods.find((period) => period.id !== excludeId
       && period.isActive
       && startTime < period.endTime
       && endTime > period.startTime);
-    if (overlap) Err(409, 'classRoutines.errors.periodConflict');
+    if (overlap) Err(409, t('classRoutines.errors.periodConflict'));
   }
 
-  async ensureSectionAcademicYear(sectionId: string, academicYear: string) {
+  // A timetable is made, and its lessons chosen, for a section of the
+  // selected year.
+  async ensureSectionInSelectedYear(sectionId: string) {
     const section = await this.repository.getSection(sectionId);
-    if (!section) Err(404, 'classRoutines.errors.sectionNotFound');
-    if (section.classAcademicYear !== academicYear) Err(409, 'classRoutines.errors.academicYearMismatch');
+    if (!section) Err(404, t('classRoutines.errors.sectionNotFound'));
+    if (section.classAcademicYear !== this.year.label) Err(409, t('classRoutines.errors.outsideSelectedYear'));
     return section;
   }
 
@@ -63,18 +70,18 @@ export class ClassRoutineValidator {
     excludeEntryId?: string,
   ) {
     const schedule = await this.ensureSchedule(scheduleId);
-    if (!schedule.activeDays.includes(data.dayOfWeek)) Err(409, 'classRoutines.errors.inactiveDay');
+    if (!schedule.activeDays.includes(data.dayOfWeek)) Err(409, t('classRoutines.errors.inactiveDay'));
     const period = await this.ensurePeriod(data.periodId, false, scheduleId);
     const assignment = await this.repository.getAssignment(data.teacherAssignmentId);
     if (!assignment || assignment.sectionId !== schedule.sectionId) {
-      Err(409, 'classRoutines.errors.invalidAssignment');
+      Err(409, t('classRoutines.errors.invalidAssignment'));
     }
 
     const ownEntries = await this.repository.getEntries(scheduleId);
     const sectionConflict = ownEntries.find((entry) => entry.id !== excludeEntryId
       && entry.dayOfWeek === data.dayOfWeek
       && entry.periodId === data.periodId);
-    if (sectionConflict) Err(409, 'classRoutines.errors.sectionConflict');
+    if (sectionConflict) Err(409, t('classRoutines.errors.sectionConflict'));
 
     const section = await this.repository.getSection(schedule.sectionId);
     const roomNumber = data.roomNumber || section?.roomNumber || null;
@@ -91,7 +98,7 @@ export class ClassRoutineValidator {
       excludeEntryId,
     });
     if (conflicts.some((conflict) => conflict.teacherId === assignment.teacherId)) {
-      Err(409, 'classRoutines.errors.teacherConflict');
+      Err(409, t('classRoutines.errors.teacherConflict'));
     }
     const dutyConflicts = await this.repository.findDutyConflicts({
       scheduleId,
@@ -101,9 +108,9 @@ export class ClassRoutineValidator {
       startTime: period.startTime,
       endTime: period.endTime,
     });
-    if (dutyConflicts.length) Err(409, 'classRoutines.errors.teacherConflict');
+    if (dutyConflicts.length) Err(409, t('classRoutines.errors.teacherConflict'));
     if (roomNumber && conflicts.some((conflict) => (conflict.roomNumber || conflict.defaultRoomNumber) === roomNumber)) {
-      Err(409, 'classRoutines.errors.roomConflict');
+      Err(409, t('classRoutines.errors.roomConflict'));
     }
     return { schedule, assignment };
   }
@@ -114,17 +121,17 @@ export class ClassRoutineValidator {
     excludeDutyId?: string,
   ) {
     const schedule = await this.ensureSchedule(scheduleId);
-    if (!schedule.activeDays.includes(data.dayOfWeek)) Err(409, 'classRoutines.errors.inactiveDay');
+    if (!schedule.activeDays.includes(data.dayOfWeek)) Err(409, t('classRoutines.errors.inactiveDay'));
     const period = await this.ensurePeriod(data.periodId, true, scheduleId);
-    if (!period.isBreak) Err(409, 'classRoutines.errors.dutyRequiresBreak');
+    if (!period.isBreak) Err(409, t('classRoutines.errors.dutyRequiresBreak'));
     const supervisor = await this.repository.getStaffSupervisor(data.staffId);
-    if (!supervisor) Err(404, 'staff.errors.notFound');
+    if (!supervisor) Err(404, t('staff.errors.notFound'));
 
     const ownDuties = await this.repository.getDuties(scheduleId);
     if (ownDuties.some((duty) => duty.id !== excludeDutyId
       && duty.dayOfWeek === data.dayOfWeek
       && duty.periodId === data.periodId)) {
-      Err(409, 'classRoutines.errors.sectionConflict');
+      Err(409, t('classRoutines.errors.sectionConflict'));
     }
     const [lessonConflicts, dutyConflicts] = await Promise.all([
       supervisor.teacherId ? this.repository.findConflicts({
@@ -148,7 +155,7 @@ export class ClassRoutineValidator {
       }),
     ]);
     if (lessonConflicts.some((conflict) => conflict.teacherId === supervisor.teacherId) || dutyConflicts.length) {
-      Err(409, 'classRoutines.errors.teacherConflict');
+      Err(409, t('classRoutines.errors.teacherConflict'));
     }
     return { schedule, period };
   }
@@ -156,7 +163,7 @@ export class ClassRoutineValidator {
   async validateForPublish(scheduleId: string) {
     const schedule = await this.ensureDraft(scheduleId);
     const entries = await this.repository.getEntries(scheduleId);
-    if (entries.length === 0) Err(409, 'classRoutines.errors.emptySchedule');
+    if (entries.length === 0) Err(409, t('classRoutines.errors.emptySchedule'));
     for (const entry of entries) {
       await this.validateEntry(scheduleId, entry, entry.id);
     }

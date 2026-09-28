@@ -9,7 +9,8 @@ export default function DisciplinePage() {
   const { user } = useAuth();
   const router = useRouter();
   const role = (user as any)?.role;
-  const allowed = role === 'admin' || role === 'teacher';
+  // Parents and students read their own or their children's records.
+  const allowed = ['admin', 'teacher', 'parent', 'student'].includes(role);
 
   useEffect(() => {
     if (user && !allowed) router.replace('/');

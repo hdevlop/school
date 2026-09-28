@@ -8,6 +8,7 @@ import AssessmentForm from './AssessmentForm';
 import AssessmentCard from './AssessmentCard';
 import { useAssessments } from '../hooks/useAssessments';
 import { useTranslation } from 'najm-i18n/react';
+import { useViewerRole } from '@/shared/useViewerRole';
 import { useAssessmentsTableColumns } from '../hooks/useAssessmentsTableColumns';
 import { useAssessmentsTableFilters } from '../hooks/useAssessmentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -15,6 +16,8 @@ import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
 function AssessmentsTable() {
   const { t } = useTranslation();
+  // Parents and students read these records; they change none of them.
+  const { isFamily } = useViewerRole();
   const columns = useAssessmentsTableColumns();
   const rawFilters = useAssessmentsTableFilters();
 
@@ -103,10 +106,10 @@ function AssessmentsTable() {
         data={assessments}
         columns={columns}
         filters={rawFilters}
-        onCreate={handleAddClick}
+        onCreate={isFamily ? undefined : handleAddClick}
         onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
+        onEdit={isFamily ? undefined : handleEdit}
+        onDelete={isFamily ? undefined : handleDelete}
         loading={isAssessmentsLoading}
         error={hasFailedToLoad(error, assessments) ? error : null}
         renderError={(currentError) => (
@@ -121,8 +124,8 @@ function AssessmentsTable() {
             surface="panel"
             icon={FEATURE_ICONS.assessments}
             title={t('emptyStates.assessments.title')}
-            description={t('emptyStates.assessments.description')}
-            action={(
+            description={isFamily ? t('emptyStates.familyDescription') : t('emptyStates.assessments.description')}
+            action={isFamily ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('assessments.dialogs.createButton')}

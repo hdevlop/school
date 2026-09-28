@@ -23,6 +23,7 @@ function harness(status: 'closed' | 'draft' = 'closed', allowed = true) {
       },
     } as any,
   );
+  (service as any).year = { id: 'year-1', label: '2025-2026', status };
   service.recalculate = async () => ({ id: 'new-fee', academicYear: '2025-2026' }) as any;
   const fee = {
     studentId: 'student-1', feeTypeId: 'fee-type-1', schedule: 'oneTime' as const,
@@ -50,5 +51,24 @@ describe('normal fee write year scope', () => {
     const { service, writes, fee } = harness();
     await service.create(fee, 'actor-1', 'accounting');
     expect(writes).toEqual(['2025-2026']);
+  });
+
+  it('refuses a bulk body that charges another year before creating any fee', async () => {
+    const { service, writes, fee } = harness();
+    await expect(service.createBulk([{ ...fee, academicYear: '2026-2027' }], 'actor-1', 'accounting'))
+      .rejects.toThrow('must match the selected academic year');
+    expect(writes).toEqual([]);
+  });
+
+  it('charges nested new-student fees to the resolved enrollment year', async () => {
+    const { service, fee } = harness();
+    let submitted: Array<{ academicYear?: string; effectiveDate?: string | null }> = [];
+    service.createBulk = async (items: typeof submitted) => { submitted = items; return []; };
+    await service.processFees({ id: 'student-1', enrollmentDate: '2025-09-01' },
+      [{ ...fee, academicYear: undefined }], { id: 'actor-1' }, '2025-10-01', '2025-2026');
+    expect(submitted).toMatchObject([{ academicYear: '2025-2026', effectiveDate: '2025-10-01' }]);
+    await expect(service.processFees({ id: 'student-1' },
+      [{ ...fee, academicYear: '2026-2027' }], { id: 'actor-1' }, '2025-10-01', '2025-2026'))
+      .rejects.toThrow('must match the new enrollment year');
   });
 });

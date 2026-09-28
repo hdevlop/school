@@ -1,7 +1,9 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as announcementApi from '@/services/announcementApi';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
+// The viewed year's announcements; mutations refresh every year's list.
 export const useAnnouncements = (options?) => {
   const { announcementId, enabled = true } = options || {};
 
@@ -16,7 +18,9 @@ export const useAnnouncements = (options?) => {
     unpublish: announcementApi.unpublishAnnouncementApi,
   });
 
-  const { data: announcements, isLoading: isAnnouncementsLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const {
+    data: announcements, isLoading: isAnnouncementsLoading, isError, error, refetch,
+  } = useYearScopedList({ resource: 'announcements', fetch: announcementApi.getAnnouncementsApi, enabled });
   const { data: announcement, isLoading: isAnnouncementLoading } = crud.useGetById(announcementId, !!announcementId);
 
   const { mutateAsync: createAnnouncement, isLoading: isCreating } = crud.useCreate();

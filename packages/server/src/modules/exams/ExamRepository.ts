@@ -1,31 +1,45 @@
 import { Repository } from '../../najm';
 import { Owned } from '../../auth';
-import { and, desc, eq, sql, asc, count, inArray, or, type SQL, isNotNull } from 'drizzle-orm';
+import { and, desc, eq, sql, asc, count, gte, inArray, or, type SQL, isNotNull } from 'drizzle-orm';
 import { exams, grades, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
-import { inReportingYear, type ReportingYear } from '../academicYears/academicRecordYear';
+import { inReportingYear } from '../academicYears/academicRecordYear';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
-import { Exam } from './ExamGuards';
+import { Exam, ExamForPlacedStudent, ExamForPlacedParent } from './ExamGuards';
 import { sourceAssignmentColumns, sourceTeachingColumns } from '../academicSources/academicSourceContext';
+import { studentPlacedOnSourceDate } from '../academicSources/placedOnSourceDate';
 
 export type ExamListFilters = {
-  year: ReportingYear;
   sectionId?: string;
   subjectId?: string;
   teacherId?: string;
 };
 
-@Owned(Exam)
+@Owned(Exam, ExamForPlacedStudent, ExamForPlacedParent)
 @Repository()
 export class ExamRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
   declare ownershipCondition: () => SQL | undefined;
+
+  // An exam belongs to its stored year, else to the year whose reporting interval holds its date.
+  private inSelectedYear() {
+    return inReportingYear(exams.academicYearId, exams.date, this.year);
+  }
+
+  /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
+  private readCondition(...filters: (SQL | undefined)[]) {
+    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+  }
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
   // ========================================
 
-  private buildExamQuery() {
+  // Never chain another .where() on this: it would replace the read condition.
+  private buildExamQuery(...filters: (SQL | undefined)[]) {
     const teacherUsers = alias(users, 'teacher_users');
 
     return this.db
@@ -74,73 +88,74 @@ export class ExamRepository {
       .leftJoin(staff, eq(teachers.staffId, staff.id))
       .leftJoin(teacherUsers, eq(staff.userId, teacherUsers.id))
       .leftJoin(sections, eq(teacherAssignments.sectionId, sections.id))
-      .leftJoin(classes, eq(sections.classId, classes.id));
+      .leftJoin(classes, eq(sections.classId, classes.id))
+      .where(this.readCondition(...filters));
   }
 
-  // The year's exams the user may read: the stored year, else the date
-  // in the year's reporting interval. Year, filters and ownership are one WHERE.
-  async getAll({ year, sectionId, subjectId, teacherId }: ExamListFilters) {
-    return await this.buildExamQuery()
-      .where(and(
-        this.ownershipCondition(),
-        inReportingYear(exams.academicYearId, exams.date, year),
-        sectionId ? or(
-          eq(teacherAssignments.sectionId, sectionId),
-          sql`EXISTS (
-            SELECT 1 FROM jsonb_array_elements_text(COALESCE(${exams.sectionIds}, '[]'::jsonb)) AS target_section_id
-            WHERE target_section_id = ${sectionId}
-          )`,
-        ) : undefined,
-        subjectId ? eq(teacherAssignments.subjectId, subjectId) : undefined,
-        teacherId ? eq(teacherAssignments.teacherId, teacherId) : undefined,
-      ))
+  // The year's exams the user may read, optionally for one section, subject or teacher.
+  async getAll({ sectionId, subjectId, teacherId }: ExamListFilters = {}) {
+    return await this.buildExamQuery(
+      sectionId ? or(
+        eq(teacherAssignments.sectionId, sectionId),
+        sql`EXISTS (
+          SELECT 1 FROM jsonb_array_elements_text(COALESCE(${exams.sectionIds}, '[]'::jsonb)) AS target_section_id
+          WHERE target_section_id = ${sectionId}
+        )`,
+      ) : undefined,
+      subjectId ? eq(teacherAssignments.subjectId, subjectId) : undefined,
+      teacherId ? eq(teacherAssignments.teacherId, teacherId) : undefined,
+    )
       .orderBy(desc(exams.date));
   }
 
+  /** One student's exams in the year, from `onOrAfter` when given: those of a section they sat in on the date. */
+  async getForStudent(studentId: string, onOrAfter?: string) {
+    return await this.buildExamQuery(
+      studentPlacedOnSourceDate(exams, studentId),
+      onOrAfter ? gte(exams.date, onOrAfter) : undefined,
+    )
+      .orderBy(asc(exams.date), asc(exams.startTime));
+  }
+
   async getById(id) {
-    const [result] = await this.buildExamQuery()
-      .where(and(this.ownershipCondition(), eq(exams.id, id)))
+    const [result] = await this.buildExamQuery(eq(exams.id, id))
       .limit(1);
 
     return result;
   }
 
   async getByType(type) {
-    return await this.buildExamQuery()
-      .where(and(this.ownershipCondition(), eq(exams.type, type)))
+    return await this.buildExamQuery(eq(exams.type, type))
       .orderBy(desc(exams.date));
   }
 
   async getByStatus(status) {
-    return await this.buildExamQuery()
-      .where(and(this.ownershipCondition(), eq(exams.status, status)))
+    return await this.buildExamQuery(eq(exams.status, status))
       .orderBy(desc(exams.date));
   }
 
   async getByTeacherAssignment(teacherAssignmentId) {
-    return await this.buildExamQuery()
-      .where(and(this.ownershipCondition(), eq(exams.teacherAssignmentId, teacherAssignmentId)))
+    return await this.buildExamQuery(eq(exams.teacherAssignmentId, teacherAssignmentId))
       .orderBy(desc(exams.date));
   }
 
   async getTodayExams() {
     const today = new Date().toISOString().split('T')[0];
-    return await this.buildExamQuery()
-      .where(and(this.ownershipCondition(), eq(exams.date, today)))
+    return await this.buildExamQuery(eq(exams.date, today))
       .orderBy(asc(exams.startTime));
   }
 
   async getUpcomingExams() {
     const today = new Date().toISOString().split('T')[0];
-    return await this.buildExamQuery()
-      .where(and(this.ownershipCondition(), sql`${exams.date} >= ${today}`))
+    return await this.buildExamQuery(sql`${exams.date} >= ${today}`)
       .orderBy(asc(exams.date), asc(exams.startTime));
   }
 
   async getCount() {
     const [result] = await this.db
       .select({ count: count() })
-      .from(exams);
+      .from(exams)
+      .where(this.readCondition());
 
     return result;
   }
@@ -148,7 +163,7 @@ export class ExamRepository {
   async create(examData) {
     const [newExam] = await this.db
       .insert(exams)
-      .values(examData)
+      .values({ ...examData, academicYearId: this.year.id })
       .returning();
 
     return await this.getById(newExam.id);
@@ -158,7 +173,7 @@ export class ExamRepository {
     const [updatedExam] = await this.db
       .update(exams)
       .set(examData)
-      .where(eq(exams.id, id))
+      .where(and(eq(exams.id, id), this.inSelectedYear()))
       .returning();
 
     return updatedExam;
@@ -167,7 +182,7 @@ export class ExamRepository {
   async delete(id) {
     const [deletedExam] = await this.db
       .delete(exams)
-      .where(eq(exams.id, id))
+      .where(and(eq(exams.id, id), this.inSelectedYear()))
       .returning();
 
     return deletedExam;
@@ -176,6 +191,7 @@ export class ExamRepository {
   async deleteAll() {
     const deletedExams = await this.db
       .delete(exams)
+      .where(this.inSelectedYear())
       .returning();
 
     return {
@@ -187,7 +203,7 @@ export class ExamRepository {
   async deleteBulk(ids: string[]) {
     const deletedExams = await this.db
       .delete(exams)
-      .where(inArray(exams.id, ids))
+      .where(and(inArray(exams.id, ids), this.inSelectedYear()))
       .returning();
 
     return {
@@ -268,6 +284,11 @@ export class ExamRepository {
       .where(and(eq(exams.id, id), isNotNull(exams.academicYearId)))
       .limit(1);
     return Boolean(row);
+  }
+
+  /** Trusted full reset; user-facing deletion is limited to the selected year. */
+  async clearForSeedReset() {
+    await this.db.delete(exams);
   }
 
 }

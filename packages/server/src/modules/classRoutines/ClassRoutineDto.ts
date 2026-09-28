@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import { MAX_ROUTINE_CONTENT_GROUPS, MAX_ROUTINE_CONTENT_LABEL_LENGTH } from '@sms/contracts/routines';
 import type { RoutineContentGroup } from '@sms/contracts/routines';
-import { academicYearField } from '../../shared/fields';
 
 const id = z.string().min(1);
 export const routineDayDto = z.enum([
@@ -25,7 +24,6 @@ export const routineTeacherParam = z.object({ teacherId: id });
 export const routineListQuery = z.object({
   classId: id.optional(),
   sectionId: id.optional(),
-  academicYear: academicYearField.optional(),
   status: routineStatusDto.optional(),
 });
 
@@ -39,9 +37,9 @@ export const createRoutinePeriodDto = z.object({
 });
 export const updateRoutinePeriodDto = createRoutinePeriodDto.partial();
 
+// A timetable takes the selected year, which must be its section's.
 export const createRoutineScheduleDto = z.object({
   sectionId: id,
-  academicYear: z.string().trim().min(4).max(20),
   name: z.string().trim().min(1).max(120),
   activeDays: z.array(routineDayDto).min(1).max(7).default([
     'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',

@@ -27,11 +27,8 @@ export class AcademicDashboardService {
     ] = await Promise.all([
       this.studentService.getCount(year).catch(() => ({ count: 0 })),
       this.teacherService.getCount().catch(() => ({ count: 0 })),
-      this.attendanceRepository.getToday('student')
-        .then((records) => records.filter((record) => record.academicYearId === year.id ||
-          (!record.academicYearId && record.date >= year.reportingStartsOn && record.date <= year.reportingEndsOn)))
-        .catch(() => []),
-      this.gradeService.getAll(year).catch(() => []),
+      this.attendanceRepository.getToday('student'),
+      this.gradeService.getAll(),
     ]);
 
     const attendanceRecords = todayAttendance as any[];

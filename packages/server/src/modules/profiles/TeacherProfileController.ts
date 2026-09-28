@@ -4,7 +4,6 @@ import { TeacherProfileService } from './TeacherProfileService';
 import { isAuth } from '../../auth';
 import { z } from 'zod';
 import { Year } from '../academicYears/requestYear';
-import { academicYearQuery } from '../academicYears/AcademicYearDto';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 const teacherIdParam = z.object({ teacherId: z.string().min(1) });
@@ -24,7 +23,7 @@ export class TeacherProfileController {
   }
 
   @Get('/:teacherId/schedule-today')
-  @Validate({ params: teacherIdParam, query: academicYearQuery })
+  @Validate({ params: teacherIdParam })
   @McpTool('Get teacher schedule for today')
   @ResMsg('teachers.success.retrieved')
   async getScheduleToday(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
@@ -32,7 +31,7 @@ export class TeacherProfileController {
   }
 
   @Get('/:teacherId/pending-grading')
-  @Validate({ params: teacherIdParam, query: academicYearQuery })
+  @Validate({ params: teacherIdParam })
   @McpTool('Get assessments with pending grading for a teacher')
   @ResMsg('teachers.success.retrieved')
   async getPendingGrading(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
@@ -40,7 +39,7 @@ export class TeacherProfileController {
   }
 
   @Get('/:teacherId/students')
-  @Validate({ params: teacherIdParam, query: academicYearQuery })
+  @Validate({ params: teacherIdParam })
   @McpTool('Get all students across assigned classes for a teacher')
   @ResMsg('teachers.success.retrieved')
   async getMyStudents(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {

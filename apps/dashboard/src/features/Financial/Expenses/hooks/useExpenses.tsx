@@ -1,6 +1,7 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as expenseApi from '@/services/expenseApi';
+import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
 export const useExpenses = (options?) => {
   const { expenseId, enabled = true } = options || {};
@@ -13,8 +14,12 @@ export const useExpenses = (options?) => {
     delete: expenseApi.deleteExpenseApi,
   });
 
-  const { data: expenses, isLoading: isExpensesLoading, isError, error, refetch } = crud.useGetAll(enabled);
-  const { data: expense, isLoading: isExpenseLoading } = crud.useGetById(expenseId, !!expenseId);
+  const { data: expenses, isLoading: isExpensesLoading, isError, error, refetch, academicYear } =
+    useYearScopedList({ resource: 'expenses', fetch: expenseApi.getExpensesApi, enabled });
+  const { data: expense, isLoading: isExpenseLoading } = useYearScopedDetail({
+    resource: 'expenses', parts: [expenseId], fetch: () => expenseApi.getExpenseByIdApi(expenseId),
+    enabled: Boolean(expenseId),
+  });
 
   const { mutateAsync: createExpense, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateExpense, isLoading: isUpdating } = crud.useUpdate();
@@ -24,6 +29,7 @@ export const useExpenses = (options?) => {
     // Data
     expenses,
     expense,
+    academicYear,
 
     // Status
     isError,
@@ -31,9 +37,6 @@ export const useExpenses = (options?) => {
     refetch,
 
     // Query Functions
-    getAllExpenses: crud.useGetAll,
-    getExpenseById: crud.useGetById,
-
     // Mutations
     createExpense,
     updateExpense,

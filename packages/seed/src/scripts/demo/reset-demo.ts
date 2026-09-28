@@ -28,8 +28,8 @@ import {
   AssessmentService,
   ExamService,
   AttendanceService,
-  AlertService,
-  AnnouncementService,
+  AlertRepository,
+  AnnouncementRepository,
   EventService,
   RefuelService,
   MaintenanceService,
@@ -50,8 +50,8 @@ runSeedTask('demo reset', async (server) => {
   const assessmentService = await server.container.resolve(AssessmentService);
   const examService = await server.container.resolve(ExamService);
   const attendanceService = await server.container.resolve(AttendanceService);
-  const alertService = await server.container.resolve(AlertService);
-  const announcementService = await server.container.resolve(AnnouncementService);
+  const alertRepository = await server.container.resolve(AlertRepository);
+  const announcementRepository = await server.container.resolve(AnnouncementRepository);
   const eventService = await server.container.resolve(EventService);
   const refuelService = await server.container.resolve(RefuelService);
   const maintenanceService = await server.container.resolve(MaintenanceService);
@@ -105,31 +105,31 @@ runSeedTask('demo reset', async (server) => {
   await expenseService.clearForSeedReset();
   console.log('✅ Expenses cleared');
 
-  await gradeService.deleteAll();
+  await gradeService.clearForSeedReset();
   console.log('✅ Grades cleared');
 
-  await assessmentService.deleteAll();
+  await assessmentService.clearForSeedReset();
   console.log('✅ Assessments cleared');
 
-  await examService.deleteAll();
+  await examService.clearForSeedReset();
   console.log('✅ Exams cleared');
 
-  await attendanceService.deleteAll();
+  await attendanceService.clearForSeedReset();
   console.log('✅ Attendance cleared');
 
-  await alertService.deleteAll();
+  await alertRepository.clearForSeedReset();
   console.log('✅ Alerts cleared');
 
-  await announcementService.deleteAll();
+  await announcementRepository.clearForSeedReset();
   console.log('✅ Announcements cleared');
 
-  await eventService.deleteAll();
+  await eventService.clearForSeedReset();
   console.log('✅ Events cleared');
 
-  await refuelService.deleteAll();
+  await refuelService.clearForSeedReset();
   console.log('✅ Refuels cleared');
 
-  await maintenanceService.deleteAll();
+  await maintenanceService.clearForSeedReset();
   console.log('✅ Maintenance cleared');
 
   await disciplineService.deleteAll();
@@ -138,10 +138,10 @@ runSeedTask('demo reset', async (server) => {
   await behaviorRewardService.deleteAll();
   console.log('✅ Behavior rewards cleared');
 
-  await studentRouteService.deleteAll();
+  await studentRouteService.clearForSeedReset();
   console.log('✅ Student routes cleared');
 
-  await vehicleAssignmentService.deleteAll();
+  await vehicleAssignmentService.clearForSeedReset();
   console.log('✅ Vehicle assignments cleared');
 
   await yearTransitionRepository.clearForSeedReset();
@@ -165,13 +165,13 @@ runSeedTask('demo reset', async (server) => {
   await parentService.deleteAll();
   console.log('✅ Parents cleared');
 
-  await sectionService.deleteAll();
+  await sectionService.clearForSeedReset();
   console.log('✅ Sections cleared');
 
-  await classService.deleteAll();
+  await classService.clearForSeedReset();
   console.log('✅ Classes cleared');
 
-  await subjectService.deleteAll();
+  await subjectService.clearForSeedReset();
   console.log('✅ Subjects cleared');
 
   await feeTypeService.deleteAll();

@@ -2,6 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useAuth } from 'najm-auth/client/react';
 import { Megaphone, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import AnnouncementForm from './AnnouncementForm';
@@ -15,6 +16,10 @@ import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 
 function AnnouncementsTable() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const role = (user as any)?.role;
+  // Everyone else reads the announcements addressed to them.
+  const canManage = role === 'admin' || role === 'principal';
   const columns = useAnnouncementsTableColumns();
   const rawFilters = useAnnouncementsTableFilters();
 
@@ -103,10 +108,10 @@ function AnnouncementsTable() {
         data={announcements}
         columns={columns}
         filters={rawFilters}
-        onCreate={handleAddClick}
+        onCreate={canManage ? handleAddClick : undefined}
         onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
+        onEdit={canManage ? handleEdit : undefined}
+        onDelete={canManage ? handleDelete : undefined}
         loading={isAnnouncementsLoading}
         error={hasFailedToLoad(error, announcements) ? error : null}
         renderError={(currentError) => (
@@ -121,13 +126,15 @@ function AnnouncementsTable() {
             surface="panel"
             icon={FEATURE_ICONS.announcements}
             title={t('emptyStates.announcements.title')}
-            description={t('emptyStates.announcements.description')}
-            action={(
+            description={canManage
+              ? t('emptyStates.announcements.description')
+              : t('emptyStates.announcements.readerDescription')}
+            action={canManage ? (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('announcements.dialogs.createButton')}
               </NButton>
-            )}
+            ) : undefined}
           />
         )}
         renderFilteredEmpty={() => (

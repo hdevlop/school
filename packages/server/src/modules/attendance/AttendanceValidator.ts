@@ -7,6 +7,8 @@ import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
 import { getBusinessDate } from '../../shared/businessDate';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 function toLocalDateOnly(date: Date | string) {
   if (typeof date === 'string') {
@@ -37,6 +39,7 @@ export function isAttendanceDateTooOld(date: Date | string, maxDaysOld: number =
 
 @Service()
 export class AttendanceValidator {
+  @Year() private readonly year!: ResolvedAcademicYear;
   @I18n('attendance.errors') private at!: (key: string) => string;
 
   constructor(
@@ -55,6 +58,10 @@ export class AttendanceValidator {
       Err(404, this.at('notFound'));
     }
     return existingAttendance;
+  }
+
+  ensureSelectedYear(yearId: string) {
+    if (yearId !== this.year.id) Err(409, 'Attendance date and target must belong to the selected academic year');
   }
 
   async ensureStudentExists(studentId: string) {

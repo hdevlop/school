@@ -1,10 +1,545 @@
 # Academic-year history implementation evidence
 
+## Cycles and subjects shared-catalog slice, 2026-09-28
+
+Uncommitted, alongside the concurrent work; no browser review or deployment is claimed.
+
+- **Classification.** Cycles (row 08) and subjects (row 36) are shared catalogs. Every year reads the same rows, so they get no `@Year()` and are not registered in `yearScopedModules`; their MCP tools take no year. Renaming one corrects it in every year, which is the intended meaning of a catalog.
+- **History fix: in-use entries can no longer be deleted.** Deleting a catalog entry reached every year's records:
+  - A subject delete cascaded to the teacher assignments of every year that used the subject. When a lesson, exam, assessment or attendance record held one of those assignments, the foreign key stopped it with a 500. When none did, the assignments were silently deleted, and with them what a past year's classes, teachers and grade visibility were built on.
+  - A cycle delete set `classes.cycle_id` to null on every year's classes that used it. An accountant assigned to the cycle stopped it with a 500.
+
+  Now deleting a subject that any teacher assignment or alert uses is refused with 409 `subjects.errors.inUse`. "Delete all" is refused with `someInUse` when any subject is in use. Deleting a cycle that any class or accountant assignment uses is refused with 409 `cycles.errors.inUse`, which suggests deactivating it instead. Unused entries delete as before. `SubjectService.clearForSeedReset` is the trusted reset (`SeedService`, `reset-demo`); it runs after teachers and their assignments are gone.
+- **Messages.**
+  - `subjects.errors` existed only in English. French, Arabic and Spanish now have it, and all four have the two new keys.
+  - Cycle errors were hard-coded English strings. They now come from a new `cycles.errors` block (`notFound`, `nameExists`, `inUse`) in all four locales.
+- **Tests.** New `CatalogsHistoryTransport.test.ts` passed 4/4 on port 5512. It covers:
+  - identical subject and cycle lists for 2024-2025, 2026-2027 and no selection;
+  - the 409 for the fixture's Mathematics subject, which each year's section-A assignment uses, and for delete-all, with the subject still present;
+  - an unused subject deleted, then "Subject not found";
+  - a cycle linked to a 2024-2025 class: refused with the English message, the class still linked, the cycle deactivated, then deleted once the class was gone;
+  - no `academicYear` input on the MCP tools, even with a year header.
+
+  Created rows were deleted, and a check afterwards found none.
+- **Gates.**
+  - `bun run lint` passed; its one warning is in the concurrent transport work.
+  - `bun run typecheck`, `bun run i18n:check` ("Missing keys: none") and the build passed.
+  - `bun run test`: config 270, access reset 60, routines 11, academic years 251, teacher dashboard 17, ownership 167 and boundaries 24 passed.
+- **Open.** Owner review. The Subjects and Cycles pages show the server's message when a delete is refused; that has not been checked in a browser.
+
+## Classes, sections and class routines selected-year slice, 2026-09-28
+
+Uncommitted, alongside the concurrent student and transport work; no browser review or deployment is claimed. Owner decision 2026-09-28: a new class, section or timetable takes the selected year, the body year field is removed, and nothing moves between years.
+
+- **Year basis.** No migration.
+  - A class belongs to the year label stored on it.
+  - A section belongs to its class's year.
+  - A timetable belongs to the year label stored on it, which must be its section's class year.
+- **Classes (row 06).**
+  - `ClassRepository` has `@Year()` and one read condition (ownership plus year) applied in its builder's only `.where()`. List and detail use it.
+  - The class's students, parents and analytics come from the selected year's placements. Its sections, teachers and subjects are read only after the class is found in that year.
+  - Create stamps the selected year; `academicYear` is gone from the create and update bodies and the list query. Update, delete and delete-all stay inside the year. `clearForSeedReset` is the trusted reset (`SeedService`, `reset-demo`).
+  - Seed data spans years: `POST /classes/seed` and `seedDemoClasses` keep each class's own year through `createForSeed`, outside any year scope.
+  - Other modules keep the any-year reference lookups `getById` and `ClassValidator.ensureExists`; they apply their own year rules. `getByAcademicYear` stays a named-year read for fees.
+- **Sections (row 31).**
+  - `SectionRepository` has the same shape through its join on classes. Students, parents and analytics come from the selected year's placements.
+  - Create, or moving a section to another class, requires a class of the selected year: 409 `classOutsideSelectedYear`.
+  - Delete now refuses any section that ever held a placement (409 `hasStudents`). Before, a past section had no current students, passed the check, and failed on the placement foreign key with a 500.
+- **Class routines (row 07).**
+  - `ClassRoutineRepository` limits list, detail, the section's published timetable and the teacher's week to the selected year. Every change goes through that detail, so another year's timetable is 404.
+  - Create takes the selected year and refuses another year's section: 409 `outsideSelectedYear`. The lesson-assignment list refuses it too.
+  - The teacher dashboard still names the active year for its week (`getTeacherScheduleIds`); periods and duty candidates stay shared.
+- **Registration.** `classes`, `sections` and `class-routines` are registered. Their controllers no longer take `@Year()` or role parameters.
+- **Messages.**
+  - `classes.errors` and `sections.errors` existed only in English, so French, Arabic and Spanish users saw raw keys. All four locales now have them, plus `hasSections`, `classRequired`, `hasStudents`, `sectionRequired`, `validationFailed` and `classOutsideSelectedYear`, which English lacked too.
+  - All 32 routine error calls passed their keys straight to `Err`, so users saw `classRoutines.errors.*`. They now go through `t()`.
+- **Dashboard.**
+  - The class form has no year field; a class takes the year being viewed.
+  - The timetable page no longer sends a year when it creates one.
+  - Class and section detail reads are keyed by year.
+- **Tests.**
+  - `OwnedRepositoryReads.test.ts` adds `getInSelectedYear` for classes and sections (ownership 167/167).
+  - New `ClassesHistoryDatabase.test.ts` passed 4/4 with rolled-back rows. It covers:
+    - each year's exact class and sections;
+    - 8 placed students and 2 sections for 2025-2026, and Omar alone in section B;
+    - a teacher who sees only the selected year's class, and an unknown role who sees nothing;
+    - a past section held by its placements;
+    - year-bound create, update and delete;
+    - timetables by year, section and teacher, with the dashboard's named-year read.
+  - New `ClassesHistoryTransport.test.ts` passed 6/6 on port 5511. It covers:
+    - 401 without a token;
+    - a body year ignored in favour of the header;
+    - 404 with the English message for another year's class, section and timetable;
+    - the three 409 messages (section's class, timetable's section, and the 2024 section that held students);
+    - the 400 conflict and an unknown year;
+    - MCP `classes_get_classes` and `sections_get_sections` by header and tool input.
+
+    Created rows were deleted, and a check afterwards found none.
+  - Four mock tests of the removed role and year parameters were replaced by `ClassSectionRoutineYearInput.test.ts` (3/3).
+  - The Alerts, Announcements, Assessments, Attendance, Exams, Events and Grades database and transport suites, which look classes and sections up, passed again.
+- **Gates.**
+  - `bun run lint` passed; its one warning is in the concurrent transport work.
+  - `bun run typecheck`, `bun run i18n:check` ("Missing keys: none") and the build passed.
+  - `bun run test`: config 270, access reset 60, routines 11, academic years 251, teacher dashboard 17, ownership 167 and boundaries 24 passed.
+- **Open.**
+  - Owner visual and browser review of the Classes, Sections and Timetable pages in a past year.
+  - Class and section ownership for parents and students still follows the current projection (`students.class_id`). They may only select the active year, where that matches.
+
+## Vehicle assignments dated-interval slice, 2026-09-28
+
+**Policy and source.** Driver assignments use the existing start and exclusive end dates as continuous intervals visible in every reporting year they overlap. `VehicleAssignmentRepository` scopes list/detail/vehicle/driver/status/count and ordinary update/delete/delete-all with `@Year()`. The named live active lookup and vehicle's computed current driver use the business day across all years. A driver change checks overlap, closes the prior row and inserts a new one transactionally; it no longer changes the old row's `driverId` or `assignmentDate`. Direct create and edits validate interval and status coherence and prevent vehicle overlap. Staff driver deletion and seed reset use explicit all-year paths. Vehicle creation derives the registered year from the optional driver assignment date without changing shared vehicle read scope; a multiple-driver creation payload is rejected because the current vehicle view has one driver. The vehicle table captures the selected year for its driver-assignment action. Assignment routes now require admin authentication, consistent with driver administration. No schema migration. Owner policy and browser review remain open.
+
+**Connected checks.** `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/VehicleAssignmentsHistoryTransport.test.ts` passed 2/2, 30 assertions against marked local `school_history_test`, authenticated admin REST and MCP on port 5524. Temporary vehicles, staff, drivers and assignments tested two-year overlap, completed old intervals, cross-year detail refusal, wrong-year and overlapping create refusal, reassignment preserving the first driver/date, shared current-driver projection, vehicle-create side effect, and MCP list. Fixture rows were deleted. `bun run typecheck`, `bun run lint`, configured `bun run test` and an isolated `.next-history-vehicle-assignments` production build passed. Existing overlapping legacy rows and concurrent overlap races remain for integrity review; owner/browser review and production deployment remain open.
+
+## Student routes dated-interval slice, 2026-09-28
+
+**Policy and source.** The existing start and exclusive end dates define a continuous assignment. A row appears in each selected reporting year it overlaps, including a completed row in its earlier year; no schema migration or synthetic annual rows are needed. `StudentRouteRepository` uses `@Year()` for normal list/detail/student/vehicle/count and update/delete/delete-all. The live active-route and occupancy checks remain explicitly all-year and use the school business day. Route creation checks the selected-year start date, that day's student enrollment and placement, and overlapping intervals across all years. Reassignment closes the old row and inserts a new one in one transaction; unassignment accepts a selected-year correction date through `POST /:id/unassign` while the existing DELETE action still uses today. Transport fees are created in the selected charged year, and ending/resuming transport now looks up only that year's fee. Seed cleanup calls `clearForSeedReset`. The Students controller receives the same request-year scope for nested student creation; its two existing MCP query inputs are reused rather than duplicated. The transport hook keys reads by selected year and captures the year for form writes. Owner policy and browser review remain open.
+
+**Connected checks.** `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/StudentRoutesHistoryTransport.test.ts` passed 2/2, 37 assertions against marked local `school_history_test`, authenticated admin REST and MCP on port 5523. Three temporary completed routes, two vehicles and one temporary transport fee type tested exclusive interval overlap, an assignment spanning two years, wrong-year and missing-placement refusal, overlapping-route refusal, historical fee creation, reassignment preserving the first vehicle/date and prior-year fee, current-year unassignment changing only the current fee, and MCP list. Created route, fee, installment, audit and vehicle rows were cleaned. `bun run typecheck`, `bun run lint`, configured `bun run test` and an isolated `.next-history-student-routes` production build passed after the Students query-input exception was added to the shared MCP scope contract. Owner/browser review, production migration and deployment remain open.
+
+## Events selected-year slice, audience and sign-in fix, 2026-09-28
+
+Uncommitted, alongside the concurrent transport and student work; no browser review or deployment is claimed.
+
+- **Security fix.** `EventController` had no `@isAuth()`, and ten read routes had no guard: `/today`, `/upcoming`, `/past`, `/active`, `/type/:type`, `/class/:classId`, `/section/:sectionId`, `/date-range`, `/mcp/date-range` and `/participant/:participantId`. A probe against the fixture got 200 without a token. Now:
+  - the class has `@isAuth()`, and every read route needs `read:events`;
+  - participant reads (`/:id/participants…`, `/participant/:id`) need `manage:participants`. That permission is not in the catalog, so only admin's wildcard passes it; the dashboard never reads participants.
+- **Year.** An event belongs to every year whose reporting interval its dates overlap. One spanning the boundary shows in both years: this module's shared exception. No migration.
+  - `EventRepository` has `@Year()` and one `readCondition` (audience plus year) applied in its builder's only `.where()`. That covers list, detail, the status, type, organizer, class, section and visibility filters, today, upcoming, past, active, date range, events by participant and the analytics.
+  - Update, delete and the admin delete-all stay inside the year. `clearForSeedReset` is the trusted reset (`SeedService`, `reset-demo`).
+  - Create, update and postpone require the dates to overlap the selected year: 409 `outsideSelectedYear`.
+  - The controller is registered as `events`. The demo seed's event phase runs in the seed year, and the generator keeps past demo events inside it.
+  - The Calendar's `useEvents` list and detail are keyed by year. The parent dashboard's upcoming items stay on the active year, which is intentional.
+- **Audience.** `visibility` was stored and never applied. The new `Event` token (`EventGuards.ts`) applies it; school-wide roles still see everything.
+  - Teachers read public, teacher and staff events, and every event they organize, private ones included.
+  - Students read public and student events; parents public and parent events. A class or section event reaches them only when the student (or a child) was placed in it on the event's first day. A missing visibility counts as public.
+  - Only the principal held `read:events`, so the Calendar showed teachers and families no events. `rolePermissions.json` now grants `read:events` to teacher, parent and student; run `bun run seed:admin` on existing databases.
+- **Other fixes.**
+  - `events.errors` was missing in all four locales. It now has the nine keys in use and `outsideSelectedYear`.
+  - `getByClass` failed on every call: an unqualified `class_id` in its subquery was ambiguous. It now uses JSON containment.
+- **Tests.**
+  - `OwnedRepositoryReads.test.ts` adds six event reads and pins the parent rule's SQL (ownership 165/165).
+  - New `EventsHistoryDatabase.test.ts` passed 3/3 with rolled-back rows. It covers:
+    - exact ids per year, with the boundary event in 2024-2025 and 2025-2026, plus the class filter and analytics;
+    - a teacher with and without their own private event;
+    - Omar, who gets the class event and the February section-B event after his transfer, and Adam, who gets the class event but not section B's;
+    - Aya, with no 2025-2026 enrollment, who gets neither;
+    - Omar's parent and an unlinked parent, and an unknown role, who gets nothing;
+    - year-bound update, delete and delete-all.
+  - New `EventsHistoryTransport.test.ts` passed 4/4 on port 5510. It covers:
+    - 401 without a token on every formerly open route;
+    - a past-year create listed only in that year;
+    - 404 for another year's detail, update, cancel and delete;
+    - 409 with the English message for dates moved out of the year;
+    - the 400 conflict, an unknown year, the translated not-found message, and MCP `events_get_events` by header and tool input.
+
+    Created rows were deleted.
+- **Gates.**
+  - `bun run lint`, `bun run typecheck`, `bun run i18n:check` ("Missing keys: none") and `bun run build` passed.
+  - `bun run test`: config 270, access reset 60, routines 11, teacher dashboard 17, ownership 165 and boundaries 24 passed.
+  - Academic years had 261 pass and 1 fail. The failure names only `StudentController.getStudents` and `getStudent` query inputs, from the concurrent students conversion (not yet in its ledger). It is not in this slice.
+- **Open.**
+  - Owner visual and browser review of the Calendar as teacher, parent and student.
+  - `/:id/participants/count` is declared after `/:id/participants/:type`, so "count" is read as a type; left as is.
+
+## Vehicles shared-identity slice, 2026-09-28
+
+**Scope.** Vehicles are shared identities. License plates, purchase dates, status and mileage remain present-time fields across selected years. The repository's computed driver is the currently active assignment, not a historical driver view. Dated driver intervals belong to row 42; vehicle creation's optional driver assignment depends on that row. Vehicles stay outside `yearScopedModules`; no schema or production change. This independent verification advanced while row 41's historical-assignment policy awaits the owner.
+
+**Connected checks.** `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/VehiclesHistoryTransport.test.ts` passed 2/2, 29 assertions against marked local `school_history_test`. Two temporary vehicles with different purchase dates and current statuses appeared in repository and authenticated admin REST/MCP list/detail/count under omitted, old, current and invalid year headers; both were deleted afterward. Server test typecheck and focused ESLint passed. Owner/browser review and production acceptance remain open.
+
+## Refuels dated-reporting slice, 2026-09-28
+
+**Source.** Refuel records and fuel aggregates use the school-local day of `datetime` in the selected reporting interval. The refuel repository scopes list, detail, vehicle/driver/voucher/date reads, recent/count, cost and efficiency reports, monthly trends, and normal update/delete/delete-all. Create and datetime edits reject dates outside the selected year. Voucher uniqueness still searches all years, while the rolling 90-day fuel-needs prediction remains a live operational calculation. Seed cleanup uses `clearForSeedReset`; demo seeding supplies a resolved year. No migration.
+
+**Verification.** `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/RefuelsHistoryTransport.test.ts` passed 2/2, 30 assertions on the marked local `school_history_test` database and authenticated REST/MCP. Two temporary refuels plus a vehicle, Staff and driver tested old/current year results, costs and vehicle reports; cross-year detail/delete refusal; historical create and wrong-year edit rejection; global voucher uniqueness; and MCP list. All temporary rows were deleted. `bun run --cwd packages/server typecheck:test`, `bun run typecheck`, `bun run lint`, `bun run test` and a production build using isolated `.next-history-refuels` passed. Owner/browser review and production acceptance remain open.
+
+## Maintenance dated-reporting slice, 2026-09-28
+
+**Policy and source.** Planned maintenance belongs to the selected year's `scheduledDate`; completed work belongs to the school-local day of `completedAt`. Older completed records with no completion timestamp fall back to their scheduled date. Open jobs without either date are mileage-driven operational work visible across years. The assumption follows row 39 of the forward plan and awaits owner review. `MaintenanceRepository` now scopes ordinary list, detail, filtered reads, counts, cost analytics, update and delete. `MaintenanceValidator` accepts historical scheduling corrections only within the selected reporting interval. Existing mileage alerts, due-hour duplicate checks and global overdue marking remain all-year operational paths. Seed cleanup uses `clearForSeedReset`; demo seeding supplies a resolved year. No migration.
+
+**Verification.** `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/MaintenanceHistoryTransport.test.ts` passed 2/2, 37 assertions against the marked local `school_history_test` database and authenticated REST/MCP. Four temporary maintenance rows and one vehicle tested old/new planned work, completion-date attribution, shared mileage work, cross-year detail/update/delete refusal, historical create/edit, invalid year, live alerts and MCP list. Cleanup removed all temporary rows. `bun run --cwd packages/server typecheck:test`, `bun run typecheck`, `bun run lint`, `bun run test` and a production build using an isolated `.next-history-maintenance` directory passed. The test exposed and the implementation fixed a numeric cost analytics comparison with an empty string. Owner/browser review and production acceptance remain open.
+
 Status: **source implemented; whole-school history remains off by default pending complete acceptance**. The server-side `ACADEMIC_YEAR_HISTORY_ENABLED` switch remains unset/false in normal configuration. A reviewed transition and activation succeeded both on an isolated synthetic fixture and on a dated copy of the regenerated demo. Browser acceptance and the remaining permission and rollback cases are open.
 
 Current source note (2026-09-27): The administrator `/year-review` endpoints and list-time context-issue notices were removed at the owner's request. Dated results below document tests of the earlier design and are not current acceptance evidence for those removed endpoints. Normal year-filtered reads, create/edit validation, and the migration issue workflow remain. The full test and build checks for this removal are recorded separately from the earlier connected evidence.
 
 Removal verification (2026-09-27): `bun run test`, `bun run lint`, `bun run --cwd packages/server typecheck:test`, and `bun run build` passed. Source search found no remaining `reviewYear`, `withContextIssues`, `/year-review`, or client context-issue notice references. These checks do not constitute connected browser or live database acceptance.
+
+## Assessment error messages, 2026-09-28
+
+`AssessmentValidator` reads `assessments.errors`, which no locale had, so every assessment error reached users as a raw key such as `assessments.errors.notFound`. The block now exists in all four locales with the seven keys in use. It also has `outsideSelectedYear` and `yearCannotChange`, which replace two hard-coded English messages: the new `AssessmentValidator.ensureSameYear` carries the second. Done in the Assessments module with the owner's approval. `AssessmentsHistoryTransport.test.ts` (4/4) now pins the English 409 and 404 messages. `bun run i18n:check` ("Missing keys: none"), server typecheck, lint and `bun run test:academic-years` (262/262) passed.
+
+## Grades selected-year slice and personal notifications, 2026-09-28
+
+Grades follow the Assessments and Exams conversion; personal notifications are verified shared across years. Uncommitted, alongside the concurrent slices; no browser review or deployment is claimed.
+
+- **Grades: year.** A grade belongs to its stored `academic_year_id`, or, without one, to the year of its one source's date (`gradeInReportingYear`, unchanged). No migration.
+  - `GradeRepository` has `@Year()` and one `readCondition` applied in its builder's only `.where()`. That covers list, the student, section, subject and teacher filters, detail, by assessment, by exam and count.
+  - Update, delete, bulk delete and the admin delete-all match only the selected year's ids. A legacy grade's year needs its source's date, which an UPDATE or DELETE cannot join, so they filter by an id subquery. `clearForSeedReset` is the trusted every-year reset, now used by `SeedService` and `reset-demo`.
+  - A new grade's source year must be the selected year: 409 `outsideSelectedYear`, in all four locales. In practice another year's source is already a 404, because its existence check reads the selected year.
+  - The service's `resolveRecord` checks on detail, by-source reads and create were removed. The year middleware already checked that the role may use the selected year, and every row read now lies in it.
+  - The controller lost its `@Year()` and role parameters. The unused `gradeListQuery` is gone.
+  - The consumers (academic dashboard KPIs, student profile, teacher pending grading) call without a year, and their silent `.catch(() => [])` around grade reads was removed.
+  - The dashboard already keyed grades by year. `studentApi.getStudentGradesApi` calls a `/students/:id/grades` route that does not exist and has no callers; left as is.
+- **Grades: teacher rule.** Teachers read a grade when the student was *currently* in a section they teach. A transferred student's earlier grades left their old teachers, and the new section's teacher saw years of history that were not theirs. `GradeForTeacher` (`GradeGuards.ts`) now gives a teacher:
+  - the grades of their own assessments and exams;
+  - every grade of a student placed in a section they teach on the grade's source date;
+  - for a student with no dated enrollment at all, the current section: the same fallback grade creation accepts.
+
+  Parents and students keep `Grade`. `writeBy` is inert in najm-auth 4.1.0: it is stored and never read.
+- **Grades: tests.**
+  - `OwnedRepositoryReads.test.ts` runs every grade read in a year and pins the teacher SQL (ownership 158/158). Five year unit tests moved to the new signatures, and the old-grade update test now pins that a grade outside the selected year is not found. `GradeWriteContract.test.ts` adds the refusal before insert (academic years 262/262).
+  - New `GradesHistoryDatabase.test.ts` passed 3/3, with rolled-back rows, a February A+B exam, and two teachers without sources. It covers:
+    - exact ids per year, including a legacy dated grade, count, the student filter, by-assessment and the cross-year detail;
+    - the source's teacher sees every grade;
+    - the section-B teacher of 2025-2026 sees only Omar's February grade, not his October one;
+    - the section-A teacher of 2026-2027 sees Adam's 2026-2027 grade and none of his 2025-2026 ones, which the old rule showed;
+    - Omar sees his own grades;
+    - year-bound update, delete, bulk delete and delete-all.
+  - New `GradesHistoryTransport.test.ts` passed 3/3 on port 5509. It covers:
+    - a past-year create stored in its source's year and read there through list, student, assessment, section, teacher, report and the student profile, but not in the current year;
+    - 404 for detail, update, delete and by-assessment from another year, and a 404 create for another year's source;
+    - the 400 conflict and an unknown year;
+    - MCP `grades_get_all` by header and tool input.
+
+    Created rows were deleted.
+  - Assessments database 4/4 and transport 4/4, and Exams database 3/3 and transport 4/4, still pass.
+- **Notifications: shared across years.**
+  - `/notifications` is a personal inbox: every read and write is keyed by the signed-in recipient. A notification has no year, and its source carries one: a financial reminder's charged year, row 20.
+  - It is REST-only with no MCP tools, is not registered for the year, and the dashboard keys it `['personal-notifications', …]` without a year or header. No code change.
+  - New `NotificationsHistoryTransport.test.ts` passed 2/2. The same inbox and unread count appear under no header and under 2024-2025, 2025-2026 and 2026-2027. Another recipient's notification is never listed, and marking it read returns 404 and leaves it unread. The recipient marks their own read under a past year's header. The two rows were deleted.
+- **Gates.** `bun run lint` (clean), `bun run typecheck`, `bun run i18n:check` ("Missing keys: none") and `bun run build` passed. `bun run test` passed every suite: 270, 60, 11, 262, 17, 158 and 24 tests.
+- **Open.**
+  - Owner visual and browser review.
+  - The teacher's student-profile grades tab and grade entry screen have not been checked in a browser with the new teacher rule.
+
+## Drivers shared-identity slice, 2026-09-27
+
+**Scope.** `drivers` is a profile on shared Staff identity; its `hireDate`, current status, license and contact details are not a selected-year roster. The controller is admin-only. Its create/update/delete routes are retired (410) because Staff owns those writes. Dated vehicle assignments live in row 42. Drivers remain outside `yearScopedModules`; no migration, new year filter or production change.
+
+**Connected checks.** `DriversHistoryTransport.test.ts` passed 2/2 with 32 assertions on the marked local `school_history_test` fixture. It inserted one older inactive and one newer active Staff/driver pair, verified repository list/status/license reads, then checked admin REST list/detail/license access with omitted, old, current and invalid year headers. A normal delete returned 410 and left the driver row intact. Authenticated MCP listed the old driver. Both temporary driver and Staff pairs were deleted afterward. Server test typecheck and focused ESLint passed. Owner/browser review and production acceptance remain open.
+
+## Search shared-identity and ownership slice, 2026-09-27
+
+**Scope.** The four `/search` GET routes and four MCP tools search current student, teacher and parent identities, independent of the selected academic year. Search remains outside `yearScopedModules`; no year filter, schema migration or dashboard UI change. Previously, `@isAuth()` allowed any signed-in user to search all three tables, including email and phone. `SearchRepository` now ANDs each resource's existing Student, Teacher or Parent ownership condition with the term in one SQL WHERE. The typed routes require the corresponding read permission; the global route requires all three. Its response shape and limits are unchanged.
+
+**Checks.** `SearchOwnership.test.ts` passed 3/3 with 26 assertions: each resource's SQL rule, deny-by-default for an unknown role, unfiltered school-wide identity, and route permission metadata. `SearchHistoryTransport.test.ts` passed 2/2 with 43 assertions against the marked local `school_history_test`: admin REST and MCP, unchanged student identity across three historical labels, invalid and conflicting year inputs, anonymous refusal, and real PostgreSQL ownership of one student identity. A disposable actor with only `read:students` got an empty owned student search but was refused teacher, parent and global REST search; MCP allowed student search and refused global search. The actor, role and test-only permission were cleaned up; fixture student rows were unchanged. `bun run test`, `bun run typecheck`, `bun run lint` and production `bun run build` with `NAJM_NEXT_DIST_DIR=.next-history-search` passed. Lint reported two unrelated unused-parameter warnings in concurrent profile work. Owner/browser review and deployment remain open.
+
+## Health shared-infrastructure slice, 2026-09-27
+
+**Scope.** `HealthController` exposes public REST `GET /health`, `/health/ping` and `/health/status`; there is no persistence model, academic data, write route or MCP tool. Status checks PostgreSQL and cache readiness and sends `Cache-Control: no-store`. Health remains outside `yearScopedModules`; no `@Year()` property, migration or production change is needed. The student health Alert is a separate Alerts route, covered in its own slice.
+
+**Connected checks.** `HealthHistoryTransport.test.ts` passed 2/2 with 33 assertions on the marked local `school_history_test` fixture. All three REST routes returned 200 with no year, each of two historical years, and an invalid year header; status remained ready with both actual PostgreSQL and cache checks `ok`. A conflicting header/query year also left readiness unchanged. Focused failure checks verified independent `database: unavailable` and `cache: unavailable` outcomes. `bun run --cwd packages/server typecheck:test` and `bun run lint` passed. This slice is read-only and left fixture data unchanged. Browser/production readiness and owner review remain unrun; no deployment is claimed.
+
+## Exams selected-year slice, 2026-09-27
+
+Exams now follow the Assessments conversion. An exam belongs to its stored `academic_year_id`, or, for a legacy row without one, to the year whose reporting interval holds its date. No migration. Uncommitted, alongside the concurrent financial slices; no browser review or deployment is claimed.
+
+- **Code.**
+  - `ExamRepository` has `@Year()` and one `readCondition` (ownership plus year) applied in its query builder's only `.where()`. That covers list, filters, detail, by type, status and assignment, today, upcoming and count.
+  - Create stamps the selected year. Update, delete, bulk delete and the admin delete-all stay inside it. `clearForSeedReset` is the trusted every-year reset, now used by `SeedService` and `reset-demo`.
+  - `ExamService.create` and context-changing updates refuse sections whose year is not the selected one, with 409 `outsideSelectedYear`. "Year cannot change" is now the translated `yearCannotChange`.
+  - The controller lost its `@Year()` parameters and `examListQuery`, and is registered as `exams`. `StudentProfileService` calls `getAll()` without a year.
+  - The demo seed's exam phase runs in the seed year.
+  - The dashboard list was already keyed by year.
+- **Family rule.** Students and parents saw exams through the student's current `students.section_id`. A transferred student lost their past exams and saw the new section's instead. Exams now use the same rule as Assessments: the student (or the parent's child) was placed in a target section on the exam date. That rule moved from `AssessmentGuards.ts` to `academicSources/placedOnSourceDate.ts`, shared by both. Its SQL is unchanged, and Assessments database 4/4 and transport 4/4 still pass.
+- **Translations.** `exams.errors` did not exist in any locale, so every exam error reached users as a raw key such as `exams.errors.notFound`. It now has the eight existing keys and the two new ones in all four locales. `assessments.errors` is missing the same way; left for its owner.
+- **Tests.**
+  - `OwnedRepositoryReads.test.ts` runs every exam read in a year and pins a parent's `getById` SQL: placement on `"exams"."date"`, no `students.section_id`, the stored year and the id (ownership 152/152).
+  - Two unit tests now call `getAll` without a year.
+  - New `ExamsHistoryDatabase.test.ts` passed 3/3 on the fixture, with rolled-back rows. It covers exact ids per year including a legacy dated row, count, filters, and the cross-year detail.
+  - It also covers Omar (S05, moved A to B on 15 January 2026). He sees December's section-A exam and February's A+B exam, but not February's A-only exam. Adam sees all four. Omar's parent sees what Omar sees, and an unlinked parent nothing. Under the old current-section rule Omar would see none of them.
+  - It also covers the year stamp on create and year-bound update, delete, bulk delete and delete-all.
+  - New `ExamsHistoryTransport.test.ts` passed 3/3 on port 5508.
+    - A past-year create is stored in that year and listed by section, teacher and year only there.
+    - Another year's detail, update, delete and `/grades/exam/:id` return 404.
+    - A create whose sections are outside the selected year returns 409 with the English message.
+    - It covers the 400 conflict and an unknown year (404), and MCP `exams_get_all` by header and by tool input.
+    - Created rows were deleted.
+- **Gates.** `bun run lint`, `bun run typecheck`, `bun run i18n:check` ("Missing keys: none") and `bun run build` passed. `bun run test` passed every suite: 270, 60, 11, 258, 17, 152 and 24 tests. The academic-years suite dropped from 259 to 258 because of the concurrent payments edits, not this slice.
+- **Open.** Owner visual and browser review.
+
+**Follow-up, 2026-09-28.**
+- **Grading was not affected.** The exams entry flagged `ExamValidator.ensureStudentInExam` as checking the current section. `GradeService.create` already requires placement in the grade's section on the source date (`ensureCreateEligible`). The current-section checks run only for a student with no dated enrollment at all, where the current section is the only record. `GradeValidator.validate` has no callers. Nothing changed.
+- **Student profile `/academic`.**
+  - `upcomingExams` filtered on `examDate`, which does not exist, so it was always empty.
+  - `assessments` returned everything the reader may see, so staff got the whole school's assessments as this student's.
+  - Both now use one student's reads: new `ExamRepository.getForStudent` and `AssessmentRepository.getForStudent`, through `ExamService.getForStudent(studentId, { upcoming })` and `AssessmentService.getForStudent`. A source is the student's when they sat in a target section on its date: `studentPlacedOnSourceDate`, the student-keyed form of the shared placement rule, in the same year and ownership condition. The silent catch on the exam read was removed.
+- **Tests.**
+  - `ExamsHistoryDatabase.test.ts` (3/3) adds Omar's own exams, from a date, and none for Hamza in 2026-2027.
+  - `ExamsHistoryTransport.test.ts` (4/4) adds the profile check. Adam's current profile lists a new May 2027 section-A exam and his one assessment. Hamza, not enrolled in 2026-2027, gets neither; before, his profile listed the year's assessment. A past year has no upcoming exams.
+  - Assessments database and transport stay 4/4.
+  - Ownership 154/154 covers both new reads.
+- **Gates.** `bun run typecheck`, `bun run lint` (one warning, in the concurrent `PayrollHistoryTransport.test.ts`) and `bun run build` passed. `bun run test` passed every suite: 270, 60, 11, 258, 17, 154 and 24 tests.
+
+## Discipline selected-year slice, 2026-09-27
+
+Same basis as Behavior rewards. An incident belongs to the year whose reporting interval holds the school-local day of `incidentAt`. There is no column and no migration. Uncommitted, alongside the concurrent financial slices; no browser review or deployment is claimed.
+
+- **Code.**
+  - `DisciplineRepository` reads with one `readCondition`: ownership plus the year, applied in the builder's only `.where()`. Update and delete stay inside the selected year, so resolve and reopen do too.
+  - Create and update take class and section from the student's placement on the incident's day in the selected year. Before, they used the student's current class, and required the student to be active today, which blocked corrections for a student who has since left.
+  - A date outside the selected year returns 409 (`outsideSelectedYear`), as does a student not placed that day (`notPlacedOnDate`). These replace `studentInactive` and `studentAcademicPlacementRequired` in all four locales. A teacher must be assigned to that day's section. Changing only the date re-checks the placement too.
+  - The placement lookup moved to `studentEnrollments/placementOnDay.ts` (`studentPlacementOn`), shared with Behavior rewards.
+  - The controller is registered as `discipline`. The dashboard list and detail are keyed by year. The demo generator dates incidents inside the seed year after each student's placement begins; the seed's conduct phase already ran in the seed year.
+- **Tests.**
+  - `OwnedRepositoryReads.test.ts` pins a parent's `getById` SQL: ownership, the interval and the id in one condition (ownership 151/151).
+  - New `DisciplineHistoryDatabase.test.ts` passed 3/3 on the fixture. It covers exact ids per year, the Casablanca boundary, ownership inside each year, placement across S05's transfer and after S07's withdrawal, and year-bound update and delete. `DisciplineOwnershipDatabase.test.ts` still passes 1/1. All rows were rolled back.
+  - New `DisciplineHistoryTransport.test.ts` passed 3/3 on port 5507. It covers past-year create filed under the day's section and a date change moving it across the transfer. It also covers cross-year 404s for read, update, resolve and delete, and the 409 refusals. Finally it checks the 400 conflict, an unknown year (404), and MCP `discipline_list` with the year as header and as tool input. Created rows were deleted.
+  - Behavior rewards database 3/3 and transport 3/3 still pass on the shared helper.
+- **Gates.** `bun run lint`, `bun run typecheck`, `bun run i18n:check` ("Missing keys: none") and `bun run build` passed. `bun run test` passed every suite: 270, 60, 11, 259, 17, 151 and 24 tests.
+- **Open.**
+  - Owner visual and browser review.
+  - The teacher dashboard's open-incident count (`TeacherDashboardRepository.countOpenIncidents`) is not year-filtered; that controller resolves its own year and belongs to the dashboard row.
+
+## Financial utilities history slice, 2026-09-27
+
+**Scope.** `financial/utils` has no CRUD routes. Fee creation, installment generation and rollover use explicit charged/target year inputs for the September-June billing range. The utility range resolver now rejects an invalid explicit academic year instead of silently switching to the current year, and requires consecutive year labels. July 1-14 remains payment closeout, outside the fee billing interval. The seed container was updated with `RolloverService`'s academic-year validator dependency, found by the academic-year suite. No schema or API change.
+
+**Checks.** `FinancialUtilsHistory.test.ts` passed 3/3 with two historical ranges, a ten-month fee and installment schedule, exact minor-unit sum, July billing refusal and malformed/non-consecutive year refusal. `SeedDependencyWiring.test.ts` and the full configured `bun run test` passed after seed wiring was fixed. `bun run typecheck`, `bun run lint` and a production `bun run build` with `NAJM_NEXT_DIST_DIR=.next-history-finance-final` passed. No separate database or transport test applies to pure utilities. Owner review and browser acceptance remain open; no production deployment is claimed.
+
+## Financial rollover source/target slice, 2026-09-27
+
+**Scope.** Preview selects active students from source-year enrollment and dated placements, not their current class. A candidate needs an active target-year enrollment; its target enrollment date drives the new fee's effective date. Preview and commit require selected year to match the explicit target, with the source preceding it. The financial operations UI sends target-year context. Academic-year activation stays separate. The existing per-fee transaction boundary, idempotency key and persisted item outcomes remain.
+
+**Connected checks.** On marked local `school_history_test`, `RolloverHistoryDatabase.test.ts` passed 1/1 with 4 assertions against source/target roster membership. `RolloverHistoryTransport.test.ts` passed 2/2 with 24 assertions through authenticated REST and MCP: wrong selected target refusal, source/target preview, idempotent preview, target fee creation, old-year isolation, idempotent commit and MCP year input. A post-preview target duplicate produced one failed item, zero new fees and a stable failed-run retry. Temporary fees, installments, run items, runs and audit rows were removed. This failure case occurs before a fee insert; it does not prove a mid-write rollback or concurrent commits.
+
+**Gates.** Server source/test and dashboard typechecks and lint passed. Owner UI/browser review and concurrent/mid-write failure acceptance remain OPEN. No production migration, deployment, commit or push is claimed.
+
+## Payroll period slice, 2026-09-27
+
+**Scope.** A payslip belongs to the registered reporting year containing the first day of its `YYYY-MM` period. Normal list, detail, staff, period, summary and SQL edit/delete routes use that selected year; creation, run, pay-staff and unpay reject a period outside it. Payment date remains the actual cash date, even when it falls in the next reporting year. The payroll view offers the selected year's period months, keys the period query by year and retains historical payslip snapshots when a staff member is no longer active. The shared current staff catalog still supplies missing-row salary estimates; historical compensation changes are not reconstructible from that catalog and need owner review before backfilling an old missing payslip. No schema migration.
+
+**Connected checks.** On marked local `school_history_test`, `PayrollHistoryDatabase.test.ts` passed 1/1 with 14 assertions in a rolled-back transaction: July 2026 payslip in 2025-2026, September 2026 payment date, current-year isolation, summary and wrong-year SQL edit/delete refusal. `PayrollHistoryTransport.test.ts` passed 1/1 with 15 assertions through authenticated REST and MCP: lists, detail, period summary, wrong-year writes and run/pay-staff refusal, an old-year correction and MCP year input. Temporary rows were deleted.
+
+**Gates.** Server source/test and dashboard typechecks and `bun run test:academic-years` (258/258) passed. Owner UI/browser review remains OPEN. No production migration, deployment, commit or push is claimed.
+
+## Payments mixed-receipt slice, 2026-09-27
+
+**Scope.** The normal payment list reads the selected fee year from `@Year()` and returns each receipt once with `yearAllocatedAmount`; the receipt's full amount and actual payment date remain unchanged. A fee-specific history route returns its allocated portion in the selected fee year and returns 404 under another year. Revenue endpoints use selected fee year while monthly revenue groups by the cash settlement or payment date. Receipt detail, per-student history, pending checks and status/refund/void actions remain shared because one receipt can settle several fee years. The dashboard already keys the school-wide payment list by year and labels the allocated portion separately. No schema migration.
+
+**Connected checks.** On marked local `school_history_test`, `PaymentsHistoryDatabase.test.ts` passed 1/1 with 13 assertions in a rolled-back transaction: a September 51.00 receipt split 30.25/20.75 between 2025-2026 and 2026-2027 appears once in each year, pending check allocation is excluded from completed revenue, exact revenue deltas and cash month are preserved. `PaymentsHistoryTransport.test.ts` passed 1/1 with 13 assertions through authenticated REST and MCP: fee-year list portions, shared receipt detail, a 404 for wrong-year fee history, revenue route and MCP year input. Temporary rows were deleted.
+
+**Gates.** Server source/test typechecks and `bun run test:academic-years` (258/258) passed. Lint passed. Owner UI/browser review remains OPEN. No production migration, deployment, commit or push is claimed.
+
+## Financial notifications operational history slice, 2026-09-27
+
+**Scope.** Cron reminders are operationally all-year, including overdue debt from an old charged year. Overdue rows group by fee year and carry a fee source into year-attributed Alerts. Cancelled installments are excluded from overdue debt. A check group with no one source year creates only its personal notification. Admin delivery history stays all-year so its log is not hidden by the current year selection. No schema migration.
+
+**Connected checks.** On marked local `school_history_test`, `FinancialNotificationsHistoryDatabase.test.ts` passed 1/1 with 4 assertions in a rolled-back transaction: old/current debt grouping, cancelled schedule exclusion, one-year source and mixed/unallocated check refusal. `FinancialNotificationsHistoryTransport.test.ts` passed 1/1 with 6 assertions through authenticated admin and cron REST: both years' delivery records appear under a selected-year header, missing cron secret is refused, and dry-run includes old-year debt. Temporary rows were deleted. The earlier `AlertsHistoryDatabase.test.ts` also checks overdue sources per charged year.
+
+**Gates.** Server test typecheck passed. Owner review of real sends, UI and browser remains OPEN. No production migration, deployment, commit or push is claimed.
+
+## Installments selected charged-year slice, 2026-09-27
+
+**Scope.** Normal installment lists, status lists, detail, fee detail, statistics, edits and deletion use the selected year of the parent fee. Creation validates that the fee belongs to that year; an edit cannot reassign an installment to another fee. Payment and allocation source paths use named all-year reads and updates so later receipts can settle old fees. Cancellation and resumption by source fee remain all-year; recalculation leaves cancelled installments cancelled. Public writes cannot set `paidAmount` or `status`, or edit/delete an installment that has allocations. The dashboard list/detail cache is year-keyed and mutations carry the selected year. No schema migration.
+
+**Connected checks.** On marked local `school_history_test`, `InstallmentsHistoryDatabase.test.ts` passed 1/1 with 17 assertions in a rolled-back transaction: charged-year list/detail/status isolation, wrong-year SQL update/delete refusal, named all-year source reads, cancellation and resumption. `InstallmentsHistoryTransport.test.ts` passed 1/1 with 14 assertions via authenticated REST and MCP: selected-year lists/detail/overdue, wrong-year create/update/delete refusal, a historical amount correction and MCP year input. Temporary rows were removed.
+
+**Gates.** Server source/test and dashboard typechecks, `bun run test:academic-years` (259/259), and lint passed. Owner UI/browser review remains OPEN. No production migration, deployment, commit or push is claimed.
+
+## Fee types shared-catalog slice, 2026-09-27
+
+**Decision and scope.** Fee types are one school-wide catalog. They have no academic-year field or `@Year()` scope; fee rows keep their own charged year and refer to the same fee type across years. The existing service checks names globally and transport reads, edits and deletion ignore a selected-year header. The dashboard uses one shared fee-type cache. No source or schema migration was needed. Name uniqueness is service-enforced but lacks a database unique index, so concurrent duplicate creates need a separate integrity review before claiming database-enforced uniqueness.
+
+**Connected checks.** On marked local `school_history_test`, `FeeTypesHistoryDatabase.test.ts` passed 1/1 with 8 assertions. A rolled-back row stayed visible by ID, name, status, category and count under three selected years. `FeeTypesHistoryTransport.test.ts` passed 1/1 with 15 assertions through authenticated REST and MCP: a type created under 2025-2026 remained visible under 2024-2025, 2026-2027 and an unknown year header; a same-name create under another year returned 409; an update was global; MCP listed it without a year input; deletion removed it globally. The temporary row was deleted.
+
+**Gates.** Server test typecheck, `bun run test:academic-years` (259/259) and lint passed. The fee-type production code did not change. Owner UI review is OPEN; no production migration, deployment, commit or push is claimed.
+
+## Parents and students read their own records, 2026-09-27
+
+Owner decision: parents and students see behavior rewards, alerts, assessments, attendance, announcements, notifications, grades and similar records. A student sees their own; a parent sees their children's; neither changes any of them. Uncommitted, alongside the concurrent financial slices; no browser review or deployment is claimed.
+
+- **Server.**
+  - `BehaviorRewardGuards.ts` gained parent and student rules.
+  - `discipline` gained ownership: `DisciplineGuards.ts` gives teachers what they reported, students their own and parents their children's, and `DisciplineRepository` applies it in its one `.where()`. This replaces the service's role check, under which any role other than teacher saw every incident.
+  - Assessments, attendance, exams and grades already had family rules. Notifications were already per person.
+  - `rolePermissions.json` grants parent and student `read:assessments`, `read:exams`, `read:attendance`, `read:behavior-rewards`, `read:discipline` and `read:sections`. The section rules already limit families to their children's sections. Every name exists in `permissions.json`, and `bun run seed:admin` adds them to existing databases.
+- **Dashboard.**
+  - `useViewerRole()` (`shared/useViewerRole.ts`) marks parents and students. The Students list, Assessments, Exams, Behavior rewards and Discipline show them no create, edit or delete. The profile's Grades tab is read-only for them.
+  - The Behavior rewards and Discipline pages now admit parents and students, and families get a shared empty-state text.
+  - The menu gives families My children or My profile, Alerts, Announcements, Conduct, Assessments, Exams, Calendar and Timetable. Grades and attendance are in the child's profile.
+- **Alerts page.**
+  - New `/alerts` page (`features/Alerts`), keyed by year, with table and card views, for everyone including staff.
+  - Families acknowledge alerts about themselves or their child. Teachers handle alerts about someone; other staff handle all; admins delete. The server enforces the same rules.
+  - The profile's Alerts tab, a placeholder until now, lists that student's alerts.
+  - `alertApi.ts` now calls only routes the server has; nothing used the old helpers.
+- **Calendar.** Add, edit and delete are for admin and principal only; teachers and families saw them before.
+- **Tests.**
+  - `OwnershipPolicy.test.ts` pins teacher, student and parent SQL for both conduct tokens. `OwnedRepositoryReads.test.ts` covers the discipline reads (ownership 150/150).
+  - `BehaviorRewardsHistoryDatabase.test.ts` now checks that a student sees only their own rewards year by year, a linked parent their two children's, and an unlinked parent or unknown role nothing (3/3).
+  - New `DisciplineOwnershipDatabase.test.ts` passed 1/1 on the fixture: admin all, teacher their reports, student own, parent children, others none. Unseen ids are not found. All rows were rolled back.
+  - After all the changes, Behavior rewards transport 3/3 and the Alerts plus Announcements database suites 8/8 passed.
+- **Gates.**
+  - `bun run typecheck`, `bun run lint` and `bun run i18n:check` ("Missing keys: none") passed.
+  - `bun run test` passed every suite: 270, 60, 11, 256, 17, 150 and 24 tests.
+  - `bun run build` passed and lists `/alerts`. A first build failed only because it ran at the same time as another agent's build over the same `.next` folder.
+- **Open.**
+  - Browser review as a parent and as a student.
+  - Families no longer land on the staff dashboard: `/` sends them to My children or My profile. The staff charts were refused to them on the server anyway. A family home with summary cards is not built, because the server's `getParentWidgets` and `getStudentWidgets` are empty stubs.
+  - Staff still cannot create alerts from the page.
+  - Exams' family rule reached students through their current section. Done in the exams slice: placement on the exam date.
+
+## Fees selected charged-year slice, 2026-09-27
+
+**Scope.** The registered selected year filters fee list, detail, per-student, overdue and summary reads by the fee's stored charged-year label. Fee-only students with no enrollment that year remain visible, with unknown historical class. Ordinary fee update, delete and recalculate refuse another year's ID. Fee create and bulk-class creation use the selected year; a conflicting body year is refused. Fees nested in a new student create use that student's resolved enrollment year, and a different supplied fee year is refused. Fee write bodies retain their existing `academicYear` field, which also supplies the MCP year selection for those tools, avoiding a duplicate tool input. Explicit all-year outstanding and per-student debt discovery remain, as do named source-fee reads and recalculation used by payment, allocation, rollover and transport jobs. Annual and all-year balances now sum completed allocations, so a receipt dated in the next year contributes only its allocated portion to each charged year. No schema migration.
+
+**UI.** Fee list and details already used year-keyed reads. Fee mutations now carry the year captured when the form opens; direct bulk and class-bulk requests do likewise. The outstanding all-year table remains a discovery view and does not expose edit/delete actions under an unrelated selected year.
+
+**Connected checks.** On marked local `school_history_test`, `FeesHistoryDatabase.test.ts` passed 1/1 with 24 assertions in a rolled-back transaction. It checked a fee-only 2025-2026 student, 2026-2027 fee isolation, per-student and overdue reads, wrong-year SQL update/delete, and a September receipt split 30.00/20.00 across two fee years. It caught and fixed an ambiguous SQL reference in per-student allocation metrics. `FeesHistoryTransport.test.ts` passed 1/1 with 22 assertions through authenticated REST and MCP: selected/default lists, detail, student and overdue reads; wrong-year update/delete/recalculation; an old-year correction; body/header conflict; MCP list and old-year create using its charged-year field. Temporary fee, installment, fee-type and audit rows were cleaned afterward.
+
+**Gates.** `bun run test:academic-years` passed 259/259 after the nested new-student fee regression case, and `bun run test` passed its full configured suite. Server source/test and dashboard typechecks passed; `bun run lint` passed cleanly. `NAJM_NEXT_DIST_DIR=.next-history-slice bun run build` passed compilation, TypeScript, page generation and traces. Owner UI/browser review remains OPEN. No production migration, deployment, commit or push is claimed.
+
+## Expenses selected business-date year slice, 2026-09-27
+
+**Scope.** An expense belongs to the registered year whose reporting interval contains its `expenseDate`. The actual `paymentDate` may be later, including in the next school year. `ExpenseRepository` applies the selected-year predicate to lists, direct IDs, pending approvals, current-day/month reads, counts, summaries, analytics and update/approval/payment/delete SQL. Its invoice, receipt and check lookups remain all-year for uniqueness; `deleteAll` remains the named trusted seed reset. `ExpenseValidator` rejects a new or corrected expense date outside the selected interval and returns the scoped row for audit before-images. `ExpenseService.getTotalExpenses` uses the selected registered reporting interval for the root dashboard widget. The controller joins the common REST/MCP year scope. No schema migration.
+
+**UI and seed callers.** The Expenses list and optional detail use the shared year-keyed query, and create/update/delete capture the selected year when the dialog opens. The demo expense phase runs in its seed year; the seed task registers the property injector before server initialization. This did not change payroll records or payment dates.
+
+**Connected checks.** On marked local `school_history_test`, `ExpensesHistoryDatabase.test.ts` passed 1/1 with 20 assertions. Its rolled-back transaction placed a paid July expense in 2025-2026 with a September payment date and a pending September expense in 2026-2027, then checked exact list/detail/date-range/pending IDs, summary and count deltas, global invoice lookup and wrong-year SQL writes. `ExpensesHistoryTransport.test.ts` passed 1/1 with 25 assertions through authenticated REST and MCP: selected/default-year lists and direct IDs, pending read, rejected wrong-year create/date correction/update/approval/delete, global invoice uniqueness, old-year approval, old-year payment with a later actual date, MCP tool year input and list, and correct-year deletion. Its temporary expense and audit rows were cleaned after the test.
+
+**Gates.** `bun run --cwd packages/server typecheck` and `typecheck:test`, `bun run --cwd packages/seed typecheck`, `bun run --cwd apps/dashboard typecheck`, `bun run lint`, `bun run test:academic-years` (256/256), focused fixture tests above, `git diff --check`, and `NAJM_NEXT_DIST_DIR=.next-history-slice bun run build` passed. Owner UI/browser review is OPEN. No production migration, deployment, commit, or push is claimed. Decision: HOLD for owner review; implementation may continue under the owner's prior continuation request.
+
+## Student credits selected target-year slice, 2026-09-27
+
+**Scope and implementation.** A credit lot is an unallocated balance tied to a student's actual source payment, so `GET /student-credits/student/:id` remains all-year. `POST /student-credits/apply` now applies it only to installments whose target fee is charged to the selected registered year. The controller enters the common REST/MCP year scope; the service reads the resolved `@Year()` property on apply, and the installment lock query takes an optional fee-year predicate. Payment auto-allocation continues to call that lock query without a year and keeps its existing all-year behavior. The original source payment retains its payment date, and each credit application creates a normal payment allocation linked to the target fee. The Financial Operations form names the target year, holds Apply until selection loads, and captures that year when sending the write. Its student list is keyed and requested by viewing year; the shared credit-lot list remains keyed by student only. No schema migration.
+
+**Connected checks.** On marked `school_history_test`, the database test passed 1/1, 6 assertions: the same available lot remained visible while installment locks returned only 2025-2026, only 2026-2027, none for 2024-2025, or both under the explicitly all-year payment path. All inserted rows rolled back. The authenticated REST/MCP transport test passed 1/1, 19 assertions: a real 150.00 cash receipt allocated 50.00 to a 2026-2027 fee and created 100.00 credit; a 2024-2025 apply with no target failed without consuming credit; 30.00 applied to a 2025-2026 fee; 20.00 applied to the 2026-2027 fee; MCP applied another 10.00 to the older year. The same lot was visible under either year throughout, ending at 40.00; the target allocation API returned only each year's portions. Direct deletion of a credit-backed allocation returned 409 and preserved that allocation. Temporary payment, credit, allocation, fee and audit records were cleaned after the suite.
+
+**Gates.** `bun run --cwd packages/server typecheck` and `typecheck:test`, `bun run --cwd apps/dashboard typecheck`, `bun run lint`, `bun run test:academic-years` (256/256), `git diff --check`, and `NAJM_NEXT_DIST_DIR=.next-history-slice bun run build` passed. Owner UI/browser review is OPEN. No production migration, deployment, commit, or push is claimed. Decision: HOLD for owner review before advancing this lane.
+
+## Financial audit log shared-history slice, 2026-09-27
+
+**Decision and scope.** `POST /financial-audit-logs/list` and `GET /financial-audit-logs/:id` (including their MCP tools) remain admin-only and all-year. The append-only log has no academic-year column; its before/after snapshots and metadata can describe several years, so filtering by a selected year would hide evidence or guess an attribution. It is intentionally absent from `yearScope.ts`; a year header is ignored by this shared route. `FinancialAuditController.ts` names this exception, and the Financial Operations panel labels the latest audit records as covering all school years. The existing `limit: 50` panel fetch is a page size, not a year filter. There is no schema migration, retention deletion, or new write path.
+
+**Connected checks.** On the marked `school_history_test` fixture, the database suite inserted two audit rows with 2025-2026 and 2026-2027 snapshots inside a rolled-back transaction. It passed 1/1, 13 assertions: both rows remained in list/count/detail under either selected-year context, and action filtering still worked. The authenticated transport suite inserted temporary rows, then removed them. It passed 2/2, 20 assertions: admin REST list and detail returned both rows under no header, either registered year and an unknown header; the principal request was denied; MCP exposed no added `academicYear` tool input and returned both records despite a year header. No fixture audit rows remained from either suite.
+
+**Gates.** `bun run --cwd packages/server typecheck`, `typecheck:test`, `bun run lint`, and `bun run test:academic-years` (256/256) passed. `NAJM_NEXT_DIST_DIR=.next-history-slice bun run build` passed compilation, TypeScript, page generation and trace collection. Owner UI/browser review is OPEN for the panel wording. No production migration, deployment, commit, or push is claimed. Decision: HOLD for owner review before advancing this lane.
+
+## Financial allocations selected-year slice, 2026-09-27
+
+**Scope.** `GET /payment-allocations`, `/:id`, `/payment/:paymentId`, `/student/:studentId`, and `DELETE /:id` are financial-only REST/MCP operations. An allocation belongs to the year charged on its target fee, even when a receipt date falls in another year or one receipt pays fees from two years. The controller is registered in the common REST/MCP year scope. The repository's API reads combine the fee-year condition with their existing ID/student/payment condition. The delete uses a fee-year subquery in its SQL predicate, then the existing transactional audit and recalculation path. `PaymentService` still reads every allocation of a receipt when processing payment state; it explicitly uses the repository's all-year mode. Credit and payment write workflows remain for their later module turns. No schema change or dashboard screen uses the allocation controller directly.
+
+**Marked fixture.** `school_history_test` passed the base 3/3 identity/marker checks. The allocation database suite inserted a 150.00 receipt with 75.00 applied to a 2025-2026 fee and 75.00 to a 2026-2027 fee inside a rolled-back transaction. It passed 1/1, 14 assertions: exact selected-year list, detail, payment and student rows; both 75.00 portions; all-year internal receipt access; a wrong-year delete changing nothing; and a matching-year delete leaving the other portion intact. The authenticated transport suite created the same shape with unique temporary IDs and removed it afterward. REST and MCP passed 3/3, 32 assertions: selected and default-active-year list and detail, principal access, per-receipt and student reads, wrong-year 404, year conflict 400, unknown year 404, MCP tool input, successful selected-year delete, and survival of the other year's allocation. A third case recorded a real mixed-year payment through `POST /payments` and found exactly 10.00 in each fee year's allocation API. The suite cleaned up its temporary payment and allocations; no fixture rows remained.
+
+**Gates.** `bun run --cwd packages/server typecheck`, `typecheck:test`, `bun run lint`, and `bun run test:academic-years` (256/256) passed. `NAJM_NEXT_DIST_DIR=.next-history-slice bun run build` passed compilation, TypeScript, page generation and trace collection. The allocation database suite passed again after the transport suite's cleanup. Owner source review is OPEN; no browser flow uses this controller, so UI/manual acceptance is N/A for this slice. No production migration, deployment, commit, or push is claimed. Decision: HOLD for owner source review before advancing this lane.
+
+## Behavior rewards slice; Alerts and Announcements read-condition follow-up, 2026-09-27
+
+Worked alongside the Assessments and Attendance slices, in the same uncommitted tree on top of `b397b57`. No migration, browser review, production change or deployment is claimed.
+
+- **Alerts and Announcements (section 5.6).** Each repository now has one `readCondition(...filters)`: ownership plus the year predicate. Its query builder applies it in the builder's only `.where()`, and each method passes just its own filters. Writes keep their own year-only predicates, since the service loads the target through the owned read first. `AnnouncementGuards.isLive()` is now exported and reused by the published and active lists, so "live" is defined once.
+- **Announcements dashboard.** The list was cached under `['announcements']` alone, so switching years kept showing the previous year's list until it refetched. `useAnnouncements` now uses `useYearScopedList`, and so does the Calendar, which uses the same hook.
+- **Behavior rewards: year basis.** The year is dated: a record belongs to the year whose reporting interval holds the school-local day of `behaviorAt`. There is no column and no migration, following the dated inventory's classification (D).
+  - The new shared helpers `occurredInReportingInterval` and `schoolLocalDay` in `academicRecordYear.ts` compare instants against the interval's first and last days in the school time zone (`settings.time_zone`), so the index on `behavior_at` still applies. Discipline has the same shape.
+- **Behavior rewards: code.**
+  - Reads use one `readCondition` (teacher ownership plus the year).
+  - Update and delete stay inside the selected year.
+  - Create and update take class and section from the student's placement on that day in the selected year, not from the current class.
+  - A date outside the selected year returns 409 (`outsideSelectedYear`), as does a student not placed that day (`notPlacedOnDate`).
+  - A teacher must be assigned to that day's section.
+  - The controller is registered as `behavior_rewards`. The dashboard list is keyed by year. The demo seed runs the conduct phase in the seed year, and the demo generator keeps reward dates inside the seed year after each student's placement begins.
+- **Behavior rewards: tests.**
+  - `BehaviorRewardsHistoryDatabase.test.ts` passed 3/3 (30 assertions). It covers:
+    - exact ids per year;
+    - the Casablanca boundary: 21:30Z on 31 August stays in 2024-2025, and 23:30Z moves into 2025-2026;
+    - teacher ownership, with families and unknown roles seeing nothing;
+    - S05's placement before and after the 15 January transfer, S07 after withdrawal, and S08 without an enrollment;
+    - year-bound update and delete.
+  - `BehaviorRewardsHistoryTransport.test.ts` passed 3/3 on port 5499. It covers:
+    - past-year create filed under the day's section, and a date change moving the record across the transfer;
+    - cross-year 404s;
+    - the 409 refusals, the 400 conflict, an unknown year (404) and principal denial (401);
+    - MCP `behavior_rewards_list` with the year as header and as tool input.
+  - Every row either suite creates is rolled back or deleted; the fixture holds no behavior rewards afterwards. With the registration removed, the transport cases fail with 500.
+- **Gates.** `bun run lint`, `bun run typecheck`, `bun run i18n:check` ("Missing keys: none") and `bun run build` passed. `bun run test` passed every suite: 270, 60, 11, 255, 17, 145 and 24 tests. After the 5.6 refactor, Alerts database 4/4, Announcements database 4/4, Alerts transport 5/5 and Announcements transport 4/4 passed.
+- **Open.** Owner visual and browser review. Whether parents and students should see their own or their child's rewards: today only staff with `read:behavior-rewards` and the awarding teacher see them. The module keeps its `Can('…:behavior-rewards')` guards instead of `@Policy`, because `@Policy` would derive `behavior_rewards` and silently drop the existing grants.
+
+## Assessments and Attendance selected-year slices, 2026-09-27
+
+**Scope and source.** Uncommitted School changes on `b397b57`; no schema migration was needed because both tables already store `academic_year_id`. Both repositories read the selected `@Year()` property for normal lists, detail, counts or dated views, and update/delete predicates; creates stamp that year. The stored year is authoritative; a legacy null-year row is visible only in the year containing its record date. Source/context lookups and monthly attendance reporting retain explicitly named cross-year parameters. Assessment create/update checks its target sections' registered year against the selection. Attendance student, staff, status-correction and roster writes check the dated year before mutation. Full seed cleanup uses named all-year methods; the demo and school seed runners bind a validated year for new records. Assessment student/parent ownership now uses dated enrollment placement and all targeted sections, rather than the current section projection. Consumer routes in profiles, grades and dashboards entered the year scope where they reach these repositories. Their own year flows remain in the later queue.
+
+**Fixture.** `bun --env-file=apps/dashboard/.env.local run seed:history:academic-records` ran twice successfully and idempotently against marked local `school_history_test`, after checking the database name, fixture marker and exactly ten students. The shared manifest adds five Assessment and five Attendance rows: three stored-year rows each, one dated null-year legacy candidate each, and one out-of-range null-year row each. It also adds one staff teacher, one subject and annual assignments, while retaining the existing three years, ten student identities and S05's midyear A-to-B transfer. No application database was seeded or migrated.
+
+**Connected database and transport.** On the fixture, `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AssessmentsHistoryDatabase.test.ts packages/server/tests/acceptance/AttendanceHistoryDatabase.test.ts` passed **6/6, 65 assertions** (Assessment 4/4; Attendance 2/2). It checked exact annual IDs, legacy fallback, unresolved exclusion, detail/count/filter and ownership reads, past-year writes, wrong-year update/delete denial, selected-year bulk deletion, staff-roster attribution and rollback cleanup. A transactional parent link, S05's dated placement and a two-section assessment proved historical Assessment ownership; the temporary parent and all repository mutations rolled back. Both suites failed on cross-year detail assertions when their detail-year predicate was temporarily removed, then passed after restoration.
+
+`bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AssessmentsHistoryTransport.test.ts` passed **4/4, 30 assertions**. `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AttendanceHistoryTransport.test.ts` passed **5/5, 38 assertions**. Authenticated REST checked past and default-year lists, date/detail reads, principal permission denial (401), malformed/conflicting selection (400), wrong-year IDs (404), matching/mismatching creates, edits, attendance correction/history, and the S05 transfer boundary. Connected profile, grade-source and dashboard requests returned the selected-year results instead of masking a missing scope as an empty list. Authenticated MCP checked selected year in the header and tool input plus conflict rejection for both lists. Temporary REST writes were deleted in `finally`.
+
+**Repository gates.** `bun run test` passed all configured suites after the new ownership assertion was updated; a subsequent focused registration test brought the academic-year suite to **256/256**, while ownership passed **144/144**. `bun run lint`, `bun run typecheck`, and `git diff --check` passed. `bun run build` passed before the final consumer cleanup. A later ordinary build compiled and typechecked, then failed while collecting `/_not-found` because its generated `.next` page file disappeared during concurrent build activity. A direct final Next build with `NAJM_NEXT_DIST_DIR=.next-history-slice` passed compilation, TypeScript, page generation and traces after the cleanup. The isolated build directory is untracked; automatic approval review rejected recursive removal with reason `blocked by policy`, so cleanup remains for the owner. No browser/manual review, production migration, commit, push, CI image or deployment is claimed. The test server still emits MCP `@custom` warnings for older controllers that retain parameter-based year flow; their conversion remains in their later module turns. Assessment and Attendance visual/browser review is **NOT RUN**. Decision: **HOLD for owner review before the next queued module**.
+
+**Shared-scope regression:** after registering the additional consumers, the previous Alerts and Announcements PostgreSQL suites passed **8/8, 117 assertions**, Alerts authenticated transport passed **5/5, 45 assertions**, and Announcements authenticated transport passed **4/4, 41 assertions**. Assessment and Attendance transports also passed after removing silent consumer catches (**4/4** and **5/5**).
+
+## Ownership for Alerts and Announcements; year scope for their consumers, 2026-09-27
+
+The owner asked for Alerts and Announcements to follow the same ownership workflow as the other modules. People handle their own alerts, and each announcement reaches only its intended audience. Both changes are uncommitted in School on top of `b397b57`. No browser review, production migration or deployment is claimed.
+
+- **Ownership rules.** `auth.ts` gained a School `when(...)` step. After a join chain it narrows the chain by a condition on the row; on its own it is the whole rule for audience rows. `ownedIds()` returns a user's owned ids as a subquery.
+  - **Alerts** (`AlertGuards.ts`): five tokens.
+    - Students, parents and teachers see alerts about a student they can see, within the alert's audience.
+    - Teachers also see alerts that name them or one of their assignments.
+    - Class-wide notices reach class members; school-wide notices reach their audience group.
+  - **Announcements** (`AnnouncementGuards.ts`): live announcements (published, started, not expired) for the reader's audience, class announcements for classes the reader belongs to, and announcements the reader wrote.
+  - **Access by role.** School-wide roles read everything their permissions allow. Unknown roles read nothing.
+- **Routes and writes.** Both controllers use `@Policy(...)` with `@Can*` permissions; bulk and school-wide operations keep `@isAdmin()`.
+  - Teachers may set any status on alerts about their students or addressed to them. Parents and students may only acknowledge alerts about their child or themselves. Class-wide and school-wide notices, and alert content edits, stay with staff.
+  - Only an announcement's author or school-wide staff may edit, publish, unpublish or delete it.
+  - `rolePermissions.json` grants teacher, parent and student `read:alerts`, `update:alerts` and `read:announcements`; `bun run seed:admin` adds them to existing databases.
+  - The dashboard hides announcement create, edit and delete from non-managers.
+- **Supersedes two earlier statements in this ledger.** `/announcements/published` now requires sign-in and returns 401 anonymously; the old public, active-year behavior is gone. The fixture principal is refused alert routes (401) because it lacks alert permissions, not because of `@isAdmin()`.
+- **Consumer fix.** `/profiles/parents/:id/unread-alerts` always returned zero unread, and `/dashboard/operations/kpis` always reported zero alerts and announcements. Both read the year-scoped repositories outside a year, and a `.catch(() => [])` hid the error.
+  - Both controllers are now registered in `config/yearScope.ts`, and the silent catches are gone.
+  - Registering `parent-profile` first stopped the server from starting: najm-mcp rejects a tool that declares `academicYear` twice. The route's own declaration was removed.
+  - `tests/academicYears/YearScopedModules.test.ts` now checks every registered controller's MCP tool params, query and body for `academicYear` without booting.
+- **Verification (ownership change).**
+  - Lint, typecheck, `i18n:check`, boundaries, build and `db:check` passed.
+  - `bun run test` passed every suite: 270, 60, 11, 252, 17, 144 and 24 tests.
+  - History database suites passed 11/11, Alerts transport 4/4 and Announcements transport 4/4.
+- **Verification (consumer fix).**
+  - Lint, typecheck and build passed.
+  - `bun run test` passed every suite: 270, 60, 11, 255, 17, 144 and 24 tests.
+  - On `school_history_test` (env file `apps/dashboard/.env.local`):
+    - Alerts transport 5/5. The new case links a temporary parent to two fixture students, checks unread alerts per child in 2025-2026 and 2026-2027, and checks KPI counts over REST and MCP; it deletes the parent afterwards.
+    - Announcements transport 4/4, Alerts database 4/4, Announcements database 4/4 and history base 3/3.
+  - With the registrations temporarily removed, the new REST case failed (500 instead of 200) and the MCP case failed (no `academicYear` input), so the tests catch the bug.
+- **Open.** Owner visual and browser review. No dashboard page yet lists alerts for teachers, parents or students. The handoff for the remaining modules is section 0 of the plan.
+
+## Repository year context: revised flow, 2026-09-27
+
+The owner requested moving selected-year access into repositories. This checkpoint supersedes the service-property forwarding and method-wrapper design described in the dated entries below. The scope policy, fixture migrations and sequential module queue are unchanged.
+
+- **Flow:** `config/yearScope.ts` registers Alerts and Announcements once for REST and MCP. REST uses Najm's public route middleware injection at order 50, after guards (40) and DTO validation (45). It resolves through `AcademicYearValidator`, then awaits the controller inside `runWithResolvedYear`. MCP retains the published per-invocation hooks. The same ALS store holds a frozen copy of the resolved year. The `@Year()` property injector only installs getters and leaves every method untouched.
+- **Domain calls:** `AlertRepository` and `AnnouncementRepository` read the operation year in explicit predicates and stamp it on normal creates. Their services no longer declare a forwarding year property or pass year IDs for ordinary CRUD. `AlertValidator` reads `@Year()` for shared/year-owned attribution. Explicit `checkDuplicateAlertInScope`, `createFromSourceYear`, and `clearForSeedReset` preserve shared notices, the charged fee year and trusted all-year cleanup. The obsolete `YearFromSource` wrapper exception is removed.
+- **Focused evidence:** the real-container getter/REST/MCP tests pass, including one resolution per request, no resolution after failed DTO validation, missing context, synchronous helpers, concurrent actors/years, and restored nested scopes. Both repository suites now resolve actual singleton instances through DI and enter trusted scopes using stored fixture years. They also reject unscoped reads/creates/deletes and exercise trusted cleanup inside rolled-back transactions.
+- **Real PostgreSQL and transports:** the two database suites passed **5/5, 98 assertions**; Alerts authenticated REST/MCP passed **4/4, 34 assertions**, and Announcements authenticated REST/MCP passed **4/4, 40 assertions**. Commands: `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/AlertsHistoryDatabase.test.ts packages/server/tests/acceptance/AnnouncementsHistoryDatabase.test.ts`, followed by the `test:history:alerts:transport` and `test:history:announcements:transport` root scripts under the same env file. Temporary writes were deleted or rolled back. No schema or seed migration was required for this refactor; the target remains marked `school_history_test` at `0059` with ten student identities.
+- **Repository gates:** `bun run lint`, `bun run typecheck`, `bun run test`, `bun run build`, and `git diff --check` passed. School source remains uncommitted; browser review, School publication and deployment are not claimed.
+
+## Announcements slice: selected-year notice history, 2026-09-27
+
+The owner instructed continuation after the Alerts slice. School remains an uncommitted working tree based on `b397b57`; no School push, CI image, production migration or deployment is claimed. The existing `@Year()` service wrapper now leaves synchronous helpers synchronous, after the connected create test showed that wrapping a normalizer as an async method lost its fields. A focused property regression test covers the correction; the Alerts real REST/MCP tests passed again after it.
+
+- **Scope and policy:** Announcement list, detail, author, class, audience, published/upcoming/expired views, stats, create, edit, publish/unpublish and deletion require the selected registered year. Schoolwide announcements also belong to their selected year. Class targets must belong to that year. Existing route grants remain in place. The public published endpoint uses the active year for unauthenticated callers; historical selection still requires an authorized actor. Existing wall-clock publish/expiry semantics remain. Legacy rows without verified attribution have a null year and stay outside selected-year views; no creation-date inference was used.
+- **Schema and fixture:** `0059_next_vector.sql` adds only `announcements.academic_year_id`, its foreign key and index; the unrelated generated role-name index was removed from the SQL and snapshot. It was applied only to the marked local `school_history_test` database after `0058` (60 journal entries). The guarded Announcement seed was run twice with the same four year-owned notices and one unresolved notice. The shared fixture still has three years, exactly ten students, 23 enrollments and 24 placements. The application `school` database was not migrated for this slice.
+- **Database and transport:** `bun --env-file=apps/dashboard/.env.local run test:history:announcements:db` passed **2/2, 47 assertions**. `bun --env-file=apps/dashboard/.env.local run test:history:announcements:transport` passed **4/4, 40 assertions** against the authenticated server and real PostgreSQL. The tests check exact annual IDs, stats and class/audience filters; unresolved-row exclusion; in-scope publish, edit and delete; cross-year failures; class-year mismatch; public/current behavior; concurrent admin historical and principal current reads; MCP header/tool conflict; and an actual MCP past-year create with wrong-year delete denial. Temporary server writes were explicitly deleted, and repository mutations were rolled back in a transaction.
+- **Gates and remaining review:** `bun run lint`, `bun run typecheck`, `bun run test`, `bun run build`, `bun run db:check`, and `git diff --check` passed. The Alerts database **3/3** and transport **4/4** suites also passed after the shared wrapper change. Visual/browser review is **NOT RUN**. Assessments is **HOLD** until the owner reviews this module slice. The test server emitted existing MCP `@custom` warnings for other modules and an unavailable optional Ollama indexer; neither caused these suites to fail.
+
+## Alerts slice: published hook and connected fixture, 2026-09-27
+
+This checkpoint supersedes the preparation status in the next section; those earlier results remain dated evidence. The user authorized publication, lint, build and tests. Najm source commit `5a9149b` added the post-guard per-tool context hook; version commits `4de8c37` and `663f860` published `najm-mcp@2.2.1` and `najm-api@2.0.6` from packed tarballs. The npm registry verification matched the published tarballs; both package URLs returned HTTP 200 before School ran `bun install`. Najm `origin/master` is at `663f860` with a clean tree. School pins both exact versions in `package.json`, overrides and `bun.lock`, and its installed declarations contain the new hook options. This is a package publication, not a School deployment.
+
+- **Schema and fixture:** `0058_marvelous_doctor_spectrum.sql` adds only `alerts.academic_year_id`, its foreign key and index; an unrelated generated `roles_name_unique` index was removed from the migration and snapshot. That role index remains a separate future schema decision and may appear in a later generator diff; this slice does not assert role-name uniqueness on existing data. The migration was applied only to the marked local `school_history_test` database, now at 59 journal entries. The base fixture still has exactly three years, ten students, 23 enrollments and 24 placements. The guarded Alert stage was run twice idempotently and contains exactly five year-owned plus two shared Alerts. The existing application `school` database was not migrated by this slice.
+- **Source and policy:** `AlertService` reads a request-scoped `@Year()` property; repository list/detail/count/status/mutation and duplicate queries require an explicit year. Shared system and untargeted emergency rows remain visible across selected years. Selected-year bulk deletes leave shared and other-year rows; trusted seed reset has a separate all-year repository operation. Student enrollment, class year and historical student placement are validated. Legacy null-year rows without a provable shared scope remain hidden. Financial overdue notifications group by charged fee year and call a trusted fee-source Alert method; a check without one unique fee source sends its personal notification without inventing an Alert year.
+- **Real database and transport:** `bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/HistoryBaseDatabase.test.ts packages/server/tests/acceptance/AlertsHistoryDatabase.test.ts packages/server/tests/acceptance/AlertsHistoryTransport.test.ts` passed **10/10** with 82 assertions. It checked exact list/detail/count IDs per year, shared rows, cross-year write denial and bulk deletion, fee-only student attribution, overdue fee-year grouping, authenticated REST create/update/delete and validation, authenticated MCP with concurrent year selections, principal denial and header/tool conflict. Temporary writes rolled back or were deleted; rerunning the guarded Alert seed confirmed exactly the seven manifest rows. The current server returns 401 for a principal denied by `@isAdmin()`; the test preserves that actual guard result.
+- **Repository gates:** `bun run lint`, `bun run typecheck`, `bun run test`, `bun run build`, and `bun run db:check` passed against the published Najm pins. The focused `@Year()` REST/MCP suites also passed in `test:academic-years`. No browser review, production migration, School commit/push, CI image, or deployment is claimed. Announcements has not started; the owner visual review of this Alerts diff remains open.
+
+## Alerts-first shared year-context prerequisite, 2026-09-27
+
+The owner authorized lint, build and test execution for the prepared shared context. The source remains uncommitted in School and the sibling Najm checkout; the Najm extension is not published or installed in School, so the School callback remains unregistered and no Alert runtime filtering is active.
+
+- Najm: `bun test packages/najm-mcp/test/invocation-hook.test.ts` passed 4/4, including concurrent direct calls, nested restoration and authenticated Streamable HTTP calls with separate actor/year headers. `bun run test:mcp` passed 51/51; `bunx turbo run build --filter=najm-api` passed 16/16 tasks, including MCP and API declaration builds. This verifies Najm source, not the installed School package or a School connected MCP call.
+- School: `bun run test:academic-years` passed 245/245. `bun run lint`, `bun run typecheck`, `bun run test` including the workspace boundary check, and `bun run build` passed after correcting fixture typing. `git diff --check` passed in both checkouts.
+- Dedicated local PostgreSQL: created `school_history_test`, applied unmodified migrations through `0057_aromatic_squadron_supreme.sql` (58 journal entries), and ran the guarded `seedAlertsHistory.ts` twice. Both runs retained exactly three years, ten students, 23 yearly enrollments and 24 placements. `bun --env-file=apps/dashboard/.env.local run test:history:base:db` passed 3/3: active pointer/identity, 7/8/8 annual memberships with the midyear transfer, and Aya's 2025-2026 fee without that year's enrollment. Fixture connection and actor passwords are in the ignored `apps/dashboard/.env.local`; no existing `school` data was changed.
+- Remaining: publish and pin the Najm MCP hook, register the School callback, implement Alert schema/service/repository year scope and module tests, then run authenticated School REST/MCP and browser acceptance. The base database has no Alert fixture rows yet. No production or deployed revision is claimed.
 
 ## `@Year()` refactor: inventory, decorator gate and groundwork, 2026-09-27
 

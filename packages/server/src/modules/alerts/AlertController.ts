@@ -1,7 +1,9 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Query, Validate } from '../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Query, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { isAdmin } from '../../auth';
 import { AlertService } from './AlertService';
+import { Alert, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AlertGuards';
+import type { AlertActor } from './AlertValidator';
 import {
   announcementAlertDto,
   alertClassIdParam,
@@ -34,12 +36,13 @@ import {
 } from './AlertDto';
 
 @ToolGroup('alerts')
+@Policy(Alert)
 @Controller('/alerts')
-@isAdmin()
 export class AlertController {
   constructor(private alertService: AlertService) { }
 
   @Get()
+  @CanList()
   @McpTool('List all alerts')
   @ResMsg('alerts.success.retrieved')
   async getAlerts() {
@@ -47,6 +50,7 @@ export class AlertController {
   }
 
   @Get('/count')
+  @CanList()
   @McpTool('Get total alert count')
   @ResMsg('alerts.success.retrieved')
   async getAlertsCount() {
@@ -54,6 +58,7 @@ export class AlertController {
   }
 
   @Get('/status-counts')
+  @CanList()
   @McpTool('Get alert counts grouped by status')
   @ResMsg('alerts.success.retrieved')
   async getStatusCounts() {
@@ -61,6 +66,7 @@ export class AlertController {
   }
 
   @Get('/priority-counts')
+  @CanList()
   @McpTool('Get alert counts grouped by priority')
   @ResMsg('alerts.success.retrieved')
   async getPriorityCounts() {
@@ -68,6 +74,7 @@ export class AlertController {
   }
 
   @Get('/type-counts')
+  @CanList()
   @McpTool('Get alert counts grouped by type')
   @ResMsg('alerts.success.retrieved')
   async getTypeCounts() {
@@ -75,6 +82,7 @@ export class AlertController {
   }
 
   @Get('/active')
+  @CanList()
   @McpTool('List active (unresolved) alerts')
   @ResMsg('alerts.success.retrieved')
   async getActiveAlerts() {
@@ -82,6 +90,7 @@ export class AlertController {
   }
 
   @Get('/critical')
+  @CanList()
   @McpTool('List critical priority alerts')
   @ResMsg('alerts.success.retrieved')
   async getCriticalAlerts() {
@@ -89,6 +98,7 @@ export class AlertController {
   }
 
   @Get('/recent')
+  @CanList()
   @Validate({ query: recentAlertsQueryDto })
   @McpTool('List recent alerts')
   @ResMsg('alerts.success.retrieved')
@@ -97,6 +107,7 @@ export class AlertController {
   }
 
   @Get('/recent-by-hours')
+  @CanList()
   @Validate({ query: recentAlertsByHoursQueryDto })
   @McpTool('List alerts from the last N hours')
   @ResMsg('alerts.success.retrieved')
@@ -105,6 +116,7 @@ export class AlertController {
   }
 
   @Get('/dashboard')
+  @CanList()
   @McpTool('Get alert dashboard summary')
   @ResMsg('alerts.success.retrieved')
   async getDashboardSummary() {
@@ -112,6 +124,7 @@ export class AlertController {
   }
 
   @Get('/type/:type')
+  @CanList()
   @Validate({ params: alertTypeParam })
   @McpTool('Get alerts by type')
   @ResMsg('alerts.success.retrieved')
@@ -120,6 +133,7 @@ export class AlertController {
   }
 
   @Get('/status/:status')
+  @CanList()
   @Validate({ params: alertStatusParam })
   @McpTool('Get alerts by status')
   @ResMsg('alerts.success.retrieved')
@@ -128,6 +142,7 @@ export class AlertController {
   }
 
   @Get('/priority/:priority')
+  @CanList()
   @Validate({ params: alertPriorityParam })
   @McpTool('Get alerts by priority')
   @ResMsg('alerts.success.retrieved')
@@ -136,6 +151,7 @@ export class AlertController {
   }
 
   @Get('/student/:studentId')
+  @CanList()
   @Validate({ params: alertStudentIdParam })
   @McpTool('Get alerts for a student')
   @ResMsg('alerts.success.retrieved')
@@ -144,6 +160,7 @@ export class AlertController {
   }
 
   @Get('/teacher/:teacherId')
+  @CanList()
   @Validate({ params: alertTeacherIdParam })
   @McpTool('Get alerts for a teacher')
   @ResMsg('alerts.success.retrieved')
@@ -152,6 +169,7 @@ export class AlertController {
   }
 
   @Get('/class/:classId')
+  @CanList()
   @Validate({ params: alertClassIdParam })
   @McpTool('Get alerts for a class')
   @ResMsg('alerts.success.retrieved')
@@ -160,6 +178,7 @@ export class AlertController {
   }
 
   @Get('/subject/:subjectId')
+  @CanList()
   @Validate({ params: alertSubjectIdParam })
   @McpTool('Get alerts for a subject')
   @ResMsg('alerts.success.retrieved')
@@ -168,6 +187,7 @@ export class AlertController {
   }
 
   @Get('/:id')
+  @CanRead()
   @Validate({ params: alertIdParam })
   @McpTool('Get an alert by ID')
   @ResMsg('alerts.success.retrieved')
@@ -176,6 +196,7 @@ export class AlertController {
   }
 
   @Post()
+  @CanCreate()
   @Validate(createAlertDto)
   @McpTool('Create a new alert')
   @ResMsg('alerts.success.created')
@@ -184,22 +205,25 @@ export class AlertController {
   }
 
   @Put('/:id')
+  @CanUpdate()
   @Validate({ params: alertIdParam, body: updateAlertDto })
   @McpTool('Update an alert')
   @ResMsg('alerts.success.updated')
-  async update(@Params('id') id: string, @Body() updateData: UpdateAlertDto) {
-    return this.alertService.update(id, updateData);
+  async update(@Params('id') id: string, @Body() updateData: UpdateAlertDto, @User() actor: AlertActor) {
+    return this.alertService.update(id, updateData, actor);
   }
 
   @Put('/:id/status')
+  @CanUpdate()
   @Validate({ params: alertIdParam, body: updateAlertStatusDto })
   @McpTool('Update alert status (e.g. mark as read)')
   @ResMsg('alerts.success.statusUpdated')
-  async updateStatus(@Params('id') id: string, @Body() body: UpdateAlertStatusDto) {
-    return this.alertService.updateStatus(id, body.status);
+  async updateStatus(@Params('id') id: string, @Body() body: UpdateAlertStatusDto, @User() actor: AlertActor) {
+    return this.alertService.updateStatus(id, body.status, actor);
   }
 
   @Delete('/resolved')
+  @isAdmin()
   @McpTool('Delete all resolved alerts')
   @ResMsg('alerts.success.resolvedDeleted')
   async deleteResolved() {
@@ -207,6 +231,7 @@ export class AlertController {
   }
 
   @Delete('/:id')
+  @CanDelete()
   @Validate({ params: alertIdParam })
   @McpTool('Delete an alert by ID')
   @ResMsg('alerts.success.deleted')
@@ -215,6 +240,7 @@ export class AlertController {
   }
 
   @Delete()
+  @isAdmin()
   @McpTool('Delete all alerts')
   @ResMsg('alerts.success.allDeleted')
   async deleteAll() {
@@ -222,6 +248,7 @@ export class AlertController {
   }
 
   @Post('/generate/attendance')
+  @isAdmin()
   @McpTool('Generate attendance alerts')
   @ResMsg('alerts.success.attendanceAlertsGenerated')
   async generateAttendanceAlerts() {
@@ -229,6 +256,7 @@ export class AlertController {
   }
 
   @Post('/generate/academic')
+  @isAdmin()
   @McpTool('Generate academic alerts')
   @ResMsg('alerts.success.academicAlertsGenerated')
   async generateAcademicAlerts() {
@@ -236,6 +264,7 @@ export class AlertController {
   }
 
   @Post('/academic')
+  @CanCreate()
   @Validate(typedStudentAlertDto)
   @McpTool('Create an academic alert for a student')
   @ResMsg('alerts.success.created')
@@ -244,6 +273,7 @@ export class AlertController {
   }
 
   @Post('/attendance')
+  @CanCreate()
   @Validate(typedStudentAlertDto)
   @McpTool('Create an attendance alert for a student')
   @ResMsg('alerts.success.created')
@@ -252,6 +282,7 @@ export class AlertController {
   }
 
   @Post('/behavioral')
+  @CanCreate()
   @Validate(typedStudentAlertDto)
   @McpTool('Create a behavioral alert for a student')
   @ResMsg('alerts.success.created')
@@ -260,6 +291,7 @@ export class AlertController {
   }
 
   @Post('/health')
+  @CanCreate()
   @Validate(typedStudentAlertDto)
   @McpTool('Create a health alert for a student')
   @ResMsg('alerts.success.created')
@@ -268,6 +300,7 @@ export class AlertController {
   }
 
   @Post('/announcement')
+  @CanCreate()
   @Validate(announcementAlertDto)
   @McpTool('Create an announcement alert')
   @ResMsg('alerts.success.created')
@@ -282,6 +315,7 @@ export class AlertController {
   }
 
   @Post('/reminder')
+  @CanCreate()
   @Validate(reminderAlertDto)
   @McpTool('Create a reminder alert')
   @ResMsg('alerts.success.created')
@@ -296,6 +330,7 @@ export class AlertController {
   }
 
   @Post('/emergency')
+  @CanCreate()
   @Validate(emergencyAlertDto)
   @McpTool('Create an emergency alert')
   @ResMsg('alerts.success.created')
@@ -304,6 +339,7 @@ export class AlertController {
   }
 
   @Post('/system')
+  @CanCreate()
   @Validate(systemAlertDto)
   @McpTool('Create a system alert')
   @ResMsg('alerts.success.created')

@@ -1,7 +1,11 @@
 import { Repository } from '../../najm';
-import { and, eq, gte, lte, or, desc, asc, sql, count } from 'drizzle-orm';
+import { and, eq, gte, lte, or, desc, asc, sql, count, type SQL } from 'drizzle-orm';
 import { events, eventParticipants, users, classes, sections } from '../../database/schema';
 import { DB } from '../../database/db';
+import { Owned } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { Event } from './EventGuards';
 
 export const eventSelect = {
   id: events.id,
@@ -60,14 +64,34 @@ export const sectionSelect = {
   updatedAt: sections.updatedAt,
 };
 
+@Owned(Event)
 @Repository()
 export class EventRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+  declare ownershipCondition: () => SQL | undefined;
   private readonly statusEnum = events.status.enumValues;
   private readonly typeEnum = events.type.enumValues;
   private readonly visibilityEnum = events.visibility.enumValues;
 
-  private buildEventQuery() {
+  // An event belongs to every year whose reporting interval its dates overlap,
+  // so one spanning the boundary shows in both years.
+  private inSelectedYear() {
+    return and(lte(events.startDate, this.year.reportingEndsOn), gte(events.endDate, this.year.reportingStartsOn));
+  }
+
+  /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
+  private readCondition(...filters: (SQL | undefined)[]) {
+    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+  }
+
+  /** Whether dates overlap the selected year: a new or moved event must stay in it. */
+  overlapsSelectedYear(startDate: string, endDate: string) {
+    return startDate <= this.year.reportingEndsOn && endDate >= this.year.reportingStartsOn;
+  }
+
+  // Never chain another .where() on this: it would replace the read condition.
+  private buildEventQuery(...filters: (SQL | undefined)[]) {
     return this.db.select({
       ...eventSelect,
       organizer: userSelect,
@@ -76,7 +100,8 @@ export class EventRepository {
     }).from(events)
       .leftJoin(users, eq(events.organizerId, users.id))
       .leftJoin(classes, eq(events.classId, classes.id))
-      .leftJoin(sections, eq(events.sectionId, sections.id));
+      .leftJoin(sections, eq(events.sectionId, sections.id))
+      .where(this.readCondition(...filters));
   }
 
   async getAll() {
@@ -85,113 +110,100 @@ export class EventRepository {
   }
 
   async getById(id: string) {
-    const [event] = await this.buildEventQuery()
-      .where(eq(events.id, id));
+    const [event] = await this.buildEventQuery(eq(events.id, id));
     return event;
   }
 
   async getByStatus(status: string) {
     const normalizedStatus = status as (typeof this.statusEnum)[number];
-    return await this.buildEventQuery()
-      .where(eq(events.status, normalizedStatus))
+    return await this.buildEventQuery(eq(events.status, normalizedStatus))
       .orderBy(asc(events.startDate));
   }
 
   async getByType(type: string) {
     const normalizedType = type as (typeof this.typeEnum)[number];
-    return await this.buildEventQuery()
-      .where(eq(events.type, normalizedType))
+    return await this.buildEventQuery(eq(events.type, normalizedType))
       .orderBy(desc(events.startDate));
   }
 
   async getByOrganizer(organizerId: string) {
-    return await this.buildEventQuery()
-      .where(eq(events.organizerId, organizerId))
+    return await this.buildEventQuery(eq(events.organizerId, organizerId))
       .orderBy(desc(events.startDate));
   }
 
   async getByClass(classId: string) {
-    return await this.buildEventQuery()
-      .where(or(
-        eq(events.classId, classId),
-        sql`EXISTS (
-          SELECT 1 FROM jsonb_array_elements_text(COALESCE(${events.classIds}, '[]'::jsonb)) AS class_id
-          WHERE class_id = ${classId}
-        )`,
-      ))
+    // An unqualified class_id inside a subquery here is ambiguous with the joined
+    // tables' columns; containment needs no column name.
+    return await this.buildEventQuery(or(
+      eq(events.classId, classId),
+      sql`coalesce(${events.classIds}, '[]'::jsonb) @> jsonb_build_array(${classId}::text)`,
+    ))
       .orderBy(desc(events.startDate));
   }
 
   async getBySection(sectionId: string) {
-    return await this.buildEventQuery()
-      .where(eq(events.sectionId, sectionId))
+    return await this.buildEventQuery(eq(events.sectionId, sectionId))
       .orderBy(desc(events.startDate));
   }
 
   async getByVisibility(visibility: string) {
     const normalizedVisibility = visibility as (typeof this.visibilityEnum)[number];
-    return await this.buildEventQuery()
-      .where(eq(events.visibility, normalizedVisibility))
+    return await this.buildEventQuery(eq(events.visibility, normalizedVisibility))
       .orderBy(desc(events.startDate));
   }
 
   async getUpcoming() {
     const today = new Date().toISOString().split('T')[0];
-    return await this.buildEventQuery()
-      .where(and(
-        gte(events.startDate, today),
-        or(
-          eq(events.status, 'scheduled'),
-          eq(events.status, 'ongoing')
-        )
-      ))
+    return await this.buildEventQuery(and(
+      gte(events.startDate, today),
+      or(
+        eq(events.status, 'scheduled'),
+        eq(events.status, 'ongoing')
+      )
+    ))
       .orderBy(asc(events.startDate));
   }
 
   async getPast() {
     const today = new Date().toISOString().split('T')[0];
-    return await this.buildEventQuery()
-      .where(and(
-        lte(events.endDate, today),
-        or(
-          eq(events.status, 'completed'),
-          eq(events.status, 'cancelled')
-        )
-      ))
+    return await this.buildEventQuery(and(
+      lte(events.endDate, today),
+      or(
+        eq(events.status, 'completed'),
+        eq(events.status, 'cancelled')
+      )
+    ))
       .orderBy(desc(events.startDate));
   }
 
   async getByDateRange(startDate: string, endDate: string) {
-    return await this.buildEventQuery()
-      .where(and(
-        gte(events.startDate, startDate),
-        lte(events.endDate, endDate)
-      ))
+    return await this.buildEventQuery(and(
+      gte(events.startDate, startDate),
+      lte(events.endDate, endDate)
+    ))
       .orderBy(asc(events.startDate));
   }
 
   async getActiveEvents() {
     const today = new Date().toISOString().split('T')[0];
-    return await this.buildEventQuery()
-      .where(and(
-        lte(events.startDate, today),
-        gte(events.endDate, today),
-        eq(events.status, 'ongoing')
-      ))
+    return await this.buildEventQuery(and(
+      lte(events.startDate, today),
+      gte(events.endDate, today),
+      eq(events.status, 'ongoing')
+    ))
       .orderBy(asc(events.startDate));
   }
 
   async getTodayEvents() {
     const today = new Date().toISOString().split('T')[0];
-    return await this.buildEventQuery()
-      .where(and(
-        lte(events.startDate, today),
-        gte(events.endDate, today),
-        or(
-          eq(events.status, 'scheduled'),
-          eq(events.status, 'ongoing')
-        )
-      ))
+    return await this.buildEventQuery(and(
+      lte(events.startDate, today),
+      gte(events.endDate, today),
+      or(
+        eq(events.status, 'scheduled'),
+        eq(events.status, 'ongoing')
+      )
+    ))
       .orderBy(asc(events.startDate));
   }
 
@@ -205,19 +217,24 @@ export class EventRepository {
   async update(id: string, data: Partial<typeof events.$inferInsert>) {
     await this.db.update(events)
       .set(data)
-      .where(eq(events.id, id));
+      .where(and(eq(events.id, id), this.inSelectedYear()));
     return this.getById(id);
   }
 
   async delete(id: string) {
     await this.db.delete(events)
-      .where(eq(events.id, id));
+      .where(and(eq(events.id, id), this.inSelectedYear()));
     return { success: true };
   }
 
   async deleteAll() {
-    await this.db.delete(events);
+    await this.db.delete(events).where(this.inSelectedYear());
     return { success: true };
+  }
+
+  /** Trusted full reset; user-facing deletion is limited to the selected year. */
+  async clearForSeedReset() {
+    await this.db.delete(events);
   }
 
   // ========== EVENT PARTICIPANTS ==========//
@@ -257,7 +274,7 @@ export class EventRepository {
       .leftJoin(users, eq(events.organizerId, users.id))
       .leftJoin(classes, eq(events.classId, classes.id))
       .leftJoin(sections, eq(events.sectionId, sections.id))
-      .where(eq(eventParticipants.participantId, participantId))
+      .where(this.readCondition(eq(eventParticipants.participantId, participantId)))
       .orderBy(desc(events.startDate));
 
     return results;
@@ -320,7 +337,8 @@ export class EventRepository {
       completed: count(sql`CASE WHEN ${events.status} = 'completed' THEN 1 END`),
       cancelled: count(sql`CASE WHEN ${events.status} = 'cancelled' THEN 1 END`),
     })
-      .from(events);
+      .from(events)
+      .where(this.readCondition());
 
     return analytics;
   }
@@ -331,6 +349,7 @@ export class EventRepository {
       count: count(),
     })
       .from(events)
+      .where(this.readCondition())
       .groupBy(events.type)
       .orderBy(desc(count()));
   }

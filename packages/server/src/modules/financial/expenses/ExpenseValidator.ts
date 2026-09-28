@@ -1,9 +1,12 @@
 import { Err, I18n, Service } from '../../../najm';
 import { ExpenseRepository } from './ExpenseRepository';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 @Service()
 export class ExpenseValidator {
   @I18n('expenses.errors') private t!: (key: string) => string;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private expenseRepository: ExpenseRepository,
@@ -68,11 +71,17 @@ export class ExpenseValidator {
   }
 
   async checkExists(id: string) {
-    const expenseExists = await this.isExists(id);
-    if (!expenseExists) {
+    const expense = await this.expenseRepository.getById(id);
+    if (!expense) {
       Err(404, this.t('notFound'));
     }
-    return true;
+    return expense;
+  }
+
+  ensureExpenseDateInSelectedYear(date: string | null) {
+    if (!date || date < this.year.reportingStartsOn || date > this.year.reportingEndsOn) {
+      Err(409, 'Expense date is outside the selected school year');
+    }
   }
 
   async checkInvoiceNumberExists(invoiceNumber: string) {

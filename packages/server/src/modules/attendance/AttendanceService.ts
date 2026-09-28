@@ -1,7 +1,7 @@
 import { Service, Err, I18n, Transaction } from '../../najm';
 import { AttendanceRepository, type AttendanceListFilters } from './AttendanceRepository';
 import { AttendanceValidator } from './AttendanceValidator';
-import { AcademicYearValidator, type ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
 import { SectionRepository } from '../sections/SectionRepository';
 import { pickProps } from '../../shared';
 import { getBusinessDateOnly } from '../../shared/businessDate';
@@ -49,11 +49,11 @@ export class AttendanceService {
 
   // The year's marks, optionally of one type, section, student or staff
   // member; a filter naming a missing record is a 404 before the list is read.
-  async getAll(year: ResolvedAcademicYear, filters: Omit<AttendanceListFilters, 'year'> = {}) {
+  async getAll(filters: AttendanceListFilters = {}) {
     if (filters.sectionId) await this.attendanceValidator.ensureSectionExists(filters.sectionId);
     if (filters.studentId) await this.attendanceValidator.ensureStudentExists(filters.studentId);
     if (filters.staffId) await this.attendanceValidator.ensureStaffExists(filters.staffId);
-    return await this.attendanceRepository.getAll({ year, ...filters });
+    return await this.attendanceRepository.getAll(filters);
   }
 
   // A mark belongs to its stored year, else its date's year; the role must be
@@ -64,22 +64,19 @@ export class AttendanceService {
     return record;
   }
 
-  // A day's marks belong to the year holding that date, whichever is viewed.
-  async getByDate(date: string, type?: string, role?: string) {
-    const year = await this.years.resolveRecord(undefined, date, role);
-    return await this.attendanceRepository.getByDate(date, type, year ?? undefined);
+  // The repository keeps the date and selected year in one read predicate.
+  async getByDate(date: string, type?: string) {
+    return await this.attendanceRepository.getByDate(date, type);
   }
 
-  async getByTeacher(teacherId: string, year: ResolvedAcademicYear) {
+  async getByTeacher(teacherId: string) {
     await this.attendanceValidator.ensureTeacherExists(teacherId);
-    return await this.attendanceRepository.getByTeacher(teacherId, year);
+    return await this.attendanceRepository.getByTeacher(teacherId);
   }
 
-  // Today's marks exist only in the year holding today; another year has none.
-  async getToday(year: ResolvedAcademicYear, type?: string) {
-    const records = await this.attendanceRepository.getToday(type);
-    return records.filter((record) => record.academicYearId === year.id ||
-      (!record.academicYearId && record.date >= year.reportingStartsOn && record.date <= year.reportingEndsOn));
+  // Today's marks exist only in the selected year when the repository reads them.
+  async getToday(type?: string) {
+    return this.attendanceRepository.getToday(type);
   }
 
   async mark(data: CreateAttendanceDto, user: { id: string; role?: string; teacherId?: string }) {
@@ -94,6 +91,7 @@ export class AttendanceService {
     user: { id: string; role?: string; teacherId?: string },
   ) {
     const academicYearId = await this.yearForStudentMark(data.sectionId, data.date);
+    this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, data.date, user.role);
     const teacherId = await this.teacherIdForUser(user);
     if (user.role === 'teacher') {
@@ -150,6 +148,7 @@ export class AttendanceService {
     const targetDate = date ?? getBusinessDateOnly();
 
     const academicYearId = await this.yearForStudentMark(sectionId, targetDate);
+    this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, targetDate, user.role);
 
     const existing = await this.attendanceRepository.findSameDayForStudentInSection(
@@ -158,6 +157,7 @@ export class AttendanceService {
     if (!existing) {
       Err(404, this.at('noRecordToday'));
     }
+    await this.attendanceValidator.ensureExists(existing.id);
 
     await this.attendanceValidator.validateAttendanceDate(targetDate, user.role);
     const isAdmin = user.role === 'admin' || user.role === 'principal';
@@ -203,6 +203,7 @@ export class AttendanceService {
   private async markStaffAttendance(data: Extract<CreateAttendanceDto, { type: 'staff' }>, user: { id: string; role?: string }) {
     if (user.role !== 'admin' && user.role !== 'principal') Err(403, 'Staff attendance requires an administrator');
     const academicYearId = await this.yearForStaffMark(data.date);
+    this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, data.date, user.role);
     await this.attendanceValidator.validateStaffAttendance(data, user.role);
 
@@ -233,9 +234,14 @@ export class AttendanceService {
     await this.attendanceValidator.validateAttendanceDate(date, user.role);
     await this.attendanceValidator.ensureStaffRosterEligible(staffIds, date);
     const academicYearId = await this.yearForStaffMark(date);
+    this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, date, user.role);
 
-    return this.attendanceRepository.upsertStaffRoster(data.items, user.id, academicYearId);
+    const saved = await this.attendanceRepository.upsertStaffRoster(data.items, user.id);
+    if (saved.savedCount !== data.items.length) {
+      Err(409, 'A staff attendance record belongs to another academic year');
+    }
+    return saved;
   }
 
   async update(id: string, data: UpdateAttendanceDto, user: { id: string; role?: string; teacherId?: string }) {
@@ -258,6 +264,10 @@ export class AttendanceService {
 
   async deleteAll() {
     return await this.attendanceRepository.deleteAll();
+  }
+
+  async clearForSeedReset() {
+    return this.attendanceRepository.clearForSeedReset();
   }
 
   async seedDemo(attendanceData) {

@@ -3,10 +3,20 @@ import { and, desc, eq, inArray, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { payslips, staff, users } from '../../../database/schema';
 import { DB } from '../../../database/db';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 @Repository()
 export class PayrollRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return and(
+      sql`(${payslips.period} || '-01')::date >= ${this.year.reportingStartsOn}`,
+      sql`(${payslips.period} || '-01')::date <= ${this.year.reportingEndsOn}`,
+    );
+  }
 
   private buildQuery() {
     const processorUsers = alias(users, 'processor_users');
@@ -51,23 +61,24 @@ export class PayrollRepository {
   }
 
   async getAll() {
-    return await this.buildQuery().orderBy(desc(payslips.period), desc(payslips.createdAt));
+    return await this.buildQuery().where(this.inSelectedYear())
+      .orderBy(desc(payslips.period), desc(payslips.createdAt));
   }
 
   async getById(id: string) {
-    const [row] = await this.buildQuery().where(eq(payslips.id, id)).limit(1);
+    const [row] = await this.buildQuery().where(and(eq(payslips.id, id), this.inSelectedYear())).limit(1);
     return row || null;
   }
 
   async getByPeriod(period: string) {
     return await this.buildQuery()
-      .where(eq(payslips.period, period))
+      .where(and(eq(payslips.period, period), this.inSelectedYear()))
       .orderBy(desc(payslips.createdAt));
   }
 
   async getByStaff(staffId: string) {
     return await this.buildQuery()
-      .where(eq(payslips.staffId, staffId))
+      .where(and(eq(payslips.staffId, staffId), this.inSelectedYear()))
       .orderBy(desc(payslips.period));
   }
 
@@ -75,7 +86,7 @@ export class PayrollRepository {
     const rows = await this.db
       .select({ staffId: payslips.staffId })
       .from(payslips)
-      .where(eq(payslips.period, period));
+      .where(and(eq(payslips.period, period), this.inSelectedYear()));
     return rows.map((r) => r.staffId);
   }
 
@@ -83,7 +94,7 @@ export class PayrollRepository {
     const [row] = await this.db
       .select({ id: payslips.id })
       .from(payslips)
-      .where(and(eq(payslips.staffId, staffId), eq(payslips.period, period)))
+      .where(and(eq(payslips.staffId, staffId), eq(payslips.period, period), this.inSelectedYear()))
       .limit(1);
     return row || null;
   }
@@ -102,19 +113,19 @@ export class PayrollRepository {
     const [row] = await this.db
       .update(payslips)
       .set(data)
-      .where(eq(payslips.id, id))
+      .where(and(eq(payslips.id, id), this.inSelectedYear()))
       .returning();
     return row;
   }
 
   async delete(id: string) {
-    const [row] = await this.db.delete(payslips).where(eq(payslips.id, id)).returning();
+    const [row] = await this.db.delete(payslips).where(and(eq(payslips.id, id), this.inSelectedYear())).returning();
     return row;
   }
 
   async deleteBulk(ids: string[]) {
     if (ids.length === 0) return [];
-    return await this.db.delete(payslips).where(inArray(payslips.id, ids)).returning();
+    return await this.db.delete(payslips).where(and(inArray(payslips.id, ids), this.inSelectedYear())).returning();
   }
 
   async deleteAll() {
@@ -132,7 +143,7 @@ export class PayrollRepository {
         pendingNet: sql<string>`COALESCE(SUM(CASE WHEN ${payslips.status} = 'pending' THEN ${payslips.netAmount} ELSE 0 END), 0)`,
       })
       .from(payslips)
-      .where(eq(payslips.period, period));
+      .where(and(eq(payslips.period, period), this.inSelectedYear()));
 
     return {
       count: Number(row?.count ?? 0),

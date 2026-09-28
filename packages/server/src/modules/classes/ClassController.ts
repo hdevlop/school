@@ -1,11 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Params, Body, User, Validate, ResMsg } from '../../najm';
+import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ClassService } from './ClassService';
 import { Class, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ClassGuards';
 import { isAdmin } from '../../auth';
-import { Year } from '../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { classIdParam, classListQuery, createClassDto, createClassesBulkDto, updateClassDto, type CreateClassDto, type UpdateClassDto } from './ClassDto';
+import { classIdParam, createClassDto, createClassesBulkDto, updateClassDto, type CreateClassDto, type CreateClassesBulkDto, type UpdateClassDto } from './ClassDto';
 
 @ToolGroup('classes')
 @Policy(Class)
@@ -17,11 +15,10 @@ export class ClassController {
 
   @Get()
   @CanList()
-  @Validate({ query: classListQuery })
-  @McpTool('List all classes')
+  @McpTool("List the selected year's classes")
   @ResMsg('classes.success.retrieved')
-  async getClasses(@Year() year: ResolvedAcademicYear) {
-    return this.classService.getAll(year);
+  async getClasses() {
+    return this.classService.getAll();
   }
 
   @Get('/:id')
@@ -29,8 +26,8 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool('Get a class by ID')
   @ResMsg('classes.success.retrieved')
-  async getClass(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.classService.getById(id, user.role);
+  async getClass(@Params('id') id: string) {
+    return this.classService.getById(id);
   }
 
   @Get('/:id/sections')
@@ -38,8 +35,8 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool('Get sections of a class')
   @ResMsg('classes.success.retrieved')
-  async getClassSections(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.classService.getSections(id, user.role);
+  async getClassSections(@Params('id') id: string) {
+    return this.classService.getSections(id);
   }
 
   @Get('/:id/students')
@@ -47,8 +44,8 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool('Get students enrolled in a class')
   @ResMsg('classes.success.retrieved')
-  async getClassStudents(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.classService.getStudents(id, user.role);
+  async getClassStudents(@Params('id') id: string) {
+    return this.classService.getStudents(id);
   }
 
   @Get('/:id/teachers')
@@ -56,8 +53,8 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool('Get teachers assigned to a class')
   @ResMsg('classes.success.retrieved')
-  async getClassTeachers(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.classService.getTeachers(id, user.role);
+  async getClassTeachers(@Params('id') id: string) {
+    return this.classService.getTeachers(id);
   }
 
   @Get('/:id/subjects')
@@ -65,8 +62,8 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool('Get subjects assigned to a class')
   @ResMsg('classes.success.retrieved')
-  async getClassSubjects(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.classService.getSubjects(id, user.role);
+  async getClassSubjects(@Params('id') id: string) {
+    return this.classService.getSubjects(id);
   }
 
   @Get('/:id/parents')
@@ -74,8 +71,8 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool('Get parents of students in a class')
   @ResMsg('classes.success.retrieved')
-  async getClassParents(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.classService.getParents(id, user.role);
+  async getClassParents(@Params('id') id: string) {
+    return this.classService.getParents(id);
   }
 
   @Get('/:id/analytics')
@@ -83,8 +80,8 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool('Get analytics for a class')
   @ResMsg('classes.success.retrieved')
-  async getClassAnalytics(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.classService.getAnalytics(id, user.role);
+  async getClassAnalytics(@Params('id') id: string) {
+    return this.classService.getAnalytics(id);
   }
 
   // ========== POST ENDPOINTS ==========//
@@ -92,17 +89,17 @@ export class ClassController {
   @Post()
   @CanCreate()
   @Validate(createClassDto)
-  @McpTool({ description: 'Create a new class', confirm: { level: 'warning', message: 'confirm.classes.create' } })
+  @McpTool({ description: 'Create a class in the selected year', confirm: { level: 'warning', message: 'confirm.classes.create' } })
   @ResMsg('classes.success.created')
-  async create(@Body() body: CreateClassDto, @User() user: { role?: string }) {
-    return this.classService.create(body, user.role);
+  async create(@Body() body: CreateClassDto) {
+    return this.classService.create(body);
   }
 
   @Post('/seed')
   @isAdmin()
   @Validate(createClassesBulkDto)
   @ResMsg('classes.success.seeded')
-  async seedClasses(@Body() body: CreateClassDto[]) {
+  async seedClasses(@Body() body: CreateClassesBulkDto) {
     return this.classService.seedDemoClasses(body);
   }
 
@@ -113,8 +110,8 @@ export class ClassController {
   @Validate({ params: classIdParam, body: updateClassDto })
   @McpTool({ description: 'Update a class by ID', confirm: { level: 'warning', message: 'confirm.classes.update' } })
   @ResMsg('classes.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateClassDto, @User() user: { role?: string }) {
-    return this.classService.update(id, body, user.role);
+  async update(@Params('id') id: string, @Body() body: UpdateClassDto) {
+    return this.classService.update(id, body);
   }
 
   // ============ DEL ENDPOINTS ============//
@@ -130,7 +127,7 @@ export class ClassController {
 
   @Delete()
   @CanDelete()
-  @McpTool({ description: 'Delete all classes', confirm: { level: 'danger', message: 'confirm.classes.deleteAll' } })
+  @McpTool({ description: "Delete the selected year's classes", confirm: { level: 'danger', message: 'confirm.classes.deleteAll' } })
   @ResMsg('classes.success.allDeleted')
   async deleteAll() {
     return this.classService.deleteAll();

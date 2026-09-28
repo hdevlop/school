@@ -8,6 +8,8 @@ import { inReportingYear, type ReportingYear } from '../academicYears/academicRe
 import { monthsBetween } from '@sms/contracts/academic-years';
 import { Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment } from './AttendanceGuards';
 import { getBusinessDateOnly } from '../../shared/businessDate';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 export const attendanceSelect = {
   id: attendance.id,
@@ -26,11 +28,9 @@ export const attendanceSelect = {
   updatedAt: attendance.updatedAt,
 };
 
-const inYear = (year?: ReportingYear) =>
-  year ? inReportingYear(attendance.academicYearId, attendance.date, year) : undefined;
+const inYear = (year: ReportingYear) => inReportingYear(attendance.academicYearId, attendance.date, year);
 
 export type AttendanceListFilters = {
-  year: ReportingYear;
   type?: string;
   sectionId?: string;
   studentId?: string;
@@ -40,6 +40,7 @@ export type AttendanceListFilters = {
 @Owned(Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment)
 @Repository()
 export class AttendanceRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
   declare ownershipCondition: () => SQL | undefined;
 
@@ -118,11 +119,11 @@ export class AttendanceRepository {
   // The year's marks the user may read (stored year, else the date in the
   // year's reporting interval), optionally of one type, section, student or
   // staff member. Year, filters and ownership are one WHERE.
-  async getAll({ year, type, sectionId, studentId, staffId }: AttendanceListFilters) {
+  async getAll({ type, sectionId, studentId, staffId }: AttendanceListFilters = {}) {
     return await this.buildAttendanceQuery()
       .where(and(
         this.ownershipCondition(),
-        inReportingYear(attendance.academicYearId, attendance.date, year),
+        inYear(this.year),
         type ? eq(attendance.type, type) : undefined,
         sectionId ? eq(sections.id, sectionId) : undefined,
         studentId ? and(eq(attendance.studentId, studentId), eq(attendance.type, 'student')) : undefined,
@@ -135,22 +136,22 @@ export class AttendanceRepository {
 
   async getById(id) {
     const [result] = await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), eq(attendance.id, id)))
+      .where(and(this.ownershipCondition(), eq(attendance.id, id), inYear(this.year)))
       .limit(1);
 
     return result;
   }
 
-  async getByDate(date, type?: string, year?: ReportingYear) {
+  async getByDate(date, type?: string) {
     const conditions = [eq(attendance.date, date)];
     if (type) conditions.push(eq(attendance.type, type));
 
     return await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), ...conditions, inYear(year)))
+      .where(and(this.ownershipCondition(), ...conditions, inYear(this.year)))
       .orderBy(asc(classes.name), asc(sections.name), asc(students.name));
   }
 
-  async getByTeacher(teacherId: string, year: ReportingYear) {
+  async getByTeacher(teacherId: string) {
     const [teacher] = await this.db
       .select({ staffId: teachers.staffId })
       .from(teachers)
@@ -163,13 +164,13 @@ export class AttendanceRepository {
     }
 
     return await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), or(...conditions), inReportingYear(attendance.academicYearId, attendance.date, year)))
+      .where(and(this.ownershipCondition(), or(...conditions), inYear(this.year)))
       .orderBy(desc(attendance.date));
   }
 
   async getByTeacherId(teacherId) {
     return await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), eq(teacherAssignments.teacherId, teacherId)))
+      .where(and(this.ownershipCondition(), eq(teacherAssignments.teacherId, teacherId), inYear(this.year)))
       .orderBy(desc(attendance.date), asc(students.name));
   }
 
@@ -180,7 +181,7 @@ export class AttendanceRepository {
   async create(attendanceData) {
     const [newAttendance] = await this.db
       .insert(attendance)
-      .values(attendanceData)
+      .values({ ...attendanceData, academicYearId: this.year.id })
       .returning();
 
     return await this.getById(newAttendance.id);
@@ -205,14 +206,13 @@ export class AttendanceRepository {
   async upsertStaffRoster(
     items: Array<{ staffId: string; date: string; status: string; notes?: string | null }>,
     userId: string,
-    academicYearId: string,
   ) {
     const rows = await this.db
       .insert(attendance)
       .values(items.map((item) => ({
         type: 'staff' as const,
         staffId: item.staffId,
-        academicYearId,
+        academicYearId: this.year.id,
         date: item.date,
         status: item.status as 'present' | 'absent' | 'late',
         notes: item.notes ?? null,
@@ -221,6 +221,7 @@ export class AttendanceRepository {
       .onConflictDoUpdate({
         target: [attendance.staffId, attendance.date],
         targetWhere: sql`${attendance.type} = 'staff'`,
+        setWhere: inYear(this.year),
         set: {
           status: sql`excluded.status`,
           notes: sql`excluded.notes`,
@@ -238,7 +239,7 @@ export class AttendanceRepository {
     const [updatedAttendance] = await this.db
       .update(attendance)
       .set(attendanceData)
-      .where(eq(attendance.id, id))
+      .where(and(eq(attendance.id, id), inYear(this.year)))
       .returning();
 
     return updatedAttendance;
@@ -247,7 +248,7 @@ export class AttendanceRepository {
   async delete(id) {
     const [deletedAttendance] = await this.db
       .delete(attendance)
-      .where(eq(attendance.id, id))
+      .where(and(eq(attendance.id, id), inYear(this.year)))
       .returning();
 
     return deletedAttendance;
@@ -256,6 +257,7 @@ export class AttendanceRepository {
   async deleteAll() {
     const deletedAttendance = await this.db
       .delete(attendance)
+      .where(inYear(this.year))
       .returning();
 
     return {
@@ -464,6 +466,11 @@ export class AttendanceRepository {
       .where(and(eq(attendance.id, id), isNotNull(attendance.academicYearId)))
       .limit(1);
     return Boolean(row);
+  }
+
+  /** Trusted full reset; user-facing deletion is limited to the selected year. */
+  async clearForSeedReset() {
+    await this.db.delete(attendance);
   }
 
 }

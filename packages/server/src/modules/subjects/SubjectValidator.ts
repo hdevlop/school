@@ -13,6 +13,14 @@ export class SubjectValidator {
     return subject;
   }
 
+  async ensureNotInUse(id: string) {
+    if (await this.subjectRepository.isInUse(id)) Err(409, this.t('inUse'));
+  }
+
+  async ensureNoneInUse() {
+    if (await this.subjectRepository.countInUse() > 0) Err(409, this.t('someInUse'));
+  }
+
   async ensureCodeUnique(code: string, excludeId?: string) {
     const existing = await this.subjectRepository.getByCode(code);
     if (existing && existing.id !== excludeId) {

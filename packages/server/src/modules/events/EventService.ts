@@ -90,6 +90,7 @@ export class EventService {
     const normalizedData = this.normalizeEventTargets(data, true);
     await this.eventValidator.ensureClassesValid(normalizedData.classIds);
     await this.eventValidator.validateEventDates(normalizedData.startDate, normalizedData.endDate, normalizedData.startTime, normalizedData.endTime, normalizedData.registrationDeadline ?? undefined);
+    this.eventValidator.ensureInSelectedYear(normalizedData.startDate, normalizedData.endDate);
 
     const eventData = {
       ...normalizedData,
@@ -113,6 +114,7 @@ export class EventService {
     const startTime = normalizedData.startTime ?? current.startTime;
     const endTime = normalizedData.endTime ?? current.endTime;
     const registrationDeadline = normalizedData.registrationDeadline ?? current.registrationDeadline;
+    this.eventValidator.ensureInSelectedYear(startDate, endDate);
 
     if (startDate && endDate && startTime && endTime) {
       await this.eventValidator.validateEventDates(startDate, endDate, startTime, endTime, registrationDeadline ?? undefined);
@@ -128,6 +130,11 @@ export class EventService {
 
   async deleteAll() {
     return await this.eventRepository.deleteAll();
+  }
+
+  /** Trusted demo reset: every year's events. */
+  async clearForSeedReset() {
+    return this.eventRepository.clearForSeedReset();
   }
 
   // ========== EVENT STATUS MANAGEMENT ==========//
@@ -159,6 +166,7 @@ export class EventService {
   async postponeEvent(id: string, newStartDate: string, newEndDate: string) {
     const current = await this.eventValidator.ensureExists(id);
     await this.eventValidator.validateEventDates(newStartDate, newEndDate, current.startTime, current.endTime, current.registrationDeadline ?? undefined);
+    this.eventValidator.ensureInSelectedYear(newStartDate, newEndDate);
 
     return await this.eventRepository.update(id, {
       startDate: newStartDate,

@@ -20,6 +20,8 @@ const BehaviorRewardsTable = () => {
   const { user } = useAuth();
   const role = (user as any)?.role;
   const canDelete = role === 'admin';
+  // Parents and students read their own or their children's records only.
+  const isFamily = role === 'parent' || role === 'student';
   const columns = useBehaviorRewardsTableColumns();
   const [classFilter, setClassFilter] = useState('');
   const [sectionFilter, setSectionFilter] = useState('');
@@ -110,9 +112,9 @@ const BehaviorRewardsTable = () => {
         data={tableData}
         columns={columns}
         filters={filters}
-        onCreate={handleCreate}
+        onCreate={isFamily ? undefined : handleCreate}
         onView={handleView}
-        onEdit={handleEdit}
+        onEdit={isFamily ? undefined : handleEdit}
         onDelete={canDelete ? handleDelete : undefined}
         loading={isBehaviorRewardsLoading}
         error={hasFailedToLoad(error, tableData) ? error : null}
@@ -128,8 +130,8 @@ const BehaviorRewardsTable = () => {
             surface="panel"
             icon={FEATURE_ICONS.behaviorRewards}
             title={t('emptyStates.behaviorRewards.title')}
-            description={t('emptyStates.behaviorRewards.description')}
-            action={(
+            description={isFamily ? t('emptyStates.familyDescription') : t('emptyStates.behaviorRewards.description')}
+            action={isFamily ? undefined : (
               <NButton size="sm" onClick={handleCreate}>
                 <Plus className="h-4 w-4" />
                 {t('behaviorRewards.dialogs.createButton')}

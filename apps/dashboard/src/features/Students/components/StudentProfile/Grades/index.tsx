@@ -7,6 +7,7 @@ import { useGrades, useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { Award, BookOpenCheck, GraduationCap, Save, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
+import { useViewerRole } from '@/shared/useViewerRole';
 
 const pctColor = (pct?: number | null) => {
   if (pct == null) return 'text-slate-400';
@@ -22,6 +23,8 @@ const gradePercentage = (marks: number | null | undefined, total: number | null 
 
 export default function GradesTab({ studentId }: { studentId?: string }) {
   const { t } = useTranslation();
+  // Parents and students read the report; staff correct marks in place.
+  const canEdit = !useViewerRole().isFamily;
   const { data: reportResponse, isLoading } = useStudentReport(studentId || null);
   const { updateGrade } = useGrades({ enabled: false });
   const queryClient = useQueryClient();
@@ -132,7 +135,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
       header: t('students.profile.gradeDetails.marks'),
       enableSorting: true,
       meta: {
-        editable: !isSaving,
+        editable: canEdit && !isSaving,
         editor: 'number',
         min: 0,
         max: (grade: any) => grade.totalMarks ?? 1000,
@@ -152,7 +155,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
       accessorKey: 'status',
       header: t('students.profile.attendanceDetails.status'),
       enableSorting: true,
-      meta: { editable: !isSaving, editor: 'select', options: gradeStatusOptions },
+      meta: { editable: canEdit && !isSaving, editor: 'select', options: gradeStatusOptions },
       cell: ({ getValue }: any) => (
         <span className="font-medium text-slate-700">
           {gradeStatusOptions.find((option) => option.value === getValue())?.label || gradeStatusOptions[1].label}
@@ -172,7 +175,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
         </div>
       ),
     },
-  ], [gradeStatusOptions, isSaving, t]);
+  ], [canEdit, gradeStatusOptions, isSaving, t]);
 
   return (
     <div className="flex min-h-full flex-col gap-4">
@@ -202,7 +205,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
         data={rows}
         getRowId={(grade: any) => grade.id}
         columns={columns}
-        onCellEdit={handleCellEdit}
+        onCellEdit={canEdit ? handleCellEdit : undefined}
         loading={isLoading}
         defaultMode="table"
         availableModes={['table']}
@@ -222,12 +225,14 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
           />
         )}
       />
-      <div className="flex shrink-0 justify-end border-t border-slate-200 bg-white pt-3">
-        <NButton type="button" onClick={handleSaveAll} disabled={isSaving || !changedGrades.length}>
-          <Save className="mr-2 h-4 w-4" />
-          {t('common.save')}
-        </NButton>
-      </div>
+      {canEdit && (
+        <div className="flex shrink-0 justify-end border-t border-slate-200 bg-white pt-3">
+          <NButton type="button" onClick={handleSaveAll} disabled={isSaving || !changedGrades.length}>
+            <Save className="mr-2 h-4 w-4" />
+            {t('common.save')}
+          </NButton>
+        </div>
+      )}
     </div>
   );
 }

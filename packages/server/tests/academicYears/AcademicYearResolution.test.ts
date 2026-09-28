@@ -109,14 +109,12 @@ describe('the record-year rule, with no switch', () => {
     }
   });
 
-  it('gives assessment and exam lists the year they are given', async () => {
-    for (const Service of [AssessmentService, ExamService]) {
-      const received: unknown[] = [];
-      const service = new Service({ getAll: async (filters: unknown) => { received.push(filters); return []; } } as any,
-        {} as any, {} as any);
-      await service.getAll(oldYear as any);
-      expect(received).toEqual([{ year: oldYear }]);
-    }
+  it('reads assessments and exams through their scoped repositories', async () => {
+    const received: unknown[] = [];
+    const read = { getAll: async (filters: unknown) => { received.push(filters); return []; } };
+    await new AssessmentService(read as any, {} as any, {} as any).getAll();
+    await new ExamService(read as any, {} as any, {} as any).getAll();
+    expect(received).toEqual([{}, {}]);
   });
 });
 

@@ -1,11 +1,15 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
 import { drizzle } from 'drizzle-orm/pg-proxy';
+import { AlertRepository } from '../../src/modules/alerts/AlertRepository';
+import { AnnouncementRepository } from '../../src/modules/announcements/AnnouncementRepository';
 import { AssessmentRepository } from '../../src/modules/assessments/AssessmentRepository';
 import { AttendanceRepository } from '../../src/modules/attendance/AttendanceRepository';
 import { BehaviorRewardRepository } from '../../src/modules/behaviorRewards/BehaviorRewardRepository';
 import { ClassRepository } from '../../src/modules/classes/ClassRepository';
+import { DisciplineRepository } from '../../src/modules/discipline/DisciplineRepository';
 import { ExamRepository } from '../../src/modules/exams/ExamRepository';
+import { EventRepository } from '../../src/modules/events/EventRepository';
 import { GradeRepository } from '../../src/modules/grades/GradeRepository';
 import { ParentRepository } from '../../src/modules/parents/ParentRepository';
 import { SectionRepository } from '../../src/modules/sections/SectionRepository';
@@ -20,6 +24,16 @@ const YEAR = { id: 'year-old', reportingStartsOn: '2025-09-01', reportingEndsOn:
 function signedIn(role: string) {
   return { hasActiveContext: () => true, getUser: () => ({ id: 'user-1', role }) };
 }
+
+// Migrated repositories read the academic year the request selected.
+function inYear<T extends object>(repo: T): T {
+  Object.defineProperty(repo, 'year', { value: { ...YEAR, label: '2025-2026' } });
+  return repo;
+}
+const alertRepo = () => inYear(new AlertRepository());
+const announcementRepo = () => inYear(new AnnouncementRepository());
+const assessmentRepo = () => inYear(new AssessmentRepository());
+const attendanceRepo = () => inYear(new AttendanceRepository());
 
 // Runs one repository read as `role` against a SQL-capturing driver and
 // returns the last statement (a few reads look up a helper row first).
@@ -46,51 +60,91 @@ const OWNED_ID_SUBQUERY = /"(\w+)"\."id" in \(select (?:"\1"\.)?"id" from "\1"/;
 // unfiltered getAll lists, each either lost ownership to a second .where() or
 // never applied it.
 const OWNED_READS: Read[] = [
-  ['assessments getById', () => new AssessmentRepository(), 'getById', ['id-1']],
-  ['assessments getAll in a year', () => new AssessmentRepository(), 'getAll', [{ year: YEAR }]],
-  ['assessments getUpcoming', () => new AssessmentRepository(), 'getUpcoming', []],
-  ['assessments getDueThisWeek', () => new AssessmentRepository(), 'getDueThisWeek', []],
-  ['assessments getOverdue', () => new AssessmentRepository(), 'getOverdue', []],
-  ['assessments getByType', () => new AssessmentRepository(), 'getByType', ['quiz']],
-  ['assessments getByStatus', () => new AssessmentRepository(), 'getByStatus', ['scheduled']],
-  ['assessments getAll for a section', () => new AssessmentRepository(), 'getAll', [{ year: YEAR, sectionId: 'section-1' }]],
-  ['assessments getByTeacherAssignment', () => new AssessmentRepository(), 'getByTeacherAssignment', ['ta-1']],
-  ['assessments getAll for a subject', () => new AssessmentRepository(), 'getAll', [{ year: YEAR, subjectId: 'subject-1' }]],
-  ['assessments getAll for a teacher', () => new AssessmentRepository(), 'getAll', [{ year: YEAR, teacherId: 'teacher-1' }]],
-  ['assessments getTodayAssessments', () => new AssessmentRepository(), 'getTodayAssessments', []],
-  ['assessments getAll for a class', () => new AssessmentRepository(), 'getAll', [{ year: YEAR, classId: 'class-1' }]],
-  ['attendance getAll in a year', () => new AttendanceRepository(), 'getAll', [{ year: YEAR }]],
-  ['attendance getAll by type', () => new AttendanceRepository(), 'getAll', [{ year: YEAR, type: 'student' }]],
-  ['attendance getById', () => new AttendanceRepository(), 'getById', ['id-1']],
-  ['attendance getAll for a student', () => new AttendanceRepository(), 'getAll', [{ year: YEAR, studentId: 'student-1' }]],
-  ['attendance getAll for a staff member', () => new AttendanceRepository(), 'getAll', [{ year: YEAR, staffId: 'staff-1' }]],
-  ['attendance getByTeacher in a year', () => new AttendanceRepository(), 'getByTeacher', ['teacher-1', YEAR]],
-  ['attendance getByDate', () => new AttendanceRepository(), 'getByDate', ['2026-09-25', 'student']],
-  ['attendance getAll for a section', () => new AttendanceRepository(), 'getAll', [{ year: YEAR, sectionId: 'section-1' }]],
-  ['attendance getByTeacherId', () => new AttendanceRepository(), 'getByTeacherId', ['teacher-1']],
-  ['attendance getToday', () => new AttendanceRepository(), 'getToday', ['student']],
-  ['behavior rewards getAll', () => new BehaviorRewardRepository(), 'getAll', []],
-  ['behavior rewards getById', () => new BehaviorRewardRepository(), 'getById', ['id-1']],
+  ['alerts getAll', alertRepo, 'getAll', []],
+  ['alerts getById', alertRepo, 'getById', ['id-1']],
+  ['alerts getByType', alertRepo, 'getByType', ['health']],
+  ['alerts getByStatus', alertRepo, 'getByStatus', ['active']],
+  ['alerts getByPriority', alertRepo, 'getByPriority', ['high']],
+  ['alerts getByStudentId', alertRepo, 'getByStudentId', ['student-1']],
+  ['alerts getByTeacherId', alertRepo, 'getByTeacherId', ['teacher-1']],
+  ['alerts getByClassId', alertRepo, 'getByClassId', ['class-1']],
+  ['alerts getBySubjectId', alertRepo, 'getBySubjectId', ['subject-1']],
+  ['alerts getActiveAlerts', alertRepo, 'getActiveAlerts', []],
+  ['alerts getCriticalAlerts', alertRepo, 'getCriticalAlerts', []],
+  ['alerts getRecentAlertsByHours', alertRepo, 'getRecentAlertsByHours', [24]],
+  ['alerts getRecentAlerts', alertRepo, 'getRecentAlerts', [5]],
+  ['alerts getCount', alertRepo, 'getCount', []],
+  ['alerts getStatusCounts', alertRepo, 'getStatusCounts', []],
+  ['alerts getPriorityCounts', alertRepo, 'getPriorityCounts', []],
+  ['alerts getTypeCounts', alertRepo, 'getTypeCounts', []],
+  ['announcements getAll', announcementRepo, 'getAll', []],
+  ['announcements getById', announcementRepo, 'getById', ['id-1']],
+  ['announcements getRecent', announcementRepo, 'getRecent', []],
+  ['announcements getByAuthor', announcementRepo, 'getByAuthor', ['user-9']],
+  ['announcements getByTargetAudience', announcementRepo, 'getByTargetAudience', ['parents']],
+  ['announcements getByClass', announcementRepo, 'getByClass', ['class-1']],
+  ['announcements getPublished', announcementRepo, 'getPublished', []],
+  ['announcements getActiveForAudience', announcementRepo, 'getActiveForAudience', ['parents', 'class-1']],
+  ['announcements getUpcoming', announcementRepo, 'getUpcoming', []],
+  ['announcements getExpired', announcementRepo, 'getExpired', []],
+  ['announcements getCount', announcementRepo, 'getCount', []],
+  ['announcements getStats', announcementRepo, 'getStats', []],
+  ['assessments getById', assessmentRepo, 'getById', ['id-1']],
+  ['assessments getForStudent', assessmentRepo, 'getForStudent', ['student-1']],
+  ['assessments getAll in a year', assessmentRepo, 'getAll', []],
+  ['assessments getUpcoming', assessmentRepo, 'getUpcoming', []],
+  ['assessments getDueThisWeek', assessmentRepo, 'getDueThisWeek', []],
+  ['assessments getOverdue', assessmentRepo, 'getOverdue', []],
+  ['assessments getByType', assessmentRepo, 'getByType', ['quiz']],
+  ['assessments getByStatus', assessmentRepo, 'getByStatus', ['scheduled']],
+  ['assessments getAll for a section', assessmentRepo, 'getAll', [{ sectionId: 'section-1' }]],
+  ['assessments getByTeacherAssignment', assessmentRepo, 'getByTeacherAssignment', ['ta-1']],
+  ['assessments getAll for a subject', assessmentRepo, 'getAll', [{ subjectId: 'subject-1' }]],
+  ['assessments getAll for a teacher', assessmentRepo, 'getAll', [{ teacherId: 'teacher-1' }]],
+  ['assessments getTodayAssessments', assessmentRepo, 'getTodayAssessments', []],
+  ['assessments getAll for a class', assessmentRepo, 'getAll', [{ classId: 'class-1' }]],
+  ['attendance getAll in a year', attendanceRepo, 'getAll', []],
+  ['attendance getAll by type', attendanceRepo, 'getAll', [{ type: 'student' }]],
+  ['attendance getById', attendanceRepo, 'getById', ['id-1']],
+  ['attendance getAll for a student', attendanceRepo, 'getAll', [{ studentId: 'student-1' }]],
+  ['attendance getAll for a staff member', attendanceRepo, 'getAll', [{ staffId: 'staff-1' }]],
+  ['attendance getByTeacher in a year', attendanceRepo, 'getByTeacher', ['teacher-1']],
+  ['attendance getByDate', attendanceRepo, 'getByDate', ['2026-09-25', 'student']],
+  ['attendance getAll for a section', attendanceRepo, 'getAll', [{ sectionId: 'section-1' }]],
+  ['attendance getByTeacherId', attendanceRepo, 'getByTeacherId', ['teacher-1']],
+  ['attendance getToday', attendanceRepo, 'getToday', ['student']],
+  ['behavior rewards getAll', () => inYear(new BehaviorRewardRepository()), 'getAll', []],
+  ['behavior rewards getById', () => inYear(new BehaviorRewardRepository()), 'getById', ['id-1']],
+  ['discipline list', () => inYear(new DisciplineRepository()), 'list', []],
+  ['discipline getById', () => inYear(new DisciplineRepository()), 'getById', ['id-1']],
   ['classes getById', () => new ClassRepository(), 'getById', ['id-1']],
-  ['classes getAll in a year', () => new ClassRepository(), 'getAll', ['2025-2026']],
-  ['exams getById', () => new ExamRepository(), 'getById', ['id-1']],
-  ['exams getAll in a year', () => new ExamRepository(), 'getAll', [{ year: YEAR }]],
-  ['exams getByType', () => new ExamRepository(), 'getByType', ['midterm']],
-  ['exams getByStatus', () => new ExamRepository(), 'getByStatus', ['scheduled']],
-  ['exams getAll for a section', () => new ExamRepository(), 'getAll', [{ year: YEAR, sectionId: 'section-1' }]],
-  ['exams getByTeacherAssignment', () => new ExamRepository(), 'getByTeacherAssignment', ['ta-1']],
-  ['exams getAll for a subject', () => new ExamRepository(), 'getAll', [{ year: YEAR, subjectId: 'subject-1' }]],
-  ['exams getAll for a teacher', () => new ExamRepository(), 'getAll', [{ year: YEAR, teacherId: 'teacher-1' }]],
-  ['exams getTodayExams', () => new ExamRepository(), 'getTodayExams', []],
-  ['exams getUpcomingExams', () => new ExamRepository(), 'getUpcomingExams', []],
-  ['grades getById', () => new GradeRepository(), 'getById', ['id-1']],
-  ['grades getAll in a year', () => new GradeRepository(), 'getAll', [{ year: YEAR }]],
-  ['grades getByAssessment', () => new GradeRepository(), 'getByAssessment', ['assessment-1']],
-  ['grades getByExam', () => new GradeRepository(), 'getByExam', ['exam-1']],
-  ['grades getAll for a student', () => new GradeRepository(), 'getAll', [{ year: YEAR, studentId: 'student-1' }]],
-  ['grades getAll for a section', () => new GradeRepository(), 'getAll', [{ year: YEAR, sectionId: 'section-1' }]],
-  ['grades getAll for a subject', () => new GradeRepository(), 'getAll', [{ year: YEAR, subjectId: 'subject-1' }]],
-  ['grades getAll for a teacher', () => new GradeRepository(), 'getAll', [{ year: YEAR, teacherId: 'teacher-1' }]],
+  ['classes getAll in a year', () => inYear(new ClassRepository()), 'getAll', []],
+  ['classes getInSelectedYear', () => inYear(new ClassRepository()), 'getInSelectedYear', ['id-1']],
+  ['exams getById', () => inYear(new ExamRepository()), 'getById', ['id-1']],
+  ['exams getAll in a year', () => inYear(new ExamRepository()), 'getAll', []],
+  ['exams getByType', () => inYear(new ExamRepository()), 'getByType', ['midterm']],
+  ['exams getByStatus', () => inYear(new ExamRepository()), 'getByStatus', ['scheduled']],
+  ['exams getAll for a section', () => inYear(new ExamRepository()), 'getAll', [{ sectionId: 'section-1' }]],
+  ['exams getByTeacherAssignment', () => inYear(new ExamRepository()), 'getByTeacherAssignment', ['ta-1']],
+  ['exams getAll for a subject', () => inYear(new ExamRepository()), 'getAll', [{ subjectId: 'subject-1' }]],
+  ['exams getAll for a teacher', () => inYear(new ExamRepository()), 'getAll', [{ teacherId: 'teacher-1' }]],
+  ['exams getTodayExams', () => inYear(new ExamRepository()), 'getTodayExams', []],
+  ['exams getUpcomingExams', () => inYear(new ExamRepository()), 'getUpcomingExams', []],
+  ['exams getForStudent', () => inYear(new ExamRepository()), 'getForStudent', ['student-1', '2026-01-01']],
+  ['events getAll', () => inYear(new EventRepository()), 'getAll', []],
+  ['events getById', () => inYear(new EventRepository()), 'getById', ['event-1']],
+  ['events getByType', () => inYear(new EventRepository()), 'getByType', ['sports']],
+  ['events getByClass', () => inYear(new EventRepository()), 'getByClass', ['class-1']],
+  ['events getUpcoming', () => inYear(new EventRepository()), 'getUpcoming', []],
+  ['events getEventsByParticipant', () => inYear(new EventRepository()), 'getEventsByParticipant', ['participant-1']],
+  ['grades getById', () => inYear(new GradeRepository()), 'getById', ['id-1']],
+  ['grades getAll in a year', () => inYear(new GradeRepository()), 'getAll', []],
+  ['grades getByAssessment', () => inYear(new GradeRepository()), 'getByAssessment', ['assessment-1']],
+  ['grades getByExam', () => inYear(new GradeRepository()), 'getByExam', ['exam-1']],
+  ['grades getAll for a student', () => inYear(new GradeRepository()), 'getAll', [{ studentId: 'student-1' }]],
+  ['grades getAll for a section', () => inYear(new GradeRepository()), 'getAll', [{ sectionId: 'section-1' }]],
+  ['grades getAll for a subject', () => inYear(new GradeRepository()), 'getAll', [{ subjectId: 'subject-1' }]],
+  ['grades getAll for a teacher', () => inYear(new GradeRepository()), 'getAll', [{ teacherId: 'teacher-1' }]],
   ['parents getAll', () => new ParentRepository(), 'getAll', []],
   ['parents search', () => new ParentRepository(), 'search', ['Amina']],
   ['parents getById', () => new ParentRepository(), 'getById', ['id-1']],
@@ -98,7 +152,8 @@ const OWNED_READS: Read[] = [
   ['parents getReadableByCin', () => new ParentRepository(), 'getReadableByCin', ['AB123']],
   ['parents getReadableByPhone', () => new ParentRepository(), 'getReadableByPhone', ['0600000000']],
   ['sections getById', () => new SectionRepository(), 'getById', ['id-1']],
-  ['sections getAll in a year', () => new SectionRepository(), 'getAll', ['2025-2026']],
+  ['sections getAll in a year', () => inYear(new SectionRepository()), 'getAll', []],
+  ['sections getInSelectedYear', () => inYear(new SectionRepository()), 'getInSelectedYear', ['id-1']],
   ['students getById', () => new StudentRepository(), 'getById', ['id-1']],
   ['students getByUserId', () => new StudentRepository(), 'getByUserId', ['user-9']],
   ['students getAll in a year', () => new StudentRepository(), 'getAll', [{ academicYearId: 'year-old' }]],
@@ -111,6 +166,7 @@ const OWNED_READS: Read[] = [
 
 // Uniqueness and duplicate checks must see every row, whoever is signed in.
 const UNSCOPED_LOOKUPS: Read[] = [
+  ['alerts checkDuplicateAlertInScope', alertRepo, 'checkDuplicateAlertInScope', ['academic', 'year-old', 'student-1']],
   ['students getByEmail', () => new StudentRepository(), 'getByEmail', ['a@school.test']],
   ['students getByPhone', () => new StudentRepository(), 'getByPhone', ['0600000000']],
   ['students getByStudentCode', () => new StudentRepository(), 'getByStudentCode', ['S-1']],
@@ -152,8 +208,72 @@ describe('owned repository reads', () => {
     expect(params).toEqual(['user-1', 'student-9', 1]);
   });
 
+  it('reads alerts and announcements school-wide for a principal', async () => {
+    for (const create of [alertRepo, announcementRepo]) {
+      const { sql } = await lastStatement(create, 'getAll', [], 'principal');
+      expect(sql).not.toMatch(OWNED_ID_SUBQUERY);
+    }
+  });
+
+  it('keeps a parent\'s alerts about one student inside the parent\'s children and the year', async () => {
+    const { sql, params } = await lastStatement(alertRepo, 'getByStudentId', ['student-9'], 'parent');
+    expect(sql.match(/"alerts"\."id" in \(select/g)).toHaveLength(3);
+    expect(sql).toContain('and "alerts"."student_id" = $');
+    expect(params).toContain('student-9');
+    expect(params).toContain('year-old');
+  });
+
+  it('keeps a teacher\'s behavior rewards inside the year by the school-local day of the behavior', async () => {
+    const { sql, params } = await lastStatement(() => inYear(new BehaviorRewardRepository()), 'getAll', [], 'teacher');
+    expect(sql).toMatch(OWNED_ID_SUBQUERY);
+    expect(sql).toContain('"behavior_rewards"."behavior_at" >= ($');
+    expect(sql).toContain('::date::timestamp at time zone coalesce((select "settings"."time_zone" from "settings"');
+    expect(sql).toContain('"behavior_rewards"."behavior_at" < (($');
+    expect(params).toEqual(expect.arrayContaining(['user-1', '2025-09-01', '2026-08-31']));
+  });
+
+  it('keeps one discipline incident inside a parent\'s children and the year by the incident\'s local day', async () => {
+    const { sql, params } = await lastStatement(() => inYear(new DisciplineRepository()), 'getById', ['id-1'], 'parent');
+    expect(sql).toMatch(OWNED_ID_SUBQUERY);
+    expect(sql).toContain('"discipline_incidents"."incident_at" >= ($');
+    expect(sql).toContain('"discipline_incidents"."incident_at" < (($');
+    expect(sql).toContain('and "discipline_incidents"."id" = $');
+    expect(params).toEqual(expect.arrayContaining(['user-1', '2025-09-01', '2026-08-31', 'id-1']));
+  });
+
+  it('shows a parent an exam only when a child was placed in a target section on its date', async () => {
+    const { sql, params } = await lastStatement(() => inYear(new ExamRepository()), 'getById', ['id-1'], 'parent');
+    expect(sql).toContain('placement.valid_from <= "exams"."date"');
+    expect(sql).toContain('join student_parents link on link.student_id = student.id');
+    expect(sql).not.toContain('"students"."section_id"');
+    expect(sql).toContain('"exams"."academic_year_id" = $');
+    expect(sql).toContain('and "exams"."id" = $');
+    expect(params).toEqual(expect.arrayContaining(['user-1', 'year-old', 'id-1']));
+  });
+
+  it('shows a teacher the grades of their sources and of students placed in a section they teach on the source date', async () => {
+    const { sql, params } = await lastStatement(() => inYear(new GradeRepository()), 'getAll', [], 'teacher');
+    expect(sql).toContain('assignment.id = coalesce(');
+    expect(sql).toContain('placement.section_id = assignment.section_id');
+    expect(sql).toContain('placement.valid_from <= coalesce(');
+    // The current section only for a student with no dated enrollment at all.
+    expect(sql).toContain('not exists (select 1 from student_enrollments enrollment where enrollment.student_id = "grades"."student_id")');
+    expect(sql).toContain('"grades"."academic_year_id" = $');
+    expect(params).toEqual(expect.arrayContaining(['user-1', 'year-old']));
+  });
+
+  it('shows a parent public and parent events, a class event only for a child placed in it that day, in the year', async () => {
+    const { sql, params } = await lastStatement(() => inYear(new EventRepository()), 'getAll', [], 'parent');
+    expect(sql).toContain(`coalesce("events"."visibility", 'public') in ('public', 'parents')`);
+    expect(sql).toContain('placement.valid_from <= "events"."start_date"');
+    expect(sql).toContain('join student_parents link on link.student_id = student.id');
+    expect(sql).toContain('"events"."start_date" <= $');
+    expect(sql).toContain('"events"."end_date" >= $');
+    expect(params).toEqual(expect.arrayContaining(['user-1', '2026-08-31', '2025-09-01']));
+  });
+
   it('keeps a filtered attendance list inside ownership when a type is given', async () => {
-    const { sql, params } = await lastStatement(() => new AttendanceRepository(), 'getAll', [{ year: YEAR, type: 'student' }], 'teacher');
+    const { sql, params } = await lastStatement(attendanceRepo, 'getAll', [{ type: 'student' }], 'teacher');
     expect(sql.match(/"attendance"\."id" in \(select/g)).toHaveLength(3);
     expect(sql).toContain('and "attendance"."type" = $7)');
     expect(params).toEqual(['user-1', 'user-1', 'user-1', 'year-old', '2025-09-01', '2026-08-31', 'student']);

@@ -1,9 +1,23 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
 import { Container } from 'diject';
+import { isNull } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/pg-proxy';
 import { ScopeContext, Owned as NajmOwned, ownershipCondition as najmOwnershipCondition } from 'najm-auth';
-import { Owned, ownershipCondition, SCHOOL_WIDE_ROLES } from '../../src/auth';
+import { Owned, ownershipCondition, SCHOOL_WIDE_ROLES, own, join, when } from '../../src/auth';
+import {
+  Alert,
+  AlertForAudience,
+  AlertForClass,
+  AlertForTeacher,
+  AlertUnderOwnAssignment,
+} from '../../src/modules/alerts/AlertGuards';
+import {
+  Announcement,
+  AnnouncementByAuthor,
+  AnnouncementForClass,
+} from '../../src/modules/announcements/AnnouncementGuards';
+import { alerts, students } from '../../src/database/schema';
 import { Assessment } from '../../src/modules/assessments/AssessmentGuards';
 import {
   Attendance,
@@ -11,6 +25,7 @@ import {
   AttendanceUnderOwnAssignment,
 } from '../../src/modules/attendance/AttendanceGuards';
 import { BehaviorReward } from '../../src/modules/behaviorRewards/BehaviorRewardGuards';
+import { Discipline } from '../../src/modules/discipline/DisciplineGuards';
 import { Class } from '../../src/modules/classes/ClassGuards';
 import { Exam } from '../../src/modules/exams/ExamGuards';
 import { Grade } from '../../src/modules/grades/GradeGuards';
@@ -20,11 +35,20 @@ import { Student } from '../../src/modules/students/StudentGuards';
 import { Teacher } from '../../src/modules/teachers/TeacherGuards';
 import { StudentRepository } from '../../src/modules/students/StudentRepository';
 
+const ALERT_RULES = [Alert, AlertForTeacher, AlertUnderOwnAssignment, AlertForClass, AlertForAudience];
+const ANNOUNCEMENT_RULES = [Announcement, AnnouncementForClass, AnnouncementByAuthor];
 const TOKENS = [
+  ...ALERT_RULES, ...ANNOUNCEMENT_RULES,
   Assessment, Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment,
-  BehaviorReward, Class, Exam, Grade, Parent, Section, Student, Teacher,
+  BehaviorReward, Class, Discipline, Exam, Grade, Parent, Section, Student, Teacher,
 ];
 const ATTENDANCE_TEACHER_RULES = [Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment];
+
+// An alert without a target audience: reminders go to parents, system alerts to staff only.
+const ALERT_AUDIENCE = 'coalesce("alerts"."target_audience", case "alerts"."type" '
+  + 'when \'reminder\' then \'parents\' when \'system\' then null else \'all\' end)';
+const NAMES_NOBODY = '("alerts"."student_id" is null and "alerts"."teacher_id" is null '
+  + 'and "alerts"."teacher_assignment_id" is null)';
 
 const db = drizzle(async () => ({ rows: [] })) as any;
 
@@ -121,6 +145,118 @@ describe('ownershipCondition', () => {
   it('refuses a scoped role on a resource where it has no rule', () => {
     // Teacher profiles have rules only for teachers; parents see none.
     expect(render(Teacher.table, ownershipCondition(db, [Teacher], signedIn('parent'))).sql).toContain('1 = 0');
+  });
+});
+
+describe('when() rules', () => {
+  it('narrows a join chain by a condition on the owned row', () => {
+    const { sql, params } = render(alerts, ownershipCondition(db, [Alert], signedIn('parent')));
+    expect(sql).toContain('inner join "student_parents"');
+    expect(sql).toContain(`where ("_sc_parents_3"."user_id" = $1 and ${ALERT_AUDIENCE} in ('all', $2))`);
+    expect(params).toEqual(['user-1', 'parents']);
+  });
+
+  it('is the whole rule when it stands alone, with no join to the user', () => {
+    const { sql, params } = render(alerts, ownershipCondition(db, [AlertForAudience], signedIn('teacher')));
+    expect(sql).not.toContain('join');
+    expect(sql).toContain(`${NAMES_NOBODY} and "alerts"."class_id" is null and ${ALERT_AUDIENCE} in ('all', $1)`);
+    expect(params).toEqual(['teachers']);
+  });
+
+  it('still requires a join chain to end at the user', () => {
+    expect(() => own(alerts).for('parent', join(alerts.studentId, students.id), when(isNull(alerts.classId))))
+      .toThrow('Ownership chain must end with where()');
+  });
+
+  it('leaves school-wide roles unfiltered and other roles refused', () => {
+    expect(ownershipCondition(db, [AlertForAudience], signedIn('principal'))).toBeUndefined();
+    expect(render(alerts, ownershipCondition(db, [AlertForAudience], signedIn('custom-role'))).sql).toContain('1 = 0');
+  });
+});
+
+describe('alert ownership', () => {
+  it('gives a teacher five ways to an alert and a parent or student three', () => {
+    const count = (role: string) => ownedSubqueries(render(alerts, ownershipCondition(db, ALERT_RULES, signedIn(role))).sql);
+    expect(count('teacher')).toBe(5);
+    expect(count('parent')).toBe(3);
+    expect(count('student')).toBe(3);
+  });
+
+  it('reaches an alert that names a teacher only when its audience includes teachers', () => {
+    const { sql, params } = render(alerts, ownershipCondition(db, [AlertForTeacher], signedIn('teacher')));
+    expect(sql).toContain('inner join "teachers" "_sc_teachers_1" on "alerts"."teacher_id" = "_sc_teachers_1"."id"');
+    expect(sql).toContain(`${ALERT_AUDIENCE} in ('all', $2)`);
+    expect(params).toEqual(['user-1', 'teachers']);
+  });
+
+  it('keeps a class alert that names a person away from the rest of the class', () => {
+    // Otherwise every parent in the class would read an alert about one child.
+    const { sql } = render(alerts, ownershipCondition(db, [AlertForClass], signedIn('parent')));
+    expect(sql).toContain('on "alerts"."class_id" = "_sc_students_1"."class_id"');
+    expect(sql).toContain(NAMES_NOBODY);
+  });
+});
+
+describe('announcement ownership', () => {
+  it('shows an audience only live announcements addressed to it', () => {
+    const { sql, params } = render(Announcement.table, ownershipCondition(db, [Announcement], signedIn('parent')));
+    expect(sql).toContain('"announcements"."is_published" = $1');
+    expect(sql).toContain('("announcements"."publish_date" is null or "announcements"."publish_date" <= $2)');
+    expect(sql).toContain('("announcements"."expiry_date" is null or "announcements"."expiry_date" > $3)');
+    expect(sql).toContain('"announcements"."target_audience" in ($4, $5)');
+    expect(params[0]).toBe(true);
+    expect(params.slice(3)).toEqual(['all', 'parents']);
+  });
+
+  it('reaches a class announcement through the Class rules', () => {
+    const { sql, params } = render(Announcement.table, ownershipCondition(db, [AnnouncementForClass], signedIn('parent')));
+    expect(sql).toContain('"announcements"."target_audience" = $4');
+    expect(sql).toContain('exists (select 1 from (select "classes"."id" from "classes" inner join "students"');
+    expect(sql).toContain('"_sc_parents_3"."user_id" = $5) as member_class');
+    expect(sql).toContain('"announcements"."class_ids" @> jsonb_build_array(member_class.id)');
+    expect(sql).toContain('or "announcements"."class_id" = member_class.id');
+    expect(params.slice(3)).toEqual(['class', 'user-1']);
+  });
+
+  it('shows authors what they wrote, drafts included', () => {
+    const { sql, params } = render(Announcement.table, ownershipCondition(db, [AnnouncementByAuthor], signedIn('teacher')));
+    expect(sql).toContain('where "announcements"."user_id" = $1)');
+    expect(sql).not.toContain('"announcements"."is_published"');
+    expect(params).toEqual(['user-1']);
+  });
+});
+
+describe('conduct record ownership', () => {
+  const CONDUCT = [
+    { token: BehaviorReward, table: 'behavior_rewards', author: 'awarded_by' },
+    { token: Discipline, table: 'discipline_incidents', author: 'reported_by' },
+  ];
+
+  it('gives a teacher the records they wrote', () => {
+    for (const { token, table, author } of CONDUCT) {
+      const { sql, params } = render(token.table, ownershipCondition(db, [token], signedIn('teacher')));
+      expect(sql).toContain(`"${table}"."${author}" = $1`);
+      expect(params).toEqual(['user-1']);
+    }
+  });
+
+  it('gives a student the records about themselves', () => {
+    for (const { token, table } of CONDUCT) {
+      const { sql, params } = render(token.table, ownershipCondition(db, [token], signedIn('student')));
+      expect(sql).toContain(`inner join "students" "_sc_students_1" on "${table}"."student_id" = "_sc_students_1"."id"`);
+      expect(sql).toContain('"_sc_students_1"."user_id" = $1');
+      expect(params).toEqual(['user-1']);
+    }
+  });
+
+  it('gives a parent the records about their linked children', () => {
+    for (const { token, table } of CONDUCT) {
+      const { sql, params } = render(token.table, ownershipCondition(db, [token], signedIn('parent')));
+      expect(sql).toContain(`on "${table}"."student_id" = "_sc_students_1"."id"`);
+      expect(sql).toContain('inner join "student_parents"');
+      expect(sql).toContain('"_sc_parents_3"."user_id" = $1');
+      expect(params).toEqual(['user-1']);
+    }
   });
 });
 

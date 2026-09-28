@@ -31,13 +31,20 @@ export class SubjectService {
     return this.subjectRepository.update(id, data);
   }
 
+  // A subject is shared by every year; one that any year uses stays.
   async delete(id: string) {
     await this.subjectValidator.ensureExists(id);
+    await this.subjectValidator.ensureNotInUse(id);
     return this.subjectRepository.delete(id);
   }
 
   async deleteAll() {
+    await this.subjectValidator.ensureNoneInUse();
     return this.subjectRepository.deleteAll();
+  }
+
+  async clearForSeedReset() {
+    await this.subjectRepository.clearForSeedReset();
   }
 
   async seedDemoSubjects(subjectsData: CreateSubjectsBulkDto) {

@@ -6,12 +6,14 @@ import {
   createStudentRouteDto,
   updateStudentRouteDto,
   reassignStudentRouteDto,
+  unassignStudentRouteDto,
   studentRouteIdParam,
   vehicleIdParam,
   studentIdParam,
   type CreateStudentRouteDto,
   type UpdateStudentRouteDto,
   type ReassignStudentRouteDto,
+  type UnassignStudentRouteDto,
 } from './StudentRouteDto';
 
 @ToolGroup('student-routes')
@@ -92,6 +94,15 @@ export class StudentRouteController {
   @ResMsg('studentRoutes.success.unassigned')
   async unassign(@Params('id') id: string) {
     return this.studentRouteService.unassign(id);
+  }
+
+  @Post('/:id/unassign')
+  @isAdmin()
+  @Validate({ params: studentRouteIdParam, body: unassignStudentRouteDto })
+  @McpTool('Unassign a student from a route on a selected-year date')
+  @ResMsg('studentRoutes.success.unassigned')
+  async unassignAt(@Params('id') id: string, @Body() body: UnassignStudentRouteDto) {
+    return this.studentRouteService.unassign(id, body.unassignmentDate);
   }
 
   @Delete('/:id')

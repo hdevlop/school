@@ -29,27 +29,27 @@ export class NotificationService {
     actorId?: string | null;
     auditAction: string;
     entityId: string;
+    sourceFeeId?: string;
+    sourceYear?: string;
   }) {
     const claim = await this.notificationRepository.tryClaimDelivery({
-      kind: input.kind,
+      kind: input.sourceYear ? `${input.kind}:${input.sourceYear}` : input.kind,
       studentId: input.studentId,
       businessDate: input.businessDate,
       payload: input.payload,
     });
     if (!claim.claimed) return { claimed: false as const };
 
-    const alert = await this.alertService.create({
-      type: 'reminder',
+    const alert = input.sourceFeeId ? await this.alertService.createFromFeeSource(input.sourceFeeId, {
       priority: input.priority,
       title: input.title,
       message: input.message,
       studentId: input.studentId,
-      status: 'active',
-    } as any);
+    }) : undefined;
 
     await this.personalNotifications.createFinancialReminder({
       studentId: input.studentId,
-      sourceKey: `${input.kind}:${input.businessDate}:${input.studentId}`,
+      sourceKey: `${input.kind}:${input.businessDate}:${input.studentId}${input.sourceYear ? `:${input.sourceYear}` : ''}`,
       topic: `financial.${input.kind}`,
       title: input.title,
       body: input.message,
@@ -89,6 +89,8 @@ export class NotificationService {
         installmentCount: student.installmentCount,
         totalUnpaid: student.totalUnpaid,
         oldestDueDate: student.oldestDueDate,
+        academicYear: student.academicYear,
+        sourceFeeId: student.sourceFeeId,
       };
 
       if (dryRun) {
@@ -109,6 +111,8 @@ export class NotificationService {
           actorId: input.actorId,
           auditAction: 'notification.overdue.created',
           entityId: `${businessDate}:${student.studentId}`,
+          sourceFeeId: student.sourceFeeId,
+          sourceYear: student.academicYear,
         });
       } catch (error) {
         results.push({
@@ -180,6 +184,8 @@ export class NotificationService {
 
       let delivery;
       try {
+        const source = await this.notificationRepository.getUniqueFeeSourceForPayments(
+          studentChecks.map((item) => item.paymentId));
         delivery = await this.deliverAlert({
           kind: 'check_due',
           studentId: check.studentId,
@@ -191,6 +197,8 @@ export class NotificationService {
           actorId: input.actorId,
           auditAction: 'notification.checkDue.created',
           entityId: `${businessDate}:${check.studentId}`,
+          sourceFeeId: source?.feeId,
+          sourceYear: source?.academicYear,
         });
       } catch (error) {
         results.push({

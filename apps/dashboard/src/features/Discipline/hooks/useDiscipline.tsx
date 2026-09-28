@@ -2,12 +2,13 @@
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as disciplineApi from '@/services/disciplineApi';
+import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
+// The viewed year's incidents; mutations refresh every year's list.
 export const useDiscipline = (options?: { disciplineId?: string; enabled?: boolean }) => {
   const { disciplineId, enabled = true } = options || {};
   const crud = useEntityCRUD('discipline', {
     getAll: disciplineApi.getDisciplineApi,
-    getById: disciplineApi.getDisciplineByIdApi,
     create: disciplineApi.createDisciplineApi,
     update: disciplineApi.updateDisciplineApi,
     delete: disciplineApi.deleteDisciplineApi,
@@ -15,8 +16,11 @@ export const useDiscipline = (options?: { disciplineId?: string; enabled?: boole
     reopen: disciplineApi.reopenDisciplineApi,
   });
 
-  const list = crud.useGetAll(enabled);
-  const detail = crud.useGetById(disciplineId, Boolean(disciplineId));
+  const list = useYearScopedList({ resource: 'discipline', fetch: disciplineApi.getDisciplineApi, enabled });
+  const detail = useYearScopedDetail({
+    resource: 'discipline', parts: [disciplineId], fetch: () => disciplineApi.getDisciplineByIdApi(disciplineId!),
+    enabled: Boolean(disciplineId),
+  });
   const create = crud.useCreate();
   const update = crud.useUpdate();
   const remove = crud.useDelete();

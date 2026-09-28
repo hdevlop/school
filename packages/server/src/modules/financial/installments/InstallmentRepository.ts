@@ -4,10 +4,17 @@ import { feeInstallments, paymentAllocations, payments, fees } from '../../../da
 import { DB } from '../../../database/db';
 import { formatDateOnly } from '../utils/dateOnly';
 import { getBusinessDate } from '../../../shared/businessDate';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 @Repository()
 export class InstallmentRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return sql`EXISTS (SELECT 1 FROM ${fees} WHERE ${fees.id} = ${feeInstallments.feeId} AND ${fees.academicYear} = ${this.year.label})`;
+  }
 
   private buildInstallmentQuery() {
     return this.db
@@ -27,16 +34,25 @@ export class InstallmentRepository {
 
   async getById(id) {
     const [installment] = await this.buildInstallmentQuery()
-      .where(eq(feeInstallments.id, id))
+      .where(and(eq(feeInstallments.id, id), this.inSelectedYear()))
       .limit(1);
 
     return installment;
   }
 
+  async getByIdAllYears(id: string) {
+    const [installment] = await this.buildInstallmentQuery().where(eq(feeInstallments.id, id)).limit(1);
+    return installment;
+  }
+
   async getByFeeId(feeId) {
     return await this.buildInstallmentQuery()
-      .where(eq(feeInstallments.feeId, feeId))
+      .where(and(eq(feeInstallments.feeId, feeId), this.inSelectedYear()))
       .orderBy(feeInstallments.number);
+  }
+
+  async getByFeeIdAllYears(feeId: string) {
+    return this.buildInstallmentQuery().where(eq(feeInstallments.feeId, feeId)).orderBy(feeInstallments.number);
   }
 
   async getByStudentForAutoAllocation(studentId: string) {
@@ -60,7 +76,7 @@ export class InstallmentRepository {
       );
   }
 
-  async getByStudentForAutoAllocationForUpdate(studentId: string) {
+  async getByStudentForAutoAllocationForUpdate(studentId: string, academicYear?: string) {
     const result = await this.db.execute<{
       id: string;
       fee_id: string;
@@ -74,6 +90,7 @@ export class InstallmentRepository {
       FROM ${feeInstallments} i
       INNER JOIN ${fees} f ON i.fee_id = f.id
       WHERE f.student_id = ${studentId}
+      ${academicYear ? sql`AND f.academic_year = ${academicYear}` : sql``}
       AND i.status != 'cancelled'
       ORDER BY i.due_date ASC, i.number ASC, i.fee_id ASC
       FOR UPDATE OF i
@@ -92,6 +109,7 @@ export class InstallmentRepository {
 
   async getAll() {
     return await this.buildInstallmentQuery()
+      .where(this.inSelectedYear())
       .orderBy(feeInstallments.number);
   }
 
@@ -100,26 +118,26 @@ export class InstallmentRepository {
 
     return await this.buildInstallmentQuery()
       .where(
-        or(
+        and(this.inSelectedYear(), or(
           eq(feeInstallments.status, 'overdue'),
           and(
             inArray(feeInstallments.status, ['pending', 'partiallyPaid']),
             sql`${feeInstallments.dueDate} < ${today}`
           )
-        )
+        ))
       )
       .orderBy(feeInstallments.dueDate);
   }
 
   async getPending() {
     return await this.buildInstallmentQuery()
-      .where(eq(feeInstallments.status, 'pending'))
+      .where(and(eq(feeInstallments.status, 'pending'), this.inSelectedYear()))
       .orderBy(feeInstallments.dueDate);
   }
 
   async getPaid() {
     return await this.buildInstallmentQuery()
-      .where(eq(feeInstallments.status, 'paid'))
+      .where(and(eq(feeInstallments.status, 'paid'), this.inSelectedYear()))
       .orderBy(feeInstallments.dueDate);
   }
 
@@ -138,6 +156,14 @@ export class InstallmentRepository {
       );
 
     return Number(result?.total || 0);
+  }
+
+  async hasAllocations(installmentId: string) {
+    const [allocation] = await this.db.select({ id: paymentAllocations.id })
+      .from(paymentAllocations)
+      .where(eq(paymentAllocations.installmentId, installmentId))
+      .limit(1);
+    return !!allocation;
   }
 
   async getByFeeAndNumbersForUpdate(
@@ -208,15 +234,20 @@ export class InstallmentRepository {
     const [updatedInstallment] = await this.db
       .update(feeInstallments)
       .set(data)
-      .where(eq(feeInstallments.id, id))
+      .where(and(eq(feeInstallments.id, id), this.inSelectedYear()))
       .returning();
     return updatedInstallment;
+  }
+
+  async updateAllYears(id: string, data: Partial<typeof feeInstallments.$inferInsert>) {
+    const [updated] = await this.db.update(feeInstallments).set(data).where(eq(feeInstallments.id, id)).returning();
+    return updated;
   }
 
   async delete(id) {
     const [deletedInstallment] = await this.db
       .delete(feeInstallments)
-      .where(eq(feeInstallments.id, id))
+      .where(and(eq(feeInstallments.id, id), this.inSelectedYear()))
       .returning();
     return deletedInstallment;
   }

@@ -104,6 +104,10 @@ export class RefuelService {
     return await this.refuelRepository.deleteAll();
   }
 
+  async clearForSeedReset() {
+    return await this.refuelRepository.clearForSeedReset();
+  }
+
   async seedDemoRefuels(refuelsData: CreateRefuelDto[]) {
     const createdRefuels = [];
 

@@ -283,6 +283,14 @@ function offsetDate(days: number): Date {
    return date;
 }
 
+// A recent moment inside the seed year, once the student's placement has begun:
+// a record's date decides its year and the class it is filed under.
+function recentMomentInSeedYear(student: any, i: number): string {
+   const earliest = student.yearEnrolledOn ?? `${seedAcademicYear.slice(0, 4)}-09-01`;
+   const moment = offsetDate(-(1 + (i % 60)));
+   return dateOnly(moment) < earliest ? `${earliest}T10:00:00.000Z` : isoDate(moment);
+}
+
 function monthPeriod(offset: number): string {
    const date = new Date();
    date.setMonth(date.getMonth() - offset);
@@ -365,7 +373,10 @@ export function eventsPack(count = featureCounts.events) {
    const eventTypes = ['academic', 'sports', 'cultural', 'meeting', 'workshop', 'fieldtrip', 'ceremony'];
    return {
       events: Array.from({ length: Math.max(0, count) }, (_, i) => {
-         const start = offsetDate(i % 4 === 0 ? -10 - i : 5 + i * 3);
+         // Events belong to the year their dates overlap: keep past ones inside the seed year.
+         const yearStart = new Date(`${seedAcademicYear.slice(0, 4)}-09-01T12:00:00.000Z`);
+         const offset = offsetDate(i % 4 === 0 ? -10 - i : 5 + i * 3);
+         const start = offset < yearStart ? yearStart : offset;
          const registrationDeadline = new Date(start);
          registrationDeadline.setDate(registrationDeadline.getDate() - 2);
          const scoped = i % 3 === 0 ? randomClassSection() : {};
@@ -520,8 +531,6 @@ export function alertsPack(students: any[], teachers: any[], count = featureCoun
             alert.teacherId = teachers[i % teachers.length].id;
          } else if (type === 'announcement') {
             alert.classId = selectedClassRecords()[i % selectedClassRecords().length]?.id;
-         } else if (type === 'system') {
-            alert.subjectId = subjectsData[i % subjectsData.length]?.id;
          }
          return alert;
       }),
@@ -583,7 +592,7 @@ export function disciplinePack(
             return {
                teacherId: teacher.id,
                studentId: student.id,
-               incidentAt: isoDate(offsetDate(-(2 + (i % 75)))),
+               incidentAt: recentMomentInSeedYear(student, i),
                category: categories[i % categories.length],
                severity: severities[i % severities.length],
                location: ['Classroom', 'Playground', 'Library', 'School entrance'][i % 4],
@@ -631,7 +640,7 @@ export function behaviorRewardsPack(
             return {
                teacherId: teacher.id,
                studentId: student.id,
-               behaviorAt: isoDate(offsetDate(-(1 + (i % 60)))),
+               behaviorAt: recentMomentInSeedYear(student, i),
                category: categories[i % categories.length],
                recognitionLevel,
                description: descriptions[i % descriptions.length],

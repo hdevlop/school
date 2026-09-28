@@ -34,6 +34,7 @@ export const reassignStudentRouteDto = updateStudentRouteDto.extend({
   vehicleId: requiredId,
   assignmentDate: optionalDateField,
 });
+export const unassignStudentRouteDto = z.object({ unassignmentDate: optionalDateField });
 export const studentRouteIdParam = z.object({ id: z.string().min(1) });
 export const vehicleIdParam = z.object({ vehicleId: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
@@ -44,3 +45,4 @@ export type CreateStudentRouteDto = Omit<CreateStudentRouteOutput, 'status'> & {
 };
 export type UpdateStudentRouteDto = z.output<typeof updateStudentRouteDto>;
 export type ReassignStudentRouteDto = z.output<typeof reassignStudentRouteDto>;
+export type UnassignStudentRouteDto = z.output<typeof unassignStudentRouteDto>;

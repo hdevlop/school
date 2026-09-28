@@ -14,10 +14,13 @@ import { useVehiclesTableColumns } from '../hooks/useVehiclesTableColumns';
 import { useVehiclesTableFilters } from '../hooks/useVehiclesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { useAcademicYearScope } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
 function VehiclesTable() {
 
   const { t } = useTranslation();
+  const { academicYear } = useAcademicYearScope();
   const columns = useVehiclesTableColumns();
   const rawFilters = useVehiclesTableFilters();
 
@@ -93,6 +96,7 @@ function VehiclesTable() {
 
   const handleCellClick = async (vehicle, columnId) => {
     if (columnId === 'driver_name') {
+      const openedYear = academicYear;
       openDialog({
         title: `${t('drivers.form.assignDriver') || 'Assign Driver'} - ${vehicle.name}`,
         children: <AssignDriverForm drivers={drivers} vehicle={vehicle} />,
@@ -101,7 +105,7 @@ function VehiclesTable() {
           text: t('common.save') || 'Save',
           loading: isUpdating,
           onClick: async (assignmentData) => {
-            await assignDriver(assignmentData);
+            await withAcademicYear(openedYear, () => assignDriver(assignmentData));
           }
         }
       });

@@ -5,6 +5,9 @@ import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { formatDateOnly } from '../utils/dateOnly';
 import { getBusinessDate } from '../../../shared/businessDate';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { inReportingInterval } from '../../academicYears/academicRecordYear';
 
 const expenseSelect = {
   id: expenses.id,
@@ -31,7 +34,12 @@ const expenseSelect = {
 
 @Repository()
 export class ExpenseRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return inReportingInterval(expenses.expenseDate, this.year);
+  }
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -67,7 +75,8 @@ export class ExpenseRepository {
   async getCount() {
     const [expenseCount] = await this.db
       .select({ count: count() })
-      .from(expenses);
+      .from(expenses)
+      .where(this.inSelectedYear());
     return expenseCount;
   }
 
@@ -76,6 +85,7 @@ export class ExpenseRepository {
     return await this.buildExpenseQuery()
       .where(
         and(
+          this.inSelectedYear(),
           sql`${expenses.expenseDate} = ${today}`,
           eq(expenses.status, 'paid')
         )
@@ -93,6 +103,7 @@ export class ExpenseRepository {
       .from(expenses)
       .where(
         and(
+          this.inSelectedYear(),
           sql`${expenses.expenseDate} = ${today}`,
           eq(expenses.status, 'paid')
         )
@@ -108,6 +119,7 @@ export class ExpenseRepository {
     return await this.buildExpenseQuery()
       .where(
         and(
+          this.inSelectedYear(),
           sql`${expenses.expenseDate} >= ${startDate}`,
           sql`${expenses.expenseDate} <= ${endDate}`,
           eq(expenses.status, 'paid')
@@ -129,6 +141,7 @@ export class ExpenseRepository {
       .from(expenses)
       .where(
         and(
+          this.inSelectedYear(),
           sql`${expenses.expenseDate} >= ${startDate}`,
           sql`${expenses.expenseDate} <= ${endDate}`,
           eq(expenses.status, 'paid')
@@ -151,27 +164,28 @@ export class ExpenseRepository {
           totalPending: sql<number>`COALESCE(SUM(CASE WHEN ${expenses.status} IN ('pending', 'approved') THEN ${expenses.amount}::numeric END), 0)`,
           totalCount: count(expenses.id),
         })
-        .from(expenses),
+        .from(expenses)
+        .where(this.inSelectedYear()),
       this.db
         .select({
           total: sql<number>`COALESCE(SUM(${expenses.amount}::numeric), 0)`,
           count: count(expenses.id),
         })
         .from(expenses)
-        .where(and(sql`${expenses.expenseDate} = ${today}`, eq(expenses.status, 'paid'))),
+        .where(and(this.inSelectedYear(), sql`${expenses.expenseDate} = ${today}`, eq(expenses.status, 'paid'))),
       this.db
         .select({
           total: sql<number>`COALESCE(SUM(${expenses.amount}::numeric), 0)`,
           count: count(expenses.id),
         })
         .from(expenses)
-        .where(and(sql`${expenses.expenseDate} >= ${monthStart}`, sql`${expenses.expenseDate} <= ${monthEnd}`, eq(expenses.status, 'paid'))),
+        .where(and(this.inSelectedYear(), sql`${expenses.expenseDate} >= ${monthStart}`, sql`${expenses.expenseDate} <= ${monthEnd}`, eq(expenses.status, 'paid'))),
       this.db
         .select({
           count: count(expenses.id),
         })
         .from(expenses)
-        .where(inArray(expenses.status, ['pending', 'approved'])),
+        .where(and(this.inSelectedYear(), inArray(expenses.status, ['pending', 'approved']))),
     ]);
 
     return {
@@ -190,6 +204,7 @@ export class ExpenseRepository {
 
   async getAllExpenses() {
     return await this.buildExpenseQuery()
+      .where(this.inSelectedYear())
       .orderBy(desc(expenses.expenseDate), desc(expenses.createdAt));
   }
 
@@ -197,13 +212,13 @@ export class ExpenseRepository {
     if (!ids || ids.length === 0) return [];
 
     return await this.buildExpenseQuery()
-      .where(inArray(expenses.id, ids))
+      .where(and(this.inSelectedYear(), inArray(expenses.id, ids)))
       .orderBy(desc(expenses.expenseDate), desc(expenses.createdAt));
   }
 
   async getById(id) {
     const [expense] = await this.buildExpenseQuery()
-      .where(eq(expenses.id, id))
+      .where(and(this.inSelectedYear(), eq(expenses.id, id)))
       .limit(1);
 
     return expense;
@@ -211,20 +226,20 @@ export class ExpenseRepository {
 
   async getByCategory(category) {
     return await this.buildExpenseQuery()
-      .where(eq(expenses.category, category))
+      .where(and(this.inSelectedYear(), eq(expenses.category, category)))
       .orderBy(desc(expenses.expenseDate));
   }
 
   async getByStatus(status) {
     return await this.buildExpenseQuery()
-      .where(eq(expenses.status, status))
+      .where(and(this.inSelectedYear(), eq(expenses.status, status)))
       .orderBy(desc(expenses.createdAt));
   }
 
   async getByDateRange(startDate: string, endDate: string) {
     return await this.buildExpenseQuery()
       .where(
-        between(expenses.expenseDate, startDate, endDate)
+        and(this.inSelectedYear(), between(expenses.expenseDate, startDate, endDate))
       )
       .orderBy(desc(expenses.expenseDate));
   }
@@ -252,7 +267,7 @@ export class ExpenseRepository {
 
   async getPendingApprovals() {
     return await this.buildExpenseQuery()
-      .where(eq(expenses.status, 'pending'))
+      .where(and(this.inSelectedYear(), eq(expenses.status, 'pending')))
       .orderBy(expenses.createdAt);
   }
 
@@ -268,7 +283,7 @@ export class ExpenseRepository {
         count: count(),
       })
       .from(expenses)
-      .where(eq(expenses.status, 'paid'))
+      .where(and(this.inSelectedYear(), eq(expenses.status, 'paid')))
       .groupBy(expenses.category);
 
     return result.map(r => ({
@@ -286,6 +301,7 @@ export class ExpenseRepository {
         count: count(),
       })
       .from(expenses)
+      .where(this.inSelectedYear())
       .groupBy(expenses.status);
 
     return result.map(r => ({
@@ -304,6 +320,7 @@ export class ExpenseRepository {
       .from(expenses)
       .where(
         and(
+          this.inSelectedYear(),
           gte(expenses.expenseDate, startDate),
           lte(expenses.expenseDate, endDate),
           eq(expenses.status, 'paid')
@@ -328,6 +345,7 @@ export class ExpenseRepository {
       .from(expenses)
       .where(
         and(
+          this.inSelectedYear(),
           gte(expenses.expenseDate, startDate),
           lte(expenses.expenseDate, endDate),
           eq(expenses.status, 'paid')
@@ -349,7 +367,7 @@ export class ExpenseRepository {
         total: sum(expenses.amount),
       })
       .from(expenses)
-      .where(eq(expenses.status, 'paid'));
+      .where(and(this.inSelectedYear(), eq(expenses.status, 'paid')));
 
     return Number(result?.total || 0);
   }
@@ -360,7 +378,7 @@ export class ExpenseRepository {
         total: sum(expenses.amount),
       })
       .from(expenses)
-      .where(inArray(expenses.status, ['pending', 'approved']));
+      .where(and(this.inSelectedYear(), inArray(expenses.status, ['pending', 'approved'])));
 
     return Number(result?.total || 0);
   }
@@ -385,7 +403,7 @@ export class ExpenseRepository {
     const [updatedExpense] = await this.db
       .update(expenses)
       .set(data)
-      .where(eq(expenses.id, id))
+      .where(and(eq(expenses.id, id), this.inSelectedYear()))
       .returning();
     return updatedExpense;
   }
@@ -399,7 +417,7 @@ export class ExpenseRepository {
         approvedAt: sql`CURRENT_TIMESTAMP`,
         rejectionReason: null,
       })
-      .where(eq(expenses.id, id))
+      .where(and(eq(expenses.id, id), this.inSelectedYear()))
       .returning();
     return updatedExpense;
   }
@@ -413,7 +431,7 @@ export class ExpenseRepository {
         approvedAt: sql`CURRENT_TIMESTAMP`,
         rejectionReason,
       })
-      .where(eq(expenses.id, id))
+      .where(and(eq(expenses.id, id), this.inSelectedYear()))
       .returning();
     return updatedExpense;
   }
@@ -426,7 +444,7 @@ export class ExpenseRepository {
         paidBy,
         paymentDate,
       })
-      .where(eq(expenses.id, id))
+      .where(and(eq(expenses.id, id), this.inSelectedYear()))
       .returning();
     return updatedExpense;
   }
@@ -438,7 +456,7 @@ export class ExpenseRepository {
   async delete(id) {
     const [deletedExpense] = await this.db
       .delete(expenses)
-      .where(eq(expenses.id, id))
+      .where(and(eq(expenses.id, id), this.inSelectedYear()))
       .returning();
     return deletedExpense;
   }

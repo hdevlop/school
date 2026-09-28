@@ -1,5 +1,6 @@
 import { vehicles } from '../../../database/schema';
 import { sql } from 'drizzle-orm';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 // ============================================
 // Vehicle Field Helpers
@@ -41,6 +42,8 @@ export const getVehicleComputedFields = () => {
       FROM student_routes AS active_routes
       WHERE active_routes.vehicle_id = "vehicles"."id"
       AND active_routes.status = 'active'
+      AND active_routes.assignment_date <= ${getBusinessDateOnly()}
+      AND (active_routes.unassignment_date IS NULL OR active_routes.unassignment_date > ${getBusinessDateOnly()})
     )`.as('active_student_count'),
     availableSeats: sql<number>`GREATEST(
       ${vehicles.capacity} - (
@@ -48,6 +51,8 @@ export const getVehicleComputedFields = () => {
         FROM student_routes AS active_routes
         WHERE active_routes.vehicle_id = "vehicles"."id"
         AND active_routes.status = 'active'
+        AND active_routes.assignment_date <= ${getBusinessDateOnly()}
+        AND (active_routes.unassignment_date IS NULL OR active_routes.unassignment_date > ${getBusinessDateOnly()})
       ),
       0
     )`.as('available_seats'),

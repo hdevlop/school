@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'bun:test';
 import { drizzle } from 'drizzle-orm/pg-proxy';
+import { Container } from 'diject';
 import { PaymentService } from '../../src/modules/financial/payments/PaymentService';
 import { PaymentRepository } from '../../src/modules/financial/payments/PaymentRepository';
-import { paymentListQuery } from '../../src/modules/financial/payments/PaymentDto';
+import { registerYearPropertyInjector, runWithResolvedYear } from '../../src/modules/academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../src/modules/academicYears/AcademicYearValidator';
 
 function service(repository: Record<string, unknown>) {
   return new PaymentService(
@@ -11,30 +13,26 @@ function service(repository: Record<string, unknown>) {
   );
 }
 
-describe('payment list year query', () => {
-  it('accepts only a school-year label', () => {
-    expect(paymentListQuery.parse({})).toEqual({});
-    expect(paymentListQuery.parse({ academicYear: '2025-2026' })).toEqual({ academicYear: '2025-2026' });
-    expect(() => paymentListQuery.parse({ academicYear: '2025-2027' })).toThrow();
-    expect(() => paymentListQuery.parse({ academicYear: 'all' })).toThrow();
-  });
-});
-
 describe('normal payment list year scope', () => {
-  it('lists receipts allocated to fees of the resolved year', async () => {
+  it('uses the repository context without a service year parameter', async () => {
     const calls: unknown[] = [];
-    const payments = service({ getAll: async (label: string) => { calls.push(label); return []; } });
-    await payments.getAll({ id: 'year-old', label: '2025-2026' } as any);
-    expect(calls).toEqual(['2025-2026']);
+    const payments = service({ getAll: async () => { calls.push('called'); return []; } });
+    await payments.getAll();
+    expect(calls).toEqual(['called']);
   });
 });
 
 describe('fee-year receipt query', () => {
   it('returns each receipt once with the exact portion allocated to that year', async () => {
     let captured = { sql: '', params: [] as unknown[] };
-    const repo: any = new PaymentRepository();
+    const container = Container.create();
+    registerYearPropertyInjector(container);
+    container.set(PaymentRepository);
+    const repo: any = await container.resolve(PaymentRepository);
     repo.db = drizzle(async (sql, params) => { captured = { sql, params }; return { rows: [] }; });
-    await repo.getAll('2025-2026');
+    await expect(repo.getAll()).rejects.toThrow('Resolved academic year is missing');
+    await runWithResolvedYear(container, { id: 'year-old', label: '2025-2026' } as ResolvedAcademicYear,
+      () => repo.getAll());
 
     const { sql, params } = captured;
     // Allocations are summed per receipt in a subquery, so a receipt split

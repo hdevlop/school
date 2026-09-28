@@ -2,6 +2,9 @@ import { z } from 'zod';
 import { optionalId } from '../../shared/fields';
 import { alertPriorityEnum, alertStatusEnum, alertTypeEnum } from '../../shared/enums';
 
+// Who an alert is for; AlertGuards reaches people by these values.
+const alertAudience = z.enum(['all', 'students', 'teachers', 'parents']);
+
 const alertSchema = z.object({
   type: alertTypeEnum,
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title too long'),
@@ -12,7 +15,7 @@ const alertSchema = z.object({
   teacherId: optionalId,
   classId: optionalId,
   subjectId: optionalId,
-  targetAudience: z.enum(['all', 'students', 'teachers', 'parents']).optional(),
+  targetAudience: alertAudience.optional(),
   authorId: optionalId,
   isRead: z.boolean().default(false),
 });
@@ -27,7 +30,7 @@ export const alertStudentIdParam = z.object({ studentId: z.string().min(1) });
 export const alertTeacherIdParam = z.object({ teacherId: z.string().min(1) });
 export const alertClassIdParam = z.object({ classId: z.string().min(1) });
 export const alertSubjectIdParam = z.object({ subjectId: z.string().min(1) });
-export const updateAlertStatusDto = z.object({ status: z.string().min(1) });
+export const updateAlertStatusDto = z.object({ status: alertStatusEnum });
 export const recentAlertsQueryDto = z.object({
   limit: z.coerce.number().int().positive().max(100).optional(),
 });
@@ -42,14 +45,14 @@ export const typedStudentAlertDto = z.object({
 export const announcementAlertDto = z.object({
   title: z.string().min(1),
   message: z.string().min(1),
-  targetAudience: z.string().min(1),
+  targetAudience: alertAudience,
   authorId: z.string().min(1),
   classId: optionalId,
 });
 export const reminderAlertDto = z.object({
   title: z.string().min(1),
   message: z.string().min(1),
-  targetAudience: z.string().min(1),
+  targetAudience: alertAudience,
   authorId: z.string().min(1),
   details: z.unknown().optional(),
 });

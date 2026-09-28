@@ -28,7 +28,7 @@ const build = () => {
     ensureSchedule: async () => ({ id: 'schedule-1' }),
     validateEntry: async () => ({}),
   };
-  const service = new ClassRoutineService(repository as any, validator as any, {} as any);
+  const service = new ClassRoutineService(repository as any, validator as any);
   return { service, writes };
 };
 

@@ -31,8 +31,8 @@ export class BehaviorRewardService {
   }
 
   async create(data: CreateBehaviorRewardDto, actor: BehaviorRewardActor) {
-    const student = await this.behaviorRewardValidator.ensureStudentEligible(data.studentId, actor);
     this.behaviorRewardValidator.ensureBehaviorDate(data.behaviorAt);
+    const student = await this.behaviorRewardValidator.ensureStudentEligible(data.studentId, data.behaviorAt, actor);
 
     return this.behaviorRewardRepository.create({
       studentId: data.studentId,
@@ -57,8 +57,13 @@ export class BehaviorRewardService {
     if (data.behaviorAt) this.behaviorRewardValidator.ensureBehaviorDate(data.behaviorAt);
     if ('rewardNote' in data) updateData.rewardNote = data.rewardNote || null;
 
-    if (data.studentId && data.studentId !== existing.studentId) {
-      const student = await this.behaviorRewardValidator.ensureStudentEligible(data.studentId, actor);
+    // The student or date decides the placement, and the date must stay in the selected year.
+    if (data.studentId !== undefined || data.behaviorAt !== undefined) {
+      const student = await this.behaviorRewardValidator.ensureStudentEligible(
+        data.studentId ?? existing.studentId,
+        data.behaviorAt ?? existing.behaviorAt,
+        actor,
+      );
       updateData.classId = student.classId;
       updateData.sectionId = student.sectionId;
     }

@@ -27,8 +27,10 @@ import { AssessmentService } from './assessments/AssessmentService';
 import { AttendanceService } from './attendance/AttendanceService';
 import { ExamService } from './exams/ExamService';
 import { AnnouncementService } from './announcements/AnnouncementService';
+import { AnnouncementRepository } from './announcements/AnnouncementRepository';
 import { EventService as SchoolEventService } from './events/EventService';
 import { AlertService } from './alerts/AlertService';
+import { AlertRepository } from './alerts/AlertRepository';
 
 import { SectionService } from './sections/SectionService';
 import { ClassService } from './classes/ClassService';
@@ -86,8 +88,10 @@ export class SeedService {
     private attendanceService: AttendanceService,
     private examService: ExamService,
     private announcementService: AnnouncementService,
+    private announcementRepository: AnnouncementRepository,
     private schoolEventService: SchoolEventService,
     private alertService: AlertService,
+    private alertRepository: AlertRepository,
     private studentService: StudentService,
     private studentEnrollmentService: StudentEnrollmentService,
     private teacherService: TeacherService,
@@ -173,17 +177,17 @@ export class SeedService {
     await this.installmentService.deleteAll();
     await this.feeService.clearForSeedReset();
     await this.expenseService.clearForSeedReset();
-    await this.gradeService.deleteAll();
-    await this.assessmentService.deleteAll();
-    await this.examService.deleteAll();
-    await this.attendanceService.deleteAll();
-    await this.alertService.deleteAll();
-    await this.announcementService.deleteAll();
-    await this.schoolEventService.deleteAll();
-    await this.refuelService.deleteAll();
-    await this.maintenanceService.deleteAll();
-    await this.studentRouteService.deleteAll();
-    await this.vehicleAssignmentService.deleteAll();
+    await this.gradeService.clearForSeedReset();
+    await this.assessmentService.clearForSeedReset();
+    await this.examService.clearForSeedReset();
+    await this.attendanceService.clearForSeedReset();
+    await this.alertRepository.clearForSeedReset();
+    await this.announcementRepository.clearForSeedReset();
+    await this.schoolEventService.clearForSeedReset();
+    await this.refuelService.clearForSeedReset();
+    await this.maintenanceService.clearForSeedReset();
+    await this.studentRouteService.clearForSeedReset();
+    await this.vehicleAssignmentService.clearForSeedReset();
     await this.yearTransitions.clearForSeedReset();
     await this.migrationIssues.clearForSeedReset();
     await this.studentEnrollmentService.clearForSeedReset();
@@ -193,9 +197,9 @@ export class SeedService {
     await this.driverService.deleteAll();
     await this.staffService.deleteAll();
     await this.parentService.deleteAll();
-    await this.sectionService.deleteAll();
-    await this.classService.deleteAll();
-    await this.subjectService.deleteAll();
+    await this.sectionService.clearForSeedReset();
+    await this.classService.clearForSeedReset();
+    await this.subjectService.clearForSeedReset();
     await this.feeTypeService.deleteAll();
     await this.settingsService.deleteAll();
     await this.academicYears.clearForSeedReset();

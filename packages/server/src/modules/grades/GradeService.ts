@@ -3,7 +3,7 @@ import { GradeRepository, type GradeListFilters } from './GradeRepository';
 import { GradeValidator } from './GradeValidator';
 import { AssessmentRepository } from '../assessments/AssessmentRepository';
 import type { CreateGradeDto, UpdateGradeDto } from './GradeDto';
-import { AcademicYearValidator, type ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
 import { AcademicSourceService } from '../academicSources/AcademicSourceService';
 import { academicSourceContextIssue, targetSectionIds } from '../academicSources/academicSourceContext';
 import { ExamRepository } from '../exams/ExamRepository';
@@ -42,15 +42,6 @@ export class GradeService {
     private sources: AcademicSourceService,
     private enrollments: StudentEnrollmentRepository,
   ) { }
-
-  private async ensureRecordYear(grade: Awaited<ReturnType<GradeRepository['getById']>>, role?: string) {
-    if (!grade) return;
-    await this.years.resolveRecord(
-      grade.academicYearId,
-      grade.assessment?.date ?? grade.exam?.date,
-      role,
-    );
-  }
 
   private async ensureTeacherOwnsSource(user: { id: string; role?: string }, teacherId: string | null | undefined) {
     if (user.role !== 'teacher') return;
@@ -124,44 +115,37 @@ export class GradeService {
 
   // The year's grades, optionally for one student, section, subject or
   // teacher; a filter naming a missing record is a 404 before the list is read.
-  async getAll(year: ResolvedAcademicYear, filters: Omit<GradeListFilters, 'year'> = {}) {
+  async getAll(filters: GradeListFilters = {}) {
     if (filters.studentId) await this.gradeValidator.ensureStudentExists(filters.studentId);
     if (filters.sectionId) await this.gradeValidator.ensureSectionExists(filters.sectionId);
     if (filters.subjectId) await this.gradeValidator.ensureSubjectExists(filters.subjectId);
     if (filters.teacherId) await this.gradeValidator.ensureTeacherExists(filters.teacherId);
-    return this.gradeRepository.getAll({ year, ...filters });
+    return this.gradeRepository.getAll(filters);
   }
 
-  async getById(id: string, role?: string) {
-    const grade = await this.gradeValidator.ensureExists(id);
-    await this.ensureRecordYear(grade, role);
-    return grade;
+  // The year middleware already checked the role may use the selected year, so a
+  // grade or source found in it needs no second year check.
+  async getById(id: string) {
+    return this.gradeValidator.ensureExists(id);
   }
 
-  // A source's grades belong to the source's year, whichever year is viewed;
-  // the role must be allowed that year.
-  async getByAssessment(assessmentId: string, role?: string) {
+  // A source's grades, in the selected year: another year's source is not found.
+  async getByAssessment(assessmentId: string) {
     await this.gradeValidator.ensureAssessmentExists(assessmentId);
-    const source = await this.assessmentRepository.getSourceContext(assessmentId);
-    await this.years.resolveRecord(source?.academicYearId, source?.date, role);
     return await this.gradeRepository.getByAssessment(assessmentId);
   }
 
-  // A source's grades belong to the source's year, whichever year is viewed;
-  // the role must be allowed that year.
-  async getByExam(examId: string, role?: string) {
+  async getByExam(examId: string) {
     await this.gradeValidator.ensureExamExists(examId);
-    const source = await this.examRepository.getSourceContext(examId);
-    await this.years.resolveRecord(source?.academicYearId, source?.date, role);
     return await this.gradeRepository.getByExam(examId);
   }
 
-  async getByStudent(studentId: string, year: ResolvedAcademicYear) {
-    return this.getAll(year, { studentId });
+  async getByStudent(studentId: string) {
+    return this.getAll({ studentId });
   }
 
-  async getStudentReport(studentId: string, year: ResolvedAcademicYear) {
-    const grades = await this.getByStudent(studentId, year);
+  async getStudentReport(studentId: string) {
+    const grades = await this.getByStudent(studentId);
     const subjectsById = new Map<string, any>();
     let totalMarksObtained = 0;
     let totalPossibleMarks = 0;
@@ -294,7 +278,7 @@ export class GradeService {
       { assessmentId: gradeDetails.assessmentId, examId: gradeDetails.examId },
       source!.teacherId!, source!.subjectId!, source!,
     );
-    await this.years.resolveRecord(eligibility.academicYearId, undefined, user.role);
+    this.gradeValidator.ensureSelectedYear(eligibility.academicYearId);
     if (!eligibility.hasDatedEnrollment) {
       await this.gradeValidator.ensureStudentInSection(gradeDetails.studentId, sectionId);
     }
@@ -312,7 +296,7 @@ export class GradeService {
   }
 
   async update(id: string, data: UpdateGradeDto, user: { id: string; role?: string; teacherId?: string }) {
-    const existing = await this.getById(id, user.role);
+    const existing = await this.getById(id);
     await this.ensureTeacherOwnsSource(user, existing.teacher?.id);
 
     const gradeData: Record<string, unknown> = {};
@@ -338,11 +322,11 @@ export class GradeService {
       await this.gradeRepository.update(id, gradeData);
     }
 
-    return await this.getById(id, user.role);
+    return await this.getById(id);
   }
 
-  async delete(id: string, role?: string) {
-    await this.getById(id, role);
+  async delete(id: string) {
+    await this.getById(id);
     return await this.gradeRepository.delete(id);
   }
 
@@ -350,9 +334,14 @@ export class GradeService {
     return await this.gradeRepository.deleteAll();
   }
 
-  async deleteBulk(ids: string[], role?: string) {
+  /** Trusted demo reset: every year's grades. */
+  async clearForSeedReset() {
+    return this.gradeRepository.clearForSeedReset();
+  }
+
+  async deleteBulk(ids: string[]) {
     const results = await Promise.all(
-      ids.map((id) => this.delete(id, role))
+      ids.map((id) => this.delete(id))
     );
     return {
       deletedCount: results.length,

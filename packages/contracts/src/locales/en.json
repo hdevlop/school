@@ -2838,7 +2838,11 @@
       "nameExists": "A section with this name already exists in this class",
       "classRequired": "Class is required",
       "notInClass": "Section does not belong to the specified class",
-      "nameExistsInClass": "A section with this name already exists"
+      "nameExistsInClass": "A section with this name already exists",
+      "hasStudents": "This section has students; move them before deleting or moving it",
+      "sectionRequired": "Section is required",
+      "validationFailed": "The section could not be identified",
+      "classOutsideSelectedYear": "The section's class must belong to the selected school year"
     },
     "validation": {
       "nameRequired": "Section name is required",
@@ -2985,6 +2989,7 @@
       "seeded": "Grades seeded successfully"
     },
     "errors": {
+      "outsideSelectedYear": "The grade's assessment or exam belongs to another school year",
       "selectSource": "Select an assessment or exam before saving grades.",
       "saveFailed": "Could not save all grades. Please try again.",
       "notFound": "Grade not found",
@@ -3087,6 +3092,18 @@
       "bulkDeleted": "Exams deleted successfully",
       "allDeleted": "All exams deleted successfully",
       "seeded": "Exams seeded successfully"
+    },
+    "errors": {
+      "notFound": "Exam not found",
+      "idExists": "An exam with this ID already exists",
+      "inUse": "This exam already has grades",
+      "noSection": "This exam has no target section",
+      "studentNotInSection": "The student is not in a section this exam targets",
+      "teacherRequired": "A teacher is required",
+      "passingMarksExceedsTotal": "Passing marks cannot exceed total marks",
+      "endTimeBeforeStart": "End time must be after start time",
+      "outsideSelectedYear": "The exam's sections must belong to the selected school year",
+      "yearCannotChange": "An exam cannot move to another school year"
     }
   },
   "assessments": {
@@ -3178,6 +3195,17 @@
       "bulkDeleted": "Assessments deleted successfully",
       "allDeleted": "All assessments deleted successfully",
       "seeded": "Assessments seeded successfully"
+    },
+    "errors": {
+      "notFound": "Assessment not found",
+      "idExists": "An assessment with this ID already exists",
+      "inUse": "This assessment already has grades",
+      "noSection": "This assessment has no target section",
+      "studentNotInSection": "The student is not in a section this assessment targets",
+      "teacherRequired": "A teacher is required",
+      "passingMarksExceedsTotal": "Passing marks cannot exceed total marks",
+      "outsideSelectedYear": "The assessment's sections must belong to the selected school year",
+      "yearCannotChange": "An assessment cannot move to another school year"
     }
   },
   "announcements": {
@@ -3266,7 +3294,8 @@
       "sectionRequiresClass": "Please select a class before selecting a section",
       "expiryBeforePublish": "Expiry date cannot be before the publish date",
       "alreadyPublished": "Announcement is already published",
-      "notPublished": "Announcement is not published"
+      "notPublished": "Announcement is not published",
+      "authorOnly": "Only staff or the announcement's author can change it"
     }
   },
   "discipline": {
@@ -3279,7 +3308,7 @@
     "actions": { "verbal_warning": "Verbal warning", "written_warning": "Written warning", "detention": "Detention", "counseling": "Counseling", "parent_meeting": "Parent meeting", "suspension": "Suspension", "other": "Other" },
     "dialogs": { "createTitle": "Add violation", "createButton": "Add violation", "viewTitle": "Violation details", "editTitle": "Edit violation", "updateButton": "Update violation", "deleteButton": "Delete violation", "resolveTitle": "Resolve violation", "resolveDescription": "Record the disciplinary action and resolution.", "resolveButton": "Resolve", "resolutionTitle": "Resolution", "reopenTitle": "Reopen violation", "reopenDescription": "Reopening returns this record to open.", "reopenWarning": "The current action and resolution fields will be cleared because resolution history is not available in this release.", "reopenButton": "Reopen" },
     "success": { "retrieved": "Discipline records retrieved successfully", "created": "Violation created successfully", "updated": "Violation updated successfully", "resolved": "Violation resolved successfully", "reopened": "Violation reopened successfully", "deleted": "Violation deleted successfully" },
-    "errors": { "notFound": "Discipline record not found", "studentNotFound": "Student not found", "studentInactive": "Only active students can receive a violation", "studentAcademicPlacementRequired": "The student must have a class and section", "teacherStudentForbidden": "You are not assigned to this student's section", "recordForbidden": "You cannot access this discipline record", "recordNotOpen": "Only open violations can be changed or resolved", "recordNotResolved": "Only resolved violations can be reopened", "adminRequired": "Administrator access is required", "invalidIncidentDate": "Incident date is invalid", "futureIncidentDate": "Incident date cannot be in the future" }
+    "errors": { "notFound": "Discipline record not found", "studentNotFound": "Student not found", "outsideSelectedYear": "The incident date is outside the selected school year", "notPlacedOnDate": "The student was not in a class and section on that date", "teacherStudentForbidden": "You are not assigned to this student's section", "recordForbidden": "You cannot access this discipline record", "recordNotOpen": "Only open violations can be changed or resolved", "recordNotResolved": "Only resolved violations can be reopened", "adminRequired": "Administrator access is required", "invalidIncidentDate": "Incident date is invalid", "futureIncidentDate": "Incident date cannot be in the future" }
   },
   "classes": {
     "subtitle": {
@@ -3298,7 +3327,9 @@
       "idExists": "ClassID already exists",
       "notFound": "Class not found",
       "nameExists": "A class with this name already exists",
-      "invalidAcademicYear": "Invalid academic year format"
+      "invalidAcademicYear": "Invalid academic year format",
+      "hasSections": "Remove this class's sections before deleting it",
+      "classRequired": "Class is required"
     },
     "validation": {
       "nameRequired": "Class name is required",
@@ -3340,6 +3371,11 @@
     }
   },
   "cycles": {
+    "errors": {
+      "notFound": "Cycle not found",
+      "nameExists": "A cycle with this name already exists",
+      "inUse": "Classes or accountants in some school year use this cycle. Deactivate it instead of deleting it"
+    },
     "subtitle": {
       "count": "{{count}} cycles total"
     },
@@ -3389,7 +3425,9 @@
       "notFound": "Subject not found",
       "codeExists": "A subject with this code already exists",
       "nameExists": "A subject with this name already exists",
-      "required": "Subject is required for teacher assignment"
+      "required": "Subject is required for teacher assignment",
+      "inUse": "Teachers or alerts in some school year use this subject, so it cannot be deleted",
+      "someInUse": "Some subjects are used by teachers or alerts, so they cannot all be deleted"
     },
     "validation": {
       "codeRequired": "Subject code is required",
@@ -3805,7 +3843,10 @@
     "studentConductShort": "Conduct",
     "violations": "Violations",
     "behaviorRewards": "Positive Behavior & Rewards",
-    "behaviorRewardsShort": "Rewards"
+    "behaviorRewardsShort": "Rewards",
+    "alerts": "Alerts",
+    "myChildren": "My children",
+    "myProfile": "My profile"
   },
   "classRoutines": {
     "success": {
@@ -3843,7 +3884,8 @@
       "teacherNotFound": "Teacher not found",
       "layoutPastMidnight": "The generated routine cannot extend past midnight",
       "layoutRemovesLessons": "Remove lessons from periods that will no longer exist before changing these settings",
-    "layoutRemovesDuties": "Remove teacher duties from breaks that will no longer exist before changing these settings"
+    "layoutRemovesDuties": "Remove teacher duties from breaks that will no longer exist before changing these settings",
+    "outsideSelectedYear": "The routine's section must belong to the selected school year"
   },
   "ui": {
     "title": "Routine",
@@ -4226,6 +4268,8 @@
       "studentNotFound": "Student not found",
       "studentInactive": "Only active students can receive recognition",
       "studentAcademicContextMissing": "Student must have a class and section",
+      "outsideSelectedYear": "The behavior date is outside the selected school year",
+      "notPlacedOnDate": "The student was not in a class and section on that date",
       "studentNotAssigned": "You can recognize only students in your assigned sections",
       "notOwner": "Teachers can update only recognition they awarded",
       "deleteAdminOnly": "Only administrators can delete recognition records",
@@ -4457,9 +4501,70 @@
       "retrieved": "Event retrieved successfully",
       "started": "Event started successfully",
       "updated": "Event updated successfully"
+    },
+    "errors": {
+      "notFound": "Event not found",
+      "capacityFull": "The event is full ({{current}} of {{capacity}} places taken)",
+      "registrationClosed": "Registration for this event is closed",
+      "alreadyRegistered": "This participant is already registered",
+      "someAlreadyRegistered": "{{count}} participants are already registered",
+      "invalidStatus": "This action is not allowed while the event is {{current}} (allowed: {{allowed}})",
+      "endDateBeforeStart": "The end date must not be before the start date",
+      "endTimeBeforeStart": "The end time must be after the start time",
+      "registrationDeadlineAfterStart": "The registration deadline must not be after the start date",
+      "outsideSelectedYear": "The event's dates must fall in the selected school year"
     }
   },
   "alerts": {
+    "page": {
+      "title": "Alerts",
+      "subtitle": "{{count}} alerts",
+      "about": "About",
+      "schoolWide": "Everyone",
+      "emptyTitle": "No alerts",
+      "emptyDescription": "Alerts about you or your children will appear here.",
+      "columns": {
+        "title": "Alert",
+        "type": "Type",
+        "priority": "Priority",
+        "status": "Status",
+        "date": "Date"
+      },
+      "actions": {
+        "acknowledge": "Acknowledge",
+        "resolve": "Resolve",
+        "dismiss": "Dismiss"
+      },
+      "types": {
+        "academic": "Academic",
+        "attendance": "Attendance",
+        "behavioral": "Behavior",
+        "health": "Health",
+        "system": "System",
+        "announcement": "Announcement",
+        "reminder": "Reminder",
+        "emergency": "Emergency"
+      },
+      "priorities": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "statuses": {
+        "active": "Active",
+        "acknowledged": "Acknowledged",
+        "resolved": "Resolved",
+        "dismissed": "Dismissed"
+      }
+    },
+    "errors": {
+      "notFound": "Alert not found",
+      "duplicateActiveAlert": "An active alert of this type already exists for this target",
+      "sharedNoticeStaffOnly": "Only staff can change the status of a class or school-wide alert",
+      "acknowledgeOnly": "You can only mark this alert as acknowledged",
+      "editStaffOnly": "Only staff can edit an alert; you can update its status"
+    },
     "success": {
       "academicAlertsGenerated": "Academic alerts generated successfully",
       "allDeleted": "All Alert records deleted successfully",
@@ -4550,6 +4655,7 @@
     }
   },
   "emptyStates": {
+    "familyDescription": "Nothing has been recorded for you or your children yet.",
     "filtered": {
       "title": "No results found",
       "description": "Try adjusting your filters."
@@ -4612,7 +4718,8 @@
     },
     "announcements": {
       "title": "No announcements yet",
-      "description": "Publish your first announcement to get started."
+      "description": "Publish your first announcement to get started.",
+      "readerDescription": "Announcements addressed to you will appear here."
     },
     "discipline": {
       "title": "No discipline records",

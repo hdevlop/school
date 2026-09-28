@@ -136,6 +136,7 @@ export { GradeValidator } from './grades/GradeValidator';
 export { AlertService } from './alerts/AlertService';
 export { AlertRepository } from './alerts/AlertRepository';
 export { AlertValidator } from './alerts/AlertValidator';
+export { registerYearPropertyInjector, runWithResolvedYear } from './academicYears/requestYear';
 
 export { DisciplineService } from './discipline/DisciplineService';
 export { DisciplineRepository } from './discipline/DisciplineRepository';
@@ -313,13 +314,13 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, SubjectService, [SubjectRepository, SubjectValidator]);
 
   registerSeedDeps(seedContainer, ClassValidator, [ClassRepository, SettingsRepository]);
-  registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository, AcademicYearValidator]);
+  registerSeedDeps(seedContainer, ClassService, [ClassRepository, ClassValidator, SettingsRepository]);
 
   registerSeedDeps(seedContainer, SectionValidator, [SectionRepository, ClassRepository, SettingsRepository]);
-  registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator, AcademicYearValidator]);
+  registerSeedDeps(seedContainer, SectionService, [SectionRepository, SectionValidator]);
 
   registerSeedDeps(seedContainer, ClassRoutineValidator, [ClassRoutineRepository]);
-  registerSeedDeps(seedContainer, ClassRoutineService, [ClassRoutineRepository, ClassRoutineValidator, AcademicYearValidator]);
+  registerSeedDeps(seedContainer, ClassRoutineService, [ClassRoutineRepository, ClassRoutineValidator]);
 
   registerSeedDeps(seedContainer, FeeTypeValidator, [FeeTypeRepository]);
   registerSeedDeps(seedContainer, FeeTypeService, [FeeTypeRepository, FeeTypeValidator]);
@@ -336,7 +337,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, DriverService, [DriverRepository, DriverValidator, UserService, StorageService, StaffService]);
 
   registerSeedDeps(seedContainer, VehicleAssignmentValidator, [VehicleAssignmentRepository]);
-  registerSeedDeps(seedContainer, VehicleAssignmentService, [VehicleAssignmentRepository, VehicleAssignmentValidator]);
+  registerSeedDeps(seedContainer, VehicleAssignmentService, [VehicleAssignmentRepository, VehicleAssignmentValidator, AcademicYearValidator]);
 
   registerSeedDeps(seedContainer, VehicleValidator, [VehicleRepository]);
   registerSeedDeps(seedContainer, VehicleService, [VehicleRepository, VehicleValidator, VehicleAssignmentService]);
@@ -371,7 +372,7 @@ export function configureSeedContainer(seedContainer: Container) {
 
   registerSeedDeps(seedContainer, FinancialAuditService, [AuditLogRepository]);
 
-  registerSeedDeps(seedContainer, RolloverService, [RolloverRepository, FeeService, SettingsRepository, FinancialAuditService]);
+  registerSeedDeps(seedContainer, RolloverService, [RolloverRepository, FeeService, SettingsRepository, FinancialAuditService, AcademicYearValidator]);
 
   registerSeedDeps(seedContainer, FeeValidator, [FeeRepository, StudentValidator, FeeTypeValidator, SettingsRepository]);
   registerSeedDeps(seedContainer, FeeService, [FeeRepository, FeeValidator, InstallmentService, SettingsRepository, ClassRepository, StudentRepository, FinancialAuditService, StudentEnrollmentRepository, AcademicYearValidator]);
@@ -484,6 +485,7 @@ export function configureSeedContainer(seedContainer: Container) {
     TeacherRepository,
     ClassRepository,
     SubjectRepository,
+    AcademicYearRepository,
   ]);
   registerSeedDeps(seedContainer, AlertService, [AlertRepository, AlertValidator]);
 
@@ -493,7 +495,7 @@ export function configureSeedContainer(seedContainer: Container) {
   registerSeedDeps(seedContainer, BehaviorRewardValidator, [BehaviorRewardRepository]);
   registerSeedDeps(seedContainer, BehaviorRewardService, [BehaviorRewardRepository, BehaviorRewardValidator]);
 
-  registerSeedDeps(seedContainer, StudentRouteValidator, [StudentRouteRepository, StudentRepository]);
+  registerSeedDeps(seedContainer, StudentRouteValidator, [StudentRouteRepository, StudentRepository, StudentEnrollmentRepository]);
   registerSeedDeps(seedContainer, StudentRouteService, [
     StudentRouteRepository,
     StudentRouteValidator,

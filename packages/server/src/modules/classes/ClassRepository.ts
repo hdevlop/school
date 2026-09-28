@@ -5,6 +5,8 @@ import { Repository } from '../../najm';
 import { Owned } from '../../auth';
 import { jsonAgg } from '../../shared';
 import { Class } from './ClassGuards';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 export const classSelect = {
   id: classes.id,
@@ -104,12 +106,23 @@ export const parentSelect = {
 export class ClassRepository {
   declare db: DB;
   declare ownershipCondition: () => SQL | undefined;
+  @Year() private readonly year!: ResolvedAcademicYear;
+
+  // A class belongs to the year it was registered for.
+  private inSelectedYear() {
+    return eq(classes.academicYear, this.year.label);
+  }
+
+  private readCondition(...filters: (SQL | undefined)[]) {
+    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+  }
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
   // ========================================
 
-  private buildClassQuery() {
+  // Takes the whole condition: reference and uniqueness lookups pass their own.
+  private selectClasses(where: SQL | undefined) {
     return this.db
       .select({
         ...classSelect,
@@ -120,16 +133,25 @@ export class ClassRepository {
       })
       .from(classes)
       .leftJoin(sections, eq(sections.classId, classes.id))
+      .where(where)
       .groupBy(classes.id);
+  }
+
+  // The selected year's classes the user may read.
+  private buildClassQuery(...filters: (SQL | undefined)[]) {
+    return this.selectClasses(this.readCondition(...filters));
   }
 
   // ============ GET ALL METHODS ============ //
 
-  // The classes of one registered year the user may read.
-  async getAll(academicYear: string) {
+  async getAll() {
     return await this.buildClassQuery()
-      .where(and(this.ownershipCondition(), eq(classes.academicYear, academicYear)))
       .orderBy(classes.createdAt, classes.name);
+  }
+
+  async getInSelectedYear(id: string) {
+    const [result] = await this.buildClassQuery(eq(classes.id, id)).limit(1);
+    return result;
   }
 
   async getCount() {
@@ -139,23 +161,23 @@ export class ClassRepository {
     return result;
   }
 
+  // A reference lookup in any year, for modules that check a class they were
+  // given against their own year rules.
   async getById(id) {
-    const [result] = await this.buildClassQuery()
-      .where(and(this.ownershipCondition(), eq(classes.id, id)))
+    const [result] = await this.selectClasses(and(this.ownershipCondition(), eq(classes.id, id)))
       .limit(1);
     return result;
   }
 
   async getByName(name: string, academicYear: string) {
-    const [result] = await this.buildClassQuery()
-      .where(and(eq(classes.name, name), eq(classes.academicYear, academicYear)))
+    const [result] = await this.selectClasses(and(eq(classes.name, name), eq(classes.academicYear, academicYear)))
       .limit(1);
     return result;
   }
 
-  async getByAcademicYear(academicYear) {
-    return await this.buildClassQuery()
-      .where(eq(classes.academicYear, academicYear))
+  // A named year's classes, for fees.
+  async getByAcademicYear(academicYear: string) {
+    return await this.selectClasses(eq(classes.academicYear, academicYear))
       .orderBy(classes.name);
   }
 
@@ -167,10 +189,11 @@ export class ClassRepository {
       .orderBy(sections.name);
   }
 
-  // The students placed in the class during its year, from their enrollment
-  // placements, never the current projection: a past class lists who sat in
-  // it then. Class and section are those of the latest placement in the class.
-  async getClassStudents(classId: string, academicYearId: string) {
+  // The students placed in the class during the selected year, which is the
+  // class's own, from their enrollment placements, never the current
+  // projection: a past class lists who sat in it then. Class and section are
+  // those of the latest placement in the class.
+  async getClassStudents(classId: string) {
     return await this.db
       .selectDistinctOn([students.name, students.id], {
         ...studentSelect,
@@ -181,23 +204,23 @@ export class ClassRepository {
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
       .innerJoin(students, eq(studentEnrollments.studentId, students.id))
       .leftJoin(users, eq(students.userId, users.id))
-      .where(this.placedInClass(classId, academicYearId))
+      .where(this.placedInClass(classId))
       .orderBy(students.name, students.id, desc(studentEnrollmentPlacements.validFrom));
   }
 
-  private placedInClass(classId: string, academicYearId: string) {
+  private placedInClass(classId: string) {
     return and(
-      eq(studentEnrollments.academicYearId, academicYearId),
+      eq(studentEnrollments.academicYearId, this.year.id),
       eq(studentEnrollmentPlacements.classId, classId),
     );
   }
 
-  private studentsPlacedInClass(classId: string, academicYearId: string) {
+  private studentsPlacedInClass(classId: string) {
     return this.db
       .select({ studentId: studentEnrollments.studentId })
       .from(studentEnrollmentPlacements)
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
-      .where(this.placedInClass(classId, academicYearId));
+      .where(this.placedInClass(classId));
   }
 
   async getTeachers(classId) {
@@ -230,17 +253,17 @@ export class ClassRepository {
   }
 
   // The parents of the students placed in the class during its year, once each.
-  async getParents(classId: string, academicYearId: string) {
+  async getParents(classId: string) {
     return await this.db
       .selectDistinctOn([parents.name, parents.id], parentSelect)
       .from(studentParents)
       .innerJoin(parents, eq(studentParents.parentId, parents.id))
       .leftJoin(users, eq(parents.userId, users.id))
-      .where(inArray(studentParents.studentId, this.studentsPlacedInClass(classId, academicYearId)))
+      .where(inArray(studentParents.studentId, this.studentsPlacedInClass(classId)))
       .orderBy(parents.name, parents.id);
   }
 
-  async getAnalytics(classId: string, academicYearId: string) {
+  async getAnalytics(classId: string) {
     const [sectionsCount] = await this.db
       .select({ count: count() })
       .from(sections)
@@ -250,7 +273,7 @@ export class ClassRepository {
       .select({ count: countDistinct(studentEnrollments.studentId) })
       .from(studentEnrollmentPlacements)
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
-      .where(this.placedInClass(classId, academicYearId));
+      .where(this.placedInClass(classId));
 
     return {
       totalSections: sectionsCount.count || 0,
@@ -315,7 +338,17 @@ export class ClassRepository {
     return (result.count || 0) > 0;
   }
 
+  // A new class takes the selected year.
   async create(data) {
+    const [newClass] = await this.db
+      .insert(classes)
+      .values({ ...data, academicYear: this.year.label })
+      .returning();
+    return newClass;
+  }
+
+  // Trusted seed data names each class's year itself.
+  async createForSeed(data: typeof classes.$inferInsert) {
     const [newClass] = await this.db
       .insert(classes)
       .values(data)
@@ -327,7 +360,7 @@ export class ClassRepository {
     const [updatedClass] = await this.db
       .update(classes)
       .set(data)
-      .where(eq(classes.id, id))
+      .where(and(eq(classes.id, id), this.inSelectedYear()))
       .returning();
     return updatedClass;
   }
@@ -335,7 +368,7 @@ export class ClassRepository {
   async delete(id) {
     const [deletedClass] = await this.db
       .delete(classes)
-      .where(eq(classes.id, id))
+      .where(and(eq(classes.id, id), this.inSelectedYear()))
       .returning();
     return deletedClass;
   }
@@ -343,11 +376,17 @@ export class ClassRepository {
   async deleteAll() {
     const deletedClasses = await this.db
       .delete(classes)
+      .where(this.inSelectedYear())
       .returning();
     return {
       deletedCount: deletedClasses.length,
       deletedClasses: deletedClasses
     };
+  }
+
+  // Every year's classes, for the trusted seed reset only.
+  async clearForSeedReset() {
+    await this.db.delete(classes);
   }
 
 }

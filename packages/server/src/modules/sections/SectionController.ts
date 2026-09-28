@@ -1,11 +1,9 @@
-import { Controller, Get, Post, Put, Delete, Params, Body, User, Validate, ResMsg } from '../../najm';
+import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SectionService } from './SectionService';
 import { Section, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './SectionGuards';
 import { isAdmin } from '../../auth';
-import { Year } from '../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import { sectionIdParam, sectionListQuery, createSectionDto, createSectionsBulkDto, updateSectionDto, type CreateSectionDto, type UpdateSectionDto } from './SectionDto';
+import { sectionIdParam, createSectionDto, createSectionsBulkDto, updateSectionDto, type CreateSectionDto, type UpdateSectionDto } from './SectionDto';
 
 @ToolGroup('sections')
 @Policy(Section)
@@ -17,11 +15,10 @@ export class SectionController {
 
   @Get()
   @CanList()
-  @Validate({ query: sectionListQuery })
-  @McpTool('List all sections')
+  @McpTool("List the selected year's sections")
   @ResMsg('sections.success.retrieved')
-  async getSections(@Year() year: ResolvedAcademicYear) {
-    return this.sectionService.getAll(year);
+  async getSections() {
+    return this.sectionService.getAll();
   }
 
   @Get('/:id/classes')
@@ -29,8 +26,8 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool('Get classes associated with a section')
   @ResMsg('sections.success.retrieved')
-  async getClasses(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.sectionService.getClasses(id, user.role);
+  async getClasses(@Params('id') id: string) {
+    return this.sectionService.getClasses(id);
   }
 
   @Get('/:id/teachers')
@@ -38,8 +35,8 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool('Get teachers assigned to a section')
   @ResMsg('sections.success.retrieved')
-  async getTeachers(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.sectionService.getTeachers(id, user.role);
+  async getTeachers(@Params('id') id: string) {
+    return this.sectionService.getTeachers(id);
   }
 
   @Get('/:id/parents')
@@ -47,8 +44,8 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool('Get parents of students in a section')
   @ResMsg('sections.success.retrieved')
-  async getParents(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.sectionService.getParents(id, user.role);
+  async getParents(@Params('id') id: string) {
+    return this.sectionService.getParents(id);
   }
 
   @Get('/:id/students')
@@ -56,8 +53,8 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool('Get students in a section')
   @ResMsg('sections.success.retrieved')
-  async getStudents(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.sectionService.getStudents(id, user.role);
+  async getStudents(@Params('id') id: string) {
+    return this.sectionService.getStudents(id);
   }
 
   @Get('/:id/analytics')
@@ -65,8 +62,8 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool('Get analytics for a section')
   @ResMsg('sections.success.retrieved')
-  async getAnalytics(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.sectionService.getAnalytics(id, user.role);
+  async getAnalytics(@Params('id') id: string) {
+    return this.sectionService.getAnalytics(id);
   }
 
   @Get('/:id')
@@ -74,8 +71,8 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool('Get a section by ID')
   @ResMsg('sections.success.retrieved')
-  async getSection(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.sectionService.getById(id, user.role);
+  async getSection(@Params('id') id: string) {
+    return this.sectionService.getById(id);
   }
 
   // ========== POST ENDPOINTS ==========//
@@ -83,10 +80,10 @@ export class SectionController {
   @Post()
   @CanCreate()
   @Validate(createSectionDto)
-  @McpTool({ description: 'Create a new section', confirm: { level: 'warning', message: 'confirm.sections.create' } })
+  @McpTool({ description: "Create a section in one of the selected year's classes", confirm: { level: 'warning', message: 'confirm.sections.create' } })
   @ResMsg('sections.success.created')
-  async create(@Body() body: CreateSectionDto, @User() user: { role?: string }) {
-    return this.sectionService.create(body, user.role);
+  async create(@Body() body: CreateSectionDto) {
+    return this.sectionService.create(body);
   }
 
   @Post('/seed')
@@ -104,8 +101,8 @@ export class SectionController {
   @Validate({ params: sectionIdParam, body: updateSectionDto })
   @McpTool({ description: 'Update a section by ID', confirm: { level: 'warning', message: 'confirm.sections.update' } })
   @ResMsg('sections.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateSectionDto, @User() user: { role?: string }) {
-    return this.sectionService.update(id, body, user.role);
+  async update(@Params('id') id: string, @Body() body: UpdateSectionDto) {
+    return this.sectionService.update(id, body);
   }
 
   // ============ DEL ENDPOINTS ============//
@@ -121,7 +118,7 @@ export class SectionController {
 
   @Delete()
   @CanDelete()
-  @McpTool({ description: 'Delete all sections', confirm: { level: 'danger', message: 'confirm.sections.deleteAll' } })
+  @McpTool({ description: "Delete the selected year's sections", confirm: { level: 'danger', message: 'confirm.sections.deleteAll' } })
   @ResMsg('sections.success.allDeleted')
   async deleteAll() {
     return this.sectionService.deleteAll();

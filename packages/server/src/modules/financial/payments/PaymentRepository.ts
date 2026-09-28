@@ -5,9 +5,12 @@ import { DB } from '../../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
 import { formatDateOnly } from '../utils/dateOnly';
 import { getBusinessDate } from '../../../shared/businessDate';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 @Repository()
 export class PaymentRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
 
   // Receipt columns shared by the payment lists; the year list adds the part
@@ -70,7 +73,7 @@ export class PaymentRepository {
   // `amount` stays the full receipt; `yearAllocatedAmount` is the exact part
   // allocated to that year's fees, whatever the receipt's status. Unallocated
   // credit belongs to no year.
-  async getAll(label: string) {
+  private async listAllocatedReceipts(feeId?: string) {
     const yearAllocations = this.db
       .select({
         paymentId: paymentAllocations.paymentId,
@@ -78,7 +81,7 @@ export class PaymentRepository {
       })
       .from(paymentAllocations)
       .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
-      .where(eq(fees.academicYear, label))
+      .where(and(eq(fees.academicYear, this.year.label), feeId ? eq(fees.id, feeId) : undefined))
       .groupBy(paymentAllocations.paymentId)
       .as('year_allocations');
     const { processorUsers, studentUsers, columns } = this.paymentColumns();
@@ -91,6 +94,14 @@ export class PaymentRepository {
       .leftJoin(students, eq(payments.studentId, students.id))
       .leftJoin(studentUsers, eq(students.userId, studentUsers.id))
       .orderBy(desc(payments.paymentDate));
+  }
+
+  async getAll() {
+    return this.listAllocatedReceipts();
+  }
+
+  async getByFeeId(feeId: string) {
+    return this.listAllocatedReceipts(feeId);
   }
 
   async getById(id) {

@@ -3,13 +3,32 @@
 Prepared: **2026-09-27** · Plan: [SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md](../../SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md) §6 and §9
 
 **Forward-plan update (2026-09-27):** the root plan now targets a dynamic
-`@Year()` service property backed by the existing ALS store, with per-operation
-resolution and independent MCP invocation scopes. Its Alerts-first alphabetical
+`@Year()` repository property backed by the existing ALS store, with separate
+REST resolution and independent MCP invocation scopes. Services call ordinary
+repository methods without forwarding year IDs. Its Alerts-first alphabetical
 implementation/review/test queue supersedes the rollout order below. The
 parameter-decorator findings and package results here remain dated evidence;
 they do not prove the proposed property getter. Each module must complete real
 PostgreSQL acceptance using the root plan's three-year, ten-student fixture
 before the next module starts. No tests were run for this documentation update.
+
+Later checkpoint: School now pins the published Najm MCP hook. Alerts and
+Announcements use repository year getters, with separate REST middleware and
+MCP invocation scopes; real PostgreSQL and authenticated REST/MCP checks pass.
+This inventory remains a dated classification; use the root
+plan and evidence ledger for current implementation status.
+
+Assessment and Attendance have since joined that repository year flow. Their
+profile, grade-source and dashboard consumers are registered in `yearScope.ts`;
+dated Assessment ownership and Attendance corrections were checked on the
+marked PostgreSQL fixture. The root plan and evidence ledger track the current
+review status.
+
+Handoff update (2026-09-27): `/profiles/parents/:id/*` and
+`/dashboard/operations/kpis` are now registered for the request year, because
+they read Alerts and Announcements. Section 0 of the root plan lists, for every
+MCP tool, where `academicYear` is still declared. Use it rather than this table
+when converting a module.
 
 This is the endpoint, tool and caller inventory the plan requires before the
 domain rollout. It records what each surface does **today** and the year basis
@@ -87,13 +106,13 @@ handler; overlapping requests and batched tool calls keep their own years.
 
 | Route | Tool | Today | Target | Notes |
 | --- | --- | --- | --- | --- |
-| `GET /classes`, `GET /sections` | yes | one query, label optional; none → all years (admin) | **S** | Twin queries already merged |
-| `GET /classes/:id`, `/sections/:id` | yes | label access check | **R** | |
+| `GET /classes`, `GET /sections` | yes | selected year (repository `@Year()`) | **S** | Implemented 2026-09-28 |
+| `GET /classes/:id`, `/sections/:id` | yes | selected year; another year's is 404 | **R** | Implemented 2026-09-28; other modules keep the any-year reference lookup |
 | `…/:id/sections`, `/subjects`, `/teachers`, `/classes` | yes | structure | **R** | |
-| `…/:id/students`, `/parents`, `/analytics` | yes | **current projection** (`students.classId`) | **R** via placements in the class's year | Gap: a past class lists today's pupils. Fix in the domain rollout |
-| `POST/PUT /classes`, `/sections` | yes | year label resolved | **W** | |
-| `GET /class-routines`, `/sections/:id/published`, `/teachers/:teacherId` | teacher tool | viewing label | **S** | |
-| `GET /class-routines/:id`, `/assignments/:id` | no | label check | **R** | |
+| `…/:id/students`, `/parents`, `/analytics` | yes | placements in the selected year, the class's own | **R** via placements in the class's year | Fixed; verified 2026-09-28 |
+| `POST/PUT /classes`, `/sections` | yes | a new class takes the selected year; a section needs a class of it | **W** | No moves between years (owner decision 2026-09-28) |
+| `GET /class-routines`, `/sections/:id/published`, `/teachers/:teacherId` | teacher tool | selected year | **S** | Implemented 2026-09-28 |
+| `GET /class-routines/:id`, `/assignments/:id` | no | selected year (404 / 409) | **R** | Implemented 2026-09-28 |
 | `GET /class-routines/periods`, `/duty-candidates` | periods tool | shared | **C** | |
 | Routine writes, publish, archive | create tool | section year | **W/R** | Keep version/publication rules |
 
@@ -109,13 +128,13 @@ handler; overlapping requests and batched tool calls keep their own years.
 | `GET /attendance/:id`, `/:id/history` | get tool | record check | **R** | |
 | `POST /attendance`, `PUT …`, `/staff/bulk`, `/status` | yes | stored/date year check | **W/R** | Dated roster for students |
 | `GET /assessments`, `GET /exams` | yes | viewing year (flag) | **S** | |
-| `GET /assessments|exams /section|subject|teacher|class/:id` | yes | **unscoped** (*verify*) | **S** | |
-| `GET /assessments|exams /today|upcoming|overdue|due-this-week` | yes | business date | **D** | |
-| `GET /assessments/:id`, `/exams/:id` | yes | row | **R** | |
+| `GET /assessments|exams /section|subject|teacher|class/:id` | yes | selected year (repository `@Year()`) | **S** | Verified 2026-09-27 |
+| `GET /assessments|exams /today|upcoming|overdue|due-this-week` | yes | business date inside the selected year | **D** | |
+| `GET /assessments/:id`, `/exams/:id` | yes | row, only in its own year | **R** | Another year's id is 404 |
 | Assessment/exam writes | yes | source/section year | **W/R** | Draft and graded-source rules stay |
-| `GET /grades`, `/student/:id`, `/student/:id/report` | yes | viewing year (flag) | **S** | |
-| `GET /grades/section|subject|teacher/:id` | yes | active (flag) or all | **S** | |
-| `GET /grades/assessment/:id`, `/exam/:id` | yes | active (flag) or all | **R** (the source's year) | |
+| `GET /grades`, `/student/:id`, `/student/:id/report` | yes | selected year (repository `@Year()`) | **S** | 2026-09-28 |
+| `GET /grades/section|subject|teacher/:id` | yes | selected year (repository `@Year()`) | **S** | 2026-09-28 |
+| `GET /grades/assessment/:id`, `/exam/:id` | yes | selected year; another year's source is 404 | **S** | 2026-09-28 |
 | `GET /grades/unassigned-sources` | no | review list | **A** | Migration-issue review |
 | Grade writes | yes | eligibility year | **W/R** | One valid source; orphans stay unresolved |
 
@@ -152,7 +171,7 @@ handler; overlapping requests and batched tool calls keep their own years.
 | `GET /teachers…`, assign/unassign | yes | identity, undated assignments | **C** (labelled current) | Assignments carry no history |
 | `GET /teachers/:id/students` | yes | year (+`onDate`) or current | **S** | |
 | `/profiles/students/:id/academic|attendance|financial|overview` | yes | unscoped (*verify*) | **S** | |
-| `/profiles/students/:id/transport` | yes | current | **C** | |
+| `/profiles/students/:id/transport` | yes | current route | **S/D** | Student-route intervals now use the selected year through the profile controller. Vehicle identity and current driver remain shared. |
 | `/profiles/parents/:id/children` | yes | current (*verify*) | **S** | |
 | `/profiles/parents/:id/fees-due` | yes | all unpaid (*verify*) | **A** | Cross-year debt discovery |
 | `/profiles/parents/:id/unread-alerts|upcoming-events` | yes | current/dated | **C/D** | |
@@ -169,11 +188,15 @@ handler; overlapping requests and batched tool calls keep their own years.
 
 | Module | Basis | Notes |
 | --- | --- | --- |
-| Transport (routes, vehicles, drivers, refuels, maintenance, assignments) | **C/D** | No historical relationship model; not filtered |
+| Transport: drivers, vehicles | **C** | Shared identities; driver reads verified across selected years |
+| Transport: maintenance | **D/C** | Planned work follows scheduled date; completed work follows completion date; open mileage-only jobs and live alerts remain shared. See row 39 of the forward plan. |
+| Transport: refuels | **D** | Fuel events and amounts follow the school-local day of `datetime` in the selected reporting year; current 90-day fuel prediction is operational across years. See row 40. |
+| Transport: student routes | **D** | Continuous dated intervals overlap each selected reporting year; list, detail, student history, counts and ordinary writes are scoped. Live capacity and active-vehicle panel remain present-time views. Reassignment closes the old row and creates another. The selected year owns transport-fee changes. See row 41. |
+| Transport: vehicle assignments | **D/C** | Continuous driver intervals overlap each selected reporting year for list/detail/count and ordinary writes. A driver change closes the old row and inserts a new one. Vehicle identity and its current driver remain present-time views; vehicle creation attributes an optional driver assignment by its date. See row 42. |
 | Payroll, expenses | **D** | Pay period / expense date; finance dashboards use reporting intervals |
-| Events, alerts, announcements, notifications | **C/D** | |
-| Behavior rewards, discipline | **D** | Incident date; no selected-year filter in this refactor |
-| Subjects, cycles, staff, zones, staff roles | **C** | Catalogs and staff identity |
+| Events, alerts, announcements, notifications | **C/D** in the earlier inventory | Alerts has year-owned types and shared exceptions. Events overlap the selected reporting interval (2026-09-28). Personal notifications are shared across years (row 27). See the module rows in `SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md`. |
+| Behavior rewards, discipline | **D** | Filtered by the school-local day of `behaviorAt` / `incidentAt` in the selected reporting interval; class and section from that day's placement |
+| Subjects, cycles, staff, zones, staff roles | **C** | Catalogs and staff identity. Subjects and cycles verified shared 2026-09-28; deleting one any year uses is refused |
 | Settings, auth tools, users, roles, permissions, access reset, health, search | **C** | Never year-filtered |
 | Academic years, transitions, migration issues | **L** / review | Registry needs no selected year |
 | Seed controllers and scripts | trusted entry | Explicit years; never browser headers |

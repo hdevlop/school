@@ -3,10 +3,13 @@ import { SectionRepository } from './SectionRepository';
 import { ClassRepository } from '../classes/ClassRepository';
 import { SettingsRepository } from '../settings/SettingsRepository';
 import { getCurrentAcademicYear } from '../financial/utils';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class SectionValidator {
   @I18n('sections.errors') private t!: (key: string) => string;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private sectionRepository: SectionRepository,
@@ -14,6 +17,16 @@ export class SectionValidator {
     private settingsRepository: SettingsRepository,
   ) {}
 
+  // The selected year's section; another year's reads as not found.
+  async ensureInSelectedYear(id: string) {
+    const section = await this.sectionRepository.getInSelectedYear(id);
+    if (!section) {
+      Err(404, this.t('notFound'));
+    }
+    return section;
+  }
+
+  // Any year's section, for modules that apply their own year rule to it.
   async ensureExists(id: string) {
     const section = await this.sectionRepository.getById(id);
     if (!section) {
@@ -49,6 +62,15 @@ export class SectionValidator {
       Err(404, t('classes.errors.notFound'));
     }
     return existingClass;
+  }
+
+  // A section is created in, or moved to, a class of the selected year.
+  async ensureClassInSelectedYear(classId: string) {
+    const schoolClass = await this.ensureClassExists(classId);
+    if (schoolClass.academicYear !== this.year.label) {
+      Err(409, this.t('classOutsideSelectedYear'));
+    }
+    return schoolClass;
   }
 
   async ensureNameUniqueInClass(classId: string, name: string, excludeId?: string) {

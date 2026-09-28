@@ -63,6 +63,7 @@ export class PayrollService {
    */
   @Transaction()
   async runPayroll({ period }: RunPayrollDto, processedBy?: string) {
+    this.payrollValidator.ensurePeriodInSelectedYear(period);
     const activeStaff = await this.staffRepository.getByStatus('active');
     const eligible = activeStaff.filter((member) => calculateStaffBasePay(member) > 0);
 
@@ -133,6 +134,7 @@ export class PayrollService {
   @Transaction()
   async payStaff(data: PayStaffDto, processedBy?: string) {
     const { staffId, period } = data;
+    this.payrollValidator.ensurePeriodInSelectedYear(period);
     const paymentMethod = data.paymentMethod || 'bankTransfer';
 
     const existing = await this.payrollRepository.getByStaffAndPeriod(staffId, period);
@@ -183,6 +185,7 @@ export class PayrollService {
   /** Undo a payment — keep the payslip snapshot and return it to pending. */
   @Transaction()
   async unpayStaff(data: UnpayStaffDto, actorId?: string) {
+    this.payrollValidator.ensurePeriodInSelectedYear(data.period);
     const existing = await this.payrollRepository.getByStaffAndPeriod(data.staffId, data.period);
     if (!existing) return { unpaid: false };
     const updated = await this.payrollRepository.update(existing.id, {
@@ -202,6 +205,7 @@ export class PayrollService {
 
   async payStaffBulk(data: PayStaffBulkDto, processedBy?: string) {
     const { staffIds, period, ...rest } = data;
+    this.payrollValidator.ensurePeriodInSelectedYear(period);
     let paidCount = 0;
     // Sequential — avoids racing the (staffId, period) unique index across the pool.
     for (const staffId of staffIds) {

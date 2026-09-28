@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../auth';
+import { isAdmin, isAuth } from '../../auth';
 import { EventService } from './EventService';
 import {
   canAccessEvent,
@@ -37,8 +37,11 @@ import {
   type UpdateEventParticipantDto,
 } from './EventDto';
 
+// Every route needs a signed-in user; the read guards below need `read:events`,
+// and the repository then limits rows to the reader's audience and the selected year.
 @ToolGroup('events')
 @Controller('/events')
+@isAuth()
 export class EventController {
   constructor(private eventService: EventService) { }
 
@@ -51,6 +54,7 @@ export class EventController {
   }
 
   @Get('/today')
+  @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
   @McpTool("List today's active events")
   async getToday() {
@@ -58,6 +62,7 @@ export class EventController {
   }
 
   @Get('/upcoming')
+  @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
   @McpTool('List upcoming events')
   async getUpcoming() {
@@ -65,6 +70,7 @@ export class EventController {
   }
 
   @Get('/past')
+  @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
   @McpTool('List past events')
   async getPast() {
@@ -72,6 +78,7 @@ export class EventController {
   }
 
   @Get('/active')
+  @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
   @McpTool('List currently active events')
   async getActive() {
@@ -88,6 +95,7 @@ export class EventController {
   }
 
   @Get('/type/:type')
+  @canAccessAllEvents()
   @Validate({ params: eventTypeParam })
   @McpTool('Get events by type')
   @ResMsg('events.success.retrieved')
@@ -104,6 +112,7 @@ export class EventController {
   }
 
   @Get('/class/:classId')
+  @canAccessAllEvents()
   @Validate({ params: eventClassIdParam })
   @McpTool('Get events by class')
   @ResMsg('events.success.retrieved')
@@ -112,6 +121,7 @@ export class EventController {
   }
 
   @Get('/section/:sectionId')
+  @canAccessAllEvents()
   @Validate({ params: eventSectionIdParam })
   @McpTool('Get events by section')
   @ResMsg('events.success.retrieved')
@@ -128,6 +138,7 @@ export class EventController {
   }
 
   @Get('/date-range')
+  @canAccessAllEvents()
   @Validate({ query: dateRangeDto })
   @ResMsg('events.success.retrieved')
   async getByDateRange(@Query() query: DateRangeDto) {
@@ -135,6 +146,7 @@ export class EventController {
   }
 
   @Post('/mcp/date-range')
+  @canAccessAllEvents()
   @Validate({ body: dateRangeDto })
   @McpTool('Get events within a date range')
   @ResMsg('events.success.retrieved')
@@ -233,7 +245,7 @@ export class EventController {
   }
 
   @Get('/:id/participants')
-  @canAccessEvent()
+  @canManageParticipants()
   @Validate({ params: eventIdParam })
   @ResMsg('events.success.participantsRetrieved')
   async getParticipants(@Params('id') id: string) {
@@ -241,7 +253,7 @@ export class EventController {
   }
 
   @Get('/:id/participants/:type')
-  @canAccessEvent()
+  @canManageParticipants()
   @Validate({ params: eventParticipantsByTypeParam })
   @ResMsg('events.success.participantsRetrieved')
   async getParticipantsByType(@Params('id') id: string, @Params('type') type: string) {
@@ -249,6 +261,7 @@ export class EventController {
   }
 
   @Get('/participant/:participantId')
+  @canManageParticipants()
   @Validate({ params: eventParticipantLookupParam })
   @ResMsg('events.success.retrieved')
   async getEventsByParticipant(@Params('participantId') participantId: string) {
@@ -256,7 +269,7 @@ export class EventController {
   }
 
   @Get('/:id/participants/count')
-  @canAccessEvent()
+  @canManageParticipants()
   @Validate({ params: eventIdParam })
   @ResMsg('events.success.retrieved')
   async getParticipantCount(@Params('id') id: string) {

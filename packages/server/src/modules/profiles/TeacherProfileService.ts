@@ -22,22 +22,21 @@ export class TeacherProfileService {
 
   // Today's assessments exist only in the year that holds today; another
   // year's view has none.
-  async getScheduleToday(teacherId: string, year: ResolvedAcademicYear) {
+  async getScheduleToday(teacherId: string, _year: ResolvedAcademicYear) {
     const teacher = await this.teacherService.getById(teacherId);
     const classes = await this.teacherService.getClasses(teacherId);
-    const todayAssessments = await this.assessmentService.getAll(year, { teacherId })
+    const todayAssessments = await this.assessmentService.getAll({ teacherId })
       .then((a: any[]) => {
         const today = new Date().toISOString().split('T')[0];
         return (a || []).filter((ass: any) => ass.date === today);
-      })
-      .catch(() => []);
+      });
     return { teacher, classes, todayAssessments };
   }
 
-  async getPendingGrading(teacherId: string, year: ResolvedAcademicYear) {
+  async getPendingGrading(teacherId: string, _year: ResolvedAcademicYear) {
     const [assessments, grades] = await Promise.all([
-      this.assessmentService.getAll(year, { teacherId }).catch(() => []),
-      this.gradeService.getAll(year, { teacherId }).catch(() => []),
+      this.assessmentService.getAll({ teacherId }),
+      this.gradeService.getAll({ teacherId }),
     ]);
 
     const gradedAssessmentIds = new Set(

@@ -15,12 +15,17 @@ export class DisciplineValidator {
     return record!;
   }
 
-  async ensureStudentReady(studentId: string) {
-    const student = await this.repository.getStudentSnapshot(studentId);
+  /**
+   * The class and section the student was placed in on the incident's day,
+   * which must fall in the selected year. A past-dated incident takes the class
+   * of that day, not the student's current one.
+   */
+  async ensureStudentPlacedOn(studentId: string, incidentAt: string) {
+    const student = await this.repository.getStudentPlacementOn(studentId, incidentAt);
     if (!student) Err(404, this.t('studentNotFound'));
-    if (student!.status !== 'active') Err(409, this.t('studentInactive'));
-    if (!student!.classId || !student!.sectionId) Err(409, this.t('studentAcademicPlacementRequired'));
-    return student!;
+    if (!student!.inSelectedYear) Err(409, this.t('outsideSelectedYear'));
+    if (!student!.classId || !student!.sectionId) Err(409, this.t('notPlacedOnDate'));
+    return { classId: student!.classId!, sectionId: student!.sectionId! };
   }
 
   async ensureTeacherMayReport(user: DisciplineUser, sectionId: string) {
@@ -28,10 +33,6 @@ export class DisciplineValidator {
     if (!(await this.repository.isTeacherAssignedToSection(user.id, sectionId))) {
       Err(403, this.t('teacherStudentForbidden'));
     }
-  }
-
-  ensureReadable(record: { reportedBy: string }, user: DisciplineUser) {
-    if (user.role === 'teacher' && record.reportedBy !== user.id) Err(403, this.t('recordForbidden'));
   }
 
   ensureOpen(record: { status: string }) {

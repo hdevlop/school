@@ -6,10 +6,13 @@ import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
 import { AssessmentValidator } from '../assessments/AssessmentValidator';
 import { ExamValidator } from '../exams/ExamValidator';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class GradeValidator {
   @I18n('grades.errors') private gt!: (key: string) => string;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private gradeRepository: GradeRepository,
@@ -20,6 +23,11 @@ export class GradeValidator {
     private assessmentValidator: AssessmentValidator,
     private examValidator: ExamValidator,
   ) { }
+
+  /** A grade is recorded in the year the request selected: its source's year must be that one. */
+  ensureSelectedYear(yearId: string) {
+    if (yearId !== this.year.id) Err(409, this.gt('outsideSelectedYear'));
+  }
 
   async ensureExists(id: string) {
     const existingGrade = await this.gradeRepository.getById(id);

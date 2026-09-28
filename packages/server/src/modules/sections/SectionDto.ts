@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { academicYearField, num, optionalId, requiredId } from '../../shared/fields';
+import { num, optionalId, requiredId } from '../../shared/fields';
 import { sectionStatusEnum } from '../../shared/enums';
 
 const sectionSchema = z.object({
@@ -15,9 +15,7 @@ export const createSectionDto = sectionSchema.omit({ id: true });
 export const createSectionsBulkDto = z.array(createSectionDto);
 export const updateSectionDto = createSectionDto.partial();
 export const sectionIdParam = z.object({ id: z.string().min(1) });
-export const sectionListQuery = z.object({ academicYear: academicYearField.optional() });
 
 export type CreateSectionDto = z.infer<typeof createSectionDto>;
 export type UpdateSectionDto = z.infer<typeof updateSectionDto>;
 export type CreateSectionsBulkDto = z.infer<typeof createSectionsBulkDto>;
-export type SectionListQuery = z.infer<typeof sectionListQuery>;

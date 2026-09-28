@@ -116,6 +116,7 @@ export async function runSeedTask(label: string, task: SeedTask) {
 
   try {
     const server = createSeedServer(seedModules);
+    seedModules.registerYearPropertyInjector(server.container);
     await server.init();
     seedModules.configureSeedContainer(server.container);
     await server.runAs({ id: 'school-seed', role: 'admin' }, () => task(server));

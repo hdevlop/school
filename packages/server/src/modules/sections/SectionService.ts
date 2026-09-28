@@ -2,60 +2,52 @@ import { Service } from '../../najm';
 import { SectionRepository } from './SectionRepository';
 import { SectionValidator } from './SectionValidator';
 import type { CreateSectionDto, CreateSectionsBulkDto, UpdateSectionDto } from './SectionDto';
-import { AcademicYearValidator, type ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class SectionService {
   constructor(
     private sectionRepository: SectionRepository,
     private sectionValidator: SectionValidator,
-    private academicYears: AcademicYearValidator,
   ) { }
 
-  async getAll(year: ResolvedAcademicYear) {
-    return this.sectionRepository.getAll(year.label);
+  // The selected year's sections. A section belongs to its class's year, so
+  // its students and parents come from that year's placements.
+  async getAll() {
+    return this.sectionRepository.getAll();
   }
 
-  async getById(id: string, role?: string) {
-    return (await this.getWithYear(id, role)).section;
+  async getById(id: string) {
+    return this.sectionValidator.ensureInSelectedYear(id);
   }
 
-  // A section belongs to its class's year: that year decides whether the role
-  // may read it and which placements its students and parents come from.
-  private async getWithYear(id: string, role?: string) {
-    const section = await this.sectionValidator.ensureExists(id);
-    const year = await this.academicYears.resolve(section.class.academicYear, role);
-    return { section, year };
+  async getStudents(sectionId: string) {
+    await this.sectionValidator.ensureInSelectedYear(sectionId);
+    return await this.sectionRepository.getStudents(sectionId);
   }
 
-  async getStudents(sectionId: string, role?: string) {
-    const { year } = await this.getWithYear(sectionId, role);
-    return await this.sectionRepository.getStudents(sectionId, year.id);
+  async getAnalytics(sectionId: string) {
+    await this.sectionValidator.ensureInSelectedYear(sectionId);
+    return await this.sectionRepository.getAnalytics(sectionId);
   }
 
-  async getAnalytics(sectionId: string, role?: string) {
-    const { year } = await this.getWithYear(sectionId, role);
-    return await this.sectionRepository.getAnalytics(sectionId, year.id);
-  }
-
-  async getClasses(sectionId: string, role?: string) {
-    await this.getWithYear(sectionId, role);
+  async getClasses(sectionId: string) {
+    await this.sectionValidator.ensureInSelectedYear(sectionId);
     return await this.sectionRepository.getClasses(sectionId);
   }
 
-  async getTeachers(sectionId: string, role?: string) {
-    await this.getWithYear(sectionId, role);
+  async getTeachers(sectionId: string) {
+    await this.sectionValidator.ensureInSelectedYear(sectionId);
     return await this.sectionRepository.getTeachers(sectionId);
   }
 
-  async getParents(sectionId: string, role?: string) {
-    const { year } = await this.getWithYear(sectionId, role);
-    return await this.sectionRepository.getParents(sectionId, year.id);
+  async getParents(sectionId: string) {
+    await this.sectionValidator.ensureInSelectedYear(sectionId);
+    return await this.sectionRepository.getParents(sectionId);
   }
 
-  async create(data: CreateSectionDto, role?: string) {
-    const schoolClass = await this.sectionValidator.ensureClassExists(data.classId);
-    await this.academicYears.resolve(schoolClass.academicYear, role);
+  // A new section joins a class of the selected year.
+  async create(data: CreateSectionDto) {
+    await this.sectionValidator.ensureClassInSelectedYear(data.classId);
     await this.sectionValidator.ensureNameUniqueInClass(
       data.classId,
       data.name
@@ -63,12 +55,12 @@ export class SectionService {
     return await this.sectionRepository.create(data);
   }
 
-  async update(id: string, data: UpdateSectionDto, role?: string) {
-    const currentSection = await this.sectionValidator.ensureExists(id);
+  // Only the selected year's sections change, and only within that year.
+  async update(id: string, data: UpdateSectionDto) {
+    const currentSection = await this.sectionValidator.ensureInSelectedYear(id);
 
     if (data.classId && data.classId !== currentSection.classId) {
-      const schoolClass = await this.sectionValidator.ensureClassExists(data.classId);
-      await this.academicYears.resolve(schoolClass.academicYear, role);
+      await this.sectionValidator.ensureClassInSelectedYear(data.classId);
       await this.sectionValidator.ensureHasNoStudents(id);
     }
 
@@ -83,21 +75,29 @@ export class SectionService {
 
 
   async delete(id: string) {
-    await this.sectionValidator.ensureExists(id);
+    await this.sectionValidator.ensureInSelectedYear(id);
     await this.sectionValidator.ensureHasNoStudents(id);
     return await this.sectionRepository.delete(id);
   }
 
+  // The selected year's sections only.
   async deleteAll() {
     return await this.sectionRepository.deleteAll();
   }
 
+  async clearForSeedReset() {
+    await this.sectionRepository.clearForSeedReset();
+  }
+
+  // Trusted seed data: each section joins its class in that class's year.
   async seedDemoSections(sectionsData: CreateSectionsBulkDto) {
     const createdSections = [];
 
     for (const sectionData of sectionsData) {
       try {
-        const sectionEntity = await this.create(sectionData);
+        await this.sectionValidator.ensureClassExists(sectionData.classId);
+        await this.sectionValidator.ensureNameUniqueInClass(sectionData.classId, sectionData.name);
+        const sectionEntity = await this.sectionRepository.create(sectionData);
         createdSections.push(sectionEntity);
       } catch (error: any) {
         if (error?.status === 409) continue;

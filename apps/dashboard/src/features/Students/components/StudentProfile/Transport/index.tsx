@@ -19,6 +19,7 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
   const {
     routes,
     isLoading,
+    academicYear,
     assignStudent,
     updateRoute,
     reassignStudent,
@@ -32,6 +33,7 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
   const history = (routes || []).filter((route: any) => route.status !== 'active')
 
   const openAssignment = async (mode: 'assign' | 'edit' | 'reassign') => {
+    const openedYear = academicYear
     const result = await openDialog({
       title: mode === 'assign'
         ? t('transport.profile.assignTitle')
@@ -45,9 +47,9 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
         text: mode === 'assign' ? t('transport.profile.assign') : t('common.save'),
         loading: isAssigning || isUpdating,
         onClick: async (data: any) => {
-          if (mode === 'assign') await assignStudent(data)
-          else if (mode === 'edit') await updateRoute({ ...data, id: active.id })
-          else await reassignStudent({ ...data, id: active.id })
+          if (mode === 'assign') await assignStudent(data, openedYear)
+          else if (mode === 'edit') await updateRoute({ ...data, id: active.id }, openedYear)
+          else await reassignStudent({ ...data, id: active.id }, openedYear)
         },
       },
     })
@@ -55,6 +57,7 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
   }
 
   const confirmUnassign = () => {
+    const openedYear = academicYear
     openDialog({
       title: t('transport.profile.unassignTitle'),
       children: <p className="text-sm text-slate-600">{t('transport.profile.unassignDescription')}</p>,
@@ -63,7 +66,7 @@ export default function TransportTab({ studentId, student, isLoading: isStudentL
         variant: 'destructive',
         loading: isDeleting,
         onClick: async () => {
-          await unassignStudent(active.id)
+          await unassignStudent(active.id, openedYear)
           toast.success(t('transport.profile.unassigned'))
         },
       },

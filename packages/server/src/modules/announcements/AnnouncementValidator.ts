@@ -1,6 +1,12 @@
 import { Service, Err, I18n } from '../../najm';
+import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { AnnouncementRepository } from './AnnouncementRepository';
 import { ClassValidator } from '../classes/ClassValidator';
+
+export type AnnouncementActor = {
+  id: string;
+  role?: string | null;
+};
 
 @Service()
 export class AnnouncementValidator {
@@ -24,11 +30,20 @@ export class AnnouncementValidator {
     return announcementExists;
   }
 
+  /** Staff change any announcement they can read; anyone else only the ones they wrote. */
+  async ensureChangeable(id: string, actor: AnnouncementActor) {
+    const announcement = await this.ensureExists(id);
+    if (!SCHOOL_WIDE_ROLES.includes(actor.role ?? '') && announcement.authorId !== actor.id) {
+      Err(403, this.at('authorOnly'));
+    }
+    return announcement;
+  }
+
   // ========================================
   // Business Logic Validations
   // ========================================
 
-  async ensureTargetAudienceValid(targetAudience: string, classIds?: string[] | null) {
+  async ensureTargetAudienceValid(targetAudience: string, classIds: string[] | null | undefined) {
     const targets = [...new Set((classIds || []).filter(Boolean))];
 
     if (targetAudience === 'all' && targets.length) {
@@ -40,6 +55,9 @@ export class AnnouncementValidator {
     }
 
     await Promise.all(targets.map((classId) => this.classValidator.ensureExists(classId)));
+    if (!(await this.announcementRepository.classesInYear(targets))) {
+      Err(409, 'Announcement classes must belong to the selected academic year');
+    }
 
     return true;
   }
@@ -61,8 +79,8 @@ export class AnnouncementValidator {
     return true;
   }
 
-  async ensureCanPublish(id: string) {
-    const announcement = await this.ensureExists(id);
+  async ensureCanPublish(id: string, actor: AnnouncementActor) {
+    const announcement = await this.ensureChangeable(id, actor);
 
     if (announcement.isPublished) {
       Err(409, this.at('alreadyPublished'));
@@ -71,8 +89,8 @@ export class AnnouncementValidator {
     return true;
   }
 
-  async ensureCanUnpublish(id: string) {
-    const announcement = await this.ensureExists(id);
+  async ensureCanUnpublish(id: string, actor: AnnouncementActor) {
+    const announcement = await this.ensureChangeable(id, actor);
 
     if (!announcement.isPublished) {
       Err(409, this.at('notPublished'));
@@ -85,7 +103,7 @@ export class AnnouncementValidator {
     return this.ensureExists(id);
   }
 
-  async validateTargetAudience(targetAudience: string, classIds?: string[] | null) {
+  async validateTargetAudience(targetAudience: string, classIds: string[] | null | undefined) {
     return this.ensureTargetAudienceValid(targetAudience, classIds);
   }
 
@@ -93,11 +111,11 @@ export class AnnouncementValidator {
     return this.ensurePublishDateValid(publishDate, expiryDate);
   }
 
-  async checkCanPublish(id: string) {
-    return this.ensureCanPublish(id);
+  async checkCanPublish(id: string, actor: AnnouncementActor) {
+    return this.ensureCanPublish(id, actor);
   }
 
-  async checkCanUnpublish(id: string) {
-    return this.ensureCanUnpublish(id);
+  async checkCanUnpublish(id: string, actor: AnnouncementActor) {
+    return this.ensureCanUnpublish(id, actor);
   }
 }

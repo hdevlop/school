@@ -28,8 +28,8 @@ export class DisciplineController {
   @canReadDiscipline()
   @McpTool({ description: 'List discipline incidents visible to the current user', readOnly: true })
   @ResMsg('discipline.success.retrieved')
-  async list(@User() user: DisciplineUser) {
-    return this.service.list(user);
+  async list() {
+    return this.service.list();
   }
 
   @Post()
@@ -64,8 +64,8 @@ export class DisciplineController {
   @Validate({ params: disciplineIdParam })
   @McpTool({ description: 'Get a visible discipline incident by ID', readOnly: true })
   @ResMsg('discipline.success.retrieved')
-  async getById(@Params('id') id: string, @User() user: DisciplineUser) {
-    return this.service.getById(id, user);
+  async getById(@Params('id') id: string) {
+    return this.service.getById(id);
   }
 
   @Put('/:id')

@@ -46,9 +46,7 @@ export const deleteFeesBulkDto = z.preprocess(
 
 export const feeIdParam = z.object({ id: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
-export const feeListQuery = z.object({ academicYear: academicYearField.optional() });
-export type FeeListQuery = z.infer<typeof feeListQuery>;
-// The year comes from @Year() (the `academicYear` query value or header).
+// The normal list year is resolved by the shared REST/MCP request scope.
 export const overdueStudentBody = studentIdParam;
 export type OverdueStudentBody = z.infer<typeof overdueStudentBody>;
 

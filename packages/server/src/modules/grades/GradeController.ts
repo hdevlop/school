@@ -2,8 +2,6 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validat
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { GradeService } from './GradeService';
 import { Grade, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './GradeGuards';
-import { Year } from '../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { isAdmin, isAdministrator } from '../../auth';
 import {
   assessmentIdParam,
@@ -11,7 +9,6 @@ import {
   deleteBulkGradeDto,
   examIdParam,
   gradeIdParam,
-  gradeListQuery,
   seedGradesBulkDto,
   sectionIdParam,
   studentIdParam,
@@ -32,11 +29,10 @@ export class GradeController {
 
   @Get()
   @CanList()
-  @Validate({ query: gradeListQuery })
-  @McpTool('List all grades')
+  @McpTool("List the selected year's grades")
   @ResMsg('grades.success.retrieved')
-  async getAll(@Year() year: ResolvedAcademicYear) {
-    return this.gradeService.getAll(year);
+  async getAll() {
+    return this.gradeService.getAll();
   }
 
   @Get('/assessment/:assessmentId')
@@ -44,8 +40,8 @@ export class GradeController {
   @Validate({ params: assessmentIdParam })
   @McpTool('Get grades by assessment')
   @ResMsg('grades.success.retrieved')
-  async getByAssessment(@Params('assessmentId') assessmentId: string, @User() user: { role?: string }) {
-    return this.gradeService.getByAssessment(assessmentId, user.role);
+  async getByAssessment(@Params('assessmentId') assessmentId: string) {
+    return this.gradeService.getByAssessment(assessmentId);
   }
 
   @Get('/exam/:examId')
@@ -53,53 +49,53 @@ export class GradeController {
   @Validate({ params: examIdParam })
   @McpTool('Get grades by exam')
   @ResMsg('grades.success.retrieved')
-  async getByExam(@Params('examId') examId: string, @User() user: { role?: string }) {
-    return this.gradeService.getByExam(examId, user.role);
+  async getByExam(@Params('examId') examId: string) {
+    return this.gradeService.getByExam(examId);
   }
 
   @Get('/student/:studentId')
   @CanList()
-  @Validate({ params: studentIdParam, query: gradeListQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get grades by student')
   @ResMsg('grades.success.retrieved')
-  async getByStudent(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {
-    return this.gradeService.getByStudent(studentId, year);
+  async getByStudent(@Params('studentId') studentId: string) {
+    return this.gradeService.getByStudent(studentId);
   }
 
   @Get('/student/:studentId/report')
   @CanList()
-  @Validate({ params: studentIdParam, query: gradeListQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get student grade report')
   @ResMsg('grades.success.retrieved')
-  async getStudentReport(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {
-    return this.gradeService.getStudentReport(studentId, year);
+  async getStudentReport(@Params('studentId') studentId: string) {
+    return this.gradeService.getStudentReport(studentId);
   }
 
   @Get('/section/:sectionId')
   @CanList()
-  @Validate({ params: sectionIdParam, query: gradeListQuery })
+  @Validate({ params: sectionIdParam })
   @McpTool('Get grades by section')
   @ResMsg('grades.success.retrieved')
-  async getBySection(@Params('sectionId') sectionId: string, @Year() year: ResolvedAcademicYear) {
-    return this.gradeService.getAll(year, { sectionId });
+  async getBySection(@Params('sectionId') sectionId: string) {
+    return this.gradeService.getAll({ sectionId });
   }
 
   @Get('/subject/:subjectId')
   @CanList()
-  @Validate({ params: subjectIdParam, query: gradeListQuery })
+  @Validate({ params: subjectIdParam })
   @McpTool('Get grades by subject')
   @ResMsg('grades.success.retrieved')
-  async getBySubject(@Params('subjectId') subjectId: string, @Year() year: ResolvedAcademicYear) {
-    return this.gradeService.getAll(year, { subjectId });
+  async getBySubject(@Params('subjectId') subjectId: string) {
+    return this.gradeService.getAll({ subjectId });
   }
 
   @Get('/teacher/:teacherId')
   @CanList()
-  @Validate({ params: teacherIdParam, query: gradeListQuery })
+  @Validate({ params: teacherIdParam })
   @McpTool('Get grades by teacher')
   @ResMsg('grades.success.retrieved')
-  async getByTeacher(@Params('teacherId') teacherId: string, @Year() year: ResolvedAcademicYear) {
-    return this.gradeService.getAll(year, { teacherId });
+  async getByTeacher(@Params('teacherId') teacherId: string) {
+    return this.gradeService.getAll({ teacherId });
   }
 
   // Grades without exactly one usable source date belong to no year. Declared
@@ -115,8 +111,8 @@ export class GradeController {
   @Validate({ params: gradeIdParam })
   @McpTool('Get a grade by ID')
   @ResMsg('grades.success.retrieved')
-  async getById(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.gradeService.getById(id, user.role);
+  async getById(@Params('id') id: string) {
+    return this.gradeService.getById(id);
   }
 
   @Post()
@@ -151,8 +147,8 @@ export class GradeController {
   @Validate(deleteBulkGradeDto)
   @McpTool({ description: 'Delete multiple grades by IDs', confirm: { level: 'danger', message: 'confirm.grades.bulkDelete' } })
   @ResMsg('grades.success.bulkDeleted')
-  async deleteBulk(@Body() body: DeleteBulkGradeDto, @User() user: { role?: string }) {
-    return this.gradeService.deleteBulk(body, user.role);
+  async deleteBulk(@Body() body: DeleteBulkGradeDto) {
+    return this.gradeService.deleteBulk(body);
   }
 
   @Delete('/:id')
@@ -160,8 +156,8 @@ export class GradeController {
   @Validate({ params: gradeIdParam })
   @McpTool({ description: 'Delete a grade by ID', confirm: { level: 'danger', message: 'confirm.grades.delete' } })
   @ResMsg('grades.success.deleted')
-  async delete(@Params('id') id: string, @User() user: { role?: string }) {
-    return this.gradeService.delete(id, user.role);
+  async delete(@Params('id') id: string) {
+    return this.gradeService.delete(id);
   }
 
   @Delete()

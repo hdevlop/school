@@ -29,19 +29,25 @@ export class BehaviorRewardValidator {
     }
   }
 
-  async ensureStudentEligible(studentId: string, actor: BehaviorRewardActor) {
+  /**
+   * The class and section the student was placed in on the behavior's day,
+   * which must fall in the selected year. A past-dated record takes the class
+   * of that day, not the student's current one.
+   */
+  async ensureStudentEligible(studentId: string, behaviorAt: string, actor: BehaviorRewardActor) {
     this.ensureSupportedActor(actor);
-    const student = await this.behaviorRewardRepository.getStudentAcademicContext(studentId);
+    const student = await this.behaviorRewardRepository.getStudentPlacementOn(studentId, behaviorAt);
     if (!student) Err(404, this.bt('studentNotFound'));
-    if (student.status !== 'active') Err(409, this.bt('studentInactive'));
-    if (!student.classId || !student.sectionId) Err(409, this.bt('studentAcademicContextMissing'));
+    if (!student.inSelectedYear) Err(409, this.bt('outsideSelectedYear'));
+    if (!student.classId || !student.sectionId) Err(409, this.bt('notPlacedOnDate'));
+    const placement = { classId: student.classId!, sectionId: student.sectionId! };
 
     if (actor.role === 'teacher') {
-      const assigned = await this.behaviorRewardRepository.isTeacherAssignedToStudent(actor.id, studentId);
+      const assigned = await this.behaviorRewardRepository.isTeacherAssignedToSection(actor.id, placement.sectionId);
       if (!assigned) Err(403, this.bt('studentNotAssigned'));
     }
 
-    return student;
+    return placement;
   }
 
   ensureTeacherOwns(record: { awardedBy: string }, actor: BehaviorRewardActor) {

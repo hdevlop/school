@@ -37,7 +37,7 @@ export class DashboardService {
     private eventService: EventService
   ) { }
 
-  async getTodaySnapshot(year: ResolvedAcademicYear) {
+  async getTodaySnapshot(_year: ResolvedAcademicYear) {
     const [
       studentAttendance,
       staffAttendance,
@@ -46,11 +46,11 @@ export class DashboardService {
       overdueFeesSummary,
       todayEvents,
     ] = await Promise.all([
-      this.attendanceRepository.getToday('student').catch(() => []),
-      this.attendanceRepository.getToday('staff').catch(() => []),
+      this.attendanceRepository.getToday('student'),
+      this.attendanceRepository.getToday('staff'),
       this.paymentService.getToday().catch(() => ({ payments: [], summary: { total: 0, count: 0 } })),
       this.expenseService.getToday().catch(() => ({ expenses: [], summary: { total: 0, count: 0 } })),
-      this.feeService.getOverdueSummary(year).catch(() => ({ overdueCount: 0, overdueAmount: 0, affectedStudents: 0 })),
+      this.feeService.getOverdueSummary().catch(() => ({ overdueCount: 0, overdueAmount: 0, affectedStudents: 0 })),
       this.eventService.getTodayEvents().catch(() => []),
     ]);
 

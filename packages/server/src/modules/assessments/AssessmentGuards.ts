@@ -1,5 +1,6 @@
-import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where } from '../../auth';
-import { assessments, students, teachers, staff, parents, teacherAssignments, studentParents } from '../../database/schema';
+import { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, own, join, where, when } from '../../auth';
+import { assessments, teachers, staff, teacherAssignments } from '../../database/schema';
+import { placedOnSourceDate } from '../academicSources/placedOnSourceDate';
 
 export const Assessment = own(assessments)
   .for('teacher',
@@ -7,18 +8,15 @@ export const Assessment = own(assessments)
     join(teacherAssignments.teacherId, teachers.id),
     join(teachers.staffId, staff.id),
     where(staff.userId),
-  )
-  .for('parent',
-    join(assessments.teacherAssignmentId, teacherAssignments.id),
-    join(teacherAssignments.sectionId, students.sectionId),
-    join(students.id, studentParents.studentId),
-    join(studentParents.parentId, parents.id),
-    where(parents.userId),
-  )
-  .for('student',
-    join(assessments.teacherAssignmentId, teacherAssignments.id),
-    join(teacherAssignments.sectionId, students.sectionId),
-    where(students.userId),
   );
+
+// The student must have occupied a target section on the assessment date.
+const placedOnAssessmentDate = (userId: string, parent: boolean) => placedOnSourceDate(assessments, userId, parent);
+
+export const AssessmentForPlacedStudent = own(assessments)
+  .for('student', when((userId: string) => placedOnAssessmentDate(userId, false)));
+
+export const AssessmentForPlacedParent = own(assessments)
+  .for('parent', when((userId: string) => placedOnAssessmentDate(userId, true)));
 
 export { Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };

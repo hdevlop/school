@@ -401,6 +401,48 @@
     "errors": {}
   },
   "alerts": {
+    "page": {
+      "title": "Alertas",
+      "subtitle": "{{count}} alertas",
+      "about": "Sobre",
+      "schoolWide": "Todos",
+      "emptyTitle": "No hay alertas",
+      "emptyDescription": "Aquí aparecerán las alertas sobre usted o sus hijos.",
+      "columns": {
+        "title": "Alerta",
+        "type": "Tipo",
+        "priority": "Prioridad",
+        "status": "Estado",
+        "date": "Fecha"
+      },
+      "actions": {
+        "acknowledge": "Confirmar lectura",
+        "resolve": "Resolver",
+        "dismiss": "Descartar"
+      },
+      "types": {
+        "academic": "Académica",
+        "attendance": "Asistencia",
+        "behavioral": "Conducta",
+        "health": "Salud",
+        "system": "Sistema",
+        "announcement": "Anuncio",
+        "reminder": "Recordatorio",
+        "emergency": "Emergencia"
+      },
+      "priorities": {
+        "low": "Baja",
+        "medium": "Media",
+        "high": "Alta",
+        "critical": "Crítica"
+      },
+      "statuses": {
+        "active": "Activa",
+        "acknowledged": "Leída",
+        "resolved": "Resuelta",
+        "dismissed": "Descartada"
+      }
+    },
     "success": {
       "retrieved": "Alertas recuperadas con éxito",
       "created": "Alerta creada con éxito",
@@ -430,7 +472,10 @@
       "noAlertsSelected": "No se seleccionaron alertas para la operación en lote",
       "noAlertsToDelete": "No se encontraron alertas para eliminar",
       "invalidStatusTransition": "Transición de estado inválida de {{from}} a {{to}}",
-      "atLeastOneTargetRequired": "Debe especificarse al menos un objetivo (vehículo, operador o usuario)"
+      "atLeastOneTargetRequired": "Debe especificarse al menos un objetivo (vehículo, operador o usuario)",
+      "sharedNoticeStaffOnly": "Solo el personal puede cambiar el estado de una alerta de clase o de toda la escuela",
+      "acknowledgeOnly": "Solo puede marcar esta alerta como reconocida",
+      "editStaffOnly": "Solo el personal puede editar una alerta; usted puede actualizar su estado"
     },
     "validation": {
       "titleMinLength": "El título debe tener al menos 2 caracteres",
@@ -886,7 +931,10 @@
     "studentConductShort": "Conducta",
     "violations": "Infracciones",
     "behaviorRewards": "Conducta positiva y recompensas",
-    "behaviorRewardsShort": "Recompensas"
+    "behaviorRewardsShort": "Recompensas",
+    "alerts": "Alertas",
+    "myChildren": "Mis hijos",
+    "myProfile": "Mi perfil"
   },
   "classRoutines": {
     "success": {
@@ -924,7 +972,8 @@
       "teacherNotFound": "Profesor no encontrado",
       "layoutPastMidnight": "El horario generado no puede superar la medianoche",
       "layoutRemovesLessons": "Elimina las clases de los periodos que desaparecerán antes de cambiar estos ajustes",
-    "layoutRemovesDuties": "Elimina las supervisiones de los descansos que desaparecerán antes de cambiar estos ajustes"
+    "layoutRemovesDuties": "Elimina las supervisiones de los descansos que desaparecerán antes de cambiar estos ajustes",
+    "outsideSelectedYear": "La sección del horario debe pertenecer al año escolar seleccionado"
   },
   "ui": {
     "title": "Horario",
@@ -1414,6 +1463,8 @@
       "studentNotFound": "No se encontró el estudiante",
       "studentInactive": "Solo los estudiantes activos pueden recibir reconocimiento",
       "studentAcademicContextMissing": "El estudiante debe tener clase y sección",
+      "outsideSelectedYear": "La fecha del comportamiento está fuera del año escolar seleccionado",
+      "notPlacedOnDate": "El estudiante no estaba en una clase y sección en esa fecha",
       "studentNotAssigned": "Solo puedes reconocer estudiantes de tus secciones asignadas",
       "notOwner": "Los profesores solo pueden editar sus propios reconocimientos",
       "deleteAdminOnly": "Solo los administradores pueden eliminar reconocimientos",
@@ -1551,6 +1602,9 @@
     }
   },
   "announcements": {
+    "errors": {
+      "authorOnly": "Solo el personal o el autor del anuncio pueden modificarlo"
+    },
     "subtitle": {
       "count": "{{count}} anuncios en total"
     },
@@ -1705,6 +1759,17 @@
       "retrieved": "Evaluación obtenido correctamente",
       "seeded": "Evaluación inicializado correctamente",
       "updated": "Evaluación actualizado correctamente"
+    },
+    "errors": {
+      "notFound": "Evaluación no encontrada",
+      "idExists": "Ya existe una evaluación con este ID",
+      "inUse": "Esta evaluación ya tiene calificaciones",
+      "noSection": "Esta evaluación no tiene sección asignada",
+      "studentNotInSection": "El estudiante no está en una sección de esta evaluación",
+      "teacherRequired": "Se requiere un profesor",
+      "passingMarksExceedsTotal": "La nota mínima no puede superar la nota total",
+      "outsideSelectedYear": "Las secciones de la evaluación deben pertenecer al año escolar seleccionado",
+      "yearCannotChange": "Una evaluación no puede pasar a otro año escolar"
     }
   },
   "discipline": {
@@ -1717,9 +1782,17 @@
     "actions": { "verbal_warning": "Advertencia verbal", "written_warning": "Advertencia escrita", "detention": "Detención", "counseling": "Orientación", "parent_meeting": "Reunión con padres", "suspension": "Suspensión", "other": "Otra" },
     "dialogs": { "createTitle": "Añadir infracción", "createButton": "Añadir infracción", "viewTitle": "Detalles de la infracción", "editTitle": "Editar infracción", "updateButton": "Actualizar", "deleteButton": "Eliminar", "resolveTitle": "Resolver infracción", "resolveDescription": "Registra la medida disciplinaria y la resolución.", "resolveButton": "Resolver", "resolutionTitle": "Resolución", "reopenTitle": "Reabrir infracción", "reopenDescription": "Al reabrir, el registro vuelve a estar abierto.", "reopenWarning": "Se borrarán la medida y resolución actuales porque el historial no está disponible en esta versión.", "reopenButton": "Reabrir" },
     "success": { "retrieved": "Registros disciplinarios obtenidos", "created": "Infracción creada", "updated": "Infracción actualizada", "resolved": "Infracción resuelta", "reopened": "Infracción reabierta", "deleted": "Infracción eliminada" },
-    "errors": { "notFound": "Registro disciplinario no encontrado", "studentNotFound": "Estudiante no encontrado", "studentInactive": "Solo los estudiantes activos pueden recibir una infracción", "studentAcademicPlacementRequired": "El estudiante debe tener clase y sección", "teacherStudentForbidden": "No estás asignado a la sección de este estudiante", "recordForbidden": "No puedes acceder a este registro", "recordNotOpen": "Solo se pueden modificar o resolver infracciones abiertas", "recordNotResolved": "Solo se pueden reabrir infracciones resueltas", "adminRequired": "Se requiere acceso de administrador", "invalidIncidentDate": "La fecha del incidente no es válida", "futureIncidentDate": "La fecha del incidente no puede ser futura" }
+    "errors": { "notFound": "Registro disciplinario no encontrado", "studentNotFound": "Estudiante no encontrado", "outsideSelectedYear": "La fecha del incidente está fuera del año escolar seleccionado", "notPlacedOnDate": "El estudiante no estaba en una clase y sección en esa fecha", "teacherStudentForbidden": "No estás asignado a la sección de este estudiante", "recordForbidden": "No puedes acceder a este registro", "recordNotOpen": "Solo se pueden modificar o resolver infracciones abiertas", "recordNotResolved": "Solo se pueden reabrir infracciones resueltas", "adminRequired": "Se requiere acceso de administrador", "invalidIncidentDate": "La fecha del incidente no es válida", "futureIncidentDate": "La fecha del incidente no puede ser futura" }
   },
   "classes": {
+    "errors": {
+      "idExists": "El identificador de la clase ya existe",
+      "notFound": "Clase no encontrada",
+      "nameExists": "Ya existe una clase con este nombre",
+      "invalidAcademicYear": "Formato de año escolar no válido",
+      "hasSections": "Elimine las secciones de esta clase antes de eliminarla",
+      "classRequired": "La clase es obligatoria"
+    },
     "subtitle": {
       "count": "{{count}} clases en total"
     },
@@ -1931,6 +2004,18 @@
       "retrieved": "Examen obtenido correctamente",
       "seeded": "Examen inicializado correctamente",
       "updated": "Examen actualizado correctamente"
+    },
+    "errors": {
+      "notFound": "Examen no encontrado",
+      "idExists": "Ya existe un examen con este ID",
+      "inUse": "Este examen ya tiene calificaciones",
+      "noSection": "Este examen no tiene sección asignada",
+      "studentNotInSection": "El estudiante no está en una sección de este examen",
+      "teacherRequired": "Se requiere un profesor",
+      "passingMarksExceedsTotal": "La nota mínima no puede superar la nota total",
+      "endTimeBeforeStart": "La hora de fin debe ser posterior a la hora de inicio",
+      "outsideSelectedYear": "Las secciones del examen deben pertenecer al año escolar seleccionado",
+      "yearCannotChange": "Un examen no puede pasar a otro año escolar"
     }
   },
   "expenses": {
@@ -2096,6 +2181,7 @@
       "count": "{{count}} estudiantes"
     },
     "errors": {
+      "outsideSelectedYear": "La evaluación o el examen de esta calificación pertenece a otro año escolar",
       "selectSource": "Selecciona una evaluación o examen antes de guardar las notas.",
       "saveFailed": "No se pudieron guardar todas las notas. Inténtalo de nuevo.",
       "marksExceedTotal": "Las notas exceden el total",
@@ -2472,6 +2558,17 @@
     "year": "Año"
   },
   "sections": {
+    "errors": {
+      "notFound": "Sección no encontrada",
+      "nameExists": "Ya existe una sección con este nombre en esta clase",
+      "classRequired": "La clase es obligatoria",
+      "notInClass": "La sección no pertenece a la clase indicada",
+      "nameExistsInClass": "Ya existe una sección con este nombre",
+      "hasStudents": "Esta sección tiene alumnos; muévalos antes de eliminarla o moverla",
+      "sectionRequired": "La sección es obligatoria",
+      "validationFailed": "No se pudo identificar la sección",
+      "classOutsideSelectedYear": "La clase de la sección debe pertenecer al año escolar seleccionado"
+    },
     "subtitle": {
       "count": "{{count}} secciones en total"
     },
@@ -2986,6 +3083,11 @@
     "title": "Título"
   },
   "cycles": {
+    "errors": {
+      "notFound": "Ciclo no encontrado",
+      "nameExists": "Ya existe un ciclo con este nombre",
+      "inUse": "Clases o contables de algún año escolar usan este ciclo. Desactívelo en lugar de eliminarlo"
+    },
     "subtitle": {
       "count": "{{count}} ciclos en total"
     },
@@ -3018,6 +3120,15 @@
     }
   },
   "subjects": {
+    "errors": {
+      "idExists": "La asignatura ya existe",
+      "notFound": "Asignatura no encontrada",
+      "codeExists": "Ya existe una asignatura con este código",
+      "nameExists": "Ya existe una asignatura con este nombre",
+      "required": "La asignatura es obligatoria para la asignación del profesor",
+      "inUse": "Profesores o alertas de algún año escolar usan esta asignatura, así que no se puede eliminar",
+      "someInUse": "Algunas asignaturas las usan profesores o alertas, así que no se pueden eliminar todas"
+    },
     "subtitle": {
       "count": "{{count}} asignaturas en total"
     },
@@ -3348,6 +3459,18 @@
       "retrieved": "Evento obtenido correctamente",
       "started": "Evento iniciado correctamente",
       "updated": "Evento actualizado correctamente"
+    },
+    "errors": {
+      "notFound": "Evento no encontrado",
+      "capacityFull": "El evento está completo ({{current}} de {{capacity}} plazas ocupadas)",
+      "registrationClosed": "La inscripción a este evento está cerrada",
+      "alreadyRegistered": "Este participante ya está inscrito",
+      "someAlreadyRegistered": "{{count}} participantes ya están inscritos",
+      "invalidStatus": "Esta acción no está permitida mientras el evento está {{current}} (permitido: {{allowed}})",
+      "endDateBeforeStart": "La fecha de fin no puede ser anterior a la de inicio",
+      "endTimeBeforeStart": "La hora de fin debe ser posterior a la de inicio",
+      "registrationDeadlineAfterStart": "La fecha límite de inscripción no puede ser posterior a la de inicio",
+      "outsideSelectedYear": "Las fechas del evento deben caer en el año escolar seleccionado"
     }
   },
   "auditLog": {
@@ -3516,6 +3639,7 @@
     }
   },
   "emptyStates": {
+    "familyDescription": "Todavía no hay nada registrado para usted o sus hijos.",
     "filtered": {
       "title": "Sin resultados",
       "description": "Prueba a ajustar los filtros."
@@ -3578,7 +3702,8 @@
     },
     "announcements": {
       "title": "Aún no hay anuncios",
-      "description": "Publica tu primer anuncio para empezar."
+      "description": "Publica tu primer anuncio para empezar.",
+      "readerDescription": "Los anuncios dirigidos a ti aparecerán aquí."
     },
     "discipline": {
       "title": "No hay registros de disciplina",

@@ -1,12 +1,11 @@
 import { Service } from '../../najm';
 import { AnnouncementRepository } from './AnnouncementRepository';
-import { AnnouncementValidator } from './AnnouncementValidator';
+import { AnnouncementValidator, type AnnouncementActor } from './AnnouncementValidator';
 import { pickProps } from '../../shared';
 import type { CreateAnnouncementDto, CreateAnnouncementsBulkDto, DeleteBulkAnnouncementDto, UpdateAnnouncementDto } from './AnnouncementDto';
 
 @Service()
 export class AnnouncementService {
-
   constructor(
     private announcementRepository: AnnouncementRepository,
     private announcementValidator: AnnouncementValidator,
@@ -87,10 +86,9 @@ export class AnnouncementService {
       ...pickProps(normalizedData, ANNOUNCEMENT_CREATE_KEYS),
       isPublished: false,
     };
-
     await this.announcementValidator.ensureTargetAudienceValid(
       announcementDetails.targetAudience,
-      announcementDetails.classIds
+      announcementDetails.classIds,
     );
     await this.announcementValidator.ensurePublishDateValid(
       announcementDetails.publishDate,
@@ -100,8 +98,8 @@ export class AnnouncementService {
     return await this.announcementRepository.create(announcementDetails);
   }
 
-  async update(id: string, data: UpdateAnnouncementDto) {
-    const existing = await this.announcementValidator.ensureExists(id);
+  async update(id: string, data: UpdateAnnouncementDto, actor: AnnouncementActor) {
+    const existing = await this.announcementValidator.ensureChangeable(id, actor);
     const targetAudience = (data.targetAudience ?? existing.targetAudience) as CreateAnnouncementDto['targetAudience'];
     const currentClassIds = existing.classIds?.length
       ? existing.classIds
@@ -132,18 +130,18 @@ export class AnnouncementService {
     return await this.announcementRepository.update(id, announcementData);
   }
 
-  async publish(id: string) {
-    await this.announcementValidator.ensureCanPublish(id);
+  async publish(id: string, actor: AnnouncementActor) {
+    await this.announcementValidator.ensureCanPublish(id, actor);
     return await this.announcementRepository.publish(id);
   }
 
-  async unpublish(id: string) {
-    await this.announcementValidator.ensureCanUnpublish(id);
+  async unpublish(id: string, actor: AnnouncementActor) {
+    await this.announcementValidator.ensureCanUnpublish(id, actor);
     return await this.announcementRepository.unpublish(id);
   }
 
-  async delete(id: string) {
-    await this.announcementValidator.ensureExists(id);
+  async delete(id: string, actor: AnnouncementActor) {
+    await this.announcementValidator.ensureChangeable(id, actor);
     const deletedAnnouncement = await this.announcementRepository.delete(id);
     return deletedAnnouncement;
   }
@@ -152,9 +150,9 @@ export class AnnouncementService {
     return await this.announcementRepository.deleteAll();
   }
 
-  async deleteBulk(ids: DeleteBulkAnnouncementDto) {
+  async deleteBulk(ids: DeleteBulkAnnouncementDto, actor: AnnouncementActor) {
     const results = await Promise.all(
-      ids.map((id) => this.delete(id))
+      ids.map((id) => this.delete(id, actor))
     );
     return {
       deletedCount: results.length,

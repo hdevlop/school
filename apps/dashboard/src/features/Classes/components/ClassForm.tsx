@@ -1,6 +1,6 @@
 'use client'
 
-import { NForm, NSkeleton } from 'najm-kit'
+import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
@@ -10,20 +10,15 @@ import { useDialog } from 'najm-kit'
 import { classSchema } from '../config/classSchemas'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
-import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings'
-import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
 
 const ClassForm = ({ classData = null}) => {
 
    const { t } = useTranslation();
    const { pop } = useDialog();
-   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
-   const { viewingYear, isResolving } = useViewingAcademicYear();
 
    const defaultValues = {
       ...(classData?.id && { id: classData.id }),
       name: classData?.name || 'CE1',
-      academicYear: classData?.academicYear || viewingYear || academicYear,
       level: classData?.level || 'Middle',
       description: classData?.description || 'asdasd',
    }
@@ -31,8 +26,6 @@ const ClassForm = ({ classData = null}) => {
    const handleSubmit = async (formData) => {
       pop(formData);
    }
-
-   if ((isAcademicYearLoading || isResolving) && !classData) return <NSkeleton className="h-64 w-full" />;
 
    return (
       <div className='flex flex-col justify-center items-center w-full'>

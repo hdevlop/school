@@ -1,6 +1,6 @@
 import { Repository } from '../../../najm';
-import { and, desc, eq, sql } from 'drizzle-orm';
-import { financialNotificationDeliveries, feeInstallments, fees, students, payments } from '../../../database/schema';
+import { and, desc, eq, inArray, ne, sql } from 'drizzle-orm';
+import { financialNotificationDeliveries, feeInstallments, fees, students, payments, paymentAllocations } from '../../../database/schema';
 import { DB } from '../../../database/db';
 
 const CRON_SECRET_ENV = 'FINANCIAL_CRON_SECRET';
@@ -61,6 +61,8 @@ export class NotificationRepository {
       .select({
         studentId: fees.studentId,
         studentName: students.name,
+        academicYear: fees.academicYear,
+        sourceFeeId: sql<string>`min(${fees.id})`,
         installmentCount: sql<number>`COUNT(${feeInstallments.id})::int`,
         totalUnpaid: sql<string>`COALESCE(SUM(${feeInstallments.amount} - ${feeInstallments.paidAmount}), 0)`,
         oldestDueDate: sql<string>`MIN(${feeInstallments.dueDate})`,
@@ -72,12 +74,15 @@ export class NotificationRepository {
         and(
           sql`${feeInstallments.dueDate} < ${businessDate}`,
           sql`${feeInstallments.amount} - ${feeInstallments.paidAmount} > 0`,
+          ne(feeInstallments.status, 'cancelled'),
         ),
       )
-      .groupBy(fees.studentId, students.name);
+      .groupBy(fees.studentId, students.name, fees.academicYear);
     return rows.map((r) => ({
       studentId: r.studentId,
       studentName: r.studentName,
+      academicYear: r.academicYear,
+      sourceFeeId: r.sourceFeeId,
       installmentCount: Number(r.installmentCount),
       totalUnpaid: Number(r.totalUnpaid),
       oldestDueDate: r.oldestDueDate,
@@ -115,5 +120,21 @@ export class NotificationRepository {
       amount: Number(r.amount),
       status: r.status,
     }));
+  }
+
+  /** A check with no allocation or allocations across years has no single fee year. */
+  async getUniqueFeeSourceForPayments(paymentIds: string[]) {
+    if (paymentIds.length === 0) return null;
+    const rows = await this.db.select({
+      paymentId: paymentAllocations.paymentId,
+      feeId: fees.id,
+      academicYear: fees.academicYear,
+    }).from(paymentAllocations)
+      .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
+      .where(inArray(paymentAllocations.paymentId, paymentIds));
+    if (new Set(rows.map((row) => row.paymentId)).size !== paymentIds.length) return null;
+    const years = new Set(rows.map((row) => row.academicYear));
+    if (years.size !== 1) return null;
+    return { feeId: rows[0].feeId, academicYear: rows[0].academicYear };
   }
 }

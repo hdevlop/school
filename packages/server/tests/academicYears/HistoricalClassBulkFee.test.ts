@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { FeeService } from '../../src/modules/financial/fees/FeeService';
 
-function build() {
+function build(selectedYear = '2025-2026') {
   const created: Array<{ studentId: string; academicYear?: string; effectiveDate?: string | null }> = [];
   const reads: string[] = [];
   const classes = {
@@ -39,14 +39,16 @@ function build() {
     enrollments as any,
     years as any,
   );
+  (service as any).year = {
+    id: selectedYear === '2025-2026' ? 'old-year' : 'active-year',
+    label: selectedYear,
+  };
   service.create = async (data: any) => {
     created.push(data);
     return { id: `fee-${data.studentId}` } as any;
   };
   return { service, created, reads };
 }
-
-const activeYear = { id: 'active-year', label: '2026-2027' } as any;
 
 describe('year-targeted class bulk fees', () => {
   const data = {
@@ -56,7 +58,7 @@ describe('year-targeted class bulk fees', () => {
 
   it('uses the dated placement instead of the current student class', async () => {
     const { service, created, reads } = build();
-    expect(await service.createClassBulk(data, activeYear, 'finance-1')).toEqual({
+    expect(await service.createClassBulk(data, 'finance-1')).toEqual({
       created: 1, skipped: 0, errors: [],
     });
     expect(created.map((fee) => ({
@@ -71,17 +73,17 @@ describe('year-targeted class bulk fees', () => {
 
   it('requires a real effective date inside the selected year', async () => {
     const { service, created, reads } = build();
-    await expect(service.createClassBulk({ ...data, effectiveDate: undefined }, activeYear, 'finance-1'))
+    await expect(service.createClassBulk({ ...data, effectiveDate: undefined }, 'finance-1'))
       .rejects.toThrow();
-    await expect(service.createClassBulk({ ...data, effectiveDate: '2025-02-30' }, activeYear, 'finance-1'))
+    await expect(service.createClassBulk({ ...data, effectiveDate: '2025-02-30' }, 'finance-1'))
       .rejects.toThrow();
     expect(created).toEqual([]);
     expect(reads).toEqual([]);
   });
 
   it("charges the request's year when the fee names none, from that year's roster", async () => {
-    const { service, created, reads } = build();
-    await service.createClassBulk({ ...data, academicYear: undefined, effectiveDate: '2026-10-01' }, activeYear, 'finance-1');
+    const { service, created, reads } = build('2026-2027');
+    await service.createClassBulk({ ...data, academicYear: undefined, effectiveDate: '2026-10-01' }, 'finance-1');
     expect(reads).toEqual(['active-year:2026-10-01']);
     expect(created.every((fee) => fee.academicYear === '2026-2027')).toBe(true);
   });

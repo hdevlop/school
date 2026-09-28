@@ -2,11 +2,14 @@ import { Repository } from '../../najm';
 import { Owned } from '../../auth';
 import { and, desc, eq, sql, asc, count, gte, lte, inArray, or, type SQL, isNotNull } from 'drizzle-orm';
 import { assessments, grades, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
-import { inReportingYear, type ReportingYear } from '../academicYears/academicRecordYear';
+import { inReportingYear } from '../academicYears/academicRecordYear';
 import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
-import { Assessment } from './AssessmentGuards';
+import { Assessment, AssessmentForPlacedStudent, AssessmentForPlacedParent } from './AssessmentGuards';
 import { sourceAssignmentColumns, sourceTeachingColumns } from '../academicSources/academicSourceContext';
+import { studentPlacedOnSourceDate } from '../academicSources/placedOnSourceDate';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 export const assessmentSelect = {
   id: assessments.id,
@@ -27,16 +30,16 @@ export const assessmentSelect = {
 };
 
 export type AssessmentListFilters = {
-  year: ReportingYear;
   sectionId?: string;
   subjectId?: string;
   teacherId?: string;
   classId?: string;
 };
 
-@Owned(Assessment)
+@Owned(Assessment, AssessmentForPlacedStudent, AssessmentForPlacedParent)
 @Repository()
 export class AssessmentRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
   declare ownershipCondition: () => SQL | undefined;
 
@@ -81,11 +84,11 @@ export class AssessmentRepository {
 
   // The year's assessments the user may read: the stored year, else the date
   // in the year's reporting interval. Year, filters and ownership are one WHERE.
-  async getAll({ year, sectionId, subjectId, teacherId, classId }: AssessmentListFilters) {
+  async getAll({ sectionId, subjectId, teacherId, classId }: AssessmentListFilters = {}) {
     return await this.buildAssessmentQuery()
       .where(and(
         this.ownershipCondition(),
-        inReportingYear(assessments.academicYearId, assessments.date, year),
+        inReportingYear(assessments.academicYearId, assessments.date, this.year),
         sectionId ? or(
           eq(teacherAssignments.sectionId, sectionId),
           sql`EXISTS (
@@ -100,9 +103,20 @@ export class AssessmentRepository {
       .orderBy(desc(assessments.date));
   }
 
+  /** One student's assessments in the year: those of a section they sat in on the date. */
+  async getForStudent(studentId: string) {
+    return await this.buildAssessmentQuery()
+      .where(and(
+        this.ownershipCondition(),
+        inReportingYear(assessments.academicYearId, assessments.date, this.year),
+        studentPlacedOnSourceDate(assessments, studentId),
+      ))
+      .orderBy(desc(assessments.date));
+  }
+
   async getById(id) {
     const [result] = await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.id, id)))
+      .where(and(this.ownershipCondition(), eq(assessments.id, id), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .limit(1);
 
     return result;
@@ -110,26 +124,26 @@ export class AssessmentRepository {
 
   async getByType(type) {
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.type, type)))
+      .where(and(this.ownershipCondition(), eq(assessments.type, type), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(desc(assessments.date));
   }
 
   async getByStatus(status) {
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.status, status)))
+      .where(and(this.ownershipCondition(), eq(assessments.status, status), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(desc(assessments.date));
   }
 
   async getByTeacherAssignment(teacherAssignmentId) {
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.teacherAssignmentId, teacherAssignmentId)))
+      .where(and(this.ownershipCondition(), eq(assessments.teacherAssignmentId, teacherAssignmentId), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(desc(assessments.date));
   }
 
   async getTodayAssessments() {
     const today = new Date().toISOString().split('T')[0];
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.date, today)))
+      .where(and(this.ownershipCondition(), eq(assessments.date, today), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(asc(assessments.date));
   }
 
@@ -138,6 +152,7 @@ export class AssessmentRepository {
     return await this.buildAssessmentQuery()
       .where(and(
         this.ownershipCondition(),
+        inReportingYear(assessments.academicYearId, assessments.date, this.year),
         gte(assessments.date, today),
         eq(assessments.status, 'scheduled')
       ))
@@ -157,6 +172,7 @@ export class AssessmentRepository {
     return await this.buildAssessmentQuery()
       .where(and(
         this.ownershipCondition(),
+        inReportingYear(assessments.academicYearId, assessments.date, this.year),
         gte(assessments.date, startStr),
         lte(assessments.date, endStr)
       ))
@@ -168,6 +184,7 @@ export class AssessmentRepository {
     return await this.buildAssessmentQuery()
       .where(and(
         this.ownershipCondition(),
+        inReportingYear(assessments.academicYearId, assessments.date, this.year),
         lte(assessments.date, today),
         eq(assessments.status, 'scheduled')
       ))
@@ -177,7 +194,8 @@ export class AssessmentRepository {
   async getCount() {
     const [result] = await this.db
       .select({ count: count() })
-      .from(assessments);
+      .from(assessments)
+      .where(and(this.ownershipCondition(), inReportingYear(assessments.academicYearId, assessments.date, this.year)));
 
     return result;
   }
@@ -185,7 +203,7 @@ export class AssessmentRepository {
   async create(assessmentData) {
     const [newAssessment] = await this.db
       .insert(assessments)
-      .values(assessmentData)
+      .values({ ...assessmentData, academicYearId: this.year.id })
       .returning();
 
     return await this.getById(newAssessment.id);
@@ -195,7 +213,7 @@ export class AssessmentRepository {
     const [updatedAssessment] = await this.db
       .update(assessments)
       .set(assessmentData)
-      .where(eq(assessments.id, id))
+      .where(and(eq(assessments.id, id), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .returning();
 
     return updatedAssessment;
@@ -204,7 +222,7 @@ export class AssessmentRepository {
   async delete(id) {
     const [deletedAssessment] = await this.db
       .delete(assessments)
-      .where(eq(assessments.id, id))
+      .where(and(eq(assessments.id, id), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .returning();
 
     return deletedAssessment;
@@ -213,6 +231,7 @@ export class AssessmentRepository {
   async deleteAll() {
     const deletedAssessments = await this.db
       .delete(assessments)
+      .where(inReportingYear(assessments.academicYearId, assessments.date, this.year))
       .returning();
 
     return {
@@ -224,7 +243,7 @@ export class AssessmentRepository {
   async deleteBulk(ids: string[]) {
     const deletedAssessments = await this.db
       .delete(assessments)
-      .where(inArray(assessments.id, ids))
+      .where(and(inArray(assessments.id, ids), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .returning();
 
     return {
@@ -305,6 +324,11 @@ export class AssessmentRepository {
       .where(and(eq(assessments.id, id), isNotNull(assessments.academicYearId)))
       .limit(1);
     return Boolean(row);
+  }
+
+  /** Trusted full reset; user-facing deletion is limited to the selected year. */
+  async clearForSeedReset() {
+    await this.db.delete(assessments);
   }
 
 }

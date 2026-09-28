@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { VehicleAssignmentService } from './VehicleAssignmentService';
-import { isAuth } from '../../../auth';
+import { isAdmin } from '../../../auth';
 import {
   assignDriverDto,
   assignmentIdParam,
@@ -26,7 +26,7 @@ export class VehicleAssignmentController {
   ) { }
 
   @Get('/')
-  @isAuth()
+  @isAdmin()
   @McpTool('List all vehicle assignments')
   @ResMsg('vehicleAssignments.success.allRetrieved')
   async getAll() {
@@ -34,7 +34,7 @@ export class VehicleAssignmentController {
   }
 
   @Get('/vehicle/:vehicleId')
-  @isAuth()
+  @isAdmin()
   @Validate({ params: vehicleIdParam })
   @McpTool('Get assignments by vehicle')
   @ResMsg('vehicleAssignments.success.retrieved')
@@ -43,7 +43,7 @@ export class VehicleAssignmentController {
   }
 
   @Get('/driver/:driverId')
-  @isAuth()
+  @isAdmin()
   @Validate({ params: driverIdParam })
   @McpTool('Get assignments by driver')
   @ResMsg('vehicleAssignments.success.retrieved')
@@ -54,7 +54,7 @@ export class VehicleAssignmentController {
 
 
   @Get('/:id')
-  @isAuth()
+  @isAdmin()
   @Validate({ params: assignmentIdParam })
   @McpTool('Get a vehicle assignment by ID')
   @ResMsg('vehicleAssignments.success.retrieved')
@@ -63,7 +63,7 @@ export class VehicleAssignmentController {
   }
 
   @Post('/')
-  @isAuth()
+  @isAdmin()
   @Validate(createVehicleAssignmentDto)
   @McpTool('Create a vehicle assignment')
   @ResMsg('vehicleAssignments.success.created')
@@ -76,7 +76,7 @@ export class VehicleAssignmentController {
   }
 
   @Post('/assign')
-  @isAuth()
+  @isAdmin()
   @Validate(assignDriverDto)
   @McpTool('Assign a driver to a vehicle')
   @ResMsg('vehicleAssignments.success.assigned')
@@ -91,7 +91,7 @@ export class VehicleAssignmentController {
   }
 
   @Put('/:id')
-  @isAuth()
+  @isAdmin()
   @Validate({ params: assignmentIdParam, body: updateVehicleAssignmentDto })
   @McpTool('Update a vehicle assignment')
   @ResMsg('vehicleAssignments.success.updated')
@@ -100,7 +100,7 @@ export class VehicleAssignmentController {
   }
 
   @Put('/:id/unassign')
-  @isAuth()
+  @isAdmin()
   @Validate({ params: assignmentIdParam, body: unassignVehicleAssignmentDto })
   @McpTool('Unassign a vehicle assignment')
   @ResMsg('vehicleAssignments.success.unassigned')
@@ -110,7 +110,7 @@ export class VehicleAssignmentController {
   }
 
   @Put('/vehicle/:vehicleId/unassign')
-  @isAuth()
+  @isAdmin()
   @Validate({ params: vehicleIdParam, body: unassignVehicleAssignmentDto })
   @ResMsg('vehicleAssignments.success.unassigned')
   async unassignByVehicle(@Params('vehicleId') vehicleId: string, @Body() body: UnassignVehicleAssignmentDto) {
@@ -119,7 +119,7 @@ export class VehicleAssignmentController {
   }
 
   @Delete('/:id')
-  @isAuth()
+  @isAdmin()
   @Validate({ params: assignmentIdParam })
   @McpTool('Delete a vehicle assignment')
   @ResMsg('vehicleAssignments.success.deleted')

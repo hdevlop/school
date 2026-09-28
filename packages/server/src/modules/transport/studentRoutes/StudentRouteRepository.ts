@@ -1,12 +1,27 @@
 import { DB } from '../../../database/db';
 import { students, vehicles, users } from '../../../database/schema';
 import { studentRoutes } from './studentRouteSchema';
-import { count, eq, desc, and, sql } from 'drizzle-orm';
+import { count, eq, desc, and, sql, lte, gt, isNull, or, lt, ne } from 'drizzle-orm';
 import { Repository } from '../../../najm';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { assignmentOverlapsYear } from '../assignmentInterval';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 @Repository()
 export class StudentRouteRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  private inSelectedYear() {
+    return assignmentOverlapsYear(studentRoutes.assignmentDate, studentRoutes.unassignmentDate, this.year);
+  }
+
+  private activeToday() {
+    const today = getBusinessDateOnly();
+    return and(eq(studentRoutes.status, 'active'), lte(studentRoutes.assignmentDate, today),
+      or(isNull(studentRoutes.unassignmentDate), gt(studentRoutes.unassignmentDate, today)))!;
+  }
 
   private buildQuery() {
     return this.db
@@ -47,6 +62,8 @@ export class StudentRouteRepository {
             FROM student_routes AS active_routes
             WHERE active_routes.vehicle_id = "vehicles"."id"
             AND active_routes.status = 'active'
+            AND active_routes.assignment_date <= ${getBusinessDateOnly()}
+            AND (active_routes.unassignment_date IS NULL OR active_routes.unassignment_date > ${getBusinessDateOnly()})
           )`,
         },
         driver: sql<{
@@ -65,6 +82,8 @@ export class StudentRouteRepository {
           LEFT JOIN users AS driver_account ON assigned_staff.user_id = driver_account.id
           WHERE assignment.vehicle_id = "vehicles"."id"
             AND assignment.status = 'active'
+            AND assignment.assignment_date <= ${getBusinessDateOnly()}
+            AND (assignment.unassignment_date IS NULL OR assignment.unassignment_date > ${getBusinessDateOnly()})
           ORDER BY assignment.assignment_date DESC, assignment.created_at DESC
           LIMIT 1
         )`.as('driver'),
@@ -76,43 +95,43 @@ export class StudentRouteRepository {
   }
 
   async getAll() {
-    return await this.buildQuery().orderBy(desc(studentRoutes.createdAt));
+    return await this.buildQuery().where(this.inSelectedYear()).orderBy(desc(studentRoutes.createdAt));
   }
 
   async getById(id: string) {
     const [row] = await this.buildQuery()
-      .where(eq(studentRoutes.id, id))
+      .where(and(eq(studentRoutes.id, id), this.inSelectedYear()))
       .limit(1);
     return row || null;
   }
 
   async getByVehicleId(vehicleId: string) {
     return await this.buildQuery()
-      .where(eq(studentRoutes.vehicleId, vehicleId))
+      .where(and(eq(studentRoutes.vehicleId, vehicleId), this.inSelectedYear()))
       .orderBy(desc(studentRoutes.createdAt));
   }
 
   async getActiveByVehicleId(vehicleId: string) {
     return await this.buildQuery()
-      .where(and(eq(studentRoutes.vehicleId, vehicleId), eq(studentRoutes.status, 'active')))
+      .where(and(eq(studentRoutes.vehicleId, vehicleId), eq(studentRoutes.status, 'active'), this.inSelectedYear()))
       .orderBy(desc(studentRoutes.createdAt));
   }
 
   async getByStudentId(studentId: string) {
     return await this.buildQuery()
-      .where(eq(studentRoutes.studentId, studentId))
+      .where(and(eq(studentRoutes.studentId, studentId), this.inSelectedYear()))
       .orderBy(desc(studentRoutes.createdAt));
   }
 
-  async getActiveByStudentId(studentId: string) {
+  async getActiveByStudentIdAcrossYears(studentId: string) {
     const [row] = await this.buildQuery()
-      .where(and(eq(studentRoutes.studentId, studentId), eq(studentRoutes.status, 'active')))
+      .where(and(eq(studentRoutes.studentId, studentId), this.activeToday()))
       .limit(1);
     return row || null;
   }
 
   async getCount() {
-    const [result] = await this.db.select({ count: count() }).from(studentRoutes);
+    const [result] = await this.db.select({ count: count() }).from(studentRoutes).where(this.inSelectedYear());
     return result;
   }
 
@@ -120,7 +139,7 @@ export class StudentRouteRepository {
     const [result] = await this.db
       .select({ count: count() })
       .from(studentRoutes)
-      .where(and(eq(studentRoutes.vehicleId, vehicleId), eq(studentRoutes.status, 'active')));
+      .where(and(eq(studentRoutes.vehicleId, vehicleId), this.activeToday()));
     return Number(result?.count || 0);
   }
 
@@ -148,7 +167,7 @@ export class StudentRouteRepository {
     const [row] = await this.db
       .update(studentRoutes)
       .set(data)
-      .where(eq(studentRoutes.id, id))
+      .where(and(eq(studentRoutes.id, id), this.inSelectedYear()))
       .returning();
     return row;
   }
@@ -156,12 +175,30 @@ export class StudentRouteRepository {
   async delete(id: string) {
     const [row] = await this.db
       .delete(studentRoutes)
-      .where(eq(studentRoutes.id, id))
+      .where(and(eq(studentRoutes.id, id), this.inSelectedYear()))
       .returning();
     return row;
   }
 
   async deleteAll() {
+    return await this.db.delete(studentRoutes).where(this.inSelectedYear()).returning();
+  }
+
+  async getOverlappingByStudentIdAcrossYears(
+    studentId: string, start: string, end?: string | null, excludeId?: string,
+  ) {
+    const [row] = await this.db.select({ id: studentRoutes.id }).from(studentRoutes)
+      .where(and(
+        eq(studentRoutes.studentId, studentId),
+        ne(studentRoutes.status, 'cancelled'),
+        end ? lt(studentRoutes.assignmentDate, end) : undefined,
+        or(isNull(studentRoutes.unassignmentDate), gt(studentRoutes.unassignmentDate, start)),
+        excludeId ? ne(studentRoutes.id, excludeId) : undefined,
+      )).limit(1);
+    return row ?? null;
+  }
+
+  async clearForSeedReset() {
     return await this.db.delete(studentRoutes).returning();
   }
 }

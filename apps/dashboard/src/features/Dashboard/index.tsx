@@ -15,10 +15,23 @@ import TeacherDashboard from './components/Teacher';
 import { canReadFinanceDashboard, usesTeacherDashboard } from './config/dashboardAudience';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useViewerRole } from '@/shared/useViewerRole';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const role = (user as { role?: string } | null)?.role;
+  const { isFamily } = useViewerRole();
+  const router = useRouter();
+
+  // The school dashboard is for staff. Parents and students start at their
+  // children or their own profile, which leads to everything about them.
+  useEffect(() => {
+    if (isFamily) router.replace('/students');
+  }, [isFamily, router]);
+
+  if (isFamily) return null;
   return usesTeacherDashboard(role) ? <TeacherDashboard /> : <SchoolDashboard role={role} />;
 };
 

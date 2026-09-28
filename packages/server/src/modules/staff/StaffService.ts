@@ -141,7 +141,7 @@ export class StaffService {
     if (!driver) return;
 
     if (replace) {
-      await this.vehicleAssignmentRepository.deleteByDriverId(driver.id);
+      await this.vehicleAssignmentRepository.deleteByDriverIdAcrossYears(driver.id);
     }
 
     for (const vehicleId of vehicleIds) {
@@ -157,7 +157,7 @@ export class StaffService {
     const driver = await this.driverRepository.getByStaffId(staffId);
     if (!driver) return null;
 
-    await this.vehicleAssignmentRepository.deleteByDriverId(driver.id);
+    await this.vehicleAssignmentRepository.deleteByDriverIdAcrossYears(driver.id);
     return await this.driverRepository.delete(driver.id);
   }
 

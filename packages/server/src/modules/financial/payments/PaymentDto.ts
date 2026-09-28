@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { academicYearField, dateField, num, optionalDateField, optionalId, requiredId } from '../../../shared/fields';
+import { dateField, num, optionalDateField, optionalId, requiredId } from '../../../shared/fields';
 import { paymentMethodEnum, paymentStatusEnum } from '../../../shared/enums';
 
 const paymentAllocationSchema = z.object({
@@ -68,10 +68,8 @@ export const checkStatusDto = z.object({
 
 export const paymentIdParam = z.object({ id: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
+export const feeIdParam = z.object({ feeId: z.string().min(1) });
 export const receiptNumberParam = z.object({ receiptNumber: z.string().min(1) });
-export const paymentListQuery = z.object({ academicYear: academicYearField.optional() });
-// The year of every list and statistic comes from @Year(): the
-// `academicYear` query value (paymentListQuery) or the X-Academic-Year header.
 const revenueQuerySchema = z.object({});
 
 export const revenueQueryDto = revenueQuerySchema.default({});
@@ -90,4 +88,3 @@ export type CheckStatusDto = z.infer<typeof checkStatusDto>;
 export type RevenueQueryDto = z.infer<typeof revenueQueryDto>;
 export type MonthlyRevenueQueryDto = z.infer<typeof monthlyRevenueQueryDto>;
 export type TopPayingStudentsQueryDto = z.infer<typeof topPayingStudentsQueryDto>;
-export type PaymentListQuery = z.infer<typeof paymentListQuery>;

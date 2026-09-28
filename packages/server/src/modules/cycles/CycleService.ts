@@ -1,4 +1,4 @@
-import { Err, Service } from '../../najm';
+import { Err, Service, t } from '../../najm';
 import { CycleRepository } from './CycleRepository';
 import type { CreateCycleDto, UpdateCycleDto } from './CycleDto';
 
@@ -16,13 +16,13 @@ export class CycleService {
 
   async getById(id: string) {
     const row = await this.cycleRepository.getById(id);
-    if (!row) Err(404, 'Cycle not found');
+    if (!row) Err(404, t('cycles.errors.notFound'));
     return row;
   }
 
   async create(data: CreateCycleDto) {
     const existing = await this.cycleRepository.getByName(data.name);
-    if (existing) Err(409, 'Cycle name already exists');
+    if (existing) Err(409, t('cycles.errors.nameExists'));
     return this.cycleRepository.create({
       name: data.name,
       labels: data.labels ?? null,
@@ -35,13 +35,15 @@ export class CycleService {
     await this.getById(id);
     if (data.name) {
       const existing = await this.cycleRepository.getByName(data.name);
-      if (existing && existing.id !== id) Err(409, 'Cycle name already exists');
+      if (existing && existing.id !== id) Err(409, t('cycles.errors.nameExists'));
     }
     return this.cycleRepository.update(id, data);
   }
 
+  // A cycle any year uses stays; deactivate it instead.
   async delete(id: string) {
     await this.getById(id);
+    if (await this.cycleRepository.isInUse(id)) Err(409, t('cycles.errors.inUse'));
     return this.cycleRepository.delete(id);
   }
 }

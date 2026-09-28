@@ -1,10 +1,13 @@
 import { Err, I18n, Service } from '../../../najm';
 import { RefuelRepository } from './RefuelRepository';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
 
 
 @Service()
 export class RefuelValidator {
+  @Year() private readonly year!: ResolvedAcademicYear;
   @I18n('refuels.errors') private t!: (key: string) => string;
 
   constructor(private refuelRepository: RefuelRepository) { }
@@ -20,6 +23,10 @@ export class RefuelValidator {
 
     if (data.datetime) {
       this.validateDate(data.datetime);
+      const day = await this.refuelRepository.schoolDayOf(data.datetime);
+      if (day < this.year.reportingStartsOn || day > this.year.reportingEndsOn) {
+        Err(409, 'Refuel date is outside the selected school year');
+      }
     }
 
     return data;
@@ -44,7 +51,7 @@ export class RefuelValidator {
   async checkVoucherNumberIsUnique(voucherNumber, excludeId = null) {
     if (!voucherNumber) return true;
 
-    const existing = await this.refuelRepository.getByVoucherNumber(voucherNumber);
+    const existing = await this.refuelRepository.getByVoucherNumberAcrossYears(voucherNumber);
     if (existing && existing.id !== excludeId) {
       Err(409, this.t('voucherExists'));
     }

@@ -1,4 +1,4 @@
-import { Service, Events, EventService } from '../../../najm';
+import { Service, Events, EventService, Err } from '../../../najm';
 import { InstallmentRepository } from './InstallmentRepository';
 import { InstallmentValidator } from './InstallmentValidator';
 import { SettingsRepository } from '../../settings/SettingsRepository';
@@ -56,6 +56,9 @@ export class InstallmentService {
   }
 
   async create(data: CreateInstallmentDto) {
+    if (data.paidAmount !== undefined || data.status !== undefined) {
+      Err(400, 'Installment payment state is managed by allocations');
+    }
     await this.installmentValidator.validate(data);
     const created = this.installmentRepository.create(data);
     this.events.emit('installment.created', created);
@@ -63,7 +66,13 @@ export class InstallmentService {
   }
 
   async update(id: string, data: UpdateInstallmentDto) {
-    await this.installmentValidator.validate(data, id)
+    if (data.paidAmount !== undefined || data.status !== undefined) {
+      Err(400, 'Installment payment state is managed by allocations');
+    }
+    await this.installmentValidator.validate(data, id);
+    if (await this.installmentRepository.hasAllocations(id)) {
+      Err(409, 'Cannot edit an installment with payment allocations');
+    }
     const updated = await this.installmentRepository.update(id, data);
     this.events.emit('installment.updated', updated);
     return updated;
@@ -71,6 +80,9 @@ export class InstallmentService {
 
   async delete(id: string) {
     await this.installmentValidator.checkExists(id);
+    if (await this.installmentRepository.hasAllocations(id)) {
+      Err(409, 'Cannot delete an installment with payment allocations');
+    }
     const deleted = await this.installmentRepository.delete(id);
     this.events.emit('installment.deleted', deleted);
     return deleted;
@@ -83,14 +95,14 @@ export class InstallmentService {
   }
 
   async cancelFutureUnpaidByFeeId(feeId: string, effectiveDate: string) {
-    await this.installmentValidator.validateFeeExists(feeId);
+    await this.installmentValidator.validateSourceFeeExists(feeId);
     const cancelled = await this.installmentRepository.cancelFutureUnpaidByFeeId(feeId, effectiveDate);
     this.events.emit('installments.cancelled', { feeId, effectiveDate, count: cancelled.length });
     return cancelled;
   }
 
   async resumeCancelledByFeeId(feeId: string, effectiveDate: string) {
-    await this.installmentValidator.validateFeeExists(feeId);
+    await this.installmentValidator.validateSourceFeeExists(feeId);
     const resumed = await this.installmentRepository.resumeCancelledByFeeId(feeId, effectiveDate);
     this.events.emit('installments.resumed', { feeId, effectiveDate, count: resumed.length });
     return resumed;
@@ -167,8 +179,10 @@ export class InstallmentService {
 
   async recalculate(id) {
     if (!id) return;
-    const totalAllocated = await this.getAllocatedTotal(id);
-    const installment = await this.installmentRepository.getById(id);
+    const installment = await this.installmentRepository.getByIdAllYears(id);
+    if (!installment) return;
+    if (installment.status === 'cancelled') return;
+    const totalAllocated = await this.installmentRepository.getAllocatedTotal(id);
     const amount = Number(installment.amount) || 0;
     let status = installment.status;
 
@@ -183,8 +197,8 @@ export class InstallmentService {
       status = installment.dueDate < today ? 'overdue' : 'pending';
     }
 
-    await this.update(id, {
-      paidAmount: totalAllocated,
+    await this.installmentRepository.updateAllYears(id, {
+      paidAmount: String(totalAllocated),
       status,
     });
   }
@@ -192,8 +206,8 @@ export class InstallmentService {
   async recalculateByFeeId(feeId) {
     if (!feeId) return;
 
-    await this.installmentValidator.validateFeeExists(feeId);
-    const installments = await this.installmentRepository.getByFeeId(feeId);
+    await this.installmentValidator.validateSourceFeeExists(feeId);
+    const installments = await this.installmentRepository.getByFeeIdAllYears(feeId);
 
     const results = [];
     for (const installment of installments) {

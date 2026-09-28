@@ -2,14 +2,8 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, 
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { isAdmin } from '../../auth';
 import { AnnouncementService } from './AnnouncementService';
-import {
-  canAccessAnnouncement,
-  canAccessAllAnnouncements,
-  canCreateAnnouncement,
-  canUpdateAnnouncement,
-  canDeleteAnnouncement,
-  canPublishAnnouncement,
-} from './AnnouncementGuards';
+import { Announcement, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AnnouncementGuards';
+import type { AnnouncementActor } from './AnnouncementValidator';
 import {
   activeAnnouncementQueryDto,
   announcementAuthorIdParam,
@@ -29,12 +23,13 @@ import {
 } from './AnnouncementDto';
 
 @ToolGroup('announcements')
+@Policy(Announcement)
 @Controller('/announcements')
 export class AnnouncementController {
   constructor(private announcementService: AnnouncementService) { }
 
   @Get()
-  @canAccessAllAnnouncements()
+  @CanList()
   @McpTool('List all announcements')
   @ResMsg('announcements.success.retrieved')
   async getAnnouncements() {
@@ -42,6 +37,7 @@ export class AnnouncementController {
   }
 
   @Get('/published')
+  @CanList()
   @McpTool('List published announcements')
   @ResMsg('announcements.success.retrieved')
   async getPublished() {
@@ -73,7 +69,7 @@ export class AnnouncementController {
   }
 
   @Get('/recent')
-  @canAccessAllAnnouncements()
+  @CanList()
   @McpTool('List recent announcements')
   @ResMsg('announcements.success.retrieved')
   async getRecent() {
@@ -90,7 +86,7 @@ export class AnnouncementController {
   }
 
   @Get('/audience/:targetAudience')
-  @canAccessAllAnnouncements()
+  @CanList()
   @Validate({ params: announcementTargetAudienceParam })
   @McpTool('Get announcements by target audience')
   @ResMsg('announcements.success.retrieved')
@@ -99,7 +95,7 @@ export class AnnouncementController {
   }
 
   @Get('/class/:classId')
-  @canAccessAllAnnouncements()
+  @CanList()
   @Validate({ params: announcementClassIdParam })
   @McpTool('Get announcements by class')
   @ResMsg('announcements.success.retrieved')
@@ -108,6 +104,7 @@ export class AnnouncementController {
   }
 
   @Get('/active/:targetAudience')
+  @CanList()
   @Validate({ params: announcementTargetAudienceParam, query: activeAnnouncementQueryDto })
   @McpTool('Get active announcements for an audience')
   @ResMsg('announcements.success.retrieved')
@@ -122,7 +119,7 @@ export class AnnouncementController {
   }
 
   @Get('/:id')
-  @canAccessAnnouncement()
+  @CanRead()
   @Validate({ params: announcementIdParam })
   @McpTool('Get an announcement by ID')
   @ResMsg('announcements.success.retrieved')
@@ -131,7 +128,7 @@ export class AnnouncementController {
   }
 
   @Post()
-  @canCreateAnnouncement()
+  @CanCreate()
   @Validate(createAnnouncementDto)
   @McpTool('Create a new announcement')
   @ResMsg('announcements.success.created')
@@ -151,30 +148,30 @@ export class AnnouncementController {
   }
 
   @Post('/:id/publish')
-  @canPublishAnnouncement()
+  @CanUpdate()
   @Validate({ params: announcementIdParam })
   @McpTool('Publish an announcement')
   @ResMsg('announcements.success.published')
-  async publish(@Params('id') id: string) {
-    return this.announcementService.publish(id);
+  async publish(@Params('id') id: string, @User() actor: AnnouncementActor) {
+    return this.announcementService.publish(id, actor);
   }
 
   @Post('/:id/unpublish')
-  @canPublishAnnouncement()
+  @CanUpdate()
   @Validate({ params: announcementIdParam })
   @McpTool('Unpublish an announcement')
   @ResMsg('announcements.success.unpublished')
-  async unpublish(@Params('id') id: string) {
-    return this.announcementService.unpublish(id);
+  async unpublish(@Params('id') id: string, @User() actor: AnnouncementActor) {
+    return this.announcementService.unpublish(id, actor);
   }
 
   @Put('/:id')
-  @canUpdateAnnouncement()
+  @CanUpdate()
   @Validate({ params: announcementIdParam, body: updateAnnouncementDto })
   @McpTool('Update an announcement')
   @ResMsg('announcements.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateAnnouncementDto) {
-    return this.announcementService.update(id, body);
+  async update(@Params('id') id: string, @Body() body: UpdateAnnouncementDto, @User() actor: AnnouncementActor) {
+    return this.announcementService.update(id, body, actor);
   }
 
   @Delete('/bulk')
@@ -182,17 +179,17 @@ export class AnnouncementController {
   @Validate(deleteBulkAnnouncementDto)
   @McpTool('Delete multiple announcements by IDs')
   @ResMsg('announcements.success.bulkDeleted')
-  async deleteBulk(@Body() body: DeleteBulkAnnouncementDto) {
-    return this.announcementService.deleteBulk(body);
+  async deleteBulk(@Body() body: DeleteBulkAnnouncementDto, @User() actor: AnnouncementActor) {
+    return this.announcementService.deleteBulk(body, actor);
   }
 
   @Delete('/:id')
-  @canDeleteAnnouncement()
+  @CanDelete()
   @Validate({ params: announcementIdParam })
   @McpTool('Delete an announcement')
   @ResMsg('announcements.success.deleted')
-  async delete(@Params('id') id: string) {
-    return this.announcementService.delete(id);
+  async delete(@Params('id') id: string, @User() actor: AnnouncementActor) {
+    return this.announcementService.delete(id, actor);
   }
 
   @Delete()

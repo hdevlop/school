@@ -2,37 +2,36 @@ import { describe, expect, it } from 'bun:test';
 import { drizzle } from 'drizzle-orm/pg-proxy';
 import { FeeService } from '../../src/modules/financial/fees/FeeService';
 import { FeeRepository } from '../../src/modules/financial/fees/FeeRepository';
-import { feeListQuery, overdueStudentBody } from '../../src/modules/financial/fees/FeeDto';
+import { overdueStudentBody } from '../../src/modules/financial/fees/FeeDto';
 
 describe('overdue fee year scope', () => {
   it('reads overdue data of the resolved year only', async () => {
-    expect(feeListQuery.safeParse({ academicYear: 'all' }).success).toBe(false);
     expect(overdueStudentBody.safeParse({ studentId: 's1' }).success).toBe(true);
     const calls: string[] = [];
     const service = new FeeService(
       {
-        getOverdue: async (yearId: string, label: string) => { calls.push(`list:${yearId}:${label}`); return []; },
-        getOverdueSummary: async (label: string) => { calls.push(`summary:${label}`); return {}; },
-        getOverdueByStudent: async (studentId: string, label: string) => { calls.push(`student:${studentId}:${label}`); return []; },
+        getOverdue: async () => { calls.push('list'); return []; },
+        getOverdueSummary: async () => { calls.push('summary'); return {}; },
+        getOverdueByStudent: async (studentId: string) => { calls.push(`student:${studentId}`); return []; },
       } as any,
       {} as any, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any,
     );
-    const year = { id: 'year-old', label: '2025-2026' } as any;
-    await service.getOverdue(year);
-    await service.getOverdueSummary(year);
-    await service.getOverdueByStudent('s1', year);
-    expect(calls).toEqual(['list:year-old:2025-2026', 'summary:2025-2026', 'student:s1:2025-2026']);
+    await service.getOverdue();
+    await service.getOverdueSummary();
+    await service.getOverdueByStudent('s1');
+    expect(calls).toEqual(['list', 'summary', 'student:s1']);
   });
 
   it('filters fee rows by stored year without joining current class', async () => {
     const statements: Array<{ sql: string; params: unknown[] }> = [];
     const repo = new FeeRepository();
+    (repo as any).year = { id: 'year-old', label: '2025-2026' };
     repo.db = drizzle(async (sql, params) => {
       statements.push({ sql, params });
       return { rows: [] };
     }) as any;
 
-    expect(await repo.getOverdue('year-old', '2025-2026')).toEqual([]);
+    expect(await repo.getOverdue()).toEqual([]);
     expect(statements).toHaveLength(1);
     const query = statements[0];
     expect(query.params).toContain('2025-2026');
@@ -46,6 +45,7 @@ describe('overdue fee year scope', () => {
   it('selects the placement covering the fee date and leaves undated fees unassigned', async () => {
     const statements: string[] = [];
     const repo = new FeeRepository();
+    (repo as any).year = { id: 'year-old', label: '2025-2026' };
     const feeRow = (id: string, effectiveDate: string | null) => [
       id, 'student-1', 'type-1', 'oneTime', '2025-2026', effectiveDate,
       '100.00', '100.00', '100.00', '25.00', '0.00', 'overdue', null,
@@ -61,7 +61,7 @@ describe('overdue fee year scope', () => {
       ] : [feeRow('fee-dated', '2025-10-01'), feeRow('fee-undated', null)] };
     }) as any;
 
-    const rows = await repo.getOverdue('year-old', '2025-2026');
+    const rows = await repo.getOverdue();
     expect(rows).toHaveLength(2);
     expect(rows[0].class.id).toBe('old-class');
     expect(rows[0].section.id).toBe('old-section');
@@ -74,12 +74,13 @@ describe('overdue fee year scope', () => {
   it('uses completed allocations for the selected-year overdue amount', async () => {
     const statements: Array<{ sql: string; params: unknown[] }> = [];
     const repo = new FeeRepository();
+    (repo as any).year = { id: 'year-old', label: '2025-2026' };
     repo.db = drizzle(async (sql, params) => {
       statements.push({ sql, params });
       return { rows: [['2', '120.50', '1']] };
     }) as any;
 
-    const summary = await repo.getOverdueSummary('2025-2026');
+    const summary = await repo.getOverdueSummary();
     expect(summary).toEqual({ overdueCount: 2, overdueAmount: '120.50', affectedStudents: 1 });
     expect(statements[0].params).toContain('2025-2026');
     expect(statements[0].sql).toContain('payment_allocations');
@@ -93,11 +94,12 @@ describe('overdue fee year scope', () => {
   it('scopes the overdue student tool by fee year and completed payment status', async () => {
     const statements: Array<{ sql: string; params: unknown[] }> = [];
     const repo = new FeeRepository();
+    (repo as any).year = { id: 'year-old', label: '2025-2026' };
     repo.db = drizzle(async (sql, params) => {
       statements.push({ sql, params });
       return { rows: [] };
     }) as any;
-    await repo.getOverdueByStudent('student-1', '2025-2026');
+    await repo.getOverdueByStudent('student-1');
     expect(statements[0].params).toContain('student-1');
     expect(statements[0].params).toContain('2025-2026');
     expect(statements[0].sql).toContain('payment_allocations');

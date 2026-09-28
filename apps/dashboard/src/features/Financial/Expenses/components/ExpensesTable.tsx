@@ -11,6 +11,7 @@ import ExpenseCard from './ExpenseCard';
 import { useExpensesTableColumns } from '../hooks/useExpensesTableColumns';
 import { useExpensesTableFilters } from '../hooks/useExpensesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
 
 function ExpensesTable() {
@@ -21,6 +22,7 @@ function ExpensesTable() {
 
   const {
     expenses,
+    academicYear,
     createExpense,
     updateExpense,
     deleteExpense,
@@ -33,6 +35,8 @@ function ExpensesTable() {
   const { openDialog, confirmDelete } = useDialog();
 
   const handleAddClick = () => {
+    if (!academicYear) return;
+    const targetYear = academicYear;
     openDialog({
       title: t('expenses.dialogs.createTitle'),
       children: <ExpenseForm />,
@@ -41,7 +45,7 @@ function ExpensesTable() {
         text: t('expenses.dialogs.createButton'),
         loading: isCreating,
         onClick: async (expenseData) => {
-          await createExpense(expenseData);
+          await withAcademicYear(targetYear, () => createExpense(expenseData));
         }
       }
     });
@@ -57,6 +61,8 @@ function ExpensesTable() {
   };
 
   const handleEdit = (expense) => {
+    if (!academicYear) return;
+    const targetYear = academicYear;
     openDialog({
       title: `${t('expenses.dialogs.editTitle')} - ${expense.title}`,
       children: <ExpenseForm expense={expense} />,
@@ -65,13 +71,15 @@ function ExpensesTable() {
         text: t('expenses.dialogs.updateButton'),
         loading: isUpdating,
         onClick: async (expenseData) => {
-          await updateExpense(expenseData);
+          await withAcademicYear(targetYear, () => updateExpense(expenseData));
         }
       }
     });
   };
 
   const handleDelete = (expense) => {
+    if (!academicYear) return;
+    const targetYear = academicYear;
     confirmDelete({
       title: t('common.delete'),
       warningText: t('common.deleteConfirm'),
@@ -80,7 +88,7 @@ function ExpensesTable() {
       confirmText: t('expenses.dialogs.deleteButton'),
       loading: isDeleting,
       onConfirm: async () => {
-        await deleteExpense(expense.id);
+        await withAcademicYear(targetYear, () => deleteExpense(expense.id));
       }
     });
   };

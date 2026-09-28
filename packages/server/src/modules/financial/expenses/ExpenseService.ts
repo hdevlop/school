@@ -2,12 +2,14 @@ import { Service, Transaction } from '../../../najm';
 import { ExpenseRepository } from './ExpenseRepository';
 import { ExpenseValidator } from './ExpenseValidator';
 import { formatDate, pickProps } from '../../../shared'
-import { getAcademicYearDateRange } from '../utils';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import type { CreateExpenseDto, ExpenseApprovalDto, ExpensePaymentDto, UpdateExpenseDto } from './ExpenseDto';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 
 @Service()
 export class ExpenseService {
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private expenseRepository: ExpenseRepository,
@@ -74,8 +76,9 @@ export class ExpenseService {
   }
 
   async getTotalExpenses() {
-    const { startDate, endDate } = getAcademicYearDateRange();
-    const result = await this.expenseRepository.getTotalExpensesByDateRange(startDate, endDate);
+    const result = await this.expenseRepository.getTotalExpensesByDateRange(
+      this.year.reportingStartsOn, this.year.reportingEndsOn,
+    );
     return result.total;
   }
 
@@ -85,6 +88,7 @@ export class ExpenseService {
   async create(data: CreateExpenseDto, actorId?: string) {
 
     await this.expenseValidator.validate(data);
+    this.expenseValidator.ensureExpenseDateInSelectedYear(formatDate(data.expenseDate));
 
     const expenseDetails = {
       category: data.category,
@@ -123,7 +127,11 @@ export class ExpenseService {
 
     const existing = await this.expenseValidator.checkExists(id);
     await this.expenseValidator.validate(data, id);
+    if (data.expenseDate !== undefined) {
+      this.expenseValidator.ensureExpenseDateInSelectedYear(formatDate(data.expenseDate));
+    }
     const expenseData = pickProps(data, EXPENSE_UPDATE_KEYS);
+    if (data.expenseDate !== undefined) expenseData.expenseDate = formatDate(data.expenseDate);
     const updated = await this.expenseRepository.update(id, expenseData);
     await this.auditService.record({
       entityType: 'expense', entityId: id, action: 'expense.updated', actorId,

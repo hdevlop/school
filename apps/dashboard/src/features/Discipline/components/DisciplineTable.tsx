@@ -22,6 +22,8 @@ export default function DisciplineTable() {
   const role = (user as any)?.role;
   const userId = (user as any)?.id;
   const isAdmin = role === 'admin';
+  // Parents and students read their own or their children's records only.
+  const isFamily = role === 'parent' || role === 'student';
   const columns = useDisciplineTableColumns();
   const filters = useDisciplineTableFilters();
   const { openDialog, confirmDelete } = useDialog();
@@ -121,7 +123,7 @@ export default function DisciplineTable() {
             ? <NForbiddenState surface="panel" />
             : <NErrorState surface="panel" />
         )}
-        onCreate={handleCreate}
+        onCreate={isFamily ? undefined : handleCreate}
         onRowClick={handleView}
         menuButton
         menu={{
@@ -138,8 +140,8 @@ export default function DisciplineTable() {
             surface="panel"
             icon={FEATURE_ICONS.discipline}
             title={t('emptyStates.discipline.title')}
-            description={t('emptyStates.discipline.description')}
-            action={(
+            description={isFamily ? t('emptyStates.familyDescription') : t('emptyStates.discipline.description')}
+            action={isFamily ? undefined : (
               <NButton size="sm" onClick={handleCreate}>
                 <Plus className="h-4 w-4" />
                 {t('discipline.dialogs.createButton')}

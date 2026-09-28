@@ -1,8 +1,12 @@
 import { Err, I18n, Service } from '../../../najm';
 import { VehicleAssignmentRepository } from './VehicleAssignmentRepository';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import { isValidDateOnly } from '../../financial/utils/dateOnly';
 
 @Service()
 export class VehicleAssignmentValidator {
+  @Year() private readonly year!: ResolvedAcademicYear;
   @I18n('vehicleAssignments.errors') private t!: (key: string) => string;
 
   constructor(
@@ -17,26 +21,20 @@ export class VehicleAssignmentValidator {
     return assignment;
   }
 
-  async validateAssignmentDates(assignmentDate: string, unassignmentDate?: string | null) {
-    if (unassignmentDate) {
-      const assignment = new Date(assignmentDate);
-      const unassignment = new Date(unassignmentDate);
-
-      if (unassignment < assignment) {
-        Err(400, this.t('invalidDateRange'));
-      }
+  validateAssignmentDates(assignmentDate: string, unassignmentDate?: string | null) {
+    if (!isValidDateOnly(assignmentDate) ||
+      (unassignmentDate != null && (!isValidDateOnly(unassignmentDate) || unassignmentDate <= assignmentDate))) {
+      Err(400, this.t('invalidDateRange'));
     }
-    return true;
   }
 
-  async validateNewAssignment(_vehicleId: string, _driverId: string, _assignmentDate: string) {
-    // Removed restriction: Allow reassigning drivers to vehicles that already have active assignments
-    // The system will handle multiple assignments or the frontend can manage unassignment if needed
-
-    // Note: We don't check if driver has active assignments because a driver CAN have multiple vehicles
-    // This is the whole point of the many-to-many relationship!
-
-    return true;
+  async checkNoOverlappingVehicleAssignment(
+    vehicleId: string, assignmentDate: string, unassignmentDate?: string | null, excludeId?: string,
+  ) {
+    const overlap = await this.vehicleAssignmentRepository.getOverlappingByVehicleAcrossYears(
+      vehicleId, assignmentDate, unassignmentDate, excludeId,
+    );
+    if (overlap) Err(409, 'Vehicle already has a driver during this date range');
   }
 
   async validateUnassignment(id: string) {
@@ -49,25 +47,30 @@ export class VehicleAssignmentValidator {
     return true;
   }
 
-  async validate(data: Record<string, unknown>, excludeId: string | null = null) {
-    const isUpdate = excludeId !== null;
-
-    if (isUpdate) {
-      await this.checkAssignmentExists(excludeId);
+  async validate(data: Record<string, unknown>, excludeId: string | null = null,
+    explicitYear?: ResolvedAcademicYear) {
+    const existing = excludeId ? await this.checkAssignmentExists(excludeId) : null;
+    const year = explicitYear ?? this.year;
+    const assignmentDate = (data.assignmentDate ?? existing?.assignmentDate) as string;
+    const unassignmentDate = (data.unassignmentDate === undefined
+      ? existing?.unassignmentDate : data.unassignmentDate) as string | null | undefined;
+    const vehicleId = (data.vehicleId ?? existing?.vehicleId) as string;
+    const status = (data.status ?? existing?.status ?? 'active') as string;
+    this.validateAssignmentDates(assignmentDate, unassignmentDate);
+    if (!existing && (assignmentDate < year.reportingStartsOn || assignmentDate > year.reportingEndsOn)) {
+      Err(409, 'Driver assignment date is outside the selected school year');
     }
-
-    const { assignmentDate, unassignmentDate, vehicleId, driverId } = data;
-
-    // Validate date range
-    if (assignmentDate && unassignmentDate) {
-      await this.validateAssignmentDates(assignmentDate as string, unassignmentDate as string);
+    if (existing && (assignmentDate > year.reportingEndsOn ||
+      (unassignmentDate != null && unassignmentDate <= year.reportingStartsOn))) {
+      Err(409, 'Driver assignment must remain in the selected school year');
     }
-
-    // For new assignments, validate that vehicle doesn't have active assignment
-    if (!isUpdate && vehicleId && driverId && assignmentDate) {
-      await this.validateNewAssignment(vehicleId as string, driverId as string, assignmentDate as string);
+    if ((status === 'active' && unassignmentDate != null) ||
+      (status !== 'active' && unassignmentDate == null)) {
+      Err(400, 'Driver assignment status and end date disagree');
     }
-
+    if (status !== 'cancelled') {
+      await this.checkNoOverlappingVehicleAssignment(vehicleId, assignmentDate, unassignmentDate, excludeId ?? undefined);
+    }
     return data;
   }
 }

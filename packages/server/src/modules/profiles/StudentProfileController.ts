@@ -4,7 +4,6 @@ import { StudentProfileService } from './StudentProfileService';
 import { isAuth } from '../../auth';
 import { z } from 'zod';
 import { Year } from '../academicYears/requestYear';
-import { academicYearQuery } from '../academicYears/AcademicYearDto';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 const studentIdParam = z.object({ studentId: z.string().min(1) });
@@ -16,7 +15,7 @@ export class StudentProfileController {
   constructor(private studentProfileService: StudentProfileService) {}
 
   @Get('/:studentId/overview')
-  @Validate({ params: studentIdParam, query: academicYearQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get student overview — bio, class and section in the academic year, parents')
   @ResMsg('students.success.retrieved')
   async getOverview(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {
@@ -24,7 +23,7 @@ export class StudentProfileController {
   }
 
   @Get('/:studentId/academic')
-  @Validate({ params: studentIdParam, query: academicYearQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get student academic profile — grades, upcoming assessments, exams')
   @ResMsg('students.success.retrieved')
   async getAcademic(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {
@@ -32,7 +31,7 @@ export class StudentProfileController {
   }
 
   @Get('/:studentId/attendance')
-  @Validate({ params: studentIdParam, query: academicYearQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get student attendance summary')
   @ResMsg('students.success.retrieved')
   async getAttendanceSummary(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {
@@ -40,7 +39,7 @@ export class StudentProfileController {
   }
 
   @Get('/:studentId/financial')
-  @Validate({ params: studentIdParam, query: academicYearQuery })
+  @Validate({ params: studentIdParam })
   @McpTool('Get student financial profile — fees, payments, balance')
   @ResMsg('students.success.retrieved')
   async getFinancial(@Params('studentId') studentId: string, @Year() year: ResolvedAcademicYear) {

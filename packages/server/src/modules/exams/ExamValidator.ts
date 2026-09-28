@@ -4,10 +4,13 @@ import { StudentValidator } from '../students/StudentValidator';
 import { TeacherValidator } from '../teachers/TeacherValidator';
 import { SectionValidator } from '../sections/SectionValidator';
 import { SubjectValidator } from '../subjects/SubjectValidator';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class ExamValidator {
   @I18n('exams.errors') private et!: (key: string) => string;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private examRepository: ExamRepository,
@@ -30,6 +33,15 @@ export class ExamValidator {
       Err(404, this.et('notFound'));
     }
     return exam;
+  }
+
+  /** An exam is written in the year the request selected: its target sections' year must be that one. */
+  ensureSelectedYear(yearId: string) {
+    if (yearId !== this.year.id) Err(409, this.et('outsideSelectedYear'));
+  }
+
+  ensureSameYear(currentYearId: string | null, yearId: string) {
+    if (currentYearId && currentYearId !== yearId) Err(409, this.et('yearCannotChange'));
   }
 
   async ensureStudentExists(studentId: string) {

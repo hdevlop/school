@@ -2,20 +2,24 @@
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as eventApi from '@/services/eventApi';
+import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
+// The viewed year's events: those whose dates overlap it. Mutations refresh every year.
 export const useEvents = (options?) => {
   const { eventId, enabled = true } = options || {};
 
   const crud = useEntityCRUD('events', {
     getAll: eventApi.getEventsApi,
-    getById: eventApi.getEventByIdApi,
     create: eventApi.createEventApi,
     update: eventApi.updateEventApi,
     delete: eventApi.deleteEventApi,
   });
 
-  const { data: events, isLoading: isEventsLoading, isError, error, refetch } = crud.useGetAll(enabled);
-  const { data: event, isLoading: isEventLoading } = crud.useGetById(eventId, !!eventId);
+  const { data: events, isLoading: isEventsLoading, isError, error, refetch } =
+    useYearScopedList({ resource: 'events', fetch: eventApi.getEventsApi, enabled });
+  const { data: event, isLoading: isEventLoading } = useYearScopedDetail({
+    resource: 'events', parts: [eventId], fetch: () => eventApi.getEventByIdApi(eventId), enabled: !!eventId,
+  });
   const { mutateAsync: createEvent, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateEvent, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deleteEvent, isLoading: isDeleting } = crud.useDelete();

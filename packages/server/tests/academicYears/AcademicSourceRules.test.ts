@@ -177,7 +177,7 @@ describe('academic source writes', () => {
         getTeacherAssignment: async () => ({ id: 'assignment-1' }),
         create: async (data: Record<string, unknown>) => { inserted = data; return data; },
       } as any,
-      { validate: async () => {}, ensureTeacherAssignmentExists: async () => {} } as any,
+      { validate: async () => {}, ensureTeacherAssignmentExists: async () => {}, ensureSelectedYear: () => {} } as any,
       { ensureTargetsValid: async () => year } as any,
     );
     await service.create({
@@ -234,8 +234,9 @@ describe('academic source writes', () => {
         ensureSectionExists: allowed, ensureSubjectExists: allowed,
         ensureGradeSourceOrTeacherProvided: allowed, ensureNoDuplicateGrade: allowed,
         ensureTeacherInSection: allowed, ensureTeacherAssignmentExists: allowed,
+        ensureSelectedYear: () => {},
       },
-      years: { requireLabel: async () => year, resolveRecord: async () => year },
+      years: { requireLabel: async () => year },
       sections: { listYearContexts: async () => [...sections.values()] },
       assessments: { getSourceContext: async () => ({ ...source, date: '2025-10-31' }) },
       enrollments: { hasAnyForStudent: async () => true, isPlacedInSectionOnDate: async () => true },
