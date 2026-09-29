@@ -95,6 +95,8 @@ export class DriverService {
       image,
       password: resolveUserPassword(data.password),
       role: 'driver',
+      // Not the self-registration mode (pending): School creates this account.
+      status: 'active',
     });
 
     const staffMember = await this.staffService.create({

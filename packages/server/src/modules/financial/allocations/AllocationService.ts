@@ -1,4 +1,4 @@
-import { Err, Service, Transaction, Events, EventService } from '../../../najm';
+import { Service, Transaction, Events, EventService } from '../../../najm';
 import { AllocationRepository } from './AllocationRepository';
 import { InstallmentRepository } from '../installments/InstallmentRepository';
 import { AllocationValidator } from './AllocationValidator';
@@ -82,11 +82,7 @@ export class AllocationService {
     return allocations.map((alloc) => {
       const feeId = alloc.feeId;
       const installmentMap = feeInstallmentsMap.get(feeId);
-      const inst = installmentMap.get(alloc.number);
-
-      if (!inst) {
-        Err(400, `Installment #${alloc.number} does not exist for fee ${feeId}`);
-      }
+      const inst = this.allocationValidator.ensureMappedInstallment(installmentMap.get(alloc.number), alloc.number, feeId);
 
       return {
         feeId: feeId,
@@ -113,9 +109,7 @@ export class AllocationService {
     const targets = allocations.map((a) => ({ feeId: a.feeId, number: a.installmentNumber }));
     const locked = await this.installmentRepository.getByFeeAndNumbersForUpdate(targets);
 
-    if (locked.length === 0) {
-      Err(400, 'No installments matched the requested allocation targets');
-    }
+    this.allocationValidator.ensureLockedTargets(locked.length);
 
     const lockedByKey = new Map(
       locked.map((row) => [`${row.feeId}:${row.number}`, row])
@@ -131,25 +125,18 @@ export class AllocationService {
     const plannedByFee = new Map<string, number>();
     const existingPaymentTotal = toCents(await this.allocationRepository.getTotalAllocatedForPayment(paymentId));
     const requestedTotal = allocations.reduce((sum, item) => sum + toCents(item.amount), 0);
-    if (existingPaymentTotal + requestedTotal > toCents(input.paymentAmount)) {
-      Err(400, 'Allocations cannot exceed the payment amount');
-    }
+    this.allocationValidator.ensurePaymentCapacity(existingPaymentTotal + requestedTotal, toCents(input.paymentAmount));
 
     for (const a of allocations) {
       const key = `${a.feeId}:${a.installmentNumber}`;
-      const lockedRow = lockedByKey.get(key);
-      if (!lockedRow) {
-        Err(400, `Installment #${a.installmentNumber} not found for fee ${a.feeId}`);
-      }
+      const lockedRow = this.allocationValidator.ensureLockedInstallment(lockedByKey.get(key), a.installmentNumber, a.feeId);
 
       const completed = toCents(completedMap.get(lockedRow.id) || 0);
       const reserved = toCents(reservedMap.get(lockedRow.id) || 0);
       const available = toCents(lockedRow.amount) - completed - reserved;
       const planned = (plannedByInstallment.get(lockedRow.id) || 0) + toCents(a.amount);
 
-      if (planned > available) {
-        Err(400, `Allocation of ${a.amount} exceeds available ${(available / 100).toFixed(2)} for installment #${a.installmentNumber}`);
-      }
+      this.allocationValidator.ensureInstallmentCapacity(planned, available, a.amount, a.installmentNumber);
 
       plannedByInstallment.set(lockedRow.id, planned);
 
@@ -199,11 +186,8 @@ export class AllocationService {
   @Transaction()
   async delete(id: string, actorId?: string) {
     const existing = await this.allocationValidator.checkExists(id);
-    if (await this.allocationRepository.hasCreditApplication(id)) {
-      Err(409, 'A credit application uses this allocation; reverse the source payment instead');
-    }
-    const result = await this.allocationRepository.delete(id);
-    if (!result) Err(404, 'Payment allocation not found in the selected academic year');
+    await this.allocationValidator.ensureNoCreditApplication(id);
+    const result = this.allocationValidator.ensureDeletedAllocation(await this.allocationRepository.delete(id));
     await this.auditService.record({
       entityType: 'payment_allocation',
       entityId: id,

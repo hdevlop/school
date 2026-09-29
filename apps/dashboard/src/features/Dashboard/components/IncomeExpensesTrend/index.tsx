@@ -14,7 +14,7 @@ import { NCard } from 'najm-kit';
 import { DollarSign } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { NSkeletonChart } from 'najm-kit';
-import { useDashboardYear, useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
+import { useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import DashboardEmptyState from '../DashboardEmptyState';
@@ -62,7 +62,8 @@ const TrendTooltip = ({
 }: TrendTooltipProps & { t: (k: string) => string }) => {
   if (active && payload && payload.length) {
     const month = payload[0].payload.month;
-    // Today belongs to the active year; another year's same month is not today.
+    // Today's figures come only with the year that holds today; another
+    // year's same month is not today.
     const isCurrent = showToday && month === t(`common.monthsShort.${CURRENT_MONTH_KEY}`);
     return (
       <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
@@ -111,16 +112,17 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const { data, isLoading, error, refetch } = useFinanceTrend(academicYear);
-  const { isOtherYear } = useDashboardYear(academicYear);
   const incomeLabel = t('dashboard.finance.income');
   const expensesLabel = t('dashboard.finance.expenses');
 
   const payload = data as
-    | { monthly?: TrendRow[]; todayIncome?: number; todayExpenses?: number }
+    | { monthly?: TrendRow[]; todayIncome?: number | null; todayExpenses?: number | null }
     | TrendRow[]
     | undefined;
-  const todayIncome = Array.isArray(payload) ? 0 : Number(payload?.todayIncome ?? 0);
-  const todayExpenses = Array.isArray(payload) ? 0 : Number(payload?.todayExpenses ?? 0);
+  const todayFigures = Array.isArray(payload) ? undefined : payload;
+  const hasToday = todayFigures?.todayIncome != null;
+  const todayIncome = Number(todayFigures?.todayIncome ?? 0);
+  const todayExpenses = Number(todayFigures?.todayExpenses ?? 0);
 
   const chartData = useMemo<TrendRow[]>(
     () => {
@@ -183,7 +185,7 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
                       expensesLabel={expensesLabel}
                       todayIncome={todayIncome}
                       todayExpenses={todayExpenses}
-                      showToday={!isOtherYear}
+                      showToday={hasToday}
                       t={t}
                     />
                   )}

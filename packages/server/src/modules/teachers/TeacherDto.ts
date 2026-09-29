@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import {
-  academicYearField,
   addressField,
   cinField,
   dateField,
@@ -44,7 +43,6 @@ const assignmentSchema = z.object({
   classId: z.string().min(1, 'Class is required'),
   sectionIds: z.array(z.string()).min(1, 'At least one section is required'),
   subjectIds: z.array(z.string()).min(1, 'At least one subject is required'),
-  academicYear: z.string().optional(),
 });
 
 const assignmentsSchema = z.object({
@@ -68,14 +66,17 @@ export const createTeachersBulkDto = z.array(createTeacherDto);
 // field is declared `never`: present means rejected, absent means fine.
 export const updateTeacherDto = createTeacherDto
   .partial()
-  .extend({ password: z.never('Passwords are not set from a profile edit').optional() });
+  .extend({
+    password: z.never('Passwords are not set from a profile edit').optional(),
+    status: teacherStatusEnum.optional(),
+    assignments: z.array(assignmentSchema).optional(),
+  });
 
 export const teacherIdParam = z.object({ id: z.string().min(1) });
 export const teacherCinParam = z.object({ cin: cinField });
 export const teacherEmailParam = z.object({ email: z.string().email('Invalid email format') });
 export const teacherPhoneParam = z.object({ phone: phoneField });
 export const teacherStudentsQuery = z.object({
-  academicYear: academicYearField.optional(),
   onDate: z.string().refine(isDateOnly, 'Expected a real YYYY-MM-DD date').optional(),
 });
 export type TeacherStudentsQuery = z.infer<typeof teacherStudentsQuery>;

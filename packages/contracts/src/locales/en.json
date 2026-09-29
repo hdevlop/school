@@ -158,7 +158,7 @@
       "passwordSet": "Your password has been set. Please log in.",
       "login": "Login successful",
       "logout": "Logout successful",
-      "register": "Registration successful. Welcome!",
+      "register": "Account created. The school will review it before you can sign in.",
       "passwordReset": "Password reset sent",
       "tokenGenerated": "Access token generated successfully",
       "tokenRefreshed": "Access token refreshed successfully",
@@ -803,6 +803,7 @@
       "created": "Settings created successfully"
     },
     "errors": {
+      "alreadyExists": "School settings already exist; change them with an update",
       "notFound": "Settings not found for this user",
       "retrievalFailed": "Failed to retrieve user settings",
       "updateFailed": "Failed to update user settings",
@@ -844,6 +845,7 @@
       "schoolPhone": "School Phone",
       "schoolEmail": "School Email",
       "currentAcademicYear": "Current Academic Year",
+      "currentAcademicYearLocked": "Changes only when a registered year is activated",
       "schoolStartTime": "School Start Time",
       "schoolEndTime": "School End Time",
       "lunchBreakDuration": "Lunch Break Duration (minutes)"
@@ -1342,6 +1344,16 @@
     }
   },
   "students": {
+    "correction": {
+      "placement": "Placement to correct",
+      "status": "Yearly enrollment status",
+      "leftOn": "Enrollment ends on (exclusive)",
+      "validFrom": "Placement starts on",
+      "validTo": "Placement ends on (exclusive)",
+      "reason": "Reason for correction",
+      "requiredReason": "Enter a reason for the correction",
+      "invalidDates": "Enter valid enrollment and placement dates"
+    },
     "enrollment": {
       "title": "School years",
       "help": "The student's class and section in each school year, from dated records. Editing the profile does not change them.",
@@ -1549,6 +1561,7 @@
     },
     "status": {
       "graduated": "Graduated",
+      "withdrawn": "Withdrawn",
       "transferred": "Transferred",
       "active": "Active",
       "inactive": "Inactive"
@@ -1768,9 +1781,13 @@
       "notFound": "Parent not found",
       "emailExists": "A parent with this email already exists",
       "cinExists": "A parent with this CIN already exists",
+      "phoneExists": "A parent with this phone number already exists",
       "hasLinkedStudents": "Cannot delete parent with linked students",
+      "someLinked": "Some parents are still linked to students. Unlink their children, or delete parents one by one.",
       "studentNotLinked": "Student is not linked to this parent",
       "studentAlreadyLinked": "Student is already linked to this parent",
+      "invalidGender": "Please select a valid gender",
+      "invalidRelationshipType": "Please select a valid relationship",
       "invalidMaritalStatus": "Please select a valid marital status"
     },
     "tooltips": {
@@ -2200,7 +2217,8 @@
       "idExists": "Teacher ID already exists",
       "notFound": "Teacher not found",
       "cinExists": "A teacher with this CIN already exists",
-      "emailExists": "A teacher with this email already exists"
+      "emailExists": "A teacher with this email already exists",
+      "hasAssignmentHistory": "This teacher has class assignments in a school year. Remove those assignments before deleting the teacher"
     },
     "validation": {
       "cinMinLength": "CIN must be at least 8 characters long",

@@ -1,9 +1,11 @@
 import { DB } from '../../database/db';
 import { teachers, users, teacherAssignments, sections, subjects, students, classes, staff, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
-import { count, eq, desc, sql, and, inArray, gt, isNull, lte, or, type SQL } from 'drizzle-orm';
+import { Owned, type OwnedWhere } from '../../auth';
+import { count, eq, desc, sql, and, inArray, gt, isNull, lte, or } from 'drizzle-orm';
 import { Teacher } from './TeacherGuards';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 export const teacherSelect = {
   id: teachers.id,
@@ -84,12 +86,13 @@ export const subjectSelect = {
   updatedAt: subjects.updatedAt,
 };
 
-@Owned(Teacher)
 @Repository()
 export class TeacherRepository {
 
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Teacher)
+  private ownedWhere!: OwnedWhere;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -123,6 +126,7 @@ export class TeacherRepository {
               INNER JOIN ${classes} ON ${sections.classId} = ${classes.id}
               INNER JOIN ${subjects} ON ${teacherAssignments.subjectId} = ${subjects.id}
               WHERE ${teacherAssignments.teacherId} = ${teachers.id}
+                AND ${classes.academicYear} = ${this.year.label}
               GROUP BY ${classes.id}
             ) grouped
           ),
@@ -148,13 +152,13 @@ export class TeacherRepository {
 
   async getAll() {
     return await this.buildTeacherQuery()
-      .where(this.ownershipCondition())
+      .where(this.ownedWhere())
       .orderBy(desc(teachers.createdAt));
   }
 
   async getById(id: string) {
     const [teacher] = await this.buildTeacherQuery()
-      .where(and(this.ownershipCondition(), eq(teachers.id, id)))
+      .where(and(this.ownedWhere(), eq(teachers.id, id)))
       .limit(1);
     if (!teacher) return null;
     return teacher
@@ -194,8 +198,10 @@ export class TeacherRepository {
   }
 
   async getByUserId(userId: string) {
-    const [teacher] = await this.buildTeacherQuery()
-      .where(and(this.ownershipCondition(), eq(staff.userId, userId)))
+    const [teacher] = await this.db.select(teacherSelect).from(teachers)
+      .innerJoin(staff, eq(teachers.staffId, staff.id))
+      .leftJoin(users, eq(staff.userId, users.id))
+      .where(and(this.ownedWhere(), eq(staff.userId, userId)))
       .limit(1);
     return teacher;
   }
@@ -204,7 +210,7 @@ export class TeacherRepository {
   // year's classes; with `onDate`, those enrolled and placed there that day.
   // The assignment's class and the student's placement must both belong to
   // the year: a student's current section never authorizes history.
-  async getStudents(teacherId: string, year: { id: string; label: string }, onDate?: string) {
+  async getStudents(teacherId: string, onDate?: string) {
     return this.db.selectDistinctOn([students.name, students.id], {
       ...studentSelect,
       classId: studentEnrollmentPlacements.classId,
@@ -229,8 +235,8 @@ export class TeacherRepository {
       .leftJoin(users, eq(students.userId, users.id))
       .where(and(
         eq(teacherAssignments.teacherId, teacherId),
-        eq(classes.academicYear, year.label),
-        eq(studentEnrollments.academicYearId, year.id),
+        eq(classes.academicYear, this.year.label),
+        eq(studentEnrollments.academicYearId, this.year.id),
         ...(onDate ? [
           lte(studentEnrollments.enrolledOn, onDate),
           or(isNull(studentEnrollments.leftOn), gt(studentEnrollments.leftOn, onDate)),
@@ -252,7 +258,7 @@ export class TeacherRepository {
       .innerJoin(sections, eq(teacherAssignments.sectionId, sections.id))
       .innerJoin(classes, eq(sections.classId, classes.id))
       .innerJoin(subjects, eq(teacherAssignments.subjectId, subjects.id))
-      .where(eq(teacherAssignments.teacherId, teacherId))
+      .where(and(eq(teacherAssignments.teacherId, teacherId), eq(classes.academicYear, this.year.label)))
       .orderBy(classes.name, sections.name, subjects.name);
   }
 
@@ -260,7 +266,8 @@ export class TeacherRepository {
     return await this.db
       .select(sectionSelect)
       .from(sections)
-      .where(eq(sections.classId, classId))
+      .innerJoin(classes, eq(sections.classId, classes.id))
+      .where(and(eq(sections.classId, classId), eq(classes.academicYear, this.year.label)))
       .orderBy(sections.name);
   }
 
@@ -272,7 +279,8 @@ export class TeacherRepository {
         and(
           eq(teacherAssignments.teacherId, teacherId),
           eq(teacherAssignments.subjectId, subjectId),
-          eq(teacherAssignments.sectionId, sectionId)
+          eq(teacherAssignments.sectionId, sectionId),
+          inArray(teacherAssignments.classId, this.classesInSelectedYear()),
         )
       )
       .limit(1);
@@ -284,7 +292,7 @@ export class TeacherRepository {
     const [assignment] = await this.db
       .select()
       .from(teacherAssignments)
-      .where(eq(teacherAssignments.id, assignmentId))
+      .where(and(eq(teacherAssignments.id, assignmentId), inArray(teacherAssignments.classId, this.classesInSelectedYear())))
       .limit(1);
 
     return assignment;
@@ -319,6 +327,7 @@ export class TeacherRepository {
           eq(teacherAssignments.teacherId, teacherId),
           eq(teacherAssignments.sectionId, sectionId),
           eq(teacherAssignments.subjectId, subjectId),
+          inArray(teacherAssignments.classId, this.classesInSelectedYear()),
         )
       )
       .limit(1);
@@ -333,6 +342,7 @@ export class TeacherRepository {
           eq(teacherAssignments.teacherId, teacherId),
           eq(teacherAssignments.sectionId, sectionId),
           eq(teacherAssignments.subjectId, subjectId),
+          inArray(teacherAssignments.classId, this.classesInSelectedYear()),
         )
       )
       .returning();
@@ -347,6 +357,7 @@ export class TeacherRepository {
     const filters = [
       eq(teacherAssignments.teacherId, teacherId),
       eq(teacherAssignments.classId, classId),
+      inArray(teacherAssignments.classId, this.classesInSelectedYear()),
       inArray(teacherAssignments.sectionId, sectionIds),
     ];
 
@@ -386,8 +397,12 @@ export class TeacherRepository {
   }
 
   async deleteAll() {
-    const allTeachers = await this.buildTeacherQuery()
-      .orderBy(desc(teachers.createdAt));
+    // Shared teacher identities are cleared across all years during a seed reset.
+    // Only linked accounts are needed; assignment reads require a selected year.
+    const allTeachers = await this.db
+      .select({ userId: staff.userId })
+      .from(teachers)
+      .innerJoin(staff, eq(teachers.staffId, staff.id));
 
     const userIds = allTeachers
       .map(teacher => teacher.userId)
@@ -410,6 +425,12 @@ export class TeacherRepository {
     };
   }
 
+  async hasAnyAssignments(id?: string) {
+    const [row] = await this.db.select({ id: teacherAssignments.id }).from(teacherAssignments)
+      .where(id ? eq(teacherAssignments.teacherId, id) : undefined).limit(1);
+    return !!row;
+  }
+
   // ========================================
   // VALIDATION_HELPERS
   // ========================================
@@ -420,11 +441,17 @@ export class TeacherRepository {
       .where(
         and(
           eq(teacherAssignments.teacherId, teacherId),
-          eq(teacherAssignments.sectionId, sectionId)
+          eq(teacherAssignments.sectionId, sectionId),
+          inArray(teacherAssignments.classId, this.classesInSelectedYear()),
         )
       )
       .limit(1);
 
     return !!result;
+  }
+
+  private classesInSelectedYear() {
+    return this.db.select({ id: classes.id }).from(classes)
+      .where(eq(classes.academicYear, this.year.label));
   }
 }

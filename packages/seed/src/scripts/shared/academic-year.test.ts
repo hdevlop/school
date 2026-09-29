@@ -1,7 +1,19 @@
 import { describe, expect, it } from 'bun:test';
-import { getSeedAcademicYear, isDemoCollectionDay } from './academic-year';
+import { getConfiguredSeedAcademicYear, getDemoReferenceDate, getSeedAcademicYear, isDemoCollectionDay, parseSeedAcademicYear } from './academic-year';
 
 describe('seed academic year', () => {
+  it('anchors historical demos inside their year and refuses future demos', () => {
+    const now = new Date('2026-09-28T12:00:00.000Z');
+    expect(getDemoReferenceDate('2025-2026', now).toISOString()).toBe('2026-06-15T12:00:00.000Z');
+    expect(getDemoReferenceDate('2026-2027', now).toISOString()).toBe(now.toISOString());
+    expect(() => getDemoReferenceDate('2027-2028', now)).toThrow('current or a past');
+  });
+  it('accepts a selected year in either CLI form and rejects invalid years', () => {
+    expect(getConfiguredSeedAcademicYear(new Date(2027, 8, 1), ['--year=2024-2025'])).toBe('2024-2025');
+    expect(getConfiguredSeedAcademicYear(new Date(2027, 8, 1), ['--year', '2025-2026'])).toBe('2025-2026');
+    expect(() => parseSeedAcademicYear('2025-2027')).toThrow();
+    expect(() => getConfiguredSeedAcademicYear(new Date(), ['--year'])).toThrow();
+  });
   it('keeps July closeout and summer in the prior teaching year', () => {
     expect(getSeedAcademicYear(new Date(2027, 6, 14))).toBe('2026-2027');
     expect(getSeedAcademicYear(new Date(2027, 6, 15))).toBe('2026-2027');

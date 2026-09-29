@@ -45,6 +45,7 @@ import { useTranslation } from 'najm-i18n/react';
 import type { TranslationParams } from 'najm-i18n';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { useParentDashboard } from '../../hooks/useParentDashboard';
 
 interface ParentProfileProps {
@@ -246,6 +247,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
         subtitle={text('subtitle')}
       >
         <NPageHeaderActions>
+          <ViewingYearSelector />
           <NButton
             type="button"
             variant="outline"

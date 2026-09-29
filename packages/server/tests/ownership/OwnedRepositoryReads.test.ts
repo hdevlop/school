@@ -12,6 +12,7 @@ import { ExamRepository } from '../../src/modules/exams/ExamRepository';
 import { EventRepository } from '../../src/modules/events/EventRepository';
 import { GradeRepository } from '../../src/modules/grades/GradeRepository';
 import { ParentRepository } from '../../src/modules/parents/ParentRepository';
+import { ParentChildrenRepository } from '../../src/modules/parents/ParentChildrenRepository';
 import { SectionRepository } from '../../src/modules/sections/SectionRepository';
 import { StudentRepository } from '../../src/modules/students/StudentRepository';
 import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
@@ -137,6 +138,7 @@ const OWNED_READS: Read[] = [
   ['events getByClass', () => inYear(new EventRepository()), 'getByClass', ['class-1']],
   ['events getUpcoming', () => inYear(new EventRepository()), 'getUpcoming', []],
   ['events getEventsByParticipant', () => inYear(new EventRepository()), 'getEventsByParticipant', ['participant-1']],
+  ['events getUpcomingForParent', () => inYear(new EventRepository()), 'getUpcomingForParent', ['parent-user-7']],
   ['grades getById', () => inYear(new GradeRepository()), 'getById', ['id-1']],
   ['grades getAll in a year', () => inYear(new GradeRepository()), 'getAll', []],
   ['grades getByAssessment', () => inYear(new GradeRepository()), 'getByAssessment', ['assessment-1']],
@@ -151,16 +153,19 @@ const OWNED_READS: Read[] = [
   ['parents getByUserId', () => new ParentRepository(), 'getByUserId', ['user-9']],
   ['parents getReadableByCin', () => new ParentRepository(), 'getReadableByCin', ['AB123']],
   ['parents getReadableByPhone', () => new ParentRepository(), 'getReadableByPhone', ['0600000000']],
+  // A parent's children are student records, read under the Student rules.
+  ['parent children in a year', () => inYear(new ParentChildrenRepository()), 'getChildren', ['parent-1']],
+  ['parent children linked now', () => inYear(new ParentChildrenRepository()), 'getLinkedChildren', ['parent-1']],
   ['sections getById', () => new SectionRepository(), 'getById', ['id-1']],
   ['sections getAll in a year', () => inYear(new SectionRepository()), 'getAll', []],
   ['sections getInSelectedYear', () => inYear(new SectionRepository()), 'getInSelectedYear', ['id-1']],
   ['students getById', () => new StudentRepository(), 'getById', ['id-1']],
   ['students getByUserId', () => new StudentRepository(), 'getByUserId', ['user-9']],
-  ['students getAll in a year', () => new StudentRepository(), 'getAll', [{ academicYearId: 'year-old' }]],
-  ['students getAll for one student', () => new StudentRepository(), 'getAll', [{ academicYearId: 'year-old', studentId: 'student-1' }]],
-  ['students getAll on a date', () => new StudentRepository(), 'getAll', [{ academicYearId: 'year-old', onDate: '2025-10-01' }]],
-  ['teachers getAll', () => new TeacherRepository(), 'getAll', []],
-  ['teachers getById', () => new TeacherRepository(), 'getById', ['id-1']],
+  ['students getAll in a year', () => inYear(new StudentRepository()), 'getAll', [{}]],
+  ['students getAll for one student', () => inYear(new StudentRepository()), 'getAll', [{ studentId: 'student-1' }]],
+  ['students getAll on a date', () => inYear(new StudentRepository()), 'getAll', [{ onDate: '2025-10-01' }]],
+  ['teachers getAll', () => inYear(new TeacherRepository()), 'getAll', []],
+  ['teachers getById', () => inYear(new TeacherRepository()), 'getById', ['id-1']],
   ['teachers getByUserId', () => new TeacherRepository(), 'getByUserId', ['user-9']],
 ];
 
@@ -173,8 +178,8 @@ const UNSCOPED_LOOKUPS: Read[] = [
   ['parents getByCin', () => new ParentRepository(), 'getByCin', ['AB123']],
   ['parents getByPhone', () => new ParentRepository(), 'getByPhone', ['0600000000']],
   ['parents getByEmail', () => new ParentRepository(), 'getByEmail', ['p@school.test']],
-  ['teachers getByCin', () => new TeacherRepository(), 'getByCin', ['CD456']],
-  ['teachers getByEmail', () => new TeacherRepository(), 'getByEmail', ['t@school.test']],
+  ['teachers getByCin', () => inYear(new TeacherRepository()), 'getByCin', ['CD456']],
+  ['teachers getByEmail', () => inYear(new TeacherRepository()), 'getByEmail', ['t@school.test']],
   ['grades checkGradeExists', () => new GradeRepository(), 'checkGradeExists', ['student-1', { assessmentId: 'a-1' }]],
 ];
 
@@ -272,6 +277,25 @@ describe('owned repository reads', () => {
     expect(params).toEqual(expect.arrayContaining(['user-1', '2026-08-31', '2025-09-01']));
   });
 
+  // The parent profile's events: what that parent's account would see, and
+  // only what the reader may read too.
+  it("reads one parent's upcoming events by that parent's rule, inside the reader's own", async () => {
+    const read = (role: string) =>
+      lastStatement(() => inYear(new EventRepository()), 'getUpcomingForParent', ['parent-user-7'], role);
+    const principal = await read('principal');
+    expect(principal.sql.match(/"events"\."id" in \(select/g)).toHaveLength(1);
+    expect(principal.sql).toContain(`coalesce("events"."visibility", 'public') in ('public', 'parents')`);
+    expect(principal.sql).toContain('join student_parents link on link.student_id = student.id');
+    expect(principal.sql).toContain('"events"."start_date" >= $');
+    expect(principal.params).toEqual(expect.arrayContaining(['parent-user-7', '2026-08-31', '2025-09-01']));
+    expect(principal.params).not.toContain('user-1');
+
+    const teacher = await read('teacher');
+    expect(teacher.sql.match(/"events"\."id" in \(select/g)).toHaveLength(2);
+    expect(teacher.sql).toContain(`in ('public', 'teachers', 'staff')`);
+    expect(teacher.params).toEqual(expect.arrayContaining(['user-1', 'parent-user-7']));
+  });
+
   it('keeps a filtered attendance list inside ownership when a type is given', async () => {
     const { sql, params } = await lastStatement(attendanceRepo, 'getAll', [{ type: 'student' }], 'teacher');
     expect(sql.match(/"attendance"\."id" in \(select/g)).toHaveLength(3);
@@ -294,8 +318,6 @@ describe('student profile tabs', () => {
     const record = (name: string) => async () => { calls.push(name); return []; };
     return new StudentProfileService(
       { ensureReadable: async () => notReadable(), getById: async () => notReadable() } as any,
-      {} as any,
-      {} as any,
       { getByStudent: record('fees') } as any,
       { getAll: record('attendance') } as any,
       { getAll: record('assessments') } as any,
@@ -308,12 +330,12 @@ describe('student profile tabs', () => {
   it('refuses every tab for a student the user cannot read before loading it', async () => {
     const calls: string[] = [];
     const service = profile(calls);
-    const year = { id: 'year-old', label: '2025-2026' } as any;
-    await expect(service.getOverview('student-9', year)).rejects.toThrow('Student not found');
-    await expect(service.getFinancial('student-9', year)).rejects.toThrow('Student not found');
+    Object.defineProperty(service, 'year', { value: { id: 'year-old', label: '2025-2026' }, configurable: true });
+    await expect(service.getOverview('student-9')).rejects.toThrow('Student not found');
+    await expect(service.getFinancial('student-9')).rejects.toThrow('Student not found');
     await expect(service.getTransport('student-9')).rejects.toThrow('Student not found');
-    await expect(service.getAttendanceSummary('student-9', year)).rejects.toThrow('Student not found');
-    await expect(service.getAcademic('student-9', year)).rejects.toThrow('Student not found');
+    await expect(service.getAttendanceSummary('student-9')).rejects.toThrow('Student not found');
+    await expect(service.getAcademic('student-9')).rejects.toThrow('Student not found');
     expect(calls).toEqual([]);
   });
 });

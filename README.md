@@ -114,6 +114,34 @@ terminals. Choose `admin`, `demo`, or `reset-demo`; the reset option asks for
 confirmation before deleting school data. Use `bun run gen:demo:ui` for the
 previous demo generator shortcut.
 
+`bun seed demo` asks which academic year to fill. You can also specify it directly:
+
+```bash
+bun seed demo --year=2025-2026 --students=100
+bun seed demo --year=2024-2025 --students=100
+```
+
+Each run adds separate demo people and year-specific classes, sections, fees,
+and dated records. Earlier years are preserved; existing Settings and the active
+year stay unchanged. On a fresh database the active year starts at the current
+teaching year, even when seeding an older year. Current and past years are supported.
+Existing years must have a verified September-June calendar and be open or closed.
+Repeat runs add more demo people; they do not replace a year's previous demo.
+Use `bun run seed:demo --year=2025-2026` for the direct script;
+`seed:full` still resets all demo data and should not be used to add another year.
+
+Run `bun run db:migrate` before seeding. If a seed stopped at Announcements after
+Payroll completed, resume with the same year and class selection:
+
+```bash
+bun seed demo --year=2025-2026 --resume-from=announcements
+```
+
+This recovery skips the completed financial and identity phases and uses the
+existing selected-year students and teachers for the remaining records. It is
+intended for a run that failed at Announcements; later failures require review
+before resuming, since this option adds the remaining records again.
+
 4. **Set up the database**
 ```bash
 # Generate migrations from schema changes

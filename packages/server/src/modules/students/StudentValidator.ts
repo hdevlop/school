@@ -12,6 +12,9 @@ type ExistingStudent = NonNullable<Awaited<ReturnType<StudentRepository['getById
 
 @Service()
 export class StudentValidator {
+  ensureCorrectionActor(): never {
+    return Err(403, 'Enrollment corrections require an authenticated administrator');
+  }
   @I18n('students.errors') private st!: (key: string) => string;
 
   constructor(

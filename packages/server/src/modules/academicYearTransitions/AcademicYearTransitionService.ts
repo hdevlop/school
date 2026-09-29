@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto';
-import { Err, Service, Transaction } from '../../najm';
-import { parseSchoolYearLabel } from '@sms/contracts/academic-years';
+import { Service, Transaction } from '../../najm';
 import { SectionRepository } from '../sections/SectionRepository';
 import { SettingsRepository } from '../settings/SettingsRepository';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
 import { AcademicYearMigrationIssueRepository } from '../academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
 import { AcademicYearTransitionRepository } from './AcademicYearTransitionRepository';
+import { AcademicYearTransitionValidator } from './AcademicYearTransitionValidator';
 import type { CommitAcademicYearTransitionDto, PreviewAcademicYearTransitionDto } from './AcademicYearTransitionDto';
 
 type PreviewIssue = {
@@ -28,6 +28,7 @@ export class AcademicYearTransitionService {
     private sections: SectionRepository,
     private migrationIssues: AcademicYearMigrationIssueRepository,
     private runs: AcademicYearTransitionRepository,
+    private validator: AcademicYearTransitionValidator,
   ) {}
 
   async preview(targetYearId: string, data: PreviewAcademicYearTransitionDto) {
@@ -36,23 +37,9 @@ export class AcademicYearTransitionService {
       this.years.requireId(targetYearId),
       this.settings.getAdminSettings(),
     ]);
-    if (!settings || settings.activeAcademicYearId !== sourceYear.id ||
-      settings.currentAcademicYear !== sourceYear.label) {
-      Err(409, 'The source year must be the active Settings year');
-    }
-    const sourceLabel = parseSchoolYearLabel(sourceYear.label);
-    const targetLabel = parseSchoolYearLabel(targetYear.label);
-    if (!sourceLabel || !targetLabel || sourceLabel.endYear !== targetLabel.startYear ||
-      sourceYear.id === targetYear.id || sourceYear.status !== 'open' ||
-      targetYear.status !== 'draft' || sourceYear.provenance !== 'verified' ||
-      targetYear.provenance !== 'verified') {
-      Err(409, 'Transition requires adjacent, verified source and draft target years');
-    }
-    if (data.enrolledOn < targetYear.reportingStartsOn ||
-      data.enrolledOn > targetYear.reportingEndsOn ||
-      data.enrolledOn <= sourceYear.reportingEndsOn) {
-      Err(422, 'Target enrollment date must follow the source year and belong to the target year');
-    }
+    const activeSettings = this.validator.ensureActiveSource(settings, sourceYear);
+    this.validator.ensureTransitionYears(sourceYear, targetYear);
+    this.validator.ensureEnrollmentDate(sourceYear, targetYear, data.enrolledOn);
 
     const [sourceRoster, targetRoster, targetRosterAtDate, targetSections, activeProjections, openMigrationIssueCount] = await Promise.all([
       this.enrollments.listAnnualRoster(sourceYear.id),
@@ -157,7 +144,7 @@ export class AcademicYearTransitionService {
     const capacity = [...proposedBySection].map(([sectionId, proposedCount]) => {
       const section = targetBySection.get(sectionId)!;
       const existingCount = existingBySection.get(sectionId) ?? 0;
-      const limit = section.maxStudents ?? settings.maxClassSize ?? null;
+      const limit = section.maxStudents ?? activeSettings.maxClassSize ?? null;
       if (limit === null || limit <= 0 || existingCount + proposedCount > limit) {
         issues.push({ code: limit === null || limit <= 0 ? 'unknown-target-capacity' : 'target-capacity-exceeded', sectionId });
       }
@@ -215,31 +202,20 @@ export class AcademicYearTransitionService {
     } });
     const prior = await this.runs.findByKey(data.idempotencyKey);
     if (prior) {
-      if (prior.payloadHash !== payloadHash || prior.targetAcademicYearId !== targetYearId) {
-        Err(409, 'Transition idempotency key was used with another payload');
-      }
+      this.validator.ensureMatchingPayload(prior, payloadHash, targetYearId);
       return prior;
     }
 
     await this.runs.lockScope(data.preview.sourceAcademicYearId, targetYearId);
     const afterLock = await this.runs.findByKey(data.idempotencyKey);
     if (afterLock) {
-      if (afterLock.payloadHash !== payloadHash || afterLock.targetAcademicYearId !== targetYearId) {
-        Err(409, 'Transition idempotency key was used with another payload');
-      }
+      this.validator.ensureMatchingPayload(afterLock, payloadHash, targetYearId);
       return afterLock;
     }
-    if (await this.runs.findByTarget(targetYearId)) {
-      Err(409, 'Target year already has a committed transition');
-    }
+    this.validator.ensureTargetAvailable(await this.runs.findByTarget(targetYearId));
 
     const preview = await this.preview(targetYearId, data.preview);
-    if (preview.previewHash !== data.expectedPreviewHash) {
-      Err(409, 'Transition preview is stale; review the current roster and capacity');
-    }
-    if (!preview.commitAvailable) {
-      Err(409, 'Transition preview has unresolved issues');
-    }
+    this.validator.ensurePreviewCurrent(preview, data.expectedPreviewHash);
 
     const outcomes: Array<{
       studentId: string;
@@ -287,8 +263,7 @@ export class AcademicYearTransitionService {
 
   async getRun(id: string) {
     const run = await this.runs.findById(id);
-    if (!run) Err(404, 'Academic-year transition run not found');
-    return run;
+    return this.validator.ensureRunExists(run);
   }
 
   // Activation's required preparation: the committed transition from the
@@ -297,9 +272,6 @@ export class AcademicYearTransitionService {
   async lockCommittedRun(sourceYearId: string, targetYearId: string) {
     await this.runs.lockScope(sourceYearId, targetYearId);
     const run = await this.runs.findByTarget(targetYearId);
-    if (!run || run.sourceAcademicYearId !== sourceYearId) {
-      Err(409, 'Commit the academic-year transition from the active year before activating this year');
-    }
-    return run!;
+    return this.validator.ensureCommittedRun(run, sourceYearId);
   }
 }

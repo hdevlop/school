@@ -1,4 +1,4 @@
-import { Err, Service, Transaction, Events, EventService } from '../../../najm';
+import { Service, Transaction, Events, EventService } from '../../../najm';
 import { FeeValidator } from './FeeValidator';
 import { getBusinessDate, isEmpty, pickProps } from '../../../shared';
 import { FeeRepository } from './FeeRepository';
@@ -6,10 +6,8 @@ import {
   amountToString,
   calculateFeeAmounts,
   calculateFeeStatus,
-  FeeEffectiveDateError,
   formatDateOnly,
   getCurrentAcademicYear,
-  isValidDateOnly,
   resolveFeeEffectiveDate,
 } from '../utils';
 import { InstallmentService } from '../installments/InstallmentService';
@@ -32,13 +30,6 @@ const FEE_CREATE_KEYS = [
   'baseAmount', 'grossAmount', 'netAmount', 'paidAmount',
   'discountAmount', 'discountReason', 'notes', 'assignedBy'
 ];
-
-function mapFeeEffectiveDateError(error: unknown): never {
-  if (error instanceof FeeEffectiveDateError) {
-    Err(400, error.message);
-  }
-  throw error;
-}
 
 @Service()
 export class FeeService {
@@ -109,7 +100,7 @@ export class FeeService {
       : await this.academicYears.requireLabel(label);
     // Explicit administrative preparation (such as rollover) calls this
     // service without a request role; ordinary fee screens cannot charge drafts.
-    if (role && year.status === 'draft') Err(409, 'Fees cannot be charged to a draft academic year');
+    this.feeValidator.ensureWritableYear(year, role);
     return year;
   }
 
@@ -117,9 +108,7 @@ export class FeeService {
   // `requestYear` is the year the request works in (the form's captured
   // year); it charges a fee that names no year of its own.
   async create(data: CreateFeeDto, assignedBy?: string, role?: string) {
-    if (role && data.academicYear && data.academicYear !== this.year.label) {
-      Err(409, 'Fee year must match the selected academic year');
-    }
+    if (role) this.feeValidator.ensureSelectedFeeYear(data.academicYear, this.year.label);
     await this.feeValidator.validate(data, null, role ? this.year.label : undefined);
 
     const [feeType, student, settings] = await Promise.all([
@@ -128,9 +117,7 @@ export class FeeService {
       this.settingsRepository.getAdminSettings(),
     ]);
 
-    if (!student) {
-      Err(404, 'Student not found');
-    }
+    this.feeValidator.ensureStudentRecord(student);
 
     const startMonth = settings?.startMonth || 'september';
     const endMonth = settings?.endMonth || 'june';
@@ -141,9 +128,7 @@ export class FeeService {
       getCurrentAcademicYear(startMonth);
     await this.requireWritableYear(academicYear, role);
 
-    if (!isValidDateOnly(student.enrollmentDate)) {
-      Err(400, 'Student is missing a valid enrollment date');
-    }
+    this.feeValidator.ensureEnrollmentDate(student.enrollmentDate);
 
     let resolvedEffectiveDate: string;
     try {
@@ -155,8 +140,7 @@ export class FeeService {
         academicYear,
       });
     } catch (error) {
-      mapFeeEffectiveDateError(error);
-      throw error;
+      this.feeValidator.mapEffectiveDateError(error);
     }
 
     const calculationContext = {
@@ -213,9 +197,7 @@ export class FeeService {
   }
 
   async createBulk(fees: CreateFeeDto[], assignedBy?: string, role?: string) {
-    if (role && fees.some((fee) => fee.academicYear && fee.academicYear !== this.year.label)) {
-      Err(409, 'Fee year must match the selected academic year');
-    }
+    if (role) this.feeValidator.ensureSelectedFeeYears(fees, this.year.label);
     const settings = await this.settingsRepository.getAdminSettings();
     const defaultYear = (role ? this.year.label : undefined) || settings?.currentAcademicYear ||
       getCurrentAcademicYear(settings?.startMonth || 'september');
@@ -239,25 +221,15 @@ export class FeeService {
   // year the fee names, else the request's. The roster date is the fee's
   // effective date, or today when the year holds today.
   async createClassBulk(data: ClassBulkFeeDto, assignedBy?: string, role?: string) {
-    if (role && data.academicYear && data.academicYear !== this.year.label) {
-      Err(409, 'Fee year must match the selected academic year');
-    }
+    if (role) this.feeValidator.ensureSelectedFeeYear(data.academicYear, this.year.label);
     const year = await this.requireWritableYear(data.academicYear || this.year.label, role);
     const rosterDate = data.effectiveDate || formatDateOnly(getBusinessDate());
-    if (!isValidDateOnly(rosterDate) || rosterDate < year.reportingStartsOn || rosterDate > year.reportingEndsOn) {
-      Err(422, data.effectiveDate
-        ? 'Bulk fee effective date must belong to the selected academic year'
-        : 'Year-targeted class fees require an effective date for the dated roster');
-    }
+    this.feeValidator.ensureRosterDate(rosterDate, year, data.effectiveDate);
     const yearClasses = await this.classRepository.getByAcademicYear(year.label);
-    if (!yearClasses.some((schoolClass: { id: string }) => schoolClass.id === data.classId)) {
-      Err(422, 'Bulk fee class must belong to the selected academic year');
-    }
+    this.feeValidator.ensureClassInYear(yearClasses, data.classId);
     if (data.sectionId) {
       const classSections = await this.classRepository.getClassSections(data.classId);
-      if (!classSections.some((section: { id: string }) => section.id === data.sectionId)) {
-        Err(422, 'Bulk fee section must belong to the selected class');
-      }
+      this.feeValidator.ensureSectionInClass(classSections, data.sectionId);
     }
     const roster = await this.enrollments.listRosterAtDate(year.id, rosterDate);
     const matchingStudents = roster
@@ -305,9 +277,7 @@ export class FeeService {
   async processFees(student?, fees?: CreateFeeDto[], user?, yearEnrolledOn?: string, enrollmentYear?: string) {
     if (isEmpty(fees)) return;
 
-    if (enrollmentYear && fees.some((fee) => fee.academicYear && fee.academicYear !== enrollmentYear)) {
-      Err(409, 'Student fee year must match the new enrollment year');
-    }
+    this.feeValidator.ensureEnrollmentFeeYear(fees, enrollmentYear);
 
     const studentId = student?.id;
     const assignedBy = user?.id;
@@ -330,9 +300,7 @@ export class FeeService {
     await this.feeValidator.validate(data, id);
 
     const existingFee = await this.feeRepository.getById(id);
-    if (data.academicYear && data.academicYear !== existingFee.academicYear) {
-      Err(409, 'Changing a fee to another academic year requires a separate correction workflow');
-    }
+    this.feeValidator.ensureYearUnchanged(data.academicYear, existingFee.academicYear);
     await this.requireWritableYear(existingFee.academicYear, role);
     const feeData: Record<string, any> = pickProps(data, FEE_UPDATE_KEYS);
 
@@ -345,10 +313,7 @@ export class FeeService {
       data.studentId !== undefined;
 
     if (needsRecalculation) {
-      const hasPaymentHistory = Number(existingFee.paymentCount || 0) > 0;
-      if (hasPaymentHistory) {
-        Err(400, 'Cannot change fee schedule, amount, or student after payments have been recorded');
-      }
+      this.feeValidator.ensureScheduleEditable(Number(existingFee.paymentCount || 0));
 
       const [feeType, student, settings] = await Promise.all([
         this.feeValidator.validateFeeTypeExists(existingFee.feeTypeId),
@@ -356,12 +321,8 @@ export class FeeService {
         this.settingsRepository.getAdminSettings(),
       ]);
 
-      if (!student) {
-        Err(404, 'Student not found');
-      }
-      if (!isValidDateOnly(student.enrollmentDate)) {
-        Err(400, 'Student is missing a valid enrollment date');
-      }
+      this.feeValidator.ensureStudentRecord(student);
+      this.feeValidator.ensureEnrollmentDate(student.enrollmentDate);
 
       const startMonth = settings?.startMonth || 'september';
       const endMonth = settings?.endMonth || 'june';
@@ -377,8 +338,7 @@ export class FeeService {
           academicYear,
         });
       } catch (error) {
-        mapFeeEffectiveDateError(error);
-        throw error;
+        this.feeValidator.mapEffectiveDateError(error);
       }
 
       const schedule = data.schedule !== undefined ? data.schedule : existingFee.schedule;
@@ -490,7 +450,7 @@ export class FeeService {
     const existing = role
       ? await this.feeValidator.checkExists(id)
       : await this.feeRepository.getByIdAllYears(id);
-    if (!existing) Err(404, 'Fee not found');
+    this.feeValidator.ensureRecalculationFee(existing);
     if (role) await this.requireWritableYear(existing.academicYear, role);
     const totalAllocated = await this.feeRepository.getAllocatedTotal(id);
     const fee = await this.feeRepository.getByIdAllYears(id);

@@ -1,6 +1,7 @@
 import { Label } from 'najm-kit';
 import { NAvatar, NButton, useNSidebar } from 'najm-kit';
 import { CreditCard, Menu } from 'lucide-react';
+import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 
 export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) => {
 
@@ -66,17 +67,19 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
             </div>
          )}
 
-         {/* Right: Action */}
-         <NButton
-            onClick={onPayClick}
-            disabled={payDisabled}
-            title={payDisabled ? 'Nothing to pay' : undefined}
-            className="shrink-0 px-8 font-semibold"
-            size="lg"
-         >
-            <CreditCard className="mr-2 h-4 w-4" />
-            Pay
-         </NButton>
+         <div className="flex shrink-0 items-center gap-1">
+            <ViewingYearSelector />
+            <NButton
+               onClick={onPayClick}
+               disabled={payDisabled}
+               title={payDisabled ? 'Nothing to pay' : undefined}
+               className="shrink-0 px-8 font-semibold"
+               size="lg"
+            >
+               <CreditCard className="mr-2 h-4 w-4" />
+               Pay
+            </NButton>
+         </div>
       </div>
    );
 };

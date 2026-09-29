@@ -148,6 +148,15 @@ export class ParentValidator {
     return await this.ensureCanDelete(parentId);
   }
 
+  // Deleting every parent would unlink every year's children, since the link
+  // cascades. Refuse while any link remains, as a single delete does.
+  async ensureNoneLinked() {
+    if (await this.parentRepository.hasAnyLinks()) {
+      Err(409, this.pt('someLinked'));
+    }
+    return true;
+  }
+
   async ensureStudentExists(studentId: string) {
     const studentExists = await this.parentRepository.checkStudentExists(studentId);
     if (!studentExists) {

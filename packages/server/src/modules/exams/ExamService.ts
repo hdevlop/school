@@ -2,6 +2,7 @@ import { Service } from '../../najm';
 import { ExamRepository, type ExamListFilters } from './ExamRepository';
 import { ExamValidator } from './ExamValidator';
 import { pickProps } from '../../shared';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 import type { CreateExamDto, UpdateExamDto } from './ExamDto';
 import { AcademicSourceService } from '../academicSources/AcademicSourceService';
 
@@ -28,7 +29,8 @@ export class ExamService {
 
   /** The year's exams one student sat, or will sit, in their section of the day; today's and later ones when `upcoming`. */
   async getForStudent(studentId: string, { upcoming = false } = {}) {
-    return this.examRepository.getForStudent(studentId, upcoming ? new Date().toISOString().slice(0, 10) : undefined);
+    // Upcoming from the school's business day, not the UTC date.
+    return this.examRepository.getForStudent(studentId, upcoming ? getBusinessDateOnly() : undefined);
   }
 
   async getTodayExams() {

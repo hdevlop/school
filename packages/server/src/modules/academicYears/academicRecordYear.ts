@@ -13,6 +13,14 @@ export function inReportingInterval(date: AnyColumn, year: ReportingYear) {
   return and(gte(date, year.reportingStartsOn), lte(date, year.reportingEndsOn));
 }
 
+/**
+ * Whether a date-only day falls in the year's reporting interval. Today's and
+ * this month's figures belong only to the year that holds today.
+ */
+export function holdsDay(year: Omit<ReportingYear, 'id'>, day: string) {
+  return day >= year.reportingStartsOn && day <= year.reportingEndsOn;
+}
+
 /** Assessments, exams and attendance: the stored year, else the row's date. */
 export function inReportingYear(yearId: AnyColumn, date: AnyColumn, year: ReportingYear): SQL {
   return or(eq(yearId, year.id), and(isNull(yearId), inReportingInterval(date, year)))!;

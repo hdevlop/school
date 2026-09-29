@@ -7,10 +7,6 @@ import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 
 const emailField = z.string().email('Invalid email format').or(z.literal(''));
 const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
-const academicYearField = z
-  .string()
-  .min(9, 'Academic year is required')
-  .regex(/^\d{4}-\d{4}$/, 'Academic year must be in YYYY-YYYY format');
 const locationValueSchema = z.object({
   address: z.string().max(500, 'Address too long'),
   latitude: z.number().min(-90).max(90).nullable(),
@@ -55,6 +51,11 @@ export const SETTINGS_DATE_FORMAT_VALUES = [
 
 export const SETTINGS_TIME_FORMAT_VALUES = ['12', '24'] as const;
 
+// Only what the settings screen shows. A field with a default and no input
+// would be submitted on every save and overwrite the stored value: the year's
+// start and end months (registered calendars change through a reviewed
+// correction), maintenance mode and backups. The active year is shown
+// read-only (AcademicSection): it changes through activation.
 export const settingsSchema = z.object({
   // School Information
   schoolName: z.string().min(2, 'School name must be at least 2 characters').max(200, 'School name too long'),
@@ -64,7 +65,6 @@ export const settingsSchema = z.object({
   schoolEmail: emailField,
   schoolWebsite: z.string().url('Must be a valid URL').max(255, 'School website URL too long').optional(),
   schoolLogo: z.string().url('Must be a valid image URL').max(255, 'School logo URL too long').optional(),
-  currentAcademicYear: academicYearField,
 
   // Academic Settings
   gradingScale: z.any().optional(),
@@ -74,8 +74,6 @@ export const settingsSchema = z.object({
   minimumPassingGrade: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Minimum passing grade must be non-negative').max(100, 'Minimum passing grade cannot exceed 100')).default(60.00),
   defaultExamDuration: numberField(z.number({ error: 'Must be a valid number' }).int('Default exam duration must be in minutes').min(15, 'Exam duration must be at least 15 minutes').max(480, 'Exam duration cannot exceed 480 minutes')).default(120),
   calendarSystem: z.enum(CALENDAR_SYSTEM_VALUES).default('SEMESTER'),
-  startMonth: z.string().default('september'),
-  endMonth: z.string().default('june'),
 
   // Notification Settings
   academicAlerts: z.boolean().default(true),
@@ -92,7 +90,6 @@ export const settingsSchema = z.object({
   examResultsAlerts: z.boolean().default(true),
   disciplinaryAlerts: z.boolean().default(true),
   achievementAlerts: z.boolean().default(true),
-  maintenanceNotifications: z.boolean().default(true),
 
   // Security Settings
   twoFactorEnabled: z.boolean().default(false),
@@ -116,10 +113,6 @@ export const settingsSchema = z.object({
   schoolStartTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid start time format (HH:MM)').default('08:00'),
   schoolEndTime: z.string().regex(/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid end time format (HH:MM)').default('15:00'),
   lunchBreakDuration: numberField(z.number({ error: 'Must be a valid number' }).int('Lunch break duration must be in minutes').min(15, 'Lunch break must be at least 15 minutes').max(120, 'Lunch break cannot exceed 120 minutes')).default(30),
-
-  // Maintenance & Backup Settings
-  maintenanceMode: z.boolean().default(false),
-  autoBackup: z.boolean().default(true),
 });
 
 export type SettingsFormValues = z.input<typeof settingsSchema>;

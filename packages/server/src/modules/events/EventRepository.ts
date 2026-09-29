@@ -1,10 +1,11 @@
 import { Repository } from '../../najm';
-import { and, eq, gte, lte, or, desc, asc, sql, count, type SQL } from 'drizzle-orm';
+import { and, eq, gte, inArray, lte, or, desc, asc, sql, count, type SQL } from 'drizzle-orm';
 import { events, eventParticipants, users, classes, sections } from '../../database/schema';
 import { DB } from '../../database/db';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere, ownedIds } from '../../auth';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 import { Event } from './EventGuards';
 
 export const eventSelect = {
@@ -64,12 +65,12 @@ export const sectionSelect = {
   updatedAt: sections.updatedAt,
 };
 
-@Owned(Event)
 @Repository()
 export class EventRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Event)
+  private ownedWhere!: OwnedWhere;
   private readonly statusEnum = events.status.enumValues;
   private readonly typeEnum = events.type.enumValues;
   private readonly visibilityEnum = events.visibility.enumValues;
@@ -82,7 +83,7 @@ export class EventRepository {
 
   /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+    return and(this.ownedWhere(), this.inSelectedYear(), ...filters);
   }
 
   /** Whether dates overlap the selected year: a new or moved event must stay in it. */
@@ -152,20 +153,37 @@ export class EventRepository {
       .orderBy(desc(events.startDate));
   }
 
-  async getUpcoming() {
-    const today = new Date().toISOString().split('T')[0];
-    return await this.buildEventQuery(and(
-      gte(events.startDate, today),
+  // Scheduled or ongoing events starting on the business day or later.
+  private upcoming() {
+    return and(
+      gte(events.startDate, getBusinessDateOnly()),
       or(
         eq(events.status, 'scheduled'),
         eq(events.status, 'ongoing')
       )
-    ))
+    );
+  }
+
+  async getUpcoming() {
+    return await this.buildEventQuery(this.upcoming())
+      .orderBy(asc(events.startDate));
+  }
+
+  /**
+   * The upcoming events one parent account sees by the Event parent rule
+   * (their audience, and their children's classes and sections), and only
+   * those the reader may read too.
+   */
+  async getUpcomingForParent(parentUserId: string) {
+    return await this.buildEventQuery(
+      this.upcoming(),
+      inArray(events.id, ownedIds(Event, 'parent', parentUserId)),
+    )
       .orderBy(asc(events.startDate));
   }
 
   async getPast() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBusinessDateOnly();
     return await this.buildEventQuery(and(
       lte(events.endDate, today),
       or(
@@ -185,7 +203,7 @@ export class EventRepository {
   }
 
   async getActiveEvents() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBusinessDateOnly();
     return await this.buildEventQuery(and(
       lte(events.startDate, today),
       gte(events.endDate, today),
@@ -195,7 +213,7 @@ export class EventRepository {
   }
 
   async getTodayEvents() {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBusinessDateOnly();
     return await this.buildEventQuery(and(
       lte(events.startDate, today),
       gte(events.endDate, today),

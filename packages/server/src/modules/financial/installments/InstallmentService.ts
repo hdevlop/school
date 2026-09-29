@@ -1,4 +1,4 @@
-import { Service, Events, EventService, Err } from '../../../najm';
+import { Service, Events, EventService } from '../../../najm';
 import { InstallmentRepository } from './InstallmentRepository';
 import { InstallmentValidator } from './InstallmentValidator';
 import { SettingsRepository } from '../../settings/SettingsRepository';
@@ -56,9 +56,7 @@ export class InstallmentService {
   }
 
   async create(data: CreateInstallmentDto) {
-    if (data.paidAmount !== undefined || data.status !== undefined) {
-      Err(400, 'Installment payment state is managed by allocations');
-    }
+    this.installmentValidator.ensurePaymentStateUntouched(data);
     await this.installmentValidator.validate(data);
     const created = this.installmentRepository.create(data);
     this.events.emit('installment.created', created);
@@ -66,13 +64,9 @@ export class InstallmentService {
   }
 
   async update(id: string, data: UpdateInstallmentDto) {
-    if (data.paidAmount !== undefined || data.status !== undefined) {
-      Err(400, 'Installment payment state is managed by allocations');
-    }
+    this.installmentValidator.ensurePaymentStateUntouched(data);
     await this.installmentValidator.validate(data, id);
-    if (await this.installmentRepository.hasAllocations(id)) {
-      Err(409, 'Cannot edit an installment with payment allocations');
-    }
+    await this.installmentValidator.ensureCanEdit(id);
     const updated = await this.installmentRepository.update(id, data);
     this.events.emit('installment.updated', updated);
     return updated;
@@ -80,9 +74,7 @@ export class InstallmentService {
 
   async delete(id: string) {
     await this.installmentValidator.checkExists(id);
-    if (await this.installmentRepository.hasAllocations(id)) {
-      Err(409, 'Cannot delete an installment with payment allocations');
-    }
+    await this.installmentValidator.ensureCanDelete(id);
     const deleted = await this.installmentRepository.delete(id);
     this.events.emit('installment.deleted', deleted);
     return deleted;

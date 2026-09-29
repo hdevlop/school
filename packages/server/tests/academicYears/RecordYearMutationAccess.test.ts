@@ -3,6 +3,8 @@ import { AcademicYearValidator } from '../../src/modules/academicYears/AcademicY
 import { AttendanceService } from '../../src/modules/attendance/AttendanceService';
 import { GradeService } from '../../src/modules/grades/GradeService';
 import { yearRegistry } from './fixtures/yearRegistry';
+import { attendanceValidator } from './fixtures/attendanceValidator';
+import { gradeValidator } from './fixtures/gradeValidator';
 
 const oldYear = { id: 'old-year', label: '2026-2027', status: 'closed',
   reportingStartsOn: '2026-09-01', reportingEndsOn: '2027-08-31' };
@@ -40,7 +42,9 @@ describe('record year access', () => {
     let studentChecked = false;
     const grade = new GradeService(
       { teacherIdForUser: async () => 'teacher-1' } as any,
-      { ensureStudentExists: async () => { studentChecked = true; } } as any,
+      gradeValidator({ teacherIdForUser: async () => 'teacher-1' }, {
+        ensureStudentExists: async () => { studentChecked = true; },
+      }),
       {} as any,
       {} as any,
       {} as any,
@@ -57,11 +61,12 @@ describe('record year access', () => {
   it('lets a teacher correct only grades sourced from their own assignment', async () => {
     let updates = 0;
     let sourceTeacherId = 'teacher-2';
+    const repository = { teacherIdForUser: async () => 'teacher-1',
+      update: async () => { updates++; } };
     const grade = new GradeService(
-      { teacherIdForUser: async () => 'teacher-1',
-        update: async () => { updates++; } } as any,
-      { ensureExists: async () => ({ id: 'grade-1', academicYearId: activeYear.id,
-        assessment: { date: '2027-10-01' }, teacher: { id: sourceTeacherId } }) } as any,
+      repository as any,
+      gradeValidator(repository, { ensureExists: async () => ({ id: 'grade-1', academicYearId: activeYear.id,
+        assessment: { date: '2027-10-01' }, teacher: { id: sourceTeacherId } }) }),
       {} as any,
       { resolveRecord: async () => activeYear } as any,
       {} as any,
@@ -80,7 +85,9 @@ describe('record year access', () => {
     let validated = false;
     const attendance = new AttendanceService(
       { create: async () => { throw new Error('created'); } } as any,
-      { ensureSelectedYear: () => {}, validateStudentAttendance: async () => { validated = true; } } as any,
+      attendanceValidator({}, {
+        ensureSelectedYear: () => {}, validateStudentAttendance: async () => { validated = true; },
+      }),
       { resolveRecord: async () => { throw new Error('Other school years are restricted'); },
         requireLabel: async () => oldYear } as any,
       { listYearContexts: async () => [{ id: 'section-1', academicYear: oldYear.label }] } as any,
@@ -93,16 +100,19 @@ describe('record year access', () => {
 
   it('resolves a teacher from the authenticated user for an active section mark', async () => {
     let validatedTeacherId: string | undefined;
+    const repository = {
+      teacherIdForUser: async (userId: string) => userId === 'user-1' ? 'teacher-1' : null,
+      isTeacherInSection: async (teacherId: string, sectionId: string) =>
+        teacherId === 'teacher-1' && sectionId === 'section-1',
+      getAttendanceMode: async () => 'per_class',
+      create: async (row: unknown) => row,
+    };
     const attendance = new AttendanceService(
-      { teacherIdForUser: async (userId: string) => userId === 'user-1' ? 'teacher-1' : null,
-        isTeacherInSection: async (teacherId: string, sectionId: string) =>
-          teacherId === 'teacher-1' && sectionId === 'section-1',
-        getAttendanceMode: async () => 'per_class',
-        create: async (row: unknown) => row } as any,
-      { ensureSelectedYear: () => {}, validateStudentAttendance: async (_data: unknown, context: any) => {
+      repository as any,
+      attendanceValidator(repository, { ensureSelectedYear: () => {}, validateStudentAttendance: async (_data: unknown, context: any) => {
         validatedTeacherId = context.user.teacherId;
         return 'assignment-1';
-      } } as any,
+      } }),
       { resolveRecord: async () => activeYear, requireLabel: async () => activeYear } as any,
       { listYearContexts: async () => [{ id: 'section-1', academicYear: activeYear.label }] } as any,
     );

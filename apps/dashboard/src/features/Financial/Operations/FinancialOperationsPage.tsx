@@ -22,6 +22,7 @@ import {
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
 const unwrap = (value: any) => value?.data?.data ?? value?.data ?? value;
@@ -163,19 +164,20 @@ export default function FinancialOperationsPage() {
   return (
     <div className="h-full overflow-y-auto px-4 pb-8">
       <header className="mb-5 rounded-xl border bg-card p-5">
-        {/* This page predates NPageHeader and so has no header-owned sidebar
-            trigger. Without one it is the only dashboard route a phone can
-            reach but not navigate away from. */}
-        <NButton
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="-ms-2 mb-2 lg:hidden"
-          aria-label="Open sidebar"
-          onClick={() => sidebar?.openMobile()}
-        >
-          <Menu size={18} />
-        </NButton>
+        <div className="mb-2 flex items-center justify-between">
+          {/* This page predates NPageHeader and carries its own mobile sidebar trigger. */}
+          <NButton
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="-ms-2 lg:hidden"
+            aria-label="Open sidebar"
+            onClick={() => sidebar?.openMobile()}
+          >
+            <Menu size={18} />
+          </NButton>
+          <div className="ms-auto"><ViewingYearSelector /></div>
+        </div>
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Financial controls</p>
         <h1 className="mt-1 text-2xl font-semibold">Operations and reconciliation</h1>
         <p className="mt-1 text-sm text-muted-foreground">Manage check settlement, unapplied credit, audit history, delivery runs, and academic-year rollover.</p>

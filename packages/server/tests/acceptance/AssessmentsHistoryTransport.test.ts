@@ -64,7 +64,8 @@ describe('authenticated Assessments transport on the marked PostgreSQL fixture',
   it('creates in a past year only for matching sections and scopes updates and deletion', async () => {
     const body = { classId: 'history-class-2025', sectionId: 'history-section-2025-a',
       subjectId: 'history-subject-math', teacherId: 'history-teacher', title: 'History term quiz',
-      date: '2025-12-15', duration: 45, totalMarks: 20, passingMarks: 10 };
+      date: '2025-12-15', duration: 45, totalMarks: 20, passingMarks: 10,
+      type: 'project', status: 'completed' };
     const created = await request('/assessments', '2025-2026', 'POST', body);
     expect(created.status).toBe(200);
     const id = created.body.data.id as string;
@@ -74,6 +75,8 @@ describe('authenticated Assessments transport on the marked PostgreSQL fixture',
       expect((await request(`/assessments/${id}`, '2026-2027', 'PUT', { title: 'Wrong year' })).status).toBe(404);
       expect((await request(`/assessments/${id}`, '2025-2026', 'PUT', { title: 'Corrected quiz' })).body.data.title)
         .toBe('Corrected quiz');
+      expect((await request(`/assessments/${id}`, '2025-2026')).body.data)
+        .toMatchObject({ type: 'project', status: 'completed' });
     } finally {
       expect((await request(`/assessments/${id}`, '2025-2026', 'DELETE')).status).toBe(200);
     }

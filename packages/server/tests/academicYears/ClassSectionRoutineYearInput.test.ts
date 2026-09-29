@@ -2,6 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import { createClassDto, createClassesBulkDto, updateClassDto } from '../../src/modules/classes/ClassDto';
 import { createRoutineScheduleDto, routineListQuery } from '../../src/modules/classRoutines/ClassRoutineDto';
 import { ClassRoutineService } from '../../src/modules/classRoutines/ClassRoutineService';
+import { ClassRoutineValidator } from '../../src/modules/classRoutines/ClassRoutineValidator';
 
 // A class, its sections and its timetables take the request's selected year.
 // The database and transport suites (ClassesHistory*) prove the reads and
@@ -28,7 +29,7 @@ describe("a teacher's routine", () => {
     let read = false;
     const routines = new ClassRoutineService(
       { getTeacherScheduleIdsInSelectedYear: async () => { read = true; return []; } } as any,
-      {} as any,
+      new ClassRoutineValidator({} as any),
     );
     await expect(routines.getTeacherSchedule('teacher-2', { role: 'teacher', teacherId: 'teacher-1' }))
       .rejects.toThrow();

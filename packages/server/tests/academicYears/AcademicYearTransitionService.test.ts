@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { AcademicYearTransitionService } from '../../src/modules/academicYearTransitions/AcademicYearTransitionService';
+import { AcademicYearTransitionValidator } from '../../src/modules/academicYearTransitions/AcademicYearTransitionValidator';
 import { previewAcademicYearTransitionDto } from '../../src/modules/academicYearTransitions/AcademicYearTransitionDto';
 
 const sourceYear = {
@@ -73,6 +74,7 @@ function harness(input: {
         return run;
       },
     } as any,
+    new AcademicYearTransitionValidator(),
   );
   return { service, writes };
 }

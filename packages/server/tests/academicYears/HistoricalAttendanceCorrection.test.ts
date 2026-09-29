@@ -1,19 +1,10 @@
 import { describe, expect, it } from 'bun:test';
 import { AttendanceService } from '../../src/modules/attendance/AttendanceService';
-import { AttendanceValidator } from '../../src/modules/attendance/AttendanceValidator';
-
-function dateValidator() {
-  const validator = new AttendanceValidator(
-    {} as any, {} as any, {} as any, {} as any,
-    {} as any, {} as any, {} as any,
-  );
-  (validator as any).at = (key: string) => key;
-  return validator;
-}
+import { attendanceValidator } from './fixtures/attendanceValidator';
 
 describe('historical attendance correction', () => {
   it('allows an older date for administrators but retains the limit for other roles', async () => {
-    const validator = dateValidator();
+    const validator = attendanceValidator();
     await validator.validateAttendanceDate('2020-09-10', 'admin');
     await validator.validateAttendanceDate('2020-09-10', 'principal');
     await expect(validator.validateAttendanceDate('2020-09-10', 'teacher')).rejects.toThrow();
@@ -31,7 +22,7 @@ describe('historical attendance correction', () => {
         create: async (row: unknown) => row,
         upsertStaffRoster: async () => ({ savedCount: 1, ids: ['attendance-1'] }),
       } as any,
-      {
+      attendanceValidator({}, {
         ensureSelectedYear: (id: string) => expect(id).toBe(markYear.id),
         validateStudentAttendance: async (_data: unknown, context: { user: { role?: string } }) => {
           seen.push(context.user.role);
@@ -40,7 +31,7 @@ describe('historical attendance correction', () => {
         validateStaffAttendance: async (_data: unknown, role?: string) => { seen.push(role); },
         validateAttendanceDate: async (_date: string, role?: string) => { seen.push(role); },
         ensureStaffRosterEligible: async () => {},
-      } as any,
+      }),
       { requireLabel: async () => markYear, findForDate: async () => markYear, resolveRecord: async () => markYear } as any,
       { listYearContexts: async () => [{ id: 'sec1', academicYear: markYear.label }] } as any,
     );

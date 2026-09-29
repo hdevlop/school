@@ -2,10 +2,12 @@
 
 import { RoleService } from 'najm-auth';
 import { db } from '@sms/server/database';
+import { sql } from 'drizzle-orm';
 import { staffRoles } from '@sms/server/database/schema';
 import {
   SettingsService,
   AcademicYearService,
+  AcademicYearRepository,
   AcademicYearValidator,
   SubjectService,
   ClassService,
@@ -39,6 +41,10 @@ import {
 import rolesData from '../admin/data/roles.json';
 import { runSeedTask } from '../shared/run-seed';
 import { schoolSeedData, seedAcademicYear } from '../shared/school-seed-data';
+import { getDemoReferenceDate } from '../shared/academic-year';
+import { prepareDemoYear } from '../shared/demo-year';
+import { remapDemoAcademicReferences } from '../shared/demo-references';
+import { getDemoResumeFrom } from '../shared/demo-resume';
 import { seedAttendance } from '../shared/seed-attendance';
 import {
   alertsPack,
@@ -63,21 +69,24 @@ import {
 } from './generator';
 
 // generate all data in-memory from CLI params (--students, --teachers, --expenses)
-const { students: studentsData, parents: parentsData, fees: feesData } = await studentsPack();
-const { teachers: teachersData } = await teachersPack();
-const { drivers: driversData, vehicles } = await transportPack();
+const resumeFrom = getDemoResumeFrom();
+const studentPack = await studentsPack();
+let studentsData = studentPack.students;
+const { parents: parentsData, fees: feesData } = studentPack;
+let { teachers: teachersData } = await teachersPack();
+let { drivers: driversData, vehicles } = await transportPack();
 const { expenses: expensesData } = await expensesPack();
 const { announcements: announcementsData } = announcementsPack();
 const { events: eventsData } = eventsPack();
-const { assessments: assessmentsData } = assessmentsPack(teachersData);
-const { exams: examsData } = examsPack(teachersData);
-const { alerts: alertsData } = alertsPack(studentsData, teachersData);
+let { assessments: assessmentsData } = assessmentsPack(teachersData);
+let { exams: examsData } = examsPack(teachersData);
+let { alerts: alertsData } = alertsPack(studentsData, teachersData);
 const { vehicleAssignments: vehicleAssignmentsData } = vehicleAssignmentsPack(vehicles, driversData);
 const { studentRoutes: studentRoutesData } = studentRoutesPack(studentsData, vehicles);
 const { disciplineIncidents: disciplineIncidentsData } = disciplinePack(studentsData, teachersData);
 const { behaviorRewards: behaviorRewardsData } = behaviorRewardsPack(studentsData, teachersData);
-const { refuels: refuelsData } = refuelsPack(vehicles, driversData);
-const { maintenance: maintenanceData } = maintenancePack(vehicles);
+let { refuels: refuelsData } = refuelsPack(vehicles, driversData);
+let { maintenance: maintenanceData } = maintenancePack(vehicles);
 const { staff: staffData } = staffPack();
 const { payrollPeriods } = payrollPack();
 
@@ -95,6 +104,8 @@ const selectedSectionsData = schoolSeedData.sectionsData.filter((section: any) =
 
 const normalizedVehiclesData = vehicles.map((vehicle: any) => ({
   ...vehicle,
+  // The dated assignment phase below owns the demo's driver history.
+  driverId: undefined,
   image: null,
   purchasePrice: vehicle.purchasePrice != null ? Number(vehicle.purchasePrice) : null,
   initialMileage: vehicle.initialMileage != null ? Number(vehicle.initialMileage) : null,
@@ -279,10 +290,10 @@ async function seedPhase<T>(label: string, task: () => Promise<T>): Promise<T> {
   }
 }
 
-async function seedPayments(feeService: FeeService, paymentService: PaymentService) {
-  // getAll() returns the student-grouped overview — we only need the student IDs
-  const studentRows = await feeService.getAllYears();
-  const today = new Date().toISOString().split('T')[0];
+async function seedPayments(feeService: FeeService, paymentService: PaymentService, seededStudentIds: Set<string>) {
+  // Only the selected year's students created by this run receive demo payments.
+  const studentRows = (await feeService.getAll()).filter((row) => seededStudentIds.has(row.student.id));
+  const today = getDemoReferenceDate(seedAcademicYear).toISOString().split('T')[0];
   const lateSummerPaymentDate = getLateSummerPaymentDate(today);
   const lateSummerPaymentLimit = Math.max(1, Math.ceil(studentRows.length * LATE_SUMMER_PAYMENT_RATE));
 
@@ -306,8 +317,8 @@ async function seedPayments(feeService: FeeService, paymentService: PaymentServi
         continue;
       }
 
-      // Fetch full fee list with installments for this student
-      const studentData = await feeService.getByStudentAllYears(studentId);
+      // Fetch only the selected year's fees and installments.
+      const studentData = await feeService.getByStudent(studentId);
       if (!studentData) continue;
 
       // Collect all installments to pay, keyed by their due-date month
@@ -390,7 +401,7 @@ async function seedPayments(feeService: FeeService, paymentService: PaymentServi
     if (latePaymentCount >= lateSummerPaymentLimit || latePaymentTotal >= LATE_SUMMER_PAYMENT_CAP) break;
 
     try {
-      const studentData = await feeService.getByStudentAllYears(studentId);
+      const studentData = await feeService.getByStudent(studentId);
       if (!studentData) continue;
 
       const installment = getFirstUnpaidPastDueInstallment(studentData, lateSummerPaymentDate);
@@ -564,7 +575,7 @@ async function seedUniqueFees(feeService: FeeService, fees: any[]) {
   return createdFees;
 }
 
-async function seedPayroll(payrollService: PayrollService, periods: string[]) {
+async function seedPayroll(payrollService: PayrollService, periods: string[], staffIds: Set<string>) {
   let createdCount = 0;
   let paidCount = 0;
   const logPayrollProgress = createProgressLogger('Payroll periods', periods.length, 10);
@@ -572,7 +583,7 @@ async function seedPayroll(payrollService: PayrollService, periods: string[]) {
 
   for (const [periodIndex, period] of periods.entries()) {
     try {
-      const result = await payrollService.runPayroll({ period });
+      const result = await payrollService.runPayrollForSeed({ period }, staffIds);
       createdCount += result.createdCount;
 
       const paymentDate = `${period}-28`;
@@ -599,10 +610,18 @@ async function seedPayroll(payrollService: PayrollService, periods: string[]) {
   return { createdCount, paidCount };
 }
 
-runSeedTask('demo seed', async (server) => {
+runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
+  // Check required migrations before creating any demo records.
+  const columns = await db.execute(sql`
+    SELECT table_name FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name IN ('announcements', 'alerts')
+      AND column_name = 'academic_year_id'
+  `);
+  if (columns.length !== 2) throw new Error('Demo schema is behind: run bun run db:migrate, then retry the seed');
   const roleService = await server.container.resolve(RoleService);
   const settingsService = await server.container.resolve(SettingsService);
   const academicYearService = await server.container.resolve(AcademicYearService);
+  const academicYearRepository = await server.container.resolve(AcademicYearRepository);
   const academicYearValidator = await server.container.resolve(AcademicYearValidator);
   const subjectService = await server.container.resolve(SubjectService);
   const classService = await server.container.resolve(ClassService);
@@ -634,167 +653,219 @@ runSeedTask('demo seed', async (server) => {
 
   console.log('🌱 Starting school demo data seeding...');
 
-  await seedPhase('Roles', () => roleService.seedDefaultRoles(rolesData));
-  console.log('✅ Roles ready');
+  if (!resumeFrom) {
+    await seedPhase('Roles', () => roleService.seedDefaultRoles(rolesData));
+    console.log('✅ Roles ready');
 
-  const staffRolesCount = await seedPhase('Staff roles', () => seedStaffRoles());
-  console.log(`✅ Staff roles ready (${staffRolesCount} roles)`);
+    const staffRolesCount = await seedPhase('Staff roles', () => seedStaffRoles());
+    console.log(`✅ Staff roles ready (${staffRolesCount} roles)`);
 
-  await seedPhase('Settings', () => settingsService.create(schoolSeedData.settingsData));
-  const { activeAcademicYearId } = await academicYearService.list('admin');
-  if (!activeAcademicYearId) throw new Error('Demo seed did not register its active academic year');
-  await academicYearService.verifyCalendar(
-    activeAcademicYearId,
-    'Verified synthetic calendar from the explicit demo seed academic year and September-June settings',
-    'school-seed',
-  );
-  console.log('✅ Settings seeded');
+    await seedPhase('Settings', () => prepareDemoYear(settingsService, academicYearService, academicYearRepository));
+    console.log('✅ Settings seeded');
+  }
 
-  await seedPhase('Subjects', () => subjectService.seedDemoSubjects(schoolSeedData.subjectsData));
-  console.log('✅ Subjects seeded');
+  const selectedYear = await academicYearValidator.resolve(seedAcademicYear, 'admin');
+  return runWithResolvedYear(server.container, selectedYear, async () => {
+    let seededStudentIds: Set<string>;
+    let seededStaffIds: Set<string>;
+    if (resumeFrom) {
+      completedSeedPhases = 20;
+      console.log('Resuming at Announcements; using existing people and preserving completed financial phases.');
+      studentsData = (await studentService.getAll()).map((student) => ({
+        ...student, yearEnrolledOn: student.enrollment?.enrolledOn,
+      })) as any;
+      teachersData = (await teacherService.getAll()).filter((teacher) => teacher.assignments.length > 0);
+      if (!studentsData.length || !teachersData.length) {
+        throw new Error('Resume requires existing students and assigned teachers in the selected academic year');
+      }
+      driversData = (await driverService.getAll()).filter((driver) =>
+        driver.hireDate === selectedYear.instructionStartsOn);
+      vehicles = (await vehicleService.getAll()).filter((vehicle) =>
+        vehicle.licensePlate?.includes(`-${seedAcademicYear}-`)).map((vehicle) => ({
+          ...vehicle, driverId: vehicle.activeAssignment?.driverId,
+        }));
+      assessmentsData = assessmentsPack(teachersData).assessments;
+      examsData = examsPack(teachersData).exams;
+      alertsData = alertsPack(studentsData, teachersData).alerts;
+      refuelsData = refuelsPack(vehicles, driversData).refuels;
+      maintenanceData = maintenancePack(vehicles).maintenance;
 
-  const createdClasses = await seedPhase('Classes', () => classService.seedDemoClasses(selectedClassesData));
-  console.log(`✅ Classes seeded (${createdClasses.length} records)`);
+      const existingClasses = await classService.getAll();
+      const existingSections = await sectionService.getAll();
+      const classIds = new Map(selectedClassesData.map((item) => {
+        const existing = existingClasses.find((candidate) => candidate.name === item.name);
+        if (!existing) throw new Error(`Resume class ${item.name} is missing; use the original --classes selection`);
+        return [item.id, existing.id];
+      }));
+      const sectionIds = new Map(selectedSectionsData.map((item) => {
+        const classId = classIds.get(item.classId) ?? item.classId;
+        const existing = existingSections.find((candidate) => candidate.classId === classId && candidate.name === item.name);
+        if (!existing) throw new Error(`Resume section ${item.name} is missing`);
+        return [item.id, existing.id];
+      }));
+      remapDemoAcademicReferences([...announcementsData, ...eventsData, ...alertsData], classIds, sectionIds);
+      seededStudentIds = new Set(studentsData.map((student: any) => student.id));
+      seededStaffIds = new Set([
+        ...teachersData.map((teacher) => teacher.staffId),
+        ...(await staffService.getAll()).filter((member) => member.employeeCode?.startsWith(`DEMO-${seedAcademicYear}-`)).map((member) => member.id),
+        ...driversData.map((driver) => driver.staffId),
+      ]);
+    } else {
+      await seedPhase('Subjects', () => subjectService.seedDemoSubjects(schoolSeedData.subjectsData));
+      console.log('✅ Subjects seeded');
 
-  const createdSections = await seedPhase('Sections', () => sectionService.seedDemoSections(selectedSectionsData));
-  console.log(`✅ Sections seeded (${createdSections.length} records)`);
+      const createdClasses = await seedPhase('Classes', () => classService.seedDemoClasses(selectedClassesData));
+      console.log(`✅ Classes seeded (${createdClasses.length} records)`);
 
-  await seedPhase('Fee types', () => feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData));
-  console.log('✅ Fee types seeded');
+      const existingClasses = await classService.getAll();
+      const classIds = new Map(selectedClassesData.map((item) => {
+        const existing = existingClasses.find((candidate) => candidate.name === item.name);
+        if (!existing) throw new Error(`Demo class ${item.name} was not created in ${seedAcademicYear}`);
+        return [item.id, existing.id];
+      }));
+      remapDemoAcademicReferences(selectedSectionsData, classIds);
 
-  await seedPhase('Parents', () => parentService.createBulk(parentsData));
-  console.log('✅ Parents seeded');
+      const createdSections = await seedPhase('Sections', () => sectionService.seedDemoSections(selectedSectionsData));
+      console.log(`✅ Sections seeded (${createdSections.length} records)`);
 
-  await seedPhase('Drivers', () => driverService.createBulk(driversData));
-  console.log('✅ Drivers seeded');
+      const existingSections = await sectionService.getAll();
+      const sectionIds = new Map(selectedSectionsData.map((item) => {
+        const existing = existingSections.find((candidate) => candidate.classId === item.classId && candidate.name === item.name);
+        if (!existing) throw new Error(`Demo section ${item.name} was not created in ${seedAcademicYear}`);
+        return [item.id, existing.id];
+      }));
+      remapDemoAcademicReferences([
+        ...studentsData, ...teachersData, ...announcementsData, ...eventsData,
+        ...assessmentsData, ...examsData, ...alertsData,
+      ], classIds, sectionIds);
 
-  await seedPhase('Vehicles', () => vehicleService.createBulk(normalizedVehiclesData));
-  console.log('✅ Vehicles seeded');
+      await seedPhase('Fee types', () => feeTypeService.seedDemoFeeTypes(schoolSeedData.feeTypesData));
+      console.log('✅ Fee types seeded');
 
-  const createdAssignments = await seedPhase('Vehicle assignments', () => createSequential(
-    'Vehicle assignments', vehicleAssignmentsData,
-    (item: any) => vehicleAssignmentService.create(item),
-  ));
-  console.log(`✅ Vehicle assignments seeded (${createdAssignments.length} records)`);
+      await seedPhase('Parents', () => parentService.createBulk(parentsData));
+      console.log('✅ Parents seeded');
 
-  const createdTeachers = await seedPhase('Teachers', () => teacherService.createBulk(teachersData));
-  console.log(`✅ Teachers seeded (${createdTeachers.length} records)`);
+      const createdDrivers = await seedPhase('Drivers', () => driverService.createBulk(driversData));
+      console.log('✅ Drivers seeded');
 
-  const createdStaff = await seedPhase('Extra staff', () => createSequential(
-    'Extra staff', staffData, (item) => staffService.create(item),
-  ));
-  console.log(`✅ Extra staff seeded (${createdStaff.length} records)`);
+      await seedPhase('Vehicles', () => vehicleService.createBulk(normalizedVehiclesData));
+      console.log('✅ Vehicles seeded');
 
-  const createdStudents = await seedPhase('Students', () => studentService.createBulk(studentsData));
-  console.log(`✅ Students seeded (${createdStudents.length} records)`);
+      const createdAssignments = await seedPhase('Vehicle assignments', () => createSequential(
+        'Vehicle assignments', vehicleAssignmentsData,
+        (item: any) => vehicleAssignmentService.create(item),
+      ));
+      console.log(`✅ Vehicle assignments seeded (${createdAssignments.length} records)`);
 
-  // Discipline incidents and behavior rewards belong to the year holding their date.
-  const conductResult = await seedPhase('Student conduct', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'), async () => {
-      const availableTeachers = await teacherService.getAll();
-      return seedConductRecords(disciplineService, behaviorRewardService, availableTeachers);
-    }));
-  console.log(
-    `✅ Student conduct seeded (${conductResult.disciplineCount} discipline incidents, ${conductResult.resolvedCount} resolved, ${conductResult.rewardCount} behavior rewards)`,
-  );
+      const createdTeachers = await seedPhase('Teachers', () => teacherService.createBulk(teachersData));
+      console.log(`✅ Teachers seeded (${createdTeachers.length} records)`);
 
-  const createdStudentRoutes = await seedPhase('Student routes', () => createRequiredSequential(
-    studentRoutesData,
-    (item: any) => studentRouteService.assign(item),
-  ));
-  console.log(`✅ Student routes seeded (${createdStudentRoutes.length} records)`);
+      const createdStaff = await seedPhase('Extra staff', () => createSequential(
+        'Extra staff', staffData, (item) => staffService.create(item),
+      ));
+      console.log(`✅ Extra staff seeded (${createdStaff.length} records)`);
 
-  const createdFees = await seedPhase('Fees + installments', () => seedUniqueFees(feeService, uniqueFeesData));
-  console.log(`✅ Fees + installments seeded (${createdFees.length} records)`);
+      const createdStudents = await seedPhase('Students', () => studentService.createBulkForSeed(studentsData));
+      console.log(`✅ Students seeded (${createdStudents.length} records)`);
+      seededStudentIds = new Set(createdStudents.map((student) => student.id));
+      seededStaffIds = new Set([
+        ...createdTeachers.map((teacher) => teacher.staffId),
+        ...createdDrivers.map((driver) => driver.staffId),
+        ...createdStaff.map((member) => member.id),
+      ]);
 
-  console.log('💳 Recording payments...');
-  const { paymentCount, skippedCount, latePaymentCount, latePaymentTotal } = await seedPhase(
-    'Payments', () => seedPayments(feeService, paymentService),
-  );
-  console.log(
-    `✅ Payments seeded (${paymentCount} records, ${skippedCount} students left unpaid, ${latePaymentCount} late summer payments totaling ${latePaymentTotal} MAD)`,
-  );
+      // Discipline incidents and behavior rewards belong to the year holding their date.
+      const conductResult = await seedPhase('Student conduct', async () => {
+        const availableTeachers = await teacherService.getAll();
+        return seedConductRecords(disciplineService, behaviorRewardService, availableTeachers);
+      });
+      console.log(
+        `✅ Student conduct seeded (${conductResult.disciplineCount} discipline incidents, ${conductResult.resolvedCount} resolved, ${conductResult.rewardCount} behavior rewards)`,
+      );
 
-  console.log('💸 Seeding expenses...');
-  const createdExpenses = await seedPhase('Expenses', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => expenseService.seedDemoExpenses(expensesData)));
-  console.log(`✅ Expenses seeded (${createdExpenses.length} records)`);
+      const createdStudentRoutes = await seedPhase('Student routes', () => createRequiredSequential(
+        studentRoutesData,
+        (item: any) => studentRouteService.assign(item),
+      ));
+      console.log(`✅ Student routes seeded (${createdStudentRoutes.length} records)`);
 
-  console.log('🧾 Seeding payroll...');
-  const payrollResult = await seedPhase('Payroll', () => seedPayroll(payrollService, payrollPeriods));
-  console.log(`✅ Payroll seeded (${payrollResult.createdCount} payslips, ${payrollResult.paidCount} paid)`);
+      const createdFees = await seedPhase('Fees + installments', () => seedUniqueFees(feeService, uniqueFeesData));
+      console.log(`✅ Fees + installments seeded (${createdFees.length} records)`);
 
-  const createdAnnouncements = await seedPhase('Announcements', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => announcementService.createBulk(announcementsData)));
-  console.log(`✅ Announcements seeded (${createdAnnouncements.length} records)`);
+      console.log('💳 Recording payments...');
+      const { paymentCount, skippedCount, latePaymentCount, latePaymentTotal } = await seedPhase(
+        'Payments', () => seedPayments(feeService, paymentService, seededStudentIds),
+      );
+      console.log(
+        `✅ Payments seeded (${paymentCount} records, ${skippedCount} students left unpaid, ${latePaymentCount} late summer payments totaling ${latePaymentTotal} MAD)`,
+      );
 
-  const createdEvents = await seedPhase('Events', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => createSequential('Events', eventsData, (item) => eventService.create(item))));
-  console.log(`✅ Events seeded (${createdEvents.length} records)`);
+      console.log('💸 Seeding expenses...');
+      const createdExpenses = await seedPhase('Expenses', () => expenseService.seedDemoExpenses(expensesData));
+      console.log(`✅ Expenses seeded (${createdExpenses.length} records)`);
 
-  const assessmentContexts: any[] = [];
-  const createdAssessments = await seedPhase('Assessments', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => createSequential('Assessments', assessmentsData, async (item) => {
+      console.log('🧾 Seeding payroll...');
+      const payrollResult = await seedPhase('Payroll', () => seedPayroll(payrollService, payrollPeriods, seededStaffIds));
+      console.log(`✅ Payroll seeded (${payrollResult.createdCount} payslips, ${payrollResult.paidCount} paid)`);
+    }
+
+    const createdAnnouncements = await seedPhase('Announcements', () => announcementService.createBulk(announcementsData));
+    console.log(`✅ Announcements seeded (${createdAnnouncements.length} records)`);
+
+    const createdEvents = await seedPhase('Events', () =>
+      createSequential('Events', eventsData, (item) => eventService.create(item)));
+    console.log(`✅ Events seeded (${createdEvents.length} records)`);
+
+    const assessmentContexts: any[] = [];
+    const createdAssessments = await seedPhase('Assessments', () =>
+      createSequential('Assessments', assessmentsData, async (item) => {
         const created = await assessmentService.create(item);
         assessmentContexts.push({ ...item, id: created.id });
         return created;
-      })));
-  console.log(`✅ Assessments seeded (${createdAssessments.length} records)`);
+      }));
+    console.log(`✅ Assessments seeded (${createdAssessments.length} records)`);
 
-  const examContexts: any[] = [];
-  const createdExams = await seedPhase('Exams', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => createSequential('Exams', examsData, async (item) => {
+    const examContexts: any[] = [];
+    const createdExams = await seedPhase('Exams', () =>
+      createSequential('Exams', examsData, async (item) => {
         const created = await examService.create(item);
         examContexts.push({ ...item, id: created.id });
         return created;
-      })));
-  console.log(`✅ Exams seeded (${createdExams.length} records)`);
+      }));
+    console.log(`✅ Exams seeded (${createdExams.length} records)`);
 
-  const createdStudentIds = new Set(createdStudents.map((student) => student.id));
-  console.log('🧮 Seeding grades...');
-  const createdGrades = await seedPhase('Grades', async () => {
-    const { grades: gradesData } = gradesPack(
-      studentsData.filter((student) => createdStudentIds.has(student.id)),
-      assessmentContexts,
-      examContexts,
-    );
-    const assessmentGradeCount = gradesData.filter((grade: any) => grade.assessmentId).length;
-    const examGradeCount = gradesData.filter((grade: any) => grade.examId).length;
-    console.log(
-      `  Grade generation: prepared ${gradesData.length} records ` +
-      `(${assessmentGradeCount} assessment, ${examGradeCount} exam)`,
-    );
-    return gradeService.seedDemoGrades(gradesData);
+    console.log('🧮 Seeding grades...');
+    const createdGrades = await seedPhase('Grades', async () => {
+      const { grades: gradesData } = gradesPack(
+        studentsData.filter((student) => seededStudentIds.has(student.id)),
+        assessmentContexts,
+        examContexts,
+      );
+      const assessmentGradeCount = gradesData.filter((grade: any) => grade.assessmentId).length;
+      const examGradeCount = gradesData.filter((grade: any) => grade.examId).length;
+      console.log(
+        `  Grade generation: prepared ${gradesData.length} records ` +
+        `(${assessmentGradeCount} assessment, ${examGradeCount} exam)`,
+      );
+      return gradeService.seedDemoGrades(gradesData);
+    });
+    console.log(`✅ Grades seeded (${createdGrades.length} records)`);
+
+    console.log('📋 Seeding attendance...');
+    const { studentCount, staffCount } = await seedPhase('Attendance', () =>
+      seedAttendance(selectedYear, attendanceService, studentService, teacherService, staffService,
+        { studentIds: seededStudentIds, staffIds: seededStaffIds }));
+    console.log(`✅ Attendance seeded (${studentCount} student records, ${staffCount} staff records)`);
+
+    const createdAlerts = await seedPhase('Alerts', () => alertService.seedDemoAlerts(alertsData));
+    console.log(`✅ Alerts seeded (${createdAlerts.length} records)`);
+
+    const createdRefuels = await seedPhase('Refuels', () => refuelService.seedDemoRefuels(refuelsData));
+    console.log(`✅ Refuels seeded (${createdRefuels.length} records)`);
+
+    const createdMaintenance = await seedPhase('Maintenance', () => maintenanceService.seedDemoMaintenances(maintenanceData));
+    console.log(`✅ Maintenance seeded (${createdMaintenance.length} records)`);
+
+    console.log('\n✨ Demo seed completed successfully!');
   });
-  console.log(`✅ Grades seeded (${createdGrades.length} records)`);
-
-  console.log('📋 Seeding attendance...');
-  const { studentCount, staffCount } = await seedPhase('Attendance', async () => {
-    const year = await academicYearValidator.resolve(seedAcademicYear, 'admin');
-    return runWithResolvedYear(server.container, year,
-      () => seedAttendance(year, attendanceService, studentService, teacherService, staffService));
-  });
-  console.log(`✅ Attendance seeded (${studentCount} student records, ${staffCount} staff records)`);
-
-  const createdAlerts = await seedPhase('Alerts', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => alertService.seedDemoAlerts(alertsData)));
-  console.log(`✅ Alerts seeded (${createdAlerts.length} records)`);
-
-  const createdRefuels = await seedPhase('Refuels', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => refuelService.seedDemoRefuels(refuelsData)));
-  console.log(`✅ Refuels seeded (${createdRefuels.length} records)`);
-
-  const createdMaintenance = await seedPhase('Maintenance', async () =>
-    runWithResolvedYear(server.container, await academicYearValidator.resolve(seedAcademicYear, 'admin'),
-      () => maintenanceService.seedDemoMaintenances(maintenanceData)));
-  console.log(`✅ Maintenance seeded (${createdMaintenance.length} records)`);
-
-  console.log('\n✨ Demo seed completed successfully!');
 });

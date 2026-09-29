@@ -1,5 +1,5 @@
-import { Err, Service, Transaction } from '../../../najm';
-import { NotificationRepository, checkCronSecret } from './NotificationRepository';
+import { Service, Transaction } from '../../../najm';
+import { NotificationRepository } from './NotificationRepository';
 import { AlertService } from '../../alerts/AlertService';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { formatDateOnly } from '../utils/dateOnly';
@@ -235,11 +235,5 @@ export class NotificationService {
 
   async listRecent(limit = 50) {
     return this.notificationRepository.listRecent(limit);
-  }
-}
-
-export function assertCronSecret(provided: string | null | undefined) {
-  if (!checkCronSecret(provided)) {
-    Err(401, 'Invalid or missing FINANCIAL_CRON_SECRET');
   }
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAuth, isAdministrator } from '../../auth';
+import { Can, isAdministrator } from '../../auth';
 import { ClassRoutineService } from './ClassRoutineService';
 import {
   createRoutineEntryDto,
@@ -31,13 +31,17 @@ import {
   type UpdateRoutineScheduleDto,
 } from './ClassRoutineDto';
 
+// Timetables are class data: reading one asks for `read:classes`, which every
+// role that uses them holds. With sign-in alone, an account with no role, such
+// as a self-registered one, read every class's and teacher's week and every
+// staff duty.
 @ToolGroup('class-routines')
 @Controller('/class-routines')
 export class ClassRoutineController {
   constructor(private service: ClassRoutineService) {}
 
   @Get('/periods')
-  @isAuth()
+  @Can('read:classes')
   @McpTool('List active class routine periods')
   @ResMsg('classRoutines.success.retrieved')
   async getPeriods() { return this.service.getPeriods(); }
@@ -57,7 +61,7 @@ export class ClassRoutineController {
   }
 
   @Get('/assignments/:id')
-  @isAuth()
+  @Can('read:classes')
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.retrieved')
   async getAssignments(@Params('id') sectionId: string) {
@@ -70,7 +74,7 @@ export class ClassRoutineController {
   async getDutyCandidates() { return this.service.getDutyCandidates(); }
 
   @Get('/teachers/:teacherId')
-  @isAuth()
+  @Can('read:classes')
   @Validate({ params: routineTeacherParam })
   @McpTool("Get a teacher's weekly routine in the selected year")
   @ResMsg('classRoutines.success.retrieved')
@@ -82,7 +86,7 @@ export class ClassRoutineController {
   }
 
   @Get('/sections/:id/published')
-  @isAuth()
+  @Can('read:classes')
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.retrieved')
   async getPublished(@Params('id') sectionId: string) {
@@ -90,7 +94,7 @@ export class ClassRoutineController {
   }
 
   @Get()
-  @isAuth()
+  @Can('read:classes')
   @Validate({ query: routineListQuery })
   @ResMsg('classRoutines.success.retrieved')
   async list(@Query() query: RoutineListQuery) {
@@ -185,7 +189,7 @@ export class ClassRoutineController {
   }
 
   @Get('/:id')
-  @isAuth()
+  @Can('read:classes')
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.retrieved')
   async getById(@Params('id') id: string) {

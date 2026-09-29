@@ -157,8 +157,12 @@ describe('alert and announcement routes', () => {
     }
   });
 
-  it('keeps bulk alert deletion and generation admin-only', () => {
-    for (const route of ['deleteAll', 'deleteResolved', 'generateAttendanceAlerts', 'generateAcademicAlerts']) {
+  it('requires sign-in and create:alerts for alert creation', () => {
+    expect(guards(AlertController, 'create')).toEqual([['AuthGuard', null], ['PermissionGuard', 'create:alerts']]);
+  });
+
+  it('keeps bulk alert deletion admin-only', () => {
+    for (const route of ['deleteAll', 'deleteResolved']) {
       expect(guards(AlertController, route)).toEqual([['AuthGuard', null], ['RoleGuard', 'admin']]);
     }
   });

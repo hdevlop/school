@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { drizzle } from 'drizzle-orm/pg-proxy';
 import { StudentEnrollmentService } from '../../src/modules/studentEnrollments/StudentEnrollmentService';
+import { StudentEnrollmentValidator } from '../../src/modules/studentEnrollments/StudentEnrollmentValidator';
 import { StudentEnrollmentRepository } from '../../src/modules/studentEnrollments/StudentEnrollmentRepository';
 
 const oldYear = {
@@ -42,11 +43,31 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
   };
   const settings = { getAdminSettings: async () => ({ activeAcademicYearId: activeYearId }) };
   const migrationIssues = { recordUnknownEnrollmentDate: async () => { writes.push('preserve-legacy-placement'); } };
-  const service = new StudentEnrollmentService(repository as any, years as any, settings as any, migrationIssues as any);
+  const service = new StudentEnrollmentService(repository as any, years as any, settings as any, migrationIssues as any, new StudentEnrollmentValidator());
   return { service, writes };
 }
 
 describe('dated enrollment writes', () => {
+  it('permits trusted demo placement in the selected historical year while ordinary create remains active-only', async () => {
+    const { service, writes } = build();
+    Object.defineProperty(service, 'year', { value: oldYear });
+    expect((await service.resolveSeedStudentPlacement('class-old', 'section-old', '2025-09-01')).id)
+      .toBe(oldYear.id);
+    await expect(service.resolveNewStudentPlacement('class-old', 'section-old', '2025-09-01')).rejects.toThrow();
+    expect(writes).toEqual([]);
+  });
+
+  it('rejects out-of-year and draft demo placements before creating accounts or enrollment records', async () => {
+    const { service, writes } = build();
+    Object.defineProperty(service, 'year', { value: oldYear });
+    await expect(service.resolveSeedStudentPlacement('class-old', 'section-old', '2026-09-01')).rejects.toThrow();
+    const draft = build('year-current', false, 'draft');
+    Object.defineProperty(draft.service, 'year', { value: oldYear });
+    await expect(draft.service.resolveSeedStudentPlacement('class-old', 'section-old', '2025-09-01')).rejects.toThrow();
+    expect(writes).toEqual([]);
+    expect(draft.writes).toEqual([]);
+  });
+
   it('accepts an explicit yearly date for a new student in the active class year', async () => {
     const { service } = build(oldYear.id);
     expect((await service.resolveNewStudentPlacement('class-old', 'section-old', '2025-09-01')).id)
@@ -138,7 +159,7 @@ describe('enrollment history for administrators', () => {
         return [{ id: 'placement-1', className: 'CE5', sectionName: 'A', validFrom: '2025-09-01', validTo: null }];
       },
     };
-    const service = new StudentEnrollmentService(repository as any, {} as any, {} as any, {} as any);
+    const service = new StudentEnrollmentService(repository as any, {} as any, {} as any, {} as any, new StudentEnrollmentValidator());
     expect<unknown>(await service.listByStudent('student-1')).toEqual([{
       id: 'enrollment-1', status: 'active', academicYear: { id: oldYear.id, label: oldYear.label },
       placements: [{ id: 'placement-1', className: 'CE5', sectionName: 'A', validFrom: '2025-09-01', validTo: null }],

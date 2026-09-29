@@ -1,4 +1,5 @@
-import { Err, Injectable } from '../../../najm';
+import { Injectable } from '../../../najm';
+import { TeacherDashboardValidator } from './TeacherDashboardValidator';
 import {
   TEACHER_TREND_RANGE_DAYS,
   type TeacherAttendanceTrend,
@@ -46,6 +47,7 @@ export class TeacherDashboardService {
     private settingsRepository: SettingsRepository,
     private academicYears: AcademicYearValidator,
     private notifications: PersonalNotificationRepository,
+    private validator: TeacherDashboardValidator,
   ) {}
 
   async getOverview(user: DashboardUser): Promise<TeacherDashboardOverview> {
@@ -164,8 +166,7 @@ export class TeacherDashboardService {
 
   /** The signed-in teacher, this year's assignments and weekly lessons. */
   private async context(user: DashboardUser) {
-    const teacher = await this.teacherRepository.getByUserId(user.id);
-    if (!teacher) Err(404, 'teachers.errors.notFound');
+    const teacher = this.validator.ensureTeacherExists(await this.teacherRepository.getByUserId(user.id));
 
     const [settings, year] = await Promise.all([
       this.settingsRepository.getPublicSettings(),

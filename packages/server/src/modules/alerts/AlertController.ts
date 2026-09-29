@@ -5,7 +5,6 @@ import { AlertService } from './AlertService';
 import { Alert, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AlertGuards';
 import type { AlertActor } from './AlertValidator';
 import {
-  announcementAlertDto,
   alertClassIdParam,
   alertIdParam,
   alertPriorityParam,
@@ -15,22 +14,13 @@ import {
   alertTeacherIdParam,
   alertTypeParam,
   createAlertDto,
-  emergencyAlertDto,
   recentAlertsByHoursQueryDto,
   recentAlertsQueryDto,
-  reminderAlertDto,
-  systemAlertDto,
-  typedStudentAlertDto,
   updateAlertDto,
   updateAlertStatusDto,
-  type AnnouncementAlertDto,
   type CreateAlertDto,
-  type EmergencyAlertDto,
   type RecentAlertsByHoursQueryDto,
   type RecentAlertsQueryDto,
-  type ReminderAlertDto,
-  type SystemAlertDto,
-  type TypedStudentAlertDto,
   type UpdateAlertStatusDto,
   type UpdateAlertDto,
 } from './AlertDto';
@@ -247,103 +237,4 @@ export class AlertController {
     return this.alertService.deleteAll();
   }
 
-  @Post('/generate/attendance')
-  @isAdmin()
-  @McpTool('Generate attendance alerts')
-  @ResMsg('alerts.success.attendanceAlertsGenerated')
-  async generateAttendanceAlerts() {
-    return this.alertService.generateAttendanceAlerts();
-  }
-
-  @Post('/generate/academic')
-  @isAdmin()
-  @McpTool('Generate academic alerts')
-  @ResMsg('alerts.success.academicAlertsGenerated')
-  async generateAcademicAlerts() {
-    return this.alertService.generateAcademicAlerts();
-  }
-
-  @Post('/academic')
-  @CanCreate()
-  @Validate(typedStudentAlertDto)
-  @McpTool('Create an academic alert for a student')
-  @ResMsg('alerts.success.created')
-  async createAcademic(@Body() body: TypedStudentAlertDto) {
-    return this.alertService.createAcademicAlert(body.studentId, body.alertType, body.details);
-  }
-
-  @Post('/attendance')
-  @CanCreate()
-  @Validate(typedStudentAlertDto)
-  @McpTool('Create an attendance alert for a student')
-  @ResMsg('alerts.success.created')
-  async createAttendance(@Body() body: TypedStudentAlertDto) {
-    return this.alertService.createAttendanceAlert(body.studentId, body.alertType, body.details);
-  }
-
-  @Post('/behavioral')
-  @CanCreate()
-  @Validate(typedStudentAlertDto)
-  @McpTool('Create a behavioral alert for a student')
-  @ResMsg('alerts.success.created')
-  async createBehavioral(@Body() body: TypedStudentAlertDto) {
-    return this.alertService.createBehavioralAlert(body.studentId, body.alertType, body.details);
-  }
-
-  @Post('/health')
-  @CanCreate()
-  @Validate(typedStudentAlertDto)
-  @McpTool('Create a health alert for a student')
-  @ResMsg('alerts.success.created')
-  async createHealth(@Body() body: TypedStudentAlertDto) {
-    return this.alertService.createHealthAlert(body.studentId, body.alertType, body.details);
-  }
-
-  @Post('/announcement')
-  @CanCreate()
-  @Validate(announcementAlertDto)
-  @McpTool('Create an announcement alert')
-  @ResMsg('alerts.success.created')
-  async createAnnouncement(@Body() body: AnnouncementAlertDto) {
-    return this.alertService.createAnnouncementAlert(
-      body.title,
-      body.message,
-      body.targetAudience,
-      body.authorId,
-      body.classId
-    );
-  }
-
-  @Post('/reminder')
-  @CanCreate()
-  @Validate(reminderAlertDto)
-  @McpTool('Create a reminder alert')
-  @ResMsg('alerts.success.created')
-  async createReminder(@Body() body: ReminderAlertDto) {
-    return this.alertService.createReminderAlert(
-      body.title,
-      body.message,
-      body.targetAudience,
-      body.authorId,
-      body.details
-    );
-  }
-
-  @Post('/emergency')
-  @CanCreate()
-  @Validate(emergencyAlertDto)
-  @McpTool('Create an emergency alert')
-  @ResMsg('alerts.success.created')
-  async createEmergency(@Body() body: EmergencyAlertDto) {
-    return this.alertService.createEmergencyAlert(body.title, body.message, body.details);
-  }
-
-  @Post('/system')
-  @CanCreate()
-  @Validate(systemAlertDto)
-  @McpTool('Create a system alert')
-  @ResMsg('alerts.success.created')
-  async createSystem(@Body() body: SystemAlertDto) {
-    return this.alertService.createSystemAlert(body.message, body.priority);
-  }
 }

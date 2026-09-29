@@ -1,5 +1,5 @@
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere } from '../../auth';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { eq, desc, and, count, sql, inArray, or, isNull, type SQL } from 'drizzle-orm';
@@ -30,12 +30,12 @@ const targetsClass = (classId: string) => or(
   )`,
 );
 
-@Owned(Announcement, AnnouncementForClass, AnnouncementByAuthor)
 @Repository()
 export class AnnouncementRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Announcement, AnnouncementForClass, AnnouncementByAuthor)
+  private ownedWhere!: OwnedWhere;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -43,7 +43,7 @@ export class AnnouncementRepository {
 
   /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), announcementInYear(this.year.id), ...filters);
+    return and(this.ownedWhere(), announcementInYear(this.year.id), ...filters);
   }
 
   // Never chain another .where() on this: it would replace the read condition.

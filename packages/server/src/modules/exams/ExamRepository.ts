@@ -1,5 +1,5 @@
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere } from '../../auth';
 import { and, desc, eq, sql, asc, count, gte, inArray, or, type SQL, isNotNull } from 'drizzle-orm';
 import { exams, grades, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
 import { inReportingYear } from '../academicYears/academicRecordYear';
@@ -17,12 +17,12 @@ export type ExamListFilters = {
   teacherId?: string;
 };
 
-@Owned(Exam, ExamForPlacedStudent, ExamForPlacedParent)
 @Repository()
 export class ExamRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Exam, ExamForPlacedStudent, ExamForPlacedParent)
+  private ownedWhere!: OwnedWhere;
 
   // An exam belongs to its stored year, else to the year whose reporting interval holds its date.
   private inSelectedYear() {
@@ -31,7 +31,7 @@ export class ExamRepository {
 
   /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+    return and(this.ownedWhere(), this.inSelectedYear(), ...filters);
   }
 
   // ========================================

@@ -1,6 +1,7 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as teacherApi from '@/services/teacherApi';
+import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
 export const useTeachers = (options?) => {
   const { teacherId, enabled = true } = options || {};
@@ -15,8 +16,13 @@ export const useTeachers = (options?) => {
     createBulk: teacherApi.createBulkTeachersApi
   });
 
-  const { data: teachers, isLoading: isTeachersLoading, isError, error, refetch } = crud.useGetAll(enabled);
-  const { data: teacher, isLoading: isTeacherLoading } = crud.useGetById(teacherId, !!teacherId);
+  const { data: teachers, isLoading: isTeachersLoading, isError, error, refetch } = useYearScopedList({
+    resource: 'teachers', fetch: teacherApi.getTeachersApi, enabled,
+  });
+  const { data: teacher, isLoading: isTeacherLoading } = useYearScopedDetail({
+    resource: 'teachers', parts: ['detail', teacherId],
+    fetch: () => teacherApi.getTeacherByIdApi(teacherId), enabled: !!teacherId,
+  });
 
   const { mutateAsync: createTeacher, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateTeacher, isLoading: isUpdating } = crud.useUpdate();

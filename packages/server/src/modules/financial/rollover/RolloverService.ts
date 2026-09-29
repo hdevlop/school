@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
-import { Err, Service, Transaction } from '../../../najm';
+import { Service, Transaction } from '../../../najm';
+import { RolloverValidator } from './RolloverValidator';
 import { RolloverRepository } from './RolloverRepository';
 import { FeeService } from '../fees/FeeService';
 import { SettingsRepository } from '../../settings/SettingsRepository';
@@ -55,11 +56,11 @@ export class RolloverService {
     private settingsRepository: SettingsRepository,
     private auditService: FinancialAuditService,
     private academicYears: AcademicYearValidator,
+    private validator: RolloverValidator,
   ) { }
 
   private async validateYears(dto: RolloverDto) {
-    if (dto.toYear !== this.year.label) Err(409, 'Rollover target must match the selected school year');
-    if (dto.fromYear >= dto.toYear) Err(409, 'Rollover source must precede the target school year');
+    this.validator.ensureYears(dto, this.year.label);
     await this.academicYears.requireLabel(dto.fromYear);
   }
 
@@ -248,9 +249,7 @@ export class RolloverService {
     const payloadHash = hashPayload(dto);
     const existing = await this.rolloverRepository.getRunByIdempotencyKey(dto.idempotencyKey);
     if (existing) {
-      if (existing.payloadHash !== payloadHash) {
-        Err(409, 'This rollover idempotency key was already used with a different payload');
-      }
+      this.validator.ensureIdempotentPayload(existing.payloadHash, payloadHash);
       return existing;
     }
 
@@ -334,26 +333,19 @@ export class RolloverService {
   }
 
   async commit(dto: CommitRolloverDto, actorId?: string) {
-    if (dto.confirmSettingsUpdate) {
-      Err(409, 'Activate the academic year separately after academic preparation');
-    }
+    this.validator.ensureSeparateActivation(dto.confirmSettingsUpdate);
     await this.validateYears(dto);
     const payloadHash = hashPayload(dto);
-    const existing = await this.rolloverRepository.getRunByIdempotencyKey(dto.idempotencyKey);
-    if (!existing) Err(400, 'No preview exists for this idempotency key');
-    if (existing!.id !== dto.runId) Err(409, 'runId does not match the preview idempotency key');
-    if (existing!.payloadHash !== payloadHash) Err(409, 'Rollover payload does not match the preview');
+    const existing = this.validator.ensureMatchingPreview(
+      await this.rolloverRepository.getRunByIdempotencyKey(dto.idempotencyKey), dto.runId, payloadHash,
+    );
     if (existing!.status === 'committed' || existing!.status === 'failed') {
       return this.getRun(existing!.id);
     }
-    if (!existing!.dryRun || existing!.status !== 'previewed') {
-      Err(409, `Cannot commit a run in status ${existing!.status}`);
-    }
+    this.validator.ensureCommittable(existing);
 
     const preview = existing!.preview as any;
-    if (!Array.isArray(preview?.details?.proposedFees)) {
-      Err(500, 'Preview payload is missing proposed fees');
-    }
+    this.validator.ensureProposedFees(preview);
 
     let successCount = 0;
     let skippedCount = 0;
@@ -398,8 +390,7 @@ export class RolloverService {
   }
 
   async getRun(id: string) {
-    const run = await this.rolloverRepository.getRunById(id);
-    if (!run) Err(404, 'Rollover run not found');
+    const run = this.validator.ensureRunExists(await this.rolloverRepository.getRunById(id));
     return { run, items: await this.rolloverRepository.listRunItems(id) };
   }
 }

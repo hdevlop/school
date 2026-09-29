@@ -1,4 +1,4 @@
-import { Err, Service, Transaction, Events, EventService } from '../../../najm';
+import { Service, Transaction, Events, EventService } from '../../../najm';
 import { PaymentRepository } from './PaymentRepository';
 import { PaymentValidator, computeIdempotencyHash } from './PaymentValidator';
 import { pickProps } from '../../../shared';
@@ -25,21 +25,6 @@ const UPDATE_KEYS = [
   'paymentMethod', 'paymentDate', 'checkNumber', 'checkDueDate', 'checkBank',
   'transactionRef', 'receiptNumber', 'notes'
 ];
-
-const ALLOWED_TRANSITIONS: Record<string, string[]> = {
-  pending: ['deposited', 'bounced', 'voided'],
-  deposited: ['completed', 'bounced', 'voided'],
-  completed: ['bounced', 'refunded', 'voided'],
-  bounced: [],
-  refunded: [],
-  voided: [],
-  failed: [],
-};
-
-function canTransition(from: string, to: string): boolean {
-  if (from === to) return false;
-  return (ALLOWED_TRANSITIONS[from] || []).includes(to);
-}
 
 function isUniqueViolation(error: any): boolean {
   return error?.code === '23505' || /unique|duplicate key/i.test(String(error?.message ?? ''));
@@ -211,9 +196,7 @@ export class PaymentService {
       remaining -= allocCents;
     }
 
-    if (remaining > 0 && !keepRemainderAsCredit) {
-      Err(400, `Payment amount exceeds available installment balance by ${(remaining / 100).toFixed(2)}; enable keepRemainderAsCredit to retain remainder`);
-    }
+    this.paymentValidator.ensureAutoAllocationRemainder(remaining, keepRemainderAsCredit);
 
     return { allocations, remainderCents: remaining };
   }
@@ -299,11 +282,8 @@ export class PaymentService {
         paymentStatus: initialStatus,
         actorId: processedBy,
       });
-    } else if (remainderCents > 0 && !data.keepRemainderAsCredit) {
-      Err(
-        400,
-        `Payment over-allocates by ${(remainderCents / 100).toFixed(2)}; set keepRemainderAsCredit to retain the remainder`,
-      );
+    } else {
+      this.paymentValidator.ensureRecordedRemainder(remainderCents, data.keepRemainderAsCredit);
     }
 
     await this.auditService.record({
@@ -352,8 +332,7 @@ export class PaymentService {
   @Transaction()
   async update(id: string, data: UpdatePaymentDto, actorId?: string) {
     await this.paymentValidator.validate(data, id);
-    const previous = await this.paymentRepository.getByIdForUpdate(id);
-    if (!previous) Err(404, 'Payment not found');
+    const previous = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
     const paymentData = pickProps(data, UPDATE_KEYS);
     if (
       data.paymentDate !== undefined
@@ -379,7 +358,7 @@ export class PaymentService {
   }
 
   async delete(_id: string) {
-    Err(400, 'Hard delete of payments is disabled. Use POST /payments/:id/void to mark a payment as voided.');
+    return this.paymentValidator.ensureHardDeleteDisabled();
   }
 
   async clearForSeedReset() {
@@ -389,14 +368,13 @@ export class PaymentService {
   }
 
   async deleteBulk(_ids: string[]) {
-    Err(400, 'Hard delete of payments is disabled. Use POST /payments/:id/void to mark a payment as voided.');
+    return this.paymentValidator.ensureHardDeleteDisabled();
   }
 
   @Transaction()
   async refund(id: string, reason?: string, actorId?: string) {
-    const payment = await this.paymentRepository.getByIdForUpdate(id);
-    if (!payment) Err(404, 'Payment not found');
-    if (payment!.status !== 'completed') Err(400, 'Only completed payments can be refunded');
+    const payment = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
+    this.paymentValidator.ensureRefundable(payment.status);
     const previous = { ...payment };
     const updated = await this.paymentRepository.update(id, {
       status: 'refunded',
@@ -421,11 +399,8 @@ export class PaymentService {
 
   @Transaction()
   async voidPayment(id: string, dto: VoidPaymentDto, actorId?: string) {
-    const payment = await this.paymentRepository.getByIdForUpdate(id);
-    if (!payment) Err(404, 'Payment not found');
-    if (!canTransition(payment.status, 'voided')) {
-      Err(409, `Cannot void payment in status ${payment.status}`);
-    }
+    const payment = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
+    this.paymentValidator.ensureVoidable(payment.status);
     const previous = { ...payment };
     const updated = await this.paymentRepository.update(id, {
       status: 'voided',
@@ -452,14 +427,8 @@ export class PaymentService {
 
   @Transaction()
   async updateCheckStatus(id: string, dto: CheckStatusDto, actorId?: string) {
-    const payment = await this.paymentRepository.getByIdForUpdate(id);
-    if (!payment) Err(404, 'Payment not found');
-    if (payment.paymentMethod !== 'check') {
-      Err(400, 'Check status changes are only allowed for check payments');
-    }
-    if (!canTransition(payment.status, dto.status)) {
-      Err(409, `Cannot transition check from ${payment.status} to ${dto.status}`);
-    }
+    const payment = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
+    this.paymentValidator.ensureCheckTransition(payment, dto.status);
     const previous = { ...payment };
     const allocations = await this.allocationRepository.getByPaymentId(id);
     const targetAllocations = allocations.filter((allocation) => allocation.installment?.number != null);
@@ -485,14 +454,11 @@ export class PaymentService {
         );
       }
       for (const [installmentId, ownCents] of ownByInstallment) {
-        const installment = lockedById.get(installmentId);
-        if (!installment) Err(409, 'A check allocation target no longer exists');
+        const installment = this.paymentValidator.ensureCheckInstallmentExists(lockedById.get(installmentId));
         const consumedCents = toCents(completedMap.get(installmentId) || 0)
           + toCents(reservedMap.get(installmentId) || 0)
           + ownCents;
-        if (consumedCents > toCents(installment!.amount)) {
-          Err(409, `Check allocations exceed installment #${installment!.number}`);
-        }
+        this.paymentValidator.ensureCheckInstallmentCapacity(consumedCents, toCents(installment.amount), installment.number);
       }
     }
     const now = new Date().toISOString();

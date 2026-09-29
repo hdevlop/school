@@ -12,6 +12,65 @@ export class StaffValidator {
     private staffRoleRepository: StaffRoleRepository,
   ) { }
 
+  ensureLoginEmail(email?: string) {
+    if (!email) Err(400, 'Email is required to create a staff login');
+  }
+
+  ensureAppAccessRole(accessRoleId: string | null) {
+    if (!accessRoleId) Err(400, 'This staff role does not grant app access');
+  }
+
+  ensureDriverProfile(profile?: Record<string, any>, partial = false) {
+    if (!profile) {
+      if (partial) return;
+      Err(400, 'Driver license profile is required');
+    }
+    for (const key of ['licenseNumber', 'licenseType', 'licenseExpiry']) {
+      if (!partial && !profile[key]) Err(400, `Driver ${key} is required`);
+    }
+  }
+
+  ensureAssignments(role: string, assignments?: Record<string, any>[]) {
+    if (!assignments?.length) return;
+    for (const assignment of assignments) {
+      if (role === 'cleaner' && !assignment.zoneId) Err(400, 'Cleaner assignment requires a zone');
+      if (role === 'assistant' && !assignment.classId) Err(400, 'Assistant assignment requires a class');
+      if (role === 'busAssistant' && !assignment.vehicleId) Err(400, 'Bus assistant assignment requires a vehicle');
+      if (role === 'accountant' && !assignment.cycleId) Err(400, 'Accountant assignment requires a cycle');
+      if (role === 'security' && !assignment.zoneId) Err(400, 'Security assignment requires a zone');
+      if (role === 'driver' && !assignment.vehicleId) Err(400, 'Driver assignment requires a vehicle');
+    }
+  }
+
+  ensureStaffRecord<T>(staff: T | null | undefined): T {
+    if (!staff) Err(404, 'Staff not found');
+    return staff;
+  }
+
+  ensureDeletionAllowed(hasLinkedProfile: boolean, allowLinked?: boolean) {
+    if (hasLinkedProfile && !allowLinked) Err(409, 'Cannot delete staff linked to an active teacher or driver');
+  }
+
+  // Payslips, attendance marks and timetable duties restrict the delete in the
+  // database; say why instead of failing on the foreign key.
+  ensureNoRecordedHistory(history: { payslips: number; attendance: number; duties: number }) {
+    if (history.payslips || history.attendance || history.duties) {
+      Err(409, 'Staff with payslips, attendance or timetable duties cannot be deleted; set an end date and status instead');
+    }
+  }
+
+  // Leaving the driver role deletes the driver profile, and its vehicle
+  // assignments with it, in every year.
+  ensureDriverRoleChangeKeepsHistory(vehicleAssignments: number) {
+    if (vehicleAssignments) {
+      Err(409, 'A driver with vehicle assignment history keeps the driver role; end the assignment and the employment instead');
+    }
+  }
+
+  ensureOneCurrentVehicle(vehicleIds: string[]) {
+    if (vehicleIds.length > 1) Err(400, 'A driver has one current vehicle');
+  }
+
   async ensureExists(id: string) {
     const row = await this.staffRepository.getById(id);
     if (!row) {

@@ -1,6 +1,6 @@
-import { eq } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import { DB } from '../../../database/db';
-import { zones } from '../../../database/schema';
+import { cleanerAssignments, securityAssignments, zones } from '../../../database/schema';
 import { Repository } from '../../../najm';
 
 const zoneSelect = {
@@ -43,6 +43,15 @@ export class ZoneRepository {
   async update(id: string, data: Partial<typeof zones.$inferInsert>) {
     const [row] = await this.db.update(zones).set(data).where(eq(zones.id, id)).returning();
     return row;
+  }
+
+  /** Cleaner and security assignments naming the zone, in every year. */
+  async countAssignments(id: string) {
+    const [[cleaning], [security]] = await Promise.all([
+      this.db.select({ count: count() }).from(cleanerAssignments).where(eq(cleanerAssignments.zoneId, id)),
+      this.db.select({ count: count() }).from(securityAssignments).where(eq(securityAssignments.zoneId, id)),
+    ]);
+    return cleaning.count + security.count;
   }
 
   async delete(id: string) {

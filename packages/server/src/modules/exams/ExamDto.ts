@@ -30,7 +30,12 @@ export const createExamDto = examSchema
     message: 'Select at least one section',
     path: ['sectionIds'],
   });
-export const updateExamDto = examSchema.omit({ examId: true, teacherAssignmentId: true }).partial();
+export const updateExamDto = examSchema.omit({ examId: true, teacherAssignmentId: true }).partial().extend({
+  type: examTypeEnum.optional(),
+  totalMarks: examSchema.shape.totalMarks.unwrap().optional(),
+  passingMarks: examSchema.shape.passingMarks.unwrap().optional(),
+  status: examStatusEnum.optional(),
+});
 export const seedExamDto = examSchema
   .omit({ classId: true, sectionId: true, sectionIds: true, subjectId: true, teacherId: true, examId: true })
   .extend({

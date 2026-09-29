@@ -83,12 +83,16 @@ describe('authenticated Alerts REST on the marked PostgreSQL fixture', () => {
     const id = created.body.data.id as string;
     try {
       expect(created.body.data.academicYearId).toBe('history-year-2025');
+      expect((await request(`/alerts/${id}`, adminToken, '2025-2026', 'PUT', {
+        status: 'resolved', isRead: true, priority: 'high',
+      })).status).toBe(200);
       expect((await request(`/alerts/${id}`, adminToken, '2026-2027')).status).toBe(404);
       expect((await request(`/alerts/${id}`, adminToken, '2026-2027', 'PUT', { title: 'Wrong year' })).status).toBe(404);
       expect((await request(`/alerts/${id}`, adminToken, '2026-2027', 'DELETE')).status).toBe(404);
       const updated = await request(`/alerts/${id}`, adminToken, '2025-2026', 'PUT', { title: 'Corrected history concern' });
       expect(updated.status).toBe(200);
       expect(updated.body.data.title).toBe('Corrected history concern');
+      expect(updated.body.data).toMatchObject({ status: 'resolved', isRead: true, priority: 'high' });
     } finally {
       expect((await request(`/alerts/${id}`, adminToken, '2025-2026', 'DELETE')).status).toBe(200);
     }
@@ -100,6 +104,35 @@ describe('authenticated Alerts REST on the marked PostgreSQL fixture', () => {
       ...alert, type: 'behavioral', title: 'Wrong student year', studentId: 'history-student-08',
     });
     expect(unenrolled.status).toBe(409);
+  });
+
+  it('keeps a resolved alert resolved after a one-field MCP edit', async () => {
+    const created = await request('/alerts', adminToken, '2025-2026', 'POST', {
+      type: 'health', title: `History MCP concern ${crypto.randomUUID().slice(0, 8)}`,
+      message: 'A historical concern for a partial MCP edit.', studentId: 'history-student-03',
+    });
+    expect(created.status).toBe(200);
+    const id = created.body.data.id as string;
+    try {
+      expect((await request(`/alerts/${id}`, adminToken, '2025-2026', 'PUT',
+        { status: 'resolved', isRead: true })).status).toBe(200);
+      const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
+      const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
+      const client = new Client({ name: 'school-alert-partial-update-test', version: '1.0.0' });
+      const transport = new StreamableHTTPClientTransport(new URL(`http://localhost:${port}/api/mcp`), {
+        requestInit: { headers: { Authorization: `Bearer ${adminToken}` } },
+      });
+      await client.connect(transport);
+      try {
+        const result = await client.callTool({ name: 'alerts_update',
+          arguments: { id, title: 'History MCP corrected concern', academicYear: '2025-2026' } });
+        expect(result.isError, JSON.stringify(result.content)).not.toBe(true);
+      } finally { await transport.close(); }
+      expect((await request(`/alerts/${id}`, adminToken, '2025-2026')).body.data)
+        .toMatchObject({ title: 'History MCP corrected concern', status: 'resolved', isRead: true });
+    } finally {
+      expect((await request(`/alerts/${id}`, adminToken, '2025-2026', 'DELETE')).status).toBe(200);
+    }
   });
 
   it('attributes a trusted financial reminder from its charged fee without an HTTP year', async () => {

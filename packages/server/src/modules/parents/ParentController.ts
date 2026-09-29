@@ -3,14 +3,11 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { ParentService } from './ParentService';
 import { Parent, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ParentGuards';
 import { isAdmin } from '../../auth';
-import { Year } from '../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   createParentDto,
   createParentsBulkDto,
   deleteBulkParentDto,
   linkStudentDto,
-  parentChildrenQuery,
   parentCinParam,
   parentIdParam,
   parentPhoneParam,
@@ -75,13 +72,15 @@ export class ParentController {
     return this.parentService.getByPhone(phone);
   }
 
+  // Each child's class and section in the request's year; the year scope
+  // (`config/yearScope.ts`) declares `academicYear` for MCP.
   @Get('/:id/children')
   @CanRead()
-  @Validate({ params: parentIdParam, query: parentChildrenQuery })
-  @McpTool('Get children linked to a parent')
+  @Validate({ params: parentIdParam })
+  @McpTool('Get children linked to a parent, with their class in the academic year')
   @ResMsg('parents.success.retrieved')
-  async getChildren(@Params('id') id: string, @Year() year: ResolvedAcademicYear) {
-    return this.parentService.getChildren(id, year);
+  async getChildren(@Params('id') id: string) {
+    return this.parentService.getChildren(id);
   }
 
   @Get('/:id')

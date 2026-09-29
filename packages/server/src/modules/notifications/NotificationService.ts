@@ -1,4 +1,5 @@
-import { Err, Service, Transaction } from '../../najm';
+import { Service, Transaction } from '../../najm';
+import { PersonalNotificationValidator } from './NotificationValidator';
 
 import { notificationFlags, vapidConfig } from './notificationConfig';
 import { notificationListQuery, pushSubscriptionDto, pushUnsubscribeDto, type NotificationListQuery, type PushSubscriptionDto, type PushUnsubscribeDto } from './notificationDto';
@@ -16,7 +17,11 @@ function userAgentFamily(value?: string) {
 
 @Service()
 export class PersonalNotificationService {
-  constructor(private readonly repository: PersonalNotificationRepository, private readonly crypto: PushCryptoService) {}
+  constructor(
+    private readonly repository: PersonalNotificationRepository,
+    private readonly crypto: PushCryptoService,
+    private readonly validator: PersonalNotificationValidator,
+  ) {}
 
   async listMine(userId: string, query: NotificationListQuery) {
     return this.repository.listMine(userId, notificationListQuery.parse(query ?? {}));
@@ -27,8 +32,7 @@ export class PersonalNotificationService {
   @Transaction()
   async markRead(userId: string, id: string) {
     const row = await this.repository.markRead(userId, id);
-    if (!row) Err(404, 'Notification not found');
-    return row;
+    return this.validator.ensureNotificationExists(row);
   }
 
   @Transaction()
@@ -60,7 +64,7 @@ export class PersonalNotificationService {
   async unsubscribe(userId: string, input: PushUnsubscribeDto) {
     const parsed = pushUnsubscribeDto.parse(input);
     const removed = await this.repository.removeSubscription(userId, hashEndpoint(parsed.endpoint));
-    if (!removed) Err(404, 'Push subscription not found');
+    this.validator.ensureSubscriptionRemoved(removed);
     return { removed: true };
   }
 

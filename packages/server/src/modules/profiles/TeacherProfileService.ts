@@ -1,11 +1,16 @@
 import { Injectable } from '../../najm';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { Year } from '../academicYears/requestYear';
+import { holdsDay } from '../academicYears/academicRecordYear';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 import { TeacherService } from '../teachers/TeacherService';
 import { AssessmentService } from '../assessments/AssessmentService';
 import { GradeService } from '../grades/GradeService';
 
 @Injectable()
 export class TeacherProfileService {
+  @Year() private readonly year!: ResolvedAcademicYear;
+
   constructor(
     private teacherService: TeacherService,
     private assessmentService: AssessmentService,
@@ -20,20 +25,19 @@ export class TeacherProfileService {
     return { teacher, classes };
   }
 
-  // Today's assessments exist only in the year that holds today; another
-  // year's view has none.
-  async getScheduleToday(teacherId: string, _year: ResolvedAcademicYear) {
+  // Today belongs only to the year whose reporting interval holds the
+  // business day; any other year has no today, so its assessments are null.
+  async getScheduleToday(teacherId: string) {
     const teacher = await this.teacherService.getById(teacherId);
     const classes = await this.teacherService.getClasses(teacherId);
-    const todayAssessments = await this.assessmentService.getAll({ teacherId })
-      .then((a: any[]) => {
-        const today = new Date().toISOString().split('T')[0];
-        return (a || []).filter((ass: any) => ass.date === today);
-      });
+    const today = getBusinessDateOnly();
+    const todayAssessments = holdsDay(this.year, today)
+      ? (await this.assessmentService.getAll({ teacherId })).filter((assessment) => assessment.date === today)
+      : null;
     return { teacher, classes, todayAssessments };
   }
 
-  async getPendingGrading(teacherId: string, _year: ResolvedAcademicYear) {
+  async getPendingGrading(teacherId: string) {
     const [assessments, grades] = await Promise.all([
       this.assessmentService.getAll({ teacherId }),
       this.gradeService.getAll({ teacherId }),
@@ -50,10 +54,10 @@ export class TeacherProfileService {
     return { pendingCount: pending.length, pendingAssessments: pending };
   }
 
-  async getMyStudents(teacherId: string, year: ResolvedAcademicYear) {
+  async getMyStudents(teacherId: string) {
     const [teacher, students] = await Promise.all([
       this.teacherService.getById(teacherId),
-      this.teacherService.getStudents(teacherId, year),
+      this.teacherService.getStudents(teacherId),
     ]);
     return { teacher, students };
   }

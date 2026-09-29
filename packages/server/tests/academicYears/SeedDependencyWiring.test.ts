@@ -5,7 +5,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 it('keeps the explicit seed container dependencies aligned with service constructors', () => {
-  const seedPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../src/modules/seed.ts');
+  const seedPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../src/modules/seed/SeedContainer.ts');
   const seed = ts.createSourceFile(seedPath, readFileSync(seedPath, 'utf8'), ts.ScriptTarget.Latest, true);
   const imports = new Map<string, string>();
   for (const statement of seed.statements) {

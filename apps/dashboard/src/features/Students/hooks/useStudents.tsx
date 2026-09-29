@@ -1,7 +1,7 @@
 'use client';
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { useYearScopedList, useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import {
   useAcademicYearOptions,
   useViewingAcademicYear,
@@ -26,7 +26,10 @@ export const useStudents = (options?) => {
   const { data: students, isLoading: isStudentsLoading, isError, error, refetch } = useYearScopedList({
     resource: 'students', fetch: studentApi.getStudentsApi, enabled,
   });
-  const { data: student, isLoading: isStudentLoading } = crud.useGetById(studentId, !!studentId);
+  const { data: student, isLoading: isStudentLoading } = useYearScopedDetail({
+    resource: 'students', parts: [studentId], fetch: () => studentApi.getStudentByIdApi(studentId),
+    enabled: enabled && !!studentId,
+  });
 
   const { mutateAsync: createStudent, isLoading: isCreating } = crud.useCreate();
   const { mutateAsync: updateStudent, isLoading: isUpdating } = crud.useUpdate();

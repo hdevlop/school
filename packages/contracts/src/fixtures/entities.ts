@@ -749,11 +749,14 @@ export function generateExpense(options = null) {
  * plus some variable ones (maintenance, supplies, etc.).
  */
 export function generateExpenses(count = 30, options: any = {}) {
-   const now = new Date();
-   const startYear = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
+   const now = options.referenceDate ? new Date(options.referenceDate) : new Date();
+   const startYear = options.academicYear ? Number(options.academicYear.split('-')[0])
+      : now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
    const startMonth = 8; // September (0-indexed)
-   const endYear = now.getFullYear();
-   const endMonth = now.getMonth();
+   const end = now < new Date(`${startYear + 1}-08-31T23:59:59.999Z`)
+      ? now : new Date(`${startYear + 1}-08-31T23:59:59.999Z`);
+   const endYear = end.getFullYear();
+   const endMonth = end.getMonth();
 
    // Build list of months in the academic year up to now
    const months: { month: number; year: number }[] = [];

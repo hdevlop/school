@@ -1,36 +1,18 @@
-import { Err, Events, EventService, I18n, Service } from '../../../najm';
+import { Events, EventService, Service, Transaction } from '../../../najm';
+import { StaffRoleValidator } from './StaffRoleValidator';
 import { RoleService, PermissionService } from 'najm-auth';
 import { StaffRoleRepository } from './StaffRoleRepository';
 import type { CreateStaffRoleDto, UpdateStaffRoleDto } from './StaffRoleDto';
 
-const normalizeRoleCode = (value: string) => {
-  const cleaned = value
-    .trim()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-  const parts = cleaned.match(/[a-zA-Z0-9]+/g) ?? [];
-  if (parts.length === 0) Err(400, 'Invalid role code');
-
-  const code = parts
-    .map((part, index) => {
-      const word = /^[A-Z0-9]+$/.test(part) ? part.toLowerCase() : `${part.charAt(0).toLowerCase()}${part.slice(1)}`;
-      return index === 0 ? word : `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
-    })
-    .join('');
-
-  if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(code)) Err(400, 'Invalid role code');
-  return code;
-};
-
 @Service()
 export class StaffRoleService {
   @Events() private events!: EventService;
-  @I18n('staffRoles.errors') private t!: (key: string) => string;
 
   constructor(
     private staffRoleRepository: StaffRoleRepository,
     private roleService: RoleService,
     private permissionService: PermissionService,
+    private validator: StaffRoleValidator,
   ) { }
 
   async list() {
@@ -42,26 +24,27 @@ export class StaffRoleService {
   }
 
   async getByCode(code: string) {
-    const row = await this.staffRoleRepository.getByCode(code);
-    if (!row) Err(404, this.t('notFound'));
-    return row!;
+    return this.validator.ensureExists(code);
   }
 
+  @Transaction()
   async create(data: CreateStaffRoleDto) {
-    const code = normalizeRoleCode(data.code);
-    const existing = await this.staffRoleRepository.getByCode(code);
-    if (existing) {
-      Err(409, this.t('codeExists'));
-    }
+    const code = this.validator.normalizeRoleCode(data.code);
+    await this.validator.ensureCodeUnique(code);
 
     // One action → HR catalog row + optional RBAC role granting app access (plan §5).
     let accessRoleId: string | null = null;
     if (data.createAccessRole) {
-      const existingRole = await this.roleService.getByName(code).catch(() => null);
+      const existingRole = await this.roleService.getByName(code);
       const role = existingRole || (await this.roleService.create({ name: code, description: data.label }));
       accessRoleId = role.id;
+      const existingPermissions = new Set(
+        (await this.permissionService.getPermissionsByRole(role.id)).map((permission) => permission.id),
+      );
       for (const permissionId of data.permissions ?? []) {
-        await this.permissionService.assignPermissionToRole(role.id, permissionId).catch(() => {});
+        if (existingPermissions.has(permissionId)) continue;
+        await this.permissionService.assignPermissionToRole(role.id, permissionId);
+        existingPermissions.add(permissionId);
       }
     }
 
@@ -80,10 +63,7 @@ export class StaffRoleService {
   }
 
   async update(code: string, data: UpdateStaffRoleDto) {
-    const existing = await this.staffRoleRepository.getByCode(code);
-    if (!existing) {
-      Err(404, this.t('notFound'));
-    }
+    const existing = await this.validator.ensureExists(code);
     const patch: Record<string, any> = {};
     if (data.label !== undefined) patch.label = data.label;
     if (data.labels !== undefined) patch.labels = data.labels ?? null;
@@ -97,10 +77,7 @@ export class StaffRoleService {
   }
 
   async remove(code: string) {
-    const existing = await this.staffRoleRepository.getByCode(code);
-    if (!existing) {
-      Err(404, this.t('notFound'));
-    }
+    const existing = await this.validator.ensureExists(code);
 
     const inUse = await this.staffRoleRepository.countStaffUsing(code);
     if (existing!.isSystem || inUse > 0) {
@@ -143,10 +120,6 @@ export class StaffRoleService {
   }
 
   async ensureActive(code: string) {
-    const row = await this.staffRoleRepository.getByCode(code);
-    if (!row || !row.active) {
-      Err(400, this.t('invalidRole'));
-    }
-    return row!;
+    return this.validator.ensureActive(code);
   }
 }

@@ -1,7 +1,6 @@
 import { join } from 'path';
 import { mkdirSync, rmSync } from 'fs';
 import {
-   classesData,
    generateDriver,
    generateExpenses,
    generateFamilyUnit,
@@ -10,14 +9,19 @@ import {
    generateTeacher,
    generateTeachers,
    generateVehicle,
-   getClassByName,
-   getSectionsByClass,
-   sectionsData,
    subjectsData,
    vehiclesData,
 } from '@sms/contracts/fixtures';
 import settingsData from '../school/data/settings.json';
-import { seedAcademicYear } from '../shared/school-seed-data';
+import { schoolSeedData, seedAcademicId, seedAcademicYear } from '../shared/school-seed-data';
+import { getDemoReferenceDate } from '../shared/academic-year';
+
+const { classesData, sectionsData } = schoolSeedData;
+const getClassByName = (name: string) => classesData.find((item) => item.name === name)!;
+const getSectionsByClass = (classId: string) => sectionsData.filter((item) => item.classId === classId);
+const demoReferenceDate = getDemoReferenceDate(seedAcademicYear);
+const demoRunId = crypto.randomUUID().slice(0, 8);
+const demoRecordId = (id: string) => `${seedAcademicId(id)}-${demoRunId}`;
 
 // ============================================
 // ⚙️ CONFIGURATION
@@ -211,7 +215,16 @@ export async function studentsPack() {
 export async function teachersPack() {
    const teachers = generateTeachers({
       ASSIGNMENTS: CONFIG.ASSIGNMENTS,
-   });
+   }).map((teacher: any) => ({
+      ...teacher,
+      hireDate: teacher.hireDate > `${seedAcademicYear.slice(0, 4)}-09-01`
+         ? `${seedAcademicYear.slice(0, 4)}-09-01` : teacher.hireDate,
+      assignments: teacher.assignments.map((assignment: any) => ({
+         ...assignment,
+         classId: seedAcademicId(assignment.classId),
+         sectionIds: assignment.sectionIds.map(seedAcademicId),
+      })),
+   }));
 
    if (teacherLimit <= 0) return { teachers };
 
@@ -229,6 +242,7 @@ export async function teachersPack() {
       ].filter(Boolean)));
 
       selectedTeachers.push(generateTeacher({
+         hireDate: `${seedAcademicYear.slice(0, 4)}-09-01`,
          specialization: subject.name,
          assignments: [{
             classId: classEntity.id,
@@ -246,12 +260,12 @@ export async function transportPack() {
    const vehicles = [];
 
    for (const vehicleData of vehiclesData) {
-      const driver = generateDriver({ POLICY:CONFIG.DRIVER });
+      const driver = generateDriver({ POLICY:CONFIG.DRIVER, hireDate: `${seedAcademicYear.slice(0, 4)}-09-01` });
       drivers.push(driver);
 
       const vehicle = generateVehicle({
          driverId: driver.id,
-         licensePlate: vehicleData.licensePlate,
+         licensePlate: `${vehicleData.licensePlate}-${seedAcademicYear}-${demoRunId}`,
          status: vehicleData.status,
       });
 
@@ -265,7 +279,7 @@ export async function transportPack() {
 }
 
 export async function expensesPack() {
-    const expenses = generateExpenses(CONFIG.EXPENSES.COUNT);
+    const expenses = generateExpenses(CONFIG.EXPENSES.COUNT, { academicYear: seedAcademicYear, referenceDate: demoReferenceDate });
     return { expenses };
 }
 
@@ -278,9 +292,11 @@ function isoDate(date: Date): string {
 }
 
 function offsetDate(days: number): Date {
-   const date = new Date();
+   const date = new Date(demoReferenceDate);
    date.setDate(date.getDate() + days);
-   return date;
+   const startsOn = new Date(`${seedAcademicYear.slice(0, 4)}-09-01T00:00:00.000Z`);
+   const endsOn = new Date(`${seedAcademicYear.slice(5)}-08-31T23:59:59.999Z`);
+   return date < startsOn ? startsOn : date > endsOn ? endsOn : date;
 }
 
 // A recent moment inside the seed year, once the student's placement has begun:
@@ -289,12 +305,6 @@ function recentMomentInSeedYear(student: any, i: number): string {
    const earliest = student.yearEnrolledOn ?? `${seedAcademicYear.slice(0, 4)}-09-01`;
    const moment = offsetDate(-(1 + (i % 60)));
    return dateOnly(moment) < earliest ? `${earliest}T10:00:00.000Z` : isoDate(moment);
-}
-
-function monthPeriod(offset: number): string {
-   const date = new Date();
-   date.setMonth(date.getMonth() - offset);
-   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
 function pick<T>(items: T[]): T {
@@ -423,7 +433,7 @@ export function assessmentsPack(teachers: any[], count = featureCounts.assessmen
          const context = contexts.length ? contexts[i % contexts.length] : randomClassSection();
          const totalMarks = [10, 20, 40, 100][i % 4];
          return {
-            id: `ASM${String(i + 1).padStart(4, '0')}`,
+            id: demoRecordId(`ASM${String(i + 1).padStart(4, '0')}`),
             ...context,
             title: ['Weekly quiz', 'Unit test', 'Class project', 'Oral presentation'][i % 4],
             description: 'Generated assessment for demo academic history.',
@@ -448,7 +458,7 @@ export function examsPack(teachers: any[], count = featureCounts.exams) {
          const totalMarks = [20, 40, 60, 100][i % 4];
          const hour = 8 + (i % 6);
          return {
-            id: `EXM${String(i + 1).padStart(4, '0')}`,
+            id: demoRecordId(`EXM${String(i + 1).padStart(4, '0')}`),
             ...context,
             title: ['Mathematics exam', 'Language exam', 'Science exam', 'History exam'][i % 4],
             description: 'Generated exam for demo academic records.',
@@ -717,7 +727,7 @@ export function refuelsPack(vehicles: any[], drivers: any[], count = featureCoun
             costPerLiter: costPerLiter.toFixed(2),
             totalCost: (liters * costPerLiter).toFixed(2),
             fuelLevelAfter: String(60 + (i % 5) * 8),
-            voucherNumber: `FUEL-${String(i + 1).padStart(4, '0')}`,
+            voucherNumber: demoRecordId(`FUEL-${String(i + 1).padStart(4, '0')}`),
             mileageAtRefuel: String(Number(vehicle?.currentMileage || 10000) + i * 120),
             attendant: ['Afriquia', 'Shell', 'TotalEnergies'][i % 3],
             notes: 'Generated refuel history.',
@@ -754,8 +764,8 @@ export function staffPack(count = featureCounts.staff) {
          const base = generateDriver({ id: `STF${String(i + 1).padStart(4, '0')}` });
          const role = i % 2 === 0 ? 'assistant' : secondaryRoles[Math.floor(i / 2) % secondaryRoles.length];
          return {
-            id: `STF${String(i + 1).padStart(4, '0')}`,
-             employeeCode: `DEMO-STF-${String(i + 1).padStart(3, '0')}`,
+            id: demoRecordId(`STF${String(i + 1).padStart(4, '0')}`),
+             employeeCode: `DEMO-${seedAcademicYear}-${demoRunId}-STF-${String(i + 1).padStart(3, '0')}`,
              name: base.name,
              email: base.email,
              cin: base.cin,
@@ -767,7 +777,8 @@ export function staffPack(count = featureCounts.staff) {
             compensationMode: 'monthly',
             salary: 3200 + (i % 6) * 600,
             employmentType: ['fullTime', 'partTime', 'contract'][i % 3],
-            hireDate: base.hireDate,
+            hireDate: base.hireDate > `${seedAcademicYear.slice(0, 4)}-09-01`
+               ? `${seedAcademicYear.slice(0, 4)}-09-01` : base.hireDate,
             status: 'active',
             bankAccount: `MA64${String(1000000000000000 + i).padStart(16, '0')}`,
             emergencyContact: base.emergencyContact,
@@ -781,7 +792,7 @@ export function staffPack(count = featureCounts.staff) {
 // June. July/August stay light in the demo dashboard, matching the summer-break
 // expense profile instead of making the current-month KPI look like regular term.
 function academicYearPeriods(): string[] {
-   const now = new Date();
+   const now = demoReferenceDate;
    const startYear = Number(seedAcademicYear.split('-')[0]);
    const startMonth = 8; // September (0-indexed)
    const endYear = now.getFullYear();
@@ -799,11 +810,11 @@ function academicYearPeriods(): string[] {
 }
 
 export function payrollPack(count = featureCounts.payrollPeriods) {
-   // count <= 0 → auto: full academic year (Sep → now). A positive count still
-   // yields the last `count` calendar months (legacy behaviour, via --payrollPeriods).
+   // Only teaching months in the selected year, up to the demo reference day.
+   const periods = academicYearPeriods();
    const payrollPeriods = count > 0
-      ? Array.from({ length: count }, (_, i) => monthPeriod(i))
-      : academicYearPeriods();
+      ? periods.slice(-count)
+      : periods;
    return { payrollPeriods };
 }
 

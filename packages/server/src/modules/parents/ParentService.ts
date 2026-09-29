@@ -1,8 +1,8 @@
 import { Service, Events, EventService } from '../../najm';
 import { ParentRepository } from './ParentRepository';
+import { ParentChildrenRepository } from './ParentChildrenRepository';
 import { ParentValidator } from './ParentValidator';
 import { AuthService, UserService } from '../../auth';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { StorageService } from 'najm-storage';
 import { nanoid } from 'nanoid';
 import { calculateAge, pickProps, isEmpty } from '../../shared';
@@ -22,7 +22,8 @@ export class ParentService {
     private parentValidator: ParentValidator,
     private userService: UserService,
     private authService: AuthService,
-    private storage: StorageService
+    private storage: StorageService,
+    private parentChildrenRepository: ParentChildrenRepository,
   ) { }
 
   // ========== RETRIEVAL METHODS ==========
@@ -57,18 +58,18 @@ export class ParentService {
   }
 
   /**
-   * Each linked child with that year's class and section from its latest
-   * placement, or none when the child was not enrolled that year.
+   * Each linked child the reader may read, with the selected year's class and
+   * section from its latest placement, or none when not enrolled that year.
    */
-  async getChildren(id: string, year: ResolvedAcademicYear) {
+  async getChildren(id: string) {
     await this.parentValidator.ensureExists(id);
-    return await this.parentRepository.getChildren(id, year.id);
+    return await this.parentChildrenRepository.getChildren(id);
   }
 
-  /** The children linked now, with their current class; no year. */
+  /** The children linked now that the reader may read, with their current class; no year. */
   async getLinkedChildren(id: string) {
     await this.parentValidator.ensureExists(id);
-    return await this.parentRepository.getLinkedChildren(id);
+    return await this.parentChildrenRepository.getLinkedChildren(id);
   }
 
   // ========== CREATE-METHOD ==========
@@ -181,6 +182,12 @@ export class ParentService {
   }
 
   async deleteAll() {
+    await this.parentValidator.ensureNoneLinked();
+    return await this.parentRepository.deleteAll();
+  }
+
+  /** Trusted full reset for the seed and the demo reset, which clear students first. */
+  async clearForSeedReset() {
     return await this.parentRepository.deleteAll();
   }
 

@@ -1,5 +1,5 @@
 import { Err, Service } from '../../najm';
-import { canUseOtherAcademicYears, parseSchoolYearLabel, readAcademicYearSelection } from '@sms/contracts/academic-years';
+import { canUseOtherAcademicYears, isDateOnly, isValidSchoolYearCalendar, parseSchoolYearLabel, readAcademicYearSelection } from '@sms/contracts/academic-years';
 import { AcademicYearRepository } from './AcademicYearRepository';
 
 type ActivePointer = { activeAcademicYearId?: string | null; currentAcademicYear?: string | null } | null | undefined;
@@ -26,6 +26,64 @@ export const canPrepareYears = (role?: string) => role === 'admin' || role === '
 @Service()
 export class AcademicYearValidator {
   constructor(private years: AcademicYearRepository) {}
+
+  ensureDraftVisible(year: ResolvedAcademicYear, role?: string) {
+    if (year.status === 'draft' && !canPrepareYears(role)) Err(404, 'Academic year not found');
+  }
+
+  ensureActiveRecord(year: ResolvedAcademicYear, settings: ActivePointer) {
+    if (!isActiveYear(year, settings)) Err(404, 'Academic year not found');
+  }
+
+  async ensureLabelUnique(label: string) {
+    if (await this.years.findByLabel(label)) Err(409, 'Academic year already exists');
+  }
+
+  ensureValidStoredCalendar(year: ResolvedAcademicYear) {
+    if (!isValidSchoolYearCalendar(year.label, year)) Err(409, 'Stored calendar is invalid');
+  }
+
+  ensureActivePointer(settings: ActivePointer) {
+    if (!settings?.activeAcademicYearId) Err(409, 'The active year is not registered in Settings');
+    return settings.activeAcademicYearId;
+  }
+
+  ensurePointerUnchanged(settings: ActivePointer, sourceId: string) {
+    if (settings?.activeAcademicYearId !== sourceId) Err(409, 'The active year changed; review and try again');
+  }
+
+  ensureActivationCalendar(source: ResolvedAcademicYear, target: ResolvedAcademicYear) {
+    const sourceLabel = parseSchoolYearLabel(source.label);
+    const targetLabel = parseSchoolYearLabel(target.label);
+    if (!sourceLabel || !targetLabel || sourceLabel.endYear !== targetLabel.startYear ||
+      source.status !== 'open' || target.status !== 'draft' || target.provenance !== 'verified' ||
+      !isValidSchoolYearCalendar(target.label, target)) {
+      Err(409, 'Only the verified draft year that follows the active year can be activated');
+    }
+  }
+
+  ensureActivationDate(year: ResolvedAcademicYear, today: string) {
+    if (today < year.reportingStartsOn || today > year.reportingEndsOn) {
+      Err(409, `This year can be activated from ${year.reportingStartsOn}, the first day it records`);
+    }
+  }
+
+  ensurePreparedEnrollmentDate(preparedOn: unknown, today: string) {
+    if (typeof preparedOn !== 'string' || !isDateOnly(preparedOn) || preparedOn > today) {
+      Err(409, 'The prepared student enrollments must start by the activation date');
+    }
+  }
+
+  ensureActiveSwitchSucceeded(switched: unknown) {
+    if (!switched) Err(409, 'The active year changed; review and try again');
+  }
+
+  ensureCanClose(year: ResolvedAcademicYear, settings: ActivePointer) {
+    if (settings?.activeAcademicYearId === year.id || settings?.currentAcademicYear === year.label) {
+      Err(409, 'Activate another year before closing this one');
+    }
+    if (year.status === 'draft') Err(409, 'A draft year cannot be closed');
+  }
 
   async requireId(id: string) {
     const year = await this.years.findById(id);

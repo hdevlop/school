@@ -1,11 +1,14 @@
-import { Body, Controller, Get, Params, Post, User, Validate } from '../../najm';
+import { Body, Controller, Get, Params, Post, Put, User, Validate } from '../../najm';
+import { ToolGroup } from 'najm-mcp';
 import { isAdministrator } from '../../auth';
 import { StudentEnrollmentService } from './StudentEnrollmentService';
 import {
   createEnrollmentDto, endEnrollmentDto, enrollmentIdParam, transferEnrollmentDto,
   type CreateEnrollmentDto, type EndEnrollmentDto, type TransferEnrollmentDto,
+  correctEnrollmentDto, type CorrectEnrollmentDto,
 } from './StudentEnrollmentDto';
 
+@ToolGroup('student-enrollments')
 @Controller('/student-enrollments')
 export class StudentEnrollmentController {
   constructor(private enrollments: StudentEnrollmentService) {}
@@ -21,7 +24,14 @@ export class StudentEnrollmentController {
   @isAdministrator()
   @Validate(createEnrollmentDto)
   create(@Body() body: CreateEnrollmentDto, @User() user: { id: string }) {
-    return this.enrollments.create(body, user.id);
+    return this.enrollments.createInSelectedYear(body, user.id);
+  }
+
+  @Put('/:id')
+  @isAdministrator()
+  @Validate({ params: enrollmentIdParam, body: correctEnrollmentDto })
+  correct(@Params('id') id: string, @Body() body: CorrectEnrollmentDto, @User() user: { id: string; role: string }) {
+    return this.enrollments.correct(id, body, user);
   }
 
   @Post('/:id/transfer')

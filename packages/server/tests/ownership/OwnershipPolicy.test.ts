@@ -274,7 +274,7 @@ describe('Owned repository wiring', () => {
     const outside: any = await container.resolve(StudentRepository as any);
     expect(outside._scopeCtx).toBeInstanceOf(ScopeContext);
     outside.db = db;
-    expect(outside.ownershipCondition()).toBeUndefined();
+    expect(outside.ownedWhere()).toBeUndefined();
 
     const statements: string[] = [];
     await container.run({ requestId: 'request-1', user: { id: 'parent-user', role: 'parent' } } as any, async () => {

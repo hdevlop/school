@@ -1,4 +1,4 @@
-import { Err, Service, Transaction } from '../../../najm';
+import { Service, Transaction } from '../../../najm';
 import { VehicleAssignmentRepository } from './VehicleAssignmentRepository';
 import { VehicleAssignmentValidator } from './VehicleAssignmentValidator';
 import type { CreateVehicleAssignmentDto, UpdateVehicleAssignmentDto } from './VehicleAssignmentDto';
@@ -55,14 +55,9 @@ export class VehicleAssignmentService {
 
   async unassign(id: string, unassignmentDate?: string) {
     const existing = await this.vehicleAssignmentValidator.checkAssignmentExists(id);
-    if (existing.status !== 'active') Err(409, 'Driver assignment is not active');
+    this.vehicleAssignmentValidator.ensureActiveAssignment(existing.status);
     const effectiveDate = unassignmentDate || getBusinessDateOnly();
-    if (effectiveDate < this.year.reportingStartsOn || effectiveDate > this.year.reportingEndsOn) {
-      Err(409, 'Driver unassignment date is outside the selected school year');
-    }
-    if (effectiveDate <= existing.assignmentDate || effectiveDate > getBusinessDateOnly()) {
-      Err(400, 'Driver unassignment date must follow its start and cannot be in the future');
-    }
+    this.vehicleAssignmentValidator.ensureUnassignmentDate(effectiveDate, existing.assignmentDate);
 
     const updateData = {
       status: 'completed',
@@ -95,20 +90,13 @@ export class VehicleAssignmentService {
     const effectiveDate = assignmentDate || getBusinessDateOnly();
     const year = explicitYear ?? this.year;
     this.vehicleAssignmentValidator.validateAssignmentDates(effectiveDate);
-    if (effectiveDate < year.reportingStartsOn || effectiveDate > year.reportingEndsOn) {
-      Err(409, 'Driver assignment date is outside the selected school year');
-    }
-    if (effectiveDate > getBusinessDateOnly()) Err(400, 'Driver reassignment cannot be in the future');
+    this.vehicleAssignmentValidator.ensureReassignmentDate(effectiveDate, year);
     const existingAssignment = await this.vehicleAssignmentRepository.getActiveAssignmentByVehicleAcrossYears(vehicleId);
     if (existingAssignment?.driverId === driverId) {
-      if (effectiveDate < existingAssignment.assignmentDate) {
-        Err(409, 'Driver is already assigned from a later date');
-      }
+      this.vehicleAssignmentValidator.ensureExistingStart(effectiveDate, existingAssignment.assignmentDate);
       return existingAssignment;
     }
-    if (existingAssignment && effectiveDate <= existingAssignment.assignmentDate) {
-      Err(400, 'Driver reassignment date must follow the old start');
-    }
+    this.vehicleAssignmentValidator.ensureReplacementStart(effectiveDate, existingAssignment?.assignmentDate);
     await this.vehicleAssignmentValidator.checkNoOverlappingVehicleAssignment(
       vehicleId, effectiveDate, null, existingAssignment?.id,
     );
@@ -129,9 +117,25 @@ export class VehicleAssignmentService {
     return await this.vehicleAssignmentRepository.create(data);
   }
 
+  /**
+   * The Staff form's vehicle for a driver, from the business day: the driver's
+   * other current vehicle ends today and the vehicle's other driver is replaced
+   * by `assignDriver`. Earlier assignments are never rewritten or deleted.
+   */
+  @Transaction()
+  async assignDriverFromToday(driverId: string, vehicleId: string) {
+    const today = getBusinessDateOnly();
+    const year = this.vehicleAssignmentValidator.ensureRegisteredYear(await this.academicYears.findForDate(today));
+    const current = await this.vehicleAssignmentRepository.getActiveAssignmentByDriverAcrossYears(driverId);
+    if (current?.vehicleId === vehicleId) return current;
+    if (current) await this.vehicleAssignmentRepository.closeActiveAssignmentAcrossYears(current.id, today);
+    return await this.assignDriver(vehicleId, driverId, today, undefined, year);
+  }
+
   async unassignDriver(vehicleId: string, unassignmentDate?: string) {
-    const activeAssignment = await this.vehicleAssignmentRepository.getActiveAssignmentByVehicleAcrossYears(vehicleId);
-    if (!activeAssignment) Err(404, 'Vehicle has no active driver assignment');
+    const activeAssignment = this.vehicleAssignmentValidator.ensureVehicleAssignment(
+      await this.vehicleAssignmentRepository.getActiveAssignmentByVehicleAcrossYears(vehicleId),
+    );
     return await this.unassign(activeAssignment.id, unassignmentDate);
   }
 
@@ -142,11 +146,10 @@ export class VehicleAssignmentService {
       ? [...new Set(driverData)]
       : [driverData];
 
-    if (driverIds.length !== 1) Err(400, 'A vehicle can have one current driver');
+    this.vehicleAssignmentValidator.ensureSingleDriver(driverIds);
     const effectiveDate = assignmentDate || getBusinessDateOnly();
     this.vehicleAssignmentValidator.validateAssignmentDates(effectiveDate);
-    const year = await this.academicYears.findForDate(effectiveDate);
-    if (!year) Err(409, 'Driver assignment date has no registered school year');
+    const year = this.vehicleAssignmentValidator.ensureRegisteredYear(await this.academicYears.findForDate(effectiveDate));
 
     const assignments = [];
 

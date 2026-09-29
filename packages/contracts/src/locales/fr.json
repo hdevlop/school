@@ -158,7 +158,7 @@
       "passwordSet": "Votre mot de passe a été défini. Veuillez vous connecter.",
       "login": "Connexion réussie",
       "logout": "Déconnexion réussie",
-      "register": "Inscription réussie. Bienvenue !",
+      "register": "Compte créé. L’établissement doit l’approuver avant que vous puissiez vous connecter.",
       "passwordReset": "Réinitialisation du mot de passe envoyée",
       "tokenGenerated": "Jeton d'accès généré avec succès",
       "tokenRefreshed": "Jeton d'accès actualisé avec succès",
@@ -798,6 +798,7 @@
       "preferences": "Préférences"
     },
     "errors": {
+      "alreadyExists": "Les paramètres de l’école existent déjà ; modifiez-les par une mise à jour",
       "userSettingsNotFound": "Paramètres utilisateur introuvables",
       "notFound": "Paramètres non trouvés pour cet utilisateur",
       "deleteAllFailed": "Échec de la suppression de tous les paramètres",
@@ -858,6 +859,7 @@
     "school": {
       "namePlaceholder": "Mon école",
       "currentAcademicYear": "Année scolaire actuelle",
+      "currentAcademicYearLocked": "Change uniquement à l’activation d’une année enregistrée",
       "lunchBreakDuration": "Durée de pause déjeuner (min)",
       "schoolAddress": "Adresse de l'école",
       "schoolEmail": "E-mail de l'école",
@@ -2747,6 +2749,17 @@
       "bulkDeleted": "Enregistrements Parent supprimés avec succès"
     },
     "errors": {
+      "idExists": "Cet identifiant de parent existe déjà",
+      "notFound": "Parent introuvable",
+      "emailExists": "Un parent avec cet e-mail existe déjà",
+      "cinExists": "Un parent avec cette CIN existe déjà",
+      "phoneExists": "Un parent avec ce numéro de téléphone existe déjà",
+      "hasLinkedStudents": "Impossible de supprimer un parent lié à des élèves",
+      "someLinked": "Certains parents sont encore liés à des élèves. Détachez leurs enfants, ou supprimez les parents un par un.",
+      "studentNotLinked": "Cet élève n'est pas lié à ce parent",
+      "studentAlreadyLinked": "Cet élève est déjà lié à ce parent",
+      "invalidGender": "Veuillez sélectionner un genre valide",
+      "invalidRelationshipType": "Veuillez sélectionner un lien de parenté valide",
       "invalidMaritalStatus": "Veuillez sélectionner un état civil valide"
     },
     "tooltips": {
@@ -3054,6 +3067,16 @@
     }
   },
   "students": {
+    "correction": {
+      "placement": "Affectation à corriger",
+      "status": "Statut de l’inscription annuelle",
+      "leftOn": "Fin de l’inscription (date exclue)",
+      "validFrom": "Début de l’affectation",
+      "validTo": "Fin de l’affectation (date exclue)",
+      "reason": "Motif de la correction",
+      "requiredReason": "Indiquez le motif de la correction",
+      "invalidDates": "Saisissez des dates d’inscription et d’affectation valides"
+    },
     "enrollment": {
       "title": "Années scolaires",
       "help": "La classe et la section de l'élève pour chaque année scolaire, d'après des enregistrements datés. Modifier le profil ne les change pas.",
@@ -3091,6 +3114,14 @@
       "bulkDeleted": "Élèves supprimés avec succès",
       "allDeleted": "Tous les élèves ont été supprimés avec succès",
       "seeded": "Élèves initialisés avec succès"
+    },
+    "errors": {
+      "idExists": "Cet identifiant d'élève existe déjà",
+      "notFound": "Élève introuvable",
+      "studentCodeExists": "Un élève avec ce code existe déjà",
+      "emailExists": "Un élève avec cet e-mail existe déjà",
+      "invalidClass": "Classe invalide",
+      "invalidSection": "Section invalide"
     },
     "subtitle": {
       "count": "{{count}} étudiants au total"
@@ -3148,6 +3179,7 @@
     },
     "status": {
       "active": "Actif",
+      "withdrawn": "Retiré",
       "graduated": "Diplômé",
       "inactive": "Inactif",
       "transferred": "Transféré"
@@ -3346,6 +3378,7 @@
     }
   },
   "teachers": {
+    "errors": { "hasAssignmentHistory": "Cet enseignant a des affectations de classe dans une année scolaire. Retirez-les avant de le supprimer" },
     "subtitle": {
       "count": "{{count}} enseignants au total"
     },

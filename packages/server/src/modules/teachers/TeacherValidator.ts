@@ -18,6 +18,28 @@ export class TeacherValidator {
     private subjectValidator: SubjectValidator,
   ) { }
 
+  ensureDatedRosterAccess(onDate: string, year: { reportingStartsOn: string; reportingEndsOn: string }, role?: string) {
+    if (role !== 'admin' && role !== 'principal') Err(403, 'Dated teacher rosters require reviewed assignment history');
+    if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) Err(400, 'Date is outside the academic year reporting interval');
+  }
+
+  ensureAssignmentDeleted<T>(assignment: T | null | undefined): T {
+    if (!assignment) Err(404, 'Assignment not found');
+    return assignment;
+  }
+
+  ensureClassSections(sections: unknown) {
+    if (isEmpty(sections)) Err(404, 'Class has no sections');
+  }
+
+  ensureAssignmentsDeleted(assignments: unknown) {
+    if (isEmpty(assignments)) Err(404, 'Assignment not found');
+  }
+
+  async ensureNoAssignmentHistory(id?: string) {
+    if (await this.teacherRepository.hasAnyAssignments(id)) Err(409, this.tt('hasAssignmentHistory'));
+  }
+
   async ensureUserIdUnique(id: string) {
     await this.userValidator.checkUserIdIsUnique(id);
   }
@@ -91,7 +113,7 @@ export class TeacherValidator {
     for (const assignment of assignments) {
       const { classId, sectionIds, subjectIds } = assignment;
 
-      await this.classValidator.ensureExists(classId);
+      await this.classValidator.ensureInSelectedYear(classId);
 
       if (!isEmpty(subjectIds)) {
         for (const subjectId of subjectIds) {

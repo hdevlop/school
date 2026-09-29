@@ -35,8 +35,8 @@
       "default": "./src/modules/index.ts"
     },
     "./modules/seed": {
-      "types": "./src/modules/seed.ts",
-      "default": "./src/modules/seed.ts"
+      "types": "./src/modules/seed/SeedContainer.ts",
+      "default": "./src/modules/seed/SeedContainer.ts"
     }
   },
   "scripts": {
@@ -51,20 +51,20 @@
     "hono": "^4.12.31",
     "ioredis": "5.11.1",
     "lodash.isempty": "^4.4.0",
-    "najm-auth": "4.1.0",
+    "najm-auth": "4.2.1",
     "najm-cache": "2.2.0",
-    "najm-core": "2.1.0",
+    "najm-core": "3.0.0",
     "najm-cors": "2.0.2",
     "najm-chatbot": "2.0.3",
     "najm-database": "2.0.4",
     "najm-event": "2.0.2",
-    "najm-guard": "2.0.2",
+    "najm-guard": "2.1.0",
     "najm-i18n": "2.1.2",
-    "najm-mcp": "2.2.0",
+    "najm-mcp": "2.2.2",
     "najm-rag": "2.0.3",
     "najm-rate": "2.1.1",
-    "najm-storage": "2.2.0",
-    "najm-theme": "0.2.1",
+    "najm-storage": "3.0.0",
+    "najm-theme": "0.2.2",
     "najm-validation": "2.0.2",
     "nanoid": "^5.0.0",
     "nodemailer": "9.1.1",

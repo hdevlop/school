@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import {
-  academicYearField,
   addressField,
   dateField,
   emailField,
@@ -13,6 +12,7 @@ import {
 import { genderEnum, studentStatusEnum } from '../../shared/enums';
 import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
 import { isDateOnly } from '@sms/contracts/academic-years';
+import { correctEnrollmentDto } from '../studentEnrollments/StudentEnrollmentDto';
 
 const transportAssignmentDto = z.object({
   vehicleId: z.string().min(1),
@@ -73,12 +73,13 @@ export const updateStudentDto = createStudentDto
   .extend({
     password: z.never('Passwords are not set from a profile edit').optional(),
     yearEnrolledOn: z.never('Use the enrollment operations for yearly placement').optional(),
+    status: studentStatusEnum.optional(),
+    enrollmentCorrection: correctEnrollmentDto.extend({ enrollmentId: z.string().min(1) }).optional(),
   });
 
 export const studentIdParam = z.object({ id: z.string().min(1) });
-// `academicYear` stays declared so MCP tools advertise it; the route reads the
-// validated year through @Year(), which also accepts the X-Academic-Year header.
-export const studentYearQuery = z.object({ academicYear: academicYearField.optional() });
+// The shared REST/MCP year boundary owns selection.
+export const studentYearQuery = z.object({});
 // `onDate` narrows the year list to the students enrolled and placed on that
 // day, each with the class and section valid then: the roster a register marks.
 export const studentListQuery = studentYearQuery.extend({

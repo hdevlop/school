@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 import { AcademicSourceService } from '../../src/modules/academicSources/AcademicSourceService';
+import { AcademicSourceValidator } from '../../src/modules/academicSources/AcademicSourceValidator';
 import { createGradeDto, updateGradeDto } from '../../src/modules/grades/GradeDto';
 import { GradeService } from '../../src/modules/grades/GradeService';
+import { gradeValidator } from './fixtures/gradeValidator';
 
 const year = {
   id: 'year-1', label: '2025-2026', status: 'open',
@@ -17,19 +19,21 @@ function gradeService(teacherIdForUser = async () => 'teacher-1', ensureSelected
     classAcademicYear: year.label, teacherId: 'teacher-1', subjectId: 'subject-1',
   };
   const allowed = async () => {};
+  const repository = { teacherIdForUser, create: async (data: Record<string, unknown>) => { inserted = data; return data; } };
   const service = new GradeService(
-    { teacherIdForUser, create: async (data: Record<string, unknown>) => { inserted = data; return data; } } as any,
-    {
+    repository as any,
+    gradeValidator(repository, {
       ensureStudentExists: allowed, ensureSingleGradeSource: allowed,
       ensureExamExists: allowed, ensureNoDuplicateGrade: allowed,
       ensureTeacherAssignmentExists: allowed, ensureSelectedYear,
-    } as any,
+    }),
     {} as any,
     { requireLabel: async () => year } as any,
     { getSourceContext: async () => source } as any,
     new AcademicSourceService(
       {} as any,
       { listYearContexts: async () => [{ id: 'section-1', academicYear: year.label }] } as any,
+      new AcademicSourceValidator(),
     ),
     { hasAnyForStudent: async () => true, isPlacedInSectionOnDate: async () => true } as any,
   );

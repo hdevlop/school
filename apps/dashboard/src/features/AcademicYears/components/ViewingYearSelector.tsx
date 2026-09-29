@@ -1,7 +1,10 @@
 'use client';
 
 import { CalendarRange } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from 'najm-kit';
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup,
+  DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger, NButton,
+} from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import {
   useAcademicYearOptions,
@@ -15,41 +18,52 @@ import {
  * the roles that work in other years. Choosing a year changes this tab's
  * selection, never the school's active year.
  */
-export function ViewingYearSelector({ collapsed }: Readonly<{ collapsed: boolean }>) {
+export function ViewingYearSelector() {
   const { t } = useTranslation();
   const { viewingYear, activeYear } = useViewingAcademicYear();
   const canChooseYear = useCanUseOtherAcademicYears();
   const setViewingYear = useSetViewingYear();
-  const { data, isError } = useAcademicYearOptions();
+  const { data, isError, isPending } = useAcademicYearOptions();
 
   if (!canChooseYear) return null;
 
   const label = t('academicYearViewing.label');
-  if (collapsed) {
-    return (
-      <div className="flex h-8 items-center justify-center text-sidebar-foreground/70" title={`${label}: ${viewingYear ?? ''}`}>
-        <CalendarRange className="h-4 w-4" aria-hidden />
-        <span className="sr-only">{`${label}: ${viewingYear ?? ''}`}</span>
-      </div>
-    );
-  }
-
   const years = data?.years ?? [];
+  const buttonLabel = viewingYear ? `${label}: ${viewingYear}` : label;
   return (
-    <div className="flex flex-col gap-1 px-2 pb-1">
-      <span className="text-xs font-medium text-sidebar-foreground/70">{label}</span>
-      <Select value={viewingYear ?? ''} onValueChange={(year) => setViewingYear(year)} disabled={isError || !years.length}>
-        <SelectTrigger aria-label={label} className="h-8 w-full">
-          <SelectValue placeholder={isError ? t('academicYearViewing.unavailable') : viewingYear} />
-        </SelectTrigger>
-        <SelectContent>
-          {years.map((year) => (
-            <SelectItem key={year.id} value={year.label}>
-              {year.label === activeYear ? t('academicYearViewing.activeOption', { year: year.label }) : year.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <NButton
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="relative text-foreground hover:text-foreground [&_svg]:opacity-100"
+          aria-label={buttonLabel}
+          title={buttonLabel}
+        >
+          <CalendarRange size={18} aria-hidden />
+          {viewingYear && activeYear && viewingYear !== activeYear && (
+            <span className="absolute bottom-1 end-1 size-1.5 rounded-full bg-primary" aria-hidden />
+          )}
+        </NButton>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="min-w-52">
+        <DropdownMenuLabel>{label}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {isError || (!isPending && years.length === 0) ? (
+          <DropdownMenuItem disabled>{t('academicYearViewing.unavailable')}</DropdownMenuItem>
+        ) : isPending ? (
+          <DropdownMenuItem disabled>{t('common.loading')}</DropdownMenuItem>
+        ) : (
+          <DropdownMenuRadioGroup value={viewingYear ?? ''} onValueChange={setViewingYear}>
+            {years.map((year) => (
+              <DropdownMenuRadioItem key={year.id} value={year.label} className="cursor-pointer whitespace-nowrap">
+                {year.label === activeYear ? t('academicYearViewing.activeOption', { year: year.label }) : year.label}
+              </DropdownMenuRadioItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

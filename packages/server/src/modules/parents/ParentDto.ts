@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import {
-  academicYearField,
   addressField,
   cinField,
   emailField,
@@ -40,10 +39,13 @@ export const createParentsBulkDto = z.array(createParentDto);
 // field is declared `never`: present means rejected, absent means fine.
 export const updateParentDto = createParentDto
   .partial()
-  .extend({ password: z.never('Passwords are not set from a profile edit').optional() });
+  .extend({
+    password: z.never('Passwords are not set from a profile edit').optional(),
+    isEmergencyContact: z.boolean().optional(),
+    financialResponsibility: z.boolean().optional(),
+  });
 
 export const parentIdParam = z.object({ id: z.string().min(1) });
-export const parentChildrenQuery = z.object({ academicYear: academicYearField.optional() });
 export const parentCinParam = z.object({ cin: cinField });
 export const parentPhoneParam = z.object({ phone: phoneField });
 export const parentSearchQueryDto = z.object({
@@ -65,4 +67,3 @@ export type CreateParentsBulkDto = z.input<typeof createParentsBulkDto>;
 export type ParentSearchQueryDto = z.infer<typeof parentSearchQueryDto>;
 export type LinkStudentDto = z.infer<typeof linkStudentDto>;
 export type DeleteBulkParentDto = z.infer<typeof deleteBulkParentDto>;
-export type ParentChildrenQuery = z.infer<typeof parentChildrenQuery>;

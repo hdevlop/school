@@ -1,4 +1,4 @@
-import { Service, Transaction, Events, EventService, Err } from '../../najm';
+import { Service, Transaction, Events, EventService } from '../../najm';
 import { TeacherRepository } from './TeacherRepository';
 import { TeacherValidator } from './TeacherValidator';
 import { AuthService, UserService } from '../../auth';
@@ -8,6 +8,7 @@ import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { nanoid } from 'nanoid';
 import { StaffService } from '../staff/StaffService';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { Year } from '../academicYears/requestYear';
 import { eq } from 'drizzle-orm';
 import { teachers as teachersTable, staff as staffTable } from '../../database/schema';
 import { db } from '../../database/db';
@@ -24,6 +25,7 @@ import type {
 @Service()
 export class TeacherService {
   @Events() private events!: EventService;
+  @Year() private readonly year!: ResolvedAcademicYear;
 
 
   constructor(
@@ -68,19 +70,14 @@ export class TeacherService {
     return await this.teacherRepository.getClasses(id);
   }
 
-  async getStudents(id: string, year: ResolvedAcademicYear, onDate?: string, role?: string) {
+  async getStudents(id: string, onDate?: string, role?: string) {
     await this.teacherValidator.ensureExists(id);
     if (onDate) {
       // Assignment rows have no valid-from/to dates yet. Until those dates are
       // captured, this is an administrator review roster, not teacher access.
-      if (role !== 'admin' && role !== 'principal') {
-        Err(403, 'Dated teacher rosters require reviewed assignment history');
-      }
-      if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) {
-        Err(400, 'Date is outside the academic year reporting interval');
-      }
+      this.teacherValidator.ensureDatedRosterAccess(onDate, this.year, role);
     }
-    return this.teacherRepository.getStudents(id, year, onDate);
+    return this.teacherRepository.getStudents(id, onDate);
   }
 
   async assignSubject(data: { teacherId: string; classId: string; sectionId: string; subjectId: string }) {
@@ -110,10 +107,7 @@ export class TeacherService {
     const deleted = await this.teacherRepository.deleteAssignment(
       data.teacherId, data.sectionId, data.subjectId,
     );
-    if (!deleted) {
-      Err(404, 'Assignment not found');
-    }
-    return deleted;
+    return this.teacherValidator.ensureAssignmentDeleted(deleted);
   }
 
   async assignClass(data: AssignClassDto) {
@@ -126,9 +120,7 @@ export class TeacherService {
       subjectIds: [data.subjectId],
     }]);
 
-    if (isEmpty(sections)) {
-      Err(404, 'Class has no sections');
-    }
+    this.teacherValidator.ensureClassSections(sections);
 
     const assignments = [];
     for (const section of sections) {
@@ -168,9 +160,7 @@ export class TeacherService {
       data.subjectId,
     );
 
-    if (isEmpty(deleted)) {
-      Err(404, 'Assignment not found');
-    }
+    this.teacherValidator.ensureAssignmentsDeleted(deleted);
 
     return {
       unassignedCount: deleted.length,
@@ -292,6 +282,7 @@ export class TeacherService {
   @Transaction()
   async delete(id: string) {
     const teacher = await this.teacherValidator.ensureExists(id);
+    await this.teacherValidator.ensureNoAssignmentHistory(id);
     const deletedTeacher = await this.teacherRepository.delete(id);
     if (teacher.staffId) await this.staffService.delete(teacher.staffId);
     this.storage.delete('teachers', `${id}_avatar.png`).catch(() => {});
@@ -300,6 +291,12 @@ export class TeacherService {
 
   @Transaction()
   async deleteAll() {
+    await this.teacherValidator.ensureNoAssignmentHistory();
+    return this.clearForSeedReset();
+  }
+
+  @Transaction()
+  async clearForSeedReset() {
     const linkedStaffIds = await db
       .select({ id: staffTable.id })
       .from(staffTable)

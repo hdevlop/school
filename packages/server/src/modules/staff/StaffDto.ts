@@ -88,7 +88,12 @@ const ensureCompensationFields = (data, ctx) => {
 };
 
 export const createStaffDto = staffBaseSchema.superRefine(ensureCompensationFields);
-export const updateStaffDto = staffBaseSchema.partial().superRefine(ensureCompensationFields);
+// `.partial()` keeps defaults: an update naming only a phone number set the
+// compensation mode back to monthly and a departed staff member back to active.
+export const updateStaffDto = staffBaseSchema.extend({
+  compensationMode: compensationModeEnum.optional(),
+  status: staffStatusEnum.optional(),
+}).partial().superRefine(ensureCompensationFields);
 
 export const staffIdParam = z.object({ id: z.string().min(1) });
 export const staffRoleParam = z.object({ role: z.string().min(1) });

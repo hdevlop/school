@@ -41,6 +41,15 @@ export class AccessResetValidator {
 
   constructor(private accessResetRepository: AccessResetRepository) {}
 
+  ensureTemporaryCredential(credential: string | undefined) {
+    if (!credential) Err(409, this.at('parentCinMissing'));
+    return credential;
+  }
+
+  ensureCooldownAvailable(count: number) {
+    if (count > 1) Err(429, this.at('cooldown'));
+  }
+
   /**
    * Resolve what this command may do, from state loaded at execution time.
    *

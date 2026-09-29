@@ -22,9 +22,12 @@ const oldId = `history-vehicle-old-${suffix}`;
 const newId = `history-vehicle-new-${suffix}`;
 let token: string;
 
-async function request(path: string, year?: string) {
+async function request(path: string, year?: string, method = 'GET', data?: unknown) {
   const response = await server.fetch(new Request(`${base}${path}`, {
-    headers: { Authorization: `Bearer ${token}`, ...(year ? { 'X-Academic-Year': year } : {}) },
+    method,
+    headers: { Authorization: `Bearer ${token}`, ...(year ? { 'X-Academic-Year': year } : {}),
+      ...(data ? { 'content-type': 'application/json' } : {}) },
+    ...(data ? { body: JSON.stringify(data) } : {}),
   }));
   return { status: response.status, body: await response.json() as Record<string, any> };
 }
@@ -32,7 +35,8 @@ async function request(path: string, year?: string) {
 beforeAll(async () => {
   await db.insert(vehicles).values([
     { id: oldId, name: 'History old vehicle', brand: 'Ford', model: 'Transit',
-      year: 2022, capacity: 20, status: 'inactive', licensePlate: `H-OLD-${suffix}`,
+      year: 2022, capacity: 20, type: 'minibus',
+      status: 'inactive', licensePlate: `H-OLD-${suffix}`,
       purchaseDate: '2025-10-01', currentMileage: '1500' },
     { id: newId, name: 'History new vehicle', brand: 'Ford', model: 'Transit',
       year: 2026, capacity: 20, status: 'active', licensePlate: `H-NEW-${suffix}`,
@@ -55,6 +59,14 @@ afterAll(async () => {
 });
 
 describe('vehicle identity remains shared across school years', () => {
+  it('preserves nondefault type and status on a one-field REST edit', async () => {
+    const updated = await request(`/vehicles/${oldId}`, undefined, 'PUT', { notes: 'Checked in history' });
+    expect(updated.status).toBe(200);
+    expect((await request(`/vehicles/${oldId}`)).body.data).toMatchObject({
+      notes: 'Checked in history', type: 'minibus', status: 'inactive',
+    });
+  });
+
   it('keeps both identities and present status in repository reads', async () => {
     expect(yearScopedModules).not.toHaveProperty('vehicles');
     const repository = new VehicleRepository();

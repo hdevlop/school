@@ -27,7 +27,10 @@ export const createAssessmentDto = assessmentSchema
     message: 'Select at least one section',
     path: ['sectionIds'],
   });
-export const updateAssessmentDto = assessmentSchema.omit({ assessmentId: true }).partial();
+export const updateAssessmentDto = assessmentSchema.omit({ assessmentId: true }).partial().extend({
+  type: assessmentTypeEnum.optional(),
+  status: assessmentStatusEnum.optional(),
+});
 export const seedAssessmentDto = assessmentSchema
   .omit({ classId: true, sectionId: true, sectionIds: true, subjectId: true, teacherId: true, assessmentId: true })
   .extend({

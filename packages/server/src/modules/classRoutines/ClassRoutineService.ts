@@ -1,4 +1,4 @@
-import { Err, Service, Transaction, t } from '../../najm';
+import { Service, Transaction } from '../../najm';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
 import { ClassRoutineValidator } from './ClassRoutineValidator';
 import type {
@@ -131,7 +131,7 @@ export class ClassRoutineService {
       const index = oldLessonIndex.get(entry.periodId);
       return index === undefined || index >= newLessonCount;
     });
-    if (orphanedEntry) Err(409, t('classRoutines.errors.layoutRemovesLessons'));
+    this.validator.ensureLayoutKeepsLessons(orphanedEntry);
     const oldBreaks = oldPeriods.filter((period) => period.isBreak);
     const oldBreakIndex = new Map(oldBreaks.map((period, index) => [period.id, index]));
     const newBreakCount = generated.filter((period) => period.isBreak).length;
@@ -139,7 +139,7 @@ export class ClassRoutineService {
       const breakIndex = oldBreakIndex.get(duty.periodId);
       return breakIndex === undefined || breakIndex >= newBreakCount;
     });
-    if (missingDutySlot) Err(409, t('classRoutines.errors.layoutRemovesDuties'));
+    this.validator.ensureLayoutKeepsDuties(missingDutySlot);
 
     const created = await this.repository.createPeriods(generated.map((period) => ({
       ...period,
@@ -180,31 +180,21 @@ export class ClassRoutineService {
 
   async updateEntry(scheduleId: string, entryId: string, data: UpdateRoutineEntryDto) {
     const current = await this.validator.ensureEntry(scheduleId, entryId);
-    if (data.contentGroups !== undefined && data.expectedVersion === undefined) {
-      Err(409, t('classRoutines.errors.staleEntry'));
-    }
-    if (data.expectedVersion !== undefined && data.expectedVersion !== current.version) {
-      Err(409, t('classRoutines.errors.staleEntry'));
-    }
+    this.validator.ensureEntryVersion(current.version, data.expectedVersion, data.contentGroups !== undefined);
     const merged = { ...current, ...data };
     await this.validator.validateEntry(scheduleId, merged, entryId);
     const { expectedVersion: _expectedVersion, ...changes } = data;
     if (changes.roomNumber !== undefined) changes.roomNumber = changes.roomNumber || null;
     const updated = await this.repository.updateEntryIfVersion(entryId, current.version, changes);
-    if (!updated) Err(409, t('classRoutines.errors.staleEntry'));
-    return updated;
+    return this.validator.ensureEntryWriteSucceeded(updated);
   }
 
   async deleteEntry(scheduleId: string, entryId: string, expectedVersion?: number) {
     await this.validator.ensureSchedule(scheduleId);
     const current = await this.validator.ensureEntry(scheduleId, entryId);
-    if ((current.contentGroups.length > 0 && expectedVersion === undefined)
-      || (expectedVersion !== undefined && expectedVersion !== current.version)) {
-      Err(409, t('classRoutines.errors.staleEntry'));
-    }
+    this.validator.ensureEntryVersion(current.version, expectedVersion, current.contentGroups.length > 0);
     const deleted = await this.repository.deleteEntryIfVersion(entryId, current.version);
-    if (!deleted) Err(409, t('classRoutines.errors.staleEntry'));
-    return deleted;
+    return this.validator.ensureEntryWriteSucceeded(deleted);
   }
 
   async addDuty(scheduleId: string, data: CreateRoutineDutyDto) {
@@ -257,9 +247,7 @@ export class ClassRoutineService {
   }
 
   async getTeacherSchedule(teacherId: string, user?: { role?: string; teacherId?: string }) {
-    if (user && !['admin', 'principal'].includes(user.role ?? '') && user.teacherId !== teacherId) {
-      Err(403, t('classRoutines.errors.forbidden'));
-    }
+    this.validator.ensureTeacherScheduleAccess(teacherId, user);
     const ids = await this.repository.getTeacherScheduleIdsInSelectedYear(teacherId);
     const schedules = await Promise.all(ids.map((id) => this.getById(id)));
     return schedules.map((schedule) => ({

@@ -1,11 +1,11 @@
-import { Err, Service } from '../../najm';
+import { Service } from '../../najm';
 import { GradeRepository, type GradeListFilters } from './GradeRepository';
 import { GradeValidator } from './GradeValidator';
 import { AssessmentRepository } from '../assessments/AssessmentRepository';
 import type { CreateGradeDto, UpdateGradeDto } from './GradeDto';
 import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
 import { AcademicSourceService } from '../academicSources/AcademicSourceService';
-import { academicSourceContextIssue, targetSectionIds } from '../academicSources/academicSourceContext';
+import { targetSectionIds } from '../academicSources/academicSourceContext';
 import { ExamRepository } from '../exams/ExamRepository';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
 
@@ -43,14 +43,6 @@ export class GradeService {
     private enrollments: StudentEnrollmentRepository,
   ) { }
 
-  private async ensureTeacherOwnsSource(user: { id: string; role?: string }, teacherId: string | null | undefined) {
-    if (user.role !== 'teacher') return;
-    const callerTeacherId = await this.gradeRepository.teacherIdForUser(user.id);
-    if (!callerTeacherId || callerTeacherId !== teacherId) {
-      Err(403, 'A teacher can grade only their own assessment or exam');
-    }
-  }
-
   private sourceContext(sourceIds: GradeSourceIds) {
     return sourceIds.assessmentId
       ? this.assessmentRepository.getSourceContext(sourceIds.assessmentId)
@@ -65,44 +57,27 @@ export class GradeService {
     subjectId: string,
     resolvedSource?: NonNullable<Awaited<ReturnType<ExamRepository['getSourceContext']>>>,
   ) {
-    if (Boolean(sourceIds.assessmentId) === Boolean(sourceIds.examId)) {
-      Err(400, 'A grade needs exactly one assessment or exam');
-    }
-    const source = resolvedSource ?? await this.sourceContext(sourceIds);
-    if (!source) Err(404, 'Grade source not found');
-    if (source!.teacherId !== teacherId || source!.subjectId !== subjectId) {
-      Err(409, 'Grade teacher and subject must match the source assignment');
-    }
-    const sections = await this.sources.sectionContexts([source!]);
-    const yearLabel = source!.classAcademicYear;
-    if (!yearLabel) Err(409, 'Grade source has no registered class year');
-    const contextIssue = academicSourceContextIssue(source!, sections, yearLabel!);
-    if (contextIssue) Err(409, `Grade source context is unresolved: ${contextIssue}`);
-    const year = await this.years.requireLabel(yearLabel!);
-    if (year.status === 'draft') Err(409, 'Grades cannot be recorded in a draft year');
-    if (source!.academicYearId && source!.academicYearId !== year.id) {
-      Err(409, 'Grade source registered year conflicts with its assignment');
-    }
-    if (source!.date < year.reportingStartsOn || source!.date > year.reportingEndsOn) {
-      Err(409, 'Grade source date is outside its academic year');
-    }
-    if (!targetSectionIds(source!).includes(sectionId)) {
-      Err(409, 'Grade section is not targeted by its source');
-    }
+    this.gradeValidator.ensureEligibleGradeSource(sourceIds);
+    const source = this.gradeValidator.ensureSourceExists(resolvedSource ?? await this.sourceContext(sourceIds));
+    this.gradeValidator.ensureSourceAssignmentMatches(source, teacherId, subjectId);
+    const sections = await this.sources.sectionContexts([source]);
+    const yearLabel = this.gradeValidator.ensureSourceContextResolved(source, sections);
+    const year = await this.years.requireLabel(yearLabel);
+    this.gradeValidator.ensureSourceYearValid(source, year);
+    this.gradeValidator.ensureSourceTargetsSection(source, sectionId);
     const hasDatedEnrollment = await this.enrollments.hasAnyForStudent(studentId);
-    if (hasDatedEnrollment && !await this.enrollments.isPlacedInSectionOnDate(studentId, sectionId, source!.date)) {
-      Err(409, 'Student has no dated placement in the grade section on the source date');
+    if (hasDatedEnrollment) {
+      this.gradeValidator.ensureDatedPlacement(
+        await this.enrollments.isPlacedInSectionOnDate(studentId, sectionId, source.date),
+      );
     }
     return { hasDatedEnrollment, academicYearId: year.id };
   }
 
   private async yearIdForSource(sourceIds: GradeSourceIds) {
-    if (Boolean(sourceIds.assessmentId) === Boolean(sourceIds.examId)) {
-      Err(400, 'A grade needs exactly one assessment or exam');
-    }
+    this.gradeValidator.ensureEligibleGradeSource(sourceIds);
     const source = await this.sourceContext(sourceIds);
-    if (!source?.academicYearId) Err(409, 'Demo grade source has no registered academic year');
-    return source.academicYearId;
+    return this.gradeValidator.ensureDemoSourceYear(source);
   }
 
   async listUnassignedSources() {
@@ -235,19 +210,14 @@ export class GradeService {
     // Check a submitted teacher before any other lookup, then check the actual
     // source teacher too. A caller cannot impersonate a teacher by changing the
     // form's teacherId.
-    if (data.teacherId) await this.ensureTeacherOwnsSource(user, data.teacherId);
+    if (data.teacherId) await this.gradeValidator.ensureTeacherOwnsSource(user, data.teacherId);
     const sourceIds = { assessmentId: data.assessmentId, examId: data.examId };
-    const source = await this.sourceContext(sourceIds);
-    if (!source) Err(404, 'Grade source not found');
-    if (!source!.teacherId || !source!.subjectId) Err(409, 'Grade source has no teaching assignment');
-    await this.ensureTeacherOwnsSource(user, source!.teacherId);
-    if ((data.teacherId && data.teacherId !== source!.teacherId) ||
-      (data.subjectId && data.subjectId !== source!.subjectId)) {
-      Err(409, 'Grade teacher and subject must match the source assignment');
-    }
-    const targets = targetSectionIds(source!);
-    const sectionId = data.sectionId ?? (targets.length === 1 ? targets[0] : null);
-    if (!sectionId) Err(400, 'Choose a target section for this grade');
+    const source = this.gradeValidator.ensureSourceExists(await this.sourceContext(sourceIds));
+    const { teacherId, subjectId } = this.gradeValidator.ensureSourceTeachingAssignment(source);
+    await this.gradeValidator.ensureTeacherOwnsSource(user, teacherId);
+    this.gradeValidator.ensureSourceAssignmentMatches(source, data.teacherId || teacherId, data.subjectId || subjectId);
+    const targets = targetSectionIds(source);
+    const sectionId = this.gradeValidator.ensureTargetSection(data.sectionId ?? (targets.length === 1 ? targets[0] : null));
     const gradeDetails = {
       studentId: data.studentId,
       assessmentId: data.assessmentId || null,
@@ -276,14 +246,14 @@ export class GradeService {
     const eligibility = await this.ensureCreateEligible(
       gradeDetails.studentId, sectionId,
       { assessmentId: gradeDetails.assessmentId, examId: gradeDetails.examId },
-      source!.teacherId!, source!.subjectId!, source!,
+      teacherId, subjectId, source,
     );
     this.gradeValidator.ensureSelectedYear(eligibility.academicYearId);
     if (!eligibility.hasDatedEnrollment) {
       await this.gradeValidator.ensureStudentInSection(gradeDetails.studentId, sectionId);
     }
     await this.gradeValidator.ensureTeacherAssignmentExists(
-      source!.teacherId!, source!.subjectId!, sectionId,
+      teacherId, subjectId, sectionId,
     );
     if (!eligibility.hasDatedEnrollment && gradeDetails.assessmentId) {
       await this.gradeValidator.ensureStudentInAssessment(gradeDetails.studentId, gradeDetails.assessmentId);
@@ -297,7 +267,7 @@ export class GradeService {
 
   async update(id: string, data: UpdateGradeDto, user: { id: string; role?: string; teacherId?: string }) {
     const existing = await this.getById(id);
-    await this.ensureTeacherOwnsSource(user, existing.teacher?.id);
+    await this.gradeValidator.ensureTeacherOwnsSource(user, existing.teacher?.id);
 
     const gradeData: Record<string, unknown> = {};
 

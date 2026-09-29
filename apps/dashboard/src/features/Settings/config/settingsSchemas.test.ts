@@ -12,7 +12,6 @@ const minimal = {
   schoolLocation: { address: 'Casablanca', latitude: 33.5, longitude: -7.6 },
   schoolPhone: '212600000000',
   schoolEmail: 'contact@ecole.ma',
-  currentAcademicYear: '2025-2026',
 };
 
 describe('settingsSchema defaults', () => {
@@ -32,8 +31,6 @@ describe('settingsSchema defaults', () => {
     expect(parsed.schoolStartTime).toBe('08:00');
     expect(parsed.schoolEndTime).toBe('15:00');
     expect(parsed.lunchBreakDuration).toBe(30);
-    expect(parsed.startMonth).toBe('september');
-    expect(parsed.endMonth).toBe('june');
   });
 
   it('takes its currency, time zone and language from the app policy rather than restating them', () => {
@@ -48,11 +45,21 @@ describe('settingsSchema defaults', () => {
     expect(parsed.smsNotifications).toBe(false);
   });
 
-  it('leaves maintenance mode and two-factor off', () => {
-    expect(parsed.maintenanceMode).toBe(false);
+  it('leaves two-factor off', () => {
     expect(parsed.twoFactorEnabled).toBe(false);
-    expect(parsed.autoBackup).toBe(true);
     expect(parsed.sessionTimeout).toBe('60');
+  });
+
+  // A save sent these defaults and overwrote what was stored; the server
+  // refused every save once a school's year started in another month, and
+  // the active year was offered as a choice the server always refuses.
+  it('submits nothing the screen does not show', () => {
+    for (const hidden of ['currentAcademicYear', 'startMonth', 'endMonth', 'maintenanceMode', 'maintenanceNotifications', 'autoBackup']) {
+      expect(Object.keys(parsed)).not.toContain(hidden);
+    }
+    const edited = Object.keys(settingsSchema.parse({ ...minimal, currentAcademicYear: '2027-2028', startMonth: 'august' }));
+    expect(edited).not.toContain('currentAcademicYear');
+    expect(edited).not.toContain('startMonth');
   });
 });
 
@@ -68,10 +75,6 @@ describe('settingsSchema validation', () => {
     expect(settingsSchema.safeParse({ ...minimal, attendanceMode: 'weekly' }).success).toBe(false);
     expect(settingsSchema.safeParse({ ...minimal, timeFormat: '36' }).success).toBe(false);
     expect(settingsSchema.safeParse({ ...minimal, dateFormat: 'YYYY' }).success).toBe(false);
-  });
-
-  it('insists on a YYYY-YYYY academic year', () => {
-    expect(settingsSchema.safeParse({ ...minimal, currentAcademicYear: '2025' }).success).toBe(false);
   });
 
   it('keeps the session timeout a plain number of minutes', () => {

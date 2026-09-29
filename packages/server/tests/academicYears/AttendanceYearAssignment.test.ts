@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { AttendanceService } from '../../src/modules/attendance/AttendanceService';
+import { attendanceValidator } from './fixtures/attendanceValidator';
 
 describe('attendance year assignment', () => {
   it('uses the section year for student marks and the reporting interval for staff marks', async () => {
@@ -7,7 +8,7 @@ describe('attendance year assignment', () => {
       reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
     const service = new AttendanceService(
       {} as any,
-      {} as any,
+      attendanceValidator(),
       {
         requireLabel: async () => year,
         findForDate: async (date: string) => date <= year.reportingEndsOn ? year : null,

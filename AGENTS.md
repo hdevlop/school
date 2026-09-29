@@ -34,20 +34,19 @@ Transport rules:
 - Use REST when the route is not exposed through MCP or when `multipart/form-data` is required.
 
 In this repo, MCP-first entities include:
-- `auth_*`
-- `users_*`
 - `students_*`
 - `parents_*`
 - `fees_*`
 - `fee-types_*`
 
 REST-only or REST-preferred flows include:
+- user, role and permission management through Najm's built-in routes
 - classes and sections lookup
 - settings repair or creation
 - student or parent create/update with file upload
 
 Auth rules:
-- Use admin auth for students, parents, classes, sections, settings, and admin user tools.
+- Use admin auth for students, parents, classes, sections, settings, and user management.
 - Use financial or accounting-capable auth for fees and fee types.
 - Only create a temporary accounting-capable user if fee work is blocked and no suitable user exists.
 
@@ -55,7 +54,7 @@ Auth rules:
 
 - MCP endpoint: `POST /api/mcp`
 - Required Accept header: `application/json, text/event-stream`
-- Login tool: `auth_login`
+- Login through `POST /api/auth/login`, then use its access token as the MCP bearer token. Authentication is not exposed as MCP tools.
 - Reuse existing records whenever safe.
 - Do not create obvious placeholders like `Test Student` unless the user explicitly asks.
 
@@ -145,11 +144,11 @@ Use a smaller module shape when the feature is lightweight and does not need eve
 - Use `@Validate(...)` for request validation.
 - Use `@McpTool(...)` only when the route should be exposed to MCP.
 - Use `@ToolGroup(...)` to group MCP tool names when needed.
-- Keep authorization rules in `*Guards.ts` and controller decorators. Repositories only apply them through `this.ownershipCondition()`.
+- Keep authorization rules in `*Guards.ts` and controller decorators. Repositories apply their SQL predicate through `this.ownedWhere()`.
 
 ### Academic Year And Ownership
 
-- **Ownership.** Owned repositories take `own`/`Owned` from `packages/server/src/auth.ts`, never from `najm-auth`. Every read is one `.where(and(this.ownershipCondition(), ...))`; a second `.where()` replaces the first and drops ownership. Controllers use `@Policy(Token)` with `@CanList/@CanRead/@CanCreate/@CanUpdate/@CanDelete`.
+- **Ownership.** Owned repositories take `own`/`Owned` and the `OwnedWhere` type from `packages/server/src/auth.ts`, never directly from `najm-auth`. Declare the predicate with `@Owned(Token, ...alternatives) private ownedWhere!: OwnedWhere;` inside the repository. Every owned read uses one `.where(and(this.ownedWhere(), ...))`; a second `.where()` replaces the first and drops ownership. Controllers use `@Policy(Token)` with `@CanList/@CanRead/@CanCreate/@CanUpdate/@CanDelete`.
 - **Year.** A converted repository reads the selected year from `@Year() private readonly year!: ResolvedAcademicYear` and filters on it in that same `.where()`. Services and controllers do not pass the year.
 - **Registration.** Every controller whose routes reach a converted repository, directly or through another module's service, is registered once in `packages/server/src/config/yearScope.ts`, keyed by its `@ToolGroup` name. Outside that scope the read throws.
 - **No duplicate input.** A registered controller must not declare `academicYear` in its own params, query or body schemas; najm-mcp then refuses to start the server. `packages/server/tests/academicYears/YearScopedModules.test.ts` checks this.

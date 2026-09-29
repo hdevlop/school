@@ -3,8 +3,6 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { TeacherService } from './TeacherService';
 import { Teacher, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './TeacherGuards';
 import { isAdmin } from '../../auth';
-import { Year } from '../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   assignClassDto,
   assignSubjectDto,
@@ -94,11 +92,10 @@ export class TeacherController {
   @ResMsg('teachers.success.retrieved')
   async getStudents(
     @Params('id') id: string,
-    @Year() year: ResolvedAcademicYear,
     @Query('onDate') onDate: TeacherStudentsQuery['onDate'],
     @User() user: { role?: string },
   ) {
-    return this.teacherService.getStudents(id, year, onDate, user.role);
+    return this.teacherService.getStudents(id, onDate, user.role);
   }
 
   @Post('/assign-subject')

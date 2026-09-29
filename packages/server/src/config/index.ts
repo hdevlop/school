@@ -7,6 +7,7 @@ import { rateLimit } from 'najm-rate';
 import { cache, type CachePluginConfig } from 'najm-cache';
 import { database } from 'najm-database';
 import { storage } from 'najm-storage';
+import { guards } from 'najm-guard';
 import { FileCategory } from 'najm-storage';
 import { mcp } from 'najm-mcp';
 import { email, type EmailPluginConfig, type ProviderConfig } from 'najm-email';
@@ -18,9 +19,11 @@ export { themeConfig } from './themeConfig';
 
 import { schoolI18n } from '@sms/contracts/locales';
 import { db } from '../database/db';
-import { auth, isAuth } from '../auth';
+import { auth, isAuth, isAdmin } from '../auth';
 import { schoolMcpYearHooks } from '../modules/academicYears/requestYear';
 import { yearScopedModules } from './yearScope';
+
+export const guardConfig = () => guards({ default: [isAuth()] });
 
 const defaultChatbotSystemPrompt = `You are a helpful AI assistant for a School Management System dashboard.
 You have access to tools to manage students, classes, sections, subjects, teachers, parents, fees, fee types, payments, allocations, attendance, grades, assessments, exams, and more.
@@ -226,6 +229,11 @@ export const authConfig = () => {
     // global EMAIL_PROVIDER merely to resolve that dependency.
     email: resolveEmailConfig(),
     rateLimit: infrastructure.rateLimit,
+    // A self-registered account waits for an administrator, who activates it
+    // and gives it a role. It used to be active at once, with no role, and
+    // could sign in and call every route that asks only for sign-in. Accounts
+    // School creates for staff, families and users pass an explicit status.
+    registrationMode: 'pending',
   });
 };
 
@@ -284,14 +292,18 @@ export const studioAssistantConfig = () => studioAssistant();
 
 export const ragStudioConfig = () => ragStudio({ auth: 'standalone' });
 
-export const storageConfig = () =>
-  storage({
+export const storageConfig = () => {
+  return storage({
     provider: 'local',
     basePath: 'storage',
     servePrefix: '/api',
     maxFileSize: 10 * 1024 * 1024,
     allowedCategories: [FileCategory.IMAGE, FileCategory.PDF, FileCategory.DOCUMENT],
     enableCascadeDelete: true,
-    mcp: true,
+    // School uploads files through REST and its own services, so MCP file tools
+    // stay disabled. Signed-in users may serve files; only admins may manage them.
+    mcp: false,
     guards: [isAuth()],
+    manageGuards: [isAdmin()],
   });
+};

@@ -1,4 +1,5 @@
-import { Err, Service } from '../../../najm';
+import { Service } from '../../../najm';
+import { FinancialAuditValidator } from './FinancialAuditValidator';
 import { AuditLogRepository } from './AuditLogRepository';
 
 export type RecordAuditInput = {
@@ -13,7 +14,7 @@ export type RecordAuditInput = {
 
 @Service()
 export class FinancialAuditService {
-  constructor(private repository: AuditLogRepository) {}
+  constructor(private repository: AuditLogRepository, private validator: FinancialAuditValidator) {}
 
   async record(input: RecordAuditInput) {
     return this.repository.create(input);
@@ -36,9 +37,6 @@ export class FinancialAuditService {
 
   async getById(id: string) {
     const row = await this.repository.getById(id);
-    if (!row) {
-      Err(404, 'Audit log entry not found');
-    }
-    return row;
+    return this.validator.ensureExists(row);
   }
 }

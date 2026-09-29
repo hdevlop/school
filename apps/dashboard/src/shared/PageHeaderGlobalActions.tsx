@@ -4,12 +4,14 @@ import { NFullscreenToggle, NGlobalActions, NThemeToggle, toast } from 'najm-kit
 import { useTranslation } from 'najm-i18n/react';
 import LanguageSwitcher from '@/features/Settings/components/LanguageSwitcher';
 import { NotificationsMenu } from '@/features/Notifications';
+import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 
 export default function PageHeaderGlobalActions() {
   const { t } = useTranslation();
 
   return (
     <NGlobalActions>
+      <ViewingYearSelector />
       <NotificationsMenu />
       <LanguageSwitcher />
       <NThemeToggle

@@ -2,7 +2,7 @@ import { CacheService } from 'najm-cache';
 import { moroccanCinTemporaryCredential } from 'najm-auth';
 
 import { AuthService } from '../../auth';
-import { Err, I18n, Service, Transaction } from '../../najm';
+import { Service, Transaction } from '../../najm';
 import type { AccessResetDelivery, AccessResetResult, ResetAccessDto } from './AccessResetDto';
 import { AccessResetRepository } from './AccessResetRepository';
 import {
@@ -29,8 +29,6 @@ const emailFlagEnabled = (value: string | undefined) =>
 
 @Service()
 export class AccessResetService {
-  @I18n('accessReset.errors') private at!: (key: string) => string;
-
   constructor(
     private accessResetRepository: AccessResetRepository,
     private accessResetValidator: AccessResetValidator,
@@ -82,8 +80,7 @@ export class AccessResetService {
 
     // The validator only reaches this mode with a normalized CIN in hand.
     // Checking anyway keeps an empty value from ever being hashed as one.
-    const temporaryCredential = fresh.temporaryCredential;
-    if (!temporaryCredential) Err(409, this.at('parentCinMissing'));
+    const temporaryCredential = this.accessResetValidator.ensureTemporaryCredential(fresh.temporaryCredential);
 
     // Every refusal is now behind us, so this is the first line that spends
     // the target's window.
@@ -212,6 +209,6 @@ export class AccessResetService {
    */
   private async claimCooldown(userId: string) {
     const { count } = await this.cache.incr(`${COOLDOWN_PREFIX}${userId}`, RESET_COOLDOWN_MS);
-    if (count > 1) Err(429, this.at('cooldown'));
+    this.accessResetValidator.ensureCooldownAvailable(count);
   }
 }

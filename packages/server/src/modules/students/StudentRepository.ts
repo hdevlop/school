@@ -1,13 +1,15 @@
 import { DB } from '../../database/db';
 import { students, classes, sections, users, parents, studentParents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
 import { Repository, t } from '../../najm';
-import { Owned } from '../../auth';
-import { count, eq, desc, inArray, and, or, gt, lte, isNull, type SQL } from 'drizzle-orm';
-import { Student } from './StudentGuards';
+import { Owned, type OwnedWhere } from '../../auth';
+import { count, eq, desc, inArray, and, or, gt, lte, isNull, sql } from 'drizzle-orm';
+import { Student, studentTeacherInYear } from './StudentGuards';
+import { ScopeContext } from '../../auth';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { parentSelect } from '../parents/ParentRepository';
 
 export type StudentListFilters = {
-  academicYearId: string;
   studentId?: string;
   onDate?: string;
 };
@@ -37,12 +39,14 @@ export const studentSelect = {
   updatedAt: students.updatedAt,
 };
 
-@Owned(Student)
 @Repository()
 export class StudentRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
+  declare _scopeCtx: ScopeContext;
 
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Student)
+  private ownedWhere!: OwnedWhere;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -79,10 +83,11 @@ export class StudentRepository {
    * new section): the roster a register marks. Year, filters and ownership
    * are one WHERE.
    */
-  async getAll({ academicYearId, studentId, onDate }: StudentListFilters) {
+  async getAll({ studentId, onDate }: StudentListFilters = {}) {
     return this.db
       .selectDistinctOn([students.createdAt, studentEnrollments.id], {
         ...studentSelect,
+        status: studentEnrollments.status,
         classId: studentEnrollmentPlacements.classId,
         sectionId: studentEnrollmentPlacements.sectionId,
         class: {
@@ -112,7 +117,7 @@ export class StudentRepository {
       .leftJoin(classes, eq(studentEnrollmentPlacements.classId, classes.id))
       .leftJoin(sections, eq(studentEnrollmentPlacements.sectionId, sections.id))
       .where(and(
-        eq(studentEnrollments.academicYearId, academicYearId),
+        eq(studentEnrollments.academicYearId, this.year.id),
         studentId ? eq(students.id, studentId) : undefined,
         ...(onDate ? [
           lte(studentEnrollments.enrolledOn, onDate),
@@ -120,7 +125,11 @@ export class StudentRepository {
           lte(studentEnrollmentPlacements.validFrom, onDate),
           or(isNull(studentEnrollmentPlacements.validTo), gt(studentEnrollmentPlacements.validTo, onDate)),
         ] : []),
-        this.ownershipCondition(),
+        this.ownedWhere(),
+        studentTeacherInYear(this.year.id, this._scopeCtx, studentEnrollmentPlacements.id),
+        onDate ? undefined : sql`NOT EXISTS (SELECT 1 FROM student_enrollment_placements later
+          WHERE later.enrollment_id = ${studentEnrollments.id}
+            AND later.valid_from > ${studentEnrollmentPlacements.validFrom})`,
       ))
       .orderBy(desc(students.createdAt), studentEnrollments.id, desc(studentEnrollmentPlacements.validFrom));
   }
@@ -128,7 +137,7 @@ export class StudentRepository {
   /** The student's identity and current class, through ownership; no year. */
   async getById(id) {
     const [existingStudent] = await this.buildStudentQuery()
-      .where(and(this.ownershipCondition(), eq(students.id, id)))
+      .where(and(this.ownedWhere(), eq(students.id, id)))
       .limit(1);
 
     if (!existingStudent) return null;
@@ -158,7 +167,7 @@ export class StudentRepository {
 
   async getByUserId(userId: string) {
     const [existingStudent] = await this.buildStudentQuery()
-      .where(and(this.ownershipCondition(), eq(students.userId, userId)))
+      .where(and(this.ownedWhere(), eq(students.userId, userId)))
       .limit(1);
     return existingStudent;
   }
@@ -235,15 +244,16 @@ export class StudentRepository {
   // School-wide counts for one year over that year's enrollments (one per
   // student), so a year's figures match its student list, including students
   // who left during the year.
-  async getCount(academicYearId: string) {
+  async getCount() {
     const [row] = await this.db
       .select({ count: count() })
       .from(studentEnrollments)
-      .where(eq(studentEnrollments.academicYearId, academicYearId));
+      .innerJoin(students, eq(studentEnrollments.studentId, students.id))
+      .where(and(eq(studentEnrollments.academicYearId, this.year.id), this.ownedWhere(), studentTeacherInYear(this.year.id, this._scopeCtx)));
     return row;
   }
 
-  async getStudentsByGender(academicYearId: string) {
+  async getStudentsByGender() {
     const genderCounts = await this.db
       .select({
         gender: students.gender,
@@ -251,7 +261,7 @@ export class StudentRepository {
       })
       .from(studentEnrollments)
       .innerJoin(students, eq(studentEnrollments.studentId, students.id))
-      .where(eq(studentEnrollments.academicYearId, academicYearId))
+      .where(and(eq(studentEnrollments.academicYearId, this.year.id), this.ownedWhere(), studentTeacherInYear(this.year.id, this._scopeCtx)))
       .groupBy(students.gender);
 
     return genderCounts

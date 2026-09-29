@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
 
 import { AccessResetService } from '../../src/modules/accessReset/AccessResetService';
+import { AccessResetValidator } from '../../src/modules/accessReset/AccessResetValidator';
 
 /**
  * What the command reports and records.
@@ -43,7 +44,9 @@ const build = (fakes: Fakes = {}) => {
     },
   };
 
-  const validator = {
+  const validator = new AccessResetValidator(repository as any);
+  Object.assign(validator, {
+    at: (key: string) => key,
     resolveTarget: async () => {
       if (fakes.resolveThrows) throw fakes.resolveThrows;
       resolveCalls += 1;
@@ -59,7 +62,7 @@ const build = (fakes: Fakes = {}) => {
     ensureConfirmationFresh: (expected: string, resolved: string) => {
       if (expected !== resolved) throw new Error('staleConfirmation');
     },
-  };
+  });
 
   const delivery = fakes.delivery ?? { emailSent: true, undeliveredLinkLive: false };
 
@@ -96,7 +99,6 @@ const build = (fakes: Fakes = {}) => {
     authService as any,
     cache as any,
   );
-  (service as any).at = (key: string) => key;
 
   return { service, audits, authCalls, cacheCounts, locked };
 };

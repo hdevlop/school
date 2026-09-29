@@ -23,9 +23,7 @@ describe('controllers registered for the request year', () => {
           const shape = (validation?.[target] as { shape?: object } | undefined)?.shape;
           const feeWriteBody = controller.name === 'FeeController' && target === 'body'
             && ['create', 'createClassBulk', 'update'].includes(String(method));
-          const studentYearQuery = controller.name === 'StudentController' && target === 'query'
-            && ['getStudents', 'getStudent'].includes(String(method));
-          if (shape && 'academicYear' in shape && !feeWriteBody && !studentYearQuery) {
+          if (shape && 'academicYear' in shape && !feeWriteBody) {
             declaredTwice.push(`${controller.name}.${String(method)} ${target}`);
           }
         }
@@ -33,8 +31,9 @@ describe('controllers registered for the request year', () => {
     }
     expect(declaredTwice).toEqual([]);
     const hooks = schoolMcpYearHooks(Object.keys(yearScopedModules));
-    expect(hooks.toolInput({ group: 'students', methodKey: 'getStudents' })).toBeUndefined();
-    expect(hooks.toolInput({ group: 'students', methodKey: 'getStudent' })).toBeUndefined();
+    expect(hooks.toolInput({ group: 'students', methodKey: 'getStudents' })).toHaveProperty('academicYear');
+    expect(hooks.toolInput({ group: 'students', methodKey: 'getStudent' })).toHaveProperty('academicYear');
+    expect(hooks.toolInput({ group: 'teachers', methodKey: 'getClasses' })).toHaveProperty('academicYear');
   });
 
   it('includes the routes that read alerts or announcements through another module', () => {
@@ -48,5 +47,18 @@ describe('controllers registered for the request year', () => {
       'assessments', 'attendance', 'student-profile', 'teacher-profile',
       'grades', 'dashboard', 'academic-dashboard',
     ]));
+  });
+
+  it('scopes teacher assignment routes and their profile consumer', () => {
+    expect(Object.keys(yearScopedModules)).toEqual(expect.arrayContaining(['teachers', 'teacher-profile']));
+  });
+
+  // Every dashboard reads the selected year except the teacher's own page,
+  // which always shows the active year a teacher works in.
+  it('scopes every school dashboard, and not the teacher dashboard', () => {
+    expect(Object.keys(yearScopedModules)).toEqual(expect.arrayContaining([
+      'dashboard', 'academic-dashboard', 'operations-dashboard', 'finance-dashboard',
+    ]));
+    expect(Object.keys(yearScopedModules)).not.toContain('teacher-dashboard');
   });
 });

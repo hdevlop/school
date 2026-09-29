@@ -1,6 +1,6 @@
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
-import { and, desc, eq, sql, asc, count, gte, lte, inArray, or, type SQL, isNotNull } from 'drizzle-orm';
+import { Owned, type OwnedWhere } from '../../auth';
+import { and, desc, eq, sql, asc, count, gte, lte, inArray, or, isNotNull } from 'drizzle-orm';
 import { assessments, grades, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
 import { inReportingYear } from '../academicYears/academicRecordYear';
 import { DB } from '../../database/db';
@@ -36,12 +36,12 @@ export type AssessmentListFilters = {
   classId?: string;
 };
 
-@Owned(Assessment, AssessmentForPlacedStudent, AssessmentForPlacedParent)
 @Repository()
 export class AssessmentRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Assessment, AssessmentForPlacedStudent, AssessmentForPlacedParent)
+  private ownedWhere!: OwnedWhere;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -87,7 +87,7 @@ export class AssessmentRepository {
   async getAll({ sectionId, subjectId, teacherId, classId }: AssessmentListFilters = {}) {
     return await this.buildAssessmentQuery()
       .where(and(
-        this.ownershipCondition(),
+        this.ownedWhere(),
         inReportingYear(assessments.academicYearId, assessments.date, this.year),
         sectionId ? or(
           eq(teacherAssignments.sectionId, sectionId),
@@ -107,7 +107,7 @@ export class AssessmentRepository {
   async getForStudent(studentId: string) {
     return await this.buildAssessmentQuery()
       .where(and(
-        this.ownershipCondition(),
+        this.ownedWhere(),
         inReportingYear(assessments.academicYearId, assessments.date, this.year),
         studentPlacedOnSourceDate(assessments, studentId),
       ))
@@ -116,7 +116,7 @@ export class AssessmentRepository {
 
   async getById(id) {
     const [result] = await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.id, id), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
+      .where(and(this.ownedWhere(), eq(assessments.id, id), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .limit(1);
 
     return result;
@@ -124,26 +124,26 @@ export class AssessmentRepository {
 
   async getByType(type) {
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.type, type), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
+      .where(and(this.ownedWhere(), eq(assessments.type, type), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(desc(assessments.date));
   }
 
   async getByStatus(status) {
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.status, status), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
+      .where(and(this.ownedWhere(), eq(assessments.status, status), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(desc(assessments.date));
   }
 
   async getByTeacherAssignment(teacherAssignmentId) {
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.teacherAssignmentId, teacherAssignmentId), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
+      .where(and(this.ownedWhere(), eq(assessments.teacherAssignmentId, teacherAssignmentId), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(desc(assessments.date));
   }
 
   async getTodayAssessments() {
     const today = new Date().toISOString().split('T')[0];
     return await this.buildAssessmentQuery()
-      .where(and(this.ownershipCondition(), eq(assessments.date, today), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
+      .where(and(this.ownedWhere(), eq(assessments.date, today), inReportingYear(assessments.academicYearId, assessments.date, this.year)))
       .orderBy(asc(assessments.date));
   }
 
@@ -151,7 +151,7 @@ export class AssessmentRepository {
     const today = new Date().toISOString().split('T')[0];
     return await this.buildAssessmentQuery()
       .where(and(
-        this.ownershipCondition(),
+        this.ownedWhere(),
         inReportingYear(assessments.academicYearId, assessments.date, this.year),
         gte(assessments.date, today),
         eq(assessments.status, 'scheduled')
@@ -171,7 +171,7 @@ export class AssessmentRepository {
 
     return await this.buildAssessmentQuery()
       .where(and(
-        this.ownershipCondition(),
+        this.ownedWhere(),
         inReportingYear(assessments.academicYearId, assessments.date, this.year),
         gte(assessments.date, startStr),
         lte(assessments.date, endStr)
@@ -183,7 +183,7 @@ export class AssessmentRepository {
     const today = new Date().toISOString().split('T')[0];
     return await this.buildAssessmentQuery()
       .where(and(
-        this.ownershipCondition(),
+        this.ownedWhere(),
         inReportingYear(assessments.academicYearId, assessments.date, this.year),
         lte(assessments.date, today),
         eq(assessments.status, 'scheduled')
@@ -195,7 +195,7 @@ export class AssessmentRepository {
     const [result] = await this.db
       .select({ count: count() })
       .from(assessments)
-      .where(and(this.ownershipCondition(), inReportingYear(assessments.academicYearId, assessments.date, this.year)));
+      .where(and(this.ownedWhere(), inReportingYear(assessments.academicYearId, assessments.date, this.year)));
 
     return result;
   }

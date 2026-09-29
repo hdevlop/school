@@ -2,7 +2,7 @@ import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
 import { eq, count, countDistinct, and, desc, ne, type SQL, inArray } from 'drizzle-orm';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere } from '../../auth';
 import { Section } from './SectionGuards';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -78,11 +78,10 @@ export const parentSelect = {
   updatedAt: parents.updatedAt,
 };
 
-@Owned(Section)
 @Repository()
 export class SectionRepository {
   db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Section) private ownedWhere!: OwnedWhere;
   @Year() private readonly year!: ResolvedAcademicYear;
 
   // A section belongs to its class's year.
@@ -93,7 +92,7 @@ export class SectionRepository {
 
   // Needs the builder's join on classes.
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), eq(classes.academicYear, this.year.label), ...filters);
+    return and(this.ownedWhere(), eq(classes.academicYear, this.year.label), ...filters);
   }
 
   // ========================================
@@ -132,7 +131,7 @@ export class SectionRepository {
   // A reference lookup in any year, for modules that check a section they
   // were given against their own year rules.
   async getById(id) {
-    const [result] = await this.selectSections(and(this.ownershipCondition(), eq(sections.id, id)))
+    const [result] = await this.selectSections(and(this.ownedWhere(), eq(sections.id, id)))
       .limit(1);
     return result;
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { NButton, Tabs, TabsContent, TabsList, TabsTrigger, useNSidebar, NLoadingState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import ProfileSidebar from './ProfileSidebar';
@@ -10,6 +10,8 @@ import ScheduleTab from './tabs/ScheduleTab';
 import DocumentsTab from './tabs/DocumentsTab';
 import PaymentsTab from './tabs/PaymentsTab';
 import { getTeacherByIdApi } from '@/services/teacherApi';
+import { useYearScopedDetail } from '@/features/AcademicYears/hooks/useYearScopedQuery';
+import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { useTeachers } from '@/features/Teachers/hooks/useTeachers';
 import { Label } from 'najm-kit';
 import {
@@ -68,29 +70,13 @@ const createDraft = (teacher: any) => ({
 const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacherId }) => {
   const { t } = useTranslation();
   const sidebar = useNSidebar();
-  const [teacher, setTeacher] = useState<any>(null);
+  const { data: teacher, isLoading: loading, refetch: fetchTeacherData } = useYearScopedDetail({
+    resource: 'teachers', parts: ['detail', teacherId],
+    fetch: () => getTeacherByIdApi(teacherId), enabled: !!teacherId,
+  });
   const [draft, setDraft] = useState(() => createDraft(null));
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('overview');
   const { updateTeacher, isUpdating } = useTeachers({ enabled: false });
-
-  const fetchTeacherData = useCallback(async () => {
-    if (!teacherId) return;
-      try {
-        setLoading(true);
-        const teacherData: any = await getTeacherByIdApi(teacherId);
-        setTeacher(teacherData?.data);
-      } catch {
-      } finally {
-        setLoading(false);
-      }
-    }, [teacherId]);
-
-  useEffect(() => {
-    if (teacherId) {
-      fetchTeacherData();
-    }
-  }, [teacherId, fetchTeacherData]);
 
   useEffect(() => {
     if (teacher) setDraft(createDraft(teacher));
@@ -202,7 +188,8 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacherId }) => {
         />
       </div>
 
-      <div className="flex h-full lg:col-span-3 border border-slate-300 p-4 rounded-2xl">
+      <div className="flex h-full flex-col lg:col-span-3 border border-slate-300 p-4 rounded-2xl">
+          <div className="mb-2 flex justify-end empty:hidden"><ViewingYearSelector /></div>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="border-b border-slate-200 px-6 h-auto w-full flex gap-6 overflow-x-auto scrollbar-hide justify-start p-0">
               {tabs.map((tab) => {

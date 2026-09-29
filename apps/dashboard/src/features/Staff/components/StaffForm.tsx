@@ -203,6 +203,10 @@ const toStaffPayload = (data) => {
   return payload;
 };
 
+// The form edits the current assignments; ended ones stay in the history the
+// server keeps, and are neither shown here nor sent back.
+const currentAssignments = (staff) => (staff?.assignments || []).filter((assignment) => assignment.current !== false);
+
 const getStaffDefaultValues = (staff = null) => ({
   ...(staff?.id && { id: staff.id }),
   employeeCode: staff?.employeeCode || '',
@@ -233,8 +237,8 @@ const getStaffDefaultValues = (staff = null) => ({
   licenseExpiry: staff?.licenseExpiry || '',
   yearsOfExperience: staff?.yearsOfExperience || '',
   notes: staff?.notes || '',
-  assignments: staff?.assignments?.length ? staff.assignments : [{}],
-  classIds: (staff?.assignments || []).map((assignment) => assignment.classId).filter(Boolean),
+  assignments: currentAssignments(staff).length ? currentAssignments(staff) : [{}],
+  classIds: currentAssignments(staff).map((assignment) => assignment.classId).filter(Boolean),
 });
 
 const StaffForm = ({ staff = null, onSubmitStaff }) => {

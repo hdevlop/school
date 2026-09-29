@@ -16,6 +16,41 @@ export class AllocationValidator {
     private installmentRepository: InstallmentRepository,
   ) { }
 
+  ensureMappedInstallment<T>(installment: T | null | undefined, number: number, feeId: string) {
+    if (!installment) Err(400, `Installment #${number} does not exist for fee ${feeId}`);
+    return installment;
+  }
+
+  ensureLockedTargets(count: number) {
+    if (count === 0) Err(400, 'No installments matched the requested allocation targets');
+  }
+
+  ensurePaymentCapacity(plannedCents: number, paymentCents: number) {
+    if (plannedCents > paymentCents) Err(400, 'Allocations cannot exceed the payment amount');
+  }
+
+  ensureLockedInstallment<T>(installment: T | null | undefined, number: number, feeId: string) {
+    if (!installment) Err(400, `Installment #${number} not found for fee ${feeId}`);
+    return installment;
+  }
+
+  ensureInstallmentCapacity(plannedCents: number, availableCents: number, amount: number, number: number) {
+    if (plannedCents > availableCents) {
+      Err(400, `Allocation of ${amount} exceeds available ${(availableCents / 100).toFixed(2)} for installment #${number}`);
+    }
+  }
+
+  async ensureNoCreditApplication(id: string) {
+    if (await this.allocationRepository.hasCreditApplication(id)) {
+      Err(409, 'A credit application uses this allocation; reverse the source payment instead');
+    }
+  }
+
+  ensureDeletedAllocation<T>(allocation: T | null | undefined) {
+    if (!allocation) Err(404, 'Payment allocation not found in the selected academic year');
+    return allocation;
+  }
+
   // ========== EXISTENCE CHECKS ==========
 
   async isExists(id) {

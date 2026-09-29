@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { AttendanceService } from '../../src/modules/attendance/AttendanceService';
+import { attendanceValidator } from './fixtures/attendanceValidator';
 
 const year = { id: 'year-1', label: '2025-2026', status: 'open',
   reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
@@ -12,11 +13,11 @@ describe('normal attendance year writes', () => {
         getAttendanceMode: async () => 'per_class',
         create: async (row: Record<string, unknown>) => { created.push(row); return row; },
       } as any,
-      {
+      attendanceValidator({}, {
         ensureSelectedYear: (id: string) => expect(id).toBe(year.id),
         validateStudentAttendance: async () => 'assignment-1',
         validateStaffAttendance: async () => {},
-      } as any,
+      }),
       {
         resolveRecord: async () => year,
         requireLabel: async (label: string) => { expect(label).toBe(year.label); return year; },

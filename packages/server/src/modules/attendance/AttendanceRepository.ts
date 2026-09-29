@@ -1,6 +1,6 @@
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
-import { and, desc, eq, asc, or, gte, lte, sql, inArray, isNull, type SQL, isNotNull } from 'drizzle-orm';
+import { Owned, type OwnedWhere } from '../../auth';
+import { and, desc, eq, asc, or, gte, lte, sql, inArray, isNull, isNotNull } from 'drizzle-orm';
 import { attendance, attendanceHistory, settings, students, teacherAssignments, teachers, staff, subjects, classes, sections, users } from '../../database/schema';
 import { DB } from '../../database/db';
 import { alias } from 'drizzle-orm/pg-core';
@@ -37,12 +37,12 @@ export type AttendanceListFilters = {
   staffId?: string;
 };
 
-@Owned(Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment)
 @Repository()
 export class AttendanceRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Attendance, AttendanceInTaughtSection, AttendanceUnderOwnAssignment)
+  private ownedWhere!: OwnedWhere;
 
   // ========================================
   // QUERY_BUILDERS (Reusable)
@@ -122,7 +122,7 @@ export class AttendanceRepository {
   async getAll({ type, sectionId, studentId, staffId }: AttendanceListFilters = {}) {
     return await this.buildAttendanceQuery()
       .where(and(
-        this.ownershipCondition(),
+        this.ownedWhere(),
         inYear(this.year),
         type ? eq(attendance.type, type) : undefined,
         sectionId ? eq(sections.id, sectionId) : undefined,
@@ -136,7 +136,7 @@ export class AttendanceRepository {
 
   async getById(id) {
     const [result] = await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), eq(attendance.id, id), inYear(this.year)))
+      .where(and(this.ownedWhere(), eq(attendance.id, id), inYear(this.year)))
       .limit(1);
 
     return result;
@@ -147,7 +147,7 @@ export class AttendanceRepository {
     if (type) conditions.push(eq(attendance.type, type));
 
     return await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), ...conditions, inYear(this.year)))
+      .where(and(this.ownedWhere(), ...conditions, inYear(this.year)))
       .orderBy(asc(classes.name), asc(sections.name), asc(students.name));
   }
 
@@ -164,13 +164,13 @@ export class AttendanceRepository {
     }
 
     return await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), or(...conditions), inYear(this.year)))
+      .where(and(this.ownedWhere(), or(...conditions), inYear(this.year)))
       .orderBy(desc(attendance.date));
   }
 
   async getByTeacherId(teacherId) {
     return await this.buildAttendanceQuery()
-      .where(and(this.ownershipCondition(), eq(teacherAssignments.teacherId, teacherId), inYear(this.year)))
+      .where(and(this.ownedWhere(), eq(teacherAssignments.teacherId, teacherId), inYear(this.year)))
       .orderBy(desc(attendance.date), asc(students.name));
   }
 
@@ -295,11 +295,12 @@ export class AttendanceRepository {
     return existing;
   }
 
-  // School-wide monthly counts for a registered year, by the stored-year-or-
+  // School-wide monthly counts for the selected year, by the stored-year-or-
   // date rule the year lists use, over the year's own
   // reporting months. A registered row dated outside its year is omitted from
   // the monthly chart because the year has no corresponding reporting month.
-  async getMonthlyStatsForYear(type: 'student' | 'staff', year: ReportingYear) {
+  async getMonthlyStats(type: 'student' | 'staff') {
+    const year = this.year;
     const month = sql<string>`TO_CHAR(${attendance.date}, 'YYYY-MM')`;
     const rows = await this.db
       .select({

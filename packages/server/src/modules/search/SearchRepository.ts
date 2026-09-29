@@ -1,18 +1,18 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { students, teachers, staff, parents, users } from '../../database/schema';
-import { and, ilike, or, sql, type SQL } from 'drizzle-orm';
-import { Owned, ownershipCondition, type ScopeContext } from '../../auth';
+import { and, ilike, or, sql } from 'drizzle-orm';
+import { Owned, type OwnedWhere, ownershipCondition, type ScopeContext } from '../../auth';
 import { Student } from '../students/StudentGuards';
 import { Teacher } from '../teachers/TeacherGuards';
 import { Parent } from '../parents/ParentGuards';
 
-@Owned(Student)
 @Repository()
 export class SearchRepository {
   declare db: DB;
   declare _scopeCtx: ScopeContext;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Student)
+  private ownedWhere!: OwnedWhere;
 
   async searchStudents(query: string, limit = 20) {
     const pattern = `%${query}%`;
@@ -30,7 +30,7 @@ export class SearchRepository {
       .from(students)
       .leftJoin(users, sql`${students.userId} = ${users.id}`)
       .where(
-        and(this.ownershipCondition(), or(
+        and(this.ownedWhere(), or(
           ilike(students.name, pattern),
           ilike(students.studentCode, pattern),
           ilike(students.phone, pattern),

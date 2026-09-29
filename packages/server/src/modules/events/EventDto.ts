@@ -40,7 +40,11 @@ const eventParticipantSchema = z.object({
 });
 
 export const createEventDto = eventSchema;
-export const updateEventDto = createEventDto.partial();
+export const updateEventDto = createEventDto.partial().extend({
+  visibility: eventVisibilityEnum.optional(),
+  status: eventStatusEnum.optional(),
+  registrationRequired: z.boolean().optional(),
+});
 export const createEventParticipantDto = eventParticipantSchema.extend({
   eventId: z.string().min(1),
   participantId: z.string().min(1),

@@ -35,7 +35,10 @@ export const createRoutinePeriodDto = z.object({
   isBreak: z.boolean().default(false),
   isActive: z.boolean().default(true),
 });
-export const updateRoutinePeriodDto = createRoutinePeriodDto.partial();
+export const updateRoutinePeriodDto = createRoutinePeriodDto.partial().extend({
+  isBreak: z.boolean().optional(),
+  isActive: z.boolean().optional(),
+});
 
 // A timetable takes the selected year, which must be its section's.
 export const createRoutineScheduleDto = z.object({
@@ -47,7 +50,8 @@ export const createRoutineScheduleDto = z.object({
 });
 export const updateRoutineScheduleDto = createRoutineScheduleDto
   .pick({ name: true, activeDays: true })
-  .partial();
+  .partial()
+  .extend({ activeDays: z.array(routineDayDto).min(1).max(7).optional() });
 
 export const routineTimelineItemDto = z.object({
   type: z.enum(['lesson', 'break']),

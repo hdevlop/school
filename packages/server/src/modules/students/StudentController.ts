@@ -3,8 +3,6 @@ import { McpTool, ToolGroup } from 'najm-mcp';
 import { StudentService } from './StudentService';
 import { Student, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './StudentGuards';
 import { isAdmin, isAdministrator } from '../../auth';
-import { Year } from '../academicYears/requestYear';
-import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import {
   createStudentDto,
   createStudentsBulkDto,
@@ -31,8 +29,8 @@ export class StudentController {
   @Validate({ query: studentListQuery })
   @McpTool('List all students')
   @ResMsg('students.success.retrieved')
-  async getStudents(@Year() year: ResolvedAcademicYear, @Query('onDate') onDate?: StudentListQuery['onDate']) {
-    return this.studentService.getAll(year, onDate);
+  async getStudents(@Query('onDate') onDate?: StudentListQuery['onDate']) {
+    return this.studentService.getAll(onDate);
   }
 
   @Get('/:id')
@@ -40,8 +38,8 @@ export class StudentController {
   @Validate({ params: studentIdParam, query: studentYearQuery })
   @McpTool('Get a student by ID')
   @ResMsg('students.success.retrieved')
-  async getStudent(@Params('id') id: string, @Year() year: ResolvedAcademicYear) {
-    return this.studentService.getById(id, year);
+  async getStudent(@Params('id') id: string) {
+    return this.studentService.getById(id);
   }
 
   @Get('/:id/parents')
@@ -83,8 +81,8 @@ export class StudentController {
   @Validate({ params: studentIdParam, body: updateStudentDto })
   @McpTool({ description: 'Update a student by ID', confirm: { level: 'warning', message: 'confirm.students.update' } })
   @ResMsg('students.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateStudentDto) {
-    return this.studentService.update(id, body);
+  async update(@Params('id') id: string, @Body() body: UpdateStudentDto, @User() user: { id: string; role: string }) {
+    return this.studentService.update(id, body, user);
   }
 
   @Delete('/bulk')

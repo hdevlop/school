@@ -13,9 +13,8 @@ const TeacherCard = ({ data }) => {
    const { t } = useTranslation();
    const teacher = data;
 
-   // Assignments are current, so they name the active year's classes.
-   const { activeYear } = useViewingAcademicYear();
-   const { classes = [] } = useClasses({ academicYear: activeYear, enabled: !!activeYear });
+   const { viewingYear } = useViewingAcademicYear();
+   const { classes = [] } = useClasses({ enabled: !!viewingYear });
 
    const getClassName = (classId) => {
       const classItem = classes.find(c => c.id === classId);

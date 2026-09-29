@@ -12,7 +12,6 @@ import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
-import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYearBanner';
 
 const THEME_SETTINGS_NAV_ID = 'settings:theme';
@@ -221,7 +220,6 @@ function SidebarFooterContent({ collapsed }: Readonly<{ collapsed: boolean }>) {
 
   return (
     <div className="flex flex-col gap-1">
-      <ViewingYearSelector collapsed={collapsed} />
       <button type="button" onClick={() => router.push(canManageSettings ? '/settings' : '/preferences')} className={itemClassName}>
           <Settings className="h-4 w-4 shrink-0" />
           {isExpanded && <span>{t('navigation.settings')}</span>}

@@ -1,10 +1,14 @@
-import { Err, Service, t } from '../../najm';
+import { Service } from '../../najm';
 import { CycleRepository } from './CycleRepository';
+import { CycleValidator } from './CycleValidator';
 import type { CreateCycleDto, UpdateCycleDto } from './CycleDto';
 
 @Service()
 export class CycleService {
-  constructor(private cycleRepository: CycleRepository) {}
+  constructor(
+    private cycleRepository: CycleRepository,
+    private cycleValidator: CycleValidator,
+  ) {}
 
   async getAll() {
     return this.cycleRepository.getAll();
@@ -15,14 +19,11 @@ export class CycleService {
   }
 
   async getById(id: string) {
-    const row = await this.cycleRepository.getById(id);
-    if (!row) Err(404, t('cycles.errors.notFound'));
-    return row;
+    return this.cycleValidator.ensureExists(id);
   }
 
   async create(data: CreateCycleDto) {
-    const existing = await this.cycleRepository.getByName(data.name);
-    if (existing) Err(409, t('cycles.errors.nameExists'));
+    await this.cycleValidator.ensureNameUnique(data.name);
     return this.cycleRepository.create({
       name: data.name,
       labels: data.labels ?? null,
@@ -32,18 +33,15 @@ export class CycleService {
   }
 
   async update(id: string, data: UpdateCycleDto) {
-    await this.getById(id);
-    if (data.name) {
-      const existing = await this.cycleRepository.getByName(data.name);
-      if (existing && existing.id !== id) Err(409, t('cycles.errors.nameExists'));
-    }
+    await this.cycleValidator.ensureExists(id);
+    if (data.name) await this.cycleValidator.ensureNameUnique(data.name, id);
     return this.cycleRepository.update(id, data);
   }
 
   // A cycle any year uses stays; deactivate it instead.
   async delete(id: string) {
-    await this.getById(id);
-    if (await this.cycleRepository.isInUse(id)) Err(409, t('cycles.errors.inUse'));
+    await this.cycleValidator.ensureExists(id);
+    await this.cycleValidator.ensureNotInUse(id);
     return this.cycleRepository.delete(id);
   }
 }

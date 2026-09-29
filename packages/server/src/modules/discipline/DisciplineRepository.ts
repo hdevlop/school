@@ -12,19 +12,19 @@ import {
 } from '../../database/schema';
 import { and, desc, eq, type SQL } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere } from '../../auth';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { occurredInReportingInterval } from '../academicYears/academicRecordYear';
 import { studentPlacementOn } from '../studentEnrollments/placementOnDay';
 import { Discipline } from './DisciplineGuards';
 
-@Owned(Discipline)
 @Repository()
 export class DisciplineRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Discipline)
+  private ownedWhere!: OwnedWhere;
 
   // An incident belongs to the year whose reporting interval holds its school-local day.
   private inSelectedYear() {
@@ -33,7 +33,7 @@ export class DisciplineRepository {
 
   /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+    return and(this.ownedWhere(), this.inSelectedYear(), ...filters);
   }
 
   // Never chain another .where() on this: it would replace the read condition.

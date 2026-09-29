@@ -133,24 +133,8 @@ export class SettingsRepository {
     return updatedSettings;
   }
 
-
-  async getAll() {
-    return await this.db
-      .select()
-      .from(settings)
-      .orderBy(desc(settings.createdAt));
-  }
-
   async deleteAll() {
     return await this.db.delete(settings);
-  }
-
-  async delete(id) {
-    const [deletedSettings] = await this.db
-      .delete(settings)
-      .where(eq(settings.id, id))
-      .returning();
-    return deletedSettings;
   }
 
 }

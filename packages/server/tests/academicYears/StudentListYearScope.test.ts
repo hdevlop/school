@@ -23,11 +23,13 @@ function studentService(
     ensureRosterDateWithinYear: StudentValidator.prototype.ensureRosterDateWithinYear,
   },
 ) {
-  return new StudentService(
+  const service = new StudentService(
     repository as any,
     validator as any, {} as any, {} as any, {} as any, {} as any, {} as any,
     {} as any, {} as any,
   );
+  Object.defineProperty(service, 'year', { value: { ...years['2025-2026'], reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' } });
+  return service;
 }
 
 describe('student history year policy', () => {
@@ -64,8 +66,8 @@ describe('student history year policy', () => {
 describe('normal student list year scope', () => {
   it('validates the optional year query', () => {
     expect(studentListQuery.parse({})).toEqual({});
-    expect(studentListQuery.parse({ academicYear: '2025-2026' })).toEqual({ academicYear: '2025-2026' });
-    expect(() => studentListQuery.parse({ academicYear: 'all' })).toThrow();
+    expect(studentListQuery.parse({ academicYear: '2025-2026' })).toEqual({});
+    expect(studentListQuery.parse({ academicYear: 'all' })).toEqual({});
   });
 
   it('lists the enrollments of the resolved year', async () => {
@@ -73,8 +75,8 @@ describe('normal student list year scope', () => {
     const service = studentService(
       { getAll: async (filters: unknown) => { calls.push(filters); return [{ id: 'student-1' }]; } },
     );
-    expect<unknown>(await service.getAll(years['2025-2026'] as any)).toEqual([{ id: 'student-1' }]);
-    expect(calls).toEqual([{ academicYearId: 'year-old', onDate: undefined }]);
+    expect<unknown>(await service.getAll()).toEqual([{ id: 'student-1' }]);
+    expect(calls).toEqual([{ onDate: undefined }]);
   });
 });
 
@@ -92,9 +94,9 @@ describe('student profile year scope', () => {
       },
       { ensureExists: async (id: string) => { calls.push(['exists', id]); return current; } },
     );
-    expect<unknown>(await service.getById('student-1', years['2025-2026'] as any))
+    expect<unknown>(await service.getById('student-1'))
       .toEqual({ id: 'student-1', classId: 'class-old', class: { id: 'class-old', name: 'CE5' } });
-    expect(calls).toEqual([['exists', 'student-1'], ['year', { academicYearId: 'year-old', studentId: 'student-1' }]]);
+    expect(calls).toEqual([['exists', 'student-1'], ['year', { studentId: 'student-1' }]]);
   });
 
   it('keeps the identity but no class when the student was not enrolled that year', async () => {
@@ -102,9 +104,9 @@ describe('student profile year scope', () => {
       { getAll: async () => [] },
       { ensureExists: async () => current },
     );
-    expect<unknown>(await service.getById('student-1', years['2025-2026'] as any)).toEqual({
+    expect<unknown>(await service.getById('student-1')).toEqual({
       id: 'student-1', name: 'Salma', classId: null, sectionId: null,
-      class: null, section: null, enrollment: null, placement: null,
+      class: null, section: null, status: null, enrollment: null, placement: null,
     });
   });
 });
@@ -113,9 +115,10 @@ describe('student year list query', () => {
   async function statementFor(role: string, studentId?: string) {
     let captured = { sql: '', params: [] as unknown[] };
     const repo: any = new StudentRepository();
+    Object.defineProperty(repo, 'year', { value: { id: 'year-old' } });
     repo.db = drizzle(async (sql, params) => { captured = { sql, params }; return { rows: [] }; });
     repo._scopeCtx = { hasActiveContext: () => true, getUser: () => ({ id: 'user-1', role }) };
-    await repo.getAll({ academicYearId: 'year-old', studentId });
+    await repo.getAll({ studentId });
     return captured;
   }
 
@@ -132,7 +135,7 @@ describe('student year list query', () => {
     expect(sql).toContain('left join "classes" on "student_enrollment_placements"."class_id" = "classes"."id"');
     expect(sql).toContain('"student_enrollment_placements"."class_id", "student_enrollment_placements"."section_id"');
     expect(sql).not.toContain('"students"."class_id"');
-    expect(sql).toContain('where "student_enrollments"."academic_year_id" = $1');
+    expect(sql).toContain('where ("student_enrollments"."academic_year_id" = $1');
     expect(sql).toContain('order by "students"."created_at" desc, "student_enrollments"."id", "student_enrollment_placements"."valid_from" desc');
     expect(params).toEqual(['year-old']);
   });
@@ -146,19 +149,18 @@ describe('student year list query', () => {
 });
 
 describe('student roster on a date', () => {
-  const oldYear = { ...years['2025-2026'], reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
 
   it('accepts a date with or without an explicit year', () => {
     expect(studentListQuery.parse({ academicYear: '2025-2026', onDate: '2025-10-01' }))
-      .toEqual({ academicYear: '2025-2026', onDate: '2025-10-01' });
+      .toEqual({ onDate: '2025-10-01' });
     expect(studentListQuery.parse({ onDate: '2025-10-01' })).toEqual({ onDate: '2025-10-01' });
     expect(() => studentListQuery.parse({ academicYear: '2025-2026', onDate: '2025-02-30' })).toThrow();
   });
 
   it('keeps the year-only query on the student detail route', () => {
-    expect(studentYearQuery.parse({ academicYear: '2025-2026' })).toEqual({ academicYear: '2025-2026' });
+    expect(studentYearQuery.parse({ academicYear: '2025-2026' })).toEqual({});
     expect(studentYearQuery.safeParse({ academicYear: '2025-2026', onDate: '2025-10-01' }).data)
-      .toEqual({ academicYear: '2025-2026' });
+      .toEqual({});
   });
 
   it('reads that day of the resolved year', async () => {
@@ -166,30 +168,31 @@ describe('student roster on a date', () => {
     const service = studentService(
       { getAll: async (filters: unknown) => { calls.push(filters); return [{ id: 'student-1' }]; } },
     );
-    expect<unknown>(await service.getAll(oldYear as any, '2025-10-01')).toEqual([{ id: 'student-1' }]);
-    expect(calls).toEqual([{ academicYearId: 'year-old', onDate: '2025-10-01' }]);
+    expect<unknown>(await service.getAll('2025-10-01')).toEqual([{ id: 'student-1' }]);
+    expect(calls).toEqual([{ onDate: '2025-10-01' }]);
   });
 
   it('accepts both ends of the reporting interval', async () => {
     const service = studentService({ getAll: async ({ onDate }: { onDate: string }) => [{ date: onDate }] });
-    expect<unknown>(await service.getAll(oldYear as any, '2025-09-01')).toEqual([{ date: '2025-09-01' }]);
-    expect<unknown>(await service.getAll(oldYear as any, '2026-08-31')).toEqual([{ date: '2026-08-31' }]);
+    expect<unknown>(await service.getAll('2025-09-01')).toEqual([{ date: '2025-09-01' }]);
+    expect<unknown>(await service.getAll('2026-08-31')).toEqual([{ date: '2026-08-31' }]);
   });
 
   it('refuses a day outside the year before reading', async () => {
     let read = false;
     const service = studentService({ getAll: async () => { read = true; return []; } });
-    await expect(service.getAll(oldYear as any, '2025-08-31')).rejects.toThrow('outside the academic year');
-    await expect(service.getAll(oldYear as any, '2026-09-01')).rejects.toThrow('outside the academic year');
+    await expect(service.getAll('2025-08-31')).rejects.toThrow('outside the academic year');
+    await expect(service.getAll('2026-09-01')).rejects.toThrow('outside the academic year');
     expect(read).toBe(false);
   });
 
   async function dayStatement(role: string) {
     let captured = { sql: '', params: [] as unknown[] };
     const repo: any = new StudentRepository();
+    Object.defineProperty(repo, 'year', { value: { id: 'year-old' } });
     repo.db = drizzle(async (sql, params) => { captured = { sql, params }; return { rows: [] }; });
     repo._scopeCtx = { hasActiveContext: () => true, getUser: () => ({ id: 'user-1', role }) };
-    await repo.getAll({ academicYearId: 'year-old', onDate: '2025-10-01' });
+    await repo.getAll({ onDate: '2025-10-01' });
     return captured;
   }
 

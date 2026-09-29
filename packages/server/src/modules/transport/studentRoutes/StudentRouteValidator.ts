@@ -5,6 +5,7 @@ import { StudentEnrollmentRepository } from '../../studentEnrollments/StudentEnr
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import { isValidDateOnly } from '../../financial/utils/dateOnly';
+import { getBusinessDateOnly } from '../../../shared/businessDate';
 
 @Service()
 export class StudentRouteValidator {
@@ -14,6 +15,33 @@ export class StudentRouteValidator {
     private studentRepository: StudentRepository,
     private enrollments: StudentEnrollmentRepository,
   ) {}
+
+  ensureStatusDates(status: string, unassignmentDate?: string | null) {
+    if (status === 'active' && unassignmentDate) Err(400, 'An active route cannot have an unassignment date');
+    if (status !== 'active' && !unassignmentDate) Err(400, 'A completed or cancelled route needs an unassignment date');
+  }
+
+  ensureReassignable(status: string) {
+    if (status !== 'active') Err(409, 'Only an active route can be reassigned');
+  }
+
+  ensureReassignmentDate(date: string, assignmentDate: string) {
+    if (date <= assignmentDate || date > getBusinessDateOnly()) Err(400, 'Reassignment date must follow the old start and cannot be in the future');
+  }
+
+  ensureActiveRoute(status: string) {
+    if (status !== 'active') Err(409, 'Route is not active');
+  }
+
+  ensureUnassignmentDate(date: string, assignmentDate: string) {
+    if (date < this.year.reportingStartsOn || date > this.year.reportingEndsOn) Err(409, 'Route unassignment date is outside the selected school year');
+    if (date <= assignmentDate || date > getBusinessDateOnly()) Err(400, 'Route unassignment date must follow its start and cannot be in the future');
+  }
+
+  ensureTransportFeeType<T>(feeType: T | null | undefined): T {
+    if (!feeType) Err(409, 'No active transport fee type is configured');
+    return feeType;
+  }
 
   async checkExists(id: string) {
     const row = await this.studentRouteRepository.getById(id);

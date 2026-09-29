@@ -36,22 +36,20 @@ export class SettingsController {
   @Put()
   @isAdministrator()
   @Validate(updateSettingsDto)
-  @McpTool({ description: 'Update settings', confirm: { level: 'warning', message: 'confirm.settings.update' } })
+  @McpTool({ description: 'Update school settings; only the fields sent change. The active academic year and its calendar months change through academic-year operations, not here', confirm: { level: 'warning', message: 'confirm.settings.update' } })
   @ResMsg('settings.success.updated')
   async update(@Body() body: UpdateSettingsDto) {
     return this.settingsService.update(body);
   }
 
-
   @Post()
   @isAdministrator()
   @Validate(createSettingsDto)
-  @McpTool({ description: 'Create settings', confirm: { level: 'warning', message: 'confirm.settings.create' } })
+  @McpTool({ description: 'Create the school settings of a new installation; refused once they exist (use update)', confirm: { level: 'warning', message: 'confirm.settings.create' } })
   @ResMsg('settings.success.created')
   async create(@Body() body: CreateSettingsDto) {
     return this.settingsService.create(body);
   }
-
 
   @Get('/:id')
   @isAdministrator()

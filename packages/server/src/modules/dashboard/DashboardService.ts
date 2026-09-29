@@ -7,7 +7,9 @@ import { PaymentService } from '../financial/payments';
 import { FeeService } from '../financial/fees/FeeService';
 import { AttendanceRepository } from '../attendance/AttendanceRepository';
 import { EventService } from '../events/EventService';
+import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { holdsDay } from '../academicYears/academicRecordYear';
 import { getBusinessDate, getBusinessDateOnly } from '../../shared/businessDate';
 
 const NO_CURRENT_ATTENDANCE = {
@@ -25,6 +27,9 @@ function localToday() {
 
 @Injectable()
 export class DashboardService {
+  // Its own rule needs the year: today's figures belong only to the year that
+  // holds today. Students take it explicitly until their own module turn.
+  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private studentService: StudentService,
@@ -37,7 +42,24 @@ export class DashboardService {
     private eventService: EventService
   ) { }
 
-  async getTodaySnapshot(_year: ResolvedAcademicYear) {
+  private holdsToday() {
+    return holdsDay(this.year, localToday());
+  }
+
+  // Today's attendance, cash and events exist only in the year that holds
+  // today; any other year reports none rather than today's under its name.
+  // Overdue fees are the selected fee year's, as of today.
+  async getTodaySnapshot() {
+    if (!this.holdsToday()) {
+      return {
+        attendance: null,
+        income: null,
+        expenses: null,
+        overdueFees: await this.feeService.getOverdueSummary(),
+        events: null,
+      };
+    }
+
     const [
       studentAttendance,
       staffAttendance,
@@ -48,10 +70,10 @@ export class DashboardService {
     ] = await Promise.all([
       this.attendanceRepository.getToday('student'),
       this.attendanceRepository.getToday('staff'),
-      this.paymentService.getToday().catch(() => ({ payments: [], summary: { total: 0, count: 0 } })),
-      this.expenseService.getToday().catch(() => ({ expenses: [], summary: { total: 0, count: 0 } })),
-      this.feeService.getOverdueSummary().catch(() => ({ overdueCount: 0, overdueAmount: 0, affectedStudents: 0 })),
-      this.eventService.getTodayEvents().catch(() => []),
+      this.paymentService.getToday(),
+      this.expenseService.getToday(),
+      this.feeService.getOverdueSummary(),
+      this.eventService.getTodayEvents(),
     ]);
 
     return {
@@ -66,15 +88,13 @@ export class DashboardService {
     };
   }
 
-  // One registered year's months, counted as that year's lists count them.
+  // The selected year's months, counted as that year's lists count them.
   // Today's and this week's figures belong to the year that holds today, so
   // any other year reports none rather than today's under its name.
-  async getAttendanceMonthly(type: 'student' | 'staff', year: ResolvedAcademicYear) {
-    const today = localToday();
-    const holdsToday = today >= year.reportingStartsOn && today <= year.reportingEndsOn;
+  async getAttendanceMonthly(type: 'student' | 'staff') {
     const [monthly, current] = await Promise.all([
-      this.attendanceRepository.getMonthlyStatsForYear(type, year),
-      holdsToday ? this.getCurrentAttendanceFigures(type) : null,
+      this.attendanceRepository.getMonthlyStats(type),
+      this.holdsToday() ? this.getCurrentAttendanceFigures(type) : null,
     ]);
     return { monthly, ...(current ?? NO_CURRENT_ATTENDANCE) };
   }
@@ -118,14 +138,17 @@ export class DashboardService {
     };
   }
 
-  // Total Students counts the selected year's enrollments, defaulting to the
-  // active year; the other widgets keep their school-wide figures.
-  async getAdminWidgets(year: ResolvedAcademicYear) {
-    const studentsCount = await this.studentService.getCount(year);
-    const teachersCount = await this.teacherService.getCount();
-    const parentsCount = await this.parentService.getCount();
-    const earnings = await this.paymentService.getTotalRevenue();
-    const expenses = await this.expenseService.getTotalExpenses()
+  // The finance dashboard's cards: the selected year's enrollments, fee-year
+  // revenue and paid expenses over its reporting dates. Teachers and parents
+  // are not recorded per year, so their counts are current.
+  async getWidgets() {
+    const [studentsCount, teachersCount, parentsCount, earnings, expenses] = await Promise.all([
+      this.studentService.getCount(),
+      this.teacherService.getCount(),
+      this.parentService.getCount(),
+      this.paymentService.getTotalRevenue(),
+      this.expenseService.getTotalExpenses(),
+    ]);
 
     return [
       {
@@ -156,19 +179,7 @@ export class DashboardService {
     ];
   }
 
-  async getStudentsByGender(year: ResolvedAcademicYear) {
-    return this.studentService.getStudentsByGender(year);
-  }
-
-  async getTeacherWidgets(_userId: string) {
-    // Get teacher by userId to find teacherId
-  }
-
-  async getStudentWidgets(_userId: string) {
-    // Get student by userId to find studentId
-  }
-
-  async getParentWidgets(_userId: string) {
-    // Get parent by userId to find parentId
+  async getStudentsByGender() {
+    return this.studentService.getStudentsByGender();
   }
 }

@@ -158,7 +158,7 @@
       "passwordSet": "Tu contraseña ha sido establecida. Inicia sesión.",
       "login": "Inicio de sesión exitoso",
       "logout": "Cierre de sesión exitoso",
-      "register": "Registro exitoso. ¡Bienvenido!",
+      "register": "Cuenta creada. La escuela la revisará antes de que pueda iniciar sesión.",
       "passwordReset": "Restablecimiento de contraseña enviado",
       "tokenGenerated": "Token de acceso generado exitosamente",
       "tokenRefreshed": "Token de acceso actualizado exitosamente",
@@ -2264,6 +2264,17 @@
       "bulkDeleted": "Registros de Padre o madre eliminados correctamente"
     },
     "errors": {
+      "idExists": "El ID del padre o madre ya existe",
+      "notFound": "Padre o madre no encontrado",
+      "emailExists": "Ya existe un padre o madre con este correo electrónico",
+      "cinExists": "Ya existe un padre o madre con este CIN",
+      "phoneExists": "Ya existe un padre o madre con este número de teléfono",
+      "hasLinkedStudents": "No se puede eliminar un padre o madre con estudiantes vinculados",
+      "someLinked": "Algunos padres o madres siguen vinculados a estudiantes. Desvincule a sus hijos, o elimínelos uno por uno.",
+      "studentNotLinked": "El estudiante no está vinculado a este padre o madre",
+      "studentAlreadyLinked": "El estudiante ya está vinculado a este padre o madre",
+      "invalidGender": "Seleccione un género válido",
+      "invalidRelationshipType": "Seleccione un parentesco válido",
       "invalidMaritalStatus": "Seleccione un estado civil válido"
     },
     "tooltips": {
@@ -2799,6 +2810,10 @@
     }
   },
   "settings": {
+    "errors": {
+      "notFound": "Configuración no encontrada",
+      "alreadyExists": "La configuración de la escuela ya existe; modifíquela con una actualización"
+    },
     "academic": {
       "semesterPlaceholder": "Semestre",
       "attendanceMode": "Modo de asistencia",
@@ -2838,6 +2853,7 @@
     "school": {
       "namePlaceholder": "Mi escuela",
       "currentAcademicYear": "Año académico actual",
+      "currentAcademicYearLocked": "Solo cambia al activar un año registrado",
       "lunchBreakDuration": "Duración del almuerzo (min)",
       "schoolAddress": "Dirección de la escuela",
       "schoolEmail": "Correo de la escuela",
@@ -2897,6 +2913,16 @@
     }
   },
   "students": {
+    "correction": {
+      "placement": "Asignación que corregir",
+      "status": "Estado de la matrícula anual",
+      "leftOn": "Fin de matrícula (fecha excluida)",
+      "validFrom": "Inicio de la asignación",
+      "validTo": "Fin de la asignación (fecha excluida)",
+      "reason": "Motivo de la corrección",
+      "requiredReason": "Indica el motivo de la corrección",
+      "invalidDates": "Introduce fechas válidas de matrícula y asignación"
+    },
     "enrollment": {
       "title": "Años escolares",
       "help": "La clase y la sección del estudiante en cada año escolar, según registros fechados. Editar el perfil no las cambia.",
@@ -2934,6 +2960,14 @@
       "bulkDeleted": "Estudiantes eliminados correctamente",
       "allDeleted": "Todos los estudiantes fueron eliminados correctamente",
       "seeded": "Estudiantes inicializados correctamente"
+    },
+    "errors": {
+      "idExists": "El ID del estudiante ya existe",
+      "notFound": "Estudiante no encontrado",
+      "studentCodeExists": "Ya existe un estudiante con este código",
+      "emailExists": "Ya existe un estudiante con este correo electrónico",
+      "invalidClass": "Clase no válida",
+      "invalidSection": "Sección no válida"
     },
     "subtitle": {
       "count": "{{count}} estudiantes en total"
@@ -2991,6 +3025,7 @@
     },
     "status": {
       "active": "Activo",
+      "withdrawn": "Retirado",
       "graduated": "Graduado",
       "inactive": "Inactivo",
       "transferred": "Transferido"
@@ -3168,6 +3203,7 @@
     }
   },
   "teachers": {
+    "errors": { "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente" },
     "subtitle": {
       "count": "{{count}} profesores en total"
     },

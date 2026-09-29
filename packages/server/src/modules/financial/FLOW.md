@@ -245,15 +245,18 @@ Fee (rolled up from its installments):
 
 ## 6. Dashboard Read-Model
 
-Finance dashboard queries (under `modules/dashboard/finance` — not inside this module) always aggregate from `fee_installments`, **never** from `fees.netAmount`. This keeps mid-year students, discounts, and partial payments reflected naturally.
+Finance dashboard queries (under `modules/dashboard/finance` — not inside this module) always aggregate from `fee_installments`, **never** from `fees.netAmount`. This keeps mid-year students, discounts, and partial payments reflected naturally. Every read covers the selected academic year (`X-Academic-Year`, else the active year): fee figures by `fees.academicYear`, cash by date over the year's reporting interval.
 
-- **Income (month)** = `SUM(allocations.amount)` joined to `payments` where `paidAt BETWEEN monthStart AND monthEnd`
-- **Expenses (month)** = `SUM(expenses.amount)` where `date BETWEEN monthStart AND monthEnd`
+- **Paid on an installment** = `SUM(payment_allocations.amount)` of **completed** payments. The cached `fee_installments.paidAmount` is not read: it stops following an installment once it is cancelled.
+- **Cancelled installments** are neither owed nor collected.
+- **Income** = `SUM(payments.amount)` of completed payments by cash date, `COALESCE(settledDate, paymentDate)`
+- **Expenses** = `SUM(expenses.amount)` of **paid** expenses by `expenseDate`, as the Expenses module totals them, plus paid payslips by `paymentDate`
 - **Net Balance** = income − expenses
-- **Collection Rate YTD** = `SUM(fee_installments.paidAmount) / SUM(fee_installments.amount)` where `dueDate ≤ today AND fee.academicYear = current`
-- **Aging Balance** = `SUM(amount − paidAmount)` of unpaid installments, bucketed by `today − dueDate`: `current (not yet due)`, `1–30`, `31–60`, `60+`
-- **Overdue Fees list** = installments where `dueDate < today AND paidAmount < amount`, grouped by student, sorted by oldest `dueDate`
-- **Recent Payments** = last N payments joined to student name
+- **This month / today** = the same sums over today's calendar month or day, only for the year that holds today; `null` for any other year, whose dashboard shows the whole year instead
+- **Collection Rate YTD** = paid / `SUM(amount)` over the year's uncancelled installments with `dueDate ≤ today`
+- **Aging Balance** = `SUM(amount − paid)` of the year's uncancelled installments, bucketed by `today − dueDate`: `current (not yet due)`, `1–30`, `31–60`, `60+`
+- **Overdue Fees list** = the year's uncancelled installments with `dueDate < today` and a balance left, grouped by student, sorted by oldest `dueDate`
+- **Recent Payments** = the latest completed payments whose cash date falls in the year, joined to student name
 
 ---
 

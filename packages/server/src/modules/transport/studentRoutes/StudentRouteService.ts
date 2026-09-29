@@ -1,4 +1,4 @@
-import { Err, Service, Transaction } from '../../../najm';
+import { Service, Transaction } from '../../../najm';
 import { StudentRouteRepository } from './StudentRouteRepository';
 import { StudentRouteValidator } from './StudentRouteValidator';
 import { FeeService } from '../../financial/fees/FeeService';
@@ -41,12 +41,7 @@ export class StudentRouteService {
     const assignmentDate = data.assignmentDate || getBusinessDateOnly();
     const status = data.status || 'active';
     await this.studentRouteValidator.validateInterval(assignmentDate, data.unassignmentDate);
-    if (status === 'active' && data.unassignmentDate) {
-      Err(400, 'An active route cannot have an unassignment date');
-    }
-    if (status !== 'active' && !data.unassignmentDate) {
-      Err(400, 'A completed or cancelled route needs an unassignment date');
-    }
+    this.studentRouteValidator.ensureStatusDates(status, data.unassignmentDate);
     await this.studentRouteValidator.validateStudentPlacement(data.studentId, assignmentDate);
     if (status !== 'cancelled') {
       await this.studentRouteValidator.checkNoOverlappingRoute(
@@ -92,13 +87,11 @@ export class StudentRouteService {
   @Transaction()
   async reassign(id: string, data: ReassignStudentRouteDto, assignedBy?: string | null) {
     const existing = await this.studentRouteValidator.checkExists(id);
-    if (existing.status !== 'active') Err(409, 'Only an active route can be reassigned');
+    this.studentRouteValidator.ensureReassignable(existing.status);
     await this.studentRouteValidator.validate(data, id);
     const assignmentDate = data.assignmentDate || getBusinessDateOnly();
     await this.studentRouteValidator.validateInterval(assignmentDate);
-    if (assignmentDate <= existing.assignmentDate || assignmentDate > getBusinessDateOnly()) {
-      Err(400, 'Reassignment date must follow the old start and cannot be in the future');
-    }
+    this.studentRouteValidator.ensureReassignmentDate(assignmentDate, existing.assignmentDate);
     await this.studentRouteValidator.validateStudentPlacement(existing.studentId, assignmentDate);
     await this.studentRouteValidator.checkNoOverlappingRoute(
       existing.studentId, assignmentDate, null, id,
@@ -135,14 +128,9 @@ export class StudentRouteService {
   @Transaction()
   async unassign(id: string, requestedDate?: string | null) {
     const assignment = await this.studentRouteValidator.checkExists(id);
-    if (assignment.status !== 'active') Err(409, 'Route is not active');
+    this.studentRouteValidator.ensureActiveRoute(assignment.status);
     const effectiveDate = requestedDate || getBusinessDateOnly();
-    if (effectiveDate < this.year.reportingStartsOn || effectiveDate > this.year.reportingEndsOn) {
-      Err(409, 'Route unassignment date is outside the selected school year');
-    }
-    if (effectiveDate <= assignment.assignmentDate || effectiveDate > getBusinessDateOnly()) {
-      Err(400, 'Route unassignment date must follow its start and cannot be in the future');
-    }
+    this.studentRouteValidator.ensureUnassignmentDate(effectiveDate, assignment.assignmentDate);
     const updated = await this.studentRouteRepository.update(id, {
       status: 'completed',
       unassignmentDate: effectiveDate,
@@ -180,9 +168,7 @@ export class StudentRouteService {
     const allFeeTypes = await this.feeTypeRepository.getAll();
     const transportFeeType = allFeeTypes.find(ft => ft.category === 'transport' && ft.status === 'active');
 
-    if (!transportFeeType) {
-      Err(409, 'No active transport fee type is configured');
-    }
+    this.studentRouteValidator.ensureTransportFeeType(transportFeeType);
 
     try {
       await this.feeService.create({

@@ -1,4 +1,3 @@
-export * from './DashboardDto';
 export * from './DashboardController';
 export * from './DashboardService';
 export * from './finance';

@@ -21,7 +21,11 @@ const alertSchema = z.object({
 });
 
 export const createAlertDto = alertSchema;
-export const updateAlertDto = createAlertDto.partial();
+export const updateAlertDto = createAlertDto.partial().extend({
+  priority: alertPriorityEnum.optional(),
+  status: alertStatusEnum.optional(),
+  isRead: z.boolean().optional(),
+});
 export const alertIdParam = z.object({ id: z.string().min(1) });
 export const alertTypeParam = z.object({ type: alertTypeEnum });
 export const alertStatusParam = z.object({ status: alertStatusEnum });
@@ -37,42 +41,9 @@ export const recentAlertsQueryDto = z.object({
 export const recentAlertsByHoursQueryDto = z.object({
   hours: z.coerce.number().int().positive().max(24 * 30).optional(),
 });
-export const typedStudentAlertDto = z.object({
-  studentId: z.string().min(1),
-  alertType: z.string().min(1),
-  details: z.unknown().optional(),
-});
-export const announcementAlertDto = z.object({
-  title: z.string().min(1),
-  message: z.string().min(1),
-  targetAudience: alertAudience,
-  authorId: z.string().min(1),
-  classId: optionalId,
-});
-export const reminderAlertDto = z.object({
-  title: z.string().min(1),
-  message: z.string().min(1),
-  targetAudience: alertAudience,
-  authorId: z.string().min(1),
-  details: z.unknown().optional(),
-});
-export const emergencyAlertDto = z.object({
-  title: z.string().min(1),
-  message: z.string().min(1),
-  details: z.unknown().optional(),
-});
-export const systemAlertDto = z.object({
-  message: z.string().min(1),
-  priority: alertPriorityEnum.optional(),
-});
 
 export type CreateAlertDto = z.input<typeof createAlertDto>;
 export type UpdateAlertDto = z.input<typeof updateAlertDto>;
 export type RecentAlertsQueryDto = z.infer<typeof recentAlertsQueryDto>;
 export type RecentAlertsByHoursQueryDto = z.infer<typeof recentAlertsByHoursQueryDto>;
-export type TypedStudentAlertDto = z.infer<typeof typedStudentAlertDto>;
-export type AnnouncementAlertDto = z.infer<typeof announcementAlertDto>;
-export type ReminderAlertDto = z.infer<typeof reminderAlertDto>;
-export type EmergencyAlertDto = z.infer<typeof emergencyAlertDto>;
-export type SystemAlertDto = z.infer<typeof systemAlertDto>;
 export type UpdateAlertStatusDto = z.infer<typeof updateAlertStatusDto>;

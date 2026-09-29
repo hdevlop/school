@@ -7,6 +7,7 @@ import { ArrowRightLeft, CalendarRange, LogOut, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { getAcademicYearsApi } from '@/services/academicYearApi';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { isAuthorizationError } from '@/services/apiError';
 import type { EnrollmentPlacement } from '@/services/studentEnrollmentApi';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -64,7 +65,7 @@ export default function EnrollmentTab({ studentId }: { studentId?: string }) {
         form: 'student-enroll-form',
         text: t('students.enrollment.enrollAction'),
         onClick: (values) => run(
-          () => enroll({ studentId, academicYearId: targetYear.id, ...values }),
+          () => withAcademicYear(targetYear.label, () => enroll({ studentId, academicYearId: targetYear.id, ...values })),
           t('students.enrollment.enrolled'),
         ),
       },
@@ -81,7 +82,7 @@ export default function EnrollmentTab({ studentId }: { studentId?: string }) {
         form: 'student-transfer-form',
         text: t('students.enrollment.transferAction'),
         onClick: (values) => run(
-          () => transfer({ enrollmentId: targetEnrollment.id, ...values }),
+          () => withAcademicYear(targetEnrollment.academicYear.label, () => transfer({ enrollmentId: targetEnrollment.id, ...values })),
           t('students.enrollment.transferred'),
         ),
       },
@@ -98,7 +99,7 @@ export default function EnrollmentTab({ studentId }: { studentId?: string }) {
         form: 'student-end-enrollment-form',
         text: t('students.enrollment.endAction'),
         onClick: (values) => run(
-          () => end({ enrollmentId: targetEnrollment.id, ...values }),
+          () => withAcademicYear(targetEnrollment.academicYear.label, () => end({ enrollmentId: targetEnrollment.id, ...values })),
           t('students.enrollment.ended'),
         ),
       },

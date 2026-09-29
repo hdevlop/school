@@ -1,5 +1,5 @@
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere } from '../../auth';
 import { and, desc, eq, sql, asc, count, inArray, type SQL, isNotNull, isNull, or } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import { grades, students, assessments, exams, teacherAssignments, subjects, teachers, staff, classes, sections, users } from '../../database/schema';
@@ -49,16 +49,16 @@ export const gradeSelect = {
   updatedAt: grades.updatedAt,
 };
 
-@Owned(Grade, GradeForTeacher)
 @Repository()
 export class GradeRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Grade, GradeForTeacher)
+  private ownedWhere!: OwnedWhere;
 
   /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), gradeInReportingYear(this.year), ...filters);
+    return and(this.ownedWhere(), gradeInReportingYear(this.year), ...filters);
   }
 
   // The selected year's grade ids. A legacy grade takes its year from its

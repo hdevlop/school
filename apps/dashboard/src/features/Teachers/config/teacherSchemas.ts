@@ -65,7 +65,6 @@ export const assignmentSchema = z.object({
   classId: z.string().min(1, 'Class is required'),
   sectionIds: z.array(z.string()).min(1, 'At least one section is required'),
   subjectIds: z.array(z.string()).min(1, 'At least one subject is required'),
-  academicYear: z.string().optional(),
 });
 
 /** Step 3 — the timetable. Also bound on its own by the bulk assignment dialog. */

@@ -11,6 +11,7 @@ import StudentCard from './StudentCard';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import SimpleStudentForm from './SimpleStudentForm';
+import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useStudentsTableColumns } from '../hooks/useStudentsTableColumns';
 import { useStudentsTableFilters } from '../hooks/useStudentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -71,7 +72,7 @@ function StudentsTable() {
           classes={newStudentClasses}
           feeTypes={feeTypes || []}
           businessDate={resolvedBusinessDate}
-          onSubmitStudent={createStudent}
+          onSubmitStudent={(data) => withAcademicYear(activeYear, () => createStudent(data))}
         />
       ),
       width: '4xl',
@@ -104,7 +105,7 @@ function StudentsTable() {
   const handleEdit = (student) => {
     openDialog({
       title: `${t('students.dialogs.editTitle')} - ${student.name}`,
-      children: <SimpleStudentForm student={student} classes={classes} />,
+      children: <SimpleStudentForm student={student} classes={classes} canCorrect={role === 'admin' || role === 'principal'} />,
       width: '4xl',
       height: 'full',
       primaryButton: {
@@ -112,7 +113,7 @@ function StudentsTable() {
         text: t('students.dialogs.updateButton'),
         loading: isUpdating,
         onClick: async (combinedData) => {
-          await updateStudent(combinedData);
+          await withAcademicYear(viewingYear, () => updateStudent(combinedData));
         }
       }
     });

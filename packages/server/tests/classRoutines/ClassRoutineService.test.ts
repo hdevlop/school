@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { ClassRoutineService } from '../../src/modules/classRoutines/ClassRoutineService';
+import { ClassRoutineValidator } from '../../src/modules/classRoutines/ClassRoutineValidator';
 
 const groups = [
   { kind: 'fixed' as const, label: 'التعبير الكتابي' },
@@ -23,11 +24,11 @@ const build = () => {
       return current;
     },
   };
-  const validator = {
+  const validator = Object.assign(new ClassRoutineValidator(repository as any), {
     ensureEntry: async () => current,
     ensureSchedule: async () => ({ id: 'schedule-1' }),
     validateEntry: async () => ({}),
-  };
+  });
   const service = new ClassRoutineService(repository as any, validator as any);
   return { service, writes };
 };

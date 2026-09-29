@@ -45,6 +45,7 @@ export {
 
 // Shared ownership engine from najm-auth; `own` below applies School's roles.
 export { Owned, ownershipCondition, join, where, ScopeContext, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete };
+export type { OwnedWhere } from 'najm-auth';
 
 // ============================================================================
 // App roles — defineRoles generates isAdmin, isPrincipal, isTeacher… + utilities

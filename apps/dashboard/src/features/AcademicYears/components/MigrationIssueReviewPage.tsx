@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle } from 'lucide-react';
-import { Card, NButton, NDialog, NPageHeader } from 'najm-kit';
+import { Card, NButton, NDialog, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { ViewingYearSelector } from './ViewingYearSelector';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 import {
@@ -65,7 +66,9 @@ export default function MigrationIssueReviewPage() {
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <NPageHeader icon={AlertTriangle} title={t('academicYearMigration.title')} />
+      <NPageHeader icon={AlertTriangle} title={t('academicYearMigration.title')}>
+        <NPageHeaderActions><ViewingYearSelector /></NPageHeaderActions>
+      </NPageHeader>
       <p className="text-sm text-muted-foreground">{t('academicYearMigration.description')}</p>
       <div className="flex flex-wrap items-center gap-2" role="group" aria-label={t('academicYearMigration.statusFilter')}>
         {statuses.map((option) => (

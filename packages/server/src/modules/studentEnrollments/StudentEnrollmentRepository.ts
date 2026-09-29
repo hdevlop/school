@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gt, inArray, isNull, lte, or } from 'drizzle-orm';
+import { and, asc, desc, eq, gt, inArray, isNull, lte, or, sql } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import type { DB } from '../../database/db';
 import { classes } from '../classes/classSchema';
@@ -6,14 +6,20 @@ import { sections } from '../sections/sectionSchema';
 import { students } from '../students/studentSchema';
 import { academicYears } from '../academicYears/AcademicYearSchema';
 import { studentEnrollmentPlacements, studentEnrollments } from './StudentEnrollmentSchema';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { auditLogs } from '../../database/schema/coreSchema';
+import type { CorrectEnrollmentDto } from './StudentEnrollmentDto';
 
 @Repository()
 export class StudentEnrollmentRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
 
-  async getById(id: string) {
-    const [row] = await this.db.select().from(studentEnrollments)
-      .where(eq(studentEnrollments.id, id)).limit(1);
+  async getById(id: string, lock = false) {
+    const query = this.db.select().from(studentEnrollments)
+      .where(and(eq(studentEnrollments.id, id), eq(studentEnrollments.academicYearId, this.year.id))).limit(1);
+    const [row] = await (lock ? query.for('update') : query);
     return row ?? null;
   }
 
@@ -294,6 +300,52 @@ export class StudentEnrollmentRepository {
     const [row] = await this.db.update(studentEnrollmentPlacements).set({ validTo })
       .where(eq(studentEnrollmentPlacements.id, id)).returning();
     return row;
+  }
+
+  async correct(id: string, data: CorrectEnrollmentDto, actorId: string) {
+    await this.db.update(studentEnrollmentPlacements).set({
+      classId: data.placement.classId, sectionId: data.placement.sectionId,
+      validFrom: data.placement.validFrom, validTo: data.placement.validTo,
+      actorId, reason: data.reason,
+    }).where(and(eq(studentEnrollmentPlacements.id, data.placement.id),
+      eq(studentEnrollmentPlacements.enrollmentId, id)));
+    const [row] = await this.db.update(studentEnrollments).set({
+      enrolledOn: data.enrolledOn, leftOn: data.leftOn, status: data.status, updatedBy: actorId,
+    }).where(and(eq(studentEnrollments.id, id), eq(studentEnrollments.academicYearId, this.year.id))).returning();
+    return row;
+  }
+
+  // Attendance and grade sources must still have a placement covering their
+  // business date and section. A correction never rewrites those records.
+  async hasInvalidDatedRecords(studentId: string) {
+    const rows = await this.db.execute(sql`
+      WITH records AS (
+        SELECT a.date AS day, a.section_id AS section_id
+        FROM attendance a WHERE a.student_id = ${studentId}
+          AND (a.academic_year_id = ${this.year.id} OR
+            (a.academic_year_id IS NULL AND a.date BETWEEN ${this.year.reportingStartsOn}::date AND ${this.year.reportingEndsOn}::date))
+        UNION ALL
+        SELECT COALESCE(x.date, a.date), ta.section_id
+        FROM grades g LEFT JOIN exams x ON x.id = g.exam_id
+        LEFT JOIN assessments a ON a.id = g.assessment_id
+        JOIN teacher_assignments ta ON ta.id = COALESCE(x.teacher_assignment_id, a.teacher_assignment_id)
+        WHERE g.student_id = ${studentId}
+          AND COALESCE(x.date, a.date) BETWEEN ${this.year.reportingStartsOn}::date AND ${this.year.reportingEndsOn}::date
+      )
+      SELECT 1 FROM records r WHERE NOT EXISTS (
+        SELECT 1 FROM student_enrollments e JOIN student_enrollment_placements p ON p.enrollment_id = e.id
+        WHERE e.student_id = ${studentId} AND e.academic_year_id = ${this.year.id}
+          AND e.enrolled_on <= r.day AND (e.left_on IS NULL OR e.left_on > r.day)
+          AND p.valid_from <= r.day AND (p.valid_to IS NULL OR p.valid_to > r.day)
+          AND (r.section_id IS NULL OR p.section_id = r.section_id)
+      ) LIMIT 1`);
+    return rows.length > 0;
+  }
+
+  async auditCorrection(id: string, actorId: string, userRole: string, reason: string, before: unknown, after: unknown) {
+    await this.db.insert(auditLogs).values({ userId: actorId, userRole,
+      action: 'correct', resource: 'student-enrollments', resourceId: id, status: 'success',
+      metadata: { academicYearId: this.year.id, reason, before, after } });
   }
 
   async endEnrollment(id: string, leftOn: string, status: 'withdrawn' | 'graduated' | 'transferred', actorId: string) {

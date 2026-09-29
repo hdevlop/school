@@ -1,7 +1,9 @@
 import { Controller, Get, RawResponse } from '../../najm';
+import { Public } from 'najm-guard';
 import { HealthService } from './HealthService';
 
 @Controller('/health')
+@Public()
 export class HealthController {
   constructor(
     private healthService: HealthService,

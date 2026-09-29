@@ -37,6 +37,11 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 - `bun run test:access-reset` - The focused access-recovery suite
 - `bun run test:ownership` - Repository ownership: the school-wide role list,
   per-role rules, and the generated SQL of every owned read
+- `bun run test:security` - Route guards: the storage routes School restricts
+  and the timetable permissions.
+  `bun --env-file=apps/dashboard/.env.local run test:security:transport` checks
+  the running server over the local `school_history_test` fixture, including
+  the reviewed lists of routes left open or behind sign-in alone
 - `bun run test:boundaries` - The boundary checker's regression fixtures, then
   the checker over the real import graph (`scripts/check-workspace-boundaries.mjs`)
 - `bun run test` - All selected safe tests above

@@ -69,6 +69,11 @@ export class EventService {
     return await this.eventRepository.getUpcoming();
   }
 
+  /** The upcoming events one parent account sees, within what the reader may read. */
+  async getUpcomingForParent(parentUserId: string) {
+    return await this.eventRepository.getUpcomingForParent(parentUserId);
+  }
+
   async getPast() {
     return await this.eventRepository.getPast();
   }

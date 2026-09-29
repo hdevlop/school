@@ -1,4 +1,4 @@
-import { Service, Err, I18n, Transaction } from '../../najm';
+import { Service, Transaction } from '../../najm';
 import { AttendanceRepository, type AttendanceListFilters } from './AttendanceRepository';
 import { AttendanceValidator } from './AttendanceValidator';
 import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
@@ -14,8 +14,6 @@ import type {
 
 @Service()
 export class AttendanceService {
-  @I18n('attendance.errors') private at!: (key: string) => string;
-
   constructor(
     private attendanceRepository: AttendanceRepository,
     private attendanceValidator: AttendanceValidator,
@@ -31,20 +29,15 @@ export class AttendanceService {
   // The registered year a new mark is stored under.
   async yearForStudentMark(sectionId: string, date: string) {
     const [section] = await this.sections.listYearContexts([sectionId]);
-    if (!section) Err(404, 'Attendance section not found');
-    const year = await this.years.requireLabel(section!.academicYear);
-    if (date < year.reportingStartsOn || date > year.reportingEndsOn) {
-      Err(409, 'Attendance date is outside the section academic year');
-    }
-    if (year.status === 'draft') Err(409, 'Attendance cannot be marked in a draft year');
+    const context = this.attendanceValidator.ensureSectionForMark(section);
+    const year = await this.years.requireLabel(context.academicYear);
+    this.attendanceValidator.ensureStudentMarkYear(year, date);
     return year.id;
   }
 
   async yearForStaffMark(date: string) {
-    const year = await this.years.findForDate(date);
-    if (!year) Err(409, 'Attendance date is outside registered academic years');
-    if (year!.status === 'draft') Err(409, 'Attendance cannot be marked in a draft year');
-    return year!.id;
+    const year = this.attendanceValidator.ensureStaffMarkYear(await this.years.findForDate(date));
+    return year.id;
   }
 
   // The year's marks, optionally of one type, section, student or staff
@@ -94,26 +87,18 @@ export class AttendanceService {
     this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, data.date, user.role);
     const teacherId = await this.teacherIdForUser(user);
-    if (user.role === 'teacher') {
-      if (!teacherId || (data.teacherId && data.teacherId !== teacherId) ||
-        !await this.attendanceRepository.isTeacherInSection(teacherId, data.sectionId)) {
-        Err(403, this.at('notAuthorizedForSection'));
-      }
-    }
+    await this.attendanceValidator.ensureTeacherCanMark(data, teacherId, user.role);
     const mode = await this.attendanceRepository.getAttendanceMode();
 
     if (mode === 'daily') {
       // Daily mode: only the first teacher of the day creates a record.
       // Later teachers must correct it via updateStatus() rather than
       // creating a duplicate (which would double-count in analytics).
-      const existing = await this.attendanceRepository.findSameDayForStudentInSection(
+      await this.attendanceValidator.ensureNoDuplicateDailyAttendance(
         data.studentId,
         data.sectionId,
         data.date,
       );
-      if (existing) {
-        Err(409, this.at('dailyAlreadyMarked'));
-      }
     }
 
     // Resolve the marker's teacher assignment. In daily mode teacher/subject
@@ -151,33 +136,16 @@ export class AttendanceService {
     this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, targetDate, user.role);
 
-    const existing = await this.attendanceRepository.findSameDayForStudentInSection(
+    const existing = await this.attendanceValidator.ensureSameDayAttendanceExists(
       studentId, sectionId, targetDate,
     );
-    if (!existing) {
-      Err(404, this.at('noRecordToday'));
-    }
     await this.attendanceValidator.ensureExists(existing.id);
 
     await this.attendanceValidator.validateAttendanceDate(targetDate, user.role);
-    const isAdmin = user.role === 'admin' || user.role === 'principal';
     const teacherId = await this.teacherIdForUser(user);
-    const isTeacherOfSection = await this.attendanceRepository.isTeacherInSection(
-      teacherId ?? '', sectionId,
+    await this.attendanceValidator.validateStatusCorrection(
+      sectionId, existing.status, status, { role: user.role, teacherId },
     );
-    if (!isTeacherOfSection && !isAdmin) {
-      Err(403, this.at('notAuthorizedForSection'));
-    }
-
-    const allowed: Record<string, string[]> = {
-      absent: ['late', 'present'],
-      late: ['present'],
-      present: [],
-    };
-    const canTransition = allowed[existing.status]?.includes(status);
-    if (!canTransition && !isAdmin) {
-      Err(400, this.at('invalidTransition'));
-    }
 
     await this.attendanceRepository.update(existing.id, {
       status,
@@ -201,7 +169,7 @@ export class AttendanceService {
   }
 
   private async markStaffAttendance(data: Extract<CreateAttendanceDto, { type: 'staff' }>, user: { id: string; role?: string }) {
-    if (user.role !== 'admin' && user.role !== 'principal') Err(403, 'Staff attendance requires an administrator');
+    this.attendanceValidator.ensureStaffAttendanceAuthorized(user.role);
     const academicYearId = await this.yearForStaffMark(data.date);
     this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, data.date, user.role);
@@ -220,17 +188,7 @@ export class AttendanceService {
 
   @Transaction()
   async upsertStaffRoster(data: UpsertStaffAttendanceRosterDto, user: { id: string; role?: string }) {
-    const staffIds = data.items.map((item) => item.staffId);
-    if (new Set(staffIds).size !== staffIds.length) {
-      Err(400, this.at('duplicateStaffInRoster') || 'Each staff member may appear only once in a roster');
-    }
-
-    const dates = new Set(data.items.map((item) => item.date));
-    if (dates.size !== 1) {
-      Err(400, this.at('mixedRosterDates') || 'All staff attendance records must use the same date');
-    }
-
-    const [date] = dates;
+    const { staffIds, date } = this.attendanceValidator.ensureStaffRosterConsistent(data.items);
     await this.attendanceValidator.validateAttendanceDate(date, user.role);
     await this.attendanceValidator.ensureStaffRosterEligible(staffIds, date);
     const academicYearId = await this.yearForStaffMark(date);
@@ -238,9 +196,7 @@ export class AttendanceService {
     await this.years.resolveRecord(academicYearId, date, user.role);
 
     const saved = await this.attendanceRepository.upsertStaffRoster(data.items, user.id);
-    if (saved.savedCount !== data.items.length) {
-      Err(409, 'A staff attendance record belongs to another academic year');
-    }
+    this.attendanceValidator.ensureStaffRosterSaved(saved.savedCount, data.items.length);
     return saved;
   }
 
@@ -250,10 +206,7 @@ export class AttendanceService {
 
     const record = await this.getById(id, user.role);
     const teacherId = await this.teacherIdForUser(user);
-    if (user.role === 'teacher' && (record.type !== 'student' || !teacherId || !record.sectionId ||
-      !await this.attendanceRepository.isTeacherInSection(teacherId, record.sectionId))) {
-      Err(403, this.at('notAuthorizedForSection'));
-    }
+    await this.attendanceValidator.ensureTeacherCanUpdate(record, teacherId, user.role);
     return await this.attendanceRepository.update(id, attendanceData);
   }
 

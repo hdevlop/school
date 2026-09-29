@@ -5,25 +5,17 @@ import { BookOpen, Users, BarChart3, Clock, Award, Calendar, ClipboardCheck } fr
 import { FormInput } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-import { useWatch } from 'react-hook-form';
-import { getCurrentAcademicYear } from '@/lib/utils';
 import {
   buildAttendanceModeOptions,
   buildCalendarSystemOptions,
 } from '../../config/settingsOptions';
 
-const AcademicSection: React.FC = () => {
+const AcademicSection: React.FC<{ activeYear?: string | null }> = ({ activeYear }) => {
   const { t } = useTranslation();
 
   const calendarSystemOptions = buildCalendarSystemOptions(t);
 
   const attendanceModeOptions = buildAttendanceModeOptions(t);
-  const selectedYear = useWatch({ name: 'currentAcademicYear' });
-  const currentStartYear = Number(getCurrentAcademicYear().slice(0, 4));
-  const academicYears = Array.from(new Set([
-    ...Array.from({ length: 5 }, (_, index) => currentStartYear + 1 - index),
-    Number(selectedYear?.slice(0, 4)),
-  ].filter(Number.isInteger))).sort((a, b) => b - a);
 
   return (
     <div className='flex flex-col gap-3'>
@@ -33,15 +25,16 @@ const AcademicSection: React.FC = () => {
       </div>
 
       <div className="grid gap-2 sm:grid-cols-2">
-        <FormInput
-          name="currentAcademicYear"
-          type="select"
-          formLabel={t('settings.school.currentAcademicYear')}
-          icon={Calendar}
-          iconColor="#ec4899"
-          items={academicYears.map((year) => ({ value: `${year}-${year + 1}`, label: `${year}-${year + 1}` }))}
-          required={true}
-        />
+        {/* Shown, never chosen here: the active year moves only when a
+            registered year is activated, and the server refuses any other. */}
+        <div className="flex flex-col gap-1.5">
+          <Label>{t('settings.school.currentAcademicYear')}</Label>
+          <div className="flex h-9 items-center gap-2 rounded-md border bg-muted px-3 text-sm">
+            <Calendar className="h-4 w-4 shrink-0" style={{ color: '#ec4899' }} aria-hidden />
+            {activeYear || '—'}
+          </div>
+          <p className="text-xs text-muted-foreground">{t('settings.school.currentAcademicYearLocked')}</p>
+        </div>
 
         <FormInput
           name="attendanceRequirement"

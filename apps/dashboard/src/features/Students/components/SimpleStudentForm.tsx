@@ -1,6 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query';
+import { getStudentEnrollmentsApi } from '@/services/studentEnrollmentApi';
+import type { StudentYearEnrollment } from '@/services/studentEnrollmentApi';
+import { studentEnrollmentCorrection } from '../config/studentCorrection';
+import { isDateOnly } from '@sms/contracts/academic-years';
 import { AvatarFormInput, NForm, useDialog } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
@@ -51,17 +56,35 @@ export const getStudentDefaultValues = (student = null, businessDate?: string | 
   return defaultValues;
 }
 
-const SimpleStudentForm = ({ student = null, classes = [] }) => {
+const SimpleStudentForm = ({ student = null, classes = [], canCorrect = false }) => {
 
   const { pop } = useDialog()
+  const { t } = useTranslation();
+  const { data: history, isFetching, error } = useQuery({
+    queryKey: ['student-enrollments', student?.id],
+    queryFn: () => getStudentEnrollmentsApi(student.id),
+    enabled: canCorrect && !!student?.enrollment?.id,
+    refetchOnMount: 'always', refetchOnWindowFocus: false,
+  });
+  const [enrollment, setEnrollment] = useState<StudentYearEnrollment | null | undefined>();
+  useEffect(() => {
+    if (history && !isFetching) setEnrollment((snapshot) => snapshot === undefined
+      ? history.find((row) => row.id === student?.enrollment?.id) ?? null : snapshot);
+  }, [history, isFetching, student?.enrollment?.id]);
+  const latest = enrollment?.placements[0];
+  const editable = canCorrect && !!latest;
+  if (canCorrect && student?.enrollment?.id && (enrollment === undefined || error)) {
+    return <p role={error ? 'alert' : 'status'}>{error ? String(error.message) : t('common.loading')}</p>;
+  }
 
   const handleSubmit = async (studentData) => {
-    const { addressLocation, ...fields } = studentData
-    // Class, section and enrollment status change through the School years
-    // tab's dated records; the server refuses them in a profile edit.
-    for (const field of PLACEMENT_FIELDS) delete fields[field]
+    const enrollmentCorrection = studentEnrollmentCorrection(editable ? enrollment : undefined, studentData);
+    const { addressLocation, ...fields } = studentData;
+    for (const field of [...PLACEMENT_FIELDS, 'correctionPlacementId', 'yearEnrolledOn', 'yearLeftOn', 'yearStatus',
+      'placementValidFrom', 'placementValidTo', 'correctionReason']) delete fields[field];
     pop({
       ...fields,
+      ...(enrollmentCorrection ? { enrollmentCorrection } : {}),
       address: addressLocation.address,
       addressLatitude: addressLocation.latitude ?? null,
       addressLongitude: addressLocation.longitude ?? null,
@@ -81,14 +104,53 @@ const SimpleStudentForm = ({ student = null, classes = [] }) => {
   return (
     <NForm
       id='student-form'
-      schema={studentProfileEditSchema}
-      defaultValues={getStudentDefaultValues(student)}
+      schema={studentProfileEditSchema.superRefine((values, ctx) => {
+        const correction = studentEnrollmentCorrection(editable ? enrollment : undefined, values);
+        if (!correction) return;
+        if (!correction.reason?.trim()) ctx.addIssue({ code: 'custom', path: ['correctionReason'],
+          message: t('students.correction.requiredReason') });
+        for (const field of ['yearEnrolledOn', 'placementValidFrom', 'yearLeftOn', 'placementValidTo'] as const) {
+          if ((values[field] || field === 'yearEnrolledOn' || field === 'placementValidFrom') && !isDateOnly(values[field])) {
+            ctx.addIssue({ code: 'custom', path: [field], message: t('students.correction.invalidDates') });
+          }
+        }
+      })}
+      defaultValues={{ ...getStudentDefaultValues(student), ...(editable ? {
+        classId: latest.classId, sectionId: latest.sectionId,
+        correctionPlacementId: latest.id, yearEnrolledOn: enrollment.enrolledOn,
+        yearLeftOn: enrollment.leftOn ?? '', yearStatus: enrollment.status,
+        placementValidFrom: latest.validFrom, placementValidTo: latest.validTo ?? '', correctionReason: '',
+      } : {}) }}
       onSubmit={handleSubmit}
       devTools={{ enabled: isDevFill, fill }}
     >
-      <StudentFormContent classes={classes} student={student} placementReadOnly />
+      <StudentFormContent classes={classes} student={student} placementReadOnly={!editable} />
+      {editable && <CorrectionFields enrollment={enrollment} />}
     </NForm>
   )
+}
+
+function CorrectionFields({ enrollment }) {
+  const { t } = useTranslation();
+  const { setValue } = useFormContext();
+  return <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+    <FormInput name='correctionPlacementId' type='select' formLabel={t('students.correction.placement')}
+      items={enrollment.placements.map((p) => ({ value: p.id,
+        label: `${p.className} / ${p.sectionName} (${p.validFrom} – ${p.validTo ?? '…'})` }))}
+      onChange={(id) => {
+        const p = enrollment.placements.find((row) => row.id === id);
+        if (p) for (const [field, value] of Object.entries({ classId: p.classId, sectionId: p.sectionId,
+          placementValidFrom: p.validFrom, placementValidTo: p.validTo ?? '' })) setValue(field, value, { shouldDirty: true });
+      }} required />
+    <FormInput name='yearStatus' type='select' formLabel={t('students.correction.status')}
+      items={['active', 'withdrawn', 'graduated', 'transferred'].map((value) => ({ value,
+        label: value === 'active' ? t('students.status.active') : t(`students.enrollment.endStatus.${value}`) }))} required />
+    <FormInput name='yearEnrolledOn' type='date' formLabel={t('students.form.yearEnrolledOn')} required />
+    <FormInput name='yearLeftOn' type='date' formLabel={t('students.correction.leftOn')} />
+    <FormInput name='placementValidFrom' type='date' formLabel={t('students.correction.validFrom')} required />
+    <FormInput name='placementValidTo' type='date' formLabel={t('students.correction.validTo')} />
+    <FormInput name='correctionReason' type='textarea' formLabel={t('students.correction.reason')} />
+  </div>;
 }
 export const StudentFormContent = ({ classes = [], prefix = '', student: _student = null, showTransportToggle = false, showYearEnrollmentDate = false, placementReadOnly = false, onTransportToggle }: {
   classes?: any[]

@@ -24,8 +24,10 @@ export const formatAssignment = (assignment: any, language = 'en') => {
   return '-';
 };
 
+// Current assignments only; the list carries every year's history too.
 export const formatAssignments = (staff: any, language = 'en') => {
-  const assignments = Array.isArray(staff?.assignments) ? staff.assignments : [];
+  const assignments = (Array.isArray(staff?.assignments) ? staff.assignments : [])
+    .filter((assignment) => assignment.current !== false);
   if (!assignments.length) return '-';
   return assignments.map((assignment) => formatAssignment(assignment, language)).filter(Boolean).join(', ') || '-';
 };

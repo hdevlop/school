@@ -20,6 +20,10 @@ export class MaintenanceValidator {
     return data;
   }
 
+  ensureAssignedTo(assignedTo: string) {
+    if (!assignedTo || typeof assignedTo !== 'string') Err(400, 'Invalid assignedTo parameter');
+  }
+
   async checkMaintenanceExists(id: string) {
     const maintenance = await this.maintenanceRepository.getById(id);
     if (!maintenance) {

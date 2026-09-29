@@ -19,7 +19,7 @@ Use this skill for work inside this School Management System repo.
 - Any agent or sub-agent working on a task covered by this skill must follow this skill in addition to `AGENTS.md`.
 - Do not switch to bash, curl, or hand-built JSON payloads for MCP work when PowerShell `Invoke-RestMethod` plus `ConvertTo-Json` will do the job.
 - For live dashboard data operations, use internal MCP or internal REST only. Do not use browser automation.
-- Login with `auth_login` first, reuse the bearer token, and omit `arguments` for no-input MCP tools.
+- Login through `POST /api/auth/login` first, reuse the access token as a bearer token, and omit `arguments` for no-input MCP tools.
 - Run `tools/list` early when the task depends on exact MCP tool names or schemas. Treat the live registry as source of truth over memory.
 - If MCP starts failing with `.next` chunk errors, DTO `ReferenceError`s, or unexplained `500`s, check `.next/dev/logs/next-development.log` and the referenced controller or DTO before changing unrelated code.
 - When this skill and a generic workflow conflict, prefer this skill for repo-specific Najm dashboard work.
@@ -35,9 +35,9 @@ Use this skill for work inside this School Management System repo.
 ## MCP Fast Path On Windows
 
 - This repo is usually operated from Windows PowerShell. Prefer PowerShell MCP calls over bash, curl, or shell-specific JSON escaping tricks.
-- MCP endpoint: `http://localhost:3000/api/mcp`
+- MCP endpoint: `http://localhost:3102/api/mcp` on the default dev port; use the running app's actual port.
 - Always send `Accept: application/json, text/event-stream`.
-- Login first with `auth_login`, then reuse the returned bearer token for the rest of the session.
+- Login first through `POST /api/auth/login`, then reuse the returned access token for MCP requests. Authentication is not exposed as MCP tools.
 - For tools with no input, omit the `arguments` key entirely instead of sending an empty object.
 - For tools with optional object input, use `arguments: [ordered]@{}` only when the tool actually expects an object and empty input is valid.
 - When testing or debugging MCP writes, call `tools/list` once first and inspect the live `inputSchema` for the target tool before assuming the payload shape.
@@ -46,23 +46,30 @@ Use this skill for work inside this School Management System repo.
 
 ### PowerShell MCP Pattern
 
+Authenticate through REST first, using the app's running port:
+
 ```powershell
+$loginBody = [ordered]@{
+  email = 'admin@admin.com'
+  password = 'ChangeMe123456'
+} | ConvertTo-Json
+$login = Invoke-RestMethod -Method Post `
+  -Uri 'http://localhost:3102/api/auth/login' `
+  -ContentType 'application/json' -Body $loginBody
+$accessToken = $login.data.accessToken
+
 $payload = [ordered]@{
   jsonrpc = '2.0'
   id = 1
   method = 'tools/call'
   params = [ordered]@{
-    name = 'auth_login'
-    arguments = [ordered]@{
-      email = 'admin@admin.com'
-      password = 'ChangeMe123456'
-    }
+    name = 'students_get_students'
   }
 } | ConvertTo-Json -Depth 20
 
 $response = Invoke-RestMethod -Method Post `
-  -Uri 'http://localhost:3000/api/mcp' `
-  -Headers @{ Accept = 'application/json, text/event-stream' } `
+  -Uri 'http://localhost:3102/api/mcp' `
+  -Headers @{ Accept = 'application/json, text/event-stream'; Authorization = "Bearer $accessToken" } `
   -ContentType 'application/json' `
   -Body $payload
 ```
@@ -76,7 +83,8 @@ $response = Invoke-RestMethod -Method Post `
 
 ### Transport Choice
 
-- Use MCP first for `auth_*`, `users_*`, `students_*`, `parents_*`, `fees_*`, and `fee-types_*`.
+- Use MCP first for `students_*`, `parents_*`, `fees_*`, and `fee-types_*`.
+- Manage users, roles and permissions through Najm's built-in REST routes; those resources have no MCP tools.
 - Use REST for classes, sections, settings, or any `multipart/form-data` flow.
 - Do not send files through MCP JSON.
 - For MCP-exposed bulk actions, prefer object payloads like `{ ids: [...] }` instead of top-level arrays.
@@ -84,7 +92,7 @@ $response = Invoke-RestMethod -Method Post `
 
 ### Auth
 
-- Use admin auth for students, parents, classes, sections, settings, and admin user tools.
+- Use admin auth for students, parents, classes, sections, settings, and user management.
 - Use accounting-capable auth for fees and fee types.
 - Only create a temporary accounting-capable user if fee work is blocked and no suitable user exists.
 
@@ -217,7 +225,6 @@ Check these when behavior matters more than docs:
 - `packages/server/src/modules/financial/payments/PaymentService.ts`
 - `packages/server/src/modules/financial/payments/PaymentValidator.ts`
 - `packages/server/src/modules/financial/allocations/AllocationRepository.ts`
-- `packages/server/src/modules/auth-tools/UserToolsController.ts`
 - `packages/server/src/modules/settings/SettingsController.ts`
 - `packages/server/src/shared/userPassword.ts`
 - `apps/dashboard/src/services/http.ts`

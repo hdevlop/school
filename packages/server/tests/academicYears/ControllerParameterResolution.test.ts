@@ -15,14 +15,16 @@ describe('Najm decorated request parameter resolution', () => {
     // omits later @User() or @Year() values or an optional body query at runtime.
     const handlers: Array<[string, (...args: any[]) => unknown, number]> = [
       ['attendance list', AttendanceController.prototype.listAll, 1],
-      ['dashboard widgets', DashboardController.prototype.getWidgets, 2],
-      ['finance KPI', FinanceDashboardController.prototype.getKpis, 1],
+      // The year comes from the request scope now, so these take no year argument.
+      ['dashboard widgets', DashboardController.prototype.getWidgets, 0],
+      ['finance KPI', FinanceDashboardController.prototype.getKpis, 0],
+      ['finance overdue', FinanceDashboardController.prototype.getOverdue, 1],
       ['fee create', FeeController.prototype.create, 2],
       ['routine list', ClassRoutineController.prototype.list, 1],
       ['staff roster', StaffController.prototype.getAttendanceRoster, 1],
       ['notification cron list', NotificationController.prototype.listRecent, 2],
-      ['student list', StudentController.prototype.getStudents, 2],
-      ['teacher students', TeacherController.prototype.getStudents, 4],
+      ['student list', StudentController.prototype.getStudents, 1],
+      ['teacher students', TeacherController.prototype.getStudents, 3],
     ];
     for (const [name, handler, count] of handlers) {
       expect(handler.length, name).toBe(count);

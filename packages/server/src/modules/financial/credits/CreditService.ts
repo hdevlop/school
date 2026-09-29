@@ -1,4 +1,5 @@
-import { Err, Service, Transaction } from '../../../najm';
+import { Service, Transaction } from '../../../najm';
+import { CreditValidator } from './CreditValidator';
 import { CreditRepository } from './CreditRepository';
 import { AllocationRepository } from '../allocations/AllocationRepository';
 import { AllocationService } from '../allocations/AllocationService';
@@ -20,6 +21,7 @@ export class CreditService {
     private installmentRepository: InstallmentRepository,
     private feeService: FeeService,
     private auditService: FinancialAuditService,
+    private validator: CreditValidator,
   ) { }
 
   async getByStudent(studentId: string) {
@@ -73,18 +75,14 @@ export class CreditService {
     );
     const requestedCents = toCents(dto.amount);
 
-    if (totalAvailable < requestedCents) {
-      Err(400, `Requested credit ${dto.amount} exceeds available balance ${(totalAvailable / 100).toFixed(2)}`);
-    }
+    this.validator.ensureAvailableBalance(dto.amount, requestedCents, totalAvailable);
 
     // A credit lot itself has no school year. Applying it targets only fees
     // charged to the selected year, including a different year from its receipt.
     const installments = await this.installmentRepository.getByStudentForAutoAllocationForUpdate(
       dto.studentId, this.year.label,
     );
-    if (!installments || installments.length === 0) {
-      Err(400, 'No installments available to apply credit to');
-    }
+    this.validator.ensureInstallmentsAvailable(installments);
 
     const installmentIds = installments.map((i) => i.id);
     const [completedMap, reservedMap] = await Promise.all([
@@ -116,9 +114,7 @@ export class CreditService {
       remainingCents -= allocCents;
     }
 
-    if (remainingCents > 0) {
-      Err(400, `Credit exceeds available installment balance by ${(remainingCents / 100).toFixed(2)}`);
-    }
+    this.validator.ensureFullyAllocated(remainingCents);
 
     // Walk lots FIFO. Each application links back to the source payment.
     const applications = [];

@@ -72,6 +72,14 @@ export type StudentFormValues = z.input<typeof studentSchema>;
 export const studentProfileEditSchema = studentSchema.extend({
   classId: optionalId,
   sectionId: optionalId,
+  status: z.string().nullish(),
+  correctionPlacementId: z.string().optional(),
+  yearEnrolledOn: z.string().optional(),
+  yearLeftOn: z.string().optional(),
+  yearStatus: z.enum(['active', 'withdrawn', 'graduated', 'transferred']).optional(),
+  placementValidFrom: z.string().optional(),
+  placementValidTo: z.string().optional(),
+  correctionReason: z.string().max(500).optional(),
 });
 
 /** The fields a profile edit leaves to the enrollment records. */

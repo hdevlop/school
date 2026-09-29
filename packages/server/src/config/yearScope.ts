@@ -15,6 +15,8 @@ import { TeacherProfileController } from '../modules/profiles/TeacherProfileCont
 import { AttendanceController } from '../modules/attendance/AttendanceController';
 import { DashboardController } from '../modules/dashboard/DashboardController';
 import { AcademicDashboardController } from '../modules/dashboard/academic/AcademicDashboardController';
+import { FinanceDashboardController } from '../modules/dashboard/finance/FinanceDashboardController';
+import { ParentController } from '../modules/parents/ParentController';
 import { GradeController } from '../modules/grades/GradeController';
 import { AllocationController } from '../modules/financial/allocations/AllocationController';
 import { CreditController } from '../modules/financial/credits/CreditController';
@@ -28,6 +30,8 @@ import { MaintenanceController } from '../modules/transport/maintenance/Maintena
 import { RefuelController } from '../modules/transport/refuels/RefuelController';
 import { StudentRouteController } from '../modules/transport/studentRoutes/StudentRouteController';
 import { StudentController } from '../modules/students/StudentController';
+import { TeacherController } from '../modules/teachers/TeacherController';
+import { StudentEnrollmentController } from '../modules/studentEnrollments/StudentEnrollmentController';
 import { VehicleAssignmentController } from '../modules/transport/vehicleAssignments/VehicleAssignmentController';
 
 /**
@@ -50,6 +54,8 @@ export const yearScopedModules = {
   'student-routes': StudentRouteController,
   'vehicle-assignments': VehicleAssignmentController,
   students: StudentController,
+  teachers: TeacherController,
+  'student-enrollments': StudentEnrollmentController,
   alerts: AlertController,
   announcements: AnnouncementController,
   behavior_rewards: BehaviorRewardController,
@@ -60,6 +66,7 @@ export const yearScopedModules = {
   exams: ExamController,
   events: EventController,
   'operations-dashboard': OperationsDashboardController,
+  parents: ParentController,
   'parent-profile': ParentProfileController,
   assessments: AssessmentController,
   'student-profile': StudentProfileController,
@@ -67,5 +74,6 @@ export const yearScopedModules = {
   attendance: AttendanceController,
   dashboard: DashboardController,
   'academic-dashboard': AcademicDashboardController,
+  'finance-dashboard': FinanceDashboardController,
   grades: GradeController,
 };

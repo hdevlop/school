@@ -1,4 +1,4 @@
-import { Err, Service } from '../../../najm';
+import { Service } from '../../../najm';
 import { MaintenanceRepository } from './MaintenanceRepository';
 import { MaintenanceValidator } from './MaintenanceValidator';
 import type { CreateMaintenanceDto, UpdateMaintenanceDto } from './MaintenanceDto';
@@ -39,9 +39,7 @@ export class MaintenanceService {
   }
 
   async getByAssignedTo(assignedTo: string) {
-    if (!assignedTo || typeof assignedTo !== 'string') {
-      Err(400, 'Invalid assignedTo parameter');
-    }
+    this.maintenanceValidator.ensureAssignedTo(assignedTo);
     return await this.maintenanceRepository.getByAssignedTo(assignedTo);
   }
 

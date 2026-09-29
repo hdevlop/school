@@ -1,7 +1,7 @@
 import { DB } from '../../database/db';
 import { alerts, classes, students, subjects, teachers, staff, studentEnrollments, studentEnrollmentPlacements, fees } from '../../database/schema';
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere } from '../../auth';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { count, eq, desc, sql, and, or, isNull, type SQL } from 'drizzle-orm';
@@ -23,13 +23,13 @@ export function alertVisibleInYear(yearId: string) {
   )!;
 }
 
-@Owned(Alert, AlertForTeacher, AlertUnderOwnAssignment, AlertForClass, AlertForAudience)
 @Repository()
 export class AlertRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
 
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Alert, AlertForTeacher, AlertUnderOwnAssignment, AlertForClass, AlertForAudience)
+  private ownedWhere!: OwnedWhere;
 
   private alertSelect = {
     id: alerts.id,
@@ -56,7 +56,7 @@ export class AlertRepository {
 
   /** What the signed-in reader may see in the selected year, narrowed by a read's own filters. */
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), alertVisibleInYear(this.year.id), ...filters);
+    return and(this.ownedWhere(), alertVisibleInYear(this.year.id), ...filters);
   }
 
   private joinedQuery() {

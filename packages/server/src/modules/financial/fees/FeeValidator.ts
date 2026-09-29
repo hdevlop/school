@@ -2,7 +2,7 @@ import { Err, I18n, Service } from '../../../najm';
 import { FeeRepository } from './FeeRepository';
 import { StudentValidator } from '../../students/StudentValidator';
 import { FeeTypeValidator } from '../feeTypes/FeeTypeValidator';
-import { getCurrentAcademicYear } from '../utils';
+import { FeeEffectiveDateError, getCurrentAcademicYear, isValidDateOnly } from '../utils';
 import { SettingsRepository } from '../../settings/SettingsRepository';
 
 @Service()
@@ -15,6 +15,67 @@ export class FeeValidator {
     private feeTypeValidator: FeeTypeValidator,
     private settingsRepository: SettingsRepository,
   ) { }
+
+  mapEffectiveDateError(error: unknown): never {
+    if (error instanceof FeeEffectiveDateError) Err(400, error.message);
+    throw error;
+  }
+
+  ensureWritableYear(year: { status: string }, role?: string) {
+    if (role && year.status === 'draft') Err(409, 'Fees cannot be charged to a draft academic year');
+  }
+
+  ensureSelectedFeeYear(academicYear: string | undefined, selectedYear: string) {
+    if (academicYear && academicYear !== selectedYear) Err(409, 'Fee year must match the selected academic year');
+  }
+
+  ensureSelectedFeeYears(fees: Array<{ academicYear?: string }>, selectedYear: string) {
+    for (const fee of fees) this.ensureSelectedFeeYear(fee.academicYear, selectedYear);
+  }
+
+  ensureStudentRecord<T>(student: T | null | undefined): T {
+    if (!student) Err(404, 'Student not found');
+    return student;
+  }
+
+  ensureEnrollmentDate(date: string) {
+    if (!isValidDateOnly(date)) Err(400, 'Student is missing a valid enrollment date');
+  }
+
+  ensureRosterDate(date: string, year: { reportingStartsOn: string; reportingEndsOn: string }, effectiveDate?: string | null) {
+    if (!isValidDateOnly(date) || date < year.reportingStartsOn || date > year.reportingEndsOn) {
+      Err(422, effectiveDate
+        ? 'Bulk fee effective date must belong to the selected academic year'
+        : 'Year-targeted class fees require an effective date for the dated roster');
+    }
+  }
+
+  ensureClassInYear(classes: Array<{ id: string }>, classId: string) {
+    if (!classes.some((schoolClass) => schoolClass.id === classId)) Err(422, 'Bulk fee class must belong to the selected academic year');
+  }
+
+  ensureSectionInClass(sections: Array<{ id: string }>, sectionId: string) {
+    if (!sections.some((section) => section.id === sectionId)) Err(422, 'Bulk fee section must belong to the selected class');
+  }
+
+  ensureEnrollmentFeeYear(fees: Array<{ academicYear?: string }>, enrollmentYear?: string) {
+    if (enrollmentYear && fees.some((fee) => fee.academicYear && fee.academicYear !== enrollmentYear)) {
+      Err(409, 'Student fee year must match the new enrollment year');
+    }
+  }
+
+  ensureYearUnchanged(academicYear: string | undefined, existingYear: string) {
+    if (academicYear && academicYear !== existingYear) Err(409, 'Changing a fee to another academic year requires a separate correction workflow');
+  }
+
+  ensureScheduleEditable(paymentCount: number) {
+    if (paymentCount > 0) Err(400, 'Cannot change fee schedule, amount, or student after payments have been recorded');
+  }
+
+  ensureRecalculationFee<T>(fee: T | null | undefined): T {
+    if (!fee) Err(404, 'Fee not found');
+    return fee;
+  }
 
   private async resolveAcademicYear(academicYear?: string | null) {
     if (academicYear) return academicYear;

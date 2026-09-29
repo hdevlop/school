@@ -3,6 +3,7 @@ import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmen
 import type {CreateStudentDto, CreateStudentsBulkDto, UpdateStudentDto,} from './StudentDto';
 import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { Year } from '../academicYears/requestYear';
 import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { FeeService } from '../financial/fees/FeeService';
 import { ParentService } from '../parents/ParentService';
@@ -15,6 +16,7 @@ import { nanoid } from 'nanoid';
 
 @Service()
 export class StudentService {
+  @Year() private readonly year!: ResolvedAcademicYear;
   @Events() private events!: EventService;
 
   constructor(
@@ -29,28 +31,29 @@ export class StudentService {
     private storage: StorageService,
   ) { }
 
-  async getCount(year: ResolvedAcademicYear) {
-    return this.studentRepository.getCount(year.id);
+  async getCount() {
+    return this.studentRepository.getCount();
   }
 
-  async getStudentsByGender(year: ResolvedAcademicYear) {
-    return this.studentRepository.getStudentsByGender(year.id);
+  async getStudentsByGender() {
+    return this.studentRepository.getStudentsByGender();
   }
 
-  async getAll(year: ResolvedAcademicYear, onDate?: string) {
-    if (onDate) this.studentValidator.ensureRosterDateWithinYear(onDate, year);
-    return this.studentRepository.getAll({ academicYearId: year.id, onDate });
+  async getAll(onDate?: string) {
+    if (onDate) this.studentValidator.ensureRosterDateWithinYear(onDate, this.year);
+    return this.studentRepository.getAll({ onDate });
   }
 
-  async getById(id: string, year: ResolvedAcademicYear) {
+  async getById(id: string) {
     const student = await this.studentValidator.ensureExists(id);
-    const [enrolled] = await this.studentRepository.getAll({ academicYearId: year.id, studentId: id });
+    const [enrolled] = await this.studentRepository.getAll({ studentId: id });
     return enrolled ?? {
       ...student,
       classId: null,
       sectionId: null,
       class: null,
       section: null,
+      status: null,
       enrollment: null,
       placement: null,
     };
@@ -73,6 +76,21 @@ export class StudentService {
 
   @Transaction()
   async create(data: CreateStudentDto, actorId?: string) {
+    return this.createStudent(data, actorId);
+  }
+
+  @Transaction()
+  async createForSeed(data: CreateStudentDto) {
+    if (!isSeeding()) throw new Error('Student demo creation requires seed mode');
+    const year = await this.studentEnrollments.resolveSeedStudentPlacement(
+      data.classId, data.sectionId, data.yearEnrolledOn,
+    );
+    // Enrollment actor fields reference a real account, so the newly provisioned
+    // student's user remains the fallback actor, as in ordinary seed creation.
+    return this.createStudent(data, undefined, year);
+  }
+
+  private async createStudent(data: CreateStudentDto, actorId?: string, seedYear?: ResolvedAcademicYear) {
     const parentsToProcess = [
       ...(data.parents || []),
       ...(data.parentIds || [])
@@ -85,7 +103,7 @@ export class StudentService {
     await this.studentValidator.ensurePhoneUnique(data.phone ?? undefined);
     await this.studentValidator.ensureClassAndSectionValid(data.classId, data.sectionId);
     this.studentValidator.ensureCreateAllowed(data);
-    const year = await this.studentEnrollments.resolveNewStudentPlacement(
+    const year = seedYear ?? await this.studentEnrollments.resolveNewStudentPlacement(
       data.classId, data.sectionId, data.yearEnrolledOn,
     );
 
@@ -151,7 +169,8 @@ export class StudentService {
     return student;
   }
 
-  async update(id: string, data: UpdateStudentDto) {
+  @Transaction()
+  async update(id: string, data: UpdateStudentDto, actor?: { id: string; role: string }) {
     // No 'password' here. A routine profile edit must not double as a
     // credential reset: that path has no audit, forces no replacement and
     // revokes no session. Recovery goes through the Reset access command.
@@ -163,11 +182,15 @@ export class StudentService {
       'name', 'studentCode', 'phone', 'address', 'addressPlaceId',
       'addressLatitude', 'addressLongitude', 'gender',
       'dateOfBirth', 'enrollmentDate', 'graduationDate', 'medicalConditions',
-      'status', 'classId', 'sectionId', 'previousSchool'
+      'previousSchool'
     ];
 
     const student = await this.studentValidator.ensureExists(id);
     await this.studentValidator.ensureProfileUpdateAllowed(student, data);
+    if (data.enrollmentCorrection) {
+      if (!actor) this.studentValidator.ensureCorrectionActor();
+      await this.studentEnrollments.correct(data.enrollmentCorrection.enrollmentId, data.enrollmentCorrection, actor!, id);
+    }
     await this.studentValidator.ensureCodeUnique(data.studentCode, id);
     await this.studentValidator.ensureEmailUnique(data.email, id);
     await this.studentValidator.ensurePhoneUnique(data.phone ?? undefined, id);
@@ -192,9 +215,9 @@ export class StudentService {
       await this.userService.update(student.userId, userData);
     }
     if (Object.keys(studentData).length > 0) {
-      return await this.studentRepository.update(id, studentData);
+      await this.studentRepository.update(id, studentData);
     }
-    return student;
+    return this.getById(id);
   }
 
   async delete(id: string) {
@@ -222,10 +245,18 @@ export class StudentService {
   }
 
   async createBulk(studentsData: CreateStudentsBulkDto) {
+    return this.createStudents(studentsData, (data) => this.create(data));
+  }
+
+  async createBulkForSeed(studentsData: CreateStudentsBulkDto) {
+    return this.createStudents(studentsData, (data) => this.createForSeed(data));
+  }
+
+  private async createStudents(studentsData: CreateStudentsBulkDto, create: (data: CreateStudentDto) => ReturnType<StudentService['create']>) {
     const createdStudents = [];
     for (const [index, studentData] of studentsData.entries()) {
       try {
-        const student = await this.create(studentData);
+        const student = await create(studentData);
         createdStudents.push(student);
       } catch (error) {
         this.studentValidator.handleBulkCreateFailure(error, studentData, index);

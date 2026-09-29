@@ -1,5 +1,4 @@
 import type { AttendanceService, AcademicYearValidator } from '@sms/server/modules/seed';
-import { seedAcademicYear } from './school-seed-data';
 
 function weightedAttendanceStatus(): string {
   // Realistic distribution: ~92% present. Previously 75% present / 10% late /
@@ -53,17 +52,19 @@ export async function seedAttendance(
   studentService: any,
   teacherService: any,
   staffService?: any,
+  seeded?: { studentIds: Set<string>; staffIds: Set<string> },
 ) {
   const now = new Date();
-  const yearStart = `${seedAcademicYear.slice(0, 4)}-09-01`;
+  const yearStart = year.instructionStartsOn;
   const academicYearStart = new Date(`${yearStart}T12:00:00.000Z`);
-  const instructionEnd = new Date(`${seedAcademicYear.slice(5)}-06-30T12:00:00.000Z`);
+  const instructionEnd = new Date(`${year.instructionEndsOn}T12:00:00.000Z`);
   const schoolDays = getSchoolDays(academicYearStart, now < instructionEnd ? now : instructionEnd);
-  if (schoolDays.length === 0) return { studentCount: 0, teacherCount: 0 };
+  if (schoolDays.length === 0) return { studentCount: 0, staffCount: 0, teacherCount: 0 };
 
   const sampledDays = schoolDays.filter(() => Math.random() < 0.6);
 
-  const allStudents = await studentService.getAll(year);
+  const allStudents = (await studentService.getAll())
+    .filter((student: any) => !seeded || seeded.studentIds.has(student.id));
   const studentAttendanceData: any[] = [];
   console.log(`  Attendance plan: ${sampledDays.length} sampled days, ${allStudents.length} students`);
   const logStudentBuildProgress = createProgressLogger('Student attendance generation', allStudents.length);
@@ -98,7 +99,7 @@ export async function seedAttendance(
     if (staffMember.id) staffById.set(staffMember.id, staffMember);
   });
 
-  const allStaff = [...staffById.values()];
+  const allStaff = [...staffById.values()].filter((member) => !seeded || seeded.staffIds.has(member.id));
   const staffAttendanceData: any[] = [];
   console.log(`  Attendance plan: ${allStaff.length} staff members`);
   const logStaffBuildProgress = createProgressLogger('Staff attendance generation', allStaff.length);

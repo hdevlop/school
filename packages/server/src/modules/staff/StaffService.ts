@@ -1,4 +1,4 @@
-import { Err, Events, EventService, Service, Transaction } from '../../najm';
+import { Events, EventService, Service, Transaction } from '../../najm';
 import { nanoid } from 'nanoid';
 
 import { AuthService, UserService } from '../../auth';
@@ -6,6 +6,8 @@ import { StorageService } from 'najm-storage';
 import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
 import { DriverRepository } from '../transport/drivers/DriverRepository';
 import { VehicleAssignmentRepository } from '../transport/vehicleAssignments/VehicleAssignmentRepository';
+import { VehicleAssignmentService } from '../transport/vehicleAssignments/VehicleAssignmentService';
+import { getBusinessDateOnly } from '../../shared/businessDate';
 import { StaffAssignmentRepository } from './StaffAssignmentRepository';
 import { StaffRepository } from './StaffRepository';
 import { StaffValidator } from './StaffValidator';
@@ -33,6 +35,7 @@ export class StaffService {
     private driverRepository: DriverRepository,
     private staffAssignmentRepository: StaffAssignmentRepository,
     private vehicleAssignmentRepository: VehicleAssignmentRepository,
+    private vehicleAssignments: VehicleAssignmentService,
   ) {
     this.roleSupport = {
       driver: {
@@ -64,18 +67,14 @@ export class StaffService {
   }
 
   private async provisionUser(data: CreateStaffDto, staffId: string) {
-    if (!data.email) {
-      Err(400, 'Email is required to create a staff login');
-    }
+    this.staffValidator.ensureLoginEmail(data.email);
     const genderSuffix = data.gender === 'F' ? 'female' : 'male';
     const image = await this.storage.processFile('staff', data.image, {
       filePath: `${staffId}_avatar.png`,
       fallback: `/images/${data.role}_${genderSuffix}.png`,
     });
     const role = await this.staffValidator.ensureRoleExists(data.role);
-    if (!role.accessRoleId) {
-      Err(400, 'This staff role does not grant app access');
-    }
+    this.staffValidator.ensureAppAccessRole(role.accessRoleId);
     // Seeding passes a password (account created silently, log-in-able);
     // the dashboard passes none, so the staff member is emailed a set-password
     // invite. The RBAC role comes from the staff role's mapped accessRoleId.
@@ -90,60 +89,16 @@ export class StaffService {
     return user.id as string;
   }
 
-  private ensureDriverProfile(profile?: Record<string, any>, partial = false) {
-    if (!profile) {
-      if (partial) return;
-      Err(400, 'Driver license profile is required');
-    }
-    const required = ['licenseNumber', 'licenseType', 'licenseExpiry'];
-    for (const key of required) {
-      if (!partial && !profile![key]) {
-        Err(400, `Driver ${key} is required`);
-      }
-    }
-  }
-
-  private ensureAssignments(role: string, assignments?: Record<string, any>[]) {
-    if (!assignments?.length) return;
-
-    for (const assignment of assignments) {
-      if (role === 'cleaner' && !assignment.zoneId) {
-        Err(400, 'Cleaner assignment requires a zone');
-      }
-      if (role === 'assistant' && !assignment.classId) {
-        Err(400, 'Assistant assignment requires a class');
-      }
-      if (role === 'busAssistant' && !assignment.vehicleId) {
-        Err(400, 'Bus assistant assignment requires a vehicle');
-      }
-      if (role === 'accountant' && !assignment.cycleId) {
-        Err(400, 'Accountant assignment requires a cycle');
-      }
-      if (role === 'security' && !assignment.zoneId) {
-        Err(400, 'Security assignment requires a zone');
-      }
-      if (role === 'driver' && !assignment.vehicleId) {
-        Err(400, 'Driver assignment requires a vehicle');
-      }
-    }
-  }
-
   // Driver assignments live in the transport vehicle_assignments table, keyed by the
-  // driver row (not staffId). Resolve the driver row first, then (re)link the vehicle.
-  private async syncDriverVehicle(staffId: string, assignments?: Record<string, any>[], replace = false) {
+  // driver row (not staffId). Resolve the driver row first, then link the vehicle.
+  private async linkDriverVehicle(staffId: string, assignments?: Record<string, any>[]) {
     const vehicleIds = (assignments ?? [])
       .map((assignment) => assignment.vehicleId)
       .filter((id): id is string => Boolean(id));
-
-    if (!replace && vehicleIds.length === 0) return;
+    if (vehicleIds.length === 0) return;
 
     const driver = await this.driverRepository.getByStaffId(staffId);
     if (!driver) return;
-
-    if (replace) {
-      await this.vehicleAssignmentRepository.deleteByDriverIdAcrossYears(driver.id);
-    }
-
     for (const vehicleId of vehicleIds) {
       await this.vehicleAssignmentRepository.create({
         vehicleId,
@@ -151,6 +106,21 @@ export class StaffService {
         status: 'active',
       });
     }
+  }
+
+  // An edit names the driver's current vehicle. It used to delete every year's
+  // vehicle assignments and insert the vehicles again as active from today, so
+  // ended assignments came back as current ones. Ended rows sent back with the
+  // form are left alone; a different vehicle is a reassignment from today.
+  private async syncDriverVehicle(staffId: string, assignments: Record<string, any>[]) {
+    const vehicleIds = [...new Set(assignments
+      .filter((assignment) => !assignment.status || assignment.status === 'active')
+      .map((assignment) => assignment.vehicleId)
+      .filter((id): id is string => Boolean(id)))];
+    this.staffValidator.ensureOneCurrentVehicle(vehicleIds);
+    const driver = await this.driverRepository.getByStaffId(staffId);
+    if (!driver || !vehicleIds.length) return;
+    await this.vehicleAssignments.assignDriverFromToday(driver.id, vehicleIds[0]);
   }
 
   private async deleteDriverProfile(staffId: string) {
@@ -166,15 +136,8 @@ export class StaffService {
   }
 
   async getAttendanceRoster(date?: string) {
-    const rosterDate = date ?? this.localDate();
-    return await this.staffRepository.getAttendanceRoster(rosterDate);
-  }
-
-  private localDate(date: Date = new Date()) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    // The school's day, not the server clock's.
+    return await this.staffRepository.getAttendanceRoster(date ?? getBusinessDateOnly());
   }
 
   async getById(id: string) {
@@ -183,8 +146,7 @@ export class StaffService {
 
   async getByEmployeeCode(employeeCode: string) {
     const row = await this.staffRepository.getByEmployeeCode(employeeCode);
-    if (!row) Err(404, 'Staff not found');
-    return row;
+    return this.staffValidator.ensureStaffRecord(row);
   }
 
   async getByRole(role: string) {
@@ -193,8 +155,7 @@ export class StaffService {
 
   async getByCin(cin: string) {
     const row = await this.staffRepository.getByCin(cin);
-    if (!row) Err(404, 'Staff not found');
-    return row;
+    return this.staffValidator.ensureStaffRecord(row);
   }
 
   async getByUserId(userId: string) {
@@ -216,9 +177,9 @@ export class StaffService {
 
     const staffId = data.id || nanoid(5);
     if (data.role === 'driver') {
-      this.ensureDriverProfile(data.profile);
+      this.staffValidator.ensureDriverProfile(data.profile);
     }
-    this.ensureAssignments(data.role, data.assignments);
+    this.staffValidator.ensureAssignments(data.role, data.assignments);
 
     // Auto-provision a login when the role grants app access and there's an email
     // to invite. Roles without an accessRoleId (e.g. cleaner) stay login-less.
@@ -266,7 +227,7 @@ export class StaffService {
     }
 
     if (data.role === 'driver') {
-      await this.syncDriverVehicle(staffRow.id, data.assignments);
+      await this.linkDriverVehicle(staffRow.id, data.assignments);
     } else if (data.assignments?.length) {
       await this.staffAssignmentRepository.createForRole(data.role, staffRow.id, data.assignments);
     }
@@ -290,7 +251,7 @@ export class StaffService {
       await this.staffValidator.ensureRoleExists(data.role);
     }
     if (data.assignments) {
-      this.ensureAssignments(data.role ?? existing.role, data.assignments);
+      this.staffValidator.ensureAssignments(data.role ?? existing.role, data.assignments);
     }
     const roleChanged = data.role !== undefined && data.role !== existing.role;
 
@@ -319,11 +280,15 @@ export class StaffService {
     if (data.emergencyPhone !== undefined) update.emergencyPhone = data.emergencyPhone || null;
     if (data.employeeCode !== undefined) update.employeeCode = data.employeeCode;
 
+    const today = getBusinessDateOnly();
     if (roleChanged) {
       if (existing.role === 'driver') {
+        const history = await this.staffRepository.countRecordedHistory(id);
+        this.staffValidator.ensureDriverRoleChangeKeepsHistory(history.vehicleAssignments);
         await this.deleteDriverProfile(id);
       } else {
-        await this.staffAssignmentRepository.deleteForRole(existing.role, id);
+        // The old role's assignments end today and stay in the history.
+        await this.staffAssignmentRepository.endCurrentForRole(existing.role, id, today);
       }
     }
 
@@ -331,13 +296,14 @@ export class StaffService {
       await this.userService.update(existing.userId, { email: data.email });
     }
 
-    const row = await this.staffRepository.update(id, update);
+    // An edit of assignments alone changes no staff column.
+    const row = Object.keys(update).length ? await this.staffRepository.update(id, update) : existing;
 
     const support = this.roleSupport[data.role ?? row.role];
     if (support && data.profile && Object.keys(data.profile).length > 0) {
       if ((data.role ?? row.role) === 'driver') {
         const existing = await this.driverRepository.getByStaffId(id);
-        this.ensureDriverProfile(data.profile, Boolean(existing));
+        this.staffValidator.ensureDriverProfile(data.profile, Boolean(existing));
       }
       await support.update(id, data.profile);
     }
@@ -345,9 +311,9 @@ export class StaffService {
     if (data.assignments) {
       const effectiveRole = data.role ?? row.role;
       if (effectiveRole === 'driver') {
-        await this.syncDriverVehicle(id, data.assignments, true);
+        await this.syncDriverVehicle(id, data.assignments);
       } else {
-        await this.staffAssignmentRepository.replaceForRole(effectiveRole, id, data.assignments);
+        await this.staffAssignmentRepository.syncCurrentForRole(effectiveRole, id, data.assignments, today);
       }
     }
 
@@ -364,9 +330,8 @@ export class StaffService {
     const linkedTeacher = await this.staffRepository.getLinkedTeacher(id);
     const linkedDriver = await this.staffRepository.getLinkedDriver(id);
 
-    if ((linkedTeacher || linkedDriver) && !options.allowLinked) {
-      Err(409, 'Cannot delete staff linked to an active teacher or driver');
-    }
+    this.staffValidator.ensureDeletionAllowed(Boolean(linkedTeacher || linkedDriver), options.allowLinked);
+    this.staffValidator.ensureNoRecordedHistory(await this.staffRepository.countRecordedHistory(id));
 
     // Role assignment FKs are onDelete: 'restrict', so clear them first.
     await this.staffAssignmentRepository.deleteAllForStaff(id);
@@ -389,5 +354,10 @@ export class StaffService {
 
   async deleteAll() {
     return await this.staffRepository.deleteAll();
+  }
+
+  @Transaction()
+  async clearAssignmentsForSeedReset() {
+    return this.staffAssignmentRepository.clearForSeedReset();
   }
 }

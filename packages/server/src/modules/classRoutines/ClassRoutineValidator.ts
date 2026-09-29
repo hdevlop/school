@@ -9,6 +9,32 @@ export class ClassRoutineValidator {
 
   constructor(private repository: ClassRoutineRepository) {}
 
+  ensureLayoutKeepsLessons(orphanedEntry: unknown) {
+    if (orphanedEntry) Err(409, t('classRoutines.errors.layoutRemovesLessons'));
+  }
+
+  ensureLayoutKeepsDuties(missingDutySlot: boolean) {
+    if (missingDutySlot) Err(409, t('classRoutines.errors.layoutRemovesDuties'));
+  }
+
+  ensureEntryVersion(currentVersion: number, expectedVersion: number | undefined, requiresVersion: boolean) {
+    if ((requiresVersion && expectedVersion === undefined) ||
+      (expectedVersion !== undefined && expectedVersion !== currentVersion)) {
+      Err(409, t('classRoutines.errors.staleEntry'));
+    }
+  }
+
+  ensureEntryWriteSucceeded<T>(entry: T | null | undefined) {
+    if (!entry) Err(409, t('classRoutines.errors.staleEntry'));
+    return entry;
+  }
+
+  ensureTeacherScheduleAccess(teacherId: string, user?: { role?: string; teacherId?: string }) {
+    if (user && !['admin', 'principal'].includes(user.role ?? '') && user.teacherId !== teacherId) {
+      Err(403, t('classRoutines.errors.forbidden'));
+    }
+  }
+
   // The selected year's timetable; another year's reads as not found.
   async ensureSchedule(id: string) {
     const schedule = await this.repository.getSchedule(id);

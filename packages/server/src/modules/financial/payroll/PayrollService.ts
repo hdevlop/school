@@ -1,4 +1,4 @@
-import { Err, Events, EventService, Service, Transaction } from '../../../najm';
+import { Events, EventService, Service, Transaction } from '../../../najm';
 import { PayrollRepository } from './PayrollRepository';
 import { PayrollValidator } from './PayrollValidator';
 import { StaffRepository } from '../../staff/StaffRepository';
@@ -15,6 +15,7 @@ import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents } from '../utils/money';
 import { getBusinessDate } from '../../../shared/businessDate';
+import { isSeeding } from '../../../shared/userPassword';
 
 const money = (value: unknown) => Number(value ?? 0);
 const toMoney = (value: number) => fromCents(Math.round(value * 100));
@@ -63,9 +64,20 @@ export class PayrollService {
    */
   @Transaction()
   async runPayroll({ period }: RunPayrollDto, processedBy?: string) {
+    return this.generatePayroll(period, processedBy);
+  }
+
+  @Transaction()
+  async runPayrollForSeed({ period }: RunPayrollDto, staffIds: Set<string>) {
+    if (!isSeeding()) throw new Error('Demo payroll requires seed mode');
+    return this.generatePayroll(period, undefined, staffIds);
+  }
+
+  private async generatePayroll(period: string, processedBy?: string, staffIds?: Set<string>) {
     this.payrollValidator.ensurePeriodInSelectedYear(period);
     const activeStaff = await this.staffRepository.getByStatus('active');
-    const eligible = activeStaff.filter((member) => calculateStaffBasePay(member) > 0);
+    const eligible = activeStaff.filter((member) =>
+      (!staffIds || staffIds.has(member.id)) && calculateStaffBasePay(member) > 0);
 
     const alreadyPaid = new Set(await this.payrollRepository.getStaffIdsWithPayslip(period));
     const toCreate = eligible.filter((member) => !alreadyPaid.has(member.id));
@@ -147,12 +159,10 @@ export class PayrollService {
       }, processedBy);
     }
 
-    const staff = await this.staffRepository.getById(staffId);
-    if (!staff) Err(404, 'Staff not found');
-    if (staff!.status !== 'active') Err(400, 'Only active staff can be paid');
+    const staff = this.payrollValidator.ensureActiveStaff(await this.staffRepository.getById(staffId));
 
     const base = calculateStaffBasePay(staff);
-    if (!(base > 0)) Err(400, 'Staff member has no compensation set');
+    this.payrollValidator.ensureCompensation(base);
 
     const row: Record<string, any> = {
       staffId,

@@ -34,7 +34,7 @@ const pastExam = {
   startTime: '09:00', endTime: '10:00', duration: 60, totalMarks: 20, passingMarks: 10,
 };
 
-async function create(year: string, body = pastExam) {
+async function create(year: string, body: Record<string, unknown> = pastExam) {
   const result = await request('/exams', year, 'POST', body);
   if (result.body.data?.id) created.push(result.body.data.id);
   return result;
@@ -59,7 +59,8 @@ afterAll(async () => {
 
 describe('authenticated Exams REST and MCP on the marked PostgreSQL fixture', () => {
   it('creates a past-year exam in that year only, and keeps reads and changes there', async () => {
-    const past = await create('2025-2026');
+    const past = await create('2025-2026', { ...pastExam, type: 'final',
+      totalMarks: 40, passingMarks: 15, status: 'completed' });
     expect(past.status).toBe(200);
     const id = past.body.data.id as string;
     expect(past.body.data.academicYearId).toBe('history-year-2025');
@@ -78,7 +79,10 @@ describe('authenticated Exams REST and MCP on the marked PostgreSQL fixture', ()
     expect((await request(`/grades/exam/${id}`, '2026-2027')).status).toBe(404);
     const corrected = await request(`/exams/${id}`, '2025-2026', 'PUT', { title: 'Corrected term exam' });
     expect(corrected.status).toBe(200);
-    expect((await request(`/exams/${id}`, '2025-2026')).body.data.title).toBe('Corrected term exam');
+    expect((await request(`/exams/${id}`, '2025-2026')).body.data).toMatchObject({
+      title: 'Corrected term exam', type: 'final', totalMarks: '40.00',
+      passingMarks: '15.00', status: 'completed',
+    });
     expect((await request(`/exams/${id}`, '2025-2026', 'DELETE')).status).toBe(200);
   });
 

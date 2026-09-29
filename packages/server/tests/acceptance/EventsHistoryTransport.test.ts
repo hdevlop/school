@@ -68,7 +68,8 @@ describe('authenticated Events REST and MCP on the marked PostgreSQL fixture', (
   });
 
   it('creates a past-year event in that year only, and keeps reads and changes there', async () => {
-    const past = await create('2025-2026');
+    const past = await create('2025-2026', { ...pastEvent, visibility: 'private',
+      status: 'completed', registrationRequired: true });
     expect(past.status).toBe(200);
     const id = past.body.data.id as string;
 
@@ -85,6 +86,8 @@ describe('authenticated Events REST and MCP on the marked PostgreSQL fixture', (
     expect(moved.body.message).toBe("The event's dates must fall in the selected school year");
     const corrected = await request(`/events/${id}`, '2025-2026', 'PUT', { title: 'History science fair (corrected)' });
     expect(corrected.status).toBe(200);
+    expect((await request(`/events/${id}`, '2025-2026')).body.data)
+      .toMatchObject({ visibility: 'private', status: 'completed', registrationRequired: true });
     expect((await request(`/events/${id}`, '2025-2026', 'DELETE')).status).toBe(200);
   });
 

@@ -2,7 +2,7 @@ import { DB } from '../../database/db';
 import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
 import { eq, count, countDistinct, and, desc, inArray, sql, type SQL } from 'drizzle-orm';
 import { Repository } from '../../najm';
-import { Owned } from '../../auth';
+import { Owned, type OwnedWhere } from '../../auth';
 import { jsonAgg } from '../../shared';
 import { Class } from './ClassGuards';
 import { Year } from '../academicYears/requestYear';
@@ -101,11 +101,11 @@ export const parentSelect = {
   updatedAt: parents.updatedAt,
 };
 
-@Owned(Class)
 @Repository()
 export class ClassRepository {
   declare db: DB;
-  declare ownershipCondition: () => SQL | undefined;
+  @Owned(Class)
+  private ownedWhere!: OwnedWhere;
   @Year() private readonly year!: ResolvedAcademicYear;
 
   // A class belongs to the year it was registered for.
@@ -114,7 +114,7 @@ export class ClassRepository {
   }
 
   private readCondition(...filters: (SQL | undefined)[]) {
-    return and(this.ownershipCondition(), this.inSelectedYear(), ...filters);
+    return and(this.ownedWhere(), this.inSelectedYear(), ...filters);
   }
 
   // ========================================
@@ -164,7 +164,7 @@ export class ClassRepository {
   // A reference lookup in any year, for modules that check a class they were
   // given against their own year rules.
   async getById(id) {
-    const [result] = await this.selectClasses(and(this.ownershipCondition(), eq(classes.id, id)))
+    const [result] = await this.selectClasses(and(this.ownedWhere(), eq(classes.id, id)))
       .limit(1);
     return result;
   }

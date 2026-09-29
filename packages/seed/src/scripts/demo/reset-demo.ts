@@ -150,8 +150,11 @@ runSeedTask('demo reset', async (server) => {
   await studentService.deleteAll();
   console.log('✅ Students cleared');
 
-  await teacherService.deleteAll();
+  await teacherService.clearForSeedReset();
   console.log('✅ Teachers cleared');
+
+  await staffService.clearAssignmentsForSeedReset();
+  console.log('✅ Staff assignments cleared');
 
   await vehicleService.deleteAll();
   console.log('✅ Vehicles cleared');
@@ -162,7 +165,7 @@ runSeedTask('demo reset', async (server) => {
   await staffService.deleteAll();
   console.log('✅ Staff cleared');
 
-  await parentService.deleteAll();
+  await parentService.clearForSeedReset();
   console.log('✅ Parents cleared');
 
   await sectionService.clearForSeedReset();

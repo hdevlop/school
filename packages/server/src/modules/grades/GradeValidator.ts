@@ -8,6 +8,10 @@ import { AssessmentValidator } from '../assessments/AssessmentValidator';
 import { ExamValidator } from '../exams/ExamValidator';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { academicSourceContextIssue, targetSectionIds, type SectionContext } from '../academicSources/academicSourceContext';
+import type { ExamRepository } from '../exams/ExamRepository';
+
+type GradeSourceContext = NonNullable<Awaited<ReturnType<ExamRepository['getSourceContext']>>>;
 
 @Service()
 export class GradeValidator {
@@ -27,6 +31,72 @@ export class GradeValidator {
   /** A grade is recorded in the year the request selected: its source's year must be that one. */
   ensureSelectedYear(yearId: string) {
     if (yearId !== this.year.id) Err(409, this.gt('outsideSelectedYear'));
+  }
+
+  async ensureTeacherOwnsSource(user: { id: string; role?: string }, teacherId: string | null | undefined) {
+    if (user.role !== 'teacher') return;
+    const callerTeacherId = await this.gradeRepository.teacherIdForUser(user.id);
+    if (!callerTeacherId || callerTeacherId !== teacherId) {
+      Err(403, 'A teacher can grade only their own assessment or exam');
+    }
+  }
+
+  ensureEligibleGradeSource(data: { assessmentId?: string | null; examId?: string | null }) {
+    if (Boolean(data.assessmentId) === Boolean(data.examId)) {
+      Err(400, 'A grade needs exactly one assessment or exam');
+    }
+  }
+
+  ensureSourceExists(source: GradeSourceContext | null | undefined) {
+    if (!source) Err(404, 'Grade source not found');
+    return source;
+  }
+
+  ensureSourceTeachingAssignment(source: GradeSourceContext) {
+    if (!source.teacherId || !source.subjectId) Err(409, 'Grade source has no teaching assignment');
+    return { teacherId: source.teacherId, subjectId: source.subjectId };
+  }
+
+  ensureSourceAssignmentMatches(source: GradeSourceContext, teacherId: string | null, subjectId: string | null) {
+    if (source.teacherId !== teacherId || source.subjectId !== subjectId) {
+      Err(409, 'Grade teacher and subject must match the source assignment');
+    }
+  }
+
+  ensureSourceContextResolved(source: GradeSourceContext, sections: Map<string, SectionContext>) {
+    const yearLabel = source.classAcademicYear;
+    if (!yearLabel) Err(409, 'Grade source has no registered class year');
+    const contextIssue = academicSourceContextIssue(source, sections, yearLabel);
+    if (contextIssue) Err(409, `Grade source context is unresolved: ${contextIssue}`);
+    return yearLabel;
+  }
+
+  ensureSourceYearValid(source: GradeSourceContext, year: ResolvedAcademicYear) {
+    if (year.status === 'draft') Err(409, 'Grades cannot be recorded in a draft year');
+    if (source.academicYearId && source.academicYearId !== year.id) {
+      Err(409, 'Grade source registered year conflicts with its assignment');
+    }
+    if (source.date < year.reportingStartsOn || source.date > year.reportingEndsOn) {
+      Err(409, 'Grade source date is outside its academic year');
+    }
+  }
+
+  ensureSourceTargetsSection(source: GradeSourceContext, sectionId: string) {
+    if (!targetSectionIds(source).includes(sectionId)) Err(409, 'Grade section is not targeted by its source');
+  }
+
+  ensureDatedPlacement(isPlaced: boolean) {
+    if (!isPlaced) Err(409, 'Student has no dated placement in the grade section on the source date');
+  }
+
+  ensureTargetSection(sectionId: string | null | undefined) {
+    if (!sectionId) Err(400, 'Choose a target section for this grade');
+    return sectionId;
+  }
+
+  ensureDemoSourceYear(source: GradeSourceContext | null | undefined) {
+    if (!source?.academicYearId) Err(409, 'Demo grade source has no registered academic year');
+    return source.academicYearId;
   }
 
   async ensureExists(id: string) {

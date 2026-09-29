@@ -28,7 +28,11 @@ const vehicleSchema = z.object({
 
 export const createVehicleDto = vehicleSchema;
 export const createVehiclesBulkDto = z.array(createVehicleDto);
-export const updateVehicleDto = createVehicleDto.partial();
+export const updateVehicleDto = createVehicleDto.partial().extend({
+  type: vehicleTypeEnum.optional(),
+  image: vehicleSchema.shape.image.unwrap().optional(),
+  status: vehicleStatusEnum.optional(),
+});
 
 export const vehicleIdParam = z.object({ id: z.string().min(1) });
 

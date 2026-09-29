@@ -557,7 +557,9 @@ Use internal REST instead when:
 - the action needs `multipart/form-data`
 - a file upload is involved
 
-**MCP-first entities:** `auth_*`, `users_*`, `students_*`, `parents_*`, `fees_*`, `fee-types_*`
+**MCP-first entities:** `students_*`, `parents_*`, `fees_*`, `fee-types_*`
+
+User, role and permission management uses Najm's built-in REST routes; School exposes no MCP tools for these resources.
 
 **REST-only or REST-preferred:**
 - `GET /api/classes` and `GET /api/classes/:id/sections`
@@ -567,10 +569,10 @@ Use internal REST instead when:
 
 ### Auth
 
-- Admin auth for students, parents, classes, sections, settings, and admin user tools.
+- Admin auth for students, parents, classes, sections, settings, and user management.
 - Financial or accounting-capable auth for fees and fee types.
 - Prefer existing users first; only create a temporary accounting-capable user if fee work is blocked.
-- MCP login tool: `auth_login` — endpoint `POST /api/mcp`, Accept: `application/json, text/event-stream`
+- Login through `POST /api/auth/login`, then send the access token as a bearer token to `POST /api/mcp`, with Accept: `application/json, text/event-stream`. Authentication is not exposed as MCP tools.
 
 ### Student Workflow
 

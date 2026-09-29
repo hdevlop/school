@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
 import { TeacherDashboardService } from '../../src/modules/dashboard/teacher/TeacherDashboardService';
+import { TeacherDashboardValidator } from '../../src/modules/dashboard/teacher/TeacherDashboardValidator';
 
 const TODAY = '2026-09-28'; // a Monday
 const WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
@@ -113,6 +114,7 @@ function build(options: { mode?: 'daily' | 'per_class'; teacher?: unknown } = {}
     settingsRepository as any,
     academicYears as any,
     notifications as any,
+    new TeacherDashboardValidator(),
   );
   // 09:30 on the school clock: e1 is over, e2 is running, e3 starts in 90 minutes.
   service.now = () => new Date(`${TODAY}T09:30:00Z`);

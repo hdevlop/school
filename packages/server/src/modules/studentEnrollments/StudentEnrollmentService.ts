@@ -1,25 +1,22 @@
-import { Err, Service, Transaction } from '../../najm';
+import { Service, Transaction } from '../../najm';
+import { StudentEnrollmentValidator } from './StudentEnrollmentValidator';
 import { AcademicYearValidator } from '../academicYears/AcademicYearValidator';
 import { SettingsRepository } from '../settings/SettingsRepository';
-import { getBusinessDateOnly } from '../../shared/businessDate';
-import { isDateOnly } from '@sms/contracts/academic-years';
 import { AcademicYearMigrationIssueRepository } from '../academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 import { StudentEnrollmentRepository } from './StudentEnrollmentRepository';
-import type { CreateEnrollmentDto, EndEnrollmentDto, TransferEnrollmentDto } from './StudentEnrollmentDto';
-
-function nextDay(value: string) {
-  const date = new Date(`${value}T00:00:00.000Z`);
-  date.setUTCDate(date.getUTCDate() + 1);
-  return date.toISOString().slice(0, 10);
-}
+import type { CorrectEnrollmentDto, CreateEnrollmentDto, EndEnrollmentDto, TransferEnrollmentDto } from './StudentEnrollmentDto';
+import { Year } from '../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 
 @Service()
 export class StudentEnrollmentService {
+  @Year() private readonly year!: ResolvedAcademicYear;
   constructor(
     private enrollments: StudentEnrollmentRepository,
     private years: AcademicYearValidator,
     private settings: SettingsRepository,
     private migrationIssues: AcademicYearMigrationIssueRepository,
+    private validator: StudentEnrollmentValidator,
   ) {}
 
   @Transaction()
@@ -29,7 +26,7 @@ export class StudentEnrollmentService {
 
   async listByStudent(studentId: string) {
     const student = await this.enrollments.getStudent(studentId);
-    if (!student) Err(404, 'Student not found');
+    this.validator.ensureStudentExists(student);
     const annualRecords = await this.enrollments.listHistoryByStudent(studentId);
     return Promise.all(annualRecords.map(async (record) => ({
       ...record,
@@ -38,36 +35,65 @@ export class StudentEnrollmentService {
   }
 
   async getById(id: string) {
-    const enrollment = await this.enrollments.getById(id);
-    if (!enrollment) Err(404, 'Enrollment not found');
+    const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id));
     const placements = await this.enrollments.listPlacements(id);
     return { ...enrollment!, placements };
   }
 
+  async createInSelectedYear(data: CreateEnrollmentDto, actorId: string) {
+    this.validator.ensureSelectedYear(data.academicYearId, this.year.id);
+    return this.create(data, actorId);
+  }
+
+  @Transaction()
+  async correct(id: string, data: CorrectEnrollmentDto, actor: { id: string; role: string }, studentId?: string) {
+    this.validator.ensureCorrectionAllowed(actor.role);
+    const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id, true));
+    if (studentId && enrollment.studentId !== studentId) this.validator.ensureEnrollmentExists(null);
+    const before = await this.enrollments.listPlacements(id);
+    const student = this.validator.ensureStudentExists(await this.enrollments.getStudent(enrollment.studentId));
+    this.validator.ensureCorrection(enrollment, before, data, this.year, student.enrollmentDate);
+    await this.ensurePlacement(this.year.id, data.placement.classId, data.placement.sectionId);
+    const settings = await this.settings.getAdminSettings();
+    const active = settings?.activeAcademicYearId === this.year.id;
+    this.validator.ensureActiveEnrollmentDate(data.enrolledOn, active);
+    this.validator.ensureActiveTransferDate(data.placement.validFrom, active);
+    if (data.leftOn) this.validator.ensureActiveEndDate(data.leftOn, active);
+    const corrected = await this.enrollments.correct(id, data, actor.id);
+    this.validator.ensureDatedRecordsRemainValid(await this.enrollments.hasInvalidDatedRecords(enrollment.studentId));
+    const placements = await this.enrollments.listPlacements(id);
+    await this.enrollments.auditCorrection(id, actor.id, actor.role, data.reason,
+      { ...enrollment, placements: before }, { ...corrected, placements });
+    if (active) {
+      const latest = placements[0];
+      await this.enrollments.updateCurrentStudent(enrollment.studentId, latest.classId, latest.sectionId,
+        data.status === 'withdrawn' ? 'inactive' : data.status);
+    }
+    return { ...corrected, placements };
+  }
+
   private async ensurePlacement(yearId: string, classId: string, sectionId: string) {
     const year = await this.years.requireId(yearId);
-    if (year.status === 'draft') Err(409, 'Draft years only permit academic setup');
-    const placement = await this.enrollments.getClassAndSection(classId, sectionId);
-    if (!placement) Err(422, 'Section must belong to the selected class');
-    if (placement!.academicYear !== year.label) Err(422, 'Class belongs to another academic year');
+    this.validator.ensurePlacementYear(year.status);
+    const placement = this.validator.ensureClassSection(await this.enrollments.getClassAndSection(classId, sectionId));
+    this.validator.ensureClassYear(placement.academicYear, year.label);
     return year;
   }
 
   async resolveNewStudentPlacement(classId: string, sectionId: string, enrolledOn: string) {
-    if (!isDateOnly(enrolledOn)) Err(422, 'A real yearly enrollment date is required');
-    const placement = await this.enrollments.getClassAndSection(classId, sectionId);
-    if (!placement) Err(422, 'Section must belong to the selected class');
+    this.validator.ensureNewEnrollmentDate(enrolledOn);
+    const placement = this.validator.ensureClassSection(await this.enrollments.getClassAndSection(classId, sectionId));
     const year = await this.years.requireLabel(placement!.academicYear);
     const settings = await this.settings.getAdminSettings();
-    if (!settings?.activeAcademicYearId || settings.activeAcademicYearId !== year.id) {
-      Err(409, 'New student placement must belong to the active academic year');
-    }
-    if (year.status === 'draft' || enrolledOn < year.reportingStartsOn || enrolledOn > year.reportingEndsOn) {
-      Err(422, 'Yearly enrollment date must belong to the active academic year');
-    }
-    if (enrolledOn > getBusinessDateOnly()) {
-      Err(422, 'Active-year enrollment cannot start in the future');
-    }
+    this.validator.ensureNewStudentYear(year, settings?.activeAcademicYearId, enrolledOn);
+    return year;
+  }
+
+  /** Trusted demo setup uses the selected year without activating it. */
+  async resolveSeedStudentPlacement(classId: string, sectionId: string, enrolledOn: string) {
+    this.validator.ensureNewEnrollmentDate(enrolledOn);
+    const year = await this.ensurePlacement(this.year.id, classId, sectionId);
+    this.validator.ensureEnrollmentInYear(enrolledOn, year);
     return year;
   }
 
@@ -103,16 +129,12 @@ export class StudentEnrollmentService {
       this.enrollments.listAnnualRoster(targetYearId),
     ]);
     const unplaced = target.filter((record) => !record.lastPlacement);
-    if (unplaced.length) {
-      Err(409, `${unplaced.length} student(s) of the new year have no placement to project`);
-    }
+    this.validator.ensureProjectionPlacements(unplaced.length);
     const enrolled = new Set(target.map((record) => record.student.id));
     const decided = new Map(dispositions.map((item) => [item.studentId, item.outcome]));
     const undecided = source.filter((record) => !record.enrollment.leftOn &&
       !enrolled.has(record.student.id) && !decided.has(record.student.id));
-    if (undecided.length) {
-      Err(409, `${undecided.length} student(s) of the active year have no enrollment or outcome in the new year`);
-    }
+    this.validator.ensureProjectionOutcomes(undecided.length);
 
     let placed = 0;
     for (const record of target) {
@@ -135,21 +157,12 @@ export class StudentEnrollmentService {
   @Transaction()
   async create(data: CreateEnrollmentDto, actorId: string) {
     const year = await this.ensurePlacement(data.academicYearId, data.classId, data.sectionId);
-    if (data.enrolledOn < year.reportingStartsOn || data.enrolledOn > year.reportingEndsOn) {
-      Err(422, 'Enrollment date must belong to the selected year');
-    }
-    const student = await this.enrollments.getStudent(data.studentId);
-    if (!student) Err(404, 'Student not found');
-    if (student!.enrollmentDate && data.enrolledOn < student!.enrollmentDate) {
-      Err(422, 'Yearly enrollment cannot predate the original admission date');
-    }
-    if (await this.enrollments.getByStudentAndYear(data.studentId, year.id)) {
-      Err(409, 'Student is already enrolled in this year');
-    }
+    this.validator.ensureEnrollmentInYear(data.enrolledOn, year);
+    const student = this.validator.ensureStudentExists(await this.enrollments.getStudent(data.studentId));
+    this.validator.ensureAdmissionDate(data.enrolledOn, student.enrollmentDate);
+    this.validator.ensureEnrollmentUnique(await this.enrollments.getByStudentAndYear(data.studentId, year.id));
     const settings = await this.settings.getAdminSettings();
-    if (settings?.activeAcademicYearId === year.id && data.enrolledOn > getBusinessDateOnly()) {
-      Err(422, 'Active-year enrollment cannot start in the future');
-    }
+    this.validator.ensureActiveEnrollmentDate(data.enrolledOn, settings?.activeAcademicYearId === year.id);
     if (settings?.activeAcademicYearId === year.id && student!.classId && student!.sectionId &&
       (student!.classId !== data.classId || student!.sectionId !== data.sectionId) &&
       !await this.enrollments.hasRecordedPlacement(data.studentId, student!.classId, student!.sectionId)) {
@@ -182,23 +195,13 @@ export class StudentEnrollmentService {
 
   @Transaction()
   async transfer(id: string, data: TransferEnrollmentDto, actorId: string) {
-    const enrollment = await this.enrollments.getById(id);
-    if (!enrollment) Err(404, 'Enrollment not found');
-    if (enrollment!.leftOn) Err(409, 'Enrollment has ended');
+    const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id, true));
+    this.validator.ensureTransferable(enrollment.leftOn);
     const year = await this.ensurePlacement(enrollment!.academicYearId, data.classId, data.sectionId);
-    if (data.validFrom <= enrollment!.enrolledOn || data.validFrom > year.reportingEndsOn) {
-      Err(422, 'Transfer date is outside the enrollment interval');
-    }
-    const current = await this.enrollments.getOpenPlacement(id);
-    if (!current) Err(409, 'No open placement to transfer');
-    if (data.validFrom <= current!.validFrom) Err(422, 'Transfer must occur after the current placement starts');
-    if (current!.classId === data.classId && current!.sectionId === data.sectionId) {
-      Err(409, 'Student is already in that placement');
-    }
+    this.validator.ensureTransferDate(data.validFrom, enrollment.enrolledOn, year.reportingEndsOn);
+    const current = this.validator.ensureTransferPlacement(await this.enrollments.getOpenPlacement(id), data);
     const settings = await this.settings.getAdminSettings();
-    if (settings?.activeAcademicYearId === year.id && data.validFrom > getBusinessDateOnly()) {
-      Err(422, 'Active-year transfer cannot start in the future');
-    }
+    this.validator.ensureActiveTransferDate(data.validFrom, settings?.activeAcademicYearId === year.id);
     await this.enrollments.closePlacement(current!.id, data.validFrom);
     const placement = await this.enrollments.addPlacement({
       enrollmentId: id,
@@ -216,21 +219,13 @@ export class StudentEnrollmentService {
 
   @Transaction()
   async end(id: string, data: EndEnrollmentDto, actorId: string) {
-    const enrollment = await this.enrollments.getById(id);
-    if (!enrollment) Err(404, 'Enrollment not found');
-    if (enrollment!.leftOn) Err(409, 'Enrollment has already ended');
+    const enrollment = this.validator.ensureEnrollmentExists(await this.enrollments.getById(id, true));
+    this.validator.ensureCanEnd(enrollment.leftOn);
     const year = await this.years.requireId(enrollment!.academicYearId);
-    if (year.status === 'draft') Err(409, 'Draft years have no editable enrollments');
-    if (data.leftOn <= enrollment!.enrolledOn || data.leftOn > nextDay(year.reportingEndsOn)) {
-      Err(422, 'End date is outside the enrollment interval');
-    }
-    const current = await this.enrollments.getOpenPlacement(id);
-    if (!current) Err(409, 'No open placement to end');
-    if (data.leftOn <= current!.validFrom) Err(422, 'End date must follow the current placement start');
+    this.validator.ensureEndDate(data.leftOn, enrollment.enrolledOn, year);
+    const current = this.validator.ensureEndPlacement(await this.enrollments.getOpenPlacement(id), data.leftOn);
     const settings = await this.settings.getAdminSettings();
-    if (settings?.activeAcademicYearId === year.id && data.leftOn > getBusinessDateOnly()) {
-      Err(422, 'Active-year enrollment cannot end in the future');
-    }
+    this.validator.ensureActiveEndDate(data.leftOn, settings?.activeAcademicYearId === year.id);
     await this.enrollments.closePlacement(current!.id, data.leftOn);
     const ended = await this.enrollments.endEnrollment(id, data.leftOn, data.status, actorId);
     if (settings?.activeAcademicYearId === year.id) {

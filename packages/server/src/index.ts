@@ -11,6 +11,7 @@ import {
   validationConfig,
   rateLimitConfig,
   storageConfig,
+  guardConfig,
   mcpConfig,
   ragConfig,
   emailConfig,
@@ -36,6 +37,7 @@ export {
   validationConfig,
   rateLimitConfig,
   storageConfig,
+  guardConfig,
   mcpConfig,
   ragConfig,
   emailConfig,
@@ -54,6 +56,7 @@ export const server = new Server()
   .use(rateLimitConfig())
   .use(eventsConfig())
   .use(emailConfig())
+  .use(guardConfig())
   .use(authConfig())
   .use(mcpConfig())
   .use(storageConfig())

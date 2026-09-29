@@ -47,12 +47,14 @@ const FinanceKpis: React.FC = () => {
   const totalStudents = pickCountByIcon(widgets, 'studentImage');
   const totalTeachers = pickCountByIcon(widgets, 'teacherImage');
 
-  // A year other than the active one has no "this month": its cards show the
-  // whole year's cash instead, and name the year. Teachers are not recorded
-  // per year yet, so that card says it shows today's count.
-  const income = Number((isOtherYear ? kpis?.incomeYear : kpis?.incomeMonth) ?? 0);
-  const expenses = Number((isOtherYear ? kpis?.expensesYear : kpis?.expensesMonth) ?? 0);
-  const netBalance = Number((isOtherYear ? kpis?.netBalanceYear : kpis?.netBalance) ?? 0);
+  // Only the year that holds today has a "this month"; the server leaves it
+  // null for any other year, whose cards show the whole year's cash instead
+  // and name the year. Teachers are not recorded per year yet, so that card
+  // says it shows today's count.
+  const showYearCash = kpis ? kpis.incomeMonth == null : isOtherYear;
+  const income = Number((showYearCash ? kpis?.incomeYear : kpis?.incomeMonth) ?? 0);
+  const expenses = Number((showYearCash ? kpis?.expensesYear : kpis?.expensesMonth) ?? 0);
+  const netBalance = Number((showYearCash ? kpis?.netBalanceYear : kpis?.netBalance) ?? 0);
   const collectionRateYTD = Number(kpis?.collectionRateYTD ?? 0);
 
   return (
@@ -68,22 +70,22 @@ const FinanceKpis: React.FC = () => {
         icon={GraduationCap}
       />
       <KpiCard
-        title={isOtherYear ? t('dashboard.finance.incomeYear', { year }) : t('dashboard.finance.incomeMonth')}
+        title={showYearCash ? t('dashboard.finance.incomeYear', { year }) : t('dashboard.finance.incomeMonth')}
         value={majorMoney(income)}
         icon={TrendingUp}
       />
       <KpiCard
-        title={isOtherYear ? t('dashboard.finance.expensesYear', { year }) : t('dashboard.finance.expensesMonth')}
+        title={showYearCash ? t('dashboard.finance.expensesYear', { year }) : t('dashboard.finance.expensesMonth')}
         value={majorMoney(expenses)}
         icon={TrendingDown}
       />
       <KpiCard
-        title={isOtherYear ? t('dashboard.finance.netBalanceYear', { year }) : t('dashboard.finance.netBalance')}
+        title={showYearCash ? t('dashboard.finance.netBalanceYear', { year }) : t('dashboard.finance.netBalance')}
         value={majorMoney(netBalance)}
         icon={Wallet}
       />
       <KpiCard
-        title={isOtherYear ? t('dashboard.finance.collectionRateYear', { year }) : t('dashboard.finance.collectionRateYTD')}
+        title={showYearCash ? t('dashboard.finance.collectionRateYear', { year }) : t('dashboard.finance.collectionRateYTD')}
         value={percentFromHundred(collectionRateYTD)}
         icon={Target}
       />

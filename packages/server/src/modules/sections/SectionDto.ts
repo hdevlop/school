@@ -13,7 +13,10 @@ const sectionSchema = z.object({
 
 export const createSectionDto = sectionSchema.omit({ id: true });
 export const createSectionsBulkDto = z.array(createSectionDto);
-export const updateSectionDto = createSectionDto.partial();
+export const updateSectionDto = createSectionDto.partial().extend({
+  maxStudents: sectionSchema.shape.maxStudents.unwrap().optional(),
+  status: sectionStatusEnum.optional(),
+});
 export const sectionIdParam = z.object({ id: z.string().min(1) });
 
 export type CreateSectionDto = z.infer<typeof createSectionDto>;

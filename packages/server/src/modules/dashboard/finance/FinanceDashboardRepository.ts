@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { and, desc, eq, gt, gte, lt, lte, ne, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, gte, lt, lte, ne, sql, type AnyColumn, type SQL, type SQLWrapper } from 'drizzle-orm';
 import {
   expenses,
   feeInstallments,
@@ -17,18 +17,41 @@ import { DB } from '../../../database/db';
 import { formatDateOnly } from '../../financial/utils/dateOnly';
 import { getBusinessDate } from '../../../shared/businessDate';
 import { monthsBetween } from '@sms/contracts/academic-years';
+import { Year } from '../../academicYears/requestYear';
+import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
-// A school year as the finance dashboard counts it: fees by their stored
+const businessToday = () => formatDateOnly(getBusinessDate()) as string;
+
+/** Whole days from one date-only value to another. */
+const daysBetween = (from: string, to: string) => Math.round((Date.parse(to) - Date.parse(from)) / 86_400_000);
+
+// The day a receipt counts as cash: its settlement date, else its payment date.
+const cashDate = sql`COALESCE(${payments.settledDate}, ${payments.paymentDate})`;
+
+// Balances by how long past due they are on `today`.
+function agingBuckets(dueDate: AnyColumn | SQLWrapper, balance: SQLWrapper, today: string) {
+  const sumWhen = (condition: SQL) =>
+    sql<string>`COALESCE(SUM(CASE WHEN ${condition} THEN ${balance} ELSE 0 END), 0)`;
+  return {
+    current: sumWhen(sql`${dueDate} >= ${today}`),
+    d1_30: sumWhen(sql`${dueDate} < ${today} AND ${dueDate} >= (${today}::date - INTERVAL '30 days')`),
+    d31_60: sumWhen(sql`${dueDate} < (${today}::date - INTERVAL '30 days') AND ${dueDate} >= (${today}::date - INTERVAL '60 days')`),
+    d60plus: sumWhen(sql`${dueDate} < (${today}::date - INTERVAL '60 days')`),
+  };
+}
+
+// The finance dashboard's reads of the selected year: fees by their stored
 // year label, cash by date over the year's own reporting interval.
-export type FinanceYear = { label: string; reportingStartsOn: string; reportingEndsOn: string };
-
 @Repository()
 export class FinanceDashboardRepository {
+  @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
 
-  // Year-specific aging uses completed allocations rather than cached paid
-  // columns. A mixed-year receipt contributes only to its target installment.
-  private outstandingInstallments(academicYear: string) {
+  // The selected fee year's uncancelled installments, with what completed
+  // receipts paid on each. Every balance and collection figure reads these
+  // rather than the cached paid column, which stops following an installment
+  // once it is cancelled; a mixed-year receipt counts only toward its targets.
+  private yearInstallments() {
     const completed = this.db.select({
       installmentId: paymentAllocations.installmentId,
       feeId: paymentAllocations.feeId,
@@ -43,6 +66,8 @@ export class FinanceDashboardRepository {
       feeId: fees.id,
       studentId: fees.studentId,
       dueDate: feeInstallments.dueDate,
+      amount: feeInstallments.amount,
+      paid: sql<string>`COALESCE(${completed.paid}, 0)`.as('paid'),
       balance: sql<string>`GREATEST(${feeInstallments.amount} - COALESCE(${completed.paid}, 0), 0)`.as('balance'),
     }).from(feeInstallments)
       .innerJoin(fees, eq(feeInstallments.feeId, fees.id))
@@ -51,21 +76,33 @@ export class FinanceDashboardRepository {
         eq(completed.feeId, fees.id),
       ))
       .where(and(
-        eq(fees.academicYear, academicYear),
+        eq(fees.academicYear, this.year.label),
         ne(feeInstallments.status, 'cancelled'),
       ))
-      .as('year_outstanding_installments');
+      .as('year_installments');
   }
 
-  async getAging(academicYear: string) {
-    const today = formatDateOnly(getBusinessDate()) as string;
-    const outstanding = this.outstandingInstallments(academicYear);
-    const [row] = await this.db.select({
-      current: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} >= ${today} THEN ${outstanding.balance} ELSE 0 END), 0)`,
-      d1_30: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} < ${today} AND ${outstanding.dueDate} >= (${today}::date - INTERVAL '30 days') THEN ${outstanding.balance} ELSE 0 END), 0)`,
-      d31_60: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} < (${today}::date - INTERVAL '30 days') AND ${outstanding.dueDate} >= (${today}::date - INTERVAL '60 days') THEN ${outstanding.balance} ELSE 0 END), 0)`,
-      d60plus: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} < (${today}::date - INTERVAL '60 days') THEN ${outstanding.balance} ELSE 0 END), 0)`,
-    }).from(outstanding).where(gt(outstanding.balance, '0'));
+  // Cash moved over an inclusive date range, one condition per source:
+  // completed receipts by cash date; paid expenses by expense date, as the
+  // Expenses module totals them; paid payslips by payment date.
+  private receiptsIn(from: string, to: string) {
+    return and(eq(payments.status, 'completed'), gte(cashDate, from), lte(cashDate, to));
+  }
+
+  private expensesIn(from: string, to: string) {
+    return and(eq(expenses.status, 'paid'), gte(expenses.expenseDate, from), lte(expenses.expenseDate, to));
+  }
+
+  private payrollIn(from: string, to: string) {
+    return and(eq(payslips.status, 'paid'), gte(payslips.paymentDate, from), lte(payslips.paymentDate, to));
+  }
+
+  async getAging() {
+    const today = businessToday();
+    const installments = this.yearInstallments();
+    const [row] = await this.db.select(agingBuckets(installments.dueDate, installments.balance, today))
+      .from(installments)
+      .where(gt(installments.balance, '0'));
 
     return {
       current: Number(row?.current ?? 0),
@@ -75,54 +112,53 @@ export class FinanceDashboardRepository {
     };
   }
 
-  async getOverdue(limit: number, academicYear: string) {
-    const today = formatDateOnly(getBusinessDate()) as string;
-    const outstanding = this.outstandingInstallments(academicYear);
+  async getOverdue(limit: number) {
+    const today = businessToday();
+    const installments = this.yearInstallments();
     const rows = await this.db.select({
       studentId: students.id,
       studentName: students.name,
       studentImage: users.image,
       gender: students.gender,
-      totalOverdue: sql<string>`COALESCE(SUM(${outstanding.balance}), 0)`,
-      oldestDueDate: sql<string>`MIN(${outstanding.dueDate})`,
-    }).from(outstanding)
-      .innerJoin(students, eq(outstanding.studentId, students.id))
+      totalOverdue: sql<string>`COALESCE(SUM(${installments.balance}), 0)`,
+      oldestDueDate: sql<string>`MIN(${installments.dueDate})`,
+    }).from(installments)
+      .innerJoin(students, eq(installments.studentId, students.id))
       .leftJoin(users, eq(students.userId, users.id))
-      .where(and(lt(outstanding.dueDate, today), gt(outstanding.balance, '0')))
+      .where(and(lt(installments.dueDate, today), gt(installments.balance, '0')))
       .groupBy(students.id, students.name, users.image, students.gender)
-      .orderBy(sql`MIN(${outstanding.dueDate}) ASC`)
+      .orderBy(sql`MIN(${installments.dueDate}) ASC`)
       .limit(limit);
 
-    return rows.map((row) => ({
-      studentId: row.studentId,
-      studentName: row.studentName,
-      studentImage: row.studentImage,
-      gender: row.gender,
-      totalOverdue: Number(row.totalOverdue ?? 0),
-      daysOverdue: row.oldestDueDate
-        ? Math.floor((Date.now() - new Date(row.oldestDueDate).getTime()) / 86_400_000)
-        : 0,
-      oldestDueDate: row.oldestDueDate,
-    }));
+    return rows.map((row) => {
+      const oldestDueDate = formatDateOnly(row.oldestDueDate);
+      return {
+        studentId: row.studentId,
+        studentName: row.studentName,
+        studentImage: row.studentImage,
+        gender: row.gender,
+        totalOverdue: Number(row.totalOverdue ?? 0),
+        daysOverdue: oldestDueDate ? daysBetween(oldestDueDate, today) : 0,
+        oldestDueDate: row.oldestDueDate,
+      };
+    });
   }
 
-  async getAgingDetail(academicYear: string) {
-    const today = formatDateOnly(getBusinessDate()) as string;
-    const outstanding = this.outstandingInstallments(academicYear);
+  /** Detailed AR aging per student — one row per student with all four buckets. */
+  async getAgingDetail() {
+    const today = businessToday();
+    const installments = this.yearInstallments();
     const rows = await this.db.select({
       studentId: students.id,
       studentName: students.name,
       studentCode: students.studentCode,
-      current: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} >= ${today} THEN ${outstanding.balance} ELSE 0 END), 0)`,
-      d1_30: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} < ${today} AND ${outstanding.dueDate} >= (${today}::date - INTERVAL '30 days') THEN ${outstanding.balance} ELSE 0 END), 0)`,
-      d31_60: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} < (${today}::date - INTERVAL '30 days') AND ${outstanding.dueDate} >= (${today}::date - INTERVAL '60 days') THEN ${outstanding.balance} ELSE 0 END), 0)`,
-      d60plus: sql<string>`COALESCE(SUM(CASE WHEN ${outstanding.dueDate} < (${today}::date - INTERVAL '60 days') THEN ${outstanding.balance} ELSE 0 END), 0)`,
-      total: sql<string>`COALESCE(SUM(${outstanding.balance}), 0)`,
-    }).from(outstanding)
-      .innerJoin(students, eq(outstanding.studentId, students.id))
-      .where(gt(outstanding.balance, '0'))
+      ...agingBuckets(installments.dueDate, installments.balance, today),
+      total: sql<string>`COALESCE(SUM(${installments.balance}), 0)`,
+    }).from(installments)
+      .innerJoin(students, eq(installments.studentId, students.id))
+      .where(gt(installments.balance, '0'))
       .groupBy(students.id, students.name, students.studentCode)
-      .orderBy(sql`SUM(${outstanding.balance}) DESC`);
+      .orderBy(sql`SUM(${installments.balance}) DESC`);
 
     return rows.map((row) => ({
       studentId: row.studentId,
@@ -136,93 +172,35 @@ export class FinanceDashboardRepository {
     }));
   }
 
-  async getKpis(financeYear: FinanceYear) {
-    const now = getBusinessDate();
-    const monthStartDate = new Date(now.getFullYear(), now.getMonth(), 1);
-    const monthEndDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    const monthStart = formatDateOnly(monthStartDate) as string;
-    const monthEnd = formatDateOnly(monthEndDate) as string;
-    const today = formatDateOnly(now) as string;
-    const academicYear = financeYear.label;
+  /** What was due by today on the selected fee year's installments, and what completed receipts paid on them. */
+  async getCollectionTotals() {
+    const installments = this.yearInstallments();
+    const [row] = await this.db.select({
+      due: sql<string>`COALESCE(SUM(${installments.amount}), 0)`,
+      paid: sql<string>`COALESCE(SUM(${installments.paid}), 0)`,
+    }).from(installments)
+      .where(lte(installments.dueDate, businessToday()));
 
-    // The month's cash, and the whole year's for a dashboard viewing a year
-    // that is not the active one, where "this month" would not be that year.
-    const [month, year] = await Promise.all([
-      this.getCashTotals(monthStart, monthEnd),
-      this.getCashTotals(financeYear.reportingStartsOn, financeYear.reportingEndsOn),
-    ]);
-
-    // Collection rate YTD académique: due installments (academicYear, dueDate <= today)
-    const [collectionRow] = await this.db
-      .select({
-        due: sql<string>`COALESCE(SUM(${feeInstallments.amount}), 0)`,
-        paid: sql<string>`COALESCE(SUM(${feeInstallments.paidAmount}), 0)`,
-      })
-      .from(feeInstallments)
-      .innerJoin(fees, eq(feeInstallments.feeId, fees.id))
-      .where(
-        and(
-          eq(fees.academicYear, academicYear),
-          lte(feeInstallments.dueDate, today),
-        ),
-      );
-
-    const due = Number(collectionRow?.due ?? 0);
-    const paid = Number(collectionRow?.paid ?? 0);
-    const collectionRateYTD = due > 0 ? (paid / due) * 100 : 0;
-
-    return {
-      incomeMonth: month.income,
-      expensesMonth: month.expenses,
-      netBalance: month.income - month.expenses,
-      collectionRateYTD,
-      incomeYear: year.income,
-      expensesYear: year.expenses,
-      netBalanceYear: year.income - year.expenses,
-    };
+    return { due: Number(row?.due ?? 0), paid: Number(row?.paid ?? 0) };
   }
 
-  // Completed receipts by settlement (else payment) date, and cash out as
-  // expenses plus paid payroll, over an inclusive date range.
-  private async getCashTotals(from: string, to: string) {
+  /** Receipts in, and expenses plus paid payroll out, over an inclusive date range. */
+  async getCashTotals(from: string, to: string) {
     const [incomeRow] = await this.db
-      .select({
-        total: sql<string>`COALESCE(SUM(${payments.amount}), 0)`,
-      })
+      .select({ total: sql<string>`COALESCE(SUM(${payments.amount}), 0)` })
       .from(payments)
-      .where(
-        and(
-          eq(payments.status, 'completed'),
-          sql`COALESCE(${payments.settledDate}, ${payments.paymentDate}) >= ${from}`,
-          sql`COALESCE(${payments.settledDate}, ${payments.paymentDate}) <= ${to}`,
-        ),
-      );
+      .where(this.receiptsIn(from, to));
 
     const [expensesRow] = await this.db
-      .select({
-        total: sql<string>`COALESCE(SUM(${expenses.amount}), 0)`,
-      })
+      .select({ total: sql<string>`COALESCE(SUM(${expenses.amount}), 0)` })
       .from(expenses)
-      .where(
-        and(
-          gte(expenses.expenseDate, from),
-          lte(expenses.expenseDate, to),
-        ),
-      );
+      .where(this.expensesIn(from, to));
 
     // Payroll is a separate cash-out source (payslips, not expenses).
     const [payrollRow] = await this.db
-      .select({
-        total: sql<string>`COALESCE(SUM(${payslips.netAmount}), 0)`,
-      })
+      .select({ total: sql<string>`COALESCE(SUM(${payslips.netAmount}), 0)` })
       .from(payslips)
-      .where(
-        and(
-          eq(payslips.status, 'paid'),
-          gte(payslips.paymentDate, from),
-          lte(payslips.paymentDate, to),
-        ),
-      );
+      .where(this.payrollIn(from, to));
 
     return {
       income: Number(incomeRow?.total ?? 0),
@@ -230,53 +208,30 @@ export class FinanceDashboardRepository {
     };
   }
 
-  async getTrend(financeYear: FinanceYear) {
-    // One point per month of the year's reporting interval.
-    const { reportingStartsOn: windowStart, reportingEndsOn: windowEnd } = financeYear;
+  /** Cash in and out for each month of the selected year's reporting interval. */
+  async getMonthlyCash() {
+    const { reportingStartsOn: from, reportingEndsOn: to } = this.year;
 
+    const incomeMonth = sql<string>`TO_CHAR(${cashDate}, 'YYYY-MM')`;
     const incomeRows = await this.db
-      .select({
-        month: sql<string>`TO_CHAR(COALESCE(${payments.settledDate}, ${payments.paymentDate}), 'YYYY-MM')`,
-        total: sql<string>`COALESCE(SUM(${payments.amount}), 0)`,
-      })
+      .select({ month: incomeMonth, total: sql<string>`COALESCE(SUM(${payments.amount}), 0)` })
       .from(payments)
-      .where(
-        and(
-          eq(payments.status, 'completed'),
-          gte(sql`COALESCE(${payments.settledDate}, ${payments.paymentDate})`, windowStart),
-          lte(sql`COALESCE(${payments.settledDate}, ${payments.paymentDate})`, windowEnd),
-        ),
-      )
-      .groupBy(sql`TO_CHAR(COALESCE(${payments.settledDate}, ${payments.paymentDate}), 'YYYY-MM')`);
+      .where(this.receiptsIn(from, to))
+      .groupBy(incomeMonth);
 
+    const expenseMonth = sql<string>`TO_CHAR(${expenses.expenseDate}, 'YYYY-MM')`;
     const expenseRows = await this.db
-      .select({
-        month: sql<string>`TO_CHAR(${expenses.expenseDate}, 'YYYY-MM')`,
-        total: sql<string>`COALESCE(SUM(${expenses.amount}), 0)`,
-      })
+      .select({ month: expenseMonth, total: sql<string>`COALESCE(SUM(${expenses.amount}), 0)` })
       .from(expenses)
-      .where(
-        and(
-          gte(expenses.expenseDate, windowStart),
-          lte(expenses.expenseDate, windowEnd),
-        ),
-      )
-      .groupBy(sql`TO_CHAR(${expenses.expenseDate}, 'YYYY-MM')`);
+      .where(this.expensesIn(from, to))
+      .groupBy(expenseMonth);
 
+    const payrollMonth = sql<string>`TO_CHAR(${payslips.paymentDate}, 'YYYY-MM')`;
     const payslipRows = await this.db
-      .select({
-        month: sql<string>`TO_CHAR(${payslips.paymentDate}, 'YYYY-MM')`,
-        total: sql<string>`COALESCE(SUM(${payslips.netAmount}), 0)`,
-      })
+      .select({ month: payrollMonth, total: sql<string>`COALESCE(SUM(${payslips.netAmount}), 0)` })
       .from(payslips)
-      .where(
-        and(
-          eq(payslips.status, 'paid'),
-          gte(payslips.paymentDate, windowStart),
-          lte(payslips.paymentDate, windowEnd),
-        ),
-      )
-      .groupBy(sql`TO_CHAR(${payslips.paymentDate}, 'YYYY-MM')`);
+      .where(this.payrollIn(from, to))
+      .groupBy(payrollMonth);
 
     const incomeMap = new Map(incomeRows.map((r) => [r.month, Number(r.total)]));
     const expenseMap = new Map(expenseRows.map((r) => [r.month, Number(r.total)]));
@@ -285,37 +240,14 @@ export class FinanceDashboardRepository {
       expenseMap.set(r.month, (expenseMap.get(r.month) ?? 0) + Number(r.total));
     }
 
-    const monthly = monthsBetween(windowStart, windowEnd).map((key) => ({
+    return monthsBetween(from, to).map((key) => ({
       month: key,
       income: incomeMap.get(key) ?? 0,
       expenses: expenseMap.get(key) ?? 0,
     }));
-
-    const todayStr = formatDateOnly(getBusinessDate()) as string;
-    const [todayIncomeRow] = await this.db
-      .select({ total: sql<string>`COALESCE(SUM(${payments.amount}), 0)` })
-      .from(payments)
-      .where(and(eq(payments.status, 'completed'), sql`COALESCE(${payments.settledDate}, ${payments.paymentDate}) = ${todayStr}`));
-    const [todayExpenseRow] = await this.db
-      .select({ total: sql<string>`COALESCE(SUM(${expenses.amount}), 0)` })
-      .from(expenses)
-      .where(eq(expenses.expenseDate, todayStr));
-    const [todayPayrollRow] = await this.db
-      .select({ total: sql<string>`COALESCE(SUM(${payslips.netAmount}), 0)` })
-      .from(payslips)
-      .where(and(eq(payslips.status, 'paid'), eq(payslips.paymentDate, todayStr)));
-
-    const todayIncome = Number(todayIncomeRow?.total ?? 0);
-    const todayExpenses = Number(todayExpenseRow?.total ?? 0) + Number(todayPayrollRow?.total ?? 0);
-
-    return {
-      monthly,
-      today: todayIncome - todayExpenses,
-      todayIncome,
-      todayExpenses,
-    };
   }
 
+  /** The latest completed receipts whose cash date falls in the selected year. */
   async getRecentPayments(limit: number) {
     const rows = await this.db
       .select({
@@ -328,8 +260,8 @@ export class FinanceDashboardRepository {
       })
       .from(payments)
       .leftJoin(students, eq(payments.studentId, students.id))
-      .where(eq(payments.status, 'completed'))
-      .orderBy(desc(payments.paymentDate), desc(payments.createdAt))
+      .where(this.receiptsIn(this.year.reportingStartsOn, this.year.reportingEndsOn))
+      .orderBy(desc(cashDate), desc(payments.createdAt))
       .limit(limit);
 
     return rows.map((r) => ({
@@ -344,9 +276,9 @@ export class FinanceDashboardRepository {
 
   // ─── Reports ───────────────────────────────────────────────────────────────
 
-  /** Expense breakdown by category over a year's reporting interval. */
-  async getExpenseBreakdown(financeYear: FinanceYear) {
-    const { reportingStartsOn: windowStart, reportingEndsOn: windowEnd } = financeYear;
+  /** Paid expenses by category, and paid payroll, over the selected year's reporting interval. */
+  async getExpenseBreakdown() {
+    const { reportingStartsOn: from, reportingEndsOn: to } = this.year;
 
     const rows = await this.db
       .select({
@@ -355,12 +287,7 @@ export class FinanceDashboardRepository {
         count: sql<string>`COUNT(*)`,
       })
       .from(expenses)
-      .where(
-        and(
-          gte(expenses.expenseDate, windowStart),
-          lte(expenses.expenseDate, windowEnd),
-        ),
-      )
+      .where(this.expensesIn(from, to))
       .groupBy(expenses.category)
       .orderBy(sql`SUM(${expenses.amount}) DESC`);
 
@@ -371,13 +298,7 @@ export class FinanceDashboardRepository {
         count: sql<string>`COUNT(*)`,
       })
       .from(payslips)
-      .where(
-        and(
-          eq(payslips.status, 'paid'),
-          gte(payslips.paymentDate, windowStart),
-          lte(payslips.paymentDate, windowEnd),
-        ),
-      );
+      .where(this.payrollIn(from, to));
 
     const breakdown = rows.map((r) => ({
       category: r.category,
@@ -398,20 +319,16 @@ export class FinanceDashboardRepository {
   }
 
   /**
-   * Collection rate (paid / due) per class for a given academic year. The
-   * class is the one the student last sat in that year, from the year's dated
+   * Collection rate (paid / due) per class for the selected year. The class
+   * is the one the student last sat in that year, from the year's dated
    * placements. Only the active year may fall back to a student's current
    * class, which is that year's class; for any other year the current class
    * would be a false one, so an undated student counts under "No class".
    */
-  async getCollectionByClass(
-    academicYear: string,
-    context: { academicYearId: string | null; isActiveYear: boolean },
-  ) {
-    const today = formatDateOnly(getBusinessDate()) as string;
+  async getCollectionByClass(isActiveYear: boolean) {
+    const installments = this.yearInstallments();
 
     // One placement per enrollment, so a transfer does not count a fee twice.
-    // An unregistered label has no enrollments, so nothing joins.
     const lastPlacement = this.db.selectDistinctOn(
       [studentEnrollmentPlacements.enrollmentId], {
         enrollmentId: studentEnrollmentPlacements.enrollmentId,
@@ -419,13 +336,13 @@ export class FinanceDashboardRepository {
       },
     ).from(studentEnrollmentPlacements)
       .innerJoin(studentEnrollments, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
-      .where(eq(studentEnrollments.academicYearId, context.academicYearId ?? ''))
+      .where(eq(studentEnrollments.academicYearId, this.year.id))
       .orderBy(
         studentEnrollmentPlacements.enrollmentId,
         desc(studentEnrollmentPlacements.validFrom),
         desc(studentEnrollmentPlacements.id),
       ).as('collection_last_placement');
-    const yearClassId = context.isActiveYear
+    const yearClassId = isActiveYear
       ? sql`COALESCE(${lastPlacement.classId}, ${students.classId})`
       : lastPlacement.classId;
 
@@ -433,25 +350,19 @@ export class FinanceDashboardRepository {
       .select({
         classId: classes.id,
         className: classes.name,
-        due: sql<string>`COALESCE(SUM(${feeInstallments.amount}), 0)`,
-        paid: sql<string>`COALESCE(SUM(${feeInstallments.paidAmount}), 0)`,
+        due: sql<string>`COALESCE(SUM(${installments.amount}), 0)`,
+        paid: sql<string>`COALESCE(SUM(${installments.paid}), 0)`,
         studentCount: sql<string>`COUNT(DISTINCT ${students.id})`,
       })
-      .from(feeInstallments)
-      .innerJoin(fees, eq(feeInstallments.feeId, fees.id))
-      .innerJoin(students, eq(fees.studentId, students.id))
+      .from(installments)
+      .innerJoin(students, eq(installments.studentId, students.id))
       .leftJoin(studentEnrollments, and(
         eq(studentEnrollments.studentId, students.id),
-        eq(studentEnrollments.academicYearId, context.academicYearId ?? ''),
+        eq(studentEnrollments.academicYearId, this.year.id),
       ))
       .leftJoin(lastPlacement, eq(lastPlacement.enrollmentId, studentEnrollments.id))
-      .leftJoin(classes, and(eq(classes.id, yearClassId), eq(classes.academicYear, academicYear)))
-      .where(
-        and(
-          eq(fees.academicYear, academicYear),
-          lte(feeInstallments.dueDate, today),
-        ),
-      )
+      .leftJoin(classes, and(eq(classes.id, yearClassId), eq(classes.academicYear, this.year.label)))
+      .where(lte(installments.dueDate, businessToday()))
       .groupBy(classes.id, classes.name)
       .orderBy(classes.name);
 
@@ -468,6 +379,4 @@ export class FinanceDashboardRepository {
       };
     });
   }
-
-  /** Detailed AR aging per student — one row per student with all four buckets. */
 }

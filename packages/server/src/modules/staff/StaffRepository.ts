@@ -18,6 +18,11 @@ import {
   zones,
 } from '../../database/schema';
 import { Repository } from '../../najm';
+import { attendance } from '../attendance/attendanceSchema';
+import { payslips } from '../financial/payroll/payrollSchema';
+import { routineDuties } from '../classRoutines/ClassRoutineSchema';
+import { getBusinessDateOnly } from '../../shared/businessDate';
+import { isCurrentAssignment } from './StaffAssignmentRepository';
 import { and, count, desc, eq, gte, inArray, isNull, lte, notInArray, or, sql } from 'drizzle-orm';
 
 // Roles managed on their own dedicated page, excluded from the unified Staff list.
@@ -160,6 +165,9 @@ export class StaffRepository {
         id: vehicleAssignments.id,
         staffId: drivers.staffId,
         status: vehicleAssignments.status,
+        // The same dated interval as the other roles; the unassignment day is exclusive.
+        startDate: vehicleAssignments.assignmentDate,
+        endDate: vehicleAssignments.unassignmentDate,
         vehicleId: vehicleAssignments.vehicleId,
         vehicleName: vehicles.name,
         vehiclePlate: vehicles.licensePlate,
@@ -193,9 +201,17 @@ export class StaffRepository {
     busAssistantRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'busAssistant' }));
     driverRows.forEach((row) => addAssignment(row.staffId, { ...row, type: 'driver' }));
 
+    // Every year's assignments, each marked whether it holds on the business
+    // day: forms edit the current ones and leave the history as it is.
+    const today = getBusinessDateOnly();
     return rows.map((row) => ({
       ...row,
-      assignments: assignmentMap.get(row.id) || [],
+      assignments: (assignmentMap.get(row.id) || []).map((assignment) => ({
+        ...assignment,
+        current: assignment.type === 'driver'
+          ? assignment.status === 'active' && assignment.startDate <= today && (!assignment.endDate || assignment.endDate > today)
+          : isCurrentAssignment(assignment, today) && (!assignment.startDate || assignment.startDate <= today),
+      })),
     }));
   }
 
@@ -290,6 +306,19 @@ export class StaffRepository {
       .where(eq(teachers.staffId, staffId))
       .limit(1);
     return row ?? null;
+  }
+
+  /** Records other modules keep for this staff member; a delete would erase or orphan them. */
+  async countRecordedHistory(staffId: string) {
+    const [[pay], [marks], [duties], [vehicles]] = await Promise.all([
+      this.db.select({ count: count() }).from(payslips).where(eq(payslips.staffId, staffId)),
+      this.db.select({ count: count() }).from(attendance).where(eq(attendance.staffId, staffId)),
+      this.db.select({ count: count() }).from(routineDuties).where(eq(routineDuties.staffId, staffId)),
+      this.db.select({ count: count() }).from(vehicleAssignments)
+        .innerJoin(drivers, eq(vehicleAssignments.driverId, drivers.id))
+        .where(eq(drivers.staffId, staffId)),
+    ]);
+    return { payslips: pay.count, attendance: marks.count, duties: duties.count, vehicleAssignments: vehicles.count };
   }
 
   async getLinkedDriver(staffId: string) {

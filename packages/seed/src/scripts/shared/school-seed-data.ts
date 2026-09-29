@@ -8,6 +8,7 @@ import settingsData from '../school/data/settings.json';
 import { getConfiguredSeedAcademicYear } from './academic-year';
 
 export const seedAcademicYear = getConfiguredSeedAcademicYear();
+export const seedAcademicId = (id: string) => `${seedAcademicYear}-${id}`;
 
 export const normalizedSettingsData = {
   ...settingsData,
@@ -27,12 +28,14 @@ export const normalizedSubjectsData = subjectsData.map((subject) => ({
 
 export const normalizedSectionsData = sectionsData.map((section) => ({
   ...section,
+  id: seedAcademicId(section.id),
+  classId: seedAcademicId(section.classId),
   roomNumber: Number(section.roomNumber),
   status: 'active' as const,
 }));
 
 export const schoolSeedData = {
-  classesData: classesData.map((schoolClass) => ({ ...schoolClass, academicYear: seedAcademicYear })),
+  classesData: classesData.map((schoolClass) => ({ ...schoolClass, id: seedAcademicId(schoolClass.id), academicYear: seedAcademicYear })),
   feeTypesData,
   settingsData: normalizedSettingsData,
   sectionsData: normalizedSectionsData,

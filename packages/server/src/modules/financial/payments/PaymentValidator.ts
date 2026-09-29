@@ -10,6 +10,17 @@ import { createHash } from 'crypto';
 import type { CreatePaymentDto } from './PaymentDto';
 import { toCents } from '../utils/money';
 
+const ALLOWED_TRANSITIONS: Record<string, string[]> = {
+  pending: ['deposited', 'bounced', 'voided'],
+  deposited: ['completed', 'bounced', 'voided'],
+  completed: ['bounced', 'refunded', 'voided'],
+  bounced: [], refunded: [], voided: [], failed: [],
+};
+
+function canTransition(from: string, to: string) {
+  return from !== to && (ALLOWED_TRANSITIONS[from] || []).includes(to);
+}
+
 type FeeInstallmentSnapshot = {
   number?: number | string | null;
   amount?: number | string | null;
@@ -82,6 +93,49 @@ export class PaymentValidator {
     private allocationRepository: AllocationRepository,
     private installmentRepository: InstallmentRepository,
   ) { }
+
+  ensureAutoAllocationRemainder(remainingCents: number, keepRemainderAsCredit: boolean) {
+    if (remainingCents > 0 && !keepRemainderAsCredit) {
+      Err(400, `Payment amount exceeds available installment balance by ${(remainingCents / 100).toFixed(2)}; enable keepRemainderAsCredit to retain remainder`);
+    }
+  }
+
+  ensureRecordedRemainder(remainingCents: number, keepRemainderAsCredit: boolean) {
+    if (remainingCents > 0 && !keepRemainderAsCredit) {
+      Err(400, `Payment over-allocates by ${(remainingCents / 100).toFixed(2)}; set keepRemainderAsCredit to retain the remainder`);
+    }
+  }
+
+  ensureLockedPayment<T>(payment: T | null | undefined) {
+    if (!payment) Err(404, 'Payment not found');
+    return payment;
+  }
+
+  ensureHardDeleteDisabled(): never {
+    Err(400, 'Hard delete of payments is disabled. Use POST /payments/:id/void to mark a payment as voided.');
+  }
+
+  ensureRefundable(status: string) {
+    if (status !== 'completed') Err(400, 'Only completed payments can be refunded');
+  }
+
+  ensureVoidable(status: string) {
+    if (!canTransition(status, 'voided')) Err(409, `Cannot void payment in status ${status}`);
+  }
+
+  ensureCheckTransition(payment: { paymentMethod: string; status: string }, status: string) {
+    if (payment.paymentMethod !== 'check') Err(400, 'Check status changes are only allowed for check payments');
+    if (!canTransition(payment.status, status)) Err(409, `Cannot transition check from ${payment.status} to ${status}`);
+  }
+
+  ensureCheckInstallmentExists<T>(installment: T | null | undefined) {
+    if (!installment) Err(409, 'A check allocation target no longer exists');
+    return installment;
+  }
+
+  ensureCheckInstallmentCapacity(consumedCents: number, amountCents: number, number: number) {
+    if (consumedCents > amountCents) Err(409, `Check allocations exceed installment #${number}`);
+  }
 
   async isInstallmentExists(id) {
     return !!(await this.installmentRepository.getByIdAllYears(id));

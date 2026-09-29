@@ -8,7 +8,6 @@ import {
   getFinanceTrendApi,
   getFinanceAgingApi,
   getFinanceOverdueApi,
-  getFinanceRecentPaymentsApi,
   getFinanceExpenseBreakdownApi,
   getFinanceCollectionByClassApi,
   getFinanceAgingDetailApi,
@@ -22,7 +21,8 @@ import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 /**
  * The year a finance read names: the one passed in, else the viewed year,
  * else the active one. `isOtherYear` marks a year other than the active one,
- * whose "this month" and "today" figures would belong to another year.
+ * whose cards name the year. "This month" and "today" figures come from the
+ * server only for the year that holds today; for any other year they are null.
  */
 export const useDashboardYear = (academicYear?: string) => {
   const { viewingYear, isResolving } = useViewingAcademicYear();
@@ -118,16 +118,6 @@ export const useFinanceOverdue = (limit = 20) => {
   });
 };
 
-export const useFinanceRecentPayments = (limit = 10) => {
-  return useQuery({
-    queryKey: ['dashboard', 'finance', 'recent-payments', limit],
-    queryFn: () => getFinanceRecentPaymentsApi(limit),
-    staleTime: FINANCE_STALE,
-    refetchOnWindowFocus: false,
-    select: (response) => response?.data,
-  });
-};
-
 export const useFinanceExpenseBreakdown = (academicYear?: string) => {
   const { year, isReady } = useDashboardYear(academicYear);
   return useQuery({
@@ -175,8 +165,6 @@ export const useStaffAttendanceMonthly = () => {
     select: (response) => response?.data,
   });
 };
-
-export const useTeacherAttendanceMonthly = useStaffAttendanceMonthly;
 
 export const useFinanceAgingDetail = () => {
   const { viewingYear, isReady } = useViewedYear();

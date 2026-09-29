@@ -64,10 +64,8 @@ export function schoolMcpYearHooks(groups: readonly string[]) {
   // second input with the same name. Other fee tools use the shared input.
   const feeBodyYear = (tool: { group?: string; methodKey?: string | symbol }) =>
     tool.group === 'fees' && ['create', 'createClassBulk', 'update'].includes(String(tool.methodKey));
-  const studentQueryYear = (tool: { group?: string; methodKey?: string | symbol }) =>
-    tool.group === 'students' && ['getStudents', 'getStudent'].includes(String(tool.methodKey));
   const declaredYear = (tool: { group?: string; methodKey?: string | symbol }) =>
-    feeBodyYear(tool) || studentQueryYear(tool);
+    feeBodyYear(tool);
   return {
     toolInput: (tool: { group?: string; methodKey?: string | symbol }) => forScopedTool(tool) && !declaredYear(tool)
       ? { [ACADEMIC_YEAR_QUERY]: z.string().optional() }
