@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "fee_types_name_normalized_unique" ON "fee_types" USING btree (lower(btrim("name")));--> statement-breakpoint
+CREATE UNIQUE INDEX "roles_name_unique" ON "roles" USING btree ("name");

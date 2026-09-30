@@ -1,5 +1,5 @@
 import { Repository } from '../../../najm';
-import { eq, desc, count } from 'drizzle-orm';
+import { eq, desc, count, sql } from 'drizzle-orm';
 import { feeTypes } from '../../../database/schema';
 import { DB } from '../../../database/db';
 
@@ -54,7 +54,7 @@ export class FeeTypeRepository {
 
   async getByName(name: string) {
     const [feeType] = await this.buildFeeTypeQuery()
-      .where(eq(feeTypes.name, name))
+      .where(sql`lower(btrim(${feeTypes.name})) = lower(btrim(${name}))`)
       .limit(1);
     return feeType || null;
   }

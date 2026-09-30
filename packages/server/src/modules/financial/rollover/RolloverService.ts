@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { Service, Transaction } from '../../../najm';
+import { Err, Service, Transaction } from '../../../najm';
 import { RolloverValidator } from './RolloverValidator';
 import { RolloverRepository } from './RolloverRepository';
 import { FeeService } from '../fees/FeeService';
@@ -277,7 +277,6 @@ export class RolloverService {
     return run;
   }
 
-  @Transaction()
   private async commitProposed(runId: string, proposed: ProposedFee, toYear: string, actorId?: string) {
     const newFee = await this.feeService.create({
       studentId: proposed.studentId,
@@ -332,10 +331,19 @@ export class RolloverService {
     return completed;
   }
 
+  /**
+   * One transaction for the whole run. A crash or an unexpected error rolls
+   * every fee back and leaves the run previewed, so a retry bills the year
+   * once; a refused fee (4xx) rolls back only its own rows and is recorded.
+   * The year lock makes a concurrent commit of the same run wait and then
+   * return the committed run instead of writing it again.
+   */
+  @Transaction()
   async commit(dto: CommitRolloverDto, actorId?: string) {
     this.validator.ensureSeparateActivation(dto.confirmSettingsUpdate);
     await this.validateYears(dto);
     const payloadHash = hashPayload(dto);
+    await this.rolloverRepository.lockTargetYear(dto.toYear);
     const existing = this.validator.ensureMatchingPreview(
       await this.rolloverRepository.getRunByIdempotencyKey(dto.idempotencyKey), dto.runId, payloadHash,
     );
@@ -352,9 +360,12 @@ export class RolloverService {
     let errorCount = 0;
     for (const proposed of preview.details.proposedFees as ProposedFee[]) {
       try {
-        await this.commitProposed(existing!.id, proposed, dto.toYear, actorId);
+        await this.rolloverRepository.withinSavepoint(
+          () => this.commitProposed(existing!.id, proposed, dto.toYear, actorId),
+        );
         successCount++;
       } catch (error: any) {
+        if (!Err.is4xx(error)) throw error;
         await this.rolloverRepository.createRunItem({
           runId: existing!.id,
           studentId: proposed.studentId,

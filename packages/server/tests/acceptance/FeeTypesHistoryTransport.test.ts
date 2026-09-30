@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
 const adminPassword = process.env.SCHOOL_HISTORY_ADMIN_PASSWORD;
@@ -19,6 +19,7 @@ const base = 'http://school.local/api';
 const port = 5506;
 let token: string;
 let id: string | undefined;
+const raceName = `History fee type race ${suffix}`;
 
 async function request(path: string, year?: string, method = 'GET', data?: unknown) {
   const response = await server.fetch(new Request(`${base}${path}`, {
@@ -45,6 +46,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await server.stop();
   if (id) await db.delete(feeTypes).where(eq(feeTypes.id, id));
+  await db.delete(feeTypes).where(sql`lower(btrim(${feeTypes.name})) = lower(${raceName})`);
 });
 
 describe('authenticated shared fee type catalog', () => {
@@ -88,5 +90,21 @@ describe('authenticated shared fee type catalog', () => {
     } finally { await transport.close(); }
     expect((await request(`/fee-types/${id}`, '2024-2025', 'DELETE')).status).toBe(200);
     expect((await request(`/fee-types/${id}`, '2026-2027')).status).toBe(404);
+  });
+
+  it('creates one fee type when creates of one name race, whatever its case or spaces', async () => {
+    // Each create passes the service's name check before any of them writes;
+    // the normalized unique index decides, and the losers get the same 409.
+    const spellings = [raceName, raceName.toUpperCase(), `  ${raceName.toLowerCase()} `, raceName];
+    const results = await Promise.all(spellings.map((spelling) => request('/fee-types', '2026-2027', 'POST', {
+      name: spelling, category: 'tuition', amount: 50, paymentType: 'oneTime', status: 'active',
+    })));
+    expect(results.map((result) => result.status).sort()).toEqual([200, 409, 409, 409]);
+    for (const refused of results.filter((result) => result.status === 409)) {
+      expect(refused.body.message).toBe('A fee type with this name already exists');
+    }
+    const rows = await db.select({ id: feeTypes.id }).from(feeTypes)
+      .where(sql`lower(btrim(${feeTypes.name})) = lower(${raceName})`);
+    expect(rows).toHaveLength(1);
   });
 });

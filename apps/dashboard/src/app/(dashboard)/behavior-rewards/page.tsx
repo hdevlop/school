@@ -1,22 +1,10 @@
-'use client';
-
 import BehaviorRewardsTable from '@/features/BehaviorRewards/components/BehaviorRewardsTable';
-import { useAuth } from 'najm-auth/client/react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 
+// No role list here: the sidebar shows this page by `read:behavior-rewards`,
+// the list route refuses anyone else, and the table draws that refusal as
+// "access denied". A client redirect used to decide instead, from a copy of the
+// role names, and such redirects race the session check on a full page load
+// (see `settings/layout.tsx`).
 export default function BehaviorRewardsPage() {
-  const { user } = useAuth();
-  const router = useRouter();
-  const role = (user as any)?.role;
-  // Parents and students read their own or their children's records.
-  const allowed = ['admin', 'teacher', 'parent', 'student'].includes(role);
-
-  useEffect(() => {
-    if (user && !allowed) router.replace('/');
-  }, [user, allowed, router]);
-
-  if (!user || !allowed) return null;
-
   return <BehaviorRewardsTable />;
 }

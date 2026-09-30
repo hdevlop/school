@@ -27,7 +27,6 @@ async function settingsService(tx: Tx) {
   const years = new AcademicYearRepository();
   years.db = tx;
   const validator = withEnglishMessages(new SettingsValidator(repo));
-  Object.defineProperty(validator, 't', { value: (key: string) => `settings.errors.${key}`, configurable: true });
   return { service: new SettingsService(repo, validator, years), repo, years, inYear };
 }
 
@@ -92,7 +91,7 @@ describe('settings on the marked PostgreSQL fixture', () => {
       const [yearsBefore] = await tx.select({ count: count() }).from(academicYears);
       const second = createSettingsDto.parse({ schoolName: 'Second school', schoolPhone: '212600000000',
         schoolEmail: '', currentAcademicYear: '2027-2028' });
-      expect(await refusal(service.create(second))).toBe('settings.errors.alreadyExists');
+      expect(await refusal(service.create(second))).toBe('School settings already exist; change them with an update');
       expect(await refusal(service.update(updateSettingsDto.parse({ currentAcademicYear: '2025-2026' }))))
         .toBe('Activate the registered year through academic-year operations');
       const [settingsRows] = await tx.select({ count: count() }).from(settings);

@@ -428,6 +428,13 @@
       "when": 1790612466973,
       "tag": "0060_student_enrollment_corrections",
       "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1790789282258,
+      "tag": "0061_fee_type_name_unique",
+      "breakpoints": true
     }
   ]
 }

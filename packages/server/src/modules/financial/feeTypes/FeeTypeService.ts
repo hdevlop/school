@@ -54,7 +54,8 @@ export class FeeTypeService {
       status: data.status,
     };
 
-    return await this.feeTypeRepository.create(feeTypeDetails);
+    return await this.feeTypeRepository.create(feeTypeDetails)
+      .catch((error) => this.feeTypeValidator.refuseDuplicateName(error));
   }
 
   async update(id: string, data: UpdateFeeTypeDto) {
@@ -71,7 +72,8 @@ export class FeeTypeService {
       return await this.getById(id);
     }
 
-    return await this.feeTypeRepository.update(id, feeTypeData);
+    return await this.feeTypeRepository.update(id, feeTypeData)
+      .catch((error) => this.feeTypeValidator.refuseDuplicateName(error));
   }
 
   // ========== STATUS-UPDATE-METHOD ==========

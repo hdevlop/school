@@ -1,5 +1,6 @@
 import { Err, I18n, Service } from '../../../najm';
 import { FeeTypeRepository } from './FeeTypeRepository';
+import { FEE_TYPE_NAME_UNIQUE } from './feeTypeSchema';
 
 @Service()
 export class FeeTypeValidator {
@@ -17,6 +18,17 @@ export class FeeTypeValidator {
     if (existingFeeType) {
       Err(409, this.t('idExists'));
     }
+  }
+
+  /**
+   * A write that lost a race for a name reaches the unique index instead of
+   * `checkNameIsUnique`; it gets the same 409 rather than a server error.
+   */
+  refuseDuplicateName(error: unknown): never {
+    const cause = (error as { cause?: unknown })?.cause ?? error;
+    const { code, constraint_name: constraint } = (cause ?? {}) as { code?: string; constraint_name?: string };
+    if (code === '23505' && constraint === FEE_TYPE_NAME_UNIQUE) Err(409, this.t('nameAlreadyExists'));
+    throw error;
   }
 
   async checkNameIsUnique(name: string, excludeId = null) {

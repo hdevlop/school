@@ -1,5 +1,17 @@
 # Academic-year history implementation evidence
 
+## Rollover under concurrency, fee-type names, and the remaining page fixes, 2026-09-30
+
+Uncommitted in School.
+
+- **Rollover commit (plan row 23).** Two commits of one preview both read it as previewed and wrote every fee, and each fee committed alone, so a failure midway left a half-billed year and a retry marked the run failed. `commit` is now one transaction: it takes `pg_advisory_xact_lock` on the target year before reading the run, writes each fee inside a savepoint, records a refused fee (4xx) as an error item and rethrows anything else. Fixture (`RolloverHistoryTransport`): two racing commits give two fees, two success items and one committed run; a trigger that fails the run's second fee insert leaves no fee, no item and a previewed run, and after it is dropped a retry commits both. Both cases fail on the previous code. The fees table's unique index already prevented a double charge.
+- **Fee-type names (row 18).** Migration `0061` adds `fee_types_name_normalized_unique` on `lower(btrim(name))`; `getByName` compares the same way, and a violation of that index is the usual 409. Fixture (`FeeTypesHistoryTransport`): four racing creates in different case and spacing give one row and three 409s; fails on the previous code. `drizzle-kit generate` also emitted `roles_name_unique`, declared by najm-auth's schema and missing in both local databases (no duplicate role or fee-type names in either). `0061` is applied to `school_history_test` only; the demo database and production are the owner's.
+- **Step 1 correction on the fixture.** Covered by the Student Edit correction in `StudentsHistoryTransport` and the audit, stale retry, restore and dated-record refusal in `EnrollmentsHistoryTransport`; both pass.
+- **`/discipline` and `/behavior-rewards`** decided access from a copy of the role names in a client `useEffect` that sent everyone else to `/`, the pattern that raced the session check on Settings. Both pages now render their table, which shows a refused list as "Accès refusé"; the principal sees that on both, with only the two expected 403s in the console.
+- **Arabic at 390 px** on Students, Fees, Teachers and Staff: `dir="rtl"`, full titles, no overlap, no sideways scroll, nothing under the chat button.
+- **The `caret-color` hydration warning** on `/staff`'s filters is a browser extension's: neither School nor najm-kit sets that style inline.
+- All 74 fixture suites pass file by file (one settings assertion moved from a key stand-in to the catalog's English); lint, typecheck and `bun run test` pass.
+
 ## Refusals in the reader's language, 2026-09-30
 
 Najm `3147137`, released as najm-kit 2.16.14 (`33ade90`, pushed); School

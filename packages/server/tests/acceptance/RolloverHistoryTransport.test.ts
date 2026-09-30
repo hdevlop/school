@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
 const adminPassword = process.env.SCHOOL_HISTORY_ADMIN_PASSWORD;
@@ -23,6 +23,12 @@ const conflictTypeId = `history-rollover-conflict-type-${suffix}`;
 const conflictSourceId = `history-rollover-conflict-source-${suffix}`;
 const conflictTargetId = `history-rollover-conflict-target-${suffix}`;
 const conflictKey = crypto.randomUUID();
+// Two fee types per scenario, so each run writes two fees for history-student-01.
+const raceTypeIds = [`history-rollover-race-a-${suffix}`, `history-rollover-race-b-${suffix}`];
+const crashTypeIds = [`history-rollover-crash-a-${suffix}`, `history-rollover-crash-b-${suffix}`];
+const scenarioTypeIds = [...raceTypeIds, ...crashTypeIds];
+const scenarioRunIds: string[] = [];
+const crashTrigger = `history_rollover_crash_${suffix.replaceAll('-', '_')}`;
 const key = crypto.randomUUID();
 const port = 5511;
 const base = 'http://school.local/api';
@@ -54,6 +60,15 @@ beforeAll(async () => {
     { id: conflictTypeId, name: `History rollover conflict ${suffix}`,
       category: 'tuition', amount: '40', paymentType: 'oneTime', status: 'active' },
   ]);
+  await db.insert(feeTypes).values(scenarioTypeIds.map((id, index) => ({
+    id, name: `History rollover scenario ${index} ${suffix}`,
+    category: 'tuition' as const, amount: '25', paymentType: 'oneTime' as const, status: 'active' as const,
+  })));
+  await db.insert(fees).values(scenarioTypeIds.map((id) => ({
+    id: `${id}-source`, studentId: 'history-student-01', feeTypeId: id,
+    academicYear: '2025-2026', effectiveDate: '2025-10-01',
+    baseAmount: '25', grossAmount: '25', netAmount: '25',
+  })));
   await db.insert(fees).values([
     { id: sourceFeeId, studentId: 'history-student-01', feeTypeId: typeId,
       academicYear: '2025-2026', effectiveDate: '2025-10-01',
@@ -75,6 +90,20 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await server.stop();
+  await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${crashTrigger} ON fees`));
+  await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${crashTrigger}()`));
+  const scenarioFeeIds = (await db.select({ id: fees.id }).from(fees)
+    .where(inArray(fees.feeTypeId, scenarioTypeIds))).map((row) => row.id);
+  if (scenarioRunIds.length) {
+    await db.delete(rolloverRunItems).where(inArray(rolloverRunItems.runId, scenarioRunIds));
+    await db.delete(financialAuditLogs).where(inArray(financialAuditLogs.entityId, [...scenarioRunIds, ...scenarioFeeIds]));
+    await db.delete(rolloverRuns).where(inArray(rolloverRuns.id, scenarioRunIds));
+  }
+  if (scenarioFeeIds.length) {
+    await db.delete(feeInstallments).where(inArray(feeInstallments.feeId, scenarioFeeIds));
+    await db.delete(fees).where(inArray(fees.id, scenarioFeeIds));
+  }
+  await db.delete(feeTypes).where(inArray(feeTypes.id, scenarioTypeIds));
   const feeIds = [sourceFeeId, conflictSourceId, conflictTargetId, ...(createdFeeId ? [createdFeeId] : [])];
   if (runId) {
     await db.delete(rolloverRunItems).where(eq(rolloverRunItems.runId, runId));
@@ -157,5 +186,74 @@ describe('authenticated financial rollover', () => {
     });
     expect(retry.status).toBe(200);
     expect(retry.body.data.run.status).toBe('failed');
+  });
+
+  async function previewScenario(feeTypeIds: string[]) {
+    const scenario = { ...payload, feeTypeIds, idempotencyKey: crypto.randomUUID() };
+    const preview = await request('/rollover/preview', '2026-2027', 'POST', scenario);
+    expect(preview.status).toBe(200);
+    expect(preview.body.data.preview.proposedFees).toBe(2);
+    scenarioRunIds.push(preview.body.data.id);
+    return { ...scenario, runId: preview.body.data.id as string, confirmSettingsUpdate: false };
+  }
+
+  async function targetFees(feeTypeIds: string[]) {
+    return db.select({ id: fees.id }).from(fees)
+      .where(and(inArray(fees.feeTypeId, feeTypeIds), eq(fees.academicYear, '2026-2027')));
+  }
+
+  it('commits one preview once when two commits of it race', async () => {
+    const commit = await previewScenario(raceTypeIds);
+    const [first, second] = await Promise.all([
+      request('/rollover/commit', '2026-2027', 'POST', commit),
+      request('/rollover/commit', '2026-2027', 'POST', commit),
+    ]);
+    expect([first.status, second.status]).toEqual([200, 200]);
+    // One commit writes the run; the other waits on the year lock and reads it.
+    const statuses = [first.body.data.status ?? first.body.data.run?.status,
+      second.body.data.status ?? second.body.data.run?.status];
+    expect(statuses).toEqual(['committed', 'committed']);
+    expect(await targetFees(raceTypeIds)).toHaveLength(2);
+    const items = await db.select().from(rolloverRunItems).where(eq(rolloverRunItems.runId, commit.runId));
+    expect(items.map((item) => item.status)).toEqual(['success', 'success']);
+    const [run] = await db.select().from(rolloverRuns).where(eq(rolloverRuns.id, commit.runId));
+    expect(run.status).toBe('committed');
+    expect(run.totalFees).toBe(2);
+  });
+
+  it('rolls back the whole run when a write fails midway, and a retry bills it once', async () => {
+    const commit = await previewScenario(crashTypeIds);
+    const [a, b] = crashTypeIds;
+    // Fails whichever of the run's two fee inserts comes second, after the
+    // first has been written in the same transaction.
+    await db.execute(sql.raw(`
+      CREATE FUNCTION ${crashTrigger}() RETURNS trigger AS $$
+      BEGIN
+        IF NEW.fee_type_id IN ('${a}', '${b}') AND EXISTS (
+          SELECT 1 FROM fees WHERE student_id = NEW.student_id
+            AND academic_year = NEW.academic_year AND fee_type_id IN ('${a}', '${b}')
+        ) THEN RAISE EXCEPTION 'injected rollover failure'; END IF;
+        RETURN NEW;
+      END $$ LANGUAGE plpgsql`));
+    await db.execute(sql.raw(`CREATE TRIGGER ${crashTrigger} BEFORE INSERT ON fees
+      FOR EACH ROW EXECUTE FUNCTION ${crashTrigger}()`));
+    try {
+      const failed = await request('/rollover/commit', '2026-2027', 'POST', commit);
+      expect(failed.status).toBe(500);
+      expect(await targetFees(crashTypeIds)).toHaveLength(0);
+      expect(await db.select().from(rolloverRunItems).where(eq(rolloverRunItems.runId, commit.runId)))
+        .toHaveLength(0);
+      const [run] = await db.select().from(rolloverRuns).where(eq(rolloverRuns.id, commit.runId));
+      expect(run.status).toBe('previewed');
+    } finally {
+      await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${crashTrigger} ON fees`));
+      await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${crashTrigger}()`));
+    }
+
+    const retried = await request('/rollover/commit', '2026-2027', 'POST', commit);
+    expect(retried.status).toBe(200);
+    expect(retried.body.data.status).toBe('committed');
+    expect(retried.body.data.successCount).toBe(2);
+    expect(await targetFees(crashTypeIds)).toHaveLength(2);
   });
 });

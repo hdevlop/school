@@ -1,11 +1,37 @@
 import { Repository } from '../../../najm';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 import { rolloverRuns, rolloverRunItems, students, fees, feeTypes, studentEnrollments, academicYears, studentEnrollmentPlacements } from '../../../database/schema';
 import { DB } from '../../../database/db';
 
 @Repository()
 export class RolloverRepository {
   declare db: DB;
+
+  /**
+   * Serializes rollover commits into one target year until the surrounding
+   * transaction ends: a second commit of the same run waits, then reads it as
+   * committed, and two runs into one year never interleave their fee writes.
+   */
+  async lockTargetYear(toYear: string) {
+    await this.db.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${`rollover:${toYear}`}))`);
+  }
+
+  /**
+   * Runs one fee's writes inside a savepoint of the surrounding transaction, so
+   * a refused fee leaves none of its rows while the rest of the run continues.
+   * Najm's nested `@Transaction` joins the outer transaction without one.
+   */
+  async withinSavepoint<T>(write: () => Promise<T>): Promise<T> {
+    await this.db.execute(sql`SAVEPOINT rollover_item`);
+    try {
+      const result = await write();
+      await this.db.execute(sql`RELEASE SAVEPOINT rollover_item`);
+      return result;
+    } catch (error) {
+      await this.db.execute(sql`ROLLBACK TO SAVEPOINT rollover_item`);
+      throw error;
+    }
+  }
 
   async clearForSeedReset() {
     await this.db.delete(rolloverRunItems);
