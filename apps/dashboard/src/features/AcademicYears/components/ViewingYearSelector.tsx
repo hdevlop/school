@@ -29,11 +29,14 @@ export function ViewingYearSelector({ inHeader = false }: { inHeader?: boolean }
   const years = data?.years ?? [];
   const buttonLabel = viewingYear ? `${label}: ${viewingYear}` : label;
   const headerClassName = 'xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2';
+  // At phone width the year is the header's widest control and the page title
+  // gives way to it; the year alone says enough there, so the icons go.
+  const headerIconClassName = 'max-sm:hidden';
 
   if (!canChooseYear) {
     return inHeader && viewingYear ? (
       <span role="status" className={`${headerClassName} inline-flex items-center gap-2 whitespace-nowrap px-2 font-semibold`}>
-        <CalendarRange className="size-4 text-primary" aria-hidden />
+        <CalendarRange className={`size-4 text-primary ${headerIconClassName}`} aria-hidden />
         {viewingYear}
       </span>
     ) : null;
@@ -52,9 +55,9 @@ export function ViewingYearSelector({ inHeader = false }: { inHeader?: boolean }
           aria-label={buttonLabel}
           title={buttonLabel}
         >
-          <CalendarRange size={18} aria-hidden />
+          <CalendarRange size={18} className={inHeader ? headerIconClassName : undefined} aria-hidden />
           {inHeader && <span>{viewingYear ?? label}</span>}
-          {inHeader && <ChevronDown className="size-4 text-muted-foreground" aria-hidden />}
+          {inHeader && <ChevronDown className={`size-4 text-muted-foreground ${headerIconClassName}`} aria-hidden />}
           {!inHeader && viewingYear && activeYear && viewingYear !== activeYear && (
             <span className="absolute bottom-1 end-1 size-1.5 rounded-full bg-primary" aria-hidden />
           )}

@@ -12,7 +12,6 @@ import { toast } from 'sonner'
 import { locationValueSchema } from '../config/transportSchemas'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react';
-import { useYearSelectionStore } from '@/features/AcademicYears/store/yearSelectionStore';
 
 const assignSchema = z.object({
   studentId: z.string().min(1, 'Student is required'),
@@ -130,7 +129,6 @@ interface VehicleStudentsPanelProps {
 export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => {
   const { t } = useTranslation();
   const { routes = [], isLoading, academicYear, assignStudent, isAssigning, unassignStudent } = useStudentRoutes({ vehicleId: vehicle.id })
-  const activeLabel = useYearSelectionStore((state) => state.activeLabel)
   const { students } = useStudents()
   const { openDialog } = useDialog()
 

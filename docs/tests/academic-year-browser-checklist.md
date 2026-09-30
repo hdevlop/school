@@ -38,7 +38,7 @@ was written.
 | 5. Principal / accounting | **PASS with findings** (third pass, Playwright, see below). The principal edited a 2024-2025 grade's feedback with 2024-2025 selected (200; without the year, 404 because the request stays in the active year) and it was set back. Accounting was refused the same edit and the grade stayed unchanged, but with 401 (finding 8). Accounting opened Fees, switched to 2024-2025 and saw that year's 100 students and balances. Neither role has a finance menu (finding 9). Paying an old year's fee today was not run: it writes a payment. **Payment, 2026-09-30: PASS.** As accounting with 2024-2025 selected, 100 MAD cash on installment #2 (due 2024-10-01) of fee `aoS40tuEl4` for Hasna Khattabi, dated 2026-09-30: payment `BkNm1CbhRd`, receipt `RCP-20260930-GM_9UZV88S`, completed and settled that day. This month's payments went from 75 / 321,415 to 76 / 321,515 MAD and the 2026-2027 dashboard's income for the month and year rose by 100; in 2024-2025 her paid total went from 100 to 200, her balance from 17,436 to 17,336, the installment became paid and the year's collection rate rose, while that year's income stayed unchanged. The first choice (Charaf Fettah) was refused because a pending 2024 cheque reserves each of his open installments, which is the reservation rule working. |
 | 6. Limited roles | **PASS with one finding.** Teacher and parent have no year selector; the header shows 2026-2027 as plain text. For teacher, parent and student, `X-Academic-Year: 2024-2025` and `?academicYear=2024-2025` are refused with 403, a 2024-2025 grade by ID with 403, and a 2024-2025-only student by ID with 404. In the page, `/students?academicYear=2024-2025` dropped the value and showed the active year; `/students/<past id>` showed none of that student's data but drew an empty profile (finding 10). Parent: 2 children and their 8 grades; student: herself and her 4 grades; teacher: 64 grades, which equals the teacher rule (students in her 18 sections on the grade's date) evaluated in SQL; a teacher with no graded sections sees 0. The assistant was not asked: its model server was unreachable. |
 | 7. Activation | NOT RUN: changes the school's active year; needs a disposable database. |
-| 8. RTL, mobile, keyboard, forms | **PARTIAL.** Arabic: `dir="rtl"`, `lang="ar"`, the selector's label and "(الحالية)" translated, no sideways scroll; dropdown menus stay left-to-right (finding 6). Phone: at 500 px, Chrome's narrowest window, the selector is fully visible and nothing scrolls sideways; 390 px not measured. A class filter kept across years matches by name: 2AC in 2024-2025 listed exactly that year's 11 students. Keyboard and the failed-request state are **inconclusive**: the Chrome window was hidden, so screenshots failed, focus did not move into the menu and React Query paused its retries. **2026-09-30 (Playwright): keyboard PASS, error state PASS.** Tab reaches the selector (19 presses on Students), Enter opens it on the first year, arrows move, Enter chooses 2025-2026 and closes the menu with focus back on the selector, and Escape closes it without a change. A refused list shows "Accès refusé" (Staff for the principal) and a refused record "Student not found" (finding 10); a loading dashboard, Fees header or Staff statistics show no figures instead of 0. **390 px:** the selector is fully visible (x 124-265) and nothing scrolls sideways, but the page title and the selector's year are drawn over each other, and the chat button covers the pagination's next button (finding 13). |
+| 8. RTL, mobile, keyboard, forms | **PARTIAL.** Arabic: `dir="rtl"`, `lang="ar"`, the selector's label and "(الحالية)" translated, no sideways scroll; dropdown menus stay left-to-right (finding 6). Phone: at 500 px, Chrome's narrowest window, the selector is fully visible and nothing scrolls sideways; 390 px not measured. A class filter kept across years matches by name: 2AC in 2024-2025 listed exactly that year's 11 students. Keyboard and the failed-request state are **inconclusive**: the Chrome window was hidden, so screenshots failed, focus did not move into the menu and React Query paused its retries. **2026-09-30 (Playwright): keyboard PASS, error state PASS.** Tab reaches the selector (19 presses on Students), Enter opens it on the first year, arrows move, Enter chooses 2025-2026 and closes the menu with focus back on the selector, and Escape closes it without a change. A refused list shows "Accès refusé" (Staff for the principal) and a refused record "Student not found" (finding 10); a loading dashboard, Fees header or Staff statistics show no figures instead of 0. **390 px:** the selector is fully visible (x 124-265) and nothing scrolls sideways, but the page title and the selector's year are drawn over each other, and the chat button covers the pagination's next button (finding 13, fixed the same day: no overlap on seven pages). |
 
 ### Findings
 
@@ -96,17 +96,32 @@ was written.
    language, theme) need about 260 px against about 145 px, so they spill
    left over the title ("Étudiants" and "2025-2026" drawn on each other on
    Students). The floating chat button also covers the pagination's next
-   button. Fix options: let the side columns size to their content on
-   phones in najm-kit, or pass School's actions through the header's compact
-   slot on every page. Not fixed.
+   button. **Fixed 2026-09-30.** najm-kit 2.16.13 sizes the controls column
+   to its content (`minmax(min-content,1fr)`), so the title truncates instead
+   of being covered; below `sm` the year selector drops its two icons and
+   Fees' "Facturer une classe" shows its icon only, which left Fees no room
+   for its title at all. The shell reserves `pb-20` below `lg` for the chat
+   button. At 390 px on Students, Fees, Teachers, Parents, Classes,
+   Announcements and Staff: no overlap, no sideways scroll, full titles
+   ("Étudiants", "Frais", "Enseignants"), nothing under the chat button
+   ("Page suivante" ends 8 px above it); at 1366 px the Fees button keeps its
+   label. Arabic at 390 px not re-measured.
 12. **A refused save says only "Something went wrong".** najm-kit's
    `useEntityCRUD` shows a server message only when it is a catalog key;
    School's server sends translated text or English literals (here
    `StudentEnrollmentValidator`'s 409), so the reason is replaced by an
    untranslated "Something went wrong". Seen on a refused placement
    correction; it applies to any refused create, update or delete that goes
-   through `useEntityCRUD`. Not fixed: it needs a choice between showing the
-   server's text and sending catalog keys.
+   through `useEntityCRUD`. **Fixed 2026-09-30** in najm-kit 2.16.13: a 4xx
+   shows the reason the server states, a guard's bare "Forbidden" reads as
+   "Accès refusé", and a 5xx or status-less error keeps the translated
+   generic title because its message can carry driver or SQL text. Browser:
+   the same refused correction now toasts "Correction conflicts with recorded
+   attendance or grades; reconcile those records first", the dialog stays
+   open with the input, and the placement is still C. That reason is still
+   English on a French page: School's server writes 227 English literals in
+   `Err(...)`, which translate only when moved to catalog keys. Also seen:
+   the table row menu reads "View / Edit / Delete" in English.
 7. **Demo data explains the negative balance.** 2025-2026 expenses are paid
    payslips only (MAD 4,830,070, about 480,000 a month) because all 172 other
    expenses are `pending`, against about 118,000 a month of income. The

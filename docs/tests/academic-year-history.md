@@ -1,12 +1,22 @@
 # Academic-year history implementation evidence
 
+## A refused save's reason and the phone-width header, 2026-09-30
+
+Najm `6851984`, released as najm-kit 2.16.13 (`eb5c025`, pushed); School
+pins it, uncommitted.
+
+- **Finding 12.** `useEntityCRUD` showed a server message only when it was a catalog key, so every refused create, update or delete said "Something went wrong". A 4xx now shows its stated reason, a guard's bare "Forbidden" the feedback "Access denied", and a 5xx or status-less error the feedback error title, because `Err.handle` returns an unexpected error's raw message. Four new najm-kit tests; three fail on the old code. Browser: the refused placement correction toasts the validator's reason and writes nothing.
+- **Finding 13.** `NPageHeader`'s controls column is at least as wide as its content; School's year selector drops its icons below `sm`, Fees' bill-a-class button is icon-only there, and the shell keeps `pb-20` below `lg` for the chat button. Measured at 390 px on seven pages.
+- **Lint.** The unused `activeLabel` store read in `VehicleStudentsPanel` is gone; lint reports nothing.
+- najm-kit typecheck and 1,432 tests pass; School lint, typecheck, `bun run test` and boundaries (including the Najm pins) pass.
+
 ## Loading and refused figures, and the remaining browser steps, 2026-09-30
 
 Uncommitted in School.
 
 - **Figures are unknown while loading or refused, not zero.** The dashboard's queries wait for the year with `enabled: isReady`, and TanStack Query reports a waiting query as not loading, so every card drew 0 or "No data" for about a second; `useDashboardHooks` now reports a query waiting for the year as loading (`untilYear`). Fees' header count now uses `isCountUnknown` with the table's own loading flag. Staff hides its statistic cards when its list failed or was refused, and Payroll does the same, guards its header count, and shows the forbidden or error state, treating a failed staff list like a failed payroll. Browser: the dashboard went from skeleton straight to "Total Élèves 100", Fees from no count to "100 étudiants au total", and the principal's `/staff` shows only "Accès refusé". Dashboard typecheck, lint of the touched files and `test:config` (287) pass.
 - **Step 8 keyboard: PASS**; **step 5 old-fee payment: PASS**; **step 1 correction: refused by the attendance-and-grades safeguard** on every demo student, nothing written; **step 4 write**: not reachable in one tab (modal dialog), the save carried its form's year. Details in the checklist.
-- **Finding 12.** A refused save shows "Something went wrong" instead of the server's reason; see the checklist.
+- **Finding 12.** A refused save shows "Something went wrong" instead of the server's reason; see the checklist. Fixed in the entry above.
 - **Seen in passing.** A hydration warning on najm-kit's table filter inputs (`style={{caret-color:"transparent"}}` present in the server HTML only), once, on `/staff`.
 
 ## Guard status and the sidebar, 2026-09-30

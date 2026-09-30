@@ -3,7 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useEffect, useMemo, useState } from 'react';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
-import { CircleDollarSign, Plus, SearchX } from 'lucide-react';
+import { CircleDollarSign, Plus, SearchX, Users } from 'lucide-react';
 import FeeForm from './FeeForm';
 import ClassBulkFeeForm from './ClassBulkFeeForm';
 import EditFeeForm from './EditFeeForm';
@@ -313,8 +313,17 @@ function FeesTableForYear() {
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
           {!showOutstanding && viewingYear && (
-            <NButton size="sm" variant="outline" onClick={handleClassFeeClick} disabled={!classes?.length}>
-              {t('fees.classBulk.action')}
+            // Icon only at phone width, where the label left no room for the title.
+            <NButton
+              size="sm"
+              variant="outline"
+              onClick={handleClassFeeClick}
+              disabled={!classes?.length}
+              aria-label={t('fees.classBulk.action')}
+              title={t('fees.classBulk.action')}
+            >
+              <Users className="h-4 w-4" aria-hidden />
+              <span className="max-sm:hidden">{t('fees.classBulk.action')}</span>
             </NButton>
           )}
         </NPageHeaderActions>
