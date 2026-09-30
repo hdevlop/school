@@ -276,20 +276,52 @@ export const mcpConfig = () =>
     ...schoolMcpYearHooks(Object.keys(yearScopedModules)),
   });
 
-export const ragConfig = (): NajmPlugin =>
-  rag({
+export const ragConfig = (): NajmPlugin => {
+  const provider = process.env.RAG_EMBEDDING_PROVIDER || 'ollama';
+  if (provider !== 'ollama' && provider !== 'openai-compatible') {
+    throw new Error('RAG_EMBEDDING_PROVIDER must be ollama or openai-compatible.');
+  }
+  const model = process.env.RAG_EMBEDDING_MODEL || 'embeddinggemma';
+  const qwen = model === 'qwen3-embedding';
+
+  return rag({
     dialect: 'pg',
     embedding: {
-      provider: 'ollama',
-      baseUrl: process.env.RAG_EMBEDDING_BASE_URL || 'http://127.0.0.1:11434',
-      model: process.env.RAG_EMBEDDING_MODEL || 'embeddinggemma',
+      provider,
+      baseUrl: process.env.RAG_EMBEDDING_BASE_URL ||
+        (provider === 'openai-compatible'
+          ? 'http://127.0.0.1:18080/v1'
+          : 'http://127.0.0.1:11434'),
+      model,
       dimensions: Number(process.env.RAG_EMBEDDING_DIMENSIONS || 768),
       timeoutMs: Number(process.env.RAG_EMBEDDING_TIMEOUT_MS || 60_000),
+      batchSize: Number(process.env.RAG_EMBEDDING_BATCH_SIZE || 4),
+      apiKey: process.env.RAG_EMBEDDING_API_KEY,
+      truncateDimensions: process.env.RAG_EMBEDDING_TRUNCATE_DIMENSIONS === 'true',
+      queryPrefix: process.env.RAG_EMBEDDING_QUERY_PREFIX ??
+        (qwen
+          ? 'Instruct: Retrieve the school management tool that fulfills the teacher request.\nQuery: '
+          : provider === 'openai-compatible'
+          ? 'task: search result | query: '
+          : ''),
+      documentPrefix: process.env.RAG_EMBEDDING_DOCUMENT_PREFIX ??
+        (provider === 'openai-compatible' && !qwen
+          ? 'title: none | text: '
+          : ''),
     },
-    toolRouting: { enabled: true },
+    toolRouting: {
+      enabled: true,
+      dependencies: {
+        attendance_mark: ['students_get_students'],
+        grades_get_student_report: ['students_get_students'],
+        grades_get_by_student: ['students_get_students'],
+        grades_create: ['students_get_students', 'assessments_get_all'],
+      },
+    },
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;
+};
 
 export const chatbotConfig = () =>
   chatbot({

@@ -65,7 +65,7 @@ export class GradeController {
   @Get('/student/:studentId/report')
   @CanList()
   @Validate({ params: studentIdParam })
-  @McpTool('Get student grade report')
+  @McpTool('Read one student\'s grade report or report card by studentId, including subject marks and assessment or exam results. Also called a bulletin de notes, boletín de calificaciones, or بيان النقط.')
   @ResMsg('grades.success.retrieved')
   async getStudentReport(@Params('studentId') studentId: string) {
     return this.gradeService.getStudentReport(studentId);
@@ -118,7 +118,7 @@ export class GradeController {
   @Post()
   @CanCreate()
   @Validate(createGradeDto)
-  @McpTool({ description: 'Create a new grade', confirm: { level: 'warning', message: 'confirm.grades.create' } })
+  @McpTool({ description: 'Record a student\'s marksObtained score or note for an existing assessment or exam. Requires studentId and exactly one of assessmentId or examId; the source determines teacher and subject. Also called saisir une note, registrar una calificación, or إدخال نقطة.', confirm: { level: 'warning', message: 'confirm.grades.create' } })
   @ResMsg('grades.success.created')
   async create(@Body() body: CreateGradeDto, @User() user: { id: string; role?: string; teacherId?: string }) {
     return this.gradeService.create(body, user);

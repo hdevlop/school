@@ -1,0 +1,2331 @@
+{
+  "capturedAt": "2026-09-30T17:25:03.058Z",
+  "model": "Qwen3-Embedding-0.6B-Q8_0",
+  "runtime": "llama.cpp b11146, local CPU, 2 threads",
+  "documentCount": 428,
+  "totalDocumentEmbeddingMs": 244068,
+  "queryPrefix": "Instruct: Retrieve the school management tool that fulfills the teacher request.\nQuery: ",
+  "note": "Direct cosine ranking, no RAG router, threshold, dependencies, authorization, or chat execution.",
+  "samples": [
+    {
+      "id": "attendance-read-en",
+      "queryMs": 378,
+      "full": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.835
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.787
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.753
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.746
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.735
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.721
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.715
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.708
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.701
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.696
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.695
+          },
+          {
+            "name": "attendance_get_by_staff",
+            "score": 0.681
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.84
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.794
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.762
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.756
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.745
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.73
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.73
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.72
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.711
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.706
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.703
+          },
+          {
+            "name": "attendance_get_by_staff",
+            "score": 0.688
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-read-fr",
+      "queryMs": 306,
+      "full": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.791
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.76
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.752
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.737
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.728
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.724
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.72
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.708
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.705
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.701
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.696
+          },
+          {
+            "name": "attendance_get_by_staff",
+            "score": 0.691
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.797
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.766
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.763
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.744
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.739
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.731
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.726
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.72
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.718
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.714
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.707
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.706
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-read-ar",
+      "queryMs": 265,
+      "full": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.785
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.752
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.749
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.727
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.713
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.71
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.706
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.704
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.701
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.696
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.683
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.682
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.789
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.76
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.754
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.733
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.728
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.717
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.712
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.712
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.706
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.705
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.689
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.689
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-read-es",
+      "queryMs": 222,
+      "full": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.822
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.785
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.763
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.743
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.739
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.736
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.723
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.718
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.718
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.714
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.714
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.699
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1
+        ],
+        "top": [
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.828
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.793
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.77
+          },
+          {
+            "name": "attendance_get_today_staff",
+            "score": 0.753
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.745
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.743
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.729
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.725
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.724
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.724
+          },
+          {
+            "name": "attendance_get_by_date",
+            "score": 0.722
+          },
+          {
+            "name": "attendance_get_all",
+            "score": 0.707
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-mark-en",
+      "queryMs": 427,
+      "full": {
+        "expectedRanks": [
+          1,
+          29
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.69
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.622
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.617
+          },
+          {
+            "name": "student-routes_unassign_at",
+            "score": 0.617
+          },
+          {
+            "name": "teachers_unassign_class",
+            "score": 0.615
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.609
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.609
+          },
+          {
+            "name": "attendance_delete",
+            "score": 0.603
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.603
+          },
+          {
+            "name": "student-routes_unassign",
+            "score": 0.595
+          },
+          {
+            "name": "parents_unlink_student",
+            "score": 0.594
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.59
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1,
+          40
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.709
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.639
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.636
+          },
+          {
+            "name": "student-routes_unassign_at",
+            "score": 0.632
+          },
+          {
+            "name": "attendance_delete",
+            "score": 0.63
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.627
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.627
+          },
+          {
+            "name": "teachers_unassign_class",
+            "score": 0.626
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.621
+          },
+          {
+            "name": "attendance_update",
+            "score": 0.615
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.612
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.608
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-mark-fr",
+      "queryMs": 525,
+      "full": {
+        "expectedRanks": [
+          1,
+          18
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.643
+          },
+          {
+            "name": "teachers_unassign_class",
+            "score": 0.616
+          },
+          {
+            "name": "student-routes_unassign_at",
+            "score": 0.607
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.603
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.601
+          },
+          {
+            "name": "parents_unlink_student",
+            "score": 0.596
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.594
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.593
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.592
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.588
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.586
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.586
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1,
+          21
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.661
+          },
+          {
+            "name": "teachers_unassign_class",
+            "score": 0.628
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.621
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.619
+          },
+          {
+            "name": "student-routes_unassign_at",
+            "score": 0.614
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.611
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.608
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.608
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.607
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.603
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.6
+          },
+          {
+            "name": "settings_update",
+            "score": 0.596
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-mark-ar",
+      "queryMs": 626,
+      "full": {
+        "expectedRanks": [
+          1,
+          5
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.672
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.67
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.654
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.649
+          },
+          {
+            "name": "sections_get_students",
+            "score": 0.639
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.637
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.632
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.629
+          },
+          {
+            "name": "sections_get_teachers",
+            "score": 0.626
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.618
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.617
+          },
+          {
+            "name": "sections_create",
+            "score": 0.616
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1,
+          6
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.696
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.684
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.672
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.671
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.652
+          },
+          {
+            "name": "sections_get_students",
+            "score": 0.649
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.649
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.646
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.645
+          },
+          {
+            "name": "sections_get_teachers",
+            "score": 0.642
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.639
+          },
+          {
+            "name": "settings_update",
+            "score": 0.627
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-mark-es",
+      "queryMs": 481,
+      "full": {
+        "expectedRanks": [
+          1,
+          29
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.699
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.642
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.641
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.633
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.621
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.618
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.615
+          },
+          {
+            "name": "attendance_update",
+            "score": 0.607
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.607
+          },
+          {
+            "name": "teachers_unassign_class",
+            "score": 0.594
+          },
+          {
+            "name": "attendance_get_by_staff",
+            "score": 0.591
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.59
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1,
+          32
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.711
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.655
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.65
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.647
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.633
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.633
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.629
+          },
+          {
+            "name": "attendance_update",
+            "score": 0.629
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.618
+          },
+          {
+            "name": "attendance_get_by_staff",
+            "score": 0.607
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.604
+          },
+          {
+            "name": "settings_update",
+            "score": 0.604
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-report-en",
+      "queryMs": 309,
+      "full": {
+        "expectedRanks": [
+          1,
+          22
+        ],
+        "top": [
+          {
+            "name": "grades_get_student_report",
+            "score": 0.714
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.644
+          },
+          {
+            "name": "grades_get_by_student",
+            "score": 0.621
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.611
+          },
+          {
+            "name": "grades_get_all",
+            "score": 0.602
+          },
+          {
+            "name": "grades_get_by_section",
+            "score": 0.588
+          },
+          {
+            "name": "grades_get_by_subject",
+            "score": 0.582
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.581
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.581
+          },
+          {
+            "name": "grades_get_by_id",
+            "score": 0.58
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.577
+          },
+          {
+            "name": "student-profile_get_academic",
+            "score": 0.576
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1,
+          25
+        ],
+        "top": [
+          {
+            "name": "grades_get_student_report",
+            "score": 0.718
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.653
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.63
+          },
+          {
+            "name": "grades_get_by_student",
+            "score": 0.625
+          },
+          {
+            "name": "grades_get_all",
+            "score": 0.608
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.604
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.596
+          },
+          {
+            "name": "grades_get_by_subject",
+            "score": 0.595
+          },
+          {
+            "name": "teacher-profile_get_pending_grading",
+            "score": 0.594
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.594
+          },
+          {
+            "name": "student-profile_get_academic",
+            "score": 0.59
+          },
+          {
+            "name": "grades_get_by_section",
+            "score": 0.59
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-report-fr",
+      "queryMs": 424,
+      "full": {
+        "expectedRanks": [
+          5,
+          16
+        ],
+        "top": [
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.597
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.596
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.582
+          },
+          {
+            "name": "alerts_get_alerts_by_student",
+            "score": 0.58
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.572
+          },
+          {
+            "name": "announcements_get_by_class",
+            "score": 0.568
+          },
+          {
+            "name": "alerts_create",
+            "score": 0.566
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.563
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.561
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.561
+          },
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.559
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.558
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          7,
+          17
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.637
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.627
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.622
+          },
+          {
+            "name": "alerts_get_alerts_by_student",
+            "score": 0.598
+          },
+          {
+            "name": "announcements_get_by_class",
+            "score": 0.596
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.594
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.594
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.589
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.588
+          },
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.585
+          },
+          {
+            "name": "alerts_create",
+            "score": 0.585
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.582
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-report-ar",
+      "queryMs": 579,
+      "full": {
+        "expectedRanks": [
+          29,
+          9
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.585
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.575
+          },
+          {
+            "name": "settings_get_public_settings",
+            "score": 0.568
+          },
+          {
+            "name": "settings_update",
+            "score": 0.563
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.562
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.56
+          },
+          {
+            "name": "settings_create",
+            "score": 0.556
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.553
+          },
+          {
+            "name": "sections_get_students",
+            "score": 0.548
+          },
+          {
+            "name": "sections_get_teachers",
+            "score": 0.544
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.539
+          },
+          {
+            "name": "alerts_get_alerts_by_student",
+            "score": 0.532
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          28,
+          15
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.601
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.588
+          },
+          {
+            "name": "settings_get_public_settings",
+            "score": 0.585
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.573
+          },
+          {
+            "name": "settings_update",
+            "score": 0.572
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.571
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.561
+          },
+          {
+            "name": "settings_create",
+            "score": 0.555
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.55
+          },
+          {
+            "name": "sections_get_teachers",
+            "score": 0.546
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.544
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.54
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-report-es",
+      "queryMs": 1232,
+      "full": {
+        "expectedRanks": [
+          4,
+          19
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.615
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.607
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.597
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.594
+          },
+          {
+            "name": "alerts_get_alerts_by_student",
+            "score": 0.581
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.575
+          },
+          {
+            "name": "alerts_create",
+            "score": 0.569
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.566
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.565
+          },
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.563
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.563
+          },
+          {
+            "name": "announcements_get_by_class",
+            "score": 0.561
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          4,
+          22
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.646
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.632
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.629
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.611
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.597
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.597
+          },
+          {
+            "name": "alerts_get_alerts_by_student",
+            "score": 0.592
+          },
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.591
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.59
+          },
+          {
+            "name": "announcements_get_by_class",
+            "score": 0.587
+          },
+          {
+            "name": "alerts_create",
+            "score": 0.581
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.581
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-create-en",
+      "queryMs": 472,
+      "full": {
+        "expectedRanks": [
+          7,
+          50,
+          1
+        ],
+        "top": [
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.65
+          },
+          {
+            "name": "assessments_get_by_class",
+            "score": 0.642
+          },
+          {
+            "name": "assessments_create",
+            "score": 0.625
+          },
+          {
+            "name": "assessments_update",
+            "score": 0.615
+          },
+          {
+            "name": "teacher-profile_get_pending_grading",
+            "score": 0.614
+          },
+          {
+            "name": "assessments_get_by_subject",
+            "score": 0.597
+          },
+          {
+            "name": "grades_create",
+            "score": 0.593
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.591
+          },
+          {
+            "name": "assessments_get_today_assessments",
+            "score": 0.588
+          },
+          {
+            "name": "assessments_get_all",
+            "score": 0.582
+          },
+          {
+            "name": "assessments_get_by_section",
+            "score": 0.58
+          },
+          {
+            "name": "assessments_get_by_id",
+            "score": 0.574
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          8,
+          54,
+          1
+        ],
+        "top": [
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.675
+          },
+          {
+            "name": "assessments_get_by_class",
+            "score": 0.666
+          },
+          {
+            "name": "teacher-profile_get_pending_grading",
+            "score": 0.637
+          },
+          {
+            "name": "assessments_create",
+            "score": 0.636
+          },
+          {
+            "name": "assessments_update",
+            "score": 0.625
+          },
+          {
+            "name": "assessments_get_by_subject",
+            "score": 0.624
+          },
+          {
+            "name": "assessments_get_today_assessments",
+            "score": 0.612
+          },
+          {
+            "name": "grades_create",
+            "score": 0.612
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.611
+          },
+          {
+            "name": "assessments_get_all",
+            "score": 0.604
+          },
+          {
+            "name": "assessments_get_by_id",
+            "score": 0.599
+          },
+          {
+            "name": "assessments_get_by_section",
+            "score": 0.599
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-create-fr",
+      "queryMs": 955,
+      "full": {
+        "expectedRanks": [
+          28,
+          15,
+          1
+        ],
+        "top": [
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.567
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.565
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.562
+          },
+          {
+            "name": "assessments_get_by_class",
+            "score": 0.56
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.545
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.545
+          },
+          {
+            "name": "settings_update",
+            "score": 0.542
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.539
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.538
+          },
+          {
+            "name": "exams_get_by_teacher",
+            "score": 0.535
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.535
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.534
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          29,
+          20,
+          1
+        ],
+        "top": [
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.593
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.591
+          },
+          {
+            "name": "assessments_get_by_class",
+            "score": 0.588
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.587
+          },
+          {
+            "name": "settings_update",
+            "score": 0.569
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.566
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.564
+          },
+          {
+            "name": "exams_get_by_teacher",
+            "score": 0.561
+          },
+          {
+            "name": "classes_get_class_analytics",
+            "score": 0.559
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.559
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.558
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.558
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-create-ar",
+      "queryMs": 750,
+      "full": {
+        "expectedRanks": [
+          2,
+          32,
+          21
+        ],
+        "top": [
+          {
+            "name": "grades_get_by_section",
+            "score": 0.598
+          },
+          {
+            "name": "grades_create",
+            "score": 0.596
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.582
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.582
+          },
+          {
+            "name": "grades_get_by_subject",
+            "score": 0.574
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.573
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.565
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.562
+          },
+          {
+            "name": "grades_update",
+            "score": 0.562
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.558
+          },
+          {
+            "name": "behavior_rewards_create",
+            "score": 0.555
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.554
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1,
+          40,
+          12
+        ],
+        "top": [
+          {
+            "name": "grades_create",
+            "score": 0.615
+          },
+          {
+            "name": "grades_get_by_section",
+            "score": 0.612
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.604
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.595
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.595
+          },
+          {
+            "name": "grades_get_by_subject",
+            "score": 0.594
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.592
+          },
+          {
+            "name": "grades_update",
+            "score": 0.583
+          },
+          {
+            "name": "grades_get_by_exam",
+            "score": 0.58
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.574
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.574
+          },
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.574
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-create-es",
+      "queryMs": 659,
+      "full": {
+        "expectedRanks": [
+          12,
+          29,
+          1
+        ],
+        "top": [
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.625
+          },
+          {
+            "name": "assessments_get_by_class",
+            "score": 0.613
+          },
+          {
+            "name": "teacher-profile_get_pending_grading",
+            "score": 0.595
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.58
+          },
+          {
+            "name": "assessments_create",
+            "score": 0.578
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.575
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.572
+          },
+          {
+            "name": "assessments_get_by_subject",
+            "score": 0.571
+          },
+          {
+            "name": "exams_get_by_teacher",
+            "score": 0.566
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.566
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.565
+          },
+          {
+            "name": "grades_create",
+            "score": 0.565
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          13,
+          37,
+          1
+        ],
+        "top": [
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.657
+          },
+          {
+            "name": "assessments_get_by_class",
+            "score": 0.641
+          },
+          {
+            "name": "teacher-profile_get_pending_grading",
+            "score": 0.62
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.604
+          },
+          {
+            "name": "exams_get_by_teacher",
+            "score": 0.603
+          },
+          {
+            "name": "assessments_get_by_subject",
+            "score": 0.601
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.599
+          },
+          {
+            "name": "assessments_create",
+            "score": 0.597
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.595
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.592
+          },
+          {
+            "name": "assessments_get_today_assessments",
+            "score": 0.589
+          },
+          {
+            "name": "grades_get_by_assessment",
+            "score": 0.585
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-darija",
+      "queryMs": 452,
+      "full": {
+        "expectedRanks": [
+          10,
+          8
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.586
+          },
+          {
+            "name": "teachers_assign_class",
+            "score": 0.585
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.579
+          },
+          {
+            "name": "sections_get_teachers",
+            "score": 0.579
+          },
+          {
+            "name": "teachers_assign_subject",
+            "score": 0.573
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.568
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.563
+          },
+          {
+            "name": "sections_get_students",
+            "score": 0.56
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.555
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.551
+          },
+          {
+            "name": "teachers_unassign_subject",
+            "score": 0.548
+          },
+          {
+            "name": "teachers_get_classes",
+            "score": 0.546
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          8,
+          11
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.608
+          },
+          {
+            "name": "sections_get_teachers",
+            "score": 0.599
+          },
+          {
+            "name": "teachers_assign_class",
+            "score": 0.597
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.591
+          },
+          {
+            "name": "teachers_assign_subject",
+            "score": 0.59
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.586
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.586
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.581
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.576
+          },
+          {
+            "name": "settings_update",
+            "score": 0.57
+          },
+          {
+            "name": "sections_get_students",
+            "score": 0.569
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.569
+          }
+        ]
+      }
+    },
+    {
+      "id": "grade-report-mixed",
+      "queryMs": 248,
+      "full": {
+        "expectedRanks": [
+          16,
+          7
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.591
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.569
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.565
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.548
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.548
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.547
+          },
+          {
+            "name": "teachers_get_students",
+            "score": 0.544
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.538
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.538
+          },
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.537
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.536
+          },
+          {
+            "name": "teachers_get_classes",
+            "score": 0.53
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          13,
+          11
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.626
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.602
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.585
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.583
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.575
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.569
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.568
+          },
+          {
+            "name": "assessments_get_by_teacher",
+            "score": 0.568
+          },
+          {
+            "name": "teacher-profile_get_my_students",
+            "score": 0.563
+          },
+          {
+            "name": "classes_get_class_teachers",
+            "score": 0.563
+          },
+          {
+            "name": "teachers_get_students",
+            "score": 0.562
+          },
+          {
+            "name": "teachers_get_classes",
+            "score": 0.556
+          }
+        ]
+      }
+    },
+    {
+      "id": "attendance-followup",
+      "queryMs": 538,
+      "full": {
+        "expectedRanks": [
+          1,
+          20
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.695
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.648
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.637
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.636
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.629
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.626
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.626
+          },
+          {
+            "name": "teachers_unassign_class",
+            "score": 0.607
+          },
+          {
+            "name": "attendance_update",
+            "score": 0.604
+          },
+          {
+            "name": "student-routes_unassign_at",
+            "score": 0.602
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.595
+          },
+          {
+            "name": "attendance_delete",
+            "score": 0.592
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          1,
+          23
+        ],
+        "top": [
+          {
+            "name": "attendance_mark",
+            "score": 0.721
+          },
+          {
+            "name": "attendance_update_status",
+            "score": 0.666
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.664
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.661
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.654
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.654
+          },
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.649
+          },
+          {
+            "name": "attendance_update",
+            "score": 0.641
+          },
+          {
+            "name": "attendance_delete",
+            "score": 0.625
+          },
+          {
+            "name": "alerts_get_alerts_by_teacher",
+            "score": 0.624
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.618
+          },
+          {
+            "name": "student-routes_unassign_at",
+            "score": 0.617
+          }
+        ]
+      }
+    },
+    {
+      "id": "topic-switch",
+      "queryMs": 731,
+      "full": {
+        "expectedRanks": [
+          2,
+          29
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.779
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.774
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.768
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.756
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.743
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.735
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.73
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.718
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.718
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.709
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.705
+          },
+          {
+            "name": "attendance_get_by_section",
+            "score": 0.696
+          }
+        ]
+      },
+      "truncated": {
+        "expectedRanks": [
+          3,
+          28
+        ],
+        "top": [
+          {
+            "name": "teacher-dashboard_get_overview",
+            "score": 0.788
+          },
+          {
+            "name": "teacher-dashboard_get_attendance_trend",
+            "score": 0.782
+          },
+          {
+            "name": "grades_get_student_report",
+            "score": 0.781
+          },
+          {
+            "name": "attendance_get_today_students",
+            "score": 0.761
+          },
+          {
+            "name": "attendance_get_by_teacher",
+            "score": 0.756
+          },
+          {
+            "name": "attendance_get_by_student",
+            "score": 0.745
+          },
+          {
+            "name": "student-profile_get_attendance_summary",
+            "score": 0.741
+          },
+          {
+            "name": "teacher-profile_get_schedule_today",
+            "score": 0.734
+          },
+          {
+            "name": "attendance_get_today",
+            "score": 0.725
+          },
+          {
+            "name": "academic-dashboard_get_kpis",
+            "score": 0.72
+          },
+          {
+            "name": "grades_get_by_teacher",
+            "score": 0.715
+          },
+          {
+            "name": "attendance_mark",
+            "score": 0.709
+          }
+        ]
+      }
+    }
+  ]
+}

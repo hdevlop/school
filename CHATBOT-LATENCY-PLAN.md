@@ -1,6 +1,40 @@
 # Chatbot latency and cost plan
 
-Status: **PROPOSED — SOURCE REVIEW COMPLETE; RUNTIME BASELINE NOT STARTED**
+Status: **LOCAL QWEN EMBEDDINGS INTEGRATED — ROUTING PREVIEW 12/20; CHAT BASELINE NOT STARTED**
+
+2026-09-30: the local app at port 3102 is healthy. Authenticated diagnostics found
+428 registered tools, zero indexed tools, zero semantic phrases, and no dependency
+mappings. Routing preview returned `router_error` because local Ollama was
+unreachable. OpenRouter conversation tests are deferred until credentials and a
+test budget are available. See [preflight evidence](docs/evidence/chatbot-latency/preflight.md)
+and the [routing-only runner guide](docs/tests/chatbot-routing.md).
+
+Follow-up: llama.cpp b11146 with EmbeddingGemma Q8_0 is running locally on
+port 18080. `najm-rag@2.1.0` was published and adopted; its adapter passed 221
+package tests. The local database needed a pgvector schema repair before all
+428 tools could be indexed. The first full preview matrix passed 4/20 minimum
+selection checks. A trial with 14 general semantic phrases passed 3/20 and was
+rolled back. See [routing trial evidence](docs/evidence/chatbot-latency/routing-trial.md)
+and [local setup](docs/tests/local-embeddings.md).
+
+The follow-up Qwen3 Embedding 0.6B trial ranked the primary tool in the top 12
+for 16/20 direct cases using 768 dimensions. Published `najm-rag@2.1.1` adds
+opt-in vector shortening; School now uses that version and Qwen locally. After
+reindexing 428 tools, adding explicit teacher-task lookup dependencies, and
+clarifying two grade-tool descriptions, the admin preview passed 12/20 cases.
+Grade report/create requests in several languages and mixed follow-ups still
+miss. A Qwen phrase experiment regressed to 10/20 and was rolled back. This is
+selection evidence only, not teacher execution or chat latency acceptance.
+
+The next routing change should be in shared Najm: compare phrase and tool
+description matches together, use a single strongest score per tool instead of
+summing repeated phrases, and preserve lookup dependencies inside the tool cap.
+Keep the 20 current cases held out and add new paraphrases before judging a
+change. Separately prove teacher permission/selected-year behavior and an
+executable review-and-confirm path for attendance or grade writes. A photo of a
+filled grade sheet also needs extraction with a teacher review screen before any
+grades are saved. Until those gates pass, retain a direct dashboard correction
+path for teachers.
 
 Scope: School's dashboard assistant, built on `najm-chatbot` and `najm-rag`,
 from sending a question through receiving the completed answer. Preserve answer
@@ -8,8 +42,9 @@ quality and authorization in English, French, Arabic, and Spanish.
 
 ## 1. Decision and order of work
 
-**Start with the existing chat provider and Ollama. Jev is optional and is not
-needed for the initial tests.** No new paid provider is a prerequisite.
+**Start with local llama.cpp embeddings, then the existing chat provider when
+credentials are available. Jev is optional and is not needed for the initial
+tests.** No new paid provider is a prerequisite for routing-only checks.
 
 1. Check runtime configuration, embedding connectivity, and routing failures.
 2. Establish an external baseline using the actual streaming chat route.
@@ -22,9 +57,12 @@ calls, large tool prompts, and provider retries are competing hypotheses.
 The former 1.5-second first-text and 1-second completed-answer targets remain
 aspirations until a baseline supports realistic acceptance thresholds.
 
-This rewrite changes documentation only. Runtime tests, logging, migrations,
-package publication, and deployment have not started. Execute those activities
-within their subsequently agreed scope and budget.
+The original rewrite changed documentation only. Local read-only routing
+diagnostics and a routing-only runner were added on 2026-09-30. Chat-provider
+tests, instrumentation, and deployment have not started. Shared embedding adapter
+publication, School adoption, and a local routing trial are complete. A local
+database schema repair was required; production schema state remains unknown.
+Execute remaining activities within their subsequently agreed scope and budget.
 
 ## 2. Verified source findings and runtime unknowns
 
@@ -83,6 +121,10 @@ In `packages/server/src/config/index.ts`:
 
 ### 2.3 Evidence currently missing
 
+The 2026-09-30 local preflight verifies the local inventory, effective routing
+settings, and embedding failure only. The remaining statements below describe
+gaps in chat-stream, internal timing, production, and billing evidence.
+
 - Interaction logs, when enabled, capture questions, routed/attempted tools, tool
   calls, and estimated tool-prompt tokens. The agent does not populate internal
   stage timings, aggregate token usage, or `steps_count` there.
@@ -95,6 +137,34 @@ In `packages/server/src/config/index.ts`:
 - Live AI settings, database contents, indexed tools/documents, production
   connectivity, and provider costs have not been verified during this review.
   The previous draft's empty-local-database statement is not current evidence.
+
+### 2.4 Routing correctness prerequisites before cap tuning
+
+The matching Desktop sources for `najm-rag@2.0.3` and `najm-chatbot@2.0.3`
+were reviewed again on 2026-09-30. Before comparing a smaller tool limit:
+
+- Evaluate complete operation-plus-lookup coverage. Dependency expansion followed
+  by a final slice can remove a required lookup even if the primary tool survives.
+- Compare selection after permission-based candidate filtering. The current
+  routable-tools filter only excludes RAG Studio internals; execution guards remain
+  a separate boundary. Admin preview does not establish teacher authorization.
+- Test unequal example-phrase coverage. Summing the strongest three scores can
+  favor a tool with several weaker phrases over one stronger match. Tool-description
+  retrieval only runs when no semantic phrase qualifies.
+- Test topic changes and short follow-ups. Routing uses the latest three user text
+  turns by default, not assistant clarification text or image contents. The selected
+  tools remain fixed within an LLM request. Photo extraction and approval/resume
+  are separate workflow requirements, not routing configuration changes.
+- Do not treat preview as the production router: `RoutingPreviewService` expands
+  dependencies one level and returns no tools on an embedding error, while
+  `ToolRouterService` expands transitively and applies its configured error fallback.
+  Preview also does additional scoring work. Check parity before using preview
+  results to certify the chat path; an HTTP 200 can contain `router_error`.
+
+The initial 20-case routing corpus includes English, French, Arabic, Spanish,
+Darija, mixed language, follow-up text, and a topic switch. Its expected tool groups
+are minimum candidate coverage checks, not proof of valid arguments or completed
+school operations. Expand to the section 6 benchmark before making accuracy claims.
 
 ## 3. Test prerequisites and required APIs
 
@@ -477,17 +547,19 @@ approval actually required by the execution scope.
 
 ## 11. Sources and verification references
 
-Installed runtime is authoritative for School behavior:
+School's published package pins and live runtime are authoritative. Per AGENTS.md,
+inspect matching Desktop package sources as read-only references; do not read
+Najm internals from `node_modules` or make School consume the Desktop checkouts:
 
 - `package.json`, `bun.lock`: pins and resolved dependencies.
 - `packages/server/src/config/index.ts`: embedding/chatbot policy.
 - `packages/server/src/database/schema/index.ts`: exported tables.
 - `apps/dashboard/src/shared/DashboardShell/index.tsx`: chat endpoint integration.
 - `compose.production.yml`: declared services, not effective production settings.
-- `node_modules/najm-chatbot/dist/index.mjs`: `ChatAgent.stream`, `prepare`,
-  `debugRun`, `buildChatTools`, `logChat`, and `computeUsageCost`.
-- `node_modules/najm-rag/dist/index.mjs`: embedding, routing, knowledge search,
-  and context-cache behavior.
+- `../najm/packages/najm-chatbot/src/agent/ChatAgent.ts` and `McpToolAdapter.ts`:
+  streaming, preparation, debug, tool adaptation, logging, and usage cost.
+- `../najm/packages/najm-rag/src/`: embeddings, toolRouter, knowledge, and caches.
+  Compare package.json versions with School pins before relying on these sources.
 - `node_modules/ai/dist/index.d.ts`: stream events and aggregate usage contract.
 
 External references:

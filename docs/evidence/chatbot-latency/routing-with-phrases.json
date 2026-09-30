@@ -1,0 +1,3628 @@
+{
+  "capturedAt": "2026-09-30T17:11:35.867Z",
+  "target": "http://127.0.0.1:3102",
+  "mode": "admin-routing-preview-only",
+  "corpusSha256": "6fac50b2c06039299d7ff5b569684b42ac0d836d7efa62fba17c7b3d27a3284a",
+  "packagePins": {
+    "najm-rag": "2.1.0",
+    "najm-chatbot": "2.0.3",
+    "najm-mcp": "2.2.2"
+  },
+  "outcome": "routing_misses",
+  "limitations": [
+    "Admin diagnostic selection, not teacher-authenticated execution or authorization acceptance.",
+    "Preview has separate implementation; its error fallback and transitive dependencies differ from the chat router.",
+    "Durations include local HTTP and preview work; they are not chat, first-text, or pure routing latency.",
+    "One observation per query is diagnostic smoke coverage, not an accuracy or p95 estimate.",
+    "No chat-provider calls, record changes, tool indexing, semantic imports, or settings updates."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 85
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 233
+    },
+    {
+      "path": "/api/chatbot-rag/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 61
+    },
+    {
+      "path": "/api/chatbot-rag/settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 62
+    },
+    {
+      "path": "/api/chatbot-rag/tools",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 543
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 359
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 339
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 232
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 210
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 150
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 90
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 130
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 124
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 132
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 327
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 241
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 209
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 152
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 303
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 223
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 237
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 248
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 242
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 202
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 1231
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 353
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "attendance-read-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-read-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-read-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-read-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-mark-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-mark-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-mark-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-mark-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-report-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-report-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-report-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-report-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-create-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-create-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-create-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-create-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-darija",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-report-mixed",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-followup",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "topic-switch",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    }
+  ],
+  "samples": [
+    {
+      "id": "attendance-read-en",
+      "language": "en",
+      "query": "Show today's student attendance.",
+      "status": "routed",
+      "elapsedMs": 339,
+      "finalTools": [
+        "attendance_mark",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5273412623209139,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5238783515655505,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5031854064221803,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.4885328557650108,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.48839448288629816,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:attendance_mark"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today",
+          "attendance_get_by_date",
+          "attendance_get_all"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-read-fr",
+      "language": "fr",
+      "query": "Affiche les présences et absences des élèves aujourd'hui.",
+      "status": "routed",
+      "elapsedMs": 232,
+      "finalTools": [
+        "attendance_mark",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.619426663466692,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.6147611920464396,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5727969578742077,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5702604225355515,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.4977452605290791,
+          "source": "semantics"
+        },
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.4729443631453625,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:attendance_mark"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today",
+          "attendance_get_by_date",
+          "attendance_get_all"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-read-ar",
+      "language": "ar",
+      "query": "اعرض حضور وغياب التلاميذ اليوم.",
+      "status": "routed",
+      "elapsedMs": 210,
+      "finalTools": [
+        "attendance_mark",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.6098039331973774,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5533271596827259,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5266752713926381,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5236774243020246,
+          "source": "semantics"
+        },
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.46591363542499886,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.4606318611094913,
+          "source": "semantics"
+        },
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.4549419555033418,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:attendance_mark"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today",
+          "attendance_get_by_date",
+          "attendance_get_all"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-read-es",
+      "language": "es",
+      "query": "Muestra la asistencia de los alumnos de hoy.",
+      "status": "routed",
+      "elapsedMs": 150,
+      "finalTools": [
+        "attendance_mark",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5352264642715454,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5237417221069336,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.5045173168182373,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.4933917518491606,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.4854523539543152,
+          "source": "semantics"
+        },
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.4595930302385678,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:attendance_mark"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today",
+          "attendance_get_by_date",
+          "attendance_get_all"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-mark-en",
+      "language": "en",
+      "query": "For class 2B this morning, mark Yassine and Salma absent.",
+      "status": "fallback_none",
+      "elapsedMs": 90,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "attendance_mark"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-mark-fr",
+      "language": "fr",
+      "query": "Pour la classe 2B ce matin, marque Yassine et Salma absents.",
+      "status": "fallback_none",
+      "elapsedMs": 130,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "attendance_mark"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-mark-ar",
+      "language": "ar",
+      "query": "سجل ياسين وسلمى غائبين في القسم 2B هذا الصباح.",
+      "status": "fallback_none",
+      "elapsedMs": 124,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "attendance_mark"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-mark-es",
+      "language": "es",
+      "query": "Marca a Yassine y Salma como ausentes esta mañana en la clase 2B.",
+      "status": "fallback_none",
+      "elapsedMs": 132,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "attendance_mark"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "grade-report-en",
+      "language": "en",
+      "query": "Show Salma's grade report.",
+      "status": "routed",
+      "elapsedMs": 327,
+      "finalTools": [
+        "grades_get_student_report",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.46556827015498525,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:grades_get_student_report"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "grade-report-fr",
+      "language": "fr",
+      "query": "Affiche le bulletin de notes de Salma.",
+      "status": "routed",
+      "elapsedMs": 241,
+      "finalTools": [
+        "grades_get_student_report",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.4541306631007991,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:grades_get_student_report"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "grade-report-ar",
+      "language": "ar",
+      "query": "اعرض بيان نقط سلمى.",
+      "status": "fallback_none",
+      "elapsedMs": 209,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "grades_get_student_report"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "grade-report-es",
+      "language": "es",
+      "query": "Muestra el boletín de notas de Salma.",
+      "status": "fallback_none",
+      "elapsedMs": 152,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "grades_get_student_report"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "grade-create-en",
+      "language": "en",
+      "query": "Record 15 out of 20 for Salma on the existing maths assessment in class 2B.",
+      "status": "fallback_none",
+      "elapsedMs": 303,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "grades_create"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ],
+        [
+          "assessments_get_all",
+          "assessments_get_by_class",
+          "assessments_get_by_section",
+          "assessments_get_by_teacher"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "grade-create-fr",
+      "language": "fr",
+      "query": "Enregistre 15 sur 20 pour Salma au contrôle de mathématiques existant de la classe 2B.",
+      "status": "fallback_none",
+      "elapsedMs": 223,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "grades_create"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ],
+        [
+          "assessments_get_all",
+          "assessments_get_by_class",
+          "assessments_get_by_section",
+          "assessments_get_by_teacher"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "grade-create-ar",
+      "language": "ar",
+      "query": "سجل نقطة 15 من 20 لسلمى في فرض الرياضيات الموجود للقسم 2B.",
+      "status": "fallback_none",
+      "elapsedMs": 237,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "grades_create"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ],
+        [
+          "assessments_get_all",
+          "assessments_get_by_class",
+          "assessments_get_by_section",
+          "assessments_get_by_teacher"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "grade-create-es",
+      "language": "es",
+      "query": "Registra 15 sobre 20 para Salma en la evaluación de matemáticas existente de la clase 2B.",
+      "status": "fallback_none",
+      "elapsedMs": 248,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "grades_create"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ],
+        [
+          "assessments_get_all",
+          "assessments_get_by_class",
+          "assessments_get_by_section",
+          "assessments_get_by_teacher"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-darija",
+      "language": "ary",
+      "query": "علّم ياسين وسلمى غايبين هاد الصباح فالقسم 2B.",
+      "status": "fallback_none",
+      "elapsedMs": 242,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "attendance_mark"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "grade-report-mixed",
+      "language": "ary-fr",
+      "query": "وريني les notes ديال سلمى.",
+      "status": "fallback_none",
+      "elapsedMs": 202,
+      "finalTools": [],
+      "matches": [],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [
+        [
+          "grades_get_by_student",
+          "grades_get_student_report"
+        ],
+        [
+          "students_get_students",
+          "sections_get_students",
+          "classes_get_class_students",
+          "teachers_get_students"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "attendance-followup",
+      "language": "en",
+      "query": "Mark Yassine absent this morning.\n---\nClass 2B.",
+      "status": "routed",
+      "elapsedMs": 1231,
+      "finalTools": [
+        "attendance_mark",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.4836961030960083,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:attendance_mark"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "topic-switch",
+      "language": "en",
+      "query": "Show today's attendance.\n---\nShow Salma's grade report instead.",
+      "status": "routed",
+      "elapsedMs": 353,
+      "finalTools": [
+        "attendance_mark",
+        "students_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.48190826177597046,
+          "source": "semantics"
+        },
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.47099807685602246,
+          "source": "semantics"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.45879876613616943,
+          "source": "semantics"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "students_get_students",
+          "reason": "dependency_of:attendance_mark"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [
+        [
+          "grades_get_student_report"
+        ]
+      ],
+      "passed": false
+    }
+  ],
+  "gitHead": "f2938fcfce7edad8f79534d3dd9d51c0474b3db5",
+  "workingTreeDirty": true,
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "index": {
+    "routingEnabled": true,
+    "embeddingModel": "embeddinggemma",
+    "embeddingDimensions": 768,
+    "registeredToolCount": 428,
+    "indexedToolCount": 428,
+    "semanticPhraseCount": 14,
+    "indexingRunning": false
+  },
+  "settings": {
+    "enableKnowledge": true,
+    "maxTools": 12,
+    "topSemanticHits": 8,
+    "similarityThreshold": 0.45,
+    "fallbackOnRouterError": "all",
+    "fallbackOnNoMatch": "none",
+    "allowedLangs": [
+      "en",
+      "fr",
+      "ar",
+      "es"
+    ],
+    "dependencies": {
+      "grades_create": [
+        "students_get_students",
+        "assessments_get_all"
+      ],
+      "attendance_mark": [
+        "students_get_students"
+      ],
+      "grades_get_by_student": [
+        "students_get_students"
+      ],
+      "grades_get_student_report": [
+        "students_get_students"
+      ]
+    },
+    "toolsOverride": "auto",
+    "contextOverride": "auto",
+    "source": "db"
+  },
+  "inventory": [
+    {
+      "name": "academic-dashboard_get_kpis",
+      "group": "academic-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_count",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_status_counts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_priority_counts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_type_counts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_active_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_critical_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_recent_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_recent_alerts_by_hours",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_dashboard_summary",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_type",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_status",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_priority",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_student",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_teacher",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_class",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_subject",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alert_by_id",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_create",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_update",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_update_status",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_delete_resolved",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_delete",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_delete_all",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_all",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_by_id",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_by_payment_id",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_by_student_id",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_delete",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_announcements",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_published",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_upcoming",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_expired",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_stats",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_recent",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_by_author",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_by_target_audience",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_by_class",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_active_for_audience",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_announcement",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_create",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_publish",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_unpublish",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_update",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_delete_bulk",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_delete",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_delete_all",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_all",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_today_assessments",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_upcoming_assessments",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_due_this_week",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_overdue",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_class",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_section",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_subject",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_teacher",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_id",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_create",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_update",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_delete_bulk",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_delete",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_delete_all",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_all",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_today",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_today_students",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_today_staff",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_date",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_section",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_student",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_staff",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_teacher",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_id",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_mark",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": [
+        "students_get_students"
+      ]
+    },
+    {
+      "name": "attendance_seed_attendance_demo",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_update_status",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_update",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_delete",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_delete_all",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_list",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_get_by_id",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_create",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_update",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_delete",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_classes",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_sections",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_students",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_teachers",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_subjects",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_parents",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_analytics",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_create",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_update",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_delete",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_delete_all",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "class-routines_get_periods",
+      "group": "class-routines",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "class-routines_get_teacher_routine",
+      "group": "class-routines",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "class-routines_create",
+      "group": "class-routines",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-credits_apply",
+      "group": "student-credits",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-credits_get_by_student",
+      "group": "student-credits",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_get_cycles",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_get_active_cycles",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_get_cycle",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_create",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_update",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_delete",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "dashboard_get_today_snapshot",
+      "group": "dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_list",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_create",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_resolve",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_reopen",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_get_by_id",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_update",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_delete",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_drivers_count",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_active_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_inactive_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_suspended_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_license_expiring_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_driver",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_driver_by_cin",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_driver_by_license",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_by_email",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_by_phone",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_create",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_update",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_update_status",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_delete",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_delete_all",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_events",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_today",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_upcoming",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_past",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_active",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_status",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_type",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_class",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_section",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_date_range_mcp",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_analytics",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_event",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_all",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_today_exams",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_upcoming_exams",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_section",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_subject",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_teacher",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_id",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_create",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_seed_demo_exams",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_update",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_delete_bulk",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_delete",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_delete_all",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_expenses",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_today",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_this_month",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_summary",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_pending_approvals",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_by_date_range",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_expense",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_create",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_handle_approval",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_record_payment",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_update",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_delete",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_fees",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_outstanding",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_overdue",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_overdue_summary",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_overdue_by_student",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_by_student_all_years",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_by_student",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_fee",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_create",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_create_bulk",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_create_class_bulk",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_update",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_delete_bulk",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_delete",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_recalculate_fee",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_get_all",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_get_by_id",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_create",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_update",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_delete",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_kpis",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_trend",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_aging",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_overdue",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_recent_payments",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_expense_breakdown",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_collection_by_class",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_aging_detail",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "audit-logs_list",
+      "group": "audit-logs",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "audit-logs_get_by_id",
+      "group": "audit-logs",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_all",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_assessment",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_exam",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_student",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": [
+        "students_get_students"
+      ]
+    },
+    {
+      "name": "grades_get_student_report",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": [
+        "students_get_students"
+      ]
+    },
+    {
+      "name": "grades_get_by_section",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_subject",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_teacher",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_id",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_create",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": [
+        "students_get_students",
+        "assessments_get_all"
+      ]
+    },
+    {
+      "name": "grades_seed_demo_grades",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_update",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_delete_bulk",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_delete",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_delete_all",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_all",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_overdue",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_pending",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_paid",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_by_fee_id",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_stats",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_by_id",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_create",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_update",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_delete",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_count",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_status_counts",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_overdue_maintenances",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_upcoming_maintenances",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenance_alerts",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_by_vehicle",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_by_status",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_by_type",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenance_by_id",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_create",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_update",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_update_status",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_complete",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_delete",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_delete_all",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_mark_overdue",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "operations-dashboard_get_kpis",
+      "group": "operations-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_parents",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_search",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_check_cin_exists",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_by_cin",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_by_phone",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_children",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_parent",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_create",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_link_student",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_update",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_delete_bulk",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_delete",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_unlink_student",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_delete_all",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_unread_alerts",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_children",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_all_fees_due",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_all_upcoming_events",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_all",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_today",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_this_month",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_this_week",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_pending_checks",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_overdue_checks",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_total_revenue",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_revenue_by_payment_method",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_monthly_revenue",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_revenue_stats",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_top_paying_students",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_by_id",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_by_student",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_by_fee_id",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_by_receipt_number",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_record",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_update",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_refund",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_void_payment",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_update_check_status",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_all",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_by_period",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_by_staff",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_by_id",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_run",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_pay_staff",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_pay_staff_bulk",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_unpay_staff",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_pay",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_update",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_delete_bulk",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_delete",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_refuels",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_count",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_recent_records",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_today_records",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_voucher_number",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_date",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_vehicle_id",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_driver_id",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_refuel",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_create",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_update",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_delete",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_delete_all",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_consumption_analytics",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_efficiency_report",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_cost_analysis",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_summary",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_vehicle_fuel_efficiency",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_vehicle_fuel_costs",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_monthly_fuel_trends",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_driver_refuel_stats",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "rollover_preview",
+      "group": "rollover",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "rollover_commit",
+      "group": "rollover",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_global",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_students",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_teachers",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_parents",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_sections",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_classes",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_teachers",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_parents",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_students",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_analytics",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_section",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_create",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_update",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_delete",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_delete_all",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_get_public_settings",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_get_admin_settings",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_update",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_create",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_get_by_id",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff_count",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_attendance_roster",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff_by_role",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_by_employee_code",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_by_cin",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff_member",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_create",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_update",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_delete_bulk",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_delete",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_list",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_list_active",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_create",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_update",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_remove",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_get_students",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_get_student",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_get_student_parents",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_create",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_update",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_delete_bulk",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_delete",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_delete_all",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_overview",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_academic",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_attendance_summary",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_financial",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_transport",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_get_all",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_get_by_vehicle",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_get_by_student",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_get_by_id",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_assign",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_update",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_reassign",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_unassign",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_unassign_at",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_delete",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_get_subjects",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_get_subject",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_create",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_seed_subjects",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_update",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_delete",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_delete_all",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_teachers",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_teacher",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_by_cin",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_by_email",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_by_phone",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_classes",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_students",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_assign_subject",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_unassign_subject",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_assign_class",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_unassign_class",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_create",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_update",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_delete_bulk",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_delete",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_delete_all",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-dashboard_get_overview",
+      "group": "teacher-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-dashboard_get_attendance_trend",
+      "group": "teacher-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_my_classes",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_schedule_today",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_pending_grading",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_my_students",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_all",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_by_vehicle_id",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_by_driver_id",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_by_id",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_create",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_assign_driver",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_update",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_unassign",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_delete",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_get_vehicles",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_get_vehicles_count",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_get_vehicle",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_create",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_update",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_delete",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_delete_all",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_get_zones",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_get_zone",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_create",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_update",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_delete",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_appearance_get",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_appearance_reset",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_presets_list",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_preset_apply",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_branding_get",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    }
+  ],
+  "diagnostic": {
+    "status": "routed",
+    "elapsedMs": 359,
+    "finalTools": [
+      "attendance_mark",
+      "students_get_students"
+    ],
+    "matches": [
+      {
+        "toolName": "attendance_mark",
+        "similarity": 0.5273412623209139,
+        "source": "semantics"
+      },
+      {
+        "toolName": "attendance_mark",
+        "similarity": 0.5238783515655505,
+        "source": "semantics"
+      },
+      {
+        "toolName": "attendance_mark",
+        "similarity": 0.5031854064221803,
+        "source": "semantics"
+      },
+      {
+        "toolName": "attendance_mark",
+        "similarity": 0.4885328557650108,
+        "source": "semantics"
+      },
+      {
+        "toolName": "attendance_mark",
+        "similarity": 0.48839448288629816,
+        "source": "semantics"
+      }
+    ],
+    "dependencies": [
+      {
+        "toolName": "students_get_students",
+        "reason": "dependency_of:attendance_mark"
+      }
+    ],
+    "confirmationTools": [
+      "attendance_mark"
+    ]
+  },
+  "blockers": []
+}

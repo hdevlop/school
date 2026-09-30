@@ -1,0 +1,139 @@
+{
+  "capturedAt": "2026-09-30T16:26:10.955Z",
+  "mode": "built-Najm-adapter-direct-local-embedding-smoke",
+  "model": "embeddinggemma-300M-Q8_0",
+  "llamaBuild": "b11146",
+  "threads": 2,
+  "gpuLayers": 0,
+  "health": {
+    "ok": true,
+    "provider": "openai-compatible",
+    "baseUrl": "http://127.0.0.1:18080/v1",
+    "model": "embeddinggemma",
+    "latencyMs": 31
+  },
+  "documents": [
+    "Record student attendance and absences for a class.",
+    "Get a student grade report and exam marks.",
+    "Get unpaid school fees and payment history."
+  ],
+  "samples": [
+    {
+      "id": "attendance-read-en",
+      "language": "en",
+      "query": "Show today's student attendance.",
+      "ms": 49,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.6582765341722748,
+        0.4088901678497158,
+        0.37534000504784537
+      ],
+      "best": 0
+    },
+    {
+      "id": "attendance-read-fr",
+      "language": "fr",
+      "query": "Affiche les présences et absences des élèves aujourd'hui.",
+      "ms": 74,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.6661252219029602,
+        0.3762506351297364,
+        0.3552568627540698
+      ],
+      "best": 0
+    },
+    {
+      "id": "attendance-read-ar",
+      "language": "ar",
+      "query": "اعرض حضور وغياب التلاميذ اليوم.",
+      "ms": 79,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.580440192555671,
+        0.31860812020233925,
+        0.27715564883353533
+      ],
+      "best": 0
+    },
+    {
+      "id": "attendance-read-es",
+      "language": "es",
+      "query": "Muestra la asistencia de los alumnos de hoy.",
+      "ms": 78,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.6240296220915,
+        0.37511983953217176,
+        0.3203670205300818
+      ],
+      "best": 0
+    },
+    {
+      "id": "grade-report-en",
+      "language": "en",
+      "query": "Show Salma's grade report.",
+      "ms": 51,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.2973508570214688,
+        0.4713050417407724,
+        0.20692061005790355
+      ],
+      "best": 1
+    },
+    {
+      "id": "grade-report-fr",
+      "language": "fr",
+      "query": "Affiche le bulletin de notes de Salma.",
+      "ms": 64,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.274588298233378,
+        0.30721561537005676,
+        0.18573872869286778
+      ],
+      "best": 1
+    },
+    {
+      "id": "grade-report-ar",
+      "language": "ar",
+      "query": "اعرض بيان نقط سلمى.",
+      "ms": 46,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.0782906723824484,
+        0.14000863701790447,
+        0.045269873579560006
+      ],
+      "best": 1
+    },
+    {
+      "id": "grade-report-es",
+      "language": "es",
+      "query": "Muestra el boletín de notas de Salma.",
+      "ms": 59,
+      "dimensions": 768,
+      "finite": true,
+      "scores": [
+        0.20789331029647515,
+        0.2207483612488552,
+        0.15350022612556935
+      ],
+      "best": 1
+    }
+  ],
+  "limitations": [
+    "Not School runtime routing or VPS performance.",
+    "Three synthetic documents only; not a routing accuracy benchmark.",
+    "Model was already loaded; queries bypassed adapter cache."
+  ]
+}

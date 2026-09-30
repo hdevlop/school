@@ -22,7 +22,7 @@
         "najm-kit": "2.16.14",
         "najm-mcp": "2.2.2",
         "najm-next": "0.8.0",
-        "najm-rag": "2.0.3",
+        "najm-rag": "2.1.1",
         "najm-rate": "2.1.1",
         "najm-storage": "3.0.0",
         "najm-theme": "0.2.2",
@@ -171,7 +171,7 @@
         "najm-guard": "2.2.0",
         "najm-i18n": "2.1.2",
         "najm-mcp": "2.2.2",
-        "najm-rag": "2.0.3",
+        "najm-rag": "2.1.1",
         "najm-rate": "2.1.1",
         "najm-storage": "3.0.0",
         "najm-theme": "0.2.2",
@@ -225,7 +225,7 @@
     "najm-kit": "2.16.14",
     "najm-mcp": "2.2.2",
     "najm-next": "0.8.0",
-    "najm-rag": "2.0.3",
+    "najm-rag": "2.1.1",
     "najm-rate": "2.1.1",
     "najm-storage": "3.0.0",
     "najm-theme": "0.2.2",
@@ -1557,7 +1557,7 @@
 
     "najm-next": ["najm-next@0.8.0", "", { "peerDependencies": { "@tanstack/react-query": "^5", "najm-auth": "^4.0.4", "najm-i18n": "^2.1.2", "najm-kit": "^2.15.0", "najm-theme": "^0.2.1", "next": ">=15.3.0 <17", "react": ">=18.2.0 <20" }, "optionalPeers": ["@tanstack/react-query", "najm-auth", "najm-i18n", "najm-kit", "najm-theme"] }, "sha512-kHnKJ8cIAKV+wpe5PqnUwljFKaqB3+PaAZiBp1Wz/tESjJ6QwDZyareO9ec5oBBMV+V7HIu63RJMp+XL47AR2A=="],
 
-    "najm-rag": ["najm-rag@2.0.3", "", { "dependencies": { "najm-core": "^2.0.5", "pdf-parse": "^1.1.1" }, "peerDependencies": { "drizzle-orm": "^0.45.1", "hono": "^4.0.0", "najm-auth": "^3.2.1", "najm-database": "^2.0.3", "najm-guard": "^2.0.2", "najm-mcp": "^2.1.1", "najm-storage": "^2.2.0", "najm-validation": "^2.0.2", "reflect-metadata": "^0.2.0", "sqlite-vec": "^0.1.9", "zod": "^4.0.0" }, "optionalPeers": ["najm-storage", "sqlite-vec"] }, "sha512-Q+FCypW7PnCFUOytXn99J2pWmLXKK1Kpj6y+6UM76OMGV23gQkXcRg1zGk7SikDnMZuSAhtbUde6pTjKnnHeMg=="],
+    "najm-rag": ["najm-rag@2.1.1", "", { "dependencies": { "najm-core": "^3.0.0", "pdf-parse": "^1.1.1" }, "peerDependencies": { "drizzle-orm": "^0.45.1", "hono": "^4.0.0", "najm-auth": "^4.2.3", "najm-database": "^2.0.4", "najm-guard": "^2.2.0", "najm-mcp": "^2.2.2", "najm-storage": "^3.0.0", "najm-validation": "^2.0.2", "reflect-metadata": "^0.2.0", "sqlite-vec": "^0.1.9", "zod": "^4.0.0" }, "optionalPeers": ["najm-storage", "sqlite-vec"] }, "sha512-lLtLYifhJAj8xYmRDaiQblClB7VlGWFFG4BSnooBUnfYqkHEUt6MFJ0b9eDVVEZssYL/JkiyVMQSN/s9tfA/LQ=="],
 
     "najm-rate": ["najm-rate@2.1.1", "", { "dependencies": { "najm-cache": "^2.1.2", "najm-core": "^2.0.6", "najm-guard": "^2.0.2" }, "peerDependencies": { "hono": "^4.0.0" } }, "sha512-uLFdZkIF7sH03b+qECo0ur6xsklVr/h8ksuL/od3DkJhQbEqbNrf2FqWMaJrISzLupuZq4GTUWW2Nsemp2GYuw=="],
 

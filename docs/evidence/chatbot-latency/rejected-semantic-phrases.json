@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "purpose": "General teacher task descriptions for local routing; no phrase duplicates a routing evaluation query.",
+  "items": [
+    {
+      "toolName": "attendance_mark",
+      "phrases": [
+        { "lang": "en", "phrase": "Record a pupil as absent from school attendance." },
+        { "lang": "fr", "phrase": "Enregistrer l'absence d'un élève dans la feuille de présence." },
+        { "lang": "ar", "phrase": "تسجيل غياب تلميذ في سجل الحضور المدرسي." },
+        { "lang": "es", "phrase": "Registrar la falta de asistencia de un estudiante." },
+        { "lang": "ary", "phrase": "تسجيل الغياب ديال تلميذ فالحضور ديال المدرسة." }
+      ]
+    },
+    {
+      "toolName": "grades_get_student_report",
+      "phrases": [
+        { "lang": "en", "phrase": "View a student's report card with their grades and marks." },
+        { "lang": "fr", "phrase": "Consulter le bulletin scolaire avec les notes d'un élève." },
+        { "lang": "ar", "phrase": "عرض كشف النقط والنتائج الدراسية للتلميذ." },
+        { "lang": "es", "phrase": "Consultar el boletín escolar con las calificaciones del alumno." },
+        { "lang": "ary", "phrase": "شوف النقط ديال التلميذ فالبولتان ديالو." }
+      ]
+    },
+    {
+      "toolName": "grades_create",
+      "phrases": [
+        { "lang": "en", "phrase": "Enter a student's score for an existing classroom assessment." },
+        { "lang": "fr", "phrase": "Saisir la note obtenue par un élève à une évaluation de classe." },
+        { "lang": "ar", "phrase": "إدخال نقطة تلميذ في فرض مدرسي موجود." },
+        { "lang": "es", "phrase": "Introducir la nota de un alumno en una evaluación existente." }
+      ]
+    }
+  ],
+  "dependencies": {
+    "attendance_mark": ["students_get_students"],
+    "grades_get_student_report": ["students_get_students"],
+    "grades_get_by_student": ["students_get_students"],
+    "grades_create": ["students_get_students", "assessments_get_all"]
+  }
+}
