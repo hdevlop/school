@@ -255,12 +255,19 @@ Tick each line and write the outcome next to it.
       all refused or show only the active year.
 - [ ] Each sees only their own or their children's records.
 
-### 7. Activating a year (disposable database only)
+### 7. Activating the next year (at the real start of 2027-2028, not now)
+
+The school is in 2026-2027, and during the year an admin only looks back at
+2025-2026 and 2024-2025 (steps 1-5). Activation accepts only the next draft
+year from its first reporting day, so this happens once, on or after
+2027-09-01, when the school opens 2027-2028. Do not fake the date to run it
+early; the server side (one switch, two at once, rollback) passes on
+`school_history_test`.
 
 - [ ] With one tab on "active" and another on an explicit old year, activate
-      the prepared next year. The "active" tab moves to it after its context
-      refreshes; the explicit tab stays. Only the lifecycle action changed
-      Settings and current classes.
+      2027-2028. The "active" tab moves to it after its context refreshes;
+      the explicit tab stays. Only the lifecycle action changed Settings and
+      current classes.
 
 ### 8. Language, layout and forms
 

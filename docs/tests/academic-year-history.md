@@ -1,8 +1,18 @@
 # Academic-year history implementation evidence
 
+## Migration `0061` on the school's database, 2026-09-30
+
+The owner confirmed that `school` (localhost) is the school's database and authorized the change.
+
+- **Backup.** A `pg_dump` custom-format backup was taken before any change and read back with `pg_restore --list` (84 tables with data). It is kept outside the repository.
+- **Migration.** `school` had 61 migrations (`0058`-`0060` included) and no duplicate fee-type or role names. `bun run db:migrate` applied `0061`; there are now 62, both indexes exist, and `db:check` is clean.
+- **Smoke test** through the running app on :3102, signed in as the admin. Each of 2024-2025, 2025-2026 and 2026-2027 returns its own students, fees, alerts, announcements and attendance (different record fingerprints per year; attendance 20081, 20203 and 1747 rows). A request without a year returns exactly 2026-2027's; `X-Academic-Year: active` is refused as malformed. Creating a fee type named after an existing one in upper case with surrounding spaces is refused (409, "A fee type with this name already exists"), and the count stays 9.
+- **Browser step 7 moved to 2027-09-01.** The school is in 2026-2027 and an admin only looks back at past years during it (steps 1-5, passed). Activating 2027-2028 is the start-of-year event and is accepted only from that year's first day; the check runs then, not with a faked date.
+- **Step 6's assistant not run.** The chat provider (key and model ID) is not configured and local Ollama on 11434 is not running.
+
 ## Rollover under concurrency, fee-type names, and the remaining page fixes, 2026-09-30
 
-Uncommitted in School.
+Committed in School as `b4f5d5d`.
 
 - **Rollover commit (plan row 23).** Two commits of one preview both read it as previewed and wrote every fee, and each fee committed alone, so a failure midway left a half-billed year and a retry marked the run failed. `commit` is now one transaction: it takes `pg_advisory_xact_lock` on the target year before reading the run, writes each fee inside a savepoint, records a refused fee (4xx) as an error item and rethrows anything else. Fixture (`RolloverHistoryTransport`): two racing commits give two fees, two success items and one committed run; a trigger that fails the run's second fee insert leaves no fee, no item and a previewed run, and after it is dropped a retry commits both. Both cases fail on the previous code. The fees table's unique index already prevented a double charge.
 - **Fee-type names (row 18).** Migration `0061` adds `fee_types_name_normalized_unique` on `lower(btrim(name))`; `getByName` compares the same way, and a violation of that index is the usual 409. Fixture (`FeeTypesHistoryTransport`): four racing creates in different case and spacing give one row and three 409s; fails on the previous code. `drizzle-kit generate` also emitted `roles_name_unique`, declared by najm-auth's schema and missing in both local databases (no duplicate role or fee-type names in either). `0061` is applied to `school_history_test` only; the demo database and production are the owner's.
