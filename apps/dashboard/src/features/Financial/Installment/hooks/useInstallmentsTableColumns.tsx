@@ -7,7 +7,7 @@ import { useTranslation } from 'najm-i18n/react';
 
 export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (installment: any) => void; onPay?: (installment: any) => void } = {}) => {
   const { t } = useTranslation();
-  const { displayDate, majorMoney } = useSchoolFormat();
+  const { displayDateOnly, majorMoney } = useSchoolFormat();
   return useMemo(() => [
     {
       accessorKey: "number",
@@ -26,7 +26,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
       cell: ({ getValue }: any) => (
         <div className="flex items-center gap-2">
           <span>📅</span>
-          <span>{displayDate(getValue())}</span>
+          <span>{displayDateOnly(getValue())}</span>
         </div>
       ),
     },
@@ -52,7 +52,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
         return paidDate ? (
           <div className="flex items-center gap-2 text-green-600">
             <span>✓</span>
-            <span>{displayDate(paidDate)}</span>
+            <span>{displayDateOnly(paidDate)}</span>
           </div>
         ) : (
           <span className="text-gray-400">-</span>
@@ -134,5 +134,5 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
         );
       },
     }
-  ], [onPay, onView, t, displayDate, majorMoney]);
+  ], [onPay, onView, t, displayDateOnly, majorMoney]);
 };

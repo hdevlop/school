@@ -12,7 +12,7 @@ import { useParentsTableColumns } from '../hooks/useParentsTableColumns';
 import { useParentsTableFilters } from '../hooks/useParentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 const getParentRowClassName = (parent) => {
   const isOrphaned = parent?.isOrphaned === true || Number(parent?.totalChildren) === 0;
@@ -118,7 +118,7 @@ function ParentsTable() {
       <NPageHeader
         icon={HeartHandshake}
         title={t('navigation.parents')}
-        subtitle={hasFailedToLoad(error, parents) ? undefined : t('parents.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, parents, isParentsLoading) ? undefined : t('parents.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

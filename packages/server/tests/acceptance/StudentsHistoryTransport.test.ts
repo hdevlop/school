@@ -123,7 +123,7 @@ describe('student history over authenticated REST and MCP', () => {
       .toBe('history-section-2025-b');
   });
   it('refuses missing permissions, invalid years, conflicting selections and out-of-year roster dates', async () => {
-    expect((await request('/students', '2025-2026', 'GET', undefined, outsiderToken)).status).toBe(401);
+    expect((await request('/students', '2025-2026', 'GET', undefined, outsiderToken)).status).toBe(403);
     expect((await request('/students', 'bad')).status).toBe(400);
     expect((await request('/students?academicYear=2026-2027')).status).toBe(400);
     expect((await request('/students?onDate=2024-10-01')).status).toBe(400);

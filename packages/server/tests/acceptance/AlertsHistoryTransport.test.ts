@@ -58,7 +58,7 @@ describe('authenticated Alerts REST on the marked PostgreSQL fixture', () => {
     ]);
     expect(old.status).toBe(200);
     expect(current.status).toBe(200);
-    expect(denied.status).toBe(401);
+    expect(denied.status).toBe(403);
     expect(old.body.data.map((item: { id: string }) => item.id).sort()).toEqual([
       'history-alert-2025-attendance', 'history-alert-2025-reminder',
       'history-alert-shared-emergency', 'history-alert-shared-system',

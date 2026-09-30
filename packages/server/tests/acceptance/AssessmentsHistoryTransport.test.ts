@@ -58,7 +58,7 @@ describe('authenticated Assessments transport on the marked PostgreSQL fixture',
     expect((await request('/assessments/history-assessment-2025', '2026-2027')).status).toBe(404);
     expect((await request('/assessments?academicYear=2026-2027', '2025-2026')).status).toBe(400);
     expect((await request('/assessments', '2025')).status).toBe(400);
-    expect((await request('/assessments', '2025-2026', 'GET', undefined, principalToken)).status).toBe(401);
+    expect((await request('/assessments', '2025-2026', 'GET', undefined, principalToken)).status).toBe(403);
   });
 
   it('creates in a past year only for matching sections and scopes updates and deletion', async () => {

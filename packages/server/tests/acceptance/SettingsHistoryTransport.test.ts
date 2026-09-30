@@ -107,7 +107,7 @@ describe('settings over the history fixture', () => {
     const admin = await request('/settings/admin', '2024-2025');
     expect(admin.status).toBe(200);
     expect(admin.body.data.id).toBe(stored.id);
-    expect((await request('/settings/admin', undefined, 'GET', undefined, outsiderToken)).status).toBe(401);
+    expect((await request('/settings/admin', undefined, 'GET', undefined, outsiderToken)).status).toBe(403);
   });
 
   // An update named one field and reset every other one to its default.
@@ -127,7 +127,7 @@ describe('settings over the history fixture', () => {
         principalToken);
       expect(principal.status).toBe(200);
       expect(withoutEdit(await row())).toEqual(withoutEdit(edited));
-      expect((await request('/settings', undefined, 'PUT', { schoolName: 'Outsider' }, outsiderToken)).status).toBe(401);
+      expect((await request('/settings', undefined, 'PUT', { schoolName: 'Outsider' }, outsiderToken)).status).toBe(403);
     } finally {
       await restore();
     }

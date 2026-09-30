@@ -197,12 +197,14 @@ states that drift apart — so do not add one without changing the plan first.
 - **Sidebar state** belongs to `NSidebarProvider` from `najm-kit`, read with `useNSidebar()`. School has no sidebar store.
 - **Translations** live in `packages/contracts/src/locales/` (`@sms/contracts/locales`) and serve backend and frontend from one catalog, consumed from source with no build step. Run `bun run i18n:check` after adding keys.
 - **One direction for workspace imports.** Browser code reaches `@sms/contracts` only; server components and route handlers may also import `@sms/server` exports; server never imports app or seed; contracts imports no workspace package. Cross-package imports use declared package `exports`, never relative paths or aliases. `bun run test:boundaries` enforces this; `docs/architecture/workspace.md` is the reference.
+- **Every route states its guard.** `packages/server/src/config/index.ts` registers `guards({ default: [isAuth()] })` before `auth()`, so a route that declares no guard asks for sign-in instead of being public. The default is a safety net, not a policy: sign-in alone lets any account in, so give each route the guard its data needs and mark a deliberately public one `@Public()` from `najm-guard`. Najm mounts only the controllers that `.load()` or a plugin declares; storage management takes `manageGuards`. `test:security:transport` fails on a route that relies on the default, and on any route left open or behind sign-in alone that is not on its reviewed lists.
 
 ### Local Najm Package Sources
 
-- Read installed behavior from `node_modules/najm-*/dist` first. That is what School actually runs.
-- A local Najm source checkout may be consulted **read-only** to understand internals. Never make School consume it: no workspace link, no `file:` dependency, no copied source, no tarball. School upgrades only by pinning a published version.
-- Najm versions are exact pins in the root `package.json` with a matching `overrides` block. Read the versions there rather than assuming, and never widen a pin to a range.
+- Load the `najm` skill, then read Najm internals from the source at `C:\Users\hdevlop\Desktop\najm\packages\<package>\src`; diject's source is `C:\Users\hdevlop\Desktop\diject\src`. Do not read or grep `node_modules/najm-*` or `node_modules/diject`.
+- That source is what School runs only while each package's version there matches the root pin. Compare them whenever a pin changes, and report a mismatch instead of falling back to `node_modules`.
+- The Desktop checkouts are **read-only** reference. Never make School consume them: no workspace link, no `file:` dependency, no copied source, no tarball. School upgrades only by pinning a published version.
+- Najm versions are exact pins in the root `package.json` with a matching `overrides` block. Read the versions there rather than assuming, and never widen a pin to a range. `scripts/tests/najm-pins.test.mjs` checks that every workspace declares the same pins.
 
 ### Design Guidance
 

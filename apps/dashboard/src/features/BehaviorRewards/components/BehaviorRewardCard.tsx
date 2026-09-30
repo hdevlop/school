@@ -3,15 +3,16 @@
 import { Award, CalendarClock, School, Star } from 'lucide-react';
 import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
-  formatBehaviorDate,
   recognitionClasses,
   rewardClasses,
   tagClass,
 } from '../behaviorRewardConstants';
 
 const BehaviorRewardCard = ({ data }: { data: any }) => {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
   const reward = data;
 
   return (
@@ -49,7 +50,7 @@ const BehaviorRewardCard = ({ data }: { data: any }) => {
           </div>
           <div className="flex items-center gap-2">
             <CalendarClock className="h-4 w-4 text-emerald-600" />
-            <span>{formatBehaviorDate(reward.behaviorAt, language)}</span>
+            <span>{displayDateTime(reward.behaviorAt)}</span>
           </div>
         </div>
       </div>

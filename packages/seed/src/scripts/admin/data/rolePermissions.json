@@ -101,6 +101,14 @@
     ]
   },
   {
+    "roleName": "accounting",
+    "permissions": [
+      "read:students",
+      "read:classes",
+      "read:sections"
+    ]
+  },
+  {
     "roleName": "teacher",
     "permissions": [
       "read:teachers",
@@ -126,7 +134,9 @@
       "read:alerts",
       "update:alerts",
       "read:announcements",
-      "read:events"
+      "read:events",
+      "read:assessments",
+      "read:exams"
     ]
   },
   {

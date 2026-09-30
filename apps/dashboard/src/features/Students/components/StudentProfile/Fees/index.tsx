@@ -20,13 +20,6 @@ const toNumber = (value: unknown) => {
   return Number.isFinite(amount) ? amount : 0;
 };
 
-const formatDate = (value: string | null | undefined, language: string) => {
-  if (!value) return '—';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '—';
-  return date.toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
-};
-
 const getRemaining = (installment: any) =>
   Math.max(toNumber(installment?.amount) - toNumber(installment?.paidAmount), 0);
 
@@ -92,8 +85,8 @@ const getFeeStatus = (fee: any, remaining: number, overdueCount: number) => {
 };
 
 export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
-  const { majorMoney } = useSchoolFormat();
-  const { t, language } = useTranslation();
+  const { majorMoney, displayDateOnly } = useSchoolFormat();
+  const { t } = useTranslation();
   // The viewed year's fees, totals and installments; every year's with history off.
   const { viewingYear } = useViewingAcademicYear();
   const { studentFees, isStudentFeesLoading } = useFees({ studentId, studentYear: viewingYear, enabled: false });
@@ -203,7 +196,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
       header: t('students.profile.nextDue'),
       enableSorting: true,
       cell: ({ row }) => (
-        <span className="whitespace-nowrap font-medium text-slate-600">{formatDate(row.original.dueDate, language)}</span>
+        <span className="whitespace-nowrap font-medium text-slate-600">{displayDateOnly(row.original.dueDate)}</span>
       ),
     },
     {
@@ -246,7 +239,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
         </div>
       ),
     },
-  ], [language, t, majorMoney]);
+  ], [displayDateOnly, t, majorMoney]);
 
   if (!studentId) {
     return (
@@ -305,7 +298,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
     {
       icon: CalendarClock,
       label: t('students.profile.nextDue'),
-      value: feeData.nextDue ? formatDate(feeData.nextDue.dueDate, language) : t('common.none'),
+      value: feeData.nextDue ? displayDateOnly(feeData.nextDue.dueDate) : t('common.none'),
       subtext: t('students.profile.feeDetails.oldestUnpaid'),
       iconClassName: 'bg-amber-50 text-amber-600 group-hover:bg-amber-100',
     },
@@ -339,7 +332,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
           </div>
           {feeData.summary.lastPayment ? (
             <span className="text-xs font-bold text-slate-500">
-              {t('students.profile.feeDetails.lastPayment')}: {formatDate(feeData.summary.lastPayment, language)}
+              {t('students.profile.feeDetails.lastPayment')}: {displayDateOnly(feeData.summary.lastPayment)}
             </span>
           ) : null}
         </div>

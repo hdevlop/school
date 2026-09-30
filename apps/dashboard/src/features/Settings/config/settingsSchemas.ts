@@ -4,6 +4,8 @@ import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
 import { schoolI18n } from '@sms/contracts/locales';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
+import { SETTINGS_DATE_FORMAT_VALUES, SETTINGS_TIME_FORMAT_VALUES } from './dateTimeFormats';
+export { SETTINGS_DATE_FORMAT_VALUES, SETTINGS_TIME_FORMAT_VALUES } from './dateTimeFormats';
 
 const emailField = z.string().email('Invalid email format').or(z.literal(''));
 const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
@@ -40,16 +42,6 @@ export const ATTENDANCE_MODE_VALUES = ['daily', 'per_class'] as const;
 export type AttendanceMode = (typeof ATTENDANCE_MODE_VALUES)[number];
 
 export const SETTINGS_THEME_VALUES = ['light', 'dark'] as const;
-
-export const SETTINGS_DATE_FORMAT_VALUES = [
-  'YYYY-MM-DD',
-  'MM/DD/YYYY',
-  'DD/MM/YYYY',
-  'DD-MM-YY',
-  'DD-MM-YYYY',
-] as const;
-
-export const SETTINGS_TIME_FORMAT_VALUES = ['12', '24'] as const;
 
 // Only what the settings screen shows. A field with a default and no input
 // would be submitted on every save and overwrite the stored value: the year's

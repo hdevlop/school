@@ -9,7 +9,7 @@ import { useTranslation } from 'najm-i18n/react';
 
 const InstallmentCard = ({ data }: any) => {
   const { t } = useTranslation();
-  const { displayDate, majorMoney } = useSchoolFormat();
+  const { displayDateOnly, majorMoney } = useSchoolFormat();
   const installment = data;
 
   const statusConfig = {
@@ -73,7 +73,7 @@ const InstallmentCard = ({ data }: any) => {
             icon={Calendar}
             iconColor="text-muted-foreground"
             label={t('fees.table.dueDate')}
-            value={displayDate(installment.dueDate)}
+            value={displayDateOnly(installment.dueDate)}
             valueColor="text-muted-foreground"
           />
 
@@ -82,7 +82,7 @@ const InstallmentCard = ({ data }: any) => {
               icon={CheckCircle}
               iconColor="text-green-600"
               label="Paid Date"
-              value={displayDate(installment.paidDate)}
+              value={displayDateOnly(installment.paidDate)}
               valueColor="text-green-600"
             />
           )}

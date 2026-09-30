@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { count, eq, like } from 'drizzle-orm';
 import type { RouteEntry } from 'najm-core';
+import type { GuardPluginConfig } from 'najm-guard';
 import { rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -14,15 +15,16 @@ if (!['localhost', '127.0.0.1', '[::1]'].includes(target.hostname)
 process.env.DB_URL = rawUrl;
 
 const { INJECTION_TYPES } = await import('najm-core');
-const { getGuardMetadata } = await import('najm-guard');
+const { GUARD_CONFIG, getEffectiveGuards, getGuardMetadata } = await import('najm-guard');
 const { db } = await import('../../src/database/db');
 const { permissions, rolePermissions, roles, users } = await import('../../src/database/schema');
 const { server } = await import('../../src/index');
 
-// Reviewed routes with no guard: sign-in, registration and password recovery;
-// OAuth, which najm-auth answers with 404 for a provider School has not
-// configured; the sign-in page's appearance and branding; health probes; and
-// cron triggers that check FINANCIAL_CRON_SECRET themselves.
+// Reviewed routes that run no guard, each marked @Public(): sign-in,
+// registration and password recovery; OAuth, which najm-auth answers with 404
+// for a provider School has not configured; the sign-in page's appearance and
+// branding; health probes; and cron triggers that check FINANCIAL_CRON_SECRET
+// themselves.
 const PUBLIC_ROUTES = [
   'GET /api/appearance',
   'GET /api/auth/credential-setup/setup',
@@ -164,22 +166,45 @@ afterAll(async () => {
 });
 
 describe('route security over the history fixture', () => {
-  // A route added without a guard, or behind sign-in alone, fails here until
-  // it is reviewed. Disabled plugin controllers must not appear in this list.
+  // Routes are sorted by the guards that run: their own, none for @Public(),
+  // or School's default sign-in guard. A route added without a guard, a route
+  // behind sign-in alone, or a public route that lost @Public() fails here
+  // until it is reviewed. Disabled plugin controllers must not appear at all.
   it('leaves no route open, or behind sign-in alone, that was not reviewed', () => {
+    const config = server.container.get(GUARD_CONFIG) as GuardPluginConfig;
+    class Undeclared { read() {} }
+    expect(getEffectiveGuards(Undeclared, 'read', config).map((guard) => guard.guardClass.name)).toEqual(['AuthGuard']);
+
     const routes = server.container.getInjections<RouteEntry>(INJECTION_TYPES.ROUTE);
     const open: string[] = [];
     const signInOnly: string[] = [];
+    const defaultOnly: string[] = [];
     for (const route of routes) {
-      const names = [...getGuardMetadata(route.target), ...getGuardMetadata(route.target, route.methodName)]
-        .map((guard) => guard.guardClass?.name);
+      const names = getEffectiveGuards(route.target, route.methodName, config).map((guard) => guard.guardClass.name);
+      const declared = [...getGuardMetadata(route.target), ...getGuardMetadata(route.target, route.methodName)];
       const line = `${route.method.toUpperCase()} ${route.path}`;
       expect(route.path).not.toMatch(/^\/api\/tools\/(auth|users|roles|permissions)(\/|$)/);
       if (names.length === 0) open.push(line);
       else if (names.every((name) => name === 'AuthGuard')) signInOnly.push(line);
+      // The default is a safety net: every route says what it needs.
+      if (declared.length === 0 && names.length > 0) defaultOnly.push(line);
     }
     expect(open.sort()).toEqual([...PUBLIC_ROUTES].sort());
     expect(signInOnly.sort()).toEqual([...SIGN_IN_ROUTES].sort());
+    expect(defaultOnly).toEqual([]);
+  });
+
+  it('answers the deliberate public routes without sign-in', async () => {
+    for (const path of ['/appearance', '/branding', '/health', '/health/ping']) {
+      expect(await status(path, { token: null }), path).toBe(200);
+    }
+    // Readiness answers 503 when a dependency is down, never a sign-in refusal.
+    expect(await status('/health/status', { token: null })).not.toBe(401);
+    expect(await status('/auth/logout', { method: 'POST', token: null })).toBe(200);
+    // The cron triggers refuse a missing secret themselves.
+    const cron = await send('/financial-notifications/cron/overdue', { method: 'POST', token: null, json: {} });
+    expect(cron.status).toBe(401);
+    expect(await cron.text()).toContain('FINANCIAL_CRON_SECRET');
   });
 
   it('does not mount the disabled storage studio', async () => {
@@ -206,7 +231,8 @@ describe('route security over the history fixture', () => {
     for (const token of [rolelessToken, readerToken]) {
       for (const [method, path] of refused) {
         const init = method === 'POST' ? { method, token, body: png, type: 'image/png' } : { method, token };
-        expect(await status(path, init), `${method} ${path}`).toBe(401);
+        // Signed in and refused: 403, so the client does not refresh and retry.
+        expect(await status(path, init), `${method} ${path}`).toBe(403);
       }
     }
 
@@ -259,7 +285,7 @@ describe('route security over the history fixture', () => {
 
   it('reads timetables with read:classes, and refuses an account with no role', async () => {
     for (const path of ['/class-routines/periods', '/class-routines']) {
-      expect(await status(path, { token: rolelessToken }), path).toBe(401);
+      expect(await status(path, { token: rolelessToken }), path).toBe(403);
       const read = await send(path, { token: readerToken });
       expect(read.status, `${path} ${await read.clone().text()}`).toBe(200);
     }

@@ -142,7 +142,7 @@ describe('staff over the history fixture', () => {
     const driver = await request(`/staff/${DRIVER_STAFF}`);
     expect(driver.body.data.assignments.map((row: Record<string, unknown>) => [row.id, row.startDate, row.endDate, row.current]).sort())
       .toEqual([[id('bus-2024'), '2024-09-01', '2025-07-01', false], [id('bus-now'), '2025-09-01', null, true]]);
-    expect((await request(`/staff/${CLEANER}`, undefined, 'GET', undefined, principalToken)).status).toBe(401);
+    expect((await request(`/staff/${CLEANER}`, undefined, 'GET', undefined, principalToken)).status).toBe(403);
   });
 
   // Every save deleted the assignments of every year and inserted the request again.

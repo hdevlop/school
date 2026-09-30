@@ -222,14 +222,14 @@ describe('profiles over the history fixture', () => {
       pendingGrading: await status(`/profiles/teachers/${TEACHER}/pending-grading`, librarianToken),
     };
     expect(librarianStatuses).toEqual({
-      overview: 200, academic: 401, attendance: 401, financial: 401, transport: 401,
-      unreadAlerts: 401, children: 401, feesDue: 401, upcomingEvents: 401,
-      teacherClasses: 200, teacherToday: 200, teacherStudents: 200, pendingGrading: 401,
+      overview: 200, academic: 403, attendance: 403, financial: 403, transport: 403,
+      unreadAlerts: 403, children: 403, feesDue: 403, upcomingEvents: 403,
+      teacherClasses: 200, teacherToday: 200, teacherStudents: 200, pendingGrading: 403,
     });
     // Fees stay with the finance roles and student routes with the administrator.
     expect(await status(`/profiles/students/${OMAR}/financial`, principalToken)).toBe(200);
     expect(await status(`/profiles/parents/${parentId}/fees-due`, principalToken)).toBe(200);
-    expect(await status(`/profiles/students/${OMAR}/transport`, principalToken)).toBe(401);
+    expect(await status(`/profiles/students/${OMAR}/transport`, principalToken)).toBe(403);
     expect(await status(`/profiles/students/${OMAR}/overview`, '')).toBe(401);
   });
 

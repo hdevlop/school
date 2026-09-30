@@ -6,23 +6,17 @@ import { NSectionInfo } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-
-const formatDate = (value) => {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleString();
-  } catch {
-    return String(value);
-  }
-};
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { STATUS_COLORS } from '../announcementDisplay';
 
 const AnnouncementCard = ({ data }: any) => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
   const a = data;
   const status = a.isPublished ? 'published' : 'draft';
   const authorName = a.author?.name || a.author?.email;
-  const publishDate = formatDate(a.publishDate);
-  const expiryDate = formatDate(a.expiryDate);
+  const publishDate = a.publishDate ? displayDateOnly(a.publishDate) : null;
+  const expiryDate = a.expiryDate ? displayDateOnly(a.expiryDate) : null;
   const classCount = a.classIds?.length || 0;
   const classLabel = a.class?.name
     ? `${a.class.name}${classCount > 1 ? ` +${classCount - 1}` : ''}`
@@ -41,7 +35,7 @@ const AnnouncementCard = ({ data }: any) => {
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-md font-bold">{a.title}</Label>
-          <NBadge status={status} />
+          <NBadge color={STATUS_COLORS[status]} label={t(`announcements.status.${status}`)} look="soft" />
         </div>
 
         {a.content && (

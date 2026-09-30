@@ -1,17 +1,18 @@
 import { useMemo } from 'react';
 import { NAvatar, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
   ACTION_COLORS,
   SEVERITY_COLORS,
   STATUS_COLORS,
-  formatDisciplineDate,
   severityClassName,
   type DisciplineIncident,
 } from '../disciplineConstants';
 
 export const useDisciplineTableColumns = () => {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -83,7 +84,7 @@ export const useDisciplineTableColumns = () => {
       header: t('discipline.table.incidentAt'),
       cell: ({ getValue }) => {
         const value = String(getValue() || '');
-        return <time dateTime={value} className="block min-w-max whitespace-nowrap text-sm">{formatDisciplineDate(value, language)}</time>;
+        return <time dateTime={value} className="block min-w-max whitespace-nowrap text-sm">{displayDateTime(value)}</time>;
       },
       enableSorting: true,
     },
@@ -106,5 +107,5 @@ export const useDisciplineTableColumns = () => {
         </div>
       ),
     },
-  ], [t, language]);
+  ], [t, displayDateTime]);
 };

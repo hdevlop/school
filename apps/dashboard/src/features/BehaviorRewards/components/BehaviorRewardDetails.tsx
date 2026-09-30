@@ -3,15 +3,16 @@
 import { Award, CalendarClock, Gift, School, Star, UserRound } from 'lucide-react';
 import { NAvatar, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
-  formatBehaviorDate,
   recognitionClasses,
   rewardClasses,
   tagClass,
 } from '../behaviorRewardConstants';
 
 const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
   const reward = behaviorReward;
   const awardedBy = reward.awardedByUser?.name || '—';
 
@@ -51,7 +52,7 @@ const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
           icon={CalendarClock}
           iconColor="text-emerald-600"
           label={t('behaviorRewards.table.behaviorDate')}
-          value={formatBehaviorDate(reward.behaviorAt, language)}
+          value={displayDateTime(reward.behaviorAt)}
           valueColor="text-foreground font-medium"
         />
         <NSectionInfo
@@ -87,8 +88,8 @@ const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
       ) : null}
 
       <div className="grid gap-2 border-t pt-4 text-xs text-muted-foreground sm:grid-cols-2">
-        <span>{t('behaviorRewards.table.createdAt')}: {formatBehaviorDate(reward.createdAt, language)}</span>
-        <span>{t('behaviorRewards.table.updatedAt')}: {formatBehaviorDate(reward.updatedAt, language)}</span>
+        <span>{t('behaviorRewards.table.createdAt')}: {displayDateTime(reward.createdAt)}</span>
+        <span>{t('behaviorRewards.table.updatedAt')}: {displayDateTime(reward.updatedAt)}</span>
       </div>
     </div>
   );

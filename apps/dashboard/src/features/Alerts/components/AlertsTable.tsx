@@ -110,6 +110,7 @@ export default function AlertsTable() {
           />
         )}
         defaultMode="table"
+        showViewToggle={false}
         defaultSorting={[{ id: 'createdAt', desc: true }]}
         dynamicHeight
       />

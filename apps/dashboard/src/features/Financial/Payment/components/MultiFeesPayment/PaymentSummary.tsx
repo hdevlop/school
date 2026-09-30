@@ -6,7 +6,7 @@ import { PaymentActions } from './PaymentActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
-   const { majorMoney } = useSchoolFormat();
+   const { majorMoney, displayDateOnly } = useSchoolFormat();
    // Get state from store
    const paymentAmount = usePaymentStore((state) => state.paymentDetails.amount);
    const totalAllocated = usePaymentStore((state) => state.getTotalAllocated());
@@ -95,7 +95,7 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                                     <Label className="text-sm font-medium text-white">
                                        {inst.feeName} #{inst.number}
                                     </Label>
-                                    <Label className="text-xs text-gray-400 block">{inst.dueDate}</Label>
+                                    <Label className="text-xs text-gray-400 block">{displayDateOnly(inst.dueDate)}</Label>
                                  </div>
                               </div>
                               <div className='flex flex-col gap-[0.5] items-center'>

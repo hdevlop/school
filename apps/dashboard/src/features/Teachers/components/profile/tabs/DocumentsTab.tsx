@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { NTable, NEmptyState } from 'najm-kit';
 import { Award, FileText, SearchX } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface DocumentsTabProps {
   teacher: any;
@@ -22,6 +23,7 @@ const StatCard = ({ icon: Icon, label, value }: { icon: any; label: string; valu
 
 const DocumentsTab: React.FC<DocumentsTabProps> = () => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
   const documents: any[] = [];
   const columns = useMemo(() => [
     {
@@ -39,8 +41,9 @@ const DocumentsTab: React.FC<DocumentsTabProps> = () => {
       accessorKey: 'uploadDate',
       header: t('teachers.profile.table.uploaded'),
       enableSorting: true,
+      cell: ({ getValue }) => displayDateOnly(getValue()),
     },
-  ], [t]);
+  ], [t, displayDateOnly]);
 
   return (
     <div className="space-y-4">

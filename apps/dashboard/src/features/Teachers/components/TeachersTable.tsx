@@ -14,7 +14,7 @@ import { useTeachersTableColumns } from '../hooks/useTeachersTableColumns';
 import { useTeachersTableFilters } from '../hooks/useTeachersTableFilters';
 import { TeacherProfile } from './profile';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function TeachersTable() {
 
@@ -118,7 +118,7 @@ function TeachersTable() {
       <NPageHeader
         icon={Users}
         title={t('navigation.teachers')}
-        subtitle={hasFailedToLoad(error, teachers) ? undefined : t('teachers.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, teachers, isTeachersLoading) ? undefined : t('teachers.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

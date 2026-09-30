@@ -4,15 +4,16 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useAuth } from 'najm-auth/client/react';
 import { Megaphone, Plus, SearchX } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import AnnouncementForm from './AnnouncementForm';
 import AnnouncementCard from './AnnouncementCard';
 import { useAnnouncements } from '../hooks/useAnnouncements';
 import { useTranslation } from 'najm-i18n/react';
 import { useAnnouncementsTableColumns } from '../hooks/useAnnouncementsTableColumns';
 import { useAnnouncementsTableFilters } from '../hooks/useAnnouncementsTableFilters';
+import { useClasses } from '@/features/Classes/hooks/useClasses';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function AnnouncementsTable() {
   const { t } = useTranslation();
@@ -21,7 +22,12 @@ function AnnouncementsTable() {
   // Everyone else reads the announcements addressed to them.
   const canManage = role === 'admin' || role === 'principal';
   const columns = useAnnouncementsTableColumns();
-  const rawFilters = useAnnouncementsTableFilters();
+  const { classes } = useClasses();
+  const [classFilter, setClassFilter] = useState('');
+  const rawFilters = useAnnouncementsTableFilters(classFilter, setClassFilter, classes);
+  useEffect(() => {
+    if (classFilter && classes && !classes.some((item) => item.id === classFilter)) setClassFilter('');
+  }, [classFilter, classes]);
 
   const {
     announcements,
@@ -34,6 +40,10 @@ function AnnouncementsTable() {
     isCreating,
     isDeleting,
   } = useAnnouncements();
+  const filteredAnnouncements = useMemo(() => (announcements || []).filter((item) =>
+    !classFilter || (item.classIds?.length
+      ? item.classIds.includes(classFilter)
+      : (item.classId || item.class?.id) === classFilter)), [announcements, classFilter]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -96,7 +106,7 @@ function AnnouncementsTable() {
       <NPageHeader
         icon={Megaphone}
         title={t('navigation.announcements')}
-        subtitle={hasFailedToLoad(error, announcements) ? undefined : t('announcements.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, announcements, isAnnouncementsLoading) ? undefined : t('announcements.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -105,7 +115,7 @@ function AnnouncementsTable() {
 
       <NTable
         className='min-h-0 flex-1'
-        data={announcements}
+        data={filteredAnnouncements}
         columns={columns}
         filters={rawFilters}
         onCreate={canManage ? handleAddClick : undefined}
@@ -124,12 +134,12 @@ function AnnouncementsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={FEATURE_ICONS.announcements}
-            title={t('emptyStates.announcements.title')}
-            description={canManage
+            icon={classFilter ? SearchX : FEATURE_ICONS.announcements}
+            title={classFilter ? t('emptyStates.filtered.title') : t('emptyStates.announcements.title')}
+            description={classFilter ? t('emptyStates.filtered.description') : canManage
               ? t('emptyStates.announcements.description')
               : t('emptyStates.announcements.readerDescription')}
-            action={canManage ? (
+            action={!classFilter && canManage ? (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('announcements.dialogs.createButton')}

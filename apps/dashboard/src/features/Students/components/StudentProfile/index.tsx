@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { NButton, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
+import { NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
 import { AlertTriangle, Bus, CalendarCheck, CalendarRange, DollarSign, Download, GraduationCap, User, X } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { StudentProfileTabsProps } from './types';
@@ -16,13 +16,14 @@ import { useTranslation } from 'najm-i18n/react';
 import TransportTab from './Transport';
 import EnrollmentTab from './Enrollment';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
+import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
 
 export { default as LeftSidebar } from './LeftSidebar';
 export { default as OverviewTab } from './Overview';
 
 export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord }: StudentProfileTabsProps) {
   const [activeTab, setActiveTab] = useState<string>('overview');
-  const { student, isStudentLoading, parents, isParentsLoading } = useStudentProfile(studentId);
+  const { student, isStudentLoading, studentError, refetchStudent, parents, isParentsLoading } = useStudentProfile(studentId);
   const { t } = useTranslation();
   const { user } = useAuth();
   // The enrollment history and its commands are administrator/principal routes.
@@ -89,6 +90,17 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
         </NPageHeaderActions>
       </NPageHeader>
 
+      {/* A refused or missing record is not an empty student: without this the
+          tabs draw "Unknown", no absences and a zero balance. */}
+      {studentError && !student ? (
+        <div className="flex min-h-0 flex-1 items-center justify-center p-6">
+          {isAuthorizationError(studentError)
+            ? <NForbiddenState surface="panel" />
+            : isNotFoundError(studentError)
+              ? <NEmptyState surface="panel" icon={GraduationCap} title={t('students.errors.notFound')} />
+              : <NErrorState surface="panel" onRetry={() => refetchStudent()} />}
+        </div>
+      ) : (
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
         <div className="min-h-0 w-full shrink-0 border-b border-slate-200 lg:w-96 lg:border-b-0 lg:border-r">
           <LeftSidebar
@@ -121,6 +133,7 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
           />
         </div>
       </div>
+      )}
     </div>
   );
 }

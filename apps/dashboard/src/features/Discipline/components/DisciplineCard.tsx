@@ -3,16 +3,17 @@
 import { CalendarClock, School, ShieldAlert } from 'lucide-react';
 import { NAvatar, NBadge, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
   SEVERITY_COLORS,
   STATUS_COLORS,
-  formatDisciplineDate,
   severityClassName,
   type DisciplineIncident,
 } from '../disciplineConstants';
 
 export default function DisciplineCard({ data }: { data: DisciplineIncident }) {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
   return (
     <div className="flex items-start gap-3 p-3">
       <NAvatar src={data.student?.image} title={data.student?.name || '—'} subtitle={data.student?.studentCode} size="md" />
@@ -31,7 +32,7 @@ export default function DisciplineCard({ data }: { data: DisciplineIncident }) {
         <NSectionInfo
           icon={CalendarClock}
           label={t('discipline.table.incidentAt')}
-          value={formatDisciplineDate(data.incidentAt, language)}
+          value={displayDateTime(data.incidentAt)}
           valueColor="text-foreground font-medium"
         />
         <NSectionInfo

@@ -8,11 +8,8 @@ import { NSectionInfo } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
-
-const formatDate = (value) => {
-  if (!value) return null;
-  try { return new Date(value).toLocaleString(); } catch { return String(value); }
-};
+import { EXAM_STATUS_COLORS, EXAM_TYPE_COLORS } from '../examBadgeColors';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const formatDuration = (mins) => {
   if (mins == null) return null;
@@ -27,10 +24,11 @@ const formatDuration = (mins) => {
 
 const ExamCard = ({ data }: any) => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
   const e = data;
   const teacherName = e.teacher?.name || e.teacher?.email;
   const subjectLabel = e.subject?.code ? `${e.subject?.name} (${e.subject?.code})` : e.subject?.name;
-  const date = formatDate(e.date);
+  const date = e.date ? displayDateOnly(e.date) : null;
   const duration = formatDuration(e.duration);
   const description = [e.description, e.instructions].filter(Boolean).join('\n\n');
   const passingDisplay = e.passingMarks != null ? `${e.passingMarks} / ${e.totalMarks}` : `${e.totalMarks}`;
@@ -52,8 +50,8 @@ const ExamCard = ({ data }: any) => {
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-md font-bold">{e.title}</Label>
-          {e.type && <NBadge status={e.type} />}
-          {e.status && <NBadge status={e.status} />}
+          {e.type && <NBadge color={EXAM_TYPE_COLORS[e.type]} label={t(`exams.type.${e.type}`)} look="soft" />}
+          {e.status && <NBadge color={EXAM_STATUS_COLORS[e.status]} label={t(`exams.status.${e.status}`)} look="soft" />}
         </div>
 
         {description && (

@@ -1,15 +1,16 @@
 import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
-  formatBehaviorDate,
   recognitionClasses,
   rewardClasses,
   tagClass,
 } from '../behaviorRewardConstants';
 
 export const useBehaviorRewardsTableColumns = () => {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -85,12 +86,12 @@ export const useBehaviorRewardsTableColumns = () => {
       accessorKey: 'behaviorAt',
       header: t('behaviorRewards.table.behaviorDate'),
       enableSorting: true,
-      cell: ({ getValue }) => <span className="whitespace-nowrap text-sm">{formatBehaviorDate(getValue() as string, language)}</span>,
+      cell: ({ getValue }) => <span className="whitespace-nowrap text-sm">{displayDateTime(getValue() as string)}</span>,
     },
     {
       accessorKey: 'awardedByUser',
       header: t('behaviorRewards.table.awardedBy'),
       cell: ({ row }) => <span className="block max-w-44 truncate text-sm font-medium">{row.original.awardedByUser?.name || '—'}</span>,
     },
-  ], [language, t]);
+  ], [displayDateTime, t]);
 };

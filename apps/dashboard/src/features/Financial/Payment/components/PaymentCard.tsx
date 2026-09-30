@@ -10,7 +10,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const PaymentCard = ({ data, feeYear }: { data: any; feeYear?: string }) => {
   const { t } = useTranslation();
-  const { displayDate, majorMoney } = useSchoolFormat();
+  const { displayDateOnly, majorMoney } = useSchoolFormat();
   const payment = data;
 
   return (
@@ -37,7 +37,7 @@ const PaymentCard = ({ data, feeYear }: { data: any; feeYear?: string }) => {
           icon={Calendar}
           iconColor="text-muted-foreground"
           label={t('payments.table.paymentDate')}
-          value={displayDate(payment.paymentDate)}
+          value={displayDateOnly(payment.paymentDate)}
         />
 
         <NSectionInfo
@@ -70,7 +70,7 @@ const PaymentCard = ({ data, feeYear }: { data: any; feeYear?: string }) => {
             icon={Calendar}
             iconColor="text-muted-foreground"
             label={t('payments.table.checkDueDate')}
-            value={displayDate(payment.checkDueDate)}
+            value={displayDateOnly(payment.checkDueDate)}
           />
         )}
 

@@ -5,7 +5,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const usePaymentsTableColumns = (feeYear?: string) => {
 
-  const { displayDate, majorMoney } = useSchoolFormat();
+  const { displayDateOnly, majorMoney } = useSchoolFormat();
   const { t } = useTranslation();
 
   return useMemo(() => [
@@ -31,7 +31,7 @@ export const usePaymentsTableColumns = (feeYear?: string) => {
       cell: ({ getValue }: any) => (
         <div className="flex items-center gap-2">
           <span>📅</span>
-          <span>{displayDate(getValue())}</span>
+          <span>{displayDateOnly(getValue())}</span>
         </div>
       ),
     },
@@ -105,5 +105,5 @@ export const usePaymentsTableColumns = (feeYear?: string) => {
         );
       },
     },
-  ], [t, displayDate, majorMoney, feeYear]);
+  ], [t, displayDateOnly, majorMoney, feeYear]);
 };

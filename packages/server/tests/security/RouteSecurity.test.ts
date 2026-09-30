@@ -4,13 +4,14 @@ import { getRoutes } from 'najm-core';
 import { getEffectiveGuards, getGuardMetadata } from 'najm-guard';
 import { StorageController, StorageMcpTools, StorageStudioController } from 'najm-storage';
 import { guardConfig, storageConfig } from '../../src/config';
-import { ADMIN_STORAGE_ROUTES } from '../../src/config/storageRoutes';
 import { ClassRoutineController } from '../../src/modules/classRoutines/ClassRoutineController';
 import { HealthController } from '../../src/modules/health/HealthController';
 import { NotificationController } from '../../src/modules/financial/notifications/NotificationController';
 
 const signIn = ['AuthGuard', null];
 const administrator = [signIn, ['RoleGuard', 'admin']];
+// The routes najm-storage puts under `manageGuards`; serving stays under `guards`.
+const ADMIN_STORAGE_ROUTES = ['listFiles', 'getFileInfo', 'uploadFile', 'deleteFile', 'deleteNamespace'];
 
 function guards(target: any, method?: string) {
   return getGuardMetadata(target, method).map((guard: any) => [guard.guardClass?.name, guard.params ?? null]);

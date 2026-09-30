@@ -18,7 +18,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useState } from 'react';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useViewerRole } from '@/shared/useViewerRole';
 
@@ -155,7 +155,7 @@ function StudentsTable() {
       <NPageHeader
         icon={GraduationCap}
         title={title}
-        subtitle={hasFailedToLoad(error, students) ? undefined : t('students.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, students, isStudentsLoading) ? undefined : t('students.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

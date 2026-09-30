@@ -104,7 +104,7 @@ describe('authenticated Behavior rewards REST and MCP on the marked PostgreSQL f
     expect((await request('/behavior-rewards?academicYear=2026-2027', adminToken, '2025-2026')).status).toBe(400);
     expect((await request('/behavior-rewards', adminToken, '2099-2100')).status).toBe(404);
     // The fixture principal holds no behavior-reward permission.
-    expect((await request('/behavior-rewards', principalToken)).status).toBe(401);
+    expect((await request('/behavior-rewards', principalToken)).status).toBe(403);
   });
 
   it('uses the same year selection over authenticated MCP', async () => {

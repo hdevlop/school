@@ -10,7 +10,7 @@ import CycleForm from './CycleForm';
 import { useCycles } from '../hooks/useCycles';
 import { useCyclesTableColumns } from '../hooks/useCyclesTableColumns';
 import { useCyclesTableFilters } from '../hooks/useCyclesTableFilters';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 const sortCycles = (cycles = []) => [...cycles].sort((a, b) => {
   const order = Number(a.sortOrder || 0) - Number(b.sortOrder || 0);
@@ -82,7 +82,7 @@ function CyclesTable() {
       <NPageHeader
         icon={CalendarRange}
         title={t('navigation.cycles')}
-        subtitle={hasFailedToLoad(error, orderedCycles) ? undefined : t('cycles.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, orderedCycles, isCyclesLoading) ? undefined : t('cycles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

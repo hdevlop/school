@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
 
-export const useAnnouncementsTableFilters = () => {
+export const useAnnouncementsTableFilters = (classFilter = '', onClassFilterChange?: (value: string) => void, classes: Array<{ id: string; name: string }> = []) => {
   const { t } = useTranslation();
 
   return useMemo(() => [
@@ -23,6 +23,15 @@ export const useAnnouncementsTableFilters = () => {
       ],
     },
     {
+      name: 'classScope',
+      placeholder: t('students.filters.filterByClass'),
+      type: 'combobox',
+      options: classes.map((item) => ({ value: item.id, label: item.name })),
+      value: classFilter,
+      onChange: onClassFilterChange,
+      className: 'w-full lg:w-48',
+    },
+    {
       name: 'isPublished',
       placeholder: t('announcements.filters.filterByStatus'),
       type: 'select',
@@ -31,5 +40,5 @@ export const useAnnouncementsTableFilters = () => {
         { value: 'false', label: t('announcements.status.draft') },
       ],
     },
-  ], [t]);
+  ], [t, classFilter, onClassFilterChange, classes]);
 };

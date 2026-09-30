@@ -11,7 +11,7 @@ import SectionCard from './SectionCard';
 import { useSectionsTableColumns } from '../hooks/useSectionsTableColumns';
 import { useSectionsTableFilters } from '../hooks/useSectionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function SectionsTable() {
 
@@ -96,7 +96,7 @@ function SectionsTable() {
       <NPageHeader
         icon={Layers}
         title={t('navigation.sections')}
-        subtitle={hasFailedToLoad(error, sections) ? undefined : t('sections.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, sections, isSectionsLoading) ? undefined : t('sections.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

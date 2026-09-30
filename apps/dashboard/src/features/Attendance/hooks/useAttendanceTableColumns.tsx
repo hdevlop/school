@@ -5,6 +5,7 @@ import { useStudentsTableColumns } from '@/features/Students/hooks/useStudentsTa
 import RosterMarks from '../components/RosterMarks';
 import type { RosterStatus } from './useAttendanceRoster';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const ROSTER_KEEP_COLUMNS = new Set(['select', 'studentCode', 'name', 'email', 'phone', 'class', 'section', 'gender']);
 
@@ -97,6 +98,7 @@ export const useStaffRosterColumns = ({ getStatus, setStatus }: RosterColumnsOpt
 
 export const useStudentAttendanceTableColumns = () => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -105,7 +107,7 @@ export const useStudentAttendanceTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => (
         <div className="font-medium text-sm">
-          {getValue()}
+          {displayDateOnly(getValue())}
         </div>
       ),
     },
@@ -197,7 +199,7 @@ export const useStudentAttendanceTableColumns = () => {
         );
       },
     },
-  ], [t]);
+  ], [t, displayDateOnly]);
 };
 
 export const useTeacherAttendanceTableColumns = () => {
@@ -206,6 +208,7 @@ export const useTeacherAttendanceTableColumns = () => {
 
 export const useStaffAttendanceTableColumns = () => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -214,7 +217,7 @@ export const useStaffAttendanceTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => (
         <div className="font-medium text-sm">
-          {getValue()}
+          {displayDateOnly(getValue())}
         </div>
       ),
     },
@@ -254,5 +257,5 @@ export const useStaffAttendanceTableColumns = () => {
         );
       },
     },
-  ], [t]);
+  ], [t, displayDateOnly]);
 };

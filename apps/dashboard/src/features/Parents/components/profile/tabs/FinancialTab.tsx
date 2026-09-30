@@ -13,6 +13,7 @@ import { Label } from 'najm-kit';
 import InfoWidget from '@/features/Dashboard/components/Widgets/Widget';
 import feesImage from '@/assets/images/feesImage.png';
 import { Badge } from 'najm-kit';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 interface FinancialTabProps {
   parentId: string;
@@ -20,6 +21,7 @@ interface FinancialTabProps {
 
 const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
   const [children, setChildren] = useState<any[]>([]);
   const [childrenFees, setChildrenFees] = useState<{[key: string]: any[]}>({});
   const [loading, setLoading] = useState(true);
@@ -205,7 +207,7 @@ const FinancialTab: React.FC<FinancialTabProps> = ({ parentId }) => {
                                 <Label className="text-sm text-muted-foreground">
                                   {t('fees.form.dueDate')}:{' '}
                                   {fee.dueDate
-                                    ? new Date(fee.dueDate).toLocaleDateString()
+                                    ? displayDateOnly(fee.dueDate)
                                     : t('common.notSpecified')}
                                 </Label>
                               </div>

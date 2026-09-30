@@ -37,6 +37,13 @@ export const useDashboardYear = (academicYear?: string) => {
   };
 };
 
+// A query waiting for the year is disabled, and TanStack Query reports a
+// disabled query as not loading, so each card drew 0 or "No data" until the
+// year resolved. While it waits, it is loading.
+function untilYear<T extends { isLoading: boolean }>(waiting: boolean, query: T): T {
+  return waiting ? { ...query, isLoading: true } : query;
+}
+
 // School-wide counts and attendance cover the viewed year; each request sends
 // the year its key names.
 const useViewedYear = () => {
@@ -46,134 +53,134 @@ const useViewedYear = () => {
 
 export const useDashboardWidgets = (enabled = true) => {
   const { viewingYear, isReady } = useViewedYear();
-  return useQuery({
+  return untilYear(enabled && !isReady, useQuery({
     queryKey: ['dashboard', 'widgets', viewingYear ?? null],
     queryFn: () => withAcademicYear(viewingYear, getWidgetsApi),
     enabled: enabled && isReady,
     staleTime: 2 * 60 * 1000, // 2 minutes
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useStudentsByGender = (enabled = true) => {
   const { viewingYear, isReady } = useViewedYear();
-  return useQuery({
+  return untilYear(enabled && !isReady, useQuery({
     queryKey: ['dashboard', 'students-by-gender', viewingYear ?? null],
     queryFn: () => withAcademicYear(viewingYear, getStudentsByGenderApi),
     enabled: enabled && isReady,
     staleTime: 2 * 60 * 1000, // 2 minutes
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 const FINANCE_STALE = 2 * 60 * 1000;
 
 export const useFinanceKpis = (academicYear?: string) => {
   const { year, isReady } = useDashboardYear(academicYear);
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'finance', 'kpis', year],
     queryFn: () => withAcademicYear(year, getFinanceKpisApi),
     enabled: isReady,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useFinanceTrend = (academicYear?: string) => {
   const { year, isReady } = useDashboardYear(academicYear);
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'finance', 'trend', year],
     queryFn: () => withAcademicYear(year, getFinanceTrendApi),
     enabled: isReady,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useFinanceAging = () => {
   const { viewingYear, isReady } = useViewedYear();
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'finance', 'aging', viewingYear ?? null],
     queryFn: () => withAcademicYear(viewingYear, getFinanceAgingApi),
     enabled: isReady,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useFinanceOverdue = (limit = 20) => {
   const { viewingYear, isReady } = useViewedYear();
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'finance', 'overdue', limit, viewingYear ?? null],
     queryFn: () => withAcademicYear(viewingYear, () => getFinanceOverdueApi(limit)),
     enabled: isReady,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useFinanceExpenseBreakdown = (academicYear?: string) => {
   const { year, isReady } = useDashboardYear(academicYear);
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'finance', 'expense-breakdown', year],
     queryFn: () => withAcademicYear(year, getFinanceExpenseBreakdownApi),
     enabled: isReady,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useFinanceCollectionByClass = (academicYear?: string) => {
   const { year, isReady } = useDashboardYear(academicYear);
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'finance', 'collection-by-class', year],
     queryFn: () => withAcademicYear(year, getFinanceCollectionByClassApi),
     enabled: isReady,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useStudentAttendanceMonthly = () => {
   const { viewingYear, isReady } = useViewedYear();
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'attendance', 'students-monthly', viewingYear ?? null],
     queryFn: () => withAcademicYear(viewingYear, getStudentAttendanceMonthlyApi),
     enabled: isReady,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useStaffAttendanceMonthly = () => {
   const { viewingYear, isReady } = useViewedYear();
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'attendance', 'staff-monthly', viewingYear ?? null],
     queryFn: () => withAcademicYear(viewingYear, getStaffAttendanceMonthlyApi),
     enabled: isReady,
     staleTime: 2 * 60 * 1000,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };
 
 export const useFinanceAgingDetail = () => {
   const { viewingYear, isReady } = useViewedYear();
-  return useQuery({
+  return untilYear(!isReady, useQuery({
     queryKey: ['dashboard', 'finance', 'aging-detail', viewingYear ?? null],
     queryFn: () => withAcademicYear(viewingYear, getFinanceAgingDetailApi),
     enabled: isReady,
     staleTime: FINANCE_STALE,
     refetchOnWindowFocus: false,
     select: (response) => response?.data,
-  });
+  }));
 };

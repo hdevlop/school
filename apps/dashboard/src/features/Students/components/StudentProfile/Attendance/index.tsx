@@ -5,9 +5,7 @@ import { useMemo } from 'react';
 import { CalendarCheck, CalendarDays, CheckCircle2, Clock3, UserX } from 'lucide-react';
 import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
 import { useTranslation } from 'najm-i18n/react';
-
-const formatDate = (value: string | null | undefined, language: string) =>
-  value ? new Date(value).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' }) : '—';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const statusClassNames: Record<string, string> = {
   present: 'border-emerald-200 bg-emerald-50 text-emerald-700',
@@ -38,7 +36,8 @@ const getClassLabel = (row: any, student: any) => {
 };
 
 export default function AttendanceTab({ studentId, student }: { studentId?: string; student?: any }) {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
   const { data, isLoading } = useStudentAttendanceRecords(studentId);
 
   const rows = useMemo(() => {
@@ -73,7 +72,7 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
       header: t('students.profile.attendanceDetails.date'),
       enableSorting: true,
       cell: ({ row }) => (
-        <span className="font-medium text-slate-700">{formatDate(row.original.date, language)}</span>
+        <span className="font-medium text-slate-700">{displayDateOnly(row.original.date)}</span>
       ),
     },
     {
@@ -102,7 +101,7 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
         <span className="text-slate-600">{row.original.notes || '—'}</span>
       ),
     },
-  ], [language, student, t]);
+  ], [displayDateOnly, student, t]);
 
   return (
     <div className="space-y-4">

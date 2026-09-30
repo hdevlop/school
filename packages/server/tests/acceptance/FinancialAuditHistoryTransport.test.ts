@@ -75,7 +75,7 @@ describe('authenticated financial audit remains all-year', () => {
     expect(detail.status).toBe(200);
     expect(detail.body.data.id).toBe(ids[0]);
     const principal = await request('/financial-audit-logs/list', principalToken, '2025-2026', 'POST', { action });
-    expect(principal.status).toBe(401);
+    expect(principal.status).toBe(403);
   });
 
   it('keeps the audit list all-year over MCP', async () => {

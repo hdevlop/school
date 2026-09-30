@@ -18,7 +18,7 @@ import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
 import { useTranslation } from 'najm-i18n/react';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { localDateInput } from 'najm-kit/format';
 import { useViewingAcademicYear, useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
@@ -331,7 +331,7 @@ function StudentAttendanceTableForYear() {
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.studentAttendance')}
-        subtitle={hasFailedToLoad(studentsError, filteredStudents) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
+        subtitle={isCountUnknown(studentsError, filteredStudents, isStudentsLoading || isSectionsLoading || isClassesLoading) ? undefined : t('attendance.subtitle.studentCount', { count: filteredStudents.length })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

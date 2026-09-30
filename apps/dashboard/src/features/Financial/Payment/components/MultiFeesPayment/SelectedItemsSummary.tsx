@@ -4,7 +4,7 @@ import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const SelectedItemsSummary = ({ selectedInstallments, selectedCount }) => {
-    const { majorMoney } = useSchoolFormat();
+    const { majorMoney, displayDateOnly } = useSchoolFormat();
     if (selectedCount === 0) return null;
 
     return (
@@ -22,7 +22,7 @@ export const SelectedItemsSummary = ({ selectedInstallments, selectedCount }) =>
                                 <Label className="text-xs font-medium text-gray-900">
                                     {inst.feeName} #{inst.number}
                                 </Label>
-                                <Label className="text-[10px] text-gray-600 block">{inst.dueDate}</Label>
+                                <Label className="text-[10px] text-gray-600 block">{displayDateOnly(inst.dueDate)}</Label>
                             </div>
                         </div>
                         <div className="text-right">

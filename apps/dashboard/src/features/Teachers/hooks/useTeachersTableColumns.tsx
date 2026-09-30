@@ -2,9 +2,11 @@ import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const useTeachersTableColumns = () => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -59,7 +61,7 @@ export const useTeachersTableColumns = () => {
       cell: ({ getValue }) => {
         const hireDate = getValue();
         if (!hireDate) return <span className="text-gray-400">{t('common.notAvailable')}</span>;
-        return new Date(hireDate).toLocaleDateString();
+        return displayDateOnly(hireDate);
       },
     },
     {
@@ -73,5 +75,5 @@ export const useTeachersTableColumns = () => {
       },
       size: 120,
     },
-  ], [t]);
+  ], [t, displayDateOnly]);
 };

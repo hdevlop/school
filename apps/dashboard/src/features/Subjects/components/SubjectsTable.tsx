@@ -11,7 +11,7 @@ import SubjectCard from './SubjectCard';
 import { useSubjectsTableColumns } from '../hooks/useSubjectsTableColumns';
 import { useSubjectsTableFilters } from '../hooks/useSubjectsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function SubjectsTable() {
 
@@ -92,7 +92,7 @@ function SubjectsTable() {
       <NPageHeader
         icon={BookOpen}
         title={t('navigation.subjects')}
-        subtitle={hasFailedToLoad(error, subjects) ? undefined : t('subjects.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, subjects, isSubjectsLoading) ? undefined : t('subjects.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

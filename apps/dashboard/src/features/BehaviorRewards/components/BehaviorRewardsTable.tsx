@@ -13,7 +13,7 @@ import BehaviorRewardForm from './BehaviorRewardForm';
 import { useBehaviorRewards } from '../hooks/useBehaviorRewards';
 import { useBehaviorRewardsTableColumns } from '../hooks/useBehaviorRewardsTableColumns';
 import { useBehaviorRewardsTableFilters } from '../hooks/useBehaviorRewardsTableFilters';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 const BehaviorRewardsTable = () => {
   const { t } = useTranslation();
@@ -100,7 +100,7 @@ const BehaviorRewardsTable = () => {
       <NPageHeader
         icon={Award}
         title={t('navigation.behaviorRewards')}
-        subtitle={hasFailedToLoad(error, tableData) ? undefined : t('behaviorRewards.table.recordCount', { count: total })}
+        subtitle={isCountUnknown(error, tableData, isBehaviorRewardsLoading) ? undefined : t('behaviorRewards.table.recordCount', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

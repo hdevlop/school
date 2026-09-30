@@ -12,7 +12,7 @@ import RoleCard from './RoleCard';
 import { useRolesTableColumns } from '../hooks/useRolesTableColumns';
 import { useRolesTableFilters } from '../hooks/useRolesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function RolesTable() {
 
@@ -107,7 +107,7 @@ function RolesTable() {
       <NPageHeader
         icon={Shield}
         title={t('navigation.roles')}
-        subtitle={hasFailedToLoad(error, roles) ? undefined : t('roles.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, roles, isRolesLoading) ? undefined : t('roles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -24,7 +24,7 @@ import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 
 type FeeScope = 'year' | 'outstanding';
 
@@ -306,7 +306,7 @@ function FeesTableForYear() {
       <NPageHeader
         icon={CircleDollarSign}
         title={t('navigation.fees')}
-        subtitle={failedToLoad
+        subtitle={isCountUnknown(error, fees, isFeesLoading || isAcademicYearLoading)
           ? undefined
           : t(showOutstanding ? 'fees.historyView.outstandingCount' : 'fees.subtitle.count', { count: total })}
       >

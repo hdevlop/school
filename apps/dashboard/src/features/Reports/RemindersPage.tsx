@@ -34,7 +34,7 @@ const urgencyBadge = (days: number) => {
 
 const RemindersPage: React.FC = () => {
   const { t } = useTranslation();
-  const { date, majorMoney } = useSchoolFormat();
+  const { displayDateOnly, majorMoney } = useSchoolFormat();
   const { viewingYear } = useViewingAcademicYear();
   const { data, error, isLoading } = useFinanceOverdue(100);
   const yearKey = viewingYear ?? 'all';
@@ -119,7 +119,7 @@ const RemindersPage: React.FC = () => {
       enableSorting: true,
       cell: ({ row }: any) => (
         <span className="whitespace-nowrap text-muted-foreground">
-          {date(row.original.oldestDueDate)}
+          {displayDateOnly(row.original.oldestDueDate)}
         </span>
       ),
     },
@@ -160,7 +160,7 @@ const RemindersPage: React.FC = () => {
         );
       },
     },
-  ], [handleRemind, date, majorMoney, reminded, t, yearKey]);
+  ], [handleRemind, displayDateOnly, majorMoney, reminded, t, yearKey]);
 
   return (
     <div className="flex flex-col gap-2 h-full overflow-hidden">

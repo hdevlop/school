@@ -12,7 +12,7 @@ import UserCard from './UserCard';
 import { useUsersTableColumns } from '../hooks/useUsersTableColumns';
 import { useUsersTableFilters } from '../hooks/useUsersTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function UsersTable() {
 
@@ -125,7 +125,7 @@ function UsersTable() {
       <NPageHeader
         icon={UserCog}
         title={t('navigation.users')}
-        subtitle={hasFailedToLoad(error, users) ? undefined : t('users.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, users, isUsersLoading) ? undefined : t('users.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

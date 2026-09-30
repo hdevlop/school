@@ -6,7 +6,7 @@ import { getCategoryClass } from '../lib/expenseCategoryStyles';
 
 export const useExpensesTableColumns = () => {
   const { t } = useTranslation();
-  const { majorMoney, displayDate } = useSchoolFormat();
+  const { majorMoney, displayDateOnly } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -59,7 +59,7 @@ export const useExpensesTableColumns = () => {
         const date = getValue();
         return (
           <div className="text-sm">
-            {displayDate(date)}
+            {displayDateOnly(date)}
           </div>
         );
       },
@@ -88,5 +88,5 @@ export const useExpensesTableColumns = () => {
         return <NBadge status={status} showIcon />;
       },
     },
-  ], [t, majorMoney, displayDate]);
+  ], [t, majorMoney, displayDateOnly]);
 };

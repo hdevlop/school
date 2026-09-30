@@ -3,7 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { FileText, Plus, SearchX } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import ExamForm from './ExamForm';
 import ExamCard from './ExamCard';
 import { useExams } from '../hooks/useExams';
@@ -11,15 +11,18 @@ import { useTranslation } from 'najm-i18n/react';
 import { useViewerRole } from '@/shared/useViewerRole';
 import { useExamsTableColumns } from '../hooks/useExamsTableColumns';
 import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
+import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function ExamsTable() {
   const { t } = useTranslation();
   // Parents and students read these records; they change none of them.
   const { isFamily } = useViewerRole();
   const columns = useExamsTableColumns();
-  const rawFilters = useExamsTableFilters();
+  const scope = useClassSectionTableScope();
+  const typeFilters = useExamsTableFilters();
+  const rawFilters = useMemo(() => [...scope.filters, ...typeFilters], [scope.filters, typeFilters]);
 
   const {
     exams,
@@ -32,6 +35,7 @@ function ExamsTable() {
     isCreating,
     isDeleting,
   } = useExams();
+  const filteredExams = useMemo(() => (exams || []).filter(scope.matches), [exams, scope.matches]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -94,7 +98,7 @@ function ExamsTable() {
       <NPageHeader
         icon={FileText}
         title={t('navigation.exams')}
-        subtitle={hasFailedToLoad(error, exams) ? undefined : t('exams.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, exams, isExamsLoading) ? undefined : t('exams.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -103,7 +107,7 @@ function ExamsTable() {
 
       <NTable
         className='min-h-0 flex-1'
-        data={exams}
+        data={filteredExams}
         columns={columns}
         filters={rawFilters}
         onCreate={isFamily ? undefined : handleAddClick}
@@ -122,10 +126,10 @@ function ExamsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={FEATURE_ICONS.exams}
-            title={t('emptyStates.exams.title')}
-            description={isFamily ? t('emptyStates.familyDescription') : t('emptyStates.exams.description')}
-            action={isFamily ? undefined : (
+            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.exams}
+            title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.exams.title')}
+            description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.exams.description')}
+            action={scope.hasSelection || isFamily ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('exams.dialogs.createButton')}

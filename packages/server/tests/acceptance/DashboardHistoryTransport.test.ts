@@ -259,7 +259,7 @@ describe('dashboards over the history fixture', () => {
 
     for (const path of ['/dashboard/widgets', '/dashboard/finance/kpis', '/dashboard/academic/kpis',
       '/dashboard/today', '/dashboard/students-by-gender']) {
-      expect((await request(path, limitedToken)).status, path).toBe(401);
+      expect((await request(path, limitedToken)).status, path).toBe(403);
     }
     expect((await request('/dashboard/finance/kpis')).status).toBe(401);
 

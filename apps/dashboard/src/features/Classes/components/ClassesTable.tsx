@@ -10,7 +10,7 @@ import ClassCard from './ClassCard';
 import { useClassesTableColumns } from '../hooks/useClassesTableColumns';
 import { useClassesTableFilters } from '../hooks/useClassesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function ClassesTable() {
 
@@ -92,7 +92,7 @@ function ClassesTable() {
       <NPageHeader
         icon={School}
         title={t('navigation.classes')}
-        subtitle={hasFailedToLoad(error, classes) ? undefined : t('classes.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, classes, isClassesLoading) ? undefined : t('classes.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

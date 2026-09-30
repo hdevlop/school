@@ -1,15 +1,8 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-
-const formatDate = (value) => {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return String(value);
-  }
-};
+import { EXAM_STATUS_COLORS, EXAM_TYPE_COLORS } from '../examBadgeColors';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const formatDuration = (mins) => {
   if (mins == null) return '—';
@@ -24,6 +17,7 @@ const formatDuration = (mins) => {
 
 export const useExamsTableColumns = () => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -40,7 +34,7 @@ export const useExamsTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const type = getValue() as string;
-        return <NBadge status={type}>{t(`exams.type.${type}`)}</NBadge>;
+        return <NBadge color={EXAM_TYPE_COLORS[type]} label={t(`exams.type.${type}`)} look="soft" />;
       },
     },
     {
@@ -86,8 +80,8 @@ export const useExamsTableColumns = () => {
       header: t('exams.table.date'),
       enableSorting: true,
       cell: ({ getValue }) => {
-        const d = formatDate(getValue());
-        return d ? <div className="text-sm">{d}</div> : <span className="text-gray-400">—</span>;
+        const value = getValue();
+        return value ? <div className="text-sm">{displayDateOnly(value)}</div> : <span className="text-gray-400">—</span>;
       },
     },
     {
@@ -120,9 +114,9 @@ export const useExamsTableColumns = () => {
       enableColumnFilter: true,
       cell: ({ getValue }) => {
         const status = getValue() as string;
-        return <NBadge status={status}>{t(`exams.status.${status}`)}</NBadge>;
+        return <NBadge color={EXAM_STATUS_COLORS[status]} label={t(`exams.status.${status}`)} look="soft" />;
       },
       size: 120,
     },
-  ], [t]);
+  ], [t, displayDateOnly]);
 };

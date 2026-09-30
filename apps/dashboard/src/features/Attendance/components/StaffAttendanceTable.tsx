@@ -14,7 +14,7 @@ import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { useStaffRoles } from '@/features/Staff/hooks/useStaffRoles';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { localDateInput } from 'najm-kit/format';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -63,7 +63,7 @@ function StaffAttendanceTable() {
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.staffAttendance')}
-        subtitle={hasFailedToLoad(staffError, staffRows) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
+        subtitle={isCountUnknown(staffError, staffRows, isStaffLoading || isAttendanceLoading || isStaffRolesLoading) ? undefined : t('attendance.subtitle.staffCount', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

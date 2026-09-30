@@ -6,9 +6,11 @@ import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const DriverCard = ({ data }) => {
    const { t } = useTranslation();
+   const { displayDateOnly } = useSchoolFormat();
    const driver = data;
 
    return (
@@ -49,14 +51,14 @@ const DriverCard = ({ data }) => {
                   icon={Shield}
                   iconColor="text-muted-foreground"
                   label={t('drivers.table.licenseExpiry')}
-                  value={new Date(driver.licenseExpiry).toLocaleDateString()}
+                  value={displayDateOnly(driver.licenseExpiry)}
                />
 
                <NSectionInfo
                   icon={Calendar}
                   iconColor="text-muted-foreground"
                   label={t('drivers.table.hireDate')}
-                  value={new Date(driver.hireDate).toLocaleDateString()}
+                  value={displayDateOnly(driver.hireDate)}
                />
 
 

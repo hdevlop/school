@@ -98,7 +98,7 @@ describe('shared identity search over the history fixture', () => {
     expect(permitted.status).toBe(200);
     expect(permitted.body.data).toEqual([]);
     for (const path of ['/search?q=Adam', '/search/teachers?q=Adam', '/search/parents?q=Adam']) {
-      expect((await request(path, limitedToken)).status).toBe(401);
+      expect((await request(path, limitedToken)).status).toBe(403);
     }
 
     const studentOwned = new SearchRepository();

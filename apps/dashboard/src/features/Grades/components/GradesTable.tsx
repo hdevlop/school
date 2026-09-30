@@ -19,7 +19,7 @@ import { useGradesTableColumns } from '../hooks/useGradesTableColumns';
 import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useTranslation } from 'najm-i18n/react';
 
 const PASS_THRESHOLD = 50;
@@ -376,7 +376,7 @@ function GradesTableForYear() {
       <NPageHeader
         icon={GraduationCap}
         title={t('grades.messages.pageTitle')}
-        subtitle={hasFailedToLoad(gradesError ?? studentsError, roster) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}`}
+        subtitle={isCountUnknown(gradesError ?? studentsError, roster, isGradesLoading || isStudentsLoading) ? undefined : `${t('grades.subtitle.count', { count: stats.total })}${selectedSource ? ` · ${selectedSource.title}` : ''}`}
       >
         <NPageHeaderActions>
           <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">

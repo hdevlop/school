@@ -1,33 +1,32 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
   PRIORITY_COLORS,
   STATUS_COLORS,
+  TYPE_COLORS,
   alertSubject,
-  formatAlertDate,
   type AlertRecord,
 } from '../alertConstants';
 
 export const useAlertsTableColumns = () => {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
 
   return useMemo(() => [
     {
       accessorKey: 'title',
       header: t('alerts.page.columns.title'),
       cell: ({ row }: { row: { original: AlertRecord } }) => (
-        <div className="max-w-80 space-y-1">
-          <p className="font-medium">{row.original.title}</p>
-          <p className="line-clamp-2 text-xs leading-5 text-muted-foreground">{row.original.message}</p>
-        </div>
+        <span className="font-medium">{row.original.title}</span>
       ),
     },
     {
       accessorKey: 'type',
       header: t('alerts.page.columns.type'),
       cell: ({ row }: { row: { original: AlertRecord } }) => (
-        <span className="text-sm">{t(`alerts.page.types.${row.original.type}`)}</span>
+        <NBadge color={TYPE_COLORS[row.original.type]} label={t(`alerts.page.types.${row.original.type}`)} look="soft" size="sm" />
       ),
     },
     {
@@ -56,8 +55,8 @@ export const useAlertsTableColumns = () => {
       header: t('alerts.page.columns.date'),
       enableSorting: true,
       cell: ({ row }: { row: { original: AlertRecord } }) => (
-        <span className="whitespace-nowrap text-sm text-muted-foreground">{formatAlertDate(row.original.createdAt, language)}</span>
+        <span className="whitespace-nowrap text-sm text-muted-foreground">{displayDateTime(row.original.createdAt)}</span>
       ),
     },
-  ], [language, t]);
+  ], [displayDateTime, t]);
 };

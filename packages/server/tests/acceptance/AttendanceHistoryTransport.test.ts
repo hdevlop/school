@@ -61,7 +61,7 @@ describe('authenticated Attendance transport on the marked PostgreSQL fixture', 
     expect((await request('/attendance/history-attendance-2025', '2026-2027')).status).toBe(404);
     expect((await request('/attendance?academicYear=2026-2027', '2025-2026')).status).toBe(400);
     expect((await request('/attendance', '2025')).status).toBe(400);
-    expect((await request('/attendance', '2025-2026', 'GET', undefined, principalToken)).status).toBe(401);
+    expect((await request('/attendance', '2025-2026', 'GET', undefined, principalToken)).status).toBe(403);
   });
 
   it('marks and corrects a past-year record only in its selected year', async () => {

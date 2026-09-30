@@ -36,7 +36,7 @@ const FeeInstallmentsTable = ({
    updateAllocatedAmount,
 }: any) => {
    const { t } = useTranslation();
-   const { majorMoney } = useSchoolFormat();
+   const { majorMoney, displayDateOnly } = useSchoolFormat();
    const rows = useMemo(() => (
       fee.installments
          .filter((inst: any) => stats.fullyPaid || inst.status !== 'paid')
@@ -102,7 +102,7 @@ const FeeInstallmentsTable = ({
          header: t('installments.table.dueDate'),
          enableSorting: false,
          cell: ({ getValue }: any) => (
-            <span className="text-xs text-gray-600">{getValue()}</span>
+            <span className="text-xs text-gray-600">{displayDateOnly(getValue())}</span>
          ),
       },
       {
@@ -173,7 +173,7 @@ const FeeInstallmentsTable = ({
             </div>
          ),
       },
-   ], [allPayableSelected, fee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, updateAllocatedAmount, t, majorMoney]);
+   ], [allPayableSelected, fee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, updateAllocatedAmount, t, majorMoney, displayDateOnly]);
 
    return (
       <div className="border-t border-gray-300 bg-muted/20 p-2">

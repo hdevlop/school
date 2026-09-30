@@ -7,6 +7,7 @@ import { FormInput, NAJM_CURRENCY_OPTIONS } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { schoolI18n } from '@sms/contracts/locales';
+import { SETTINGS_DATE_FORMAT_VALUES } from '../../config/dateTimeFormats';
 
 const SystemSection: React.FC = () => {
   const { t } = useTranslation();
@@ -25,11 +26,7 @@ const SystemSection: React.FC = () => {
     { value: 'dark', label: t('settings.system.darkTheme') || 'Dark' },
   ];
 
-  const dateFormatOptions = [
-    { value: 'MM/DD/YYYY', label: 'MM/DD/YYYY' },
-    { value: 'DD/MM/YYYY', label: 'DD/MM/YYYY' },
-    { value: 'YYYY-MM-DD', label: 'YYYY-MM-DD' },
-  ];
+  const dateFormatOptions = SETTINGS_DATE_FORMAT_VALUES.map((value) => ({ value, label: value }));
 
   const timeFormatOptions = [
     { value: '12', label: '12-hour' },

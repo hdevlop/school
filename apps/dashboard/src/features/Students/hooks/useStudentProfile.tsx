@@ -25,6 +25,8 @@ export const useStudentProfile = (studentId: string | undefined) => {
     student: studentQuery.data,
     isStudentLoading: studentQuery.isLoading && !!studentId,
     isStudentError: studentQuery.isError,
+    studentError: studentQuery.error,
+    refetchStudent: studentQuery.refetch,
 
     parents: parentsQuery.data?.data ?? [],
     isParentsLoading: parentsQuery.isPending && !!studentId,

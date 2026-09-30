@@ -2,9 +2,11 @@ import { useMemo } from 'react';
 import { NAvatar } from 'najm-kit';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const useDriversTableColumns = () => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -71,7 +73,7 @@ export const useDriversTableColumns = () => {
           colorClass = 'text-orange-600 font-semibold';
         }
 
-        return <span className={colorClass}>{expiryDate.toLocaleDateString()}</span>;
+        return <span className={colorClass}>{displayDateOnly(licenseExpiry)}</span>;
       },
     },
     {
@@ -81,7 +83,7 @@ export const useDriversTableColumns = () => {
       cell: ({ getValue }) => {
         const hireDate = getValue();
         if (!hireDate) return <span className="text-gray-400">{t('common.notAvailable')}</span>;
-        return new Date(hireDate).toLocaleDateString();
+        return displayDateOnly(hireDate);
       },
     },
     {
@@ -95,5 +97,5 @@ export const useDriversTableColumns = () => {
       },
       size: 120,
     },
-  ], [t]);
+  ], [t, displayDateOnly]);
 };

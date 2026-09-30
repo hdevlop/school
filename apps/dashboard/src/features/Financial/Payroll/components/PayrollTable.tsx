@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Banknote, BriefcaseBusiness, CalendarDays, CheckCircle2, Clock, HandCoins, ReceiptText, Timer, Undo2, UserRound, Wallet, SearchX } from 'lucide-react';
-import { Badge, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NEmptyState } from 'najm-kit';
+import { Badge, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaff } from '@/features/Staff/hooks/useStaff';
@@ -11,6 +12,8 @@ import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+import { payrollPeriods, shownPayrollPeriod } from '@/features/Financial/Payroll/config/payrollPeriods';
 
 const calculateStaffPay = (member) => {
   if (member?.compensationMode === 'hourly') {
@@ -27,9 +30,6 @@ const normalizeEmploymentType = (value?: string | null) => {
   return 'permanent';
 };
 
-// Current period in 'YYYY-MM' (what the backend expects).
-const currentPeriod = () => new Date().toISOString().slice(0, 7);
-
 const formatPeriod = (period: string, locale: string) => {
   const [year, month] = period.split('-').map(Number);
   if (!year || !month) return period;
@@ -40,28 +40,19 @@ const formatPeriod = (period: string, locale: string) => {
 const PayrollTable = () => {
   const { t } = useTranslation();
   const { locale, majorMoney } = useSchoolFormat();
-  const [period, setPeriod] = useState<string>(currentPeriod());
+  // 'YYYY-MM', what the backend expects; undefined until a period is picked.
+  const [period, setPeriod] = useState<string>();
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const year = useViewingYearCalendar();
-  const periodOptions = useMemo(() => {
-    if (!year) return [];
-    const start = year.reportingStartsOn.slice(0, 7);
-    const end = year.reportingEndsOn.slice(0, 7);
-    const [startYear, startMonth] = start.split('-').map(Number);
-    const [endYear, endMonth] = end.split('-').map(Number);
-    const months: Array<{ value: string; label: string }> = [];
-    for (let index = startYear * 12 + startMonth - 1; index <= endYear * 12 + endMonth - 1; index++) {
-      const value = `${Math.floor(index / 12)}-${String(index % 12 + 1).padStart(2, '0')}`;
-      if (`${value}-01` >= year.reportingStartsOn && `${value}-01` <= year.reportingEndsOn) {
-        months.push({ value, label: formatPeriod(value, locale) });
-      }
-    }
-    return months.reverse();
-  }, [year, locale]);
-  const effectivePeriod = periodOptions.some((item) => item.value === period)
-    ? period : periodOptions[0]?.value ?? period;
+  const { businessDate } = useBusinessDate();
+  const periods = useMemo(() => payrollPeriods(year), [year]);
+  const periodOptions = useMemo(
+    () => periods.map((value) => ({ value, label: formatPeriod(value, locale) })),
+    [periods, locale],
+  );
+  const effectivePeriod = shownPayrollPeriod(period, businessDate, year, periods);
 
-  const { staff, isStaffLoading } = useStaff();
+  const { staff, isStaffLoading, isError: isStaffError, error: staffError } = useStaff();
   const {
     payslips,
     summary,
@@ -75,6 +66,9 @@ const PayrollTable = () => {
   } = usePayroll({ period: effectivePeriod, enabled: !!year });
 
   const isLoading = isStaffLoading || isPayrollLoading;
+  // The rows join the staff list with the period's payslips; either failing
+  // leaves the payroll unknown, not empty.
+  const loadError = (isStaffError ? staffError : null) ?? (isError ? error : null);
 
   // Only active staff with a salary can be paid — mirror the backend's eligibility.
   const eligibleStaff = useMemo(
@@ -264,7 +258,7 @@ const PayrollTable = () => {
       name: 'period',
       type: 'select',
       value: effectivePeriod,
-      onChange: (value: string) => setPeriod(value || currentPeriod()),
+      onChange: (value: string) => setPeriod(value || undefined),
       placeholder: t('payroll.stats.period'),
       className: 'w-full lg:w-44',
       options: periodOptions,
@@ -303,16 +297,20 @@ const PayrollTable = () => {
       <NPageHeader
         icon={Wallet}
         title={t('navigation.payroll')}
-        subtitle={`${t('payroll.subtitle.count', { count: tableRows.length })} · ${formatPeriod(effectivePeriod, locale)}`}
+        subtitle={isCountUnknown(loadError, tableRows, isLoading)
+          ? formatPeriod(effectivePeriod, locale)
+          : `${t('payroll.subtitle.count', { count: tableRows.length })} · ${formatPeriod(effectivePeriod, locale)}`}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
+      {/* Figures from a payroll that failed or was refused are unknown, not zero;
+          the table below shows why. */}
       {isLoading ? (
         <NSkeletonWidgets />
-      ) : (
+      ) : hasFailedToLoad(loadError, tableRows) ? null : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <NStatCard
             icon={CalendarDays}
@@ -362,7 +360,12 @@ const PayrollTable = () => {
           })()
         }
         loading={isLoading}
-        error={isError ? error : null}
+        error={hasFailedToLoad(loadError, tableRows) ? loadError : null}
+        renderError={(currentError) => (
+          isAuthorizationError(currentError)
+            ? <NForbiddenState surface="panel" />
+            : <NErrorState surface="panel" />
+        )}
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'

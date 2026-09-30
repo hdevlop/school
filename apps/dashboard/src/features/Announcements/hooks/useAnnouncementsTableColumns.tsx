@@ -1,18 +1,12 @@
 import { useMemo } from 'react';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-
-const formatDate = (value) => {
-  if (!value) return null;
-  try {
-    return new Date(value).toLocaleDateString();
-  } catch {
-    return String(value);
-  }
-};
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { AUDIENCE_COLORS, STATUS_COLORS } from '../announcementDisplay';
 
 export const useAnnouncementsTableColumns = () => {
   const { t } = useTranslation();
+  const { displayDateOnly } = useSchoolFormat();
 
   return useMemo(() => [
     {
@@ -42,7 +36,7 @@ export const useAnnouncementsTableColumns = () => {
       enableSorting: true,
       cell: ({ getValue }) => {
         const audience = getValue() as string;
-        return <NBadge status={audience} />;
+        return <NBadge color={AUDIENCE_COLORS[audience]} label={t(`announcements.audience.${audience}`)} look="soft" />;
       },
     },
     {
@@ -81,7 +75,7 @@ export const useAnnouncementsTableColumns = () => {
       cell: ({ getValue }) => {
         const isPublished = getValue();
         const status = isPublished ? 'published' : 'draft';
-        return <NBadge status={status} />;
+        return <NBadge color={STATUS_COLORS[status]} label={t(`announcements.status.${status}`)} look="soft" />;
       },
       size: 120,
     },
@@ -90,21 +84,13 @@ export const useAnnouncementsTableColumns = () => {
       header: t('announcements.table.publishDate'),
       enableSorting: true,
       cell: ({ getValue }) => {
-        const date = formatDate(getValue());
-        return date ? (
-          <div className="text-sm">{date}</div>
+        const value = getValue();
+        return value ? (
+          <time dateTime={String(value)} className="block min-w-max whitespace-nowrap text-sm">{displayDateOnly(value)}</time>
         ) : (
           <span className="text-gray-400">—</span>
         );
       },
     },
-    {
-      accessorKey: 'createdAt',
-      header: t('announcements.table.createdAt'),
-      enableSorting: true,
-      cell: ({ getValue }) => (
-        <div className="text-sm text-muted-foreground">{formatDate(getValue())}</div>
-      ),
-    },
-  ], [t]);
+  ], [t, displayDateOnly]);
 };

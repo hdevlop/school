@@ -10,17 +10,19 @@ export default function PageHeaderGlobalActions() {
   const { t } = useTranslation();
 
   return (
-    <NGlobalActions>
-      <ViewingYearSelector />
-      <NotificationsMenu />
-      <LanguageSwitcher />
-      <NThemeToggle
-        label={t('common.toggleTheme')}
-        onError={(error) =>
-          toast.error(error instanceof Error ? error.message : 'Could not update color theme.')
-        }
-      />
-      <NFullscreenToggle label={t('common.toggleFullscreen')} />
-    </NGlobalActions>
+    <>
+      <ViewingYearSelector inHeader />
+      <NGlobalActions>
+        <NotificationsMenu />
+        <LanguageSwitcher />
+        <NThemeToggle
+          label={t('common.toggleTheme')}
+          onError={(error) =>
+            toast.error(error instanceof Error ? error.message : 'Could not update color theme.')
+          }
+        />
+        <NFullscreenToggle label={t('common.toggleFullscreen')} />
+      </NGlobalActions>
+    </>
   );
 }

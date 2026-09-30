@@ -7,7 +7,7 @@ import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceAgingDetail } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
-import { AuthError } from 'najm-auth/client';
+import { isAuthorizationError } from '@/services/apiError';
 import { cn } from 'najm-kit';
 
 type AgingRow = {
@@ -122,7 +122,7 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
       errorText={t(
         // `NCard` renders one message and has no forbidden state of its own, so
         // the distinction a table makes with an icon is made here in words.
-        error instanceof AuthError && (error.status === 401 || error.status === 403)
+        isAuthorizationError(error)
           ? 'common.feedback.forbiddenDescription'
           : 'common.feedback.errorMessage',
       )}

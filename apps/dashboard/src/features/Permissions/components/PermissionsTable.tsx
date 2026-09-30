@@ -11,7 +11,7 @@ import PermissionCard from './PermissionCard';
 import { usePermissionsTableColumns } from '../hooks/usePermissionsTableColumns';
 import { usePermissionsTableFilters } from '../hooks/usePermissionsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function PermissionsTable() {
 
@@ -96,7 +96,7 @@ function PermissionsTable() {
       <NPageHeader
         icon={KeyRound}
         title={tf('navigation.permissions', 'Permissions')}
-        subtitle={hasFailedToLoad(error, permissions) ? undefined : t('permissions.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, permissions, isPermissionsLoading) ? undefined : t('permissions.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

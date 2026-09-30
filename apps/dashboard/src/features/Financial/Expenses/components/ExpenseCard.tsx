@@ -5,9 +5,11 @@ import { DollarSign, Calendar, CreditCard, FileText } from 'lucide-react';
 import { Label, NBadge, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { getCategoryClass } from '../lib/expenseCategoryStyles';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const ExpenseCard = ({ data: expense }) => {
    const { t } = useTranslation();
+   const { displayDateOnly } = useSchoolFormat();
 
    return (
       <div className="flex items-start gap-4 p-4">
@@ -44,7 +46,7 @@ const ExpenseCard = ({ data: expense }) => {
                   icon={Calendar}
                   iconColor="text-muted-foreground"
                   label={t('expenses.form.expenseDate')}
-                  value={expense.expenseDate}
+                  value={displayDateOnly(expense.expenseDate)}
                   valueColor="text-muted-foreground"
                />
 

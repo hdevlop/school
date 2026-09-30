@@ -8,7 +8,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useStaff } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
 import { formatAssignments } from '../utils/staffAssignments';
@@ -292,16 +292,18 @@ const StaffTable = () => {
       <NPageHeader
         icon={Briefcase}
         title={t('navigation.staff')}
-        subtitle={hasFailedToLoad(isError ? error : null, rows) ? undefined : t('staff.subtitle.count', { count: rows.length })}
+        subtitle={isCountUnknown(isError ? error : null, rows, isStaffLoading) ? undefined : t('staff.subtitle.count', { count: rows.length })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
+      {/* Figures from a list that failed or was refused are unknown, not zero;
+          the table below shows why. */}
       {isStaffLoading ? (
         <NSkeletonWidgets />
-      ) : (
+      ) : hasFailedToLoad(isError ? error : null, rows) ? null : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
           <NStatCard
             icon={UserRound}

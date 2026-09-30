@@ -33,17 +33,22 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
   source; nothing is emitted first. The dashboard runs two passes: the app
   (`tsconfig.json`, which excludes tests) and the tests (`tsconfig.test.json`,
   which adds `bun` types). Neither hides the other.
-- `bun run test:config` - The focused contract, feature-config and form-fill tests
+- `bun run test:config` - The focused contract, feature-config and form-fill
+  tests, the API error helpers and the sidebar's page access
 - `bun run test:access-reset` - The focused access-recovery suite
 - `bun run test:ownership` - Repository ownership: the school-wide role list,
   per-role rules, and the generated SQL of every owned read
-- `bun run test:security` - Route guards: the storage routes School restricts
-  and the timetable permissions.
+- `bun run test:security` - Route guards: the default sign-in guard and the
+  deliberately public routes, the storage routes School restricts, and the
+  timetable permissions.
   `bun --env-file=apps/dashboard/.env.local run test:security:transport` checks
   the running server over the local `school_history_test` fixture, including
-  the reviewed lists of routes left open or behind sign-in alone
-- `bun run test:boundaries` - The boundary checker's regression fixtures, then
-  the checker over the real import graph (`scripts/check-workspace-boundaries.mjs`)
+  the reviewed lists of routes left open or behind sign-in alone, by the guards
+  that actually run, then that refreshes sharing one cookie (tabs, a lost
+  response) all succeed and keep the session
+- `bun run test:boundaries` - The boundary checker's regression fixtures and the
+  workspace Najm pins (`scripts/tests`), then the checker over the real import
+  graph (`scripts/check-workspace-boundaries.mjs`)
 - `bun run test` - All selected safe tests above
 - `bun run build` to verify production readiness
 - `bun run i18n:check` when touching `packages/contracts/src/locales/*.json`
@@ -72,6 +77,7 @@ states that drift — so do not add one without changing the plan first.
   from a layout or page, and never build the adapter per request.
 - **One version of each Najm package.** Pin every workspace to the exact root
   manifest version and keep the matching root override.
+  `scripts/tests/najm-pins.test.mjs`, part of `test:boundaries`, checks both.
 - **One set of words for status and state.** Use NBadge directly. Najm Kit
   resolves common colors, icons, and labels from the status token and the
   configured catalog. Keep interface text in the shared catalogs for all
@@ -79,8 +85,10 @@ states that drift — so do not add one without changing the plan first.
 - **A failed list is not an empty one.** Every `NTable` fed by a query passes
   `{...tableErrorProps(error, rows)}` from
   `apps/dashboard/src/shared/TableErrorState.tsx`, and guards its `NPageHeader`
-  count with the same `hasFailedToLoad(error, rows)` so the header cannot
-  contradict the table. Without it `useEntityCRUD` hands the table the `[]` it
+  count with `isCountUnknown(error, rows, isLoading)` from
+  `apps/dashboard/src/services/apiError.ts`, which adds the first load to the
+  same `hasFailedToLoad(error, rows)`, so the header cannot contradict the
+  table or say "0" while another year's list is still loading. Without it `useEntityCRUD` hands the table the `[]` it
   returns for a failed query and the screen invites the user to add their first
   record — including when the server refused the request. `rows` is what keeps a
   failed background refetch from raising an error over records already on
@@ -100,6 +108,17 @@ states that drift — so do not add one without changing the plan first.
   `AnnouncementGuards.ts`). Uniqueness and duplicate
   lookups stay unscoped. ESLint rejects `x.where(a).where(b)` and najm-auth's
   `own`/`Owned` in server code.
+
+- **Every route states its guard.** `packages/server/src/config/index.ts`
+  registers `guards({ default: [isAuth()] })` before `auth()`, so a route that
+  declares no guard asks for sign-in instead of being public. The default is a
+  safety net, not a policy: sign-in alone lets any account in, so give each
+  route the guard its data needs (`@Can(...)`, `@isAdministrator()`, ...) and
+  mark a deliberately public one `@Public()` from `najm-guard`. Najm mounts only
+  the controllers that `.load()` or a plugin declares; storage management takes
+  `manageGuards`. `test:security:transport` fails on a route that relies on the
+  default, and on any route left open or behind sign-in alone that is not on its
+  reviewed lists.
 
 - **One year scope per operation.** A converted repository reads the selected
   year from its `@Year()` property; services and controllers do not pass it.

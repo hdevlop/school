@@ -1,6 +1,6 @@
 'use client';
 
-import { CalendarRange } from 'lucide-react';
+import { CalendarRange, ChevronDown } from 'lucide-react';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup,
   DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuTrigger, NButton,
@@ -18,31 +18,44 @@ import {
  * the roles that work in other years. Choosing a year changes this tab's
  * selection, never the school's active year.
  */
-export function ViewingYearSelector() {
+export function ViewingYearSelector({ inHeader = false }: { inHeader?: boolean } = {}) {
   const { t } = useTranslation();
   const { viewingYear, activeYear } = useViewingAcademicYear();
   const canChooseYear = useCanUseOtherAcademicYears();
   const setViewingYear = useSetViewingYear();
   const { data, isError, isPending } = useAcademicYearOptions();
 
-  if (!canChooseYear) return null;
-
   const label = t('academicYearViewing.label');
   const years = data?.years ?? [];
   const buttonLabel = viewingYear ? `${label}: ${viewingYear}` : label;
+  const headerClassName = 'xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2';
+
+  if (!canChooseYear) {
+    return inHeader && viewingYear ? (
+      <span role="status" className={`${headerClassName} inline-flex items-center gap-2 whitespace-nowrap px-2 font-semibold`}>
+        <CalendarRange className="size-4 text-primary" aria-hidden />
+        {viewingYear}
+      </span>
+    ) : null;
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <NButton
           type="button"
           variant="ghost"
-          size="icon"
-          className="relative text-foreground hover:text-foreground [&_svg]:opacity-100"
+          size={inHeader ? 'default' : 'icon'}
+          className={inHeader
+            ? `${headerClassName} gap-2 whitespace-nowrap px-2 font-semibold text-foreground hover:text-foreground [&_svg]:opacity-100`
+            : 'relative text-foreground hover:text-foreground [&_svg]:opacity-100'}
           aria-label={buttonLabel}
           title={buttonLabel}
         >
           <CalendarRange size={18} aria-hidden />
-          {viewingYear && activeYear && viewingYear !== activeYear && (
+          {inHeader && <span>{viewingYear ?? label}</span>}
+          {inHeader && <ChevronDown className="size-4 text-muted-foreground" aria-hidden />}
+          {!inHeader && viewingYear && activeYear && viewingYear !== activeYear && (
             <span className="absolute bottom-1 end-1 size-1.5 rounded-full bg-primary" aria-hidden />
           )}
         </NButton>

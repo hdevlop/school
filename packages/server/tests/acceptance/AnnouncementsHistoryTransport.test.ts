@@ -70,7 +70,7 @@ describe('authenticated Announcements transport on the marked PostgreSQL fixture
     expect((await request('/announcements/history-announcement-2025-class', '2026-2027')).status).toBe(404);
     expect((await request('/announcements/history-announcement-unresolved', '2025-2026')).status).toBe(404);
     expect((await request('/announcements?academicYear=2026-2027', '2025-2026')).status).toBe(400);
-    expect((await request('/announcements/stats', '2026-2027', 'GET', undefined, principalToken)).status).toBe(401);
+    expect((await request('/announcements/stats', '2026-2027', 'GET', undefined, principalToken)).status).toBe(403);
   });
 
   it('creates and corrects a past-year class notice with scoped publish and deletion', async () => {

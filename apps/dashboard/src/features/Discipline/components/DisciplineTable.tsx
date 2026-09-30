@@ -13,8 +13,10 @@ import ResolveDisciplineForm from './ResolveDisciplineForm';
 import { useDiscipline } from '../hooks/useDiscipline';
 import { useDisciplineTableColumns } from '../hooks/useDisciplineTableColumns';
 import { useDisciplineTableFilters } from '../hooks/useDisciplineTableFilters';
+import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useMemo } from 'react';
 import type { DisciplineIncident } from '../disciplineConstants';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 export default function DisciplineTable() {
   const { t } = useTranslation();
@@ -25,12 +27,15 @@ export default function DisciplineTable() {
   // Parents and students read their own or their children's records only.
   const isFamily = role === 'parent' || role === 'student';
   const columns = useDisciplineTableColumns();
-  const filters = useDisciplineTableFilters();
+  const scope = useClassSectionTableScope();
+  const disciplineFilters = useDisciplineTableFilters();
+  const filters = useMemo(() => [...scope.filters, ...disciplineFilters], [scope.filters, disciplineFilters]);
   const { openDialog, confirmDelete } = useDialog();
   const {
     incidents, createIncident, updateIncident, deleteIncident, resolveIncident, reopenIncident,
     error, isDisciplineLoading, isCreating, isUpdating, isDeleting, isResolving, isReopening,
   } = useDiscipline();
+  const filteredIncidents = useMemo(() => (incidents || []).filter(scope.matches), [incidents, scope.matches]);
 
   const canEdit = (incident: DisciplineIncident) => incident.status === 'open'
     && (isAdmin || (role === 'teacher' && incident.reportedBy === userId));
@@ -107,13 +112,13 @@ export default function DisciplineTable() {
       <NPageHeader
         icon={ShieldAlert}
         title={t('navigation.discipline')}
-        subtitle={hasFailedToLoad(error, incidents || []) ? undefined : t('discipline.table.count', { count: incidents?.length || 0 })}
+        subtitle={isCountUnknown(error, incidents || [], isDisciplineLoading) ? undefined : t('discipline.table.count', { count: incidents?.length || 0 })}
       >
         <NPageHeaderActions><PageHeaderGlobalActions /></NPageHeaderActions>
       </NPageHeader>
       <NTable
         className="min-h-0 flex-1"
-        data={incidents || []}
+        data={filteredIncidents}
         columns={columns}
         filters={filters}
         loading={isDisciplineLoading}
@@ -138,10 +143,10 @@ export default function DisciplineTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={FEATURE_ICONS.discipline}
-            title={t('emptyStates.discipline.title')}
-            description={isFamily ? t('emptyStates.familyDescription') : t('emptyStates.discipline.description')}
-            action={isFamily ? undefined : (
+            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.discipline}
+            title={scope.hasSelection ? t('emptyStates.filtered.title') : t('emptyStates.discipline.title')}
+            description={scope.hasSelection ? t('emptyStates.filtered.description') : isFamily ? t('emptyStates.familyDescription') : t('emptyStates.discipline.description')}
+            action={scope.hasSelection || isFamily ? undefined : (
               <NButton size="sm" onClick={handleCreate}>
                 <Plus className="h-4 w-4" />
                 {t('discipline.dialogs.createButton')}

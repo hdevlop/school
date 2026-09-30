@@ -34,13 +34,3 @@ export const toLocalDateTimeInput = (value?: string | null) => {
   const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
   return local.toISOString().slice(0, 16);
 };
-
-export const formatBehaviorDate = (value?: string | null, language = 'en') => {
-  if (!value) return '—';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return '—';
-  return new Intl.DateTimeFormat(language, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(date);
-};

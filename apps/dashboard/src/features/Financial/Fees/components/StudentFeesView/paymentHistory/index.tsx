@@ -12,7 +12,7 @@ interface PaymentHistoryProps {
 }
 
 export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: PaymentHistoryProps) => {
-  const { displayDate, majorMoney } = useSchoolFormat();
+  const { displayDateOnly, majorMoney } = useSchoolFormat();
 
   const shouldFetchStudentFees = !initialStudentFees && Boolean(studentId);
   const { studentFees: fetchedStudentFees, isStudentFeesLoading } = useFees({
@@ -64,7 +64,7 @@ export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: P
         <NStatCard
           icon={Calendar}
           label="Last Payment"
-          value={summary.lastPayment ? displayDate(summary.lastPayment) : "No payments"}
+          value={summary.lastPayment ? displayDateOnly(summary.lastPayment) : "No payments"}
         />
 
         <NStatCard

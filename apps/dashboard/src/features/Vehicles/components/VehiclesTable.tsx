@@ -13,7 +13,7 @@ import { useDrivers } from '@/features/Drivers/hooks/useDrivers';
 import { useVehiclesTableColumns } from '../hooks/useVehiclesTableColumns';
 import { useVehiclesTableFilters } from '../hooks/useVehiclesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useAcademicYearScope } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 
@@ -119,7 +119,7 @@ function VehiclesTable() {
       <NPageHeader
         icon={Bus}
         title={t('navigation.vehicles')}
-        subtitle={hasFailedToLoad(error, vehicles) ? undefined : t('vehicles.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, vehicles, isVehiclesLoading) ? undefined : t('vehicles.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

@@ -201,7 +201,7 @@ describe('parents over the history fixture', () => {
   });
 
   it('refuses outsiders and bad years', async () => {
-    expect((await request(`/parents/${parentId}/children`, undefined, 'GET', undefined, outsiderToken)).status).toBe(401);
+    expect((await request(`/parents/${parentId}/children`, undefined, 'GET', undefined, outsiderToken)).status).toBe(403);
     expect((await request(`/parents/${parentId}/children`, undefined, 'GET', undefined, '')).status).toBe(401);
     expect((await request(`/parents/${parentId}/children`, 'twenty')).status).toBe(400);
     expect((await request(`/parents/${parentId}/children?academicYear=2024-2025`, '2025-2026')).status).toBe(400);

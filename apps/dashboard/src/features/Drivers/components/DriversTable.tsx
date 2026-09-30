@@ -10,7 +10,7 @@ import DriverCard from './DriverCard';
 import { useDriversTableColumns } from '../hooks/useDriversTableColumns';
 import { useDriversTableFilters } from '../hooks/useDriversTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function DriversTable() {
 
@@ -111,7 +111,7 @@ function DriversTable() {
       <NPageHeader
         icon={Car}
         title={t('navigation.drivers')}
-        subtitle={hasFailedToLoad(error, drivers) ? undefined : t('drivers.subtitle.count', { count: total })}
+        subtitle={isCountUnknown(error, drivers, isDriversLoading) ? undefined : t('drivers.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />

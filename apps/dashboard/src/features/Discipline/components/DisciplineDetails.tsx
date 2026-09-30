@@ -3,11 +3,11 @@
 import { CalendarClock, Clock3, Gavel, MapPin, RotateCcw, School, ShieldCheck, UserRound } from 'lucide-react';
 import { NAvatar, NBadge, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
   ACTION_COLORS,
   SEVERITY_COLORS,
   STATUS_COLORS,
-  formatDisciplineDate,
   severityClassName,
   type DisciplineIncident,
 } from '../disciplineConstants';
@@ -32,7 +32,8 @@ export default function DisciplineDetails({
   onReopen: () => void;
   resolving?: boolean;
 }) {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { displayDateTime } = useSchoolFormat();
   const resolved = incident.status === 'resolved';
   return (
     <div className="space-y-5">
@@ -63,7 +64,7 @@ export default function DisciplineDetails({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <DetailItem label={t('discipline.table.violation')}>{t(`discipline.categories.${incident.category}`)}</DetailItem>
-        <DetailItem label={t('discipline.table.incidentAt')}><CalendarClock className="me-1 inline h-4 w-4" />{formatDisciplineDate(incident.incidentAt, language)}</DetailItem>
+        <DetailItem label={t('discipline.table.incidentAt')}><CalendarClock className="me-1 inline h-4 w-4" />{displayDateTime(incident.incidentAt)}</DetailItem>
         <DetailItem label={t('discipline.form.location')}><MapPin className="me-1 inline h-4 w-4" />{incident.location || '—'}</DetailItem>
         <DetailItem label={t('discipline.table.reportedBy')}><UserRound className="me-1 inline h-4 w-4" />{incident.reporter?.name || incident.reporter?.email || '—'}</DetailItem>
       </div>
@@ -82,7 +83,7 @@ export default function DisciplineDetails({
           <DetailItem label={t('discipline.form.resolutionNote')}>{incident.resolutionNote}</DetailItem>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <DetailItem label={t('discipline.table.resolvedBy')}>{incident.resolver?.name || incident.resolver?.email || '—'}</DetailItem>
-            <DetailItem label={t('discipline.table.resolvedAt')}><Clock3 className="me-1 inline h-4 w-4" />{formatDisciplineDate(incident.resolvedAt, language)}</DetailItem>
+            <DetailItem label={t('discipline.table.resolvedAt')}><Clock3 className="me-1 inline h-4 w-4" />{displayDateTime(incident.resolvedAt)}</DetailItem>
           </div>
         </div>
       )}

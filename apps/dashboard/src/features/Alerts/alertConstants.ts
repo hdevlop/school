@@ -23,6 +23,11 @@ export const PRIORITY_COLORS: Record<AlertPriority, BadgeColor> = {
   low: 'neutral', medium: 'info', high: 'warning', critical: 'destructive',
 };
 
+export const TYPE_COLORS: Record<AlertType, BadgeColor> = {
+  academic: 'info', attendance: 'warning', behavioral: 'primary', health: 'destructive',
+  system: 'neutral', announcement: 'success', reminder: 'warning', emergency: 'destructive',
+};
+
 export const STATUS_COLORS: Record<AlertStatus, BadgeColor> = {
   active: 'warning', acknowledged: 'info', resolved: 'success', dismissed: 'neutral',
 };
@@ -38,11 +43,3 @@ export const isAboutSomeone = (alert: AlertRecord) =>
 /** Who or what the alert is about, for the "About" column. */
 export const alertSubject = (alert: AlertRecord) =>
   alert.studentName || alert.teacherName || alert.className || null;
-
-export const formatAlertDate = (value: string | null | undefined, language = 'en') => {
-  if (!value) return '—';
-  const date = new Date(value);
-  return Number.isNaN(date.getTime())
-    ? '—'
-    : new Intl.DateTimeFormat(language, { dateStyle: 'medium', timeStyle: 'short' }).format(date);
-};

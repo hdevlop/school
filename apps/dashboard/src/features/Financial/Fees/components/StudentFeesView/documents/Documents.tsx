@@ -8,7 +8,7 @@ import { printReceipt } from "@/features/Financial/Payment/components/ReceiptPri
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 export const Documents = ({ studentId }) => {
-  const { currency, displayDate, majorMoney } = useSchoolFormat();
+  const { currency, displayDateOnly, majorMoney } = useSchoolFormat();
   const { studentPayments, isStudentPaymentsLoading } = usePayments({ studentId });
 
   const payments = Array.isArray(studentPayments) ? studentPayments : [];
@@ -89,7 +89,7 @@ export const Documents = ({ studentId }) => {
                       Reçu N° {payment.receiptNumber ?? payment.id}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {displayDate(payment.paymentDate)} &nbsp;·&nbsp;{' '}
+                      {displayDateOnly(payment.paymentDate)} &nbsp;·&nbsp;{' '}
                       {majorMoney(payment.amount)}
                     </p>
                   </div>

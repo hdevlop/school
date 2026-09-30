@@ -61,7 +61,7 @@ const inputClass = 'h-10 rounded-md border bg-background px-3 text-sm outline-no
 
 export default function FinancialOperationsPage() {
   const { viewingYear, isResolving } = useViewingAcademicYear();
-  const { majorMoney } = useSchoolFormat();
+  const { majorMoney, displayDateTime } = useSchoolFormat();
   const { t } = useTranslation();
   const sidebar = useNSidebar();
   const [studentId, setStudentId] = useState('');
@@ -260,7 +260,7 @@ export default function FinancialOperationsPage() {
             <NButton size="sm" variant="outline" onClick={() => auditQuery.refetch()}><RefreshCw className="mr-2 h-4 w-4" />Refresh</NButton>
           </div>
           <div className="max-h-80 overflow-auto rounded-lg border">
-            <table className="w-full text-left text-sm"><thead className="sticky top-0 bg-muted"><tr><th className="p-3">Action</th><th className="p-3">Entity</th><th className="p-3">Actor</th><th className="p-3">Time</th></tr></thead><tbody>{auditEntries.map((entry: any) => <tr key={entry.id} className="border-t"><td className="p-3 font-medium">{entry.action}</td><td className="p-3">{entry.entityType} · {entry.entityId}</td><td className="p-3">{entry.actorId || 'system'}</td><td className="p-3 text-muted-foreground">{entry.createdAt ? new Date(entry.createdAt).toLocaleString() : ''}</td></tr>)}</tbody></table>
+            <table className="w-full text-left text-sm"><thead className="sticky top-0 bg-muted"><tr><th className="p-3">Action</th><th className="p-3">Entity</th><th className="p-3">Actor</th><th className="p-3">Time</th></tr></thead><tbody>{auditEntries.map((entry: any) => <tr key={entry.id} className="border-t"><td className="p-3 font-medium">{entry.action}</td><td className="p-3">{entry.entityType} · {entry.entityId}</td><td className="p-3">{entry.actorId || 'system'}</td><td className="p-3 text-muted-foreground">{entry.createdAt ? displayDateTime(entry.createdAt) : ''}</td></tr>)}</tbody></table>
           </div>
         </section>
       </div>
