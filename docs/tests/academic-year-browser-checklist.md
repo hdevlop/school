@@ -118,10 +118,13 @@ was written.
    generic title because its message can carry driver or SQL text. Browser:
    the same refused correction now toasts "Correction conflicts with recorded
    attendance or grades; reconcile those records first", the dialog stays
-   open with the input, and the placement is still C. That reason is still
-   English on a French page: School's server writes 227 English literals in
-   `Err(...)`, which translate only when moved to catalog keys. Also seen:
-   the table row menu reads "View / Edit / Delete" in English.
+   open with the input, and the placement is still C. **Translated
+   2026-09-30:** the server's 254 English `Err(...)` literals are catalog
+   keys in all four languages, and the dashboard sends its language as
+   `X-Language`, so the same refusal now reads "La correction est en conflit
+   avec des présences ou des notes enregistrées ; régularisez d'abord ces
+   enregistrements". The row menu reads "Voir / Modifier / Supprimer"
+   (najm-kit 2.16.14).
 7. **Demo data explains the negative balance.** 2025-2026 expenses are paid
    payslips only (MAD 4,830,070, about 480,000 a month) because all 172 other
    expenses are `pending`, against about 118,000 a month of income. The

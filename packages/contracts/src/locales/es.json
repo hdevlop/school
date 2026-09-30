@@ -475,7 +475,15 @@
       "atLeastOneTargetRequired": "Debe especificarse al menos un objetivo (vehículo, operador o usuario)",
       "sharedNoticeStaffOnly": "Solo el personal puede cambiar el estado de una alerta de clase o de toda la escuela",
       "acknowledgeOnly": "Solo puede marcar esta alerta como reconocida",
-      "editStaffOnly": "Solo el personal puede editar una alerta; usted puede actualizar su estado"
+      "editStaffOnly": "Solo el personal puede editar una alerta; usted puede actualizar su estado",
+      "noAcademicTargets": "Este tipo de alerta no puede dirigirse a alumnos ni clases",
+      "studentNotEnrolledInYear": "El alumno no está matriculado en el año escolar seleccionado",
+      "classNotInYear": "La clase no pertenece al año escolar seleccionado",
+      "studentNotInClass": "El alumno no está asignado a esa clase en el año escolar seleccionado",
+      "yearScopeImmutable": "El año de una alerta no se puede cambiar al editarla",
+      "feeSourceNotFound": "Cuota de origen no encontrada",
+      "feeSourceOtherStudent": "Esta cuota pertenece a otro alumno",
+      "feeSourceNoYear": "Esta cuota no tiene un año escolar registrado"
     },
     "validation": {
       "titleMinLength": "El título debe tener al menos 2 caracteres",
@@ -631,7 +639,12 @@
       "totalOperators": "Total Operadores",
       "completedOperations": "Operaciones Completadas",
       "totalWorkHours": "Total Horas de Trabajo",
-      "totalCost": "Costo Total"
+      "totalCost": "Costo Total",
+      "totalStudents": "Total de alumnos",
+      "totalTeachers": "Total de docentes",
+      "totalParents": "Total de padres",
+      "totalEarnings": "Total de ingresos",
+      "totalExpenses": "Total de gastos"
     },
     "cards": {
       "recentOperations": {
@@ -816,7 +829,12 @@
       "filters": "Filtros",
       "filterRegion": "Filtros de la tabla",
       "allOption": "Todos",
-      "create": "Añadir"
+      "create": "Añadir",
+      "rowActions": "Acciones de la fila",
+      "rowView": "Ver",
+      "rowEdit": "Editar",
+      "rowDelete": "Eliminar",
+      "actionsColumn": "Acciones"
     },
     "pagination": {
       "rowsPerPage": "Filas/página",
@@ -1062,7 +1080,11 @@
     "errors": {
       "notFound": "Recibo de nómina no encontrado",
       "alreadyPaid": "Este recibo de nómina ya ha sido pagado",
-      "cancelled": "Este recibo de nómina ha sido cancelado"
+      "cancelled": "Este recibo de nómina ha sido cancelado",
+      "staffNotFound": "Miembro del personal no encontrado",
+      "staffInactive": "Solo se puede pagar al personal activo",
+      "noCompensation": "Este miembro del personal no tiene remuneración definida",
+      "outsideYear": "El periodo de nómina está fuera del año escolar seleccionado"
     },
     "stats": {
       "period": "Periodo",
@@ -1174,7 +1196,19 @@
       "notAuthorizedForSection": "No está autorizado a actualizar la asistencia para esta sección",
       "invalidTransition": "Este cambio de estado no está permitido",
       "futureDate": "La asistencia no puede registrarse para una fecha futura",
-      "dateTooOld": "La asistencia no puede registrarse para fechas anteriores a {{days}} días"
+      "dateTooOld": "La asistencia no puede registrarse para fechas anteriores a {{days}} días",
+      "outsideSelectedYear": "La fecha y el destino de la asistencia deben pertenecer al año escolar seleccionado",
+      "sectionNotFound": "Sección no encontrada",
+      "outsideSectionYear": "La fecha está fuera del año escolar de la sección",
+      "draftYear": "No se puede registrar asistencia en un año en borrador",
+      "outsideRegisteredYears": "La fecha está fuera de los años escolares registrados",
+      "staffRequiresAdmin": "La asistencia del personal está reservada a la administración",
+      "staffRecordOtherYear": "Un registro de asistencia del personal pertenece a otro año escolar",
+      "noPlacementOnDate": "El alumno no está asignado a esta sección en la fecha de asistencia",
+      "duplicateStaffInRoster": "Cada miembro del personal solo puede aparecer una vez en la lista",
+      "mixedRosterDates": "Todos los registros de asistencia del personal deben tener la misma fecha",
+      "staffNotEligible": "El miembro del personal {{staffId}} no está sujeto a asistencia el {{date}}",
+      "teacherAndSubjectRequired": "Se requieren el docente y la asignatura"
     },
     "filters": {
       "searchByStudent": "Buscar por nombre del estudiante...",
@@ -1370,6 +1404,41 @@
       "revenueRetrieved": "Cuota completado correctamente",
       "statsRetrieved": "Estadísticas obtenidas correctamente",
       "updated": "Cuota actualizado correctamente"
+    },
+    "errors": {
+      "installmentMissingForFee": "La cuota n.º {{number}} no existe para la tarifa {{feeId}}",
+      "noInstallmentsMatched": "Ninguna cuota coincide con las asignaciones solicitadas",
+      "allocationsExceedPayment": "Las asignaciones no pueden superar el importe del pago",
+      "installmentNotFoundForFee": "Cuota n.º {{number}} no encontrada para la tarifa {{feeId}}",
+      "allocationExceedsAvailable": "La asignación de {{amount}} supera el disponible de {{available}} para la cuota n.º {{number}}",
+      "allocationUsedByCredit": "Un crédito usa esta asignación; anule en su lugar el pago de origen",
+      "allocationNotFoundInYear": "Asignación de pago no encontrada en el año escolar seleccionado",
+      "allocationInstallmentIdRequired": "Las asignaciones a cuotas requieren un installmentId",
+      "draftYear": "No se pueden cobrar cuotas en un año en borrador",
+      "yearMismatch": "El año de la cuota debe coincidir con el año escolar seleccionado",
+      "studentNotFound": "Alumno no encontrado",
+      "studentEnrollmentDateInvalid": "El alumno no tiene una fecha de matrícula válida",
+      "bulkClassNotInYear": "La clase facturada debe pertenecer al año escolar seleccionado",
+      "bulkSectionNotInClass": "La sección facturada debe pertenecer a la clase seleccionada",
+      "enrollmentYearMismatch": "El año de la cuota debe coincidir con el año de la nueva matrícula",
+      "yearChangeNeedsCorrection": "Mover una cuota a otro año escolar requiere un procedimiento de corrección aparte",
+      "lockedAfterPayments": "No se puede cambiar el calendario, el importe ni el alumno de una cuota con pagos registrados",
+      "notFound": "Cuota no encontrada",
+      "installmentStateManaged": "El estado de pago de una cuota depende de sus asignaciones",
+      "installmentEditHasAllocations": "No se puede editar una cuota con pagos asignados",
+      "installmentDeleteHasAllocations": "No se puede eliminar una cuota con pagos asignados",
+      "feeNotFound": "Cuota no encontrada",
+      "invalidStatus": "Estado de cuota no válido",
+      "invalidDiscount": "Descuento no válido",
+      "invalidNetAmount": "El importe tras el descuento debe ser positivo",
+      "cannotPayCancelledInstallment": "No se puede pagar una cuota cancelada",
+      "installmentNumberExists": "Ya existe una cuota con este número para esta tarifa",
+      "allocationNotFound": "Asignación de pago no encontrada",
+      "paymentNotFound": "Pago no encontrado",
+      "installmentNotFound": "Cuota no encontrada",
+      "installmentDoesNotBelongToFee": "La cuota no pertenece a la tarifa indicada",
+      "feeAlreadyExists": "Ya existe una cuota para este alumno, año escolar y tipo de cuota",
+      "installmentAlreadyPaid": "Esta cuota ya está pagada"
     }
   },
   "behaviorRewards": {
@@ -1603,7 +1672,14 @@
   },
   "announcements": {
     "errors": {
-      "authorOnly": "Solo el personal o el autor del anuncio pueden modificarlo"
+      "authorOnly": "Solo el personal o el autor del anuncio pueden modificarlo",
+      "classesNotInYear": "Las clases del anuncio deben pertenecer al año escolar seleccionado",
+      "notFound": "Anuncio no encontrado",
+      "allAudienceNoClassSection": "Un anuncio para todos no puede limitarse a una clase o sección",
+      "classRequired": "Elija una clase para un anuncio de clase",
+      "expiryBeforePublish": "La fecha de caducidad no puede ser anterior a la de publicación",
+      "alreadyPublished": "El anuncio ya está publicado",
+      "notPublished": "El anuncio no está publicado"
     },
     "subtitle": {
       "count": "{{count}} anuncios en total"
@@ -1918,6 +1994,20 @@
       "seeded": "Conductor inicializado correctamente",
       "statusUpdated": "Estado de Conductor actualizado correctamente",
       "updated": "Conductor actualizado correctamente"
+    },
+    "errors": {
+      "createdFromStaff": "Los conductores se crean desde el módulo de Personal",
+      "updatedFromStaff": "Los conductores se modifican desde el módulo de Personal",
+      "statusFromStaff": "El estado de los conductores se modifica desde el módulo de Personal",
+      "deletedFromStaff": "Los conductores se eliminan desde el módulo de Personal",
+      "licenseExists": "Ya existe un conductor con este número de permiso",
+      "emailExists": "Ya existe un conductor con este correo electrónico",
+      "phoneExists": "Ya existe un conductor con este número de teléfono",
+      "licenseExpired": "El permiso del conductor ha caducado",
+      "idExists": "Este conductor ya existe",
+      "cinExists": "Ya existe un conductor con este DNI",
+      "notFound": "Conductor no encontrado",
+      "invalidStatus": "Estado de conductor no válido"
     }
   },
   "exams": {
@@ -2108,6 +2198,19 @@
       "paymentRecorded": "Pago registrado correctamente",
       "retrieved": "Gasto obtenido correctamente",
       "updated": "Gasto actualizado correctamente"
+    },
+    "errors": {
+      "outsideYear": "La fecha del gasto está fuera del año escolar seleccionado",
+      "invoiceNumberExists": "Ya existe un gasto con este número de factura",
+      "receiptNumberExists": "Ya existe un gasto con este número de recibo",
+      "checkNumberExists": "Ya existe un gasto con este número de cheque",
+      "cannotApprove": "Este gasto no se puede aprobar en su estado actual",
+      "cannotPay": "Este gasto no se puede pagar en su estado actual",
+      "rejectionReasonRequired": "Se requiere un motivo de rechazo",
+      "checkNumberRequired": "Se requiere un número de cheque para los pagos con cheque",
+      "idExists": "Este gasto ya existe",
+      "notFound": "Gasto no encontrado",
+      "paymentDateBeforeExpense": "La fecha de pago no puede ser anterior a la del gasto"
     }
   },
   "feeTypes": {
@@ -2169,6 +2272,15 @@
       "deleted": "Tipo de cuota eliminado correctamente",
       "retrieved": "Tipo de cuota obtenido correctamente",
       "updated": "Tipo de cuota actualizado correctamente"
+    },
+    "errors": {
+      "invalidStatus": "Estado de tipo de cuota no válido",
+      "invalidPaymentType": "Tipo de pago no válido",
+      "idExists": "Este tipo de cuota ya existe",
+      "nameAlreadyExists": "Ya existe un tipo de cuota con este nombre",
+      "notFound": "Tipo de cuota no encontrado",
+      "invalidAmount": "El importe debe ser mayor que 0",
+      "amountTooLarge": "El importe no puede superar 1.000.000"
     }
   },
   "grades": {
@@ -2185,7 +2297,25 @@
       "selectSource": "Selecciona una evaluación o examen antes de guardar las notas.",
       "saveFailed": "No se pudieron guardar todas las notas. Inténtalo de nuevo.",
       "marksExceedTotal": "Las notas exceden el total",
-      "sourceRequired": "Seleccione una evaluación o un examen"
+      "sourceRequired": "Seleccione una evaluación o un examen",
+      "ownSourceOnly": "Un docente solo puede calificar sus propias evaluaciones o exámenes",
+      "exactlyOneSource": "Una calificación debe corresponder exactamente a una evaluación o un examen",
+      "sourceNotFound": "Evaluación o examen no encontrado",
+      "sourceNoAssignment": "La evaluación no tiene una asignación docente",
+      "teacherSubjectMismatch": "El docente y la asignatura deben coincidir con la asignación de la evaluación",
+      "sourceNoClassYear": "La evaluación no tiene un año de clase registrado",
+      "sourceContextUnresolved": "El contexto de la evaluación no está resuelto: {{issue}}",
+      "draftYear": "No se pueden registrar calificaciones en un año en borrador",
+      "sourceYearConflict": "El año de la evaluación no coincide con su asignación",
+      "sourceDateOutsideYear": "La fecha de la evaluación está fuera de su año escolar",
+      "sectionNotTargeted": "La sección de la calificación no está incluida en la evaluación",
+      "noPlacementOnDate": "El alumno no está asignado a la sección de la calificación en la fecha de la evaluación",
+      "chooseSection": "Elija una sección para esta calificación",
+      "demoSourceNoYear": "La evaluación de demostración no tiene un año escolar registrado",
+      "notFound": "Calificación no encontrada",
+      "idExists": "Esta calificación ya existe",
+      "alreadyExists": "Ya existe una calificación para este alumno y esta evaluación",
+      "assessmentOrTeacherRequired": "Se requiere una evaluación, un examen o un docente"
     },
     "form": {
       "academicContext": "Contexto académico",
@@ -2458,7 +2588,27 @@
       "studentMismatch": "El pago no pertenece al estudiante especificado",
       "feeTypeMismatch": "El pago no coincide con el tipo de tarifa especificado",
       "allocationTotalMismatch": "El monto total asignado {{actual}} no coincide con el monto del pago {{expected}}.",
-      "allocationsRequired": "Se requiere al menos una asignación"
+      "allocationsRequired": "Se requiere al menos una asignación",
+      "creditExceedsBalance": "El crédito solicitado ({{amount}}) supera el saldo disponible ({{available}})",
+      "noInstallmentsForCredit": "No hay cuotas disponibles a las que aplicar el crédito",
+      "creditExceedsInstallments": "El crédito supera el saldo de las cuotas en {{excess}}",
+      "exceedsInstallmentsKeepCredit": "El importe del pago supera el saldo de las cuotas en {{excess}}; active keepRemainderAsCredit para conservar el resto como crédito",
+      "overAllocates": "El pago está sobreasignado en {{excess}}; active keepRemainderAsCredit para conservar el resto",
+      "hardDeleteDisabled": "La eliminación definitiva de pagos está desactivada. Use POST /payments/:id/void para anular un pago.",
+      "refundCompletedOnly": "Solo se pueden reembolsar los pagos completados",
+      "cannotVoidStatus": "No se puede anular un pago en estado {{status}}",
+      "checkStatusChecksOnly": "El estado de cheque solo puede cambiar en pagos con cheque",
+      "checkTransitionInvalid": "No se puede pasar un cheque de {{from}} a {{to}}",
+      "checkTargetMissing": "Una cuota asignada al cheque ya no existe",
+      "checkAllocationsExceed": "Las asignaciones del cheque superan la cuota n.º {{number}}",
+      "allocationsOtherStudent": "Las asignaciones deben pertenecer al mismo alumno que el pago",
+      "installmentMissingForFee": "La cuota n.º {{number}} no existe para la tarifa {{feeId}}",
+      "installmentAlreadyPaid": "La cuota n.º {{number}} ya está totalmente pagada",
+      "allocationsExceedFee": "Las asignaciones de la cuota {{feeId}} superan el saldo pendiente",
+      "noInstallmentsMatched": "Ninguna cuota coincide con las asignaciones solicitadas",
+      "installmentNotFoundForFee": "Cuota n.º {{number}} no encontrada para la tarifa {{feeId}}",
+      "allocationExceedsAvailable": "La asignación de {{amount}} supera el disponible de {{available}} para la cuota n.º {{number}}",
+      "idempotencyKeyConflict": "Esta clave de idempotencia ya se usó para otro pago"
     },
     "filters": {
       "filterByPaymentMethod": "Filtrar por método de pago",
@@ -2635,7 +2785,23 @@
     "errors": {
       "notFound": "Miembro del personal no encontrado",
       "employeeCodeExists": "Ya existe un miembro del personal con este código de empleado",
-      "cinExists": "Ya existe un miembro del personal con este CIN"
+      "cinExists": "Ya existe un miembro del personal con este CIN",
+      "emailRequiredForLogin": "Se requiere un correo electrónico para crear un acceso",
+      "roleHasNoAppAccess": "Este rol no da acceso a la aplicación",
+      "driverLicenseRequired": "Se requiere el perfil del permiso de conducir",
+      "driverFieldRequired": "El campo {{field}} del conductor es obligatorio",
+      "cleanerZoneRequired": "La asignación de un limpiador requiere una zona",
+      "assistantClassRequired": "La asignación de un asistente requiere una clase",
+      "busAssistantVehicleRequired": "La asignación de un acompañante de autobús requiere un vehículo",
+      "accountantCycleRequired": "La asignación de un contable requiere un ciclo",
+      "securityZoneRequired": "La asignación de un agente de seguridad requiere una zona",
+      "driverVehicleRequired": "La asignación de un conductor requiere un vehículo",
+      "staffNotFound": "Miembro del personal no encontrado",
+      "linkedToTeacherOrDriver": "No se puede eliminar a un miembro del personal vinculado a un docente o conductor activo",
+      "hasHistory": "No se puede eliminar a personal con nóminas, asistencia o turnos en el horario; indique en su lugar una fecha de fin y un estado",
+      "driverKeepsRole": "Un conductor con historial de asignación de vehículos conserva su rol; finalice en su lugar la asignación y el empleo",
+      "driverOneVehicle": "Un conductor tiene un solo vehículo a la vez",
+      "emailExists": "Ya existe un miembro del personal con este correo electrónico"
     },
     "stats": {
       "total": "Total Personal",
@@ -2767,7 +2933,8 @@
       "notFound": "Rol del personal no encontrado",
       "codeExists": "Ya existe un rol del personal con este código",
       "invalidRole": "Rol inválido o inactivo",
-      "systemRoleInUse": "Los roles del sistema no se pueden eliminar"
+      "systemRoleInUse": "Los roles del sistema no se pueden eliminar",
+      "invalidCode": "Código de rol no válido"
     },
     "table": {
       "code": "Código",
@@ -2812,7 +2979,12 @@
   "settings": {
     "errors": {
       "notFound": "Configuración no encontrada",
-      "alreadyExists": "La configuración de la escuela ya existe; modifíquela con una actualización"
+      "alreadyExists": "La configuración de la escuela ya existe; modifíquela con una actualización",
+      "invalidCalendarMonth": "Mes del calendario escolar no válido",
+      "invalidCalendar": "Calendario escolar no válido",
+      "missing": "Falta la configuración de la escuela",
+      "registeredCalendarLocked": "El calendario de un año registrado solo se modifica con una corrección revisada",
+      "activateThroughYears": "Active el año registrado desde la gestión de años escolares"
     },
     "academic": {
       "semesterPlaceholder": "Semestre",
@@ -2967,7 +3139,17 @@
       "studentCodeExists": "Ya existe un estudiante con este código",
       "emailExists": "Ya existe un estudiante con este correo electrónico",
       "invalidClass": "Clase no válida",
-      "invalidSection": "Sección no válida"
+      "invalidSection": "Sección no válida",
+      "correctionRequiresAdmin": "Las correcciones de matrícula están reservadas a la administración autenticada",
+      "dateOutsideYear": "La fecha está fuera del periodo del año escolar",
+      "createActiveFirst": "Cree un alumno activo y luego finalice su matrícula anual si es necesario",
+      "beforeAdmission": "La matrícula anual no puede ser anterior a la fecha de admisión original",
+      "useEnrollmentOperations": "Use las operaciones de matrícula fechadas para cambiar la ubicación o el estado de matrícula",
+      "admissionAfterEnrollment": "La fecha de admisión original no puede ser posterior a una matrícula anual registrada",
+      "hasEnrollmentHistory": "No se puede eliminar a un alumno con historial de matrículas anuales",
+      "historyRetained": "El historial de matrículas anuales debe conservarse",
+      "phoneExists": "Ya existe un alumno con este número de teléfono",
+      "notInSection": "El alumno no está en esta sección"
     },
     "subtitle": {
       "count": "{{count}} estudiantes en total"
@@ -3203,7 +3385,7 @@
     }
   },
   "teachers": {
-    "errors": { "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente" },
+    "errors": { "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente", "notFound": "Docente no encontrado", "datedRosterUnreviewed": "Las listas fechadas de un docente requieren un historial de asignaciones revisado", "dateOutsideYear": "La fecha está fuera del periodo del año escolar", "assignmentNotFound": "Asignación no encontrada", "classHasNoSections": "La clase no tiene secciones", "phoneExists": "Ya existe un docente con este número de teléfono", "notInSection": "El docente no imparte clase en esta sección", "idExists": "Este docente ya existe", "cinExists": "Ya existe un docente con este DNI", "emailExists": "Ya existe un docente con este correo electrónico" },
     "subtitle": {
       "count": "{{count}} profesores en total"
     },
@@ -3334,6 +3516,24 @@
       "retrieved": "Asignación de vehículo obtenido correctamente",
       "unassigned": "Asignación de vehículo desasignado correctamente",
       "updated": "Asignación de vehículo actualizado correctamente"
+    },
+    "errors": {
+      "driverAssignmentNotActive": "La asignación del conductor no está activa",
+      "endOutsideYear": "La fecha de desasignación del conductor está fuera del año escolar seleccionado",
+      "endDateInvalid": "La fecha de desasignación debe ser posterior al inicio y no puede estar en el futuro",
+      "startOutsideYear": "La fecha de asignación del conductor está fuera del año escolar seleccionado",
+      "futureReassignment": "La reasignación del conductor no puede estar en el futuro",
+      "laterAssignmentExists": "El conductor ya está asignado desde una fecha posterior",
+      "reassignBeforeStart": "La fecha de reasignación debe ser posterior al inicio anterior",
+      "noActiveDriver": "El vehículo no tiene un conductor asignado",
+      "oneCurrentDriver": "Un vehículo tiene un solo conductor a la vez",
+      "startNoYear": "La fecha de asignación no pertenece a ningún año escolar registrado",
+      "overlappingDriver": "El vehículo ya tiene un conductor en este periodo",
+      "mustStayInYear": "La asignación del conductor debe permanecer en el año escolar seleccionado",
+      "statusEndMismatch": "El estado y la fecha de fin de la asignación no coinciden",
+      "notFound": "Asignación de vehículo no encontrada",
+      "invalidDateRange": "La fecha de desasignación debe ser posterior a la de asignación",
+      "assignmentNotActive": "La asignación no está activa y no se puede modificar"
     }
   },
   "vehicles": {
@@ -3421,6 +3621,20 @@
       "retrieved": "Vehículo obtenido correctamente",
       "seeded": "Vehículo inicializado correctamente",
       "updated": "Vehículo actualizado correctamente"
+    },
+    "errors": {
+      "currentMileageLessThanInitial": "El kilometraje actual no puede ser inferior al inicial",
+      "notFound": "Vehículo no encontrado",
+      "idExists": "Este vehículo ya existe",
+      "invalidType": "Tipo de vehículo no válido",
+      "invalidStatus": "Estado de vehículo no válido",
+      "invalidFuelType": "Tipo de combustible no válido",
+      "invalidYear": "El año debe estar entre {{minYear}} y {{currentYear}}",
+      "licensePlateExists": "Ya existe un vehículo con esta matrícula",
+      "invalidEngineHours": "Las horas de motor deben ser un número positivo",
+      "invalidMileage": "El kilometraje debe ser un número positivo",
+      "invalidFuelCapacity": "La capacidad del depósito debe ser un número positivo",
+      "invalidPurchasePrice": "El precio de compra debe ser un número positivo"
     }
   },
   "events": {
@@ -3532,6 +3746,23 @@
       "retrieved": "Mantenimiento obtenido correctamente",
       "statusUpdated": "Estado de Mantenimiento actualizado correctamente",
       "updated": "Mantenimiento actualizado correctamente"
+    },
+    "errors": {
+      "invalidAssignedTo": "Parámetro assignedTo no válido",
+      "invalidDate": "Fecha no válida",
+      "outsideYear": "La fecha de mantenimiento está fuera del año escolar seleccionado",
+      "notFound": "Mantenimiento no encontrado",
+      "invalidType": "Tipo de mantenimiento no válido",
+      "invalidStatus": "Estado de mantenimiento no válido",
+      "invalidPriority": "Prioridad de mantenimiento no válida",
+      "invalidDueHours": "Las horas de motor previstas deben ser un número positivo",
+      "invalidCost": "El coste debe ser un número positivo",
+      "dueHoursPastCurrent": "Las horas de motor previstas deben superar las horas actuales del vehículo",
+      "cannotModifyCompleted": "No se puede modificar un mantenimiento finalizado",
+      "cannotDeleteInProgress": "No se puede eliminar un mantenimiento en curso",
+      "alreadyCompleted": "Este mantenimiento ya está finalizado",
+      "cannotCompleteCancelled": "No se puede finalizar un mantenimiento cancelado",
+      "duplicateMaintenanceExists": "Ya hay un mantenimiento similar programado para este vehículo"
     }
   },
   "notifications": {
@@ -3557,7 +3788,11 @@
     "pushUnavailable": "Las notificaciones push no están disponibles ahora.",
     "pushUnsupported": "Este navegador no admite push web.",
     "pushDenied": "Las notificaciones están bloqueadas en los ajustes del sitio.",
-    "pushError": "No se pudieron actualizar las notificaciones push."
+    "pushError": "No se pudieron actualizar las notificaciones push.",
+    "errors": {
+      "notFound": "Notificación no encontrada",
+      "subscriptionNotFound": "Suscripción a notificaciones no encontrada"
+    }
   },
   "permissions": {
     "subtitle": {
@@ -3613,12 +3848,32 @@
       "retrieved": "Repostaje obtenido correctamente",
       "seeded": "Repostaje inicializado correctamente",
       "updated": "Repostaje actualizado correctamente"
+    },
+    "errors": {
+      "outsideYear": "La fecha de repostaje está fuera del año escolar seleccionado",
+      "notFound": "Repostaje no encontrado",
+      "voucherExists": "Ya existe un repostaje con este número de vale",
+      "dateRequired": "Se requiere una fecha",
+      "invalidDateFormat": "Formato de fecha no válido",
+      "endDateAfterStart": "La fecha de fin debe ser posterior a la de inicio"
     }
   },
   "rollover": {
     "committed": "Traspaso confirmado correctamente",
     "previewed": "Traspaso previsualizado correctamente",
-    "retrieved": "Traspaso obtenido correctamente"
+    "retrieved": "Traspaso obtenido correctamente",
+    "errors": {
+      "targetMismatch": "El año de destino de la renovación debe coincidir con el año escolar seleccionado",
+      "sourceAfterTarget": "El año de origen de la renovación debe preceder al año de destino",
+      "idempotencyKeyReused": "Esta clave de idempotencia ya se usó con otro contenido",
+      "activateSeparately": "Active el año escolar por separado, tras la preparación académica",
+      "noPreview": "No existe una vista previa para esta clave de idempotencia",
+      "runIdMismatch": "runId no coincide con la clave de idempotencia de la vista previa",
+      "payloadMismatch": "El contenido de la renovación no coincide con la vista previa",
+      "cannotCommitStatus": "No se puede confirmar una renovación en estado {{status}}",
+      "previewMissingFees": "La vista previa no incluye las cuotas propuestas",
+      "runNotFound": "Renovación no encontrada"
+    }
   },
   "search": {
     "success": "Búsqueda completado correctamente"
@@ -3630,6 +3885,30 @@
       "retrieved": "Ruta de estudiante obtenido correctamente",
       "unassigned": "Ruta de estudiante desasignado correctamente",
       "updated": "Ruta de estudiante actualizado correctamente"
+    },
+    "errors": {
+      "activeHasNoEnd": "Una ruta activa no puede tener fecha de desasignación",
+      "closedNeedsEnd": "Una ruta finalizada o cancelada requiere una fecha de desasignación",
+      "reassignActiveOnly": "Solo se puede reasignar una ruta activa",
+      "reassignDateInvalid": "La fecha de reasignación debe ser posterior al inicio anterior y no puede estar en el futuro",
+      "notActive": "La ruta no está activa",
+      "endOutsideYear": "La fecha de desasignación está fuera del año escolar seleccionado",
+      "endDateInvalid": "La fecha de desasignación debe ser posterior al inicio y no puede estar en el futuro",
+      "noTransportFeeType": "No hay ningún tipo de cuota de transporte activo configurado",
+      "notFound": "Asignación de ruta no encontrada",
+      "alreadyOnVehicle": "El alumno ya está asignado al vehículo «{{vehicle}}». Desasígnelo primero.",
+      "invalidStartDate": "Fecha de asignación no válida",
+      "startOutsideYear": "La fecha de asignación está fuera del año escolar seleccionado",
+      "endBeforeStart": "La fecha de desasignación debe ser posterior a la de asignación",
+      "notEnrolledOnStart": "El alumno no está matriculado en la fecha de asignación",
+      "noPlacementOnStart": "El alumno no tiene ubicación en la fecha de asignación",
+      "overlappingRoute": "El alumno ya tiene una ruta en este periodo",
+      "coordinatesTogether": "La latitud y la longitud ({{label}}) deben indicarse juntas.",
+      "studentNotFound": "Alumno no encontrado",
+      "studentInactive": "Solo los alumnos activos pueden usar el transporte escolar",
+      "vehicleNotFound": "Vehículo no encontrado",
+      "vehicleInactive": "El vehículo «{{vehicle}}» no está activo",
+      "vehicleFull": "El vehículo «{{vehicle}}» está completo ({{occupancy}}/{{capacity}})"
     }
   },
   "transport": {
@@ -3792,6 +4071,112 @@
     "documents": {
       "title": "No hay documentos subidos",
       "description": "Sube un documento para empezar."
+    }
+  },
+  "academicSources": {
+    "errors": {
+      "dateAndSectionsRequired": "Se requieren una fecha y secciones de destino",
+      "targetSectionMissing": "Falta una sección de destino",
+      "sectionsSpanYears": "Las secciones de destino pertenecen a años distintos",
+      "draftYear": "No se pueden registrar evaluaciones en un año en borrador",
+      "dateOutsideYear": "La fecha está fuera del año de las secciones de destino"
+    }
+  },
+  "migrationIssues": {
+    "errors": {
+      "notFound": "Incidencia de migración no encontrada",
+      "alreadyReviewed": "Esta incidencia de migración ya fue revisada",
+      "placementRequired": "Registre una ubicación fechada y confirmada para la clase y la sección capturadas antes de resolver esta incidencia",
+      "attendanceYearRequired": "Registre un año de asistencia válido antes de resolver esta incidencia",
+      "sourceYearRequired": "Registre un año de evaluación válido antes de resolver esta incidencia",
+      "gradeYearRequired": "Registre un año de calificaciones válido antes de resolver esta incidencia",
+      "reviewedConcurrently": "Otra persona revisó esta incidencia al mismo tiempo"
+    }
+  },
+  "academicYears": {
+    "errors": {
+      "notFound": "Año escolar no encontrado",
+      "alreadyExists": "Este año escolar ya existe",
+      "invalidCalendar": "El calendario guardado no es válido",
+      "activeYearNotRegistered": "El año activo no está registrado en la configuración",
+      "activeYearChanged": "El año activo cambió; revise e inténtelo de nuevo",
+      "onlyNextDraftActivates": "Solo se puede activar el año en borrador verificado que sigue al año activo",
+      "activatableFrom": "Este año se puede activar a partir del {{date}}, su primer día de registro",
+      "enrollmentsBeforeActivation": "Las matrículas preparadas deben comenzar a más tardar en la fecha de activación",
+      "activateAnotherFirst": "Active otro año antes de cerrar este",
+      "draftCannotClose": "No se puede cerrar un año en borrador",
+      "reportingOverlaps": "El periodo se superpone con {{label}}",
+      "invalid": "Año escolar no válido",
+      "recordHasNoYear": "Este registro no tiene un año escolar accesible",
+      "settingsMissing": "Falta la configuración de la escuela",
+      "otherYearsRestricted": "Los demás años escolares solo están disponibles para la administración y la contabilidad"
+    }
+  },
+  "yearTransitions": {
+    "errors": {
+      "sourceNotActive": "El año de origen debe ser el año activo de la configuración",
+      "yearsNotAdjacent": "La transición requiere un año de origen verificado y un año de destino en borrador consecutivos",
+      "targetDateInvalid": "La fecha de matrícula de destino debe ser posterior al año de origen y pertenecer al año de destino",
+      "idempotencyKeyReused": "Esta clave de idempotencia ya se usó con otro contenido",
+      "alreadyCommitted": "El año de destino ya tiene una transición confirmada",
+      "previewStale": "La vista previa de la transición está desactualizada; revise la lista y la capacidad actuales",
+      "previewHasIssues": "La vista previa de la transición tiene incidencias sin resolver",
+      "runNotFound": "Transición de año no encontrada",
+      "commitBeforeActivating": "Confirme la transición desde el año activo antes de activar este año"
+    }
+  },
+  "financialAudit": {
+    "errors": {
+      "notFound": "Entrada del registro de auditoría no encontrada"
+    }
+  },
+  "financialNotifications": {
+    "errors": {
+      "invalidCronSecret": "FINANCIAL_CRON_SECRET no válido o ausente"
+    }
+  },
+  "zones": {
+    "errors": {
+      "notFound": "Zona no encontrada",
+      "inUse": "Esta zona se usa en asignaciones del personal y no se puede eliminar",
+      "nameExists": "Ese nombre de zona ya existe"
+    }
+  },
+  "enrollments": {
+    "errors": {
+      "notFoundInYear": "Matrícula no encontrada en el año seleccionado",
+      "correctionRequiresAdmin": "Las correcciones de matrícula están reservadas a la administración",
+      "changedReload": "La matrícula cambió; vuelva a cargarla antes de corregirla",
+      "statusEndDateMismatch": "El estado de la matrícula debe coincidir con su fecha de fin",
+      "placementNotFound": "Ubicación no encontrada en esta matrícula",
+      "placementIntervalsInvalid": "Los periodos de ubicación deben caber en la matrícula sin superponerse",
+      "correctionConflictsRecords": "La corrección entra en conflicto con asistencias o calificaciones registradas; regularice primero esos registros",
+      "studentNotFound": "Alumno no encontrado",
+      "notFound": "Matrícula no encontrada",
+      "draftSetupOnly": "Un año en borrador solo permite la preparación académica",
+      "sectionNotInClass": "La sección debe pertenecer a la clase seleccionada",
+      "classOtherYear": "La clase pertenece a otro año escolar",
+      "enrollmentDateRequired": "Se requiere una fecha de matrícula anual real",
+      "newPlacementActiveYear": "La ubicación de un alumno nuevo debe pertenecer al año escolar activo",
+      "enrollmentDateActiveYear": "La fecha de matrícula anual debe pertenecer al año escolar activo",
+      "unplacedStudents": "{{count}} alumno(s) del nuevo año no tienen ubicación que trasladar",
+      "undecidedStudents": "{{count}} alumno(s) del año activo no tienen matrícula ni resultado en el nuevo año",
+      "dateOutsideYear": "La fecha de matrícula debe pertenecer al año seleccionado",
+      "beforeAdmission": "La matrícula anual no puede ser anterior a la fecha de admisión original",
+      "alreadyEnrolled": "El alumno ya está matriculado en este año",
+      "futureStart": "Una matrícula del año activo no puede empezar en el futuro",
+      "ended": "La matrícula ha finalizado",
+      "transferOutsideInterval": "La fecha de traslado está fuera del periodo de matrícula",
+      "noOpenPlacementTransfer": "No hay una ubicación abierta que trasladar",
+      "transferBeforePlacement": "El traslado debe ocurrir después del inicio de la ubicación actual",
+      "alreadyInPlacement": "El alumno ya está en esa ubicación",
+      "futureTransfer": "Un traslado del año activo no puede empezar en el futuro",
+      "alreadyEnded": "La matrícula ya ha finalizado",
+      "draftNotEditable": "Un año en borrador no tiene matrículas editables",
+      "endOutsideInterval": "La fecha de fin está fuera del periodo de matrícula",
+      "noOpenPlacementEnd": "No hay una ubicación abierta que finalizar",
+      "endBeforePlacement": "La fecha de fin debe ser posterior al inicio de la ubicación actual",
+      "futureEnd": "Una matrícula del año activo no puede terminar en el futuro"
     }
   }
 }

@@ -1,6 +1,6 @@
 import { auth } from '@/najm.auth';
 import { AuthError } from 'najm-auth/client';
-import { captureRequestHeaders } from '@/lib/requestHeaders';
+import { captureRequestHeaders, languageHeader } from '@/lib/requestHeaders';
 import { toFormData, hasFiles } from './formDataHelper';
 
 function buildURL(path: string, params?: Record<string, any>): string {
@@ -20,14 +20,17 @@ function wrap(body: any): { data: any } {
 }
 
 /**
- * The scoped headers of a request, read once, synchronously, as it starts (see
- * `lib/requestHeaders`). Authentication endpoints get none. The same object is
- * reused for the request's retries, so a retry keeps the request's headers.
+ * The headers of a request, read once, synchronously, as it starts (see
+ * `lib/requestHeaders`): the interface language, so the server answers in it,
+ * and the scoped headers, which authentication endpoints do not get. The same
+ * object is reused for the request's retries, so a retry keeps its headers.
  */
 function headersFor(url: string): Record<string, string> | undefined {
-  if (url.startsWith('/auth/')) return undefined;
-  const headers = captureRequestHeaders();
-  return Object.keys(headers).length ? { ...headers } : undefined;
+  const headers = {
+    ...languageHeader(),
+    ...(url.startsWith('/auth/') ? {} : captureRequestHeaders()),
+  };
+  return Object.keys(headers).length ? headers : undefined;
 }
 
 let pendingAccessTokenRefresh: Promise<void> | null = null;

@@ -21,7 +21,7 @@ export class MaintenanceValidator {
   }
 
   ensureAssignedTo(assignedTo: string) {
-    if (!assignedTo || typeof assignedTo !== 'string') Err(400, 'Invalid assignedTo parameter');
+    if (!assignedTo || typeof assignedTo !== 'string') Err(400, this.mt('invalidAssignedTo'));
   }
 
   async checkMaintenanceExists(id: string) {
@@ -69,10 +69,10 @@ export class MaintenanceValidator {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate)
       || Number.isNaN(Date.parse(scheduledDate))
       || new Date(scheduledDate).toISOString().slice(0, 10) !== scheduledDate) {
-      Err(400, 'Invalid date');
+      Err(400, this.mt('invalidDate'));
     }
     if (scheduledDate < this.year.reportingStartsOn || scheduledDate > this.year.reportingEndsOn) {
-      Err(409, 'Maintenance date is outside the selected school year');
+      Err(409, this.mt('outsideYear'));
     }
 
     return true;

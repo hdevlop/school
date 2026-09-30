@@ -7,7 +7,7 @@ import { InstallmentRepository } from '../installments/InstallmentRepository';
 
 @Service()
 export class AllocationValidator {
-  @I18n('fees.errors') private t!: (key: string) => string;
+  @I18n('fees.errors') private t!: (key: string, params?: Record<string, unknown>) => string;
 
   constructor(
     private allocationRepository: AllocationRepository,
@@ -17,37 +17,37 @@ export class AllocationValidator {
   ) { }
 
   ensureMappedInstallment<T>(installment: T | null | undefined, number: number, feeId: string) {
-    if (!installment) Err(400, `Installment #${number} does not exist for fee ${feeId}`);
+    if (!installment) Err(400, this.t('installmentMissingForFee', { number, feeId }));
     return installment;
   }
 
   ensureLockedTargets(count: number) {
-    if (count === 0) Err(400, 'No installments matched the requested allocation targets');
+    if (count === 0) Err(400, this.t('noInstallmentsMatched'));
   }
 
   ensurePaymentCapacity(plannedCents: number, paymentCents: number) {
-    if (plannedCents > paymentCents) Err(400, 'Allocations cannot exceed the payment amount');
+    if (plannedCents > paymentCents) Err(400, this.t('allocationsExceedPayment'));
   }
 
   ensureLockedInstallment<T>(installment: T | null | undefined, number: number, feeId: string) {
-    if (!installment) Err(400, `Installment #${number} not found for fee ${feeId}`);
+    if (!installment) Err(400, this.t('installmentNotFoundForFee', { number, feeId }));
     return installment;
   }
 
   ensureInstallmentCapacity(plannedCents: number, availableCents: number, amount: number, number: number) {
     if (plannedCents > availableCents) {
-      Err(400, `Allocation of ${amount} exceeds available ${(availableCents / 100).toFixed(2)} for installment #${number}`);
+      Err(400, this.t('allocationExceedsAvailable', { amount, available: (availableCents / 100).toFixed(2), number }));
     }
   }
 
   async ensureNoCreditApplication(id: string) {
     if (await this.allocationRepository.hasCreditApplication(id)) {
-      Err(409, 'A credit application uses this allocation; reverse the source payment instead');
+      Err(409, this.t('allocationUsedByCredit'));
     }
   }
 
   ensureDeletedAllocation<T>(allocation: T | null | undefined) {
-    if (!allocation) Err(404, 'Payment allocation not found in the selected academic year');
+    if (!allocation) Err(404, this.t('allocationNotFoundInYear'));
     return allocation;
   }
 
@@ -124,7 +124,7 @@ export class AllocationValidator {
     }
 
     if (type === 'installment' && !installmentId) {
-      Err(400, 'Installment allocations require an installmentId');
+      Err(400, this.t('allocationInstallmentIdRequired'));
     }
 
     return data;

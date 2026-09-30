@@ -5,6 +5,7 @@ import { CreditService } from '../../src/modules/financial/credits/CreditService
 import { CreditValidator } from '../../src/modules/financial/credits/CreditValidator';
 import { PaymentService } from '../../src/modules/financial/payments/PaymentService';
 import { PaymentValidator } from '../../src/modules/financial/payments/PaymentValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const installment = { id: 'installment-1', feeId: 'fee-1', number: 1, amount: '100.00' };
 
@@ -18,7 +19,7 @@ function allocationHarness(input: { completed?: number; reserved?: number; alrea
   };
   const service = new AllocationService(
     repository as any,
-    new AllocationValidator(repository as any, {} as any, {} as any, {} as any),
+    withEnglishMessages(new AllocationValidator(repository as any, {} as any, {} as any, {} as any)),
     { getByFeeAndNumbersForUpdate: async () => { calls.push('lock'); return input.locked ?? [installment]; } } as any,
     {} as any, {} as any,
     { record: async () => { calls.push('audit'); } } as any,
@@ -79,7 +80,7 @@ describe('financial guards under the existing write locks', () => {
       { getByStudentForAutoAllocationForUpdate: async (_studentId: string, year: string) => {
         calls.push(`lock-installments:${year}`); return [installment];
       } } as any,
-      {} as any, {} as any, new CreditValidator(),
+      {} as any, {} as any, withEnglishMessages(new CreditValidator()),
     );
     (service as any).year = { label: '2025-2026' };
     await expect(service.applyStudentCredit({ studentId: 'student-1', amount: 30 }))
@@ -95,7 +96,7 @@ function checkHarness(payment: object | null, locked: object[] = [installment], 
       getByIdForUpdate: async () => { calls.push('lock-payment'); return payment; },
       update: async () => { calls.push('update'); },
     } as any,
-    new PaymentValidator({} as any, {} as any, {} as any, {} as any, {} as any, {} as any),
+    withEnglishMessages(new PaymentValidator({} as any, {} as any, {} as any, {} as any, {} as any, {} as any)),
     {} as any,
     {
       getByPaymentId: async () => [{ installmentId: installment.id, feeId: installment.feeId, installment: { number: 1 }, amount: '70.00' }],

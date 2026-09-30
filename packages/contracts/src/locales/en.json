@@ -725,7 +725,12 @@
       "filters": "Filters",
       "filterRegion": "Table filters",
       "allOption": "All",
-      "create": "Add"
+      "create": "Add",
+      "rowActions": "Row actions",
+      "rowView": "View",
+      "rowEdit": "Edit",
+      "rowDelete": "Delete",
+      "actionsColumn": "Actions"
     },
     "pagination": {
       "rowsPerPage": "Rows/page",
@@ -815,7 +820,12 @@
       "invalidTheme": "Invalid theme specified",
       "invalidTimeZone": "Invalid time zone specified",
       "noSettingsToDelete": "No settings found to delete",
-      "userSettingsNotFound": "User settings not found"
+      "userSettingsNotFound": "User settings not found",
+      "invalidCalendarMonth": "Invalid academic calendar month",
+      "invalidCalendar": "Invalid academic calendar",
+      "missing": "School settings are missing",
+      "registeredCalendarLocked": "Registered year calendars require a reviewed correction",
+      "activateThroughYears": "Activate the registered year through academic-year operations"
     },
     "system": {
       "title": "System Settings",
@@ -951,7 +961,9 @@
       "amountTooLarge": "Amount cannot exceed 1,000,000",
       "dueDateTooOld": "Due date cannot be older than 1 year",
       "alreadyArchived": "Fee type is already archived",
-      "alreadyActive": "Fee type is already active"
+      "alreadyActive": "Fee type is already active",
+      "invalidStatus": "Invalid fee type status",
+      "invalidPaymentType": "Invalid payment type"
     },
     "form": {
       "feeTypeInformation": "Fee Type Information",
@@ -1134,7 +1146,32 @@
       "cannotAllocateFailedPayment": "Cannot allocate a failed payment",
       "cannotAllocateRefundedPayment": "Cannot allocate a refunded payment",
       "installmentRequiredForInstallmentAllocation": "Installment ID is required for installment allocation",
-      "installmentNotAllowedForFeeAllocation": "Installment ID is not allowed for fee allocation"
+      "installmentNotAllowedForFeeAllocation": "Installment ID is not allowed for fee allocation",
+      "installmentMissingForFee": "Installment #{{number}} does not exist for fee {{feeId}}",
+      "noInstallmentsMatched": "No installments matched the requested allocation targets",
+      "allocationsExceedPayment": "Allocations cannot exceed the payment amount",
+      "installmentNotFoundForFee": "Installment #{{number}} not found for fee {{feeId}}",
+      "allocationExceedsAvailable": "Allocation of {{amount}} exceeds available {{available}} for installment #{{number}}",
+      "allocationUsedByCredit": "A credit application uses this allocation; reverse the source payment instead",
+      "allocationNotFoundInYear": "Payment allocation not found in the selected academic year",
+      "allocationInstallmentIdRequired": "Installment allocations require an installmentId",
+      "draftYear": "Fees cannot be charged to a draft academic year",
+      "yearMismatch": "Fee year must match the selected academic year",
+      "studentEnrollmentDateInvalid": "Student is missing a valid enrollment date",
+      "bulkClassNotInYear": "Bulk fee class must belong to the selected academic year",
+      "bulkSectionNotInClass": "Bulk fee section must belong to the selected class",
+      "enrollmentYearMismatch": "Student fee year must match the new enrollment year",
+      "yearChangeNeedsCorrection": "Changing a fee to another academic year requires a separate correction workflow",
+      "lockedAfterPayments": "Cannot change fee schedule, amount, or student after payments have been recorded",
+      "installmentStateManaged": "Installment payment state is managed by allocations",
+      "installmentEditHasAllocations": "Cannot edit an installment with payment allocations",
+      "installmentDeleteHasAllocations": "Cannot delete an installment with payment allocations",
+      "feeNotFound": "Fee not found",
+      "invalidStatus": "Invalid fee status",
+      "invalidDiscount": "Invalid discount",
+      "invalidNetAmount": "The amount after discount must be positive",
+      "cannotPayCancelledInstallment": "A cancelled installment cannot be paid",
+      "installmentNumberExists": "An installment with this number already exists for this fee"
     },
     "validation": {
       "studentRequired": "Student is required",
@@ -1399,7 +1436,17 @@
       "studentCodeExists": "A student with this student code already exists",
       "emailExists": "A student with this email already exists",
       "invalidClass": "Invalid class specified",
-      "invalidSection": "Invalid section specified"
+      "invalidSection": "Invalid section specified",
+      "correctionRequiresAdmin": "Enrollment corrections require an authenticated administrator",
+      "dateOutsideYear": "Date is outside the academic year reporting interval",
+      "createActiveFirst": "Create an active student, then end the yearly enrollment if needed",
+      "beforeAdmission": "Yearly enrollment cannot predate the original admission date",
+      "useEnrollmentOperations": "Use the dated enrollment operations to change placement or enrollment status",
+      "admissionAfterEnrollment": "Original admission date cannot follow a recorded yearly enrollment",
+      "hasEnrollmentHistory": "A student with yearly enrollment history cannot be deleted",
+      "historyRetained": "Yearly enrollment history must be retained",
+      "phoneExists": "A student with this phone number already exists",
+      "notInSection": "Student is not in this section"
     },
     "validation": {
       "studentCodeRequired": "Student code is required",
@@ -1969,7 +2016,23 @@
     "errors": {
       "notFound": "Staff member not found",
       "employeeCodeExists": "A staff member with this employee code already exists",
-      "cinExists": "A staff member with this CIN already exists"
+      "cinExists": "A staff member with this CIN already exists",
+      "emailRequiredForLogin": "Email is required to create a staff login",
+      "roleHasNoAppAccess": "This staff role does not grant app access",
+      "driverLicenseRequired": "Driver license profile is required",
+      "driverFieldRequired": "Driver {{field}} is required",
+      "cleanerZoneRequired": "Cleaner assignment requires a zone",
+      "assistantClassRequired": "Assistant assignment requires a class",
+      "busAssistantVehicleRequired": "Bus assistant assignment requires a vehicle",
+      "accountantCycleRequired": "Accountant assignment requires a cycle",
+      "securityZoneRequired": "Security assignment requires a zone",
+      "driverVehicleRequired": "Driver assignment requires a vehicle",
+      "staffNotFound": "Staff not found",
+      "linkedToTeacherOrDriver": "Cannot delete staff linked to an active teacher or driver",
+      "hasHistory": "Staff with payslips, attendance or timetable duties cannot be deleted; set an end date and status instead",
+      "driverKeepsRole": "A driver with vehicle assignment history keeps the driver role; end the assignment and the employment instead",
+      "driverOneVehicle": "A driver has one current vehicle",
+      "emailExists": "A staff member with this email already exists"
     },
     "stats": {
       "total": "Total Staff",
@@ -2113,7 +2176,8 @@
       "notFound": "Staff role not found",
       "codeExists": "A staff role with this code already exists",
       "invalidRole": "Invalid or inactive role",
-      "systemRoleInUse": "System roles cannot be removed"
+      "systemRoleInUse": "System roles cannot be removed",
+      "invalidCode": "Invalid role code"
     },
     "table": {
       "code": "Code",
@@ -2218,7 +2282,13 @@
       "notFound": "Teacher not found",
       "cinExists": "A teacher with this CIN already exists",
       "emailExists": "A teacher with this email already exists",
-      "hasAssignmentHistory": "This teacher has class assignments in a school year. Remove those assignments before deleting the teacher"
+      "hasAssignmentHistory": "This teacher has class assignments in a school year. Remove those assignments before deleting the teacher",
+      "datedRosterUnreviewed": "Dated teacher rosters require reviewed assignment history",
+      "dateOutsideYear": "Date is outside the academic year reporting interval",
+      "assignmentNotFound": "Assignment not found",
+      "classHasNoSections": "Class has no sections",
+      "phoneExists": "A teacher with this phone number already exists",
+      "notInSection": "Teacher does not teach this section"
     },
     "validation": {
       "cinMinLength": "CIN must be at least 8 characters long",
@@ -2445,7 +2515,15 @@
       "cinExists": "A driver with this CIN already exists",
       "licenseNumberExists": "A driver with this license number already exists",
       "assignmentNotFound": "Driver assignment not found",
-      "invalidStatus": "status Invalid"
+      "invalidStatus": "Invalid driver status",
+      "createdFromStaff": "Drivers are created from the unified Staff module",
+      "updatedFromStaff": "Drivers are updated from the unified Staff module",
+      "statusFromStaff": "Driver status is updated from the unified Staff module",
+      "deletedFromStaff": "Drivers are deleted from the unified Staff module",
+      "licenseExists": "A driver with this license number already exists",
+      "emailExists": "A driver with this email already exists",
+      "phoneExists": "A driver with this phone number already exists",
+      "licenseExpired": "The driver's license has expired"
     },
     "validation": {
       "cinMinLength": "CIN must be at least 8 characters long",
@@ -2563,7 +2641,27 @@
       "studentMismatch": "Payment does not belong to the specified student",
       "feeTypeMismatch": "Payment does not match the specified fee type",
       "allocationTotalMismatch": "Total allocated amount {{actual}} does not match payment amount {{expected}}.",
-      "allocationsRequired": "At least one allocation is required"
+      "allocationsRequired": "At least one allocation is required",
+      "creditExceedsBalance": "Requested credit {{amount}} exceeds available balance {{available}}",
+      "noInstallmentsForCredit": "No installments available to apply credit to",
+      "creditExceedsInstallments": "Credit exceeds available installment balance by {{excess}}",
+      "exceedsInstallmentsKeepCredit": "Payment amount exceeds available installment balance by {{excess}}; enable keepRemainderAsCredit to retain remainder",
+      "overAllocates": "Payment over-allocates by {{excess}}; set keepRemainderAsCredit to retain the remainder",
+      "hardDeleteDisabled": "Hard delete of payments is disabled. Use POST /payments/:id/void to mark a payment as voided.",
+      "refundCompletedOnly": "Only completed payments can be refunded",
+      "cannotVoidStatus": "Cannot void payment in status {{status}}",
+      "checkStatusChecksOnly": "Check status changes are only allowed for check payments",
+      "checkTransitionInvalid": "Cannot transition check from {{from}} to {{to}}",
+      "checkTargetMissing": "A check allocation target no longer exists",
+      "checkAllocationsExceed": "Check allocations exceed installment #{{number}}",
+      "allocationsOtherStudent": "Payment allocations must belong to the same student as the payment",
+      "installmentMissingForFee": "Installment #{{number}} does not exist for fee {{feeId}}",
+      "installmentAlreadyPaid": "Installment #{{number}} is already fully paid",
+      "allocationsExceedFee": "Allocations for fee {{feeId}} exceed the remaining fee balance",
+      "noInstallmentsMatched": "No installments matched the requested allocation targets",
+      "installmentNotFoundForFee": "Installment #{{number}} not found for fee {{feeId}}",
+      "allocationExceedsAvailable": "Allocation of {{amount}} exceeds available {{available}} for installment #{{number}}",
+      "idempotencyKeyConflict": "This idempotency key was already used for another payment"
     },
     "validation": {
       "amountRequired": "Payment amount is required",
@@ -3015,7 +3113,21 @@
       "alreadyExists": "Grade already exists for this student and source",
       "assessmentOrTeacherRequired": "Assessment, exam, or teacher is required",
       "sourceRequired": "Select either an assessment or an exam",
-      "marksExceedTotal": "Marks obtained cannot exceed assessment's total marks"
+      "marksExceedTotal": "Marks obtained cannot exceed assessment's total marks",
+      "ownSourceOnly": "A teacher can grade only their own assessment or exam",
+      "exactlyOneSource": "A grade needs exactly one assessment or exam",
+      "sourceNotFound": "Grade source not found",
+      "sourceNoAssignment": "Grade source has no teaching assignment",
+      "teacherSubjectMismatch": "Grade teacher and subject must match the source assignment",
+      "sourceNoClassYear": "Grade source has no registered class year",
+      "sourceContextUnresolved": "Grade source context is unresolved: {{issue}}",
+      "draftYear": "Grades cannot be recorded in a draft year",
+      "sourceYearConflict": "Grade source registered year conflicts with its assignment",
+      "sourceDateOutsideYear": "Grade source date is outside its academic year",
+      "sectionNotTargeted": "Grade section is not targeted by its source",
+      "noPlacementOnDate": "Student has no dated placement in the grade section on the source date",
+      "chooseSection": "Choose a target section for this grade",
+      "demoSourceNoYear": "Demo grade source has no registered academic year"
     }
   },
   "exams": {
@@ -3313,7 +3425,8 @@
       "expiryBeforePublish": "Expiry date cannot be before the publish date",
       "alreadyPublished": "Announcement is already published",
       "notPublished": "Announcement is not published",
-      "authorOnly": "Only staff or the announcement's author can change it"
+      "authorOnly": "Only staff or the announcement's author can change it",
+      "classesNotInYear": "Announcement classes must belong to the selected academic year"
     }
   },
   "discipline": {
@@ -3504,7 +3617,15 @@
       "titleRequired": "Title is required",
       "categoryRequired": "Category is required",
       "expenseDateRequired": "Expense date is required",
-      "paymentDateBeforeExpense": "Payment date cannot be before the expense date"
+      "paymentDateBeforeExpense": "Payment date cannot be before the expense date",
+      "outsideYear": "Expense date is outside the selected school year",
+      "invoiceNumberExists": "An expense with this invoice number already exists",
+      "receiptNumberExists": "An expense with this receipt number already exists",
+      "checkNumberExists": "An expense with this check number already exists",
+      "cannotApprove": "This expense cannot be approved in its current status",
+      "cannotPay": "This expense cannot be paid in its current status",
+      "rejectionReasonRequired": "A rejection reason is required",
+      "checkNumberRequired": "A check number is required for check payments"
     },
     "form": {
       "basicInformation": "Basic Information",
@@ -3627,14 +3748,15 @@
       "invalidType": "Invalid vehicle type",
       "invalidStatus": "Invalid vehicle status",
       "invalidFuelType": "Invalid fuel type",
-      "invalidYear": "Year must be between {minYear} and {currentYear}",
+      "invalidYear": "Year must be between {{minYear}} and {{currentYear}}",
       "invalidEngineHours": "Engine hours must be a positive number",
       "invalidMileage": "Mileage must be a positive number",
       "invalidFuelCapacity": "Fuel capacity must be a positive number",
       "invalidPurchasePrice": "Purchase price must be a positive number",
       "inUse": "Vehicle is currently in use and cannot be deleted",
       "vehiclesInUseCannotDelete": "The following vehicles are in use and cannot be deleted: {vehicleNames}",
-      "noVehiclesToDelete": "No vehicles found to delete"
+      "noVehiclesToDelete": "No vehicles found to delete",
+      "currentMileageLessThanInitial": "Current mileage cannot be less than the initial mileage"
     },
     "validation": {
       "nameRequired": "Vehicle name is required",
@@ -3787,7 +3909,20 @@
       "notFound": "Vehicle assignment not found",
       "vehicleAlreadyAssigned": "This vehicle already has an active driver assignment",
       "assignmentNotActive": "Assignment is not active and cannot be modified",
-      "invalidDateRange": "Unassignment date must be after assignment date"
+      "invalidDateRange": "Unassignment date must be after assignment date",
+      "driverAssignmentNotActive": "Driver assignment is not active",
+      "endOutsideYear": "Driver unassignment date is outside the selected school year",
+      "endDateInvalid": "Driver unassignment date must follow its start and cannot be in the future",
+      "startOutsideYear": "Driver assignment date is outside the selected school year",
+      "futureReassignment": "Driver reassignment cannot be in the future",
+      "laterAssignmentExists": "Driver is already assigned from a later date",
+      "reassignBeforeStart": "Driver reassignment date must follow the old start",
+      "noActiveDriver": "Vehicle has no active driver assignment",
+      "oneCurrentDriver": "A vehicle can have one current driver",
+      "startNoYear": "Driver assignment date has no registered school year",
+      "overlappingDriver": "Vehicle already has a driver during this date range",
+      "mustStayInYear": "Driver assignment must remain in the selected school year",
+      "statusEndMismatch": "Driver assignment status and end date disagree"
     },
     "form": {
       "assignDriver": "Assign Driver",
@@ -3992,7 +4127,11 @@
     "errors": {
       "notFound": "Payslip not found",
       "alreadyPaid": "This payslip has already been paid",
-      "cancelled": "This payslip has been cancelled"
+      "cancelled": "This payslip has been cancelled",
+      "staffNotFound": "Staff not found",
+      "staffInactive": "Only active staff can be paid",
+      "noCompensation": "Staff member has no compensation set",
+      "outsideYear": "Payroll period is outside the selected school year"
     },
     "stats": {
       "period": "Period",
@@ -4148,7 +4287,19 @@
       "notAuthorizedForSection": "You are not authorized to update attendance for this section",
       "invalidTransition": "This status change is not allowed (would overwrite a stronger attendance state)",
       "futureDate": "Attendance cannot be marked for a future date",
-      "dateTooOld": "Attendance cannot be marked for dates older than {{days}} days"
+      "dateTooOld": "Attendance cannot be marked for dates older than {{days}} days",
+      "outsideSelectedYear": "Attendance date and target must belong to the selected academic year",
+      "sectionNotFound": "Attendance section not found",
+      "outsideSectionYear": "Attendance date is outside the section academic year",
+      "draftYear": "Attendance cannot be marked in a draft year",
+      "outsideRegisteredYears": "Attendance date is outside registered academic years",
+      "staffRequiresAdmin": "Staff attendance requires an administrator",
+      "staffRecordOtherYear": "A staff attendance record belongs to another academic year",
+      "noPlacementOnDate": "Student has no dated placement in this section on the attendance date",
+      "duplicateStaffInRoster": "Each staff member may appear only once in a roster",
+      "mixedRosterDates": "All staff attendance records must use the same date",
+      "staffNotEligible": "Staff member {{staffId}} is not eligible for attendance on {{date}}",
+      "teacherAndSubjectRequired": "Teacher and subject are required"
     },
     "filters": {
       "searchByStudent": "Search by student name...",
@@ -4581,7 +4732,15 @@
       "duplicateActiveAlert": "An active alert of this type already exists for this target",
       "sharedNoticeStaffOnly": "Only staff can change the status of a class or school-wide alert",
       "acknowledgeOnly": "You can only mark this alert as acknowledged",
-      "editStaffOnly": "Only staff can edit an alert; you can update its status"
+      "editStaffOnly": "Only staff can edit an alert; you can update its status",
+      "noAcademicTargets": "This alert type cannot have academic targets",
+      "studentNotEnrolledInYear": "Student is not enrolled in the selected academic year",
+      "classNotInYear": "Class does not belong to the selected academic year",
+      "studentNotInClass": "Student has no placement in that class for the selected academic year",
+      "yearScopeImmutable": "Alert year scope cannot be changed by an update",
+      "feeSourceNotFound": "Fee source not found",
+      "feeSourceOtherStudent": "Fee source belongs to another student",
+      "feeSourceNoYear": "Fee source has no registered academic year"
     },
     "success": {
       "academicAlertsGenerated": "Academic alerts generated successfully",
@@ -4618,6 +4777,23 @@
       "retrieved": "Maintenance retrieved successfully",
       "statusUpdated": "Maintenance status updated successfully",
       "updated": "Maintenance updated successfully"
+    },
+    "errors": {
+      "invalidAssignedTo": "Invalid assignedTo parameter",
+      "invalidDate": "Invalid date",
+      "outsideYear": "Maintenance date is outside the selected school year",
+      "notFound": "Maintenance record not found",
+      "invalidType": "Invalid maintenance type",
+      "invalidStatus": "Invalid maintenance status",
+      "invalidPriority": "Invalid maintenance priority",
+      "invalidDueHours": "Due engine hours must be a positive number",
+      "invalidCost": "Cost must be a positive number",
+      "dueHoursPastCurrent": "Due engine hours must be above the vehicle's current hours",
+      "cannotModifyCompleted": "A completed maintenance cannot be modified",
+      "cannotDeleteInProgress": "A maintenance in progress cannot be deleted",
+      "alreadyCompleted": "This maintenance is already completed",
+      "cannotCompleteCancelled": "A cancelled maintenance cannot be completed",
+      "duplicateMaintenanceExists": "A similar maintenance is already scheduled for this vehicle"
     }
   },
   "notifications": {
@@ -4643,7 +4819,11 @@
     "pushUnavailable": "Push notifications are not available right now.",
     "pushUnsupported": "This browser does not support web push.",
     "pushDenied": "Notifications are blocked in this browser's site settings.",
-    "pushError": "Could not update push notifications."
+    "pushError": "Could not update push notifications.",
+    "errors": {
+      "notFound": "Notification not found",
+      "subscriptionNotFound": "Push subscription not found"
+    }
   },
   "refuels": {
     "success": {
@@ -4653,12 +4833,32 @@
       "retrieved": "Refuel retrieved successfully",
       "seeded": "Refuel seeded successfully",
       "updated": "Refuel updated successfully"
+    },
+    "errors": {
+      "outsideYear": "Refuel date is outside the selected school year",
+      "notFound": "Refuel record not found",
+      "voucherExists": "A refuel with this voucher number already exists",
+      "dateRequired": "A date is required",
+      "invalidDateFormat": "Invalid date format",
+      "endDateAfterStart": "The end date must follow the start date"
     }
   },
   "rollover": {
     "committed": "Rollover committed successfully",
     "previewed": "Rollover previewed successfully",
-    "retrieved": "Rollover retrieved successfully"
+    "retrieved": "Rollover retrieved successfully",
+    "errors": {
+      "targetMismatch": "Rollover target must match the selected school year",
+      "sourceAfterTarget": "Rollover source must precede the target school year",
+      "idempotencyKeyReused": "This rollover idempotency key was already used with a different payload",
+      "activateSeparately": "Activate the academic year separately after academic preparation",
+      "noPreview": "No preview exists for this idempotency key",
+      "runIdMismatch": "runId does not match the preview idempotency key",
+      "payloadMismatch": "Rollover payload does not match the preview",
+      "cannotCommitStatus": "Cannot commit a run in status {{status}}",
+      "previewMissingFees": "Preview payload is missing proposed fees",
+      "runNotFound": "Rollover run not found"
+    }
   },
   "search": {
     "success": "Search completed successfully"
@@ -4670,6 +4870,30 @@
       "retrieved": "Student route retrieved successfully",
       "unassigned": "Student route unassigned successfully",
       "updated": "Student route updated successfully"
+    },
+    "errors": {
+      "activeHasNoEnd": "An active route cannot have an unassignment date",
+      "closedNeedsEnd": "A completed or cancelled route needs an unassignment date",
+      "reassignActiveOnly": "Only an active route can be reassigned",
+      "reassignDateInvalid": "Reassignment date must follow the old start and cannot be in the future",
+      "notActive": "Route is not active",
+      "endOutsideYear": "Route unassignment date is outside the selected school year",
+      "endDateInvalid": "Route unassignment date must follow its start and cannot be in the future",
+      "noTransportFeeType": "No active transport fee type is configured",
+      "notFound": "Student route assignment not found",
+      "alreadyOnVehicle": "Student is already assigned to vehicle \"{{vehicle}}\". Unassign first.",
+      "invalidStartDate": "Invalid route assignment date",
+      "startOutsideYear": "Route assignment date is outside the selected school year",
+      "endBeforeStart": "Route unassignment date must follow the assignment date",
+      "notEnrolledOnStart": "Student is not enrolled on the route assignment date",
+      "noPlacementOnStart": "Student has no placement on the route assignment date",
+      "overlappingRoute": "Student already has a route during this date range",
+      "coordinatesTogether": "{{label}} latitude and longitude must be provided together.",
+      "studentNotFound": "Student not found",
+      "studentInactive": "Only active students can use school transport",
+      "vehicleNotFound": "Vehicle not found",
+      "vehicleInactive": "Vehicle \"{{vehicle}}\" is not active",
+      "vehicleFull": "Vehicle \"{{vehicle}}\" is full ({{occupancy}}/{{capacity}})"
     }
   },
   "emptyStates": {
@@ -4790,6 +5014,112 @@
     "documents": {
       "title": "No documents uploaded",
       "description": "Upload a document to get started."
+    }
+  },
+  "academicSources": {
+    "errors": {
+      "dateAndSectionsRequired": "A date and target sections are required",
+      "targetSectionMissing": "An academic target section is missing",
+      "sectionsSpanYears": "Academic target sections span different years",
+      "draftYear": "Academic sources cannot be recorded in a draft year",
+      "dateOutsideYear": "Academic source date is outside its target sections year"
+    }
+  },
+  "migrationIssues": {
+    "errors": {
+      "notFound": "Migration issue not found",
+      "alreadyReviewed": "Migration issue has already been reviewed",
+      "placementRequired": "Record a confirmed dated placement for the captured class and section before resolving this issue",
+      "attendanceYearRequired": "Record a supported attendance year before resolving this issue",
+      "sourceYearRequired": "Record a supported academic source year before resolving this issue",
+      "gradeYearRequired": "Record a supported grade year before resolving this issue",
+      "reviewedConcurrently": "Migration issue was reviewed concurrently"
+    }
+  },
+  "academicYears": {
+    "errors": {
+      "notFound": "Academic year not found",
+      "alreadyExists": "Academic year already exists",
+      "invalidCalendar": "Stored calendar is invalid",
+      "activeYearNotRegistered": "The active year is not registered in Settings",
+      "activeYearChanged": "The active year changed; review and try again",
+      "onlyNextDraftActivates": "Only the verified draft year that follows the active year can be activated",
+      "activatableFrom": "This year can be activated from {{date}}, the first day it records",
+      "enrollmentsBeforeActivation": "The prepared student enrollments must start by the activation date",
+      "activateAnotherFirst": "Activate another year before closing this one",
+      "draftCannotClose": "A draft year cannot be closed",
+      "reportingOverlaps": "Reporting interval overlaps {{label}}",
+      "invalid": "Invalid academic year",
+      "recordHasNoYear": "Record has no accessible academic year",
+      "settingsMissing": "School settings are missing",
+      "otherYearsRestricted": "Other school years are open to administrators and accounting only"
+    }
+  },
+  "yearTransitions": {
+    "errors": {
+      "sourceNotActive": "The source year must be the active Settings year",
+      "yearsNotAdjacent": "Transition requires adjacent, verified source and draft target years",
+      "targetDateInvalid": "Target enrollment date must follow the source year and belong to the target year",
+      "idempotencyKeyReused": "Transition idempotency key was used with another payload",
+      "alreadyCommitted": "Target year already has a committed transition",
+      "previewStale": "Transition preview is stale; review the current roster and capacity",
+      "previewHasIssues": "Transition preview has unresolved issues",
+      "runNotFound": "Academic-year transition run not found",
+      "commitBeforeActivating": "Commit the academic-year transition from the active year before activating this year"
+    }
+  },
+  "financialAudit": {
+    "errors": {
+      "notFound": "Audit log entry not found"
+    }
+  },
+  "financialNotifications": {
+    "errors": {
+      "invalidCronSecret": "Invalid or missing FINANCIAL_CRON_SECRET"
+    }
+  },
+  "zones": {
+    "errors": {
+      "notFound": "Zone not found",
+      "inUse": "Zone is named by staff assignments and cannot be deleted",
+      "nameExists": "Zone name already exists"
+    }
+  },
+  "enrollments": {
+    "errors": {
+      "notFoundInYear": "Enrollment not found in the selected year",
+      "correctionRequiresAdmin": "Enrollment corrections require an administrator",
+      "changedReload": "Enrollment changed; reload it before correcting",
+      "statusEndDateMismatch": "Enrollment status must match its end date",
+      "placementNotFound": "Placement not found in this enrollment",
+      "placementIntervalsInvalid": "Placement intervals must fit the enrollment and must not overlap",
+      "correctionConflictsRecords": "Correction conflicts with recorded attendance or grades; reconcile those records first",
+      "studentNotFound": "Student not found",
+      "notFound": "Enrollment not found",
+      "draftSetupOnly": "Draft years only permit academic setup",
+      "sectionNotInClass": "Section must belong to the selected class",
+      "classOtherYear": "Class belongs to another academic year",
+      "enrollmentDateRequired": "A real yearly enrollment date is required",
+      "newPlacementActiveYear": "New student placement must belong to the active academic year",
+      "enrollmentDateActiveYear": "Yearly enrollment date must belong to the active academic year",
+      "unplacedStudents": "{{count}} student(s) of the new year have no placement to project",
+      "undecidedStudents": "{{count}} student(s) of the active year have no enrollment or outcome in the new year",
+      "dateOutsideYear": "Enrollment date must belong to the selected year",
+      "beforeAdmission": "Yearly enrollment cannot predate the original admission date",
+      "alreadyEnrolled": "Student is already enrolled in this year",
+      "futureStart": "Active-year enrollment cannot start in the future",
+      "ended": "Enrollment has ended",
+      "transferOutsideInterval": "Transfer date is outside the enrollment interval",
+      "noOpenPlacementTransfer": "No open placement to transfer",
+      "transferBeforePlacement": "Transfer must occur after the current placement starts",
+      "alreadyInPlacement": "Student is already in that placement",
+      "futureTransfer": "Active-year transfer cannot start in the future",
+      "alreadyEnded": "Enrollment has already ended",
+      "draftNotEditable": "Draft years have no editable enrollments",
+      "endOutsideInterval": "End date is outside the enrollment interval",
+      "noOpenPlacementEnd": "No open placement to end",
+      "endBeforePlacement": "End date must follow the current placement start",
+      "futureEnd": "Active-year enrollment cannot end in the future"
     }
   }
 }

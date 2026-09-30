@@ -6,6 +6,7 @@ import { AlertService } from '../../src/modules/alerts/AlertService';
 import { AlertValidator } from '../../src/modules/alerts/AlertValidator';
 import { AnnouncementController } from '../../src/modules/announcements/AnnouncementController';
 import { AnnouncementValidator } from '../../src/modules/announcements/AnnouncementValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const staff = { id: 'staff-user', role: 'principal' };
 const teacher = { id: 'teacher-user', role: 'teacher' };
@@ -24,13 +25,13 @@ function alertService(readable: object | undefined, calls: string[] = []) {
     updateStatus: async (_id: string, status: string) => { calls.push(`status:${status}`); return { ...readable, status }; },
     update: async () => { calls.push('update'); return readable; },
   };
-  const validator = new AlertValidator(repository as any, {} as any, {} as any, {} as any, {} as any, {} as any);
+  const validator = withEnglishMessages(new AlertValidator(repository as any, {} as any, {} as any, {} as any, {} as any, {} as any));
   (validator as any).at = (key: string) => key;
   return { service: new AlertService(repository as any, validator), validator };
 }
 
 function announcementValidator(readable: object | undefined) {
-  const validator = new AnnouncementValidator({ getById: async () => readable } as any, {} as any);
+  const validator = withEnglishMessages(new AnnouncementValidator({ getById: async () => readable } as any, {} as any));
   (validator as any).at = (key: string) => key;
   return validator;
 }

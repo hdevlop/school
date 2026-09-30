@@ -15,7 +15,7 @@ type GradeSourceContext = NonNullable<Awaited<ReturnType<ExamRepository['getSour
 
 @Service()
 export class GradeValidator {
-  @I18n('grades.errors') private gt!: (key: string) => string;
+  @I18n('grades.errors') private gt!: (key: string, params?: Record<string, unknown>) => string;
   @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
@@ -37,65 +37,65 @@ export class GradeValidator {
     if (user.role !== 'teacher') return;
     const callerTeacherId = await this.gradeRepository.teacherIdForUser(user.id);
     if (!callerTeacherId || callerTeacherId !== teacherId) {
-      Err(403, 'A teacher can grade only their own assessment or exam');
+      Err(403, this.gt('ownSourceOnly'));
     }
   }
 
   ensureEligibleGradeSource(data: { assessmentId?: string | null; examId?: string | null }) {
     if (Boolean(data.assessmentId) === Boolean(data.examId)) {
-      Err(400, 'A grade needs exactly one assessment or exam');
+      Err(400, this.gt('exactlyOneSource'));
     }
   }
 
   ensureSourceExists(source: GradeSourceContext | null | undefined) {
-    if (!source) Err(404, 'Grade source not found');
+    if (!source) Err(404, this.gt('sourceNotFound'));
     return source;
   }
 
   ensureSourceTeachingAssignment(source: GradeSourceContext) {
-    if (!source.teacherId || !source.subjectId) Err(409, 'Grade source has no teaching assignment');
+    if (!source.teacherId || !source.subjectId) Err(409, this.gt('sourceNoAssignment'));
     return { teacherId: source.teacherId, subjectId: source.subjectId };
   }
 
   ensureSourceAssignmentMatches(source: GradeSourceContext, teacherId: string | null, subjectId: string | null) {
     if (source.teacherId !== teacherId || source.subjectId !== subjectId) {
-      Err(409, 'Grade teacher and subject must match the source assignment');
+      Err(409, this.gt('teacherSubjectMismatch'));
     }
   }
 
   ensureSourceContextResolved(source: GradeSourceContext, sections: Map<string, SectionContext>) {
     const yearLabel = source.classAcademicYear;
-    if (!yearLabel) Err(409, 'Grade source has no registered class year');
+    if (!yearLabel) Err(409, this.gt('sourceNoClassYear'));
     const contextIssue = academicSourceContextIssue(source, sections, yearLabel);
-    if (contextIssue) Err(409, `Grade source context is unresolved: ${contextIssue}`);
+    if (contextIssue) Err(409, this.gt('sourceContextUnresolved', { issue: contextIssue }));
     return yearLabel;
   }
 
   ensureSourceYearValid(source: GradeSourceContext, year: ResolvedAcademicYear) {
-    if (year.status === 'draft') Err(409, 'Grades cannot be recorded in a draft year');
+    if (year.status === 'draft') Err(409, this.gt('draftYear'));
     if (source.academicYearId && source.academicYearId !== year.id) {
-      Err(409, 'Grade source registered year conflicts with its assignment');
+      Err(409, this.gt('sourceYearConflict'));
     }
     if (source.date < year.reportingStartsOn || source.date > year.reportingEndsOn) {
-      Err(409, 'Grade source date is outside its academic year');
+      Err(409, this.gt('sourceDateOutsideYear'));
     }
   }
 
   ensureSourceTargetsSection(source: GradeSourceContext, sectionId: string) {
-    if (!targetSectionIds(source).includes(sectionId)) Err(409, 'Grade section is not targeted by its source');
+    if (!targetSectionIds(source).includes(sectionId)) Err(409, this.gt('sectionNotTargeted'));
   }
 
   ensureDatedPlacement(isPlaced: boolean) {
-    if (!isPlaced) Err(409, 'Student has no dated placement in the grade section on the source date');
+    if (!isPlaced) Err(409, this.gt('noPlacementOnDate'));
   }
 
   ensureTargetSection(sectionId: string | null | undefined) {
-    if (!sectionId) Err(400, 'Choose a target section for this grade');
+    if (!sectionId) Err(400, this.gt('chooseSection'));
     return sectionId;
   }
 
   ensureDemoSourceYear(source: GradeSourceContext | null | undefined) {
-    if (!source?.academicYearId) Err(409, 'Demo grade source has no registered academic year');
+    if (!source?.academicYearId) Err(409, this.gt('demoSourceNoYear'));
     return source.academicYearId;
   }
 

@@ -104,13 +104,13 @@ describe('attendance write guards', () => {
   it('rejects a partial roster save from an academic-year conflict', async () => {
     const attendance = service({ upsertStaffRoster: async () => ({ savedCount: 0, ids: [] }) });
     await expect(attendance.upsertStaffRoster({ items: [rosterItem] }, { id: 'admin-1', role: 'admin' }))
-      .rejects.toMatchObject({ status: 409, message: 'A staff attendance record belongs to another academic year' });
+      .rejects.toMatchObject({ status: 409, message: 'staffRecordOtherYear' });
   });
 
   it('rejects a staff mark by a teacher', async () => {
     await expect(service({}).mark({ type: 'staff', ...rosterItem, notes: undefined },
       { id: 'user-1', role: 'teacher' }))
-      .rejects.toMatchObject({ status: 403, message: 'Staff attendance requires an administrator' });
+      .rejects.toMatchObject({ status: 403, message: 'staffRequiresAdmin' });
   });
 
   it('rejects a teacher updating staff attendance', async () => {

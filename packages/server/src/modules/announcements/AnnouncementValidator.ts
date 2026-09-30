@@ -56,7 +56,7 @@ export class AnnouncementValidator {
 
     await Promise.all(targets.map((classId) => this.classValidator.ensureExists(classId)));
     if (!(await this.announcementRepository.classesInYear(targets))) {
-      Err(409, 'Announcement classes must belong to the selected academic year');
+      Err(409, this.at('classesNotInYear'));
     }
 
     return true;

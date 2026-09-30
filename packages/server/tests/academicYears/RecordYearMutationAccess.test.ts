@@ -5,6 +5,7 @@ import { GradeService } from '../../src/modules/grades/GradeService';
 import { yearRegistry } from './fixtures/yearRegistry';
 import { attendanceValidator } from './fixtures/attendanceValidator';
 import { gradeValidator } from './fixtures/gradeValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const oldYear = { id: 'old-year', label: '2026-2027', status: 'closed',
   reportingStartsOn: '2026-09-01', reportingEndsOn: '2027-08-31' };
@@ -13,8 +14,8 @@ const activeYear = { id: 'active-year', label: '2027-2028', status: 'active',
 
 describe('record year access', () => {
   it('refuses a teacher an old dated record while allowing an administrator', async () => {
-    const years = new AcademicYearValidator(yearRegistry([oldYear, activeYear], { activeAcademicYearId: activeYear.id,
-        currentAcademicYear: activeYear.label }) as any);
+    const years = withEnglishMessages(new AcademicYearValidator(yearRegistry([oldYear, activeYear], { activeAcademicYearId: activeYear.id,
+        currentAcademicYear: activeYear.label }) as any));
     await expect(years.resolveRecord(oldYear.id, '2027-08-31', 'teacher')).rejects.toThrow();
     expect((await years.resolveRecord(oldYear.id, '2027-08-31', 'admin'))?.id).toBe(oldYear.id);
     expect((await years.resolveRecord(undefined, '2027-09-01', 'teacher'))?.id).toBe(activeYear.id);
@@ -54,7 +55,7 @@ describe('record year access', () => {
     await expect(grade.create({ studentId: 'student-1', sectionId: 'section-1',
       teacherId: 'teacher-2', subjectId: 'subject-1', assessmentId: 'assessment-1',
       marksObtained: 10, status: 'graded' }, { id: 'user-1', role: 'teacher' }))
-      .rejects.toThrow('A teacher can grade only their own assessment or exam');
+      .rejects.toThrow('ownSourceOnly');
     expect(studentChecked).toBe(false);
   });
 
@@ -74,7 +75,7 @@ describe('record year access', () => {
       {} as any,
     );
     await expect(grade.update('grade-1', { feedback: 'changed' },
-      { id: 'user-1', role: 'teacher' })).rejects.toThrow('A teacher can grade only their own assessment or exam');
+      { id: 'user-1', role: 'teacher' })).rejects.toThrow('ownSourceOnly');
     expect(updates).toBe(0);
     sourceTeacherId = 'teacher-1';
     await grade.update('grade-1', { feedback: 'changed' }, { id: 'user-1', role: 'teacher' });

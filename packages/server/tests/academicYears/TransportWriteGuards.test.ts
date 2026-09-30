@@ -3,12 +3,13 @@ import { StudentRouteService } from '../../src/modules/transport/studentRoutes/S
 import { StudentRouteValidator } from '../../src/modules/transport/studentRoutes/StudentRouteValidator';
 import { VehicleAssignmentService } from '../../src/modules/transport/vehicleAssignments/VehicleAssignmentService';
 import { VehicleAssignmentValidator } from '../../src/modules/transport/vehicleAssignments/VehicleAssignmentValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const year = { id: 'year-1', label: '2025-2026', reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
 
 function routeHarness(status = 'active') {
   const calls: string[] = [];
-  const validator = Object.assign(new StudentRouteValidator({} as any, {} as any, {} as any), {
+  const validator = Object.assign(withEnglishMessages(new StudentRouteValidator({} as any, {} as any, {} as any)), {
     checkExists: async () => ({ studentId: 'student-1', assignmentDate: '2025-10-01', status }),
   }) as any;
   validator.year = year;
@@ -35,7 +36,7 @@ describe('route unassignment guards', () => {
 
 function driverHarness(existing: object) {
   const calls: string[] = [];
-  const validator = new VehicleAssignmentValidator({} as any);
+  const validator = withEnglishMessages(new VehicleAssignmentValidator({} as any));
   const service = new VehicleAssignmentService(
     {
       getActiveAssignmentByVehicleAcrossYears: async () => { calls.push('read'); return existing; },

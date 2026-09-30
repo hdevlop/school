@@ -13,7 +13,7 @@ type ExistingStudent = NonNullable<Awaited<ReturnType<StudentRepository['getById
 @Service()
 export class StudentValidator {
   ensureCorrectionActor(): never {
-    return Err(403, 'Enrollment corrections require an authenticated administrator');
+    return Err(403, this.st('correctionRequiresAdmin'));
   }
   @I18n('students.errors') private st!: (key: string) => string;
 
@@ -27,16 +27,16 @@ export class StudentValidator {
 
   ensureRosterDateWithinYear(onDate: string, year: ResolvedAcademicYear) {
     if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) {
-      Err(400, 'Date is outside the academic year reporting interval');
+      Err(400, this.st('dateOutsideYear'));
     }
   }
 
   ensureCreateAllowed(data: CreateStudentDto) {
     if (data.status && data.status !== 'active') {
-      Err(422, 'Create an active student, then end the yearly enrollment if needed');
+      Err(422, this.st('createActiveFirst'));
     }
     if (isDateOnly(data.enrollmentDate) && data.yearEnrolledOn < data.enrollmentDate) {
-      Err(422, 'Yearly enrollment cannot predate the original admission date');
+      Err(422, this.st('beforeAdmission'));
     }
   }
 
@@ -46,25 +46,25 @@ export class StudentValidator {
       (data.sectionId !== undefined && data.sectionId !== student.sectionId) ||
       (data.status !== undefined && data.status !== student.status)
     ) {
-      Err(409, 'Use the dated enrollment operations to change placement or enrollment status');
+      Err(409, this.st('useEnrollmentOperations'));
     }
     if (data.enrollmentDate !== undefined && data.enrollmentDate !== student.enrollmentDate) {
       const earliest = await this.studentEnrollments.earliestEnrolledOn(student.id);
       if (earliest && (!isDateOnly(data.enrollmentDate) || data.enrollmentDate > earliest)) {
-        Err(422, 'Original admission date cannot follow a recorded yearly enrollment');
+        Err(422, this.st('admissionAfterEnrollment'));
       }
     }
   }
 
   async ensureCanDelete(id: string) {
     if (await this.studentEnrollments.hasAnyForStudent(id)) {
-      Err(409, 'A student with yearly enrollment history cannot be deleted');
+      Err(409, this.st('hasEnrollmentHistory'));
     }
   }
 
   async ensureCanDeleteAll() {
     if (await this.studentEnrollments.hasAny()) {
-      Err(409, 'Yearly enrollment history must be retained');
+      Err(409, this.st('historyRetained'));
     }
   }
 

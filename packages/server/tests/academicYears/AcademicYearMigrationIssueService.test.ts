@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { AcademicYearMigrationIssueService } from '../../src/modules/academicYearMigrationIssues/AcademicYearMigrationIssueService';
 import { AcademicYearMigrationIssueValidator } from '../../src/modules/academicYearMigrationIssues/AcademicYearMigrationIssueValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 type Owners = Partial<Record<'enrollments' | 'attendance' | 'assessments' | 'exams' | 'grades', Record<string, unknown>>>;
 
@@ -13,7 +14,7 @@ function reviewService(issues: Record<string, unknown>, owners: Owners = {}) {
     (owners.assessments ?? {}) as any,
     (owners.exams ?? {}) as any,
     (owners.grades ?? {}) as any,
-    new AcademicYearMigrationIssueValidator(),
+    withEnglishMessages(new AcademicYearMigrationIssueValidator()),
   );
 }
 

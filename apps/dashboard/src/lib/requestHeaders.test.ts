@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'bun:test';
-import { captureRequestHeaders, setDefaultRequestHeaders, withRequestHeaders } from './requestHeaders';
+import { captureRequestHeaders, languageHeader, setDefaultRequestHeaders, withRequestHeaders } from './requestHeaders';
 
 let unbind = () => {};
 afterEach(() => unbind());
@@ -47,5 +47,17 @@ describe('request headers bound where a request starts', () => {
     unbind = setDefaultRequestHeaders(() => ({ 'X-A': 'second' }));
     first();
     expect(captureRequestHeaders()).toEqual({ 'X-A': 'second' });
+  });
+});
+
+describe('the interface language a request names', () => {
+  it('sends the base language of <html lang>', () => {
+    expect(languageHeader({ lang: 'fr' })).toEqual({ 'X-Language': 'fr' });
+    expect(languageHeader({ lang: 'ar-MA' })).toEqual({ 'X-Language': 'ar' });
+  });
+
+  it('sends nothing before the page names a language', () => {
+    expect(languageHeader({ lang: '' })).toEqual({});
+    expect(languageHeader(undefined)).toEqual({});
   });
 });

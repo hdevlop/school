@@ -18,7 +18,7 @@ export class SettingsValidator {
     const years = parseSchoolYearLabel(label)!;
     const start = MONTHS.indexOf((startMonth || 'september').toLowerCase());
     const end = MONTHS.indexOf((endMonth || 'june').toLowerCase());
-    if (start < 0 || end < 0) Err(400, 'Invalid academic calendar month');
+    if (start < 0 || end < 0) Err(400, this.t('invalidCalendarMonth'));
     const endYear = end < start ? years.endYear : years.startYear;
     const lastDay = new Date(Date.UTC(endYear, end + 1, 0)).getUTCDate();
     const calendar = {
@@ -26,22 +26,22 @@ export class SettingsValidator {
       instructionStartsOn: `${years.startYear}-${String(start + 1).padStart(2, '0')}-01`,
       instructionEndsOn: `${endYear}-${String(end + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`,
     };
-    if (!isValidSchoolYearCalendar(label, calendar)) Err(400, 'Invalid academic calendar');
+    if (!isValidSchoolYearCalendar(label, calendar)) Err(400, this.t('invalidCalendar'));
     return calendar;
   }
 
   ensureCurrentSettings<T>(settings: T | null | undefined): T {
-    if (!settings) Err(404, 'School settings are missing');
+    if (!settings) Err(404, this.t('missing'));
     return settings;
   }
 
   ensureYearSettingsUnchanged(data: UpdateSettingsDto, current: { startMonth: string; endMonth: string; currentAcademicYear: string }) {
     if ((data.startMonth !== undefined && data.startMonth !== current.startMonth) ||
       (data.endMonth !== undefined && data.endMonth !== current.endMonth)) {
-      Err(409, 'Registered year calendars require a reviewed correction');
+      Err(409, this.t('registeredCalendarLocked'));
     }
     if (data.currentAcademicYear && data.currentAcademicYear !== current.currentAcademicYear) {
-      Err(409, 'Activate the registered year through academic-year operations');
+      Err(409, this.t('activateThroughYears'));
     }
   }
 

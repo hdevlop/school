@@ -4,6 +4,7 @@ import { updateStaffDto } from '../../src/modules/staff/StaffDto';
 import { StaffService } from '../../src/modules/staff/StaffService';
 import { StaffValidator } from '../../src/modules/staff/StaffValidator';
 import { isCurrentAssignment } from '../../src/modules/staff/StaffAssignmentRepository';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const originalBusinessDate = process.env.APP_BUSINESS_DATE;
 afterEach(() => {
@@ -24,8 +25,7 @@ function service(calls: Calls, options: { role?: string; history?: Partial<Recor
     getAttendanceRoster: async (date: string) => { calls.push(`roster ${date}`); return []; },
     countRecordedHistory: async () => ({ payslips: 0, attendance: 0, duties: 0, vehicleAssignments: 0, ...options.history }),
   };
-  const validator = new StaffValidator(staffRepository as any, { getByCode: async (code: string) => ({ code, active: true }) } as any);
-  Object.defineProperty(validator, 't', { value: (key: string) => `staff.errors.${key}`, configurable: true });
+  const validator = withEnglishMessages(new StaffValidator(staffRepository as any, { getByCode: async (code: string) => ({ code, active: true }) } as any));
   return new StaffService(
     staffRepository as any,
     validator,

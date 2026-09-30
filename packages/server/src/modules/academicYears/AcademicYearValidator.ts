@@ -1,4 +1,4 @@
-import { Err, Service } from '../../najm';
+import { Err, I18n, Service } from '../../najm';
 import { canUseOtherAcademicYears, isDateOnly, isValidSchoolYearCalendar, parseSchoolYearLabel, readAcademicYearSelection } from '@sms/contracts/academic-years';
 import { AcademicYearRepository } from './AcademicYearRepository';
 
@@ -25,31 +25,32 @@ export const canPrepareYears = (role?: string) => role === 'admin' || role === '
  */
 @Service()
 export class AcademicYearValidator {
+  @I18n('academicYears.errors') private et!: (key: string, params?: Record<string, unknown>) => string;
   constructor(private years: AcademicYearRepository) {}
 
   ensureDraftVisible(year: ResolvedAcademicYear, role?: string) {
-    if (year.status === 'draft' && !canPrepareYears(role)) Err(404, 'Academic year not found');
+    if (year.status === 'draft' && !canPrepareYears(role)) Err(404, this.et('notFound'));
   }
 
   ensureActiveRecord(year: ResolvedAcademicYear, settings: ActivePointer) {
-    if (!isActiveYear(year, settings)) Err(404, 'Academic year not found');
+    if (!isActiveYear(year, settings)) Err(404, this.et('notFound'));
   }
 
   async ensureLabelUnique(label: string) {
-    if (await this.years.findByLabel(label)) Err(409, 'Academic year already exists');
+    if (await this.years.findByLabel(label)) Err(409, this.et('alreadyExists'));
   }
 
   ensureValidStoredCalendar(year: ResolvedAcademicYear) {
-    if (!isValidSchoolYearCalendar(year.label, year)) Err(409, 'Stored calendar is invalid');
+    if (!isValidSchoolYearCalendar(year.label, year)) Err(409, this.et('invalidCalendar'));
   }
 
   ensureActivePointer(settings: ActivePointer) {
-    if (!settings?.activeAcademicYearId) Err(409, 'The active year is not registered in Settings');
+    if (!settings?.activeAcademicYearId) Err(409, this.et('activeYearNotRegistered'));
     return settings.activeAcademicYearId;
   }
 
   ensurePointerUnchanged(settings: ActivePointer, sourceId: string) {
-    if (settings?.activeAcademicYearId !== sourceId) Err(409, 'The active year changed; review and try again');
+    if (settings?.activeAcademicYearId !== sourceId) Err(409, this.et('activeYearChanged'));
   }
 
   ensureActivationCalendar(source: ResolvedAcademicYear, target: ResolvedAcademicYear) {
@@ -58,42 +59,42 @@ export class AcademicYearValidator {
     if (!sourceLabel || !targetLabel || sourceLabel.endYear !== targetLabel.startYear ||
       source.status !== 'open' || target.status !== 'draft' || target.provenance !== 'verified' ||
       !isValidSchoolYearCalendar(target.label, target)) {
-      Err(409, 'Only the verified draft year that follows the active year can be activated');
+      Err(409, this.et('onlyNextDraftActivates'));
     }
   }
 
   ensureActivationDate(year: ResolvedAcademicYear, today: string) {
     if (today < year.reportingStartsOn || today > year.reportingEndsOn) {
-      Err(409, `This year can be activated from ${year.reportingStartsOn}, the first day it records`);
+      Err(409, this.et('activatableFrom', { date: year.reportingStartsOn }));
     }
   }
 
   ensurePreparedEnrollmentDate(preparedOn: unknown, today: string) {
     if (typeof preparedOn !== 'string' || !isDateOnly(preparedOn) || preparedOn > today) {
-      Err(409, 'The prepared student enrollments must start by the activation date');
+      Err(409, this.et('enrollmentsBeforeActivation'));
     }
   }
 
   ensureActiveSwitchSucceeded(switched: unknown) {
-    if (!switched) Err(409, 'The active year changed; review and try again');
+    if (!switched) Err(409, this.et('activeYearChanged'));
   }
 
   ensureCanClose(year: ResolvedAcademicYear, settings: ActivePointer) {
     if (settings?.activeAcademicYearId === year.id || settings?.currentAcademicYear === year.label) {
-      Err(409, 'Activate another year before closing this one');
+      Err(409, this.et('activateAnotherFirst'));
     }
-    if (year.status === 'draft') Err(409, 'A draft year cannot be closed');
+    if (year.status === 'draft') Err(409, this.et('draftCannotClose'));
   }
 
   async requireId(id: string) {
     const year = await this.years.findById(id);
-    if (!year) Err(404, 'Academic year not found');
+    if (!year) Err(404, this.et('notFound'));
     return year!;
   }
 
   async requireLabel(label: string) {
     const year = await this.years.findByLabel(label);
-    if (!year) Err(404, 'Academic year not found');
+    if (!year) Err(404, this.et('notFound'));
     return year!;
   }
 
@@ -104,7 +105,7 @@ export class AcademicYearValidator {
 
   async ensureCalendarAvailable(startsOn: string, endsOn: string) {
     const overlap = await this.years.findOverlapping(startsOn, endsOn);
-    if (overlap) Err(409, `Reporting interval overlaps ${overlap!.label}`);
+    if (overlap) Err(409, this.et('reportingOverlaps', { label: overlap!.label }));
   }
 
   /**
@@ -125,7 +126,7 @@ export class AcademicYearValidator {
 
   /** The year with this label, or the active year without one, if the role may use it. */
   async resolve(label?: string, role?: string): Promise<ResolvedAcademicYear> {
-    if (label !== undefined && !parseSchoolYearLabel(label)) Err(400, 'Invalid academic year');
+    if (label !== undefined && !parseSchoolYearLabel(label)) Err(400, this.et('invalid'));
     return this.permit(await this.years.findWithActivePointer(label === undefined ? undefined : { label }), role);
   }
 
@@ -136,19 +137,19 @@ export class AcademicYearValidator {
     // A stored year must exist; a date that no registered year holds, or no
     // date at all, leaves the record without a year to check.
     if (yearId || found === null || found?.year) return this.permit(found ?? null, role);
-    if (!canUseOtherAcademicYears(role)) Err(403, 'Record has no accessible academic year');
+    if (!canUseOtherAcademicYears(role)) Err(403, this.et('recordHasNoYear'));
     return null;
   }
 
   // One rule for every year-scoped read and write: only administrators and
   // accounting work outside the active year (ACADEMIC_YEAR_HISTORY_ROLES).
   private permit(found: FoundYear, role?: string): ResolvedAcademicYear {
-    if (!found) Err(409, 'School settings are missing');
+    if (!found) Err(409, this.et('settingsMissing'));
     const { year, ...pointer } = found!;
-    if (!year) Err(404, 'Academic year not found');
-    if (year!.status === 'draft' && !canPrepareYears(role)) Err(404, 'Academic year not found');
+    if (!year) Err(404, this.et('notFound'));
+    if (year!.status === 'draft' && !canPrepareYears(role)) Err(404, this.et('notFound'));
     if (!canUseOtherAcademicYears(role) && !isActiveYear(year!, pointer)) {
-      Err(403, 'Other school years are open to administrators and accounting only');
+      Err(403, this.et('otherYearsRestricted'));
     }
     return year!;
   }

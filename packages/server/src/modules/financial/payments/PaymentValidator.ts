@@ -83,7 +83,7 @@ export function computeIdempotencyHash(payload: Record<string, any>): string {
 @Service()
 export class PaymentValidator {
   @I18n('fees.errors') private ft!: (key: string) => string;
-  @I18n('payments.errors') private pt!: (key: string) => string;
+  @I18n('payments.errors') private pt!: (key: string, params?: Record<string, unknown>) => string;
 
   constructor(
     private paymentRepository: PaymentRepository,
@@ -96,45 +96,45 @@ export class PaymentValidator {
 
   ensureAutoAllocationRemainder(remainingCents: number, keepRemainderAsCredit: boolean) {
     if (remainingCents > 0 && !keepRemainderAsCredit) {
-      Err(400, `Payment amount exceeds available installment balance by ${(remainingCents / 100).toFixed(2)}; enable keepRemainderAsCredit to retain remainder`);
+      Err(400, this.pt('exceedsInstallmentsKeepCredit', { excess: (remainingCents / 100).toFixed(2) }));
     }
   }
 
   ensureRecordedRemainder(remainingCents: number, keepRemainderAsCredit: boolean) {
     if (remainingCents > 0 && !keepRemainderAsCredit) {
-      Err(400, `Payment over-allocates by ${(remainingCents / 100).toFixed(2)}; set keepRemainderAsCredit to retain the remainder`);
+      Err(400, this.pt('overAllocates', { excess: (remainingCents / 100).toFixed(2) }));
     }
   }
 
   ensureLockedPayment<T>(payment: T | null | undefined) {
-    if (!payment) Err(404, 'Payment not found');
+    if (!payment) Err(404, this.pt('paymentNotFound'));
     return payment;
   }
 
   ensureHardDeleteDisabled(): never {
-    Err(400, 'Hard delete of payments is disabled. Use POST /payments/:id/void to mark a payment as voided.');
+    Err(400, this.pt('hardDeleteDisabled'));
   }
 
   ensureRefundable(status: string) {
-    if (status !== 'completed') Err(400, 'Only completed payments can be refunded');
+    if (status !== 'completed') Err(400, this.pt('refundCompletedOnly'));
   }
 
   ensureVoidable(status: string) {
-    if (!canTransition(status, 'voided')) Err(409, `Cannot void payment in status ${status}`);
+    if (!canTransition(status, 'voided')) Err(409, this.pt('cannotVoidStatus', { status }));
   }
 
   ensureCheckTransition(payment: { paymentMethod: string; status: string }, status: string) {
-    if (payment.paymentMethod !== 'check') Err(400, 'Check status changes are only allowed for check payments');
-    if (!canTransition(payment.status, status)) Err(409, `Cannot transition check from ${payment.status} to ${status}`);
+    if (payment.paymentMethod !== 'check') Err(400, this.pt('checkStatusChecksOnly'));
+    if (!canTransition(payment.status, status)) Err(409, this.pt('checkTransitionInvalid', { from: payment.status, to: status }));
   }
 
   ensureCheckInstallmentExists<T>(installment: T | null | undefined) {
-    if (!installment) Err(409, 'A check allocation target no longer exists');
+    if (!installment) Err(409, this.pt('checkTargetMissing'));
     return installment;
   }
 
   ensureCheckInstallmentCapacity(consumedCents: number, amountCents: number, number: number) {
-    if (consumedCents > amountCents) Err(409, `Check allocations exceed installment #${number}`);
+    if (consumedCents > amountCents) Err(409, this.pt('checkAllocationsExceed', { number }));
   }
 
   async isInstallmentExists(id) {
@@ -265,17 +265,17 @@ export class PaymentValidator {
       const resolvedFee = fee!;
 
       if (resolvedFee.studentId !== studentId) {
-        Err(400, 'Payment allocations must belong to the same student as the payment');
+        Err(400, this.pt('allocationsOtherStudent'));
       }
 
       const installment = this.findInstallmentByNumber(resolvedFee, allocation.number);
       if (!installment) {
-        Err(400, `Installment #${allocation.number} does not exist for fee ${allocation.feeId}`);
+        Err(400, this.pt('installmentMissingForFee', { number: allocation.number, feeId: allocation.feeId }));
       }
       const resolvedInstallment = installment!;
 
       if (resolvedInstallment.status === 'paid') {
-        Err(400, `Installment #${allocation.number} is already fully paid`);
+        Err(400, this.pt('installmentAlreadyPaid', { number: allocation.number }));
       }
 
       const installmentKey = `${allocation.feeId}:${allocation.number}`;
@@ -302,7 +302,7 @@ export class PaymentValidator {
         (plannedByFee.get(resolvedFee.id) || 0) + toCents(allocation.amount);
 
       if (plannedFeeAmount > remainingFeeBalance) {
-        Err(400, `Allocations for fee ${resolvedFee.id} exceed the remaining fee balance`);
+        Err(400, this.pt('allocationsExceedFee', { feeId: resolvedFee.id }));
       }
 
       plannedByFee.set(resolvedFee.id, plannedFeeAmount);
@@ -327,7 +327,7 @@ export class PaymentValidator {
     const locked = await this.installmentRepository.getByFeeAndNumbersForUpdate(targets);
 
     if (locked.length === 0) {
-      Err(400, 'No installments matched the requested allocation targets');
+      Err(400, this.pt('noInstallmentsMatched'));
     }
 
     const installmentIds = locked.map((row) => row.id);
@@ -343,7 +343,7 @@ export class PaymentValidator {
         (row) => row.feeId === allocation.feeId && row.number === allocation.number,
       );
       if (!lockedRow) {
-        Err(400, `Installment #${allocation.number} not found for fee ${allocation.feeId}`);
+        Err(400, this.pt('installmentNotFoundForFee', { number: allocation.number, feeId: allocation.feeId }));
       }
 
       const completed = toCents(completedMap.get(lockedRow.id) || 0);
@@ -354,7 +354,7 @@ export class PaymentValidator {
       if (planned > available) {
         Err(
           400,
-          `Allocation of ${allocation.amount} exceeds available ${(available / 100).toFixed(2)} for installment #${allocation.number}`,
+          this.pt('allocationExceedsAvailable', { amount: allocation.amount, available: (available / 100).toFixed(2), number: allocation.number }),
         );
       }
 

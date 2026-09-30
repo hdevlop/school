@@ -80,7 +80,7 @@ export class ExpenseValidator {
 
   ensureExpenseDateInSelectedYear(date: string | null) {
     if (!date || date < this.year.reportingStartsOn || date > this.year.reportingEndsOn) {
-      Err(409, 'Expense date is outside the selected school year');
+      Err(409, this.t('outsideYear'));
     }
   }
 

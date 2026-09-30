@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Err, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
+import { Body, Controller, Delete, Err, Get, Params, Post, Put, ResMsg, Validate, t } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DriverService } from './DriverService';
 import { isAdmin } from '../../../auth';
@@ -128,7 +128,7 @@ export class DriverController {
   @McpTool('Create a new driver')
   @ResMsg('drivers.success.created')
   async create(@Body() _body: CreateDriverDto) {
-    Err(410, 'Drivers are created from the unified Staff module');
+    Err(410, t('drivers.errors.createdFromStaff'));
   }
 
   @Post('/seed')
@@ -136,7 +136,7 @@ export class DriverController {
   @Validate(createDriversBulkDto)
   @ResMsg('drivers.success.seeded')
   async createBulk(@Body() _body: CreateDriversBulkDto) {
-    Err(410, 'Drivers are created from the unified Staff module');
+    Err(410, t('drivers.errors.createdFromStaff'));
   }
 
   @Post('/update')
@@ -145,7 +145,7 @@ export class DriverController {
   @McpTool('Update a driver by ID')
   @ResMsg('drivers.success.updated')
   async update(@Body() _body: UpdateDriverMcpDto) {
-    Err(410, 'Drivers are updated from the unified Staff module');
+    Err(410, t('drivers.errors.updatedFromStaff'));
   }
 
   @Put('/:id')
@@ -153,7 +153,7 @@ export class DriverController {
   @Validate({ params: driverIdParam, body: updateDriverDto })
   @ResMsg('drivers.success.updated')
   async updateDriverRest(@Params('id') _id: string, @Body() _body: UpdateDriverDto) {
-    Err(410, 'Drivers are updated from the unified Staff module');
+    Err(410, t('drivers.errors.updatedFromStaff'));
   }
 
   @Put('/:id/status')
@@ -162,7 +162,7 @@ export class DriverController {
   @McpTool('Update driver status')
   @ResMsg('drivers.success.statusUpdated')
   async updateStatus(@Params('id') _id: string, @Body() _body: UpdateDriverStatusDto) {
-    Err(410, 'Driver status is updated from the unified Staff module');
+    Err(410, t('drivers.errors.statusFromStaff'));
   }
 
   @Delete('/bulk')
@@ -170,7 +170,7 @@ export class DriverController {
   @Validate({ body: deleteDriversBulkDto })
   @ResMsg('drivers.success.bulkDeleted')
   async deleteBulk(@Body() _body: DeleteDriversBulkDto) {
-    Err(410, 'Drivers are deleted from the unified Staff module');
+    Err(410, t('drivers.errors.deletedFromStaff'));
   }
 
   @Delete('/:id')
@@ -179,7 +179,7 @@ export class DriverController {
   @McpTool('Delete a driver by ID')
   @ResMsg('drivers.success.deleted')
   async delete(@Params('id') _id: string) {
-    Err(410, 'Drivers are deleted from the unified Staff module');
+    Err(410, t('drivers.errors.deletedFromStaff'));
   }
 
   @Delete()
@@ -187,6 +187,6 @@ export class DriverController {
   @McpTool('Delete all drivers')
   @ResMsg('drivers.success.allDeleted')
   async deleteAll() {
-    Err(410, 'Drivers are deleted from the unified Staff module');
+    Err(410, t('drivers.errors.deletedFromStaff'));
   }
 }

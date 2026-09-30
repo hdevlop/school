@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 import { StudentEnrollmentValidator } from '../../src/modules/studentEnrollments/StudentEnrollmentValidator';
 import { correctEnrollmentDto, type CorrectEnrollmentDto } from '../../src/modules/studentEnrollments/StudentEnrollmentDto';
+import { withEnglishMessages } from '../support/englishMessages';
 
-const validator = new StudentEnrollmentValidator();
+const validator = withEnglishMessages(new StudentEnrollmentValidator());
 const year = { id: 'old', status: 'closed', reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
 const enrollment = { enrolledOn: '2025-09-01', leftOn: null, status: 'active' };
 const placements = [

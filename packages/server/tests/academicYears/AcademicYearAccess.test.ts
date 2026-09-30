@@ -3,6 +3,7 @@ import { AcademicYearValidator } from '../../src/modules/academicYears/AcademicY
 import { resolveRequestYear } from '../../src/modules/academicYears/requestYear';
 import { USER } from '../../src/najm';
 import { yearRegistry } from './fixtures/yearRegistry';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const oldYear = {
   id: 'year-old', label: '2025-2026', status: 'closed',
@@ -11,7 +12,7 @@ const oldYear = {
 const activeYear = { ...oldYear, id: 'year-active', label: '2026-2027', status: 'open' };
 
 function registry(pointer: string | null = activeYear.id) {
-  return new AcademicYearValidator(yearRegistry([oldYear, activeYear], { activeAcademicYearId: pointer, currentAcademicYear: activeYear.label }) as any);
+  return withEnglishMessages(new AcademicYearValidator(yearRegistry([oldYear, activeYear], { activeAcademicYearId: pointer, currentAcademicYear: activeYear.label }) as any));
 }
 
 function request(role: string | undefined, header?: string) {

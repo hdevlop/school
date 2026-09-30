@@ -10,12 +10,12 @@ export class StaffRoleValidator {
   normalizeRoleCode(value: string) {
     const cleaned = value.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const parts = cleaned.match(/[a-zA-Z0-9]+/g) ?? [];
-    if (parts.length === 0) Err(400, 'Invalid role code');
+    if (parts.length === 0) Err(400, this.t('invalidCode'));
     const code = parts.map((part, index) => {
       const word = /^[A-Z0-9]+$/.test(part) ? part.toLowerCase() : `${part.charAt(0).toLowerCase()}${part.slice(1)}`;
       return index === 0 ? word : `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
     }).join('');
-    if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(code)) Err(400, 'Invalid role code');
+    if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(code)) Err(400, this.t('invalidCode'));
     return code;
   }
 

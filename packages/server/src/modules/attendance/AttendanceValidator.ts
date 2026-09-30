@@ -41,7 +41,7 @@ export function isAttendanceDateTooOld(date: Date | string, maxDaysOld: number =
 @Service()
 export class AttendanceValidator {
   @Year() private readonly year!: ResolvedAcademicYear;
-  @I18n('attendance.errors') private at!: (key: string) => string;
+  @I18n('attendance.errors') private at!: (key: string, params?: Record<string, unknown>) => string;
 
   constructor(
     private attendanceRepository: AttendanceRepository,
@@ -62,24 +62,24 @@ export class AttendanceValidator {
   }
 
   ensureSelectedYear(yearId: string) {
-    if (yearId !== this.year.id) Err(409, 'Attendance date and target must belong to the selected academic year');
+    if (yearId !== this.year.id) Err(409, this.at('outsideSelectedYear'));
   }
 
   ensureSectionForMark(section: { academicYear: string } | undefined) {
-    if (!section) Err(404, 'Attendance section not found');
+    if (!section) Err(404, this.at('sectionNotFound'));
     return section;
   }
 
   ensureStudentMarkYear(year: ResolvedAcademicYear, date: string) {
     if (date < year.reportingStartsOn || date > year.reportingEndsOn) {
-      Err(409, 'Attendance date is outside the section academic year');
+      Err(409, this.at('outsideSectionYear'));
     }
-    if (year.status === 'draft') Err(409, 'Attendance cannot be marked in a draft year');
+    if (year.status === 'draft') Err(409, this.at('draftYear'));
   }
 
   ensureStaffMarkYear(year: ResolvedAcademicYear | null | undefined) {
-    if (!year) Err(409, 'Attendance date is outside registered academic years');
-    if (year.status === 'draft') Err(409, 'Attendance cannot be marked in a draft year');
+    if (!year) Err(409, this.at('outsideRegisteredYears'));
+    if (year.status === 'draft') Err(409, this.at('draftYear'));
     return year;
   }
 
@@ -135,18 +135,18 @@ export class AttendanceValidator {
   }
 
   ensureStaffAttendanceAuthorized(role?: string) {
-    if (role !== 'admin' && role !== 'principal') Err(403, 'Staff attendance requires an administrator');
+    if (role !== 'admin' && role !== 'principal') Err(403, this.at('staffRequiresAdmin'));
   }
 
   ensureStaffRosterConsistent(items: StaffAttendanceRosterItemDto[]) {
     const staffIds = items.map((item) => item.staffId);
     if (new Set(staffIds).size !== staffIds.length) {
-      Err(400, this.at('duplicateStaffInRoster') || 'Each staff member may appear only once in a roster');
+      Err(400, this.at('duplicateStaffInRoster'));
     }
 
     const dates = new Set(items.map((item) => item.date));
     if (dates.size !== 1) {
-      Err(400, this.at('mixedRosterDates') || 'All staff attendance records must use the same date');
+      Err(400, this.at('mixedRosterDates'));
     }
 
     const [date] = dates;
@@ -154,7 +154,7 @@ export class AttendanceValidator {
   }
 
   ensureStaffRosterSaved(savedCount: number, expectedCount: number) {
-    if (savedCount !== expectedCount) Err(409, 'A staff attendance record belongs to another academic year');
+    if (savedCount !== expectedCount) Err(409, this.at('staffRecordOtherYear'));
   }
 
   async ensureStudentExists(studentId: string) {
@@ -192,7 +192,7 @@ export class AttendanceValidator {
       return this.ensureStudentInSection(studentId, sectionId);
     }
     if (!await this.enrollments.isPlacedInSectionOnDate(studentId, sectionId, date)) {
-      Err(409, 'Student has no dated placement in this section on the attendance date');
+      Err(409, this.at('noPlacementOnDate'));
     }
   }
 
@@ -227,7 +227,7 @@ export class AttendanceValidator {
     const missingId = uniqueIds.find((id) => !existingSet.has(id));
 
     if (missingId) {
-      Err(400, this.at('staffNotEligible') || `Staff member ${missingId} is not eligible for attendance on ${date}`);
+      Err(400, this.at('staffNotEligible', { staffId: missingId, date }));
     }
   }
 
@@ -272,7 +272,7 @@ export class AttendanceValidator {
 
     if (mode === 'per_class') {
       if (!teacherId || !subjectId) {
-        Err(400, this.at('teacherAndSubjectRequired') || 'Teacher and subject are required');
+        Err(400, this.at('teacherAndSubjectRequired'));
       }
     } else if (!teacherId && user.teacherId) {
       teacherId = user.teacherId;

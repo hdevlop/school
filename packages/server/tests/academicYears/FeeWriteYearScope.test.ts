@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { FeeService } from '../../src/modules/financial/fees/FeeService';
 import { FeeValidator } from '../../src/modules/financial/fees/FeeValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 function harness(status: 'closed' | 'draft' = 'closed', allowed = true) {
   const writes: string[] = [];
@@ -9,7 +10,7 @@ function harness(status: 'closed' | 'draft' = 'closed', allowed = true) {
       writes.push(fee.academicYear);
       return { id: 'new-fee', ...fee };
     } } as any,
-    Object.assign(new FeeValidator({} as any, {} as any, {} as any, {} as any), {
+    Object.assign(withEnglishMessages(new FeeValidator({} as any, {} as any, {} as any, {} as any)), {
       validate: async () => {}, validateFeeTypeExists: async () => ({ amount: 30, paymentType: 'oneTime' }),
     }) as any,
     { generateInstallments: async () => {} } as any,

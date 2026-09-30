@@ -5,6 +5,8 @@ import { McpBuilderService, McpTool, ToolGroup, mcp } from 'najm-mcp';
 import { AcademicYearRepository } from '../../src/modules/academicYears/AcademicYearRepository';
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../src/modules/academicYears/AcademicYearValidator';
 import { Year, registerYearPropertyInjector, schoolMcpYearHooks } from '../../src/modules/academicYears/requestYear';
+import { i18n } from 'najm-i18n';
+import { schoolI18n } from '@sms/contracts/locales';
 
 const years = {
   '2025-2026': { id: 'year-2025', label: '2025-2026', status: 'closed' },
@@ -43,6 +45,7 @@ afterEach(async () => {
 async function boot() {
   const listenPort = port++;
   server = new Server({ isolated: true, silent: true })
+    .use(i18n(schoolI18n.options))
     .use(mcp({
       name: 'school-year-hook-gate', version: '1.0.0', path: '/mcp',
       auth: {

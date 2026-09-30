@@ -4,7 +4,7 @@ import { StaffRoleRepository } from './roles/StaffRoleRepository';
 
 @Service()
 export class StaffValidator {
-  @I18n('staff.errors') private t!: (key: string) => string;
+  @I18n('staff.errors') private t!: (key: string, params?: Record<string, unknown>) => string;
   @I18n('staffRoles.errors') private roleT!: (key: string) => string;
 
   constructor(
@@ -13,49 +13,49 @@ export class StaffValidator {
   ) { }
 
   ensureLoginEmail(email?: string) {
-    if (!email) Err(400, 'Email is required to create a staff login');
+    if (!email) Err(400, this.t('emailRequiredForLogin'));
   }
 
   ensureAppAccessRole(accessRoleId: string | null) {
-    if (!accessRoleId) Err(400, 'This staff role does not grant app access');
+    if (!accessRoleId) Err(400, this.t('roleHasNoAppAccess'));
   }
 
   ensureDriverProfile(profile?: Record<string, any>, partial = false) {
     if (!profile) {
       if (partial) return;
-      Err(400, 'Driver license profile is required');
+      Err(400, this.t('driverLicenseRequired'));
     }
     for (const key of ['licenseNumber', 'licenseType', 'licenseExpiry']) {
-      if (!partial && !profile[key]) Err(400, `Driver ${key} is required`);
+      if (!partial && !profile[key]) Err(400, this.t('driverFieldRequired', { field: key }));
     }
   }
 
   ensureAssignments(role: string, assignments?: Record<string, any>[]) {
     if (!assignments?.length) return;
     for (const assignment of assignments) {
-      if (role === 'cleaner' && !assignment.zoneId) Err(400, 'Cleaner assignment requires a zone');
-      if (role === 'assistant' && !assignment.classId) Err(400, 'Assistant assignment requires a class');
-      if (role === 'busAssistant' && !assignment.vehicleId) Err(400, 'Bus assistant assignment requires a vehicle');
-      if (role === 'accountant' && !assignment.cycleId) Err(400, 'Accountant assignment requires a cycle');
-      if (role === 'security' && !assignment.zoneId) Err(400, 'Security assignment requires a zone');
-      if (role === 'driver' && !assignment.vehicleId) Err(400, 'Driver assignment requires a vehicle');
+      if (role === 'cleaner' && !assignment.zoneId) Err(400, this.t('cleanerZoneRequired'));
+      if (role === 'assistant' && !assignment.classId) Err(400, this.t('assistantClassRequired'));
+      if (role === 'busAssistant' && !assignment.vehicleId) Err(400, this.t('busAssistantVehicleRequired'));
+      if (role === 'accountant' && !assignment.cycleId) Err(400, this.t('accountantCycleRequired'));
+      if (role === 'security' && !assignment.zoneId) Err(400, this.t('securityZoneRequired'));
+      if (role === 'driver' && !assignment.vehicleId) Err(400, this.t('driverVehicleRequired'));
     }
   }
 
   ensureStaffRecord<T>(staff: T | null | undefined): T {
-    if (!staff) Err(404, 'Staff not found');
+    if (!staff) Err(404, this.t('staffNotFound'));
     return staff;
   }
 
   ensureDeletionAllowed(hasLinkedProfile: boolean, allowLinked?: boolean) {
-    if (hasLinkedProfile && !allowLinked) Err(409, 'Cannot delete staff linked to an active teacher or driver');
+    if (hasLinkedProfile && !allowLinked) Err(409, this.t('linkedToTeacherOrDriver'));
   }
 
   // Payslips, attendance marks and timetable duties restrict the delete in the
   // database; say why instead of failing on the foreign key.
   ensureNoRecordedHistory(history: { payslips: number; attendance: number; duties: number }) {
     if (history.payslips || history.attendance || history.duties) {
-      Err(409, 'Staff with payslips, attendance or timetable duties cannot be deleted; set an end date and status instead');
+      Err(409, this.t('hasHistory'));
     }
   }
 
@@ -63,12 +63,12 @@ export class StaffValidator {
   // assignments with it, in every year.
   ensureDriverRoleChangeKeepsHistory(vehicleAssignments: number) {
     if (vehicleAssignments) {
-      Err(409, 'A driver with vehicle assignment history keeps the driver role; end the assignment and the employment instead');
+      Err(409, this.t('driverKeepsRole'));
     }
   }
 
   ensureOneCurrentVehicle(vehicleIds: string[]) {
-    if (vehicleIds.length > 1) Err(400, 'A driver has one current vehicle');
+    if (vehicleIds.length > 1) Err(400, this.t('driverOneVehicle'));
   }
 
   async ensureExists(id: string) {
@@ -103,7 +103,7 @@ export class StaffValidator {
     if (!email) return;
     const existing = await this.staffRepository.getByEmail(email);
     if (existing && existing.id !== excludeId) {
-      Err(409, this.t('emailExists') || 'Email already exists');
+      Err(409, this.t('emailExists'));
     }
   }
 

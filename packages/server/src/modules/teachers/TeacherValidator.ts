@@ -19,21 +19,21 @@ export class TeacherValidator {
   ) { }
 
   ensureDatedRosterAccess(onDate: string, year: { reportingStartsOn: string; reportingEndsOn: string }, role?: string) {
-    if (role !== 'admin' && role !== 'principal') Err(403, 'Dated teacher rosters require reviewed assignment history');
-    if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) Err(400, 'Date is outside the academic year reporting interval');
+    if (role !== 'admin' && role !== 'principal') Err(403, this.tt('datedRosterUnreviewed'));
+    if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) Err(400, this.tt('dateOutsideYear'));
   }
 
   ensureAssignmentDeleted<T>(assignment: T | null | undefined): T {
-    if (!assignment) Err(404, 'Assignment not found');
+    if (!assignment) Err(404, this.tt('assignmentNotFound'));
     return assignment;
   }
 
   ensureClassSections(sections: unknown) {
-    if (isEmpty(sections)) Err(404, 'Class has no sections');
+    if (isEmpty(sections)) Err(404, this.tt('classHasNoSections'));
   }
 
   ensureAssignmentsDeleted(assignments: unknown) {
-    if (isEmpty(assignments)) Err(404, 'Assignment not found');
+    if (isEmpty(assignments)) Err(404, this.tt('assignmentNotFound'));
   }
 
   async ensureNoAssignmentHistory(id?: string) {

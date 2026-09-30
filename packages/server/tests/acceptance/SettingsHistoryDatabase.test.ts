@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { scopedHistoryRepository } from '../academicYears/fixtures/scopedHistoryRepository';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
 if (!rawUrl) throw new Error('SCHOOL_HISTORY_TEST_DB_URL is required');
@@ -25,7 +26,7 @@ async function settingsService(tx: Tx) {
   const { repo, inYear } = await scopedHistoryRepository(SettingsRepository, tx);
   const years = new AcademicYearRepository();
   years.db = tx;
-  const validator = new SettingsValidator(repo);
+  const validator = withEnglishMessages(new SettingsValidator(repo));
   Object.defineProperty(validator, 't', { value: (key: string) => `settings.errors.${key}`, configurable: true });
   return { service: new SettingsService(repo, validator, years), repo, years, inYear };
 }

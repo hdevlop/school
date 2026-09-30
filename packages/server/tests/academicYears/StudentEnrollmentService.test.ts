@@ -3,6 +3,7 @@ import { drizzle } from 'drizzle-orm/pg-proxy';
 import { StudentEnrollmentService } from '../../src/modules/studentEnrollments/StudentEnrollmentService';
 import { StudentEnrollmentValidator } from '../../src/modules/studentEnrollments/StudentEnrollmentValidator';
 import { StudentEnrollmentRepository } from '../../src/modules/studentEnrollments/StudentEnrollmentRepository';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const oldYear = {
   id: 'year-old', label: '2025-2026', reportingStartsOn: '2025-09-01',
@@ -43,7 +44,7 @@ function build(activeYearId = 'year-current', legacyProjection = false, yearStat
   };
   const settings = { getAdminSettings: async () => ({ activeAcademicYearId: activeYearId }) };
   const migrationIssues = { recordUnknownEnrollmentDate: async () => { writes.push('preserve-legacy-placement'); } };
-  const service = new StudentEnrollmentService(repository as any, years as any, settings as any, migrationIssues as any, new StudentEnrollmentValidator());
+  const service = new StudentEnrollmentService(repository as any, years as any, settings as any, migrationIssues as any, withEnglishMessages(new StudentEnrollmentValidator()));
   return { service, writes };
 }
 
@@ -159,7 +160,7 @@ describe('enrollment history for administrators', () => {
         return [{ id: 'placement-1', className: 'CE5', sectionName: 'A', validFrom: '2025-09-01', validTo: null }];
       },
     };
-    const service = new StudentEnrollmentService(repository as any, {} as any, {} as any, {} as any, new StudentEnrollmentValidator());
+    const service = new StudentEnrollmentService(repository as any, {} as any, {} as any, {} as any, withEnglishMessages(new StudentEnrollmentValidator()));
     expect<unknown>(await service.listByStudent('student-1')).toEqual([{
       id: 'enrollment-1', status: 'active', academicYear: { id: oldYear.id, label: oldYear.label },
       placements: [{ id: 'placement-1', className: 'CE5', sectionName: 'A', validFrom: '2025-09-01', validTo: null }],

@@ -2,6 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import { AcademicYearTransitionService } from '../../src/modules/academicYearTransitions/AcademicYearTransitionService';
 import { AcademicYearTransitionValidator } from '../../src/modules/academicYearTransitions/AcademicYearTransitionValidator';
 import { previewAcademicYearTransitionDto } from '../../src/modules/academicYearTransitions/AcademicYearTransitionDto';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const sourceYear = {
   id: 'year-old', label: '2025-2026', status: 'open', provenance: 'verified',
@@ -74,7 +75,7 @@ function harness(input: {
         return run;
       },
     } as any,
-    new AcademicYearTransitionValidator(),
+    withEnglishMessages(new AcademicYearTransitionValidator()),
   );
   return { service, writes };
 }

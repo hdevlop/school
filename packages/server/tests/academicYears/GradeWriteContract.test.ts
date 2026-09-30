@@ -4,6 +4,7 @@ import { AcademicSourceValidator } from '../../src/modules/academicSources/Acade
 import { createGradeDto, updateGradeDto } from '../../src/modules/grades/GradeDto';
 import { GradeService } from '../../src/modules/grades/GradeService';
 import { gradeValidator } from './fixtures/gradeValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const year = {
   id: 'year-1', label: '2025-2026', status: 'open',
@@ -33,7 +34,7 @@ function gradeService(teacherIdForUser = async () => 'teacher-1', ensureSelected
     new AcademicSourceService(
       {} as any,
       { listYearContexts: async () => [{ id: 'section-1', academicYear: year.label }] } as any,
-      new AcademicSourceValidator(),
+      withEnglishMessages(new AcademicSourceValidator()),
     ),
     { hasAnyForStudent: async () => true, isPlacedInSectionOnDate: async () => true } as any,
   );
@@ -70,7 +71,7 @@ describe('grade write contract', () => {
     await expect(service.create({
       studentId: 'student-1', examId: 'exam-1', teacherId: 'teacher-other',
       marksObtained: 16, status: 'graded',
-    }, { id: 'admin-1' })).rejects.toThrow('must match the source assignment');
+    }, { id: 'admin-1' })).rejects.toThrow('teacherSubjectMismatch');
     expect(inserted()).toBeNull();
   });
 
@@ -78,7 +79,7 @@ describe('grade write contract', () => {
     const { service, inserted } = gradeService(async () => 'teacher-other');
     await expect(service.create({
       studentId: 'student-1', examId: 'exam-1', marksObtained: 16, status: 'graded',
-    }, { id: 'user-1', role: 'teacher' })).rejects.toThrow('only their own assessment or exam');
+    }, { id: 'user-1', role: 'teacher' })).rejects.toThrow('ownSourceOnly');
     expect(inserted()).toBeNull();
   });
 

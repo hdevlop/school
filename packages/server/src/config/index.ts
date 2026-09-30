@@ -17,7 +17,7 @@ import { rag, ragStudio } from 'najm-rag';
 import type { NajmPlugin } from 'najm-core';
 export { themeConfig } from './themeConfig';
 
-import { schoolI18n } from '@sms/contracts/locales';
+import { LANGUAGE_HEADER, schoolI18n } from '@sms/contracts/locales';
 import { db } from '../database/db';
 import { auth, isAuth, isAdmin } from '../auth';
 import { schoolMcpYearHooks } from '../modules/academicYears/requestYear';
@@ -252,7 +252,18 @@ export const corsConfig = () =>
     credentials: true,
   });
 
-export const i18nConfig = () => i18n(schoolI18n.options);
+// The dashboard names its interface language in LANGUAGE_HEADER; that comes
+// first. najm-i18n's default order read its own `language` cookie first, and
+// its cookie cache pinned that cookie to the first language it guessed, so a
+// French page got English refusals. Without the header (MCP, scripts) the
+// cookie and `?lang=` still apply, and nothing is written back.
+export const i18nConfig = () =>
+  i18n({
+    ...schoolI18n.options,
+    order: ['header', 'cookie', 'querystring'],
+    lookupFromHeaderKey: LANGUAGE_HEADER,
+    caches: [],
+  });
 
 export const mcpConfig = () =>
   mcp({

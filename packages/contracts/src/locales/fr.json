@@ -511,7 +511,12 @@
       "filters": "Filtres",
       "filterRegion": "Filtres du tableau",
       "allOption": "Tous",
-      "create": "Ajouter"
+      "create": "Ajouter",
+      "rowActions": "Actions de la ligne",
+      "rowView": "Voir",
+      "rowEdit": "Modifier",
+      "rowDelete": "Supprimer",
+      "actionsColumn": "Actions"
     },
     "pagination": {
       "rowsPerPage": "Lignes/page",
@@ -538,7 +543,23 @@
     "errors": {
       "notFound": "Membre du personnel introuvable",
       "employeeCodeExists": "Un membre du personnel avec ce code existe déjà",
-      "cinExists": "Un membre du personnel avec ce CIN existe déjà"
+      "cinExists": "Un membre du personnel avec ce CIN existe déjà",
+      "emailRequiredForLogin": "Un e-mail est requis pour créer un accès",
+      "roleHasNoAppAccess": "Ce rôle ne donne pas accès à l'application",
+      "driverLicenseRequired": "Le profil de permis de conduire est requis",
+      "driverFieldRequired": "Le champ {{field}} du chauffeur est requis",
+      "cleanerZoneRequired": "L'affectation d'un agent d'entretien exige une zone",
+      "assistantClassRequired": "L'affectation d'un assistant exige une classe",
+      "busAssistantVehicleRequired": "L'affectation d'un accompagnateur de bus exige un véhicule",
+      "accountantCycleRequired": "L'affectation d'un comptable exige un cycle",
+      "securityZoneRequired": "L'affectation d'un agent de sécurité exige une zone",
+      "driverVehicleRequired": "L'affectation d'un chauffeur exige un véhicule",
+      "staffNotFound": "Membre du personnel introuvable",
+      "linkedToTeacherOrDriver": "Impossible de supprimer un membre du personnel lié à un enseignant ou un chauffeur actif",
+      "hasHistory": "Un membre du personnel ayant des bulletins de paie, des présences ou des créneaux ne peut pas être supprimé ; indiquez plutôt une date de fin et un statut",
+      "driverKeepsRole": "Un chauffeur ayant un historique d'affectation de véhicule garde son rôle ; terminez plutôt l'affectation et l'emploi",
+      "driverOneVehicle": "Un chauffeur n'a qu'un véhicule à la fois",
+      "emailExists": "Un membre du personnel avec cet e-mail existe déjà"
     },
     "stats": {
       "total": "Total du personnel",
@@ -670,7 +691,8 @@
       "notFound": "Rôle du personnel introuvable",
       "codeExists": "Un rôle du personnel avec ce code existe déjà",
       "invalidRole": "Rôle invalide ou inactif",
-      "systemRoleInUse": "Les rôles système ne peuvent pas être supprimés"
+      "systemRoleInUse": "Les rôles système ne peuvent pas être supprimés",
+      "invalidCode": "Code de rôle invalide"
     },
     "table": {
       "code": "Code",
@@ -813,7 +835,12 @@
       "invalidTimeZone": "Fuseau horaire spécifié invalide",
       "validationFailed": "Échec de la validation des paramètres",
       "resetFailed": "Échec de la réinitialisation des paramètres utilisateur",
-      "noSettingsToDelete": "Aucun paramètre trouvé à supprimer"
+      "noSettingsToDelete": "Aucun paramètre trouvé à supprimer",
+      "invalidCalendarMonth": "Mois du calendrier scolaire invalide",
+      "invalidCalendar": "Calendrier scolaire invalide",
+      "missing": "Les paramètres de l'école sont manquants",
+      "registeredCalendarLocked": "Le calendrier d'une année enregistrée ne peut être modifié que par une correction vérifiée",
+      "activateThroughYears": "Activez l'année enregistrée depuis la gestion des années scolaires"
     },
     "notifications": {
       "title": "Paramètres de Notification",
@@ -950,7 +977,15 @@
       "atLeastOneTargetRequired": "Au moins une cible (véhicule, opérateur, ou utilisateur) doit être spécifiée",
       "sharedNoticeStaffOnly": "Seul le personnel peut modifier le statut d'une alerte de classe ou de toute l'école",
       "acknowledgeOnly": "Vous pouvez seulement accuser réception de cette alerte",
-      "editStaffOnly": "Seul le personnel peut modifier une alerte ; vous pouvez mettre à jour son statut"
+      "editStaffOnly": "Seul le personnel peut modifier une alerte ; vous pouvez mettre à jour son statut",
+      "noAcademicTargets": "Ce type d'alerte ne peut pas cibler d'élèves ou de classes",
+      "studentNotEnrolledInYear": "L'élève n'est pas inscrit dans l'année scolaire sélectionnée",
+      "classNotInYear": "La classe n'appartient pas à l'année scolaire sélectionnée",
+      "studentNotInClass": "L'élève n'est pas affecté à cette classe pour l'année scolaire sélectionnée",
+      "yearScopeImmutable": "L'année d'une alerte ne peut pas être modifiée",
+      "feeSourceNotFound": "Frais introuvables",
+      "feeSourceOtherStudent": "Ces frais appartiennent à un autre élève",
+      "feeSourceNoYear": "Ces frais n'ont pas d'année scolaire enregistrée"
     },
     "validation": {
       "titleMinLength": "Le titre doit contenir au moins 2 caractères",
@@ -1115,7 +1150,12 @@
       "totalOperators": "Total Opérateurs",
       "completedOperations": "Opérations Terminées",
       "totalWorkHours": "Total Heures de Travail",
-      "totalCost": "Coût Total"
+      "totalCost": "Coût Total",
+      "totalStudents": "Total élèves",
+      "totalTeachers": "Total enseignants",
+      "totalParents": "Total parents",
+      "totalEarnings": "Total des recettes",
+      "totalExpenses": "Total des dépenses"
     },
     "finance": {
       "totalStudents": "Total Élèves",
@@ -1438,7 +1478,11 @@
     "errors": {
       "notFound": "Fiche de paie introuvable",
       "alreadyPaid": "Cette fiche de paie a déjà été payée",
-      "cancelled": "Cette fiche de paie a été annulée"
+      "cancelled": "Cette fiche de paie a été annulée",
+      "staffNotFound": "Membre du personnel introuvable",
+      "staffInactive": "Seul le personnel actif peut être payé",
+      "noCompensation": "Aucune rémunération n'est définie pour ce membre du personnel",
+      "outsideYear": "La période de paie est en dehors de l'année scolaire sélectionnée"
     },
     "stats": {
       "period": "Période",
@@ -1594,7 +1638,19 @@
       "notAuthorizedForSection": "Vous n'êtes pas autorisé à mettre à jour la présence pour cette section",
       "invalidTransition": "Ce changement de statut n'est pas autorisé",
       "futureDate": "La présence ne peut pas être marquée pour une date future",
-      "dateTooOld": "La présence ne peut pas être marquée pour des dates de plus de {{days}} jours"
+      "dateTooOld": "La présence ne peut pas être marquée pour des dates de plus de {{days}} jours",
+      "outsideSelectedYear": "La date et la cible de la présence doivent appartenir à l'année scolaire sélectionnée",
+      "sectionNotFound": "Section introuvable",
+      "outsideSectionYear": "La date est en dehors de l'année scolaire de la section",
+      "draftYear": "La présence ne peut pas être saisie dans une année en brouillon",
+      "outsideRegisteredYears": "La date est en dehors des années scolaires enregistrées",
+      "staffRequiresAdmin": "La présence du personnel est réservée à l'administration",
+      "staffRecordOtherYear": "Une présence du personnel appartient à une autre année scolaire",
+      "noPlacementOnDate": "L'élève n'est pas affecté à cette section à la date de présence",
+      "duplicateStaffInRoster": "Un membre du personnel ne peut apparaître qu'une fois dans la liste",
+      "mixedRosterDates": "Toutes les présences du personnel doivent porter la même date",
+      "staffNotEligible": "Le membre du personnel {{staffId}} n'est pas concerné par la présence le {{date}}",
+      "teacherAndSubjectRequired": "L'enseignant et la matière sont requis"
     },
     "filters": {
       "searchByStudent": "Rechercher par nom d'élève...",
@@ -1661,7 +1717,16 @@
       "amountTooLarge": "Le montant ne peut pas dépasser 1 000 000",
       "titleRequired": "Le titre est obligatoire",
       "categoryRequired": "La catégorie est obligatoire",
-      "expenseDateRequired": "La date de dépense est obligatoire"
+      "expenseDateRequired": "La date de dépense est obligatoire",
+      "outsideYear": "La date de la dépense est en dehors de l'année scolaire sélectionnée",
+      "invoiceNumberExists": "Une dépense avec ce numéro de facture existe déjà",
+      "receiptNumberExists": "Une dépense avec ce numéro de reçu existe déjà",
+      "checkNumberExists": "Une dépense avec ce numéro de chèque existe déjà",
+      "cannotApprove": "Cette dépense ne peut pas être approuvée dans son statut actuel",
+      "cannotPay": "Cette dépense ne peut pas être payée dans son statut actuel",
+      "rejectionReasonRequired": "Un motif de refus est requis",
+      "checkNumberRequired": "Un numéro de chèque est requis pour un paiement par chèque",
+      "paymentDateBeforeExpense": "La date de paiement ne peut pas précéder la date de la dépense"
     },
     "form": {
       "basicInformation": "Informations de base",
@@ -1910,6 +1975,41 @@
       "revenueRetrieved": "Frais terminé avec succès",
       "statsRetrieved": "Statistiques récupérées avec succès",
       "updated": "Frais mis à jour avec succès"
+    },
+    "errors": {
+      "installmentMissingForFee": "L'échéance n°{{number}} n'existe pas pour les frais {{feeId}}",
+      "noInstallmentsMatched": "Aucune échéance ne correspond aux cibles d'affectation demandées",
+      "allocationsExceedPayment": "Les affectations ne peuvent pas dépasser le montant du paiement",
+      "installmentNotFoundForFee": "Échéance n°{{number}} introuvable pour les frais {{feeId}}",
+      "allocationExceedsAvailable": "L'affectation de {{amount}} dépasse le disponible de {{available}} pour l'échéance n°{{number}}",
+      "allocationUsedByCredit": "Un avoir utilise cette affectation ; annulez plutôt le paiement d'origine",
+      "allocationNotFoundInYear": "Affectation de paiement introuvable dans l'année scolaire sélectionnée",
+      "allocationInstallmentIdRequired": "Les affectations sur échéance exigent un installmentId",
+      "draftYear": "Des frais ne peuvent pas être facturés sur une année en brouillon",
+      "yearMismatch": "L'année des frais doit correspondre à l'année scolaire sélectionnée",
+      "studentNotFound": "Élève introuvable",
+      "studentEnrollmentDateInvalid": "L'élève n'a pas de date d'inscription valide",
+      "bulkClassNotInYear": "La classe facturée doit appartenir à l'année scolaire sélectionnée",
+      "bulkSectionNotInClass": "La section facturée doit appartenir à la classe sélectionnée",
+      "enrollmentYearMismatch": "L'année des frais doit correspondre à l'année de la nouvelle inscription",
+      "yearChangeNeedsCorrection": "Déplacer des frais vers une autre année scolaire nécessite une procédure de correction distincte",
+      "lockedAfterPayments": "Impossible de modifier l'échéancier, le montant ou l'élève une fois des paiements enregistrés",
+      "notFound": "Frais introuvables",
+      "installmentStateManaged": "L'état de paiement d'une échéance dépend de ses affectations",
+      "installmentEditHasAllocations": "Impossible de modifier une échéance qui a des paiements affectés",
+      "installmentDeleteHasAllocations": "Impossible de supprimer une échéance qui a des paiements affectés",
+      "feeNotFound": "Frais introuvables",
+      "invalidStatus": "Statut de frais invalide",
+      "invalidDiscount": "Remise invalide",
+      "invalidNetAmount": "Le montant après remise doit être positif",
+      "cannotPayCancelledInstallment": "Une échéance annulée ne peut pas être payée",
+      "installmentNumberExists": "Une échéance avec ce numéro existe déjà pour ces frais",
+      "allocationNotFound": "Affectation de paiement introuvable",
+      "paymentNotFound": "Paiement introuvable",
+      "installmentNotFound": "Échéance introuvable",
+      "installmentDoesNotBelongToFee": "L'échéance n'appartient pas aux frais indiqués",
+      "feeAlreadyExists": "Des frais existent déjà pour cet élève, cette année scolaire et ce type de frais",
+      "installmentAlreadyPaid": "Cette échéance est déjà payée"
     }
   },
   "behaviorRewards": {
@@ -2143,7 +2243,14 @@
   },
   "announcements": {
     "errors": {
-      "authorOnly": "Seuls le personnel ou l'auteur de l'annonce peuvent la modifier"
+      "authorOnly": "Seuls le personnel ou l'auteur de l'annonce peuvent la modifier",
+      "classesNotInYear": "Les classes de l'annonce doivent appartenir à l'année scolaire sélectionnée",
+      "notFound": "Annonce introuvable",
+      "allAudienceNoClassSection": "Une annonce pour tous ne peut pas être limitée à une classe ou une section",
+      "classRequired": "Choisissez une classe pour une annonce de classe",
+      "expiryBeforePublish": "La date d'expiration ne peut pas précéder la date de publication",
+      "alreadyPublished": "L'annonce est déjà publiée",
+      "notPublished": "L'annonce n'est pas publiée"
     },
     "subtitle": {
       "count": "{{count}} annonces au total"
@@ -2495,6 +2602,20 @@
       "seeded": "Conducteur initialisé avec succès",
       "statusUpdated": "Statut de Conducteur mis à jour avec succès",
       "updated": "Conducteur mis à jour avec succès"
+    },
+    "errors": {
+      "createdFromStaff": "Les chauffeurs se créent depuis le module Personnel",
+      "updatedFromStaff": "Les chauffeurs se modifient depuis le module Personnel",
+      "statusFromStaff": "Le statut des chauffeurs se modifie depuis le module Personnel",
+      "deletedFromStaff": "Les chauffeurs se suppriment depuis le module Personnel",
+      "licenseExists": "Un chauffeur avec ce numéro de permis existe déjà",
+      "emailExists": "Un chauffeur avec cet e-mail existe déjà",
+      "phoneExists": "Un chauffeur avec ce numéro de téléphone existe déjà",
+      "licenseExpired": "Le permis du chauffeur a expiré",
+      "idExists": "Ce chauffeur existe déjà",
+      "cinExists": "Un chauffeur avec cette CIN existe déjà",
+      "notFound": "Chauffeur introuvable",
+      "invalidStatus": "Statut de chauffeur invalide"
     }
   },
   "exams": {
@@ -2654,6 +2775,15 @@
       "deleted": "Type de frais supprimé avec succès",
       "retrieved": "Type de frais récupéré avec succès",
       "updated": "Type de frais mis à jour avec succès"
+    },
+    "errors": {
+      "invalidStatus": "Statut de type de frais invalide",
+      "invalidPaymentType": "Type de paiement invalide",
+      "idExists": "Ce type de frais existe déjà",
+      "nameAlreadyExists": "Un type de frais avec ce nom existe déjà",
+      "notFound": "Type de frais introuvable",
+      "invalidAmount": "Le montant doit être supérieur à 0",
+      "amountTooLarge": "Le montant ne peut pas dépasser 1 000 000"
     }
   },
   "grades": {
@@ -2670,7 +2800,25 @@
       "selectSource": "Sélectionnez une évaluation ou un examen avant d’enregistrer les notes.",
       "saveFailed": "Impossible d’enregistrer toutes les notes. Veuillez réessayer.",
       "marksExceedTotal": "Les notes dépassent le total",
-      "sourceRequired": "Sélectionnez une évaluation ou un examen"
+      "sourceRequired": "Sélectionnez une évaluation ou un examen",
+      "ownSourceOnly": "Un enseignant ne peut noter que ses propres évaluations ou examens",
+      "exactlyOneSource": "Une note doit porter sur exactement une évaluation ou un examen",
+      "sourceNotFound": "Évaluation ou examen introuvable",
+      "sourceNoAssignment": "L'évaluation n'est liée à aucune affectation d'enseignement",
+      "teacherSubjectMismatch": "L'enseignant et la matière de la note doivent correspondre à l'affectation de l'évaluation",
+      "sourceNoClassYear": "L'évaluation n'a pas d'année de classe enregistrée",
+      "sourceContextUnresolved": "Le contexte de l'évaluation n'est pas résolu : {{issue}}",
+      "draftYear": "Aucune note ne peut être saisie dans une année en brouillon",
+      "sourceYearConflict": "L'année de l'évaluation ne correspond pas à son affectation",
+      "sourceDateOutsideYear": "La date de l'évaluation est en dehors de son année scolaire",
+      "sectionNotTargeted": "La section de la note n'est pas visée par l'évaluation",
+      "noPlacementOnDate": "L'élève n'est pas affecté à la section de la note à la date de l'évaluation",
+      "chooseSection": "Choisissez une section pour cette note",
+      "demoSourceNoYear": "L'évaluation de démonstration n'a pas d'année scolaire enregistrée",
+      "notFound": "Note introuvable",
+      "idExists": "Cette note existe déjà",
+      "alreadyExists": "Une note existe déjà pour cet élève et cette évaluation",
+      "assessmentOrTeacherRequired": "Une évaluation, un examen ou un enseignant est requis"
     },
     "form": {
       "academicContext": "Contexte académique",
@@ -2943,7 +3091,27 @@
       "studentMismatch": "Le paiement n'appartient pas à l'élève spécifié",
       "feeTypeMismatch": "Le paiement ne correspond pas au type de frais spécifié",
       "allocationTotalMismatch": "Le montant total alloué {{actual}} ne correspond pas au montant du paiement {{expected}}.",
-      "allocationsRequired": "Au moins une allocation est requise"
+      "allocationsRequired": "Au moins une allocation est requise",
+      "creditExceedsBalance": "L'avoir demandé ({{amount}}) dépasse le solde disponible ({{available}})",
+      "noInstallmentsForCredit": "Aucune échéance disponible à laquelle appliquer l'avoir",
+      "creditExceedsInstallments": "L'avoir dépasse le solde des échéances de {{excess}}",
+      "exceedsInstallmentsKeepCredit": "Le montant du paiement dépasse le solde des échéances de {{excess}} ; activez keepRemainderAsCredit pour conserver le reste en avoir",
+      "overAllocates": "Le paiement est sur-affecté de {{excess}} ; activez keepRemainderAsCredit pour conserver le reste",
+      "hardDeleteDisabled": "La suppression définitive des paiements est désactivée. Utilisez POST /payments/:id/void pour annuler un paiement.",
+      "refundCompletedOnly": "Seuls les paiements finalisés peuvent être remboursés",
+      "cannotVoidStatus": "Impossible d'annuler un paiement au statut {{status}}",
+      "checkStatusChecksOnly": "Le statut de chèque ne peut changer que pour un paiement par chèque",
+      "checkTransitionInvalid": "Impossible de passer un chèque de {{from}} à {{to}}",
+      "checkTargetMissing": "Une échéance affectée au chèque n'existe plus",
+      "checkAllocationsExceed": "Les affectations du chèque dépassent l'échéance n°{{number}}",
+      "allocationsOtherStudent": "Les affectations doivent concerner le même élève que le paiement",
+      "installmentMissingForFee": "L'échéance n°{{number}} n'existe pas pour les frais {{feeId}}",
+      "installmentAlreadyPaid": "L'échéance n°{{number}} est déjà entièrement payée",
+      "allocationsExceedFee": "Les affectations sur les frais {{feeId}} dépassent le solde restant",
+      "noInstallmentsMatched": "Aucune échéance ne correspond aux cibles d'affectation demandées",
+      "installmentNotFoundForFee": "Échéance n°{{number}} introuvable pour les frais {{feeId}}",
+      "allocationExceedsAvailable": "L'affectation de {{amount}} dépasse le disponible de {{available}} pour l'échéance n°{{number}}",
+      "idempotencyKeyConflict": "Cette clé d'idempotence a déjà servi pour un autre paiement"
     },
     "filters": {
       "filterByPaymentMethod": "Filtrer par mode de paiement",
@@ -3121,7 +3289,17 @@
       "studentCodeExists": "Un élève avec ce code existe déjà",
       "emailExists": "Un élève avec cet e-mail existe déjà",
       "invalidClass": "Classe invalide",
-      "invalidSection": "Section invalide"
+      "invalidSection": "Section invalide",
+      "correctionRequiresAdmin": "Les corrections d'inscription sont réservées à l'administration connectée",
+      "dateOutsideYear": "La date est en dehors de la période de l'année scolaire",
+      "createActiveFirst": "Créez un élève actif, puis terminez son inscription annuelle si nécessaire",
+      "beforeAdmission": "L'inscription annuelle ne peut pas précéder la date d'admission",
+      "useEnrollmentOperations": "Utilisez les opérations d'inscription datées pour changer l'affectation ou le statut d'inscription",
+      "admissionAfterEnrollment": "La date d'admission ne peut pas être postérieure à une inscription annuelle enregistrée",
+      "hasEnrollmentHistory": "Un élève ayant un historique d'inscriptions annuelles ne peut pas être supprimé",
+      "historyRetained": "L'historique des inscriptions annuelles doit être conservé",
+      "phoneExists": "Un élève avec ce numéro de téléphone existe déjà",
+      "notInSection": "L'élève n'est pas dans cette section"
     },
     "subtitle": {
       "count": "{{count}} étudiants au total"
@@ -3378,7 +3556,7 @@
     }
   },
   "teachers": {
-    "errors": { "hasAssignmentHistory": "Cet enseignant a des affectations de classe dans une année scolaire. Retirez-les avant de le supprimer" },
+    "errors": { "hasAssignmentHistory": "Cet enseignant a des affectations de classe dans une année scolaire. Retirez-les avant de le supprimer", "notFound": "Enseignant introuvable", "datedRosterUnreviewed": "Les listes datées d'un enseignant exigent un historique d'affectations vérifié", "dateOutsideYear": "La date est en dehors de la période de l'année scolaire", "assignmentNotFound": "Affectation introuvable", "classHasNoSections": "La classe n'a aucune section", "phoneExists": "Un enseignant avec ce numéro de téléphone existe déjà", "notInSection": "L'enseignant n'enseigne pas dans cette section", "idExists": "Cet enseignant existe déjà", "cinExists": "Un enseignant avec cette CIN existe déjà", "emailExists": "Un enseignant avec cet e-mail existe déjà" },
     "subtitle": {
       "count": "{{count}} enseignants au total"
     },
@@ -3509,6 +3687,24 @@
       "retrieved": "Affectation de véhicule récupéré avec succès",
       "unassigned": "Affectation de véhicule désaffecté avec succès",
       "updated": "Affectation de véhicule mis à jour avec succès"
+    },
+    "errors": {
+      "driverAssignmentNotActive": "L'affectation du chauffeur n'est pas active",
+      "endOutsideYear": "La date de fin d'affectation du chauffeur est en dehors de l'année scolaire sélectionnée",
+      "endDateInvalid": "La date de fin d'affectation doit suivre le début et ne peut pas être dans le futur",
+      "startOutsideYear": "La date d'affectation du chauffeur est en dehors de l'année scolaire sélectionnée",
+      "futureReassignment": "La réaffectation du chauffeur ne peut pas être dans le futur",
+      "laterAssignmentExists": "Le chauffeur est déjà affecté à partir d’une date ultérieure",
+      "reassignBeforeStart": "La date de réaffectation doit suivre l'ancien début",
+      "noActiveDriver": "Le véhicule n'a pas de chauffeur affecté",
+      "oneCurrentDriver": "Un véhicule n'a qu'un chauffeur à la fois",
+      "startNoYear": "La date d'affectation n'appartient à aucune année scolaire enregistrée",
+      "overlappingDriver": "Le véhicule a déjà un chauffeur sur cette période",
+      "mustStayInYear": "L'affectation du chauffeur doit rester dans l'année scolaire sélectionnée",
+      "statusEndMismatch": "Le statut et la date de fin de l'affectation ne concordent pas",
+      "notFound": "Affectation de véhicule introuvable",
+      "invalidDateRange": "La date de fin d'affectation doit suivre la date d'affectation",
+      "assignmentNotActive": "L'affectation n'est pas active et ne peut pas être modifiée"
     }
   },
   "vehicles": {
@@ -3596,6 +3792,20 @@
       "retrieved": "Véhicule récupéré avec succès",
       "seeded": "Véhicule initialisé avec succès",
       "updated": "Véhicule mis à jour avec succès"
+    },
+    "errors": {
+      "currentMileageLessThanInitial": "Le kilométrage actuel ne peut pas être inférieur au kilométrage initial",
+      "notFound": "Véhicule introuvable",
+      "idExists": "Ce véhicule existe déjà",
+      "invalidType": "Type de véhicule invalide",
+      "invalidStatus": "Statut de véhicule invalide",
+      "invalidFuelType": "Type de carburant invalide",
+      "invalidYear": "L'année doit être comprise entre {{minYear}} et {{currentYear}}",
+      "licensePlateExists": "Un véhicule avec cette plaque d'immatriculation existe déjà",
+      "invalidEngineHours": "Les heures moteur doivent être un nombre positif",
+      "invalidMileage": "Le kilométrage doit être un nombre positif",
+      "invalidFuelCapacity": "La capacité du réservoir doit être un nombre positif",
+      "invalidPurchasePrice": "Le prix d'achat doit être un nombre positif"
     }
   },
   "events": {
@@ -3707,6 +3917,23 @@
       "retrieved": "Maintenance récupéré avec succès",
       "statusUpdated": "Statut de Maintenance mis à jour avec succès",
       "updated": "Maintenance mis à jour avec succès"
+    },
+    "errors": {
+      "invalidAssignedTo": "Paramètre assignedTo invalide",
+      "invalidDate": "Date invalide",
+      "outsideYear": "La date de maintenance est en dehors de l'année scolaire sélectionnée",
+      "notFound": "Maintenance introuvable",
+      "invalidType": "Type de maintenance invalide",
+      "invalidStatus": "Statut de maintenance invalide",
+      "invalidPriority": "Priorité de maintenance invalide",
+      "invalidDueHours": "Les heures moteur d'échéance doivent être un nombre positif",
+      "invalidCost": "Le coût doit être un nombre positif",
+      "dueHoursPastCurrent": "Les heures moteur d'échéance doivent dépasser les heures actuelles du véhicule",
+      "cannotModifyCompleted": "Une maintenance terminée ne peut pas être modifiée",
+      "cannotDeleteInProgress": "Une maintenance en cours ne peut pas être supprimée",
+      "alreadyCompleted": "Cette maintenance est déjà terminée",
+      "cannotCompleteCancelled": "Une maintenance annulée ne peut pas être terminée",
+      "duplicateMaintenanceExists": "Une maintenance similaire est déjà prévue pour ce véhicule"
     }
   },
   "notifications": {
@@ -3732,7 +3959,11 @@
     "pushUnavailable": "Les notifications push ne sont pas disponibles actuellement.",
     "pushUnsupported": "Ce navigateur ne prend pas en charge le push web.",
     "pushDenied": "Les notifications sont bloquées dans les réglages du site.",
-    "pushError": "Impossible de modifier les notifications push."
+    "pushError": "Impossible de modifier les notifications push.",
+    "errors": {
+      "notFound": "Notification introuvable",
+      "subscriptionNotFound": "Abonnement aux notifications introuvable"
+    }
   },
   "permissions": {
     "subtitle": {
@@ -3788,12 +4019,32 @@
       "retrieved": "Ravitaillement récupéré avec succès",
       "seeded": "Ravitaillement initialisé avec succès",
       "updated": "Ravitaillement mis à jour avec succès"
+    },
+    "errors": {
+      "outsideYear": "La date du plein est en dehors de l'année scolaire sélectionnée",
+      "notFound": "Plein de carburant introuvable",
+      "voucherExists": "Un plein avec ce numéro de bon existe déjà",
+      "dateRequired": "Une date est requise",
+      "invalidDateFormat": "Format de date invalide",
+      "endDateAfterStart": "La date de fin doit suivre la date de début"
     }
   },
   "rollover": {
     "committed": "Report validé avec succès",
     "previewed": "Report prévisualisé avec succès",
-    "retrieved": "Report récupéré avec succès"
+    "retrieved": "Report récupéré avec succès",
+    "errors": {
+      "targetMismatch": "L'année cible de la reconduction doit correspondre à l'année scolaire sélectionnée",
+      "sourceAfterTarget": "L'année source de la reconduction doit précéder l'année cible",
+      "idempotencyKeyReused": "Cette clé d'idempotence a déjà servi pour un autre contenu",
+      "activateSeparately": "Activez l'année scolaire séparément, après la préparation pédagogique",
+      "noPreview": "Aucun aperçu n'existe pour cette clé d'idempotence",
+      "runIdMismatch": "runId ne correspond pas à la clé d'idempotence de l'aperçu",
+      "payloadMismatch": "Le contenu de la reconduction ne correspond pas à l'aperçu",
+      "cannotCommitStatus": "Impossible de valider une reconduction au statut {{status}}",
+      "previewMissingFees": "L'aperçu ne contient pas les frais proposés",
+      "runNotFound": "Reconduction introuvable"
+    }
   },
   "search": {
     "success": "Recherche terminé avec succès"
@@ -3805,6 +4056,30 @@
       "retrieved": "Trajet étudiant récupéré avec succès",
       "unassigned": "Trajet étudiant désaffecté avec succès",
       "updated": "Trajet étudiant mis à jour avec succès"
+    },
+    "errors": {
+      "activeHasNoEnd": "Un trajet actif ne peut pas avoir de date de fin d'affectation",
+      "closedNeedsEnd": "Un trajet terminé ou annulé exige une date de fin d'affectation",
+      "reassignActiveOnly": "Seul un trajet actif peut être réaffecté",
+      "reassignDateInvalid": "La date de réaffectation doit suivre l'ancien début et ne peut pas être dans le futur",
+      "notActive": "Le trajet n'est pas actif",
+      "endOutsideYear": "La date de fin d'affectation est en dehors de l'année scolaire sélectionnée",
+      "endDateInvalid": "La date de fin d'affectation doit suivre le début et ne peut pas être dans le futur",
+      "noTransportFeeType": "Aucun type de frais de transport actif n'est configuré",
+      "notFound": "Affectation de trajet introuvable",
+      "alreadyOnVehicle": "L'élève est déjà affecté au véhicule « {{vehicle}} ». Retirez-le d'abord.",
+      "invalidStartDate": "Date d'affectation invalide",
+      "startOutsideYear": "La date d'affectation est en dehors de l'année scolaire sélectionnée",
+      "endBeforeStart": "La date de fin d'affectation doit suivre la date d'affectation",
+      "notEnrolledOnStart": "L'élève n'est pas inscrit à la date d'affectation",
+      "noPlacementOnStart": "L'élève n'a pas d'affectation à la date d'affectation du trajet",
+      "overlappingRoute": "L'élève a déjà un trajet sur cette période",
+      "coordinatesTogether": "La latitude et la longitude ({{label}}) doivent être renseignées ensemble.",
+      "studentNotFound": "Élève introuvable",
+      "studentInactive": "Seuls les élèves actifs peuvent utiliser le transport scolaire",
+      "vehicleNotFound": "Véhicule introuvable",
+      "vehicleInactive": "Le véhicule « {{vehicle}} » n'est pas actif",
+      "vehicleFull": "Le véhicule « {{vehicle}} » est complet ({{occupancy}}/{{capacity}})"
     }
   },
   "transport": {
@@ -3967,6 +4242,112 @@
     "documents": {
       "title": "Aucun document téléversé",
       "description": "Téléversez un document pour commencer."
+    }
+  },
+  "academicSources": {
+    "errors": {
+      "dateAndSectionsRequired": "Une date et des sections cibles sont requises",
+      "targetSectionMissing": "Une section cible est introuvable",
+      "sectionsSpanYears": "Les sections cibles appartiennent à des années différentes",
+      "draftYear": "Aucune évaluation ne peut être enregistrée dans une année en brouillon",
+      "dateOutsideYear": "La date est en dehors de l'année des sections cibles"
+    }
+  },
+  "migrationIssues": {
+    "errors": {
+      "notFound": "Anomalie de migration introuvable",
+      "alreadyReviewed": "Cette anomalie de migration a déjà été examinée",
+      "placementRequired": "Enregistrez une affectation datée et confirmée pour la classe et la section relevées avant de résoudre cette anomalie",
+      "attendanceYearRequired": "Enregistrez une année de présence valide avant de résoudre cette anomalie",
+      "sourceYearRequired": "Enregistrez une année d'évaluation valide avant de résoudre cette anomalie",
+      "gradeYearRequired": "Enregistrez une année de notes valide avant de résoudre cette anomalie",
+      "reviewedConcurrently": "Cette anomalie de migration a été examinée en même temps par quelqu’un d’autre"
+    }
+  },
+  "academicYears": {
+    "errors": {
+      "notFound": "Année scolaire introuvable",
+      "alreadyExists": "Cette année scolaire existe déjà",
+      "invalidCalendar": "Le calendrier enregistré est invalide",
+      "activeYearNotRegistered": "L'année active n'est pas enregistrée dans les paramètres",
+      "activeYearChanged": "L'année active a changé ; vérifiez puis réessayez",
+      "onlyNextDraftActivates": "Seule l'année en brouillon vérifiée qui suit l'année active peut être activée",
+      "activatableFrom": "Cette année peut être activée à partir du {{date}}, son premier jour d'enregistrement",
+      "enrollmentsBeforeActivation": "Les inscriptions préparées doivent commencer au plus tard à la date d'activation",
+      "activateAnotherFirst": "Activez une autre année avant de clôturer celle-ci",
+      "draftCannotClose": "Une année en brouillon ne peut pas être clôturée",
+      "reportingOverlaps": "La période chevauche {{label}}",
+      "invalid": "Année scolaire invalide",
+      "recordHasNoYear": "Cet enregistrement n'a pas d'année scolaire accessible",
+      "settingsMissing": "Les paramètres de l'école sont manquants",
+      "otherYearsRestricted": "Les autres années scolaires sont réservées à l'administration et à la comptabilité"
+    }
+  },
+  "yearTransitions": {
+    "errors": {
+      "sourceNotActive": "L'année source doit être l'année active des paramètres",
+      "yearsNotAdjacent": "Le passage exige une année source vérifiée et une année cible en brouillon consécutives",
+      "targetDateInvalid": "La date d'inscription cible doit suivre l'année source et appartenir à l'année cible",
+      "idempotencyKeyReused": "Cette clé d'idempotence a déjà servi pour un autre contenu",
+      "alreadyCommitted": "L'année cible a déjà un passage validé",
+      "previewStale": "L'aperçu du passage n'est plus à jour ; vérifiez l'effectif et la capacité actuels",
+      "previewHasIssues": "L'aperçu du passage contient des anomalies non résolues",
+      "runNotFound": "Passage d’année introuvable",
+      "commitBeforeActivating": "Validez le passage depuis l'année active avant d'activer cette année"
+    }
+  },
+  "financialAudit": {
+    "errors": {
+      "notFound": "Entrée du journal d'audit introuvable"
+    }
+  },
+  "financialNotifications": {
+    "errors": {
+      "invalidCronSecret": "FINANCIAL_CRON_SECRET invalide ou manquant"
+    }
+  },
+  "zones": {
+    "errors": {
+      "notFound": "Zone introuvable",
+      "inUse": "Cette zone est utilisée par des affectations du personnel et ne peut pas être supprimée",
+      "nameExists": "Ce nom de zone existe déjà"
+    }
+  },
+  "enrollments": {
+    "errors": {
+      "notFoundInYear": "Inscription introuvable dans l'année sélectionnée",
+      "correctionRequiresAdmin": "Les corrections d'inscription sont réservées à l'administration",
+      "changedReload": "L'inscription a changé ; rechargez-la avant de la corriger",
+      "statusEndDateMismatch": "Le statut de l'inscription doit correspondre à sa date de fin",
+      "placementNotFound": "Affectation introuvable dans cette inscription",
+      "placementIntervalsInvalid": "Les périodes d'affectation doivent tenir dans l'inscription sans se chevaucher",
+      "correctionConflictsRecords": "La correction est en conflit avec des présences ou des notes enregistrées ; régularisez d'abord ces enregistrements",
+      "studentNotFound": "Élève introuvable",
+      "notFound": "Inscription introuvable",
+      "draftSetupOnly": "Une année en brouillon n'autorise que la préparation pédagogique",
+      "sectionNotInClass": "La section doit appartenir à la classe sélectionnée",
+      "classOtherYear": "La classe appartient à une autre année scolaire",
+      "enrollmentDateRequired": "Une date d'inscription annuelle réelle est requise",
+      "newPlacementActiveYear": "L'affectation d'un nouvel élève doit appartenir à l'année scolaire active",
+      "enrollmentDateActiveYear": "La date d'inscription annuelle doit appartenir à l'année scolaire active",
+      "unplacedStudents": "{{count}} élève(s) de la nouvelle année n'ont pas d'affectation à reporter",
+      "undecidedStudents": "{{count}} élève(s) de l'année active n'ont ni inscription ni décision dans la nouvelle année",
+      "dateOutsideYear": "La date d'inscription doit appartenir à l'année sélectionnée",
+      "beforeAdmission": "L'inscription annuelle ne peut pas précéder la date d'admission",
+      "alreadyEnrolled": "L'élève est déjà inscrit cette année",
+      "futureStart": "Une inscription de l'année active ne peut pas commencer dans le futur",
+      "ended": "L'inscription est terminée",
+      "transferOutsideInterval": "La date de transfert est en dehors de la période d'inscription",
+      "noOpenPlacementTransfer": "Aucune affectation en cours à transférer",
+      "transferBeforePlacement": "Le transfert doit avoir lieu après le début de l'affectation actuelle",
+      "alreadyInPlacement": "L'élève est déjà dans cette affectation",
+      "futureTransfer": "Un transfert de l'année active ne peut pas commencer dans le futur",
+      "alreadyEnded": "L'inscription est déjà terminée",
+      "draftNotEditable": "Une année en brouillon n'a pas d'inscriptions modifiables",
+      "endOutsideInterval": "La date de fin est en dehors de la période d'inscription",
+      "noOpenPlacementEnd": "Aucune affectation en cours à terminer",
+      "endBeforePlacement": "La date de fin doit suivre le début de l'affectation actuelle",
+      "futureEnd": "Une inscription de l'année active ne peut pas se terminer dans le futur"
     }
   }
 }

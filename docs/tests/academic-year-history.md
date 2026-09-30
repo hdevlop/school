@@ -1,5 +1,17 @@
 # Academic-year history implementation evidence
 
+## Refusals in the reader's language, 2026-09-30
+
+Najm `3147137`, released as najm-kit 2.16.14 (`33ade90`, pushed); School
+pins it, uncommitted.
+
+- **The server never answered in the page's language.** najm-i18n read its own `language` cookie first and cached the first language it guessed into it, so `localhost` held `language=en` and every refusal was English, including the ones already translated. The dashboard's HTTP client now sends the base of `<html lang>` as `X-Language` (`LANGUAGE_HEADER` in `@sms/contracts/locales`); the server reads that header first and writes no cookie. Without the header (MCP, scripts) the cookie and `?lang=` still apply.
+- **254 English `Err(...)` literals** in 32 server files are catalog keys under the file's `<module>.errors` translator (new blocks: `academicSources`, `migrationIssues`, `academicYears`, `yearTransitions`, `enrollments`, `rollover`, `zones`, `studentRoutes`, `financialAudit`, `financialNotifications`, `notifications`), in English, French, Arabic and Spanish. English keeps each message's wording; 26 templates pass their values as `{{placeholders}}`. `DriverController` and the cron-secret check use najm's global `t`.
+- **Keys the server already used were missing.** 47 were in no catalog, so users saw raw keys such as `maintenance.errors.notFound`; 50 more existed in English only. All are filled. `vehicles.errors.invalidYear` used `{minYear}` braces najm-i18n does not fill; `drivers.errors.invalidStatus` read "status Invalid". The attendance and staff validators' `this.at('x') || 'English'` fallbacks never ran, since a translator returns the key, and are gone.
+- **`test:server-i18n`** (`packages/server/tests/i18n/ServerMessages.test.ts`, part of `bun run test`) fails on any literal `Err(...)` message and on any key the server names that a language lacks or whose placeholders differ. Unit tests that build a validator with `new` get the English catalog through `tests/support/englishMessages.ts`; the three suites that boot a server register School's i18n plugin.
+- **Row actions** in NTable (menu, buttons, card menu, actions column) read `common.table.row*` in all four languages.
+- Browser: `X-Language: fr` answers "Élève introuvable" (ar and es likewise); the refused placement correction toasts in French; nothing written (still C). School lint, typecheck, `i18n:check` and `bun run test` pass.
+
 ## A refused save's reason and the phone-width header, 2026-09-30
 
 Najm `6851984`, released as najm-kit 2.16.13 (`eb5c025`, pushed); School

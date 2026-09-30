@@ -25,7 +25,7 @@ export class RefuelValidator {
       this.validateDate(data.datetime);
       const day = await this.refuelRepository.schoolDayOf(data.datetime);
       if (day < this.year.reportingStartsOn || day > this.year.reportingEndsOn) {
-        Err(409, 'Refuel date is outside the selected school year');
+        Err(409, this.t('outsideYear'));
       }
     }
 

@@ -5,7 +5,7 @@ import { getBusinessDate } from '../../../shared/businessDate';
 
 @Service()
 export class VehicleValidator {
-  @I18n('vehicles.errors') private t!: (key: string) => string;
+  @I18n('vehicles.errors') private t!: (key: string, params?: Record<string, unknown>) => string;
 
   constructor(
     private vehicleRepository: VehicleRepository,
@@ -59,7 +59,7 @@ export class VehicleValidator {
     const minYear = 1900;
 
     if (year < minYear || year > currentYear) {
-      Err(400, this.t('invalidYear'));
+      Err(400, this.t('invalidYear', { minYear, currentYear }));
     }
     return true;
   }

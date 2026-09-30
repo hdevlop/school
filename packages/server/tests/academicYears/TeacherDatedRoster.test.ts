@@ -4,6 +4,7 @@ import { teacherStudentsQuery } from '../../src/modules/teachers/TeacherDto';
 import { TeacherService } from '../../src/modules/teachers/TeacherService';
 import { TeacherValidator } from '../../src/modules/teachers/TeacherValidator';
 import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const year = {
   id: 'year-1', label: '2025-2026', reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31',
@@ -18,7 +19,7 @@ function harness() {
         return [{ id: 'student-1', enrollmentId: 'enrollment-1', placementId: 'placement-1' }];
       },
     } as any,
-    Object.assign(new TeacherValidator({} as any, {} as any, {} as any, {} as any, {} as any), {
+    Object.assign(withEnglishMessages(new TeacherValidator({} as any, {} as any, {} as any, {} as any, {} as any)), {
       ensureExists: async () => ({ id: 'teacher-1' }),
     }) as any,
     {} as any, {} as any, {} as any, {} as any,

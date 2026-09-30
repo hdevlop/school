@@ -486,7 +486,15 @@
       "atLeastOneTargetRequired": "يجب تحديد هدف واحد على الأقل (مركبة، مشغل، أو مستخدم)",
       "sharedNoticeStaffOnly": "يمكن للموظفين فقط تغيير حالة تنبيه موجّه لقسم أو للمدرسة كلها",
       "acknowledgeOnly": "يمكنك فقط إقرار هذا التنبيه",
-      "editStaffOnly": "يمكن للموظفين فقط تعديل التنبيه؛ يمكنك تحديث حالته"
+      "editStaffOnly": "يمكن للموظفين فقط تعديل التنبيه؛ يمكنك تحديث حالته",
+      "noAcademicTargets": "لا يمكن لهذا النوع من التنبيهات أن يستهدف تلاميذ أو فصولًا",
+      "studentNotEnrolledInYear": "التلميذ غير مسجل في السنة الدراسية المحددة",
+      "classNotInYear": "الفصل لا ينتمي إلى السنة الدراسية المحددة",
+      "studentNotInClass": "التلميذ غير مُسكَّن في هذا الفصل خلال السنة الدراسية المحددة",
+      "yearScopeImmutable": "لا يمكن تغيير السنة الدراسية للتنبيه عند التعديل",
+      "feeSourceNotFound": "الرسوم المصدر غير موجودة",
+      "feeSourceOtherStudent": "هذه الرسوم تخص تلميذًا آخر",
+      "feeSourceNoYear": "لا توجد سنة دراسية مسجلة لهذه الرسوم"
     },
     "validation": {
       "titleMinLength": "العنوان يجب أن يكون على الأقل حرفين",
@@ -642,7 +650,12 @@
       "totalOperators": "إجمالي المشغلين",
       "completedOperations": "العمليات المكتملة",
       "totalWorkHours": "إجمالي ساعات العمل",
-      "totalCost": "إجمالي التكلفة"
+      "totalCost": "إجمالي التكلفة",
+      "totalStudents": "مجموع التلاميذ",
+      "totalTeachers": "مجموع الأساتذة",
+      "totalParents": "مجموع أولياء الأمور",
+      "totalEarnings": "مجموع المداخيل",
+      "totalExpenses": "مجموع المصاريف"
     },
     "finance": {
       "totalStudents": "إجمالي الطلاب",
@@ -830,7 +843,12 @@
       "filters": "عوامل التصفية",
       "filterRegion": "عوامل تصفية الجدول",
       "allOption": "الكل",
-      "create": "إضافة"
+      "create": "إضافة",
+      "rowActions": "إجراءات الصف",
+      "rowView": "عرض",
+      "rowEdit": "تعديل",
+      "rowDelete": "حذف",
+      "actionsColumn": "الإجراءات"
     },
     "pagination": {
       "rowsPerPage": "صفوف/صفحة",
@@ -1076,7 +1094,11 @@
     "errors": {
       "notFound": "قسيمة الراتب غير موجودة",
       "alreadyPaid": "تم دفع قسيمة الراتب هذه بالفعل",
-      "cancelled": "تم إلغاء قسيمة الراتب هذه"
+      "cancelled": "تم إلغاء قسيمة الراتب هذه",
+      "staffNotFound": "الموظف غير موجود",
+      "staffInactive": "لا يمكن صرف الأجر إلا للموظفين النشطين",
+      "noCompensation": "لم يُحدَّد أجر لهذا الموظف",
+      "outsideYear": "فترة الأجور خارج السنة الدراسية المحددة"
     },
     "stats": {
       "period": "الفترة",
@@ -1188,7 +1210,19 @@
       "notAuthorizedForSection": "غير مصرح لك بتحديث الحضور لهذا القسم",
       "invalidTransition": "تغيير الحالة هذا غير مسموح به",
       "futureDate": "لا يمكن تسجيل الحضور لتاريخ مستقبلي",
-      "dateTooOld": "لا يمكن تسجيل الحضور لتواريخ أقدم من {{days}} يوم"
+      "dateTooOld": "لا يمكن تسجيل الحضور لتواريخ أقدم من {{days}} يوم",
+      "outsideSelectedYear": "يجب أن ينتمي تاريخ الحضور والمستهدَف إلى السنة الدراسية المحددة",
+      "sectionNotFound": "القسم غير موجود",
+      "outsideSectionYear": "تاريخ الحضور خارج السنة الدراسية للقسم",
+      "draftYear": "لا يمكن تسجيل الحضور في سنة دراسية مسودة",
+      "outsideRegisteredYears": "تاريخ الحضور خارج السنوات الدراسية المسجلة",
+      "staffRequiresAdmin": "حضور الموظفين مقتصر على الإدارة",
+      "staffRecordOtherYear": "أحد سجلات حضور الموظفين ينتمي إلى سنة دراسية أخرى",
+      "noPlacementOnDate": "التلميذ غير مُسكَّن في هذا القسم في تاريخ الحضور",
+      "duplicateStaffInRoster": "لا يمكن أن يظهر الموظف إلا مرة واحدة في القائمة",
+      "mixedRosterDates": "يجب أن تحمل جميع سجلات حضور الموظفين التاريخ نفسه",
+      "staffNotEligible": "الموظف {{staffId}} غير معني بالحضور بتاريخ {{date}}",
+      "teacherAndSubjectRequired": "الأستاذ والمادة مطلوبان"
     },
     "filters": {
       "searchByStudent": "البحث باسم الطالب...",
@@ -1384,6 +1418,41 @@
       "revenueRetrieved": "تم إكمال الرسوم بنجاح",
       "statsRetrieved": "تم جلب الإحصائيات بنجاح",
       "updated": "تم تحديث الرسوم بنجاح"
+    },
+    "errors": {
+      "installmentMissingForFee": "القسط رقم {{number}} غير موجود للرسوم {{feeId}}",
+      "noInstallmentsMatched": "لا توجد أقساط مطابقة للتخصيصات المطلوبة",
+      "allocationsExceedPayment": "لا يمكن أن تتجاوز التخصيصات مبلغ الدفعة",
+      "installmentNotFoundForFee": "القسط رقم {{number}} غير موجود للرسوم {{feeId}}",
+      "allocationExceedsAvailable": "التخصيص بمبلغ {{amount}} يتجاوز المتاح {{available}} للقسط رقم {{number}}",
+      "allocationUsedByCredit": "يستخدم رصيد دائن هذا التخصيص؛ ألغِ الدفعة الأصلية بدلًا من ذلك",
+      "allocationNotFoundInYear": "تخصيص الدفعة غير موجود في السنة الدراسية المحددة",
+      "allocationInstallmentIdRequired": "تخصيصات الأقساط تتطلب installmentId",
+      "draftYear": "لا يمكن فرض رسوم على سنة دراسية مسودة",
+      "yearMismatch": "يجب أن تطابق سنة الرسوم السنة الدراسية المحددة",
+      "studentNotFound": "التلميذ غير موجود",
+      "studentEnrollmentDateInvalid": "لا يملك التلميذ تاريخ تسجيل صالحًا",
+      "bulkClassNotInYear": "يجب أن ينتمي الفصل المفوتر إلى السنة الدراسية المحددة",
+      "bulkSectionNotInClass": "يجب أن ينتمي القسم المفوتر إلى الفصل المحدد",
+      "enrollmentYearMismatch": "يجب أن تطابق سنة الرسوم سنة التسجيل الجديد",
+      "yearChangeNeedsCorrection": "نقل الرسوم إلى سنة دراسية أخرى يتطلب إجراء تصحيح منفصلًا",
+      "lockedAfterPayments": "لا يمكن تغيير جدول الرسوم أو مبلغها أو التلميذ بعد تسجيل دفعات",
+      "notFound": "الرسوم غير موجودة",
+      "installmentStateManaged": "حالة دفع القسط تُحدَّد تلقائيًا من التخصيصات",
+      "installmentEditHasAllocations": "لا يمكن تعديل قسط مرتبط بدفعات",
+      "installmentDeleteHasAllocations": "لا يمكن حذف قسط مرتبط بدفعات",
+      "feeNotFound": "الرسوم غير موجودة",
+      "invalidStatus": "حالة الرسوم غير صالحة",
+      "invalidDiscount": "التخفيض غير صالح",
+      "invalidNetAmount": "يجب أن يكون المبلغ بعد التخفيض موجبًا",
+      "cannotPayCancelledInstallment": "لا يمكن دفع قسط ملغى",
+      "installmentNumberExists": "يوجد مسبقًا قسط بهذا الرقم لهذه الرسوم",
+      "allocationNotFound": "تخصيص الدفعة غير موجود",
+      "paymentNotFound": "الدفعة غير موجودة",
+      "installmentNotFound": "القسط غير موجود",
+      "installmentDoesNotBelongToFee": "القسط لا ينتمي إلى الرسوم المحددة",
+      "feeAlreadyExists": "توجد مسبقًا رسوم لهذا التلميذ وهذه السنة الدراسية وهذا النوع من الرسوم",
+      "installmentAlreadyPaid": "هذا القسط مدفوع مسبقًا"
     }
   },
   "behaviorRewards": {
@@ -1617,7 +1686,14 @@
   },
   "announcements": {
     "errors": {
-      "authorOnly": "يمكن للموظفين أو لكاتب الإعلان فقط تعديله"
+      "authorOnly": "يمكن للموظفين أو لكاتب الإعلان فقط تعديله",
+      "classesNotInYear": "يجب أن تنتمي فصول الإعلان إلى السنة الدراسية المحددة",
+      "notFound": "الإعلان غير موجود",
+      "allAudienceNoClassSection": "لا يمكن حصر الإعلان الموجه للجميع في فصل أو قسم",
+      "classRequired": "اختر فصلًا لإعلان الفصل",
+      "expiryBeforePublish": "لا يمكن أن يسبق تاريخ الانتهاء تاريخ النشر",
+      "alreadyPublished": "الإعلان منشور مسبقًا",
+      "notPublished": "الإعلان غير منشور"
     },
     "subtitle": {
       "count": "{{count}} إعلان إجمالاً"
@@ -1932,6 +2008,20 @@
       "seeded": "تم إنشاء بيانات السائق بنجاح",
       "statusUpdated": "تم تحديث حالة السائق بنجاح",
       "updated": "تم تحديث السائق بنجاح"
+    },
+    "errors": {
+      "createdFromStaff": "يُنشأ السائقون من وحدة الموظفين",
+      "updatedFromStaff": "يُعدَّل السائقون من وحدة الموظفين",
+      "statusFromStaff": "تُعدَّل حالة السائق من وحدة الموظفين",
+      "deletedFromStaff": "يُحذف السائقون من وحدة الموظفين",
+      "licenseExists": "يوجد مسبقًا سائق بهذا الرقم للرخصة",
+      "emailExists": "يوجد مسبقًا سائق بهذا البريد الإلكتروني",
+      "phoneExists": "يوجد مسبقًا سائق بهذا الرقم الهاتفي",
+      "licenseExpired": "انتهت صلاحية رخصة السائق",
+      "idExists": "هذا السائق موجود مسبقًا",
+      "cinExists": "يوجد مسبقًا سائق بهذا الرقم للبطاقة الوطنية",
+      "notFound": "السائق غير موجود",
+      "invalidStatus": "حالة السائق غير صالحة"
     }
   },
   "exams": {
@@ -2122,6 +2212,19 @@
       "paymentRecorded": "تم تسجيل الدفع بنجاح",
       "retrieved": "تم جلب المصروف بنجاح",
       "updated": "تم تحديث المصروف بنجاح"
+    },
+    "errors": {
+      "outsideYear": "تاريخ المصروف خارج السنة الدراسية المحددة",
+      "invoiceNumberExists": "يوجد مسبقًا مصروف بهذا الرقم للفاتورة",
+      "receiptNumberExists": "يوجد مسبقًا مصروف بهذا الرقم للوصل",
+      "checkNumberExists": "يوجد مسبقًا مصروف بهذا الرقم للشيك",
+      "cannotApprove": "لا يمكن اعتماد هذا المصروف في حالته الحالية",
+      "cannotPay": "لا يمكن دفع هذا المصروف في حالته الحالية",
+      "rejectionReasonRequired": "سبب الرفض مطلوب",
+      "checkNumberRequired": "رقم الشيك مطلوب للدفع بالشيك",
+      "idExists": "هذا المصروف موجود مسبقًا",
+      "notFound": "المصروف غير موجود",
+      "paymentDateBeforeExpense": "لا يمكن أن يسبق تاريخ الدفع تاريخ المصروف"
     }
   },
   "feeTypes": {
@@ -2183,6 +2286,15 @@
       "deleted": "تم حذف نوع الرسوم بنجاح",
       "retrieved": "تم جلب نوع الرسوم بنجاح",
       "updated": "تم تحديث نوع الرسوم بنجاح"
+    },
+    "errors": {
+      "invalidStatus": "حالة نوع الرسوم غير صالحة",
+      "invalidPaymentType": "نوع الدفع غير صالح",
+      "idExists": "نوع الرسوم هذا موجود مسبقًا",
+      "nameAlreadyExists": "يوجد مسبقًا نوع رسوم بهذا الاسم",
+      "notFound": "نوع الرسوم غير موجود",
+      "invalidAmount": "يجب أن يكون المبلغ أكبر من 0",
+      "amountTooLarge": "لا يمكن أن يتجاوز المبلغ 1,000,000"
     }
   },
   "grades": {
@@ -2199,7 +2311,25 @@
       "selectSource": "اختر تقييماً أو امتحاناً قبل حفظ النقط.",
       "saveFailed": "تعذر حفظ جميع النقط. يرجى المحاولة مرة أخرى.",
       "marksExceedTotal": "النقاط تتجاوز المجموع",
-      "sourceRequired": "اختر تقييما أو امتحانا"
+      "sourceRequired": "اختر تقييما أو امتحانا",
+      "ownSourceOnly": "لا يمكن للأستاذ أن يمنح درجات إلا لتقييماته أو امتحاناته",
+      "exactlyOneSource": "يجب أن ترتبط الدرجة بتقييم واحد أو امتحان واحد فقط",
+      "sourceNotFound": "التقييم أو الامتحان غير موجود",
+      "sourceNoAssignment": "التقييم غير مرتبط بأي إسناد تدريس",
+      "teacherSubjectMismatch": "يجب أن يطابق الأستاذ والمادة إسناد التقييم",
+      "sourceNoClassYear": "لا توجد سنة دراسية مسجلة لفصل التقييم",
+      "sourceContextUnresolved": "سياق التقييم غير محسوم: {{issue}}",
+      "draftYear": "لا يمكن تسجيل الدرجات في سنة دراسية مسودة",
+      "sourceYearConflict": "سنة التقييم المسجلة تتعارض مع إسناده",
+      "sourceDateOutsideYear": "تاريخ التقييم خارج سنته الدراسية",
+      "sectionNotTargeted": "قسم الدرجة غير مشمول بالتقييم",
+      "noPlacementOnDate": "التلميذ غير مُسكَّن في قسم الدرجة في تاريخ التقييم",
+      "chooseSection": "اختر قسمًا لهذه الدرجة",
+      "demoSourceNoYear": "لا توجد سنة دراسية مسجلة لتقييم العرض التجريبي",
+      "notFound": "الدرجة غير موجودة",
+      "idExists": "هذه الدرجة موجودة مسبقًا",
+      "alreadyExists": "توجد مسبقًا درجة لهذا التلميذ وهذا التقييم",
+      "assessmentOrTeacherRequired": "التقييم أو الامتحان أو الأستاذ مطلوب"
     },
     "form": {
       "academicContext": "السياق الأكاديمي",
@@ -2472,7 +2602,27 @@
       "studentMismatch": "الدفعة لا تنتمي إلى التلميذ المحدد",
       "feeTypeMismatch": "الدفعة لا تطابق نوع الرسوم المحدد",
       "allocationTotalMismatch": "إجمالي المبلغ المخصص {{actual}} لا يطابق مبلغ الدفع {{expected}}.",
-      "allocationsRequired": "تخصيص واحد على الأقل مطلوب"
+      "allocationsRequired": "تخصيص واحد على الأقل مطلوب",
+      "creditExceedsBalance": "الرصيد الدائن المطلوب {{amount}} يتجاوز الرصيد المتاح {{available}}",
+      "noInstallmentsForCredit": "لا توجد أقساط متاحة لتطبيق الرصيد الدائن عليها",
+      "creditExceedsInstallments": "الرصيد الدائن يتجاوز رصيد الأقساط المتاح بمقدار {{excess}}",
+      "exceedsInstallmentsKeepCredit": "مبلغ الدفعة يتجاوز رصيد الأقساط المتاح بمقدار {{excess}}؛ فعّل keepRemainderAsCredit للاحتفاظ بالباقي كرصيد دائن",
+      "overAllocates": "الدفعة مخصصة بزيادة قدرها {{excess}}؛ فعّل keepRemainderAsCredit للاحتفاظ بالباقي",
+      "hardDeleteDisabled": "الحذف النهائي للدفعات معطّل. استخدم POST /payments/:id/void لإلغاء دفعة.",
+      "refundCompletedOnly": "لا يمكن استرداد إلا الدفعات المكتملة",
+      "cannotVoidStatus": "لا يمكن إلغاء دفعة في الحالة {{status}}",
+      "checkStatusChecksOnly": "لا يمكن تغيير حالة الشيك إلا لدفعات الشيك",
+      "checkTransitionInvalid": "لا يمكن نقل الشيك من {{from}} إلى {{to}}",
+      "checkTargetMissing": "أحد الأقساط المخصصة للشيك لم يعد موجودًا",
+      "checkAllocationsExceed": "تخصيصات الشيك تتجاوز القسط رقم {{number}}",
+      "allocationsOtherStudent": "يجب أن تخص التخصيصات التلميذ نفسه صاحب الدفعة",
+      "installmentMissingForFee": "القسط رقم {{number}} غير موجود للرسوم {{feeId}}",
+      "installmentAlreadyPaid": "القسط رقم {{number}} مدفوع بالكامل مسبقًا",
+      "allocationsExceedFee": "تخصيصات الرسوم {{feeId}} تتجاوز الرصيد المتبقي",
+      "noInstallmentsMatched": "لا توجد أقساط مطابقة للتخصيصات المطلوبة",
+      "installmentNotFoundForFee": "القسط رقم {{number}} غير موجود للرسوم {{feeId}}",
+      "allocationExceedsAvailable": "التخصيص بمبلغ {{amount}} يتجاوز المتاح {{available}} للقسط رقم {{number}}",
+      "idempotencyKeyConflict": "استُخدم مفتاح عدم التكرار هذا لدفعة أخرى"
     },
     "filters": {
       "filterByPaymentMethod": "تصفية حسب طريقة الدفع",
@@ -2649,7 +2799,23 @@
     "errors": {
       "notFound": "الموظف غير موجود",
       "employeeCodeExists": "يوجد موظف بهذا الرمز الوظيفي بالفعل",
-      "cinExists": "يوجد موظف برقم التعريف الوطني هذا بالفعل"
+      "cinExists": "يوجد موظف برقم التعريف الوطني هذا بالفعل",
+      "emailRequiredForLogin": "البريد الإلكتروني مطلوب لإنشاء حساب دخول",
+      "roleHasNoAppAccess": "هذا الدور لا يمنح الوصول إلى التطبيق",
+      "driverLicenseRequired": "بيانات رخصة السياقة مطلوبة",
+      "driverFieldRequired": "الحقل {{field}} للسائق مطلوب",
+      "cleanerZoneRequired": "يتطلب إسناد عامل النظافة منطقة",
+      "assistantClassRequired": "يتطلب إسناد المساعد فصلًا",
+      "busAssistantVehicleRequired": "يتطلب إسناد مرافق الحافلة مركبة",
+      "accountantCycleRequired": "يتطلب إسناد المحاسب سلكًا دراسيًا",
+      "securityZoneRequired": "يتطلب إسناد حارس الأمن منطقة",
+      "driverVehicleRequired": "يتطلب إسناد السائق مركبة",
+      "staffNotFound": "الموظف غير موجود",
+      "linkedToTeacherOrDriver": "لا يمكن حذف موظف مرتبط بأستاذ أو سائق نشط",
+      "hasHistory": "لا يمكن حذف موظف لديه كشوف أجور أو حضور أو حصص في الجدول؛ حدّد بدلًا من ذلك تاريخ نهاية وحالة",
+      "driverKeepsRole": "يحتفظ السائق الذي له سجل إسناد مركبات بدور السائق؛ أنهِ الإسناد والتوظيف بدلًا من ذلك",
+      "driverOneVehicle": "للسائق مركبة حالية واحدة فقط",
+      "emailExists": "يوجد مسبقًا موظف بهذا البريد الإلكتروني"
     },
     "stats": {
       "total": "إجمالي الموظفين",
@@ -2781,7 +2947,8 @@
       "notFound": "دور الموظف غير موجود",
       "codeExists": "يوجد دور موظف بهذا الرمز بالفعل",
       "invalidRole": "دور غير صالح أو غير نشط",
-      "systemRoleInUse": "لا يمكن إزالة أدوار النظام"
+      "systemRoleInUse": "لا يمكن إزالة أدوار النظام",
+      "invalidCode": "رمز الدور غير صالح"
     },
     "table": {
       "code": "الرمز",
@@ -2826,7 +2993,12 @@
   "settings": {
     "errors": {
       "notFound": "الإعدادات غير موجودة",
-      "alreadyExists": "إعدادات المدرسة موجودة بالفعل؛ عدّلها بالتحديث"
+      "alreadyExists": "إعدادات المدرسة موجودة بالفعل؛ عدّلها بالتحديث",
+      "invalidCalendarMonth": "شهر التقويم الدراسي غير صالح",
+      "invalidCalendar": "التقويم الدراسي غير صالح",
+      "missing": "إعدادات المدرسة غير موجودة",
+      "registeredCalendarLocked": "تقويم السنة المسجلة لا يُعدَّل إلا عبر تصحيح مُراجَع",
+      "activateThroughYears": "فعّل السنة المسجلة من خلال إدارة السنوات الدراسية"
     },
     "academic": {
       "semesterPlaceholder": "الفصل الدراسي",
@@ -2981,7 +3153,17 @@
       "studentCodeExists": "يوجد تلميذ بهذا الرمز مسبقاً",
       "emailExists": "يوجد تلميذ بهذا البريد الإلكتروني مسبقاً",
       "invalidClass": "القسم المحدد غير صالح",
-      "invalidSection": "الشعبة المحددة غير صالحة"
+      "invalidSection": "الشعبة المحددة غير صالحة",
+      "correctionRequiresAdmin": "تصحيحات التسجيل مقتصرة على الإدارة بعد تسجيل الدخول",
+      "dateOutsideYear": "التاريخ خارج فترة السنة الدراسية",
+      "createActiveFirst": "أنشئ تلميذًا نشطًا ثم أنهِ تسجيله السنوي عند الحاجة",
+      "beforeAdmission": "لا يمكن أن يسبق التسجيل السنوي تاريخ القبول الأصلي",
+      "useEnrollmentOperations": "استخدم عمليات التسجيل المؤرخة لتغيير التسكين أو حالة التسجيل",
+      "admissionAfterEnrollment": "لا يمكن أن يلي تاريخ القبول الأصلي تسجيلًا سنويًا مسجلًا",
+      "hasEnrollmentHistory": "لا يمكن حذف تلميذ لديه سجل تسجيلات سنوية",
+      "historyRetained": "يجب الاحتفاظ بسجل التسجيلات السنوية",
+      "phoneExists": "يوجد مسبقًا تلميذ بهذا الرقم الهاتفي",
+      "notInSection": "التلميذ ليس في هذا القسم"
     },
     "subtitle": {
       "count": "{{count}} طالب إجمالاً"
@@ -3217,7 +3399,7 @@
     }
   },
   "teachers": {
-    "errors": { "hasAssignmentHistory": "لدى هذا المعلم تكليفات صفية في سنة دراسية. أزلها قبل حذف المعلم" },
+    "errors": { "hasAssignmentHistory": "لدى هذا المعلم تكليفات صفية في سنة دراسية. أزلها قبل حذف المعلم", "notFound": "الأستاذ غير موجود", "datedRosterUnreviewed": "تتطلب قوائم الأستاذ المؤرخة سجل إسنادات مُراجَعًا", "dateOutsideYear": "التاريخ خارج فترة السنة الدراسية", "assignmentNotFound": "الإسناد غير موجود", "classHasNoSections": "لا توجد أقسام في هذا الفصل", "phoneExists": "يوجد مسبقًا أستاذ بهذا الرقم الهاتفي", "notInSection": "الأستاذ لا يدرّس هذا القسم", "idExists": "هذا الأستاذ موجود مسبقًا", "cinExists": "يوجد مسبقًا أستاذ بهذا الرقم للبطاقة الوطنية", "emailExists": "يوجد مسبقًا أستاذ بهذا البريد الإلكتروني" },
     "subtitle": {
       "count": "{{count}} أستاذ إجمالاً"
     },
@@ -3348,6 +3530,24 @@
       "retrieved": "تم جلب تعيين المركبة بنجاح",
       "unassigned": "تم إلغاء تعيين تعيين المركبة بنجاح",
       "updated": "تم تحديث تعيين المركبة بنجاح"
+    },
+    "errors": {
+      "driverAssignmentNotActive": "إسناد السائق غير نشط",
+      "endOutsideYear": "تاريخ إلغاء إسناد السائق خارج السنة الدراسية المحددة",
+      "endDateInvalid": "يجب أن يلي تاريخ إلغاء إسناد السائق بدايته وألا يكون في المستقبل",
+      "startOutsideYear": "تاريخ إسناد السائق خارج السنة الدراسية المحددة",
+      "futureReassignment": "لا يمكن أن تكون إعادة إسناد السائق في المستقبل",
+      "laterAssignmentExists": "السائق مُسنَد مسبقًا ابتداءً من تاريخ لاحق",
+      "reassignBeforeStart": "يجب أن يلي تاريخ إعادة الإسناد البداية السابقة",
+      "noActiveDriver": "لا يوجد سائق مُسنَد للمركبة حاليًا",
+      "oneCurrentDriver": "للمركبة سائق حالي واحد فقط",
+      "startNoYear": "تاريخ إسناد السائق لا ينتمي إلى أي سنة دراسية مسجلة",
+      "overlappingDriver": "للمركبة سائق مسبقًا خلال هذه الفترة",
+      "mustStayInYear": "يجب أن يبقى إسناد السائق ضمن السنة الدراسية المحددة",
+      "statusEndMismatch": "حالة إسناد السائق وتاريخ نهايته غير متوافقين",
+      "notFound": "إسناد المركبة غير موجود",
+      "invalidDateRange": "يجب أن يلي تاريخ إلغاء الإسناد تاريخ الإسناد",
+      "assignmentNotActive": "الإسناد غير نشط ولا يمكن تعديله"
     }
   },
   "vehicles": {
@@ -3435,6 +3635,20 @@
       "retrieved": "تم جلب المركبة بنجاح",
       "seeded": "تم إنشاء بيانات المركبة بنجاح",
       "updated": "تم تحديث المركبة بنجاح"
+    },
+    "errors": {
+      "currentMileageLessThanInitial": "لا يمكن أن يكون عدد الكيلومترات الحالي أقل من العدد الأولي",
+      "notFound": "المركبة غير موجودة",
+      "idExists": "هذه المركبة موجودة مسبقًا",
+      "invalidType": "نوع المركبة غير صالح",
+      "invalidStatus": "حالة المركبة غير صالحة",
+      "invalidFuelType": "نوع الوقود غير صالح",
+      "invalidYear": "يجب أن تكون السنة بين {{minYear}} و{{currentYear}}",
+      "licensePlateExists": "توجد مسبقًا مركبة بهذه اللوحة",
+      "invalidEngineHours": "يجب أن تكون ساعات المحرك عددًا موجبًا",
+      "invalidMileage": "يجب أن يكون عدد الكيلومترات عددًا موجبًا",
+      "invalidFuelCapacity": "يجب أن تكون سعة الخزان عددًا موجبًا",
+      "invalidPurchasePrice": "يجب أن يكون ثمن الشراء عددًا موجبًا"
     }
   },
   "events": {
@@ -3546,6 +3760,23 @@
       "retrieved": "تم جلب الصيانة بنجاح",
       "statusUpdated": "تم تحديث حالة الصيانة بنجاح",
       "updated": "تم تحديث الصيانة بنجاح"
+    },
+    "errors": {
+      "invalidAssignedTo": "المعامل assignedTo غير صالح",
+      "invalidDate": "تاريخ غير صالح",
+      "outsideYear": "تاريخ الصيانة خارج السنة الدراسية المحددة",
+      "notFound": "سجل الصيانة غير موجود",
+      "invalidType": "نوع الصيانة غير صالح",
+      "invalidStatus": "حالة الصيانة غير صالحة",
+      "invalidPriority": "أولوية الصيانة غير صالحة",
+      "invalidDueHours": "يجب أن تكون ساعات المحرك المستحقة عددًا موجبًا",
+      "invalidCost": "يجب أن تكون التكلفة عددًا موجبًا",
+      "dueHoursPastCurrent": "يجب أن تتجاوز ساعات المحرك المستحقة الساعات الحالية للمركبة",
+      "cannotModifyCompleted": "لا يمكن تعديل صيانة منتهية",
+      "cannotDeleteInProgress": "لا يمكن حذف صيانة قيد التنفيذ",
+      "alreadyCompleted": "هذه الصيانة منتهية مسبقًا",
+      "cannotCompleteCancelled": "لا يمكن إنهاء صيانة ملغاة",
+      "duplicateMaintenanceExists": "توجد مسبقًا صيانة مماثلة مبرمجة لهذه المركبة"
     }
   },
   "notifications": {
@@ -3571,7 +3802,11 @@
     "pushUnavailable": "إشعارات الدفع غير متاحة حاليا.",
     "pushUnsupported": "هذا المتصفح لا يدعم إشعارات الويب.",
     "pushDenied": "الإشعارات محظورة في إعدادات الموقع لهذا المتصفح.",
-    "pushError": "تعذر تحديث إشعارات الدفع."
+    "pushError": "تعذر تحديث إشعارات الدفع.",
+    "errors": {
+      "notFound": "الإشعار غير موجود",
+      "subscriptionNotFound": "اشتراك الإشعارات غير موجود"
+    }
   },
   "permissions": {
     "subtitle": {
@@ -3627,12 +3862,32 @@
       "retrieved": "تم جلب التزود بالوقود بنجاح",
       "seeded": "تم إنشاء بيانات التزود بالوقود بنجاح",
       "updated": "تم تحديث التزود بالوقود بنجاح"
+    },
+    "errors": {
+      "outsideYear": "تاريخ التزود بالوقود خارج السنة الدراسية المحددة",
+      "notFound": "سجل التزود بالوقود غير موجود",
+      "voucherExists": "يوجد مسبقًا تزود بالوقود بهذا الرقم للقسيمة",
+      "dateRequired": "التاريخ مطلوب",
+      "invalidDateFormat": "صيغة التاريخ غير صالحة",
+      "endDateAfterStart": "يجب أن يلي تاريخ النهاية تاريخ البداية"
     }
   },
   "rollover": {
     "committed": "تم تنفيذ الترحيل بنجاح",
     "previewed": "تمت معاينة الترحيل بنجاح",
-    "retrieved": "تم جلب الترحيل بنجاح"
+    "retrieved": "تم جلب الترحيل بنجاح",
+    "errors": {
+      "targetMismatch": "يجب أن تطابق السنة الهدف للترحيل السنة الدراسية المحددة",
+      "sourceAfterTarget": "يجب أن تسبق السنة المصدر للترحيل السنة الهدف",
+      "idempotencyKeyReused": "استُخدم مفتاح عدم التكرار هذا مع محتوى مختلف",
+      "activateSeparately": "فعّل السنة الدراسية بشكل منفصل بعد الإعداد التربوي",
+      "noPreview": "لا توجد معاينة لمفتاح عدم التكرار هذا",
+      "runIdMismatch": "runId لا يطابق مفتاح عدم التكرار الخاص بالمعاينة",
+      "payloadMismatch": "محتوى الترحيل لا يطابق المعاينة",
+      "cannotCommitStatus": "لا يمكن اعتماد عملية في الحالة {{status}}",
+      "previewMissingFees": "المعاينة لا تتضمن الرسوم المقترحة",
+      "runNotFound": "عملية الترحيل غير موجودة"
+    }
   },
   "search": {
     "success": "تم إكمال البحث بنجاح"
@@ -3644,6 +3899,30 @@
       "retrieved": "تم جلب مسار التلميذ بنجاح",
       "unassigned": "تم إلغاء تعيين مسار التلميذ بنجاح",
       "updated": "تم تحديث مسار التلميذ بنجاح"
+    },
+    "errors": {
+      "activeHasNoEnd": "لا يمكن أن يكون للمسار النشط تاريخ إلغاء إسناد",
+      "closedNeedsEnd": "يتطلب المسار المنتهي أو الملغى تاريخ إلغاء إسناد",
+      "reassignActiveOnly": "لا يمكن إعادة إسناد إلا المسار النشط",
+      "reassignDateInvalid": "يجب أن يلي تاريخ إعادة الإسناد البداية السابقة وألا يكون في المستقبل",
+      "notActive": "المسار غير نشط",
+      "endOutsideYear": "تاريخ إلغاء إسناد المسار خارج السنة الدراسية المحددة",
+      "endDateInvalid": "يجب أن يلي تاريخ إلغاء الإسناد بدايته وألا يكون في المستقبل",
+      "noTransportFeeType": "لم يُضبط أي نوع رسوم نقل نشط",
+      "notFound": "إسناد مسار التلميذ غير موجود",
+      "alreadyOnVehicle": "التلميذ مُسنَد مسبقًا إلى المركبة «{{vehicle}}». ألغِ الإسناد أولًا.",
+      "invalidStartDate": "تاريخ الإسناد غير صالح",
+      "startOutsideYear": "تاريخ إسناد المسار خارج السنة الدراسية المحددة",
+      "endBeforeStart": "يجب أن يلي تاريخ إلغاء الإسناد تاريخ الإسناد",
+      "notEnrolledOnStart": "التلميذ غير مسجل في تاريخ إسناد المسار",
+      "noPlacementOnStart": "التلميذ غير مُسكَّن في تاريخ إسناد المسار",
+      "overlappingRoute": "للتلميذ مسار مسبقًا خلال هذه الفترة",
+      "coordinatesTogether": "يجب إدخال خط العرض وخط الطول ({{label}}) معًا.",
+      "studentNotFound": "التلميذ غير موجود",
+      "studentInactive": "لا يمكن إلا للتلاميذ النشطين استخدام النقل المدرسي",
+      "vehicleNotFound": "المركبة غير موجودة",
+      "vehicleInactive": "المركبة «{{vehicle}}» غير نشطة",
+      "vehicleFull": "المركبة «{{vehicle}}» ممتلئة ({{occupancy}}/{{capacity}})"
     }
   },
   "transport": {
@@ -3806,6 +4085,112 @@
     "documents": {
       "title": "لا توجد وثائق مرفوعة",
       "description": "ارفع وثيقة للبدء."
+    }
+  },
+  "academicSources": {
+    "errors": {
+      "dateAndSectionsRequired": "التاريخ والأقسام المستهدفة مطلوبة",
+      "targetSectionMissing": "أحد الأقسام المستهدفة غير موجود",
+      "sectionsSpanYears": "الأقسام المستهدفة تنتمي إلى سنوات دراسية مختلفة",
+      "draftYear": "لا يمكن تسجيل التقييمات في سنة دراسية مسودة",
+      "dateOutsideYear": "التاريخ خارج السنة الدراسية للأقسام المستهدفة"
+    }
+  },
+  "migrationIssues": {
+    "errors": {
+      "notFound": "مشكلة الترحيل غير موجودة",
+      "alreadyReviewed": "تمت مراجعة مشكلة الترحيل هذه مسبقًا",
+      "placementRequired": "سجّل تسكينًا مؤرخًا ومؤكدًا للقسم والفصل المسجلين قبل حل هذه المشكلة",
+      "attendanceYearRequired": "سجّل سنة حضور صالحة قبل حل هذه المشكلة",
+      "sourceYearRequired": "سجّل سنة تقييم صالحة قبل حل هذه المشكلة",
+      "gradeYearRequired": "سجّل سنة درجات صالحة قبل حل هذه المشكلة",
+      "reviewedConcurrently": "تمت مراجعة مشكلة الترحيل من طرف مستخدم آخر في الوقت نفسه"
+    }
+  },
+  "academicYears": {
+    "errors": {
+      "notFound": "السنة الدراسية غير موجودة",
+      "alreadyExists": "هذه السنة الدراسية موجودة مسبقًا",
+      "invalidCalendar": "التقويم المسجل غير صالح",
+      "activeYearNotRegistered": "السنة النشطة غير مسجلة في الإعدادات",
+      "activeYearChanged": "تغيّرت السنة النشطة؛ راجع ثم حاول مرة أخرى",
+      "onlyNextDraftActivates": "لا يمكن تفعيل إلا السنة المسودة المُتحقق منها التي تلي السنة النشطة",
+      "activatableFrom": "يمكن تفعيل هذه السنة ابتداءً من {{date}}، وهو أول يوم تُسجَّل فيه",
+      "enrollmentsBeforeActivation": "يجب أن تبدأ التسجيلات المُعدّة في موعد لا يتجاوز تاريخ التفعيل",
+      "activateAnotherFirst": "فعّل سنة أخرى قبل إغلاق هذه السنة",
+      "draftCannotClose": "لا يمكن إغلاق سنة مسودة",
+      "reportingOverlaps": "تتداخل الفترة مع {{label}}",
+      "invalid": "سنة دراسية غير صالحة",
+      "recordHasNoYear": "لا توجد سنة دراسية متاحة لهذا السجل",
+      "settingsMissing": "إعدادات المدرسة غير موجودة",
+      "otherYearsRestricted": "السنوات الدراسية الأخرى متاحة للإدارة والمحاسبة فقط"
+    }
+  },
+  "yearTransitions": {
+    "errors": {
+      "sourceNotActive": "يجب أن تكون السنة المصدر هي السنة النشطة في الإعدادات",
+      "yearsNotAdjacent": "يتطلب الانتقال سنة مصدر مُتحقَّقًا منها وسنة هدف مسودة متتاليتين",
+      "targetDateInvalid": "يجب أن يلي تاريخ التسجيل المستهدف السنة المصدر وأن يقع ضمن السنة الهدف",
+      "idempotencyKeyReused": "استُخدم مفتاح عدم التكرار هذا مع محتوى آخر",
+      "alreadyCommitted": "للسنة الهدف انتقال مُعتمد مسبقًا",
+      "previewStale": "معاينة الانتقال لم تعد محدّثة؛ راجع قائمة التلاميذ والسعة الحالية",
+      "previewHasIssues": "تحتوي معاينة الانتقال على مشكلات غير محلولة",
+      "runNotFound": "عملية الانتقال بين السنتين غير موجودة",
+      "commitBeforeActivating": "اعتمد الانتقال من السنة النشطة قبل تفعيل هذه السنة"
+    }
+  },
+  "financialAudit": {
+    "errors": {
+      "notFound": "سجل التدقيق غير موجود"
+    }
+  },
+  "financialNotifications": {
+    "errors": {
+      "invalidCronSecret": "FINANCIAL_CRON_SECRET غير صالح أو مفقود"
+    }
+  },
+  "zones": {
+    "errors": {
+      "notFound": "المنطقة غير موجودة",
+      "inUse": "هذه المنطقة مستخدمة في إسنادات الموظفين ولا يمكن حذفها",
+      "nameExists": "اسم المنطقة موجود مسبقًا"
+    }
+  },
+  "enrollments": {
+    "errors": {
+      "notFoundInYear": "التسجيل غير موجود في السنة المحددة",
+      "correctionRequiresAdmin": "تصحيحات التسجيل مقتصرة على الإدارة",
+      "changedReload": "تغيّر التسجيل؛ أعد تحميله قبل التصحيح",
+      "statusEndDateMismatch": "يجب أن تتوافق حالة التسجيل مع تاريخ نهايته",
+      "placementNotFound": "التسكين غير موجود في هذا التسجيل",
+      "placementIntervalsInvalid": "يجب أن تقع فترات التسكين ضمن التسجيل دون أن تتداخل",
+      "correctionConflictsRecords": "يتعارض التصحيح مع حضور أو درجات مسجلة؛ سوِّ تلك السجلات أولًا",
+      "studentNotFound": "التلميذ غير موجود",
+      "notFound": "التسجيل غير موجود",
+      "draftSetupOnly": "السنة المسودة لا تسمح إلا بالإعداد التربوي",
+      "sectionNotInClass": "يجب أن ينتمي القسم إلى الفصل المحدد",
+      "classOtherYear": "الفصل ينتمي إلى سنة دراسية أخرى",
+      "enrollmentDateRequired": "تاريخ تسجيل سنوي فعلي مطلوب",
+      "newPlacementActiveYear": "يجب أن ينتمي تسكين التلميذ الجديد إلى السنة الدراسية النشطة",
+      "enrollmentDateActiveYear": "يجب أن يقع تاريخ التسجيل السنوي ضمن السنة الدراسية النشطة",
+      "unplacedStudents": "{{count}} تلميذ(ة) في السنة الجديدة بدون تسكين للنقل",
+      "undecidedStudents": "{{count}} تلميذ(ة) في السنة النشطة بدون تسجيل أو قرار في السنة الجديدة",
+      "dateOutsideYear": "يجب أن يقع تاريخ التسجيل ضمن السنة المحددة",
+      "beforeAdmission": "لا يمكن أن يسبق التسجيل السنوي تاريخ القبول الأصلي",
+      "alreadyEnrolled": "التلميذ مسجل مسبقًا في هذه السنة",
+      "futureStart": "لا يمكن أن يبدأ تسجيل السنة النشطة في المستقبل",
+      "ended": "انتهى التسجيل",
+      "transferOutsideInterval": "تاريخ النقل خارج فترة التسجيل",
+      "noOpenPlacementTransfer": "لا يوجد تسكين جارٍ لنقله",
+      "transferBeforePlacement": "يجب أن يتم النقل بعد بداية التسكين الحالي",
+      "alreadyInPlacement": "التلميذ موجود مسبقًا في هذا التسكين",
+      "futureTransfer": "لا يمكن أن يبدأ النقل في السنة النشطة في المستقبل",
+      "alreadyEnded": "انتهى التسجيل مسبقًا",
+      "draftNotEditable": "لا توجد تسجيلات قابلة للتعديل في سنة مسودة",
+      "endOutsideInterval": "تاريخ النهاية خارج فترة التسجيل",
+      "noOpenPlacementEnd": "لا يوجد تسكين جارٍ لإنهائه",
+      "endBeforePlacement": "يجب أن يلي تاريخ النهاية بداية التسكين الحالي",
+      "futureEnd": "لا يمكن أن ينتهي تسجيل السنة النشطة في المستقبل"
     }
   }
 }

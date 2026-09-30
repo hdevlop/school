@@ -6,6 +6,7 @@ import { AcademicYearController } from '../../src/modules/academicYears/Academic
 import { StudentEnrollmentService } from '../../src/modules/studentEnrollments/StudentEnrollmentService';
 import { StudentEnrollmentValidator } from '../../src/modules/studentEnrollments/StudentEnrollmentValidator';
 import { createAcademicYearDto } from '../../src/modules/academicYears/AcademicYearDto';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const activeYear = {
   id: 'year-2026', label: '2026-2027', status: 'open', provenance: 'verified',
@@ -47,7 +48,7 @@ function harness(input: {
       setStatus: async (id: string, status: string, actorId: string) => { writes.push(['status', id, status, actorId]); },
       recordActivation: async (entry: unknown) => { writes.push(['audit', entry]); },
     } as any,
-    Object.assign(new AcademicYearValidator({} as any), { requireId: async (id: string) => years[id] }),
+    Object.assign(withEnglishMessages(new AcademicYearValidator({} as any)), { requireId: async (id: string) => years[id] }),
     {
       getAdminSettings: async () => {
         reads++;
@@ -209,7 +210,7 @@ describe('current class after activation', () => {
         updateCurrentStudent: async (...args: unknown[]) => { writes.push(['place', ...args]); },
         updateCurrentStudentStatus: async (...args: unknown[]) => { writes.push(['status', ...args]); },
       } as any,
-      {} as any, {} as any, {} as any, new StudentEnrollmentValidator(),
+      {} as any, {} as any, {} as any, withEnglishMessages(new StudentEnrollmentValidator()),
     );
     return { service, writes };
   }
@@ -288,7 +289,7 @@ describe('year calendar checks', () => {
     const verified: unknown[] = [];
     const service = new AcademicYearService(
       { verifyCalendar: async (...args: unknown[]) => { verified.push(args); return { ...nextYear }; } } as any,
-      Object.assign(new AcademicYearValidator({} as any), { requireId: async () => ({ ...nextYear, provenance: 'assumed', provenanceNote: null, createdBy: null }) }) as any,
+      Object.assign(withEnglishMessages(new AcademicYearValidator({} as any)), { requireId: async () => ({ ...nextYear, provenance: 'assumed', provenanceNote: null, createdBy: null }) }) as any,
       {} as any, {} as any, {} as any,
     );
     await service.verifyCalendar(nextYear.id, 'Ministry calendar 2027-2028', 'admin-1');
@@ -302,7 +303,7 @@ describe('years offered to each role', () => {
   const registered = [closedYear, activeYear, nextYear];
   const service = new AcademicYearService(
     { list: async () => registered } as any,
-    Object.assign(new AcademicYearValidator({} as any), { requireId: async (id: string) => registered.find((year) => year.id === id) }) as any,
+    Object.assign(withEnglishMessages(new AcademicYearValidator({} as any)), { requireId: async (id: string) => registered.find((year) => year.id === id) }) as any,
     { getPublicSettings: async () => ({ activeAcademicYearId: activeYear.id, currentAcademicYear: activeYear.label }) } as any,
     {} as any, {} as any,
   );

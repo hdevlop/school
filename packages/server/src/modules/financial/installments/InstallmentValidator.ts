@@ -12,15 +12,15 @@ export class InstallmentValidator {
   ) { }
 
   ensurePaymentStateUntouched(data: { paidAmount?: unknown; status?: unknown }) {
-    if (data.paidAmount !== undefined || data.status !== undefined) Err(400, 'Installment payment state is managed by allocations');
+    if (data.paidAmount !== undefined || data.status !== undefined) Err(400, this.t('installmentStateManaged'));
   }
 
   async ensureCanEdit(id: string) {
-    if (await this.installmentRepository.hasAllocations(id)) Err(409, 'Cannot edit an installment with payment allocations');
+    if (await this.installmentRepository.hasAllocations(id)) Err(409, this.t('installmentEditHasAllocations'));
   }
 
   async ensureCanDelete(id: string) {
-    if (await this.installmentRepository.hasAllocations(id)) Err(409, 'Cannot delete an installment with payment allocations');
+    if (await this.installmentRepository.hasAllocations(id)) Err(409, this.t('installmentDeleteHasAllocations'));
   }
 
   // ========== EXISTENCE CHECKS ==========

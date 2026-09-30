@@ -9,6 +9,7 @@ import { ExamService } from '../../src/modules/exams/ExamService';
 import { resolveRequestYear } from '../../src/modules/academicYears/requestYear';
 import { USER } from '../../src/najm';
 import { yearRegistry } from './fixtures/yearRegistry';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const oldYear = { id: 'year-old', label: '2025-2026', status: 'closed',
   reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
@@ -66,7 +67,7 @@ describe('year resolution reads the Settings pointer and the year in one query',
   it('resolves a year and a dated record with one repository call each', async () => {
     const calls: unknown[] = [];
     const registry = yearRegistry([oldYear, activeYear], pointer);
-    const service = new AcademicYearValidator({ findWithActivePointer: async (match: unknown) => { calls.push(match); return registry.findWithActivePointer(match as any); } } as any);
+    const service = withEnglishMessages(new AcademicYearValidator({ findWithActivePointer: async (match: unknown) => { calls.push(match); return registry.findWithActivePointer(match as any); } } as any));
     expect((await service.resolve(oldYear.label, 'admin')).id).toBe(oldYear.id);
     expect((await service.resolve(undefined, 'teacher')).id).toBe(activeYear.id);
     expect((await service.resolveRecord(oldYear.id, null, 'accounting'))?.id).toBe(oldYear.id);
@@ -76,7 +77,7 @@ describe('year resolution reads the Settings pointer and the year in one query',
   });
 
   it('keeps the refusals of the two-step resolution', async () => {
-    const service = new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any);
+    const service = withEnglishMessages(new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any));
     await expect(service.resolve('2030-2031', 'admin')).rejects.toThrow('Academic year not found');
     await expect(service.resolve(oldYear.label, 'teacher')).rejects.toThrow('administrators and accounting only');
     await expect(service.resolveRecord('year-missing', null, 'admin')).rejects.toThrow('Academic year not found');
@@ -85,14 +86,14 @@ describe('year resolution reads the Settings pointer and the year in one query',
     expect(await service.resolveRecord(null, '2031-01-01', 'admin')).toBeNull();
     await expect(service.resolveRecord(null, '2031-01-01', 'teacher')).rejects.toThrow('Record has no accessible academic year');
 
-    const withoutSettings = new AcademicYearValidator(yearRegistry([oldYear, activeYear], null) as any);
+    const withoutSettings = withEnglishMessages(new AcademicYearValidator(yearRegistry([oldYear, activeYear], null) as any));
     await expect(withoutSettings.resolve(oldYear.label, 'admin')).rejects.toThrow('School settings are missing');
     await expect(withoutSettings.resolveRecord(oldYear.id, null, 'admin')).rejects.toThrow('School settings are missing');
   });
 });
 
 describe('the record-year rule, with no switch', () => {
-  const registry = () => new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any);
+  const registry = () => withEnglishMessages(new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any));
 
   it('lets administrators and accounting use a record of another year', async () => {
     for (const role of HISTORY_ROLES) {
@@ -119,7 +120,7 @@ describe('the record-year rule, with no switch', () => {
 });
 
 describe('the year a request selects (X-Academic-Year header, academicYear query)', () => {
-  const validator = () => new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any);
+  const validator = () => withEnglishMessages(new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any));
 
   it('means the active year for every role, administrators included, when nothing is selected', async () => {
     for (const role of [...HISTORY_ROLES, ...ACTIVE_YEAR_ROLES]) {
@@ -137,9 +138,9 @@ describe('the year a request selects (X-Academic-Year header, academicYear query
 
   it('refuses a conflict, "all" and malformed values before reading any year', async () => {
     const calls: unknown[] = [];
-    const counted = new AcademicYearValidator({
+    const counted = withEnglishMessages(new AcademicYearValidator({
       findWithActivePointer: async (match: unknown) => { calls.push(match); return null; },
-    } as any);
+    } as any));
     await expect(counted.resolveSelection({ header: oldYear.label, query: activeYear.label }, 'admin'))
       .rejects.toThrow('disagree');
     for (const bad of ['all', '2025', '2025-2027']) {
@@ -159,7 +160,7 @@ describe('the year a request selects (X-Academic-Year header, academicYear query
 
 describe('the year of one request, as @Year() will inject it', () => {
   function request(headers: Record<string, string>, query: Record<string, unknown>, user?: { role?: string }) {
-    const validator = new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any);
+    const validator = withEnglishMessages(new AcademicYearValidator(yearRegistry([oldYear, activeYear], pointer) as any));
     return {
       header: (name: string) => headers[name.toLowerCase()],
       query: (name: string) => query[name],

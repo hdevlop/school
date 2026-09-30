@@ -10,6 +10,8 @@
  * request's retries, so a request never changes headers mid-flight.
  */
 
+import { LANGUAGE_HEADER } from '@sms/contracts/locales';
+
 export type RequestHeaders = Readonly<Record<string, string>>;
 
 let scoped: RequestHeaders | undefined;
@@ -31,6 +33,16 @@ export function setDefaultRequestHeaders(source: () => RequestHeaders | undefine
   return () => {
     if (defaultSource === source) defaultSource = () => undefined;
   };
+}
+
+/**
+ * The interface language as `LANGUAGE_HEADER`, read from `<html lang>`, which
+ * the app provider keeps on the language the page is shown in. Only the base
+ * language: the server's catalogs are `en`, `fr`, `ar` and `es`.
+ */
+export function languageHeader(root: { lang?: string } | undefined = globalThis.document?.documentElement): RequestHeaders {
+  const language = root?.lang?.split('-')[0]?.toLowerCase();
+  return language ? { [LANGUAGE_HEADER]: language } : {};
 }
 
 /** The headers of a request starting now: the default source's, overridden by any scope. */

@@ -8,6 +8,7 @@ import { ExamService } from '../../src/modules/exams/ExamService';
 import { AssessmentValidator } from '../../src/modules/assessments/AssessmentValidator';
 import { ExamValidator } from '../../src/modules/exams/ExamValidator';
 import { gradeValidator } from './fixtures/gradeValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const year = {
   id: 'year-1', label: '2025-2026', status: 'open',
@@ -39,7 +40,7 @@ function gradeService(input: {
     (input.assessments ?? {}) as any,
     input.years as any,
     (input.exams ?? {}) as any,
-    new AcademicSourceService(input.years as any, input.sections as any, new AcademicSourceValidator()),
+    new AcademicSourceService(input.years as any, input.sections as any, withEnglishMessages(new AcademicSourceValidator())),
     (input.enrollments ?? {}) as any,
   );
 }
@@ -53,19 +54,19 @@ describe('academic source year context', () => {
     const sources = new AcademicSourceService(
       { requireLabel: async () => historicalYear } as any,
       { listYearContexts: async () => [{ id: 'section-2000', academicYear: historicalYear.label }] } as any,
-      new AcademicSourceValidator(),
+      withEnglishMessages(new AcademicSourceValidator()),
     );
     await expect(sources.ensureTargetsValid(['section-2000'], '2000-10-01'))
       .resolves.toMatchObject(historicalYear);
     await expect(sources.ensureTargetsValid(['section-2000'], '2002-10-01'))
       .rejects.toThrow();
 
-    const assessment = new AssessmentValidator(
+    const assessment = withEnglishMessages(new AssessmentValidator(
       {} as any, {} as any, {} as any, {} as any, {} as any, {} as any,
-    );
-    const exam = new ExamValidator(
+    ));
+    const exam = withEnglishMessages(new ExamValidator(
       {} as any, {} as any, {} as any, {} as any, {} as any,
-    );
+    ));
     await expect(assessment.validate({ date: '2000-10-01' })).resolves.toMatchObject({ date: '2000-10-01' });
     await expect(exam.validate({ date: '2000-10-01' })).resolves.toMatchObject({ date: '2000-10-01' });
   });
@@ -76,12 +77,12 @@ describe('academic source year context', () => {
       listYearContexts: async (ids: string[]) => ids.map((id) => ({
         id, academicYear: id === 'section-2' ? '2026-2027' : year.label,
       })),
-    } as any, new AcademicSourceValidator());
+    } as any, withEnglishMessages(new AcademicSourceValidator()));
     await expect(service.ensureTargetsValid(['section-1', 'section-2'], '2025-10-31')).rejects.toThrow();
 
     const singleYear = new AcademicSourceService(validator as any, {
       listYearContexts: async (ids: string[]) => ids.map((id) => ({ id, academicYear: year.label })),
-    } as any, new AcademicSourceValidator());
+    } as any, withEnglishMessages(new AcademicSourceValidator()));
     await expect(singleYear.ensureTargetsValid(['section-1'], '2026-09-01')).rejects.toThrow();
     await expect(singleYear.ensureTargetsValid(['section-1', 'section-2'], '2025-10-31'))
       .resolves.toMatchObject(year);
@@ -91,7 +92,7 @@ describe('academic source year context', () => {
     const draft = { ...year, status: 'draft' };
     const draftYears = { requireLabel: async () => draft };
     const sectionContexts = { listYearContexts: async () => [...sections.values()] };
-    await expect(new AcademicSourceService(draftYears as any, sectionContexts as any, new AcademicSourceValidator())
+    await expect(new AcademicSourceService(draftYears as any, sectionContexts as any, withEnglishMessages(new AcademicSourceValidator()))
       .ensureTargetsValid(['section-1'], '2025-10-31')).rejects.toThrow();
     const service = gradeService({
       years: draftYears,

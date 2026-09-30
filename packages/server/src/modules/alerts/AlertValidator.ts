@@ -125,20 +125,20 @@ export class AlertValidator {
 
   async ensureYearScope(data: CreateAlertDto) {
     const scope = alertYearScope(data);
-    if (scope === 'invalid') Err(400, 'This alert type cannot have academic targets');
+    if (scope === 'invalid') Err(400, this.at('noAcademicTargets'));
     if (data.studentId) {
       await this.ensureStudentExists(data.studentId);
       if (!(await this.alertRepository.hasStudentEnrollment(data.studentId))) {
-        Err(409, 'Student is not enrolled in the selected academic year');
+        Err(409, this.at('studentNotEnrolledInYear'));
       }
     }
     if (data.classId) {
       await this.ensureClassExists(data.classId);
       if (!(await this.alertRepository.classBelongsToYear(data.classId))) {
-        Err(409, 'Class does not belong to the selected academic year');
+        Err(409, this.at('classNotInYear'));
       }
       if (data.studentId && !(await this.alertRepository.studentWasPlacedInClass(data.studentId, data.classId))) {
-        Err(409, 'Student has no placement in that class for the selected academic year');
+        Err(409, this.at('studentNotInClass'));
       }
     }
     if (data.teacherId) await this.ensureTeacherExists(data.teacherId);
@@ -147,15 +147,15 @@ export class AlertValidator {
   }
 
   async ensureScopeUnchanged(storedYearId: string | null, nextYearId: string | null) {
-    if (storedYearId !== nextYearId) Err(409, 'Alert year scope cannot be changed by an update');
+    if (storedYearId !== nextYearId) Err(409, this.at('yearScopeImmutable'));
   }
 
   async ensureFeeSource(feeId: string, studentId: string) {
     const fee = await this.alertRepository.findFeeSource(feeId);
-    if (!fee) Err(404, 'Fee source not found');
-    if (fee!.studentId !== studentId) Err(409, 'Fee source belongs to another student');
+    if (!fee) Err(404, this.at('feeSourceNotFound'));
+    if (fee!.studentId !== studentId) Err(409, this.at('feeSourceOtherStudent'));
     const year = await this.academicYearRepository.findByLabel(fee!.yearLabel);
-    if (!year) Err(409, 'Fee source has no registered academic year');
+    if (!year) Err(409, this.at('feeSourceNoYear'));
     return year!;
   }
 

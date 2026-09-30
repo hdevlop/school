@@ -35,6 +35,10 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
   which adds `bun` types). Neither hides the other.
 - `bun run test:config` - The focused contract, feature-config and form-fill
   tests, the API error helpers and the sidebar's page access
+- `bun run test:server-i18n` - Every server refusal names a catalog key, never
+  an English literal, and every key the server uses exists in all four
+  languages with the same placeholders. The dashboard sends its interface
+  language as `X-Language` (`LANGUAGE_HEADER`), which the server reads first
 - `bun run test:access-reset` - The focused access-recovery suite
 - `bun run test:ownership` - Repository ownership: the school-wide role list,
   per-role rules, and the generated SQL of every owned read

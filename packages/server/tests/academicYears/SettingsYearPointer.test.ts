@@ -2,11 +2,10 @@ import { describe, expect, it } from 'bun:test';
 import { updateSettingsDto } from '../../src/modules/settings/SettingsDto';
 import { SettingsService } from '../../src/modules/settings/SettingsService';
 import { SettingsValidator } from '../../src/modules/settings/SettingsValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 function validator() {
-  const settingsValidator = new SettingsValidator({ getById: async () => ({ id: 'settings-1' }) } as any);
-  // The catalog key stands in for its translation; the DI container installs `t`.
-  Object.defineProperty(settingsValidator, 't', { value: (key: string) => `settings.errors.${key}`, configurable: true });
+  const settingsValidator = withEnglishMessages(new SettingsValidator({ getById: async () => ({ id: 'settings-1' }) } as any));
   return settingsValidator;
 }
 
@@ -64,7 +63,7 @@ describe('Settings edits and the active year', () => {
     const years: object[] = [];
     await expect(service({ currentAcademicYear: '2025-2026' }, writes, years)
       .create({ schoolName: 'Al Amal', schoolPhone: '212600000000', schoolEmail: '', currentAcademicYear: '2027-2028' } as any))
-      .rejects.toThrow('settings.errors.alreadyExists');
+      .rejects.toThrow('School settings already exist');
     expect(writes).toEqual([]);
     expect(years).toEqual([]);
   });

@@ -7,6 +7,8 @@ import { Controller, Get, INJECTION_TYPES, Server, Service, User, USER, Validate
 import { AcademicYearRepository } from '../../src/modules/academicYears/AcademicYearRepository';
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../src/modules/academicYears/AcademicYearValidator';
 import { Year, registerYearPropertyInjector, registerYearRequestScope } from '../../src/modules/academicYears/requestYear';
+import { i18n } from 'najm-i18n';
+import { schoolI18n } from '@sms/contracts/locales';
 
 const years = {
   '2025-2026': { id: 'year-2025', label: '2025-2026', status: 'closed' },
@@ -62,6 +64,7 @@ afterEach(async () => {
 
 async function boot() {
   server = new Server({ isolated: true, silent: true })
+    .use(i18n(schoolI18n.options))
     .use(guards())
     .use(validation())
     .base('/api')

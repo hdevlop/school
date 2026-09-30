@@ -1,34 +1,35 @@
-import { Err, Service } from '../../najm';
+import { Err, I18n, Service } from '../../najm';
 import type { AcademicYearMigrationIssueRepository } from './AcademicYearMigrationIssueRepository';
 
 type MigrationIssue = Awaited<ReturnType<AcademicYearMigrationIssueRepository['findById']>>;
 
 @Service()
 export class AcademicYearMigrationIssueValidator {
+  @I18n('migrationIssues.errors') private et!: (key: string) => string;
   ensureReviewable(issue: MigrationIssue) {
-    if (!issue) Err(404, 'Migration issue not found');
-    if (issue.reviewStatus !== 'open') Err(409, 'Migration issue has already been reviewed');
+    if (!issue) Err(404, this.et('notFound'));
+    if (issue.reviewStatus !== 'open') Err(409, this.et('alreadyReviewed'));
     return issue;
   }
 
   ensureConfirmedPlacement(confirmed: boolean) {
-    if (!confirmed) Err(409, 'Record a confirmed dated placement for the captured class and section before resolving this issue');
+    if (!confirmed) Err(409, this.et('placementRequired'));
   }
 
   ensureAttendanceYear(registered: boolean) {
-    if (!registered) Err(409, 'Record a supported attendance year before resolving this issue');
+    if (!registered) Err(409, this.et('attendanceYearRequired'));
   }
 
   ensureSourceYear(registered: boolean) {
-    if (!registered) Err(409, 'Record a supported academic source year before resolving this issue');
+    if (!registered) Err(409, this.et('sourceYearRequired'));
   }
 
   ensureGradeYear(registered: boolean) {
-    if (!registered) Err(409, 'Record a supported grade year before resolving this issue');
+    if (!registered) Err(409, this.et('gradeYearRequired'));
   }
 
   ensureReviewSaved(issue: MigrationIssue) {
-    if (!issue) Err(409, 'Migration issue was reviewed concurrently');
+    if (!issue) Err(409, this.et('reviewedConcurrently'));
     return issue;
   }
 }

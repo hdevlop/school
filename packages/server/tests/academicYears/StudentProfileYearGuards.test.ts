@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { StudentService } from '../../src/modules/students/StudentService';
 import { StudentValidator } from '../../src/modules/students/StudentValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 function build() {
   let writes = 0;
@@ -8,11 +9,11 @@ function build() {
     id: 'student-1', userId: 'user-1', classId: 'class-2025',
     sectionId: 'section-2025', status: 'active', enrollmentDate: '2025-08-20',
   };
-  const validator = new StudentValidator(
+  const validator = withEnglishMessages(new StudentValidator(
     { getById: async () => student } as any,
     {} as any, {} as any, {} as any,
     { earliestEnrolledOn: async () => '2025-09-01' } as any,
-  );
+  ));
   const service = new StudentService(
     { update: async () => { writes++; return student; } } as any,
     validator,

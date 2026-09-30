@@ -15,38 +15,38 @@ export class VehicleAssignmentValidator {
   ) { }
 
   ensureActiveAssignment(status: string) {
-    if (status !== 'active') Err(409, 'Driver assignment is not active');
+    if (status !== 'active') Err(409, this.t('driverAssignmentNotActive'));
   }
 
   ensureUnassignmentDate(date: string, assignmentDate: string) {
-    if (date < this.year.reportingStartsOn || date > this.year.reportingEndsOn) Err(409, 'Driver unassignment date is outside the selected school year');
-    if (date <= assignmentDate || date > getBusinessDateOnly()) Err(400, 'Driver unassignment date must follow its start and cannot be in the future');
+    if (date < this.year.reportingStartsOn || date > this.year.reportingEndsOn) Err(409, this.t('endOutsideYear'));
+    if (date <= assignmentDate || date > getBusinessDateOnly()) Err(400, this.t('endDateInvalid'));
   }
 
   ensureReassignmentDate(date: string, year: ResolvedAcademicYear) {
-    if (date < year.reportingStartsOn || date > year.reportingEndsOn) Err(409, 'Driver assignment date is outside the selected school year');
-    if (date > getBusinessDateOnly()) Err(400, 'Driver reassignment cannot be in the future');
+    if (date < year.reportingStartsOn || date > year.reportingEndsOn) Err(409, this.t('startOutsideYear'));
+    if (date > getBusinessDateOnly()) Err(400, this.t('futureReassignment'));
   }
 
   ensureExistingStart(date: string, assignmentDate: string) {
-    if (date < assignmentDate) Err(409, 'Driver is already assigned from a later date');
+    if (date < assignmentDate) Err(409, this.t('laterAssignmentExists'));
   }
 
   ensureReplacementStart(date: string, assignmentDate: string | undefined) {
-    if (assignmentDate && date <= assignmentDate) Err(400, 'Driver reassignment date must follow the old start');
+    if (assignmentDate && date <= assignmentDate) Err(400, this.t('reassignBeforeStart'));
   }
 
   ensureVehicleAssignment<T>(assignment: T | null | undefined): T {
-    if (!assignment) Err(404, 'Vehicle has no active driver assignment');
+    if (!assignment) Err(404, this.t('noActiveDriver'));
     return assignment;
   }
 
   ensureSingleDriver(driverIds: unknown[]) {
-    if (driverIds.length !== 1) Err(400, 'A vehicle can have one current driver');
+    if (driverIds.length !== 1) Err(400, this.t('oneCurrentDriver'));
   }
 
   ensureRegisteredYear<T>(year: T | null | undefined): T {
-    if (!year) Err(409, 'Driver assignment date has no registered school year');
+    if (!year) Err(409, this.t('startNoYear'));
     return year;
   }
 
@@ -71,7 +71,7 @@ export class VehicleAssignmentValidator {
     const overlap = await this.vehicleAssignmentRepository.getOverlappingByVehicleAcrossYears(
       vehicleId, assignmentDate, unassignmentDate, excludeId,
     );
-    if (overlap) Err(409, 'Vehicle already has a driver during this date range');
+    if (overlap) Err(409, this.t('overlappingDriver'));
   }
 
   async validateUnassignment(id: string) {
@@ -95,15 +95,15 @@ export class VehicleAssignmentValidator {
     const status = (data.status ?? existing?.status ?? 'active') as string;
     this.validateAssignmentDates(assignmentDate, unassignmentDate);
     if (!existing && (assignmentDate < year.reportingStartsOn || assignmentDate > year.reportingEndsOn)) {
-      Err(409, 'Driver assignment date is outside the selected school year');
+      Err(409, this.t('startOutsideYear'));
     }
     if (existing && (assignmentDate > year.reportingEndsOn ||
       (unassignmentDate != null && unassignmentDate <= year.reportingStartsOn))) {
-      Err(409, 'Driver assignment must remain in the selected school year');
+      Err(409, this.t('mustStayInYear'));
     }
     if ((status === 'active' && unassignmentDate != null) ||
       (status !== 'active' && unassignmentDate == null)) {
-      Err(400, 'Driver assignment status and end date disagree');
+      Err(400, this.t('statusEndMismatch'));
     }
     if (status !== 'cancelled') {
       await this.checkNoOverlappingVehicleAssignment(vehicleId, assignmentDate, unassignmentDate, excludeId ?? undefined);

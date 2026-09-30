@@ -22,11 +22,11 @@ export class FeeValidator {
   }
 
   ensureWritableYear(year: { status: string }, role?: string) {
-    if (role && year.status === 'draft') Err(409, 'Fees cannot be charged to a draft academic year');
+    if (role && year.status === 'draft') Err(409, this.t('draftYear'));
   }
 
   ensureSelectedFeeYear(academicYear: string | undefined, selectedYear: string) {
-    if (academicYear && academicYear !== selectedYear) Err(409, 'Fee year must match the selected academic year');
+    if (academicYear && academicYear !== selectedYear) Err(409, this.t('yearMismatch'));
   }
 
   ensureSelectedFeeYears(fees: Array<{ academicYear?: string }>, selectedYear: string) {
@@ -34,12 +34,12 @@ export class FeeValidator {
   }
 
   ensureStudentRecord<T>(student: T | null | undefined): T {
-    if (!student) Err(404, 'Student not found');
+    if (!student) Err(404, this.t('studentNotFound'));
     return student;
   }
 
   ensureEnrollmentDate(date: string) {
-    if (!isValidDateOnly(date)) Err(400, 'Student is missing a valid enrollment date');
+    if (!isValidDateOnly(date)) Err(400, this.t('studentEnrollmentDateInvalid'));
   }
 
   ensureRosterDate(date: string, year: { reportingStartsOn: string; reportingEndsOn: string }, effectiveDate?: string | null) {
@@ -51,29 +51,29 @@ export class FeeValidator {
   }
 
   ensureClassInYear(classes: Array<{ id: string }>, classId: string) {
-    if (!classes.some((schoolClass) => schoolClass.id === classId)) Err(422, 'Bulk fee class must belong to the selected academic year');
+    if (!classes.some((schoolClass) => schoolClass.id === classId)) Err(422, this.t('bulkClassNotInYear'));
   }
 
   ensureSectionInClass(sections: Array<{ id: string }>, sectionId: string) {
-    if (!sections.some((section) => section.id === sectionId)) Err(422, 'Bulk fee section must belong to the selected class');
+    if (!sections.some((section) => section.id === sectionId)) Err(422, this.t('bulkSectionNotInClass'));
   }
 
   ensureEnrollmentFeeYear(fees: Array<{ academicYear?: string }>, enrollmentYear?: string) {
     if (enrollmentYear && fees.some((fee) => fee.academicYear && fee.academicYear !== enrollmentYear)) {
-      Err(409, 'Student fee year must match the new enrollment year');
+      Err(409, this.t('enrollmentYearMismatch'));
     }
   }
 
   ensureYearUnchanged(academicYear: string | undefined, existingYear: string) {
-    if (academicYear && academicYear !== existingYear) Err(409, 'Changing a fee to another academic year requires a separate correction workflow');
+    if (academicYear && academicYear !== existingYear) Err(409, this.t('yearChangeNeedsCorrection'));
   }
 
   ensureScheduleEditable(paymentCount: number) {
-    if (paymentCount > 0) Err(400, 'Cannot change fee schedule, amount, or student after payments have been recorded');
+    if (paymentCount > 0) Err(400, this.t('lockedAfterPayments'));
   }
 
   ensureRecalculationFee<T>(fee: T | null | undefined): T {
-    if (!fee) Err(404, 'Fee not found');
+    if (!fee) Err(404, this.t('notFound'));
     return fee;
   }
 

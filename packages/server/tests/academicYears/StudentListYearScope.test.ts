@@ -6,6 +6,7 @@ import { StudentValidator } from '../../src/modules/students/StudentValidator';
 import { StudentRepository } from '../../src/modules/students/StudentRepository';
 import { studentListQuery, studentYearQuery } from '../../src/modules/students/StudentDto';
 import { yearRegistry } from './fixtures/yearRegistry';
+import { withEnglishMessages } from '../support/englishMessages';
 
 const years = {
   '2025-2026': { id: 'year-old', label: '2025-2026', status: 'closed' },
@@ -14,14 +15,12 @@ const years = {
 } as const;
 
 function yearService(settings: { activeAcademicYearId?: string | null; currentAcademicYear: string }) {
-  return new AcademicYearValidator(yearRegistry(Object.values(years), settings) as any);
+  return withEnglishMessages(new AcademicYearValidator(yearRegistry(Object.values(years), settings) as any));
 }
 
 function studentService(
   repository: Record<string, unknown>,
-  validator: Record<string, unknown> = {
-    ensureRosterDateWithinYear: StudentValidator.prototype.ensureRosterDateWithinYear,
-  },
+  validator: Record<string, unknown> = withEnglishMessages(Object.create(StudentValidator.prototype)),
 ) {
   const service = new StudentService(
     repository as any,

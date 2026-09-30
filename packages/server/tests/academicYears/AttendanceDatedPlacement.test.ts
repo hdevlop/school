@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 import { AttendanceValidator } from '../../src/modules/attendance/AttendanceValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 function validator(hasEnrollment: boolean, isPlaced: boolean, legacyCalls: string[]) {
-  return new AttendanceValidator(
+  return withEnglishMessages(new AttendanceValidator(
     {} as any,
     { ensureInSection: async (studentId: string, sectionId: string) => {
       legacyCalls.push(`${studentId}:${sectionId}`);
@@ -12,7 +13,7 @@ function validator(hasEnrollment: boolean, isPlaced: boolean, legacyCalls: strin
       hasAnyForStudent: async () => hasEnrollment,
       isPlacedInSectionOnDate: async () => isPlaced,
     } as any,
-  );
+  ));
 }
 
 describe('attendance event-time placement', () => {
