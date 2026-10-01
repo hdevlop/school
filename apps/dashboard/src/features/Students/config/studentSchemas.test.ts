@@ -86,6 +86,22 @@ describe('studentProfileEditSchema', () => {
     expect(studentProfileEditSchema.safeParse({ ...student, name: 'A' }).success).toBe(false);
   });
 
+  it('saves blank optional profile fields as null, including when a historical correction is submitted', () => {
+    const parsed = studentProfileEditSchema.parse({
+      ...student, phone: '', dateOfBirth: '',
+      correctionPlacementId: 'past-placement', correctionReason: 'Correct the historical section',
+    });
+    expect(parsed.phone).toBeNull();
+    expect(parsed.dateOfBirth).toBeNull();
+    expect(parsed.correctionReason).toBe('Correct the historical section');
+    expect(studentSchema.parse({ ...student, phone: '', dateOfBirth: '' }).phone).toBeNull();
+  });
+
+  it('still rejects nonempty invalid optional profile fields', () => {
+    expect(studentProfileEditSchema.safeParse({ ...student, phone: 'invalid' }).success).toBe(false);
+    expect(studentProfileEditSchema.safeParse({ ...student, dateOfBirth: 'yesterday' }).success).toBe(false);
+  });
+
   it('names the fields the enrollment records own', () => {
     expect([...PLACEMENT_FIELDS]).toEqual(['classId', 'sectionId', 'status']);
   });

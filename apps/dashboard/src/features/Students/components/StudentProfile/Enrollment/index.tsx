@@ -26,7 +26,7 @@ const serverMessage = (error: any) => error?.response?.data?.message || error?.m
  */
 export default function EnrollmentTab({ studentId }: { studentId?: string }) {
   const { t } = useTranslation();
-  const { displayDate } = useSchoolFormat();
+  const { displayDate, displayDateTime } = useSchoolFormat();
   const { openDialog } = useDialog();
   const { viewingYear, activeYear } = useViewingAcademicYear();
   const { enrollments, error, isLoading, enroll, transfer, end } = useStudentEnrollments(studentId);
@@ -171,6 +171,14 @@ export default function EnrollmentTab({ studentId }: { studentId?: string }) {
                   <span className="text-muted-foreground">
                     {period(placement.validFrom, placement.validTo)}
                     {placement.reason ? ` · ${placement.reason}` : ''}
+                    {placement.actorId && placement.updatedAt && (
+                      <span className="block text-xs">
+                        {t('students.enrollment.changedBy', {
+                          actor: placement.actorName ?? placement.actorId,
+                          at: displayDateTime(placement.updatedAt),
+                        })}
+                      </span>
+                    )}
                   </span>
                 </li>
               ))}

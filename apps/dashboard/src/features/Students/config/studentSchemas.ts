@@ -10,7 +10,10 @@ const requiredId = z.preprocess(
   z.string().min(1, 'ID is required'),
 );
 const emailField = z.string().email('Invalid email format').or(z.literal(''));
-const phoneField = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
+const phoneField = z.preprocess(
+  (value) => value === '' ? null : value,
+  z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number').nullish(),
+);
 const nameField = z
   .string()
   .min(2, 'Name must be at least 2 characters')
@@ -19,11 +22,10 @@ const dateField = z.string().regex(
   /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
   'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format',
 );
-const optionalDateField = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
-  .nullable()
-  .optional();
+const optionalDateField = z.preprocess(
+  (value) => value === '' ? null : value,
+  z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format').nullish(),
+);
 const locationValueSchema = z.object({
   address: z.string().max(500, 'Address too long'),
   latitude: z.number().min(-90).max(90).nullable(),
@@ -49,7 +51,7 @@ export const studentSchema = z.object({
   studentCode: z.string(),
   name: nameField,
   email: emailField,
-  phone: phoneField.nullish(),
+  phone: phoneField,
   addressLocation: locationValueSchema,
   addressPlaceId: z.string().max(255).optional().nullable(),
   dateOfBirth: optionalDateField,

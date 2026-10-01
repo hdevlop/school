@@ -1414,6 +1414,7 @@
       "currentPlacement": "Currently in {{className}} – {{sectionName}} since {{date}}.",
       "fromUntil": "From {{from}} until {{to}}",
       "fromOngoing": "From {{from}}, ongoing",
+      "changedBy": "Changed by {{actor}} on {{at}}",
       "endStatus": {
         "withdrawn": "Withdrawn",
         "graduated": "Graduated",

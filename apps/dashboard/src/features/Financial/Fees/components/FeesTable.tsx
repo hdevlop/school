@@ -331,6 +331,7 @@ function FeesTableForYear() {
 
       <NTable
         data={filteredFees}
+        isFilteredEmpty={filteredFees.length === 0 && !!fees?.length}
         columns={columns}
         filters={filters}
         onCreate={handleAddClick}

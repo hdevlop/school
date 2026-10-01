@@ -3118,6 +3118,7 @@
       "currentPlacement": "Actualmente en {{className}} – {{sectionName}} desde el {{date}}.",
       "fromUntil": "Del {{from}} hasta el {{to}}",
       "fromOngoing": "Desde el {{from}}, en curso",
+      "changedBy": "Modificado por {{actor}} el {{at}}",
       "endStatus": {
         "withdrawn": "Retirado",
         "graduated": "Graduado",

@@ -10,6 +10,7 @@ import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { auditLogs } from '../../database/schema/coreSchema';
 import type { CorrectEnrollmentDto } from './StudentEnrollmentDto';
+import { usersTable as users } from '../../auth';
 
 @Repository()
 export class StudentEnrollmentRepository {
@@ -63,9 +64,13 @@ export class StudentEnrollmentRepository {
       validFrom: studentEnrollmentPlacements.validFrom,
       validTo: studentEnrollmentPlacements.validTo,
       reason: studentEnrollmentPlacements.reason,
+      actorId: studentEnrollmentPlacements.actorId,
+      actorName: users.name,
+      updatedAt: studentEnrollmentPlacements.updatedAt,
     }).from(studentEnrollmentPlacements)
       .innerJoin(classes, eq(studentEnrollmentPlacements.classId, classes.id))
       .innerJoin(sections, eq(studentEnrollmentPlacements.sectionId, sections.id))
+      .leftJoin(users, eq(studentEnrollmentPlacements.actorId, users.id))
       .where(eq(studentEnrollmentPlacements.enrollmentId, enrollmentId))
       .orderBy(desc(studentEnrollmentPlacements.validFrom));
   }

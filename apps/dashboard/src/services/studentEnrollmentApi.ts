@@ -11,6 +11,9 @@ export type EnrollmentPlacement = {
   validFrom: string;
   validTo: string | null;
   reason: string | null;
+  actorId?: string | null;
+  actorName?: string | null;
+  updatedAt?: string | null;
 };
 
 export type StudentYearEnrollment = {

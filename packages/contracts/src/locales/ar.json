@@ -3132,6 +3132,7 @@
       "currentPlacement": "حاليًا في {{className}} – {{sectionName}} منذ {{date}}.",
       "fromUntil": "من {{from}} إلى {{to}}",
       "fromOngoing": "من {{from}}، مستمر",
+      "changedBy": "عدّل {{actor}} بتاريخ {{at}}",
       "endStatus": {
         "withdrawn": "منسحب",
         "graduated": "متخرّج",
