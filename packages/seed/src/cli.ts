@@ -8,6 +8,8 @@ const help = `School seed commands:
   bun seed demo            Choose a year and add demo data
   bun seed demo --year=2025-2026  Add demo data for one year without a prompt
   bun seed demo --year=2025-2026 --resume-from=announcements  Resume after Payroll
+  bun seed history         Seed the last 3 years up to today; the same students move up each year
+  bun seed history --years=4  Seed a longer history
   bun seed reset-demo      Delete all school data
   bun run seed:admin       Create or reset the administrator
 ${production ? '' : '  bun seed demo-ui         Open the development demo generator\n'}`;
@@ -29,6 +31,7 @@ if (!command) {
     options: [
       { value: 'admin', label: 'Create or reset administrator' },
       { value: 'demo', label: 'Add demo data' },
+      { value: 'history', label: 'Seed 3 years of demo history', hint: 'empty school, students promoted each year' },
       { value: 'reset-demo', label: 'Delete all school data', hint: 'destructive' },
       ...(!production ? [{ value: 'demo-ui', label: 'Open development demo generator' }] : []),
     ],
@@ -87,6 +90,11 @@ switch (command) {
     console.log(`Demo academic year: ${getConfiguredSeedAcademicYear()}`);
     await import('./scripts/demo/seed-demo');
     break;
+  case 'history': {
+    const { runHistorySeedCommand } = await import('./scripts/demo/seed-history');
+    await runHistorySeedCommand(process.argv.slice(3));
+    break;
+  }
   case 'reset-demo': {
     if (!process.stdin.isTTY || !process.stdout.isTTY) {
       throw new Error('Demo reset requires an interactive terminal.');

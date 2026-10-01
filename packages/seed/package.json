@@ -10,6 +10,7 @@
     "seed:roles":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/admin/seed-staff-roles.ts",
     "seed:school":   "bun --env-file=../../apps/dashboard/.env.local src/scripts/school/seed-school.ts",
     "seed:demo":     "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-demo.ts",
+    "seed:history":  "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-history.ts",
     "seed:expenses": "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-expenses.ts",
     "seed:topup":    "bun --env-file=../../apps/dashboard/.env.local src/scripts/demo/seed-topup.ts",
     "gen:demo":      "bun src/scripts/demo/generator.ts",

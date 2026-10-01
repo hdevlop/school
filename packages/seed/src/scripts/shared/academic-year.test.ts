@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'bun:test';
-import { getConfiguredSeedAcademicYear, getDemoReferenceDate, getSeedAcademicYear, isDemoCollectionDay, parseSeedAcademicYear } from './academic-year';
+import {
+  getConfiguredSeedAcademicYear, getDemoReferenceDate, getHistoryAcademicYears, getSeedAcademicYear, isDemoCollectionDay,
+  parseSeedAcademicYear,
+} from './academic-year';
 
 describe('seed academic year', () => {
   it('anchors historical demos inside their year and refuses future demos', () => {
@@ -27,5 +30,12 @@ describe('seed academic year', () => {
     expect(isDemoCollectionDay(new Date(2027, 6, 15))).toBe(false);
     expect(isDemoCollectionDay(new Date(2027, 7, 1))).toBe(false);
     expect(isDemoCollectionDay(new Date(2027, 8, 1))).toBe(true);
+  });
+
+  it('seeds history as consecutive years ending with the current teaching year', () => {
+    expect(getHistoryAcademicYears(3, new Date(2026, 8, 30))).toEqual(['2024-2025', '2025-2026', '2026-2027']);
+    expect(getHistoryAcademicYears(2, new Date(2027, 6, 20))).toEqual(['2025-2026', '2026-2027']);
+    expect(getHistoryAcademicYears(1, new Date(2026, 8, 30))).toEqual(['2026-2027']);
+    for (const count of [0, 11, 2.5, Number.NaN]) expect(() => getHistoryAcademicYears(count)).toThrow('between 1 and 10');
   });
 });

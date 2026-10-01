@@ -83,6 +83,7 @@
     "seed:history:announcements": "bun packages/server/tests/academicYears/fixtures/seedAnnouncementsHistoryCases.ts",
     "seed:history:academic-records": "bun packages/server/tests/academicYears/fixtures/seedAcademicRecordHistoryCases.ts",
     "seed:demo": "bun run --cwd packages/seed seed:demo",
+    "seed:demo:history": "bun run --cwd packages/seed seed:history",
     "seed:expenses": "bun run --cwd packages/seed seed:expenses",
     "seed:topup": "bun run --cwd packages/seed seed:topup",
     "gen:demo": "bun run --cwd packages/seed gen:demo",

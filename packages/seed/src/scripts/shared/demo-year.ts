@@ -3,16 +3,21 @@ import type { AcademicYearRepository, AcademicYearService, SettingsService } fro
 import { getSeedAcademicYear } from './academic-year';
 import { schoolSeedData, seedAcademicYear } from './school-seed-data';
 
-/** Install settings once; adding a demo year never activates it. */
+/**
+ * Install settings once; adding a demo year never activates it. A fresh
+ * install makes `installYear` active: today's teaching year, or the oldest
+ * year of a history seed, which later years then succeed.
+ */
 export async function prepareDemoYear(
   settings: Pick<SettingsService, 'getAdminSettings' | 'create'>,
   years: Pick<AcademicYearService, 'list' | 'create' | 'verifyCalendar'>,
   repository: Pick<AcademicYearRepository, 'setStatus'>,
   academicYear = seedAcademicYear,
+  installYear = getSeedAcademicYear(),
 ) {
   const installed = !await settings.getAdminSettings();
   if (installed) {
-    await settings.create({ ...schoolSeedData.settingsData, currentAcademicYear: getSeedAcademicYear() });
+    await settings.create({ ...schoolSeedData.settingsData, currentAcademicYear: installYear });
   }
   const registered = await years.list('admin');
   if (installed && registered.activeAcademicYearId) {

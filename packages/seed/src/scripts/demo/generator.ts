@@ -88,7 +88,8 @@ const featureCounts = {
    staff: parseCount('staff'),
 };
 
-const ALL_CLASS_NAMES = ['PS','MS','GS','CP','CE1','CE2','CM1','CM2','CE6','1AC','2AC','3AC','TC','1BAC','2BAC'];
+/** School order: each class promotes into the next one. */
+export const ALL_CLASS_NAMES = ['PS','MS','GS','CP','CE1','CE2','CM1','CM2','CE6','1AC','2AC','3AC','TC','1BAC','2BAC'];
 
 const selectedClasses = (() => {
    if (classesArg.toUpperCase() === 'ALL' || !classesArg.trim()) return ALL_CLASS_NAMES;
@@ -160,10 +161,22 @@ const CONFIG = {
 // 📦 DATA PACKS
 // ============================================
 
-export async function studentsPack() {
+/** New students per class, spread over each class's sections. */
+export function demoIntakeAssignments(counts: Array<{ className: string; students: number }>) {
+   return counts.map(({ className, students }) => ({
+      CLASS_NAME: className,
+      SECTION_COUNTS: distributeStudents(students, getSectionsByClass(getClassByName(className).id).length || 1),
+   }));
+}
+
+// `admittedOn` makes every generated student a new admission on that day.
+export async function studentsPack(
+   assignments: Array<{ CLASS_NAME: string; SECTION_COUNTS: number[] }> = CONFIG.ASSIGNMENTS,
+   admittedOn?: string,
+) {
    const db = { students: [], parents: [], fees: [] };
 
-   for (const ASSIGNMENT of CONFIG.ASSIGNMENTS) {
+   for (const ASSIGNMENT of assignments) {
 
       const classObj = getClassByName(ASSIGNMENT.CLASS_NAME);
       const sections = getSectionsByClass(classObj.id);
@@ -190,6 +203,7 @@ export async function studentsPack() {
                // Synthetic fixtures know when this year's placement begins;
                // the permanent admission date can belong to an older year.
                const yearStart = `${seedAcademicYear.slice(0, 4)}-09-01`;
+               if (admittedOn) student.enrollmentDate = admittedOn;
                student.yearEnrolledOn = student.enrollmentDate > yearStart
                   ? student.enrollmentDate : yearStart;
 

@@ -39,3 +39,15 @@ export function isDemoCollectionDay(date: Date): boolean {
   const month = date.getMonth();
   return month !== 7 && (month !== 6 || date.getDate() < 15);
 }
+
+/** `count` consecutive years ending with today's teaching year, oldest first. */
+export function getHistoryAcademicYears(count: number, referenceDate = new Date()) {
+  if (!Number.isInteger(count) || count < 1 || count > 10) {
+    throw new Error('Expected --years between 1 and 10');
+  }
+  const currentStart = Number(getSeedAcademicYear(referenceDate).slice(0, 4));
+  return Array.from({ length: count }, (_, index) => {
+    const start = currentStart - count + 1 + index;
+    return `${start}-${start + 1}`;
+  });
+}
