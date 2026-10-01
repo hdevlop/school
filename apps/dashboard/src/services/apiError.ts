@@ -10,9 +10,9 @@ function httpStatusOf(error: unknown): number | undefined {
   return typeof status === 'number' ? status : undefined;
 }
 
-/** Keep usable stale rows visible when a background list refetch fails. */
+/** Keep stale rows after a transient failure; an auth refusal hides them. */
 export function hasFailedToLoad(error: unknown, rows?: readonly unknown[] | null) {
-  return Boolean(error) && !(Array.isArray(rows) && rows.length > 0);
+  return Boolean(error) && (isAuthorizationError(error) || !(Array.isArray(rows) && rows.length > 0));
 }
 
 /**

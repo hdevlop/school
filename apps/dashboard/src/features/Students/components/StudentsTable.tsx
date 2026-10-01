@@ -21,6 +21,7 @@ import { useState } from 'react';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useViewerRole } from '@/shared/useViewerRole';
+import { usePermissions } from 'najm-auth/client/react';
 
 function StudentsTable() {
 
@@ -28,6 +29,10 @@ function StudentsTable() {
   const router = useRouter();
   // A parent sees their children here and a student themselves, read-only.
   const { role, isFamily } = useViewerRole();
+  const { can } = usePermissions();
+  const canCreate = !isFamily && can('create:students');
+  const canUpdate = !isFamily && can('update:students');
+  const canDelete = !isFamily && can('delete:students');
   const title = role === 'parent' ? t('navigation.myChildren')
     : role === 'student' ? t('navigation.myProfile') : t('navigation.students');
   const { classes } = useClasses();
@@ -41,7 +46,6 @@ function StudentsTable() {
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const columns = useStudentsTableColumns();
-  const rawFilters = useStudentsTableFilters(classes);
 
   const {
     students,
@@ -55,6 +59,7 @@ function StudentsTable() {
     isDeleting,
     isBulkDeleting
   } = useStudents();
+  const { filters, filteredStudents } = useStudentsTableFilters(classes, students);
 
   const { openDialog, confirmDelete, pop } = useDialog();
 
@@ -164,17 +169,19 @@ function StudentsTable() {
 
       <NTable
         className='min-h-0 flex-1'
-        data={students}
+        data={filteredStudents}
+        getRowId={(student) => student.id}
         columns={columns}
-        filters={rawFilters}
-        onCreate={isFamily ? undefined : handleAddClick}
+        filters={filters}
+        isFilteredEmpty={filteredStudents.length === 0 && !!students?.length}
+        onCreate={canCreate ? handleAddClick : undefined}
         onView={handleView}
         onRowClick={handleView}
-        onEdit={isFamily ? undefined : handleEdit}
-        onDelete={isFamily ? undefined : handleDelete}
-        onBulkDelete={isFamily ? undefined : handleBulkDelete}
-        rowSelection={isFamily ? undefined : rowSelection}
-        onRowSelectionChange={isFamily ? undefined : setRowSelection}
+        onEdit={canUpdate ? handleEdit : undefined}
+        onDelete={canDelete ? handleDelete : undefined}
+        onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        rowSelection={canDelete ? rowSelection : undefined}
+        onRowSelectionChange={canDelete ? setRowSelection : undefined}
         loading={isStudentsLoading}
         error={hasFailedToLoad(error, students) ? error : null}
         renderError={(currentError) => (
@@ -191,12 +198,12 @@ function StudentsTable() {
             icon={FEATURE_ICONS.students}
             title={t('emptyStates.students.title')}
             description={t('emptyStates.students.description')}
-            action={isFamily ? undefined : (
+            action={canCreate ? (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('students.dialogs.createButton')}
               </NButton>
-            )}
+            ) : undefined}
           />
         )}
         renderFilteredEmpty={() => (
