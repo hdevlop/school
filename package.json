@@ -155,7 +155,7 @@
     "sharp": "0.35.3",
     "najm-auth": "$najm-auth",
     "najm-core": "$najm-core",
-    "diject": "0.1.9",
+    "diject": "0.1.11",
     "drizzle-orm": "0.45.2",
     "najm-api": "$najm-api",
     "najm-cache": "$najm-cache",
