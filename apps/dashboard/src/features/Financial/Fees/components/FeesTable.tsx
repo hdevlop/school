@@ -23,7 +23,7 @@ import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
-import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 
 type FeeScope = 'year' | 'outstanding';
@@ -380,6 +380,5 @@ function FeesTableForYear() {
 }
 
 export default function FeesTable() {
-  const { viewingYear, isResolving } = useViewingAcademicYear();
-  return <FeesTableForYear key={isResolving ? 'resolving' : `year:${viewingYear ?? 'all'}`} />;
+  return <FeesTableForYear key={useViewingYearKey()} />;
 }

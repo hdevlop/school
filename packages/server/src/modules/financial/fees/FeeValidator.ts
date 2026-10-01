@@ -2,8 +2,7 @@ import { Err, I18n, Service } from '../../../najm';
 import { FeeRepository } from './FeeRepository';
 import { StudentValidator } from '../../students/StudentValidator';
 import { FeeTypeValidator } from '../feeTypes/FeeTypeValidator';
-import { FeeEffectiveDateError, getCurrentAcademicYear, isValidDateOnly } from '../utils';
-import { SettingsRepository } from '../../settings/SettingsRepository';
+import { FeeEffectiveDateError, isValidDateOnly } from '../utils';
 
 @Service()
 export class FeeValidator {
@@ -13,7 +12,6 @@ export class FeeValidator {
     private feeRepository: FeeRepository,
     private studentValidator: StudentValidator,
     private feeTypeValidator: FeeTypeValidator,
-    private settingsRepository: SettingsRepository,
   ) { }
 
   mapEffectiveDateError(error: unknown): never {
@@ -75,16 +73,6 @@ export class FeeValidator {
   ensureRecalculationFee<T>(fee: T | null | undefined): T {
     if (!fee) Err(404, this.t('notFound'));
     return fee;
-  }
-
-  private async resolveAcademicYear(academicYear?: string | null) {
-    if (academicYear) return academicYear;
-
-    const settings = await this.settingsRepository.getAdminSettings();
-    return (
-      settings?.currentAcademicYear ||
-      getCurrentAcademicYear(settings?.startMonth || 'september')
-    );
   }
 
   async isExists(id) {
@@ -181,9 +169,7 @@ export class FeeValidator {
 
     const targetStudentId = studentId || existingFee?.studentId;
     const targetFeeTypeId = existingFee?.feeTypeId || feeTypeId;
-    const targetAcademicYear = await this.resolveAcademicYear(
-      academicYear || existingFee?.academicYear || defaultAcademicYear,
-    );
+    const targetAcademicYear = academicYear || existingFee?.academicYear || defaultAcademicYear;
 
     if (targetStudentId && targetFeeTypeId && targetAcademicYear) {
       await this.checkFeeIsUnique(

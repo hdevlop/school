@@ -12,8 +12,6 @@ import { CreditService } from '../credits/CreditService';
 import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents, toCents } from '../utils/money';
 import { getBusinessDate } from '../../../shared/businessDate';
-import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
-import { Year } from '../../academicYears/requestYear';
 import type {
   CreatePaymentDto,
   UpdatePaymentDto,
@@ -33,7 +31,6 @@ function isUniqueViolation(error: any): boolean {
 @Service()
 export class PaymentService {
   @Events() private events!: EventService;
-  @Year() private readonly year!: ResolvedAcademicYear;
 
   constructor(
     private paymentRepository: PaymentRepository,
@@ -104,11 +101,7 @@ export class PaymentService {
   }
 
   async getTotalRevenue() {
-    return this.allocationRepository.getTotalRevenue(this.year.label);
-  }
-
-  async getRevenueByAcademicYear(academicYear: string) {
-    return this.allocationRepository.getRevenueByAcademicYear(academicYear);
+    return this.allocationRepository.getTotalRevenue();
   }
 
   async getRevenueByDateRange(startDate: string, endDate: string) {
@@ -116,19 +109,19 @@ export class PaymentService {
   }
 
   async getRevenueByPaymentMethod() {
-    return this.allocationRepository.getRevenueByPaymentMethod(this.year.label);
+    return this.allocationRepository.getRevenueByPaymentMethod();
   }
 
   async getMonthlyRevenue(year: number) {
-    return this.allocationRepository.getMonthlyRevenue(year, this.year.label);
+    return this.allocationRepository.getMonthlyRevenue(year);
   }
 
   async getRevenueStats() {
-    return this.allocationRepository.getRevenueStats(this.year.label);
+    return this.allocationRepository.getRevenueStats();
   }
 
   async getTopPayingStudents(limit: number = 10) {
-    return this.allocationRepository.getTopPayingStudents(limit, this.year.label);
+    return this.allocationRepository.getTopPayingStudents(limit);
   }
 
   private async getImpactedStudentIds(paymentId?: string, primaryStudentId?: string) {

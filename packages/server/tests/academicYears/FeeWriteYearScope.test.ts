@@ -10,7 +10,7 @@ function harness(status: 'closed' | 'draft' = 'closed', allowed = true) {
       writes.push(fee.academicYear);
       return { id: 'new-fee', ...fee };
     } } as any,
-    Object.assign(withEnglishMessages(new FeeValidator({} as any, {} as any, {} as any, {} as any)), {
+    Object.assign(withEnglishMessages(new FeeValidator({} as any, {} as any, {} as any)), {
       validate: async () => {}, validateFeeTypeExists: async () => ({ amount: 30, paymentType: 'oneTime' }),
     }) as any,
     { generateInstallments: async () => {} } as any,

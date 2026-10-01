@@ -7,7 +7,7 @@ import { useAuth } from 'najm-auth/client/react';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
-import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import ClassRoutineSkeleton from './ClassRoutineSkeleton';
@@ -315,7 +315,8 @@ function ClassRoutinePageForYear() {
 }
 
 export default function ClassRoutinePage() {
-  const { viewingYear, isResolving } = useViewingAcademicYear();
+  const { isResolving } = useViewingAcademicYear();
+  const yearKey = useViewingYearKey();
   if (isResolving) return <ClassRoutineSkeleton />;
-  return <ClassRoutinePageForYear key={`year:${viewingYear ?? 'all'}`} />;
+  return <ClassRoutinePageForYear key={yearKey} />;
 }

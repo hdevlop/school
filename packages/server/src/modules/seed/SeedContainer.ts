@@ -390,7 +390,7 @@ export function configureSeedContainer(seedContainer: Container) {
 
   registerSeedDeps(seedContainer, RolloverService, [RolloverRepository, FeeService, SettingsRepository, FinancialAuditService, AcademicYearValidator, RolloverValidator]);
 
-  registerSeedDeps(seedContainer, FeeValidator, [FeeRepository, StudentValidator, FeeTypeValidator, SettingsRepository]);
+  registerSeedDeps(seedContainer, FeeValidator, [FeeRepository, StudentValidator, FeeTypeValidator]);
   registerSeedDeps(seedContainer, FeeService, [FeeRepository, FeeValidator, InstallmentService, SettingsRepository, ClassRepository, StudentRepository, FinancialAuditService, StudentEnrollmentRepository, AcademicYearValidator]);
 
   registerSeedDeps(seedContainer, InstallmentValidator, [InstallmentRepository, FeeValidator]);

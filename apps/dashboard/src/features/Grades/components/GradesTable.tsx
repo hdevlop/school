@@ -18,7 +18,7 @@ import { useExams } from '@/features/Exams/hooks/useExams';
 import { useGradesTableColumns } from '../hooks/useGradesTableColumns';
 import { useGradesTableFilters } from '../hooks/useGradesTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { useTranslation } from 'najm-i18n/react';
 
@@ -452,6 +452,5 @@ function GradesTableForYear() {
 }
 
 export default function GradesTable() {
-  const { viewingYear, isResolving } = useViewingAcademicYear();
-  return <GradesTableForYear key={isResolving ? 'resolving' : `year:${viewingYear ?? 'all'}`} />;
+  return <GradesTableForYear key={useViewingYearKey()} />;
 }

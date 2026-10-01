@@ -20,7 +20,7 @@ import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { localDateInput } from 'najm-kit/format';
-import { useViewingAcademicYear, useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useViewingYearDate, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -385,6 +385,5 @@ function StudentAttendanceTableForYear() {
 }
 
 export default function StudentAttendanceTable() {
-  const { viewingYear, isResolving } = useViewingAcademicYear();
-  return <StudentAttendanceTableForYear key={isResolving ? 'resolving' : `year:${viewingYear ?? 'all'}`} />;
+  return <StudentAttendanceTableForYear key={useViewingYearKey()} />;
 }

@@ -23,8 +23,9 @@ describe('payment receipt and fee-year portions on the marked PostgreSQL fixture
       await db.transaction(async (transaction) => {
         const tx = transaction as unknown as typeof db;
         const { repo, inYear } = await scopedHistoryRepository(PaymentRepository, tx);
-        const allocations = new AllocationRepository();
-        allocations.db = tx;
+        const { repo: allocations, inYear: inAllocationYear } = await scopedHistoryRepository(AllocationRepository, tx);
+        const oldSeptember = async () => (await inAllocationYear('history-year-2025', () => allocations.getMonthlyRevenue(2026)))
+          .find((row) => row.month === 9)?.total ?? 0;
         const studentId = 'history-student-08';
         const typeId = 'history-payments-db-type';
         const oldFee = 'history-payments-db-old';
@@ -33,8 +34,7 @@ describe('payment receipt and fee-year portions on the marked PostgreSQL fixture
         const checkId = 'history-payments-db-pending';
         const oldRevenueBefore = await allocations.getRevenueByAcademicYear('2025-2026');
         const newRevenueBefore = await allocations.getRevenueByAcademicYear('2026-2027');
-        const oldSeptemberBefore = (await allocations.getMonthlyRevenue(2026, '2025-2026'))
-          .find((row) => row.month === 9)?.total ?? 0;
+        const oldSeptemberBefore = await oldSeptember();
         await tx.insert(feeTypes).values({ id: typeId, name: 'History payments DB', category: 'tuition',
           amount: '100', paymentType: 'oneTime', status: 'active' });
         await tx.insert(fees).values([
@@ -78,8 +78,7 @@ describe('payment receipt and fee-year portions on the marked PostgreSQL fixture
           .toBe(3025);
         expect(Math.round(((await allocations.getRevenueByAcademicYear('2026-2027')) - newRevenueBefore) * 100))
           .toBe(2075);
-        const oldSeptemberAfter = (await allocations.getMonthlyRevenue(2026, '2025-2026'))
-          .find((row) => row.month === 9)?.total ?? 0;
+        const oldSeptemberAfter = await oldSeptember();
         expect(Math.round((oldSeptemberAfter - oldSeptemberBefore) * 100)).toBe(3025);
         throw rollback;
       });

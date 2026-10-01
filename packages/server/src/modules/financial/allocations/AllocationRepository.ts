@@ -315,13 +315,9 @@ export class AllocationRepository {
   // REVENUE CALCULATION METHODS
   //=====================================================================//
 
-  async getTotalRevenue(academicYear?: string) {
-    const conditions = [eq(payments.status, 'completed')];
-
-    if (academicYear) {
-      conditions.push(eq(fees.academicYear, academicYear));
-    }
-
+  // Revenue reads below count fees charged to the selected year;
+  // getRevenueByAcademicYear names its year for explicit cross-year use.
+  async getTotalRevenue() {
     const [result] = await this.db
       .select({
         total: sum(paymentAllocations.amount),
@@ -329,7 +325,7 @@ export class AllocationRepository {
       .from(paymentAllocations)
       .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
       .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
-      .where(and(...conditions));
+      .where(and(eq(payments.status, 'completed'), eq(fees.academicYear, this.year.label)));
 
     return Number(result?.total) || 0;
   }
@@ -370,25 +366,17 @@ export class AllocationRepository {
     return Number(result?.total) || 0;
   }
 
-  async getRevenueByPaymentMethod(academicYear?: string) {
-    const conditions = [eq(payments.status, 'completed')];
-
-    let query = this.db
+  async getRevenueByPaymentMethod() {
+    const results = await this.db
       .select({
         paymentMethod: payments.paymentMethod,
         total: sum(paymentAllocations.amount),
         count: count(paymentAllocations.id),
       })
       .from(paymentAllocations)
-      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id));
-
-    if (academicYear) {
-      conditions.push(eq(fees.academicYear, academicYear));
-      query = query.innerJoin(fees, eq(paymentAllocations.feeId, fees.id));
-    }
-
-    const results = await query
-      .where(and(...conditions))
+      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
+      .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
+      .where(and(eq(payments.status, 'completed'), eq(fees.academicYear, this.year.label)))
       .groupBy(payments.paymentMethod);
 
     return results.map(r => ({
@@ -398,31 +386,25 @@ export class AllocationRepository {
     }));
   }
 
-  async getMonthlyRevenue(year: number, academicYear?: string) {
+  async getMonthlyRevenue(year: number) {
     const startDate = `${year}-01-01`;
     const endDate = `${year}-12-31`;
-    const conditions = [
-      eq(payments.status, 'completed'),
-      sql`COALESCE(${payments.settledDate}, ${payments.paymentDate}) >= ${startDate}`,
-      sql`COALESCE(${payments.settledDate}, ${payments.paymentDate}) <= ${endDate}`,
-    ];
 
-    let query = this.db
+    const results = await this.db
       .select({
         month: sql<number>`EXTRACT(MONTH FROM COALESCE(${payments.settledDate}, ${payments.paymentDate}))`,
         total: sum(paymentAllocations.amount),
         count: count(paymentAllocations.id),
       })
       .from(paymentAllocations)
-      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id));
-
-    if (academicYear) {
-      conditions.push(eq(fees.academicYear, academicYear));
-      query = query.innerJoin(fees, eq(paymentAllocations.feeId, fees.id));
-    }
-
-    const results = await query
-      .where(and(...conditions))
+      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
+      .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
+      .where(and(
+        eq(payments.status, 'completed'),
+        eq(fees.academicYear, this.year.label),
+        sql`COALESCE(${payments.settledDate}, ${payments.paymentDate}) >= ${startDate}`,
+        sql`COALESCE(${payments.settledDate}, ${payments.paymentDate}) <= ${endDate}`,
+      ))
       .groupBy(sql`EXTRACT(MONTH FROM COALESCE(${payments.settledDate}, ${payments.paymentDate}))`)
       .orderBy(sql`EXTRACT(MONTH FROM COALESCE(${payments.settledDate}, ${payments.paymentDate}))`);
 
@@ -433,24 +415,17 @@ export class AllocationRepository {
     }));
   }
 
-  async getRevenueStats(academicYear?: string) {
-    const conditions = [eq(payments.status, 'completed')];
-
-    let query = this.db
+  async getRevenueStats() {
+    const [result] = await this.db
       .select({
         totalRevenue: sum(paymentAllocations.amount),
         totalAllocations: count(paymentAllocations.id),
         completedPayments: sql<number>`COUNT(DISTINCT ${payments.id})`,
       })
       .from(paymentAllocations)
-      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id));
-
-    if (academicYear) {
-      conditions.push(eq(fees.academicYear, academicYear));
-      query = query.innerJoin(fees, eq(paymentAllocations.feeId, fees.id));
-    }
-
-    const [result] = await query.where(and(...conditions));
+      .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
+      .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
+      .where(and(eq(payments.status, 'completed'), eq(fees.academicYear, this.year.label)));
 
     return {
       totalRevenue: Number(result?.totalRevenue) || 0,
@@ -459,13 +434,7 @@ export class AllocationRepository {
     };
   }
 
-  async getTopPayingStudents(limit: number = 10, academicYear?: string) {
-    const conditions = [eq(payments.status, 'completed')];
-
-    if (academicYear) {
-      conditions.push(eq(fees.academicYear, academicYear));
-    }
-
+  async getTopPayingStudents(limit: number = 10) {
     const results = await this.db
       .select({
         studentId: fees.studentId,
@@ -478,7 +447,7 @@ export class AllocationRepository {
       .innerJoin(payments, eq(paymentAllocations.paymentId, payments.id))
       .innerJoin(fees, eq(paymentAllocations.feeId, fees.id))
       .leftJoin(students, eq(fees.studentId, students.id))
-      .where(and(...conditions))
+      .where(and(eq(payments.status, 'completed'), eq(fees.academicYear, this.year.label)))
       .groupBy(fees.studentId, students.name, students.studentCode)
       .orderBy(desc(sum(paymentAllocations.amount)))
       .limit(limit);

@@ -30,6 +30,15 @@ export function useViewingAcademicYear() {
 }
 
 /**
+ * A React key for a year-scoped screen: changing the viewing year remounts it,
+ * so filters, dialogs and picked dates of the previous year do not carry over.
+ */
+export function useViewingYearKey() {
+  const { viewingYear, isResolving } = useViewingAcademicYear();
+  return isResolving ? 'resolving' : `year:${viewingYear}`;
+}
+
+/**
  * Switches this tab to another viewing year; undefined returns to the active
  * year. The page's own address filters are dropped, since they may name
  * records of the previous year. It never changes the school's active year.

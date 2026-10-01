@@ -7,7 +7,6 @@ import {
   calculateFeeAmounts,
   calculateFeeStatus,
   formatDateOnly,
-  getCurrentAcademicYear,
   resolveFeeEffectiveDate,
 } from '../utils';
 import { InstallmentService } from '../installments/InstallmentService';
@@ -105,11 +104,11 @@ export class FeeService {
   }
 
   @Transaction()
-  // `requestYear` is the year the request works in (the form's captured
-  // year); it charges a fee that names no year of its own.
+  // A fee that names no year of its own is charged to the selected year.
   async create(data: CreateFeeDto, assignedBy?: string, role?: string) {
     if (role) this.feeValidator.ensureSelectedFeeYear(data.academicYear, this.year.label);
-    await this.feeValidator.validate(data, null, role ? this.year.label : undefined);
+    const academicYear = data.academicYear || this.year.label;
+    await this.feeValidator.validate(data, null, academicYear);
 
     const [feeType, student, settings] = await Promise.all([
       this.feeValidator.validateFeeTypeExists(data.feeTypeId),
@@ -121,11 +120,6 @@ export class FeeService {
 
     const startMonth = settings?.startMonth || 'september';
     const endMonth = settings?.endMonth || 'june';
-    const academicYear =
-      data.academicYear ||
-      (role ? this.year.label : undefined) ||
-      settings?.currentAcademicYear ||
-      getCurrentAcademicYear(startMonth);
     await this.requireWritableYear(academicYear, role);
 
     this.feeValidator.ensureEnrollmentDate(student.enrollmentDate);
@@ -198,10 +192,7 @@ export class FeeService {
 
   async createBulk(fees: CreateFeeDto[], assignedBy?: string, role?: string) {
     if (role) this.feeValidator.ensureSelectedFeeYears(fees, this.year.label);
-    const settings = await this.settingsRepository.getAdminSettings();
-    const defaultYear = (role ? this.year.label : undefined) || settings?.currentAcademicYear ||
-      getCurrentAcademicYear(settings?.startMonth || 'september');
-    for (const label of new Set(fees.map((fee) => fee.academicYear || defaultYear))) {
+    for (const label of new Set(fees.map((fee) => fee.academicYear || this.year.label))) {
       await this.requireWritableYear(label, role);
     }
     const createdFees = [];

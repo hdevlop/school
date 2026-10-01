@@ -32,7 +32,7 @@ function build(selectedYear = '2025-2026') {
   };
   const service = new FeeService(
     {} as any,
-    withEnglishMessages(new FeeValidator({} as any, {} as any, {} as any, {} as any)),
+    withEnglishMessages(new FeeValidator({} as any, {} as any, {} as any)),
     {} as any,
     {} as any,
     classes as any,
