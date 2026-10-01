@@ -5,14 +5,35 @@ tick. Record each outcome here and add a dated entry to
 [the evidence ledger](academic-year-history.md). `PASS` means you ran it and saw
 the expected result; a step you could not run is `BLOCKED` with the reason.
 
+## Latest browser checkpoint, 2026-10-01
+
+Playwright resumed these checks in its own headless Chrome; Chrome MCP reconnection is no longer required. These post-seed UI results supplement the dated Chrome/REST/MCP evidence below:
+
+| Case | Latest outcome |
+| --- | --- |
+| Students/profile | **PASS:** 100 / 103 / 106 students; Rim Qadiri's profile/history reflects CM2 B → CE6 B → 1AC B with actor/time/reason. |
+| Tabs/account changes | **PASS:** remembered new-tab year, independent reload years, admin → parent → student → teacher → student → admin, old tab replacing protected data and admin preference returning. |
+| Historical links | **PASS:** all three limited-role query links normalize to active; parent/student unowned ID shows not found, teacher's readable shared identity has no historical placement. This closes the student's previously unrun URL case. |
+| Delayed reads | **PASS for final-state test:** old response held three seconds completes after active selection; page still shows 106 active students. |
+| Arabic/phone/keyboard | **PASS on Students/Fees at actual 390 × 844:** no overflow; concurrent layout now places the selector in the drawer below 640 px; settled selector fits and its RTL menu accepts keyboard selection with focus returned. Main language restored to French. |
+| No-match filter | **PASS:** Fees search remains available; clearing restores 100 selected-year rows. |
+| Print | **PASS:** actual Print opens receipt popup; browser PDF and screenshot show Rim Qadiri, 2026-06-01, 1,600 MAD. Native OS print dialog/physical printing remain unrun. |
+| Principal closed-year Edit | **PASS:** fixture 2025-2026 A → B → A through normal Edit, audit principal/time/reason, current projection unchanged and year remains closed. Temporary five normal grants removed; exact original four grants restored. |
+| Still separate | Assistant **BLOCKED** (configuration); fresh existing-account accounting rerun needs credentials; owner per-module visual/policy review is **OPEN**; activation **SCHEDULED 2027-09-01**. |
+
+Only documentation and ignored helpers/artifacts changed in this continuation. Full details, setup retries and cleanup are in [the ledger](academic-year-history.md). Combined unchecked steps below may have partial or dated evidence above; they are not automatically full acceptance.
+
 ## Before you start
+
+**Current reseed checkpoint:** :3102 has 100 / 103 / 106 enrollments across 2024-2025 / 2025-2026 / 2026-2027, with 103 students enrolled in multiple years. Active year is 2026-2027; all three registered years are open. Fresh transport checks are recorded separately from the Playwright UI results above. Main principal/accounting credentials do not match the configured ordinary seed default; closed-year principal UI used the isolated fixture instead. `/api/ai-settings` still returns 204. Root plan section 0.1c is the latest resume point.
 
 **Which database.** The plan's scenarios need students who stay across years.
 
 | Database | Good for | Not good for |
 | --- | --- | --- |
-| `school` (demo, `seed:demo` over three years) | Volume, dashboards, finance totals, page-by-page year switching | Anything about one student across years: its 300 students are each enrolled in exactly one year, no one changes section mid-year, every enrollment is `active` and every placement is open-ended, all three years are `open`, and no receipt pays fees of two years. There is no principal or accounting account, and the teacher, parent and student passwords are unknown. |
-| `school_history_test` (fixture) | Steps 1, 5 and 6: the ten students S01-S10 across 2024-2025, 2025-2026 and 2026-2027, Omar's transfer, Mariam's graduation, Aya's fee-only year; admin and principal accounts whose passwords are `SCHOOL_HISTORY_ADMIN_PASSWORD` and `SCHOOL_HISTORY_PRINCIPAL_PASSWORD` | Volume. Writes you make through the UI stay in the fixture; re-run the `seed:history:*` stages afterwards and expect the acceptance suites to need their baseline back. |
+| `school` (current history seed) | Volume, dashboards, finance totals, year switching and the same student promoted across years; Rim Qadiri moves CM2 → CE6 → 1AC | Controlled Omar/Mariam/Aya cases and principal closed-year acceptance: all registered years are open. Principal/accounting credentials remain a prerequisite. |
+| `school` (previous demo baseline, retained history) | Volume, dashboards, finance totals, page-by-page year switching | Its former 300 students were enrolled in one year each, with no mid-year transfer; all three years were open. Accounts/counts and relationships recorded for that baseline are dated evidence. |
+| `school_history_test` (fixture) | Steps 1, 5 and 6: the ten students S01-S10 across 2024-2025, 2025-2026 and 2026-2027, Omar's transfer, Mariam's graduation, Aya's fee-only year; admin and principal credentials come from fixture environment variables | Volume. Principal normal Edit passed with temporary normal grants, then exact original grants restored; repeat that bounded preparation for another run. UI correction/cleanup audit metadata and defaulted gender remain. Do not automatically reset/reseed to clear them. |
 
 To browse the fixture, start a second dev server with `DB_URL` set to the
 fixture URL in that shell only. Never edit `.env.local` for this, and never run
@@ -41,6 +62,22 @@ was written.
 | 8. RTL, mobile, keyboard, forms | **PARTIAL.** Arabic: `dir="rtl"`, `lang="ar"`, the selector's label and "(الحالية)" translated, no sideways scroll; dropdown menus stay left-to-right (finding 6). Phone: at 500 px, Chrome's narrowest window, the selector is fully visible and nothing scrolls sideways; 390 px not measured. A class filter kept across years matches by name: 2AC in 2024-2025 listed exactly that year's 11 students. Keyboard and the failed-request state are **inconclusive**: the Chrome window was hidden, so screenshots failed, focus did not move into the menu and React Query paused its retries. **2026-09-30 (Playwright): keyboard PASS, error state PASS.** Tab reaches the selector (19 presses on Students), Enter opens it on the first year, arrows move, Enter chooses 2025-2026 and closes the menu with focus back on the selector, and Escape closes it without a change. A refused list shows "Accès refusé" (Staff for the principal) and a refused record "Student not found" (finding 10); a loading dashboard, Fees header or Staff statistics show no figures instead of 0. **390 px:** the selector is fully visible (x 124-265) and nothing scrolls sideways, but the page title and the selector's year are drawn over each other, and the chat button covers the pagination's next button (finding 13, fixed the same day: no overlap on seven pages). |
 
 ### Findings
+
+**Chrome MCP continuation, 2026-09-30, before reseed:** the initial empty Browser discovery and Chrome stale-transport failure were resolved by reconnecting the owner's Chrome MCP extension. Actual UI results:
+
+| Case | Outcome |
+| --- | --- |
+| Tabs and account switch | **PASS:** independent years survived individual reloads; admin → parent → student → teacher → admin replaced data/permissions and restored admin's remembered year. |
+| Fixture historical correction and audit | **PASS:** normal Edit changed/restored Ilyas S09's old section; current projection stayed unchanged; history showed actor/time/reason. Audit rows and cleanup metadata remain. |
+| Fixture Omar, Mariam, Aya | **PASS:** Omar's Jan 14/15 roster transition, Mariam's active-year absence and Aya's fee-only year. |
+| Forms and pending saves | **PASS:** dirty attendance/date/class/section reset, historical multipart request, and a held cleanup PUT while a second tab changed year. Same-tab selector is blocked by the modal. |
+| Keyboard, Arabic and filtering | **PASS for measured cases:** focus returned after keyboard year selection; RTL menu; no overflow at actual 500 px; Fees search could recover from no matches. Prior 390 px Playwright results remain separate. |
+| Receipt | Generated receipt HTML/date/amount **PASS with temporary capture**; native popup/print preview **NOT RUN**. |
+| Limited-role URL UI | Parent/teacher query links and all three historical-only IDs **PASS**; student's query-link UI case **NOT RUN**. Earlier direct REST/MCP checks stay separate. |
+| Principal closed-year form | **BLOCKED:** fixture principal lacks Student grants, although sign-in succeeds. Main demo's years are all open. |
+| Assistant / activation | Assistant **BLOCKED** (settings 204); activation **SCHEDULED 2027-09-01**. |
+
+Three browser fixes passed focused tests, lint, full typecheck, locale check and production build; see [the ledger](academic-year-history.md) for exact scope. The owner subsequently reseeded the main database, so prior IDs/counts/relationships must be rechecked. Full owner visual acceptance remains open.
 
 1. **Two tabs reloading together sign the user out** (najm-auth 4.2.1,
    upstream). After a refresh, `TokenService` writes the 120-second grace
@@ -201,17 +238,20 @@ Tick each line and write the outcome next to it.
 
 ### 1. Past-year students and the historical correction (admin)
 
-- [ ] On Students, switch from the active year to 2025-2026. The header, list
+- [x] On Students, switch from the active year to 2025-2026. The header, list
       and count change; each student shows that year's class and section.
+      Playwright 2026-10-01: 106 → 103; Rim Qadiri CE6 B in 2025-2026.
 - [ ] Fixture: Adam (S01) shows his 2025-2026 class, not his current one.
       Omar (S05) shows his section before the transfer date and the new one
       after it, with the dated-roster views (attendance on a day before and a
       day after).
 - [ ] Mariam (S04) is not in 2026-2027; Aya (S08) has 2025-2026 fees but no
       2025-2026 class.
-- [ ] Edit a 2025-2026 student's placement through the normal Student Edit
+- [x] Edit a 2025-2026 student's placement through the normal Student Edit
       form with a reason. Switch to 2026-2027: the student's current class and
       section did not change. The enrollment history shows who, when and why.
+      Admin Chrome fixture 2026-09-30; principal closed-year Playwright
+      fixture 2026-10-01. Original section restored; audit metadata retained.
 
 ### 2. Navigation keeps the year
 
@@ -223,12 +263,16 @@ Tick each line and write the outcome next to it.
 
 ### 3. Tabs, reload and account switch
 
-- [ ] Open a new tab: it starts on the last year you chose.
-- [ ] Put two tabs on different years; reload **one at a time**. Each keeps
+- [x] Open a new tab: it starts on the last year you chose.
+      Playwright 2026-10-01: 2025-2026.
+- [x] Put two tabs on different years; reload **one at a time**. Each keeps
       its own year, and its reads and writes use it.
-- [ ] Log out, sign in as another account. Nothing of the first account's
+      Playwright reads/reloads 2026-10-01: 2025-2026 / 2024-2025;
+      captured pending-write case is the dated Chrome fixture check.
+- [x] Log out, sign in as another account. Nothing of the first account's
       year choice or data shows; the first account's remembered year comes
       back when it signs in again.
+      Playwright 2026-10-01: parent/student/teacher and return to admin.
 
 ### 4. Switching quickly
 
@@ -240,8 +284,10 @@ Tick each line and write the outcome next to it.
 
 ### 5. Principal and accounting
 
-- [ ] Principal edits a closed year's academic record with the normal forms,
+- [x] Principal edits a closed year's academic record with the normal forms,
       without reopening the year.
+      Playwright fixture 2026-10-01: normal Student Edit, both saves 200;
+      2025-2026 stays closed, current projection unchanged, grants restored.
 - [ ] Accounting uses finance pages in a past year and is refused academic
       edits.
 - [ ] Paying an old year's fee today records today's date; the cash shows in
@@ -249,10 +295,16 @@ Tick each line and write the outcome next to it.
 
 ### 6. Teacher, parent and student
 
-- [ ] No year selector; the header names the active year.
+- [x] No year selector; the header names the active year.
+      Playwright 2026-10-01: teacher/parent/student desktop, 2026-2027.
 - [ ] A link carrying `?academicYear=<past year>`, a past-year record ID
       typed into the URL, and the assistant asked for last year's data are
       all refused or show only the active year.
+      A permanent identity readable through ownership may return 200 without
+      enrollment in the active year; its class, section, placement and year
+      status must be null. Require 404 for an unowned identity, not every ID
+      that also appears in history (plan section 4.3).
+      URL/ID UI cases passed 2026-10-01; assistant remains blocked.
 - [ ] Each sees only their own or their children's records.
 
 ### 7. Activating the next year (at the real start of 2027-2028, not now)
@@ -273,7 +325,9 @@ early; the server side (one switch, two at once, rollback) passes on
 
 - [ ] Arabic: the selector, banner and tables read right to left, and every
       year-related text is translated.
-- [ ] Phone width: the selector is reachable and the cards readable.
+- [x] Phone width: the selector is reachable and the cards readable.
+      Playwright 2026-10-01: actual 390 × 844 Arabic Students/Fees,
+      settled drawer selector, no horizontal overflow.
 - [ ] Keyboard only: open the selector, choose a year, close it.
 - [ ] An empty year shows an empty state; a failed request shows an error,
       not an empty list.
