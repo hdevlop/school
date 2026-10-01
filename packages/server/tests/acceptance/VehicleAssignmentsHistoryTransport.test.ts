@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
 const adminPassword = process.env.SCHOOL_HISTORY_ADMIN_PASSWORD;
@@ -29,6 +29,7 @@ const staffA = `history-driver-staff-a-${suffix}`;
 const staffB = `history-driver-staff-b-${suffix}`;
 const oldId = `history-driver-old-${suffix}`;
 const historicId = `history-driver-historic-${suffix}`;
+const raceTrigger = `history_driver_race_${suffix.replaceAll('-', '_')}`;
 let token: string;
 let createdVehicleId: string | undefined;
 
@@ -91,6 +92,103 @@ afterAll(async () => {
 }, 30_000);
 
 describe('vehicle assignment history on the local fixture', () => {
+  it('refuses overlapping driver intervals when creates race', async () => {
+    // Hold each insert long enough for the competing request to validate
+    // against the same empty interval on the previous implementation.
+    await db.execute(sql.raw(`CREATE FUNCTION ${raceTrigger}() RETURNS trigger AS $$
+      BEGIN
+        IF NEW.vehicle_id = '${vehicleB}' THEN PERFORM pg_sleep(0.2); END IF;
+        RETURN NEW;
+      END $$ LANGUAGE plpgsql`));
+    await db.execute(sql.raw(`CREATE TRIGGER ${raceTrigger} BEFORE INSERT ON vehicle_assignments
+      FOR EACH ROW EXECUTE FUNCTION ${raceTrigger}()`));
+    try {
+      const results = await Promise.all([driverA, driverB].map(driverId =>
+        request('/vehicle-assignments', '2024-2025', 'POST', {
+          vehicleId: vehicleB, driverId, assignmentDate: '2024-10-01',
+          unassignmentDate: '2025-03-01', status: 'completed',
+        })));
+      expect(results.map(result => result.status).sort()).toEqual([200, 409]);
+      const rows = (await db.select().from(vehicleAssignments)
+        .where(eq(vehicleAssignments.vehicleId, vehicleB)))
+        .filter(row => row.assignmentDate === '2024-10-01');
+      expect(rows).toHaveLength(1);
+    } finally {
+      await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${raceTrigger} ON vehicle_assignments`));
+      await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${raceTrigger}()`));
+      await db.delete(vehicleAssignments).where(and(
+        eq(vehicleAssignments.vehicleId, vehicleB), eq(vehicleAssignments.assignmentDate, '2024-10-01'),
+      ));
+    }
+  });
+
+  it('refuses overlapping intervals when two different assignments are edited at once', async () => {
+    const ids = [`history-driver-edit-a-${suffix}`, `history-driver-edit-b-${suffix}`];
+    await db.insert(vehicleAssignments).values(ids.map((id, index) => ({
+      id, vehicleId: vehicleB, driverId: driverA, status: 'completed',
+      assignmentDate: index ? '2025-01-01' : '2024-09-01',
+      unassignmentDate: index ? '2025-02-01' : '2024-10-01',
+    })));
+    await db.execute(sql.raw(`CREATE FUNCTION ${raceTrigger}() RETURNS trigger AS $$
+      BEGIN
+        IF NEW.vehicle_id = '${vehicleB}' THEN PERFORM pg_sleep(0.2); END IF;
+        RETURN NEW;
+      END $$ LANGUAGE plpgsql`));
+    await db.execute(sql.raw(`CREATE TRIGGER ${raceTrigger} BEFORE UPDATE ON vehicle_assignments
+      FOR EACH ROW EXECUTE FUNCTION ${raceTrigger}()`));
+    try {
+      const results = await Promise.all(ids.map(id => request(`/vehicle-assignments/${id}`,
+        '2024-2025', 'PUT', { assignmentDate: '2024-11-01', unassignmentDate: '2024-12-01' })));
+      expect(results.map(result => result.status).sort()).toEqual([200, 409]);
+      const rows = await db.select().from(vehicleAssignments).where(inArray(vehicleAssignments.id, ids));
+      expect(rows.filter(row => row.assignmentDate === '2024-11-01')).toHaveLength(1);
+    } finally {
+      await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${raceTrigger} ON vehicle_assignments`));
+      await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${raceTrigger}()`));
+      await db.delete(vehicleAssignments).where(inArray(vehicleAssignments.id, ids));
+    }
+  });
+
+  it('serializes two driver replacements at the same date', async () => {
+    const results = await Promise.all([driverA, driverB].map(driverId =>
+      request('/vehicle-assignments/assign', '2026-2027', 'POST', {
+        vehicleId: vehicleB, driverId, assignmentDate: '2026-09-20',
+      })));
+    try {
+      expect(results.map(result => result.status).sort()).toEqual([200, 400]);
+      const rows = await db.select().from(vehicleAssignments).where(and(
+        eq(vehicleAssignments.vehicleId, vehicleB), eq(vehicleAssignments.assignmentDate, '2026-09-20'),
+      ));
+      expect(rows).toHaveLength(1);
+    } finally {
+      await db.delete(vehicleAssignments).where(and(
+        eq(vehicleAssignments.vehicleId, vehicleB), eq(vehicleAssignments.assignmentDate, '2026-09-20'),
+      ));
+    }
+  });
+
+  it('restores the old driver interval if inserting its replacement fails', async () => {
+    const [before] = await db.select().from(vehicleAssignments).where(eq(vehicleAssignments.id, oldId));
+    await db.execute(sql.raw(`CREATE FUNCTION ${raceTrigger}() RETURNS trigger AS $$
+      BEGIN
+        IF NEW.vehicle_id = '${vehicleA}' THEN RAISE EXCEPTION 'injected driver replacement failure'; END IF;
+        RETURN NEW;
+      END $$ LANGUAGE plpgsql`));
+    await db.execute(sql.raw(`CREATE TRIGGER ${raceTrigger} BEFORE INSERT ON vehicle_assignments
+      FOR EACH ROW EXECUTE FUNCTION ${raceTrigger}()`));
+    try {
+      const result = await request('/vehicle-assignments/assign', '2026-2027', 'POST', {
+        vehicleId: vehicleA, driverId: driverB, assignmentDate: '2026-09-20',
+      });
+      expect(result.status).toBe(500);
+      expect(await db.select().from(vehicleAssignments).where(eq(vehicleAssignments.vehicleId, vehicleA)))
+        .toEqual([before]);
+    } finally {
+      await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${raceTrigger} ON vehicle_assignments`));
+      await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${raceTrigger}()`));
+    }
+  });
+
   it('scopes overlapping intervals and preserves shared current driver identity', async () => {
     expect(yearScopedModules).toHaveProperty('vehicle-assignments');
     const { repo, inYear } = await scopedHistoryRepository(VehicleAssignmentRepository, db);

@@ -100,11 +100,7 @@ export class StaffService {
     const driver = await this.driverRepository.getByStaffId(staffId);
     if (!driver) return;
     for (const vehicleId of vehicleIds) {
-      await this.vehicleAssignmentRepository.create({
-        vehicleId,
-        driverId: driver.id,
-        status: 'active',
-      });
+      await this.vehicleAssignments.createDriverFromToday(vehicleId, driver.id);
     }
   }
 

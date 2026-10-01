@@ -32,7 +32,9 @@ export class VehicleAssignmentService {
     return await this.vehicleAssignmentRepository.getByDriverId(driverId);
   }
 
+  @Transaction()
   async create(data: CreateVehicleAssignmentDto) {
+    await this.vehicleAssignmentRepository.lockAssignmentChanges();
     await this.vehicleAssignmentValidator.validate(data);
 
     const assignmentData = {
@@ -48,12 +50,27 @@ export class VehicleAssignmentService {
     return await this.vehicleAssignmentRepository.create(assignmentData);
   }
 
+  /** Staff creation is shared identity work outside the selected-year scope. */
+  @Transaction()
+  async createDriverFromToday(vehicleId: string, driverId: string) {
+    await this.vehicleAssignmentRepository.lockAssignmentChanges();
+    const assignmentDate = getBusinessDateOnly();
+    const year = this.vehicleAssignmentValidator.ensureRegisteredYear(await this.academicYears.findForDate(assignmentDate));
+    const data = { vehicleId, driverId, assignmentDate, status: 'active' as const };
+    await this.vehicleAssignmentValidator.validate(data, null, year);
+    return await this.vehicleAssignmentRepository.create(data);
+  }
+
+  @Transaction()
   async update(id: string, data: UpdateVehicleAssignmentDto) {
+    await this.vehicleAssignmentRepository.lockAssignmentChanges();
     await this.vehicleAssignmentValidator.validate(data, id);
     return await this.vehicleAssignmentRepository.update(id, data);
   }
 
+  @Transaction()
   async unassign(id: string, unassignmentDate?: string) {
+    await this.vehicleAssignmentRepository.lockAssignmentChanges();
     const existing = await this.vehicleAssignmentValidator.checkAssignmentExists(id);
     this.vehicleAssignmentValidator.ensureActiveAssignment(existing.status);
     const effectiveDate = unassignmentDate || getBusinessDateOnly();
@@ -91,6 +108,7 @@ export class VehicleAssignmentService {
     const year = explicitYear ?? this.year;
     this.vehicleAssignmentValidator.validateAssignmentDates(effectiveDate);
     this.vehicleAssignmentValidator.ensureReassignmentDate(effectiveDate, year);
+    await this.vehicleAssignmentRepository.lockAssignmentChanges();
     const existingAssignment = await this.vehicleAssignmentRepository.getActiveAssignmentByVehicleAcrossYears(vehicleId);
     if (existingAssignment?.driverId === driverId) {
       this.vehicleAssignmentValidator.ensureExistingStart(effectiveDate, existingAssignment.assignmentDate);
@@ -124,6 +142,7 @@ export class VehicleAssignmentService {
    */
   @Transaction()
   async assignDriverFromToday(driverId: string, vehicleId: string) {
+    await this.vehicleAssignmentRepository.lockAssignmentChanges();
     const today = getBusinessDateOnly();
     const year = this.vehicleAssignmentValidator.ensureRegisteredYear(await this.academicYears.findForDate(today));
     const current = await this.vehicleAssignmentRepository.getActiveAssignmentByDriverAcrossYears(driverId);
@@ -132,7 +151,9 @@ export class VehicleAssignmentService {
     return await this.assignDriver(vehicleId, driverId, today, undefined, year);
   }
 
+  @Transaction()
   async unassignDriver(vehicleId: string, unassignmentDate?: string) {
+    await this.vehicleAssignmentRepository.lockAssignmentChanges();
     const activeAssignment = this.vehicleAssignmentValidator.ensureVehicleAssignment(
       await this.vehicleAssignmentRepository.getActiveAssignmentByVehicleAcrossYears(vehicleId),
     );

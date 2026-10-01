@@ -108,6 +108,13 @@ describe('enrollment history over authenticated REST', () => {
       expect(audit).toHaveLength(1);
       expect(audit[0].userRole).toBe('admin');
       expect((audit[0].metadata as any).before.placements[0].sectionId).toBe('history-section-2025-a');
+      const history = await request(`/students/${original.studentId}/enrollments`);
+      expect(history.status).toBe(200);
+      const corrected = history.body.data.find((enrollment: any) => enrollment.id === id).placements[0];
+      expect(corrected.actorId).toBe(audit[0].userId);
+      expect(corrected.actorName).toBeTruthy();
+      expect(corrected.updatedAt).toBeTruthy();
+      expect(corrected.reason).toBe(reason);
     } finally {
       if (changed) {
         const current = ((await request(`/student-enrollments/${id}`)).body.data ?? (await request(`/student-enrollments/${id}`)).body);

@@ -158,6 +158,13 @@ export class StudentRouteRepository {
     return vehicle || null;
   }
 
+  /** The student row exists even before a first route. Lock it before reading
+   * intervals so assignments to different vehicles cannot pass together. */
+  async lockStudent(studentId: string) {
+    await this.db.select({ id: students.id }).from(students)
+      .where(eq(students.id, studentId)).for('update');
+  }
+
   async create(data) {
     const [row] = await this.db.insert(studentRoutes).values(data).returning();
     return row;

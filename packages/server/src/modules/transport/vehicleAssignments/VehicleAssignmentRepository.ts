@@ -1,6 +1,6 @@
 import { DB } from '../../../database/db';
 import { vehicleAssignments, vehicles, drivers, staff, users } from '../../../database/schema';
-import { count, eq, desc, and, inArray, lte, gt, isNull, or, lt, ne } from 'drizzle-orm';
+import { count, eq, desc, and, inArray, lte, gt, isNull, or, lt, ne, sql } from 'drizzle-orm';
 import { Repository } from '../../../najm';
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
@@ -11,6 +11,12 @@ import { getBusinessDateOnly } from '../../../shared/businessDate';
 export class VehicleAssignmentRepository {
   @Year() private readonly year!: ResolvedAcademicYear;
   declare db: DB;
+
+  /** Driver moves can touch two vehicles. Serialize their interval checks and
+   * writes together, including the Staff form, until the transaction ends. */
+  async lockAssignmentChanges() {
+    await this.db.execute(sql`SELECT pg_advisory_xact_lock(hashtext('vehicle-assignment-changes'))`);
+  }
 
   private inSelectedYear() {
     return assignmentOverlapsYear(

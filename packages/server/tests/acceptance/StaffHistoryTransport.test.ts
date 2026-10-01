@@ -129,6 +129,37 @@ afterAll(async () => {
 }, 30_000);
 
 describe('staff over the history fixture', () => {
+  it('creates driver assignments through the interval checks without a selected year', async () => {
+    const newStaff = id('create-driver');
+    const newDriver = id('create-profile');
+    const data = {
+      id: newStaff, employeeCode: `H-ND-${suffix}`, name: 'Youssef Amrani',
+      role: 'driver', hireDate: TODAY, salary: 3000, cin: `Z${Date.now().toString().slice(-7)}`,
+      phone: '212611234567', address: 'Rue Hassan II, Tanger',
+      profile: { id: newDriver, licenseNumber: `H-ND-${suffix}`, licenseType: 'B', licenseExpiry: '2030-01-01' },
+      assignments: [{ vehicleId: BUS_A }],
+    };
+    const before = await busRows();
+    try {
+      const refused = await request('/staff', undefined, 'POST', data);
+      expect(refused.status, JSON.stringify(refused.body)).toBe(409);
+      expect(await db.select().from(staff).where(eq(staff.id, newStaff))).toEqual([]);
+      expect(await db.select().from(drivers).where(eq(drivers.id, newDriver))).toEqual([]);
+      expect(await busRows()).toEqual(before);
+
+      const created = await request('/staff', undefined, 'POST', { ...data, assignments: [{ vehicleId: BUS_B }] });
+      expect(created.status, JSON.stringify(created.body)).toBe(200);
+      const rows = await db.select().from(vehicleAssignments).where(eq(vehicleAssignments.driverId, newDriver));
+      expect(rows).toHaveLength(1);
+      expect([rows[0].vehicleId, rows[0].assignmentDate, rows[0].unassignmentDate, rows[0].status])
+        .toEqual([BUS_B, TODAY, null, 'active']);
+    } finally {
+      await db.delete(vehicleAssignments).where(eq(vehicleAssignments.driverId, newDriver));
+      await db.delete(drivers).where(eq(drivers.id, newDriver));
+      await db.delete(staff).where(eq(staff.id, newStaff));
+    }
+  });
+
   it('is one shared identity in every selected year, with its dated assignments marked', async () => {
     expect(yearScopedModules).not.toHaveProperty('staff');
     const reads = await Promise.all([undefined, '2024-2025', '2025-2026', '2026-2027']

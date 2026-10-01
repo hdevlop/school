@@ -14,7 +14,7 @@ function routeHarness(status = 'active') {
   }) as any;
   validator.year = year;
   const service = new StudentRouteService(
-    { update: async () => { calls.push('update'); } } as any, validator,
+    { lockStudent: async () => {}, update: async () => { calls.push('update'); } } as any, validator,
     { endTransportFee: async () => { calls.push('end-fee'); } } as any,
     { getAll: async () => { calls.push('fee-types'); return []; } } as any,
   );
@@ -39,6 +39,7 @@ function driverHarness(existing: object) {
   const validator = withEnglishMessages(new VehicleAssignmentValidator({} as any));
   const service = new VehicleAssignmentService(
     {
+      lockAssignmentChanges: async () => {},
       getActiveAssignmentByVehicleAcrossYears: async () => { calls.push('read'); return existing; },
       closeActiveAssignmentAcrossYears: async () => { calls.push('close'); },
       create: async () => { calls.push('create'); },

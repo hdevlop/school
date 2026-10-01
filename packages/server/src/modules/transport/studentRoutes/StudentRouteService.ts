@@ -37,6 +37,7 @@ export class StudentRouteService {
 
   @Transaction()
   async assign(data: CreateStudentRouteDto) {
+    await this.studentRouteRepository.lockStudent(data.studentId);
     await this.studentRouteValidator.validate(data);
     const assignmentDate = data.assignmentDate || getBusinessDateOnly();
     const status = data.status || 'active';
@@ -86,7 +87,7 @@ export class StudentRouteService {
 
   @Transaction()
   async reassign(id: string, data: ReassignStudentRouteDto, assignedBy?: string | null) {
-    const existing = await this.studentRouteValidator.checkExists(id);
+    const existing = await this.getLockedRoute(id);
     this.studentRouteValidator.ensureReassignable(existing.status);
     await this.studentRouteValidator.validate(data, id);
     const assignmentDate = data.assignmentDate || getBusinessDateOnly();
@@ -127,7 +128,7 @@ export class StudentRouteService {
 
   @Transaction()
   async unassign(id: string, requestedDate?: string | null) {
-    const assignment = await this.studentRouteValidator.checkExists(id);
+    const assignment = await this.getLockedRoute(id);
     this.studentRouteValidator.ensureActiveRoute(assignment.status);
     const effectiveDate = requestedDate || getBusinessDateOnly();
     this.studentRouteValidator.ensureUnassignmentDate(effectiveDate, assignment.assignmentDate);
@@ -152,6 +153,13 @@ export class StudentRouteService {
 
   async clearForSeedReset() {
     return this.studentRouteRepository.clearForSeedReset();
+  }
+
+  private async getLockedRoute(id: string) {
+    const route = await this.studentRouteValidator.checkExists(id);
+    await this.studentRouteRepository.lockStudent(route.studentId);
+    // A competing end or replacement may have finished while the lock waited.
+    return await this.studentRouteValidator.checkExists(id);
   }
 
   private async endTransportFee(studentId: string, effectiveDate: string, assignedBy?: string | null) {

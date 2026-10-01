@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
-import { eq, inArray } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
 const adminPassword = process.env.SCHOOL_HISTORY_ADMIN_PASSWORD;
@@ -27,6 +27,7 @@ const feeTypeId = `history-route-type-${suffix}`;
 const oldId = `history-route-old-${suffix}`;
 const newId = `history-route-new-${suffix}`;
 const spanId = `history-route-span-${suffix}`;
+const raceTrigger = `history_route_race_${suffix.replaceAll('-', '_')}`;
 let token: string;
 
 async function request(path: string, year?: string, method = 'GET', body?: object) {
@@ -176,5 +177,125 @@ describe('student route history on the local fixture', () => {
       expect(ids).toContain(createdId);
       expect(ids).not.toContain(replacementId);
     } finally { await transport.close(); }
+  });
+
+  it('refuses overlapping completed routes when different vehicles are assigned at once', async () => {
+    await db.insert(fees).values({ id: `history-route-race-fee-${suffix}`, studentId: 'history-student-02',
+      feeTypeId, academicYear: '2025-2026', effectiveDate: '2025-10-01',
+      baseAmount: '100', grossAmount: '100', netAmount: '100' });
+    await db.execute(sql.raw(`CREATE FUNCTION ${raceTrigger}() RETURNS trigger AS $$
+      BEGIN
+        IF NEW.vehicle_id IN ('${firstVehicle}', '${secondVehicle}') THEN PERFORM pg_sleep(0.2); END IF;
+        RETURN NEW;
+      END $$ LANGUAGE plpgsql`));
+    await db.execute(sql.raw(`CREATE TRIGGER ${raceTrigger} BEFORE INSERT ON student_routes
+      FOR EACH ROW EXECUTE FUNCTION ${raceTrigger}()`));
+    try {
+      const results = await Promise.all([firstVehicle, secondVehicle].map(vehicleId =>
+        request('/student-routes', '2025-2026', 'POST', { studentId: 'history-student-02', vehicleId,
+          assignmentDate: '2025-10-01', unassignmentDate: '2025-11-01', status: 'completed' })));
+      expect(results.map(result => result.status).sort()).toEqual([200, 409]);
+      expect(await db.select().from(studentRoutes).where(and(
+        eq(studentRoutes.studentId, 'history-student-02'), eq(studentRoutes.assignmentDate, '2025-10-01'),
+      ))).toHaveLength(1);
+    } finally {
+      await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${raceTrigger} ON student_routes`));
+      await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${raceTrigger}()`));
+    }
+  });
+
+  it('serializes assignments, replacements and ends for one student across different vehicles', async () => {
+    const studentId = 'history-student-01';
+    const [fee] = (await db.select().from(fees).where(eq(fees.feeTypeId, feeTypeId)))
+      .filter(row => row.studentId === studentId && row.academicYear === '2026-2027');
+    expect(fee).toBeDefined();
+    const resumedAmount = (await db.select().from(feeInstallments).where(eq(feeInstallments.feeId, fee.id)))
+      .filter(row => row.status === 'cancelled' && row.dueDate >= '2026-09-26')
+      .reduce((total, row) => total + Number(row.amount), 0);
+    await db.execute(sql.raw(`CREATE FUNCTION ${raceTrigger}() RETURNS trigger AS $$
+      BEGIN
+        IF NEW.vehicle_id IN ('${firstVehicle}', '${secondVehicle}') THEN PERFORM pg_sleep(0.2); END IF;
+        RETURN NEW;
+      END $$ LANGUAGE plpgsql`));
+    await db.execute(sql.raw(`CREATE TRIGGER ${raceTrigger} BEFORE INSERT ON student_routes
+      FOR EACH ROW EXECUTE FUNCTION ${raceTrigger}()`));
+    try {
+      const assigned = await Promise.all([firstVehicle, secondVehicle].map(vehicleId =>
+        request('/student-routes', '2026-2027', 'POST', { studentId, vehicleId, assignmentDate: '2026-09-26' })));
+      expect(assigned.map(result => result.status).sort()).toEqual([200, 409]);
+      const first = assigned.find(result => result.status === 200)!.body.data;
+      const assignments = await db.select().from(studentRoutes).where(and(
+        eq(studentRoutes.studentId, studentId), eq(studentRoutes.assignmentDate, '2026-09-26'),
+      ));
+      expect(assignments).toHaveLength(1);
+      const [resumedFee] = await db.select().from(fees).where(eq(fees.id, fee.id));
+      expect(Number(resumedFee.netAmount)).toBe(Number(fee.netAmount) + resumedAmount);
+
+      const targetVehicle = first.vehicleId === firstVehicle ? secondVehicle : firstVehicle;
+      const moved = await Promise.all([1, 2].map(() => request(`/student-routes/${first.id}/reassign`,
+        '2026-2027', 'POST', { vehicleId: targetVehicle, assignmentDate: '2026-09-27' })));
+      expect(moved.map(result => result.status).sort()).toEqual([200, 409]);
+      const replacement = moved.find(result => result.status === 200)!.body.data;
+      expect(await db.select().from(studentRoutes).where(and(
+        eq(studentRoutes.studentId, studentId), eq(studentRoutes.assignmentDate, '2026-09-27'),
+      ))).toHaveLength(1);
+      const [original] = await db.select().from(studentRoutes).where(eq(studentRoutes.id, first.id));
+      expect([original.vehicleId, original.status, original.unassignmentDate])
+        .toEqual([first.vehicleId, 'completed', '2026-09-27']);
+
+      const ended = await Promise.all([1, 2].map(() => request(`/student-routes/${replacement.id}/unassign`,
+        '2026-2027', 'POST', { unassignmentDate: '2026-09-28' })));
+      expect(ended.map(result => result.status).sort()).toEqual([200, 409]);
+    } finally {
+      await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${raceTrigger} ON student_routes`));
+      await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${raceTrigger}()`));
+    }
+  });
+
+  it('restores the old route when billing its replacement fails', async () => {
+    const rollbackId = `history-route-rollback-${suffix}`;
+    await db.insert(studentRoutes).values({ id: rollbackId, studentId: 'history-student-02',
+      vehicleId: firstVehicle, assignmentDate: '2026-09-12', status: 'active' });
+    const [before] = await db.select().from(studentRoutes).where(eq(studentRoutes.id, rollbackId));
+    await db.execute(sql.raw(`CREATE FUNCTION ${raceTrigger}() RETURNS trigger AS $$
+      BEGIN
+        IF NEW.fee_type_id = '${feeTypeId}' AND NEW.academic_year = '2026-2027'
+          AND NEW.student_id = 'history-student-02' THEN RAISE EXCEPTION 'injected route billing failure'; END IF;
+        RETURN NEW;
+      END $$ LANGUAGE plpgsql`));
+    await db.execute(sql.raw(`CREATE TRIGGER ${raceTrigger} BEFORE INSERT ON fees
+      FOR EACH ROW EXECUTE FUNCTION ${raceTrigger}()`));
+    try {
+      const failed = await request(`/student-routes/${rollbackId}/reassign`, '2026-2027', 'POST', {
+        vehicleId: secondVehicle, assignmentDate: '2026-09-20',
+      });
+      expect(failed.status).toBe(500);
+      expect(await db.select().from(studentRoutes).where(and(
+        eq(studentRoutes.studentId, 'history-student-02'), eq(studentRoutes.status, 'active'),
+        inArray(studentRoutes.vehicleId, [firstVehicle, secondVehicle]),
+      ))).toEqual([before]);
+      expect(await db.select().from(fees).where(and(
+        eq(fees.feeTypeId, feeTypeId), eq(fees.studentId, 'history-student-02'), eq(fees.academicYear, '2026-2027'),
+      ))).toHaveLength(0);
+    } finally {
+      await db.execute(sql.raw(`DROP TRIGGER IF EXISTS ${raceTrigger} ON fees`));
+      await db.execute(sql.raw(`DROP FUNCTION IF EXISTS ${raceTrigger}()`));
+      await db.delete(studentRoutes).where(eq(studentRoutes.id, rollbackId));
+    }
+  });
+
+  it('keeps the live capacity limit when two different students take the last seat', async () => {
+    const vehicleId = `history-route-last-seat-${suffix}`;
+    await db.insert(vehicles).values({ id: vehicleId, name: 'History last-seat bus', brand: 'Ford', model: 'Transit',
+      year: 2024, capacity: 1, licensePlate: `H-RC-${suffix}` });
+    try {
+      const results = await Promise.all(['history-student-05', 'history-student-06'].map(studentId =>
+        request('/student-routes', '2026-2027', 'POST', { studentId, vehicleId, assignmentDate: '2026-09-20' })));
+      expect(results.map(result => result.status).sort()).toEqual([200, 409]);
+      expect(await db.select().from(studentRoutes).where(eq(studentRoutes.vehicleId, vehicleId))).toHaveLength(1);
+    } finally {
+      await db.delete(studentRoutes).where(eq(studentRoutes.vehicleId, vehicleId));
+      await db.delete(vehicles).where(eq(vehicles.id, vehicleId));
+    }
   });
 });
