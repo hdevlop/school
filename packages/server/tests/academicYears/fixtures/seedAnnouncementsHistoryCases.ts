@@ -57,7 +57,8 @@ try {
           ${item.id}, ${yearId}, 'history-admin', ${item.classId}, ${classIds},
           ${`History ${item.id}`}, ${`History fixture content for ${item.id}`},
           ${item.audience}, ${item.published}, ${item.publishDate}, ${item.expiryDate}
-        ) on conflict (id) do update set class_ids = excluded.class_ids
+        ) on conflict (id) do update set class_ids = excluded.class_ids,
+          publish_date = excluded.publish_date, expiry_date = excluded.expiry_date
       `;
     }
     await tx`

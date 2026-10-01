@@ -80,7 +80,8 @@ export const historyAnnouncementCases = [
     published: true, publishDate: '2026-09-10T08:00:00.000Z', expiryDate: '2027-05-01T08:00:00.000Z' },
   { id: 'history-announcement-2026-class', year: '2026-2027', audience: 'class',
     classId: 'history-class-2026', published: false,
-    publishDate: '2026-10-01T08:00:00.000Z', expiryDate: '2027-05-01T08:00:00.000Z' },
+    // Still upcoming for getUpcoming() until this date passes, late in the year.
+    publishDate: '2027-04-01T08:00:00.000Z', expiryDate: '2027-05-01T08:00:00.000Z' },
 ] as const;
 
 export const historyAssessmentCases = [
