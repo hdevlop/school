@@ -11,7 +11,7 @@ export default function PageHeaderGlobalActions() {
 
   return (
     <>
-      <ViewingYearSelector inHeader />
+      <ViewingYearSelector placement="header" />
       <NGlobalActions>
         <NotificationsMenu />
         <LanguageSwitcher />

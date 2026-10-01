@@ -14,6 +14,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { visibleNavItems, type GatedNavItem, type NavViewer } from './navigationAccess';
 import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
 import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYearBanner';
+import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { useSessionExpiryRedirect } from '@/shared/useSessionExpiryRedirect';
 
 const THEME_SETTINGS_NAV_ID = 'settings:theme';
@@ -256,7 +257,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         // even though the desktop rail is collapsed.
         logo={({ collapsed, isMobile }) => {
           const showExpandedMark = isMobile || !collapsed;
-          return (
+          const mark = (
             <div className="flex min-w-0 items-center gap-2">
               <NThemeImage
                 slot={showExpandedMark ? 'sidebarLogoExpanded' : 'sidebarLogoCollapsed'}
@@ -270,7 +271,13 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
               )}
             </div>
           );
+          // At phone width the page header has no room for the year, so the
+          // drawer carries it under the logo instead.
+          return isMobile ? <>{mark}<ViewingYearSelector placement="sidebar" /></> : mark;
         }}
+        // The drawer's header stacks the logo and the year at phone width.
+        // Only the drawer renders below lg, so this never reaches the rail.
+        classNames={{ sidebarHeader: 'max-sm:h-auto max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:pt-1 max-sm:pb-3' }}
         navItems={navItems}
         activePath={pathname}
         isActive={isSidebarItemActive}
