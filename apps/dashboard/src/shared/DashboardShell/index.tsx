@@ -12,6 +12,7 @@ import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { visibleNavItems, type GatedNavItem, type NavViewer } from './navigationAccess';
+import { PAGE_ACCESS } from '@/shared/pageAccess';
 import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
 import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYearBanner';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
@@ -191,7 +192,7 @@ function SidebarFooterContent({ collapsed }: Readonly<{ collapsed: boolean }>) {
   const { t } = useTranslation();
   const isExpanded = !collapsed;
   const role = (user as any)?.role;
-  const canManageSettings = role === 'admin' || role === 'principal';
+  const canManageSettings = PAGE_ACCESS.settings({ role, can: () => false });
   const itemClassName =
     'flex h-8 w-full cursor-pointer items-center gap-3 rounded-md px-2 text-left text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground';
 

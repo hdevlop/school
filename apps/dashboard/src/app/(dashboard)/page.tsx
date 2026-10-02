@@ -1,14 +1,7 @@
-
-"use client"
 import Dashboard from '@/features/Dashboard';
+import { requirePageAccess } from '@/shared/requirePageAccess';
 
-function DashboardPage() {
-
-  return (
-
-      <Dashboard/>
-  
-  );
+export default async function DashboardPage() {
+  await requirePageAccess('dashboard');
+  return <Dashboard />;
 }
-
-export default DashboardPage;

@@ -17,6 +17,8 @@ Dedicated accounts for each role and a controlled recovery mailbox. Use an ident
 - [ ] **authentication-R03**: Compare Remember Me enabled and disabled using fresh browser contexts; inspect cookie attributes without copying values.
 - [ ] **authentication-R04**: Repeat allowed/denied navigation for all twelve roles from the committed grants; isolated contexts must not share sessions.
 - [ ] **authentication-R05**: With two tabs in the same session, log out in one; the other must lose protected access. Observe an overlapping protected request; no late response may restore the session.
+- [ ] **authentication-R06**: As principal, accounting, teacher, parent and student, type a denied page URL (for example `/users`, `/payroll` or `/fees`) and repeat through client navigation. Expect the server to redirect before the restricted screen appears; hiding its sidebar link alone does not pass. Verify an allowed shared page still opens, and its records remain limited by API ownership.
+- [ ] **authentication-R07**: Open `/` as a parent or student; expect `/students` and the existing family view. Open `/` as a driver or an account outside the staff dashboard group; expect `/notifications` without school charts or a redirect loop.
 
 ## Owned-fixture mutations
 

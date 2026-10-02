@@ -1,11 +1,10 @@
-import { requireRole } from '@/najm.server';
+import { requirePageAccess } from '@/shared/requirePageAccess';
 
 // Reads the per-request session cookie, so it cannot be prerendered.
 export const dynamic = 'force-dynamic';
 
 /**
- * Settings is the one screen restricted to a subset of signed-in roles, and the
- * restriction belongs on the server.
+ * Settings follows the shared page access rule on the server.
  *
  * It used to be a `useEffect` in the page that called `router.replace('/')`
  * once the client knew the role. That redirect raced the session verification
@@ -17,7 +16,7 @@ export const dynamic = 'force-dynamic';
  * Backend authorization remains authoritative for the settings data itself.
  */
 export default async function SettingsLayout({ children }: { children: React.ReactNode }) {
-  await requireRole(['admin', 'principal']);
+  await requirePageAccess('settings');
 
   return children;
 }
