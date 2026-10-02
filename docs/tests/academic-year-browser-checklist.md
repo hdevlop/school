@@ -7,7 +7,9 @@ the expected result; a step you could not run is `BLOCKED` with the reason.
 
 ## Latest browser checkpoint, 2026-10-01
 
-**Latest authorized fixes and continuation:** main Playwright **5 passed** (43.2 seconds), fixture payment **1 passed** (7.4 seconds), fixture empty-year/Arabic **2 passed** (25.5 seconds). Students no-match display, unauthorized Student actions and suppressed authorization-error UI are fixed. Existing main accounting credentials were set through admin REST and stored locally under ignored `.cache/`; historical finance/refusal, exact parent/student/teacher ownership and sampled-frame rapid switching pass. A fixture payment dated today allocated to a closed old year, then was voided with cash/balances restored. Actual empty draft 2023-2024 Students and Arabic year notices pass. Fixture :3103 is stopped; main :3102 remains running. Root section **0.1f** is the latest resume point.
+**Assistant continuation:** OpenRouter / `openai/gpt-oss-120b` now answers successfully. Final admin Chrome check: 1 passed, 48.5 seconds; real tool results exactly match REST and PostgreSQL for selected 2024-2025 / 2026-2027 (100 / 106 students), and switching year clears the previous chat. Actual teacher, parent and student SSE conversations refuse a request for 2024-2025 while viewing active 2026-2027, with no tool execution. Historical chat transport itself returns 403 for all three. This closes the focused step 6 assistant prerequisite/check; role conversations are authenticated API evidence, not separate role UI runs. Root section **0.1j** and the latest ledger entry are the current assistant checkpoint.
+
+**Latest authorized fixes and continuation:** main Playwright **5 passed** (43.2 seconds), fixture payment **1 passed** (7.4 seconds), fixture empty-year/Arabic **2 passed** (25.5 seconds). Students no-match display, unauthorized Student actions and suppressed authorization-error UI are fixed. Existing main accounting credentials were set through admin REST and stored locally under ignored `.cache/`; historical finance/refusal, exact parent/student/teacher ownership and sampled-frame rapid switching pass. A fixture payment dated today allocated to a closed old year, then was voided with cash/balances restored. Actual empty draft 2023-2024 Students and Arabic year notices pass. Fixture :3103 is stopped; main :3102 remains running. Root section **0.1f** records that finance/browser checkpoint; **0.1j** is the latest assistant checkpoint.
 
 **Earlier fixture continuation: 4 passed (26.4 seconds).** Adam, Omar, Mariam and Aya passed without fixture domain changes in that earlier pass. Its empty-module evidence and no-match finding are preserved in the ledger; the new fixes and entirely empty-year case above supersede its open items.
 
@@ -23,17 +25,17 @@ Playwright resumed these checks in its own headless Chrome; Chrome MCP reconnect
 | Delayed reads | **PASS:** old response completes after active selection; sampled animation frames match visible counts and student IDs to the heading year. Final 106 active students. |
 | Arabic/phone/keyboard | **PASS on Students/Fees at actual 390 × 844:** no overflow; concurrent layout now places the selector in the drawer below 640 px; settled selector fits and its RTL menu accepts keyboard selection with focus returned. Main language restored to French. |
 | No-match filter | **PASS:** Fees and fixed Students search remain available, show no results and recover after clearing. |
-| Print | **PASS:** actual Print opens receipt popup; browser PDF and screenshot show Rim Qadiri, 2026-06-01, 1,600 MAD. Native OS print dialog/physical printing remain unrun. |
+| Print | **PASS:** actual Print opens receipt popup; browser PDF and screenshot show Rim Qadiri, 2026-06-01, 1,600 MAD. Native OS print dialog/physical printing dropped by the owner (2026-10-01). |
 | Principal closed-year Edit | **PASS:** fixture 2025-2026 A → B → A through normal Edit, audit principal/time/reason, current projection unchanged and year remains closed. Temporary five normal grants removed; exact original four grants restored. |
 | Accounting/payment | **PASS:** existing accounting historical finance/refusal and fixture normal cash payment dated today against an old fee. Payment voided afterward; audit retained. |
 | Owned/empty | **PASS:** exact owned active Students IDs 1 / 1 / 72; actual empty fixture draft-year Students returns 200 `[]` with the empty state. |
-| Still separate | Assistant **BLOCKED** (no provider/model); owner per-module visual/policy review is **OPEN**; activation **SCHEDULED 2027-09-01**. |
+| Still separate | Owner per-module visual/policy review is **OPEN**. Focused local assistant year/refusal acceptance now passes (0.1j); production and broader model acceptance remain separate. Activation (step 7) was dropped by the owner on 2026-10-01. |
 
 Four dashboard source/test files and three documentation files changed during the latest authorized fixes. Full details, setup retries, final gates and cleanup are in [the ledger](academic-year-history.md). Combined unchecked steps below may have partial or dated evidence above; they are not automatically full acceptance.
 
 ## Before you start
 
-**Current reseed checkpoint:** :3102 has 100 / 103 / 106 enrollments across 2024-2025 / 2025-2026 / 2026-2027, with 103 students enrolled in multiple years. Active year is 2026-2027; all three registered years are open. Fresh transport checks remain separate from browser evidence. Main accounting uses its newly set local credential; closed-year principal UI used the fixture. `/api/ai-settings` still returns 204. Root plan section **0.1f** is the latest resume point.
+**Current reseed checkpoint:** :3102 has 100 / 103 / 106 enrollments across 2024-2025 / 2025-2026 / 2026-2027, with 103 students enrolled in multiple years. Active year is 2026-2027; all three registered years are open. Fresh transport checks remain separate from browser evidence. Main accounting uses its newly set local credential; closed-year principal UI used the fixture. `/api/ai-settings` now returns 200 with enabled OpenRouter / `openai/gpt-oss-120b` and `hasKey:true`. Root plan section **0.1j** is the latest assistant checkpoint; **0.1f** retains the finance/browser details.
 
 **Which database.** The plan's scenarios need students who stay across years.
 
@@ -66,7 +68,7 @@ was written.
 | 4. Rapid switching | **PASS** (read part). With 2025-2026 requests held 4 s in the page, 2025-2026 then 2026-2027 were chosen 0.4 s apart, so the older answer came last: the page went to 2026-2027 and stayed there, and its six visible names are all 2026-2027 students. While a year loads, the header reads "0 students total" (finding 5). The in-flight write was not run. **2026-09-30:** the Edit form is a modal dialog, so the year cannot change under it in the same tab (the selector sits behind it), and other tabs keep their own year; the save above carried the year the form was opened in (`X-Academic-Year: 2025-2026`). The header count is fixed (finding 5). |
 | 5. Principal / accounting | **PASS with findings** (third pass, Playwright, see below). The principal edited a 2024-2025 grade's feedback with 2024-2025 selected (200; without the year, 404 because the request stays in the active year) and it was set back. Accounting was refused the same edit and the grade stayed unchanged, but with 401 (finding 8). Accounting opened Fees, switched to 2024-2025 and saw that year's 100 students and balances. Neither role has a finance menu (finding 9). Paying an old year's fee today was not run: it writes a payment. **Payment, 2026-09-30: PASS.** As accounting with 2024-2025 selected, 100 MAD cash on installment #2 (due 2024-10-01) of fee `aoS40tuEl4` for Hasna Khattabi, dated 2026-09-30: payment `BkNm1CbhRd`, receipt `RCP-20260930-GM_9UZV88S`, completed and settled that day. This month's payments went from 75 / 321,415 to 76 / 321,515 MAD and the 2026-2027 dashboard's income for the month and year rose by 100; in 2024-2025 her paid total went from 100 to 200, her balance from 17,436 to 17,336, the installment became paid and the year's collection rate rose, while that year's income stayed unchanged. The first choice (Charaf Fettah) was refused because a pending 2024 cheque reserves each of his open installments, which is the reservation rule working. |
 | 6. Limited roles | **PASS with one finding.** Teacher and parent have no year selector; the header shows 2026-2027 as plain text. For teacher, parent and student, `X-Academic-Year: 2024-2025` and `?academicYear=2024-2025` are refused with 403, a 2024-2025 grade by ID with 403, and a 2024-2025-only student by ID with 404. In the page, `/students?academicYear=2024-2025` dropped the value and showed the active year; `/students/<past id>` showed none of that student's data but drew an empty profile (finding 10). Parent: 2 children and their 8 grades; student: herself and her 4 grades; teacher: 64 grades, which equals the teacher rule (students in her 18 sections on the grade's date) evaluated in SQL; a teacher with no graded sections sees 0. The assistant was not asked: its model server was unreachable. |
-| 7. Activation | NOT RUN: changes the school's active year; needs a disposable database. |
+| 7. Activation | **REMOVED 2026-10-01** by the owner: not necessary. |
 | 8. RTL, mobile, keyboard, forms | **PARTIAL.** Arabic: `dir="rtl"`, `lang="ar"`, the selector's label and "(الحالية)" translated, no sideways scroll; dropdown menus stay left-to-right (finding 6). Phone: at 500 px, Chrome's narrowest window, the selector is fully visible and nothing scrolls sideways; 390 px not measured. A class filter kept across years matches by name: 2AC in 2024-2025 listed exactly that year's 11 students. Keyboard and the failed-request state are **inconclusive**: the Chrome window was hidden, so screenshots failed, focus did not move into the menu and React Query paused its retries. **2026-09-30 (Playwright): keyboard PASS, error state PASS.** Tab reaches the selector (19 presses on Students), Enter opens it on the first year, arrows move, Enter chooses 2025-2026 and closes the menu with focus back on the selector, and Escape closes it without a change. A refused list shows "Accès refusé" (Staff for the principal) and a refused record "Student not found" (finding 10); a loading dashboard, Fees header or Staff statistics show no figures instead of 0. **390 px:** the selector is fully visible (x 124-265) and nothing scrolls sideways, but the page title and the selector's year are drawn over each other, and the chat button covers the pagination's next button (finding 13, fixed the same day: no overlap on seven pages). |
 
 ### Findings
@@ -83,7 +85,7 @@ was written.
 | Receipt | Generated receipt HTML/date/amount **PASS with temporary capture**; native popup/print preview **NOT RUN**. |
 | Limited-role URL UI | Parent/teacher query links and all three historical-only IDs **PASS**; student's query-link UI case **NOT RUN**. Earlier direct REST/MCP checks stay separate. |
 | Principal closed-year form | **BLOCKED:** fixture principal lacks Student grants, although sign-in succeeds. Main demo's years are all open. |
-| Assistant / activation | Assistant **BLOCKED** (settings 204); activation **SCHEDULED 2027-09-01**. |
+| Assistant | Assistant **BLOCKED** (settings 204). Activation was later dropped from the checklist (2026-10-01). |
 
 Three browser fixes passed focused tests, lint, full typecheck, locale check and production build; see [the ledger](academic-year-history.md) for exact scope. The owner subsequently reseeded the main database, so prior IDs/counts/relationships must be rechecked. Full owner visual acceptance remains open.
 
@@ -298,7 +300,8 @@ Tick each line and write the outcome next to it.
       rows appear; no rows or error from an earlier year flash under it.
       Playwright 2026-10-01 automated equivalent: real old reply held;
       every sampled animation frame's card IDs/count matches its year;
-      no denied state. Actual DevTools Slow 4G was not used.
+      no denied state. A real DevTools Slow 4G run was dropped by the
+      owner on 2026-10-01; the held-response evidence stands.
 - [x] Open an edit form, switch year, submit: the write goes to the year the
       form was opened in, or the form resets as the dirty-form rule says.
       Chrome fixture 2026-09-30: the modal blocks same-tab switching;
@@ -326,32 +329,27 @@ Tick each line and write the outcome next to it.
 
 - [x] No year selector; the header names the active year.
       Playwright 2026-10-01: teacher/parent/student desktop, 2026-2027.
-- [ ] A link carrying `?academicYear=<past year>`, a past-year record ID
+- [x] A link carrying `?academicYear=<past year>`, a past-year record ID
       typed into the URL, and the assistant asked for last year's data are
       all refused or show only the active year.
       A permanent identity readable through ownership may return 200 without
       enrollment in the active year; its class, section, placement and year
       status must be null. Require 404 for an unowned identity, not every ID
       that also appears in history (plan section 4.3).
-      URL/ID UI cases passed 2026-10-01; assistant remains blocked.
+      URL/ID UI cases passed 2026-10-01. Actual GPT-OSS conversations now
+      explain the historical restriction for all three roles without calling
+      tools; a historical chat URL also returns 403 for each role. These are
+      authenticated SSE/API checks; admin year-switch chat passed in Chrome.
 - [x] Each sees only their own or their children's records.
       Playwright 2026-10-01 Students responses exactly match SQL ownership:
       parent/student/teacher 1 / 1 / 72. Own/excluded-name filters and clear
       recovery pass. Earlier module-specific ownership evidence is separate.
 
-### 7. Activating the next year (at the real start of 2027-2028, not now)
+### 7. Activating the next year (removed)
 
-The school is in 2026-2027, and during the year an admin only looks back at
-2025-2026 and 2024-2025 (steps 1-5). Activation accepts only the next draft
-year from its first reporting day, so this happens once, on or after
-2027-09-01, when the school opens 2027-2028. Do not fake the date to run it
-early; the server side (one switch, two at once, rollback) passes on
-`school_history_test`.
-
-- [ ] With one tab on "active" and another on an explicit old year, activate
-      2027-2028. The "active" tab moves to it after its context refreshes;
-      the explicit tab stays. Only the lifecycle action changed Settings and
-      current classes.
+Removed on 2026-10-01: the owner ruled a browser activation check not
+necessary. The server side (one switch, two at once, rollback) passes on
+`school_history_test`. The number is kept so references to step 8 stay valid.
 
 ### 8. Language, layout and forms
 
