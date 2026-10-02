@@ -1,3 +1,4 @@
+import { ChatController } from 'najm-chatbot';
 import { AlertController } from '../modules/alerts/AlertController';
 import { AnnouncementController } from '../modules/announcements/AnnouncementController';
 import { BehaviorRewardController } from '../modules/behaviorRewards/BehaviorRewardController';
@@ -77,3 +78,6 @@ export const yearScopedModules = {
   'finance-dashboard': FinanceDashboardController,
   grades: GradeController,
 };
+
+/** Chat is an HTTP consumer of scoped tools; it exposes no MCP tool group. */
+export const yearRequestControllers = [...Object.values(yearScopedModules), ChatController];

@@ -11,10 +11,10 @@ import { guards } from 'najm-guard';
 import { FileCategory } from 'najm-storage';
 import { mcp } from 'najm-mcp';
 import { email, type EmailPluginConfig, type ProviderConfig } from 'najm-email';
-import { chatbot } from 'najm-chatbot';
+import { chatbot, CHATBOT_CONTEXT_PROVIDER } from 'najm-chatbot';
 import { studioAssistant } from 'najm-chatbot/studio-assistant';
 import { rag, ragStudio } from 'najm-rag';
-import type { NajmPlugin } from 'najm-core';
+import { plugin, type NajmPlugin } from 'najm-core';
 export { themeConfig } from './themeConfig';
 
 import { LANGUAGE_HEADER, schoolI18n } from '@sms/contracts/locales';
@@ -22,6 +22,7 @@ import { db } from '../database/db';
 import { auth, isAuth, isAdmin } from '../auth';
 import { schoolMcpYearHooks } from '../modules/academicYears/requestYear';
 import { yearScopedModules } from './yearScope';
+import { SchoolChatContextProvider } from '../modules/chat/SchoolChatContextProvider';
 
 export const guardConfig = () => guards({ default: [isAuth()] });
 
@@ -332,6 +333,12 @@ export const chatbotConfig = () =>
   });
 
 export const studioAssistantConfig = () => studioAssistant();
+
+export const chatYearContextConfig = () => plugin('school-chat-year-context')
+  .requires('rag', 'chatbot')
+  .services(SchoolChatContextProvider)
+  .alias(CHATBOT_CONTEXT_PROVIDER, SchoolChatContextProvider)
+  .build();
 
 export const ragStudioConfig = () => ragStudio({ auth: 'standalone' });
 

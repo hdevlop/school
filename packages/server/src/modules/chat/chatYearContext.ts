@@ -1,0 +1,15 @@
+import { ChatController } from 'najm-chatbot';
+import type { Container } from 'diject';
+import type { MiddlewareHandler } from 'hono';
+import { INJECTION_TYPES, USER } from '../../najm';
+import { schoolChatYearContext, SchoolChatContextProvider } from './SchoolChatContextProvider';
+
+/** Runs after the shared year boundary (50); never resolves or authorizes a second year. */
+export function registerChatYearContext(container: Container) {
+  const handler: MiddlewareHandler = async (_context, next) => {
+    const provider = await container.resolve(SchoolChatContextProvider);
+    const actor = container.get(USER) as { role?: string } | undefined;
+    return schoolChatYearContext.run(provider.describeYear(actor?.role), next);
+  };
+  container.setInjection({ type: INJECTION_TYPES.MIDDLEWARE, target: ChatController, order: 55, handler });
+}

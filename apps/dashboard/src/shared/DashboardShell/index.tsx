@@ -4,7 +4,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ImageIcon, LogOut, Palette, Settings } from 'lucide-react';
-import { Chatbot } from 'najm-chatbot/react';
+import { YearScopedChatbot } from '@/features/Chat/components/YearScopedChatbot';
 import { SignOutButton, useAuth, usePermissions } from 'najm-auth/client/react';
 import { NSidebar, NSidebarProvider, useNSidebar, type NavItem } from 'najm-kit';
 import { clearNajmUiPreferences } from 'najm-kit/server';
@@ -302,8 +302,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
       </div>
 
 
-      <Chatbot
-        apiPath="/api/chat"
+      <YearScopedChatbot
         settingsApiPath="/api/ai-settings"
         mcpApiPath="/api/mcp"
         testApiPath=""
