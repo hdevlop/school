@@ -167,7 +167,7 @@ export default function FinancialOperationsPage() {
   };
 
   return (
-    <div className="h-full overflow-y-auto px-4 pb-8">
+    <div className="h-full min-w-0 overflow-y-auto px-4 pb-8">
       <header className="mb-5 rounded-xl border bg-card p-5">
         <div className="mb-2 flex items-center justify-between">
           {/* This page predates NPageHeader and carries its own mobile sidebar trigger. */}
@@ -188,14 +188,14 @@ export default function FinancialOperationsPage() {
         <p className="mt-1 text-sm text-muted-foreground">{t('financialOperations.description')}</p>
       </header>
 
-      <div className="grid gap-4 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <Panel title={t('financialOperations.checksTitle')} description={t('financialOperations.checksDescription')} icon={Activity} badge={checks.length || null}>
           <div className="max-h-[28rem] space-y-2 overflow-y-auto pr-1">
             {checks.length === 0 ? <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">{t('financialOperations.noChecks')}</p> : checks.map((payment: any) => (
               <div key={payment.id} className="rounded-lg border p-3">
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <p className="truncate font-medium">{payment.student?.name || payment.studentId}</p>
                       <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize ${checkStatusBadge[payment.status] ?? 'bg-muted text-muted-foreground'}`}>{t(`financialOperations.checkStatuses.${payment.status}`)}</span>
                     </div>

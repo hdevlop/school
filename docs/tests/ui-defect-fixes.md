@@ -37,7 +37,8 @@ Verification:
   compilation, TypeScript, page generation and build traces. The default build
   attempt encountered `ENOTEMPTY` while clearing the active `.next` directory;
   verification used a separate build directory.
-- Fresh connected/browser verification: **NOT RUN**. Browser discovery returned
+- Initial connected/browser verification: **NOT RUN** (superseded by the focused
+  [2026-10-02 release replay](academic-year-release-2026-10-02.md)). Browser discovery returned
   no connected browser. The original captures establish the defects, not the
   appearance after these changes.
 

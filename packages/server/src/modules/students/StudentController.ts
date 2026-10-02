@@ -27,10 +27,18 @@ export class StudentController {
   @Get()
   @CanList()
   @Validate({ query: studentListQuery })
-  @McpTool('List all students')
+  @McpTool({ description: 'List all students enrolled in the selected academic year. Liste des élèves inscrits pour l’année scolaire sélectionnée. قائمة تلاميذ السنة الدراسية المحددة.', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getStudents(@Query('onDate') onDate?: StudentListQuery['onDate']) {
     return this.studentService.getAll(onDate);
+  }
+
+  @Get('/count')
+  @CanList()
+  @McpTool({ description: 'Get the exact total number of students enrolled in the selected academic year, limited to records this account can read. Nombre total d’élèves pour l’année scolaire sélectionnée. العدد الإجمالي للتلاميذ في السنة الدراسية المحددة.', readOnly: true })
+  @ResMsg('students.success.retrieved')
+  async getStudentCount() {
+    return this.studentService.getCount();
   }
 
   @Get('/:id')

@@ -301,7 +301,7 @@ export const ragConfig = (): NajmPlugin => {
       truncateDimensions: process.env.RAG_EMBEDDING_TRUNCATE_DIMENSIONS === 'true',
       queryPrefix: process.env.RAG_EMBEDDING_QUERY_PREFIX ??
         (qwen
-          ? 'Instruct: Retrieve the school management tool that fulfills the teacher request.\nQuery: '
+          ? 'Instruct: Retrieve the school management tool that fulfills the user request.\nQuery: '
           : provider === 'openai-compatible'
           ? 'task: search result | query: '
           : ''),

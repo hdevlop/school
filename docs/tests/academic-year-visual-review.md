@@ -141,7 +141,7 @@ chat widget's refresh-and-retry 401 on `/api/mcp` (the retry succeeds).
   lint pass, and Attendance shows "1 octobre 2026" at both widths. The
   hydration error on that recapture fits the time-zone mismatch below: it
   was taken at 00:43 server time, 23:43 in the browser.
-- **Migration 0062: keep, not applied.** The installed najm-chatbot declares
+- **Migration 0062: keep; earlier application observation superseded.** The installed najm-chatbot declares
   `ai_settings.provider` as text and supports providers (`openrouter`,
   `mistral`, `deepseek`) that the 0009 enum rejects, so an OpenRouter
   provider cannot be saved until it runs. `db:check` passes with it. Applying
@@ -162,6 +162,15 @@ chat widget's refresh-and-retry 401 on `/api/mcp` (the retry succeeds).
   `0062_ai_settings_provider_text.sql` (`ai_settings.provider` enum to text),
   not mentioned in the fix record. It is not applied: `school` holds 62
   migrations (0000-0061) and the column is still the enum.
+
+**2026-10-02 correction to the migration observations above:** a fresh read-only
+check of `school` reports 63 migration journal entries and
+`ai_settings.provider` as `text NOT NULL DEFAULT 'ollama'`. Migration 0062 was
+already applied after the earlier backup; this review does not apply it again.
+The isolated migration regression passes for both an enum and an already-text
+column, preserving the probe's encrypted key. The earlier unapplied notes are
+historical observations, not the current prerequisite. See the
+[release follow-up](academic-year-release-2026-10-02.md).
 
 ## Defects found (not year-specific)
 

@@ -21,6 +21,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
       `The dashboard's selected academic year is ${this.year.label}.`,
       'Year-scoped tools return records for this selected year. Describe their results as belonging to this year only.',
       'A student admission/enrollmentDate or shared identity is not proof of membership in another academic year.',
+      'For the total number of students, use students_get_student_count and report its exact count. Do not estimate totals by counting a long list yourself.',
       canUseOtherAcademicYears(role)
         ? 'If the user asks for another year, ask them to select that year in the dashboard before continuing.'
         : 'This account can access only the active academic year. If the user asks for another year, explain the access restriction and do not query historical records. Never describe this restriction as an empty historical result.',

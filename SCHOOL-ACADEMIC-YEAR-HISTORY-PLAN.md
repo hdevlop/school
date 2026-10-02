@@ -162,6 +162,12 @@ At the owner's request, authenticated internal REST selected **`openai/gpt-oss-1
 
 ### 0.1j Configured assistant, selected-year transport and refusals (2026-10-01)
 
+The 2026-10-02 follow-up adds an exact, owned student-count tool, multilingual
+routing descriptions, a neutral Qwen retrieval instruction and waits for the
+client access token before mounting chat. French and Arabic greetings and
+selected-year counts pass locally. The dated results and release boundaries
+are in [the release follow-up](docs/tests/academic-year-release-2026-10-02.md).
+
 The owner saved the OpenRouter key and confirmed a successful greeting with `openai/gpt-oss-120b`; settings now reports `hasKey:true`. This supersedes the prerequisite checkpoints in 0.1g-0.1i.
 
 School connects the published widget to the existing account/year selection. Its supported API URL supplies the year, and the Next boundary forwards it to internal MCP through the normal header. The HTTP-only `ChatController` is a REST year consumer in `config/yearScope.ts`; business MCP registrations are unchanged. The shared validator rejects unauthorized, malformed, conflicting or unregistered selections before provider work. The widget resets its conversation on account/year changes, with the year reset proven in Chrome.
