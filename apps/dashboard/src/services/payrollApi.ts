@@ -5,6 +5,11 @@ export const getPayrollApi = async () => {
   return res.data
 }
 
+export const getPayrollRosterApi = async () => {
+  const res = await api.get('/payroll/roster')
+  return res.data
+}
+
 export const getPayrollByIdApi = async (id) => {
   const res = await api.get(`/payroll/${id}`)
   return res.data

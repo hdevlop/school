@@ -37,6 +37,17 @@ export const usePayroll = (options?) => {
     fetch: () => payrollApi.getPayrollByPeriodApi(period), enabled: !!period && enabled,
   });
 
+  // Who the period pays, teachers included: the server's payroll eligibility.
+  const {
+    data: rosterData,
+    isLoading: isRosterLoading,
+    isError: isRosterError,
+    error: rosterError,
+  } = useYearScopedDetail({
+    resource: 'payroll', parts: ['roster'],
+    fetch: payrollApi.getPayrollRosterApi, enabled,
+  });
+
   const { mutateAsync: updatePayslip, isLoading: isUpdating } = crud.useUpdate();
   const { mutateAsync: deletePayslip, isLoading: isDeleting } = crud.useDelete();
   const { mutateAsync: bulkDeletePayslips, isLoading: isBulkDeleting } = crud.useBulkDelete();
@@ -55,10 +66,15 @@ export const usePayroll = (options?) => {
 
   const payslips = Array.isArray(periodData?.payslips) ? periodData.payslips : [];
   const summary = periodData?.summary ?? null;
+  const roster = Array.isArray(rosterData) ? rosterData : [];
 
   return {
     payslips,
     summary,
+    roster,
+    isRosterLoading,
+    isRosterError,
+    rosterError,
     isError,
     error,
     refetch,

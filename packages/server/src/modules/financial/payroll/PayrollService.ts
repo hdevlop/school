@@ -59,6 +59,16 @@ export class PayrollService {
   }
 
   /**
+   * The people a payroll run pays: every active staff member with a salary,
+   * teachers included. The Staff list leaves teachers out, so the payroll
+   * screen reads this instead.
+   */
+  async getRoster() {
+    const activeStaff = await this.staffRepository.getByStatus('active');
+    return activeStaff.filter((member) => calculateStaffBasePay(member) > 0);
+  }
+
+  /**
    * Generate `pending` payslips for every active staff member with a salary that
    * does not yet have a payslip for the given period. Salary/name/role are snapshotted.
    */
@@ -75,9 +85,7 @@ export class PayrollService {
 
   private async generatePayroll(period: string, processedBy?: string, staffIds?: Set<string>) {
     this.payrollValidator.ensurePeriodInSelectedYear(period);
-    const activeStaff = await this.staffRepository.getByStatus('active');
-    const eligible = activeStaff.filter((member) =>
-      (!staffIds || staffIds.has(member.id)) && calculateStaffBasePay(member) > 0);
+    const eligible = (await this.getRoster()).filter((member) => !staffIds || staffIds.has(member.id));
 
     const alreadyPaid = new Set(await this.payrollRepository.getStaffIdsWithPayslip(period));
     const toCreate = eligible.filter((member) => !alreadyPaid.has(member.id));

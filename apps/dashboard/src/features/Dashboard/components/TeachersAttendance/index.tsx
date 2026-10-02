@@ -7,6 +7,8 @@ import { cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaffAttendanceMonthly } from '../../hooks/useDashboardHooks';
 import DashboardEmptyState from '../DashboardEmptyState';
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+import { hasNoFigures, monthValue } from '../../config/monthTrend';
 
 const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 const EXCLUDED_MONTH_KEYS = new Set(['jul', 'aug']);
@@ -20,7 +22,8 @@ interface TeachersAttendanceProps {
 }
 
 const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, todayLate = null, t }: any) => {
-  if (active && payload && payload.length) {
+  // A month that has not happened has no figures to show.
+  if (active && payload && payload.length && payload[0].value != null) {
     const month = payload[0].payload.month;
     // Another school year has no today: the server sends no figures for it.
     const isCurrent = month === CURRENT_MONTH_KEY && todayAbsent != null;
@@ -54,6 +57,7 @@ const CustomTooltip = ({ active = null, payload = null, todayAbsent = null, toda
 const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className }) => {
   const { t } = useTranslation();
   const { data: payload, isLoading, error, refetch } = useStaffAttendanceMonthly();
+  const { businessDate } = useBusinessDate();
 
   const data = useMemo(() => {
     const monthly: { month: string; absent?: number; late?: number; present: number; total: number }[] = payload?.monthly ?? [];
@@ -63,20 +67,20 @@ const TeachersAttendance: React.FC<TeachersAttendanceProps> = ({ className }) =>
         const monthKey = MONTH_KEYS[idx] ?? null;
         return {
           month: monthKey ? t(`common.monthsShort.${monthKey}`) : m.month,
-          absent: m.absent ?? 0,
-          late: m.late ?? 0,
+          absent: monthValue(m.absent, m.month, businessDate),
+          late: monthValue(m.late, m.month, businessDate),
         };
       })
       .filter((entry, idx) => {
         const originalKey = MONTH_KEYS[Number(monthly[idx]?.month.split('-')[1]) - 1];
         return !EXCLUDED_MONTH_KEYS.has(originalKey);
       });
-  }, [payload, t]);
+  }, [payload, t, businessDate]);
 
   const todayAbsent = payload?.todayAbsent ?? null;
   const todayLate = payload?.todayLate ?? null;
 
-  const noData = !data.length || data.every((d) => d.absent === 0 && d.late === 0);
+  const noData = !data.length || hasNoFigures(data, (d) => [d.absent, d.late]);
 
   return (
     <NCard

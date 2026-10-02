@@ -7,7 +7,6 @@ import { Badge, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSk
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
 import { useTranslation } from 'najm-i18n/react';
-import { useStaff } from '@/features/Staff/hooks/useStaff';
 import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -52,8 +51,11 @@ const PayrollTable = () => {
   );
   const effectivePeriod = shownPayrollPeriod(period, businessDate, year, periods);
 
-  const { staff, isStaffLoading, isError: isStaffError, error: staffError } = useStaff();
   const {
+    roster,
+    isRosterLoading,
+    isRosterError,
+    rosterError,
     payslips,
     summary,
     isPayrollLoading,
@@ -65,18 +67,14 @@ const PayrollTable = () => {
     isPaying,
   } = usePayroll({ period: effectivePeriod, enabled: !!year });
 
-  const isLoading = isStaffLoading || isPayrollLoading;
-  // The rows join the staff list with the period's payslips; either failing
+  const isLoading = isRosterLoading || isPayrollLoading;
+  // The rows join the payroll roster with the period's payslips; either failing
   // leaves the payroll unknown, not empty.
-  const loadError = (isStaffError ? staffError : null) ?? (isError ? error : null);
+  const loadError = (isRosterError ? rosterError : null) ?? (isError ? error : null);
 
-  // Only active staff with a salary can be paid — mirror the backend's eligibility.
-  const eligibleStaff = useMemo(
-    () => (Array.isArray(staff) ? staff : []).filter(
-      (member) => member?.status === 'active' && calculateStaffPay(member) > 0,
-    ),
-    [staff],
-  );
+  // The server's roster: active staff with a salary, teachers included. The
+  // Staff list leaves teachers out, so a month without payslips lost them.
+  const eligibleStaff = roster;
 
   const payslipByStaff = useMemo(() => {
     const map = new Map<string, any>();

@@ -35,6 +35,14 @@ export class PayrollController {
     return this.payrollService.getAll();
   }
 
+  @Get('/roster')
+  @isAdmin()
+  @McpTool('List the staff a payroll run pays: active, with a salary, teachers included')
+  @ResMsg('payroll.success.retrieved')
+  async getRoster() {
+    return this.payrollService.getRoster();
+  }
+
   @Get('/period/:period')
   @isAdmin()
   @Validate({ params: payslipPeriodParam })

@@ -18,6 +18,8 @@ import { useFinanceTrend } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import DashboardEmptyState from '../DashboardEmptyState';
+import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
+import { hasNoFigures, monthValue } from '../../config/monthTrend';
 
 interface IncomeExpensesTrendProps {
   className?: string;
@@ -37,7 +39,7 @@ const toLabel = (month: string, t: (k: string) => string) => {
 const INCOME_COLOR = '#1e40af';
 const EXPENSES_COLOR = '#f97316';
 
-type TooltipPayloadItem = { value: number; payload: { month: string } };
+type TooltipPayloadItem = { value: number | null; payload: { month: string } };
 type TrendTooltipProps = {
   active?: boolean;
   payload?: TooltipPayloadItem[];
@@ -60,7 +62,8 @@ const TrendTooltip = ({
   showToday,
   t,
 }: TrendTooltipProps & { t: (k: string) => string }) => {
-  if (active && payload && payload.length) {
+  // A month that has not happened has no figures to show.
+  if (active && payload && payload.length && payload[0].value != null) {
     const month = payload[0].payload.month;
     // Today's figures come only with the year that holds today; another
     // year's same month is not today.
@@ -69,11 +72,11 @@ const TrendTooltip = ({
       <div className="bg-white px-3 py-2 rounded shadow-lg border border-gray-200">
         <p className="text-sm font-semibold text-gray-800">{month}</p>
         <p className="text-sm" style={{ color: INCOME_COLOR }}>
-          {incomeLabel}: <span className="font-bold">{majorMoney(payload[0].value)}</span>
+          {incomeLabel}: <span className="font-bold">{majorMoney(payload[0].value ?? 0)}</span>
         </p>
         {payload[1] && (
           <p className="text-sm" style={{ color: EXPENSES_COLOR }}>
-            {expensesLabel}: <span className="font-bold">{majorMoney(payload[1].value)}</span>
+            {expensesLabel}: <span className="font-bold">{majorMoney(payload[1].value ?? 0)}</span>
           </p>
         )}
         {isCurrent && (
@@ -107,11 +110,13 @@ const TrendLegend = ({ incomeLabel, expensesLabel }: LegendProps) => (
 );
 
 type TrendRow = { month: string; income: number; expenses: number };
+type ChartRow = { month: string; income: number | null; expenses: number | null };
 
 const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '', academicYear }) => {
   const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const { data, isLoading, error, refetch } = useFinanceTrend(academicYear);
+  const { businessDate } = useBusinessDate();
   const incomeLabel = t('dashboard.finance.income');
   const expensesLabel = t('dashboard.finance.expenses');
 
@@ -124,24 +129,24 @@ const IncomeExpensesTrend: React.FC<IncomeExpensesTrendProps> = ({ className = '
   const todayIncome = Number(todayFigures?.todayIncome ?? 0);
   const todayExpenses = Number(todayFigures?.todayExpenses ?? 0);
 
-  const chartData = useMemo<TrendRow[]>(
+  const chartData = useMemo<ChartRow[]>(
     () => {
       const monthly: TrendRow[] = Array.isArray(payload) ? payload : payload?.monthly ?? [];
       return monthly
         .map((row) => ({
           month: toLabel(row.month, t),
-          income: Number(row.income ?? 0),
-          expenses: Number(row.expenses ?? 0),
+          income: monthValue(row.income, row.month, businessDate),
+          expenses: monthValue(row.expenses, row.month, businessDate),
         }))
         .filter((row, idx) => {
           const originalKey = MONTH_KEYS[Number(monthly[idx]?.month.split('-')[1]) - 1];
           return !EXCLUDED_MONTH_KEYS.has(originalKey);
         });
     },
-    [payload, t],
+    [payload, t, businessDate],
   );
   const noData = chartData.length === 0
-    || chartData.every((row) => row.income === 0 && row.expenses === 0);
+    || hasNoFigures(chartData, (row) => [row.income, row.expenses]);
 
   return (
     <NCard
