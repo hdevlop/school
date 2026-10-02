@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { formatSchoolDate, schoolDateFormat, schoolTimeFormat } from './schoolDateFormat';
+import { formatSchoolDate, schoolDateFormat, schoolTimeFormat, todayInTimeZone } from './schoolDateFormat';
 
 const base = {
   locale: 'en-US',
@@ -35,5 +35,14 @@ describe('school date formatting', () => {
     expect(schoolDateFormat('unexpected')).toBe('MM/DD/YYYY');
     expect(schoolTimeFormat(undefined)).toBe('12');
     expect(schoolTimeFormat('24')).toBe('24');
+  });
+});
+
+describe('school today', () => {
+  test('names the day in the school time zone, not the host one', () => {
+    const lateEvening = new Date('2026-10-01T23:43:00Z');
+    expect(todayInTimeZone('UTC', lateEvening)).toBe('2026-10-01');
+    expect(todayInTimeZone('Africa/Casablanca', lateEvening)).toBe('2026-10-02');
+    expect(todayInTimeZone('America/Los_Angeles', lateEvening)).toBe('2026-10-01');
   });
 });

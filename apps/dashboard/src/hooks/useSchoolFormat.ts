@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'react';
 import { useNajmFormat } from 'najm-kit';
 import { SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import { usePublicSettings } from '@/features/Settings/hooks/useSettings';
-import { formatSchoolDate, schoolDateFormat, schoolTimeFormat } from './schoolDateFormat';
+import { formatSchoolDate, schoolDateFormat, schoolTimeFormat, todayInTimeZone } from './schoolDateFormat';
 
 export function toMinorUnits(amount: number | string | null | undefined, fractionDigits: number): number | null {
   if (amount == null || amount === '') return null;
@@ -81,4 +81,12 @@ export function useSchoolFormat() {
     displayDateTime,
     percentFromHundred,
   };
+}
+
+/**
+ * Today's date in the school's time zone, which the server render and the
+ * browser share; each host's own clock can disagree around midnight.
+ */
+export function useSchoolToday(): string {
+  return todayInTimeZone(useNajmFormat().timeZone);
 }

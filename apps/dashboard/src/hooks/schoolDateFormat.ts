@@ -49,3 +49,16 @@ export function formatSchoolDate(
   }).format(date);
   return `${formattedDate}, ${formattedTime}`;
 }
+
+/**
+ * Today's calendar date ("yyyy-MM-dd") in the school's time zone. The server
+ * and the browser may sit in different zones, so "today" read from either
+ * host's clock can name different days around midnight.
+ */
+export function todayInTimeZone(timeZone: string, now: Date = new Date()): string {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric', month: '2-digit', day: '2-digit', timeZone, numberingSystem: 'latn',
+  }).formatToParts(now);
+  const part = (type: string) => parts.find((item) => item.type === type)?.value ?? '';
+  return `${part('year')}-${part('month')}-${part('day')}`;
+}

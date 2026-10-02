@@ -10,8 +10,6 @@ import {
   format,
   isSameDay,
   isSameMonth,
-  isToday,
-  startOfDay,
   startOfMonth,
   startOfWeek,
 } from 'date-fns';
@@ -30,8 +28,11 @@ import AnnouncementForm from '@/features/Announcements/components/AnnouncementFo
 import EventForm from '@/features/Events/components/EventForm';
 import { useEvents } from '@/features/Events/hooks/useEvents';
 import { useTranslation } from 'najm-i18n/react';
+import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useViewerRole } from '@/shared/useViewerRole';
+import { useViewingYearCalendar, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { dateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 
 type CalendarItemType = 'event' | 'announcement';
 
@@ -51,7 +52,7 @@ type CalendarItem = {
 
 type ViewMode = 'month' | 'week';
 
-const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 
 const itemStyle = {
   event: {
@@ -92,13 +93,20 @@ const formatTimeRange = (start?: string, end?: string) => {
 
 const getItemDate = (item: CalendarItem) => item.date;
 
-export default function CalendarPage() {
+// The events and announcements are the viewed year's, so the calendar opens on
+// a day of that year: today while the year holds it, otherwise its nearest
+// teaching day, as the attendance date does.
+function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   const { t } = useTranslation();
+  const { displayDate, locale } = useSchoolFormat();
+  const today = useSchoolToday();
+  const todayDate = useMemo(() => toLocalDate(today), [today]);
+  const weekdays = Array.from({ length: 7 }, (_, index) => new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + index))));
   // Everyone reads the calendar; only administrators add, change or delete on it.
   const { role } = useViewerRole();
   const canManage = role === 'admin' || role === 'principal';
-  const [currentDate, setCurrentDate] = useState(startOfDay(new Date()));
-  const [selectedDate, setSelectedDate] = useState<Date | null>(startOfDay(new Date()));
+  const [currentDate, setCurrentDate] = useState(openingDay);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(openingDay);
   const [viewMode, setViewMode] = useState<ViewMode>('month');
 
   const {
@@ -192,10 +200,9 @@ export default function CalendarPage() {
   const isLoading = isEventsLoading || isAnnouncementsLoading;
 
   const goToToday = useCallback(() => {
-    const today = startOfDay(new Date());
-    setCurrentDate(today);
-    setSelectedDate(today);
-  }, []);
+    setCurrentDate(todayDate);
+    setSelectedDate(todayDate);
+  }, [todayDate]);
 
   const handleSelectDate = useCallback((day: Date) => {
     setSelectedDate(day);
@@ -205,11 +212,11 @@ export default function CalendarPage() {
   const openEventDialog = (event = null) => {
     const isEdit = Boolean(event?.id);
     openDialog({
-      title: isEdit ? `Edit Event - ${event.title}` : 'Create Event',
+      title: isEdit ? `${t('events.dialogs.editTitle')} - ${event.title}` : t('events.dialogs.createTitle'),
       children: <EventForm event={event} initialDate={selectedDate} />,
       primaryButton: {
         form: 'event-form',
-        text: isEdit ? 'Update Event' : 'Create Event',
+        text: isEdit ? t('events.dialogs.updateButton') : t('events.dialogs.createButton'),
         loading: isEdit ? isUpdatingEvent : isCreatingEvent,
         onClick: async (data) => {
           if (isEdit) {
@@ -225,7 +232,7 @@ export default function CalendarPage() {
   const openAnnouncementDialog = (announcement = null) => {
     const isEdit = Boolean(announcement?.id);
     openDialog({
-      title: isEdit ? `Edit Announcement - ${announcement.title}` : 'Create Announcement',
+      title: isEdit ? `${t('announcements.dialogs.editTitle')} - ${announcement.title}` : t('announcements.dialogs.createTitle'),
       children: (
         <AnnouncementForm
           announcement={announcement}
@@ -234,7 +241,7 @@ export default function CalendarPage() {
       ),
       primaryButton: {
         form: 'announcement-form',
-        text: isEdit ? 'Update Announcement' : 'Create Announcement',
+        text: isEdit ? t('announcements.dialogs.updateButton') : t('announcements.dialogs.createButton'),
         loading: isEdit ? isUpdatingAnnouncement : isCreatingAnnouncement,
         onClick: async (data) => {
           if (isEdit) {
@@ -261,7 +268,7 @@ export default function CalendarPage() {
       warningText: t('common.deleteConfirm'),
       cancelText: t('common.cancel'),
       itemName: item.title,
-      confirmText: item.source === 'event' ? 'Delete Event' : 'Delete Announcement',
+      confirmText: item.source === 'event' ? t('events.dialogs.deleteButton') : t('announcements.dialogs.deleteButton'),
       loading: item.source === 'event' ? isDeletingEvent : isDeletingAnnouncement,
       onConfirm: async () => {
         if (item.source === 'event') {
@@ -274,9 +281,9 @@ export default function CalendarPage() {
   };
 
   const headerLabel = viewMode === 'month'
-    ? format(currentDate, 'MMMM yyyy')
-    : `Week of ${format(startOfWeek(currentDate, { weekStartsOn: 1 }), 'MMM d, yyyy')}`;
-  const displayDate = selectedDate || currentDate;
+    ? displayDate(currentDate, { month: 'long', year: 'numeric' })
+    : t('calendar.weekOf', { date: displayDate(startOfWeek(currentDate, { weekStartsOn: 1 }), { month: 'short', day: 'numeric', year: 'numeric' }) });
+  const selectedDisplayDate = selectedDate || currentDate;
   const maxItems = viewMode === 'week' ? 7 : 4;
 
   return (
@@ -288,10 +295,10 @@ export default function CalendarPage() {
       </NPageHeader>
 
       <Card className="flex min-h-0 flex-1 flex-col gap-0 overflow-hidden border bg-card py-0 shadow-sm">
-        <div className="flex h-16 shrink-0 items-center justify-between gap-3 border-b px-4">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b px-4 py-3">
           <div className="flex min-w-0 shrink-0 items-center gap-3">
             <div className="flex size-9 shrink-0 items-center justify-center rounded-md border bg-background shadow-sm">
-              <span className="text-sm font-bold leading-none text-foreground">{format(displayDate, 'd')}</span>
+              <span className="text-sm font-bold leading-none text-foreground">{format(selectedDisplayDate, 'd')}</span>
             </div>
             <div className="min-w-0">
               <h2 className="truncate text-sm font-semibold text-foreground sm:text-base">{headerLabel}</h2>
@@ -301,11 +308,11 @@ export default function CalendarPage() {
           <div className="hidden flex-1 items-center justify-center gap-3 text-[11px] leading-none text-muted-foreground md:flex">
             <span className="flex items-center gap-1.5">
               <span className={cn('size-2 rounded-full', itemStyle.event.dot)} />
-              Events
+              {t('calendar.events')}
             </span>
             <span className="flex items-center gap-1.5">
               <span className={cn('size-2 rounded-full', itemStyle.announcement.dot)} />
-              Announcements
+              {t('navigation.announcements')}
             </span>
           </div>
 
@@ -317,7 +324,7 @@ export default function CalendarPage() {
               className="h-8 border border-dashed border-primary bg-background px-3 text-primary hover:bg-primary/10"
             >
               <CalendarDays className="size-3.5" />
-              Today
+              {t('calendar.today')}
             </NButton>
             <NTabs
               value={viewMode}
@@ -334,19 +341,19 @@ export default function CalendarPage() {
                 },
               }}
               items={[
-                { value: 'month', label: 'Month view', icon: CalendarDays, content: null },
-                { value: 'week', label: 'Week view', icon: Clock, content: null },
+                { value: 'month', label: t('calendar.monthView'), icon: CalendarDays, content: null },
+                { value: 'week', label: t('calendar.weekView'), icon: Clock, content: null },
               ]}
             />
             {canManage && (
               <>
                 <NButton size="sm" onClick={() => openEventDialog()} className="h-8 px-3">
                   <Plus className="size-3.5" />
-                  Add event
+                  {t('calendar.addEvent')}
                 </NButton>
                 <NButton size="sm" variant="tertiary" onClick={() => openAnnouncementDialog()} className="h-8 px-3">
                   <Bell className="size-3.5" />
-                  Add announcement
+                  {t('calendar.addAnnouncement')}
                 </NButton>
               </>
             )}
@@ -354,12 +361,12 @@ export default function CalendarPage() {
         </div>
 
         {isLoading ? (
-          <NLoadingState surface="panel" label="Loading calendar..." className="min-h-0 flex-1" />
+          <NLoadingState surface="panel" label={t('calendar.loading')} className="min-h-0 flex-1" />
         ) : (
           <div className="flex min-h-0 flex-1 overflow-auto">
             <div className="flex min-w-[780px] flex-1 flex-col">
               <div className="grid shrink-0 grid-cols-7 border-b bg-secondary text-secondary-foreground">
-                {WEEKDAYS.map((day) => (
+                {weekdays.map((day) => (
                   <div key={day} className="flex h-9 items-center justify-center border-r border-secondary-foreground/20 px-3 text-[11px] font-semibold text-secondary-foreground last:border-r-0">
                     {day}
                   </div>
@@ -374,7 +381,7 @@ export default function CalendarPage() {
                   const dayItems = getItemsForDay(day);
                   const inMonth = viewMode === 'month' ? isSameMonth(day, currentDate) : true;
                   const isSelected = selectedDate && isSameDay(day, selectedDate);
-                  const currentDay = isToday(day);
+                  const currentDay = isSameDay(day, todayDate);
 
                   return (
                     <div
@@ -443,7 +450,7 @@ export default function CalendarPage() {
                                   type="button"
                                   onClick={() => handleDeleteItem(item)}
                                   className="hidden shrink-0 cursor-pointer text-muted-foreground transition-colors hover:text-destructive group-hover/item:block"
-                                  aria-label={`Delete ${item.title}`}
+                                  aria-label={`${t('common.delete')} ${item.title}`}
                                 >
                                   <Trash2 className="size-3" />
                                 </button>
@@ -460,7 +467,7 @@ export default function CalendarPage() {
                             }}
                             className="w-fit cursor-pointer rounded px-1 text-[10px] font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
                           >
-                            {dayItems.length - maxItems} more...
+                            {t('calendar.more', { count: dayItems.length - maxItems })}
                           </button>
                         )}
                       </div>
@@ -474,4 +481,13 @@ export default function CalendarPage() {
       </Card>
     </div>
   );
+}
+
+export default function CalendarPage() {
+  const yearKey = useViewingYearKey();
+  const year = useViewingYearCalendar();
+  const today = useSchoolToday();
+  const openingDay = toLocalDate(dateWithinYear(today, year)) ?? toLocalDate(today);
+  // Remount when the viewed year changes, and once its calendar has loaded.
+  return <CalendarPageForYear key={`${yearKey}:${year ? 'dated' : 'pending'}`} openingDay={openingDay} />;
 }

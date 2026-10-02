@@ -19,8 +19,8 @@ import { useTranslation } from 'najm-i18n/react';
 import * as sectionApi from '@/services/sectionApi';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
-import { localDateInput } from 'najm-kit/format';
 import { useViewingYearDate, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useSchoolToday } from '@/hooks/useSchoolFormat';
 
 type SectionTeacherAssignment = {
   id: string;
@@ -40,7 +40,7 @@ function StudentAttendanceTableForYear() {
   const { classes, isClassesLoading } = useClasses();
   const { attendance, submitRoster, isSubmittingRoster } = useStudentAttendance();
   // Marks are read for the viewed year only, so the register stays on its days.
-  const [selectedDate, setSelectedDate] = useViewingYearDate(localDateInput);
+  const [selectedDate, setSelectedDate] = useViewingYearDate(useSchoolToday());
   // With a viewing year the register lists the students enrolled and placed on
   // that day, in that day's section.
   const { students, error: studentsError, isStudentsLoading } = useStudentsOnDate(selectedDate);

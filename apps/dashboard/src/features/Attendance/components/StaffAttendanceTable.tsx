@@ -15,13 +15,13 @@ import { useStaffRoles } from '@/features/Staff/hooks/useStaffRoles';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
-import { localDateInput } from 'najm-kit/format';
 import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 import { useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useSchoolToday } from '@/hooks/useSchoolFormat';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
-  const [selectedDate, setSelectedDate] = useViewingYearDate(localDateInput);
+  const [selectedDate, setSelectedDate] = useViewingYearDate(useSchoolToday());
   const { staff, error: staffError, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
   const { activeStaffRoles, isStaffRolesLoading } = useStaffRoles({ activeOnly: true });
   const { attendance, submitRoster, isSubmittingRoster, isAttendanceLoading } = useStaffAttendance({ date: selectedDate });
