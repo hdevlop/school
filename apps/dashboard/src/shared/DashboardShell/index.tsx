@@ -297,7 +297,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
       {/* Below lg the page's last row (a list's pagination) reaches the right
           edge, under the chat button fixed in the bottom-right corner (56px,
           20px from each edge); pb-20 keeps it clear. */}
-      <div className='flex flex-col w-full h-full min-h-0 gap-2 pt-2 pb-20 lg:pb-2'>
+      <div className='dashboard-content flex min-w-0 flex-1 flex-col h-full min-h-0 gap-2 px-3 pt-2 pb-20 lg:px-2 lg:pb-2'>
         <ViewingYearBanner />
         {children}
       </div>

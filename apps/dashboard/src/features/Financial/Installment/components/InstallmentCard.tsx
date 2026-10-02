@@ -81,7 +81,7 @@ const InstallmentCard = ({ data }: any) => {
             <NSectionInfo
               icon={CheckCircle}
               iconColor="text-green-600"
-              label="Paid Date"
+              label={t('installments.table.paidDate')}
               value={displayDateOnly(installment.paidDate)}
               valueColor="text-green-600"
             />

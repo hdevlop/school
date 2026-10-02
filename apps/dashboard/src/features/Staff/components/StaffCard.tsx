@@ -7,12 +7,13 @@ import { useTranslation } from 'najm-i18n/react';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
-const resolveRoleLabel = (staff, language) => {
+const resolveRoleLabel = (staff, language, t) => {
   if (!staff?.role) return '-';
   const localized = staff?.roleLabels?.[language];
   if (localized) return localized;
   if (staff?.roleLabel) return staff.roleLabel;
-  return staff.role;
+  const key = `staff.roles.${staff.role}`;
+  return t(key) === key ? staff.role : t(key);
 };
 
 const StaffCard = ({ data }) => {
@@ -40,7 +41,7 @@ const StaffCard = ({ data }) => {
           </Label>
 
           <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">
-            {resolveRoleLabel(staff, language)}
+            {resolveRoleLabel(staff, language, t)}
           </span>
         </div>
 

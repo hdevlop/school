@@ -334,6 +334,7 @@ const PayrollTable = () => {
       )}
 
       <NTable
+        classNames={{ content: '[&_table]:min-w-[900px]' }}
         data={tableRows}
         columns={columns}
         getRowId={(row) => row.id}

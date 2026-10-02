@@ -114,6 +114,7 @@ function AnnouncementsTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         className='min-h-0 flex-1'
         data={filteredAnnouncements}
         columns={columns}

@@ -85,7 +85,99 @@
     "creditDescription": "Apply settled unapplied funds to the oldest available installments.",
     "creditTitle": "Student credit",
     "checksDescription": "Pending checks reserve balances until completion or release.",
-    "checksTitle": "Checks awaiting settlement"
+    "checksTitle": "Checks awaiting settlement",
+    "eyebrow": "Financial controls",
+    "title": "Operations and reconciliation",
+    "description": "Manage checks, credit, audit history, notifications, and academic-year rollover.",
+    "failed": "Financial operation failed",
+    "bounceReason": "Reason for bounced check",
+    "voidReason": "Reason for voiding this payment",
+    "creditApplied": "Student credit applied",
+    "previewCreated": "Rollover preview created",
+    "rolloverCompleted": "Rollover completed",
+    "noChecks": "No pending or deposited checks.",
+    "due": "Due {{date}}",
+    "deposit": "Deposit",
+    "complete": "Complete",
+    "bounce": "Bounce",
+    "void": "Void",
+    "creditScope": "Apply to fees in {{year}}. Available credit is shared across years.",
+    "selectedYear": "the selected school year",
+    "selectStudent": "Select student",
+    "applyCredit": "Apply credit",
+    "availableBalance": "Available balance",
+    "rolloverTitle": "Academic-year rollover",
+    "rolloverDescription": "Preview prior-year assignments before creating target-year fees.",
+    "preview": "Preview",
+    "commitPreview": "Commit preview",
+    "noNotifications": "No delivery records yet.",
+    "student": "Student",
+    "auditTitle": "Financial audit history",
+    "auditDescription": "Latest records across all school years.",
+    "entity": "Entity",
+    "actor": "Actor",
+    "time": "Time",
+    "system": "System",
+    "auditActions": {
+      "fee": {
+        "created": "Creation · Fee",
+        "updated": "Update · Fee",
+        "deleted": "Deletion · Fee",
+        "transportEnded": "Transport ended · Fee",
+        "transportResumed": "Transport resumed · Fee"
+      },
+      "expense": {
+        "created": "Creation · Expense",
+        "updated": "Update · Expense",
+        "deleted": "Deletion · Expense",
+        "approved": "Approval · Expense",
+        "rejected": "Rejection · Expense",
+        "paid": "Payment · Expense"
+      },
+      "payroll": {
+        "generated": "Generation · Salary",
+        "paid": "Salary paid",
+        "createdAndPaid": "Creation and payment · Salary",
+        "unpaid": "Payment cancelled · Salary",
+        "updated": "Update · Salary",
+        "deleted": "Deletion · Salary"
+      },
+      "rollover": {
+        "previewed": "Preview · Year rollover",
+        "committed": "Completion · Year rollover",
+        "failed": "Failure · Year rollover"
+      },
+      "creditLot": {
+        "created": "Creation · Credit",
+        "applied": "Application · Credit",
+        "activated": "Activation · Credit",
+        "cancelled": "Cancellation · Credit"
+      },
+      "allocation": {
+        "created": "Creation · Allocation",
+        "deleted": "Deletion · Allocation"
+      },
+      "payment": {
+        "checkRecorded": "Check recorded · Payment",
+        "completed": "Settlement · Payment",
+        "updated": "Update · Payment",
+        "refunded": "Refund · Payment",
+        "voided": "Cancellation · Payment",
+        "check": {
+          "deposited": "Check deposited",
+          "completed": "Check settled",
+          "bounced": "Check bounced",
+          "cancelled": "Check cancelled"
+        }
+      }
+    },
+    "otherAction": "Other financial operation",
+    "checkStatuses": {
+      "pending": "Pending",
+      "deposited": "Deposited",
+      "completed": "Settled",
+      "bounced": "Bounced"
+    }
   },
   "installments": {
     "table": {
@@ -744,7 +836,10 @@
       "pageOf": "Page {{page}} of {{pageCount}}",
       "pageOfUnknown": "Page {{page}}",
       "rowsSelected": "{{selected}} of {{total}} row(s) selected"
-    }
+    },
+    "saving": "Saving…",
+    "refresh": "Refresh",
+    "other": "Other"
   },
   "status": {
     "upcoming": "Upcoming",
@@ -840,6 +935,8 @@
       "timeZone": "Time Zone",
       "dateFormat": "Date Format",
       "timeFormat": "Time Format",
+      "timeFormat12": "12-hour",
+      "timeFormat24": "24-hour",
       "currency": "Currency",
       "button": "Initialize System",
       "confirmTitle": "Initialize System Defaults",
@@ -849,7 +946,7 @@
     },
     "school": {
       "namePlaceholder": "My School",
-      "title": "School Information",
+      "title": "School information",
       "schoolName": "School Name",
       "schoolAddress": "School Address",
       "schoolPhone": "School Phone",
@@ -862,7 +959,7 @@
     },
     "academic": {
       "semesterPlaceholder": "Semester",
-      "title": "Academic Settings",
+      "title": "Academic settings",
       "attendanceRequirement": "Attendance Requirement (%)",
       "maxClassSize": "Maximum Class Size",
       "gradingPeriods": "Grading Periods",
@@ -931,7 +1028,8 @@
       "studentAccessEnabled": "Student Portal Access",
       "apiKey": "API Key",
       "apiKeyDescription": "This key is used for system operations and integrations."
-    }
+    },
+    "saveSettings": "Save settings"
   },
   "seed": {
     "success": {
@@ -1378,6 +1476,38 @@
       "partiallyPaid": "Partially Paid",
       "pending": "Pending",
       "refunded": "Refunded"
+    },
+    "studentView": {
+      "pay": "Pay",
+      "nothingToPay": "Nothing to pay",
+      "overdue": "{{count}} overdue payments",
+      "overview": "Fees overview",
+      "discounts": "Discounts",
+      "history": "Payment history (all years)",
+      "documents": "Documents (all years)",
+      "addFees": "Add fees",
+      "noData": "No fee data available",
+      "noFees": "No fees assigned to this student",
+      "installments": "Fee installments",
+      "discountNote": "This fee has a discount",
+      "discountAmount": "{{amount}} reduced from the original amount.",
+      "installmentNumber": "Installment #{{number}}",
+      "paymentInProgress": "Payment in progress",
+      "noBalance": "No available balance",
+      "payInstallment": "Pay this installment",
+      "alreadyPaid": "Already paid",
+      "reserved": "A pending or deposited payment reserves this installment",
+      "totalPaid": "Total paid",
+      "totalDue": "Total due",
+      "paymentsCount": "Payments count",
+      "lastPayment": "Last payment",
+      "noPayments": "No payments",
+      "averagePayment": "Average payment",
+      "editDiscount": "Edit discount",
+      "saveDiscount": "Save discount",
+      "addDiscount": "Add discount",
+      "discountCount": "{{count}} of {{total}} fees have a discount",
+      "totalSaved": "Total saved: {{amount}}"
     }
   },
   "students": {
@@ -2492,7 +2622,15 @@
       "academic": "Academic",
       "personalDetails": "Personal Details",
       "personal": "Personal",
-      "schedule": "Schedule"
+      "schedule": "Schedule",
+      "currentPeriod": "Current period",
+      "currentMonth": "Current month",
+      "hourly": "Hourly",
+      "monthlySalary": "Monthly salary",
+      "hoursNotSet": "Hours not set",
+      "estimatedRate": "Estimated rate",
+      "noPayments": "No teacher payments recorded",
+      "payments": "Payments"
     }
   },
   "drivers": {
@@ -3129,6 +3267,21 @@
       "noPlacementOnDate": "Student has no dated placement in the grade section on the source date",
       "chooseSection": "Choose a target section for this grade",
       "demoSourceNoYear": "Demo grade source has no registered academic year"
+    },
+    "toolbar": {
+      "highest": "Highest",
+      "lowest": "Lowest",
+      "passRate": "Pass rate",
+      "save": "Save grades",
+      "selectSource": "Select an assessment or exam first",
+      "exam": "Exam",
+      "selectExam": "Select exam",
+      "searchExam": "Search exam",
+      "searchAssessment": "Search assessment",
+      "teacherForSubject": "Teacher for subject",
+      "selectClass": "Select a class to start.",
+      "selectSection": "Select a section to load students.",
+      "noStudents": "No students found in the selected section."
     }
   },
   "exams": {
@@ -4602,7 +4755,8 @@
   "events": {
     "sections": {
       "schedule": "Schedule",
-      "eventDetails": "Event Details"
+      "eventDetails": "Event Details",
+      "placeAndAudience": "Place and audience"
     },
     "form": {
       "noClasses": "No classes found",
@@ -4683,6 +4837,13 @@
       "endTimeBeforeStart": "The end time must be after the start time",
       "registrationDeadlineAfterStart": "The registration deadline must not be after the start date",
       "outsideSelectedYear": "The event's dates must fall in the selected school year"
+    },
+    "dialogs": {
+      "createTitle": "Create event",
+      "createButton": "Create event",
+      "editTitle": "Edit event",
+      "updateButton": "Update event",
+      "deleteButton": "Delete event"
     }
   },
   "alerts": {
@@ -5122,5 +5283,16 @@
       "endBeforePlacement": "End date must follow the current placement start",
       "futureEnd": "Active-year enrollment cannot end in the future"
     }
+  },
+  "calendar": {
+    "today": "Today",
+    "monthView": "Month view",
+    "weekView": "Week view",
+    "weekOf": "Week of {{date}}",
+    "addEvent": "Add event",
+    "addAnnouncement": "Add announcement",
+    "loading": "Loading calendar…",
+    "more": "{{count}} more…",
+    "events": "Events"
   }
 }

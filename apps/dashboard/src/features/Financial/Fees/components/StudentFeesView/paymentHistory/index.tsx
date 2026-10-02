@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { Calendar, DollarSign, TrendingUp, CheckCircle2 } from "lucide-react";
 import { NStatCard, NStatCardSkeleton, NTableSkeleton } from 'najm-kit';
@@ -12,6 +13,7 @@ interface PaymentHistoryProps {
 }
 
 export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: PaymentHistoryProps) => {
+  const { t } = useTranslation();
   const { displayDateOnly, majorMoney } = useSchoolFormat();
 
   const shouldFetchStudentFees = !initialStudentFees && Boolean(studentId);
@@ -44,32 +46,32 @@ export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: P
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <NStatCard
           icon={DollarSign}
-          label="Total Paid"
+          label={t('fees.studentView.totalPaid')}
           value={majorMoney(summary.totalPaid)}
         />
 
 
         <NStatCard
           icon={DollarSign}
-          label="Total Due"
+          label={t('fees.studentView.totalDue')}
           value={majorMoney(summary.totalDue)}
         />
 
         <NStatCard
           icon={CheckCircle2}
-          label="Payments Count"
+          label={t('fees.studentView.paymentsCount')}
           value={summary.paidCount}
         />
 
         <NStatCard
           icon={Calendar}
-          label="Last Payment"
-          value={summary.lastPayment ? displayDateOnly(summary.lastPayment) : "No payments"}
+          label={t('fees.studentView.lastPayment')}
+          value={summary.lastPayment ? displayDateOnly(summary.lastPayment) : t('fees.studentView.noPayments')}
         />
 
         <NStatCard
           icon={TrendingUp}
-          label="Avg. Payment"
+          label={t('fees.studentView.averagePayment')}
           value={majorMoney(summary.avgPaymentAmount)}
         />
       </div>

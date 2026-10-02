@@ -85,7 +85,99 @@
     "creditDescription": "Affecter les fonds réglés non appliqués aux échéances les plus anciennes.",
     "creditTitle": "Crédit élève",
     "checksDescription": "Les chèques en attente réservent les soldes jusqu’au règlement ou à la libération.",
-    "checksTitle": "Chèques en attente de règlement"
+    "checksTitle": "Chèques en attente de règlement",
+    "eyebrow": "Gestion financière",
+    "title": "Opérations et rapprochement",
+    "description": "Gérez les chèques, les crédits, l’historique, les notifications et le report des frais.",
+    "failed": "Échec de l’opération financière",
+    "bounceReason": "Motif du rejet du chèque",
+    "voidReason": "Motif de l’annulation du paiement",
+    "creditApplied": "Crédit de l’élève appliqué",
+    "previewCreated": "Aperçu du report créé",
+    "rolloverCompleted": "Report effectué",
+    "noChecks": "Aucun chèque en attente ou déposé.",
+    "due": "Échéance : {{date}}",
+    "deposit": "Déposer",
+    "complete": "Encaisser",
+    "bounce": "Rejeter",
+    "void": "Annuler",
+    "creditScope": "Appliquer aux frais de {{year}}. Le crédit disponible est commun à toutes les années.",
+    "selectedYear": "l’année scolaire sélectionnée",
+    "selectStudent": "Sélectionner un élève",
+    "applyCredit": "Appliquer le crédit",
+    "availableBalance": "Solde disponible",
+    "rolloverTitle": "Report vers une nouvelle année",
+    "rolloverDescription": "Vérifiez les affectations de l’année précédente avant de créer les frais de l’année cible.",
+    "preview": "Aperçu",
+    "commitPreview": "Confirmer le report",
+    "noNotifications": "Aucun envoi enregistré.",
+    "student": "Élève",
+    "auditTitle": "Historique des opérations financières",
+    "auditDescription": "Dernières opérations de toutes les années scolaires.",
+    "entity": "Élément",
+    "actor": "Auteur",
+    "time": "Date et heure",
+    "system": "Système",
+    "auditActions": {
+      "fee": {
+        "created": "Création · Frais",
+        "updated": "Modification · Frais",
+        "deleted": "Suppression · Frais",
+        "transportEnded": "Transport arrêté · Frais",
+        "transportResumed": "Transport repris · Frais"
+      },
+      "expense": {
+        "created": "Création · Dépense",
+        "updated": "Modification · Dépense",
+        "deleted": "Suppression · Dépense",
+        "approved": "Approbation · Dépense",
+        "rejected": "Rejet · Dépense",
+        "paid": "Paiement · Dépense"
+      },
+      "payroll": {
+        "generated": "Génération · Salaire",
+        "paid": "Salaire payé",
+        "createdAndPaid": "Création et paiement · Salaire",
+        "unpaid": "Paiement annulé · Salaire",
+        "updated": "Modification · Salaire",
+        "deleted": "Suppression · Salaire"
+      },
+      "rollover": {
+        "previewed": "Aperçu · Report annuel",
+        "committed": "Confirmation · Report annuel",
+        "failed": "Échec · Report annuel"
+      },
+      "creditLot": {
+        "created": "Création · Crédit",
+        "applied": "Application · Crédit",
+        "activated": "Activation · Crédit",
+        "cancelled": "Annulation · Crédit"
+      },
+      "allocation": {
+        "created": "Création · Affectation",
+        "deleted": "Suppression · Affectation"
+      },
+      "payment": {
+        "checkRecorded": "Chèque enregistré · Paiement",
+        "completed": "Encaissement · Paiement",
+        "updated": "Modification · Paiement",
+        "refunded": "Remboursement · Paiement",
+        "voided": "Annulation · Paiement",
+        "check": {
+          "deposited": "Chèque déposé",
+          "completed": "Chèque encaissé",
+          "bounced": "Chèque rejeté",
+          "cancelled": "Chèque annulé"
+        }
+      }
+    },
+    "otherAction": "Autre opération financière",
+    "checkStatuses": {
+      "pending": "En attente",
+      "deposited": "D?pos?",
+      "completed": "Encaiss?",
+      "bounced": "Rejet?"
+    }
   },
   "installments": {
     "table": {
@@ -530,7 +622,10 @@
       "pageOf": "Page {{page}} sur {{pageCount}}",
       "pageOfUnknown": "Page {{page}}",
       "rowsSelected": "{{selected}} ligne(s) sélectionnée(s) sur {{total}}"
-    }
+    },
+    "saving": "Enregistrement…",
+    "refresh": "Actualiser",
+    "other": "Autre"
   },
   "staff": {
     "success": {
@@ -800,6 +895,8 @@
       "currency": "Devise",
       "dateFormat": "Format de date",
       "timeFormat": "Format de l'heure",
+      "timeFormat12": "Format 12 heures",
+      "timeFormat24": "Format 24 heures",
       "timeZone": "Fuseau horaire",
       "success": "System terminé avec succès"
     },
@@ -881,7 +978,7 @@
       "gradingPeriods": "Périodes de notation",
       "maxClassSize": "Taille max de classe",
       "minimumPassingGrade": "Note minimale de réussite",
-      "title": "Titre"
+      "title": "Paramètres scolaires"
     },
     "school": {
       "namePlaceholder": "Mon école",
@@ -894,13 +991,14 @@
       "schoolName": "Nom de l'école",
       "schoolPhone": "Téléphone de l'école",
       "schoolStartTime": "Heure de début des cours",
-      "title": "Titre"
+      "title": "Informations de l’établissement"
     },
     "calendarSystem": {
       "SEMESTER": "Semestre",
       "TRIMESTER": "Trimestre",
       "QUARTER": "Trimestre"
-    }
+    },
+    "saveSettings": "Enregistrer les paramètres"
   },
   "alerts": {
     "page": {
@@ -2010,6 +2108,38 @@
       "installmentDoesNotBelongToFee": "L'échéance n'appartient pas aux frais indiqués",
       "feeAlreadyExists": "Des frais existent déjà pour cet élève, cette année scolaire et ce type de frais",
       "installmentAlreadyPaid": "Cette échéance est déjà payée"
+    },
+    "studentView": {
+      "pay": "Payer",
+      "nothingToPay": "Aucun montant à payer",
+      "overdue": "{{count}} paiements en retard",
+      "overview": "Aperçu des frais",
+      "discounts": "Réductions",
+      "history": "Historique des paiements (toutes les années)",
+      "documents": "Documents (toutes les années)",
+      "addFees": "Ajouter des frais",
+      "noData": "Aucune donnée de frais disponible",
+      "noFees": "Aucun frais attribué à cet élève",
+      "installments": "Échéances des frais",
+      "discountNote": "Ces frais bénéficient d’une réduction",
+      "discountAmount": "{{amount}} déduits du montant initial.",
+      "installmentNumber": "Échéance n° {{number}}",
+      "paymentInProgress": "Paiement en cours",
+      "noBalance": "Aucun solde disponible",
+      "payInstallment": "Payer cette échéance",
+      "alreadyPaid": "Déjà payé",
+      "reserved": "Un paiement en attente ou déposé réserve cette échéance",
+      "totalPaid": "Total payé",
+      "totalDue": "Total dû",
+      "paymentsCount": "Nombre de paiements",
+      "lastPayment": "Dernier paiement",
+      "noPayments": "Aucun paiement",
+      "averagePayment": "Paiement moyen",
+      "editDiscount": "Modifier la réduction",
+      "saveDiscount": "Enregistrer la réduction",
+      "addDiscount": "Ajouter une réduction",
+      "discountCount": "{{count}} frais sur {{total}} bénéficient d’une réduction",
+      "totalSaved": "Total des réductions : {{amount}}"
     }
   },
   "behaviorRewards": {
@@ -2822,12 +2952,12 @@
     },
     "form": {
       "academicContext": "Contexte académique",
-      "assessment": "Assessment",
-      "assessmentPlaceholder": "Assessment Placeholder",
+      "assessment": "Évaluation",
+      "assessmentPlaceholder": "Sélectionner une évaluation",
       "class": "Classe",
       "classPlaceholder": "Sélectionnez la classe",
       "feedback": "Retour",
-      "feedbackPlaceholder": "Feedback Placeholder",
+      "feedbackPlaceholder": "Ajoutez un commentaire pour l’élève",
       "gradeDetails": "Détails de la note",
       "gradedBy": "Noté par",
       "marksObtained": "Notes obtenues",
@@ -2878,6 +3008,21 @@
       "retrieved": "Note récupéré avec succès",
       "seeded": "Note initialisé avec succès",
       "updated": "Note mis à jour avec succès"
+    },
+    "toolbar": {
+      "highest": "Maximum",
+      "lowest": "Minimum",
+      "passRate": "Taux de réussite",
+      "save": "Enregistrer les notes",
+      "selectSource": "Sélectionnez d’abord une évaluation ou un examen",
+      "exam": "Examen",
+      "selectExam": "Sélectionner un examen",
+      "searchExam": "Rechercher un examen",
+      "searchAssessment": "Rechercher une évaluation",
+      "teacherForSubject": "Enseignant de la matière",
+      "selectClass": "Sélectionnez une classe pour commencer.",
+      "selectSection": "Sélectionnez une section pour afficher les élèves.",
+      "noStudents": "Aucun élève dans la section sélectionnée."
     }
   },
   "parents": {
@@ -3621,7 +3766,8 @@
       "workloadHours": "Heures de charge",
       "workloadHoursPlaceholder": "Entrez les heures de charge",
       "yearsOfExperience": "Années d'expérience",
-      "yearsOfExperiencePlaceholder": "Entrez les années d'expérience"
+      "yearsOfExperiencePlaceholder": "Entrez les années d'expérience",
+      "noAssignments": "Aucune affectation"
     },
     "profile": {
       "table": {
@@ -3641,7 +3787,30 @@
         "section": "Section",
         "class": "Classe"
       },
-      "teacherNotFound": "Enseignant introuvable"
+      "teacherNotFound": "Enseignant introuvable",
+      "currentPeriod": "Période actuelle",
+      "currentMonth": "Mois actuel",
+      "hourly": "Horaire",
+      "monthlySalary": "Salaire mensuel",
+      "hoursNotSet": "Heures non définies",
+      "estimatedRate": "Taux estimé",
+      "noPayments": "Aucun paiement enregistré pour cet enseignant",
+      "payments": "Paiements",
+      "academic": "Scolarité",
+      "academicInfo": "Informations scolaires",
+      "academicOverview": "Aperçu pédagogique",
+      "biography": "Biographie",
+      "certificates": "Certificats",
+      "contactInfo": "Coordonnées",
+      "contractType": "Type de contrat",
+      "documents": "Documents",
+      "experience": "Expérience",
+      "noDocuments": "Aucun document téléversé",
+      "personalInformation": "Informations personnelles",
+      "qualifications": "Diplômes",
+      "schedule": "Emploi du temps",
+      "teachingAssignments": "Affectations pédagogiques",
+      "years": "ans"
     },
     "status": {
       "active": "Actif",
@@ -3656,7 +3825,8 @@
       "name": "Nom",
       "phone": "Téléphone",
       "specialization": "Spécialisation",
-      "status": "Statut"
+      "status": "Statut",
+      "subjects": "Matières"
     },
     "employmentType": {
       "fullTime": "Temps plein",
@@ -3812,7 +3982,8 @@
   "events": {
     "sections": {
       "schedule": "Horaire",
-      "eventDetails": "Détails de l'événement"
+      "eventDetails": "Détails de l'événement",
+      "placeAndAudience": "Lieu et public"
     },
     "form": {
       "noClasses": "Aucune classe trouvée",
@@ -3893,6 +4064,13 @@
       "endTimeBeforeStart": "L'heure de fin doit être après l'heure de début",
       "registrationDeadlineAfterStart": "La date limite d'inscription ne peut pas dépasser la date de début",
       "outsideSelectedYear": "Les dates de l'événement doivent tomber dans l'année scolaire sélectionnée"
+    },
+    "dialogs": {
+      "createTitle": "Créer un événement",
+      "createButton": "Créer l’événement",
+      "editTitle": "Modifier l’événement",
+      "updateButton": "Enregistrer l’événement",
+      "deleteButton": "Supprimer l’événement"
     }
   },
   "auditLog": {
@@ -4350,5 +4528,16 @@
       "endBeforePlacement": "La date de fin doit suivre le début de l'affectation actuelle",
       "futureEnd": "Une inscription de l'année active ne peut pas se terminer dans le futur"
     }
+  },
+  "calendar": {
+    "today": "Aujourd’hui",
+    "monthView": "Vue mensuelle",
+    "weekView": "Vue hebdomadaire",
+    "weekOf": "Semaine du {{date}}",
+    "addEvent": "Ajouter un événement",
+    "addAnnouncement": "Ajouter une annonce",
+    "loading": "Chargement du calendrier…",
+    "more": "{{count}} de plus…",
+    "events": "Événements"
   }
 }

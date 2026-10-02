@@ -2,17 +2,19 @@ import { Label } from 'najm-kit';
 import { NAvatar, NButton, useNSidebar } from 'najm-kit';
 import { CreditCard, Menu } from 'lucide-react';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
+import { useTranslation } from 'najm-i18n/react';
 
 export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) => {
 
    const { student, alerts, assignment } = studentFees;
    const sidebar = useNSidebar();
+   const { t } = useTranslation();
 
    return (
-      <div className="flex items-center justify-between rounded-lg border border-border bg-card p-3 text-card-foreground">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-3 text-card-foreground">
 
          {/* Left: Avatar + Info */}
-         <div className="flex items-center gap-3 flex-1 min-w-0">
+         <div className="flex basis-full items-center gap-3 min-w-0 xl:basis-auto xl:flex-1">
             {/* This header stands in for NPageHeader on the standalone
                 /students/[id]/fees route, so it carries the mobile sidebar
                 trigger the page header would otherwise provide. */}
@@ -43,11 +45,11 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
                   )}
                </div>
 
-               <div className="flex items-center gap-2 text-xs text-muted-foreground">
+               <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                   <span className="font-mono">📋 {student.studentCode}</span>
                   <span className="text-muted-foreground/40">•</span>
-                  <span>📚 {assignment.class.name}</span>
-                  {assignment.section?.name && (
+                  <span>📚 {assignment?.class?.name ?? t('common.notAvailable')}</span>
+                  {assignment?.section?.name && (
                      <>
                         <span className="text-muted-foreground/40">•</span>
                         <span>🏛️ {assignment.section.name}</span>
@@ -59,7 +61,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
 
          {/* Center: Alert Box (Option 3 Style) */}
          {alerts?.hasOverdueFees && (
-            <div className="flex gap-2 items-center bg-destructive/10 border border-destructive/20 rounded-lg px-4 py-2 mx-3">
+            <div className="flex min-w-0 gap-2 items-center bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
                <span className='text-sm'>⛔</span>
                <p className="text-sm font-bold text-destructive">
                   {alerts.message}
@@ -67,17 +69,17 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
             </div>
          )}
 
-         <div className="flex shrink-0 items-center gap-1">
+         <div className="ms-auto flex shrink-0 items-center gap-1">
             <ViewingYearSelector />
             <NButton
                onClick={onPayClick}
                disabled={payDisabled}
-               title={payDisabled ? 'Nothing to pay' : undefined}
+               title={payDisabled ? t('fees.studentView.nothingToPay') : undefined}
                className="shrink-0 px-8 font-semibold"
                size="lg"
             >
                <CreditCard className="mr-2 h-4 w-4" />
-               Pay
+               {t('fees.studentView.pay')}
             </NButton>
          </div>
       </div>

@@ -4,7 +4,8 @@ import ar from '../src/locales/ar.json';
 import en from '../src/locales/en.json';
 import es from '../src/locales/es.json';
 import fr from '../src/locales/fr.json';
-import translations, { schoolI18n, translations as namedTranslations } from '../src/locales';
+import translations, { schoolI18n, translations as namedTranslations, type SchoolLocale } from '../src/locales';
+import { FEE_CATEGORY_VALUES, PAYMENT_TYPE_VALUES, SCHEDULE_VALUES, STAFF_ROLE_VALUES } from '../src/enums';
 
 type Catalog = { [key: string]: Catalog | string };
 
@@ -70,5 +71,26 @@ describe('schoolI18n', () => {
       schoolI18n.translate(language, key as never),
     );
     expect(new Set(values).size).toBe(4);
+  });
+
+  it('defines labels for the financial and staff codes displayed by the dashboard', () => {
+    const required = [
+      ...FEE_CATEGORY_VALUES.map((value) => `feeTypes.category.${value}`),
+      ...PAYMENT_TYPE_VALUES.map((value) => `payments.type.${value}`),
+      ...SCHEDULE_VALUES.map((value) => `fees.schedule.${value}`),
+      ...STAFF_ROLE_VALUES.map((value) => `staff.roles.${value}`),
+      'financialOperations.auditActions.payroll.paid',
+      ...['pending', 'deposited', 'completed', 'bounced'].map((value) =>
+        `financialOperations.checkStatuses.${value}`),
+    ];
+    for (const [language, catalog] of Object.entries({ en, fr, ar, es })) {
+      const values = new Map(leaves(catalog as Catalog));
+      for (const key of required) {
+        expect(values.has(key), `${language}: ${key}`).toBe(true);
+        expect(schoolI18n.translate(language as SchoolLocale, key as never)).not.toBe(key);
+      }
+    }
+    expect(schoolI18n.translate('fr', 'financialOperations.auditActions.payroll.paid' as never))
+      .toBe('Salaire payé');
   });
 });

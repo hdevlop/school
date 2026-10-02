@@ -48,9 +48,9 @@ const DocumentsTab: React.FC<DocumentsTabProps> = () => {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <StatCard icon={Award} label="Qualifications" value="0" />
-        <StatCard icon={FileText} label="Certificates" value="0" />
-        <StatCard icon={FileText} label="Other" value="0" />
+        <StatCard icon={Award} label={t('teachers.profile.qualifications')} value="0" />
+        <StatCard icon={FileText} label={t('teachers.profile.certificates')} value="0" />
+        <StatCard icon={FileText} label={t('common.other')} value="0" />
       </div>
 
       <NTable
@@ -65,7 +65,7 @@ const DocumentsTab: React.FC<DocumentsTabProps> = () => {
           <NEmptyState
             surface="panel"
             icon={FEATURE_ICONS.documents}
-            title={"No documents uploaded"}
+            title={t('teachers.profile.noDocuments')}
           />
         )}
         renderFilteredEmpty={() => (

@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import { useTranslation } from 'najm-i18n/react';
 import { Download, Save } from 'lucide-react';
 import { NAvatar, NButton } from 'najm-kit';
 import { Label } from 'najm-kit';
@@ -26,12 +27,6 @@ const StatBox = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-const formatEmployment = (value?: string | null) => {
-  if (!value) return '-';
-  const normalized = value.replace(/[-_]/g, ' ');
-  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
-};
-
 const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   teacher,
   draft,
@@ -40,9 +35,10 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
   isSaving = false,
   onSave,
 }) => {
+  const { t } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const source = draft || teacher || {};
-  const genderLabel = source?.gender === 'M' ? 'Male' : source?.gender === 'F' ? 'Female' : 'Other';
+  const genderLabel = source?.gender === 'M' ? t('common.male') : source?.gender === 'F' ? t('common.female') : t('common.other');
   const hireYear = source?.hireDate ? new Date(source.hireDate).getFullYear() : '-';
   const status = source?.status || 'inactive';
 
@@ -69,12 +65,12 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
 
         <Label className="text-xl font-bold text-slate-900">{source?.name ?? '-'}</Label>
         <p className="text-sm text-slate-500 mb-3">
-          {source?.specialization || 'Teacher'}
+          {source?.specialization || t('teachers.form.teacher')}
         </p>
 
         <div className="flex gap-2 mb-6 flex-wrap justify-center">
           <Label className="px-3 py-1 rounded-full text-xs font-bold text-white bg-secondary">
-            {formatEmployment(source?.employmentType)}
+            {t(`teachers.employmentType.${source?.employmentType}`)}
           </Label>
           <Label
             className={`px-3 py-1 rounded-full text-xs font-bold ${
@@ -83,29 +79,29 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                 : 'bg-slate-100 text-slate-600'
             }`}
           >
-            {status.charAt(0).toUpperCase() + status.slice(1)}
+            {t(`teachers.status.${status}`)}
           </Label>
         </div>
 
         <div className="grid grid-cols-2 gap-3 w-full mb-6">
-          <StatBox label="Gender" value={genderLabel} />
-          <StatBox label="Hired" value={String(hireYear)} />
-          <StatBox label="Classes" value={String(analytics?.totalClasses ?? 0)} />
-          <StatBox label="Subjects" value={String(analytics?.totalSubjects ?? 0)} />
-          <StatBox label="Students" value={String(analytics?.totalStudents ?? 0)} />
-          <StatBox label="Workload" value={source?.workloadHours ? `${source.workloadHours}h` : '-'} />
-          <StatBox label="Salary" value={majorMoney(source?.salary)} />
-          <StatBox label="Experience" value={source?.yearsOfExperience != null ? `${source.yearsOfExperience} yrs` : '-'} />
+          <StatBox label={t('teachers.form.gender')} value={genderLabel} />
+          <StatBox label={t('teachers.form.hireDate')} value={String(hireYear)} />
+          <StatBox label={t('teachers.table.classes')} value={String(analytics?.totalClasses ?? 0)} />
+          <StatBox label={t('teachers.table.subjects')} value={String(analytics?.totalSubjects ?? 0)} />
+          <StatBox label={t('teachers.profile.table.students')} value={String(analytics?.totalStudents ?? 0)} />
+          <StatBox label={t('teachers.form.workloadHours')} value={source?.workloadHours ? `${source.workloadHours}h` : '-'} />
+          <StatBox label={t('teachers.form.salary')} value={majorMoney(source?.salary)} />
+          <StatBox label={t('teachers.profile.experience')} value={source?.yearsOfExperience != null ? `${source.yearsOfExperience} ${t('teachers.profile.years')}` : '-'} />
         </div>
 
         <div className="flex flex-col gap-4 w-full">
           <NButton className="w-full bg-tertiary" disabled={!isDirty || isSaving} onClick={onSave}>
             <Save size={16} className="mr-2" />
-            {isSaving ? 'Saving...' : 'Save'}
+            {isSaving ? t('common.saving') : t('common.save')}
           </NButton>
           <NButton variant="outline" className="w-full">
             <Download size={16} className="mr-2" />
-            Download Report
+            {t('students.profile.downloadReport')}
           </NButton>
         </div>
       </div>

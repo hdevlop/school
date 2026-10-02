@@ -56,7 +56,7 @@ const FeeCard = ({ data }) => {
           <div className="flex gap-1.5 flex-wrap">
             <Label className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded">
               <Calendar className="h-3 w-3" />
-              {fee.schedule}
+              {t(`fees.schedule.${fee.schedule}`)}
             </Label>
             <Label className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded">
               <CalendarDays className="h-3 w-3" />
@@ -81,7 +81,7 @@ const FeeCard = ({ data }) => {
           {isFullyPaid ? (
             <NBadge look='solid' color='success' size='md' className="gap-1.5 px-2.5 py-1">
               <CheckCircle2 className="h-4 w-4" />
-              <span className="font-semibold">PAID</span>
+              <span className="font-semibold">{t('fees.status.paid')}</span>
               {majorMoney(fee.paidAmount)}
             </NBadge>
           ) : (
@@ -117,8 +117,8 @@ const FeeCard = ({ data }) => {
       align="start"
       content={
         <div className="flex flex-col gap-0.5">
-          <span className="font-semibold">This fee has a discount</span>
-          <span>{majorMoney(discountAmount)} reduced from the original amount.</span>
+          <span className="font-semibold">{t('fees.studentView.discountNote')}</span>
+          <span>{t('fees.studentView.discountAmount', { amount: majorMoney(discountAmount) })}</span>
         </div>
       }
     >

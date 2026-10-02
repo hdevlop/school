@@ -22,7 +22,7 @@ import {
 export type ViewingYearSelectorPlacement = 'inline' | 'header' | 'sidebar';
 
 const placementClassName: Record<Exclude<ViewingYearSelectorPlacement, 'inline'>, string> = {
-  header: 'max-sm:hidden xl:absolute xl:left-1/2 xl:top-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2',
+  header: 'max-sm:hidden shrink-0',
   sidebar: 'sm:hidden',
 };
 

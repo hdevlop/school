@@ -29,7 +29,7 @@ const SchoolDashboard = ({ role }: { role: string | undefined }) => {
   const showFinance = canReadFinanceDashboard(role);
 
   return (
-    <div className='flex flex-col w-full h-full min-h-0 gap-2'>
+    <div className='flex flex-col w-full h-full min-h-0 gap-2 max-md:overflow-y-auto'>
       <NPageHeader
         icon={LayoutDashboard}
         title={t('navigation.dashboard')}
@@ -41,13 +41,13 @@ const SchoolDashboard = ({ role }: { role: string | undefined }) => {
 
       {showFinance && <FinanceKpis />}
 
-      <div className='grid grid-cols-1 md:grid-cols-12 gap-3 flex-1 min-h-0 [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden'>
+      <div className='grid grid-cols-1 md:grid-cols-12 gap-3 md:flex-1 md:min-h-0 max-md:shrink-0 max-md:auto-rows-[320px] [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden'>
         <StudentsGenderChart className={showFinance ? 'md:col-span-2' : 'md:col-span-4'} />
         <StudentAttendanceChart className={showFinance ? 'md:col-span-4' : 'md:col-span-8'} />
         {showFinance && <IncomeExpensesTrend className="md:col-span-6" />}
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-12 gap-3 flex-1 min-h-0 [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden'>
+      <div className='grid grid-cols-1 md:grid-cols-12 gap-3 md:flex-1 md:min-h-0 max-md:shrink-0 max-md:auto-rows-[320px] [&>*]:min-h-0 [&>*]:min-w-0 [&>*]:overflow-hidden'>
         {showFinance && <ExpenseBreakdownChart className="md:col-span-2" />}
         <TeachersAttendance className={showFinance ? 'md:col-span-4' : 'md:col-span-8'} />
         {showFinance && <OverdueFees className="md:col-span-4" />}

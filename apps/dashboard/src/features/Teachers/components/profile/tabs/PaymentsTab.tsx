@@ -52,9 +52,9 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
     ? [
       {
         id: 'current-period',
-        period: 'Current period',
-        type: 'Hourly',
-        base: workloadHours ? `${workloadHours}h x ${majorMoney(hourlyRate)}` : 'Hours not set',
+        period: t('teachers.profile.currentPeriod'),
+        type: t('teachers.profile.hourly'),
+        base: workloadHours ? `${workloadHours}h x ${majorMoney(hourlyRate)}` : t('teachers.profile.hoursNotSet'),
         amount: workloadHours ? majorMoney(workloadHours * hourlyRate) : majorMoney(0),
         status: 'pending',
       },
@@ -62,8 +62,8 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
     : [
       {
         id: 'current-month',
-        period: 'Current month',
-        type: 'Monthly salary',
+        period: t('teachers.profile.currentMonth'),
+        type: t('teachers.profile.monthlySalary'),
         base: majorMoney(monthlySalary),
         amount: majorMoney(monthlySalary),
         status: 'pending',
@@ -99,7 +99,7 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
       enableSorting: true,
       cell: ({ getValue }) => (
         <Badge className="border-amber-200 bg-amber-50 text-amber-700">
-          {getValue() as string}
+          {t(`payroll.status.${getValue()}`)}
         </Badge>
       ),
     },
@@ -110,22 +110,22 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
         <StatCard
           icon={ReceiptText}
-          label="Contract"
-          value={contractType === 'vacataire' ? 'Vacataire' : 'Permanent'}
+          label={t('teachers.profile.contractType')}
+          value={t(`payroll.types.${contractType}`)}
         />
         <StatCard
           icon={Banknote}
-          label={contractType === 'vacataire' ? 'Estimated Rate' : 'Monthly Salary'}
+          label={contractType === 'vacataire' ? t('teachers.profile.estimatedRate') : t('teachers.profile.monthlySalary')}
           value={contractType === 'vacataire' ? majorMoney(hourlyRate) : majorMoney(monthlySalary)}
         />
         <StatCard
           icon={Clock}
-          label="Workload"
-          value={workloadHours ? `${workloadHours}h` : 'Not set'}
+          label={t('teachers.form.workloadHours')}
+          value={workloadHours ? `${workloadHours}h` : t('common.notSpecified')}
         />
         <StatCard
           icon={CalendarDays}
-          label="Pending"
+          label={t('payroll.status.pending')}
           value={sampleRows[0]?.amount || majorMoney(0)}
         />
       </div>
@@ -142,7 +142,7 @@ const PaymentsTab: React.FC<PaymentsTabProps> = ({ teacher }) => {
           <NEmptyState
             surface="panel"
             icon={FEATURE_ICONS.payments}
-            title={"No teacher payments recorded"}
+            title={t('teachers.profile.noPayments')}
           />
         )}
         renderFilteredEmpty={() => (

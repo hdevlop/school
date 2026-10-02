@@ -100,6 +100,7 @@ function SubjectsTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         data={subjects}
         columns={columns}
         filters={rawFilters}

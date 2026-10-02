@@ -104,6 +104,7 @@ function SectionsTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         className='min-h-0 flex-1'
         data={sections}
         columns={columns}

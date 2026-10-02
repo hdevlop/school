@@ -46,11 +46,11 @@ function StaffAttendanceTable() {
         {...props}
         getStatus={roster.getStatus}
         setStatus={roster.setStatus}
-        detail={props.data?.role}
+        detail={t(`staff.roles.${props.data?.role}`)}
         avatarSrc={props.data?.image || getStaffAvatar(props.data?.role, props.data?.gender)}
       />
     ),
-    [roster.getStatus, roster.setStatus],
+    [t, roster.getStatus, roster.setStatus],
   );
   const rawFilters = useStaffRosterFilters(
     { value: roster.selectedDate, onChange: roster.goToDate },
@@ -71,6 +71,7 @@ function StaffAttendanceTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         data={staffRows}
         columns={columns}
         filters={rawFilters}

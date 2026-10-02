@@ -346,7 +346,7 @@ function GradesTableForYear() {
       toast.success(t('grades.success.saved'));
       resetDraft();
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || err?.message || 'Failed to save grades.');
+      toast.error(err?.response?.data?.message || err?.message || t('grades.errors.saveFailed'));
     }
   };
 
@@ -366,10 +366,10 @@ function GradesTableForYear() {
     isAdminOrPrincipal,
   });
   const noDataText = !classId
-    ? 'Select a class to start.'
+    ? t('grades.toolbar.selectClass')
     : !sectionId
-      ? 'Select a section to load students.'
-      : 'No students found in the selected section.';
+      ? t('grades.toolbar.selectSection')
+      : t('grades.toolbar.noStudents');
 
   return (
     <div className='flex flex-col gap-2 w-full h-full min-h-0'>
@@ -395,8 +395,8 @@ function GradesTableForYear() {
                 },
               }}
               items={[
-                { value: 'assessment', label: 'Assessment', icon: ClipboardList, content: null },
-                { value: 'exam', label: 'Exam', icon: FileText, content: null },
+                { value: 'assessment', label: t('grades.form.assessment'), icon: ClipboardList, content: null },
+                { value: 'exam', label: t('grades.toolbar.exam'), icon: FileText, content: null },
               ]}
             />
           </div>
@@ -416,7 +416,7 @@ function GradesTableForYear() {
             isSubmitting={isSubmittingBatch}
             onSubmit={handleSubmit}
             canSubmit={canSubmit}
-            submitTitle={canSubmit ? 'Save grades' : 'Select an assessment or exam first'}
+            submitTitle={canSubmit ? t('grades.toolbar.save') : t('grades.toolbar.selectSource')}
           />
         )}
         onCellEdit={handleCellEdit}

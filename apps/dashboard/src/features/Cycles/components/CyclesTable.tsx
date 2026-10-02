@@ -90,6 +90,7 @@ function CyclesTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         data={orderedCycles}
         columns={columns}
         filters={rawFilters}

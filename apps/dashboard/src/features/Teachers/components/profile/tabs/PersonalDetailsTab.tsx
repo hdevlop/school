@@ -1,6 +1,8 @@
 "use client";
 
 import React from 'react';
+import { useTranslation } from 'najm-i18n/react';
+import { buildGenderOptions, buildTeacherStatusOptions, buildEmploymentTypeOptions } from '@/features/Teachers/config/teacherOptions';
 import { NIcon } from 'najm-kit';
 import { Input } from 'najm-kit';
 import { Textarea } from 'najm-kit';
@@ -76,7 +78,7 @@ const EditableSelect = ({
   label: string;
   value: string;
   iconColor?: string;
-  options: { value: string; label: string }[];
+  options: readonly { value: string; label: string }[];
   onChange: (value: string) => void;
 }) => (
   <div className="flex flex-col gap-1.5">
@@ -121,26 +123,11 @@ const EditableTextArea = ({
   </div>
 );
 
-const genderOptions = [
-  { value: 'M', label: 'Male' },
-  { value: 'F', label: 'Female' },
-  { value: 'Other', label: 'Other' },
-];
-
-const statusOptions = [
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
-  { value: 'onLeave', label: 'On Leave' },
-];
-
-const employmentTypeOptions = [
-  { value: 'fullTime', label: 'Full-time' },
-  { value: 'partTime', label: 'Part-time' },
-  { value: 'contract', label: 'Contract' },
-  { value: 'temporary', label: 'Temporary' },
-];
-
 const PersonalDetailsTab: React.FC<PersonalDetailsTabProps> = ({ teacher, draft = {}, onDraftChange }) => {
+  const { t } = useTranslation();
+  const genderOptions = buildGenderOptions(t);
+  const statusOptions = buildTeacherStatusOptions(t);
+  const employmentTypeOptions = buildEmploymentTypeOptions(t);
   if (!teacher) return null;
 
   const update = (field: string) => (value: any) => onDraftChange?.(field, value);
@@ -148,36 +135,36 @@ const PersonalDetailsTab: React.FC<PersonalDetailsTabProps> = ({ teacher, draft 
   return (
     <div className="space-y-7">
       <section>
-        <SectionTitle>Personal Information</SectionTitle>
+        <SectionTitle>{t('teachers.profile.personalInformation')}</SectionTitle>
         <div className="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-3">
-          <EditableField icon={User} label="Full Name" value={draft.name} iconColor="#3b82f6" onChange={update('name')} />
-          <EditableField icon={Hash} label="CIN / ID" value={draft.cin} iconColor="#94a3b8" onChange={update('cin')} />
-          <EditableSelect icon={Users} label="Gender" value={draft.gender} options={genderOptions} iconColor="#0ea5e9" onChange={update('gender')} />
-          <EditableField icon={Calendar} label="Hire Date" value={draft.hireDate} type="date" iconColor="#f59e0b" onChange={update('hireDate')} />
-          <EditableSelect icon={ShieldCheck} label="Status" value={draft.status} options={statusOptions} iconColor="#22c55e" onChange={update('status')} />
-          <EditableSelect icon={Briefcase} label="Employment Type" value={draft.employmentType} options={employmentTypeOptions} iconColor="#8b5cf6" onChange={update('employmentType')} />
+          <EditableField icon={User} label={t('teachers.form.fullName')} value={draft.name} iconColor="#3b82f6" onChange={update('name')} />
+          <EditableField icon={Hash} label={t('teachers.form.cin')} value={draft.cin} iconColor="#94a3b8" onChange={update('cin')} />
+          <EditableSelect icon={Users} label={t('teachers.form.gender')} value={draft.gender} options={genderOptions} iconColor="#0ea5e9" onChange={update('gender')} />
+          <EditableField icon={Calendar} label={t('teachers.form.hireDate')} value={draft.hireDate} type="date" iconColor="#f59e0b" onChange={update('hireDate')} />
+          <EditableSelect icon={ShieldCheck} label={t('teachers.form.status')} value={draft.status} options={statusOptions} iconColor="#22c55e" onChange={update('status')} />
+          <EditableSelect icon={Briefcase} label={t('teachers.form.employmentType')} value={draft.employmentType} options={employmentTypeOptions} iconColor="#8b5cf6" onChange={update('employmentType')} />
         </div>
       </section>
 
       <section>
-        <SectionTitle>Academic Information</SectionTitle>
+        <SectionTitle>{t('teachers.profile.academicInfo')}</SectionTitle>
         <div className="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-3">
-          <EditableField icon={GraduationCap} label="Specialization" value={draft.specialization} iconColor="#3b82f6" onChange={update('specialization')} />
-          <EditableField icon={Briefcase} label="Experience" value={draft.yearsOfExperience} type="number" iconColor="#f97316" onChange={update('yearsOfExperience')} />
-          <EditableField icon={Calendar} label="Workload Hours" value={draft.workloadHours} type="number" iconColor="#06b6d4" onChange={update('workloadHours')} />
-          <EditableField icon={Banknote} label="Salary" value={draft.salary} type="number" iconColor="#22c55e" onChange={update('salary')} />
-          <EditableField icon={BadgeDollarSign} label="Bank Account" value={draft.bankAccount} iconColor="#64748b" onChange={update('bankAccount')} className="md:col-span-2" />
+          <EditableField icon={GraduationCap} label={t('teachers.form.specialization')} value={draft.specialization} iconColor="#3b82f6" onChange={update('specialization')} />
+          <EditableField icon={Briefcase} label={t('teachers.profile.experience')} value={draft.yearsOfExperience} type="number" iconColor="#f97316" onChange={update('yearsOfExperience')} />
+          <EditableField icon={Calendar} label={t('teachers.form.workloadHours')} value={draft.workloadHours} type="number" iconColor="#06b6d4" onChange={update('workloadHours')} />
+          <EditableField icon={Banknote} label={t('teachers.form.salary')} value={draft.salary} type="number" iconColor="#22c55e" onChange={update('salary')} />
+          <EditableField icon={BadgeDollarSign} label={t('teachers.form.bankAccount')} value={draft.bankAccount} iconColor="#64748b" onChange={update('bankAccount')} className="md:col-span-2" />
         </div>
       </section>
 
       <section>
-        <SectionTitle>Contact Information</SectionTitle>
+        <SectionTitle>{t('teachers.profile.contactInfo')}</SectionTitle>
         <div className="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-3">
-          <EditableField icon={Mail} label="Email" value={draft.email} iconColor="#3b82f6" onChange={update('email')} />
-          <EditableField icon={Phone} label="Phone" value={draft.phone} iconColor="#22c55e" onChange={update('phone')} />
-          <EditableField icon={Phone} label="Emergency Phone" value={draft.emergencyPhone} iconColor="#ef4444" onChange={update('emergencyPhone')} />
-          <EditableField icon={Users} label="Emergency Contact" value={draft.emergencyContact} iconColor="#f59e0b" onChange={update('emergencyContact')} />
-          <EditableTextArea icon={MapPin} label="Address" value={draft.address} iconColor="#ef4444" onChange={update('address')} className="md:col-span-2" />
+          <EditableField icon={Mail} label={t('teachers.form.email')} value={draft.email} iconColor="#3b82f6" onChange={update('email')} />
+          <EditableField icon={Phone} label={t('teachers.form.phone')} value={draft.phone} iconColor="#22c55e" onChange={update('phone')} />
+          <EditableField icon={Phone} label={t('teachers.form.emergencyPhone')} value={draft.emergencyPhone} iconColor="#ef4444" onChange={update('emergencyPhone')} />
+          <EditableField icon={Users} label={t('teachers.form.emergencyContactName')} value={draft.emergencyContact} iconColor="#f59e0b" onChange={update('emergencyContact')} />
+          <EditableTextArea icon={MapPin} label={t('teachers.form.address')} value={draft.address} iconColor="#ef4444" onChange={update('address')} className="md:col-span-2" />
         </div>
       </section>
     </div>

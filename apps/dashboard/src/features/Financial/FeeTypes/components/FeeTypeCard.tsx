@@ -12,17 +12,8 @@ const FeeTypeCard = ({ data }: any) => {
   const { majorMoney } = useSchoolFormat();
   const feeType = data;
 
-  const categoryMap: Record<string, string> = {
-    'tuition': t('feeTypes.category.tuition'),
-    'registration': t('feeTypes.category.registration'),
-    'books': t('feeTypes.category.books'),
-    'transport': t('feeTypes.category.transport'),
-    'activities': t('feeTypes.category.activities'),
-    'lunch': t('feeTypes.category.lunch'),
-    'exam': t('feeTypes.category.exam'),
-    'uniform': t('feeTypes.category.uniform'),
-    'other': t('feeTypes.category.other'),
-  };
+  const categoryKey = `feeTypes.category.${feeType.category}`;
+  const categoryLabel = t(categoryKey);
 
   return (
     <div className="flex items-start gap-4 p-4">
@@ -42,7 +33,7 @@ const FeeTypeCard = ({ data }: any) => {
             icon={Tag}
             iconColor="text-primary"
             label={t('feeTypes.table.category')}
-            value={categoryMap[feeType.category] || feeType.category}
+            value={categoryLabel === categoryKey ? feeType.category : categoryLabel}
             valueColor="text-primary"
           />
 

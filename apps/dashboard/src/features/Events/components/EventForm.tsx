@@ -142,7 +142,7 @@ const EventForm = ({ event = null, initialDate = null }) => {
           <FormInput name="endTime" type="time" formLabel={t('events.form.endTime')} icon={Clock} />
         </div>
 
-        <FormSectionHeader icon={MapPin} title="Place & Audience" />
+        <FormSectionHeader icon={MapPin} title={t('events.sections.placeAndAudience')} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput name="location" type="text" formLabel={t('events.form.location')} placeholder={t('events.form.locationPlaceholder')} icon={MapPin} />

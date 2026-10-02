@@ -108,6 +108,7 @@ const BehaviorRewardsTable = () => {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         className="min-h-0 flex-1"
         data={tableData}
         columns={columns}

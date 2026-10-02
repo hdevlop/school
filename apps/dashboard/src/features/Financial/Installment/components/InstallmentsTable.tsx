@@ -18,7 +18,7 @@ function InstallmentsTable({ fee, className = '', onPayInstallment }) {
 
   const handleView = (installment) => {
     openDialog({
-      title: `Installment #${installment.number}`,
+      title: t('fees.studentView.installmentNumber', { number: installment.number }),
       children: <InstallmentCard data={installment} />,
       showButtons: false,
     });

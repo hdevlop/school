@@ -33,11 +33,11 @@ const list = (value: any) => {
 
 function Panel({ title, description, icon: Icon, badge, action, children }: any) {
   return (
-    <section className="flex flex-col rounded-xl border bg-card p-5 shadow-sm">
+    <section className="flex min-w-0 flex-col rounded-xl border bg-card p-4 shadow-sm sm:p-5">
       <div className="mb-4 flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
+        <div className="flex min-w-0 items-start gap-3">
           <div className="rounded-lg bg-primary/10 p-2 text-primary"><Icon className="h-5 w-5" /></div>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
               <h2 className="font-semibold">{title}</h2>
               {badge != null ? <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{badge}</span> : null}
@@ -57,13 +57,18 @@ const checkStatusBadge: Record<string, string> = {
   deposited: 'bg-blue-100 text-blue-700',
 };
 
-const inputClass = 'h-10 rounded-md border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/30';
+const inputClass = 'h-10 min-w-0 w-full rounded-md border bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/30';
 
 export default function FinancialOperationsPage() {
   const { viewingYear, isResolving } = useViewingAcademicYear();
   const { majorMoney, displayDateTime } = useSchoolFormat();
   const { t } = useTranslation();
   const sidebar = useNSidebar();
+  const auditLabel = (action: string) => {
+    const key = `financialOperations.auditActions.${action}`;
+    const label = t(key);
+    return label === key ? t('financialOperations.otherAction') : label;
+  };
   const [studentId, setStudentId] = useState('');
   const [creditAmount, setCreditAmount] = useState('');
   const [fromYear, setFromYear] = useState('2025-2026');
@@ -105,7 +110,7 @@ export default function FinancialOperationsPage() {
       toast.success(success);
       return result;
     } catch (error: any) {
-      toast.error(error?.message || 'Financial operation failed');
+      toast.error(error?.message || t('financialOperations.failed'));
       throw error;
     } finally {
       setBusy(null);
@@ -113,16 +118,16 @@ export default function FinancialOperationsPage() {
   };
 
   const changeCheckStatus = async (payment: any, status: 'deposited' | 'completed' | 'bounced') => {
-    const reason = status === 'bounced' ? window.prompt('Reason for bounced check') : undefined;
+    const reason = status === 'bounced' ? window.prompt(t('financialOperations.bounceReason')) : undefined;
     if (status === 'bounced' && !reason) return;
-    await run(`check-${payment.id}`, () => updateCheckStatusApi(payment.id, { status, reason }), `Check marked ${status}`);
+    await run(`check-${payment.id}`, () => updateCheckStatusApi(payment.id, { status, reason }), t('payments.success.checkMarked', { status: t(`financialOperations.checkStatuses.${status}`) }));
     await checksQuery.refetch();
   };
 
   const voidCheck = async (payment: any) => {
-    const reason = window.prompt('Reason for voiding this payment');
+    const reason = window.prompt(t('financialOperations.voidReason'));
     if (!reason) return;
-    await run(`check-${payment.id}`, () => voidPaymentApi(payment.id, reason), 'Payment voided');
+    await run(`check-${payment.id}`, () => voidPaymentApi(payment.id, reason), t('payments.success.voided'));
     await checksQuery.refetch();
   };
 
@@ -130,7 +135,7 @@ export default function FinancialOperationsPage() {
     const amount = Number(creditAmount);
     if (!studentId || !(amount > 0)) return toast.error(t('financialOperations.selectStudentAmount'));
     if (!viewingYear) return;
-    await run('credit', () => withAcademicYear(viewingYear, () => applyStudentCreditApi(studentId, amount)), 'Student credit applied');
+    await run('credit', () => withAcademicYear(viewingYear, () => applyStudentCreditApi(studentId, amount)), t('financialOperations.creditApplied'));
     setCreditAmount('');
     await Promise.all([creditsQuery.refetch(), auditQuery.refetch()]);
   };
@@ -145,7 +150,7 @@ export default function FinancialOperationsPage() {
   };
 
   const previewRollover = async () => {
-    const result = await run('rollover-preview', () => withAcademicYear(toYear, () => previewRolloverApi(rolloverPayload)), 'Rollover preview created');
+    const result = await run('rollover-preview', () => withAcademicYear(toYear, () => previewRolloverApi(rolloverPayload)), t('financialOperations.previewCreated'));
     setRolloverRun(unwrap(result));
   };
 
@@ -155,7 +160,7 @@ export default function FinancialOperationsPage() {
       ...rolloverPayload,
       runId: rolloverRun.id,
       confirmSettingsUpdate: false,
-    })), 'Rollover completed');
+    })), t('financialOperations.rolloverCompleted'));
     setRolloverRun(unwrap(result));
     setRolloverKey(crypto.randomUUID());
     await auditQuery.refetch();
@@ -178,31 +183,31 @@ export default function FinancialOperationsPage() {
           </NButton>
           <div className="ms-auto"><ViewingYearSelector /></div>
         </div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Financial controls</p>
-        <h1 className="mt-1 text-2xl font-semibold">Operations and reconciliation</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Manage check settlement, unapplied credit, audit history, delivery runs, and academic-year rollover.</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">{t('financialOperations.eyebrow')}</p>
+        <h1 className="mt-1 text-2xl font-semibold">{t('financialOperations.title')}</h1>
+        <p className="mt-1 text-sm text-muted-foreground">{t('financialOperations.description')}</p>
       </header>
 
       <div className="grid gap-4 xl:grid-cols-2">
         <Panel title={t('financialOperations.checksTitle')} description={t('financialOperations.checksDescription')} icon={Activity} badge={checks.length || null}>
           <div className="max-h-[28rem] space-y-2 overflow-y-auto pr-1">
-            {checks.length === 0 ? <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">No pending or deposited checks.</p> : checks.map((payment: any) => (
+            {checks.length === 0 ? <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">{t('financialOperations.noChecks')}</p> : checks.map((payment: any) => (
               <div key={payment.id} className="rounded-lg border p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="truncate font-medium">{payment.student?.name || payment.studentId}</p>
-                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize ${checkStatusBadge[payment.status] ?? 'bg-muted text-muted-foreground'}`}>{payment.status}</span>
+                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize ${checkStatusBadge[payment.status] ?? 'bg-muted text-muted-foreground'}`}>{t(`financialOperations.checkStatuses.${payment.status}`)}</span>
                     </div>
-                    <p className="mt-0.5 text-xs text-muted-foreground">{payment.checkNumber} · due {payment.checkDueDate}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">{payment.checkNumber} · {t('financialOperations.due', { date: payment.checkDueDate })}</p>
                   </div>
                   <p className="whitespace-nowrap font-semibold tabular-nums">{majorMoney(Number(payment.amount))}</p>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-2 border-t pt-3">
-                  {payment.status === 'pending' ? <NButton size="sm" disabled={busy === `check-${payment.id}`} onClick={() => changeCheckStatus(payment, 'deposited')}>Deposit</NButton> : null}
-                  {payment.status === 'deposited' ? <NButton size="sm" disabled={busy === `check-${payment.id}`} onClick={() => changeCheckStatus(payment, 'completed')}>Complete</NButton> : null}
-                  <NButton size="sm" variant="outline" onClick={() => changeCheckStatus(payment, 'bounced')}>Bounce</NButton>
-                  <NButton size="sm" variant="destructive" onClick={() => voidCheck(payment)}>Void</NButton>
+                  {payment.status === 'pending' ? <NButton size="sm" disabled={busy === `check-${payment.id}`} onClick={() => changeCheckStatus(payment, 'deposited')}>{t('financialOperations.deposit')}</NButton> : null}
+                  {payment.status === 'deposited' ? <NButton size="sm" disabled={busy === `check-${payment.id}`} onClick={() => changeCheckStatus(payment, 'completed')}>{t('financialOperations.complete')}</NButton> : null}
+                  <NButton size="sm" variant="outline" onClick={() => changeCheckStatus(payment, 'bounced')}>{t('financialOperations.bounce')}</NButton>
+                  <NButton size="sm" variant="destructive" onClick={() => voidCheck(payment)}>{t('financialOperations.void')}</NButton>
                 </div>
               </div>
             ))}
@@ -210,22 +215,22 @@ export default function FinancialOperationsPage() {
         </Panel>
 
         <Panel title={t('financialOperations.creditTitle')} description={t('financialOperations.creditDescription')} icon={Banknote}>
-          <p className="mb-3 text-sm text-muted-foreground">Apply to fees charged in {viewingYear ?? 'the selected school year'}. Available credit remains shared across years.</p>
-          <div className="grid gap-3 md:grid-cols-[1fr_150px_auto]">
+          <p className="mb-3 text-sm text-muted-foreground">{t('financialOperations.creditScope', { year: viewingYear ?? t('financialOperations.selectedYear') })}</p>
+          <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,150px)]">
             <select className={inputClass} value={studentId} onChange={(event) => setStudentId(event.target.value)}>
-              <option value="">Select student</option>
+              <option value="">{t('financialOperations.selectStudent')}</option>
               {students.map((student: any) => <option key={student.id} value={student.id}>{student.name} · {student.studentCode}</option>)}
             </select>
             <input className={inputClass} type="number" min="0.01" step="0.01" placeholder={t('financialOperations.amountPlaceholder')} value={creditAmount} onChange={(event) => setCreditAmount(event.target.value)} />
-            <NButton disabled={busy === 'credit' || isResolving} onClick={applyCredit}>Apply credit</NButton>
+            <NButton className="sm:col-span-2" disabled={busy === 'credit' || isResolving} onClick={applyCredit}>{t('financialOperations.applyCredit')}</NButton>
           </div>
           <div className="mt-4 rounded-lg bg-muted/50 p-3">
-            <p className="text-sm text-muted-foreground">Available balance</p>
+            <p className="text-sm text-muted-foreground">{t('financialOperations.availableBalance')}</p>
             <p className="text-xl font-semibold">{majorMoney(availableCredit)}</p>
           </div>
         </Panel>
 
-        <Panel title="Academic-year rollover" description="Preview from actual prior-year assignments before writing any target-year fees." icon={RotateCw}>
+        <Panel title={t('financialOperations.rolloverTitle')} description={t('financialOperations.rolloverDescription')} icon={RotateCw}>
           <div className="grid gap-3 md:grid-cols-2">
             <input className={inputClass} value={fromYear} onChange={(event) => setFromYear(event.target.value)} placeholder="2025-2026" />
             <input className={inputClass} value={toYear} onChange={(event) => setToYear(event.target.value)} placeholder="2026-2027" />
@@ -234,9 +239,9 @@ export default function FinancialOperationsPage() {
             <label className="flex items-center gap-2"><input type="checkbox" checked={copyDiscounts} onChange={(event) => setCopyDiscounts(event.target.checked)} /> {t('financialOperations.copyDiscounts')}</label>
             <label className="flex items-center gap-2"><input type="checkbox" checked={includeOneTimeFees} onChange={(event) => setIncludeOneTimeFees(event.target.checked)} /> {t('financialOperations.includeOneTimeFees')}</label>
           </div>
-          <div className="mt-4 flex gap-2">
-            <NButton variant="outline" disabled={busy === 'rollover-preview'} onClick={previewRollover}>Preview</NButton>
-            <NButton disabled={!rolloverRun?.id || busy === 'rollover-commit'} onClick={commitRollover}>Commit preview</NButton>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <NButton variant="outline" disabled={busy === 'rollover-preview'} onClick={previewRollover}>{t('financialOperations.preview')}</NButton>
+            <NButton disabled={!rolloverRun?.id || busy === 'rollover-commit'} onClick={commitRollover}>{t('financialOperations.commitPreview')}</NButton>
           </div>
           {rolloverRun?.preview ? (
             <pre className="mt-4 max-h-56 overflow-auto rounded-lg bg-muted p-3 text-xs">{JSON.stringify(rolloverRun.preview, null, 2)}</pre>
@@ -245,22 +250,22 @@ export default function FinancialOperationsPage() {
 
         <Panel title={t('financialOperations.notificationsTitle')} description={t('financialOperations.notificationsDescription')} icon={BellRing} badge={notifications.length || null}>
           <div className="max-h-72 space-y-2 overflow-y-auto pr-1">
-            {notifications.length === 0 ? <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">No delivery claims yet.</p> : notifications.map((item: any) => (
+            {notifications.length === 0 ? <p className="rounded-lg border border-dashed p-6 text-center text-sm text-muted-foreground">{t('financialOperations.noNotifications')}</p> : notifications.map((item: any) => (
               <div key={item.id} className="rounded-lg border p-3 text-sm">
                 <div className="flex justify-between gap-3"><span className="font-medium">{item.kind}</span><span className="text-muted-foreground">{item.businessDate}</span></div>
-                <p className="mt-1 text-muted-foreground">Student: {item.studentId}</p>
+                <p className="mt-1 text-muted-foreground">{t('financialOperations.student')}: {item.studentId}</p>
               </div>
             ))}
           </div>
         </Panel>
 
         <section className="rounded-xl border bg-card p-5 shadow-sm xl:col-span-2">
-          <div className="mb-4 flex items-center justify-between">
-            <div className="flex items-start gap-3"><div className="rounded-lg bg-primary/10 p-2 text-primary"><History className="h-5 w-5" /></div><div><h2 className="font-semibold">Financial audit history</h2><p className="text-sm text-muted-foreground">Latest records across all school years.</p></div></div>
-            <NButton size="sm" variant="outline" onClick={() => auditQuery.refetch()}><RefreshCw className="mr-2 h-4 w-4" />Refresh</NButton>
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-start gap-3"><div className="rounded-lg bg-primary/10 p-2 text-primary"><History className="h-5 w-5" /></div><div><h2 className="font-semibold">{t('financialOperations.auditTitle')}</h2><p className="text-sm text-muted-foreground">{t('financialOperations.auditDescription')}</p></div></div>
+            <NButton size="sm" variant="outline" onClick={() => auditQuery.refetch()}><RefreshCw className="mr-2 h-4 w-4" />{t('common.refresh')}</NButton>
           </div>
           <div className="max-h-80 overflow-auto rounded-lg border">
-            <table className="w-full text-left text-sm"><thead className="sticky top-0 bg-muted"><tr><th className="p-3">Action</th><th className="p-3">Entity</th><th className="p-3">Actor</th><th className="p-3">Time</th></tr></thead><tbody>{auditEntries.map((entry: any) => <tr key={entry.id} className="border-t"><td className="p-3 font-medium">{entry.action}</td><td className="p-3">{entry.entityType} · {entry.entityId}</td><td className="p-3">{entry.actorId || 'system'}</td><td className="p-3 text-muted-foreground">{entry.createdAt ? displayDateTime(entry.createdAt) : ''}</td></tr>)}</tbody></table>
+            <table className="w-full text-left text-sm"><thead className="sticky top-0 bg-muted"><tr><th className="p-3">{t('common.actions')}</th><th className="p-3">{t('financialOperations.entity')}</th><th className="p-3">{t('financialOperations.actor')}</th><th className="p-3">{t('financialOperations.time')}</th></tr></thead><tbody>{auditEntries.map((entry: any) => <tr key={entry.id} className="border-t"><td className="p-3 font-medium">{auditLabel(entry.action)}</td><td className="p-3">{entry.entityType} · {entry.entityId}</td><td className="p-3">{entry.actorId || t('financialOperations.system')}</td><td className="p-3 text-muted-foreground">{entry.createdAt ? displayDateTime(entry.createdAt) : ''}</td></tr>)}</tbody></table>
           </div>
         </section>
       </div>

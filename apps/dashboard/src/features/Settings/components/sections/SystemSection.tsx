@@ -29,8 +29,8 @@ const SystemSection: React.FC = () => {
   const dateFormatOptions = SETTINGS_DATE_FORMAT_VALUES.map((value) => ({ value, label: value }));
 
   const timeFormatOptions = [
-    { value: '12', label: '12-hour' },
-    { value: '24', label: '24-hour' },
+    { value: '12', label: t('settings.system.timeFormat12') },
+    { value: '24', label: t('settings.system.timeFormat24') },
   ];
 
   return (

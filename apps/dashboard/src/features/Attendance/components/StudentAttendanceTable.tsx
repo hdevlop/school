@@ -339,6 +339,7 @@ function StudentAttendanceTableForYear() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         data={filteredStudents}
         columns={columns}
         filters={filters}

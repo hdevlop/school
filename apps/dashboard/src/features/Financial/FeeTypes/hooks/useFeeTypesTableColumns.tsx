@@ -35,7 +35,9 @@ export const useFeeTypesTableColumns = () => {
       enableSorting: true,
       enableColumnFilter: true,
       cell: ({ getValue }: any) => {
-        return getValue();
+        const value = getValue();
+        const key = `feeTypes.category.${value}`;
+        return t(key) === key ? value : t(key);
       },
     },
     {
@@ -53,7 +55,7 @@ export const useFeeTypesTableColumns = () => {
       enableSorting: true,
       enableColumnFilter: true,
       cell: ({ getValue }: any) => {
-        return getValue();
+        return t(`payments.type.${getValue()}`);
       },
     },
     {
@@ -66,13 +68,12 @@ export const useFeeTypesTableColumns = () => {
       },
     },
     {
-      accessorKey: "isActive",
+      accessorKey: "status",
       header: t('feeTypes.table.status'),
       enableSorting: true,
       enableColumnFilter: true,
       cell: ({ getValue }: any) => {
-        const isActive = getValue();
-        return <NBadge status={isActive ? 'active' : 'inactive'} />;
+        return <NBadge status={getValue()} />;
       },
       size: 120,
     },

@@ -98,6 +98,7 @@ function FeeTypesTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         data={feeTypes}
         columns={columns}
         filters={rawFilters}

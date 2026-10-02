@@ -85,7 +85,99 @@
     "creditDescription": "تطبيق الأموال المسواة غير المخصصة على أقدم الأقساط.",
     "creditTitle": "رصيد التلميذ",
     "checksDescription": "الشيكات المعلقة تحجز الأرصدة حتى التسوية أو الإفراج.",
-    "checksTitle": "شيكات بانتظار التسوية"
+    "checksTitle": "شيكات بانتظار التسوية",
+    "eyebrow": "الإدارة المالية",
+    "title": "العمليات والمطابقة",
+    "description": "إدارة الشيكات والأرصدة وسجل العمليات والإشعارات وترحيل الرسوم.",
+    "failed": "فشلت العملية المالية",
+    "bounceReason": "سبب رفض الشيك",
+    "voidReason": "سبب إلغاء الدفعة",
+    "creditApplied": "تم تطبيق رصيد الطالب",
+    "previewCreated": "تم إنشاء معاينة الترحيل",
+    "rolloverCompleted": "تم الترحيل",
+    "noChecks": "لا توجد شيكات معلقة أو مودعة.",
+    "due": "الاستحقاق: {{date}}",
+    "deposit": "إيداع",
+    "complete": "تحصيل",
+    "bounce": "رفض",
+    "void": "إلغاء",
+    "creditScope": "تطبيق على رسوم {{year}}. الرصيد المتاح مشترك بين السنوات.",
+    "selectedYear": "السنة الدراسية المحددة",
+    "selectStudent": "اختر طالبًا",
+    "applyCredit": "تطبيق الرصيد",
+    "availableBalance": "الرصيد المتاح",
+    "rolloverTitle": "الترحيل إلى سنة دراسية جديدة",
+    "rolloverDescription": "عاين تكليفات السنة السابقة قبل إنشاء رسوم السنة الجديدة.",
+    "preview": "معاينة",
+    "commitPreview": "تأكيد الترحيل",
+    "noNotifications": "لا توجد سجلات إرسال بعد.",
+    "student": "الطالب",
+    "auditTitle": "سجل العمليات المالية",
+    "auditDescription": "آخر العمليات لجميع السنوات الدراسية.",
+    "entity": "العنصر",
+    "actor": "المنفذ",
+    "time": "التاريخ والوقت",
+    "system": "النظام",
+    "auditActions": {
+      "fee": {
+        "created": "إنشاء · الرسوم",
+        "updated": "تعديل · الرسوم",
+        "deleted": "حذف · الرسوم",
+        "transportEnded": "إيقاف النقل · الرسوم",
+        "transportResumed": "استئناف النقل · الرسوم"
+      },
+      "expense": {
+        "created": "إنشاء · المصروف",
+        "updated": "تعديل · المصروف",
+        "deleted": "حذف · المصروف",
+        "approved": "موافقة · المصروف",
+        "rejected": "رفض · المصروف",
+        "paid": "دفع · المصروف"
+      },
+      "payroll": {
+        "generated": "إنشاء · الراتب",
+        "paid": "تم دفع الراتب",
+        "createdAndPaid": "إنشاء ودفع · الراتب",
+        "unpaid": "إلغاء الدفع · الراتب",
+        "updated": "تعديل · الراتب",
+        "deleted": "حذف · الراتب"
+      },
+      "rollover": {
+        "previewed": "معاينة · ترحيل السنة",
+        "committed": "تأكيد · ترحيل السنة",
+        "failed": "فشل · ترحيل السنة"
+      },
+      "creditLot": {
+        "created": "إنشاء · الرصيد",
+        "applied": "تطبيق · الرصيد",
+        "activated": "تفعيل · الرصيد",
+        "cancelled": "إلغاء · الرصيد"
+      },
+      "allocation": {
+        "created": "إنشاء · التخصيص",
+        "deleted": "حذف · التخصيص"
+      },
+      "payment": {
+        "checkRecorded": "تسجيل شيك · الدفعة",
+        "completed": "تحصيل · الدفعة",
+        "updated": "تعديل · الدفعة",
+        "refunded": "استرداد · الدفعة",
+        "voided": "إلغاء · الدفعة",
+        "check": {
+          "deposited": "إيداع شيك",
+          "completed": "تحصيل شيك",
+          "bounced": "رفض شيك",
+          "cancelled": "إلغاء شيك"
+        }
+      }
+    },
+    "otherAction": "عملية مالية أخرى",
+    "checkStatuses": {
+      "pending": "????",
+      "deposited": "????",
+      "completed": "????",
+      "bounced": "?????"
+    }
   },
   "installments": {
     "table": {
@@ -862,7 +954,10 @@
       "pageOf": "الصفحة {{page}} من {{pageCount}}",
       "pageOfUnknown": "الصفحة {{page}}",
       "rowsSelected": "تم تحديد {{selected}} من {{total}} صف"
-    }
+    },
+    "saving": "جارٍ الحفظ…",
+    "refresh": "تحديث",
+    "other": "آخر"
   },
   "status": {
     "upcoming": "قادم",
@@ -1453,6 +1548,38 @@
       "installmentDoesNotBelongToFee": "القسط لا ينتمي إلى الرسوم المحددة",
       "feeAlreadyExists": "توجد مسبقًا رسوم لهذا التلميذ وهذه السنة الدراسية وهذا النوع من الرسوم",
       "installmentAlreadyPaid": "هذا القسط مدفوع مسبقًا"
+    },
+    "studentView": {
+      "pay": "دفع",
+      "nothingToPay": "لا يوجد مبلغ للدفع",
+      "overdue": "{{count}} دفعات متأخرة",
+      "overview": "نظرة عامة على الرسوم",
+      "discounts": "التخفيضات",
+      "history": "سجل الدفعات (كل السنوات)",
+      "documents": "المستندات (كل السنوات)",
+      "addFees": "إضافة رسوم",
+      "noData": "لا توجد بيانات رسوم",
+      "noFees": "لا توجد رسوم لهذا الطالب",
+      "installments": "أقساط الرسوم",
+      "discountNote": "توجد تخفيضات على هذه الرسوم",
+      "discountAmount": "تم خصم {{amount}} من المبلغ الأصلي.",
+      "installmentNumber": "القسط رقم {{number}}",
+      "paymentInProgress": "دفعة قيد المعالجة",
+      "noBalance": "لا يوجد رصيد متاح",
+      "payInstallment": "دفع هذا القسط",
+      "alreadyPaid": "مدفوع بالفعل",
+      "reserved": "هذه الدفعة محجوزة لعملية معلقة أو مودعة",
+      "totalPaid": "المبلغ المدفوع",
+      "totalDue": "المبلغ المستحق",
+      "paymentsCount": "عدد الدفعات",
+      "lastPayment": "آخر دفعة",
+      "noPayments": "لا توجد دفعات",
+      "averagePayment": "متوسط الدفعات",
+      "editDiscount": "تعديل التخفيض",
+      "saveDiscount": "حفظ التخفيض",
+      "addDiscount": "إضافة تخفيض",
+      "discountCount": "{{count}} من {{total}} رسوم لها تخفيض",
+      "totalSaved": "مجموع التخفيضات: {{amount}}"
     }
   },
   "behaviorRewards": {
@@ -2333,12 +2460,12 @@
     },
     "form": {
       "academicContext": "السياق الأكاديمي",
-      "assessment": "Assessment",
-      "assessmentPlaceholder": "Assessment Placeholder",
+      "assessment": "تقييم",
+      "assessmentPlaceholder": "اختر تقييمًا",
       "class": "القسم",
       "classPlaceholder": "اختر القسم",
       "feedback": "ملاحظات",
-      "feedbackPlaceholder": "Feedback Placeholder",
+      "feedbackPlaceholder": "أضف ملاحظة للطالب",
       "gradeDetails": "تفاصيل النقطة",
       "gradedBy": "تم تقييمه من طرف",
       "marksObtained": "النقطة المحصل عليها",
@@ -2389,6 +2516,21 @@
       "retrieved": "تم جلب النقطة بنجاح",
       "seeded": "تم إنشاء بيانات النقطة بنجاح",
       "updated": "تم تحديث النقطة بنجاح"
+    },
+    "toolbar": {
+      "highest": "الأعلى",
+      "lowest": "الأدنى",
+      "passRate": "نسبة النجاح",
+      "save": "حفظ النقط",
+      "selectSource": "اختر تقييمًا أو امتحانًا أولًا",
+      "exam": "امتحان",
+      "selectExam": "اختر امتحانًا",
+      "searchExam": "البحث عن امتحان",
+      "searchAssessment": "البحث عن تقييم",
+      "teacherForSubject": "أستاذ المادة",
+      "selectClass": "اختر قسمًا للبدء.",
+      "selectSection": "اختر مجموعة لعرض الطلاب.",
+      "noStudents": "لا يوجد طلاب في المجموعة المحددة."
     }
   },
   "parents": {
@@ -3011,7 +3153,7 @@
       "gradingPeriods": "فترات التقييم",
       "maxClassSize": "الحجم الأقصى للقسم",
       "minimumPassingGrade": "الحد الأدنى للنجاح",
-      "title": "العنوان"
+      "title": "الإعدادات الدراسية"
     },
     "clear": {
       "button": "تأكيد",
@@ -3047,7 +3189,7 @@
       "schoolName": "اسم المدرسة",
       "schoolPhone": "هاتف المدرسة",
       "schoolStartTime": "وقت بدء الدراسة",
-      "title": "العنوان"
+      "title": "معلومات المؤسسة"
     },
     "security": {
       "apiKey": "مفتاح API",
@@ -3083,6 +3225,8 @@
       "lightTheme": "فاتح",
       "theme": "السمة",
       "timeFormat": "تنسيق الوقت",
+      "timeFormat12": "نظام 12 ساعة",
+      "timeFormat24": "نظام 24 ساعة",
       "timeZone": "المنطقة الزمنية",
       "title": "العنوان",
       "success": "تم إكمال System بنجاح"
@@ -3096,7 +3240,8 @@
       "created": "تم إنشاء الإعدادات بنجاح",
       "retrieved": "تم جلب الإعدادات بنجاح",
       "updated": "تم تحديث الإعدادات بنجاح"
-    }
+    },
+    "saveSettings": "حفظ الإعدادات"
   },
   "students": {
     "correction": {
@@ -3464,7 +3609,8 @@
       "workloadHours": "ساعات العمل",
       "workloadHoursPlaceholder": "أدخل ساعات العمل",
       "yearsOfExperience": "سنوات الخبرة",
-      "yearsOfExperiencePlaceholder": "أدخل سنوات الخبرة"
+      "yearsOfExperiencePlaceholder": "أدخل سنوات الخبرة",
+      "noAssignments": "لا توجد تكليفات"
     },
     "profile": {
       "table": {
@@ -3484,7 +3630,30 @@
         "section": "الشعبة",
         "class": "القسم"
       },
-      "teacherNotFound": "الأستاذ غير موجود"
+      "teacherNotFound": "الأستاذ غير موجود",
+      "currentPeriod": "الفترة الحالية",
+      "currentMonth": "الشهر الحالي",
+      "hourly": "بالساعة",
+      "monthlySalary": "الراتب الشهري",
+      "hoursNotSet": "لم تُحدد الساعات",
+      "estimatedRate": "السعر التقديري",
+      "noPayments": "لا توجد دفعات مسجلة للأستاذ",
+      "payments": "الدفعات",
+      "academic": "الدراسة",
+      "academicInfo": "معلومات دراسية",
+      "academicOverview": "نظرة عامة دراسية",
+      "biography": "السيرة الذاتية",
+      "certificates": "الشهادات",
+      "contactInfo": "معلومات الاتصال",
+      "contractType": "نوع العقد",
+      "documents": "المستندات",
+      "experience": "الخبرة",
+      "noDocuments": "لا توجد مستندات مرفوعة",
+      "personalInformation": "المعلومات الشخصية",
+      "qualifications": "المؤهلات",
+      "schedule": "الجدول الزمني",
+      "teachingAssignments": "تكليفات التدريس",
+      "years": "سنوات"
     },
     "status": {
       "active": "نشط",
@@ -3499,7 +3668,8 @@
       "name": "الاسم",
       "phone": "الهاتف",
       "specialization": "التخصص",
-      "status": "الحالة"
+      "status": "الحالة",
+      "subjects": "المواد"
     },
     "employmentType": {
       "fullTime": "دوام كامل",
@@ -3655,7 +3825,8 @@
   "events": {
     "sections": {
       "schedule": "الجدول",
-      "eventDetails": "تفاصيل الحدث"
+      "eventDetails": "تفاصيل الحدث",
+      "placeAndAudience": "?????? ????????"
     },
     "form": {
       "noClasses": "لم يتم العثور على أقسام",
@@ -3736,6 +3907,13 @@
       "endTimeBeforeStart": "يجب أن يكون وقت النهاية بعد وقت البداية",
       "registrationDeadlineAfterStart": "لا يمكن أن يتجاوز آخر أجل للتسجيل تاريخ البداية",
       "outsideSelectedYear": "يجب أن تقع تواريخ الحدث في السنة الدراسية المحددة"
+    },
+    "dialogs": {
+      "createTitle": "إنشاء حدث",
+      "createButton": "إنشاء الحدث",
+      "editTitle": "تعديل الحدث",
+      "updateButton": "حفظ الحدث",
+      "deleteButton": "حذف الحدث"
     }
   },
   "auditLog": {
@@ -4193,5 +4371,16 @@
       "endBeforePlacement": "يجب أن يلي تاريخ النهاية بداية التسكين الحالي",
       "futureEnd": "لا يمكن أن ينتهي تسجيل السنة النشطة في المستقبل"
     }
+  },
+  "calendar": {
+    "today": "اليوم",
+    "monthView": "عرض شهري",
+    "weekView": "عرض أسبوعي",
+    "weekOf": "أسبوع {{date}}",
+    "addEvent": "إضافة حدث",
+    "addAnnouncement": "إضافة إعلان",
+    "loading": "جارٍ تحميل التقويم…",
+    "more": "{{count}} إضافية…",
+    "events": "الأحداث"
   }
 }

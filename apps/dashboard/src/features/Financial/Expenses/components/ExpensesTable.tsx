@@ -108,6 +108,7 @@ function ExpensesTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         data={expenses}
         columns={columns}
         filters={rawFilters}

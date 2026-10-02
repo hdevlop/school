@@ -15,7 +15,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
       enableSorting: true,
       cell: ({ getValue }: any) => (
         <div className="font-medium">
-          Installment #{getValue()}
+          {t('fees.studentView.installmentNumber', { number: getValue() })}
         </div>
       ),
     },
@@ -69,8 +69,8 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
         const unavailableReason = status === 'paid' || isInstallmentPayable(row.original)
           ? null
           : Number(row.original.reservedAmount || 0) > 0
-            ? 'Payment in progress'
-            : 'No available balance';
+            ? t('fees.studentView.paymentInProgress')
+            : t('fees.studentView.noBalance');
 
         return (
           <div className="flex flex-col items-start gap-1">
@@ -93,12 +93,12 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
         const installment = row.original;
         const payable = isInstallmentPayable(installment);
         const payTitle = payable
-          ? 'Pay this installment'
+          ? t('fees.studentView.payInstallment')
           : installment.status === 'paid'
-            ? 'Already paid'
+            ? t('fees.studentView.alreadyPaid')
             : Number(installment.reservedAmount || 0) > 0
-              ? 'A pending or deposited payment reserves this installment'
-              : 'No available balance';
+              ? t('fees.studentView.reserved')
+              : t('fees.studentView.noBalance');
 
         return (
           <div className="flex justify-start gap-2">
@@ -113,7 +113,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
               }}
             >
               <Eye className="h-3.5 w-3.5" />
-              View
+              {t('common.view')}
             </NButton>
             <span className="inline-flex" title={payTitle}>
               <NButton
@@ -127,7 +127,7 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
                 }}
               >
                 <CreditCard className="h-3.5 w-3.5" />
-                Pay
+                {t('fees.studentView.pay')}
               </NButton>
             </span>
           </div>

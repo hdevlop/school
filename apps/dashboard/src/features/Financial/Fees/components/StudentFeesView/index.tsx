@@ -155,7 +155,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   const visibleAlerts = {
     hasOverdueFees: overdueCount > 0,
     overdueCount,
-    message: overdueCount > 0 ? `${overdueCount} Overdue Payments` : '',
+    message: overdueCount > 0 ? t('fees.studentView.overdue', { count: overdueCount }) : '',
   };
   const { openDialog } = useDialog();
   const resetPayment = usePaymentStore((state) => state.reset);
@@ -195,13 +195,13 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
 
   const handleAddFee = () => {
     openDialog({
-      title: 'Add Fees',
+      title: t('fees.studentView.addFees'),
       children: <AddStudentFeesForm studentId={studentId} feeTypes={addableFeeTypes} />,
       width: 'xxl',
       height: 'xl',
       primaryButton: {
         form: 'student-bulk-fee-form',
-        text: 'Add Fees',
+        text: t('fees.studentView.addFees'),
         loading: isBulkCreating,
         onClick: async (bulkData: any) => {
           await createBulkFees(withFeeYear(bulkData, viewingYear));
@@ -322,7 +322,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   if (!studentFees) {
     return (
       <div className="flex items-center justify-center py-16">
-        <p className="text-sm text-muted-foreground">No fee data available</p>
+        <p className="text-sm text-muted-foreground">{t('fees.studentView.noData')}</p>
       </div>
     );
   }
@@ -330,7 +330,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   const tabConfig = [
     {
       value: "overview",
-      label: "Fees Overview",
+      label: t('fees.studentView.overview'),
       icon: Receipt,
       content: (
         <FeesOverview
@@ -345,19 +345,19 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     },
     {
       value: "discounts",
-      label: "Discounts",
+      label: t('fees.studentView.discounts'),
       icon: Tag,
       content: <DiscountsTab fees={visibleFees} studentId={studentId} />,
     },
     {
       value: "history",
-      label: "Payment History (all years)",
+      label: t('fees.studentView.history'),
       icon: History,
       content: <PaymentHistory studentId={studentId} studentFees={studentAllYearFees} />,
     },
     {
       value: "documents",
-      label: "Documents (all years)",
+      label: t('fees.studentView.documents'),
       icon: FileText,
       content: <Documents studentId={studentId} />,
     },
@@ -393,8 +393,8 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       )}
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">
-        <div className="flex items-center justify-between border-b border-gray-200">
-          <TabsList className="bg-transparent rounded-none justify-start h-auto p-0 border-0">
+        <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-gray-200">
+          <TabsList className="max-w-full overflow-x-auto bg-transparent rounded-none justify-start h-auto p-0 border-0">
             {tabConfig.map(({ value, label, icon: Icon }) => (
               <TabsTrigger key={value} value={value} className={TAB_STYLES}>
                 <Icon className="w-4 h-4 mr-2" />
@@ -414,7 +414,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
                   className="gap-2 border-border bg-transparent text-foreground font-semibold hover:bg-accent hover:text-accent-foreground"
                 >
                   <Plus className="h-4 w-4" />
-                  Add Fee
+                  {t('fees.studentView.addFees')}
                 </NButton>
               )}
 
@@ -431,12 +431,12 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
                   <NButton
                     onClick={() => handlePayClick()}
                     disabled={!hasPayableBalance}
-                    title={!hasPayableBalance ? 'Nothing to pay' : undefined}
+                    title={!hasPayableBalance ? t('fees.studentView.nothingToPay') : undefined}
                     size="sm"
                     className="px-5 font-semibold"
                   >
                     <CreditCard className="mr-2 h-4 w-4" />
-                    Pay
+                    {t('fees.studentView.pay')}
                   </NButton>
                 </>
               )}

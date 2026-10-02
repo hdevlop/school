@@ -44,8 +44,6 @@ const EditableField = ({
   </div>
 );
 
-const formatText = (value?: string | null) => value ? value.replace(/[-_]/g, ' ') : '-';
-
 const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, draft = {}, onDraftChange }) => {
   const { t } = useTranslation();
   const { data: classRows, isLoading: loadingClasses } = useYearScopedList({
@@ -122,43 +120,43 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
   return (
     <div className="space-y-7">
       <section>
-        <SectionTitle>Academic Overview</SectionTitle>
+        <SectionTitle>{t('teachers.profile.academicOverview')}</SectionTitle>
         <div className="grid grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-3">
-          <EditableField icon={GraduationCap} label="Specialization" value={draft.specialization} iconColor="#3b82f6" onChange={update('specialization')} />
-          <EditableField icon={Award} label="Academic Degrees" value={draft.academicDegrees} iconColor="#8b5cf6" onChange={update('academicDegrees')} />
-          <EditableField icon={Briefcase} label="Experience" value={draft.yearsOfExperience} type="number" iconColor="#f97316" onChange={update('yearsOfExperience')} />
-          <EditableField icon={Calendar} label="Hire Date" value={draft.hireDate} type="date" iconColor="#f59e0b" onChange={update('hireDate')} />
-          <EditableField icon={Hash} label="Workload Hours" value={draft.workloadHours} type="number" iconColor="#64748b" onChange={update('workloadHours')} />
+          <EditableField icon={GraduationCap} label={t('teachers.form.specialization')} value={draft.specialization} iconColor="#3b82f6" onChange={update('specialization')} />
+          <EditableField icon={Award} label={t('teachers.form.academicDegrees')} value={draft.academicDegrees} iconColor="#8b5cf6" onChange={update('academicDegrees')} />
+          <EditableField icon={Briefcase} label={t('teachers.profile.experience')} value={draft.yearsOfExperience} type="number" iconColor="#f97316" onChange={update('yearsOfExperience')} />
+          <EditableField icon={Calendar} label={t('teachers.form.hireDate')} value={draft.hireDate} type="date" iconColor="#f59e0b" onChange={update('hireDate')} />
+          <EditableField icon={Hash} label={t('teachers.form.workloadHours')} value={draft.workloadHours} type="number" iconColor="#64748b" onChange={update('workloadHours')} />
           <div className="flex flex-col gap-1.5">
             <label className="flex items-center gap-2 text-sm font-medium leading-none text-foreground">
               <NIcon icon={ShieldCheck} size={16} className="h-4 w-4" color="#22c55e" />
-              Status
+              {t('common.status')}
             </label>
             <div className="flex min-h-9 w-full items-center rounded-md border border-input bg-slate-50 px-3 py-2 text-sm capitalize text-slate-800 shadow-sm">
-              {formatText(draft.status)}
+              {t(`teachers.status.${draft.status}`)}
             </div>
           </div>
         </div>
       </section>
 
       <section>
-        <SectionTitle>Subjects And Classes</SectionTitle>
+        <SectionTitle>{t('teachers.profile.teachingAssignments')}</SectionTitle>
         <div className="space-y-4">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <div className="text-[10px] font-semibold uppercase text-slate-500">Classes</div>
+              <div className="text-[10px] font-semibold uppercase text-slate-500">{t('teachers.table.classes')}</div>
               <div className="mt-1 text-xl font-bold text-slate-800">{uniqueClasses.size}</div>
             </div>
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <div className="text-[10px] font-semibold uppercase text-slate-500">Subjects</div>
+              <div className="text-[10px] font-semibold uppercase text-slate-500">{t('teachers.table.subjects')}</div>
               <div className="mt-1 text-xl font-bold text-slate-800">{uniqueSubjects.size}</div>
             </div>
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <div className="text-[10px] font-semibold uppercase text-slate-500">Sections</div>
+              <div className="text-[10px] font-semibold uppercase text-slate-500">{t('teachers.form.sections')}</div>
               <div className="mt-1 text-xl font-bold text-slate-800">{tableRows.length}</div>
             </div>
             <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-              <div className="text-[10px] font-semibold uppercase text-slate-500">Students</div>
+              <div className="text-[10px] font-semibold uppercase text-slate-500">{t('teachers.profile.table.students')}</div>
               <div className="mt-1 text-xl font-bold text-slate-800">{totalStudents}</div>
             </div>
           </div>
@@ -177,7 +175,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
               <NEmptyState
                 surface="panel"
                 icon={FEATURE_ICONS.classes}
-                title={"No assignments recorded"}
+                title={t('teachers.form.noAssignments')}
               />
             )}
             renderFilteredEmpty={() => (
@@ -194,7 +192,7 @@ const AcademicInfoTab: React.FC<AcademicInfoTabProps> = ({ teacher, teacherId, d
 
       {teacher?.bio && (
         <section>
-          <SectionTitle>Biography</SectionTitle>
+          <SectionTitle>{t('teachers.profile.biography')}</SectionTitle>
           <div className="rounded-md border border-input bg-slate-50 px-3 py-3 text-sm text-slate-700">
             <div className="flex items-start gap-2">
               <Users className="mt-0.5 h-4 w-4 text-slate-400" />

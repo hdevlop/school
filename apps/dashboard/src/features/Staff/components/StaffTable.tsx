@@ -22,12 +22,13 @@ const calculateStaffPay = (row) => {
   return Number(row?.salary || 0);
 };
 
-const resolveRoleLabel = (row, language) => {
+const resolveRoleLabel = (row, language, t) => {
   if (!row?.role) return '—';
   const localized = row?.roleLabels?.[language];
   if (localized) return localized;
   if (row?.roleLabel) return row.roleLabel;
-  return row.role;
+  const key = `staff.roles.${row.role}`;
+  return t(key) === key ? row.role : t(key);
 };
 
 // Teacher keeps its own academic workflow; every other staff role is managed here.
@@ -171,7 +172,7 @@ const StaffTable = () => {
       cell: ({ row }) => (
         <Badge className="gap-1 border-transparent bg-indigo-600 text-white shadow-sm">
           <Briefcase className="h-3 w-3" />
-          {resolveRoleLabel(row.original, language)}
+          {resolveRoleLabel(row.original, language, t)}
         </Badge>
       ),
     },

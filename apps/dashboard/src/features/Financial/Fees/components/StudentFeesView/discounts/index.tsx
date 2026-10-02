@@ -4,6 +4,7 @@ import { Badge, NButton, useDialog } from 'najm-kit'
 import { DollarSign, Pencil, Plus, Tag } from 'lucide-react'
 import { useFees } from '@/features/Financial/Fees/hooks/useFees'
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes'
+import { useTranslation } from 'najm-i18n/react'
 import { useSchoolFormat } from '@/hooks/useSchoolFormat'
 import EditFeeForm from '../../EditFeeForm'
 
@@ -13,6 +14,7 @@ interface DiscountsTabProps {
 }
 
 export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
+  const { t } = useTranslation()
   const { openDialog } = useDialog()
   const { feeTypes } = useFeeTypes()
   const { updateFee, isUpdating } = useFees({ enabled: false })
@@ -32,12 +34,12 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
 
   const handleEditDiscount = (fee: any) => {
     openDialog({
-      title: `Edit Discount — ${fee.name}`,
+      title: `${t('fees.studentView.editDiscount')} — ${fee.name}`,
       children: <EditFeeForm fee={fee} feeTypes={feeTypes} />,
       width: 'xl',
       primaryButton: {
         form: 'simple-fee-form',
-        text: 'Save Discount',
+        text: t('fees.studentView.saveDiscount'),
         loading: isUpdating,
         onClick: async (feeData: any) => {
           await updateFee(feeData)
@@ -50,21 +52,21 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
         <Tag className="w-10 h-10 mb-3 opacity-30" />
-        <p className="text-sm">No fees assigned to this student</p>
+        <p className="text-sm">{t('fees.studentView.noFees')}</p>
       </div>
     )
   }
 
   return (
     <div className="flex flex-col gap-3 p-1">
-      <div className="flex items-center justify-between rounded-lg border bg-card px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border bg-card px-4 py-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Tag className="h-4 w-4 text-primary" />
-          <span>{feesWithDiscount.length} of {fees.length} fees have a discount</span>
+          <span>{t('fees.studentView.discountCount', { count: feesWithDiscount.length, total: fees.length })}</span>
         </div>
         {totalDiscount > 0 && (
           <Badge variant="secondary" className="border-green-200 bg-green-50 text-green-700">
-            Total saved: {majorMoney(totalDiscount)}
+            {t('fees.studentView.totalSaved', { amount: majorMoney(totalDiscount) })}
           </Badge>
         )}
       </div>
@@ -95,13 +97,19 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
 
                   <div className="flex min-w-0 items-center gap-2 text-sm">
                     <Tag className="h-3.5 w-3.5 shrink-0 text-primary" />
-                    <span className="text-muted-foreground">Category:</span>
-                    <span className="truncate text-primary">{category}</span>
+                    <span className="text-muted-foreground">{t('feeTypes.table.category')}:</span>
+                    <span className="truncate text-primary">{
+                      t(`feeTypes.category.${category}`) !== `feeTypes.category.${category}`
+                        ? t(`feeTypes.category.${category}`)
+                        : t(`fees.schedule.${category}`) !== `fees.schedule.${category}`
+                          ? t(`fees.schedule.${category}`)
+                          : category
+                    }</span>
                   </div>
 
                   <div className="flex min-w-0 items-center gap-2 text-sm">
                     <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="shrink-0 text-muted-foreground">Amount:</span>
+                    <span className="shrink-0 text-muted-foreground">{t('fees.table.amount')}:</span>
                     <span className={hasDiscount ? 'text-muted-foreground line-through' : 'font-semibold text-green-700'}>
                       {majorMoney(base || net)}
                     </span>
@@ -128,17 +136,17 @@ export const DiscountsTab = ({ fees = [] }: DiscountsTabProps) => {
                 size="sm"
                 className="absolute right-4 top-4 h-8 px-3 text-xs"
                 onClick={() => handleEditDiscount(fee)}
-                title={hasDiscount ? 'Edit discount' : 'Add discount'}
+                title={hasDiscount ? t('fees.studentView.editDiscount') : t('fees.studentView.addDiscount')}
               >
                 {hasDiscount ? (
                   <>
                     <Pencil className="mr-1.5 h-3.5 w-3.5" />
-                    Edit
+                    {t('common.edit')}
                   </>
                 ) : (
                   <>
                     <Plus className="mr-1.5 h-3.5 w-3.5" />
-                    Discount
+                    {t('fees.studentView.discounts')}
                   </>
                 )}
               </NButton>

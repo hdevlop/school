@@ -85,7 +85,99 @@
     "creditDescription": "Aplica fondos liquidados no aplicados a las cuotas más antiguas.",
     "creditTitle": "Crédito del estudiante",
     "checksDescription": "Los cheques pendientes reservan saldos hasta su liquidación o liberación.",
-    "checksTitle": "Cheques pendientes de liquidación"
+    "checksTitle": "Cheques pendientes de liquidación",
+    "eyebrow": "Control financiero",
+    "title": "Operaciones y conciliación",
+    "description": "Gestione cheques, créditos, historial, notificaciones y traslado de cuotas.",
+    "failed": "Error en la operación financiera",
+    "bounceReason": "Motivo del rechazo del cheque",
+    "voidReason": "Motivo de anulación del pago",
+    "creditApplied": "Crédito del alumno aplicado",
+    "previewCreated": "Vista previa creada",
+    "rolloverCompleted": "Traslado completado",
+    "noChecks": "No hay cheques pendientes o depositados.",
+    "due": "Vencimiento: {{date}}",
+    "deposit": "Depositar",
+    "complete": "Cobrar",
+    "bounce": "Rechazar",
+    "void": "Anular",
+    "creditScope": "Aplicar a cuotas de {{year}}. El crédito se comparte entre años.",
+    "selectedYear": "el curso seleccionado",
+    "selectStudent": "Seleccionar alumno",
+    "applyCredit": "Aplicar crédito",
+    "availableBalance": "Saldo disponible",
+    "rolloverTitle": "Traslado al nuevo curso",
+    "rolloverDescription": "Revise las asignaciones anteriores antes de crear las cuotas del nuevo curso.",
+    "preview": "Vista previa",
+    "commitPreview": "Confirmar traslado",
+    "noNotifications": "No hay envíos registrados.",
+    "student": "Alumno",
+    "auditTitle": "Historial financiero",
+    "auditDescription": "Últimas operaciones de todos los cursos.",
+    "entity": "Elemento",
+    "actor": "Autor",
+    "time": "Fecha y hora",
+    "system": "Sistema",
+    "auditActions": {
+      "fee": {
+        "created": "Creación · Cuota",
+        "updated": "Modificación · Cuota",
+        "deleted": "Eliminación · Cuota",
+        "transportEnded": "Transporte finalizado · Cuota",
+        "transportResumed": "Transporte reanudado · Cuota"
+      },
+      "expense": {
+        "created": "Creación · Gasto",
+        "updated": "Modificación · Gasto",
+        "deleted": "Eliminación · Gasto",
+        "approved": "Aprobación · Gasto",
+        "rejected": "Rechazo · Gasto",
+        "paid": "Pago · Gasto"
+      },
+      "payroll": {
+        "generated": "Generación · Salario",
+        "paid": "Salario pagado",
+        "createdAndPaid": "Creación y pago · Salario",
+        "unpaid": "Pago anulado · Salario",
+        "updated": "Modificación · Salario",
+        "deleted": "Eliminación · Salario"
+      },
+      "rollover": {
+        "previewed": "Vista previa · Traslado anual",
+        "committed": "Confirmación · Traslado anual",
+        "failed": "Error · Traslado anual"
+      },
+      "creditLot": {
+        "created": "Creación · Crédito",
+        "applied": "Aplicación · Crédito",
+        "activated": "Activación · Crédito",
+        "cancelled": "Anulación · Crédito"
+      },
+      "allocation": {
+        "created": "Creación · Asignación",
+        "deleted": "Eliminación · Asignación"
+      },
+      "payment": {
+        "checkRecorded": "Cheque registrado · Pago",
+        "completed": "Cobro · Pago",
+        "updated": "Modificación · Pago",
+        "refunded": "Reembolso · Pago",
+        "voided": "Anulación · Pago",
+        "check": {
+          "deposited": "Cheque depositado",
+          "completed": "Cheque cobrado",
+          "bounced": "Cheque rechazado",
+          "cancelled": "Cheque anulado"
+        }
+      }
+    },
+    "otherAction": "Otra operación financiera",
+    "checkStatuses": {
+      "pending": "Pendiente",
+      "deposited": "Depositado",
+      "completed": "Cobrado",
+      "bounced": "Rechazado"
+    }
   },
   "installments": {
     "table": {
@@ -848,7 +940,10 @@
       "pageOf": "Página {{page}} de {{pageCount}}",
       "pageOfUnknown": "Página {{page}}",
       "rowsSelected": "{{selected}} de {{total}} fila(s) seleccionada(s)"
-    }
+    },
+    "saving": "Guardando…",
+    "refresh": "Actualizar",
+    "other": "Otro"
   },
   "status": {
     "upcoming": "Próximo",
@@ -1439,6 +1534,38 @@
       "installmentDoesNotBelongToFee": "La cuota no pertenece a la tarifa indicada",
       "feeAlreadyExists": "Ya existe una cuota para este alumno, año escolar y tipo de cuota",
       "installmentAlreadyPaid": "Esta cuota ya está pagada"
+    },
+    "studentView": {
+      "pay": "Pagar",
+      "nothingToPay": "Nada pendiente",
+      "overdue": "{{count}} pagos atrasados",
+      "overview": "Resumen de cuotas",
+      "discounts": "Descuentos",
+      "history": "Historial de pagos (todos los cursos)",
+      "documents": "Documentos (todos los cursos)",
+      "addFees": "Añadir cuotas",
+      "noData": "No hay datos de cuotas",
+      "noFees": "No hay cuotas asignadas al alumno",
+      "installments": "Plazos de cuotas",
+      "discountNote": "Esta cuota tiene un descuento",
+      "discountAmount": "{{amount}} descontados del importe original.",
+      "installmentNumber": "Plazo n.º {{number}}",
+      "paymentInProgress": "Pago en curso",
+      "noBalance": "Sin saldo disponible",
+      "payInstallment": "Pagar este plazo",
+      "alreadyPaid": "Ya pagado",
+      "reserved": "Un pago pendiente o depositado reserva este plazo",
+      "totalPaid": "Total pagado",
+      "totalDue": "Total pendiente",
+      "paymentsCount": "Número de pagos",
+      "lastPayment": "Último pago",
+      "noPayments": "Sin pagos",
+      "averagePayment": "Pago medio",
+      "editDiscount": "Editar descuento",
+      "saveDiscount": "Guardar descuento",
+      "addDiscount": "Añadir descuento",
+      "discountCount": "{{count}} de {{total}} cuotas tienen descuento",
+      "totalSaved": "Descuento total: {{amount}}"
     }
   },
   "behaviorRewards": {
@@ -2319,12 +2446,12 @@
     },
     "form": {
       "academicContext": "Contexto académico",
-      "assessment": "Assessment",
-      "assessmentPlaceholder": "Assessment Placeholder",
+      "assessment": "Evaluación",
+      "assessmentPlaceholder": "Seleccionar evaluación",
       "class": "Clase",
       "classPlaceholder": "Seleccione la clase",
       "feedback": "Comentarios",
-      "feedbackPlaceholder": "Feedback Placeholder",
+      "feedbackPlaceholder": "Añade un comentario para el estudiante",
       "gradeDetails": "Detalles de la calificación",
       "gradedBy": "Calificado por",
       "marksObtained": "Nota obtenida",
@@ -2375,6 +2502,21 @@
       "retrieved": "Calificación obtenido correctamente",
       "seeded": "Calificación inicializado correctamente",
       "updated": "Calificación actualizado correctamente"
+    },
+    "toolbar": {
+      "highest": "Máxima",
+      "lowest": "Mínima",
+      "passRate": "Tasa de aprobados",
+      "save": "Guardar notas",
+      "selectSource": "Seleccione primero una evaluación o examen",
+      "exam": "Examen",
+      "selectExam": "Seleccionar examen",
+      "searchExam": "Buscar examen",
+      "searchAssessment": "Buscar evaluación",
+      "teacherForSubject": "Profesor de la materia",
+      "selectClass": "Seleccione una clase para empezar.",
+      "selectSection": "Seleccione un grupo para ver los alumnos.",
+      "noStudents": "No hay alumnos en el grupo seleccionado."
     }
   },
   "parents": {
@@ -2997,7 +3139,7 @@
       "gradingPeriods": "Períodos de calificación",
       "maxClassSize": "Tamaño máximo de clase",
       "minimumPassingGrade": "Nota mínima de aprobación",
-      "title": "Título"
+      "title": "Ajustes académicos"
     },
     "clear": {
       "button": "Confirmar",
@@ -3033,7 +3175,7 @@
       "schoolName": "Nombre de la escuela",
       "schoolPhone": "Teléfono de la escuela",
       "schoolStartTime": "Hora de inicio de clases",
-      "title": "Título"
+      "title": "Información del centro"
     },
     "security": {
       "apiKey": "Clave API",
@@ -3069,6 +3211,8 @@
       "lightTheme": "Claro",
       "theme": "Tema",
       "timeFormat": "Formato de hora",
+      "timeFormat12": "Formato de 12 horas",
+      "timeFormat24": "Formato de 24 horas",
       "timeZone": "Zona horaria",
       "title": "Título",
       "success": "System completado correctamente"
@@ -3082,7 +3226,8 @@
       "created": "Configuración creado correctamente",
       "retrieved": "Configuración obtenido correctamente",
       "updated": "Configuración actualizado correctamente"
-    }
+    },
+    "saveSettings": "Guardar ajustes"
   },
   "students": {
     "correction": {
@@ -3450,7 +3595,8 @@
       "workloadHours": "Horas de carga",
       "workloadHoursPlaceholder": "Ingrese las horas de carga",
       "yearsOfExperience": "Años de experiencia",
-      "yearsOfExperiencePlaceholder": "Ingrese los años de experiencia"
+      "yearsOfExperiencePlaceholder": "Ingrese los años de experiencia",
+      "noAssignments": "Sin asignaciones"
     },
     "profile": {
       "table": {
@@ -3470,7 +3616,30 @@
         "section": "Sección",
         "class": "Clase"
       },
-      "teacherNotFound": "Profesor no encontrado"
+      "teacherNotFound": "Profesor no encontrado",
+      "currentPeriod": "Periodo actual",
+      "currentMonth": "Mes actual",
+      "hourly": "Por horas",
+      "monthlySalary": "Salario mensual",
+      "hoursNotSet": "Horas sin definir",
+      "estimatedRate": "Tarifa estimada",
+      "noPayments": "No hay pagos registrados para el profesor",
+      "payments": "Pagos",
+      "academic": "Académico",
+      "academicInfo": "Información académica",
+      "academicOverview": "Resumen académico",
+      "biography": "Biografía",
+      "certificates": "Certificados",
+      "contactInfo": "Datos de contacto",
+      "contractType": "Tipo de contrato",
+      "documents": "Documentos",
+      "experience": "Experiencia",
+      "noDocuments": "No hay documentos subidos",
+      "personalInformation": "Información personal",
+      "qualifications": "Titulaciones",
+      "schedule": "Horario",
+      "teachingAssignments": "Asignaciones docentes",
+      "years": "años"
     },
     "status": {
       "active": "Activo",
@@ -3485,7 +3654,8 @@
       "name": "Nombre",
       "phone": "Teléfono",
       "specialization": "Especialización",
-      "status": "Estado"
+      "status": "Estado",
+      "subjects": "Materias"
     },
     "employmentType": {
       "fullTime": "Tiempo completo",
@@ -3641,7 +3811,8 @@
   "events": {
     "sections": {
       "schedule": "Horario",
-      "eventDetails": "Detalles del evento"
+      "eventDetails": "Detalles del evento",
+      "placeAndAudience": "Lugar y p?blico"
     },
     "form": {
       "noClasses": "No se encontraron clases",
@@ -3722,6 +3893,13 @@
       "endTimeBeforeStart": "La hora de fin debe ser posterior a la de inicio",
       "registrationDeadlineAfterStart": "La fecha límite de inscripción no puede ser posterior a la de inicio",
       "outsideSelectedYear": "Las fechas del evento deben caer en el año escolar seleccionado"
+    },
+    "dialogs": {
+      "createTitle": "Crear evento",
+      "createButton": "Crear evento",
+      "editTitle": "Editar evento",
+      "updateButton": "Guardar evento",
+      "deleteButton": "Eliminar evento"
     }
   },
   "auditLog": {
@@ -4179,5 +4357,16 @@
       "endBeforePlacement": "La fecha de fin debe ser posterior al inicio de la ubicación actual",
       "futureEnd": "Una matrícula del año activo no puede terminar en el futuro"
     }
+  },
+  "calendar": {
+    "today": "Hoy",
+    "monthView": "Vista mensual",
+    "weekView": "Vista semanal",
+    "weekOf": "Semana del {{date}}",
+    "addEvent": "Añadir evento",
+    "addAnnouncement": "Añadir anuncio",
+    "loading": "Cargando calendario…",
+    "more": "{{count}} más…",
+    "events": "Eventos"
   }
 }

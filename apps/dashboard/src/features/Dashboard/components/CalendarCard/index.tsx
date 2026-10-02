@@ -1,4 +1,5 @@
 'use client';
+import { ar, enUS, es, fr } from 'date-fns/locale';
 import React, { useEffect, useState } from 'react';
 import { NCard } from 'najm-kit';
 import { Calendar } from 'najm-kit';
@@ -9,7 +10,8 @@ import { useDelayedLoading } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 
 const CalendarCard = ({ className = '' }) => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const calendarLocale = { ar, en: enUS, es, fr }[language] ?? enUS;
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const isLoading = useDelayedLoading();
 
@@ -21,6 +23,7 @@ const CalendarCard = ({ className = '' }) => {
     <NCard title={t('dashboard.calendar.title')} icon={CalendarIcon} className={cn('flex w-full h-full', className)} loading={isLoading} skeleton={<NSkeletonCalendar />}>
       <Calendar
         mode="single"
+        locale={calendarLocale}
         selected={selectedDate}
         onSelect={setSelectedDate}
         className="rounded-md mx-auto w-full [--cell-size:2.25rem]"

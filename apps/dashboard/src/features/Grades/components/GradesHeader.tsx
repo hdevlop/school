@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, Target, Loader2, Send } from 'lucide-react';
+import { useTranslation } from 'najm-i18n/react';
 import { NButton } from 'najm-kit';
 import { cn } from 'najm-kit';
 
@@ -52,23 +53,25 @@ export default function GradesHeader({
   isSubmitting = false,
   onSubmit,
   canSubmit = true,
-  submitTitle = 'Save grades',
+  submitTitle,
 }: Props) {
+  const { t } = useTranslation();
+  const title = submitTitle ?? t('grades.toolbar.save');
   const fmt = (v: number | null) => (v == null ? '—' : `${v}%`);
   return (
-    <div className="flex w-full items-stretch justify-end gap-2">
-      <div className="flex h-10 items-center gap-4 rounded-md border bg-card px-3">
-        <StatItem icon={TrendingUp} label="Highest" value={fmt(stats.highest)} tone="blue" />
+    <div className="flex w-full flex-wrap items-stretch justify-end gap-2">
+      <div className="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2 rounded-md border bg-card px-3 py-2">
+        <StatItem icon={TrendingUp} label={t('grades.toolbar.highest')} value={fmt(stats.highest)} tone="blue" />
         <span className="h-4 w-px bg-border shrink-0" />
-        <StatItem icon={TrendingDown} label="Lowest" value={fmt(stats.lowest)} tone="red" />
+        <StatItem icon={TrendingDown} label={t('grades.toolbar.lowest')} value={fmt(stats.lowest)} tone="red" />
         <span className="h-4 w-px bg-border shrink-0" />
-        <StatItem icon={Target} label="Pass Rate" value={`${stats.passRate}%`} tone="amber" />
+        <StatItem icon={Target} label={t('grades.toolbar.passRate')} value={`${stats.passRate}%`} tone="amber" />
       </div>
       <NButton
         onClick={onSubmit}
         disabled={isSubmitting || !hasChanges || !canSubmit}
-        aria-label={submitTitle}
-        title={submitTitle}
+        aria-label={title}
+        title={title}
         className="h-10 w-10 cursor-pointer p-0 disabled:cursor-not-allowed"
       >
         {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

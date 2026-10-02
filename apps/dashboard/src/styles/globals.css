@@ -7,6 +7,22 @@ body {
   @apply font-sans;
 }
 
+/* Let page content and header titles give way to controls inside the shell. */
+.dashboard-content > *,
+.dashboard-content [data-slot="page-header"] {
+  min-width: 0;
+}
+
+.dashboard-content [data-slot="page-header"] {
+  flex-shrink: 0;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-content [data-slot="page-header-identity"] {
+    flex: 1 1 0%;
+  }
+}
+
 :root {
   --background: oklch(94.827% 0.00756 260.887);
   --foreground: oklch(0.2686 0 0);

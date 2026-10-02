@@ -45,7 +45,7 @@ export const useGradesTableFilters = (params: Params) => {
       {
         name: 'class',
         type: 'combobox',
-        placeholder: isClassesLoading ? 'Loading...' : t('grades.form.class'),
+        placeholder: isClassesLoading ? t('common.loading') : t('grades.form.class'),
         searchPlaceholder: t('grades.form.classPlaceholder'),
         value: classId,
         onChange: setClassId,
@@ -56,7 +56,7 @@ export const useGradesTableFilters = (params: Params) => {
       {
         name: 'section',
         type: 'select',
-        placeholder: !classId ? 'Select class first' : t('grades.form.section'),
+        placeholder: !classId ? t('grades.toolbar.selectClass') : t('grades.form.section'),
         searchPlaceholder: t('grades.form.sectionPlaceholder'),
         value: sectionId,
         onChange: setSectionId,
@@ -80,7 +80,7 @@ export const useGradesTableFilters = (params: Params) => {
       base.push({
         name: 'teacher',
         type: 'combobox',
-        placeholder: subjectId ? 'Teacher for subject' : t('grades.form.teacher'),
+        placeholder: subjectId ? t('grades.toolbar.teacherForSubject') : t('grades.form.teacher'),
         searchPlaceholder: t('grades.form.teacherPlaceholder'),
         value: teacherId,
         onChange: setTeacherId,
@@ -93,11 +93,11 @@ export const useGradesTableFilters = (params: Params) => {
       name: 'source',
       type: 'combobox',
       placeholder: isSourceLoading
-        ? 'Loading...'
+        ? t('common.loading')
         : sourceType === 'assessment'
-          ? 'Select assessment'
-          : 'Select exam',
-      searchPlaceholder: sourceType === 'assessment' ? 'Search assessment' : 'Search exam',
+          ? t('grades.form.assessmentPlaceholder')
+          : t('grades.toolbar.selectExam'),
+      searchPlaceholder: sourceType === 'assessment' ? t('grades.toolbar.searchAssessment') : t('grades.toolbar.searchExam'),
       value: sourceId,
       onChange: setSourceId,
       options: sourceOptions,

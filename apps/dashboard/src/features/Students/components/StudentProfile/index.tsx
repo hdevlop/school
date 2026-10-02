@@ -102,7 +102,7 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
         </div>
       ) : (
       <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-        <div className="min-h-0 w-full shrink-0 border-b border-slate-200 lg:w-96 lg:border-b-0 lg:border-r">
+        <div className="min-h-0 w-full shrink-0 border-b border-slate-200 lg:w-72 xl:w-80 2xl:w-96 lg:border-b-0 lg:border-r">
           <LeftSidebar
             student={student}
             isLoading={isStudentLoading}
@@ -117,7 +117,7 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
             variant="underline"
             classNames={{
               root: 'min-h-0 w-full flex-1 gap-0',
-              list: 'sticky top-0 z-10 h-auto shrink-0 justify-start gap-4 overflow-hidden !border-0 !border-b-0 !border-transparent bg-white px-5 py-0 !shadow-none',
+              list: 'sticky top-0 z-10 h-auto max-w-full shrink-0 justify-start gap-4 overflow-x-auto !border-0 !border-b-0 !border-transparent bg-white px-5 py-0 !shadow-none',
               trigger:
                 'relative cursor-pointer gap-2 px-2 pb-3 pt-3 text-slate-500 hover:text-slate-700 data-[state=active]:border-b-primary! data-[state=active]:text-primary!',
               content: 'min-h-0 flex-1 overflow-y-auto px-5 py-3 scrollbar-hide',

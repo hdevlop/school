@@ -72,6 +72,7 @@ export default function AlertsTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         className="min-h-0 flex-1"
         data={rows}
         columns={columns}

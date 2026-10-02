@@ -152,7 +152,12 @@ const SettingsForm: React.FC = () => {
         title={t('navigation.settings')}
       >
         <NPageHeaderActions>
-          <Link href="/academic-year-migration" className="rounded-md border px-3 py-2 text-sm font-medium hover:bg-muted">
+          <PageHeaderGlobalActions />
+        </NPageHeaderActions>
+      </NPageHeader>
+
+      <div className="flex flex-wrap items-center justify-between gap-2">
+          <Link href="/academic-year-migration" className="min-w-0 rounded-md border px-3 py-2 text-sm font-medium hover:bg-muted">
             {t('academicYearMigration.title')}
           </Link>
           <NButton
@@ -161,13 +166,11 @@ const SettingsForm: React.FC = () => {
             disabled={isUpdating}
           >
             {isUpdating
-              ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving…</>
-              : <><Save className="h-4 w-4 mr-2" />Save Settings</>
+              ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />{t('common.saving')}</>
+              : <><Save className="h-4 w-4 mr-2" />{t('settings.saveSettings')}</>
             }
           </NButton>
-          <PageHeaderGlobalActions />
-        </NPageHeaderActions>
-      </NPageHeader>
+      </div>
 
       <NForm
         id="settings-form"

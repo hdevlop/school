@@ -77,20 +77,20 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
 
     if (onPayFee && getFeeBalance(fee) > 0) {
       items.push({
-        label: 'Pay',
+        label: t('fees.studentView.pay'),
         icon: CreditCard,
         onSelect: () => onPayFee(fee),
       });
     }
 
     items.push({
-      label: 'Edit',
+      label: t('common.edit'),
       icon: Pencil,
       onSelect: () => handleEdit(fee),
     });
 
     items.push({
-      label: 'Delete',
+      label: t('common.delete'),
       icon: Trash2,
       danger: true,
       separatorBefore: items.length > 0,
@@ -98,7 +98,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
     });
 
     return items;
-  }, [handleDelete, handleEdit, onPayFee]);
+  }, [t, handleDelete, handleEdit, onPayFee]);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden">
@@ -122,7 +122,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
           <NEmptyState
             surface="panel"
             icon={FEATURE_ICONS.fees}
-            title={"No fees assigned to this student"}
+            title={t('fees.studentView.noFees')}
           />
         )}
         renderFilteredEmpty={() => (
@@ -143,7 +143,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
         <div className='flex min-h-0 flex-1 flex-col gap-2'>
           <Label className="flex shrink-0 items-center gap-2 text-lg text-gray-800">
             <span>📅</span>
-            Fee Installments
+            {t('fees.studentView.installments')}
           </Label>
           <InstallmentsTable
             key={selectedFee.id}

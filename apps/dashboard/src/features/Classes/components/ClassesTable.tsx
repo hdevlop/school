@@ -100,6 +100,7 @@ function ClassesTable() {
       </NPageHeader>
 
       <NTable
+        responsiveSkeleton
         data={classes}
         columns={columns}
         filters={rawFilters}

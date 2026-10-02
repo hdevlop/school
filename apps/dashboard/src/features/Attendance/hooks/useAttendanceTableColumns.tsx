@@ -15,10 +15,10 @@ interface RosterColumnsOptions {
   setStatus: (id: string, status: RosterStatus) => void;
 }
 
-const statusCell = ({ getStatus, setStatus }: RosterColumnsOptions) => ({
+const statusCell = ({ getStatus, setStatus }: RosterColumnsOptions, label: string) => ({
   id: 'status',
   accessorFn: (row: any) => getStatus(row.id),
-  header: () => <div className="flex w-full justify-center text-center">Status</div>,
+  header: () => <div className="flex w-full justify-center text-center">{label}</div>,
   enableSorting: false,
   enableColumnFilter: true,
   cell: ({ row }: any) => (
@@ -30,14 +30,15 @@ const statusCell = ({ getStatus, setStatus }: RosterColumnsOptions) => ({
 });
 
 export const useStudentRosterColumns = ({ getStatus, setStatus }: RosterColumnsOptions) => {
+  const { t } = useTranslation();
   const studentColumns = useStudentsTableColumns();
 
   return useMemo(() => {
     const base = studentColumns.filter((col: any) =>
       ROSTER_KEEP_COLUMNS.has(col.id ?? col.accessorKey)
     );
-    return [...base, statusCell({ getStatus, setStatus })];
-  }, [studentColumns, getStatus, setStatus]);
+    return [...base, statusCell({ getStatus, setStatus }, t('common.status'))];
+  }, [t, studentColumns, getStatus, setStatus]);
 };
 
 export const useTeacherRosterColumns = ({ getStatus, setStatus }: RosterColumnsOptions) => {
@@ -90,9 +91,14 @@ export const useStaffRosterColumns = ({ getStatus, setStatus }: RosterColumnsOpt
       accessorKey: 'role',
       header: t('staff.table.role'),
       enableSorting: true,
-      cell: ({ getValue }: any) => getValue() || <span className="text-gray-400">{t('common.notSpecified')}</span>,
+      cell: ({ getValue }: any) => {
+        const value = getValue();
+        if (!value) return t('common.notSpecified');
+        const key = `staff.roles.${value}`;
+        return t(key) === key ? value : t(key);
+      },
     },
-    statusCell({ getStatus, setStatus }),
+    statusCell({ getStatus, setStatus }, t('common.status')),
   ], [t, getStatus, setStatus]);
 };
 

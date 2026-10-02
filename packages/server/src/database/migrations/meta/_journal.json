@@ -435,6 +435,13 @@
       "when": 1790789282258,
       "tag": "0061_fee_type_name_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1790894284110,
+      "tag": "0062_ai_settings_provider_text",
+      "breakpoints": true
     }
   ]
 }

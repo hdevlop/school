@@ -155,15 +155,15 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacherId }) => {
   }
 
   const tabs = [
-    { value: 'overview', icon: User, label: 'Overview' },
-    { value: 'academic', icon: GraduationCap, label: 'Academic' },
-    { value: 'schedule', icon: Calendar, label: 'Schedule' },
-    { value: 'payments', icon: CreditCard, label: 'Payments' },
-    { value: 'documents', icon: FileText, label: 'Documents' },
+    { value: 'overview', icon: User, label: t('students.profile.tabs.overview') },
+    { value: 'academic', icon: GraduationCap, label: t('teachers.profile.academic') },
+    { value: 'schedule', icon: Calendar, label: t('teachers.profile.schedule') },
+    { value: 'payments', icon: CreditCard, label: t('teachers.profile.payments') },
+    { value: 'documents', icon: FileText, label: t('teachers.profile.documents') },
   ];
 
   return (
-    <div className="h-full grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
+    <div className="h-full min-h-0 overflow-y-auto grid grid-cols-1 lg:grid-cols-4 gap-6 w-full">
       {/* This profile has no NPageHeader, so it carries the mobile sidebar
           trigger a page header would otherwise provide. */}
       <NButton
@@ -188,7 +188,7 @@ const TeacherProfile: React.FC<TeacherProfileProps> = ({ teacherId }) => {
         />
       </div>
 
-      <div className="flex h-full flex-col lg:col-span-3 border border-slate-300 p-4 rounded-2xl">
+      <div className="flex min-w-0 h-full flex-col lg:col-span-3 border border-slate-300 p-4 rounded-2xl">
           <div className="mb-2 flex justify-end empty:hidden"><ViewingYearSelector /></div>
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="border-b border-slate-200 px-6 h-auto w-full flex gap-6 overflow-x-auto scrollbar-hide justify-start p-0">
