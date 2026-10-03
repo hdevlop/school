@@ -9,6 +9,7 @@ import { getStudentDefaultValues, StudentFormContent } from './SimpleStudentForm
 import { BulkParentFormContent } from '@/features/Parents/components/BulkParentForm'
 import { fullStudentSchema, studentWithTransportSchema } from '../config/fullStudentSchemas'
 import { studentSchema } from '../config/studentSchemas'
+import { academicYearStartDate, firstYearEnrolledOn } from '../config/newStudentEnrollment'
 import { parentSchema, parentsSchema } from '@/features/Parents/config/parentSchemas'
 import { feesSchema } from '@/features/Financial/Fees/config/feeSchemas'
 import { transportSchema } from '@/features/Transport/config/transportSchemas'
@@ -30,15 +31,6 @@ type StudentWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLab
 
 const StudentWizardForm = WizardForm as ComponentType<StudentWizardFormProps>
 
-const getAcademicYearStartDate = (academicYear?: string | null, referenceDate?: string | null) => {
-  const startYear = academicYear?.match(/^\d{4}/)?.[0]
-  if (startYear) return `${startYear}-09-01`
-
-  const today = referenceDate ? new Date(`${referenceDate}T00:00:00`) : new Date()
-  const year = today.getMonth() >= 8 ? today.getFullYear() : today.getFullYear() - 1
-  return `${year}-09-01`
-}
-
 const FullStudentForm = ({
   classes = [],
   feeTypes = [],
@@ -50,13 +42,7 @@ const FullStudentForm = ({
   const [transportSelected, setTransportSelected] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
-  const initialStudentValues = useMemo(
-    () => ({
-      ...getStudentDefaultValues(null, businessDate),
-      yearEnrolledOn: businessDate ?? new Date().toISOString().slice(0, 10),
-    }),
-    [businessDate],
-  )
+  const initialStudentValues = useMemo(() => getStudentDefaultValues(null, businessDate), [businessDate])
 
   const defaultFees = useMemo(() => {
     if (!feeTypes?.length) return []
@@ -72,8 +58,7 @@ const FullStudentForm = ({
     return buildFill(studentSchema, {
       classId: selectedClass?.id ?? '',
       sectionId: selectedSection?.id ?? '',
-      enrollmentDate: getAcademicYearStartDate(selectedClass?.academicYear, businessDate),
-      yearEnrolledOn: getAcademicYearStartDate(selectedClass?.academicYear, businessDate),
+      enrollmentDate: academicYearStartDate(selectedClass?.academicYear, businessDate),
     })
   }, [businessDate, classes])
 
@@ -140,7 +125,6 @@ const FullStudentForm = ({
         <StudentFormContent
           classes={classes}
           showTransportToggle
-          showYearEnrollmentDate
           onTransportToggle={setTransportSelected}
         />
       ),
@@ -226,8 +210,10 @@ const FullStudentForm = ({
         })()
       : null
 
+    const studentClass: any = classes.find((candidate: any) => candidate.id === flatStudentFields.classId)
     const payload = {
       ...flatStudentFields,
+      yearEnrolledOn: firstYearEnrolledOn(flatStudentFields.enrollmentDate, studentClass?.academicYear),
       address: addressLocation.address,
       addressLatitude: addressLocation.latitude ?? null,
       addressLongitude: addressLocation.longitude ?? null,
@@ -252,7 +238,7 @@ const FullStudentForm = ({
       setIsSubmitting(false)
       throw error
     }
-  }, [feeTypes, onSubmitStudent, pop])
+  }, [classes, feeTypes, onSubmitStudent, pop])
 
   return (
     <div className='h-full min-h-0' aria-busy={isSubmitting}>

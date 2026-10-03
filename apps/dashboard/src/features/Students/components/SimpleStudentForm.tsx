@@ -10,7 +10,7 @@ import { AvatarFormInput, NForm, useDialog } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
-import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, CalendarDays, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
+import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { PLACEMENT_FIELDS, studentProfileEditSchema, studentSchema } from '../config/studentSchemas'
@@ -152,13 +152,12 @@ function CorrectionFields({ enrollment }) {
     <FormInput name='correctionReason' type='textarea' formLabel={t('students.correction.reason')} />
   </div>;
 }
-export const StudentFormContent = ({ classes = [], prefix = '', student: _student = null, showTransportToggle = false, showYearEnrollmentDate = false, placementReadOnly = false, onTransportToggle }: {
+export const StudentFormContent = ({ classes = [], prefix = '', student: _student = null, showTransportToggle = false, placementReadOnly = false, onTransportToggle }: {
   classes?: any[]
   placementReadOnly?: boolean
   prefix?: string
   student?: any
   showTransportToggle?: boolean
-  showYearEnrollmentDate?: boolean
   onTransportToggle?: (enabled: boolean) => void
 }) => {
 
@@ -324,15 +323,6 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
           icon={CalendarCheck}
           required={true}
         />
-        {showYearEnrollmentDate ? (
-          <FormInput
-            name='yearEnrolledOn'
-            type='date'
-            formLabel={t('students.form.yearEnrolledOn')}
-            icon={CalendarDays}
-            required
-          />
-        ) : null}
         <FormInput
           name='previousSchool'
           type='text'

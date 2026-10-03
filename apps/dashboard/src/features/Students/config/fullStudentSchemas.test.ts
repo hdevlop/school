@@ -16,7 +16,6 @@ const student = {
   email: 'sara@example.com',
   addressLocation: somewhere,
   enrollmentDate: '2025-09-01',
-  yearEnrolledOn: '2025-09-01',
   gender: 'F',
 };
 
