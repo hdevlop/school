@@ -1,6 +1,38 @@
 # Chatbot latency and cost plan
 
-Status: **ALL SMOKE-RUN PROBLEMS FIXED LOCALLY; NAJM-CHATBOT 2.0.4 PINNED; USAGE AND COST NOW REPORTED (~$0.0001 PER ANSWER)**
+Status: **PHASE 1 DIAGNOSTICS BUILT IN THE NAJM CLONE (UNRELEASED); NAJM-CHATBOT 2.0.4 PINNED**
+
+2026-10-03, Phase 1 (section 5): `najm-chatbot` in the Najm clone (commit
+`8233790`, not yet pushed or published) now records diagnostics for each request
+to `chatLogging.onDiagnostics` and, when logging is on, to
+`metadata.diagnostics` on the interaction log row. They contain:
+
+- **Outcome:** exactly one of completed, error, aborted or setup_error.
+- **Timings:** settings, history, routing, context and preparation spans;
+  first-text and finish marks.
+- **Steps:** finish reason and tokens for each step.
+- **Tool calls:** executed, blocked or error, with duration and argument and
+  result sizes.
+- **Cost:** usage and estimated cost.
+- **Correlation id:** the `x-request-id` the client sends.
+
+The row also gains `steps_count`, `success` and `error`.
+
+Building it found a gap: when a provider stream throws mid-answer, the AI SDK
+calls no `onError`, `onFinish` or `onAbort`, and the client sees a dropped
+connection. Before, such requests were never logged; the body is now watched,
+so they are logged, as are client disconnects. Tests pass: 183 in
+`najm-chatbot`. One `ai-settings` test fails, and it fails on the unchanged
+code too. Build and the API snapshot are additive.
+
+Not done yet:
+- **Embedding spans** (cache hit/miss, attempts) belong to `najm-rag`
+  (section 5.1). Routing and context are timed only as whole spans.
+- **School wiring** (section 5.3) waits for a release. Also,
+  `chatLogging.enabled` already defaults to `true`, but no School migration
+  creates `chatbot_interaction_logs`, so today each chat attempts an insert
+  that fails silently. Rows store questions and tool arguments, so set
+  retention and access first (section 5.2).
 
 2026-10-02, latest: `najm-chatbot@2.0.4` is published and pinned, and School
 sets a 30 s stall limit. A 12-request pass completed 12/12, with first text
@@ -139,6 +171,8 @@ paid provider is a prerequisite; paid chat runs need a declared budget.
    data are done (35/36 completed on seeded data). An acceptance baseline still
    needs a larger corpus and sample.**
 3. Add shared instrumentation in Najm and establish a controlled internal baseline.
+   **`najm-chatbot` diagnostics built and tested in the clone (2026-10-03);
+   release, `najm-rag` embedding spans and School wiring remain.**
 4. Compare configuration, model, routing, and tool-call improvements separately.
 5. Consider Jev only if measured traffic and avoidable LLM spending justify it.
 
@@ -431,7 +465,12 @@ set retention/access rules before logging real questions or tool arguments.
    only the intended additive table/index changes, with no unrelated drops.
 3. Apply the reviewed migration using `bun run db:migrate` on the designated
    development/test database. Production application is a separate rollout step.
-4. Enable `chatLogging: { enabled: true }` in `chatbotConfig()` after the sink exists.
+4. Decide logging explicitly in `chatbotConfig()`. `chatLogging.enabled`
+   already defaults to `true`, which today inserts into a missing table. Either
+   enable it with the table and a retention rule, or use `onDiagnostics` alone,
+   which carries no question text or tool arguments. The benchmark runner can
+   match rows to cases by sending `x-request-id`, which is recorded as
+   `correlationId`.
 5. Verify successful, blocked/denied, embedding-failure, and aborted requests;
    check correlation, aggregate usage, log persistence, and terminal outcomes.
 6. Re-run unchanged cases/settings to measure instrumentation overhead before
