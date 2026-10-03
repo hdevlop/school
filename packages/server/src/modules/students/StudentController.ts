@@ -35,7 +35,7 @@ export class StudentController {
 
   @Get('/count')
   @CanList()
-  @McpTool({ description: 'Get the exact total number of students enrolled in the selected academic year, limited to records this account can read. Nombre total d’élèves pour l’année scolaire sélectionnée. العدد الإجمالي للتلاميذ في السنة الدراسية المحددة.', readOnly: true })
+  @McpTool({ description: 'Get the exact total number of students enrolled in the selected academic year, limited to records this account can read. Nombre total d’élèves pour l’année scolaire sélectionnée. العدد الإجمالي للتلاميذ في السنة الدراسية المحددة. شحال من تلميذ مسجل هاد العام.', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getStudentCount() {
     return this.studentService.getCount();

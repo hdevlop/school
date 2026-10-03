@@ -45,6 +45,10 @@ export class TeacherService {
     return await this.teacherRepository.getCount();
   }
 
+  async getOwnedCount() {
+    return await this.teacherRepository.getOwnedCount();
+  }
+
   async getById(id: string) {
     return this.teacherValidator.ensureExists(id);
   }

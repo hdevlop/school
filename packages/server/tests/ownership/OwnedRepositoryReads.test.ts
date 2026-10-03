@@ -165,6 +165,7 @@ const OWNED_READS: Read[] = [
   ['students getAll for one student', () => inYear(new StudentRepository()), 'getAll', [{ studentId: 'student-1' }]],
   ['students getAll on a date', () => inYear(new StudentRepository()), 'getAll', [{ onDate: '2025-10-01' }]],
   ['teachers getAll', () => inYear(new TeacherRepository()), 'getAll', []],
+  ['teachers getOwnedCount', () => inYear(new TeacherRepository()), 'getOwnedCount', []],
   ['teachers getById', () => inYear(new TeacherRepository()), 'getById', ['id-1']],
   ['teachers getByUserId', () => new TeacherRepository(), 'getByUserId', ['user-9']],
 ];

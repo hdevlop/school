@@ -40,6 +40,14 @@ export class TeacherController {
     return this.teacherService.getAll();
   }
 
+  @Get('/count')
+  @CanList()
+  @McpTool({ description: 'Get the exact total number of teachers, limited to records this account can read. Nombre total d’enseignants de l’école. العدد الإجمالي للأساتذة في المدرسة. شحال من أستاذ كاين فالمدرسة.', readOnly: true })
+  @ResMsg('teachers.success.retrieved')
+  async getTeacherCount() {
+    return this.teacherService.getOwnedCount();
+  }
+
   @Get('/:id')
   @CanRead()
   @Validate({ params: teacherIdParam })

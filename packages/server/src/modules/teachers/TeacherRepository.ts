@@ -150,6 +150,16 @@ export class TeacherRepository {
     return teachersCount;
   }
 
+  // The rows getAll returns, counted. getCount above is the dashboards'
+  // school-wide total.
+  async getOwnedCount() {
+    const [row] = await this.db
+      .select({ count: count() })
+      .from(teachers)
+      .where(this.ownedWhere());
+    return row;
+  }
+
   async getAll() {
     return await this.buildTeacherQuery()
       .where(this.ownedWhere())
