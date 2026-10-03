@@ -30,9 +30,22 @@ const ELISION = /\b(?:l|d|qu|n|j|c|s)['’]\p{L}/giu;
 
 const MIN_LETTERS = 12;
 
+// A Markdown table's data rows echo stored records, such as French class names
+// in an English answer; its header row is the model's own wording and stays.
+const TABLE_ROW = /^\s*\|.*\|\s*$/;
+const TABLE_SEPARATOR = /^\s*\|[\s:|-]+\|\s*$/;
+function withoutTableData(text) {
+  let inData = false;
+  return text.split('\n').filter((line) => {
+    if (!TABLE_ROW.test(line)) { inData = false; return true; }
+    if (TABLE_SEPARATOR.test(line)) { inData = true; return false; }
+    return !inData;
+  }).join('\n');
+}
+
 /** @returns {'ar' | 'en' | 'fr' | 'es' | null} */
 export function detectReplyLanguage(text) {
-  const plain = String(text ?? '')
+  const plain = withoutTableData(String(text ?? ''))
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
     .replace(/https?:\/\/\S+/g, ' ')

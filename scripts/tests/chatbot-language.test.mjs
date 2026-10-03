@@ -35,6 +35,28 @@ describe('detectReplyLanguage', () => {
     expect(detectReplyLanguage(reply)).toBe('es');
   });
 
+  it('reads an English answer whose table lists French class names as English', () => {
+    const reply = [
+      'Here are the classes for the 2026‑2027 academic year, each with its sections:',
+      '',
+      '| Class | Description | Level | Sections |',
+      '|-------|-------------|-------|----------|',
+      '| **CP** | Cours Préparatoire | Primaire | A, B, C |',
+      '| **CE1** | Cours Élémentaire 1ère année | Primaire | A, B, C |',
+      '| **CM2** | Cours Moyen 2ème année | Primaire | A, B, C |',
+      '| **CE6** | Sixième – Début du collège | Collège | A, B, C |',
+      '| **1AC** | 1ère année collège | Collège | A, B, C |',
+      '',
+      'Let me know if you need details about a specific class, its sections, teachers, or students.',
+    ].join('\n');
+    expect(detectReplyLanguage(reply)).toBe('en');
+  });
+
+  it('never calls a short French answer that is mostly a table another language', () => {
+    const reply = 'Voici les classes :\n\n| Classe | Niveau | Sections |\n|---|---|---|\n| CP | Primary | A, B |\n| CE1 | Primary | A, B |';
+    expect([null, 'fr']).toContain(detectReplyLanguage(reply));
+  });
+
   it('declines to call text that is too short or too mixed', () => {
     expect(detectReplyLanguage('100')).toBeNull();
     expect(detectReplyLanguage('**100**.')).toBeNull();
