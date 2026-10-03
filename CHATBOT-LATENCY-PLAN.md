@@ -1,6 +1,25 @@
 # Chatbot latency and cost plan
 
-Status: **PHASE 1 DIAGNOSTICS RELEASED IN NAJM-CHATBOT 2.0.5 AND PINNED; SCHOOL LOGGING DECISION PENDING**
+Status: **INTERNAL BASELINE CAPTURED: THE MODEL IS ~99% OF ANSWER TIME; SCHOOL'S OWN WORK IS ~10 MS**
+
+2026-10-03, internal baseline ([review](docs/evidence/chatbot-latency/stream-diagnostics-20261003.md)):
+School now sends each chat's diagnostics to an in-memory, admin-only log at
+`GET /api/chat-diagnostics`, which holds no question text. The interaction log
+table stays off (`chatLogging.enabled: false`) until a retention rule exists.
+The runner matches each request to its server record by `x-request-id`.
+
+Two runs of 36 requests completed 72/72, with a server record for each. Per
+answer, at p50:
+- settings, routing, tools and saving took about 10 ms in total;
+- routing took about 150 ms for a question it hadn't seen and about 6 ms when
+  cached;
+- tools took 0.3–19 ms.
+
+The rest is the provider. The same 36 questions ran at complete p50 5.1 s in
+one run and 2.7 s in the next, with server stages unchanged. So latency work
+belongs in Phase 2 items 5–6 (model choice, context and reasoning size), and
+comparisons must interleave runs. Write checks now use the server's
+`blocked` outcome; the stream could not tell a blocked tool from a real one.
 
 2026-10-03, Phase 1 (section 5): `najm-chatbot@2.0.5` (published and pinned;
 a 2-request live check completed 2/2 with usage) now records diagnostics for each request
@@ -28,11 +47,9 @@ pass after fixing a stale `ai-settings` test, which expected JSON for a
 Not done yet:
 - **Embedding spans** (cache hit/miss, attempts) belong to `najm-rag`
   (section 5.1). Routing and context are timed only as whole spans.
-- **School wiring** (section 5.3) waits on the logging decision. Also,
-  `chatLogging.enabled` already defaults to `true`, but no School migration
-  creates `chatbot_interaction_logs`, so today each chat attempts an insert
-  that fails silently. Rows store questions and tool arguments, so set
-  retention and access first (section 5.2).
+- **School wiring** (section 5.3) is done with the in-memory log above. The
+  interaction log table remains off. Rows store questions and tool arguments,
+  so set retention and access before enabling it (section 5.2).
 
 2026-10-02, latest: `najm-chatbot@2.0.4` is published and pinned, and School
 sets a 30 s stall limit. A 12-request pass completed 12/12, with first text
@@ -171,8 +188,9 @@ paid provider is a prerequisite; paid chat runs need a declared budget.
    data are done (35/36 completed on seeded data). An acceptance baseline still
    needs a larger corpus and sample.**
 3. Add shared instrumentation in Najm and establish a controlled internal baseline.
-   **`najm-chatbot` diagnostics released in 2.0.5 and pinned (2026-10-03);
-   `najm-rag` embedding spans and School wiring remain.**
+   **`najm-chatbot` diagnostics released in 2.0.5, wired into School and the
+   runner; internal baseline captured (2026-10-03). `najm-rag` embedding spans
+   remain.**
 4. Compare configuration, model, routing, and tool-call improvements separately.
 5. Consider Jev only if measured traffic and avoidable LLM spending justify it.
 
@@ -487,6 +505,7 @@ Files (created 2026-10-02 unless noted):
 - `scripts/chatbot-benchmark.mjs` with `scripts/chatbot-stream.mjs` (parser,
   tested in `scripts/tests/chatbot-stream.test.mjs`): streaming runner, request
   limits, and budget controls. `.mjs` follows the other `scripts/` runners.
+  Server diagnostics are read for each request by `x-request-id` (2026-10-03).
   Still to add: interleaved baseline/candidate runs, declared concurrency above
   one, and non-admin accounts.
 - `datasets/chatbot-latency/questions.json`: currently a 12-case smoke set;
