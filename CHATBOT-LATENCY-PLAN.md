@@ -2,6 +2,13 @@
 
 Status: **FASTER HOST FOUND: GPT-OSS-120B:NITRO ANSWERS IN 0.6 S P50 (1.1 S P95), 12/12 CORRECT; NOT YET ADOPTED**
 
+2026-10-03, full baseline after the fixes ([review](docs/evidence/chatbot-latency/full50-20261003.md)):
+all 50 questions in five languages pass (49/50 as scored; the miss was the
+language check reading French class names in an English answer's table,
+now fixed). Complete answer 4.2 s p50 and 13.1 s p95 on the default
+OpenRouter route; School's own work is 0.2 s p50 and under 0.5 s p95, and the
+model about 93%. About $0.19 per 1,000 answers. One run: smoke coverage.
+
 2026-10-03, French and Darija ([review](docs/evidence/chatbot-latency/fr-darija-20261003.md)):
 the corpus gained 10 Darija (`ary`) cases, and `--languages=fr,ary` runs only
 those. On the saved model, French went from 8/10 to 10/10 and Darija from 5/10
