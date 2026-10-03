@@ -5,8 +5,15 @@ describe('admin seed credentials', () => {
   test('retains local defaults for development', () => {
     expect(resolveAdminSeedCredentials({ NODE_ENV: 'development' })).toEqual({
       email: 'admin@admin.com',
-      password: 'ChangeMe123456',
+      password: 'School2026',
     });
+  });
+
+  test('treats the untouched template password as unset in development', () => {
+    expect(resolveAdminSeedCredentials({
+      NODE_ENV: 'development',
+      ADMIN_PASSWORD: 'replace-before-any-shared-environment',
+    })).toEqual({ email: 'admin@admin.com', password: 'School2026' });
   });
 
   test('requires explicit production credentials before seeding', () => {
@@ -15,7 +22,7 @@ describe('admin seed credentials', () => {
   });
 
   test('rejects default and template passwords in production', () => {
-    for (const password of ['ChangeMe123456', 'replace-before-any-shared-environment']) {
+    for (const password of ['School2026', 'replace-before-any-shared-environment']) {
       expect(() => resolveAdminSeedCredentials({
         NODE_ENV: 'production',
         ADMIN_EMAIL: 'admin@school.test',

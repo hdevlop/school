@@ -510,7 +510,7 @@ image: z.string().nullish(),
 
 ```
 email:    admin@sms.local
-password: ChangeMe123456
+password: School2026
 Login:    POST /api/auth/login  →  returns accessToken
 ```
 

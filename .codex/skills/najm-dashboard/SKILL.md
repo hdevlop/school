@@ -51,7 +51,7 @@ Authenticate through REST first, using the app's running port:
 ```powershell
 $loginBody = [ordered]@{
   email = 'admin@admin.com'
-  password = 'ChangeMe123456'
+  password = 'School2026'
 } | ConvertTo-Json
 $login = Invoke-RestMethod -Method Post `
   -Uri 'http://localhost:3102/api/auth/login' `
@@ -76,7 +76,7 @@ $response = Invoke-RestMethod -Method Post `
 
 ### Local Auth Defaults
 
-- Seeded local admin login is usually `admin@admin.com` / `ChangeMe123456`.
+- Seeded local admin login is usually `admin@admin.com` / `School2026`.
 - Seeded or generated dashboard users often use the default password from `packages/server/src/shared/userPassword.ts`. Check that file before guessing.
 - Use admin auth for student, parent, class, section, settings, and user-tool work.
 - Use accounting-capable auth for fee and fee-type work.

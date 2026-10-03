@@ -1,13 +1,15 @@
 type SeedEnvironment = Record<string, string | undefined>;
 
 const LOCAL_ADMIN_EMAIL = 'admin@admin.com';
-const LOCAL_ADMIN_PASSWORD = 'ChangeMe123456';
+const LOCAL_ADMIN_PASSWORD = 'School2026';
 const TEMPLATE_ADMIN_PASSWORD = 'replace-before-any-shared-environment';
 
 export function resolveAdminSeedCredentials(env: SeedEnvironment = process.env) {
   const production = env.NODE_ENV === 'production';
   const email = (env.ADMIN_EMAIL?.trim() || (production ? '' : LOCAL_ADMIN_EMAIL)).toLowerCase();
-  const password = env.ADMIN_PASSWORD || (production ? '' : LOCAL_ADMIN_PASSWORD);
+  // Outside production, the untouched template placeholder means "not set".
+  const configured = !production && env.ADMIN_PASSWORD === TEMPLATE_ADMIN_PASSWORD ? '' : env.ADMIN_PASSWORD;
+  const password = configured || (production ? '' : LOCAL_ADMIN_PASSWORD);
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     throw new Error('ADMIN_EMAIL must be set to a valid email address before seeding an admin.');
