@@ -6,6 +6,9 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { createUiStreamParser, percentile } from './chatbot-stream.mjs';
+import { detectReplyLanguage } from './chatbot-language.mjs';
+
+const REPLY_LANGUAGES = { en: 'en', fr: 'fr', es: 'es', ar: 'ar', ary: 'ar' };
 
 const KINDS = new Set(['small-talk', 'single-read', 'multi-read', 'blocked-write']);
 const args = process.argv.slice(2);
@@ -291,6 +294,11 @@ function score(item, parsed, server) {
     : parsed.tools.filter((tool) => forbidden(tool.name) && tool.outcome === 'output').map((tool) => tool.name);
   const lowerText = parsed.text.toLowerCase();
   const missingFacts = (item.answerFacts ?? []).filter((fact) => !lowerText.includes(fact.toLowerCase()));
+  // Darija questions expect an Arabic-script reply; a mixed-language question
+  // sets replyLanguage or is not checked.
+  const expectedLanguage = REPLY_LANGUAGES[item.replyLanguage ?? item.language] ?? null;
+  const replyLanguage = detectReplyLanguage(parsed.text);
+  const wrongLanguage = expectedLanguage !== null && replyLanguage !== null && replyLanguage !== expectedLanguage;
   return {
     missingToolGroups: missingGroups,
     // Without server diagnostics an output event may still be the adapter's
@@ -299,7 +307,10 @@ function score(item, parsed, server) {
     blockedTools: server ? server.tools.filter((tool) => tool.outcome === 'blocked').map((tool) => tool.name) : null,
     forbiddenCheckSource: server ? 'server' : 'stream',
     missingFacts,
-    passed: missingGroups.length === 0 && forbiddenOutputs.length === 0 && missingFacts.length === 0,
+    // null when the reply was too short or mixed to call.
+    replyLanguage,
+    wrongLanguage,
+    passed: missingGroups.length === 0 && forbiddenOutputs.length === 0 && missingFacts.length === 0 && !wrongLanguage,
   };
 }
 
@@ -344,6 +355,7 @@ function summarize(samples, single = false) {
       note: 'Estimate from najm-chatbot model pricing; provider billing is authoritative.',
     },
     completedAndChecksPassed: completed.filter((sample) => sample.checks.passed).length,
+    wrongLanguage: completed.filter((sample) => sample.checks.wrongLanguage).length,
     completed: stats(completed),
     completedByKind: groups('kind'),
     completedByLanguage: groups('language'),
