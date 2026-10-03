@@ -102,3 +102,41 @@ stopped before compilation; the dev server was restarted afterward. Local app
 health returned HTTP 200 with database/cache OK, Qwen health returned ready, and
 the final 12/20 preview was repeated successfully after restart. The production
 build is a source/build gate, not a deployment.
+
+## Re-run on the second workstation, 2026-10-02
+
+The sections above ran on the original workstation (llama.cpp at
+`%LOCALAPPDATA%\SchoolAI`). This workstation (`C:\Users\pc`) had no llama.cpp
+install, no Qwen model and no `RAG_EMBEDDING_*` variables, so the app was using
+the source default: Ollama 0.35.0 serving `embeddinggemma:latest` (BF16, no
+query/document prefixes). Its 430 tool vectors had been built that day with
+that model. pgvector 0.8.6 was present and all three embedding columns were
+already `vector(768)`; no repair was needed. The registered tool count is now
+430 (it was 428).
+
+| Configuration | Report | Passed | Preview HTTP time |
+|---|---|---:|---|
+| Ollama EmbeddingGemma BF16, as found | [routing-ollama-gemma-20261002.json](routing-ollama-gemma-20261002.json) | **6/20** | 59–254 ms, one 1,490 ms; first call 4,256 ms |
+| Ollama Qwen3 Embedding 0.6B Q8_0, current School instruction | [routing-qwen-20261002.json](routing-qwen-20261002.json) | **14/20** | 168–650 ms; first call 630 ms |
+
+For the Qwen run, `qwen3-embedding:0.6b` (Q8_0, 639 MB, the same quantization
+as the pinned GGUF) was pulled into Ollama and aliased to `qwen3-embedding` so
+School applies its Qwen instruction ("…fulfills the user request", commit
+`b96c55f`). `.env.local` selects `openai-compatible` at
+`http://127.0.0.1:11434/v1` with `RAG_EMBEDDING_TRUNCATE_DIMENSIONS=true`;
+Ollama itself honors `dimensions: 768` and returns unit-length vectors. The dev
+server was restarted, all 430 fingerprints were set to a sentinel value (index
+data only), and the admin `POST /api/chatbot-rag/index-tools` rebuilt 430/430 in
+313 s. No semantic phrases or school records changed.
+
+Still missing with Qwen: French and Arabic grade reports, Spanish grade entry,
+Darija attendance, the mixed Darija/French grade query and the topic switch.
+All 20 previews returned `routed`; several picked teacher-dashboard tools as
+the primary. Attendance and grade-entry cases that pass now include their
+lookup dependencies.
+
+14/20 is not directly comparable with the earlier 12/20: the server
+(Ollama, not llama.cpp), the machine, the query instruction, the tool
+descriptions and the tool count all differ. It is the current routing number
+for this workstation's configuration. Preview timing is HTTP time on an
+unloaded local machine, not chat latency.

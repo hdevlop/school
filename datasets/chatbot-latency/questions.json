@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "scope": "Read-only smoke set for the streaming chat benchmark (CHATBOT-LATENCY-PLAN section 4.2). Not the 40-case section 6 corpus. Names in write cases are synthetic and must not match real records; those cases check that confirmation-marked tools stay blocked. Answer facts depend on the seeded dataset, so count answers are reviewed by hand against REST rather than pinned here.",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "cases": [
+    { "id": "greeting-en", "language": "en", "kind": "small-talk", "query": "Hello! What can you help me with?" },
+    { "id": "greeting-fr", "language": "fr", "kind": "small-talk", "query": "Bonjour ! En quoi peux-tu m'aider ?" },
+    { "id": "greeting-ar", "language": "ar", "kind": "small-talk", "query": "مرحبا! بماذا يمكنك مساعدتي؟" },
+    { "id": "greeting-es", "language": "es", "kind": "small-talk", "query": "¡Hola! ¿En qué me puedes ayudar?" },
+    { "id": "student-count-en", "language": "en", "kind": "single-read", "query": "How many students are enrolled this year?", "expectedToolGroups": [["students_get_student_count"]] },
+    { "id": "student-count-fr", "language": "fr", "kind": "single-read", "query": "Combien d'élèves sont inscrits cette année ?", "expectedToolGroups": [["students_get_student_count"]] },
+    { "id": "student-count-ar", "language": "ar", "kind": "single-read", "query": "كم عدد التلاميذ المسجلين هذه السنة؟", "expectedToolGroups": [["students_get_student_count"]] },
+    { "id": "student-count-es", "language": "es", "kind": "single-read", "query": "¿Cuántos alumnos están matriculados este año?", "expectedToolGroups": [["students_get_student_count"]] },
+    { "id": "attendance-today-en", "language": "en", "kind": "single-read", "query": "Show today's student attendance.", "expectedToolGroups": [["attendance_get_today_students", "attendance_get_today", "attendance_get_by_date", "attendance_get_all"]] },
+    { "id": "attendance-today-fr", "language": "fr", "kind": "single-read", "query": "Affiche les présences des élèves aujourd'hui.", "expectedToolGroups": [["attendance_get_today_students", "attendance_get_today", "attendance_get_by_date", "attendance_get_all"]] },
+    { "id": "attendance-mark-blocked-en", "language": "en", "kind": "blocked-write", "query": "Mark the student Zzbench Qqtest absent today.", "forbiddenSuccessfulTools": ["attendance_mark"] },
+    { "id": "grade-create-blocked-fr", "language": "fr", "kind": "blocked-write", "query": "Enregistre 15 sur 20 pour l'élève Zzbench Qqtest au dernier contrôle.", "forbiddenSuccessfulTools": ["grades_create"] }
+  ]
+}

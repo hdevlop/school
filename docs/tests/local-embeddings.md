@@ -41,6 +41,28 @@ if ($embeddingProcess.Path -ne (Join-Path $embeddingRoot 'llama-b11146\llama-ser
 $embeddingProcess | Stop-Process
 ```
 
+## Alternative: the same model through Ollama
+
+A workstation with Ollama but no llama.cpp install can serve the same
+Qwen3 Embedding 0.6B Q8_0 build (used on the second workstation, 2026-10-02):
+
+```powershell
+ollama pull qwen3-embedding:0.6b
+ollama cp qwen3-embedding:0.6b qwen3-embedding
+```
+
+The alias matters: School applies its Qwen instruction only when the model is
+named `qwen3-embedding`. In `apps/dashboard/.env.local` set
+`RAG_EMBEDDING_PROVIDER=openai-compatible`,
+`RAG_EMBEDDING_BASE_URL=http://127.0.0.1:11434/v1`,
+`RAG_EMBEDDING_MODEL=qwen3-embedding` and
+`RAG_EMBEDDING_TRUNCATE_DIMENSIONS=true`, restart the app, then reindex. Ollama
+honors `dimensions: 768` itself and returns unit-length vectors. Because tool
+fingerprints ignore the model, set the `fingerprint` column of
+`chatbot_tool_embeddings` to a sentinel before calling the admin
+`POST /api/chatbot-rag/index-tools`, or unchanged tools are skipped. A full
+430-tool rebuild took 313 s on that workstation.
+
 ## School integration status
 
 Published `najm-rag@2.1.1` supports the server's OpenAI-compatible embedding API
