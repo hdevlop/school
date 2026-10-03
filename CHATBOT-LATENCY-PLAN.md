@@ -2,6 +2,18 @@
 
 Status: **FASTER HOST FOUND: GPT-OSS-120B:NITRO ANSWERS IN 0.6 S P50 (1.1 S P95), 12/12 CORRECT; NOT YET ADOPTED**
 
+2026-10-03, embedding failure paths, Phase 2 items 1-3 ([review](docs/evidence/chatbot-latency/embedding-residency-20261003.md)):
+a warm question embeds in 137 ms p50, a cold one in about 1.7 s, an indexing
+batch of 16 long tool texts in 14 s. School's empty knowledge base used to embed
+every message again and, with the embedding server down, failed the chat
+(`setup_error`) despite the routing fallback. Now (`najm-rag` 2.2.0,
+`najm-chatbot` 2.1.1): questions time out after 5 s while indexing keeps 60 s,
+skip the server for 30 s after a failure, and `fallbackOnRouterError: 'none'`
+answers without the ~51k-token all-tools fallback. Live with Ollama stopped,
+12/12 answers said the data was unreachable, in the question's language,
+0.8-6.6 s; after Ollama returned the same questions were correct again.
+`OLLAMA_KEEP_ALIVE=-1` on this workstation removes the reload after idle.
+
 2026-10-03, full baseline after the fixes ([review](docs/evidence/chatbot-latency/full50-20261003.md)):
 all 50 questions in five languages pass (49/50 as scored; the miss was the
 language check reading French class names in an English answer's table,
@@ -290,9 +302,9 @@ their subsequently agreed scope and budget.
 
 Reviewed on **2026-09-23** against School's configuration, installed
 `najm-chatbot@2.0.3`, `najm-rag@2.0.3`, and AI SDK declarations. This is a source
-snapshot, not a measured baseline. **Pins as of 2026-10-03 (evening):
-`najm-rag` `2.1.4`, `najm-chatbot` `2.0.5`, `najm-mcp` `2.2.3`, `najm-theme`
-`0.2.3`, `najm-core` `3.0.2`.** The 2.1.x releases added the
+snapshot, not a measured baseline. **Pins as of 2026-10-03 (night):
+`najm-rag` `2.2.0`, `najm-chatbot` `2.1.1`, `najm-mcp` `2.2.3`, `najm-theme`
+`0.2.3`, `najm-core` `3.0.2`, `najm-api` `3.1.1`.** The 2.1.x releases added the
 `openai-compatible` adapter, opt-in vector shortening, `rewriteRoutingQuery`
 (2.1.3) and re-indexing on an embedder change (2.1.4). Re-read in 2.1.3: the
 router falls back per `fallbackOnRouterError` (default `all`), expands
