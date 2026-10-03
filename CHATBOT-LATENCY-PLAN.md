@@ -5,22 +5,23 @@ Status: **FASTER HOST FOUND: GPT-OSS-120B:NITRO ANSWERS IN 0.6 S P50 (1.1 S P95)
 2026-10-03, French and Darija ([review](docs/evidence/chatbot-latency/fr-darija-20261003.md)):
 the corpus gained 10 Darija (`ary`) cases, and `--languages=fr,ary` runs only
 those. On the saved model, French went from 8/10 to 10/10 and Darija from 5/10
-to 8/10, with no wrong-language reply:
+to 10/10 (two runs), with no wrong-language reply:
 - `teachers_get_teacher_count` replaces counting a list (42, 62 and 84 became 50);
 - the system prompt judges the reply language by the user's own words, so a
   student name or French class labels no longer switch a Darija answer to
-  English or French.
-
-The two Darija failures left are routing: the embedding model scores all tools
-about equally for Darija. Semantic phrases could fix it, but they replace
-description matches whenever one clears the threshold, so they need a decision
-on coverage first.
+  English or French;
+- Darija words are rewritten to Modern Standard Arabic before tool routing
+  embeds a message (`najm-rag` 2.1.3 `rewriteRoutingQuery`, School's
+  `darijaRouting.ts`). The embedding model scored every tool about equally
+  for Darija, and well for the same question in MSA. Semantic phrases were
+  measured and rejected: they replace description matches whenever one clears
+  the threshold, and unrelated questions cleared it.
 
 Earlier the same day, an audit found 41 chat-callable tools that changed data
 without a confirmation; all are now confirmed, so the chat refuses them
 (`tests/security/ChatReadOnlyTools.test.ts`). Marking the 249 reads
 `readOnly` stopped najm-rag dropping them as possible writes: routing
-preflight 14/20 → 17/20.
+preflight 14/20 → 17/20 (18/20 with the Darija rewrite).
 
 2026-10-03, host comparison ([review](docs/evidence/chatbot-latency/model-nitro-20261003.md)):
 OpenRouter's live stats show the default route serves `gpt-oss-120b` from the
