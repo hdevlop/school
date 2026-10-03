@@ -18,7 +18,7 @@ export class StudentProfileController {
   @Get('/:studentId/overview')
   @Can('read:students')
   @Validate({ params: studentIdParam })
-  @McpTool('Get student overview — bio, class and section in the academic year, parents')
+  @McpTool({ description: 'Get student overview — bio, class and section in the academic year, parents', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getOverview(@Params('studentId') studentId: string) {
     return this.studentProfileService.getOverview(studentId);
@@ -27,7 +27,7 @@ export class StudentProfileController {
   @Get('/:studentId/academic')
   @Can('read:grades')
   @Validate({ params: studentIdParam })
-  @McpTool('Get student academic profile in the academic year — grades, assessments, upcoming exams')
+  @McpTool({ description: 'Get student academic profile in the academic year — grades, assessments, upcoming exams', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getAcademic(@Params('studentId') studentId: string) {
     return this.studentProfileService.getAcademic(studentId);
@@ -36,7 +36,7 @@ export class StudentProfileController {
   @Get('/:studentId/attendance')
   @Can('read:attendance')
   @Validate({ params: studentIdParam })
-  @McpTool('Get student attendance summary in the academic year')
+  @McpTool({ description: 'Get student attendance summary in the academic year', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getAttendanceSummary(@Params('studentId') studentId: string) {
     return this.studentProfileService.getAttendanceSummary(studentId);
@@ -45,7 +45,7 @@ export class StudentProfileController {
   @Get('/:studentId/financial')
   @isFinancial()
   @Validate({ params: studentIdParam })
-  @McpTool('Get student financial profile in the academic year — fees, payments, balance')
+  @McpTool({ description: 'Get student financial profile in the academic year — fees, payments, balance', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getFinancial(@Params('studentId') studentId: string) {
     return this.studentProfileService.getFinancial(studentId);
@@ -54,7 +54,7 @@ export class StudentProfileController {
   @Get('/:studentId/transport')
   @isAdmin()
   @Validate({ params: studentIdParam })
-  @McpTool('Get student transport in the academic year — route, vehicle, driver')
+  @McpTool({ description: 'Get student transport in the academic year — route, vehicle, driver', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getTransport(@Params('studentId') studentId: string) {
     return this.studentProfileService.getTransport(studentId);

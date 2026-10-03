@@ -19,7 +19,7 @@ export class SettingsController {
 
   @Get('/public')
   @isAuth()
-  @McpTool('Get public school settings')
+  @McpTool({ description: 'Get public school settings', readOnly: true })
   @ResMsg('settings.success.retrieved')
   async getPublicSettings() {
     return this.settingsService.getPublicSettings();
@@ -27,7 +27,7 @@ export class SettingsController {
 
   @Get('/admin')
   @isAdministrator()
-  @McpTool('Get admin settings')
+  @McpTool({ description: 'Get admin settings', readOnly: true })
   @ResMsg('settings.success.retrieved')
   async getAdminSettings() {
     return this.settingsService.getAdminSettings();
@@ -54,7 +54,7 @@ export class SettingsController {
   @Get('/:id')
   @isAdministrator()
   @Validate({ params: settingsIdParam })
-  @McpTool('Get settings by ID')
+  @McpTool({ description: 'Get settings by ID', readOnly: true })
   @ResMsg('settings.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.settingsService.getById(id);

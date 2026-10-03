@@ -15,7 +15,7 @@ export class ClassController {
 
   @Get()
   @CanList()
-  @McpTool("List the selected year's classes")
+  @McpTool({ description: "List the selected year's classes", readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClasses() {
     return this.classService.getAll();
@@ -24,7 +24,7 @@ export class ClassController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: classIdParam })
-  @McpTool('Get a class by ID')
+  @McpTool({ description: 'Get a class by ID', readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClass(@Params('id') id: string) {
     return this.classService.getById(id);
@@ -33,7 +33,7 @@ export class ClassController {
   @Get('/:id/sections')
   @CanRead()
   @Validate({ params: classIdParam })
-  @McpTool('Get sections of a class')
+  @McpTool({ description: 'Get sections of a class', readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClassSections(@Params('id') id: string) {
     return this.classService.getSections(id);
@@ -42,7 +42,7 @@ export class ClassController {
   @Get('/:id/students')
   @CanRead()
   @Validate({ params: classIdParam })
-  @McpTool('Get students enrolled in a class')
+  @McpTool({ description: 'Get students enrolled in a class', readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClassStudents(@Params('id') id: string) {
     return this.classService.getStudents(id);
@@ -51,7 +51,7 @@ export class ClassController {
   @Get('/:id/teachers')
   @CanRead()
   @Validate({ params: classIdParam })
-  @McpTool('Get teachers assigned to a class')
+  @McpTool({ description: 'Get teachers assigned to a class', readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClassTeachers(@Params('id') id: string) {
     return this.classService.getTeachers(id);
@@ -60,7 +60,7 @@ export class ClassController {
   @Get('/:id/subjects')
   @CanRead()
   @Validate({ params: classIdParam })
-  @McpTool('Get subjects assigned to a class')
+  @McpTool({ description: 'Get subjects assigned to a class', readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClassSubjects(@Params('id') id: string) {
     return this.classService.getSubjects(id);
@@ -69,7 +69,7 @@ export class ClassController {
   @Get('/:id/parents')
   @CanRead()
   @Validate({ params: classIdParam })
-  @McpTool('Get parents of students in a class')
+  @McpTool({ description: 'Get parents of students in a class', readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClassParents(@Params('id') id: string) {
     return this.classService.getParents(id);
@@ -78,7 +78,7 @@ export class ClassController {
   @Get('/:id/analytics')
   @CanRead()
   @Validate({ params: classIdParam })
-  @McpTool('Get analytics for a class')
+  @McpTool({ description: 'Get analytics for a class', readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClassAnalytics(@Params('id') id: string) {
     return this.classService.getAnalytics(id);

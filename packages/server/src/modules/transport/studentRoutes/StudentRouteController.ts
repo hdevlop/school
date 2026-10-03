@@ -23,7 +23,7 @@ export class StudentRouteController {
 
   @Get()
   @isAdmin()
-  @McpTool('List all student routes')
+  @McpTool({ description: 'List all student routes', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
   async getAll() {
     return this.studentRouteService.getAll();
@@ -32,7 +32,7 @@ export class StudentRouteController {
   @Get('/vehicle/:vehicleId')
   @isAdmin()
   @Validate({ params: vehicleIdParam })
-  @McpTool('Get student routes by vehicle')
+  @McpTool({ description: 'Get student routes by vehicle', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
   async getByVehicle(@Params('vehicleId') vehicleId: string) {
     return this.studentRouteService.getByVehicleId(vehicleId);
@@ -41,7 +41,7 @@ export class StudentRouteController {
   @Get('/student/:studentId')
   @isAdmin()
   @Validate({ params: studentIdParam })
-  @McpTool('Get student route by student')
+  @McpTool({ description: 'Get student route by student', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.studentRouteService.getByStudentId(studentId);
@@ -50,7 +50,7 @@ export class StudentRouteController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: studentRouteIdParam })
-  @McpTool('Get a student route by ID')
+  @McpTool({ description: 'Get a student route by ID', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.studentRouteService.getById(id);

@@ -31,7 +31,7 @@ export class DriverController {
 
   @Get()
   @isAdmin()
-  @McpTool('List all drivers')
+  @McpTool({ description: 'List all drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getDrivers() {
     return this.driverService.getAll();
@@ -39,7 +39,7 @@ export class DriverController {
 
   @Get('/count')
   @isAdmin()
-  @McpTool('Get driver count')
+  @McpTool({ description: 'Get driver count', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getDriversCount() {
     return this.driverService.getCount();
@@ -47,7 +47,7 @@ export class DriverController {
 
   @Get('/active')
   @isAdmin()
-  @McpTool('List active drivers')
+  @McpTool({ description: 'List active drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getActiveDrivers() {
     return this.driverService.getByStatus('active');
@@ -55,7 +55,7 @@ export class DriverController {
 
   @Get('/inactive')
   @isAdmin()
-  @McpTool('List inactive drivers')
+  @McpTool({ description: 'List inactive drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getInactiveDrivers() {
     return this.driverService.getByStatus('inactive');
@@ -63,7 +63,7 @@ export class DriverController {
 
   @Get('/suspended')
   @isAdmin()
-  @McpTool('List suspended drivers')
+  @McpTool({ description: 'List suspended drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getSuspendedDrivers() {
     return this.driverService.getByStatus('suspended');
@@ -71,7 +71,7 @@ export class DriverController {
 
   @Get('/license-expiring')
   @isAdmin()
-  @McpTool('List drivers with expiring licenses')
+  @McpTool({ description: 'List drivers with expiring licenses', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getLicenseExpiringDrivers() {
     return this.driverService.getLicenseExpiringDrivers();
@@ -80,7 +80,7 @@ export class DriverController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: driverIdParam })
-  @McpTool('Get a driver by ID')
+  @McpTool({ description: 'Get a driver by ID', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getDriver(@Params('id') id: string) {
     return this.driverService.getById(id);
@@ -89,7 +89,7 @@ export class DriverController {
   @Get('/cin/:cin')
   @isAdmin()
   @Validate({ params: cinParam })
-  @McpTool('Get a driver by CIN')
+  @McpTool({ description: 'Get a driver by CIN', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getDriverByCin(@Params('cin') cin: string) {
     return this.driverService.getByCin(cin);
@@ -98,7 +98,7 @@ export class DriverController {
   @Get('/license/:licenseNumber')
   @isAdmin()
   @Validate({ params: licenseNumberParam })
-  @McpTool('Get a driver by license number')
+  @McpTool({ description: 'Get a driver by license number', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getDriverByLicense(@Params('licenseNumber') licenseNumber: string) {
     return this.driverService.getByLicenseNumber(licenseNumber);
@@ -107,7 +107,7 @@ export class DriverController {
   @Get('/email/:email')
   @isAdmin()
   @Validate({ params: emailParam })
-  @McpTool('Get a driver by email')
+  @McpTool({ description: 'Get a driver by email', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getByEmail(@Params('email') email: string) {
     return this.driverService.getByEmail(email);
@@ -116,7 +116,7 @@ export class DriverController {
   @Get('/phone/:phone')
   @isAdmin()
   @Validate({ params: phoneParam })
-  @McpTool('Get a driver by phone')
+  @McpTool({ description: 'Get a driver by phone', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getByPhone(@Params('phone') phone: string) {
     return this.driverService.getByPhone(phone);

@@ -15,7 +15,7 @@ export class SectionController {
 
   @Get()
   @CanList()
-  @McpTool("List the selected year's sections")
+  @McpTool({ description: "List the selected year's sections", readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getSections() {
     return this.sectionService.getAll();
@@ -24,7 +24,7 @@ export class SectionController {
   @Get('/:id/classes')
   @isAdmin()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get classes associated with a section')
+  @McpTool({ description: 'Get classes associated with a section', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getClasses(@Params('id') id: string) {
     return this.sectionService.getClasses(id);
@@ -33,7 +33,7 @@ export class SectionController {
   @Get('/:id/teachers')
   @isAdmin()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get teachers assigned to a section')
+  @McpTool({ description: 'Get teachers assigned to a section', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getTeachers(@Params('id') id: string) {
     return this.sectionService.getTeachers(id);
@@ -42,7 +42,7 @@ export class SectionController {
   @Get('/:id/parents')
   @isAdmin()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get parents of students in a section')
+  @McpTool({ description: 'Get parents of students in a section', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getParents(@Params('id') id: string) {
     return this.sectionService.getParents(id);
@@ -51,7 +51,7 @@ export class SectionController {
   @Get('/:id/students')
   @CanRead()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get students in a section')
+  @McpTool({ description: 'Get students in a section', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getStudents(@Params('id') id: string) {
     return this.sectionService.getStudents(id);
@@ -60,7 +60,7 @@ export class SectionController {
   @Get('/:id/analytics')
   @CanRead()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get analytics for a section')
+  @McpTool({ description: 'Get analytics for a section', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getAnalytics(@Params('id') id: string) {
     return this.sectionService.getAnalytics(id);
@@ -69,7 +69,7 @@ export class SectionController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get a section by ID')
+  @McpTool({ description: 'Get a section by ID', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getSection(@Params('id') id: string) {
     return this.sectionService.getById(id);

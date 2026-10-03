@@ -14,7 +14,7 @@ export class FinancialAuditController {
   @Post('/list')
   @isAdmin()
   @Validate({ body: auditLogQueryDto })
-  @McpTool('List financial audit log entries (admin only)')
+  @McpTool({ description: 'List financial audit log entries (admin only)', readOnly: true })
   @ResMsg('auditLog.list')
   async list(@Body() body: AuditLogQueryDto) {
     return this.service.list(body);
@@ -23,7 +23,7 @@ export class FinancialAuditController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: auditLogIdParam })
-  @McpTool('Get a financial audit log entry by ID (admin only)')
+  @McpTool({ description: 'Get a financial audit log entry by ID (admin only)', readOnly: true })
   @ResMsg('auditLog.retrieved')
   async getById(@Params('id') id: string) {
     return this.service.getById(id);

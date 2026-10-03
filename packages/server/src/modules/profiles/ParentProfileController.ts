@@ -18,7 +18,7 @@ export class ParentProfileController {
   @Get('/:parentId/unread-alerts')
   @Can('read:alerts')
   @Validate({ params: parentIdParam })
-  @McpTool('Get unread alerts aggregated across all children for a parent')
+  @McpTool({ description: 'Get unread alerts aggregated across all children for a parent', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getUnreadAlerts(@Params('parentId') parentId: string) {
     return this.parentProfileService.getUnreadAlerts(parentId);
@@ -28,7 +28,7 @@ export class ParentProfileController {
   @Get('/:parentId/children')
   @isFinancial()
   @Validate({ params: parentIdParam })
-  @McpTool('Get children for a parent with their class and fees in the academic year')
+  @McpTool({ description: 'Get children for a parent with their class and fees in the academic year', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getChildren(@Params('parentId') parentId: string) {
     return this.parentProfileService.getChildren(parentId);
@@ -37,7 +37,7 @@ export class ParentProfileController {
   @Get('/:parentId/fees-due')
   @isFinancial()
   @Validate({ params: parentIdParam })
-  @McpTool("Get every academic year's fees of all children for a parent")
+  @McpTool({ description: "Get every academic year's fees of all children for a parent", readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getAllFeesDue(@Params('parentId') parentId: string) {
     return this.parentProfileService.getFeesDue(parentId);
@@ -46,7 +46,7 @@ export class ParentProfileController {
   @Get('/:parentId/upcoming-events')
   @Can('read:events')
   @Validate({ params: parentIdParam })
-  @McpTool("Get the academic year's upcoming events a parent sees: the school's and their children's classes'")
+  @McpTool({ description: "Get the academic year's upcoming events a parent sees: the school's and their children's classes'", readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getAllUpcomingEvents(@Params('parentId') parentId: string) {
     return this.parentProfileService.getUpcomingEvents(parentId);

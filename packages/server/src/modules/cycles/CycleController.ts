@@ -11,7 +11,7 @@ export class CycleController {
 
   @Get()
   @isAdmin()
-  @McpTool('List school cycles')
+  @McpTool({ description: 'List school cycles', readOnly: true })
   @ResMsg('cycles.success.retrieved')
   async getCycles() {
     return this.cycleService.getAll();
@@ -19,7 +19,7 @@ export class CycleController {
 
   @Get('/active')
   @isAdmin()
-  @McpTool('List active school cycles')
+  @McpTool({ description: 'List active school cycles', readOnly: true })
   @ResMsg('cycles.success.retrieved')
   async getActiveCycles() {
     return this.cycleService.getActive();
@@ -28,7 +28,7 @@ export class CycleController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: cycleIdParam })
-  @McpTool('Get a school cycle by ID')
+  @McpTool({ description: 'Get a school cycle by ID', readOnly: true })
   @ResMsg('cycles.success.retrieved')
   async getCycle(@Params('id') id: string) {
     return this.cycleService.getById(id);

@@ -22,7 +22,7 @@ export class VehicleController {
 
   @Get()
   @canAccessAllVehicles()
-  @McpTool('List all vehicles')
+  @McpTool({ description: 'List all vehicles', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
   async getVehicles() {
     return this.vehicleService.getAll();
@@ -30,7 +30,7 @@ export class VehicleController {
 
   @Get('/count')
   @isAdmin()
-  @McpTool('Get vehicle count')
+  @McpTool({ description: 'Get vehicle count', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
   async getVehiclesCount() {
     return this.vehicleService.getCount();
@@ -39,7 +39,7 @@ export class VehicleController {
   @Get('/:id')
   @canAccessVehicle()
   @Validate({ params: vehicleIdParam })
-  @McpTool('Get a vehicle by ID')
+  @McpTool({ description: 'Get a vehicle by ID', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
   async getVehicle(@Params('id') id: string) {
     return this.vehicleService.getById(id);

@@ -42,7 +42,7 @@ export class ClassRoutineController {
 
   @Get('/periods')
   @Can('read:classes')
-  @McpTool('List active class routine periods')
+  @McpTool({ description: 'List active class routine periods', readOnly: true })
   @ResMsg('classRoutines.success.retrieved')
   async getPeriods() { return this.service.getPeriods(); }
 
@@ -76,7 +76,7 @@ export class ClassRoutineController {
   @Get('/teachers/:teacherId')
   @Can('read:classes')
   @Validate({ params: routineTeacherParam })
-  @McpTool("Get a teacher's weekly routine in the selected year")
+  @McpTool({ description: "Get a teacher's weekly routine in the selected year", readOnly: true })
   @ResMsg('classRoutines.success.retrieved')
   async getTeacherRoutine(
     @Params('teacherId') teacherId: string,

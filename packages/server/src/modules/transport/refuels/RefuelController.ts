@@ -23,7 +23,7 @@ export class RefuelController {
 
   @Get()
   @canAccessAllRefuels()
-  @McpTool('List all refuel records')
+  @McpTool({ description: 'List all refuel records', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getRefuels() {
     return this.refuelService.getAll();
@@ -31,7 +31,7 @@ export class RefuelController {
 
   @Get('/count')
   @canAccessAllRefuels()
-  @McpTool('Get refuel record count')
+  @McpTool({ description: 'Get refuel record count', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getCount() {
     return this.refuelService.getCount();
@@ -39,7 +39,7 @@ export class RefuelController {
 
   @Get('/recent')
   @canAccessAllRefuels()
-  @McpTool('List recent refuel records')
+  @McpTool({ description: 'List recent refuel records', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getRecentRecords() {
     return this.refuelService.getRecentRecords();
@@ -47,7 +47,7 @@ export class RefuelController {
 
   @Get('/today')
   @canAccessAllRefuels()
-  @McpTool("List today's refuel records")
+  @McpTool({ description: "List today's refuel records", readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getTodayRecords() {
     return this.refuelService.getTodayRecords();
@@ -56,7 +56,7 @@ export class RefuelController {
   @Get('/voucher/:voucherNumber')
   @canAccessAllRefuels()
   @Validate({ params: voucherNumberParam })
-  @McpTool('Get a refuel by voucher number')
+  @McpTool({ description: 'Get a refuel by voucher number', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getByVoucherNumber(@Params('voucherNumber') voucherNumber: string) {
     return this.refuelService.getByVoucherNumber(voucherNumber);
@@ -65,7 +65,7 @@ export class RefuelController {
   @Get('/date/:date')
   @canAccessAllRefuels()
   @Validate({ params: dateParam })
-  @McpTool('Get refuels by date')
+  @McpTool({ description: 'Get refuels by date', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getByDate(@Params('date') date: string) {
     return this.refuelService.getByDate(date);
@@ -74,7 +74,7 @@ export class RefuelController {
   @Get('/vehicle/:vehicleId')
   @canAccessAllRefuels()
   @Validate({ params: vehicleIdParam })
-  @McpTool('Get refuels by vehicle')
+  @McpTool({ description: 'Get refuels by vehicle', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getByVehicleId(@Params('vehicleId') vehicleId: string) {
     return this.refuelService.getByVehicleId(vehicleId);
@@ -83,7 +83,7 @@ export class RefuelController {
   @Get('/driver/:driverId')
   @canAccessAllRefuels()
   @Validate({ params: driverIdParam })
-  @McpTool('Get refuels by driver')
+  @McpTool({ description: 'Get refuels by driver', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getByDriverId(@Params('driverId') driverId: string) {
     return this.refuelService.getByDriverId(driverId);
@@ -92,7 +92,7 @@ export class RefuelController {
   @Get('/:id')
   @canAccessRefuel()
   @Validate({ params: refuelIdParam })
-  @McpTool('Get a refuel by ID')
+  @McpTool({ description: 'Get a refuel by ID', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getRefuel(@Params('id') id: string) {
     return this.refuelService.getById(id);
@@ -143,7 +143,7 @@ export class RefuelController {
 
   @Get('/analytics/consumption')
   @canAccessAllRefuels()
-  @McpTool('Get fuel consumption analytics')
+  @McpTool({ description: 'Get fuel consumption analytics', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getFuelConsumptionAnalytics() {
     return this.refuelService.getFuelConsumptionAnalytics();
@@ -151,7 +151,7 @@ export class RefuelController {
 
   @Get('/analytics/efficiency')
   @canAccessAllRefuels()
-  @McpTool('Get fuel efficiency report')
+  @McpTool({ description: 'Get fuel efficiency report', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getFuelEfficiencyReport() {
     return this.refuelService.getFuelEfficiencyReport();
@@ -159,7 +159,7 @@ export class RefuelController {
 
   @Get('/analytics/costs')
   @canAccessAllRefuels()
-  @McpTool('Get fuel cost analysis')
+  @McpTool({ description: 'Get fuel cost analysis', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getFuelCostAnalysis() {
     return this.refuelService.getFuelCostAnalysis();
@@ -167,7 +167,7 @@ export class RefuelController {
 
   @Get('/analytics/summary')
   @canAccessAllRefuels()
-  @McpTool('Get fuel summary')
+  @McpTool({ description: 'Get fuel summary', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getFuelSummary() {
     return this.refuelService.getFuelSummary();
@@ -176,7 +176,7 @@ export class RefuelController {
   @Get('/vehicle/:vehicleId/efficiency')
   @canAccessAllRefuels()
   @Validate({ params: vehicleIdParam })
-  @McpTool('Get vehicle fuel efficiency')
+  @McpTool({ description: 'Get vehicle fuel efficiency', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getVehicleFuelEfficiency(@Params('vehicleId') vehicleId: string) {
     return this.refuelService.getVehicleFuelEfficiency(vehicleId);
@@ -185,7 +185,7 @@ export class RefuelController {
   @Get('/vehicle/:vehicleId/costs')
   @canAccessAllRefuels()
   @Validate({ params: vehicleIdParam })
-  @McpTool('Get vehicle fuel costs')
+  @McpTool({ description: 'Get vehicle fuel costs', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getVehicleFuelCosts(@Params('vehicleId') vehicleId: string) {
     return this.refuelService.getVehicleFuelCosts(vehicleId);
@@ -193,7 +193,7 @@ export class RefuelController {
 
   @Get('/trends/monthly')
   @canAccessAllRefuels()
-  @McpTool('Get monthly fuel trends')
+  @McpTool({ description: 'Get monthly fuel trends', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getMonthlyFuelTrends() {
     return this.refuelService.getMonthlyFuelTrends();
@@ -202,7 +202,7 @@ export class RefuelController {
   @Get('/driver/:driverId/stats')
   @canAccessAllRefuels()
   @Validate({ params: driverIdParam })
-  @McpTool('Get driver refuel statistics')
+  @McpTool({ description: 'Get driver refuel statistics', readOnly: true })
   @ResMsg('refuels.success.retrieved')
   async getDriverRefuelStats(@Params('driverId') driverId: string) {
     return this.refuelService.getDriverRefuelStats(driverId);

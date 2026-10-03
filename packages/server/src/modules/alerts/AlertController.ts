@@ -33,7 +33,7 @@ export class AlertController {
 
   @Get()
   @CanList()
-  @McpTool('List all alerts')
+  @McpTool({ description: 'List all alerts', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlerts() {
     return this.alertService.getAll();
@@ -41,7 +41,7 @@ export class AlertController {
 
   @Get('/count')
   @CanList()
-  @McpTool('Get total alert count')
+  @McpTool({ description: 'Get total alert count', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsCount() {
     return this.alertService.getCount();
@@ -49,7 +49,7 @@ export class AlertController {
 
   @Get('/status-counts')
   @CanList()
-  @McpTool('Get alert counts grouped by status')
+  @McpTool({ description: 'Get alert counts grouped by status', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getStatusCounts() {
     return this.alertService.getStatusCounts();
@@ -57,7 +57,7 @@ export class AlertController {
 
   @Get('/priority-counts')
   @CanList()
-  @McpTool('Get alert counts grouped by priority')
+  @McpTool({ description: 'Get alert counts grouped by priority', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getPriorityCounts() {
     return this.alertService.getPriorityCounts();
@@ -65,7 +65,7 @@ export class AlertController {
 
   @Get('/type-counts')
   @CanList()
-  @McpTool('Get alert counts grouped by type')
+  @McpTool({ description: 'Get alert counts grouped by type', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getTypeCounts() {
     return this.alertService.getTypeCounts();
@@ -73,7 +73,7 @@ export class AlertController {
 
   @Get('/active')
   @CanList()
-  @McpTool('List active (unresolved) alerts')
+  @McpTool({ description: 'List active (unresolved) alerts', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getActiveAlerts() {
     return this.alertService.getActiveAlerts();
@@ -81,7 +81,7 @@ export class AlertController {
 
   @Get('/critical')
   @CanList()
-  @McpTool('List critical priority alerts')
+  @McpTool({ description: 'List critical priority alerts', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getCriticalAlerts() {
     return this.alertService.getCriticalAlerts();
@@ -90,7 +90,7 @@ export class AlertController {
   @Get('/recent')
   @CanList()
   @Validate({ query: recentAlertsQueryDto })
-  @McpTool('List recent alerts')
+  @McpTool({ description: 'List recent alerts', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getRecentAlerts(@Query() query: RecentAlertsQueryDto) {
     return this.alertService.getRecentAlerts(query.limit ?? 10);
@@ -99,7 +99,7 @@ export class AlertController {
   @Get('/recent-by-hours')
   @CanList()
   @Validate({ query: recentAlertsByHoursQueryDto })
-  @McpTool('List alerts from the last N hours')
+  @McpTool({ description: 'List alerts from the last N hours', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getRecentAlertsByHours(@Query() query: RecentAlertsByHoursQueryDto) {
     return this.alertService.getRecentAlertsByHours(query.hours ?? 24);
@@ -107,7 +107,7 @@ export class AlertController {
 
   @Get('/dashboard')
   @CanList()
-  @McpTool('Get alert dashboard summary')
+  @McpTool({ description: 'Get alert dashboard summary', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getDashboardSummary() {
     return this.alertService.getDashboardSummary();
@@ -116,7 +116,7 @@ export class AlertController {
   @Get('/type/:type')
   @CanList()
   @Validate({ params: alertTypeParam })
-  @McpTool('Get alerts by type')
+  @McpTool({ description: 'Get alerts by type', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsByType(@Params('type') type: string) {
     return this.alertService.getByType(type);
@@ -125,7 +125,7 @@ export class AlertController {
   @Get('/status/:status')
   @CanList()
   @Validate({ params: alertStatusParam })
-  @McpTool('Get alerts by status')
+  @McpTool({ description: 'Get alerts by status', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsByStatus(@Params('status') status: string) {
     return this.alertService.getByStatus(status);
@@ -134,7 +134,7 @@ export class AlertController {
   @Get('/priority/:priority')
   @CanList()
   @Validate({ params: alertPriorityParam })
-  @McpTool('Get alerts by priority')
+  @McpTool({ description: 'Get alerts by priority', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsByPriority(@Params('priority') priority: string) {
     return this.alertService.getByPriority(priority);
@@ -143,7 +143,7 @@ export class AlertController {
   @Get('/student/:studentId')
   @CanList()
   @Validate({ params: alertStudentIdParam })
-  @McpTool('Get alerts for a student')
+  @McpTool({ description: 'Get alerts for a student', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsByStudent(@Params('studentId') studentId: string) {
     return this.alertService.getByStudentId(studentId);
@@ -152,7 +152,7 @@ export class AlertController {
   @Get('/teacher/:teacherId')
   @CanList()
   @Validate({ params: alertTeacherIdParam })
-  @McpTool('Get alerts for a teacher')
+  @McpTool({ description: 'Get alerts for a teacher', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsByTeacher(@Params('teacherId') teacherId: string) {
     return this.alertService.getByTeacherId(teacherId);
@@ -161,7 +161,7 @@ export class AlertController {
   @Get('/class/:classId')
   @CanList()
   @Validate({ params: alertClassIdParam })
-  @McpTool('Get alerts for a class')
+  @McpTool({ description: 'Get alerts for a class', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsByClass(@Params('classId') classId: string) {
     return this.alertService.getByClassId(classId);
@@ -170,7 +170,7 @@ export class AlertController {
   @Get('/subject/:subjectId')
   @CanList()
   @Validate({ params: alertSubjectIdParam })
-  @McpTool('Get alerts for a subject')
+  @McpTool({ description: 'Get alerts for a subject', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertsBySubject(@Params('subjectId') subjectId: string) {
     return this.alertService.getBySubjectId(subjectId);
@@ -179,7 +179,7 @@ export class AlertController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: alertIdParam })
-  @McpTool('Get an alert by ID')
+  @McpTool({ description: 'Get an alert by ID', readOnly: true })
   @ResMsg('alerts.success.retrieved')
   async getAlertById(@Params('id') id: string) {
     return this.alertService.getById(id);

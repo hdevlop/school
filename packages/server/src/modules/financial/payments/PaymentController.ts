@@ -34,7 +34,7 @@ export class PaymentController {
 
   @Get()
   @isFinancial()
-  @McpTool('List all payments')
+  @McpTool({ description: 'List all payments', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getAll() {
     return this.paymentService.getAll();
@@ -42,7 +42,7 @@ export class PaymentController {
 
   @Get('/today')
   @isFinancial()
-  @McpTool("List today's payments with summary")
+  @McpTool({ description: "List today's payments with summary", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getToday() {
     return this.paymentService.getToday();
@@ -50,7 +50,7 @@ export class PaymentController {
 
   @Get('/this-month')
   @isFinancial()
-  @McpTool("List this month's payments with summary")
+  @McpTool({ description: "List this month's payments with summary", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getThisMonth() {
     return this.paymentService.getThisMonth();
@@ -58,7 +58,7 @@ export class PaymentController {
 
   @Get('/this-week')
   @isFinancial()
-  @McpTool("List this week's payments with summary")
+  @McpTool({ description: "List this week's payments with summary", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getThisWeek() {
     return this.paymentService.getThisWeek();
@@ -66,7 +66,7 @@ export class PaymentController {
 
   @Get('/pending-checks')
   @isFinancial()
-  @McpTool('List pending and deposited checks')
+  @McpTool({ description: 'List pending and deposited checks', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getPendingChecks() {
     return this.paymentService.getPendingChecks();
@@ -74,7 +74,7 @@ export class PaymentController {
 
   @Get('/overdue-checks')
   @isFinancial()
-  @McpTool('List checks whose due date has passed')
+  @McpTool({ description: 'List checks whose due date has passed', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getOverdueChecks() {
     return this.paymentService.getOverdueChecks();
@@ -83,7 +83,7 @@ export class PaymentController {
   @Post('/stats/revenue')
   @isFinancial()
   @Validate(revenueQueryDto)
-  @McpTool('Get total revenue allocated to fees of the academic year')
+  @McpTool({ description: 'Get total revenue allocated to fees of the academic year', readOnly: true })
   @ResMsg('fees.success.revenueRetrieved')
   async getTotalRevenue() {
     const revenue = await this.paymentService.getTotalRevenue();
@@ -93,7 +93,7 @@ export class PaymentController {
   @Post('/stats/revenue-by-payment-method')
   @isFinancial()
   @Validate(revenueQueryDto)
-  @McpTool('Get revenue breakdown by payment method')
+  @McpTool({ description: 'Get revenue breakdown by payment method', readOnly: true })
   @ResMsg('fees.success.revenueRetrieved')
   async getRevenueByPaymentMethod() {
     return this.paymentService.getRevenueByPaymentMethod();
@@ -102,7 +102,7 @@ export class PaymentController {
   @Post('/stats/monthly-revenue')
   @isFinancial()
   @Validate(monthlyRevenueQueryDto)
-  @McpTool('Get monthly revenue for a given year')
+  @McpTool({ description: 'Get monthly revenue for a given year', readOnly: true })
   @ResMsg('fees.success.revenueRetrieved')
   async getMonthlyRevenue(@Body() body: MonthlyRevenueQueryDto) {
     return this.paymentService.getMonthlyRevenue(body.year);
@@ -111,7 +111,7 @@ export class PaymentController {
   @Post('/stats/revenue-stats')
   @isFinancial()
   @Validate(revenueQueryDto)
-  @McpTool('Get full revenue statistics')
+  @McpTool({ description: 'Get full revenue statistics', readOnly: true })
   @ResMsg('fees.success.statsRetrieved')
   async getRevenueStats() {
     return this.paymentService.getRevenueStats();
@@ -120,7 +120,7 @@ export class PaymentController {
   @Post('/stats/top-paying-students')
   @isFinancial()
   @Validate(topPayingStudentsQueryDto)
-  @McpTool('Get top paying students')
+  @McpTool({ description: 'Get top paying students', readOnly: true })
   @ResMsg('fees.success.dataRetrieved')
   async getTopPayingStudents(@Body() body: TopPayingStudentsQueryDto) {
     return this.paymentService.getTopPayingStudents(body?.limit ?? 10);
@@ -129,7 +129,7 @@ export class PaymentController {
   @Get('/:id')
   @isFinancial()
   @Validate({ params: paymentIdParam })
-  @McpTool('Get a payment by ID')
+  @McpTool({ description: 'Get a payment by ID', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getById(@Params('id') id: string) {
     return this.paymentService.getById(id);
@@ -138,7 +138,7 @@ export class PaymentController {
   @Get('/student/:studentId')
   @isFinancial()
   @Validate({ params: studentIdParam })
-  @McpTool('Get payments for a student by student ID')
+  @McpTool({ description: 'Get payments for a student by student ID', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.paymentService.getByStudent(studentId);
@@ -147,7 +147,7 @@ export class PaymentController {
   @Get('/fee/:feeId')
   @isFinancial()
   @Validate({ params: feeIdParam })
-  @McpTool('Get receipts allocated to a fee in the selected year')
+  @McpTool({ description: 'Get receipts allocated to a fee in the selected year', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getByFeeId(@Params('feeId') feeId: string) {
     return this.paymentService.getByFeeId(feeId);
@@ -156,7 +156,7 @@ export class PaymentController {
   @Get('/receipt/:receiptNumber')
   @isFinancial()
   @Validate({ params: receiptNumberParam })
-  @McpTool('Get a payment by receipt number')
+  @McpTool({ description: 'Get a payment by receipt number', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getByReceiptNumber(@Params('receiptNumber') receiptNumber: string) {
     return this.paymentService.getByReceiptNumber(receiptNumber);

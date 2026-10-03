@@ -43,7 +43,7 @@ export class AttendanceController {
   @Post('/mcp/all')
   @CanList()
   @Validate({ body: typeQueryParam })
-  @McpTool('List all attendance records')
+  @McpTool({ description: 'List all attendance records', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getAll(@Body() body: AttendanceTypeQueryDto) {
     return this.attendanceService.getAll({ type: body?.type });
@@ -60,7 +60,7 @@ export class AttendanceController {
   @Post('/mcp/today')
   @CanList()
   @Validate({ body: typeQueryParam })
-  @McpTool("List today's attendance records")
+  @McpTool({ description: "List today's attendance records", readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getToday(@Body() body: AttendanceTypeQueryDto) {
     return this.attendanceService.getToday(body?.type);
@@ -68,7 +68,7 @@ export class AttendanceController {
 
   @Post('/mcp/today/students')
   @CanList()
-  @McpTool("List today's student attendance records")
+  @McpTool({ description: "List today's student attendance records", readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getTodayStudents() {
     return this.attendanceService.getToday('student');
@@ -76,7 +76,7 @@ export class AttendanceController {
 
   @Post('/mcp/today/staff')
   @CanList()
-  @McpTool("List today's staff attendance records")
+  @McpTool({ description: "List today's staff attendance records", readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getTodayStaff() {
     return this.attendanceService.getToday('staff');
@@ -93,7 +93,7 @@ export class AttendanceController {
   @Post('/mcp/date')
   @CanList()
   @Validate({ body: attendanceDateFilterDto })
-  @McpTool('Get attendance records for a specific date')
+  @McpTool({ description: 'Get attendance records for a specific date', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getByDate(@Body() body: AttendanceDateFilterDto) {
     return this.attendanceService.getByDate(body.date, body.type);
@@ -102,7 +102,7 @@ export class AttendanceController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get attendance records for a section')
+  @McpTool({ description: 'Get attendance records for a section', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.attendanceService.getAll({ sectionId });
@@ -111,7 +111,7 @@ export class AttendanceController {
   @Get('/student/:studentId')
   @CanList()
   @Validate({ params: studentIdParam })
-  @McpTool('Get attendance records for a student')
+  @McpTool({ description: 'Get attendance records for a student', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.attendanceService.getAll({ studentId });
@@ -120,7 +120,7 @@ export class AttendanceController {
   @Get('/staff/:staffId')
   @CanList()
   @Validate({ params: staffIdParam })
-  @McpTool('Get attendance records for a staff member')
+  @McpTool({ description: 'Get attendance records for a staff member', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getByStaff(@Params('staffId') staffId: string) {
     return this.attendanceService.getAll({ staffId });
@@ -129,7 +129,7 @@ export class AttendanceController {
   @Get('/teacher/:teacherId')
   @CanList()
   @Validate({ params: teacherIdParam })
-  @McpTool('Get attendance records for a teacher through their staff profile')
+  @McpTool({ description: 'Get attendance records for a teacher through their staff profile', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getByTeacher(@Params('teacherId') teacherId: string) {
     return this.attendanceService.getByTeacher(teacherId);
@@ -138,7 +138,7 @@ export class AttendanceController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: attendanceIdParam })
-  @McpTool('Get an attendance record by ID')
+  @McpTool({ description: 'Get an attendance record by ID', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getById(@Params('id') id: string, @User() user: { role?: string }) {
     return this.attendanceService.getById(id, user.role);

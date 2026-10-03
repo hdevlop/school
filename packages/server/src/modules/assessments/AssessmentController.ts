@@ -27,7 +27,7 @@ export class AssessmentController {
 
   @Get()
   @CanList()
-  @McpTool('List all assessments')
+  @McpTool({ description: 'List all assessments', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getAll() {
     return this.assessmentService.getAll();
@@ -35,7 +35,7 @@ export class AssessmentController {
 
   @Get('/today')
   @CanList()
-  @McpTool("List today's assessments")
+  @McpTool({ description: "List today's assessments", readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getTodayAssessments() {
     return this.assessmentService.getTodayAssessments();
@@ -43,7 +43,7 @@ export class AssessmentController {
 
   @Get('/upcoming')
   @CanList()
-  @McpTool('List upcoming assessments')
+  @McpTool({ description: 'List upcoming assessments', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getUpcomingAssessments() {
     return this.assessmentService.getUpcoming();
@@ -51,7 +51,7 @@ export class AssessmentController {
 
   @Get('/due-this-week')
   @CanList()
-  @McpTool('List assessments due this week')
+  @McpTool({ description: 'List assessments due this week', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getDueThisWeek() {
     return this.assessmentService.getDueThisWeek();
@@ -59,7 +59,7 @@ export class AssessmentController {
 
   @Get('/overdue')
   @CanList()
-  @McpTool('List overdue assessments')
+  @McpTool({ description: 'List overdue assessments', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getOverdue() {
     return this.assessmentService.getOverdue();
@@ -68,7 +68,7 @@ export class AssessmentController {
   @Get('/class/:classId')
   @CanList()
   @Validate({ params: classIdParam })
-  @McpTool('Get assessments by class')
+  @McpTool({ description: 'Get assessments by class', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getByClass(@Params('classId') classId: string) {
     return this.assessmentService.getAll({ classId });
@@ -77,7 +77,7 @@ export class AssessmentController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get assessments by section')
+  @McpTool({ description: 'Get assessments by section', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.assessmentService.getAll({ sectionId });
@@ -86,7 +86,7 @@ export class AssessmentController {
   @Get('/subject/:subjectId')
   @CanList()
   @Validate({ params: subjectIdParam })
-  @McpTool('Get assessments by subject')
+  @McpTool({ description: 'Get assessments by subject', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getBySubject(@Params('subjectId') subjectId: string) {
     return this.assessmentService.getAll({ subjectId });
@@ -95,7 +95,7 @@ export class AssessmentController {
   @Get('/teacher/:teacherId')
   @CanList()
   @Validate({ params: teacherIdParam })
-  @McpTool('Get assessments by teacher')
+  @McpTool({ description: 'Get assessments by teacher', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getByTeacher(@Params('teacherId') teacherId: string) {
     return this.assessmentService.getAll({ teacherId });
@@ -104,7 +104,7 @@ export class AssessmentController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: assessmentIdParam })
-  @McpTool('Get an assessment by ID')
+  @McpTool({ description: 'Get an assessment by ID', readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.assessmentService.getById(id);

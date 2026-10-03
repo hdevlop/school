@@ -15,7 +15,7 @@ export class AllocationController {
 
   @Get()
   @isFinancial()
-  @McpTool('List all payment allocations')
+  @McpTool({ description: 'List all payment allocations', readOnly: true })
   @ResMsg('fees.success.allocationsRetrieved')
   async getAll() {
     return this.allocationService.getAll();
@@ -24,7 +24,7 @@ export class AllocationController {
   @Get('/:id')
   @isFinancial()
   @Validate({ params: allocationIdParam })
-  @McpTool('Get a payment allocation by ID')
+  @McpTool({ description: 'Get a payment allocation by ID', readOnly: true })
   @ResMsg('fees.success.allocationRetrieved')
   async getById(@Params('id') id: string) {
     return this.allocationService.getById(id);
@@ -33,7 +33,7 @@ export class AllocationController {
   @Get('/payment/:paymentId')
   @isFinancial()
   @Validate({ params: paymentIdParam })
-  @McpTool('Get allocations for a payment by payment ID')
+  @McpTool({ description: 'Get allocations for a payment by payment ID', readOnly: true })
   @ResMsg('fees.success.allocationsRetrieved')
   async getByPaymentId(@Params('paymentId') paymentId: string) {
     return this.allocationService.getByPaymentId(paymentId);
@@ -42,7 +42,7 @@ export class AllocationController {
   @Get('/student/:studentId')
   @isFinancial()
   @Validate({ params: studentIdParam })
-  @McpTool('Get allocations for a student by student ID')
+  @McpTool({ description: 'Get allocations for a student by student ID', readOnly: true })
   @ResMsg('fees.success.allocationsRetrieved')
   async getByStudentId(@Params('studentId') studentId: string) {
     return this.allocationService.getByStudentId(studentId);

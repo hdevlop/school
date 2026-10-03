@@ -11,7 +11,7 @@ export class DashboardController {
 
   @Get('/today')
   @isAdmin()
-  @McpTool('Get today snapshot — attendance, income, expenses, overdue fees, events')
+  @McpTool({ description: 'Get today snapshot — attendance, income, expenses, overdue fees, events', readOnly: true })
   @ResMsg('dashboards.success.retrieved')
   async getTodaySnapshot() {
     return this.dashboardService.getTodaySnapshot();

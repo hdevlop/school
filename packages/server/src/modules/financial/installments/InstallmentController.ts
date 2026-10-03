@@ -20,7 +20,7 @@ export class InstallmentController {
 
   @Get()
   @isFinancial()
-  @McpTool('List all installments')
+  @McpTool({ description: 'List all installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getAll() {
     return this.installmentService.getAll();
@@ -28,7 +28,7 @@ export class InstallmentController {
 
   @Get('/overdue')
   @isFinancial()
-  @McpTool('List overdue installments')
+  @McpTool({ description: 'List overdue installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getOverdue() {
     return this.installmentService.getOverdue();
@@ -36,7 +36,7 @@ export class InstallmentController {
 
   @Get('/pending')
   @isFinancial()
-  @McpTool('List pending installments')
+  @McpTool({ description: 'List pending installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getPending() {
     return this.installmentService.getPending();
@@ -44,7 +44,7 @@ export class InstallmentController {
 
   @Get('/paid')
   @isFinancial()
-  @McpTool('List paid installments')
+  @McpTool({ description: 'List paid installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getPaid() {
     return this.installmentService.getPaid();
@@ -53,7 +53,7 @@ export class InstallmentController {
   @Get('/fee/:feeId')
   @isFinancial()
   @Validate({ params: feeIdParam })
-  @McpTool('Get installments for a fee by fee ID')
+  @McpTool({ description: 'Get installments for a fee by fee ID', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getByFeeId(@Params('feeId') feeId: string) {
     return this.installmentService.getByFeeId(feeId);
@@ -61,7 +61,7 @@ export class InstallmentController {
 
   @Get('/stats')
   @isFinancial()
-  @McpTool('Get installment statistics')
+  @McpTool({ description: 'Get installment statistics', readOnly: true })
   @ResMsg('fees.success.statsRetrieved')
   async getStats() {
     return this.installmentService.getInstallmentStats();
@@ -70,7 +70,7 @@ export class InstallmentController {
   @Get('/:id')
   @isFinancial()
   @Validate({ params: installmentIdParam })
-  @McpTool('Get an installment by ID')
+  @McpTool({ description: 'Get an installment by ID', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getById(@Params('id') id: string) {
     return this.installmentService.getById(id);

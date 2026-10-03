@@ -21,7 +21,7 @@ export class CreditController {
   @Get('/student/:studentId')
   @isFinancial()
   @Validate({ params: creditStudentIdParam })
-  @McpTool('List student credit lots')
+  @McpTool({ description: 'List student credit lots', readOnly: true })
   @ResMsg('credits.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.creditService.getByStudent(studentId);

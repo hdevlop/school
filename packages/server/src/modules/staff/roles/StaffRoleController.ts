@@ -17,7 +17,7 @@ export class StaffRoleController {
 
   @Get()
   @isAdmin()
-  @McpTool('List all staff roles')
+  @McpTool({ description: 'List all staff roles', readOnly: true })
   @ResMsg('staffRoles.success.retrieved')
   async list() {
     return this.staffRoleService.list();
@@ -25,7 +25,7 @@ export class StaffRoleController {
 
   @Get('/active')
   @isAdmin()
-  @McpTool('List active staff roles')
+  @McpTool({ description: 'List active staff roles', readOnly: true })
   @ResMsg('staffRoles.success.retrieved')
   async listActive() {
     return this.staffRoleService.listActive();

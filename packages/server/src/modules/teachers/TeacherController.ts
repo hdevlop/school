@@ -34,7 +34,7 @@ export class TeacherController {
 
   @Get()
   @CanList()
-  @McpTool('List all teachers')
+  @McpTool({ description: 'List all teachers', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getTeachers() {
     return this.teacherService.getAll();
@@ -43,7 +43,7 @@ export class TeacherController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: teacherIdParam })
-  @McpTool('Get a teacher by ID')
+  @McpTool({ description: 'Get a teacher by ID', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getTeacher(@Params('id') id: string) {
     return this.teacherService.getById(id);
@@ -52,7 +52,7 @@ export class TeacherController {
   @Get('/cin/:cin')
   @isAdmin()
   @Validate({ params: teacherCinParam })
-  @McpTool('Get a teacher by CIN')
+  @McpTool({ description: 'Get a teacher by CIN', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getByCin(@Params('cin') cin: string) {
     return this.teacherService.getByCin(cin);
@@ -61,7 +61,7 @@ export class TeacherController {
   @Get('/email/:email')
   @isAdmin()
   @Validate({ params: teacherEmailParam })
-  @McpTool('Get a teacher by email')
+  @McpTool({ description: 'Get a teacher by email', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getByEmail(@Params('email') email: string) {
     return this.teacherService.getByEmail(email);
@@ -70,7 +70,7 @@ export class TeacherController {
   @Get('/phone/:phone')
   @isAdmin()
   @Validate({ params: teacherPhoneParam })
-  @McpTool('Get a teacher by phone number')
+  @McpTool({ description: 'Get a teacher by phone number', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getByPhone(@Params('phone') phone: string) {
     return this.teacherService.getByPhone(phone);
@@ -79,7 +79,7 @@ export class TeacherController {
   @Get('/:id/classes')
   @CanRead()
   @Validate({ params: teacherIdParam })
-  @McpTool('Get classes assigned to a teacher')
+  @McpTool({ description: 'Get classes assigned to a teacher', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getClasses(@Params('id') id: string) {
     return this.teacherService.getClasses(id);
@@ -88,7 +88,7 @@ export class TeacherController {
   @Get('/:id/students')
   @CanRead()
   @Validate({ params: teacherIdParam, query: teacherStudentsQuery })
-  @McpTool('Get students taught by a teacher')
+  @McpTool({ description: 'Get students taught by a teacher', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getStudents(
     @Params('id') id: string,

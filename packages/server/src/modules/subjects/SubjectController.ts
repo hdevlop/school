@@ -11,7 +11,7 @@ export class SubjectController {
 
   @Get()
   @canAccessSubject()
-  @McpTool('List all subjects')
+  @McpTool({ description: 'List all subjects', readOnly: true })
   @ResMsg('subjects.success.retrieved')
   async getSubjects() {
     return this.subjectService.getAll();
@@ -20,7 +20,7 @@ export class SubjectController {
   @Get('/:id')
   @canAccessSubject()
   @Validate({ params: subjectIdParam })
-  @McpTool('Get a subject by ID')
+  @McpTool({ description: 'Get a subject by ID', readOnly: true })
   @ResMsg('subjects.success.retrieved')
   async getSubject(@Params('id') id: string) {
     return this.subjectService.getById(id);

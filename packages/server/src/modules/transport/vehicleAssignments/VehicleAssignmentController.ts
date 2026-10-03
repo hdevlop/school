@@ -27,7 +27,7 @@ export class VehicleAssignmentController {
 
   @Get('/')
   @isAdmin()
-  @McpTool('List all vehicle assignments')
+  @McpTool({ description: 'List all vehicle assignments', readOnly: true })
   @ResMsg('vehicleAssignments.success.allRetrieved')
   async getAll() {
     return this.vehicleAssignmentService.getAll();
@@ -36,7 +36,7 @@ export class VehicleAssignmentController {
   @Get('/vehicle/:vehicleId')
   @isAdmin()
   @Validate({ params: vehicleIdParam })
-  @McpTool('Get assignments by vehicle')
+  @McpTool({ description: 'Get assignments by vehicle', readOnly: true })
   @ResMsg('vehicleAssignments.success.retrieved')
   async getByVehicleId(@Params('vehicleId') vehicleId: string) {
     return this.vehicleAssignmentService.getByVehicleId(vehicleId);
@@ -45,7 +45,7 @@ export class VehicleAssignmentController {
   @Get('/driver/:driverId')
   @isAdmin()
   @Validate({ params: driverIdParam })
-  @McpTool('Get assignments by driver')
+  @McpTool({ description: 'Get assignments by driver', readOnly: true })
   @ResMsg('vehicleAssignments.success.retrieved')
   async getByDriverId(@Params('driverId') driverId: string) {
     return this.vehicleAssignmentService.getByDriverId(driverId);
@@ -56,7 +56,7 @@ export class VehicleAssignmentController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: assignmentIdParam })
-  @McpTool('Get a vehicle assignment by ID')
+  @McpTool({ description: 'Get a vehicle assignment by ID', readOnly: true })
   @ResMsg('vehicleAssignments.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.vehicleAssignmentService.getById(id);

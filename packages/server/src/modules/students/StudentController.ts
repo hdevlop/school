@@ -44,7 +44,7 @@ export class StudentController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: studentIdParam, query: studentYearQuery })
-  @McpTool('Get a student by ID')
+  @McpTool({ description: 'Get a student by ID', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getStudent(@Params('id') id: string) {
     return this.studentService.getById(id);
@@ -53,7 +53,7 @@ export class StudentController {
   @Get('/:id/parents')
   @CanRead()
   @Validate({ params: studentIdParam })
-  @McpTool('Get parents linked to a student')
+  @McpTool({ description: 'Get parents linked to a student', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getStudentParents(@Params('id') id: string) {
     return this.studentService.getParents(id);

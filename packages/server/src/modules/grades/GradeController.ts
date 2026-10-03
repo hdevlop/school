@@ -29,7 +29,7 @@ export class GradeController {
 
   @Get()
   @CanList()
-  @McpTool("List the selected year's grades")
+  @McpTool({ description: "List the selected year's grades", readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getAll() {
     return this.gradeService.getAll();
@@ -38,7 +38,7 @@ export class GradeController {
   @Get('/assessment/:assessmentId')
   @CanList()
   @Validate({ params: assessmentIdParam })
-  @McpTool('Get grades by assessment')
+  @McpTool({ description: 'Get grades by assessment', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByAssessment(@Params('assessmentId') assessmentId: string) {
     return this.gradeService.getByAssessment(assessmentId);
@@ -47,7 +47,7 @@ export class GradeController {
   @Get('/exam/:examId')
   @CanList()
   @Validate({ params: examIdParam })
-  @McpTool('Get grades by exam')
+  @McpTool({ description: 'Get grades by exam', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByExam(@Params('examId') examId: string) {
     return this.gradeService.getByExam(examId);
@@ -56,7 +56,7 @@ export class GradeController {
   @Get('/student/:studentId')
   @CanList()
   @Validate({ params: studentIdParam })
-  @McpTool('Get grades by student')
+  @McpTool({ description: 'Get grades by student', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.gradeService.getByStudent(studentId);
@@ -65,7 +65,7 @@ export class GradeController {
   @Get('/student/:studentId/report')
   @CanList()
   @Validate({ params: studentIdParam })
-  @McpTool('Read one student\'s grade report or report card by studentId, including subject marks and assessment or exam results. Also called a bulletin de notes, boletín de calificaciones, or بيان النقط.')
+  @McpTool({ description: 'Read one student\'s grade report or report card by studentId, including subject marks and assessment or exam results. Also called a bulletin de notes, boletín de calificaciones, or بيان النقط.', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getStudentReport(@Params('studentId') studentId: string) {
     return this.gradeService.getStudentReport(studentId);
@@ -74,7 +74,7 @@ export class GradeController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get grades by section')
+  @McpTool({ description: 'Get grades by section', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.gradeService.getAll({ sectionId });
@@ -83,7 +83,7 @@ export class GradeController {
   @Get('/subject/:subjectId')
   @CanList()
   @Validate({ params: subjectIdParam })
-  @McpTool('Get grades by subject')
+  @McpTool({ description: 'Get grades by subject', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getBySubject(@Params('subjectId') subjectId: string) {
     return this.gradeService.getAll({ subjectId });
@@ -92,7 +92,7 @@ export class GradeController {
   @Get('/teacher/:teacherId')
   @CanList()
   @Validate({ params: teacherIdParam })
-  @McpTool('Get grades by teacher')
+  @McpTool({ description: 'Get grades by teacher', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getByTeacher(@Params('teacherId') teacherId: string) {
     return this.gradeService.getAll({ teacherId });
@@ -109,7 +109,7 @@ export class GradeController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: gradeIdParam })
-  @McpTool('Get a grade by ID')
+  @McpTool({ description: 'Get a grade by ID', readOnly: true })
   @ResMsg('grades.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.gradeService.getById(id);

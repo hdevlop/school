@@ -30,7 +30,7 @@ export class ParentController {
 
   @Get()
   @CanList()
-  @McpTool('List all parents')
+  @McpTool({ description: 'List all parents', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getParents() {
     return this.parentService.getAll();
@@ -39,7 +39,7 @@ export class ParentController {
   @Post('/search')
   @CanList()
   @Validate(parentSearchQueryDto)
-  @McpTool('Search parents by name, CIN, email, or phone')
+  @McpTool({ description: 'Search parents by name, CIN, email, or phone', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async search(@Body() body: ParentSearchQueryDto) {
     return this.parentService.search(body.q, body.limit);
@@ -48,7 +48,7 @@ export class ParentController {
   @Get('/cin/:cin/exists')
   @CanList()
   @Validate({ params: parentCinParam })
-  @McpTool('Check whether a parent CIN exists')
+  @McpTool({ description: 'Check whether a parent CIN exists', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async checkCinExists(@Params('cin') cin: string) {
     return this.parentService.checkCinExists(cin);
@@ -57,7 +57,7 @@ export class ParentController {
   @Get('/cin/:cin')
   @CanList()
   @Validate({ params: parentCinParam })
-  @McpTool('Get a parent by CIN')
+  @McpTool({ description: 'Get a parent by CIN', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getByCin(@Params('cin') cin: string) {
     return this.parentService.getByCin(cin);
@@ -66,7 +66,7 @@ export class ParentController {
   @Get('/phone/:phone')
   @CanList()
   @Validate({ params: parentPhoneParam })
-  @McpTool('Get a parent by phone number')
+  @McpTool({ description: 'Get a parent by phone number', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getByPhone(@Params('phone') phone: string) {
     return this.parentService.getByPhone(phone);
@@ -77,7 +77,7 @@ export class ParentController {
   @Get('/:id/children')
   @CanRead()
   @Validate({ params: parentIdParam })
-  @McpTool('Get children linked to a parent, with their class in the academic year')
+  @McpTool({ description: 'Get children linked to a parent, with their class in the academic year', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getChildren(@Params('id') id: string) {
     return this.parentService.getChildren(id);
@@ -86,7 +86,7 @@ export class ParentController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: parentIdParam })
-  @McpTool('Get a parent by ID')
+  @McpTool({ description: 'Get a parent by ID', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getParent(@Params('id') id: string) {
     return this.parentService.getById(id);

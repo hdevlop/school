@@ -24,7 +24,7 @@ export class SearchController {
   @Can('read:teachers')
   @Can('read:parents')
   @Validate({ query: searchQueryDto })
-  @McpTool('Search globally across students, teachers, and parents')
+  @McpTool({ description: 'Search globally across students, teachers, and parents', readOnly: true })
   @ResMsg('search.success')
   async searchGlobal(@Query('q') q: string, @Query('limit') limit?: number) {
     return this.searchService.searchGlobal(q, limit);
@@ -33,7 +33,7 @@ export class SearchController {
   @Get('/students')
   @CanList(Student)
   @Validate({ query: searchQueryDto })
-  @McpTool('Search students by name, code, CIN, email, or phone')
+  @McpTool({ description: 'Search students by name, code, CIN, email, or phone', readOnly: true })
   @ResMsg('search.success')
   async searchStudents(@Query('q') q: string, @Query('limit') limit?: number) {
     return this.searchService.searchStudents(q, limit);
@@ -42,7 +42,7 @@ export class SearchController {
   @Get('/teachers')
   @CanList(Teacher)
   @Validate({ query: searchQueryDto })
-  @McpTool('Search teachers by name, CIN, email, phone, or specialization')
+  @McpTool({ description: 'Search teachers by name, CIN, email, phone, or specialization', readOnly: true })
   @ResMsg('search.success')
   async searchTeachers(@Query('q') q: string, @Query('limit') limit?: number) {
     return this.searchService.searchTeachers(q, limit);
@@ -51,7 +51,7 @@ export class SearchController {
   @Get('/parents')
   @CanList(Parent)
   @Validate({ query: searchQueryDto })
-  @McpTool('Search parents by name, CIN, email, or phone')
+  @McpTool({ description: 'Search parents by name, CIN, email, or phone', readOnly: true })
   @ResMsg('search.success')
   async searchParents(@Query('q') q: string, @Query('limit') limit?: number) {
     return this.searchService.searchParents(q, limit);

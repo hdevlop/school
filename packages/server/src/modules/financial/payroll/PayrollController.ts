@@ -29,7 +29,7 @@ export class PayrollController {
 
   @Get()
   @isAdmin()
-  @McpTool('List all payslips')
+  @McpTool({ description: 'List all payslips', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getAll() {
     return this.payrollService.getAll();
@@ -37,7 +37,7 @@ export class PayrollController {
 
   @Get('/roster')
   @isAdmin()
-  @McpTool('List the staff a payroll run pays: active, with a salary, teachers included')
+  @McpTool({ description: 'List the staff a payroll run pays: active, with a salary, teachers included', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getRoster() {
     return this.payrollService.getRoster();
@@ -46,7 +46,7 @@ export class PayrollController {
   @Get('/period/:period')
   @isAdmin()
   @Validate({ params: payslipPeriodParam })
-  @McpTool('List payslips for a payroll period (YYYY-MM) with summary')
+  @McpTool({ description: 'List payslips for a payroll period (YYYY-MM) with summary', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getByPeriod(@Params('period') period: string) {
     return this.payrollService.getByPeriod(period);
@@ -54,7 +54,7 @@ export class PayrollController {
 
   @Get('/staff/:staffId')
   @isAdmin()
-  @McpTool('List payslips for a staff member')
+  @McpTool({ description: 'List payslips for a staff member', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getByStaff(@Params('staffId') staffId: string) {
     return this.payrollService.getByStaff(staffId);
@@ -63,7 +63,7 @@ export class PayrollController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: payslipIdParam })
-  @McpTool('Get a payslip by ID')
+  @McpTool({ description: 'Get a payslip by ID', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.payrollService.getById(id);

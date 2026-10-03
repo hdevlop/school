@@ -12,7 +12,7 @@ export class AcademicDashboardController {
   // School-wide counts are for staff, not parents or students.
   @Get('/kpis')
   @isStaff()
-  @McpTool('Get academic dashboard KPIs — total students, teachers, attendance rate, avg GPA, pending grading')
+  @McpTool({ description: 'Get academic dashboard KPIs — total students, teachers, attendance rate, avg GPA, pending grading', readOnly: true })
   @ResMsg('dashboards.success.retrieved')
   async getKpis() {
     return this.academicDashboardService.getKpis();

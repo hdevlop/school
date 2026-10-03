@@ -24,7 +24,7 @@ export class ExpenseController {
 
   @Get()
   @isFinancial()
-  @McpTool('List all expenses')
+  @McpTool({ description: 'List all expenses', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getExpenses() {
     return this.expenseService.getAll();
@@ -32,7 +32,7 @@ export class ExpenseController {
 
   @Get('/today')
   @isFinancial()
-  @McpTool("List today's paid expenses with summary")
+  @McpTool({ description: "List today's paid expenses with summary", readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getToday() {
     return this.expenseService.getToday();
@@ -40,7 +40,7 @@ export class ExpenseController {
 
   @Get('/this-month')
   @isFinancial()
-  @McpTool("List this month's paid expenses with summary")
+  @McpTool({ description: "List this month's paid expenses with summary", readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getThisMonth() {
     return this.expenseService.getThisMonth();
@@ -48,7 +48,7 @@ export class ExpenseController {
 
   @Get('/summary')
   @isFinancial()
-  @McpTool('Get expense summary for dashboard')
+  @McpTool({ description: 'Get expense summary for dashboard', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getSummary() {
     return this.expenseService.getSummary();
@@ -56,7 +56,7 @@ export class ExpenseController {
 
   @Get('/pending')
   @isFinancial()
-  @McpTool('List expenses pending approval')
+  @McpTool({ description: 'List expenses pending approval', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getPendingApprovals() {
     return this.expenseService.getPendingApprovals();
@@ -65,7 +65,7 @@ export class ExpenseController {
   @Get('/date-range/:startDate/:endDate')
   @isFinancial()
   @Validate({ params: expenseDateRangeParam })
-  @McpTool('Get expenses within a date range')
+  @McpTool({ description: 'Get expenses within a date range', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getByDateRange(@Params('startDate') startDate: string, @Params('endDate') endDate: string) {
     return this.expenseService.getByDateRange(startDate, endDate);
@@ -74,7 +74,7 @@ export class ExpenseController {
   @Get('/:id')
   @isFinancial()
   @Validate({ params: expenseIdParam })
-  @McpTool('Get an expense by ID')
+  @McpTool({ description: 'Get an expense by ID', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getExpense(@Params('id') id: string) {
     return this.expenseService.getById(id);

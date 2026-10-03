@@ -26,28 +26,28 @@ export class MaintenanceController {
   ) { }
 
   @Get()
-  @McpTool('List all maintenance records')
+  @McpTool({ description: 'List all maintenance records', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getMaintenances() {
     return this.maintenanceService.getAll();
   }
 
   @Get('/count')
-  @McpTool('Get maintenance record count')
+  @McpTool({ description: 'Get maintenance record count', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getMaintenancesCount() {
     return this.maintenanceService.getCount();
   }
 
   @Get('/status-counts')
-  @McpTool('Get maintenance counts by status')
+  @McpTool({ description: 'Get maintenance counts by status', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getStatusCounts() {
     return this.maintenanceService.getStatusCounts();
   }
 
   @Get('/overdue')
-  @McpTool('List overdue maintenance records')
+  @McpTool({ description: 'List overdue maintenance records', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getOverdueMaintenances() {
     return this.maintenanceService.getOverdueMaintenances();
@@ -55,14 +55,14 @@ export class MaintenanceController {
 
   @Get('/upcoming')
   @Validate({ query: upcomingMaintenanceQueryDto })
-  @McpTool('List upcoming maintenance records')
+  @McpTool({ description: 'List upcoming maintenance records', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getUpcomingMaintenances(@Query() query: UpcomingMaintenanceQueryDto) {
     return this.maintenanceService.getUpcomingMaintenances(query.withinHours ?? 50);
   }
 
   @Get('/alerts')
-  @McpTool('Get maintenance alerts')
+  @McpTool({ description: 'Get maintenance alerts', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getMaintenanceAlerts() {
     return this.maintenanceService.checkMaintenanceAlerts();
@@ -70,7 +70,7 @@ export class MaintenanceController {
 
   @Get('/vehicle/:vehicleId')
   @Validate({ params: vehicleIdParam })
-  @McpTool('Get maintenance records by vehicle')
+  @McpTool({ description: 'Get maintenance records by vehicle', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getMaintenancesByVehicle(@Params('vehicleId') vehicleId: string) {
     return this.maintenanceService.getByVehicleId(vehicleId);
@@ -78,7 +78,7 @@ export class MaintenanceController {
 
   @Get('/status/:status')
   @Validate({ params: statusParam })
-  @McpTool('Get maintenance records by status')
+  @McpTool({ description: 'Get maintenance records by status', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getMaintenancesByStatus(@Params('status') status: string) {
     return this.maintenanceService.getByStatus(status);
@@ -86,7 +86,7 @@ export class MaintenanceController {
 
   @Get('/type/:type')
   @Validate({ params: typeParam })
-  @McpTool('Get maintenance records by type')
+  @McpTool({ description: 'Get maintenance records by type', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getMaintenancesByType(@Params('type') type: string) {
     return this.maintenanceService.getByType(type);
@@ -94,7 +94,7 @@ export class MaintenanceController {
 
   @Get('/:id')
   @Validate({ params: maintenanceIdParam })
-  @McpTool('Get a maintenance record by ID')
+  @McpTool({ description: 'Get a maintenance record by ID', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
   async getMaintenanceById(@Params('id') id: string) {
     return this.maintenanceService.getById(id);

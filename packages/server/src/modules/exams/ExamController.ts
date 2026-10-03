@@ -26,7 +26,7 @@ export class ExamController {
 
   @Get()
   @CanList()
-  @McpTool("List the selected year's exams")
+  @McpTool({ description: "List the selected year's exams", readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getAll() {
     return this.examService.getAll();
@@ -34,7 +34,7 @@ export class ExamController {
 
   @Get('/today')
   @CanList()
-  @McpTool("List today's exams")
+  @McpTool({ description: "List today's exams", readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getTodayExams() {
     return this.examService.getTodayExams();
@@ -42,7 +42,7 @@ export class ExamController {
 
   @Get('/upcoming')
   @CanList()
-  @McpTool('List upcoming exams')
+  @McpTool({ description: 'List upcoming exams', readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getUpcomingExams() {
     return this.examService.getUpcomingExams();
@@ -51,7 +51,7 @@ export class ExamController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool('Get exams by section')
+  @McpTool({ description: 'Get exams by section', readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.examService.getAll({ sectionId });
@@ -60,7 +60,7 @@ export class ExamController {
   @Get('/subject/:subjectId')
   @CanList()
   @Validate({ params: subjectIdParam })
-  @McpTool('Get exams by subject')
+  @McpTool({ description: 'Get exams by subject', readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getBySubject(@Params('subjectId') subjectId: string) {
     return this.examService.getAll({ subjectId });
@@ -69,7 +69,7 @@ export class ExamController {
   @Get('/teacher/:teacherId')
   @CanList()
   @Validate({ params: teacherIdParam })
-  @McpTool('Get exams by teacher')
+  @McpTool({ description: 'Get exams by teacher', readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getByTeacher(@Params('teacherId') teacherId: string) {
     return this.examService.getAll({ teacherId });
@@ -78,7 +78,7 @@ export class ExamController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: examIdParam })
-  @McpTool('Get an exam by ID')
+  @McpTool({ description: 'Get an exam by ID', readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.examService.getById(id);

@@ -10,7 +10,7 @@ export class OperationsDashboardController {
   constructor(private operationsDashboardService: OperationsDashboardService) {}
 
   @Get('/kpis')
-  @McpTool('Get operations dashboard KPIs — active events, announcements, critical alerts, transport status')
+  @McpTool({ description: 'Get operations dashboard KPIs — active events, announcements, critical alerts, transport status', readOnly: true })
   @ResMsg('dashboards.success.retrieved')
   async getKpis() {
     return this.operationsDashboardService.getKpis();

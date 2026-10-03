@@ -30,7 +30,7 @@ export class FeeController {
 
   @Get()
   @isFinancial()
-  @McpTool('List all fees')
+  @McpTool({ description: 'List all fees', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getFees() {
     return this.feeService.getAll();
@@ -38,7 +38,7 @@ export class FeeController {
 
   @Get('/outstanding')
   @isFinancial()
-  @McpTool('List students owing fees of any school year, with every year summed')
+  @McpTool({ description: 'List students owing fees of any school year, with every year summed', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOutstanding() {
     return this.feeService.getOutstanding();
@@ -46,7 +46,7 @@ export class FeeController {
 
   @Get('/overdue')
   @isFinancial()
-  @McpTool('List all overdue fees with student info')
+  @McpTool({ description: 'List all overdue fees with student info', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOverdue() {
     return this.feeService.getOverdue();
@@ -54,7 +54,7 @@ export class FeeController {
 
   @Get('/overdue/summary')
   @isFinancial()
-  @McpTool('Get overdue fees summary for dashboard')
+  @McpTool({ description: 'Get overdue fees summary for dashboard', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOverdueSummary() {
     return this.feeService.getOverdueSummary();
@@ -63,7 +63,7 @@ export class FeeController {
   @Post('/mcp/overdue/student')
   @isFinancial()
   @Validate({ body: overdueStudentBody })
-  @McpTool('Get overdue fees for a specific student')
+  @McpTool({ description: 'Get overdue fees for a specific student', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOverdueByStudent(@Body() body: OverdueStudentBody) {
     return this.feeService.getOverdueByStudent(body.studentId);
@@ -74,7 +74,7 @@ export class FeeController {
   @Get('/student/:studentId/all-years')
   @isFinancial()
   @Validate({ params: studentIdParam })
-  @McpTool("Get a student's fees of every school year, to find unpaid fees of other years")
+  @McpTool({ description: "Get a student's fees of every school year, to find unpaid fees of other years", readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getByStudentAllYears(@Params('studentId') studentId: string) {
     return this.feeService.getByStudentAllYears(studentId);
@@ -83,7 +83,7 @@ export class FeeController {
   @Get('/student/:studentId')
   @isFinancial()
   @Validate({ params: studentIdParam })
-  @McpTool('Get fees for a student by student ID')
+  @McpTool({ description: 'Get fees for a student by student ID', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.feeService.getByStudent(studentId);
@@ -92,7 +92,7 @@ export class FeeController {
   @Get('/:id')
   @isFinancial()
   @Validate({ params: feeIdParam })
-  @McpTool('Get a fee by ID')
+  @McpTool({ description: 'Get a fee by ID', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getFee(@Params('id') id: string) {
     return this.feeService.getById(id);

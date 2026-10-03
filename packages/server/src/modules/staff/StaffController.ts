@@ -24,7 +24,7 @@ export class StaffController {
 
   @Get()
   @isAdmin()
-  @McpTool('List all staff')
+  @McpTool({ description: 'List all staff', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getStaff() {
     return this.staffService.getAll();
@@ -32,7 +32,7 @@ export class StaffController {
 
   @Get('/count')
   @isAdmin()
-  @McpTool('Get staff count')
+  @McpTool({ description: 'Get staff count', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getStaffCount() {
     return this.staffService.getAll().then((rows) => ({ count: rows.length }));
@@ -41,7 +41,7 @@ export class StaffController {
   @Get('/attendance-roster')
   @isAdmin()
   @Validate({ query: staffAttendanceRosterQueryDto })
-  @McpTool('List staff for attendance roster')
+  @McpTool({ description: 'List staff for attendance roster', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getAttendanceRoster(@Query() query: StaffAttendanceRosterQueryDto) {
     return this.staffService.getAttendanceRoster(query?.date);
@@ -50,7 +50,7 @@ export class StaffController {
   @Get('/role/:role')
   @isAdmin()
   @Validate({ params: staffRoleParam })
-  @McpTool('List staff by role')
+  @McpTool({ description: 'List staff by role', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getStaffByRole(@Params('role') role: string) {
     return this.staffService.getByRole(role);
@@ -59,7 +59,7 @@ export class StaffController {
   @Get('/employee-code/:employeeCode')
   @isAdmin()
   @Validate({ params: staffEmployeeCodeParam })
-  @McpTool('Get a staff member by employee code')
+  @McpTool({ description: 'Get a staff member by employee code', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getByEmployeeCode(@Params('employeeCode') employeeCode: string) {
     return this.staffService.getByEmployeeCode(employeeCode);
@@ -67,7 +67,7 @@ export class StaffController {
 
   @Get('/cin/:cin')
   @isAdmin()
-  @McpTool('Get a staff member by CIN')
+  @McpTool({ description: 'Get a staff member by CIN', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getByCin(@Params('cin') cin: string) {
     return this.staffService.getByCin(cin);
@@ -76,7 +76,7 @@ export class StaffController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: staffIdParam })
-  @McpTool('Get a staff member by ID')
+  @McpTool({ description: 'Get a staff member by ID', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getStaffMember(@Params('id') id: string) {
     return this.staffService.getById(id);

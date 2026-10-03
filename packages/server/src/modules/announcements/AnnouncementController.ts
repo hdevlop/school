@@ -30,7 +30,7 @@ export class AnnouncementController {
 
   @Get()
   @CanList()
-  @McpTool('List all announcements')
+  @McpTool({ description: 'List all announcements', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getAnnouncements() {
     return this.announcementService.getAll();
@@ -38,7 +38,7 @@ export class AnnouncementController {
 
   @Get('/published')
   @CanList()
-  @McpTool('List published announcements')
+  @McpTool({ description: 'List published announcements', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getPublished() {
     return this.announcementService.getPublished();
@@ -46,7 +46,7 @@ export class AnnouncementController {
 
   @Get('/upcoming')
   @isAdmin()
-  @McpTool('List upcoming announcements')
+  @McpTool({ description: 'List upcoming announcements', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getUpcoming() {
     return this.announcementService.getUpcoming();
@@ -54,7 +54,7 @@ export class AnnouncementController {
 
   @Get('/expired')
   @isAdmin()
-  @McpTool('List expired announcements')
+  @McpTool({ description: 'List expired announcements', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getExpired() {
     return this.announcementService.getExpired();
@@ -62,7 +62,7 @@ export class AnnouncementController {
 
   @Get('/stats')
   @isAdmin()
-  @McpTool('Get announcement statistics')
+  @McpTool({ description: 'Get announcement statistics', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getStats() {
     return this.announcementService.getStats();
@@ -70,7 +70,7 @@ export class AnnouncementController {
 
   @Get('/recent')
   @CanList()
-  @McpTool('List recent announcements')
+  @McpTool({ description: 'List recent announcements', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getRecent() {
     return this.announcementService.getRecent();
@@ -79,7 +79,7 @@ export class AnnouncementController {
   @Get('/author/:authorId')
   @isAdmin()
   @Validate({ params: announcementAuthorIdParam })
-  @McpTool('Get announcements by author')
+  @McpTool({ description: 'Get announcements by author', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getByAuthor(@Params('authorId') authorId: string) {
     return this.announcementService.getByAuthor(authorId);
@@ -88,7 +88,7 @@ export class AnnouncementController {
   @Get('/audience/:targetAudience')
   @CanList()
   @Validate({ params: announcementTargetAudienceParam })
-  @McpTool('Get announcements by target audience')
+  @McpTool({ description: 'Get announcements by target audience', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getByTargetAudience(@Params('targetAudience') targetAudience: AnnouncementDtoShape['targetAudience']) {
     return this.announcementService.getByTargetAudience(targetAudience);
@@ -97,7 +97,7 @@ export class AnnouncementController {
   @Get('/class/:classId')
   @CanList()
   @Validate({ params: announcementClassIdParam })
-  @McpTool('Get announcements by class')
+  @McpTool({ description: 'Get announcements by class', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getByClass(@Params('classId') classId: string) {
     return this.announcementService.getByClass(classId);
@@ -106,7 +106,7 @@ export class AnnouncementController {
   @Get('/active/:targetAudience')
   @CanList()
   @Validate({ params: announcementTargetAudienceParam, query: activeAnnouncementQueryDto })
-  @McpTool('Get active announcements for an audience')
+  @McpTool({ description: 'Get active announcements for an audience', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getActiveForAudience(
     @Params('targetAudience') targetAudience: AnnouncementDtoShape['targetAudience'],
@@ -121,7 +121,7 @@ export class AnnouncementController {
   @Get('/:id')
   @CanRead()
   @Validate({ params: announcementIdParam })
-  @McpTool('Get an announcement by ID')
+  @McpTool({ description: 'Get an announcement by ID', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getAnnouncement(@Params('id') id: string) {
     return this.announcementService.getById(id);

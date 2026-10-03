@@ -47,7 +47,7 @@ export class EventController {
 
   @Get()
   @canAccessAllEvents()
-  @McpTool('List all events')
+  @McpTool({ description: 'List all events', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getEvents() {
     return this.eventService.getAll();
@@ -56,7 +56,7 @@ export class EventController {
   @Get('/today')
   @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
-  @McpTool("List today's active events")
+  @McpTool({ description: "List today's active events", readOnly: true })
   async getToday() {
     return this.eventService.getTodayEvents();
   }
@@ -64,7 +64,7 @@ export class EventController {
   @Get('/upcoming')
   @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
-  @McpTool('List upcoming events')
+  @McpTool({ description: 'List upcoming events', readOnly: true })
   async getUpcoming() {
     return this.eventService.getUpcoming();
   }
@@ -72,7 +72,7 @@ export class EventController {
   @Get('/past')
   @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
-  @McpTool('List past events')
+  @McpTool({ description: 'List past events', readOnly: true })
   async getPast() {
     return this.eventService.getPast();
   }
@@ -80,7 +80,7 @@ export class EventController {
   @Get('/active')
   @canAccessAllEvents()
   @ResMsg('events.success.retrieved')
-  @McpTool('List currently active events')
+  @McpTool({ description: 'List currently active events', readOnly: true })
   async getActive() {
     return this.eventService.getActiveEvents();
   }
@@ -88,7 +88,7 @@ export class EventController {
   @Get('/status/:status')
   @canAccessAllEvents()
   @Validate({ params: eventStatusParam })
-  @McpTool('Get events by status')
+  @McpTool({ description: 'Get events by status', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getByStatus(@Params('status') status: string) {
     return this.eventService.getByStatus(status);
@@ -97,7 +97,7 @@ export class EventController {
   @Get('/type/:type')
   @canAccessAllEvents()
   @Validate({ params: eventTypeParam })
-  @McpTool('Get events by type')
+  @McpTool({ description: 'Get events by type', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getByType(@Params('type') type: string) {
     return this.eventService.getByType(type);
@@ -114,7 +114,7 @@ export class EventController {
   @Get('/class/:classId')
   @canAccessAllEvents()
   @Validate({ params: eventClassIdParam })
-  @McpTool('Get events by class')
+  @McpTool({ description: 'Get events by class', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getByClass(@Params('classId') classId: string) {
     return this.eventService.getByClass(classId);
@@ -123,7 +123,7 @@ export class EventController {
   @Get('/section/:sectionId')
   @canAccessAllEvents()
   @Validate({ params: eventSectionIdParam })
-  @McpTool('Get events by section')
+  @McpTool({ description: 'Get events by section', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.eventService.getBySection(sectionId);
@@ -148,7 +148,7 @@ export class EventController {
   @Post('/mcp/date-range')
   @canAccessAllEvents()
   @Validate({ body: dateRangeDto })
-  @McpTool('Get events within a date range')
+  @McpTool({ description: 'Get events within a date range', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getByDateRangeMcp(@Body() body: DateRangeDto) {
     return this.eventService.getByDateRange(body.startDate, body.endDate);
@@ -156,7 +156,7 @@ export class EventController {
 
   @Get('/analytics')
   @isAdmin()
-  @McpTool('Get event analytics')
+  @McpTool({ description: 'Get event analytics', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getAnalytics() {
     return this.eventService.getEventAnalytics();
@@ -172,7 +172,7 @@ export class EventController {
   @Get('/:id')
   @canAccessEvent()
   @Validate({ params: eventIdParam })
-  @McpTool('Get an event by ID')
+  @McpTool({ description: 'Get an event by ID', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getEvent(@Params('id') id: string) {
     return this.eventService.getById(id);

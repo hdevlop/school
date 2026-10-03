@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
 import { getRoutes } from 'najm-core';
-import { getMcpConfirmation, getMcpControllerTools } from 'najm-mcp';
+import { getMcpAnnotations, getMcpConfirmation, getMcpControllerTools } from 'najm-mcp';
 import * as modules from '../../src/modules';
 
 // The chat assistant is read-only: najm-chatbot refuses any MCP tool that
@@ -55,6 +55,27 @@ describe('chat-callable tools', () => {
     }
     expect(writeTools).toBeGreaterThan(100);
     expect(unconfirmed).toEqual([]);
+  });
+
+  // najm-rag keeps the best-matching tool and drops every other candidate that
+  // lacks readOnlyHint as a possible write, so an unmarked read is routed only
+  // when it is the single best match.
+  it('mark every read as read-only, so routing can offer it, and no write', () => {
+    const unmarkedReads: string[] = [];
+    const markedWrites: string[] = [];
+    for (const controller of controllers()) {
+      const tools = new Set(getMcpControllerTools(controller).map(String));
+      for (const route of getRoutes(controller)) {
+        if (!tools.has(route.methodName)) continue;
+        const key = `${controller.name}.${route.methodName}`;
+        const readOnly = getMcpAnnotations(controller.prototype[route.methodName])?.readOnlyHint === true;
+        const isRead = route.method === 'get' || READ_ONLY_POSTS.has(key);
+        if (isRead && !readOnly) unmarkedReads.push(key);
+        if (!isRead && readOnly) markedWrites.push(`${key} (${route.method.toUpperCase()})`);
+      }
+    }
+    expect(unmarkedReads).toEqual([]);
+    expect(markedWrites).toEqual([]);
   });
 
   it('keep the reviewed read-only list current', () => {

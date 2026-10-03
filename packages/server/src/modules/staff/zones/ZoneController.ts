@@ -11,7 +11,7 @@ export class ZoneController {
 
   @Get()
   @isAdmin()
-  @McpTool('List zones')
+  @McpTool({ description: 'List zones', readOnly: true })
   @ResMsg('zones.success.retrieved')
   async getZones() {
     return this.zoneService.getAll();
@@ -20,7 +20,7 @@ export class ZoneController {
   @Get('/:id')
   @isAdmin()
   @Validate({ params: zoneIdParam })
-  @McpTool('Get a zone by ID')
+  @McpTool({ description: 'Get a zone by ID', readOnly: true })
   @ResMsg('zones.success.retrieved')
   async getZone(@Params('id') id: string) {
     return this.zoneService.getById(id);

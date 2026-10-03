@@ -19,7 +19,7 @@ export class FeeTypeController {
 
   @Get()
   @isFinancial()
-  @McpTool('List all fee types')
+  @McpTool({ description: 'List all fee types', readOnly: true })
   @ResMsg('feeTypes.success.retrieved')
   async getAll() {
     return this.feeTypeService.getAll();
@@ -28,7 +28,7 @@ export class FeeTypeController {
   @Get('/:id')
   @isFinancial()
   @Validate({ params: feeTypeIdParam })
-  @McpTool('Get a fee type by ID')
+  @McpTool({ description: 'Get a fee type by ID', readOnly: true })
   @ResMsg('feeTypes.success.retrieved')
   async getById(@Params('id') id: string) {
     return this.feeTypeService.getById(id);

@@ -17,7 +17,7 @@ export class TeacherProfileController {
   @Get('/:teacherId/classes')
   @Can('read:teachers')
   @Validate({ params: teacherIdParam })
-  @McpTool('Get the classes a teacher teaches in the academic year')
+  @McpTool({ description: 'Get the classes a teacher teaches in the academic year', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getMyClasses(@Params('teacherId') teacherId: string) {
     return this.teacherProfileService.getMyClasses(teacherId);
@@ -26,7 +26,7 @@ export class TeacherProfileController {
   @Get('/:teacherId/schedule-today')
   @Can('read:teachers')
   @Validate({ params: teacherIdParam })
-  @McpTool("Get a teacher's classes and today's assessments; today exists only in the academic year that holds it")
+  @McpTool({ description: "Get a teacher's classes and today's assessments; today exists only in the academic year that holds it", readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getScheduleToday(@Params('teacherId') teacherId: string) {
     return this.teacherProfileService.getScheduleToday(teacherId);
@@ -36,7 +36,7 @@ export class TeacherProfileController {
   @Can('read:teachers')
   @Can('read:grades')
   @Validate({ params: teacherIdParam })
-  @McpTool('Get assessments with pending grading for a teacher in the academic year')
+  @McpTool({ description: 'Get assessments with pending grading for a teacher in the academic year', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getPendingGrading(@Params('teacherId') teacherId: string) {
     return this.teacherProfileService.getPendingGrading(teacherId);
@@ -45,7 +45,7 @@ export class TeacherProfileController {
   @Get('/:teacherId/students')
   @Can('read:teachers')
   @Validate({ params: teacherIdParam })
-  @McpTool("Get the students placed in a teacher's sections in the academic year")
+  @McpTool({ description: "Get the students placed in a teacher's sections in the academic year", readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getMyStudents(@Params('teacherId') teacherId: string) {
     return this.teacherProfileService.getMyStudents(teacherId);
