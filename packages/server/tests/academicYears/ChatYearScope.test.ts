@@ -11,6 +11,7 @@ import { AcademicYearRepository } from '../../src/modules/academicYears/Academic
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../src/modules/academicYears/AcademicYearValidator';
 import { registerYearPropertyInjector, registerYearRequestScope, Year } from '../../src/modules/academicYears/requestYear';
 import { SchoolChatContextProvider } from '../../src/modules/chat/SchoolChatContextProvider';
+import { SettingsRepository } from '../../src/modules/settings/SettingsRepository';
 import { registerChatYearContext } from '../../src/modules/chat/chatYearContext';
 
 @Service()
@@ -38,6 +39,7 @@ async function boot() {
     getContext: async () => 'Existing knowledge context',
     getContextTrace: async () => ({ used: false, chunks: [] }),
   });
+  instance.container.set(SettingsRepository, { getPublicSettings: async () => ({ timeZone: 'Africa/Casablanca' }) });
   instance.container.set(ChatAgent, {
     stream: async (input: ChatAgentInput) => {
       providerCalls++;
@@ -116,6 +118,14 @@ describe('published chat controller year boundary', () => {
     expect(body.context).toContain('selected academic year is 2026-2027');
     expect(body.context).toContain('This account can access only the active academic year');
     expect(body.context).toContain('Existing knowledge context');
+    expect(body.context).toMatch(/Today is [a-z]+day \d{4}-\d{2}-\d{2} \(YYYY-MM-DD\) in the school's time zone, Africa\/Casablanca\./);
+  });
+
+  it("dates today on the school's clock, not the server's UTC date", async () => {
+    const provider = await (await boot()).container.resolve(SchoolChatContextProvider);
+    // 23:30 UTC on 1 October is already 2 October in Casablanca (UTC+1).
+    expect(await provider.describeToday(new Date('2026-10-01T23:30:00Z')))
+      .toBe("Today is friday 2026-10-02 (YYYY-MM-DD) in the school's time zone, Africa/Casablanca.");
   });
 
   it('keeps overlapping chat prompts on their validated year and does not affect other knowledge consumers', async () => {

@@ -1,0 +1,222 @@
+{
+  "capturedAt": "2026-10-02T19:05:57.715Z",
+  "runId": "0e126f84",
+  "target": "http://localhost:3102",
+  "mode": "api-client-streaming",
+  "corpusSha256": "5ae462b3af6a402f4028dcec0a5bf941fbccb7d2e3e325df8f964d4fd8e0411c",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "plannedRequests": 2,
+  "maxRequests": 2,
+  "concurrency": 1,
+  "timeoutMs": 120000,
+  "textStored": false,
+  "packagePins": {
+    "najm-rag": "2.1.1",
+    "najm-chatbot": "2.0.3",
+    "najm-mcp": "2.2.2",
+    "ai": "6.0.275"
+  },
+  "outcome": "failures",
+  "limitations": [
+    "API-client timings including local transport; not browser submit-to-render.",
+    "First byte is not first answer text; firstTextMs is the first non-empty text-delta.",
+    "Small samples are smoke coverage, not p95 estimates; cache and Ollama state are not controlled.",
+    "Admin account only; teacher, parent and student behavior is not measured.",
+    "No internal stage timings until Phase 1 instrumentation; usage is whatever the stream reports."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 27
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 113
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    }
+  ],
+  "samples": [
+    {
+      "id": "attendance-mark-real-en",
+      "language": "en",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-0e126f84-attendance-mark-real-en-1",
+      "httpStatus": 200,
+      "headersMs": 264,
+      "streamProtocol": "v1",
+      "firstByteMs": 265,
+      "firstTextMs": 14762,
+      "finishChunkMs": 15883,
+      "bodyEndMs": 15887,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 3,
+        "text-start": 3,
+        "tool-input-start": 2,
+        "tool-input-delta": 37,
+        "text-end": 3,
+        "tool-input-available": 2,
+        "tool-output-available": 2,
+        "finish-step": 3,
+        "text-delta": 59,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "attendance_mark",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 222,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [
+          "attendance_mark"
+        ],
+        "missingFacts": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "grade-create-real-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-0e126f84-grade-create-real-fr-1",
+      "httpStatus": 200,
+      "headersMs": 339,
+      "streamProtocol": "v1",
+      "firstByteMs": 339,
+      "firstTextMs": 25355,
+      "finishChunkMs": 26589,
+      "bodyEndMs": 26591,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 4,
+        "text-start": 4,
+        "tool-input-start": 3,
+        "tool-input-delta": 50,
+        "text-end": 4,
+        "tool-input-available": 3,
+        "tool-output-available": 3,
+        "finish-step": 4,
+        "text-delta": 71,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "assessments_get_all",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "grades_create",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 190,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [
+          "grades_create"
+        ],
+        "missingFacts": [],
+        "passed": false
+      }
+    }
+  ],
+  "gitHead": "b96c55ff381969e11ed71598c62322d1ab60866f",
+  "workingTreeDirty": true,
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "summary": {
+    "requests": 2,
+    "byOutcome": {
+      "completed": 2
+    },
+    "completedAndChecksPassed": 0,
+    "completed": {
+      "n": 2,
+      "firstTextP50": 14762,
+      "firstTextP95": 25355,
+      "completeP50": 15887,
+      "completeP95": 26591
+    },
+    "completedByKind": {
+      "blocked-write": {
+        "n": 2,
+        "firstTextP50": 14762,
+        "firstTextP95": 25355,
+        "completeP50": 15887,
+        "completeP95": 26591
+      }
+    },
+    "completedByLanguage": {
+      "en": {
+        "n": 1,
+        "firstTextP50": 14762,
+        "firstTextP95": 14762,
+        "completeP50": 15887,
+        "completeP95": 15887
+      },
+      "fr": {
+        "n": 1,
+        "firstTextP50": 25355,
+        "firstTextP95": 25355,
+        "completeP50": 26591,
+        "completeP95": 26591
+      }
+    },
+    "note": "Failures and timeouts are counted in byOutcome and excluded only from the completed timing rows."
+  },
+  "textRemovedAfterReview": "Answer text was kept locally for human review and removed; see stream-fixed-20261002.md."
+}

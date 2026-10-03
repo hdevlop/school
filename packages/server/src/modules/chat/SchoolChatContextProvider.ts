@@ -5,6 +5,9 @@ import { KnowledgeContextProvider } from 'najm-rag';
 import { Service } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
+import { SettingsRepository } from '../settings/SettingsRepository';
+import { schoolClock } from '../dashboard/teacher/teacherDashboardMetrics';
+import { getBusinessDateOverride } from '../../shared/businessDate';
 
 // Only prompt text is stored here; the shared year boundary remains its source.
 export const schoolChatYearContext = new AsyncLocalStorage<string>();
@@ -14,7 +17,18 @@ export const schoolChatYearContext = new AsyncLocalStorage<string>();
 export class SchoolChatContextProvider implements ChatbotContextProvider {
   @Year() private readonly year!: ResolvedAcademicYear;
 
-  constructor(private knowledge: KnowledgeContextProvider) {}
+  constructor(private knowledge: KnowledgeContextProvider, private settings: SettingsRepository) {}
+
+  /** Read per request: a date fixed at startup goes stale overnight and ignores the school's zone. */
+  async describeToday(now = new Date()) {
+    const timeZone = (await this.settings.getPublicSettings())?.timeZone || 'UTC';
+    const today = schoolClock(timeZone, now, getBusinessDateOverride());
+    return `Today is ${today.weekday} ${today.date} (YYYY-MM-DD) in the school's time zone, ${timeZone}.`;
+  }
+
+  async describe(role?: string, now = new Date()) {
+    return [await this.describeToday(now), this.describeYear(role)].join('\n');
+  }
 
   describeYear(role?: string) {
     return [

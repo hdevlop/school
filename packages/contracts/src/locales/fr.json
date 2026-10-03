@@ -199,7 +199,7 @@
   },
   "assistant": {
     "security": {
-      "readOnlyMode": "Par sécurité, cet assistant peut actuellement uniquement lire et rechercher des données. Les actions de création, modification, suppression, attribution, retrait ou vidage seront disponibles après l’ajout de la confirmation."
+      "readOnlyMode": "Non effectué. Par sécurité, cet assistant peut uniquement lire et rechercher des données ; il ne peut ni créer, ni modifier, ni supprimer, ni attribuer, ni retirer, ni vider des enregistrements, et une confirmation dans la conversation n’y change rien. Ne demandez pas de confirmation à l’utilisateur. Indiquez-lui d’effectuer cette modification dans le tableau de bord."
     }
   },
   "auth": {

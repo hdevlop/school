@@ -1,0 +1,1728 @@
+{
+  "capturedAt": "2026-10-02T19:18:47.996Z",
+  "runId": "501651db",
+  "target": "http://localhost:3102",
+  "mode": "api-client-streaming",
+  "corpusSha256": "4d4568498a58046e2564d584572603d49aaa2a5bccaba5606f5d25f76f1a5834",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "plannedRequests": 36,
+  "maxRequests": 36,
+  "concurrency": 1,
+  "timeoutMs": 120000,
+  "textStored": false,
+  "packagePins": {
+    "najm-rag": "2.1.1",
+    "najm-chatbot": "2.0.3",
+    "najm-mcp": "2.2.2",
+    "ai": "6.0.275"
+  },
+  "outcome": "failures",
+  "limitations": [
+    "API-client timings including local transport; not browser submit-to-render.",
+    "First byte is not first answer text; firstTextMs is the first non-empty text-delta.",
+    "Small samples are smoke coverage, not p95 estimates; cache and Ollama state are not controlled.",
+    "Admin account only; teacher, parent and student behavior is not measured.",
+    "No internal stage timings until Phase 1 instrumentation; usage is whatever the stream reports."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 23
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 129
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    }
+  ],
+  "samples": [
+    {
+      "id": "greeting-en",
+      "language": "en",
+      "kind": "small-talk",
+      "repetition": 1,
+      "sessionId": "bench-501651db-greeting-en-1",
+      "httpStatus": 200,
+      "headersMs": 179,
+      "streamProtocol": "v1",
+      "firstByteMs": 180,
+      "firstTextMs": 1527,
+      "finishChunkMs": 2323,
+      "bodyEndMs": 2327,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 84,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 338,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-fr",
+      "language": "fr",
+      "kind": "small-talk",
+      "repetition": 1,
+      "sessionId": "bench-501651db-greeting-fr-1",
+      "httpStatus": 200,
+      "headersMs": 227,
+      "streamProtocol": "v1",
+      "firstByteMs": 228,
+      "firstTextMs": 2187,
+      "finishChunkMs": 4743,
+      "bodyEndMs": 4747,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 101,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 480,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-ar",
+      "language": "ar",
+      "kind": "small-talk",
+      "repetition": 1,
+      "sessionId": "bench-501651db-greeting-ar-1",
+      "httpStatus": 200,
+      "headersMs": 204,
+      "streamProtocol": "v1",
+      "firstByteMs": 204,
+      "firstTextMs": 2909,
+      "finishChunkMs": 5046,
+      "bodyEndMs": 5048,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 89,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 228,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-es",
+      "language": "es",
+      "kind": "small-talk",
+      "repetition": 1,
+      "sessionId": "bench-501651db-greeting-es-1",
+      "httpStatus": 200,
+      "headersMs": 235,
+      "streamProtocol": "v1",
+      "firstByteMs": 235,
+      "firstTextMs": 2643,
+      "finishChunkMs": 4679,
+      "bodyEndMs": 4681,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 87,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 390,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-en",
+      "language": "en",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-501651db-student-count-en-1",
+      "httpStatus": 200,
+      "headersMs": 285,
+      "streamProtocol": "v1",
+      "firstByteMs": 285,
+      "firstTextMs": 3941,
+      "finishChunkMs": 4424,
+      "bodyEndMs": 4430,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 18,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 67,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-501651db-student-count-fr-1",
+      "httpStatus": 200,
+      "headersMs": 240,
+      "streamProtocol": "v1",
+      "firstByteMs": 240,
+      "firstTextMs": 3458,
+      "finishChunkMs": 3787,
+      "bodyEndMs": 3792,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 13,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 42,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-501651db-student-count-ar-1",
+      "httpStatus": 200,
+      "headersMs": 244,
+      "streamProtocol": "v1",
+      "firstByteMs": 244,
+      "firstTextMs": 3835,
+      "finishChunkMs": 4541,
+      "bodyEndMs": 4548,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 26,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 67,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-es",
+      "language": "es",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-501651db-student-count-es-1",
+      "httpStatus": 200,
+      "headersMs": 360,
+      "streamProtocol": "v1",
+      "firstByteMs": 360,
+      "firstTextMs": 2873,
+      "finishChunkMs": 3175,
+      "bodyEndMs": 3181,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 18,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 63,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-today-en",
+      "language": "en",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-501651db-attendance-today-en-1",
+      "httpStatus": 200,
+      "headersMs": 173,
+      "streamProtocol": "v1",
+      "firstByteMs": 174,
+      "firstTextMs": 3258,
+      "finishChunkMs": 4771,
+      "bodyEndMs": 4778,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 57,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 269,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-today-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-501651db-attendance-today-fr-1",
+      "httpStatus": 200,
+      "headersMs": 209,
+      "streamProtocol": "v1",
+      "firstByteMs": 209,
+      "firstTextMs": 5383,
+      "finishChunkMs": 6165,
+      "bodyEndMs": 6172,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 33,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 152,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-mark-blocked-en",
+      "language": "en",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-501651db-attendance-mark-blocked-en-1",
+      "httpStatus": 200,
+      "headersMs": 228,
+      "streamProtocol": "v1",
+      "firstByteMs": 228,
+      "firstTextMs": 5197,
+      "finishChunkMs": 5804,
+      "bodyEndMs": 5811,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 15,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 51,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 190,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "grade-create-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-501651db-grade-create-blocked-fr-1",
+      "httpStatus": 200,
+      "headersMs": 325,
+      "streamProtocol": "v1",
+      "firstByteMs": 325,
+      "firstTextMs": 4038,
+      "finishChunkMs": 4830,
+      "bodyEndMs": 4832,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 15,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 77,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 258,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-en",
+      "language": "en",
+      "kind": "small-talk",
+      "repetition": 2,
+      "sessionId": "bench-501651db-greeting-en-2",
+      "httpStatus": 200,
+      "headersMs": 41,
+      "streamProtocol": "v1",
+      "firstByteMs": 41,
+      "firstTextMs": 1334,
+      "finishChunkMs": 2634,
+      "bodyEndMs": 2637,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 72,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 326,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-fr",
+      "language": "fr",
+      "kind": "small-talk",
+      "repetition": 2,
+      "sessionId": "bench-501651db-greeting-fr-2",
+      "httpStatus": 200,
+      "headersMs": 46,
+      "streamProtocol": "v1",
+      "firstByteMs": 46,
+      "firstTextMs": 2176,
+      "finishChunkMs": 3260,
+      "bodyEndMs": 3266,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 79,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 329,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-ar",
+      "language": "ar",
+      "kind": "small-talk",
+      "repetition": 2,
+      "sessionId": "bench-501651db-greeting-ar-2",
+      "httpStatus": 200,
+      "headersMs": 48,
+      "streamProtocol": "v1",
+      "firstByteMs": 48,
+      "firstTextMs": 1052,
+      "finishChunkMs": 1816,
+      "bodyEndMs": 1821,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 78,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 229,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-es",
+      "language": "es",
+      "kind": "small-talk",
+      "repetition": 2,
+      "sessionId": "bench-501651db-greeting-es-2",
+      "httpStatus": 200,
+      "headersMs": 58,
+      "streamProtocol": "v1",
+      "firstByteMs": 58,
+      "firstTextMs": 2660,
+      "finishChunkMs": 4126,
+      "bodyEndMs": 4128,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 68,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 344,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-en",
+      "language": "en",
+      "kind": "single-read",
+      "repetition": 2,
+      "sessionId": "bench-501651db-student-count-en-2",
+      "httpStatus": 200,
+      "headersMs": 32,
+      "streamProtocol": "v1",
+      "firstByteMs": 32,
+      "firstTextMs": 5234,
+      "finishChunkMs": 11734,
+      "bodyEndMs": 11736,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 14,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 67,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 2,
+      "sessionId": "bench-501651db-student-count-fr-2",
+      "httpStatus": 200,
+      "headersMs": 44,
+      "streamProtocol": "v1",
+      "firstByteMs": 44,
+      "firstTextMs": 4192,
+      "finishChunkMs": 4972,
+      "bodyEndMs": 4973,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 22,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 63,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 2,
+      "sessionId": "bench-501651db-student-count-ar-2",
+      "httpStatus": 200,
+      "headersMs": 27,
+      "streamProtocol": "v1",
+      "firstByteMs": 27,
+      "firstTextMs": 3833,
+      "finishChunkMs": 4451,
+      "bodyEndMs": 4453,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 23,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 61,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-es",
+      "language": "es",
+      "kind": "single-read",
+      "repetition": 2,
+      "sessionId": "bench-501651db-student-count-es-2",
+      "httpStatus": 200,
+      "headersMs": 34,
+      "streamProtocol": "v1",
+      "firstByteMs": 34,
+      "firstTextMs": 1627,
+      "finishChunkMs": 1907,
+      "bodyEndMs": 1909,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 18,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 63,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-today-en",
+      "language": "en",
+      "kind": "single-read",
+      "repetition": 2,
+      "sessionId": "bench-501651db-attendance-today-en-2",
+      "httpStatus": 200,
+      "headersMs": 31,
+      "streamProtocol": "v1",
+      "firstByteMs": 31,
+      "firstTextMs": 3108,
+      "finishChunkMs": 4488,
+      "bodyEndMs": 4495,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 64,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 283,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-today-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 2,
+      "sessionId": "bench-501651db-attendance-today-fr-2",
+      "httpStatus": 200,
+      "headersMs": 63,
+      "streamProtocol": "v1",
+      "firstByteMs": 63,
+      "firstTextMs": 4341,
+      "finishChunkMs": 6284,
+      "bodyEndMs": 6286,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 48,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 223,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-mark-blocked-en",
+      "language": "en",
+      "kind": "blocked-write",
+      "repetition": 2,
+      "sessionId": "bench-501651db-attendance-mark-blocked-en-2",
+      "httpStatus": 200,
+      "headersMs": 49,
+      "streamProtocol": "v1",
+      "firstByteMs": 49,
+      "firstTextMs": 10839,
+      "finishChunkMs": 11644,
+      "bodyEndMs": 11647,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 15,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 49,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 197,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "grade-create-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "repetition": 2,
+      "sessionId": "bench-501651db-grade-create-blocked-fr-2",
+      "httpStatus": 200,
+      "headersMs": 44,
+      "streamProtocol": "v1",
+      "firstByteMs": 44,
+      "firstTextMs": 13032,
+      "finishChunkMs": 15719,
+      "bodyEndMs": 15721,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 15,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 72,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 251,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-en",
+      "language": "en",
+      "kind": "small-talk",
+      "repetition": 3,
+      "sessionId": "bench-501651db-greeting-en-3",
+      "httpStatus": 200,
+      "headersMs": 44,
+      "streamProtocol": "v1",
+      "firstByteMs": 44,
+      "firstTextMs": 5793,
+      "finishChunkMs": 10989,
+      "bodyEndMs": 10991,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 88,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 405,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-fr",
+      "language": "fr",
+      "kind": "small-talk",
+      "repetition": 3,
+      "sessionId": "bench-501651db-greeting-fr-3",
+      "httpStatus": 200,
+      "headersMs": 46,
+      "streamProtocol": "v1",
+      "firstByteMs": 46,
+      "firstTextMs": 1731,
+      "finishChunkMs": 3736,
+      "bodyEndMs": 3742,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 86,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 399,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-ar",
+      "language": "ar",
+      "kind": "small-talk",
+      "repetition": 3,
+      "sessionId": "bench-501651db-greeting-ar-3",
+      "httpStatus": 200,
+      "headersMs": 48,
+      "streamProtocol": "v1",
+      "firstByteMs": 48,
+      "firstTextMs": 1934,
+      "finishChunkMs": 4381,
+      "bodyEndMs": 4388,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 82,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 234,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "greeting-es",
+      "language": "es",
+      "kind": "small-talk",
+      "repetition": 3,
+      "sessionId": "bench-501651db-greeting-es-3",
+      "httpStatus": 200,
+      "headersMs": 58,
+      "streamProtocol": "v1",
+      "firstByteMs": 58,
+      "firstTextMs": 1019,
+      "finishChunkMs": 2395,
+      "bodyEndMs": 2401,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 65,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 316,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-en",
+      "language": "en",
+      "kind": "single-read",
+      "repetition": 3,
+      "sessionId": "bench-501651db-student-count-en-3",
+      "httpStatus": 200,
+      "headersMs": 103,
+      "streamProtocol": "v1",
+      "firstByteMs": 103,
+      "firstTextMs": 2194,
+      "finishChunkMs": 2754,
+      "bodyEndMs": 2761,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 14,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 67,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 3,
+      "sessionId": "bench-501651db-student-count-fr-3",
+      "httpStatus": 200,
+      "headersMs": 46,
+      "streamProtocol": "v1",
+      "firstByteMs": 46,
+      "firstTextMs": 2158,
+      "finishChunkMs": 2403,
+      "bodyEndMs": 2406,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 20,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 63,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 3,
+      "sessionId": "bench-501651db-student-count-ar-3",
+      "httpStatus": 200,
+      "headersMs": 37,
+      "streamProtocol": "v1",
+      "firstByteMs": 37,
+      "firstTextMs": 3967,
+      "finishChunkMs": 4232,
+      "bodyEndMs": 4239,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 26,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 67,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "student-count-es",
+      "language": "es",
+      "kind": "single-read",
+      "repetition": 3,
+      "sessionId": "bench-501651db-student-count-es-3",
+      "httpStatus": 200,
+      "headersMs": 61,
+      "streamProtocol": "v1",
+      "firstByteMs": 62,
+      "firstTextMs": 2787,
+      "finishChunkMs": 3250,
+      "bodyEndMs": 3255,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 18,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 63,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-today-en",
+      "language": "en",
+      "kind": "single-read",
+      "repetition": 3,
+      "sessionId": "bench-501651db-attendance-today-en-3",
+      "httpStatus": 200,
+      "headersMs": 60,
+      "streamProtocol": "v1",
+      "firstByteMs": 60,
+      "firstTextMs": 2652,
+      "finishChunkMs": 4290,
+      "bodyEndMs": 4292,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 60,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 240,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-today-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 3,
+      "sessionId": "bench-501651db-attendance-today-fr-3",
+      "httpStatus": 200,
+      "headersMs": 41,
+      "streamProtocol": "v1",
+      "firstByteMs": 41,
+      "firstTextMs": 4371,
+      "finishChunkMs": 6073,
+      "bodyEndMs": 6075,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 51,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 236,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [],
+        "missingFacts": [],
+        "passed": true
+      }
+    },
+    {
+      "id": "attendance-mark-blocked-en",
+      "language": "en",
+      "kind": "blocked-write",
+      "repetition": 3,
+      "sessionId": "bench-501651db-attendance-mark-blocked-en-3",
+      "httpStatus": 200,
+      "headersMs": 87,
+      "streamProtocol": "v1",
+      "firstByteMs": 87,
+      "firstTextMs": 6342,
+      "finishChunkMs": 6673,
+      "bodyEndMs": 6676,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 3,
+        "text-start": 3,
+        "tool-input-start": 2,
+        "tool-input-delta": 41,
+        "text-end": 3,
+        "tool-input-available": 2,
+        "tool-output-available": 2,
+        "finish-step": 3,
+        "text-delta": 58,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_mark",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 225,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [
+          "attendance_mark"
+        ],
+        "missingFacts": [],
+        "passed": false
+      }
+    },
+    {
+      "id": "grade-create-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "repetition": 3,
+      "sessionId": "bench-501651db-grade-create-blocked-fr-3",
+      "httpStatus": 200,
+      "headersMs": 34,
+      "streamProtocol": "v1",
+      "firstByteMs": 34,
+      "firstTextMs": 24114,
+      "finishChunkMs": 30074,
+      "bodyEndMs": 30081,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 4,
+        "text-start": 4,
+        "tool-input-start": 3,
+        "tool-input-delta": 45,
+        "text-end": 4,
+        "tool-input-available": 3,
+        "tool-output-available": 3,
+        "finish-step": 4,
+        "text-delta": 196,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "grades_create",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "assessments_get_all",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": null,
+      "textLength": 692,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "forbiddenToolOutputs": [
+          "grades_create"
+        ],
+        "missingFacts": [],
+        "passed": false
+      }
+    }
+  ],
+  "gitHead": "b96c55ff381969e11ed71598c62322d1ab60866f",
+  "workingTreeDirty": true,
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "summary": {
+    "requests": 36,
+    "byOutcome": {
+      "completed": 36
+    },
+    "completedAndChecksPassed": 34,
+    "completed": {
+      "n": 36,
+      "firstTextP50": 3108,
+      "firstTextP95": 13032,
+      "completeP50": 4453,
+      "completeP95": 15721
+    },
+    "completedByKind": {
+      "small-talk": {
+        "n": 12,
+        "firstTextP50": 1934,
+        "firstTextP95": 5793,
+        "completeP50": 3742,
+        "completeP95": 10991
+      },
+      "single-read": {
+        "n": 18,
+        "firstTextP50": 3458,
+        "firstTextP95": 5383,
+        "completeP50": 4430,
+        "completeP95": 11736
+      },
+      "blocked-write": {
+        "n": 6,
+        "firstTextP50": 6342,
+        "firstTextP95": 24114,
+        "completeP50": 6676,
+        "completeP95": 30081
+      }
+    },
+    "completedByLanguage": {
+      "en": {
+        "n": 12,
+        "firstTextP50": 3258,
+        "firstTextP95": 10839,
+        "completeP50": 4495,
+        "completeP95": 11736
+      },
+      "fr": {
+        "n": 12,
+        "firstTextP50": 4038,
+        "firstTextP95": 24114,
+        "completeP50": 4832,
+        "completeP95": 30081
+      },
+      "ar": {
+        "n": 6,
+        "firstTextP50": 2909,
+        "firstTextP95": 3967,
+        "completeP50": 4388,
+        "completeP95": 5048
+      },
+      "es": {
+        "n": 6,
+        "firstTextP50": 2643,
+        "firstTextP95": 2873,
+        "completeP50": 3181,
+        "completeP95": 4681
+      }
+    },
+    "note": "Failures and timeouts are counted in byOutcome and excluded only from the completed timing rows."
+  },
+  "textRemovedAfterReview": "Answer text was kept locally for human review and removed; see stream-fixed-20261002.md."
+}

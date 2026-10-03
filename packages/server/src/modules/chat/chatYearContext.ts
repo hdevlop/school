@@ -9,7 +9,7 @@ export function registerChatYearContext(container: Container) {
   const handler: MiddlewareHandler = async (_context, next) => {
     const provider = await container.resolve(SchoolChatContextProvider);
     const actor = container.get(USER) as { role?: string } | undefined;
-    return schoolChatYearContext.run(provider.describeYear(actor?.role), next);
+    return schoolChatYearContext.run(await provider.describe(actor?.role), next);
   };
   container.setInjection({ type: INJECTION_TYPES.MIDDLEWARE, target: ChatController, order: 55, handler });
 }

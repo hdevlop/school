@@ -27,7 +27,7 @@ export class StudentController {
   @Get()
   @CanList()
   @Validate({ query: studentListQuery })
-  @McpTool({ description: 'List all students enrolled in the selected academic year. Liste des élèves inscrits pour l’année scolaire sélectionnée. قائمة تلاميذ السنة الدراسية المحددة.', readOnly: true })
+  @McpTool({ description: 'List all students enrolled in the selected academic year. To find one student by name, use search_search_students instead. Liste des élèves inscrits pour l’année scolaire sélectionnée. قائمة تلاميذ السنة الدراسية المحددة.', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getStudents(@Query('onDate') onDate?: StudentListQuery['onDate']) {
     return this.studentService.getAll(onDate);

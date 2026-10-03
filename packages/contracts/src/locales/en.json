@@ -199,7 +199,7 @@
   },
   "assistant": {
     "security": {
-      "readOnlyMode": "For safety, this assistant can currently read and search data only. Actions that create, update, delete, assign, remove, or clear data will be available after confirmation approval is added."
+      "readOnlyMode": "Not done. For safety, this assistant can only read and search data; it cannot create, update, delete, assign, remove, or clear records, and confirming in the chat does not change that. Do not ask the user to confirm. Tell them to make this change in the dashboard."
     }
   },
   "auth": {

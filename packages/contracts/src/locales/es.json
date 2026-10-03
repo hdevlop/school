@@ -199,7 +199,7 @@
   },
   "assistant": {
     "security": {
-      "readOnlyMode": "Por seguridad, este asistente actualmente solo puede leer y buscar datos. Las acciones de crear, actualizar, eliminar, asignar, quitar o vaciar estarán disponibles después de añadir la aprobación de confirmación."
+      "readOnlyMode": "No realizado. Por seguridad, este asistente solo puede leer y buscar datos; no puede crear, actualizar, eliminar, asignar, quitar ni vaciar registros, y confirmar en el chat no cambia eso. No pidas confirmación al usuario. Indícale que haga este cambio en el panel."
     }
   },
   "auth": {
