@@ -577,10 +577,15 @@ Files (created 2026-10-02 unless noted):
   tested in `scripts/tests/chatbot-stream.test.mjs`): streaming runner, request
   limits, and budget controls. `.mjs` follows the other `scripts/` runners.
   Server diagnostics are read for each request by `x-request-id` (2026-10-03).
-  Still to add: interleaved baseline/candidate runs, declared concurrency above
-  one, and non-admin accounts.
-- `datasets/chatbot-latency/questions.json`: currently a 12-case smoke set;
-  grow it to the section 6.1 corpus.
+  `--compare-model` interleaves the saved model with a candidate, and
+  `--languages=fr,ary` runs only those cases (2026-10-03). Still to add:
+  declared concurrency above one, non-admin accounts, and conversation cases.
+- `datasets/chatbot-latency/questions.json`: 50 independent cases, 10 per
+  language (English, French, Spanish, Modern Standard Arabic, Darija), since
+  2026-10-03. Follow-ups, ambiguity and authorization denials are still to add.
+- `datasets/chatbot-latency/routing-cases.json` (20) and `routing-darija-fr.json`
+  (31): routing-only cases for `scripts/chatbot-routing-preflight.mjs`
+  (`--cases=<file>`).
 - `docs/tests/chatbot-latency.md`: setup, execution, and scoring; cache
   controls arrive with section 6.2 work.
 - `docs/evidence/chatbot-latency/`: sanitized raw samples and comparison reports.
