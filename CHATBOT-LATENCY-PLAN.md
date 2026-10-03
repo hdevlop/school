@@ -1,6 +1,13 @@
 # Chatbot latency and cost plan
 
-Status: **FASTER HOST FOUND: GPT-OSS-120B:NITRO ANSWERS IN 0.6 S P50 (1.1 S P95), 12/12 CORRECT; NOT YET ADOPTED**
+Status: **GPT-OSS-120B:NITRO REJECTED ON THE FULL SET: 47/50, CEREBRAS TRUNCATES TOOL NAMES; THE DEFAULT ROUTE STAYS (50/50)**
+
+2026-10-03, all 50 questions, default vs `:nitro` ([review](docs/evidence/chatbot-latency/model-nitro-full50-20261003.md)):
+`:nitro` completed in 1.0 s p50 / 1.5 s p95 against 3.5 s / 12.3 s, but three
+teacher-count answers came back empty. Cerebras, which serves `:nitro`, returned
+`teachers_get_teacher_count` calls as `teachers_get_teacher` (12/12 in a direct
+probe); Groq rejects the `null` the model sends for optional parameters. Measured
+cost about $1.5 per 1,000 answers against $0.18. The saved model is unchanged.
 
 2026-10-03, embedding failure paths, Phase 2 items 1-3 ([review](docs/evidence/chatbot-latency/embedding-residency-20261003.md)):
 a warm question embeds in 137 ms p50, a cold one in about 1.7 s, an indexing
