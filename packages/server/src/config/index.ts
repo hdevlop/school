@@ -216,9 +216,12 @@ export function resolveEmailConfig(): EmailPluginConfig {
 
 export const emailConfig = () => email(resolveEmailConfig());
 
+// `db` is one process-wide pool (see database/db.ts), shared by every server,
+// seed and hot reload in the process; a server stopping must not close it.
 export const databaseConfig = () =>
   database({
     default: db,
+    close: false,
   });
 
 export const authInfrastructureConfig = () => ({
@@ -339,6 +342,9 @@ export const chatbotConfig = () =>
     dialect: 'pg',
     defaultSystemPrompt: defaultChatbotSystemPrompt,
     maxSteps: 10,
+    // Ends an answer whose provider stream goes silent. It also runs while a
+    // tool executes; School's tools are database reads well under this.
+    streamTimeout: { chunkMs: 30_000 },
     conversationStore: 'db',
   });
 
@@ -350,7 +356,8 @@ export const chatYearContextConfig = () => plugin('school-chat-year-context')
   .alias(CHATBOT_CONTEXT_PROVIDER, SchoolChatContextProvider)
   .build();
 
-export const ragStudioConfig = () => ragStudio({ auth: 'standalone' });
+// najm-rag 2.1.2 makes the Studio Assistant opt-in; School registers studioAssistant().
+export const ragStudioConfig = () => ragStudio({ auth: 'standalone', assistant: true });
 
 export const storageConfig = () => {
   return storage({

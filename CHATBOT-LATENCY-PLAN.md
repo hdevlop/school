@@ -1,16 +1,95 @@
 # Chatbot latency and cost plan
 
-Status: **LOCAL QWEN EMBEDDINGS INTEGRATED — ROUTING PREVIEW 12/20; CHAT BASELINE NOT STARTED**
+Status: **ALL SMOKE-RUN PROBLEMS FIXED LOCALLY; NAJM-CHATBOT 2.0.4 PINNED; USAGE AND COST NOW REPORTED (~$0.0001 PER ANSWER)**
+
+2026-10-02, latest: `najm-chatbot@2.0.4` is published and pinned, and School
+sets a 30 s stall limit. A 12-request pass completed 12/12, with first text
+p50 2.2 s and complete p50 2.4 s. All 12 answers carried usage: 23.8k tokens,
+an estimated $0.0012 in total. See [the 2.0.4 section](docs/evidence/chatbot-latency/stream-fixed-20261002.md#after-najm-chatbot-204-report).
+Remaining: routing 14/20, the section 6 corpus and sample size, non-admin
+roles, production.
+
+2026-10-02, fixes ([review](docs/evidence/chatbot-latency/stream-fixed-20261002.md)):
+- **Date:** today's date and weekday now come per request from the school's
+  clock. The old prompt date was computed once at startup, in UTC.
+- **Language:** replies now match the question's language. French grade
+  requests: English 3/3 before, French 3/3 after.
+- **Greetings:** now 219–480 characters, describing lookups only.
+- **Name lookups:** they use `search_search_students` instead of the full
+  list, so write requests went from 12.5 s to 6.7 s complete p50.
+- **Blocked actions:** the message now says nothing was done and not to ask
+  for confirmation in chat.
+- **Blocking proven:** with a real demo student, the model called
+  `attendance_mark` and `grades_create`, both were refused, and the database
+  was unchanged.
+
+In the Najm clone, `najm-chatbot` gained a `streamTimeout` (default chunk
+limit 60 s) and correct v6 token usage. Its tests and build pass. It needs a
+2.0.4 release and School pin before School gets them (then set
+`streamTimeout: { chunkMs: 30_000 }`).
+
+2026-10-02, seeded run ([review](docs/evidence/chatbot-latency/stream-seeded-20261002.md)):
+after `seed:demo`, 36 requests (12 cases × 3) gave first text p50 2.4 s
+(p95 12.5 s) and complete p50 4.8 s (p95 16.6 s) over 35 completed requests.
+Count answers were correct 12/12. Findings for the next phases:
+1. A provider stream went silent mid-answer, and nothing ended it before the
+   runner's 120 s abort. A stall timeout is needed in `najm-chatbot`.
+2. French grade-entry requests were answered in English, 3/3.
+3. One French answer gave the wrong date for today.
+4. Write requests are the slowest (p50 12.5 s). The suspected cause is
+   full-list student lookups; this needs tool-result sizes from Phase 1 to
+   confirm.
+5. Blocking is still unproven: the synthetic name never reaches the write tool.
+6. The stream carries no token usage.
+
+Use this run as a smoke reference, not the acceptance baseline. Next: add
+argument and result-size capture (Phase 1); decide whether a write case may use
+a real student's name to prove blocking; grow the corpus and repetitions.
+
+2026-10-02, later: the key and `openai/gpt-oss-120b` were saved to AI Settings
+via the admin API, and the 12-case smoke set ran
+([report](docs/evidence/chatbot-latency/stream-smoke-20261002.md)). All 12
+completed. First text p50 was 5.1 s (max 12.3 s); complete p50 was 8.5 s
+(max 20.3 s). Every read used two LLM steps, and answers were correct for the
+data. Caveats: this workstation's database has **no students, attendance or
+grades**, so reads returned nothing. The write cases never reached the blocked
+tool. The stream reports **no token usage**. Greetings answered quickly but
+ran long (up to 20 s) and over-promise write abilities. Next: run on seeded
+data, then repeat for sample size.
+
+2026-10-02, second workstation (`C:\Users\pc`): there was no llama.cpp or Qwen
+install here, and the app was on the source default (Ollama EmbeddingGemma),
+which passed **6/20**. Qwen3 Embedding 0.6B Q8_0 now runs through Ollama's
+OpenAI-compatible endpoint (`.env.local`), all 430 tools were reindexed, and
+the 20 held-out cases pass **14/20** with the current instruction. pgvector was
+already correct here. See [the re-run](docs/evidence/chatbot-latency/routing-trial.md#re-run-on-the-second-workstation-2026-10-02).
+The section 4.2 runner exists ([guide](docs/tests/chatbot-latency.md)) with a
+12-case smoke corpus. A keyless one-request probe proved body, year and
+stream framing ([probe](docs/evidence/chatbot-latency/stream-transport-probe-20261002.json)).
+At that point AI Settings had no key; see the later entry above.
+
+Earlier the same day, on the original workstation: OpenRouter /
+`openai/gpt-oss-120b` was configured in School's AI settings (`hasKey:true`)
+and the chat widget answered locally in the selected academic year ([release follow-up](docs/tests/academic-year-release-2026-10-02.md),
+`SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md` section 0.1j). Since the 12/20 preview
+below, the Qwen query instruction changed ("teacher request" → "user request",
+commit `b96c55f`), student-list tool descriptions became multilingual, and
+`students_get_student_count` was added; the 14/20 re-run above reflects them.
+
+Informal timings from that follow-up, four local samples through the
+release check, not the section 4.2 runner: first answer text 1.8–8.4 s,
+complete answer 2.2–8.6 s. Earlier long-list count requests took roughly
+71–79 s and returned wrong totals; the aggregate count tool replaced them.
+These are leads for the baseline, not a baseline.
 
 2026-09-30: the local app at port 3102 is healthy. Authenticated diagnostics found
 428 registered tools, zero indexed tools, zero semantic phrases, and no dependency
 mappings. Routing preview returned `router_error` because local Ollama was
-unreachable. OpenRouter conversation tests are deferred until credentials and a
-test budget are available. See [preflight evidence](docs/evidence/chatbot-latency/preflight.md)
+unreachable. See [preflight evidence](docs/evidence/chatbot-latency/preflight.md)
 and the [routing-only runner guide](docs/tests/chatbot-routing.md).
 
 Follow-up: llama.cpp b11146 with EmbeddingGemma Q8_0 is running locally on
-port 18080. `najm-rag@2.1.0` was published and adopted; its adapter passed 221
+port 18080 (since replaced by Qwen on 18081, below). `najm-rag@2.1.0` was published and adopted; its adapter passed 221
 package tests. The local database needed a pgvector schema repair before all
 428 tools could be indexed. The first full preview matrix passed 4/20 minimum
 selection checks. A trial with 14 general semantic phrases passed 3/20 and was
@@ -19,7 +98,8 @@ and [local setup](docs/tests/local-embeddings.md).
 
 The follow-up Qwen3 Embedding 0.6B trial ranked the primary tool in the top 12
 for 16/20 direct cases using 768 dimensions. Published `najm-rag@2.1.1` adds
-opt-in vector shortening; School now uses that version and Qwen locally. After
+opt-in vector shortening; School now uses that version and Qwen locally
+(llama.cpp, `openai-compatible`, port 18081). After
 reindexing 428 tools, adding explicit teacher-task lookup dependencies, and
 clarifying two grade-tool descriptions, the admin preview passed 12/20 cases.
 Grade report/create requests in several languages and mixed follow-ups still
@@ -30,11 +110,16 @@ The next routing change should be in shared Najm: compare phrase and tool
 description matches together, use a single strongest score per tool instead of
 summing repeated phrases, and preserve lookup dependencies inside the tool cap.
 Keep the 20 current cases held out and add new paraphrases before judging a
-change. Separately prove teacher permission/selected-year behavior and an
-executable review-and-confirm path for attendance or grade writes. A photo of a
-filled grade sheet also needs extraction with a teacher review screen before any
-grades are saved. Until those gates pass, retain a direct dashboard correction
-path for teachers.
+change.
+
+**Out of scope here:** an executable review-and-confirm path for attendance or
+grade writes, and extracting grades from a photo of a filled grade sheet with a
+teacher review screen. Both are feature work, not latency work, and belong in
+their own plan; this plan only benchmarks that writes stay blocked (section
+2.2). Until they exist, retain the direct dashboard correction path for
+teachers. Limited-role selected-year refusals were proven locally in 0.1j of
+the academic-year plan; teacher permission behavior inside routing is still
+unproven (section 2.4).
 
 Scope: School's dashboard assistant, built on `najm-chatbot` and `najm-rag`,
 from sending a question through receiving the completed answer. Preserve answer
@@ -42,12 +127,17 @@ quality and authorization in English, French, Arabic, and Spanish.
 
 ## 1. Decision and order of work
 
-**Start with local llama.cpp embeddings, then the existing chat provider when
-credentials are available. Jev is optional and is not needed for the initial
-tests.** No new paid provider is a prerequisite for routing-only checks.
+**Local llama.cpp embeddings and the configured OpenRouter chat model are both
+in place. Jev is optional and is not needed for the initial tests.** No new
+paid provider is a prerequisite; paid chat runs need a declared budget.
 
-1. Check runtime configuration, embedding connectivity, and routing failures.
-2. Establish an external baseline using the actual streaming chat route.
+1. Re-run the 20 routing cases under the current Qwen instruction and tool
+   descriptions; check runtime configuration, embedding connectivity, the
+   database's pgvector schema, and routing failures. **Done 2026-10-02: 14/20.**
+2. Build the section 4.2 runner and establish an external baseline using the
+   actual streaming chat route. **Runner built; smoke runs on empty and seeded
+   data are done (35/36 completed on seeded data). An acceptance baseline still
+   needs a larger corpus and sample.**
 3. Add shared instrumentation in Najm and establish a controlled internal baseline.
 4. Compare configuration, model, routing, and tool-call improvements separately.
 5. Consider Jev only if measured traffic and avoidable LLM spending justify it.
@@ -58,35 +148,67 @@ The former 1.5-second first-text and 1-second completed-answer targets remain
 aspirations until a baseline supports realistic acceptance thresholds.
 
 The original rewrite changed documentation only. Local read-only routing
-diagnostics and a routing-only runner were added on 2026-09-30. Chat-provider
-tests, instrumentation, and deployment have not started. Shared embedding adapter
-publication, School adoption, and a local routing trial are complete. A local
-database schema repair was required; production schema state remains unknown.
-Execute remaining activities within their subsequently agreed scope and budget.
+diagnostics and a routing-only runner were added on 2026-09-30. Shared embedding
+adapter publication, School adoption, and a local routing trial are complete.
+The chat provider was configured and focused functional chat checks passed
+locally on 2026-10-01/02. The streaming benchmark runner, instrumentation, and
+deployment have not started. A local database schema repair was required;
+production schema state remains unknown. Execute remaining activities within
+their subsequently agreed scope and budget.
 
 ## 2. Verified source findings and runtime unknowns
 
 Reviewed on **2026-09-23** against School's configuration, installed
 `najm-chatbot@2.0.3`, `najm-rag@2.0.3`, and AI SDK declarations. This is a source
-snapshot, not a measured baseline. Recheck root pins before implementation.
+snapshot, not a measured baseline. **Pins as of 2026-10-03: `najm-rag` `2.1.2`,**
+(`najm-chatbot` `2.0.4`, `najm-core` `3.0.2`). The 2.1.x releases added the
+`openai-compatible` adapter and opt-in vector shortening; the router behavior
+in sections 2.2 and 2.4 (error fallback, phrase-score summing, dependency
+expansion, caches, default timeout) has not been re-checked against 2.1.1 and
+must be before it is relied on. Recheck root pins before implementation.
 
 ### 2.1 School configuration
 
-In `packages/server/src/config/index.ts`:
+In `packages/server/src/config/index.ts`, re-read 2026-10-02:
 
-- Ollama embeddings use `embeddinggemma`, 768 dimensions, and
-  `RAG_EMBEDDING_BASE_URL`, defaulting to `http://127.0.0.1:11434`.
+- `RAG_EMBEDDING_PROVIDER` selects `ollama` (default) or `openai-compatible`.
+  The source defaults are still Ollama, `embeddinggemma`, 768 dimensions, and
+  `http://127.0.0.1:11434`. **Local runtimes override them, and differ per
+  workstation:** the original one runs llama.cpp serving `qwen3-embedding`
+  (Qwen3 Embedding 0.6B Q8_0) at port 18081; the second (`C:\Users\pc`) serves
+  the same Q8_0 model from Ollama at `http://127.0.0.1:11434/v1`. Both use
+  `openai-compatible` with `RAG_EMBEDDING_TRUNCATE_DIMENSIONS=true` shortening
+  its 1024 values to 768. Record which one produced each result. For Qwen, School supplies the query instruction
+  "Retrieve the school management tool that fulfills the user request" and
+  an empty document prefix. A query-prefix change alters routing scores without
+  invalidating stored tool vectors; a model, quantization, or document-prefix
+  change requires reindexing.
+- On the original workstation the Qwen server is a manually started process
+  (`scripts/start-local-embeddings.ps1 -Model Qwen3`), not a supervised service.
+  Ollama on the second workstation was already running; whether it starts at
+  login was not checked. On
+  2026-10-01 chat failed in preparation because it had stopped and its model
+  file was missing (academic-year plan 0.1h). Treat embedding-process
+  availability as a latency and failure risk, not only model residency.
 - School's default `RAG_EMBEDDING_TIMEOUT_MS` is **60,000 ms**. The installed
-  RAG package default is 8,000 ms. Query and indexing embedding calls share this
-  timeout; health probes have a separate timeout.
-- Tool routing and knowledge support are enabled. Effective RAG Studio settings
+  RAG package default was 8,000 ms in 2.0.3. Query and indexing embedding calls
+  share this timeout; health probes have a separate timeout.
+- Tool routing and knowledge support are enabled, with explicit lookup
+  dependencies for `attendance_mark`, `grades_get_student_report`,
+  `grades_get_by_student`, and `grades_create`. Effective RAG Studio settings
   can override routing limits and disable knowledge retrieval.
 - Chat allows up to 10 LLM steps and stores conversations in the database.
   Ten is a ceiling, not an observed step count. Interaction logging is disabled.
+  The configured model is OpenRouter / `openai/gpt-oss-120b`.
+- Chat runs in the dashboard's selected academic year. `ChatController` is a
+  REST year consumer in `config/yearScope.ts`; each request validates the year
+  before provider work, and `SchoolChatContextProvider` adds the year and role
+  rules to the system prompt. Both are per-request preparation work.
 - The database schema exports AI settings and chat sessions, but not
   `chatbotInteractionLogsTable`.
-- `compose.production.yml` has no Ollama service. Its absence does not prove an
-  outage: the effective production endpoint and container connectivity are unknown.
+- `compose.production.yml` has no embedding service of either kind. Its absence
+  does not prove an outage: the effective production endpoint and container
+  connectivity are unknown.
 
 ### 2.2 Installed behavior that matters to this plan
 
@@ -109,10 +231,11 @@ In `packages/server/src/config/index.ts`:
   in that preparation path, so successful LLM fallback is not guaranteed.
 - Query embeddings have an in-process LRU cache, default size 256. Knowledge
   context has another cache, size 32. A repeated question can avoid embedding
-  or retrieval even after Ollama has been unloaded.
-- Embedding requests omit `keep_alive`. Ollama documents a five-minute default
-  residency unless its configuration changes this. Cached questions still avoid
-  a cold model call.
+  or retrieval even after the embedding model has been unloaded or stopped.
+- Ollama embedding requests omit `keep_alive`. Ollama documents a five-minute
+  default residency unless its configuration changes this. llama.cpp keeps its
+  model loaded for the life of the server process, so locally the cold case is
+  a process start, not an idle unload. Cached questions still avoid a model call.
 - Knowledge retrieval defaults to five chunks. Document index definitions exist
   in migration 0020; applied indexes and actual query cost remain runtime checks.
 - Tools marked with confirmation metadata are **blocked** by the chat adapter.
@@ -141,7 +264,8 @@ gaps in chat-stream, internal timing, production, and billing evidence.
 ### 2.4 Routing correctness prerequisites before cap tuning
 
 The matching Desktop sources for `najm-rag@2.0.3` and `najm-chatbot@2.0.3`
-were reviewed again on 2026-09-30. Before comparing a smaller tool limit:
+were reviewed again on 2026-09-30; recheck them against the `najm-rag@2.1.2`
+pin. Before comparing a smaller tool limit:
 
 - Evaluate complete operation-plus-lookup coverage. Dependency expansion followed
   by a final slice can remove a required lookup even if the primary tool survives.
@@ -165,14 +289,21 @@ The initial 20-case routing corpus includes English, French, Arabic, Spanish,
 Darija, mixed language, follow-up text, and a topic switch. Its expected tool groups
 are minimum candidate coverage checks, not proof of valid arguments or completed
 school operations. Expand to the section 6 benchmark before making accuracy claims.
+The last result, 12/20 in `routing-final.json`, predates the 2026-10-02 query
+instruction and description changes; re-run all 20 cases (and confirm the tool
+index covers the new count tool and changed descriptions) before treating any
+routing number as current.
 
 ## 3. Test prerequisites and required APIs
 
 | Requirement | Purpose and configuration |
 |---|---|
 | Running School app and test account | Exercise authenticated `/api/chat`; admin access for configuration/debug only where required |
-| Existing chat provider key and exact model ID | Configure through School AI settings; record the custom base URL if applicable |
-| Working Ollama embedding endpoint | Set `RAG_EMBEDDING_BASE_URL`; local Ollama needs no provider API key |
+| Existing chat provider key and exact model ID | **Met on both workstations:** OpenRouter / `openai/gpt-oss-120b`. On the second, the key was saved through `PUT /api/ai-settings` from a local env variable on 2026-10-02. Record the custom base URL if applicable |
+| Seeded test data | **Met on the second workstation (2026-10-02):** `seed:demo` after verifying the synthetic 2026-2027 calendar; 100 students, 946 student attendance rows, 64 grades |
+| Working embedding endpoint | **Met on both workstations** via `RAG_EMBEDDING_PROVIDER=openai-compatible`: llama.cpp Qwen on 18081 (started manually; confirm it runs before each run) or Ollama Qwen at `11434/v1`. Ollama EmbeddingGemma remains the source default; none needs a provider API key locally |
+| pgvector schema on the target database | `vector` extension present and RAG embedding columns typed `vector(768)`; `db:check` does not detect a mismatch |
+| Selected academic year | Fix the year sent with each chat request; it changes tool results and the system prompt |
 | Representative test data and indexed tools | Known answers, valid IDs, and documents for knowledge cases |
 | Request and spend budget | Bound paid calls, including warmups, failures, and retries |
 | TypeSafe key, only for Phase 4 | Proposed server-only `TYPESAFE_API_KEY`; Jev integration is not implemented |
@@ -195,14 +326,20 @@ This phase does not require a new Najm release or interaction-log migration.
    dataset identity, and effective AI/routing settings without secrets.
 2. Confirm the assistant is enabled and the configured model supports the tool
    contract used by the adapter. Setup failures are not slow successful answers.
-3. Probe Ollama **from the application runtime's network context**, checking
-   vector dimensions and model availability. A successful host probe does not
-   establish access from an application container.
-4. Inventory indexed tools and knowledge documents. Record effective limits,
-   dependency rules, knowledge enablement, and error/no-match fallback settings.
-5. Use the admin debug route on a few read-only questions to inspect routing and
+3. Probe the configured embedding endpoint **from the application runtime's
+   network context**, checking provider, vector dimensions, and model
+   availability. A successful host probe does not establish access from an
+   application container.
+4. On the database actually used, confirm the `vector` extension and that the
+   three RAG embedding columns are `vector(768)`. The local database lacked
+   both until the 2026-09-30 repair, and `db:check` did not notice.
+5. Inventory registered and indexed tools and knowledge documents; a tool was
+   added after the 428-tool count (`students_get_student_count`), so recount
+   and confirm the index is current. Record effective limits, dependency rules,
+   knowledge enablement, and error/no-match fallback settings.
+6. Use the admin debug route on a few read-only questions to inspect routing and
    tool calls. Keep these diagnostic runs separate from streaming measurements.
-6. Start locally or in staging. If production inspection is in scope, record its
+7. Start locally or in staging. If production inspection is in scope, record its
    effective endpoint and live revision separately rather than inferring either
    from local configuration or the compose file.
 
@@ -261,8 +398,8 @@ Record these in interaction-log metadata or a documented diagnostic sink:
 
 | Area | Required evidence |
 |---|---|
-| Identity | Request/run/case ID, role, language, provider/model, config/package/dataset versions, history size |
-| Preparation | Settings/history load, total preparation, routing, and knowledge-context durations |
+| Identity | Request/run/case ID, role, language, selected academic year, provider/model, config/package/dataset versions, history size |
+| Preparation | Settings/history load, academic-year validation and School context provider, total preparation, routing, and knowledge-context durations |
 | Embeddings | Purpose, duration, cache hit/miss, attempts, timeout/error for each call |
 | Retrieval | Semantic/tool/document searches, selected counts, routing status, fallback reason, missing dependencies |
 | Generation | First text, each LLM step, finish reason, retries when observable, `steps_count` |
@@ -306,19 +443,27 @@ external baseline while the releases are pending.
 
 ## 6. Benchmark contract
 
-Create these files when implementation begins:
+Files (created 2026-10-02 unless noted):
 
-- `scripts/chatbot-benchmark.ts`: streaming runner, request limits, and budget controls.
-- `datasets/chatbot-latency/questions.json`: anonymized cases and expected outcomes.
-- `docs/tests/chatbot-latency.md`: setup, execution, cache controls, and scoring.
+- `scripts/chatbot-benchmark.mjs` with `scripts/chatbot-stream.mjs` (parser,
+  tested in `scripts/tests/chatbot-stream.test.mjs`): streaming runner, request
+  limits, and budget controls. `.mjs` follows the other `scripts/` runners.
+  Still to add: interleaved baseline/candidate runs, declared concurrency above
+  one, and non-admin accounts.
+- `datasets/chatbot-latency/questions.json`: currently a 12-case smoke set;
+  grow it to the section 6.1 corpus.
+- `docs/tests/chatbot-latency.md`: setup, execution, and scoring; cache
+  controls arrive with section 6.2 work.
 - `docs/evidence/chatbot-latency/`: sanitized raw samples and comparison reports.
 
 ### 6.1 Corpus and correctness
 
 Start with 40 questions, 10 per language: small talk, grounded knowledge,
 single-tool reads, multi-tool reads, and attempted writes that must remain blocked.
-Each case specifies role, fixture IDs, expected tools/alternatives, important
-arguments, answer facts, and refusal behavior. Human-review quality in every
+Each case specifies role, selected academic year, fixture IDs, expected
+tools/alternatives, important arguments, answer facts, and refusal behavior.
+Include count questions: list-based counting took 71–79 s and gave wrong totals
+before the aggregate tool existed. Human-review quality in every
 language; a fast incorrect answer fails.
 
 Add controlled follow-ups, ambiguity, missing records, authorization denials, and
@@ -334,12 +479,13 @@ Write cases validate the existing block, not a hypothetical confirmation flow.
 | Condition | Setup and evidence |
 |---|---|
 | Application cache hit | Pre-run the exact input/history and verify the observed hit |
-| Empty application caches, warm Ollama | Clear both caches through supported test controls or restart the isolated app; verify an actual embedding call without a model reload |
-| Empty application caches, cold Ollama | Empty both caches and unload the isolated model; verify a real call and reload |
+| Empty application caches, warm embedding model | Clear both caches through supported test controls or restart the isolated app; verify an actual embedding call without a model reload |
+| Empty application caches, cold embedding model | Empty both caches, then unload the isolated Ollama model or restart the isolated llama.cpp process; verify a real call and reload |
+| Embedding process down | Stop the isolated llama.cpp process and measure the outcome; this is the failure seen on 2026-10-01 |
 | Concurrent traffic | Declare client concurrency; report queueing, rate limits, errors, and results separately |
 | Failure paths | Exercise refused connections, hanging embedding requests, provider failures, and client cancellation in isolation |
 
-Unloading Ollama alone does not make a repeated query cold. Restarting the app can
+Unloading or restarting the embedding model alone does not make a repeated query cold. Restarting the app can
 also introduce app/database cold starts; warm or measure them separately. Do not
 unload a shared production model to benchmark. Count warmups toward spend and
 record provider prompt caching separately from application RAG caches.
@@ -369,10 +515,13 @@ that merely hide a weaker language or fall within measurement variability.
 
 Apply one change per experiment and retain before/after evidence.
 
-1. **Embedding availability/residency.** Repair the endpoint where needed. Evaluate
-   `OLLAMA_KEEP_ALIVE=-1` on the Ollama server after checking memory capacity.
-   Verify the running process received it and residency works; the setting does
-   not itself preload a model after restart.
+1. **Embedding availability/residency.** Repair the endpoint where needed. For
+   llama.cpp, run the embedding server under supervision (a startup service or
+   container with restart and a health check) so a stopped process is restarted
+   rather than discovered by a failed chat; check its memory footprint first.
+   For Ollama, evaluate `OLLAMA_KEEP_ALIVE=-1` after checking memory capacity,
+   and verify the running process received it; the setting does not itself
+   preload a model after restart.
 2. **Bound query waits.** Choose a budget from warm/cold timings and user goals.
    Test tool/document indexing before reducing the shared timeout. If indexing
    needs longer, add separate query/indexing timeouts in a published `najm-rag` release.
@@ -385,7 +534,8 @@ Apply one change per experiment and retain before/after evidence.
 4. **Tune tool selection.** Compare the current cap with a smaller candidate such
    as six. Check lookup dependencies, multi-tool tasks, and all languages. Reject
    savings that cause extra retries or incomplete answers.
-5. **Compare chat models.** Start with the current model and one cheaper tool-capable
+5. **Compare chat models.** Start with the current model (OpenRouter /
+   `openai/gpt-oss-120b`) and one cheaper tool-capable
    model available from the same provider. Verify exact IDs, prices, availability,
    adapter compatibility, and caching at test time. Hold routing/history/data
    constant. Add providers only when justified. Evaluate local chat models against
@@ -549,10 +699,18 @@ approval actually required by the execution scope.
 
 School's published package pins and live runtime are authoritative. Per AGENTS.md,
 inspect matching Desktop package sources as read-only references; do not read
-Najm internals from `node_modules` or make School consume the Desktop checkouts:
+Najm internals from `node_modules` or make School consume the Desktop checkouts.
+**Source location unresolved (2026-10-02):** AGENTS.md names
+`C:\Users\hdevlop\Desktop\najm`, the paths below assume `../najm`, and neither
+exists on the current machine (`C:\Users\pc\Desktop`). Section 2 cannot be
+re-verified until the Najm checkout is located or cloned at the matching tag.
 
 - `package.json`, `bun.lock`: pins and resolved dependencies.
 - `packages/server/src/config/index.ts`: embedding/chatbot policy.
+- `packages/server/src/modules/chat/SchoolChatContextProvider.ts` and
+  `config/yearScope.ts`: per-request year validation and prompt context.
+- `scripts/start-local-embeddings.ps1`, `docs/tests/local-embeddings.md`: local
+  llama.cpp embedding server.
 - `packages/server/src/database/schema/index.ts`: exported tables.
 - `apps/dashboard/src/shared/DashboardShell/index.tsx`: chat endpoint integration.
 - `compose.production.yml`: declared services, not effective production settings.
@@ -565,6 +723,8 @@ Najm internals from `node_modules` or make School consume the Desktop checkouts:
 External references:
 
 - [Ollama FAQ](https://docs.ollama.com/faq): residency and server configuration.
+- [Qwen3 Embedding 0.6B GGUF](https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF):
+  the local embedding model.
 - [TypeSafe: Introducing System One Models and Jev](https://typesafe.ai/blog/introducing-system-one-models-and-jev): capabilities, advertised pricing, and timing caveats.
 - [TypeSafe documentation](https://docs.typesafe.ai/): verify the current API,
   model versions, and error contract before Phase 4. The API reference was not
