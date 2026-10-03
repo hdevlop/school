@@ -112,6 +112,9 @@ bun --env-file=apps/dashboard/.env.local scripts/chatbot-benchmark.mjs \
   --output=docs/evidence/chatbot-latency/model-<name>-YYYYMMDD.json
 ```
 
+To compare two models that are neither the saved one, add
+`--baseline-model=<id>`. The saved model is still restored at the end.
+
 The summary holds one block per variant under `summary.comparison`. Do not run
 it while someone is using the assistant: the saved model changes for everyone
 during the run.

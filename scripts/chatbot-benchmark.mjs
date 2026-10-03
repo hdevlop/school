@@ -60,11 +60,17 @@ const keepText = args.includes('--keep-text');
 // One request that may run without a saved key: proves body, year and stream
 // framing (the provider then refuses inside the stream). Not a latency sample.
 const transportProbe = args.includes('--transport-probe');
-// Interleaves the saved model with a candidate, request by request, on the same
-// provider and key, then restores the saved model.
+// Interleaves a baseline (the saved model unless --baseline-model is given) with
+// a candidate, request by request, on the same provider and key, then restores
+// the saved model.
 const compareModel = option('compare-model', '');
-if (compareModel && (transportProbe || !/^[\w.:/-]{1,120}$/.test(compareModel))) {
+const baselineOverride = option('baseline-model', '');
+const modelId = /^[\w.:/-]{1,120}$/;
+if (compareModel && (transportProbe || !modelId.test(compareModel))) {
   throw new Error('Use --compare-model=<provider model id> without --transport-probe');
+}
+if (baselineOverride && (!compareModel || !modelId.test(baselineOverride))) {
+  throw new Error('Use --baseline-model=<provider model id> together with --compare-model');
 }
 const selected = corpus.cases.slice(0, transportProbe ? 1 : limit);
 const planned = transportProbe ? 1 : selected.length * repeat * (compareModel ? 2 : 1);
@@ -403,16 +409,17 @@ try {
     throw new Error('Assistant is disabled or has no saved provider key; no chat requests were sent');
   }
 
-  const baselineModel = settings.model;
-  report.comparison = compareModel ? { baseline: baselineModel, candidate: compareModel } : null;
-  activeModel = baselineModel;
+  const savedModel = settings.model;
+  const baselineModel = baselineOverride || savedModel;
+  report.comparison = compareModel ? { saved: savedModel, baseline: baselineModel, candidate: compareModel } : null;
+  activeModel = savedModel;
   try {
     await runAll(baselineModel);
   } finally {
     // Always put the saved model back, even after a failure.
-    if (compareModel && activeModel !== baselineModel) {
-      await setModel(baselineModel).catch(() => {
-        report.restoreFailed = `AI settings model left at ${activeModel}; set it back to ${baselineModel}`;
+    if (compareModel && activeModel !== savedModel) {
+      await setModel(savedModel).catch(() => {
+        report.restoreFailed = `AI settings model left at ${activeModel}; set it back to ${savedModel}`;
       });
     }
   }

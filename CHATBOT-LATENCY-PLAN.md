@@ -24,6 +24,11 @@ Crusoe ($0.05 / $0.25, about 183 tokens/s) would be a middle option. It needs
 an OpenRouter account preference, because School cannot send provider routing
 options yet.
 
+`gpt-oss-20b:nitro` was rejected ([review](docs/evidence/chatbot-latency/model-20b-nitro-20261003.md)).
+It answered 10/12: on both write requests it retried an invalid student search
+until `maxSteps` and returned an empty answer. It was not faster than
+`120b:nitro` and used 4× the input tokens.
+
 2026-10-03, internal baseline ([review](docs/evidence/chatbot-latency/stream-diagnostics-20261003.md)):
 School now sends each chat's diagnostics to an in-memory, admin-only log at
 `GET /api/chat-diagnostics`, which holds no question text. The interaction log
