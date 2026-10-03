@@ -34,7 +34,7 @@ export class ExamController {
 
   @Get('/today')
   @CanList()
-  @McpTool({ description: "List today's exams", readOnly: true })
+  @McpTool({ description: "List today's exams. Examens d’aujourd’hui. امتحانات اليوم.", readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getTodayExams() {
     return this.examService.getTodayExams();
@@ -42,7 +42,7 @@ export class ExamController {
 
   @Get('/upcoming')
   @CanList()
-  @McpTool({ description: 'List upcoming exams', readOnly: true })
+  @McpTool({ description: 'List upcoming exams. Prochains examens. الامتحانات القادمة.', readOnly: true })
   @ResMsg('exams.success.retrieved')
   async getUpcomingExams() {
     return this.examService.getUpcomingExams();

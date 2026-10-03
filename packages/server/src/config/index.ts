@@ -329,6 +329,15 @@ export const ragConfig = (): NajmPlugin => {
         grades_get_student_report: ['search_search_students', 'students_get_students'],
         grades_get_by_student: ['search_search_students', 'students_get_students'],
         grades_create: ['search_search_students', 'students_get_students', 'assessments_get_all'],
+        attendance_get_by_student: ['search_search_students', 'students_get_students'],
+        // "Yesterday" or "last Monday" routes like "today"; the date tool answers it.
+        attendance_get_today_students: ['attendance_get_by_date'],
+        attendance_get_today: ['attendance_get_by_date'],
+        fees_get_by_student: ['search_search_students', 'students_get_students'],
+        payments_get_by_student: ['search_search_students', 'students_get_students'],
+        students_get_student_parents: ['search_search_students', 'students_get_students'],
+        'student-routes_get_by_student': ['search_search_students', 'students_get_students'],
+        'student-profile_get_transport': ['search_search_students', 'students_get_students'],
       },
     },
     // Darija words become MSA before tool routing embeds a message; the model

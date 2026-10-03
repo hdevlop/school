@@ -15,7 +15,7 @@ export class SectionController {
 
   @Get()
   @CanList()
-  @McpTool({ description: "List the selected year's sections", readOnly: true })
+  @McpTool({ description: "List the selected year's sections. Liste des sections, par exemple 2B. لائحة الأقسام مثل 2B.", readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getSections() {
     return this.sectionService.getAll();
@@ -33,7 +33,7 @@ export class SectionController {
   @Get('/:id/teachers')
   @isAdmin()
   @Validate({ params: sectionIdParam })
-  @McpTool({ description: 'Get teachers assigned to a section', readOnly: true })
+  @McpTool({ description: 'Get teachers assigned to a section. Enseignants d’une section. أساتذة قسم معين.', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getTeachers(@Params('id') id: string) {
     return this.sectionService.getTeachers(id);
@@ -51,7 +51,7 @@ export class SectionController {
   @Get('/:id/students')
   @CanRead()
   @Validate({ params: sectionIdParam })
-  @McpTool({ description: 'Get students in a section', readOnly: true })
+  @McpTool({ description: 'Get students in a section. Élèves d’une section. تلاميذ قسم معين.', readOnly: true })
   @ResMsg('sections.success.retrieved')
   async getStudents(@Params('id') id: string) {
     return this.sectionService.getStudents(id);

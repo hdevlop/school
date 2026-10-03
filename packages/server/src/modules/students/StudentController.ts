@@ -35,7 +35,7 @@ export class StudentController {
 
   @Get('/count')
   @CanList()
-  @McpTool({ description: 'Get the exact total number of students enrolled in the selected academic year, limited to records this account can read. Nombre total d’élèves pour l’année scolaire sélectionnée. العدد الإجمالي للتلاميذ في السنة الدراسية المحددة. شحال من تلميذ مسجل هاد العام.', readOnly: true })
+  @McpTool({ description: 'Get the exact total number of students enrolled in the selected academic year, limited to records this account can read. Nombre total d’élèves pour l’année scolaire sélectionnée. العدد الإجمالي للتلاميذ في السنة الدراسية المحددة.', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getStudentCount() {
     return this.studentService.getCount();
@@ -53,7 +53,7 @@ export class StudentController {
   @Get('/:id/parents')
   @CanRead()
   @Validate({ params: studentIdParam })
-  @McpTool({ description: 'Get parents linked to a student', readOnly: true })
+  @McpTool({ description: 'Get parents linked to a student. Parents d’un élève et leur téléphone. أولياء أمور التلميذ، الأب والأم، ورقم الهاتف.', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getStudentParents(@Params('id') id: string) {
     return this.studentService.getParents(id);

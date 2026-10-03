@@ -42,7 +42,7 @@ export class PaymentController {
 
   @Get('/today')
   @isFinancial()
-  @McpTool({ description: "List today's payments with summary", readOnly: true })
+  @McpTool({ description: "List today's payments with summary. Paiements reçus aujourd’hui. المدفوعات اليوم.", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getToday() {
     return this.paymentService.getToday();
@@ -50,7 +50,7 @@ export class PaymentController {
 
   @Get('/this-month')
   @isFinancial()
-  @McpTool({ description: "List this month's payments with summary", readOnly: true })
+  @McpTool({ description: "List this month's payments with summary. Paiements et recettes de ce mois. المدفوعات والمداخيل هذا الشهر.", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getThisMonth() {
     return this.paymentService.getThisMonth();
@@ -138,7 +138,7 @@ export class PaymentController {
   @Get('/student/:studentId')
   @isFinancial()
   @Validate({ params: studentIdParam })
-  @McpTool({ description: 'Get payments for a student by student ID', readOnly: true })
+  @McpTool({ description: 'Get payments for a student by student ID. Paiements d’un élève. مدفوعات تلميذ.', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.paymentService.getByStudent(studentId);

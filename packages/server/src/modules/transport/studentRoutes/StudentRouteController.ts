@@ -41,7 +41,7 @@ export class StudentRouteController {
   @Get('/student/:studentId')
   @isAdmin()
   @Validate({ params: studentIdParam })
-  @McpTool({ description: 'Get student route by student', readOnly: true })
+  @McpTool({ description: 'Get student route by student. The bus and transport route of one student. Bus et trajet d’un élève. حافلة ومسار نقل التلميذ.', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.studentRouteService.getByStudentId(studentId);

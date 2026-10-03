@@ -7,7 +7,7 @@ const option = (name, fallback) => {
   const entry = args.find((value) => value.startsWith(`--${name}=`));
   return entry ? entry.slice(name.length + 3) : fallback;
 };
-const casesPath = resolve('datasets/chatbot-latency/routing-cases.json');
+const casesPath = resolve(option('cases', 'datasets/chatbot-latency/routing-cases.json'));
 const corpusText = await Bun.file(casesPath).text();
 const corpus = JSON.parse(corpusText);
 const ids = new Set();

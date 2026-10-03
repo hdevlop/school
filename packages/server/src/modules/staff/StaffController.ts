@@ -32,7 +32,7 @@ export class StaffController {
 
   @Get('/count')
   @isAdmin()
-  @McpTool({ description: 'Get staff count', readOnly: true })
+  @McpTool({ description: 'Get staff count. Nombre total du personnel. العدد الإجمالي للموظفين.', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getStaffCount() {
     return this.staffService.getAll().then((rows) => ({ count: rows.length }));

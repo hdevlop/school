@@ -111,10 +111,43 @@ const WORDS: Record<string, string> = {
   خلصو: 'دفعوا',
   خلصات: 'دفعت',
   ماخلصش: 'لم يدفع',
+  خلصوش: 'يدفعوا',
+  ماخلصوش: 'لم يدفعوا',
+  كيخلص: 'يدفع',
+  كيخلصو: 'يدفعون',
+  خلصش: 'يدفع',
   فلوس: 'مال',
   الفلوس: 'المال',
+  // Coming to school
+  جا: 'حضر',
+  جاو: 'حضروا',
+  جات: 'حضرت',
+  جاش: 'يحضر',
+  ماجاش: 'لم يحضر',
+  ماجاوش: 'لم يحضروا',
+  // Family
+  بابا: 'اب',
+  باباه: 'ابوه',
+  باباها: 'ابوها',
+  ماما: 'ام',
+  ماماه: 'امه',
+  ماماها: 'امها',
+  الواليد: 'الاب',
+  الواليده: 'الام',
+  تيليفون: 'هاتف',
+  التيليفون: 'الهاتف',
+  // Teaching and transport
+  كيقري: 'يدرس',
+  كيقريو: 'يدرسون',
+  كيقرا: 'يدرس',
+  كيقراو: 'يدرسون',
+  كيركب: 'يركب',
+  كيركبو: 'يركبون',
   كار: 'حافله',
   الكار: 'الحافله',
+  طوبيس: 'حافله',
+  الطوبيس: 'الحافله',
+  طوبيسات: 'حافلات',
 };
 
 // Shadda and short vowels; a message rarely has them, a lookup ignores them.
@@ -137,7 +170,18 @@ function rewriteWord(word: string): string {
   return word;
 }
 
+// Two-word forms, applied before single words. "شحال من تلميذ" reads as
+// "كم عدد تلميذ": "كم من" is not the MSA idiom, and the count tools match
+// "كم عدد". Darija negation wraps a verb, "ما جاش"; joined, it is one key
+// (ماجاش → لم يحضر) instead of "ما" plus a present-tense verb.
+const PHRASES: Array<[RegExp, (match: string, ...groups: string[]) => string]> = [
+  [/(^|[^ء-ي])(و?)شحال من(?=$|[^ء-ي])/g, (_m, before, and) => `${before}${and}كم عدد`],
+  [/(^|[^ء-ي])ما ([ء-ي]+ش)(?=$|[^ء-ي])/g,
+    (match, before, verb) => (`ما${verb}` in WORDS ? `${before}ما${verb}` : match)],
+];
+
 /** najm-rag `rewriteRoutingQuery`: Darija words to MSA; other text unchanged. */
 export function rewriteDarijaForRouting(normalized: string): string {
-  return normalized.replace(ARABIC_WORD, rewriteWord).replace(/ {2,}/g, ' ').trim();
+  const phrased = PHRASES.reduce((text, [pattern, replace]) => text.replace(pattern, replace), normalized);
+  return phrased.replace(ARABIC_WORD, rewriteWord).replace(/ {2,}/g, ' ').trim();
 }

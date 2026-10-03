@@ -51,7 +51,7 @@ export class SearchController {
   @Get('/parents')
   @CanList(Parent)
   @Validate({ query: searchQueryDto })
-  @McpTool({ description: 'Search parents by name, CIN, email, or phone', readOnly: true })
+  @McpTool({ description: 'Search parents by name, CIN, email, or phone. Rechercher un parent par son nom. البحث عن ولي أمر بالاسم.', readOnly: true })
   @ResMsg('search.success')
   async searchParents(@Query('q') q: string, @Query('limit') limit?: number) {
     return this.searchService.searchParents(q, limit);

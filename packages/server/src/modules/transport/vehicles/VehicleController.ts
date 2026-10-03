@@ -22,7 +22,7 @@ export class VehicleController {
 
   @Get()
   @canAccessAllVehicles()
-  @McpTool({ description: 'List all vehicles', readOnly: true })
+  @McpTool({ description: 'List all vehicles. School buses and other vehicles. Liste des véhicules et bus scolaires. لائحة المركبات والحافلات المدرسية.', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
   async getVehicles() {
     return this.vehicleService.getAll();
@@ -30,7 +30,7 @@ export class VehicleController {
 
   @Get('/count')
   @isAdmin()
-  @McpTool({ description: 'Get vehicle count', readOnly: true })
+  @McpTool({ description: 'Get vehicle count. Number of school buses and other vehicles. Nombre de véhicules et bus scolaires. عدد المركبات والحافلات المدرسية.', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
   async getVehiclesCount() {
     return this.vehicleService.getCount();

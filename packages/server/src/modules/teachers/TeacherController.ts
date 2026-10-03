@@ -34,7 +34,7 @@ export class TeacherController {
 
   @Get()
   @CanList()
-  @McpTool({ description: 'List all teachers', readOnly: true })
+  @McpTool({ description: 'List all teachers. Liste des enseignants. لائحة الأساتذة.', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getTeachers() {
     return this.teacherService.getAll();
@@ -42,7 +42,7 @@ export class TeacherController {
 
   @Get('/count')
   @CanList()
-  @McpTool({ description: 'Get the exact total number of teachers, limited to records this account can read. Nombre total d’enseignants de l’école. العدد الإجمالي للأساتذة في المدرسة. شحال من أستاذ كاين فالمدرسة.', readOnly: true })
+  @McpTool({ description: 'Get the exact total number of teachers, limited to records this account can read. Nombre total d’enseignants de l’école. العدد الإجمالي للأساتذة في المدرسة.', readOnly: true })
   @ResMsg('teachers.success.retrieved')
   async getTeacherCount() {
     return this.teacherService.getOwnedCount();

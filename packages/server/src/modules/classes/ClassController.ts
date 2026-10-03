@@ -15,7 +15,7 @@ export class ClassController {
 
   @Get()
   @CanList()
-  @McpTool({ description: "List the selected year's classes", readOnly: true })
+  @McpTool({ description: "List the selected year's classes. Liste des classes et niveaux de l’école. لائحة المستويات والأقسام في المدرسة.", readOnly: true })
   @ResMsg('classes.success.retrieved')
   async getClasses() {
     return this.classService.getAll();

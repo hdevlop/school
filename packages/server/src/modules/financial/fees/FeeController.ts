@@ -38,7 +38,7 @@ export class FeeController {
 
   @Get('/outstanding')
   @isFinancial()
-  @McpTool({ description: 'List students owing fees of any school year, with every year summed', readOnly: true })
+  @McpTool({ description: 'List students owing fees of any school year, with every year summed. Élèves qui doivent encore payer. التلاميذ الذين لم يدفعوا الرسوم بعد.', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOutstanding() {
     return this.feeService.getOutstanding();
@@ -46,7 +46,7 @@ export class FeeController {
 
   @Get('/overdue')
   @isFinancial()
-  @McpTool({ description: 'List all overdue fees with student info', readOnly: true })
+  @McpTool({ description: 'List all overdue fees with student info. Frais impayés en retard. الرسوم المتأخرة غير المدفوعة.', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOverdue() {
     return this.feeService.getOverdue();
@@ -83,7 +83,7 @@ export class FeeController {
   @Get('/student/:studentId')
   @isFinancial()
   @Validate({ params: studentIdParam })
-  @McpTool({ description: 'Get fees for a student by student ID', readOnly: true })
+  @McpTool({ description: 'Get fees for a student by student ID. Frais d’un élève. رسوم تلميذ.', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.feeService.getByStudent(studentId);

@@ -68,7 +68,7 @@ export class AttendanceController {
 
   @Post('/mcp/today/students')
   @CanList()
-  @McpTool({ description: "List today's student attendance records", readOnly: true })
+  @McpTool({ description: "List today's student attendance records. Présences et absences des élèves aujourd'hui. حضور وغياب التلاميذ اليوم.", readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getTodayStudents() {
     return this.attendanceService.getToday('student');
@@ -93,7 +93,7 @@ export class AttendanceController {
   @Post('/mcp/date')
   @CanList()
   @Validate({ body: attendanceDateFilterDto })
-  @McpTool({ description: 'Get attendance records for a specific date', readOnly: true })
+  @McpTool({ description: 'Get attendance records for a specific date. Présences et absences à une date donnée, par exemple hier. الحضور والغياب في تاريخ معين، مثل أمس.', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getByDate(@Body() body: AttendanceDateFilterDto) {
     return this.attendanceService.getByDate(body.date, body.type);
@@ -102,7 +102,7 @@ export class AttendanceController {
   @Get('/section/:sectionId')
   @CanList()
   @Validate({ params: sectionIdParam })
-  @McpTool({ description: 'Get attendance records for a section', readOnly: true })
+  @McpTool({ description: 'Get attendance records for a section. Présences d’une section, par exemple 2B. حضور قسم معين مثل 2B.', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getBySection(@Params('sectionId') sectionId: string) {
     return this.attendanceService.getAll({ sectionId });
@@ -111,7 +111,7 @@ export class AttendanceController {
   @Get('/student/:studentId')
   @CanList()
   @Validate({ params: studentIdParam })
-  @McpTool({ description: 'Get attendance records for a student', readOnly: true })
+  @McpTool({ description: 'Get attendance records for a student. Présences et absences d’un élève. حضور وغياب تلميذ.', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getByStudent(@Params('studentId') studentId: string) {
     return this.attendanceService.getAll({ studentId });

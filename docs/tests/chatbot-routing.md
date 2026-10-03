@@ -30,6 +30,15 @@ The default output is `docs/evidence/chatbot-latency/routing-preflight.json` and
 replaced on rerun. Use a different output path to preserve comparisons. Nonzero
 exit means blocked prerequisites or observed routing misses; inspect `outcome`.
 `--validate` checks fixture structure without making network requests.
+`--cases=<file>` reads another fixture instead of
+`datasets/chatbot-latency/routing-cases.json`;
+`datasets/chatbot-latency/routing-darija-fr.json` holds 31 Darija and French
+questions on absences, payments, fees, timetables, parents and transport.
+
+Each run signs in once, and so does each benchmark run. Sign-in is rate
+limited (by default 8 attempts per 10 minutes: `NAJM_AUTH_LOGIN_RATE_LIMIT`,
+`NAJM_AUTH_LOGIN_RATE_WINDOW`); several runs in a row can hit it and
+report `HTTP_429` until the window passes.
 
 ## What is checked
 

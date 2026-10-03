@@ -70,7 +70,7 @@ export class AnnouncementController {
 
   @Get('/recent')
   @CanList()
-  @McpTool({ description: 'List recent announcements', readOnly: true })
+  @McpTool({ description: 'List recent announcements. Dernières annonces. آخر الإعلانات.', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getRecent() {
     return this.announcementService.getRecent();

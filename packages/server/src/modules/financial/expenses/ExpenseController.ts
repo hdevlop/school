@@ -40,7 +40,7 @@ export class ExpenseController {
 
   @Get('/this-month')
   @isFinancial()
-  @McpTool({ description: "List this month's paid expenses with summary", readOnly: true })
+  @McpTool({ description: "List this month's paid expenses with summary. Dépenses de ce mois. مصاريف هذا الشهر.", readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getThisMonth() {
     return this.expenseService.getThisMonth();
