@@ -27,6 +27,7 @@ export * from './announcements';
 export * from './events';
 export * from './dashboard';
 export * from './health';
+export * from './chat';
 export * from './behaviorRewards';
 
 export * from './transport/drivers';

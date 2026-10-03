@@ -23,6 +23,7 @@ import { auth, isAuth, isAdmin } from '../auth';
 import { schoolMcpYearHooks } from '../modules/academicYears/requestYear';
 import { yearScopedModules } from './yearScope';
 import { SchoolChatContextProvider } from '../modules/chat/SchoolChatContextProvider';
+import { chatDiagnosticsLog } from '../modules/chat/ChatDiagnosticsLog';
 
 export const guardConfig = () => guards({ default: [isAuth()] });
 
@@ -343,6 +344,10 @@ export const chatbotConfig = () =>
     // tool executes; School's tools are database reads well under this.
     streamTimeout: { chunkMs: 30_000 },
     conversationStore: 'db',
+    // The interaction log table would store questions and tool arguments, and
+    // School has set no retention rule for them, so it stays off. Diagnostics
+    // carry timings and outcomes only; see /api/chat-diagnostics.
+    chatLogging: { enabled: false, onDiagnostics: chatDiagnosticsLog.record },
   });
 
 export const studioAssistantConfig = () => studioAssistant();

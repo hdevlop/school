@@ -85,7 +85,7 @@ const report = {
     'First byte is not first answer text; firstTextMs is the first non-empty text-delta.',
     'Small samples are smoke coverage, not p95 estimates; cache and Ollama state are not controlled.',
     'Admin account only; teacher, parent and student behavior is not measured.',
-    'No internal stage timings until Phase 1 instrumentation; usage is whatever the stream reports.',
+    'Server timings come from najm-chatbot diagnostics (>= 2.0.5) matched by x-request-id; modelAndStreamMs is derived, not measured.',
   ],
   requests: [],
   samples: [],
@@ -137,6 +137,30 @@ async function request(path, body) {
   }
 }
 
+// Server-side diagnostics for one chat request, matched by the x-request-id it
+// was sent with. 204 means not recorded yet: the record lands after the save.
+async function serverDiagnostics(requestId) {
+  const url = new URL(`/api/chat-diagnostics/${encodeURIComponent(requestId)}`, base.origin);
+  for (let attempt = 0; attempt < 10; attempt++) {
+    try {
+      const response = await fetch(url, {
+        headers: { authorization: `Bearer ${token}` },
+        redirect: 'error',
+        signal: AbortSignal.timeout(10000),
+      });
+      if (response.status === 200) {
+        const json = await response.json();
+        return { diagnostics: json.data ?? json };
+      }
+      if (response.status !== 204) return { error: `HTTP_${response.status}` };
+    } catch (error) {
+      return { error: error.name === 'TimeoutError' ? 'timeout' : 'request_failed' };
+    }
+    await Bun.sleep(200);
+  }
+  return { error: 'not_recorded' };
+}
+
 async function chat(item, repetition) {
   const sessionId = `bench-${runId}-${item.id}-${repetition}`;
   const url = new URL('/api/chat', base.origin);
@@ -144,14 +168,18 @@ async function chat(item, repetition) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   const parser = createUiStreamParser();
-  const sample = { id: item.id, language: item.language, kind: item.kind, repetition, sessionId };
+  const sample = { id: item.id, language: item.language, kind: item.kind, repetition, sessionId, requestId: sessionId };
   const start = performance.now();
   const since = () => Math.round(performance.now() - start);
   let streamEnd = null;
   try {
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${token}` },
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${token}`,
+        'x-request-id': sessionId,
+      },
       body: JSON.stringify({
         id: sessionId,
         trigger: 'submit-message',
@@ -198,24 +226,33 @@ async function chat(item, repetition) {
     : parsed.finishMs === null ? 'incomplete'
     : parsed.text.trim() === '' ? 'empty_answer'
     : 'completed';
-  sample.checks = score(item, parsed);
+  const server = await serverDiagnostics(sessionId);
+  sample.server = server.diagnostics ?? null;
+  if (server.error) sample.serverDiagnosticsError = server.error;
+  sample.checks = score(item, parsed, sample.server);
   return sample;
 }
 
 /** Automatic checks only; answer quality still needs human review per language. */
-function score(item, parsed) {
+function score(item, parsed, server) {
   const called = new Set(parsed.tools.map((tool) => tool.name).filter(Boolean));
   const missingGroups = (item.expectedToolGroups ?? [])
     .filter((group) => !group.some((name) => called.has(name)));
-  const forbiddenOutputs = parsed.tools
-    .filter((tool) => item.forbiddenSuccessfulTools?.includes(tool.name) && tool.outcome === 'output')
-    .map((tool) => tool.name);
+  const forbidden = (name) => item.forbiddenSuccessfulTools?.includes(name) ?? false;
+  // The server knows whether a tool ran or was blocked by the read-only adapter;
+  // the stream shows both as an output event.
+  const forbiddenOutputs = server
+    ? server.tools.filter((tool) => forbidden(tool.name) && tool.outcome === 'executed').map((tool) => tool.name)
+    : parsed.tools.filter((tool) => forbidden(tool.name) && tool.outcome === 'output').map((tool) => tool.name);
   const lowerText = parsed.text.toLowerCase();
   const missingFacts = (item.answerFacts ?? []).filter((fact) => !lowerText.includes(fact.toLowerCase()));
   return {
     missingToolGroups: missingGroups,
-    // An output event may still carry the adapter's "blocked" result: review, do not assume a write.
+    // Without server diagnostics an output event may still be the adapter's
+    // "blocked" result: review, do not assume a write.
     forbiddenToolOutputs: forbiddenOutputs,
+    blockedTools: server ? server.tools.filter((tool) => tool.outcome === 'blocked').map((tool) => tool.name) : null,
+    forbiddenCheckSource: server ? 'server' : 'stream',
     missingFacts,
     passed: missingGroups.length === 0 && forbiddenOutputs.length === 0 && missingFacts.length === 0,
   };
@@ -240,6 +277,7 @@ function summarize(samples) {
   return {
     requests: samples.length,
     byOutcome,
+    server: serverSummary(completed),
     usage: {
       requestsWithUsage: withUsage.length,
       promptTokens: sum('promptTokens'),
@@ -253,6 +291,43 @@ function summarize(samples) {
     completedByKind: groups('kind'),
     completedByLanguage: groups('language'),
     note: 'Failures and timeouts are counted in byOutcome and excluded only from the completed timing rows.',
+  };
+}
+
+/** Where completed answers spent their time, from the server's own clock. */
+function serverSummary(completed) {
+  const rows = completed.filter((sample) => sample.server);
+  const toolMs = (server) => server.tools.reduce((total, tool) => total + tool.durationMs, 0);
+  const derived = rows.map((sample) => {
+    const { spans, marks } = sample.server;
+    const beforeModel = (spans.settingsMs ?? 0) + (spans.historyMs ?? 0) + (spans.prepareMs ?? 0);
+    return {
+      ...spans,
+      serverFirstTextMs: marks.firstTextMs,
+      serverFinishMs: marks.finishMs,
+      toolMs: toolMs(sample.server),
+      // Provider time plus SDK streaming: whatever the finish mark holds beyond
+      // preparation and tool execution.
+      modelAndStreamMs: marks.finishMs === null ? null : marks.finishMs - beforeModel - toolMs(sample.server),
+      steps: sample.server.steps.length,
+      // Local transport, Next.js and stream parsing between server and client.
+      clientOverheadFirstTextMs: sample.firstTextMs === null || marks.firstTextMs === null
+        ? null : sample.firstTextMs - marks.firstTextMs,
+    };
+  });
+  const keys = ['settingsMs', 'historyMs', 'routingMs', 'contextMs', 'prepareMs', 'persistenceMs',
+    'toolMs', 'modelAndStreamMs', 'serverFirstTextMs', 'serverFinishMs', 'clientOverheadFirstTextMs', 'steps'];
+  const toolOutcomes = {};
+  for (const sample of rows) {
+    for (const tool of sample.server.tools) toolOutcomes[tool.outcome] = (toolOutcomes[tool.outcome] ?? 0) + 1;
+  }
+  return {
+    n: rows.length,
+    missing: completed.length - rows.length,
+    p50: Object.fromEntries(keys.map((key) => [key, percentile(derived.map((row) => row[key]), 50)])),
+    p95: Object.fromEntries(keys.map((key) => [key, percentile(derived.map((row) => row[key]), 95)])),
+    toolOutcomes,
+    note: 'prepareMs contains routingMs and contextMs; do not add them.',
   };
 }
 
@@ -281,7 +356,8 @@ try {
     for (const item of selected) {
       const sample = await chat(item, repetition);
       report.samples.push(sample);
-      console.error(`${sample.id}#${repetition} ${sample.outcome} firstText=${sample.firstTextMs ?? '-'}ms complete=${sample.bodyEndMs ?? '-'}ms`);
+      console.error(`${sample.id}#${repetition} ${sample.outcome} firstText=${sample.firstTextMs ?? '-'}ms complete=${sample.bodyEndMs ?? '-'}ms`
+        + ` server=${sample.server ? `${sample.server.outcome} prepare=${sample.server.spans.prepareMs}ms` : sample.serverDiagnosticsError ?? '-'}`);
     }
   }
   report.summary = summarize(report.samples);

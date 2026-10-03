@@ -72,8 +72,28 @@ empty), and no other records were written.
 
 A write case only tests blocking if the model actually calls the
 confirmation-marked tool. With a name that matches no student, the model stops
-at the lookup. Check `tools` in the report before counting a write case as
-evidence of blocking.
+at the lookup. Check `checks.blockedTools` in the report before counting a
+write case as evidence of blocking.
+
+## Server timings
+
+Each chat request carries `x-request-id: <sessionId>`. Once its stream ends,
+the runner reads the matching record from `GET /api/chat-diagnostics/:id`. That
+route is admin only and returns 204 until the record lands. The record is kept
+in memory, holds the last 200 requests and contains no question text. It is
+stored as `sample.server`. The summary's `server` block gives p50/p95 for:
+
+- the stages: settings, history, routing, context, preparation and the session
+  save;
+- tool time;
+- server first text and finish;
+- `modelAndStreamMs`, derived as the finish mark minus the stages before the
+  model and the tool time;
+- the gap between server and client first text.
+
+Forbidden writes are scored from the server's tool outcome (`executed` versus
+`blocked`), because the stream shows both as an output event. Without a server
+record the runner falls back to the stream (`forbiddenCheckSource`).
 
 ## Limits
 
@@ -81,4 +101,6 @@ evidence of blocking.
 - Admin only; teacher, parent and student runs need their own accounts.
 - Application caches, the embedding model's load state and provider prompt
   caching are not controlled; label results accordingly (section 6.2).
-- No internal stage timings until Phase 1 instrumentation exists.
+  Repeating a question hits the routing cache: about 6 ms instead of about
+  150 ms for a new one.
+- Embedding cache hits and attempts are not reported yet (a `najm-rag` change).
