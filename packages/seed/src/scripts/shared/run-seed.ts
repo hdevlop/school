@@ -16,8 +16,7 @@ import { validation } from 'najm-validation';
 
 // Seed scripts never send real emails — always use console provider
 const seedEmailConfig = () => email({ provider: { provider: 'console' } });
-// The shared server pool: seed tasks keep using `db` after their server stops.
-const seedDatabaseConfig = () => database({ default: db, close: false });
+const seedDatabaseConfig = () => database({ default: db });
 const seedI18nConfig = () =>
   i18n({
     translations,

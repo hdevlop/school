@@ -216,12 +216,9 @@ export function resolveEmailConfig(): EmailPluginConfig {
 
 export const emailConfig = () => email(resolveEmailConfig());
 
-// `db` is one process-wide pool (see database/db.ts), shared by every server,
-// seed and hot reload in the process; a server stopping must not close it.
 export const databaseConfig = () =>
   database({
     default: db,
-    close: false,
   });
 
 export const authInfrastructureConfig = () => ({
