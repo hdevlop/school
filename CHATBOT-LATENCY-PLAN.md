@@ -2,6 +2,26 @@
 
 Status: **FASTER HOST FOUND: GPT-OSS-120B:NITRO ANSWERS IN 0.6 S P50 (1.1 S P95), 12/12 CORRECT; NOT YET ADOPTED**
 
+2026-10-03, French and Darija ([review](docs/evidence/chatbot-latency/fr-darija-20261003.md)):
+the corpus gained 10 Darija (`ary`) cases, and `--languages=fr,ary` runs only
+those. On the saved model, French went from 8/10 to 10/10 and Darija from 5/10
+to 8/10, with no wrong-language reply:
+- `teachers_get_teacher_count` replaces counting a list (42, 62 and 84 became 50);
+- the system prompt judges the reply language by the user's own words, so a
+  student name or French class labels no longer switch a Darija answer to
+  English or French.
+
+The two Darija failures left are routing: the embedding model scores all tools
+about equally for Darija. Semantic phrases could fix it, but they replace
+description matches whenever one clears the threshold, so they need a decision
+on coverage first.
+
+Earlier the same day, an audit found 41 chat-callable tools that changed data
+without a confirmation; all are now confirmed, so the chat refuses them
+(`tests/security/ChatReadOnlyTools.test.ts`). Marking the 249 reads
+`readOnly` stopped najm-rag dropping them as possible writes: routing
+preflight 14/20 → 17/20.
+
 2026-10-03, host comparison ([review](docs/evidence/chatbot-latency/model-nitro-20261003.md)):
 OpenRouter's live stats show the default route serves `gpt-oss-120b` from the
 cheapest hosts (CoreWeave, DekaLLM: 23–36 tokens/s). Faster hosts run the same
