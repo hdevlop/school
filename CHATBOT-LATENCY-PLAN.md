@@ -1,9 +1,9 @@
 # Chatbot latency and cost plan
 
-Status: **PHASE 1 DIAGNOSTICS BUILT IN THE NAJM CLONE (UNRELEASED); NAJM-CHATBOT 2.0.4 PINNED**
+Status: **PHASE 1 DIAGNOSTICS RELEASED IN NAJM-CHATBOT 2.0.5 AND PINNED; SCHOOL LOGGING DECISION PENDING**
 
-2026-10-03, Phase 1 (section 5): `najm-chatbot` in the Najm clone (commit
-`8233790`, not yet pushed or published) now records diagnostics for each request
+2026-10-03, Phase 1 (section 5): `najm-chatbot@2.0.5` (published and pinned;
+a 2-request live check completed 2/2 with usage) now records diagnostics for each request
 to `chatLogging.onDiagnostics` and, when logging is on, to
 `metadata.diagnostics` on the interaction log row. They contain:
 
@@ -21,14 +21,14 @@ The row also gains `steps_count`, `success` and `error`.
 Building it found a gap: when a provider stream throws mid-answer, the AI SDK
 calls no `onError`, `onFinish` or `onAbort`, and the client sees a dropped
 connection. Before, such requests were never logged; the body is now watched,
-so they are logged, as are client disconnects. Tests pass: 183 in
-`najm-chatbot`. One `ai-settings` test fails, and it fails on the unchanged
-code too. Build and the API snapshot are additive.
+so they are logged, as are client disconnects. All 184 `najm-chatbot` tests
+pass after fixing a stale `ai-settings` test, which expected JSON for a
+`204 No Content` reply. The API snapshot changes are additive.
 
 Not done yet:
 - **Embedding spans** (cache hit/miss, attempts) belong to `najm-rag`
   (section 5.1). Routing and context are timed only as whole spans.
-- **School wiring** (section 5.3) waits for a release. Also,
+- **School wiring** (section 5.3) waits on the logging decision. Also,
   `chatLogging.enabled` already defaults to `true`, but no School migration
   creates `chatbot_interaction_logs`, so today each chat attempts an insert
   that fails silently. Rows store questions and tool arguments, so set
@@ -171,8 +171,8 @@ paid provider is a prerequisite; paid chat runs need a declared budget.
    data are done (35/36 completed on seeded data). An acceptance baseline still
    needs a larger corpus and sample.**
 3. Add shared instrumentation in Najm and establish a controlled internal baseline.
-   **`najm-chatbot` diagnostics built and tested in the clone (2026-10-03);
-   release, `najm-rag` embedding spans and School wiring remain.**
+   **`najm-chatbot` diagnostics released in 2.0.5 and pinned (2026-10-03);
+   `najm-rag` embedding spans and School wiring remain.**
 4. Compare configuration, model, routing, and tool-call improvements separately.
 5. Consider Jev only if measured traffic and avoidable LLM spending justify it.
 
