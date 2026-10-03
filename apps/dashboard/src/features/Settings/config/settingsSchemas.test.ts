@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
 
-import { settingsSchema } from './settingsSchemas';
+import { schoolSetupSchema, settingsSchema } from './settingsSchemas';
 
 /**
  * A school that has never opened the settings screen runs on these defaults,
@@ -16,6 +16,10 @@ const minimal = {
 
 describe('settingsSchema defaults', () => {
   const parsed = settingsSchema.parse(minimal);
+
+  it('leaves out the grading scale, which has no input and must not overwrite the stored one', () => {
+    expect('gradingScale' in settingsSchema.parse({ ...minimal, gradingScale: '' })).toBe(false);
+  });
 
   it('fills the academic defaults', () => {
     expect(parsed.attendanceRequirement).toBe(75);
@@ -81,5 +85,23 @@ describe('settingsSchema validation', () => {
     expect(settingsSchema.safeParse({ ...minimal, sessionTimeout: '90' }).success).toBe(true);
     expect(settingsSchema.safeParse({ ...minimal, sessionTimeout: '90m' }).success).toBe(false);
     expect(settingsSchema.safeParse({ ...minimal, sessionTimeout: '12345' }).success).toBe(false);
+  });
+});
+
+describe('schoolSetupSchema', () => {
+  const setup = { schoolName: 'Ecole Al Amal', schoolPhone: '212600000000', schoolEmail: '', currentAcademicYear: '2026-2027' };
+
+  it('fills the school preferences a new installation starts with', () => {
+    const parsed = schoolSetupSchema.parse(setup);
+    expect(parsed.currency).toBe('MAD');
+    expect(parsed.timeZone).toBe('Africa/Casablanca');
+    expect(Object.keys(parsed).sort()).toEqual(['currency', 'currentAcademicYear', 'language', 'schoolEmail', 'schoolName', 'schoolPhone', 'timeZone']);
+  });
+
+  it('requires a school name, a phone and a consecutive-year label', () => {
+    expect(schoolSetupSchema.safeParse({ ...setup, schoolPhone: '' }).success).toBe(false);
+    expect(schoolSetupSchema.safeParse({ ...setup, schoolName: '' }).success).toBe(false);
+    expect(schoolSetupSchema.safeParse({ ...setup, currentAcademicYear: '2026-2028' }).success).toBe(false);
+    expect(schoolSetupSchema.safeParse({ ...setup, currentAcademicYear: '2026' }).success).toBe(false);
   });
 });

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEntityCRUD } from 'najm-kit/query/crud';
-import { getAdminSettingsApi, getPublicSettingsApi, updateSettingsApi } from '@/services/settingApi';
+import { createSettingsApi, getAdminSettingsApi, getPublicSettingsApi, updateSettingsApi } from '@/services/settingApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { getCurrentAcademicYear } from '@/lib/utils';
 import { useRenderedActiveAcademicYear } from '../context/RenderedActiveAcademicYear';
@@ -63,6 +63,13 @@ export const useBusinessDate = () => {
     isBusinessDateLoading: isSettingsLoading,
     refetchBusinessDate,
   };
+};
+
+/** Installs the settings of a school that has none; refused once they exist. */
+export const useInstallSchool = () => {
+  const crud = useEntityCRUD('settings', { create: createSettingsApi });
+  const { mutateAsync: installSchool, isLoading: isInstalling } = crud.useCreate();
+  return { installSchool, isInstalling };
 };
 
 export const useAdminSettings = (enabled = true) => {

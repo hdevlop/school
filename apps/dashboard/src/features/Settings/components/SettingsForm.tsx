@@ -79,7 +79,6 @@ const SettingsForm: React.FC = () => {
     schoolAddressPlaceId: settings?.schoolAddressPlaceId || null,
     schoolPhone: settings?.schoolPhone || '',
     schoolEmail: settings?.schoolEmail || '',
-    gradingScale: settings?.gradingScale || '',
     attendanceRequirement: settings?.attendanceRequirement || 75,
     attendanceMode: (settings?.attendanceMode as 'daily' | 'per_class') || 'daily',
     maxClassSize: settings?.maxClassSize || 34,

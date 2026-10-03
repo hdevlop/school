@@ -39,6 +39,7 @@ const SchoolSection: React.FC = () => {
           formLabel={t('settings.school.schoolAddress')}
           placeholder="123 Education Street, City, State 12345"
           required
+          classNames={{ status: 'hidden' }}
           providerMeta={schoolLocation && schoolPlaceId
             ? { provider: 'google', placeId: schoolPlaceId, ...schoolLocation }
             : null}

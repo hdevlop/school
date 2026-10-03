@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { AuthError } from 'najm-auth/client';
-import { hasFailedToLoad, isCountUnknown, isAuthorizationError, isNotFoundError } from './apiError';
+import { hasFailedToLoad, isCountUnknown, isAuthorizationError, isConflictError, isNotFoundError } from './apiError';
 
 // najm-auth builds each entry point without code splitting, so the client
 // behind `najm-auth/client/server` (School's `auth.api`) throws its own copy
@@ -39,6 +39,8 @@ describe('API error helpers', () => {
       expect(isAuthorizationError(make(404))).toBe(false);
       expect(isNotFoundError(make(404))).toBe(true);
       expect(isNotFoundError(make(500))).toBe(false);
+      expect(isConflictError(make(409))).toBe(true);
+      expect(isConflictError(make(400))).toBe(false);
     }
   });
 
@@ -46,6 +48,7 @@ describe('API error helpers', () => {
     for (const error of [new Error('Session expired'), null, undefined, { status: 404 }]) {
       expect(isAuthorizationError(error)).toBe(false);
       expect(isNotFoundError(error)).toBe(false);
+      expect(isConflictError(error)).toBe(false);
     }
   });
 });

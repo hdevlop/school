@@ -884,6 +884,14 @@
     "class": "Class"
   },
   "settings": {
+    "setup": {
+      "title": "Set up your school",
+      "description": "Your school has no settings yet. Enter its name and the academic year you are starting with; you can complete the rest in Settings.",
+      "academicYear": "Starting academic year",
+      "submit": "Finish setup",
+      "notReadyTitle": "This school isn't set up yet",
+      "notReadyDescription": "An administrator must finish setting up the school before you can use the dashboard. Please try again later."
+    },
     "success": {
       "retrieved": "Settings retrieved successfully",
       "updated": "Settings updated successfully",
@@ -952,7 +960,6 @@
       "schoolPhone": "School Phone",
       "schoolEmail": "School Email",
       "currentAcademicYear": "Current Academic Year",
-      "currentAcademicYearLocked": "Changes only when a registered year is activated",
       "schoolStartTime": "School Start Time",
       "schoolEndTime": "School End Time",
       "lunchBreakDuration": "Lunch Break Duration (minutes)"

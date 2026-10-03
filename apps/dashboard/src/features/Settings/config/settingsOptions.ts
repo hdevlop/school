@@ -1,5 +1,6 @@
 import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
 import type { CalendarSystem } from '@sms/contracts';
+import { getCurrentAcademicYear } from '@/lib/utils';
 import { ATTENDANCE_MODE_VALUES, type AttendanceMode } from './settingsSchemas';
 
 type Translate = (key: string, ...args: any[]) => string;
@@ -46,3 +47,15 @@ export const buildAttendanceModeOptions = (t: Translate): readonly EnumOption<At
 ];
 
 export const ATTENDANCE_MODE_OPTION_VALUES = ATTENDANCE_MODE_VALUES;
+
+/**
+ * The years a new installation may start in: the teaching year `today` falls
+ * in, then the one after it, for a school set up over the summer.
+ */
+export const buildSetupAcademicYearOptions = (today: Date = new Date()): readonly EnumOption[] => {
+  const start = Number(getCurrentAcademicYear(today).slice(0, 4));
+  return [start, start + 1].map((year) => {
+    const label = `${year}-${year + 1}`;
+    return { value: label, label };
+  });
+};

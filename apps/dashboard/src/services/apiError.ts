@@ -38,3 +38,8 @@ export function isAuthorizationError(error: unknown) {
 export function isNotFoundError(error: unknown) {
   return httpStatusOf(error) === 404;
 }
+
+/** The server refused because the state changed first, e.g. a second install. */
+export function isConflictError(error: unknown) {
+  return httpStatusOf(error) === 409;
+}

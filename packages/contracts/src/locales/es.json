@@ -3119,6 +3119,14 @@
     }
   },
   "settings": {
+    "setup": {
+      "title": "Configure su escuela",
+      "description": "Su escuela aún no tiene ajustes. Indique su nombre y el año académico con el que empieza; podrá completar el resto en Configuración.",
+      "academicYear": "Año académico inicial",
+      "submit": "Finalizar configuración",
+      "notReadyTitle": "Esta escuela aún no está configurada",
+      "notReadyDescription": "Un administrador debe terminar de configurar la escuela antes de que pueda usar el panel. Vuelva a intentarlo más tarde."
+    },
     "errors": {
       "notFound": "Configuración no encontrada",
       "alreadyExists": "La configuración de la escuela ya existe; modifíquela con una actualización",
@@ -3167,7 +3175,6 @@
     "school": {
       "namePlaceholder": "Mi escuela",
       "currentAcademicYear": "Año académico actual",
-      "currentAcademicYearLocked": "Solo cambia al activar un año registrado",
       "lunchBreakDuration": "Duración del almuerzo (min)",
       "schoolAddress": "Dirección de la escuela",
       "schoolEmail": "Correo de la escuela",

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { NAJM_CURRENCIES, NAJM_TIME_ZONES } from 'najm-kit/server';
 import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
+import { parseSchoolYearLabel } from '@sms/contracts/academic-years';
 import { schoolI18n } from '@sms/contracts/locales';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
@@ -59,7 +60,6 @@ export const settingsSchema = z.object({
   schoolLogo: z.string().url('Must be a valid image URL').max(255, 'School logo URL too long').optional(),
 
   // Academic Settings
-  gradingScale: z.any().optional(),
   attendanceRequirement: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Attendance requirement must be non-negative').max(100, 'Attendance requirement cannot exceed 100')).default(75.00),
   attendanceMode: z.enum(ATTENDANCE_MODE_VALUES).default('daily'),
   maxClassSize: numberField(z.number({ error: 'Must be a valid number' }).int('Max class size must be an integer').min(1, 'Max class size must be at least 1').max(200, 'Max class size cannot exceed 200')).default(34),
@@ -108,3 +108,20 @@ export const settingsSchema = z.object({
 });
 
 export type SettingsFormValues = z.input<typeof settingsSchema>;
+
+/**
+ * The first-run form shown while the school has no settings. Installing them
+ * registers and activates `currentAcademicYear` (September-June, reviewable
+ * later), which every year-scoped page needs. The rest of the settings keep
+ * the server's defaults until the administrator opens the settings screen.
+ */
+export const schoolSetupSchema = settingsSchema
+  .pick({ schoolName: true, schoolPhone: true, schoolEmail: true, timeZone: true, language: true, currency: true })
+  .extend({
+    currentAcademicYear: z.string().refine(
+      (value) => parseSchoolYearLabel(value) !== null,
+      'Expected consecutive years in YYYY-YYYY format',
+    ),
+  });
+
+export type SchoolSetupValues = z.input<typeof schoolSetupSchema>;

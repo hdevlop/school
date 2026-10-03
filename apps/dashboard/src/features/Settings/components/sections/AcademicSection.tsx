@@ -33,7 +33,6 @@ const AcademicSection: React.FC<{ activeYear?: string | null }> = ({ activeYear 
             <Calendar className="h-4 w-4 shrink-0" style={{ color: '#ec4899' }} aria-hidden />
             {activeYear || '—'}
           </div>
-          <p className="text-xs text-muted-foreground">{t('settings.school.currentAcademicYearLocked')}</p>
         </div>
 
         <FormInput

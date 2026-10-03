@@ -830,6 +830,14 @@
     }
   },
   "settings": {
+    "setup": {
+      "title": "Configurez votre école",
+      "description": "Votre école n'a pas encore de paramètres. Indiquez son nom et l'année scolaire de départ ; vous pourrez compléter le reste dans Paramètres.",
+      "academicYear": "Année scolaire de départ",
+      "submit": "Terminer la configuration",
+      "notReadyTitle": "Cette école n'est pas encore configurée",
+      "notReadyDescription": "Un administrateur doit terminer la configuration de l'école avant que vous puissiez utiliser le tableau de bord. Réessayez plus tard."
+    },
     "success": {
       "operationalUpdated": "Préférences opérationnelles mises à jour avec succès",
       "deleted": "Paramètres supprimés avec succès",
@@ -983,7 +991,6 @@
     "school": {
       "namePlaceholder": "Mon école",
       "currentAcademicYear": "Année scolaire actuelle",
-      "currentAcademicYearLocked": "Change uniquement à l’activation d’une année enregistrée",
       "lunchBreakDuration": "Durée de pause déjeuner (min)",
       "schoolAddress": "Adresse de l'école",
       "schoolEmail": "E-mail de l'école",

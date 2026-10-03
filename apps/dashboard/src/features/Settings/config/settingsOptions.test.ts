@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
 
-import { buildAttendanceModeOptions, buildCalendarSystemOptions } from './settingsOptions';
+import { buildAttendanceModeOptions, buildCalendarSystemOptions, buildSetupAcademicYearOptions } from './settingsOptions';
 import { settingsSchema } from './settingsSchemas';
 
 const echo = (key: string) => key;
@@ -42,5 +42,17 @@ describe('settings option builders', () => {
 
     expect(daily.label).toBe('Daily (first period locks, later teachers correct)');
     expect(perClass.label).toBe('Per class (each teacher records independently)');
+  });
+});
+
+describe('school setup year options', () => {
+  it('offers the teaching year of the day, then the next one', () => {
+    expect(buildSetupAcademicYearOptions(new Date(2026, 9, 2)).map((option) => option.value))
+      .toEqual(['2026-2027', '2027-2028']);
+  });
+
+  it('still starts at the year being finished during the summer', () => {
+    expect(buildSetupAcademicYearOptions(new Date(2027, 6, 15)).map((option) => option.value))
+      .toEqual(['2026-2027', '2027-2028']);
   });
 });
