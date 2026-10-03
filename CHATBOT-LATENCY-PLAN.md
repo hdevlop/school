@@ -29,6 +29,23 @@ It answered 10/12: on both write requests it retried an invalid student search
 until `maxSteps` and returned an empty answer. It was not faster than
 `120b:nitro` and used 4× the input tokens.
 
+I scanned all 101 cheap, tool-capable OpenRouter models, then compared four
+fast ones against `120b:nitro` ([review](docs/evidence/chatbot-latency/model-candidates-20261003.md)).
+
+Viable:
+- `nvidia/nemotron-3.5-lightning:nitro` passed 12/12 with the right
+  languages and facts, at 0.97 s p50 and about $0.18 per 1,000 answers. It is
+  the cheaper fallback.
+
+Rejected:
+- `gemini-2.5-flash-lite` answered an Arabic count question in English with
+  a wrong, tool-free number.
+- `mercury-2` had one server stream error and one hang.
+- `nemotron-3-nano` took 78 s and 9 steps on one write request.
+
+The runner does not yet check reply language, so automatic checks alone cannot
+pick a model.
+
 2026-10-03, internal baseline ([review](docs/evidence/chatbot-latency/stream-diagnostics-20261003.md)):
 School now sends each chat's diagnostics to an in-memory, admin-only log at
 `GET /api/chat-diagnostics`, which holds no question text. The interaction log
