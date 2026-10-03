@@ -2,6 +2,12 @@
 
 Status: **GPT-OSS-120B:NITRO REJECTED ON THE FULL SET: 47/50, CEREBRAS TRUNCATES TOOL NAMES; THE DEFAULT ROUTE STAYS (50/50)**
 
+2026-10-04, tool cap ([review](docs/evidence/chatbot-latency/tool-cap-20261004.md)): `maxTools` 12
+stays. Routing sends 8-10 tools; a cap of six cuts dependencies first and
+fails 9/20 core, 3/31 Darija/French and 7/45 benchmark questions that pass
+now. Six semantic matches instead of eight lose the Arabic class list and
+student search, whose tool ranks 7th-8th. Routing only, no provider calls.
+
 2026-10-03 (night), tool arguments and roles ([review](docs/evidence/chatbot-latency/tool-schemas-20261003.md), [roles](docs/evidence/chatbot-latency/roles-20261003.md)):
 until `najm-chatbot` 2.1.2 every tool reached the model with an empty argument
 schema (AI SDK 6 reads `inputSchema`, not `parameters`), so the model guessed

@@ -1,0 +1,6294 @@
+{
+  "capturedAt": "2026-10-03T23:00:31.139Z",
+  "target": "http://localhost:3102",
+  "mode": "admin-routing-preview-only",
+  "corpusSha256": "50231bcff1498cea5166482d5529752fc7d1962c1edb7d635514fa3d9a91444d",
+  "packagePins": {
+    "najm-rag": "2.2.0",
+    "najm-chatbot": "2.1.2",
+    "najm-mcp": "2.2.3"
+  },
+  "outcome": "routing_misses",
+  "limitations": [
+    "Admin diagnostic selection, not teacher-authenticated execution or authorization acceptance.",
+    "Preview has separate implementation; its error fallback and transitive dependencies differ from the chat router.",
+    "Durations include local HTTP and preview work; they are not chat, first-text, or pure routing latency.",
+    "One observation per query is diagnostic smoke coverage, not an accuracy or p95 estimate.",
+    "No chat-provider calls, record changes, tool indexing, semantic imports, or settings updates."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 27
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 128
+    },
+    {
+      "path": "/api/chatbot-rag/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 25
+    },
+    {
+      "path": "/api/chatbot-rag/settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/chatbot-rag/tools",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 164
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 284
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 116
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 348
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 277
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 115
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 251
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 306
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 340
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 293
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 427
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 350
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 262
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 267
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 305
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 333
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 431
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 370
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 440
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 509
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 338
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 302
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 379
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 269
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 328
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 337
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 325
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 312
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 634
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 300
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 228
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 270
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 115
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 309
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 329
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 338
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 387
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 521
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 311
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 261
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 330
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 282
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 320
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 381
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 303
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 343
+    },
+    {
+      "path": "/api/chatbot-rag/routing/preview",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 607
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "student-count-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "teacher-count-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "classes-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-today-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "upcoming-exams-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "students-and-teachers-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "missing-student-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-mark-blocked-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "announcement-blocked-en",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "student-count-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "teacher-count-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "classes-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-today-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "upcoming-exams-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "students-and-teachers-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "missing-student-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-create-blocked-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "announcement-blocked-fr",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "student-count-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "teacher-count-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "classes-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-today-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "upcoming-exams-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "students-and-teachers-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "missing-student-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-mark-blocked-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "announcement-blocked-ar",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "student-count-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "teacher-count-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "classes-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-today-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "upcoming-exams-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "students-and-teachers-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "missing-student-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "grade-create-blocked-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "announcement-blocked-es",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "student-count-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "teacher-count-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "classes-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-today-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "upcoming-exams-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "students-and-teachers-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "missing-student-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "attendance-mark-blocked-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    },
+    {
+      "id": "announcement-blocked-ary",
+      "missingAlternativeNames": [],
+      "unavailableGroups": []
+    }
+  ],
+  "samples": [
+    {
+      "id": "student-count-en",
+      "language": "en",
+      "query": "How many students are enrolled this year?",
+      "status": "routed",
+      "elapsedMs": 116,
+      "finalTools": [
+        "students_get_student_count",
+        "teachers_get_teacher_count",
+        "students_get_students",
+        "academic-dashboard_get_kpis",
+        "classes_get_class_students",
+        "teacher-profile_get_my_students",
+        "student-profile_get_attendance_summary",
+        "attendance_get_today_students",
+        "attendance_get_by_date"
+      ],
+      "matches": [
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.839207925985354,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.7756700284579556,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.7269932844339061,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "academic-dashboard_get_kpis",
+          "similarity": 0.7164274285094715,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.7028351538574329,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.6957138258220795,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "student-profile_get_attendance_summary",
+          "similarity": 0.6903590106108163,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.6890263597416929,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "attendance_get_by_date",
+          "reason": "dependency_of:attendance_get_today_students"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "teacher-count-en",
+      "language": "en",
+      "query": "How many teachers does the school have?",
+      "status": "routed",
+      "elapsedMs": 348,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "teachers_get_teachers",
+        "teachers_get_teacher",
+        "classes_get_class_teachers",
+        "students_get_student_count",
+        "teachers_get_by_phone",
+        "sections_get_teachers"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8400538027366705,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.7391164212102329,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher",
+          "similarity": 0.7050154101885393,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_delete_all",
+          "similarity": 0.6906193310391516,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.6904866141951003,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.6884331292848024,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_by_phone",
+          "similarity": 0.6847696712475831,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.6782267052317299,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "classes-en",
+      "language": "en",
+      "query": "List the school's classes.",
+      "status": "routed",
+      "elapsedMs": 277,
+      "finalTools": [
+        "teachers_get_classes",
+        "teacher-profile_get_my_classes",
+        "classes_get_class_students",
+        "classes_get_classes",
+        "classes_get_class_teachers",
+        "classes_get_class_parents",
+        "classes_get_class_subjects",
+        "teacher-profile_get_my_students"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_classes",
+          "similarity": 0.8102664849718468,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_classes",
+          "similarity": 0.7984666237434915,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.7973939542662001,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_classes",
+          "similarity": 0.78952438893769,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.7817510832399901,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_parents",
+          "similarity": 0.7713596769905915,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_subjects",
+          "similarity": 0.7630892819602595,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7579605252884155,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-today-en",
+      "language": "en",
+      "query": "Show today's student attendance.",
+      "status": "routed",
+      "elapsedMs": 115,
+      "finalTools": [
+        "attendance_get_today_students",
+        "attendance_get_today",
+        "attendance_get_today_staff",
+        "attendance_get_by_student",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_date",
+        "attendance_get_by_teacher",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.8505443485213743,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today",
+          "similarity": 0.8237851296240155,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_staff",
+          "similarity": 0.7851659315626759,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.7777464455953927,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.7557934973116827,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.7553374754578148,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_date",
+          "similarity": 0.7500519454790169,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.7371576145699537,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "upcoming-exams-en",
+      "language": "en",
+      "query": "Which exams are coming up?",
+      "status": "routed",
+      "elapsedMs": 251,
+      "finalTools": [
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "exams_get_all",
+        "exams_get_by_subject",
+        "exams_get_by_teacher",
+        "exams_get_by_section",
+        "assessments_get_upcoming_assessments",
+        "exams_get_by_id"
+      ],
+      "matches": [
+        {
+          "toolName": "exams_get_upcoming_exams",
+          "similarity": 0.8690524619253343,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_today_exams",
+          "similarity": 0.8178302701126621,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_all",
+          "similarity": 0.8101332383792131,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_subject",
+          "similarity": 0.7969020735375675,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_teacher",
+          "similarity": 0.787740302816624,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_section",
+          "similarity": 0.7761712607929084,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_upcoming_assessments",
+          "similarity": 0.770850107061874,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_id",
+          "similarity": 0.7544612299112295,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "students-and-teachers-en",
+      "language": "en",
+      "query": "How many students and how many teachers are there this year?",
+      "status": "routed",
+      "elapsedMs": 306,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-profile_get_my_students",
+        "teachers_get_teachers",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-dashboard_get_overview",
+        "classes_get_class_teachers"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8083671368809947,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.7736257967057623,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7005852878444084,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.6928019640454739,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "academic-dashboard_get_kpis",
+          "similarity": 0.6887678622550335,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.6812661506256062,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.677806498612233,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.6773956667879616,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "missing-student-en",
+      "language": "en",
+      "query": "Show the grade report of the student Zzbench Qqtest.",
+      "status": "routed",
+      "elapsedMs": 340,
+      "finalTools": [
+        "grades_get_student_report",
+        "grades_get_by_teacher",
+        "grades_get_by_student",
+        "grades_get_by_id",
+        "grades_get_by_subject",
+        "grades_get_all",
+        "grades_get_by_assessment",
+        "grades_get_by_section",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.7880283611971025,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_teacher",
+          "similarity": 0.7324381890314446,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_student",
+          "similarity": 0.7308826664353293,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_id",
+          "similarity": 0.7217581850093694,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_subject",
+          "similarity": 0.712885596964208,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_all",
+          "similarity": 0.7122020852265017,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_assessment",
+          "similarity": 0.707819500332505,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_section",
+          "similarity": 0.7009071259339342,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:grades_get_student_report"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-mark-blocked-en",
+      "language": "en",
+      "query": "Mark the student Zzbench Qqtest absent today.",
+      "status": "routed",
+      "elapsedMs": 293,
+      "finalTools": [
+        "attendance_mark",
+        "attendance_get_by_student",
+        "attendance_get_today_students",
+        "attendance_get_by_teacher",
+        "search_search_students",
+        "attendance_get_by_date"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.7390496290296655,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_update_status",
+          "similarity": 0.7016363196698397,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6955657834489533,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_delete",
+          "similarity": 0.687167443374705,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.6841359169726818,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_update",
+          "similarity": 0.6705546764866493,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "student-routes_unassign_at",
+          "similarity": 0.6664893030803729,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.6574093920208474,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_mark"
+        },
+        {
+          "toolName": "attendance_get_by_date",
+          "reason": "dependency_of:attendance_get_today_students"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "announcement-blocked-en",
+      "language": "en",
+      "query": "Create and publish an announcement for all parents titled 'Zzbench test' saying school closes early on Friday.",
+      "status": "routed",
+      "elapsedMs": 427,
+      "finalTools": [
+        "announcements_create",
+        "announcements_get_by_class",
+        "announcements_get_published",
+        "announcements_get_upcoming"
+      ],
+      "matches": [
+        {
+          "toolName": "announcements_create",
+          "similarity": 0.8021840092916706,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_publish",
+          "similarity": 0.8019616839931616,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_update",
+          "similarity": 0.776013520239194,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_by_class",
+          "similarity": 0.7334055999807279,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_create",
+          "similarity": 0.7315208315849772,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_published",
+          "similarity": 0.7224694821275103,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_update",
+          "similarity": 0.7084185157959129,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_upcoming",
+          "similarity": 0.7059813737869715,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [
+        "announcements_create"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "student-count-fr",
+      "language": "fr",
+      "query": "Combien d'élèves sont inscrits cette année ?",
+      "status": "routed",
+      "elapsedMs": 350,
+      "finalTools": [
+        "students_get_student_count",
+        "teachers_get_teacher_count",
+        "students_get_students",
+        "attendance_get_today_students",
+        "classes_get_class_students",
+        "teacher-profile_get_my_students",
+        "attendance_get_by_student",
+        "classes_get_classes",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.8479178495700957,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.819696900293737,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.7589806235748542,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.7256266907232072,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.7241017613047075,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7197852445800793,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.7195112705231531,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_classes",
+          "similarity": 0.7163367351683021,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "attendance_get_by_date",
+          "reason": "dependency_of:attendance_get_today_students"
+        },
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "teacher-count-fr",
+      "language": "fr",
+      "query": "Combien d'enseignants compte l'école ?",
+      "status": "routed",
+      "elapsedMs": 262,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teachers_get_teachers",
+        "sections_get_teachers",
+        "staff_get_staff_count",
+        "classes_get_class_teachers",
+        "teachers_get_students",
+        "teacher-profile_get_my_students"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8581016657737046,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.7565383138794902,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.7513405305331402,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.7116853868827487,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "staff_get_staff_count",
+          "similarity": 0.7010719923568484,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.6999700605923438,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_students",
+          "similarity": 0.6770882935541148,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.6750406175609722,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "classes-fr",
+      "language": "fr",
+      "query": "Liste les classes de l'école.",
+      "status": "routed",
+      "elapsedMs": 267,
+      "finalTools": [
+        "classes_get_classes",
+        "teachers_get_classes",
+        "classes_get_class_students",
+        "teacher-profile_get_my_classes",
+        "classes_get_class_teachers",
+        "classes_get_class_parents",
+        "classes_get_class_subjects",
+        "teacher-profile_get_my_students"
+      ],
+      "matches": [
+        {
+          "toolName": "classes_get_classes",
+          "similarity": 0.800048899662255,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_classes",
+          "similarity": 0.7957063176336113,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.7933013192774945,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_classes",
+          "similarity": 0.7789214912293235,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.7742389825245134,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_parents",
+          "similarity": 0.7709606749392629,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_subjects",
+          "similarity": 0.7538216416623648,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7535973934176222,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-today-fr",
+      "language": "fr",
+      "query": "Affiche les présences des élèves aujourd'hui.",
+      "status": "routed",
+      "elapsedMs": 305,
+      "finalTools": [
+        "attendance_get_today_students",
+        "attendance_get_by_student",
+        "attendance_get_today",
+        "attendance_get_by_date",
+        "attendance_get_today_staff",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-dashboard_get_overview",
+        "attendance_get_by_section",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.8528765246801822,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.7916628917040308,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today",
+          "similarity": 0.7818067333930053,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_date",
+          "similarity": 0.7722374684408537,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_staff",
+          "similarity": 0.7638454155738146,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.7438744306565177,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.7340229591145534,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_section",
+          "similarity": 0.7319893751093746,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "upcoming-exams-fr",
+      "language": "fr",
+      "query": "Quels examens sont prévus prochainement ?",
+      "status": "routed",
+      "elapsedMs": 333,
+      "finalTools": [
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "exams_get_all",
+        "assessments_get_upcoming_assessments",
+        "exams_get_by_subject",
+        "exams_get_by_teacher",
+        "exams_get_by_section",
+        "teacher-profile_get_schedule_today"
+      ],
+      "matches": [
+        {
+          "toolName": "exams_get_upcoming_exams",
+          "similarity": 0.8870482973485564,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_today_exams",
+          "similarity": 0.8291170612155039,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_all",
+          "similarity": 0.8045370798254404,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_upcoming_assessments",
+          "similarity": 0.8035630200651462,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_subject",
+          "similarity": 0.7946046729309593,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_teacher",
+          "similarity": 0.7766381039239231,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_section",
+          "similarity": 0.7621207804391907,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_schedule_today",
+          "similarity": 0.7575366786078651,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "students-and-teachers-fr",
+      "language": "fr",
+      "query": "Combien y a-t-il d'élèves et combien d'enseignants cette année ?",
+      "status": "routed",
+      "elapsedMs": 431,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teachers_get_teachers",
+        "teacher-profile_get_my_students",
+        "sections_get_teachers",
+        "students_get_students",
+        "classes_get_class_teachers",
+        "classes_get_classes"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8289486212951874,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.795061660107288,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.7307073370676248,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7188193276359713,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.7115342456576754,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.7110789709553984,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.7049453326962005,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_classes",
+          "similarity": 0.6937045272412626,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "missing-student-fr",
+      "language": "fr",
+      "query": "Affiche le bulletin de notes de l'élève Zzbench Qqtest.",
+      "status": "routed",
+      "elapsedMs": 370,
+      "finalTools": [
+        "grades_get_student_report",
+        "teacher-dashboard_get_overview",
+        "attendance_get_by_student",
+        "alerts_get_alerts_by_student",
+        "sections_get_students",
+        "grades_get_by_teacher",
+        "assessments_get_by_teacher",
+        "alerts_get_alerts_by_teacher",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.7264638818398169,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.6981303939197618,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6895283645673573,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_get_alerts_by_student",
+          "similarity": 0.678523197790253,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_students",
+          "similarity": 0.6710564486284037,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_teacher",
+          "similarity": 0.6702195780029692,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_teacher",
+          "similarity": 0.6696981372248308,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_get_alerts_by_teacher",
+          "similarity": 0.6694511569201328,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:grades_get_student_report"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "grade-create-blocked-fr",
+      "language": "fr",
+      "query": "Enregistre 15 sur 20 pour l'élève Zzbench Qqtest au dernier contrôle.",
+      "status": "routed",
+      "elapsedMs": 440,
+      "finalTools": [
+        "grades_create",
+        "assessments_get_by_teacher",
+        "assessments_get_by_class",
+        "exams_get_by_teacher",
+        "assessments_get_by_subject",
+        "attendance_get_by_student",
+        "teacher-dashboard_get_overview",
+        "assessments_get_by_section",
+        "search_search_students",
+        "assessments_get_all"
+      ],
+      "matches": [
+        {
+          "toolName": "grades_create",
+          "similarity": 0.693280444173635,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_teacher",
+          "similarity": 0.6642579653648513,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_class",
+          "similarity": 0.6636825415029414,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_teacher",
+          "similarity": 0.6611250264719969,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_subject",
+          "similarity": 0.6523534187494956,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6417626400561448,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.6391536575144674,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_section",
+          "similarity": 0.6313495072815353,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:grades_create"
+        },
+        {
+          "toolName": "assessments_get_all",
+          "reason": "dependency_of:grades_create"
+        }
+      ],
+      "confirmationTools": [
+        "grades_create"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "announcement-blocked-fr",
+      "language": "fr",
+      "query": "Crée et publie une annonce pour tous les parents intitulée « Zzbench test » : l'école ferme plus tôt vendredi.",
+      "status": "routed",
+      "elapsedMs": 509,
+      "finalTools": [
+        "announcements_create",
+        "announcements_get_by_class"
+      ],
+      "matches": [
+        {
+          "toolName": "announcements_create",
+          "similarity": 0.7137929712904464,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_update",
+          "similarity": 0.6829183072594158,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_publish",
+          "similarity": 0.6772047262422041,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_create",
+          "similarity": 0.66167225470118,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_by_class",
+          "similarity": 0.657228690367936,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "settings_update",
+          "similarity": 0.6480916771725089,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "settings_create",
+          "similarity": 0.646381439592162,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_update",
+          "similarity": 0.635980676657916,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [
+        "announcements_create"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "student-count-ar",
+      "language": "ar",
+      "query": "كم عدد التلاميذ المسجلين هذه السنة؟",
+      "status": "routed",
+      "elapsedMs": 338,
+      "finalTools": [
+        "students_get_student_count",
+        "teachers_get_teacher_count",
+        "students_get_students",
+        "teacher-profile_get_my_students",
+        "classes_get_class_students",
+        "attendance_get_today_students",
+        "attendance_get_by_student",
+        "sections_get_students",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.847199320793176,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8211828991258235,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.7278000876367331,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7169983296994006,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.7103871107101642,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.708174822165009,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6857879230217707,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_students",
+          "similarity": 0.6829826075989265,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "attendance_get_by_date",
+          "reason": "dependency_of:attendance_get_today_students"
+        },
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "teacher-count-ar",
+      "language": "ar",
+      "query": "كم عدد الأساتذة في المدرسة؟",
+      "status": "routed",
+      "elapsedMs": 302,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teachers_get_teachers",
+        "classes_get_class_teachers",
+        "staff_get_staff_count",
+        "sections_get_teachers",
+        "teachers_get_students",
+        "attendance_get_by_teacher"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8393748557008708,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.7366868571416362,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.7195404219216515,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.7016964795227673,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "staff_get_staff_count",
+          "similarity": 0.6997705548659872,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.6809201975798376,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_students",
+          "similarity": 0.6757457819894572,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.6698193943715866,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "classes-ar",
+      "language": "ar",
+      "query": "اعرض قائمة أقسام المدرسة.",
+      "status": "routed",
+      "elapsedMs": 379,
+      "finalTools": [
+        "sections_get_parents",
+        "sections_get_teachers",
+        "sections_get_students",
+        "sections_get_classes",
+        "teacher-profile_get_my_students",
+        "classes_get_class_sections",
+        "classes_get_classes",
+        "teachers_get_classes"
+      ],
+      "matches": [
+        {
+          "toolName": "sections_get_parents",
+          "similarity": 0.7141198686289878,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.7055009044107615,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_students",
+          "similarity": 0.6993954419369082,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_classes",
+          "similarity": 0.6989762424202304,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.6824294679077368,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_sections",
+          "similarity": 0.6758734970243625,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_classes",
+          "similarity": 0.6615897417068481,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_classes",
+          "similarity": 0.6542749967716861,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-today-ar",
+      "language": "ar",
+      "query": "اعرض حضور التلاميذ اليوم.",
+      "status": "routed",
+      "elapsedMs": 269,
+      "finalTools": [
+        "attendance_get_today_students",
+        "attendance_get_today",
+        "attendance_get_by_student",
+        "attendance_get_today_staff",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_teacher",
+        "teacher-dashboard_get_overview",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.8489944737833809,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today",
+          "similarity": 0.8018755072167945,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.7715650482203363,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_staff",
+          "similarity": 0.7675033121553168,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.7643607452355535,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.740252249814377,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.7385544868477614,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_date",
+          "similarity": 0.7373907412651042,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "upcoming-exams-ar",
+      "language": "ar",
+      "query": "ما هي الامتحانات القادمة؟",
+      "status": "routed",
+      "elapsedMs": 328,
+      "finalTools": [
+        "exams_get_upcoming_exams",
+        "assessments_get_upcoming_assessments",
+        "exams_get_today_exams",
+        "exams_get_all",
+        "assessments_get_by_subject",
+        "assessments_get_by_class",
+        "exams_get_by_subject",
+        "assessments_get_today_assessments"
+      ],
+      "matches": [
+        {
+          "toolName": "exams_get_upcoming_exams",
+          "similarity": 0.8085294036216573,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_upcoming_assessments",
+          "similarity": 0.775466572284956,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_today_exams",
+          "similarity": 0.7560737053090569,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_all",
+          "similarity": 0.7355568504994575,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_subject",
+          "similarity": 0.7283339931070203,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_class",
+          "similarity": 0.7246792636142654,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_subject",
+          "similarity": 0.723094160280208,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_today_assessments",
+          "similarity": 0.7218872506215289,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "students-and-teachers-ar",
+      "language": "ar",
+      "query": "كم عدد التلاميذ وكم عدد الأساتذة هذه السنة؟",
+      "status": "routed",
+      "elapsedMs": 337,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-profile_get_my_students",
+        "classes_get_class_teachers",
+        "teachers_get_teachers",
+        "teachers_get_students",
+        "sections_get_teachers",
+        "classes_get_class_students"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8047539235578246,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.7695962006575716,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.6987960223689198,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.6843060662928968,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.6837529147789827,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_students",
+          "similarity": 0.6692700573867617,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.6664277713643637,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.6646696928734148,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "missing-student-ar",
+      "language": "ar",
+      "query": "اعرض بيان نقط التلميذ Zzbench Qqtest.",
+      "status": "routed",
+      "elapsedMs": 325,
+      "finalTools": [
+        "academic-dashboard_get_kpis",
+        "assessments_get_by_teacher",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-dashboard_get_overview",
+        "exams_get_by_teacher",
+        "assessments_get_by_class",
+        "grades_get_by_teacher",
+        "grades_get_student_report",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "academic-dashboard_get_kpis",
+          "similarity": 0.6894611571934647,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_teacher",
+          "similarity": 0.6744715751477732,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.6646616462478373,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.6638225121709879,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_teacher",
+          "similarity": 0.658720452632958,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_class",
+          "similarity": 0.6558470315750875,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_teacher",
+          "similarity": 0.6504629103950499,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.6467789447107105,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:grades_get_student_report"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-mark-blocked-ar",
+      "language": "ar",
+      "query": "سجل غياب التلميذ Zzbench Qqtest اليوم.",
+      "status": "routed",
+      "elapsedMs": 312,
+      "finalTools": [
+        "attendance_mark",
+        "attendance_get_by_student",
+        "attendance_get_today_students",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_teacher",
+        "search_search_students",
+        "attendance_get_by_date"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.7066594537103614,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6875514015617097,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.6873530186450517,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_update_status",
+          "similarity": 0.6730608516081702,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.6636662493945708,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.660044870365889,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_delete",
+          "similarity": 0.6589087654460996,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_delete_all",
+          "similarity": 0.6549522095975673,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_mark"
+        },
+        {
+          "toolName": "attendance_get_by_date",
+          "reason": "dependency_of:attendance_get_today_students"
+        }
+      ],
+      "confirmationTools": [
+        "attendance_mark"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "announcement-blocked-ar",
+      "language": "ar",
+      "query": "أنشئ وانشر إعلانا لجميع أولياء الأمور بعنوان «Zzbench test» يفيد بأن المدرسة ستغلق مبكرا يوم الجمعة.",
+      "status": "routed",
+      "elapsedMs": 634,
+      "finalTools": [
+        "announcements_create",
+        "announcements_get_by_class",
+        "announcements_get_by_target_audience"
+      ],
+      "matches": [
+        {
+          "toolName": "announcements_create",
+          "similarity": 0.7266279621942182,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_create",
+          "similarity": 0.6985656439403394,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_update",
+          "similarity": 0.694784599853491,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_publish",
+          "similarity": 0.6849640199563601,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_update",
+          "similarity": 0.6701867174657065,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_by_class",
+          "similarity": 0.6569033273843009,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_by_target_audience",
+          "similarity": 0.6406223201195382,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "settings_update",
+          "similarity": 0.624877296395473,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [
+        "announcements_create"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "student-count-es",
+      "language": "es",
+      "query": "¿Cuántos alumnos están matriculados este año?",
+      "status": "routed",
+      "elapsedMs": 300,
+      "finalTools": [
+        "students_get_student_count",
+        "teachers_get_teacher_count",
+        "students_get_students",
+        "attendance_get_today_students",
+        "classes_get_class_students",
+        "teacher-profile_get_my_students",
+        "academic-dashboard_get_kpis",
+        "attendance_get_by_student",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.8454066883548049,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8099797722703462,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.7301990011393988,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.7150698986775125,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.7143519605751132,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7007665094515456,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "academic-dashboard_get_kpis",
+          "similarity": 0.7003361404142775,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6981006500841408,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "attendance_get_by_date",
+          "reason": "dependency_of:attendance_get_today_students"
+        },
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "teacher-count-es",
+      "language": "es",
+      "query": "¿Cuántos profesores tiene la escuela?",
+      "status": "routed",
+      "elapsedMs": 228,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "teachers_get_teachers",
+        "students_get_student_count",
+        "classes_get_class_teachers",
+        "sections_get_teachers",
+        "staff_get_staff_count",
+        "teachers_get_teacher",
+        "teachers_get_by_cin"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8288324416228265,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.729790362970011,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.7091346979141437,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.6855749334275564,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.6831463923615031,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "staff_get_staff_count",
+          "similarity": 0.6753436350254036,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher",
+          "similarity": 0.6715187047477689,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_by_cin",
+          "similarity": 0.6585158487596151,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "classes-es",
+      "language": "es",
+      "query": "Enumera las clases de la escuela.",
+      "status": "routed",
+      "elapsedMs": 270,
+      "finalTools": [
+        "classes_get_classes",
+        "teachers_get_classes",
+        "teacher-profile_get_my_classes",
+        "classes_get_class_teachers",
+        "classes_get_class_students",
+        "classes_get_class_subjects",
+        "teacher-profile_get_my_students",
+        "classes_get_class_parents"
+      ],
+      "matches": [
+        {
+          "toolName": "classes_get_classes",
+          "similarity": 0.7526820000789219,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_classes",
+          "similarity": 0.7234822397653169,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_classes",
+          "similarity": 0.7214840688512502,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.7139618396759236,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.70740122618646,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_subjects",
+          "similarity": 0.705441962375173,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.6951867421682472,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_parents",
+          "similarity": 0.6929085573826571,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-today-es",
+      "language": "es",
+      "query": "Muestra la asistencia de los alumnos de hoy.",
+      "status": "routed",
+      "elapsedMs": 115,
+      "finalTools": [
+        "attendance_get_today_students",
+        "attendance_get_today",
+        "attendance_get_by_student",
+        "attendance_get_today_staff",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-dashboard_get_overview",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.8530118623411624,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today",
+          "similarity": 0.8132273626707015,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.7896381115050806,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_staff",
+          "similarity": 0.7833848257798219,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.776495867610985,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.7599880528471497,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_date",
+          "similarity": 0.7598949431748209,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.7553399059379058,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "upcoming-exams-es",
+      "language": "es",
+      "query": "¿Qué exámenes hay próximamente?",
+      "status": "routed",
+      "elapsedMs": 309,
+      "finalTools": [
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "exams_get_all",
+        "assessments_get_upcoming_assessments",
+        "exams_get_by_subject",
+        "exams_get_by_teacher",
+        "exams_get_by_section",
+        "assessments_get_by_subject"
+      ],
+      "matches": [
+        {
+          "toolName": "exams_get_upcoming_exams",
+          "similarity": 0.8673536102386866,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_today_exams",
+          "similarity": 0.823007527706321,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_all",
+          "similarity": 0.8031668292184121,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_upcoming_assessments",
+          "similarity": 0.8015988696107325,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_subject",
+          "similarity": 0.7948399323797525,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_teacher",
+          "similarity": 0.7735967175008946,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_section",
+          "similarity": 0.7615748616278502,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_subject",
+          "similarity": 0.7603501174956268,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "students-and-teachers-es",
+      "language": "es",
+      "query": "¿Cuántos alumnos y cuántos profesores hay este año?",
+      "status": "routed",
+      "elapsedMs": 329,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-profile_get_my_students",
+        "students_get_students",
+        "academic-dashboard_get_kpis",
+        "staff_get_staff_count",
+        "teachers_get_teachers",
+        "classes_get_class_students"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8003945232260726,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.794338464736961,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.6973360722060682,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.6861895375164105,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "academic-dashboard_get_kpis",
+          "similarity": 0.685457076268518,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "staff_get_staff_count",
+          "similarity": 0.6795136366970164,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.6754555323180179,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_students",
+          "similarity": 0.6664341688156318,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "missing-student-es",
+      "language": "es",
+      "query": "Muestra el boletín de notas del alumno Zzbench Qqtest.",
+      "status": "routed",
+      "elapsedMs": 338,
+      "finalTools": [
+        "grades_get_student_report",
+        "teacher-dashboard_get_overview",
+        "alerts_get_alerts_by_student",
+        "grades_get_by_teacher",
+        "alerts_get_alerts_by_teacher",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_student",
+        "search_search_students",
+        "assessments_get_all"
+      ],
+      "matches": [
+        {
+          "toolName": "grades_get_student_report",
+          "similarity": 0.7707895586992581,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.7363704914384319,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_get_alerts_by_student",
+          "similarity": 0.7187021710035648,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_teacher",
+          "similarity": 0.7167788564758081,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_get_alerts_by_teacher",
+          "similarity": 0.7123957358114361,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_create",
+          "similarity": 0.7073398406899083,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.7069537146202015,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.7064049736035009,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:grades_get_student_report"
+        },
+        {
+          "toolName": "assessments_get_all",
+          "reason": "dependency_of:grades_create"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "grade-create-blocked-es",
+      "language": "es",
+      "query": "Registra 15 sobre 20 para el alumno Zzbench Qqtest en la última evaluación.",
+      "status": "routed",
+      "elapsedMs": 387,
+      "finalTools": [
+        "grades_create",
+        "assessments_get_by_teacher",
+        "assessments_get_by_subject",
+        "assessments_get_by_class",
+        "exams_get_by_teacher",
+        "assessments_get_all",
+        "assessments_get_upcoming_assessments",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "grades_create",
+          "similarity": 0.7150315978954234,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_teacher",
+          "similarity": 0.699834281334551,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_subject",
+          "similarity": 0.6934867857514759,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_class",
+          "similarity": 0.6902514200354651,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_teacher",
+          "similarity": 0.6893497213455209,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_all",
+          "similarity": 0.6782850369048714,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_create",
+          "similarity": 0.6739928255149598,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_upcoming_assessments",
+          "similarity": 0.6714055487334849,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:grades_create"
+        }
+      ],
+      "confirmationTools": [
+        "grades_create"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "announcement-blocked-es",
+      "language": "es",
+      "query": "Crea y publica un anuncio para todos los padres titulado «Zzbench test»: la escuela cierra antes el viernes.",
+      "status": "routed",
+      "elapsedMs": 521,
+      "finalTools": [
+        "announcements_create",
+        "announcements_get_by_class"
+      ],
+      "matches": [
+        {
+          "toolName": "announcements_create",
+          "similarity": 0.7345685958862357,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_update",
+          "similarity": 0.7045325040817311,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_publish",
+          "similarity": 0.6936714649200488,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_create",
+          "similarity": 0.6787952397817852,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_by_class",
+          "similarity": 0.6665154496873807,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "settings_update",
+          "similarity": 0.6536099910736131,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_update",
+          "similarity": 0.6534550213596199,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "settings_create",
+          "similarity": 0.6432176211373011,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [
+        "announcements_create"
+      ],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "student-count-ary",
+      "language": "ary",
+      "query": "شحال من تلميذ مسجل هاد العام؟",
+      "status": "routed",
+      "elapsedMs": 311,
+      "finalTools": [
+        "students_get_student_count",
+        "teachers_get_teacher_count",
+        "students_get_students",
+        "attendance_get_today_students",
+        "teacher-profile_get_my_students",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_student",
+        "student-profile_get_attendance_summary",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.8572320767731693,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8209450031453389,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.7273750413730866,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.7109224742695116,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7094682936306785,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.690504049255624,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6900000038743179,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "student-profile_get_attendance_summary",
+          "similarity": 0.6877881269644461,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "attendance_get_by_date",
+          "reason": "dependency_of:attendance_get_today_students"
+        },
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "teacher-count-ary",
+      "language": "ary",
+      "query": "شحال من أستاذ كاين فالمدرسة؟",
+      "status": "routed",
+      "elapsedMs": 261,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teachers_get_teachers",
+        "classes_get_class_teachers",
+        "attendance_get_by_teacher",
+        "sections_get_teachers",
+        "teachers_get_teacher",
+        "teachers_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8344290402573775,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.7288858395167369,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.719604895220946,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.7065611585233637,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.6907987876898067,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.6904203906378116,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teacher",
+          "similarity": 0.6790692784067276,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_students",
+          "similarity": 0.6769252346096745,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "classes-ary",
+      "language": "ary",
+      "query": "عطيني اللائحة ديال الأقسام ديال المدرسة.",
+      "status": "routed",
+      "elapsedMs": 330,
+      "finalTools": [
+        "sections_get_parents",
+        "sections_get_classes",
+        "sections_get_teachers",
+        "sections_get_students",
+        "classes_get_class_sections",
+        "teacher-profile_get_my_students",
+        "teacher-dashboard_get_overview",
+        "sections_get_sections"
+      ],
+      "matches": [
+        {
+          "toolName": "sections_get_parents",
+          "similarity": 0.7619978019003044,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_classes",
+          "similarity": 0.7571240663528658,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_teachers",
+          "similarity": 0.7499886900247543,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_students",
+          "similarity": 0.7480163574218962,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_sections",
+          "similarity": 0.7437750711977312,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7408507355478435,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.7295633764376127,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "sections_get_sections",
+          "similarity": 0.72102879301148,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-today-ary",
+      "language": "ary",
+      "query": "وريني الحضور ديال التلاميذ اليوم.",
+      "status": "routed",
+      "elapsedMs": 282,
+      "finalTools": [
+        "attendance_get_today_students",
+        "attendance_get_today",
+        "attendance_get_today_staff",
+        "attendance_get_by_student",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_teacher",
+        "attendance_get_by_date",
+        "teacher-dashboard_get_overview",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "attendance_get_today_students",
+          "similarity": 0.854630563491162,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today",
+          "similarity": 0.8163392227462892,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_today_staff",
+          "similarity": 0.7795496512533066,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.7745141714232667,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.7637869368361515,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.7482599620199294,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_date",
+          "similarity": 0.7473729836337016,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.7349893048437535,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_get_by_student"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "upcoming-exams-ary",
+      "language": "ary",
+      "query": "شنو هوما الامتحانات اللي جايين؟",
+      "status": "routed",
+      "elapsedMs": 320,
+      "finalTools": [
+        "exams_get_upcoming_exams",
+        "assessments_get_upcoming_assessments",
+        "exams_get_today_exams",
+        "exams_get_all",
+        "assessments_get_by_subject",
+        "exams_get_by_subject",
+        "assessments_get_by_class",
+        "teacher-profile_get_schedule_today"
+      ],
+      "matches": [
+        {
+          "toolName": "exams_get_upcoming_exams",
+          "similarity": 0.8292773758503882,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_upcoming_assessments",
+          "similarity": 0.7886473730135442,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_today_exams",
+          "similarity": 0.7786707941678904,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_all",
+          "similarity": 0.7572487268750667,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_subject",
+          "similarity": 0.7467474356902429,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_subject",
+          "similarity": 0.7436051536783237,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_class",
+          "similarity": 0.7412087917327933,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_schedule_today",
+          "similarity": 0.7412069594140687,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "students-and-teachers-ary",
+      "language": "ary",
+      "query": "شحال من تلميذ وشحال من أستاذ كاينين هاد العام؟",
+      "status": "routed",
+      "elapsedMs": 381,
+      "finalTools": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-profile_get_my_students",
+        "teachers_get_teachers",
+        "classes_get_class_teachers",
+        "students_get_students",
+        "attendance_get_by_teacher",
+        "teachers_get_students"
+      ],
+      "matches": [
+        {
+          "toolName": "teachers_get_teacher_count",
+          "similarity": 0.8156829389864381,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_student_count",
+          "similarity": 0.7870649695396646,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-profile_get_my_students",
+          "similarity": 0.7117717185429265,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_teachers",
+          "similarity": 0.6906146655768951,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "classes_get_class_teachers",
+          "similarity": 0.6859299983811374,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "students_get_students",
+          "similarity": 0.6797740494598882,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.6772218346595956,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teachers_get_students",
+          "similarity": 0.6766616876932704,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "missing-student-ary",
+      "language": "ary",
+      "query": "وريني النقط ديال التلميذ Zzbench Qqtest.",
+      "status": "routed",
+      "elapsedMs": 303,
+      "finalTools": [
+        "academic-dashboard_get_kpis",
+        "assessments_get_by_teacher",
+        "teacher-dashboard_get_overview",
+        "grades_get_by_teacher",
+        "exams_get_by_teacher",
+        "teacher-dashboard_get_attendance_trend",
+        "grades_get_by_student",
+        "search_search_students",
+        "assessments_get_all"
+      ],
+      "matches": [
+        {
+          "toolName": "academic-dashboard_get_kpis",
+          "similarity": 0.6983393071102468,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_create",
+          "similarity": 0.6850036758180051,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "assessments_get_by_teacher",
+          "similarity": 0.6849299603951313,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.677990274908482,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_teacher",
+          "similarity": 0.6726811105747657,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "exams_get_by_teacher",
+          "similarity": 0.6707067489624071,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.6690259370130596,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "grades_get_by_student",
+          "similarity": 0.6676090755928664,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:grades_create"
+        },
+        {
+          "toolName": "assessments_get_all",
+          "reason": "dependency_of:grades_create"
+        }
+      ],
+      "confirmationTools": [],
+      "missingGroups": [],
+      "passed": true
+    },
+    {
+      "id": "attendance-mark-blocked-ary",
+      "language": "ary",
+      "query": "سجل بلي التلميذ Zzbench Qqtest غايب اليوم.",
+      "status": "routed",
+      "elapsedMs": 343,
+      "finalTools": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "attendance_get_by_teacher",
+        "alerts_get_alerts_by_teacher",
+        "attendance_get_by_student",
+        "teacher-dashboard_get_attendance_trend",
+        "search_search_students"
+      ],
+      "matches": [
+        {
+          "toolName": "settings_update",
+          "similarity": 0.6602241778908247,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_overview",
+          "similarity": 0.6508336067200123,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "settings_create",
+          "similarity": 0.6475155688128252,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_mark",
+          "similarity": 0.6381088824531798,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_teacher",
+          "similarity": 0.630831756045355,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_get_alerts_by_teacher",
+          "similarity": 0.6297706233634793,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "attendance_get_by_student",
+          "similarity": 0.6275508041891842,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "teacher-dashboard_get_attendance_trend",
+          "similarity": 0.6257924064522092,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [
+        {
+          "toolName": "search_search_students",
+          "reason": "dependency_of:attendance_mark"
+        }
+      ],
+      "confirmationTools": [
+        "settings_update"
+      ],
+      "missingGroups": [
+        [
+          "attendance_mark"
+        ]
+      ],
+      "passed": false
+    },
+    {
+      "id": "announcement-blocked-ary",
+      "language": "ary",
+      "query": "دير إعلان لجميع الآباء بعنوان «Zzbench test» وقول ليهم بلي المدرسة غادي تسد بكري نهار الجمعة، ونشرو.",
+      "status": "routed",
+      "elapsedMs": 607,
+      "finalTools": [
+        "announcements_create",
+        "announcements_get_by_class",
+        "announcements_get_by_target_audience",
+        "announcements_get_upcoming"
+      ],
+      "matches": [
+        {
+          "toolName": "announcements_create",
+          "similarity": 0.6978183527969286,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_publish",
+          "similarity": 0.6700458541717833,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_update",
+          "similarity": 0.6696352375903657,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_create",
+          "similarity": 0.6662130551948707,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "alerts_update",
+          "similarity": 0.6437556086123958,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_by_class",
+          "similarity": 0.6406203797068205,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_by_target_audience",
+          "similarity": 0.6283468245523242,
+          "source": "embeddings"
+        },
+        {
+          "toolName": "announcements_get_upcoming",
+          "similarity": 0.5963191786427745,
+          "source": "embeddings"
+        }
+      ],
+      "dependencies": [],
+      "confirmationTools": [
+        "announcements_create"
+      ],
+      "missingGroups": [],
+      "passed": true
+    }
+  ],
+  "gitHead": "1fc83b862791c94d088aada1caa7acb49587249d",
+  "workingTreeDirty": true,
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "index": {
+    "routingEnabled": true,
+    "embeddingModel": "qwen3-embedding",
+    "embeddingDimensions": 768,
+    "registeredToolCount": 431,
+    "indexedToolCount": 431,
+    "semanticPhraseCount": 0,
+    "indexingRunning": false
+  },
+  "settings": {
+    "enableKnowledge": true,
+    "maxTools": 12,
+    "topSemanticHits": 8,
+    "similarityThreshold": 0.45,
+    "fallbackOnRouterError": "none",
+    "fallbackOnNoMatch": "none",
+    "allowedLangs": [
+      "en",
+      "fr",
+      "ar",
+      "es"
+    ],
+    "dependencies": {
+      "attendance_mark": [
+        "search_search_students"
+      ],
+      "grades_get_student_report": [
+        "search_search_students"
+      ],
+      "grades_get_by_student": [
+        "search_search_students"
+      ],
+      "grades_create": [
+        "search_search_students",
+        "assessments_get_all"
+      ],
+      "attendance_get_by_student": [
+        "search_search_students"
+      ],
+      "attendance_get_today_students": [
+        "attendance_get_by_date"
+      ],
+      "attendance_get_today": [
+        "attendance_get_by_date"
+      ],
+      "fees_get_by_student": [
+        "search_search_students"
+      ],
+      "payments_get_by_student": [
+        "search_search_students"
+      ],
+      "students_get_student_parents": [
+        "search_search_students"
+      ],
+      "student-routes_get_by_student": [
+        "search_search_students"
+      ],
+      "student-profile_get_transport": [
+        "search_search_students"
+      ]
+    },
+    "toolsOverride": "auto",
+    "contextOverride": "auto",
+    "source": "boot"
+  },
+  "inventory": [
+    {
+      "name": "academic-dashboard_get_kpis",
+      "group": "academic-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_count",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_status_counts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_priority_counts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_type_counts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_active_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_critical_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_recent_alerts",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_recent_alerts_by_hours",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_dashboard_summary",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_type",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_status",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_priority",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_student",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_teacher",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_class",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alerts_by_subject",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_get_alert_by_id",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_create",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_update",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_update_status",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_delete_resolved",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_delete",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "alerts_delete_all",
+      "group": "alerts",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_all",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_by_id",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_by_payment_id",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_get_by_student_id",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payment-allocations_delete",
+      "group": "payment-allocations",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_announcements",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_published",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_upcoming",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_expired",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_stats",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_recent",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_by_author",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_by_target_audience",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_by_class",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_active_for_audience",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_get_announcement",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_create",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_publish",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_unpublish",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_update",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_delete_bulk",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_delete",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "announcements_delete_all",
+      "group": "announcements",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_all",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_today_assessments",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_upcoming_assessments",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_due_this_week",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_overdue",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_class",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_section",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_subject",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_teacher",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_get_by_id",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_create",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_update",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_delete_bulk",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_delete",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "assessments_delete_all",
+      "group": "assessments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_all",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_today",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": [
+        "attendance_get_by_date"
+      ]
+    },
+    {
+      "name": "attendance_get_today_students",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": [
+        "attendance_get_by_date"
+      ]
+    },
+    {
+      "name": "attendance_get_today_staff",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_date",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_section",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_student",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "attendance_get_by_staff",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_teacher",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_get_by_id",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_mark",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "attendance_seed_attendance_demo",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_update_status",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_update",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_delete",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "attendance_delete_all",
+      "group": "attendance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_list",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_get_by_id",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_create",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_update",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "behavior_rewards_delete",
+      "group": "behavior_rewards",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_classes",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_sections",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_students",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_teachers",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_subjects",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_parents",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_get_class_analytics",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_create",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_update",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_delete",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "classes_delete_all",
+      "group": "classes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "class-routines_get_periods",
+      "group": "class-routines",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "class-routines_get_teacher_routine",
+      "group": "class-routines",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "class-routines_create",
+      "group": "class-routines",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-credits_apply",
+      "group": "student-credits",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-credits_get_by_student",
+      "group": "student-credits",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_get_cycles",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_get_active_cycles",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_get_cycle",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_create",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_update",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "cycles_delete",
+      "group": "cycles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "dashboard_get_today_snapshot",
+      "group": "dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_list",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_create",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_resolve",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_reopen",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_get_by_id",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_update",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "discipline_delete",
+      "group": "discipline",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_drivers_count",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_active_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_inactive_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_suspended_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_license_expiring_drivers",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_driver",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_driver_by_cin",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_driver_by_license",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_by_email",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_get_by_phone",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_create",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_update",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_update_status",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_delete",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "drivers_delete_all",
+      "group": "drivers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_events",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_today",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_upcoming",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_past",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_active",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_status",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_type",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_class",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_section",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_by_date_range_mcp",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_analytics",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "events_get_event",
+      "group": "events",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_all",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_today_exams",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_upcoming_exams",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_section",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_subject",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_teacher",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_get_by_id",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_create",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_seed_demo_exams",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_update",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_delete_bulk",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_delete",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "exams_delete_all",
+      "group": "exams",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_expenses",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_today",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_this_month",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_summary",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_pending_approvals",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_by_date_range",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_get_expense",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_create",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_handle_approval",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_record_payment",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_update",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "expenses_delete",
+      "group": "expenses",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_fees",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_outstanding",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_overdue",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_overdue_summary",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_overdue_by_student",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_by_student_all_years",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_get_by_student",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "fees_get_fee",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_create",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_create_bulk",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_create_class_bulk",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_update",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_delete_bulk",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_delete",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fees_recalculate_fee",
+      "group": "fees",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_get_all",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_get_by_id",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_create",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_update",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "fee-types_delete",
+      "group": "fee-types",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_kpis",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_trend",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_aging",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_overdue",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_recent_payments",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_expense_breakdown",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_collection_by_class",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "finance-dashboard_get_aging_detail",
+      "group": "finance-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "audit-logs_list",
+      "group": "audit-logs",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "audit-logs_get_by_id",
+      "group": "audit-logs",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_all",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_assessment",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_exam",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_student",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "grades_get_student_report",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "grades_get_by_section",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_subject",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_teacher",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_get_by_id",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_create",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students",
+        "assessments_get_all"
+      ]
+    },
+    {
+      "name": "grades_seed_demo_grades",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_update",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_delete_bulk",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_delete",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "grades_delete_all",
+      "group": "grades",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_all",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_overdue",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_pending",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_paid",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_by_fee_id",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_stats",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_get_by_id",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_create",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_update",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "installments_delete",
+      "group": "installments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_count",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_status_counts",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_overdue_maintenances",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_upcoming_maintenances",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenance_alerts",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_by_vehicle",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_by_status",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenances_by_type",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_get_maintenance_by_id",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_create",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_update",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_update_status",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_complete",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_delete",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_delete_all",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-maintenance_mark_overdue",
+      "group": "vehicle-maintenance",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "operations-dashboard_get_kpis",
+      "group": "operations-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_parents",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_search",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_check_cin_exists",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_by_cin",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_by_phone",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_children",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_get_parent",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_create",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_link_student",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_update",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_delete_bulk",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_delete",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_unlink_student",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parents_delete_all",
+      "group": "parents",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_unread_alerts",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_children",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_all_fees_due",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "parent-profile_get_all_upcoming_events",
+      "group": "parent-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_all",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_today",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_this_month",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_this_week",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_pending_checks",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_overdue_checks",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_total_revenue",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_revenue_by_payment_method",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_monthly_revenue",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_revenue_stats",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_top_paying_students",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_by_id",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_by_student",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "payments_get_by_fee_id",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_get_by_receipt_number",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_record",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_update",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_refund",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_void_payment",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payments_update_check_status",
+      "group": "payments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_all",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_roster",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_by_period",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_by_staff",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_get_by_id",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_run",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_pay_staff",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_pay_staff_bulk",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_unpay_staff",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_pay",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_update",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_delete_bulk",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "payroll_delete",
+      "group": "payroll",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_refuels",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_count",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_recent_records",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_today_records",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_voucher_number",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_date",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_vehicle_id",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_by_driver_id",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_refuel",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_create",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_update",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_delete",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_delete_all",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_consumption_analytics",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_efficiency_report",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_cost_analysis",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_fuel_summary",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_vehicle_fuel_efficiency",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_vehicle_fuel_costs",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_monthly_fuel_trends",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-refuels_get_driver_refuel_stats",
+      "group": "vehicle-refuels",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "rollover_preview",
+      "group": "rollover",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "rollover_commit",
+      "group": "rollover",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_global",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_students",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_teachers",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "search_search_parents",
+      "group": "search",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_sections",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_classes",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_teachers",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_parents",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_students",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_analytics",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_get_section",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_create",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_update",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_delete",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "sections_delete_all",
+      "group": "sections",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_get_public_settings",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_get_admin_settings",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_update",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_create",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "settings_get_by_id",
+      "group": "settings",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff_count",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_attendance_roster",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff_by_role",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_by_employee_code",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_by_cin",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_get_staff_member",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_create",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_update",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_delete_bulk",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff_delete",
+      "group": "staff",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_list",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_list_active",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_create",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_update",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "staff-roles_remove",
+      "group": "staff-roles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_get_students",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_get_student_count",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_get_student",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_get_student_parents",
+      "group": "students",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "students_create",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_update",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_delete_bulk",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_delete",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "students_delete_all",
+      "group": "students",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_overview",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_academic",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_attendance_summary",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_financial",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-profile_get_transport",
+      "group": "student-profile",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "student-routes_get_all",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_get_by_vehicle",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_get_by_student",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": [
+        "search_search_students"
+      ]
+    },
+    {
+      "name": "student-routes_get_by_id",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_assign",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_update",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_reassign",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_unassign",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_unassign_at",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "student-routes_delete",
+      "group": "student-routes",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_get_subjects",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_get_subject",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_create",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_seed_subjects",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_update",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_delete",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "subjects_delete_all",
+      "group": "subjects",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_teachers",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_teacher_count",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_teacher",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_by_cin",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_by_email",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_by_phone",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_classes",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_get_students",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_assign_subject",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_unassign_subject",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_assign_class",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_unassign_class",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_create",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_update",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_delete_bulk",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_delete",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teachers_delete_all",
+      "group": "teachers",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-dashboard_get_overview",
+      "group": "teacher-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-dashboard_get_attendance_trend",
+      "group": "teacher-dashboard",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_my_classes",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_schedule_today",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_pending_grading",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "teacher-profile_get_my_students",
+      "group": "teacher-profile",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_all",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_by_vehicle_id",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_by_driver_id",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_get_by_id",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_create",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_assign_driver",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_update",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_unassign",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicle-assignments_delete",
+      "group": "vehicle-assignments",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_get_vehicles",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_get_vehicles_count",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_get_vehicle",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_create",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_update",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_delete",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "vehicles_delete_all",
+      "group": "vehicles",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_get_zones",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_get_zone",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_create",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_update",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "zones_delete",
+      "group": "zones",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_appearance_get",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_appearance_reset",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_presets_list",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_preset_apply",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    },
+    {
+      "name": "theme_branding_get",
+      "group": "default",
+      "indexed": true,
+      "dependencies": []
+    }
+  ],
+  "diagnostic": {
+    "status": "routed",
+    "elapsedMs": 284,
+    "finalTools": [
+      "students_get_student_count",
+      "teachers_get_teacher_count",
+      "students_get_students",
+      "academic-dashboard_get_kpis",
+      "classes_get_class_students",
+      "teacher-profile_get_my_students",
+      "student-profile_get_attendance_summary",
+      "attendance_get_today_students",
+      "attendance_get_by_date"
+    ],
+    "matches": [
+      {
+        "toolName": "students_get_student_count",
+        "similarity": 0.839207925985354,
+        "source": "embeddings"
+      },
+      {
+        "toolName": "teachers_get_teacher_count",
+        "similarity": 0.7756700284579556,
+        "source": "embeddings"
+      },
+      {
+        "toolName": "students_get_students",
+        "similarity": 0.7269932844339061,
+        "source": "embeddings"
+      },
+      {
+        "toolName": "academic-dashboard_get_kpis",
+        "similarity": 0.7164274285094715,
+        "source": "embeddings"
+      },
+      {
+        "toolName": "classes_get_class_students",
+        "similarity": 0.7028351538574329,
+        "source": "embeddings"
+      },
+      {
+        "toolName": "teacher-profile_get_my_students",
+        "similarity": 0.6957138258220795,
+        "source": "embeddings"
+      },
+      {
+        "toolName": "student-profile_get_attendance_summary",
+        "similarity": 0.6903590106108163,
+        "source": "embeddings"
+      },
+      {
+        "toolName": "attendance_get_today_students",
+        "similarity": 0.6890263597416929,
+        "source": "embeddings"
+      }
+    ],
+    "dependencies": [
+      {
+        "toolName": "attendance_get_by_date",
+        "reason": "dependency_of:attendance_get_today_students"
+      }
+    ],
+    "confirmationTools": []
+  },
+  "blockers": []
+}
