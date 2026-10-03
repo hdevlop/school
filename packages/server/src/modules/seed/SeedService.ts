@@ -124,7 +124,7 @@ export class SeedService {
   }
 
   /** Seed full demo data (school structure + all people + fees) */
-  async seedDemo(opts: { students?: number; teachers?: number } = {}) {
+  async seedDemo(opts: { students?: number; teachers?: number } = {}, actor: { id: string; role: string }) {
     await this.seedSystem();
 
     const studentLimit = opts.students ?? studentsData.length;
@@ -163,8 +163,8 @@ export class SeedService {
     await this.driverService.createBulk(driversData as any);
     await this.vehicleService.createBulk(normalizedVehicles as any);
     await this.teacherService.createBulk(selectedTeachers);
-    await this.studentService.createBulk(selectedStudents);
-    await this.feeService.createBulk(selectedFees);
+    await this.studentService.createBulk(selectedStudents, actor);
+    await this.feeService.createBulk(selectedFees, actor.id, actor.role);
   }
 
   /**

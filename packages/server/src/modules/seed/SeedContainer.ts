@@ -398,6 +398,7 @@ export function configureSeedContainer(seedContainer: Container) {
     InstallmentRepository,
     InstallmentValidator,
     SettingsRepository,
+    FinancialAuditService,
   ]);
 
   registerSeedDeps(seedContainer, AllocationValidator, [

@@ -31,6 +31,12 @@ export const fullStudentSchema = z.object({
   transportAssignment: transportAssignmentSchema.optional().nullable(),
 });
 
+// SEC-001: enrollment staff without financial access submit no charges.
+// Reuse the item schema; chaining min(0) would retain feesSchema's min(1).
+export const studentWithoutFeesSchema = fullStudentSchema.extend({
+  fees: z.array(fullStudentSchema.shape.fees.element).max(0),
+});
+
 /**
  * The wizard's first step.
  *

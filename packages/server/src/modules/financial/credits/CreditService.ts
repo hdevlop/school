@@ -205,7 +205,10 @@ export class CreditService {
     return lot;
   }
 
+  @Transaction()
   async cancelCreditForSourcePayment(sourcePaymentId: string, actorId?: string) {
+    const previousLots = await this.creditRepository.getLotsBySourcePaymentForUpdate(sourcePaymentId);
+    const previousById = new Map(previousLots.map(lot => [lot.id, lot]));
     const lots = await this.creditRepository.cancelLotsBySourcePayment(sourcePaymentId);
     const reversed = await this.creditRepository.reverseApplicationsByPayment(sourcePaymentId);
 
@@ -215,7 +218,7 @@ export class CreditService {
         entityId: lot.id,
         action: 'creditLot.cancelled',
         actorId,
-        before: { status: lot.status },
+        before: previousById.get(lot.id) ?? null, // FIX: SEC-013 — capture before UPDATE RETURNING.
         after: lot,
         metadata: { sourcePaymentId, reason: 'source payment bounced/refunded/voided' },
       });

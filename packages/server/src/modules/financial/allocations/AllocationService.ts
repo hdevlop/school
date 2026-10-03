@@ -130,6 +130,7 @@ export class AllocationService {
     for (const a of allocations) {
       const key = `${a.feeId}:${a.installmentNumber}`;
       const lockedRow = this.allocationValidator.ensureLockedInstallment(lockedByKey.get(key), a.installmentNumber, a.feeId);
+      this.allocationValidator.ensurePayableInstallment(lockedRow.status); // FIX: SEC-007 — recheck after locking.
 
       const completed = toCents(completedMap.get(lockedRow.id) || 0);
       const reserved = toCents(reservedMap.get(lockedRow.id) || 0);

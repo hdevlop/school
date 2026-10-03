@@ -128,6 +128,18 @@ export class PaymentValidator {
     if (!canTransition(payment.status, status)) Err(409, this.pt('checkTransitionInvalid', { from: payment.status, to: status }));
   }
 
+  ensureMethodEditable(previousMethod: string, requestedMethod?: string) {
+    // FIX: SEC-008 — crossing the check boundary requires a new receipt lifecycle.
+    if (requestedMethod && (previousMethod === 'check') !== (requestedMethod === 'check')) {
+      Err(409, this.pt('methodChangeNeedsNewReceipt'));
+    }
+  }
+
+  ensurePayableInstallment(status: string) {
+    // FIX: SEC-007 — explicit allocation and check settlement share this rule.
+    if (status === 'cancelled') Err(409, this.ft('cannotPayCancelledInstallment'));
+  }
+
   ensureCheckInstallmentExists<T>(installment: T | null | undefined) {
     if (!installment) Err(409, this.pt('checkTargetMissing'));
     return installment;
@@ -273,6 +285,7 @@ export class PaymentValidator {
         Err(400, this.pt('installmentMissingForFee', { number: allocation.number, feeId: allocation.feeId }));
       }
       const resolvedInstallment = installment!;
+      this.ensurePayableInstallment(resolvedInstallment.status);
 
       if (resolvedInstallment.status === 'paid') {
         Err(400, this.pt('installmentAlreadyPaid', { number: allocation.number }));
@@ -345,6 +358,7 @@ export class PaymentValidator {
       if (!lockedRow) {
         Err(400, this.pt('installmentNotFoundForFee', { number: allocation.number, feeId: allocation.feeId }));
       }
+      this.ensurePayableInstallment(lockedRow.status);
 
       const completed = toCents(completedMap.get(lockedRow.id) || 0);
       const reserved = toCents(reservedMap.get(lockedRow.id) || 0);

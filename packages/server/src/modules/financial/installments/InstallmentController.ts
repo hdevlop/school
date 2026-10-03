@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { InstallmentService } from './InstallmentService';
 import { isFinancial } from '../../../auth';
@@ -90,8 +90,8 @@ export class InstallmentController {
   @Validate({ params: installmentIdParam, body: updateInstallmentDto })
   @McpTool({ description: 'Update an installment by ID', confirm: { level: 'warning', message: 'confirm.installments.update' } })
   @ResMsg('fees.success.installmentUpdated')
-  async update(@Params('id') id: string, @Body() body: UpdateInstallmentDto) {
-    return this.installmentService.update(id, body);
+  async update(@Params('id') id: string, @Body() body: UpdateInstallmentDto, @User() user: { id: string }) {
+    return this.installmentService.update(id, body, user.id);
   }
 
   @Delete('/:id')

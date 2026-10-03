@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { createParentDto } from '../parents/ParentDto';
+import { createFeeDto } from '../financial/fees/FeeDto';
 import {
   addressField,
   dateField,
@@ -58,9 +60,10 @@ export const createStudentDto = studentSchema.omit({ id: true }).extend({
   yearEnrolledOn: z.string().refine(isDateOnly, 'A real YYYY-MM-DD yearly enrollment date is required'),
   gradeLevel: z.number().optional(),
   graduationDate: z.string().optional().nullable(),
-  parents: z.array(z.unknown()).optional(),
+  // FIX: SEC-001 — compose child validation, including existing parent IDs.
+  parents: z.array(z.union([z.string().min(1), createParentDto])).optional(),
   parentIds: z.array(z.string().min(1)).optional(),
-  fees: z.array(z.unknown()).optional(),
+  fees: z.array(createFeeDto.omit({ studentId: true })).optional(),
   transportAssignment: transportAssignmentDto.optional().nullable(),
 });
 

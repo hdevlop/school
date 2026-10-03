@@ -269,6 +269,19 @@ Finance dashboard queries (under `modules/dashboard/finance` — not inside this
 - **Payment → allocation is N:M via `allocations`**. A single payment can cover multiple installments; a single installment can be covered by multiple payments over time.
 - **Schedule is forced to `oneTime`** in the UI when the FeeType is `oneTime`. Backend validators should also enforce this — don't trust the client.
 - **Dashboard `overdue`** is computed on read. Stored `overdue` status on installments is a best-effort snapshot that may lag until a write touches the row.
+
+### Finance integrity rules (2026-10-03)
+
+- A fee's stored `discountAmount` is an aggregate. Edit inputs and rollover proposals use the per-period discount; partial edits preserve the existing aggregate when the charged month count is unchanged.
+- One-time fee types always store `schedule: oneTime` and generate one installment, including direct REST/MCP requests.
+- Fee payment status is derived from allocations. Requests cannot set `paid`, `partiallyPaid`, or `overdue` directly.
+- A generated installment schedule belongs to its fee. Change amounts or installment counts through the fee edit workflow. Standalone installment writes permit date/number corrections with the authenticated actor in the financial audit, but refuse amount changes, creation and deletion.
+- Explicit allocations and check settlement reject cancelled installment targets, including a lifecycle recheck under the allocation lock. Cancelled installments cannot be selected in the payment form.
+- Editing a receipt cannot cross the check/non-check boundary. Void it and record a new receipt with the correct method; ordinary non-check method corrections remain available.
+- A fee with any payment allocation cannot be hard-deleted. Mixed bulk deletes validate every fee before deleting any.
+- Schedule rewrites, fee deletion and allocation queries take transaction-level advisory locks for their fee IDs in a shared sorted order before installment row locks. These supplement the payment and credit locks; PostgreSQL concurrency acceptance remains a separate verification step.
+- Transport-end audits name the current admin. Credit cancellation records the lot snapshot read under lock before mutation.
+- Cron bodies are runtime validated. The bounded check-day window is a SQL parameter multiplied by `INTERVAL '1 day'`.
 - **Currency** is MAD only for MVP. All amounts are stored as `moneyField` (decimal). Never do money math in floating-point JS — use the helpers or strings.
 - **Academic year** is `"YYYY-YYYY"` text, driven by a Sept 1 boundary via `getCurrentAcademicYear()`. Don't parse calendar year from it.
 

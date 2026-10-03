@@ -55,7 +55,7 @@ runSeedTask('school seed', async (server) => {
   await teacherService.createBulk(teachersData);
   console.log('✅ Teachers seeded');
 
-  await studentService.createBulk(studentsData);
+  await studentService.createBulkForSeed(studentsData);
   console.log('✅ Students seeded');
 
   console.log('📋 Seeding attendance...');

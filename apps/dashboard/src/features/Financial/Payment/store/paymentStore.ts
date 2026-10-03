@@ -93,7 +93,7 @@ export const getInstallmentAvailableAmount = (inst: Installment) => {
 };
 
 export const isInstallmentPayable = (inst: Installment) =>
-  inst.status !== 'paid' && getInstallmentAvailableAmount(inst) > 0;
+  inst.status !== 'paid' && inst.status !== 'cancelled' && getInstallmentAvailableAmount(inst) > 0;
 
 export const usePaymentStore = create<PaymentStore>((set, get) => ({
   // Initial state

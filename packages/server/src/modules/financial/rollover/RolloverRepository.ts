@@ -112,6 +112,7 @@ export class RolloverRepository {
         feeTypeId: fees.feeTypeId,
         schedule: fees.schedule,
         sourceBaseAmount: fees.baseAmount,
+        effectiveDate: fees.effectiveDate,
         discountAmount: fees.discountAmount,
         discountReason: fees.discountReason,
         notes: fees.notes,

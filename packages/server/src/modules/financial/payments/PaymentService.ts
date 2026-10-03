@@ -326,6 +326,7 @@ export class PaymentService {
   async update(id: string, data: UpdatePaymentDto, actorId?: string) {
     await this.paymentValidator.validate(data, id);
     const previous = this.paymentValidator.ensureLockedPayment(await this.paymentRepository.getByIdForUpdate(id));
+    this.paymentValidator.ensureMethodEditable(previous.paymentMethod, data.paymentMethod);
     const paymentData = pickProps(data, UPDATE_KEYS);
     if (
       data.paymentDate !== undefined
@@ -448,6 +449,7 @@ export class PaymentService {
       }
       for (const [installmentId, ownCents] of ownByInstallment) {
         const installment = this.paymentValidator.ensureCheckInstallmentExists(lockedById.get(installmentId));
+        if (dto.status === 'completed') this.paymentValidator.ensurePayableInstallment(installment.status);
         const consumedCents = toCents(completedMap.get(installmentId) || 0)
           + toCents(reservedMap.get(installmentId) || 0)
           + ownCents;

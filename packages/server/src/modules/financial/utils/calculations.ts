@@ -57,6 +57,17 @@ export const calculateRemainingMonthsInYear = (
   return calculateRemainingMonths(chargeableStart, end);
 };
 
+/** Stored discounts are aggregate; fee inputs and rollover use a monthly rate. */
+export function getFeeDiscountPerPeriod(
+  fee: { paymentType: string; schedule: string; discountAmount?: string | number | null },
+  context: FeeCalculationContext,
+): number {
+  const months = fee.paymentType === 'recurring' && fee.schedule !== 'oneTime'
+    ? calculateRemainingMonthsInYear(context) : 1;
+  // FIX: SEC-006 — never feed a saved yearly total back as a monthly discount.
+  return Number(fromCents(Math.round(toCents(fee.discountAmount ?? 0) / Math.max(1, months))));
+}
+
 export const calculateFeeAmounts = (
   paymentType: string,
   amount: string | number | null,

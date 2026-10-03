@@ -72,16 +72,16 @@ export class StudentController {
   @Validate(createStudentDto)
   @McpTool({ description: 'Create a new student', confirm: { level: 'warning', message: 'confirm.students.create' } })
   @ResMsg('students.success.created')
-  async create(@Body() body: CreateStudentDto, @User() user: { id: string }) {
-    return this.studentService.create(body, user.id);
+  async create(@Body() body: CreateStudentDto, @User() user: { id: string; role: string }) {
+    return this.studentService.create(body, user);
   }
 
   @Post('/seed')
   @isAdmin()
   @Validate(createStudentsBulkDto)
   @ResMsg('students.success.seeded')
-  async createBulk(@Body() body: CreateStudentsBulkDto) {
-    return this.studentService.createBulk(body);
+  async createBulk(@Body() body: CreateStudentsBulkDto, @User() user: { id: string; role: string }) {
+    return this.studentService.createBulk(body, user);
   }
 
   @Put('/:id')

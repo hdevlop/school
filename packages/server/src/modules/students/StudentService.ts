@@ -75,8 +75,8 @@ export class StudentService {
   }
 
   @Transaction()
-  async create(data: CreateStudentDto, actorId?: string) {
-    return this.createStudent(data, actorId);
+  async create(data: CreateStudentDto, actor: { id: string; role: string }) {
+    return this.createStudent(data, actor);
   }
 
   @Transaction()
@@ -90,7 +90,12 @@ export class StudentService {
     return this.createStudent(data, undefined, year);
   }
 
-  private async createStudent(data: CreateStudentDto, actorId?: string, seedYear?: ResolvedAcademicYear) {
+  private async createStudent(data: CreateStudentDto, actor?: { id: string; role: string }, seedYear?: ResolvedAcademicYear) {
+    // FIX: SEC-001 — authorize and validate before provisioning or file writes.
+    if (!(seedYear && isSeeding())) this.studentValidator.ensureNestedCreateAllowed(data, actor);
+    const validatedData = this.studentValidator.parseNestedCreate(data);
+    data = { ...data, ...validatedData };
+    const actorId = actor?.id;
     const parentsToProcess = [
       ...(data.parents || []),
       ...(data.parentIds || [])
@@ -156,7 +161,7 @@ export class StudentService {
     }, actorId || user.id);
 
     await this.parentService.processParents(student, parentsToProcess);
-    await this.feeService.processFees(student, data.fees as any, { id: actorId || user.id }, data.yearEnrolledOn, year.label);
+    await this.feeService.processFees(student, validatedData.fees, actor ?? { id: user.id }, data.yearEnrolledOn, year.label);
 
     if (data.transportAssignment) {
       await this.studentRouteService.assign({
@@ -244,8 +249,8 @@ export class StudentService {
     };
   }
 
-  async createBulk(studentsData: CreateStudentsBulkDto) {
-    return this.createStudents(studentsData, (data) => this.create(data));
+  async createBulk(studentsData: CreateStudentsBulkDto, actor: { id: string; role: string }) {
+    return this.createStudents(studentsData, (data) => this.create(data, actor));
   }
 
   async createBulkForSeed(studentsData: CreateStudentsBulkDto) {

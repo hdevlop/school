@@ -92,8 +92,8 @@ export class StudentRouteController {
   @Validate({ params: studentRouteIdParam })
   @McpTool({ description: 'Unassign a student from a route', confirm: { level: 'warning', message: 'confirm.studentRoutes.unassign' } })
   @ResMsg('studentRoutes.success.unassigned')
-  async unassign(@Params('id') id: string) {
-    return this.studentRouteService.unassign(id);
+  async unassign(@Params('id') id: string, @User() user: { id: string }) {
+    return this.studentRouteService.unassign(id, undefined, user.id);
   }
 
   @Post('/:id/unassign')
@@ -101,8 +101,8 @@ export class StudentRouteController {
   @Validate({ params: studentRouteIdParam, body: unassignStudentRouteDto })
   @McpTool({ description: 'Unassign a student from a route on a selected-year date', confirm: { level: 'warning', message: 'confirm.studentRoutes.unassignAt' } })
   @ResMsg('studentRoutes.success.unassigned')
-  async unassignAt(@Params('id') id: string, @Body() body: UnassignStudentRouteDto) {
-    return this.studentRouteService.unassign(id, body.unassignmentDate);
+  async unassignAt(@Params('id') id: string, @Body() body: UnassignStudentRouteDto, @User() user: { id: string }) {
+    return this.studentRouteService.unassign(id, body.unassignmentDate, user.id);
   }
 
   @Delete('/:id')

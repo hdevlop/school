@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { isSupportedPushEndpoint } from './pushEndpoint';
 
 const base64url = z.string().trim().min(1).max(500).regex(/^[A-Za-z0-9_-]+={0,2}$/);
 
@@ -8,7 +9,7 @@ export const notificationListQuery = z.object({
 });
 export const notificationIdParams = z.object({ id: z.string().min(1).max(40) });
 export const pushSubscriptionDto = z.object({
-  endpoint: z.string().trim().url().max(2_000),
+  endpoint: z.string().trim().url().max(2_000).refine(isSupportedPushEndpoint, 'Unsupported HTTPS push provider'),
   p256dh: base64url,
   auth: base64url,
 });

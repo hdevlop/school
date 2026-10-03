@@ -7,7 +7,7 @@ import type { StepConfig } from 'najm-kit'
 import { Loader2 } from 'lucide-react'
 import { getStudentDefaultValues, StudentFormContent } from './SimpleStudentForm'
 import { BulkParentFormContent } from '@/features/Parents/components/BulkParentForm'
-import { fullStudentSchema, studentWithTransportSchema } from '../config/fullStudentSchemas'
+import { fullStudentSchema, studentWithoutFeesSchema, studentWithTransportSchema } from '../config/fullStudentSchemas'
 import { studentSchema } from '../config/studentSchemas'
 import { academicYearStartDate, firstYearEnrolledOn } from '../config/newStudentEnrollment'
 import { parentSchema, parentsSchema } from '@/features/Parents/config/parentSchemas'
@@ -20,6 +20,7 @@ import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { chance } from '@sms/contracts/fixtures'
 import { StudentTransportFormContent } from '@/features/Transport/components/StudentTransportFormContent'
 import { normalizeLocationValue } from 'najm-kit/location'
+import { useViewerRole } from '@/shared/useViewerRole'
 
 const ALWAYS_FEE_CATEGORIES = ['registration', 'tuition']
 const OPTIONAL_FEE_PROBABILITY = 0.8
@@ -39,17 +40,21 @@ const FullStudentForm = ({
 }) => {
   const { pop } = useDialog()
   const { t } = useTranslation()
+  const { role } = useViewerRole()
+  const canCreateFees = ['admin', 'principal', 'accounting'].includes(role ?? '')
+  const canAssignTransport = role === 'admin'
+  const formSchema = canCreateFees ? fullStudentSchema : studentWithoutFeesSchema
   const [transportSelected, setTransportSelected] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
   const initialStudentValues = useMemo(() => getStudentDefaultValues(null, businessDate), [businessDate])
 
   const defaultFees = useMemo(() => {
-    if (!feeTypes?.length) return []
+    if (!canCreateFees || !feeTypes?.length) return []
     const tuition = feeTypes.filter((ft: any) => ft.category === 'tuition' && ft.paymentType === 'recurring' && ft.status === 'active')
     const candidates = tuition.length > 0 ? tuition : feeTypes.filter((ft: any) => ft.paymentType === 'recurring' && ft.status === 'active')
     return candidates.map((ft: any) => FeeFactory.createFromFeeType(ft))
-  }, [feeTypes])
+  }, [canCreateFees, feeTypes])
 
   const fillStudent = useCallback(() => {
     const selectedClass: any = pick(classes)
@@ -63,12 +68,13 @@ const FullStudentForm = ({
   }, [businessDate, classes])
 
   const fillFees = useCallback(() => {
+    if (!canCreateFees) return { fees: [] }
     const active = (feeTypes ?? []).filter((ft: any) => ft.status === 'active')
     const selected = active.filter((ft: any) =>
       ALWAYS_FEE_CATEGORIES.includes(ft.category) || chance(OPTIONAL_FEE_PROBABILITY),
     )
     return { fees: selected.map((ft: any) => FeeFactory.createFromFeeType(ft)) }
-  }, [feeTypes])
+  }, [canCreateFees, feeTypes])
 
   const fillAll = useCallback(() => {
     const student = fillStudent()
@@ -124,7 +130,7 @@ const FullStudentForm = ({
       render: () => (
         <StudentFormContent
           classes={classes}
-          showTransportToggle
+          showTransportToggle={canAssignTransport}
           onTransportToggle={setTransportSelected}
         />
       ),
@@ -138,7 +144,7 @@ const FullStudentForm = ({
         <BulkParentFormContent />
       ),
     },
-    {
+    ...(canCreateFees ? [{
       id: 'fees',
       title: feesStepTitle,
       schema: feesSchema,
@@ -150,8 +156,8 @@ const FullStudentForm = ({
           showEffectiveDateField={false}
         />
       ),
-    },
-    ...(transportSelected ? [{
+    }] : []),
+    ...(canAssignTransport && transportSelected ? [{
       id: 'transport',
       title: transportStepTitle,
       schema: transportSchema,
@@ -166,7 +172,7 @@ const FullStudentForm = ({
         <StudentTransportFormContent feeTypes={feeTypes} />
       ),
     }] : []),
-  ], [classes, feeTypes, feesStepTitle, parentsStepTitle, studentStepTitle, transportSelected, transportStepTitle])
+  ], [canCreateFees, canAssignTransport, classes, feeTypes, feesStepTitle, parentsStepTitle, studentStepTitle, transportSelected, transportStepTitle])
 
   const defaultValues = useMemo(() => ({
     ...initialStudentValues,
@@ -195,7 +201,7 @@ const FullStudentForm = ({
       : studentData.fees
 
     const { addressLocation, ...flatStudentFields } = studentFields
-    const flatTransportAssignment = transportEnabled && transportAssignment
+    const flatTransportAssignment = canAssignTransport && transportEnabled && transportAssignment
       ? (() => {
           const { pickup, dropoff, ...fields } = transportAssignment
           return {
@@ -217,7 +223,7 @@ const FullStudentForm = ({
       address: addressLocation.address,
       addressLatitude: addressLocation.latitude ?? null,
       addressLongitude: addressLocation.longitude ?? null,
-      fees,
+      fees: canCreateFees ? fees : [],
       transportAssignment: flatTransportAssignment,
     }
 
@@ -238,17 +244,17 @@ const FullStudentForm = ({
       setIsSubmitting(false)
       throw error
     }
-  }, [classes, feeTypes, onSubmitStudent, pop])
+  }, [canCreateFees, canAssignTransport, classes, feeTypes, onSubmitStudent, pop])
 
   return (
     <div className='h-full min-h-0' aria-busy={isSubmitting}>
       <StudentWizardForm
         steps={steps}
-        schema={fullStudentSchema}
+        schema={formSchema}
         defaultValues={defaultValues}
         devTools={devTools}
         onStepComplete={(stepIndex, data) => {
-          if (stepIndex === 0) setTransportSelected(Boolean(data.transportEnabled))
+          if (stepIndex === 0) setTransportSelected(canAssignTransport && Boolean(data.transportEnabled))
         }}
         onSubmit={handleSubmit}
         className={isSubmitting ? 'pointer-events-none select-none' : undefined}

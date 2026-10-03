@@ -11,7 +11,7 @@ import { useCallback, useEffect } from 'react'
 import { feeSchema } from '../config/feeSchemas'
 import { buildFeeStatusOptions, buildScheduleOptions } from '../config/feeOptions'
 import { useDialog } from 'najm-kit'
-import { calculateFeeAmounts } from '@/features/Financial/Fees/utils/feeUtils'
+import { calculateFeeAmounts, getFeeDiscountPerPeriod } from '@/features/Financial/Fees/utils/feeUtils'
 import { usePrefix } from 'najm-kit';
 
 
@@ -25,7 +25,7 @@ const EditFeeForm = ({ fee, feeTypes = [] }) => {
       schedule: fee?.schedule || 'monthly',
       baseAmount: fee?.baseAmount || 0,
       netAmount: fee?.netAmount || 0,
-      discountAmount: fee?.discountAmount || 0,
+      discountAmount: getFeeDiscountPerPeriod(fee ?? {}),
       status: fee?.status || 'pending',
       notes: fee?.notes || '',
    }
@@ -44,13 +44,13 @@ const EditFeeForm = ({ fee, feeTypes = [] }) => {
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
          >
-            <SimpleFeeFormContent feeTypes={feeTypes} isEditMode={isEditMode} />
+            <SimpleFeeFormContent fee={fee} feeTypes={feeTypes} isEditMode={isEditMode} />
          </NForm>
       </div>
    )
 }
 
-const SimpleFeeFormContent = ({ feeTypes, isEditMode }) => {
+const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
    const { t } = useTranslation()
    const { setValue, register } = useFormContext()
    const prefix = usePrefix();
@@ -83,12 +83,13 @@ const SimpleFeeFormContent = ({ feeTypes, isEditMode }) => {
             paymentType,
             baseAmount,
             schedule,
-            discountAmount
+            discountAmount,
+            { academicYear: fee?.academicYear, effectiveDate: fee?.effectiveDate }
          )
 
          setValue(f('netAmount'), netAmount)
       }
-   }, [baseAmount, schedule, discountAmount, selectedFeeType, paymentType, f, feeTypeId, setValue])
+   }, [baseAmount, schedule, discountAmount, selectedFeeType, paymentType, f, feeTypeId, setValue, fee?.academicYear, fee?.effectiveDate])
 
    const scheduleOptions = buildScheduleOptions(t)
 

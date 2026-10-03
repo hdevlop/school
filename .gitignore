@@ -69,3 +69,5 @@ apps/dashboard/storage/
 apps/dashboard/test-results/
 apps/dashboard/playwright-report/
 apps/dashboard/playwright/.auth/
+# Local security audit evidence and pre-fix snapshots.
+.security-audit/

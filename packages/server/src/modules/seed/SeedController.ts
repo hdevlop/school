@@ -1,4 +1,4 @@
-import { Controller, Post, ResMsg, Body } from '../../najm';
+import { Controller, Post, ResMsg, Body, User } from '../../najm';
 import { isAdministrator } from '../../auth';
 import { SeedService } from './SeedService';
 
@@ -14,8 +14,8 @@ export class SeedController {
   @Post('/demo')
   @isAdministrator()
   @ResMsg('settings.seed.success')
-  async seedDemo(@Body() body: SeedDemoOptions) {
-    await this.seedService.seedDemo(body);
+  async seedDemo(@Body() body: SeedDemoOptions, @User() user: { id: string; role: string }) {
+    await this.seedService.seedDemo(body, user);
     return { seeded: true };
   }
 

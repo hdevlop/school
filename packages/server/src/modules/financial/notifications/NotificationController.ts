@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Headers, Post, ResMsg } from '../../../najm';
+import { Body, Controller, Get, Headers, Post, ResMsg, Validate } from '../../../najm';
 import { NotificationService } from './NotificationService';
 import { assertCronSecret } from './NotificationValidator';
-import { type RunNotificationsDto } from './NotificationDto';
+import { listRecentNotificationsDto, runNotificationsDto, type RunNotificationsDto } from './NotificationDto';
 import { isAdmin } from '../../../auth';
 import { Public } from 'najm-guard';
 
@@ -11,6 +11,7 @@ export class NotificationController {
 
   @Post('/cron/overdue')
   @Public()
+  @Validate(runNotificationsDto)
   @ResMsg('notifications.overdueRun')
   async runOverdue(
     @Body() body: RunNotificationsDto,
@@ -22,6 +23,7 @@ export class NotificationController {
 
   @Post('/cron/check-due')
   @Public()
+  @Validate(runNotificationsDto)
   @ResMsg('notifications.checkDueRun')
   async runCheckDue(
     @Body() body: RunNotificationsDto,
@@ -33,6 +35,7 @@ export class NotificationController {
 
   @Post('/list-recent')
   @Public()
+  @Validate(listRecentNotificationsDto)
   @ResMsg('notifications.list')
   async listRecent(@Body() body: { limit?: number }, @Headers('x-cron-secret') secret: string) {
     assertCronSecret(secret);

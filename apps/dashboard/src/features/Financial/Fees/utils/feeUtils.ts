@@ -122,6 +122,15 @@ export const isOneTimePaymentType = (feeTypes: FeeType[], feeTypeId: string): bo
    return feeType?.paymentType === 'oneTime';
 };
 
+/** Convert the stored aggregate back to the per-period value expected by edits. */
+export const getFeeDiscountPerPeriod = (fee: {
+  schedule?: string; baseAmount?: string | number; grossAmount?: string | number; discountAmount?: string | number;
+}) => {
+  const periods = fee.schedule === 'oneTime' ? 1
+    : Math.max(1, Math.round(Number(fee.grossAmount || 0) / Number(fee.baseAmount || 1)));
+  return Math.round(Number(fee.discountAmount || 0) * 100 / periods) / 100;
+};
+
 // ========================================
 // FEE CALCULATION UTILITIES
 // ========================================
@@ -169,6 +178,11 @@ export const calculateFeeAmounts = (
 ) => {
   const baseAmount = Number(amount) || 0;
   const discountVal = Number(discount) || 0;
+
+  if (schedule === 'oneTime') {
+    const totalDiscount = Math.min(discountVal, baseAmount);
+    return { grossAmount: baseAmount, totalDiscount, netAmount: Math.max(0, baseAmount - totalDiscount), periods: 1, monthsRemaining: 1 };
+  }
 
   const range = getPreviewRange(context);
   const chargeableStart = context.effectiveDate && context.effectiveDate > range.startDate

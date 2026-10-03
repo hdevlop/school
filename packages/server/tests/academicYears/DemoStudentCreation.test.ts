@@ -7,6 +7,7 @@ it('provisions historical demo students with a real audit actor and uses only th
     'ensureIdUnique', 'ensureCodeUnique', 'ensureEmailUnique', 'ensurePhoneUnique',
     'ensureClassAndSectionValid', 'ensureCreateAllowed',
   ].map((name) => [name, () => {}]));
+  Object.assign(validators, { parseNestedCreate: (data: object) => data });
   const service = new StudentService(
     { create: async (data: object) => data } as any, validators as any, {} as any,
     { provisionUser: async () => ({ id: 'real-student-user' }) } as any,

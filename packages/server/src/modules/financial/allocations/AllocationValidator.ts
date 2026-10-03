@@ -25,6 +25,10 @@ export class AllocationValidator {
     if (count === 0) Err(400, this.t('noInstallmentsMatched'));
   }
 
+  ensurePayableInstallment(status: string) {
+    if (status === 'cancelled') Err(409, this.t('cannotPayCancelledInstallment'));
+  }
+
   ensurePaymentCapacity(plannedCents: number, paymentCents: number) {
     if (plannedCents > paymentCents) Err(400, this.t('allocationsExceedPayment'));
   }

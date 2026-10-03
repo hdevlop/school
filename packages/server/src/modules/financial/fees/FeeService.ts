@@ -6,6 +6,8 @@ import {
   amountToString,
   calculateFeeAmounts,
   calculateFeeStatus,
+  calculateRemainingMonthsInYear,
+  getFeeDiscountPerPeriod,
   formatDateOnly,
   resolveFeeEffectiveDate,
 } from '../utils';
@@ -21,7 +23,7 @@ import type { CreateFeeDto, UpdateFeeDto, ClassBulkFeeDto } from './FeeDto';
 
 const FEE_UPDATE_KEYS = [
   'studentId', 'schedule', 'academicYear', 'effectiveDate', 'baseAmount',
-  'discountAmount', 'discountReason', 'status', 'notes', 'assignedBy'
+  'discountAmount', 'discountReason', 'notes'
 ];
 
 const FEE_CREATE_KEYS = [
@@ -146,10 +148,11 @@ export class FeeService {
 
     const baseAmount = data.baseAmount !== undefined ? data.baseAmount : feeType.amount;
 
+    const schedule = feeType.paymentType === 'oneTime' ? 'oneTime' : data.schedule; // FIX: SEC-014 — enforce catalog policy.
     const { grossAmount, netAmount, totalDiscount } = calculateFeeAmounts(
       feeType.paymentType,
       baseAmount,
-      data.schedule,
+      schedule,
       data.discountAmount,
       calculationContext,
     );
@@ -157,7 +160,7 @@ export class FeeService {
     const feeDetails: Record<string, any> = {
       studentId: data.studentId,
       feeTypeId: data.feeTypeId,
-      schedule: data.schedule,
+      schedule,
       academicYear,
       effectiveDate: resolvedEffectiveDate,
       baseAmount,
@@ -168,7 +171,8 @@ export class FeeService {
       discountReason: data.discountReason,
       status: 'pending',
       notes: data.notes,
-      assignedBy: data.assignedBy || assignedBy,
+      // FIX: SEC-002 — never take the acting account from request data.
+      assignedBy: assignedBy ?? null,
     };
 
     const created = await this.feeRepository.create(pickProps(feeDetails, FEE_CREATE_KEYS));
@@ -182,7 +186,7 @@ export class FeeService {
       entityType: 'fee',
       entityId: recalculated.id,
       action: 'fee.created',
-      actorId: data.assignedBy || assignedBy || null,
+      actorId: assignedBy ?? null,
       before: null,
       after: recalculated,
       metadata: { effectiveDate: resolvedEffectiveDate },
@@ -265,7 +269,7 @@ export class FeeService {
     return results;
   }
 
-  async processFees(student?, fees?: CreateFeeDto[], user?, yearEnrolledOn?: string, enrollmentYear?: string) {
+  async processFees(student?, fees?: Omit<CreateFeeDto, 'studentId'>[], user?, yearEnrolledOn?: string, enrollmentYear?: string) {
     if (isEmpty(fees)) return;
 
     this.feeValidator.ensureEnrollmentFeeYear(fees, enrollmentYear);
@@ -289,8 +293,9 @@ export class FeeService {
   @Transaction()
   async update(id: string, data: UpdateFeeDto, actorId?: string, role?: string) {
     await this.feeValidator.validate(data, id);
+    await this.installmentService.lockFeeSchedule(id);
 
-    const existingFee = await this.feeRepository.getById(id);
+    const existingFee = this.feeValidator.ensureRecalculationFee(await this.feeRepository.getById(id));
     this.feeValidator.ensureYearUnchanged(data.academicYear, existingFee.academicYear);
     await this.requireWritableYear(existingFee.academicYear, role);
     const feeData: Record<string, any> = pickProps(data, FEE_UPDATE_KEYS);
@@ -332,10 +337,13 @@ export class FeeService {
         this.feeValidator.mapEffectiveDateError(error);
       }
 
-      const schedule = data.schedule !== undefined ? data.schedule : existingFee.schedule;
+      const schedule = feeType.paymentType === 'oneTime' ? 'oneTime'
+        : data.schedule !== undefined ? data.schedule : existingFee.schedule;
       const discountAmount = data.discountAmount !== undefined
         ? data.discountAmount
-        : existingFee.discountAmount;
+        : getFeeDiscountPerPeriod({ ...existingFee, paymentType: feeType.paymentType }, {
+          academicYear: existingFee.academicYear, startMonth, endMonth, effectiveDate: existingFee.effectiveDate,
+        });
 
       const calculationContext = {
         academicYear,
@@ -348,15 +356,26 @@ export class FeeService {
         ? data.baseAmount
         : (existingFee.baseAmount || feeType.amount);
 
-      const { grossAmount, netAmount, totalDiscount } = calculateFeeAmounts(
+      const amounts = calculateFeeAmounts(
         feeType.paymentType,
         baseAmount,
         schedule,
         discountAmount,
         calculationContext,
       );
+      const { grossAmount, monthsRemaining } = amounts;
+      let { netAmount, totalDiscount } = amounts;
+      const previousMonths = feeType.paymentType === 'recurring' && existingFee.schedule !== 'oneTime'
+        ? calculateRemainingMonthsInYear({ academicYear: existingFee.academicYear,
+          startMonth, endMonth, effectiveDate: existingFee.effectiveDate }) : 1;
+      if (data.discountAmount === undefined && monthsRemaining === previousMonths) {
+        // Preserve even an aggregate with a cent remainder on an unrelated edit.
+        totalDiscount = Number(existingFee.discountAmount || 0);
+        netAmount = Math.max(0, Math.round((grossAmount - totalDiscount) * 100) / 100);
+      }
 
       feeData.studentId = student.id;
+      feeData.schedule = schedule;
       feeData.academicYear = academicYear;
       feeData.baseAmount = Number(baseAmount);
       feeData.grossAmount = grossAmount;
@@ -400,8 +419,11 @@ export class FeeService {
 
   @Transaction()
   async delete(id: string, actorId?: string, role?: string) {
+    const target = await this.feeValidator.checkExists(id);
+    await this.requireWritableYear(target.academicYear, role);
+    await this.installmentService.lockFeeSchedule(id);
     const existing = await this.feeValidator.checkExists(id);
-    await this.requireWritableYear(existing.academicYear, role);
+    await this.feeValidator.ensureCanDelete(id); // FIX: SEC-009 — retain receipt applications.
     const deletedFee = await this.feeRepository.delete(id);
     await this.auditService.record({
       entityType: 'fee',
@@ -419,6 +441,7 @@ export class FeeService {
     return await this.feeRepository.deleteAll();
   }
 
+  @Transaction()
   async deleteBulk(ids: string[], actorId?: string, role?: string) {
     if (role) {
       // Authorize the whole request before deleting any of its fees.
@@ -427,9 +450,11 @@ export class FeeService {
         await this.requireWritableYear(label, role);
       }
     }
-    const results = await Promise.all(
-      ids.map((id) => this.delete(id, actorId, role))
-    );
+    const uniqueIds = [...new Set(ids)].sort();
+    for (const id of uniqueIds) await this.installmentService.lockFeeSchedule(id);
+    for (const id of uniqueIds) await this.feeValidator.ensureCanDelete(id);
+    const results = [];
+    for (const id of uniqueIds) results.push(await this.delete(id, actorId, role));
     return {
       deletedCount: results.length,
       deletedFees: results,
@@ -472,8 +497,10 @@ export class FeeService {
 
   @Transaction()
   async endTransportFee(studentId: string, feeTypeId: string, effectiveDate: string, actorId?: string) {
-    const fee = await this.feeRepository.getByStudentAndYear(studentId, this.year.label, feeTypeId);
-    if (!fee) return { fee: null, cancelledInstallments: 0 };
+    const target = await this.feeRepository.getByStudentAndYear(studentId, this.year.label, feeTypeId);
+    if (!target) return { fee: null, cancelledInstallments: 0 };
+    await this.installmentService.lockFeeSchedule(target.id);
+    const fee = this.feeValidator.ensureRecalculationFee(await this.feeRepository.getByIdAllYears(target.id));
 
     const cancelled = await this.installmentService.cancelFutureUnpaidByFeeId(fee.id, effectiveDate);
     if (cancelled.length === 0) {
@@ -509,8 +536,10 @@ export class FeeService {
 
   @Transaction()
   async resumeTransportFee(studentId: string, feeTypeId: string, effectiveDate: string, actorId?: string) {
-    const fee = await this.feeRepository.getByStudentAndYear(studentId, this.year.label, feeTypeId);
-    if (!fee) return { fee: null, resumedInstallments: 0 };
+    const target = await this.feeRepository.getByStudentAndYear(studentId, this.year.label, feeTypeId);
+    if (!target) return { fee: null, resumedInstallments: 0 };
+    await this.installmentService.lockFeeSchedule(target.id);
+    const fee = this.feeValidator.ensureRecalculationFee(await this.feeRepository.getByIdAllYears(target.id));
 
     const resumed = await this.installmentService.resumeCancelledByFeeId(fee.id, effectiveDate);
     if (resumed.length === 0) {

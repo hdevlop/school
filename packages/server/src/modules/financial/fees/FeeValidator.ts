@@ -70,6 +70,10 @@ export class FeeValidator {
     if (paymentCount > 0) Err(400, this.t('lockedAfterPayments'));
   }
 
+  async ensureCanDelete(id: string) {
+    if (await this.feeRepository.hasAllocations(id)) Err(409, this.t('feeDeleteHasAllocations'));
+  }
+
   ensureRecalculationFee<T>(fee: T | null | undefined): T {
     if (!fee) Err(404, this.t('notFound'));
     return fee;

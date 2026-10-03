@@ -26,10 +26,9 @@ export const createFeeDto = feeSchema.omit({
   paidAmount: true,
   grossAmount: true,
   netAmount: true,
-});
-export const updateFeeDto = createFeeDto.partial().extend({
-  status: feeStatusEnum.optional(),
-});
+  assignedBy: true,
+}); // FIX: SEC-002 — assignment comes from the trusted service actor.
+export const updateFeeDto = createFeeDto.partial(); // FIX: SEC-011 — status is allocation-derived.
 
 export const createFeesBulkDto = z.object({
   fees: z.array(createFeeDto).min(1),

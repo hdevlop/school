@@ -1,4 +1,4 @@
-import { Service, Events, EventService } from '../../../najm';
+import { Service, Events, EventService, Transaction } from '../../../najm';
 import { InstallmentRepository } from './InstallmentRepository';
 import { InstallmentValidator } from './InstallmentValidator';
 import { SettingsRepository } from '../../settings/SettingsRepository';
@@ -13,6 +13,7 @@ import {
 } from '../utils';
 import type { CreateInstallmentDto, UpdateInstallmentDto } from './InstallmentDto';
 import { getBusinessDate } from '../../../shared/businessDate';
+import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 
 @Service()
 export class InstallmentService {
@@ -22,10 +23,15 @@ export class InstallmentService {
     private installmentRepository: InstallmentRepository,
     private installmentValidator: InstallmentValidator,
     private settingsRepository: SettingsRepository,
+    private auditService: FinancialAuditService,
   ) { }
 
   async getAll() {
     return this.installmentRepository.getAll();
+  }
+
+  async lockFeeSchedule(feeId: string) {
+    await this.installmentRepository.lockFeeSchedules([feeId]);
   }
 
   async getById(id: string) {
@@ -58,16 +64,23 @@ export class InstallmentService {
   async create(data: CreateInstallmentDto) {
     this.installmentValidator.ensurePaymentStateUntouched(data);
     await this.installmentValidator.validate(data);
-    const created = this.installmentRepository.create(data);
-    this.events.emit('installment.created', created);
-    return created;
+    // FIX: SEC-010 — the fee owns its amount and generated schedule.
+    return this.installmentValidator.ensureManagedSchedule();
   }
 
-  async update(id: string, data: UpdateInstallmentDto) {
+  @Transaction()
+  async update(id: string, data: UpdateInstallmentDto, actorId?: string) {
     this.installmentValidator.ensurePaymentStateUntouched(data);
+    const existing = await this.installmentValidator.checkExists(id);
+    await this.lockFeeSchedule(existing.feeId);
     await this.installmentValidator.validate(data, id);
+    const locked = await this.installmentValidator.checkExists(id);
+    this.installmentValidator.ensureAmountUnchanged(data.amount, locked.amount);
     await this.installmentValidator.ensureCanEdit(id);
     const updated = await this.installmentRepository.update(id, data);
+    await this.auditService.record({ entityType: 'fee_installment', entityId: id,
+      action: 'installment.updated', actorId, before: locked, after: updated,
+      metadata: { changedFields: Object.keys(data) } });
     this.events.emit('installment.updated', updated);
     return updated;
   }
@@ -75,9 +88,7 @@ export class InstallmentService {
   async delete(id: string) {
     await this.installmentValidator.checkExists(id);
     await this.installmentValidator.ensureCanDelete(id);
-    const deleted = await this.installmentRepository.delete(id);
-    this.events.emit('installment.deleted', deleted);
-    return deleted;
+    return this.installmentValidator.ensureManagedSchedule();
   }
 
   async deleteAll() {
@@ -102,6 +113,7 @@ export class InstallmentService {
 
   async generateInstallments(fee) {
     const { id: feeId, schedule, netAmount, effectiveDate, createdAt } = fee;
+    await this.lockFeeSchedule(feeId);
     await this.installmentRepository.deleteByFeeId(feeId);
     const settings = await this.settingsRepository.getAdminSettings();
 

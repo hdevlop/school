@@ -79,8 +79,9 @@ describe('authenticated installment charged year', () => {
     expect((await request('/installments', '2026-2027', 'POST', {
       feeId: oldFee, number: 2, dueDate: '2026-05-01', amount: 50,
     })).status).toBe(404);
-    expect((await request(`/installments/${oldId}`, '2025-2026', 'PUT', { amount: 90 })).status).toBe(200);
-    expect(Number((await request(`/installments/${oldId}`, '2025-2026')).body.data.amount)).toBe(90);
+    // Generated amounts are changed through the parent fee, never one row at a time.
+    expect((await request(`/installments/${oldId}`, '2025-2026', 'PUT', { amount: 90 })).status).toBe(409);
+    expect(Number((await request(`/installments/${oldId}`, '2025-2026')).body.data.amount)).toBe(100);
 
     const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
     const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');

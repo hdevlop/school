@@ -9,6 +9,7 @@ import { AcademicYearValidator, type ResolvedAcademicYear } from '../../academic
 import { Year } from '../../academicYears/requestYear';
 import {
   calculateFeeAmounts,
+  getFeeDiscountPerPeriod,
   formatDateOnly,
   fromCents,
   getAcademicYearRange,
@@ -186,11 +187,14 @@ export class RolloverService {
           academicYear: dto.toYear,
         });
         const baseAmount = Number(sourceFee.feeTypeAmount);
-        const discountAmount = dto.copyDiscounts ? Number(sourceFee.discountAmount || 0) : 0;
+        const schedule = sourceFee.paymentType === 'oneTime' ? 'oneTime' : sourceFee.schedule || 'oneTime';
+        const discountAmount = dto.copyDiscounts ? getFeeDiscountPerPeriod({ ...sourceFee, schedule }, {
+          academicYear: dto.fromYear, startMonth, endMonth, effectiveDate: sourceFee.effectiveDate,
+        }) : 0;
         const amounts = calculateFeeAmounts(
           sourceFee.paymentType,
           baseAmount,
-          sourceFee.schedule || 'oneTime',
+          schedule,
           discountAmount,
           { academicYear: dto.toYear, startMonth, endMonth, effectiveDate },
         );
@@ -200,7 +204,7 @@ export class RolloverService {
           studentName: student.name,
           feeTypeId: sourceFee.feeTypeId,
           feeTypeName: sourceFee.feeTypeName,
-          schedule: sourceFee.schedule || 'oneTime',
+          schedule,
           baseAmount,
           discountAmount,
           discountReason: dto.copyDiscounts ? sourceFee.discountReason : null,

@@ -93,6 +93,12 @@ export class CreditRepository {
       .returning();
   }
 
+  async getLotsBySourcePaymentForUpdate(sourcePaymentId: string) {
+    return this.db.select().from(studentCreditLots)
+      .where(eq(studentCreditLots.sourcePaymentId, sourcePaymentId))
+      .orderBy(asc(studentCreditLots.id)).for('update');
+  }
+
   async activatePendingLotBySourcePayment(sourcePaymentId: string) {
     const [row] = await this.db
       .update(studentCreditLots)

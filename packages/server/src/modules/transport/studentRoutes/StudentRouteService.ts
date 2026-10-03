@@ -127,7 +127,7 @@ export class StudentRouteService {
   }
 
   @Transaction()
-  async unassign(id: string, requestedDate?: string | null) {
+  async unassign(id: string, requestedDate?: string | null, actorId?: string) {
     const assignment = await this.getLockedRoute(id);
     this.studentRouteValidator.ensureActiveRoute(assignment.status);
     const effectiveDate = requestedDate || getBusinessDateOnly();
@@ -137,7 +137,7 @@ export class StudentRouteService {
       unassignmentDate: effectiveDate,
     });
 
-    await this.endTransportFee(assignment.studentId, effectiveDate, assignment.assignedBy);
+    await this.endTransportFee(assignment.studentId, effectiveDate, actorId); // FIX: SEC-012 — current operator.
 
     return updated;
   }
@@ -186,7 +186,6 @@ export class StudentRouteService {
         baseAmount: Number(transportFeeType.amount),
         academicYear: this.year.label,
         effectiveDate: effectiveDate || undefined,
-        assignedBy: assignedBy || undefined,
       }, assignedBy || undefined);
     } catch (err: any) {
       // Rejoining in the same academic year resumes only the future cancelled

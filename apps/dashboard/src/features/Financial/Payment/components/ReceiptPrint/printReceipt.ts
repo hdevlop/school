@@ -50,6 +50,13 @@ function formatAmountFR(amount: number, currency: string): string {
   return new Intl.NumberFormat('fr-MA', { style: 'currency', currency }).format(amount);
 }
 
+// FIX: SEC-003 — data stays text even in the hand-written print document.
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[char]!);
+}
+
 export function buildReceiptHtml(data: ReceiptData) {
   const school = data.schoolName ?? 'École Privée';
   const address = data.schoolAddress ?? '';
@@ -64,7 +71,7 @@ export function buildReceiptHtml(data: ReceiptData) {
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Reçu ${data.receiptNumber}</title>
+  <title>Reçu ${escapeHtml(data.receiptNumber)}</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -179,6 +186,7 @@ export function buildReceiptHtml(data: ReceiptData) {
     /* ---- Details table ---- */
     .details-table { width: 100%; border-collapse: collapse; }
     .details-table tr td {
+      white-space: pre-wrap;
       padding: 2mm 0;
       font-size: 12px;
       border-bottom: 1px solid #f3f4f6;
@@ -232,14 +240,14 @@ export function buildReceiptHtml(data: ReceiptData) {
   <!-- Header -->
   <div class="header">
     <div class="school-info">
-      <h1>${school}</h1>
-      ${address ? `<p>${address}</p>` : ''}
-      ${phone ? `<p>Tél : ${phone}</p>` : ''}
+      <h1>${escapeHtml(school)}</h1>
+      ${address ? `<p>${escapeHtml(address)}</p>` : ''}
+      ${phone ? `<p>Tél : ${escapeHtml(phone)}</p>` : ''}
     </div>
     <div class="receipt-label">
       <div class="title-fr">Reçu</div>
       <div class="title-ar">وصل استلام</div>
-      <div class="number">N° ${data.receiptNumber}</div>
+      <div class="number">N° ${escapeHtml(data.receiptNumber)}</div>
     </div>
   </div>
 
@@ -247,11 +255,11 @@ export function buildReceiptHtml(data: ReceiptData) {
   <div class="meta">
     <div class="meta-item">
       <label>Date / التاريخ</label>
-      <p>${dateFR}</p>
+      <p>${escapeHtml(dateFR)}</p>
     </div>
     <div class="meta-item" style="text-align:right">
       <label>Méthode / الطريقة</label>
-      <p>${methodFR} &nbsp;/&nbsp; ${methodAR}</p>
+      <p>${escapeHtml(methodFR)} &nbsp;/&nbsp; ${escapeHtml(methodAR)}</p>
     </div>
   </div>
 
@@ -260,8 +268,8 @@ export function buildReceiptHtml(data: ReceiptData) {
     <div class="section-title">Élève / الطالب</div>
     <div class="student-block">
       <div>
-        <div class="student-name">${data.studentName}</div>
-        <div class="student-code">${data.studentCode}</div>
+        <div class="student-name">${escapeHtml(data.studentName)}</div>
+        <div class="student-code">${escapeHtml(data.studentCode)}</div>
       </div>
     </div>
   </div>
@@ -269,10 +277,10 @@ export function buildReceiptHtml(data: ReceiptData) {
   <!-- Amount -->
   <div class="amount-block">
     <div class="amount-row">
-      <div class="amount-figure">${amountFormatted}</div>
+      <div class="amount-figure">${escapeHtml(amountFormatted)}</div>
       <div class="amount-ar">المبلغ المدفوع</div>
     </div>
-    ${amountWords ? `<div class="amount-words">${amountWords}</div>` : ''}
+    ${amountWords ? `<div class="amount-words">${escapeHtml(amountWords)}</div>` : ''}
   </div>
 
   <!-- Details -->
@@ -280,13 +288,13 @@ export function buildReceiptHtml(data: ReceiptData) {
     <div class="section-title">Détails / التفاصيل</div>
     <table class="details-table">
       ${data.feeYear && data.yearAllocatedAmount !== undefined
-        ? `<tr><td>Année scolaire / السنة الدراسية</td><td>${data.feeYear}</td></tr>
-           <tr><td>Affecté à cette année / المخصص لهذه السنة</td><td>${formatAmountFR(data.yearAllocatedAmount, data.currency)}</td></tr>`
+        ? `<tr><td>Année scolaire / السنة الدراسية</td><td>${escapeHtml(data.feeYear)}</td></tr>
+           <tr><td>Affecté à cette année / المخصص لهذه السنة</td><td>${escapeHtml(formatAmountFR(data.yearAllocatedAmount, data.currency))}</td></tr>`
         : ''}
-      ${data.transactionRef ? `<tr><td>Référence / المرجع</td><td>${data.transactionRef}</td></tr>` : ''}
-      ${data.checkNumber ? `<tr><td>N° Chèque / رقم الشيك</td><td>${data.checkNumber}</td></tr>` : ''}
-      ${data.notes ? `<tr><td>Notes / ملاحظات</td><td>${data.notes}</td></tr>` : ''}
-      ${data.processedBy ? `<tr><td>Encaissé par / قبضه</td><td>${data.processedBy}</td></tr>` : ''}
+      ${data.transactionRef ? `<tr><td>Référence / المرجع</td><td>${escapeHtml(data.transactionRef)}</td></tr>` : ''}
+      ${data.checkNumber ? `<tr><td>N° Chèque / رقم الشيك</td><td>${escapeHtml(data.checkNumber)}</td></tr>` : ''}
+      ${data.notes ? `<tr><td>Notes / ملاحظات</td><td>${escapeHtml(data.notes)}</td></tr>` : ''}
+      ${data.processedBy ? `<tr><td>Encaissé par / قبضه</td><td>${escapeHtml(data.processedBy)}</td></tr>` : ''}
     </table>
   </div>
 
@@ -304,7 +312,7 @@ export function buildReceiptHtml(data: ReceiptData) {
     </div>
   </div>
 
-  <div class="watermark">Document généré le ${new Date().toLocaleDateString('fr-FR')} · ${school}</div>
+  <div class="watermark">Document généré le ${escapeHtml(new Date().toLocaleDateString('fr-FR'))} · ${escapeHtml(school)}</div>
 </div>
 <script>window.onload = function(){ window.print(); };</script>
 </body>

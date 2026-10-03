@@ -107,7 +107,7 @@ export class NotificationRepository {
           eq(payments.paymentMethod, 'check'),
           sql`${payments.status} IN ('pending', 'deposited')`,
           sql`${payments.checkDueDate} >= ${businessDate}`,
-          sql`${payments.checkDueDate} <= (${businessDate}::date + INTERVAL '${sql.raw(String(daysAhead))} days')`,
+          sql`${payments.checkDueDate} <= (${businessDate}::date + ${daysAhead} * INTERVAL '1 day')`,
         ),
       )
       .orderBy(payments.checkDueDate);

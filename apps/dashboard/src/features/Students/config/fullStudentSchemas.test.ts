@@ -3,7 +3,7 @@ import { describe, expect, it } from 'bun:test';
 import { feesSchema } from '@/features/Financial/Fees/config/feeSchemas';
 import { parentsSchema } from '@/features/Parents/config/parentSchemas';
 
-import { fullStudentSchema, studentWithTransportSchema } from './fullStudentSchemas';
+import { fullStudentSchema, studentWithoutFeesSchema, studentWithTransportSchema } from './fullStudentSchemas';
 import { studentSchema } from './studentSchemas';
 
 const somewhere = { address: '12 Rue des Écoles', latitude: 33.57, longitude: -7.59 };
@@ -27,6 +27,11 @@ const parent = {
 };
 
 const fee = { feeTypeId: 'ft1', schedule: 'monthly' };
+
+it('SEC-001 allows enrollment without financial access to submit zero fees', () => {
+  expect(studentWithoutFeesSchema.safeParse({ ...student, parents: [parent], fees: [] }).success).toBe(true);
+  expect(studentWithoutFeesSchema.safeParse({ ...student, parents: [parent], fees: [fee] }).success).toBe(false);
+});
 
 const enrolment = { ...student, parents: [parent], fees: [fee] };
 

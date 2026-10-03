@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { withFeeYear } from './feeUtils';
+import { calculateFeeAmounts, getFeeDiscountPerPeriod, withFeeYear } from './feeUtils';
 
 describe('withFeeYear', () => {
   it('charges new fees to the viewed year without changing the submitted payload', () => {
@@ -24,5 +24,15 @@ describe('withFeeYear', () => {
   it('leaves the year to the server when no year is viewed', () => {
     const data = { fees: [{ feeTypeId: 'tuition' }] };
     expect(withFeeYear(data, undefined)).toBe(data);
+  });
+});
+
+describe('fee edit discount units', () => {
+  it('shows the monthly rate instead of the stored yearly total', () => {
+    expect(getFeeDiscountPerPeriod({ schedule: 'monthly', baseAmount: 100, grossAmount: 1000, discountAmount: 100 })).toBe(10);
+    expect(getFeeDiscountPerPeriod({ schedule: 'quarterly', baseAmount: 100, grossAmount: 500, discountAmount: 50 })).toBe(10);
+    expect(getFeeDiscountPerPeriod({ schedule: 'oneTime', baseAmount: 100, grossAmount: 100, discountAmount: 10 })).toBe(10);
+    expect(calculateFeeAmounts('recurring', 100, 'monthly', 10, { academicYear: '2026-2027', effectiveDate: '2026-09-01' }).netAmount).toBe(900);
+    expect(calculateFeeAmounts('recurring', 100, 'oneTime', 10, { academicYear: '2026-2027', effectiveDate: '2026-09-01' }).netAmount).toBe(90);
   });
 });

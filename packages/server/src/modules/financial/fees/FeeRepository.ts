@@ -611,6 +611,12 @@ export class FeeRepository {
     return deletedFee;
   }
 
+  async hasAllocations(feeId: string) {
+    const [allocation] = await this.db.select({ id: paymentAllocations.id }).from(paymentAllocations)
+      .where(eq(paymentAllocations.feeId, feeId)).limit(1);
+    return !!allocation;
+  }
+
   async deleteAll() {
     const deletedFees = await this.db
       .delete(fees)

@@ -5,6 +5,7 @@ import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { formatDateOnly } from '../utils/dateOnly';
 import { getBusinessDate } from '../../../shared/businessDate';
 import { PersonalNotificationService } from '../../notifications';
+import { listRecentNotificationsDto, runNotificationsDto, type RunNotificationsDto } from './NotificationDto';
 
 export const CHECK_DUE_WINDOW_DAYS = 7;
 
@@ -68,7 +69,8 @@ export class NotificationService {
     return { claimed: true as const, alertId: (alert as any)?.id };
   }
 
-  async runOverdueJob(input: { businessDate?: string; dryRun?: boolean; actorId?: string }) {
+  async runOverdueJob(input: Partial<RunNotificationsDto>) {
+    input = runNotificationsDto.parse(input);
     const businessDate = input.businessDate ?? formatDateOnly(getBusinessDate()) as string;
     const dryRun = input.dryRun ?? false;
     const students = await this.notificationRepository.getStudentsWithOverdueInstallments(businessDate);
@@ -134,7 +136,8 @@ export class NotificationService {
     return { businessDate, dryRun, processed: students.length, results };
   }
 
-  async runCheckDueJob(input: { businessDate?: string; dryRun?: boolean; actorId?: string; daysAhead?: number }) {
+  async runCheckDueJob(input: Partial<RunNotificationsDto>) {
+    input = runNotificationsDto.parse(input); // FIX: SEC-005 — also protect direct job callers.
     const businessDate = input.businessDate ?? formatDateOnly(getBusinessDate()) as string;
     const dryRun = input.dryRun ?? false;
     const daysAhead = input.daysAhead ?? CHECK_DUE_WINDOW_DAYS;
@@ -234,6 +237,7 @@ export class NotificationService {
   }
 
   async listRecent(limit = 50) {
+    limit = listRecentNotificationsDto.parse({ limit }).limit!;
     return this.notificationRepository.listRecent(limit);
   }
 }

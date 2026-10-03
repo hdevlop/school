@@ -6,7 +6,7 @@ import { SectionValidator } from '../sections/SectionValidator';
 import { StudentEnrollmentRepository } from '../studentEnrollments/StudentEnrollmentRepository';
 import { isDateOnly } from '@sms/contracts/academic-years';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
-import type { CreateStudentDto, UpdateStudentDto } from './StudentDto';
+import { createStudentDto, type CreateStudentDto, type UpdateStudentDto } from './StudentDto';
 
 type ExistingStudent = NonNullable<Awaited<ReturnType<StudentRepository['getById']>>>;
 
@@ -29,6 +29,23 @@ export class StudentValidator {
     if (onDate < year.reportingStartsOn || onDate > year.reportingEndsOn) {
       Err(400, this.st('dateOutsideYear'));
     }
+  }
+
+  // FIX: SEC-001 — child writes retain their standalone route policies.
+  ensureNestedCreateAllowed(data: CreateStudentDto, actor?: { id: string; role: string }) {
+    if (!actor?.id) Err(403, this.st('createRequiresActor'));
+    if (data.fees?.length && !['admin', 'principal', 'accounting'].includes(actor!.role)) {
+      Err(403, this.st('nestedFeesRequireFinancial'));
+    }
+    if (data.transportAssignment && actor!.role !== 'admin') {
+      Err(403, this.st('nestedTransportRequiresAdmin'));
+    }
+  }
+
+  parseNestedCreate(data: CreateStudentDto) {
+    // File values are restored by Najm after route validation. Parse only the
+    // nested payloads here so the multipart image remains a File.
+    return createStudentDto.pick({ parents: true, fees: true, transportAssignment: true }).parse(data);
   }
 
   ensureCreateAllowed(data: CreateStudentDto) {

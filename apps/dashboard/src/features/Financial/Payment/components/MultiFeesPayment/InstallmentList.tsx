@@ -39,7 +39,7 @@ const FeeInstallmentsTable = ({
    const { majorMoney, displayDateOnly } = useSchoolFormat();
    const rows = useMemo(() => (
       fee.installments
-         .filter((inst: any) => stats.fullyPaid || inst.status !== 'paid')
+         .filter((inst: any) => inst.status !== 'cancelled' && (stats.fullyPaid || inst.status !== 'paid'))
          .map((inst: any) => ({
             ...inst,
             availableAmount: getInstallmentAvailableAmount(inst),

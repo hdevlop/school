@@ -16,6 +16,13 @@ export class InstallmentRepository {
     return sql`EXISTS (SELECT 1 FROM ${fees} WHERE ${fees.id} = ${feeInstallments.feeId} AND ${fees.academicYear} = ${this.year.label})`;
   }
 
+  /** All schedule writers and allocators take these transaction locks before row locks. */
+  async lockFeeSchedules(feeIds: string[]) {
+    for (const feeId of [...new Set(feeIds)].sort()) {
+      await this.db.execute(sql`SELECT pg_advisory_xact_lock(hashtext('school.finance.schedule'), hashtext(${feeId}))`);
+    }
+  }
+
   private buildInstallmentQuery() {
     return this.db
       .select({
@@ -77,6 +84,9 @@ export class InstallmentRepository {
   }
 
   async getByStudentForAutoAllocationForUpdate(studentId: string, academicYear?: string) {
+    const targets = await this.db.select({ id: fees.id }).from(fees)
+      .where(and(eq(fees.studentId, studentId), academicYear ? eq(fees.academicYear, academicYear) : undefined));
+    await this.lockFeeSchedules(targets.map(row => row.id));
     const result = await this.db.execute<{
       id: string;
       fee_id: string;
@@ -178,6 +188,7 @@ export class InstallmentRepository {
     dueDate: string;
   }>> {
     if (!targets || targets.length === 0) return [];
+    await this.lockFeeSchedules(targets.map(target => target.feeId));
 
     const sorted = [...targets].sort((a, b) =>
       a.feeId.localeCompare(b.feeId) || a.number - b.number

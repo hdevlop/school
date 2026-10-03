@@ -1,6 +1,7 @@
 import { Err, I18n, Service } from '../../../najm';
 import { InstallmentRepository } from './InstallmentRepository';
 import { FeeValidator } from '../fees/FeeValidator';
+import { toCents } from '../utils/money';
 
 @Service()
 export class InstallmentValidator {
@@ -13,6 +14,16 @@ export class InstallmentValidator {
 
   ensurePaymentStateUntouched(data: { paidAmount?: unknown; status?: unknown }) {
     if (data.paidAmount !== undefined || data.status !== undefined) Err(400, this.t('installmentStateManaged'));
+  }
+
+  ensureManagedSchedule(): never {
+    Err(409, this.t('scheduleChangeNeedsFeeEdit'));
+  }
+
+  ensureAmountUnchanged(requestedAmount: number | undefined, existingAmount: string | number) {
+    if (requestedAmount !== undefined && toCents(requestedAmount) !== toCents(existingAmount)) {
+      this.ensureManagedSchedule();
+    }
   }
 
   async ensureCanEdit(id: string) {
