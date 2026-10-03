@@ -10,7 +10,7 @@
         "najm-api": "3.1.1",
         "najm-auth": "4.2.4",
         "najm-cache": "2.2.0",
-        "najm-chatbot": "2.0.5",
+        "najm-chatbot": "2.1.1",
         "najm-cookies": "2.0.2",
         "najm-core": "3.0.2",
         "najm-cors": "2.0.2",
@@ -22,7 +22,7 @@
         "najm-kit": "2.16.15",
         "najm-mcp": "2.2.3",
         "najm-next": "0.8.0",
-        "najm-rag": "2.1.4",
+        "najm-rag": "2.2.0",
         "najm-rate": "2.1.1",
         "najm-storage": "3.0.0",
         "najm-theme": "0.2.3",
@@ -94,7 +94,7 @@
         "leaflet": "^1.9.4",
         "lucide-react": "^1.8.0",
         "najm-auth": "4.2.4",
-        "najm-chatbot": "2.0.5",
+        "najm-chatbot": "2.1.1",
         "najm-kit": "2.16.15",
         "najm-next": "0.8.0",
         "najm-theme": "0.2.3",
@@ -163,7 +163,7 @@
         "lodash.isempty": "^4.4.0",
         "najm-auth": "4.2.4",
         "najm-cache": "2.2.0",
-        "najm-chatbot": "2.0.5",
+        "najm-chatbot": "2.1.1",
         "najm-core": "3.0.2",
         "najm-cors": "2.0.2",
         "najm-database": "2.1.1",
@@ -171,7 +171,7 @@
         "najm-guard": "2.2.0",
         "najm-i18n": "2.1.2",
         "najm-mcp": "2.2.3",
-        "najm-rag": "2.1.4",
+        "najm-rag": "2.2.0",
         "najm-rate": "2.1.1",
         "najm-storage": "3.0.0",
         "najm-theme": "0.2.3",
@@ -213,7 +213,7 @@
     "najm-api": "3.1.1",
     "najm-auth": "4.2.4",
     "najm-cache": "2.2.0",
-    "najm-chatbot": "2.0.5",
+    "najm-chatbot": "2.1.1",
     "najm-cookies": "2.0.2",
     "najm-core": "3.0.2",
     "najm-cors": "2.0.2",
@@ -225,7 +225,7 @@
     "najm-kit": "2.16.15",
     "najm-mcp": "2.2.3",
     "najm-next": "0.8.0",
-    "najm-rag": "2.1.4",
+    "najm-rag": "2.2.0",
     "najm-rate": "2.1.1",
     "najm-storage": "3.0.0",
     "najm-theme": "0.2.3",
@@ -1531,7 +1531,7 @@
 
     "najm-cache": ["najm-cache@2.2.0", "", { "dependencies": { "najm-core": "^2.0.6" }, "optionalDependencies": { "ioredis": "^5.0.0" }, "peerDependencies": { "reflect-metadata": "^0.2.0" } }, "sha512-usj65pyVCe7RpYCCuD+s5OBQUDqp96olpeI1bOxJMQD4Jn+KG+56BYUZp/+8R8zCPg2UlXgOIiVksMGtc21rGw=="],
 
-    "najm-chatbot": ["najm-chatbot@2.0.5", "", { "dependencies": { "@ai-sdk/anthropic": "^3.0.100", "@ai-sdk/google": "^3.0.99", "@ai-sdk/openai": "^3.0.87", "@ai-sdk/react": "^3.0.236", "ai": "^6.0.234", "highlight.js": "^11.11.1", "lucide-react": "^0.468.0", "najm-cache": "^2.2.0", "najm-core": "^3.0.2", "najm-event": "^2.0.2", "react-markdown": "^9.0.1" }, "peerDependencies": { "drizzle-orm": "^0.45.2", "najm-auth": "^4.2.4", "najm-database": "^2.1.1", "najm-guard": "^2.2.0", "najm-mcp": "^2.2.2", "najm-rag": "^2.1.2", "najm-validation": "^2.0.2", "react": ">=18", "reflect-metadata": "^0.2.0", "sqlite-vec": "^0.1.9", "zod": "^4.0.0" }, "optionalPeers": ["najm-rag", "react", "sqlite-vec"] }, "sha512-vUjH1QfWYKPYTAFhaqJ4PFa2wK4WQTzfZcE6aj2WljYYcJVgcQoVrtwwKdgpBXV+AwyjUkZqzHfN+w6CUOXl7w=="],
+    "najm-chatbot": ["najm-chatbot@2.1.1", "", { "dependencies": { "@ai-sdk/anthropic": "^3.0.100", "@ai-sdk/google": "^3.0.99", "@ai-sdk/openai": "^3.0.87", "@ai-sdk/react": "^3.0.236", "ai": "^6.0.234", "highlight.js": "^11.11.1", "lucide-react": "^0.468.0", "najm-cache": "^2.2.0", "najm-core": "^3.0.2", "najm-event": "^2.0.2", "react-markdown": "^9.0.1" }, "peerDependencies": { "drizzle-orm": "^0.45.2", "najm-auth": "^4.2.4", "najm-database": "^2.1.1", "najm-guard": "^2.2.0", "najm-mcp": "^2.2.3", "najm-rag": "^2.2.0", "najm-validation": "^2.0.2", "react": ">=18", "reflect-metadata": "^0.2.0", "sqlite-vec": "^0.1.9", "zod": "^4.0.0" }, "optionalPeers": ["najm-rag", "react", "sqlite-vec"] }, "sha512-NJSBNpR1XOPqoZWWfAFFmZRSJJN6LrD5u4n8njJ2KOTX/EvTuHAdlyorQDLd/ntLqm+0fOo6jOyRd5R5y9A0sA=="],
 
     "najm-cookies": ["najm-cookies@2.0.2", "", { "peerDependencies": { "hono": "^4.0.0", "najm-core": "^2.0.3", "reflect-metadata": "^0.2.0" } }, "sha512-urNMF4w+0GRbOk/IhYcStNmxZOCEajFbxNa2Mnol8n8wnh6MfnKfXk3wDZpyMXSJO8qqiL9FvbugTOJMtjd49g=="],
 
@@ -1555,7 +1555,7 @@
 
     "najm-next": ["najm-next@0.8.0", "", { "peerDependencies": { "@tanstack/react-query": "^5", "najm-auth": "^4.0.4", "najm-i18n": "^2.1.2", "najm-kit": "^2.15.0", "najm-theme": "^0.2.1", "next": ">=15.3.0 <17", "react": ">=18.2.0 <20" }, "optionalPeers": ["@tanstack/react-query", "najm-auth", "najm-i18n", "najm-kit", "najm-theme"] }, "sha512-kHnKJ8cIAKV+wpe5PqnUwljFKaqB3+PaAZiBp1Wz/tESjJ6QwDZyareO9ec5oBBMV+V7HIu63RJMp+XL47AR2A=="],
 
-    "najm-rag": ["najm-rag@2.1.4", "", { "dependencies": { "@tanstack/react-query": "^5", "@tanstack/react-router": "^1.170.8", "lucide-react": "^0.474.0", "najm-core": "^3.0.2", "najm-kit": "^2.16.15", "pdf-parse": "^1.1.1" }, "peerDependencies": { "drizzle-orm": "^0.45.1", "hono": "^4.0.0", "najm-auth": "^4.2.4", "najm-database": "^2.1.1", "najm-guard": "^2.2.0", "najm-mcp": "^2.2.3", "najm-storage": "^3.0.0", "najm-validation": "^2.0.2", "react": ">=18", "react-dom": ">=18", "reflect-metadata": "^0.2.0", "sqlite-vec": "^0.1.9", "zod": "^4.0.0" }, "optionalPeers": ["najm-storage", "react", "react-dom", "sqlite-vec"] }, "sha512-YfTDSXpyPXjX3zKjD0oFiYkDASDE2Rx02WdJ4HJrhyMeja95ySJB0oDApk+/MZHp+YxP6c7fle83Z4dwlC8Ggw=="],
+    "najm-rag": ["najm-rag@2.2.0", "", { "dependencies": { "@tanstack/react-query": "^5", "@tanstack/react-router": "^1.170.8", "lucide-react": "^0.474.0", "najm-core": "^3.0.2", "najm-kit": "^2.16.15", "pdf-parse": "^1.1.1" }, "peerDependencies": { "drizzle-orm": "^0.45.1", "hono": "^4.0.0", "najm-auth": "^4.2.4", "najm-database": "^2.1.1", "najm-guard": "^2.2.0", "najm-mcp": "^2.2.3", "najm-storage": "^3.0.0", "najm-validation": "^2.0.2", "react": ">=18", "react-dom": ">=18", "reflect-metadata": "^0.2.0", "sqlite-vec": "^0.1.9", "zod": "^4.0.0" }, "optionalPeers": ["najm-storage", "react", "react-dom", "sqlite-vec"] }, "sha512-2LYDbG2fpL7RTqVv6RsNH6V/Z7OehTKCPvgLSIljQrFk6XJSbp40FApsCP9S5BnYkd0SIWw5ErT/lNs4ZE7fdQ=="],
 
     "najm-rate": ["najm-rate@2.1.1", "", { "dependencies": { "najm-cache": "^2.1.2", "najm-core": "^2.0.6", "najm-guard": "^2.0.2" }, "peerDependencies": { "hono": "^4.0.0" } }, "sha512-uLFdZkIF7sH03b+qECo0ur6xsklVr/h8ksuL/od3DkJhQbEqbNrf2FqWMaJrISzLupuZq4GTUWW2Nsemp2GYuw=="],
 

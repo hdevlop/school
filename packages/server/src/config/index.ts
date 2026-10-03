@@ -306,7 +306,12 @@ export const ragConfig = (): NajmPlugin => {
           : 'http://127.0.0.1:11434'),
       model,
       dimensions: Number(process.env.RAG_EMBEDDING_DIMENSIONS || 768),
+      // Indexing batches take up to ~15 s on a CPU model; a chat question takes
+      // 0.1-2 s. Questions get their own bound, and after a timeout or refused
+      // connection skip the provider for a while instead of each waiting again.
       timeoutMs: Number(process.env.RAG_EMBEDDING_TIMEOUT_MS || 60_000),
+      queryTimeoutMs: Number(process.env.RAG_EMBEDDING_QUERY_TIMEOUT_MS || 5_000),
+      queryFailureCooldownMs: Number(process.env.RAG_EMBEDDING_QUERY_COOLDOWN_MS || 30_000),
       batchSize: Number(process.env.RAG_EMBEDDING_BATCH_SIZE || 4),
       apiKey: process.env.RAG_EMBEDDING_API_KEY,
       truncateDimensions: process.env.RAG_EMBEDDING_TRUNCATE_DIMENSIONS === 'true',
@@ -323,6 +328,10 @@ export const ragConfig = (): NajmPlugin => {
     },
     toolRouting: {
       enabled: true,
+      // When routing fails, answer without tools and say the data is
+      // unreachable (najm-chatbot's notice) rather than send all ~430 tools,
+      // about 51k tokens on every step.
+      fallbackOnRouterError: 'none',
       // A named student is found with search; the full list stays for class-wide work.
       dependencies: {
         attendance_mark: ['search_search_students', 'students_get_students'],
