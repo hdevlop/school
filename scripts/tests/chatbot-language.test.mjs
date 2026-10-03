@@ -23,6 +23,18 @@ describe('detectReplyLanguage', () => {
     expect(detectReplyLanguage("I can't find a student named Zzbench Qqtest. Please check the name and try again.")).toBe('en');
   });
 
+  it('reads a Spanish list of classes with French names in parentheses as Spanish', () => {
+    const reply = [
+      'Aquí tienes la lista de clases para el año académico 2026‑2027:',
+      '- **CP** (Cours Préparatoire) – Secciones: A, B, C',
+      '- **CE1** (Cours Élémentaire 1ère année) – Secciones: A, B, C',
+      '- **CM2** (Cours Moyen 2ème année) – Secciones: A, B, C',
+      '- **1AC** (1ère année collège) – Secciones: A, B, C',
+      'Cada clase pertenece al año académico 2026‑2027 y tiene tres secciones (A, B y C).',
+    ].join('\n');
+    expect(detectReplyLanguage(reply)).toBe('es');
+  });
+
   it('declines to call text that is too short or too mixed', () => {
     expect(detectReplyLanguage('100')).toBeNull();
     expect(detectReplyLanguage('**100**.')).toBeNull();

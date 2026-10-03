@@ -24,6 +24,7 @@ bun --env-file=apps/dashboard/.env.local scripts/chatbot-benchmark.mjs --max-req
 |---|---|---|
 | `--max-requests` | 0 | Budget: chat requests this run may send (cases × repeats) |
 | `--cases` | `datasets/chatbot-latency/questions.json` | Fixture file |
+| `--languages` | all | Comma-separated case languages, e.g. `fr,ary` (Darija); `--limit` applies after |
 | `--limit` / `--repeat` | all / 1 | First N cases, repeated in order (no interleaving with a candidate yet) |
 | `--year` | fixture `academicYear` | Sent as `?academicYear=`, as the widget does |
 | `--timeout-ms` | 120000 | Per request, including the whole stream |

@@ -75,7 +75,13 @@ if (compareModel && (transportProbe || !modelId.test(compareModel))) {
 if (baselineOverride && (!compareModel || !modelId.test(baselineOverride))) {
   throw new Error('Use --baseline-model=<provider model id> together with --compare-model');
 }
-const selected = corpus.cases.slice(0, transportProbe ? 1 : limit);
+// --languages=fr,ary runs only those languages' cases; --limit applies after.
+const languages = option('languages', '').split(',').map((value) => value.trim()).filter(Boolean);
+const unknownLanguages = languages.filter((language) => !corpus.cases.some((item) => item.language === language));
+if (unknownLanguages.length) throw new Error(`No cases for --languages=${unknownLanguages.join(',')}`);
+const selected = corpus.cases
+  .filter((item) => !languages.length || languages.includes(item.language))
+  .slice(0, transportProbe ? 1 : limit);
 const planned = transportProbe ? 1 : selected.length * repeat * (compareModel ? 2 : 1);
 const outputPath = resolve(option('output', 'docs/evidence/chatbot-latency/stream-baseline.json'));
 
@@ -88,6 +94,7 @@ const report = {
   corpusSha256: createHash('sha256').update(corpusText).digest('hex'),
   role: corpus.role,
   academicYear: year,
+  languages: languages.length ? languages : null,
   plannedRequests: planned,
   maxRequests,
   concurrency: 1,
@@ -283,7 +290,10 @@ async function chat(item, repetition, variant = null) {
 
 /** Automatic checks only; answer quality still needs human review per language. */
 function score(item, parsed, server) {
-  const called = new Set(parsed.tools.map((tool) => tool.name).filter(Boolean));
+  // A call whose input failed validation, or that errored, did not answer the
+  // question; only a tool that returned output (a blocked write's refusal
+  // included) satisfies an expected group.
+  const called = new Set(parsed.tools.filter((tool) => tool.outcome === 'output').map((tool) => tool.name).filter(Boolean));
   const missingGroups = (item.expectedToolGroups ?? [])
     .filter((group) => !group.some((name) => called.has(name)));
   const forbidden = (name) => item.forbiddenSuccessfulTools?.includes(name) ?? false;
@@ -292,7 +302,10 @@ function score(item, parsed, server) {
   const forbiddenOutputs = server
     ? server.tools.filter((tool) => forbidden(tool.name) && tool.outcome === 'executed').map((tool) => tool.name)
     : parsed.tools.filter((tool) => forbidden(tool.name) && tool.outcome === 'output').map((tool) => tool.name);
-  const lowerText = parsed.text.toLowerCase();
+  // Arabic replies may write ١٠٠ for 100; facts are written with ASCII digits.
+  const lowerText = parsed.text.toLowerCase()
+    .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 0x06f0));
   const missingFacts = (item.answerFacts ?? []).filter((fact) => !lowerText.includes(fact.toLowerCase()));
   // Darija questions expect an Arabic-script reply; a mixed-language question
   // sets replyLanguage or is not checked.

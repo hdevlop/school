@@ -35,7 +35,10 @@ export function detectReplyLanguage(text) {
   const plain = String(text ?? '')
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
-    .replace(/https?:\/\/\S+/g, ' ');
+    .replace(/https?:\/\/\S+/g, ' ')
+    // Glosses and names in parentheses, such as "CE1 (Cours Élémentaire 1ère
+    // année)" inside a Spanish answer, are often in another language.
+    .replace(/\([^()]*\)/g, ' ');
   const letters = plain.match(/\p{L}/gu) ?? [];
   if (letters.length < MIN_LETTERS) return null;
 
