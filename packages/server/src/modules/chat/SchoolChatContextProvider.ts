@@ -8,16 +8,29 @@ import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidato
 import { SettingsRepository } from '../settings/SettingsRepository';
 import { schoolClock } from '../dashboard/teacher/teacherDashboardMetrics';
 import { getBusinessDateOverride } from '../../shared/businessDate';
+import { ParentRepository } from '../parents/ParentRepository';
+import { ParentChildrenRepository } from '../parents/ParentChildrenRepository';
+import { TeacherRepository } from '../teachers/TeacherRepository';
+import { StudentRepository } from '../students/StudentRepository';
 
 // Only prompt text is stored here; the shared year boundary remains its source.
 export const schoolChatYearContext = new AsyncLocalStorage<string>();
+
+export interface ChatActor { id?: string; role?: string }
 
 /** Adds validated School context while preserving the existing knowledge provider. */
 @Service()
 export class SchoolChatContextProvider implements ChatbotContextProvider {
   @Year() private readonly year!: ResolvedAcademicYear;
 
-  constructor(private knowledge: KnowledgeContextProvider, private settings: SettingsRepository) {}
+  constructor(
+    private knowledge: KnowledgeContextProvider,
+    private settings: SettingsRepository,
+    private parents: ParentRepository,
+    private parentChildren: ParentChildrenRepository,
+    private teachers: TeacherRepository,
+    private students: StudentRepository,
+  ) {}
 
   /** Read per request: a date fixed at startup goes stale overnight and ignores the school's zone. */
   async describeToday(now = new Date()) {
@@ -26,8 +39,47 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
     return `Today is ${today.weekday} ${today.date} (YYYY-MM-DD) in the school's time zone, ${timeZone}.`;
   }
 
-  async describe(role?: string, now = new Date()) {
-    return [await this.describeToday(now), this.describeYear(role)].join('\n');
+  async describe(actor: ChatActor = {}, now = new Date()) {
+    return [await this.describeToday(now), this.describeYear(actor.role), await this.describeActor(actor)]
+      .filter(Boolean).join('\n');
+  }
+
+  /**
+   * The signed-in person's own record. Profile tools take a parentId,
+   * teacherId or studentId that the model cannot otherwise know, so "my
+   * children" or "my grades" failed. The repositories read through each
+   * role's ownership rules, and the tools still check every id they receive.
+   * A failed lookup leaves the line out rather than failing the chat.
+   */
+  async describeActor({ id, role }: ChatActor): Promise<string | null> {
+    if (!id) return null;
+    try {
+      if (role === 'parent') {
+        const parent = await this.parents.getByUserId(id);
+        if (!parent) return null;
+        const children = await this.parentChildren.getChildren(parent.id);
+        const listed = children.map((child) => {
+          const place = [child.class?.name, child.section?.name].filter(Boolean).join(' ');
+          return `${child.name} (studentId ${child.id}${place ? `, ${place}` : ''})`;
+        });
+        return [
+          `The signed-in user is a parent, parentId ${parent.id}.`,
+          listed.length ? `Their children this year: ${listed.join('; ')}.` : 'No child is linked to them this year.',
+          '"My child" means one of these children; for their grades, attendance or overview use the student-profile tools with that studentId.',
+        ].join(' ');
+      }
+      if (role === 'teacher') {
+        const teacher = await this.teachers.getByUserId(id);
+        return teacher ? `The signed-in user is a teacher, teacherId ${teacher.id}. For their own classes, students, schedule or pending grading use the teacher-profile tools with this teacherId.` : null;
+      }
+      if (role === 'student') {
+        const student = await this.students.getByUserId(id);
+        return student ? `The signed-in user is the student ${student.name}, studentId ${student.id}. "My" grades, attendance or overview mean this student: use the student-profile tools with this studentId.` : null;
+      }
+    } catch {
+      return null;
+    }
+    return null;
   }
 
   describeYear(role?: string) {

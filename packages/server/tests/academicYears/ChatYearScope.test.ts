@@ -12,6 +12,10 @@ import { AcademicYearValidator, type ResolvedAcademicYear } from '../../src/modu
 import { registerYearPropertyInjector, registerYearRequestScope, Year } from '../../src/modules/academicYears/requestYear';
 import { SchoolChatContextProvider } from '../../src/modules/chat/SchoolChatContextProvider';
 import { SettingsRepository } from '../../src/modules/settings/SettingsRepository';
+import { ParentRepository } from '../../src/modules/parents/ParentRepository';
+import { ParentChildrenRepository } from '../../src/modules/parents/ParentChildrenRepository';
+import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
+import { StudentRepository } from '../../src/modules/students/StudentRepository';
 import { registerChatYearContext } from '../../src/modules/chat/chatYearContext';
 
 @Service()
@@ -40,6 +44,20 @@ async function boot() {
     getContextTrace: async () => ({ used: false, chunks: [] }),
   });
   instance.container.set(SettingsRepository, { getPublicSettings: async () => ({ timeZone: 'Africa/Casablanca' }) });
+  instance.container.set(ParentRepository, { getByUserId: async (userId: string) => (userId === 'u-parent' ? { id: 'P1' } : undefined) });
+  instance.container.set(ParentChildrenRepository, {
+    getChildren: async () => [
+      { id: 'S1', name: 'Salma Idrissi', class: { name: 'CE2' }, section: { name: 'A' } },
+      { id: 'S2', name: 'Omar Idrissi', class: null, section: null },
+    ],
+  });
+  instance.container.set(TeacherRepository, {
+    getByUserId: async (userId: string) => {
+      if (userId === 'u-broken') throw new Error('database unavailable');
+      return userId === 'u-teacher' ? { id: 'T1' } : undefined;
+    },
+  });
+  instance.container.set(StudentRepository, { getByUserId: async (userId: string) => (userId === 'u-student' ? { id: 'S1', name: 'Salma Idrissi' } : undefined) });
   instance.container.set(ChatAgent, {
     stream: async (input: ChatAgentInput) => {
       providerCalls++;
@@ -126,6 +144,22 @@ describe('published chat controller year boundary', () => {
     // 23:30 UTC on 1 October is already 2 October in Casablanca (UTC+1).
     expect(await provider.describeToday(new Date('2026-10-01T23:30:00Z')))
       .toBe("Today is friday 2026-10-02 (YYYY-MM-DD) in the school's time zone, Africa/Casablanca.");
+  });
+
+  it("names the signed-in parent, teacher or student so profile tools get the person's own id", async () => {
+    const provider = await (await boot()).container.resolve(SchoolChatContextProvider);
+    expect(await provider.describeActor({ id: 'u-parent', role: 'parent' })).toBe(
+      'The signed-in user is a parent, parentId P1. Their children this year: Salma Idrissi (studentId S1, CE2 A); '
+      + 'Omar Idrissi (studentId S2). "My child" means one of these children; for their grades, attendance or '
+      + 'overview use the student-profile tools with that studentId.',
+    );
+    expect(await provider.describeActor({ id: 'u-teacher', role: 'teacher' })).toContain('teacherId T1');
+    expect(await provider.describeActor({ id: 'u-student', role: 'student' }))
+      .toContain('the student Salma Idrissi, studentId S1');
+    // Administrators, unknown accounts, a missing id and a failed lookup add nothing.
+    for (const actor of [{ id: 'u-admin', role: 'admin' }, { id: 'u-nobody', role: 'parent' }, { role: 'teacher' }, { id: 'u-broken', role: 'teacher' }]) {
+      expect(await provider.describeActor(actor)).toBeNull();
+    }
   });
 
   it('keeps overlapping chat prompts on their validated year and does not affect other knowledge consumers', async () => {

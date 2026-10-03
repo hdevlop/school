@@ -59,6 +59,7 @@ export class TeacherProfileService {
       this.teacherService.getById(teacherId),
       this.teacherService.getStudents(teacherId),
     ]);
-    return { teacher, students };
+    // The count travels with the list: the chat model miscounted a 67-row list as 50.
+    return { teacher, studentCount: students.length, students };
   }
 }

@@ -161,8 +161,10 @@ describe('teacher profile in the selected year', () => {
 
   it("reads the teacher's students in the request's year", async () => {
     const calls: string[] = [];
-    await service(OLD, calls).getMyStudents('teacher-1');
+    const result = await service(OLD, calls).getMyStudents('teacher-1');
     expect(calls).toEqual(['students']);
+    // The chat answers "how many students do I teach" from this count.
+    expect(result.studentCount).toBe(0);
   });
 });
 
