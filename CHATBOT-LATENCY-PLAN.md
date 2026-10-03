@@ -1,6 +1,28 @@
 # Chatbot latency and cost plan
 
-Status: **INTERNAL BASELINE CAPTURED: THE MODEL IS ~99% OF ANSWER TIME; SCHOOL'S OWN WORK IS ~10 MS**
+Status: **FASTER HOST FOUND: GPT-OSS-120B:NITRO ANSWERS IN 0.6 S P50 (1.1 S P95), 12/12 CORRECT; NOT YET ADOPTED**
+
+2026-10-03, host comparison ([review](docs/evidence/chatbot-latency/model-nitro-20261003.md)):
+OpenRouter's live stats show the default route serves `gpt-oss-120b` from the
+cheapest hosts (CoreWeave, DekaLLM: 23–36 tokens/s). Faster hosts run the same
+model at 183–933 tokens/s. The runner's new `--compare-model` mode
+interleaved the default with `openai/gpt-oss-120b:nitro`, OpenRouter's
+fastest-host route:
+
+| | Default | `:nitro` |
+|---|---|---|
+| Complete p50 | 1.95 s | 0.63 s |
+| Complete p95 | 6.64 s | 1.07 s |
+| Checks passed | 12/12 | 12/12 |
+
+The estimated cost rises from about $0.11 to about $0.75 per 1,000 answers.
+Adopting it is a change to the AI settings model, not to code. Before adopting:
+- add a `:nitro` price to `najm-chatbot`, which today reports no cost for that id;
+- review the answers in every language by hand.
+
+Crusoe ($0.05 / $0.25, about 183 tokens/s) would be a middle option. It needs
+an OpenRouter account preference, because School cannot send provider routing
+options yet.
 
 2026-10-03, internal baseline ([review](docs/evidence/chatbot-latency/stream-diagnostics-20261003.md)):
 School now sends each chat's diagnostics to an in-memory, admin-only log at
