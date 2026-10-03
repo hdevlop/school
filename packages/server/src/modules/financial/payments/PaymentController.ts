@@ -165,7 +165,7 @@ export class PaymentController {
   @Post()
   @isFinancial()
   @Validate(createPaymentDto)
-  @McpTool('Record a new payment')
+  @McpTool({ description: 'Record a new payment', confirm: { level: 'warning', message: 'confirm.payments.record' } })
   @ResMsg('fees.success.paymentRecorded')
   async record(@Body() body: CreatePaymentDto, @User() user: { id: string }) {
     return this.paymentService.record(body, user.id);
@@ -174,7 +174,7 @@ export class PaymentController {
   @Put('/:id')
   @isFinancial()
   @Validate({ params: paymentIdParam, body: updatePaymentDto })
-  @McpTool('Update a payment by ID')
+  @McpTool({ description: 'Update a payment by ID', confirm: { level: 'warning', message: 'confirm.payments.update' } })
   @ResMsg('fees.success.paymentUpdated')
   async update(@Params('id') id: string, @Body() body: UpdatePaymentDto, @User() user: { id: string }) {
     return this.paymentService.update(id, body, user.id);

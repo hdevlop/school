@@ -188,7 +188,7 @@ export class AlertController {
   @Post()
   @CanCreate()
   @Validate(createAlertDto)
-  @McpTool('Create a new alert')
+  @McpTool({ description: 'Create a new alert', confirm: { level: 'warning', message: 'confirm.alerts.create' } })
   @ResMsg('alerts.success.created')
   async create(@Body() alertData: CreateAlertDto) {
     return this.alertService.create(alertData);
@@ -197,7 +197,7 @@ export class AlertController {
   @Put('/:id')
   @CanUpdate()
   @Validate({ params: alertIdParam, body: updateAlertDto })
-  @McpTool('Update an alert')
+  @McpTool({ description: 'Update an alert', confirm: { level: 'warning', message: 'confirm.alerts.update' } })
   @ResMsg('alerts.success.updated')
   async update(@Params('id') id: string, @Body() updateData: UpdateAlertDto, @User() actor: AlertActor) {
     return this.alertService.update(id, updateData, actor);
@@ -206,7 +206,7 @@ export class AlertController {
   @Put('/:id/status')
   @CanUpdate()
   @Validate({ params: alertIdParam, body: updateAlertStatusDto })
-  @McpTool('Update alert status (e.g. mark as read)')
+  @McpTool({ description: 'Update alert status (e.g. mark as read)', confirm: { level: 'warning', message: 'confirm.alerts.updateStatus' } })
   @ResMsg('alerts.success.statusUpdated')
   async updateStatus(@Params('id') id: string, @Body() body: UpdateAlertStatusDto, @User() actor: AlertActor) {
     return this.alertService.updateStatus(id, body.status, actor);

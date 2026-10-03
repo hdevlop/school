@@ -79,7 +79,7 @@ export class InstallmentController {
   @Post()
   @isFinancial()
   @Validate(createInstallmentDto)
-  @McpTool('Create a new installment')
+  @McpTool({ description: 'Create a new installment', confirm: { level: 'warning', message: 'confirm.installments.create' } })
   @ResMsg('fees.success.installmentCreated')
   async create(@Body() body: CreateInstallmentDto) {
     return this.installmentService.create(body);
@@ -88,7 +88,7 @@ export class InstallmentController {
   @Put('/:id')
   @isFinancial()
   @Validate({ params: installmentIdParam, body: updateInstallmentDto })
-  @McpTool('Update an installment by ID')
+  @McpTool({ description: 'Update an installment by ID', confirm: { level: 'warning', message: 'confirm.installments.update' } })
   @ResMsg('fees.success.installmentUpdated')
   async update(@Params('id') id: string, @Body() body: UpdateInstallmentDto) {
     return this.installmentService.update(id, body);

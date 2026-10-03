@@ -101,7 +101,7 @@ export class RefuelController {
   @Post()
   @canCreateRefuel()
   @Validate(createRefuelDto)
-  @McpTool('Create a new refuel record')
+  @McpTool({ description: 'Create a new refuel record', confirm: { level: 'warning', message: 'confirm.vehicleRefuels.create' } })
   @ResMsg('refuels.success.created')
   async create(@Body() body: CreateRefuelDto) {
     return this.refuelService.create(body);
@@ -118,7 +118,7 @@ export class RefuelController {
   @Put('/:id')
   @canUpdateRefuel()
   @Validate({ params: refuelIdParam, body: updateRefuelDto })
-  @McpTool('Update a refuel record')
+  @McpTool({ description: 'Update a refuel record', confirm: { level: 'warning', message: 'confirm.vehicleRefuels.update' } })
   @ResMsg('refuels.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateRefuelDto) {
     return this.refuelService.update(id, body);

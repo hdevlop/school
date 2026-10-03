@@ -59,7 +59,7 @@ export class StudentRouteController {
   @Post()
   @isAdmin()
   @Validate(createStudentRouteDto)
-  @McpTool('Assign a student to a route')
+  @McpTool({ description: 'Assign a student to a route', confirm: { level: 'warning', message: 'confirm.studentRoutes.assign' } })
   @ResMsg('studentRoutes.success.assigned')
   async assign(@Body() body: CreateStudentRouteDto, @User() user: any) {
     return this.studentRouteService.assign({ ...body, assignedBy: user?.id });
@@ -68,7 +68,7 @@ export class StudentRouteController {
   @Put('/:id')
   @isAdmin()
   @Validate({ params: studentRouteIdParam, body: updateStudentRouteDto })
-  @McpTool('Update a student route')
+  @McpTool({ description: 'Update a student route', confirm: { level: 'warning', message: 'confirm.studentRoutes.update' } })
   @ResMsg('studentRoutes.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateStudentRouteDto) {
     return this.studentRouteService.update(id, body);
@@ -77,7 +77,7 @@ export class StudentRouteController {
   @Post('/:id/reassign')
   @isAdmin()
   @Validate({ params: studentRouteIdParam, body: reassignStudentRouteDto })
-  @McpTool('Move a student transport assignment to another vehicle')
+  @McpTool({ description: 'Move a student transport assignment to another vehicle', confirm: { level: 'warning', message: 'confirm.studentRoutes.reassign' } })
   @ResMsg('studentRoutes.success.updated')
   async reassign(
     @Params('id') id: string,
@@ -90,7 +90,7 @@ export class StudentRouteController {
   @Delete('/:id/unassign')
   @isAdmin()
   @Validate({ params: studentRouteIdParam })
-  @McpTool('Unassign a student from a route')
+  @McpTool({ description: 'Unassign a student from a route', confirm: { level: 'warning', message: 'confirm.studentRoutes.unassign' } })
   @ResMsg('studentRoutes.success.unassigned')
   async unassign(@Params('id') id: string) {
     return this.studentRouteService.unassign(id);
@@ -99,7 +99,7 @@ export class StudentRouteController {
   @Post('/:id/unassign')
   @isAdmin()
   @Validate({ params: studentRouteIdParam, body: unassignStudentRouteDto })
-  @McpTool('Unassign a student from a route on a selected-year date')
+  @McpTool({ description: 'Unassign a student from a route on a selected-year date', confirm: { level: 'warning', message: 'confirm.studentRoutes.unassignAt' } })
   @ResMsg('studentRoutes.success.unassigned')
   async unassignAt(@Params('id') id: string, @Body() body: UnassignStudentRouteDto) {
     return this.studentRouteService.unassign(id, body.unassignmentDate);

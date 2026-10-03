@@ -130,7 +130,7 @@ export class AnnouncementController {
   @Post()
   @CanCreate()
   @Validate(createAnnouncementDto)
-  @McpTool('Create a new announcement')
+  @McpTool({ description: 'Create a new announcement', confirm: { level: 'warning', message: 'confirm.announcements.create' } })
   @ResMsg('announcements.success.created')
   async create(@Body() body: CreateAnnouncementDto, @User() user: { id: string }) {
     return this.announcementService.create({
@@ -150,7 +150,7 @@ export class AnnouncementController {
   @Post('/:id/publish')
   @CanUpdate()
   @Validate({ params: announcementIdParam })
-  @McpTool('Publish an announcement')
+  @McpTool({ description: 'Publish an announcement', confirm: { level: 'warning', message: 'confirm.announcements.publish' } })
   @ResMsg('announcements.success.published')
   async publish(@Params('id') id: string, @User() actor: AnnouncementActor) {
     return this.announcementService.publish(id, actor);
@@ -159,7 +159,7 @@ export class AnnouncementController {
   @Post('/:id/unpublish')
   @CanUpdate()
   @Validate({ params: announcementIdParam })
-  @McpTool('Unpublish an announcement')
+  @McpTool({ description: 'Unpublish an announcement', confirm: { level: 'warning', message: 'confirm.announcements.unpublish' } })
   @ResMsg('announcements.success.unpublished')
   async unpublish(@Params('id') id: string, @User() actor: AnnouncementActor) {
     return this.announcementService.unpublish(id, actor);
@@ -168,7 +168,7 @@ export class AnnouncementController {
   @Put('/:id')
   @CanUpdate()
   @Validate({ params: announcementIdParam, body: updateAnnouncementDto })
-  @McpTool('Update an announcement')
+  @McpTool({ description: 'Update an announcement', confirm: { level: 'warning', message: 'confirm.announcements.update' } })
   @ResMsg('announcements.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateAnnouncementDto, @User() actor: AnnouncementActor) {
     return this.announcementService.update(id, body, actor);

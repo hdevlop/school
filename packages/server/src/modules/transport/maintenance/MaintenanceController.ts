@@ -102,7 +102,7 @@ export class MaintenanceController {
 
   @Post()
   @Validate(createMaintenanceDto)
-  @McpTool('Create a new maintenance record')
+  @McpTool({ description: 'Create a new maintenance record', confirm: { level: 'warning', message: 'confirm.vehicleMaintenance.create' } })
   @ResMsg('maintenance.success.created')
   async create(@Body() maintenanceData: CreateMaintenanceDto) {
     return this.maintenanceService.create(maintenanceData);
@@ -110,7 +110,7 @@ export class MaintenanceController {
 
   @Put('/:id')
   @Validate({ params: maintenanceIdParam, body: updateMaintenanceDto })
-  @McpTool('Update a maintenance record')
+  @McpTool({ description: 'Update a maintenance record', confirm: { level: 'warning', message: 'confirm.vehicleMaintenance.update' } })
   @ResMsg('maintenance.success.updated')
   async update(@Params('id') id: string, @Body() updateData: UpdateMaintenanceDto) {
     return this.maintenanceService.update(id, updateData);
@@ -118,7 +118,7 @@ export class MaintenanceController {
 
   @Put('/:id/status')
   @Validate({ params: maintenanceIdParam, body: updateMaintenanceStatusDto })
-  @McpTool('Update maintenance record status')
+  @McpTool({ description: 'Update maintenance record status', confirm: { level: 'warning', message: 'confirm.vehicleMaintenance.updateStatus' } })
   @ResMsg('maintenance.success.statusUpdated')
   async updateStatus(@Params('id') id: string, @Body() body: UpdateMaintenanceStatusDto) {
     return this.maintenanceService.updateStatus(id, body.status);
@@ -126,7 +126,7 @@ export class MaintenanceController {
 
   @Put('/:id/complete')
   @Validate({ params: maintenanceIdParam })
-  @McpTool('Mark a maintenance record as completed')
+  @McpTool({ description: 'Mark a maintenance record as completed', confirm: { level: 'warning', message: 'confirm.vehicleMaintenance.complete' } })
   @ResMsg('maintenance.success.completed')
   async complete(@Params('id') id: string) {
     return this.maintenanceService.markAsCompleted(id);
@@ -148,7 +148,7 @@ export class MaintenanceController {
   }
 
   @Post('/mark-overdue')
-  @McpTool('Mark overdue maintenance records')
+  @McpTool({ description: 'Mark overdue maintenance records', confirm: { level: 'warning', message: 'confirm.vehicleMaintenance.markOverdue' } })
   @ResMsg('maintenance.success.overdueMarked')
   async markOverdue() {
     const result = await this.maintenanceService.markOverdueMaintenances();

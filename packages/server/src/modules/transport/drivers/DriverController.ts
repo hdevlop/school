@@ -125,7 +125,7 @@ export class DriverController {
   @Post()
   @isAdmin()
   @Validate(createDriverDto)
-  @McpTool('Create a new driver')
+  @McpTool({ description: 'Create a new driver', confirm: { level: 'warning', message: 'confirm.drivers.create' } })
   @ResMsg('drivers.success.created')
   async create(@Body() _body: CreateDriverDto) {
     Err(410, t('drivers.errors.createdFromStaff'));
@@ -142,7 +142,7 @@ export class DriverController {
   @Post('/update')
   @isAdmin()
   @Validate(updateDriverMcpDto)
-  @McpTool('Update a driver by ID')
+  @McpTool({ description: 'Update a driver by ID', confirm: { level: 'warning', message: 'confirm.drivers.update' } })
   @ResMsg('drivers.success.updated')
   async update(@Body() _body: UpdateDriverMcpDto) {
     Err(410, t('drivers.errors.updatedFromStaff'));
@@ -159,7 +159,7 @@ export class DriverController {
   @Put('/:id/status')
   @isAdmin()
   @Validate({ params: driverIdParam, body: updateDriverStatusDto })
-  @McpTool('Update driver status')
+  @McpTool({ description: 'Update driver status', confirm: { level: 'warning', message: 'confirm.drivers.updateStatus' } })
   @ResMsg('drivers.success.statusUpdated')
   async updateStatus(@Params('id') _id: string, @Body() _body: UpdateDriverStatusDto) {
     Err(410, t('drivers.errors.statusFromStaff'));

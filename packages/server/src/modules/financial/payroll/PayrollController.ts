@@ -117,7 +117,7 @@ export class PayrollController {
   @Put('/:id')
   @isAdmin()
   @Validate({ params: payslipIdParam, body: updatePayslipDto })
-  @McpTool('Update a payslip by ID')
+  @McpTool({ description: 'Update a payslip by ID', confirm: { level: 'warning', message: 'confirm.payroll.update' } })
   @ResMsg('payroll.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdatePayslipDto, @User() user: { id: string }) {
     return this.payrollService.update(id, body, user.id);

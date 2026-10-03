@@ -83,7 +83,7 @@ export class ExpenseController {
   @Post()
   @isFinancial()
   @Validate(createExpenseDto)
-  @McpTool('Create a new expense')
+  @McpTool({ description: 'Create a new expense', confirm: { level: 'warning', message: 'confirm.expenses.create' } })
   @ResMsg('expenses.success.created')
   async create(@Body() body: CreateExpenseDto, @User() user: { id: string }) {
     return this.expenseService.create(body, user.id);
@@ -92,7 +92,7 @@ export class ExpenseController {
   @Post('/:id/approve')
   @isFinancial()
   @Validate({ params: expenseIdParam, body: expenseApprovalDto })
-  @McpTool('Approve or reject an expense')
+  @McpTool({ description: 'Approve or reject an expense', confirm: { level: 'warning', message: 'confirm.expenses.handleApproval' } })
   @ResMsg('expenses.success.updated')
   async handleApproval(@Params('id') id: string, @Body() body: ExpenseApprovalDto, @User() user: { id: string }) {
     return this.expenseService.handleApproval(id, body, user.id);
@@ -101,7 +101,7 @@ export class ExpenseController {
   @Post('/:id/payment')
   @isFinancial()
   @Validate({ params: expenseIdParam, body: expensePaymentDto })
-  @McpTool('Record a payment for an expense')
+  @McpTool({ description: 'Record a payment for an expense', confirm: { level: 'warning', message: 'confirm.expenses.recordPayment' } })
   @ResMsg('expenses.success.paymentRecorded')
   async recordPayment(@Params('id') id: string, @Body() body: ExpensePaymentDto, @User() user: { id: string }) {
     return this.expenseService.recordPayment(id, body, user.id);
@@ -110,7 +110,7 @@ export class ExpenseController {
   @Put('/:id')
   @isFinancial()
   @Validate({ params: expenseIdParam, body: updateExpenseDto })
-  @McpTool('Update an expense by ID')
+  @McpTool({ description: 'Update an expense by ID', confirm: { level: 'warning', message: 'confirm.expenses.update' } })
   @ResMsg('expenses.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateExpenseDto, @User() user: { id: string }) {
     return this.expenseService.update(id, body, user.id);

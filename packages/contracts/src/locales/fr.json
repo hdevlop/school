@@ -2370,13 +2370,32 @@
       "pay": "Marquer cette fiche de paie comme payée ?",
       "unpay": "Annuler ce paiement ? La fiche de paie sera supprimée.",
       "delete": "Supprimer cette fiche de paie ? Cette action est irréversible.",
-      "bulkDelete": "Supprimer ces fiches de paie ? Cette action est irréversible."
+      "bulkDelete": "Supprimer ces fiches de paie ? Cette action est irréversible.",
+      "update": "Mettre à jour cette fiche de paie ?"
     },
     "staffRoles": {
       "create": "Créer ce rôle du personnel ?",
       "update": "Mettre à jour ce rôle du personnel ?",
       "delete": "Désactiver ce rôle du personnel ? Les rôles utilisés sont désactivés, pas supprimés."
-    }
+    },
+    "alerts": { "create": "Créer cette alerte ?", "update": "Mettre à jour cette alerte ?", "updateStatus": "Mettre à jour le statut de cette alerte ?" },
+    "announcements": { "create": "Créer cette annonce ?", "publish": "Publier cette annonce ?", "unpublish": "Dépublier cette annonce ?", "update": "Mettre à jour cette annonce ?" },
+    "assessments": { "create": "Créer cette évaluation ?", "update": "Mettre à jour cette évaluation ?" },
+    "drivers": { "create": "Ajouter ce chauffeur ?", "update": "Mettre à jour ce chauffeur ?", "updateStatus": "Changer le statut de ce chauffeur ?" },
+    "expenses": { "create": "Créer cette dépense ?", "handleApproval": "Approuver ou refuser cette dépense ?", "recordPayment": "Enregistrer un paiement pour cette dépense ?", "update": "Mettre à jour cette dépense ?" },
+    "feeTypes": { "create": "Créer ce type de frais ?", "update": "Mettre à jour ce type de frais ?" },
+    "installments": { "create": "Créer cette échéance ?", "update": "Mettre à jour cette échéance ?" },
+    "vehicleMaintenance": { "create": "Créer cette intervention d'entretien ?", "update": "Mettre à jour cette intervention d'entretien ?", "updateStatus": "Changer le statut de cette intervention d'entretien ?", "complete": "Marquer cet entretien comme terminé ?", "markOverdue": "Marquer les entretiens en retard ?" },
+    "payments": { "record": "Enregistrer ce paiement ?", "update": "Mettre à jour ce paiement ?", "void": "Annuler ce paiement ? Il restera enregistré comme annulé.", "checkStatus": "Changer le statut de ce chèque ?" },
+    "vehicleRefuels": { "create": "Enregistrer ce plein ?", "update": "Mettre à jour ce plein ?" },
+    "studentRoutes": { "assign": "Affecter cet élève au circuit ?", "update": "Mettre à jour cette affectation au circuit ?", "reassign": "Déplacer cet élève vers un autre circuit ?", "unassign": "Retirer cet élève du circuit ?", "unassignAt": "Retirer cet élève du circuit à cette date ?" },
+    "vehicleAssignments": { "create": "Créer cette affectation de véhicule ?", "assignDriver": "Affecter ce chauffeur au véhicule ?", "update": "Mettre à jour cette affectation de véhicule ?", "unassign": "Terminer cette affectation de véhicule ?" },
+    "vehicles": { "create": "Ajouter ce véhicule ?", "update": "Mettre à jour ce véhicule ?" },
+    "zones": { "create": "Créer cette zone ?", "update": "Mettre à jour cette zone ?", "delete": "Supprimer cette zone ? Cette action est irréversible." },
+    "rollover": { "preview": "Prévisualiser le passage à l'année scolaire suivante ?", "commit": "Passer à l'année scolaire suivante ? Les inscriptions et les soldes seront modifiés." },
+    "credits": { "apply": "Appliquer cet avoir aux frais ?" },
+    "cycles": { "create": "Créer ce cycle ?", "update": "Mettre à jour ce cycle ?", "delete": "Supprimer ce cycle ? Cette action est irréversible." },
+    "classRoutines": { "create": "Créer cet emploi du temps ?" }
   },
   "announcements": {
     "errors": {

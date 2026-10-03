@@ -48,7 +48,7 @@ export class VehicleController {
   @Post()
   @canCreateVehicle()
   @Validate(createVehicleDto)
-  @McpTool('Create a new vehicle')
+  @McpTool({ description: 'Create a new vehicle', confirm: { level: 'warning', message: 'confirm.vehicles.create' } })
   @ResMsg('vehicles.success.created')
   async create(@Body() body: CreateVehicleDto) {
     return this.vehicleService.create(body);
@@ -65,7 +65,7 @@ export class VehicleController {
   @Put('/:id')
   @canUpdateVehicle()
   @Validate({ params: vehicleIdParam, body: updateVehicleDto })
-  @McpTool('Update a vehicle by ID')
+  @McpTool({ description: 'Update a vehicle by ID', confirm: { level: 'warning', message: 'confirm.vehicles.update' } })
   @ResMsg('vehicles.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateVehicleDto) {
     return this.vehicleService.update(id, body);

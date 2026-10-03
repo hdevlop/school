@@ -113,7 +113,7 @@ export class AssessmentController {
   @Post()
   @CanCreate()
   @Validate(createAssessmentDto)
-  @McpTool('Create a new assessment')
+  @McpTool({ description: 'Create a new assessment', confirm: { level: 'warning', message: 'confirm.assessments.create' } })
   @ResMsg('assessments.success.created')
   async create(@Body() body: CreateAssessmentDto) {
     return this.assessmentService.create(body);
@@ -130,7 +130,7 @@ export class AssessmentController {
   @Put('/:id')
   @CanUpdate()
   @Validate({ params: assessmentIdParam, body: updateAssessmentDto })
-  @McpTool('Update an assessment by ID')
+  @McpTool({ description: 'Update an assessment by ID', confirm: { level: 'warning', message: 'confirm.assessments.update' } })
   @ResMsg('assessments.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateAssessmentDto) {
     return this.assessmentService.update(id, body);

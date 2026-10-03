@@ -1789,13 +1789,32 @@
       "pay": "¿Marcar este recibo de nómina como pagado?",
       "unpay": "¿Anular este pago? El recibo de nómina será eliminado.",
       "delete": "¿Eliminar este recibo de nómina? Esta acción no se puede deshacer.",
-      "bulkDelete": "¿Eliminar estos recibos de nómina? Esta acción no se puede deshacer."
+      "bulkDelete": "¿Eliminar estos recibos de nómina? Esta acción no se puede deshacer.",
+      "update": "¿Actualizar esta nómina?"
     },
     "staffRoles": {
       "create": "¿Crear este rol del personal?",
       "update": "¿Actualizar este rol del personal?",
       "delete": "¿Desactivar este rol del personal? Los roles en uso se desactivan, no se eliminan."
-    }
+    },
+    "alerts": { "create": "¿Crear esta alerta?", "update": "¿Actualizar esta alerta?", "updateStatus": "¿Actualizar el estado de esta alerta?" },
+    "announcements": { "create": "¿Crear este anuncio?", "publish": "¿Publicar este anuncio?", "unpublish": "¿Despublicar este anuncio?", "update": "¿Actualizar este anuncio?" },
+    "assessments": { "create": "¿Crear esta evaluación?", "update": "¿Actualizar esta evaluación?" },
+    "drivers": { "create": "¿Añadir este conductor?", "update": "¿Actualizar este conductor?", "updateStatus": "¿Cambiar el estado de este conductor?" },
+    "expenses": { "create": "¿Crear este gasto?", "handleApproval": "¿Aprobar o rechazar este gasto?", "recordPayment": "¿Registrar un pago para este gasto?", "update": "¿Actualizar este gasto?" },
+    "feeTypes": { "create": "¿Crear este tipo de cuota?", "update": "¿Actualizar este tipo de cuota?" },
+    "installments": { "create": "¿Crear este plazo?", "update": "¿Actualizar este plazo?" },
+    "vehicleMaintenance": { "create": "¿Crear este registro de mantenimiento?", "update": "¿Actualizar este registro de mantenimiento?", "updateStatus": "¿Cambiar el estado de este registro de mantenimiento?", "complete": "¿Marcar este mantenimiento como completado?", "markOverdue": "¿Marcar los mantenimientos vencidos?" },
+    "payments": { "record": "¿Registrar este pago?", "update": "¿Actualizar este pago?", "void": "¿Anular este pago? Quedará registrado como anulado.", "checkStatus": "¿Cambiar el estado de este cheque?" },
+    "vehicleRefuels": { "create": "¿Registrar esta carga de combustible?", "update": "¿Actualizar esta carga de combustible?" },
+    "studentRoutes": { "assign": "¿Asignar este alumno a la ruta?", "update": "¿Actualizar esta asignación de ruta?", "reassign": "¿Mover este alumno a otra ruta?", "unassign": "¿Quitar este alumno de la ruta?", "unassignAt": "¿Quitar este alumno de la ruta en esta fecha?" },
+    "vehicleAssignments": { "create": "¿Crear esta asignación de vehículo?", "assignDriver": "¿Asignar este conductor al vehículo?", "update": "¿Actualizar esta asignación de vehículo?", "unassign": "¿Finalizar esta asignación de vehículo?" },
+    "vehicles": { "create": "¿Añadir este vehículo?", "update": "¿Actualizar este vehículo?" },
+    "zones": { "create": "¿Crear esta zona?", "update": "¿Actualizar esta zona?", "delete": "¿Eliminar esta zona? Esta acción no se puede deshacer." },
+    "rollover": { "preview": "¿Previsualizar el paso al siguiente año escolar?", "commit": "¿Pasar al siguiente año escolar? Se modificarán las matrículas y los saldos." },
+    "credits": { "apply": "¿Aplicar este crédito a la cuota?" },
+    "cycles": { "create": "¿Crear este ciclo?", "update": "¿Actualizar este ciclo?", "delete": "¿Eliminar este ciclo? Esta acción no se puede deshacer." },
+    "classRoutines": { "create": "¿Crear este horario?" }
   },
   "announcements": {
     "errors": {

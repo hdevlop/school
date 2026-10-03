@@ -4695,37 +4695,9 @@
       "bulkDelete": "Delete these exams? This action cannot be undone.",
       "deleteAll": "Delete all exams? This action cannot be undone.",
       "seed": "Seed exams demo data? This will create sample exam records."
-  },
-  "cycles": {
-    "form": {
-      "cycleInformation": "Cycle Information",
-      "name": "Name",
-      "labels": "Labels",
-      "labelFr": "French Label",
-      "labelAr": "Arabic Label",
-      "labelEs": "Spanish Label",
-      "sortOrder": "Sort Order",
-      "active": "Active"
     },
-    "dialogs": {
-      "createTitle": "Create Cycle",
-      "createButton": "Create Cycle",
-      "viewTitle": "Cycle Details",
-      "editTitle": "Edit Cycle",
-      "updateButton": "Update Cycle",
-      "deleteButton": "Delete Cycle"
-    },
-    "table": {
-      "id": "ID",
-      "name": "Name",
-      "sortOrder": "Sort Order",
-      "status": "Status"
-    },
-    "filters": {
-      "searchByName": "Search by cycle name..."
-    }
-  },
-  "subjects": {
+    "cycles": { "create": "Create this cycle?", "update": "Update this cycle?", "delete": "Delete this cycle? This action cannot be undone." },
+    "subjects": {
       "create": "Create this subject?",
       "update": "Update this subject?",
       "delete": "Delete this subject? This action cannot be undone.",
@@ -4751,13 +4723,32 @@
       "pay": "Mark this payslip as paid?",
       "unpay": "Undo this payment? The payslip will be removed.",
       "delete": "Delete this payslip? This action cannot be undone.",
-      "bulkDelete": "Delete these payslips? This action cannot be undone."
+      "bulkDelete": "Delete these payslips? This action cannot be undone.",
+      "update": "Update this payroll record?"
     },
     "staffRoles": {
       "create": "Create this staff role?",
       "update": "Update this staff role?",
       "delete": "Deactivate this staff role? Roles in use are deactivated, not deleted."
-    }
+    },
+    "alerts": { "create": "Create this alert?", "update": "Update this alert?", "updateStatus": "Update this alert's status?" },
+    "announcements": { "create": "Create this announcement?", "publish": "Publish this announcement?", "unpublish": "Unpublish this announcement?", "update": "Update this announcement?" },
+    "assessments": { "create": "Create this assessment?", "update": "Update this assessment?" },
+    "drivers": { "create": "Add this driver?", "update": "Update this driver?", "updateStatus": "Change this driver's status?" },
+    "expenses": { "create": "Create this expense?", "handleApproval": "Approve or reject this expense?", "recordPayment": "Record a payment for this expense?", "update": "Update this expense?" },
+    "feeTypes": { "create": "Create this fee type?", "update": "Update this fee type?" },
+    "installments": { "create": "Create this installment?", "update": "Update this installment?" },
+    "vehicleMaintenance": { "create": "Create this maintenance record?", "update": "Update this maintenance record?", "updateStatus": "Change this maintenance record's status?", "complete": "Mark this maintenance as completed?", "markOverdue": "Mark overdue maintenance records?" },
+    "payments": { "record": "Record this payment?", "update": "Update this payment?", "void": "Void this payment? It stays on record as voided.", "checkStatus": "Change this check's status?" },
+    "vehicleRefuels": { "create": "Record this refuel?", "update": "Update this refuel record?" },
+    "studentRoutes": { "assign": "Assign this student to the route?", "update": "Update this route assignment?", "reassign": "Move this student to another route?", "unassign": "Remove this student from the route?", "unassignAt": "Remove this student from the route on this date?" },
+    "vehicleAssignments": { "create": "Create this vehicle assignment?", "assignDriver": "Assign this driver to the vehicle?", "update": "Update this vehicle assignment?", "unassign": "End this vehicle assignment?" },
+    "vehicles": { "create": "Add this vehicle?", "update": "Update this vehicle?" },
+    "staff": { "create": "Add this staff member?", "update": "Update this staff member?", "bulkDelete": "Delete these staff members? This action cannot be undone.", "delete": "Delete this staff member? This action cannot be undone." },
+    "zones": { "create": "Create this zone?", "update": "Update this zone?", "delete": "Delete this zone? This action cannot be undone." },
+    "rollover": { "preview": "Preview the move to the next academic year?", "commit": "Move to the next academic year? This changes enrollments and balances." },
+    "credits": { "apply": "Apply this credit to the fee?" },
+    "classRoutines": { "create": "Create this timetable?" }
   },
   "events": {
     "sections": {

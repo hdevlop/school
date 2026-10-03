@@ -37,7 +37,7 @@ export class FeeTypeController {
   @Post()
   @isFinancial()
   @Validate(createFeeTypeDto)
-  @McpTool('Create a new fee type')
+  @McpTool({ description: 'Create a new fee type', confirm: { level: 'warning', message: 'confirm.feeTypes.create' } })
   @ResMsg('feeTypes.success.created')
   async create(@Body() body: CreateFeeTypeDto) {
     return this.feeTypeService.create(body);
@@ -46,7 +46,7 @@ export class FeeTypeController {
   @Put('/:id')
   @isFinancial()
   @Validate({ params: feeTypeIdParam, body: updateFeeTypeDto })
-  @McpTool('Update a fee type by ID')
+  @McpTool({ description: 'Update a fee type by ID', confirm: { level: 'warning', message: 'confirm.feeTypes.update' } })
   @ResMsg('feeTypes.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateFeeTypeDto) {
     return this.feeTypeService.update(id, body);

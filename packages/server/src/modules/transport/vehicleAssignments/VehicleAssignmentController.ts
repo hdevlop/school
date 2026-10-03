@@ -65,7 +65,7 @@ export class VehicleAssignmentController {
   @Post('/')
   @isAdmin()
   @Validate(createVehicleAssignmentDto)
-  @McpTool('Create a vehicle assignment')
+  @McpTool({ description: 'Create a vehicle assignment', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.create' } })
   @ResMsg('vehicleAssignments.success.created')
   async create(@Body() body: CreateVehicleAssignmentDto, @User() user: { id: string }) {
     const assignmentData = {
@@ -78,7 +78,7 @@ export class VehicleAssignmentController {
   @Post('/assign')
   @isAdmin()
   @Validate(assignDriverDto)
-  @McpTool('Assign a driver to a vehicle')
+  @McpTool({ description: 'Assign a driver to a vehicle', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.assignDriver' } })
   @ResMsg('vehicleAssignments.success.assigned')
   async assignDriver(@Body() body: AssignDriverDto, @User() user: { id: string }) {
     const { vehicleId, driverId, assignmentDate } = body;
@@ -93,7 +93,7 @@ export class VehicleAssignmentController {
   @Put('/:id')
   @isAdmin()
   @Validate({ params: assignmentIdParam, body: updateVehicleAssignmentDto })
-  @McpTool('Update a vehicle assignment')
+  @McpTool({ description: 'Update a vehicle assignment', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.update' } })
   @ResMsg('vehicleAssignments.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateVehicleAssignmentDto) {
     return this.vehicleAssignmentService.update(id, body);
@@ -102,7 +102,7 @@ export class VehicleAssignmentController {
   @Put('/:id/unassign')
   @isAdmin()
   @Validate({ params: assignmentIdParam, body: unassignVehicleAssignmentDto })
-  @McpTool('Unassign a vehicle assignment')
+  @McpTool({ description: 'Unassign a vehicle assignment', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.unassign' } })
   @ResMsg('vehicleAssignments.success.unassigned')
   async unassign(@Params('id') id: string, @Body() body: UnassignVehicleAssignmentDto) {
     const { unassignmentDate } = body;
