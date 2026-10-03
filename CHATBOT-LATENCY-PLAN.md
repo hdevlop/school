@@ -283,12 +283,16 @@ their subsequently agreed scope and budget.
 
 Reviewed on **2026-09-23** against School's configuration, installed
 `najm-chatbot@2.0.3`, `najm-rag@2.0.3`, and AI SDK declarations. This is a source
-snapshot, not a measured baseline. **Pins as of 2026-10-03: `najm-rag` `2.1.2`,**
-(`najm-chatbot` `2.0.4`, `najm-core` `3.0.2`). The 2.1.x releases added the
-`openai-compatible` adapter and opt-in vector shortening; the router behavior
-in sections 2.2 and 2.4 (error fallback, phrase-score summing, dependency
-expansion, caches, default timeout) has not been re-checked against 2.1.1 and
-must be before it is relied on. Recheck root pins before implementation.
+snapshot, not a measured baseline. **Pins as of 2026-10-03 (evening):
+`najm-rag` `2.1.4`, `najm-chatbot` `2.0.5`, `najm-mcp` `2.2.3`, `najm-theme`
+`0.2.3`, `najm-core` `3.0.2`.** The 2.1.x releases added the
+`openai-compatible` adapter, opt-in vector shortening, `rewriteRoutingQuery`
+(2.1.3) and re-indexing on an embedder change (2.1.4). Re-read in 2.1.3: the
+router falls back per `fallbackOnRouterError` (default `all`), expands
+dependencies after matching, sums each tool's top three phrase scores to pick
+the primary, and uses phrase matches alone whenever one clears the threshold.
+Caches and the default embedding timeout have not been re-checked. Recheck
+root pins before implementation.
 
 ### 2.1 School configuration
 
