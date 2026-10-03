@@ -125,17 +125,19 @@ const WORDS: Record<string, string> = {
   جاش: 'يحضر',
   ماجاش: 'لم يحضر',
   ماجاوش: 'لم يحضروا',
-  // Family
-  بابا: 'اب',
-  باباه: 'ابوه',
-  باباها: 'ابوها',
-  ماما: 'ام',
-  ماماه: 'امه',
-  ماماها: 'امها',
-  الواليد: 'الاب',
-  الواليده: 'الام',
+  // Family and contact. والد matches the parents tool far better than اب.
+  بابا: 'والد',
+  باباه: 'والده',
+  باباها: 'والدها',
+  ماما: 'والده',
+  ماماه: 'والدته',
+  ماماها: 'والدتها',
+  الواليد: 'الوالد',
+  الواليده: 'الوالده',
   تيليفون: 'هاتف',
   التيليفون: 'الهاتف',
+  نمره: 'رقم هاتف',
+  النمره: 'رقم الهاتف',
   // Teaching and transport
   كيقري: 'يدرس',
   كيقريو: 'يدرسون',
@@ -173,8 +175,10 @@ function rewriteWord(word: string): string {
 // Two-word forms, applied before single words. "شحال من تلميذ" reads as
 // "كم عدد تلميذ": "كم من" is not the MSA idiom, and the count tools match
 // "كم عدد". Darija negation wraps a verb, "ما جاش"; joined, it is one key
-// (ماجاش → لم يحضر) instead of "ما" plus a present-tense verb.
+// (ماجاش → لم يحضر) instead of "ما" plus a present-tense verb. "الرقم ديال"
+// (the number of someone) is a phone number.
 const PHRASES: Array<[RegExp, (match: string, ...groups: string[]) => string]> = [
+  [/(^|[^ء-ي])الرقم ديال(?=$|[^ء-ي])/g, (_m, before) => `${before}رقم هاتف`],
   [/(^|[^ء-ي])(و?)شحال من(?=$|[^ء-ي])/g, (_m, before, and) => `${before}${and}كم عدد`],
   [/(^|[^ء-ي])ما ([ء-ي]+ش)(?=$|[^ء-ي])/g,
     (match, before, verb) => (`ما${verb}` in WORDS ? `${before}ما${verb}` : match)],
