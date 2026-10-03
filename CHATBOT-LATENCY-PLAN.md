@@ -9,7 +9,9 @@ argument names. Fixed, then: named students resolve by search only (the full
 list cost 52k tokens on one step), a closing reply-language line (2/36 to 0/36
 on English tool results), and the chat context names the signed-in parent,
 teacher or student. Parent, teacher, student and follow-up checks: 10/10, no
-other student in any tool output. Full set: 50/50, 178k input tokens.
+other student in any tool output. Full set: 50/50, 178k input tokens. Twice
+in 98 blocked-write replies the model said a refused announcement was created;
+the benchmark now fails such a reply (`falseWriteClaims`).
 
 2026-10-03, all 50 questions, default vs `:nitro` ([review](docs/evidence/chatbot-latency/model-nitro-full50-20261003.md)):
 `:nitro` completed in 1.0 s p50 / 1.5 s p95 against 3.5 s / 12.3 s, but three

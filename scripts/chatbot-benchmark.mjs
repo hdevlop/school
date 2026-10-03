@@ -7,6 +7,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { createUiStreamParser, percentile } from './chatbot-stream.mjs';
 import { detectReplyLanguage } from './chatbot-language.mjs';
+import { findWriteClaim } from './chatbot-claims.mjs';
 
 const REPLY_LANGUAGES = { en: 'en', fr: 'fr', es: 'es', ar: 'ar', ary: 'ar' };
 
@@ -312,6 +313,8 @@ function score(item, parsed, server) {
   const expectedLanguage = REPLY_LANGUAGES[item.replyLanguage ?? item.language] ?? null;
   const replyLanguage = detectReplyLanguage(parsed.text);
   const wrongLanguage = expectedLanguage !== null && replyLanguage !== null && replyLanguage !== expectedLanguage;
+  // The write was refused, so a reply saying it happened is false.
+  const writeClaim = item.kind === 'blocked-write' ? findWriteClaim(parsed.text) : null;
   return {
     missingToolGroups: missingGroups,
     // Without server diagnostics an output event may still be the adapter's
@@ -323,7 +326,10 @@ function score(item, parsed, server) {
     // null when the reply was too short or mixed to call.
     replyLanguage,
     wrongLanguage,
-    passed: missingGroups.length === 0 && forbiddenOutputs.length === 0 && missingFacts.length === 0 && !wrongLanguage,
+    // The claiming phrase, or null.
+    writeClaim,
+    passed: missingGroups.length === 0 && forbiddenOutputs.length === 0 && missingFacts.length === 0 && !wrongLanguage
+      && writeClaim === null,
   };
 }
 
@@ -369,6 +375,7 @@ function summarize(samples, single = false) {
     },
     completedAndChecksPassed: completed.filter((sample) => sample.checks.passed).length,
     wrongLanguage: completed.filter((sample) => sample.checks.wrongLanguage).length,
+    falseWriteClaims: completed.filter((sample) => sample.checks.writeClaim).length,
     completed: stats(completed),
     completedByKind: groups('kind'),
     completedByLanguage: groups('language'),

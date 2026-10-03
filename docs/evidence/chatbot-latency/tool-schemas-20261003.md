@@ -52,8 +52,20 @@ before; it was taken late in the evening and is not attributed to the change.
    French after a dash (`- **CP** – Cours Préparatoire (secciones A, B, C)`).
    Glosses after a bold label are now ignored, like table data rows.
 
-## Seen once, not fixed
+## False success claims: now scored, not fixed
 
-In the 2.1.2 run the Arabic announcement answer said the announcement had been
-created although `announcements_create` was blocked; the earlier and later
-runs answered it correctly. The scorer does not detect a false success claim.
+Twice a blocked announcement was answered as done although
+`announcements_create` was refused: Arabic in the 2.1.2 run ("تم إنشاء
+الإعلان"), and Darija in the language run before the reminder ("تم إنشاء
+إعلان للآباء"), the second missed when that run was reviewed. Every other
+answer to the same questions refused correctly.
+
+The benchmark now fails a blocked write whose reply claims the write
+(`scripts/chatbot-claims.mjs`: completed-action phrases in the five languages,
+not negated and not inside a condition or an instruction in the same
+sentence) and reports `falseWriteClaims`. Over all 358 replies saved in this
+folder it flags exactly those two. Without the condition guard it also flagged
+advice in read answers ("please ensure attendance has been recorded"), so it
+runs on blocked writes only. Two in 98
+blocked-write replies is too rare for a prompt change to be measured on these
+sample sizes; the check is there so the next runs count it.
