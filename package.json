@@ -111,7 +111,7 @@
   "dependencies": {
     "@types/node": "^25.6.0",
     "ioredis": "5.11.1",
-    "najm-api": "3.1.0",
+    "najm-api": "3.1.1",
     "najm-auth": "4.2.4",
     "najm-cache": "2.2.0",
     "najm-chatbot": "2.0.5",
