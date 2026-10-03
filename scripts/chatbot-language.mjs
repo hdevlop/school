@@ -43,9 +43,15 @@ function withoutTableData(text) {
   }).join('\n');
 }
 
+// A list item that names a record and glosses it, "- **CP** – Cours
+// Préparatoire (secciones A, B)", repeats stored text after the dash; the
+// label stays, the gloss goes, as with a table's data rows.
+const GLOSSED_ITEM = /^(\s*(?:[-*]|\d+\.)\s+\*\*[^*\n]+\*\*\s*[–—-]\s*)[^(\n]*/gm;
+
 /** @returns {'ar' | 'en' | 'fr' | 'es' | null} */
 export function detectReplyLanguage(text) {
   const plain = withoutTableData(String(text ?? ''))
+    .replace(GLOSSED_ITEM, '$1')
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/`[^`]*`/g, ' ')
     .replace(/https?:\/\/\S+/g, ' ')

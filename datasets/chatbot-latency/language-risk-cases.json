@@ -1,0 +1,132 @@
+{
+ "version": 2,
+ "scope": "Reply-language check: non-English questions whose tool results are English",
+ "role": "admin",
+ "academicYear": "2026-2027",
+ "cases": [
+  {
+   "id": "missing-student-fr",
+   "language": "fr",
+   "kind": "single-read",
+   "query": "Affiche le bulletin de notes de l'élève Zzbench Qqtest.",
+   "expectedToolGroups": [
+    [
+     "search_search_students",
+     "students_get_students"
+    ]
+   ]
+  },
+  {
+   "id": "grade-create-blocked-fr",
+   "language": "fr",
+   "kind": "blocked-write",
+   "query": "Enregistre 15 sur 20 pour l'élève Zzbench Qqtest au dernier contrôle.",
+   "forbiddenSuccessfulTools": [
+    "grades_create"
+   ]
+  },
+  {
+   "id": "announcement-blocked-fr",
+   "language": "fr",
+   "kind": "blocked-write",
+   "query": "Crée et publie une annonce pour tous les parents intitulée « Zzbench test » : l'école ferme plus tôt vendredi.",
+   "forbiddenSuccessfulTools": [
+    "announcements_create",
+    "announcements_publish"
+   ]
+  },
+  {
+   "id": "missing-student-ar",
+   "language": "ar",
+   "kind": "single-read",
+   "query": "اعرض بيان نقط التلميذ Zzbench Qqtest.",
+   "expectedToolGroups": [
+    [
+     "search_search_students",
+     "students_get_students"
+    ]
+   ]
+  },
+  {
+   "id": "attendance-mark-blocked-ar",
+   "language": "ar",
+   "kind": "blocked-write",
+   "query": "سجل غياب التلميذ Zzbench Qqtest اليوم.",
+   "forbiddenSuccessfulTools": [
+    "attendance_mark"
+   ]
+  },
+  {
+   "id": "announcement-blocked-ar",
+   "language": "ar",
+   "kind": "blocked-write",
+   "query": "أنشئ وانشر إعلانا لجميع أولياء الأمور بعنوان «Zzbench test» يفيد بأن المدرسة ستغلق مبكرا يوم الجمعة.",
+   "forbiddenSuccessfulTools": [
+    "announcements_create",
+    "announcements_publish"
+   ]
+  },
+  {
+   "id": "missing-student-es",
+   "language": "es",
+   "kind": "single-read",
+   "query": "Muestra el boletín de notas del alumno Zzbench Qqtest.",
+   "expectedToolGroups": [
+    [
+     "search_search_students",
+     "students_get_students"
+    ]
+   ]
+  },
+  {
+   "id": "grade-create-blocked-es",
+   "language": "es",
+   "kind": "blocked-write",
+   "query": "Registra 15 sobre 20 para el alumno Zzbench Qqtest en la última evaluación.",
+   "forbiddenSuccessfulTools": [
+    "grades_create"
+   ]
+  },
+  {
+   "id": "announcement-blocked-es",
+   "language": "es",
+   "kind": "blocked-write",
+   "query": "Crea y publica un anuncio para todos los padres titulado «Zzbench test»: la escuela cierra antes el viernes.",
+   "forbiddenSuccessfulTools": [
+    "announcements_create",
+    "announcements_publish"
+   ]
+  },
+  {
+   "id": "missing-student-ary",
+   "language": "ary",
+   "kind": "single-read",
+   "query": "وريني النقط ديال التلميذ Zzbench Qqtest.",
+   "expectedToolGroups": [
+    [
+     "search_search_students",
+     "students_get_students"
+    ]
+   ]
+  },
+  {
+   "id": "attendance-mark-blocked-ary",
+   "language": "ary",
+   "kind": "blocked-write",
+   "query": "سجل بلي التلميذ Zzbench Qqtest غايب اليوم.",
+   "forbiddenSuccessfulTools": [
+    "attendance_mark"
+   ]
+  },
+  {
+   "id": "announcement-blocked-ary",
+   "language": "ary",
+   "kind": "blocked-write",
+   "query": "دير إعلان لجميع الآباء بعنوان «Zzbench test» وقول ليهم بلي المدرسة غادي تسد بكري نهار الجمعة، ونشرو.",
+   "forbiddenSuccessfulTools": [
+    "announcements_create",
+    "announcements_publish"
+   ]
+  }
+ ]
+}

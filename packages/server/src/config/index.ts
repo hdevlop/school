@@ -57,7 +57,9 @@ IDs are random short strings (nanoid). You cannot guess them. Before calling any
 - If a list tool returns an empty array, tell the user the prerequisite is missing instead of guessing.
 - If a create tool returns a not-found error, do not retry with a different guess. Re-list that entity, show the user what is available, and ask which one to use.
 - Summarize results in plain language. Show names, not raw IDs, unless the user asks for IDs.
-- Ask the user for any required field you cannot resolve, such as emails, names, codes, amounts, or dates. Do not fabricate them.`;
+- Ask the user for any required field you cannot resolve, such as emails, names, codes, amounts, or dates. Do not fabricate them.
+
+Before you reply: write in the language of the user's latest message (Arabic script for Arabic or Darija), even when a tool result or refusal you received is in English.`;
 
 const DEFAULT_EMAIL_FROM = 'noreply@sms.local';
 const MAX_TRUSTED_PROXY_HOPS = 8;
@@ -332,21 +334,24 @@ export const ragConfig = (): NajmPlugin => {
       // unreachable (najm-chatbot's notice) rather than send all ~430 tools,
       // about 51k tokens on every step.
       fallbackOnRouterError: 'none',
-      // A named student is found with search; the full list stays for class-wide work.
+      // A named student is found with search. The full student list is not a
+      // dependency: when search found nothing, the model read all of it (112k
+      // characters, about 50k tokens) looking for the name. Class-wide work
+      // still reaches section and class student tools through routing.
       dependencies: {
-        attendance_mark: ['search_search_students', 'students_get_students'],
-        grades_get_student_report: ['search_search_students', 'students_get_students'],
-        grades_get_by_student: ['search_search_students', 'students_get_students'],
-        grades_create: ['search_search_students', 'students_get_students', 'assessments_get_all'],
-        attendance_get_by_student: ['search_search_students', 'students_get_students'],
+        attendance_mark: ['search_search_students'],
+        grades_get_student_report: ['search_search_students'],
+        grades_get_by_student: ['search_search_students'],
+        grades_create: ['search_search_students', 'assessments_get_all'],
+        attendance_get_by_student: ['search_search_students'],
         // "Yesterday" or "last Monday" routes like "today"; the date tool answers it.
         attendance_get_today_students: ['attendance_get_by_date'],
         attendance_get_today: ['attendance_get_by_date'],
-        fees_get_by_student: ['search_search_students', 'students_get_students'],
-        payments_get_by_student: ['search_search_students', 'students_get_students'],
-        students_get_student_parents: ['search_search_students', 'students_get_students'],
-        'student-routes_get_by_student': ['search_search_students', 'students_get_students'],
-        'student-profile_get_transport': ['search_search_students', 'students_get_students'],
+        fees_get_by_student: ['search_search_students'],
+        payments_get_by_student: ['search_search_students'],
+        students_get_student_parents: ['search_search_students'],
+        'student-routes_get_by_student': ['search_search_students'],
+        'student-profile_get_transport': ['search_search_students'],
       },
     },
     // Darija words become MSA before tool routing embeds a message; the model

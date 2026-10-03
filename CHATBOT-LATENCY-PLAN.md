@@ -2,6 +2,15 @@
 
 Status: **GPT-OSS-120B:NITRO REJECTED ON THE FULL SET: 47/50, CEREBRAS TRUNCATES TOOL NAMES; THE DEFAULT ROUTE STAYS (50/50)**
 
+2026-10-03 (night), tool arguments and roles ([review](docs/evidence/chatbot-latency/tool-schemas-20261003.md), [roles](docs/evidence/chatbot-latency/roles-20261003.md)):
+until `najm-chatbot` 2.1.2 every tool reached the model with an empty argument
+schema (AI SDK 6 reads `inputSchema`, not `parameters`), so the model guessed
+argument names. Fixed, then: named students resolve by search only (the full
+list cost 52k tokens on one step), a closing reply-language line (2/36 to 0/36
+on English tool results), and the chat context names the signed-in parent,
+teacher or student. Parent, teacher, student and follow-up checks: 10/10, no
+other student in any tool output. Full set: 50/50, 178k input tokens.
+
 2026-10-03, all 50 questions, default vs `:nitro` ([review](docs/evidence/chatbot-latency/model-nitro-full50-20261003.md)):
 `:nitro` completed in 1.0 s p50 / 1.5 s p95 against 3.5 s / 12.3 s, but three
 teacher-count answers came back empty. Cerebras, which serves `:nitro`, returned

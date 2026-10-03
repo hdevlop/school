@@ -52,6 +52,27 @@ describe('detectReplyLanguage', () => {
     expect(detectReplyLanguage(reply)).toBe('en');
   });
 
+  it('reads a Spanish list whose items gloss classes in French after a dash as Spanish', () => {
+    const reply = [
+      'Aquí tienes la lista de clases para el año académico 2026‑2027:',
+      '',
+      '- **CP** – Cours Préparatoire (secciones A, B, C)',
+      '- **CE1** – Cours Élémentaire 1ère année (secciones A, B, C)',
+      '- **CE2** – Cours Élémentaire 2ème année (secciones A, B, C)',
+      '- **CM1** – Cours Moyen 1ère année (secciones A, B, C)',
+      '- **CM2** – Cours Moyen 2ème année (secciones A, B, C)',
+      '- **1AC** – 1ère année collège (secciones A, B, C)',
+      '',
+      'Si necesitas más detalles sobre alguna clase, dímelo.',
+    ].join('\n');
+    expect(detectReplyLanguage(reply)).toBe('es');
+  });
+
+  it('keeps reading a French list of glossed items as French', () => {
+    const reply = 'Voici les classes de l’année :\n\n- **CP** – Cours Préparatoire\n- **CE1** – Cours Élémentaire 1ère année\n\nVoulez‑vous les sections de chaque classe ?';
+    expect(detectReplyLanguage(reply)).toBe('fr');
+  });
+
   it('never calls a short French answer that is mostly a table another language', () => {
     const reply = 'Voici les classes :\n\n| Classe | Niveau | Sections |\n|---|---|---|\n| CP | Primary | A, B |\n| CE1 | Primary | A, B |';
     expect([null, 'fr']).toContain(detectReplyLanguage(reply));
