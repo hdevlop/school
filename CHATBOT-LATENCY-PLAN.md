@@ -2,6 +2,13 @@
 
 Status: **GPT-OSS-120B:NITRO REJECTED ON THE FULL SET: 47/50, CEREBRAS TRUNCATES TOOL NAMES; THE DEFAULT ROUTE STAYS (50/50)**
 
+2026-10-04, context size ([review](docs/evidence/chatbot-latency/context-size-20261004.md)): the
+system message was 55% of input tokens (960 per model step, uncached), tool
+definitions 19% (44 per tool), the conversation 26%. The chat cannot write,
+so the prompt's create recipes went; it now says writes are impossible here.
+50 questions: 50/50, 174k to 137k input tokens; language-risk set: 36/36,
+148k to 83k; blocked writes refuse without a tool call.
+
 2026-10-04, tool cap ([review](docs/evidence/chatbot-latency/tool-cap-20261004.md)): `maxTools` 12
 stays. Routing sends 8-10 tools; a cap of six cuts dependencies first and
 fails 9/20 core, 3/31 Darija/French and 7/45 benchmark questions that pass

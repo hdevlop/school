@@ -1,0 +1,2902 @@
+{
+ "method": "Each chat request was forwarded unchanged to OpenRouter (openai/gpt-oss-120b, default route) and replayed non-streamed with max_tokens 16 three times: as sent, without tools, without the system message. prompt_tokens differences give the tokens of the tool definitions and of the system message; the rest is the conversation (question, tool calls, tool results). Request bodies are not kept.",
+ "before": [
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4255,
+    "system": 4506,
+    "user": 35,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1683,
+   "withoutTools": 1040,
+   "withoutSystem": 723,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 3212,
+    "system": 4506,
+    "user": 43,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1491,
+   "withoutTools": 1026,
+   "withoutSystem": 531,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 3212,
+    "system": 4506,
+    "user": 43,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1539,
+   "withoutTools": 1090,
+   "withoutSystem": 579,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 2151,
+    "system": 4506,
+    "user": 41,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1334,
+   "withoutTools": 1039,
+   "withoutSystem": 374,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 7,
+   "chars": {
+    "tools": 2151,
+    "system": 4506,
+    "user": 41,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1384,
+   "withoutTools": 1076,
+   "withoutSystem": 424,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 4506,
+    "user": 28,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1315,
+   "withoutTools": 1036,
+   "withoutSystem": 355,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 4506,
+    "user": 28,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 3069,
+   "withoutTools": 2787,
+   "withoutSystem": 2109,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2502,
+    "system": 4506,
+    "user": 34,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1371,
+   "withoutTools": 1036,
+   "withoutSystem": 411,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2502,
+    "system": 4506,
+    "user": 34,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1424,
+   "withoutTools": 1078,
+   "withoutSystem": 453,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2025,
+    "system": 4506,
+    "user": 28,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1280,
+   "withoutTools": 1036,
+   "withoutSystem": 320,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2025,
+    "system": 4506,
+    "user": 28,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5463,
+   "withoutTools": 5220,
+   "withoutSystem": 4503,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2534,
+    "system": 4506,
+    "user": 62,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1389,
+   "withoutTools": 1042,
+   "withoutSystem": 429,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2534,
+    "system": 4506,
+    "user": 62,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1437,
+   "withoutTools": 1091,
+   "withoutSystem": 477,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2534,
+    "system": 4506,
+    "user": 62,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1487,
+   "withoutTools": 1141,
+   "withoutSystem": 527,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2659,
+    "system": 4506,
+    "user": 54,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1392,
+   "withoutTools": 1042,
+   "withoutSystem": 432,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2659,
+    "system": 4506,
+    "user": 54,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1434,
+   "withoutTools": 1091,
+   "withoutSystem": 474,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 6,
+   "chars": {
+    "tools": 2236,
+    "system": 4506,
+    "user": 47,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1365,
+   "withoutTools": 1043,
+   "withoutSystem": 405,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 6,
+   "chars": {
+    "tools": 2236,
+    "system": 4506,
+    "user": 47,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1407,
+   "withoutTools": 1085,
+   "withoutSystem": 447,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1323,
+    "system": 4506,
+    "user": 112,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1217,
+   "withoutTools": 1040,
+   "withoutSystem": 257,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1323,
+    "system": 4506,
+    "user": 112,
+    "assistant": 272,
+    "toolResults": 317
+   },
+   "promptTokens": 1343,
+   "withoutTools": 1166,
+   "withoutSystem": 383,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4208,
+    "system": 4506,
+    "user": 37,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1682,
+   "withoutTools": 1027,
+   "withoutSystem": 722,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3516,
+    "system": 4506,
+    "user": 46,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1545,
+   "withoutTools": 1029,
+   "withoutSystem": 585,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3516,
+    "system": 4506,
+    "user": 46,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1593,
+   "withoutTools": 1090,
+   "withoutSystem": 633,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2488,
+    "system": 4506,
+    "user": 40,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1381,
+   "withoutTools": 1041,
+   "withoutSystem": 421,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2488,
+    "system": 4506,
+    "user": 40,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1431,
+   "withoutTools": 1094,
+   "withoutSystem": 471,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 4506,
+    "user": 31,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1317,
+   "withoutTools": 1038,
+   "withoutSystem": 357,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 4506,
+    "user": 31,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 3071,
+   "withoutTools": 2792,
+   "withoutSystem": 2111,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2818,
+    "system": 4506,
+    "user": 47,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1425,
+   "withoutTools": 1028,
+   "withoutSystem": 465,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2142,
+    "system": 4506,
+    "user": 43,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1298,
+   "withoutTools": 1039,
+   "withoutSystem": 338,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2818,
+    "system": 4506,
+    "user": 47,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1467,
+   "withoutTools": 1085,
+   "withoutSystem": 507,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2142,
+    "system": 4506,
+    "user": 43,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5481,
+   "withoutTools": 5225,
+   "withoutSystem": 4521,
+   "cached": 80
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2723,
+    "system": 4506,
+    "user": 66,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1436,
+   "withoutTools": 1046,
+   "withoutSystem": 476,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2723,
+    "system": 4506,
+    "user": 66,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1484,
+   "withoutTools": 1094,
+   "withoutSystem": 524,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2723,
+    "system": 4506,
+    "user": 66,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1534,
+   "withoutTools": 1144,
+   "withoutSystem": 574,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2794,
+    "system": 4506,
+    "user": 57,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1423,
+   "withoutTools": 1035,
+   "withoutSystem": 463,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2794,
+    "system": 4506,
+    "user": 57,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1465,
+   "withoutTools": 1077,
+   "withoutSystem": 505,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3287,
+    "system": 4506,
+    "user": 71,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1471,
+   "withoutTools": 1039,
+   "withoutSystem": 511,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3287,
+    "system": 4506,
+    "user": 71,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1513,
+   "withoutTools": 1094,
+   "withoutSystem": 553,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 2,
+   "chars": {
+    "tools": 851,
+    "system": 4506,
+    "user": 112,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1178,
+   "withoutTools": 1045,
+   "withoutSystem": 218,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 2,
+   "chars": {
+    "tools": 851,
+    "system": 4506,
+    "user": 112,
+    "assistant": 273,
+    "toolResults": 317
+   },
+   "promptTokens": 1305,
+   "withoutTools": 1172,
+   "withoutSystem": 345,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4255,
+    "system": 4506,
+    "user": 29,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1683,
+   "withoutTools": 1027,
+   "withoutSystem": 723,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3499,
+    "system": 4506,
+    "user": 37,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1544,
+   "withoutTools": 1043,
+   "withoutSystem": 584,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3499,
+    "system": 4506,
+    "user": 37,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1592,
+   "withoutTools": 1078,
+   "withoutSystem": 632,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2478,
+    "system": 4506,
+    "user": 29,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1375,
+   "withoutTools": 1039,
+   "withoutSystem": 415,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2478,
+    "system": 4506,
+    "user": 29,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1425,
+   "withoutTools": 1089,
+   "withoutSystem": 465,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2290,
+    "system": 4506,
+    "user": 27,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1330,
+   "withoutTools": 1038,
+   "withoutSystem": 370,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2290,
+    "system": 4506,
+    "user": 27,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 3084,
+   "withoutTools": 3055,
+   "withoutSystem": 2124,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 4506,
+    "user": 27,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1408,
+   "withoutTools": 1040,
+   "withoutSystem": 448,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 4506,
+    "user": 27,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1450,
+   "withoutTools": 1082,
+   "withoutSystem": 490,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2039,
+    "system": 4506,
+    "user": 27,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1277,
+   "withoutTools": 1038,
+   "withoutSystem": 317,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2039,
+    "system": 4506,
+    "user": 27,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5460,
+   "withoutTools": 5208,
+   "withoutSystem": 4500,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2516,
+    "system": 4506,
+    "user": 45,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1385,
+   "withoutTools": 1033,
+   "withoutSystem": 425,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2516,
+    "system": 4506,
+    "user": 45,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1433,
+   "withoutTools": 1097,
+   "withoutSystem": 473,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2516,
+    "system": 4506,
+    "user": 45,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1483,
+   "withoutTools": 1131,
+   "withoutSystem": 523,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2745,
+    "system": 4506,
+    "user": 39,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1404,
+   "withoutTools": 1044,
+   "withoutSystem": 444,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2745,
+    "system": 4506,
+    "user": 39,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1446,
+   "withoutTools": 1087,
+   "withoutSystem": 486,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 2533,
+    "system": 4506,
+    "user": 40,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1407,
+   "withoutTools": 1046,
+   "withoutSystem": 447,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 7,
+   "chars": {
+    "tools": 2533,
+    "system": 4506,
+    "user": 40,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1449,
+   "withoutTools": 1088,
+   "withoutSystem": 489,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 3,
+   "chars": {
+    "tools": 1211,
+    "system": 4506,
+    "user": 102,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1231,
+   "withoutTools": 1063,
+   "withoutSystem": 271,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 3,
+   "chars": {
+    "tools": 1211,
+    "system": 4506,
+    "user": 102,
+    "assistant": 301,
+    "toolResults": 317
+   },
+   "promptTokens": 1369,
+   "withoutTools": 1200,
+   "withoutSystem": 409,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4166,
+    "system": 4506,
+    "user": 34,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1671,
+   "withoutTools": 1041,
+   "withoutSystem": 711,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3510,
+    "system": 4506,
+    "user": 47,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1541,
+   "withoutTools": 1041,
+   "withoutSystem": 581,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3510,
+    "system": 4506,
+    "user": 47,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1589,
+   "withoutTools": 1086,
+   "withoutSystem": 629,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2375,
+    "system": 4506,
+    "user": 39,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1364,
+   "withoutTools": 1036,
+   "withoutSystem": 404,
+   "cached": 80
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2375,
+    "system": 4506,
+    "user": 39,
+    "assistant": 157,
+    "toolResults": 23
+   },
+   "promptTokens": 1414,
+   "withoutTools": 1086,
+   "withoutSystem": 454,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 4506,
+    "user": 35,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1318,
+   "withoutTools": 1043,
+   "withoutSystem": 358,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 4506,
+    "user": 35,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 3072,
+   "withoutTools": 2780,
+   "withoutSystem": 2112,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2470,
+    "system": 4506,
+    "user": 46,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1375,
+   "withoutTools": 1041,
+   "withoutSystem": 415,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2470,
+    "system": 4506,
+    "user": 46,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1417,
+   "withoutTools": 1070,
+   "withoutSystem": 457,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2059,
+    "system": 4506,
+    "user": 33,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1281,
+   "withoutTools": 1038,
+   "withoutSystem": 321,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2059,
+    "system": 4506,
+    "user": 33,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5464,
+   "withoutTools": 5218,
+   "withoutSystem": 4504,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2647,
+    "system": 4506,
+    "user": 53,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1415,
+   "withoutTools": 1044,
+   "withoutSystem": 455,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2647,
+    "system": 4506,
+    "user": 53,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1463,
+   "withoutTools": 1092,
+   "withoutSystem": 503,
+   "cached": 80
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2647,
+    "system": 4506,
+    "user": 53,
+    "assistant": 330,
+    "toolResults": 47
+   },
+   "promptTokens": 1513,
+   "withoutTools": 1129,
+   "withoutSystem": 553,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2742,
+    "system": 4506,
+    "user": 56,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1414,
+   "withoutTools": 1046,
+   "withoutSystem": 454,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2742,
+    "system": 4506,
+    "user": 56,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1456,
+   "withoutTools": 1089,
+   "withoutSystem": 496,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2638,
+    "system": 4506,
+    "user": 77,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1387,
+   "withoutTools": 1052,
+   "withoutSystem": 427,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2638,
+    "system": 4506,
+    "user": 77,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1429,
+   "withoutTools": 1094,
+   "withoutSystem": 469,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 2,
+   "chars": {
+    "tools": 851,
+    "system": 4506,
+    "user": 110,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1177,
+   "withoutTools": 1056,
+   "withoutSystem": 217,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 2,
+   "chars": {
+    "tools": 851,
+    "system": 4506,
+    "user": 110,
+    "assistant": 277,
+    "toolResults": 317
+   },
+   "promptTokens": 1305,
+   "withoutTools": 1185,
+   "withoutSystem": 345,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 6,
+   "chars": {
+    "tools": 3847,
+    "system": 4506,
+    "user": 26,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1622,
+   "withoutTools": 1041,
+   "withoutSystem": 662,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3546,
+    "system": 4506,
+    "user": 31,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1548,
+   "withoutTools": 1043,
+   "withoutSystem": 588,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3546,
+    "system": 4506,
+    "user": 31,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1596,
+   "withoutTools": 1091,
+   "withoutSystem": 636,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2487,
+    "system": 4506,
+    "user": 30,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1377,
+   "withoutTools": 1044,
+   "withoutSystem": 417,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2487,
+    "system": 4506,
+    "user": 30,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1427,
+   "withoutTools": 1097,
+   "withoutSystem": 467,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2291,
+    "system": 4506,
+    "user": 42,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1341,
+   "withoutTools": 1031,
+   "withoutSystem": 381,
+   "cached": 80
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2291,
+    "system": 4506,
+    "user": 42,
+    "assistant": 152,
+    "toolResults": 16483
+   },
+   "promptTokens": 7092,
+   "withoutTools": 7337,
+   "withoutSystem": 6132,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 4506,
+    "user": 35,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1411,
+   "withoutTools": 1043,
+   "withoutSystem": 451,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 4506,
+    "user": 35,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1453,
+   "withoutTools": 1085,
+   "withoutSystem": 493,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2158,
+    "system": 4506,
+    "user": 33,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1302,
+   "withoutTools": 1043,
+   "withoutSystem": 342,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2158,
+    "system": 4506,
+    "user": 33,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5485,
+   "withoutTools": 5846,
+   "withoutSystem": 4525,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2703,
+    "system": 4506,
+    "user": 48,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1420,
+   "withoutTools": 1050,
+   "withoutSystem": 460,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2703,
+    "system": 4506,
+    "user": 48,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1468,
+   "withoutTools": 1101,
+   "withoutSystem": 508,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2703,
+    "system": 4506,
+    "user": 48,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1518,
+   "withoutTools": 1135,
+   "withoutSystem": 558,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2507,
+    "system": 4506,
+    "user": 42,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1360,
+   "withoutTools": 1044,
+   "withoutSystem": 400,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2507,
+    "system": 4506,
+    "user": 42,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1402,
+   "withoutTools": 1093,
+   "withoutSystem": 442,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4222,
+    "system": 4506,
+    "user": 44,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1686,
+   "withoutTools": 1053,
+   "withoutSystem": 726,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1446,
+    "system": 4506,
+    "user": 102,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1255,
+   "withoutTools": 1062,
+   "withoutSystem": 295,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1446,
+    "system": 4506,
+    "user": 102,
+    "assistant": 275,
+    "toolResults": 317
+   },
+   "promptTokens": 1389,
+   "withoutTools": 1196,
+   "withoutSystem": 429,
+   "cached": 0
+  }
+ ],
+ "after": [
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4255,
+    "system": 2968,
+    "user": 35,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1367,
+   "withoutTools": 724,
+   "withoutSystem": 723,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 3212,
+    "system": 2968,
+    "user": 43,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1175,
+   "withoutTools": 710,
+   "withoutSystem": 531,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 3212,
+    "system": 2968,
+    "user": 43,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1223,
+   "withoutTools": 771,
+   "withoutSystem": 579,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 2151,
+    "system": 2968,
+    "user": 41,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1018,
+   "withoutTools": 723,
+   "withoutSystem": 374,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 7,
+   "chars": {
+    "tools": 2151,
+    "system": 2968,
+    "user": 41,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1068,
+   "withoutTools": 773,
+   "withoutSystem": 424,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 2968,
+    "user": 28,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 999,
+   "withoutTools": 720,
+   "withoutSystem": 355,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 2968,
+    "user": 28,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 2753,
+   "withoutTools": 2471,
+   "withoutSystem": 2109,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2502,
+    "system": 2968,
+    "user": 34,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1055,
+   "withoutTools": 720,
+   "withoutSystem": 411,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2502,
+    "system": 2968,
+    "user": 34,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1097,
+   "withoutTools": 765,
+   "withoutSystem": 453,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2025,
+    "system": 2968,
+    "user": 28,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 964,
+   "withoutTools": 720,
+   "withoutSystem": 320,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2025,
+    "system": 2968,
+    "user": 28,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5147,
+   "withoutTools": 4891,
+   "withoutSystem": 4503,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2534,
+    "system": 2968,
+    "user": 62,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1073,
+   "withoutTools": 727,
+   "withoutSystem": 429,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2534,
+    "system": 2968,
+    "user": 62,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1121,
+   "withoutTools": 775,
+   "withoutSystem": 477,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2534,
+    "system": 2968,
+    "user": 62,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1171,
+   "withoutTools": 825,
+   "withoutSystem": 527,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2659,
+    "system": 2968,
+    "user": 54,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1076,
+   "withoutTools": 716,
+   "withoutSystem": 432,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2659,
+    "system": 2968,
+    "user": 54,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1118,
+   "withoutTools": 758,
+   "withoutSystem": 474,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 6,
+   "chars": {
+    "tools": 2236,
+    "system": 2968,
+    "user": 47,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1049,
+   "withoutTools": 727,
+   "withoutSystem": 405,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 6,
+   "chars": {
+    "tools": 2236,
+    "system": 2968,
+    "user": 47,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1091,
+   "withoutTools": 764,
+   "withoutSystem": 447,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1323,
+    "system": 2968,
+    "user": 112,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 901,
+   "withoutTools": 724,
+   "withoutSystem": 257,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1323,
+    "system": 2968,
+    "user": 112,
+    "assistant": 271,
+    "toolResults": 317
+   },
+   "promptTokens": 1027,
+   "withoutTools": 866,
+   "withoutSystem": 383,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4208,
+    "system": 2968,
+    "user": 37,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1366,
+   "withoutTools": 724,
+   "withoutSystem": 722,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3516,
+    "system": 2968,
+    "user": 46,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1229,
+   "withoutTools": 726,
+   "withoutSystem": 585,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3516,
+    "system": 2968,
+    "user": 46,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1277,
+   "withoutTools": 774,
+   "withoutSystem": 633,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2488,
+    "system": 2968,
+    "user": 40,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1065,
+   "withoutTools": 725,
+   "withoutSystem": 421,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2488,
+    "system": 2968,
+    "user": 40,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1115,
+   "withoutTools": 778,
+   "withoutSystem": 471,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 2968,
+    "user": 31,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1001,
+   "withoutTools": 709,
+   "withoutSystem": 357,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 2968,
+    "user": 31,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 2755,
+   "withoutTools": 2463,
+   "withoutSystem": 2111,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2818,
+    "system": 2968,
+    "user": 47,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1109,
+   "withoutTools": 725,
+   "withoutSystem": 465,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2818,
+    "system": 2968,
+    "user": 47,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1151,
+   "withoutTools": 769,
+   "withoutSystem": 507,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2142,
+    "system": 2968,
+    "user": 43,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 982,
+   "withoutTools": 720,
+   "withoutSystem": 338,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2142,
+    "system": 2968,
+    "user": 43,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5165,
+   "withoutTools": 5526,
+   "withoutSystem": 4521,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2723,
+    "system": 2968,
+    "user": 66,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1120,
+   "withoutTools": 733,
+   "withoutSystem": 476,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2723,
+    "system": 2968,
+    "user": 66,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1168,
+   "withoutTools": 781,
+   "withoutSystem": 524,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2723,
+    "system": 2968,
+    "user": 66,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1218,
+   "withoutTools": 818,
+   "withoutSystem": 574,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2794,
+    "system": 2968,
+    "user": 57,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1107,
+   "withoutTools": 732,
+   "withoutSystem": 463,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2794,
+    "system": 2968,
+    "user": 57,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1149,
+   "withoutTools": 773,
+   "withoutSystem": 505,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3287,
+    "system": 2968,
+    "user": 71,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1155,
+   "withoutTools": 736,
+   "withoutSystem": 511,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3287,
+    "system": 2968,
+    "user": 71,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1197,
+   "withoutTools": 782,
+   "withoutSystem": 553,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 2,
+   "chars": {
+    "tools": 851,
+    "system": 2968,
+    "user": 112,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 862,
+   "withoutTools": 742,
+   "withoutSystem": 218,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4255,
+    "system": 2968,
+    "user": 29,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1367,
+   "withoutTools": 724,
+   "withoutSystem": 723,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3499,
+    "system": 2968,
+    "user": 37,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1228,
+   "withoutTools": 727,
+   "withoutSystem": 584,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3499,
+    "system": 2968,
+    "user": 37,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1276,
+   "withoutTools": 778,
+   "withoutSystem": 632,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2478,
+    "system": 2968,
+    "user": 29,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1059,
+   "withoutTools": 723,
+   "withoutSystem": 415,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2478,
+    "system": 2968,
+    "user": 29,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1109,
+   "withoutTools": 775,
+   "withoutSystem": 465,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2290,
+    "system": 2968,
+    "user": 27,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1014,
+   "withoutTools": 726,
+   "withoutSystem": 370,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2290,
+    "system": 2968,
+    "user": 27,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 2768,
+   "withoutTools": 2476,
+   "withoutSystem": 2124,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 2968,
+    "user": 27,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1092,
+   "withoutTools": 711,
+   "withoutSystem": 448,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 2968,
+    "user": 27,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1134,
+   "withoutTools": 766,
+   "withoutSystem": 490,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2039,
+    "system": 2968,
+    "user": 27,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 961,
+   "withoutTools": 722,
+   "withoutSystem": 317,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2039,
+    "system": 2968,
+    "user": 27,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5144,
+   "withoutTools": 4905,
+   "withoutSystem": 4500,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2516,
+    "system": 2968,
+    "user": 45,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1117,
+   "withoutTools": 778,
+   "withoutSystem": 473,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2516,
+    "system": 2968,
+    "user": 45,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1069,
+   "withoutTools": 729,
+   "withoutSystem": 425,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2516,
+    "system": 2968,
+    "user": 45,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1167,
+   "withoutTools": 832,
+   "withoutSystem": 523,
+   "cached": 48
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2745,
+    "system": 2968,
+    "user": 39,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1088,
+   "withoutTools": 729,
+   "withoutSystem": 444,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2745,
+    "system": 2968,
+    "user": 39,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1130,
+   "withoutTools": 775,
+   "withoutSystem": 486,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 2533,
+    "system": 2968,
+    "user": 40,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1091,
+   "withoutTools": 730,
+   "withoutSystem": 447,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 3,
+   "chars": {
+    "tools": 1211,
+    "system": 2968,
+    "user": 102,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 915,
+   "withoutTools": 747,
+   "withoutSystem": 271,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4166,
+    "system": 2968,
+    "user": 34,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1355,
+   "withoutTools": 725,
+   "withoutSystem": 711,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3510,
+    "system": 2968,
+    "user": 47,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1225,
+   "withoutTools": 725,
+   "withoutSystem": 581,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3510,
+    "system": 2968,
+    "user": 47,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1273,
+   "withoutTools": 770,
+   "withoutSystem": 629,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2375,
+    "system": 2968,
+    "user": 39,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1048,
+   "withoutTools": 723,
+   "withoutSystem": 404,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2375,
+    "system": 2968,
+    "user": 39,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1098,
+   "withoutTools": 773,
+   "withoutSystem": 454,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 2968,
+    "user": 35,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1002,
+   "withoutTools": 723,
+   "withoutSystem": 358,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2273,
+    "system": 2968,
+    "user": 35,
+    "assistant": 166,
+    "toolResults": 5265
+   },
+   "promptTokens": 2756,
+   "withoutTools": 2464,
+   "withoutSystem": 2112,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2470,
+    "system": 2968,
+    "user": 46,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1059,
+   "withoutTools": 725,
+   "withoutSystem": 415,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2470,
+    "system": 2968,
+    "user": 46,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1101,
+   "withoutTools": 767,
+   "withoutSystem": 457,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2059,
+    "system": 2968,
+    "user": 33,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 965,
+   "withoutTools": 709,
+   "withoutSystem": 321,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2059,
+    "system": 2968,
+    "user": 33,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5148,
+   "withoutTools": 4905,
+   "withoutSystem": 4504,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2647,
+    "system": 2968,
+    "user": 53,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1099,
+   "withoutTools": 715,
+   "withoutSystem": 455,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2647,
+    "system": 2968,
+    "user": 53,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1147,
+   "withoutTools": 776,
+   "withoutSystem": 503,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2647,
+    "system": 2968,
+    "user": 53,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1197,
+   "withoutTools": 832,
+   "withoutSystem": 553,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2742,
+    "system": 2968,
+    "user": 56,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1098,
+   "withoutTools": 731,
+   "withoutSystem": 454,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2742,
+    "system": 2968,
+    "user": 56,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1140,
+   "withoutTools": 773,
+   "withoutSystem": 496,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2638,
+    "system": 2968,
+    "user": 77,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1071,
+   "withoutTools": 723,
+   "withoutSystem": 427,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 2,
+   "chars": {
+    "tools": 851,
+    "system": 2968,
+    "user": 110,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 861,
+   "withoutTools": 741,
+   "withoutSystem": 217,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 6,
+   "chars": {
+    "tools": 3847,
+    "system": 2968,
+    "user": 26,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1306,
+   "withoutTools": 724,
+   "withoutSystem": 662,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3546,
+    "system": 2968,
+    "user": 31,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1232,
+   "withoutTools": 727,
+   "withoutSystem": 588,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 10,
+   "chars": {
+    "tools": 3546,
+    "system": 2968,
+    "user": 31,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1280,
+   "withoutTools": 775,
+   "withoutSystem": 636,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2487,
+    "system": 2968,
+    "user": 30,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1061,
+   "withoutTools": 728,
+   "withoutSystem": 417,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2487,
+    "system": 2968,
+    "user": 30,
+    "assistant": 173,
+    "toolResults": 23
+   },
+   "promptTokens": 1111,
+   "withoutTools": 772,
+   "withoutSystem": 467,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2291,
+    "system": 2968,
+    "user": 42,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1025,
+   "withoutTools": 715,
+   "withoutSystem": 381,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2291,
+    "system": 2968,
+    "user": 42,
+    "assistant": 168,
+    "toolResults": 16483
+   },
+   "promptTokens": 6776,
+   "withoutTools": 6482,
+   "withoutSystem": 6132,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 2968,
+    "user": 35,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1095,
+   "withoutTools": 727,
+   "withoutSystem": 451,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2782,
+    "system": 2968,
+    "user": 35,
+    "assistant": 176,
+    "toolResults": 4
+   },
+   "promptTokens": 1137,
+   "withoutTools": 769,
+   "withoutSystem": 493,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2158,
+    "system": 2968,
+    "user": 33,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 986,
+   "withoutTools": 724,
+   "withoutSystem": 342,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2158,
+    "system": 2968,
+    "user": 33,
+    "assistant": 171,
+    "toolResults": 13833
+   },
+   "promptTokens": 5169,
+   "withoutTools": 4907,
+   "withoutSystem": 4525,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2703,
+    "system": 2968,
+    "user": 48,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1104,
+   "withoutTools": 731,
+   "withoutSystem": 460,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2703,
+    "system": 2968,
+    "user": 48,
+    "assistant": 173,
+    "toolResults": 24
+   },
+   "promptTokens": 1152,
+   "withoutTools": 779,
+   "withoutSystem": 508,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool,assistant,tool",
+   "toolCount": 8,
+   "chars": {
+    "tools": 2703,
+    "system": 2968,
+    "user": 48,
+    "assistant": 346,
+    "toolResults": 47
+   },
+   "promptTokens": 1202,
+   "withoutTools": 829,
+   "withoutSystem": 558,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2507,
+    "system": 2968,
+    "user": 42,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1044,
+   "withoutTools": 731,
+   "withoutSystem": 400,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 9,
+   "chars": {
+    "tools": 2507,
+    "system": 2968,
+    "user": 42,
+    "assistant": 175,
+    "toolResults": 4
+   },
+   "promptTokens": 1086,
+   "withoutTools": 773,
+   "withoutSystem": 442,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 7,
+   "chars": {
+    "tools": 4222,
+    "system": 2968,
+    "user": 44,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 1370,
+   "withoutTools": 733,
+   "withoutSystem": 726,
+   "cached": 0
+  },
+  {
+   "roles": "system,user",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1446,
+    "system": 2968,
+    "user": 102,
+    "assistant": 0,
+    "toolResults": 0
+   },
+   "promptTokens": 939,
+   "withoutTools": 736,
+   "withoutSystem": 295,
+   "cached": 0
+  },
+  {
+   "roles": "system,user,assistant,tool",
+   "toolCount": 4,
+   "chars": {
+    "tools": 1446,
+    "system": 2968,
+    "user": 102,
+    "assistant": 276,
+    "toolResults": 317
+   },
+   "promptTokens": 1073,
+   "withoutTools": 883,
+   "withoutSystem": 429,
+   "cached": 0
+  }
+ ]
+}
