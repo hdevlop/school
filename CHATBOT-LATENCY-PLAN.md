@@ -17,6 +17,12 @@ to 10/10 (two runs), with no wrong-language reply:
   measured and rejected: they replace description matches whenever one clears
   the threshold, and unrelated questions cleared it.
 
+Because the benchmark questions shaped the word list, 31 more Darija and French
+routing questions on other topics (`routing-darija-fr.json`) went from 23/31 to
+29/31, after more words, French and Arabic sentences on 27 common read tools,
+and student-search dependencies for per-student tools. The all-language
+preflight stayed at 18/20, and French and Darija passed 20/20 a third time.
+
 Earlier the same day, an audit found 41 chat-callable tools that changed data
 without a confirmation; all are now confirmed, so the chat refuses them
 (`tests/security/ChatReadOnlyTools.test.ts`). Marking the 249 reads
