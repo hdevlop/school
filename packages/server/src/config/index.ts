@@ -24,6 +24,7 @@ import { schoolMcpYearHooks } from '../modules/academicYears/requestYear';
 import { yearScopedModules } from './yearScope';
 import { SchoolChatContextProvider } from '../modules/chat/SchoolChatContextProvider';
 import { chatDiagnosticsLog } from '../modules/chat/ChatDiagnosticsLog';
+import { rewriteDarijaForRouting } from '../modules/chat/darijaRouting';
 
 export const guardConfig = () => guards({ default: [isAuth()] });
 
@@ -330,6 +331,9 @@ export const ragConfig = (): NajmPlugin => {
         grades_create: ['search_search_students', 'students_get_students', 'assessments_get_all'],
       },
     },
+    // Darija words become MSA before tool routing embeds a message; the model
+    // still reads the user's own words.
+    rewriteRoutingQuery: rewriteDarijaForRouting,
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;
