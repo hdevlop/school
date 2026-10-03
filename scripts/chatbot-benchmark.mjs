@@ -60,8 +60,14 @@ const keepText = args.includes('--keep-text');
 // One request that may run without a saved key: proves body, year and stream
 // framing (the provider then refuses inside the stream). Not a latency sample.
 const transportProbe = args.includes('--transport-probe');
+// Interleaves the saved model with a candidate, request by request, on the same
+// provider and key, then restores the saved model.
+const compareModel = option('compare-model', '');
+if (compareModel && (transportProbe || !/^[\w.:/-]{1,120}$/.test(compareModel))) {
+  throw new Error('Use --compare-model=<provider model id> without --transport-probe');
+}
 const selected = corpus.cases.slice(0, transportProbe ? 1 : limit);
-const planned = transportProbe ? 1 : selected.length * repeat;
+const planned = transportProbe ? 1 : selected.length * repeat * (compareModel ? 2 : 1);
 const outputPath = resolve(option('output', 'docs/evidence/chatbot-latency/stream-baseline.json'));
 
 const runId = randomUUID().slice(0, 8);
@@ -69,7 +75,7 @@ const report = {
   capturedAt: new Date().toISOString(),
   runId,
   target: base.origin,
-  mode: transportProbe ? 'transport-probe' : 'api-client-streaming',
+  mode: transportProbe ? 'transport-probe' : compareModel ? 'api-client-streaming-comparison' : 'api-client-streaming',
   corpusSha256: createHash('sha256').update(corpusText).digest('hex'),
   role: corpus.role,
   academicYear: year,
@@ -99,16 +105,17 @@ const revision = Bun.spawnSync(['git', 'rev-parse', 'HEAD']);
 report.gitHead = revision.exitCode === 0 ? revision.stdout.toString().trim() : null;
 report.workingTreeDirty = Bun.spawnSync(['git', 'status', '--porcelain']).stdout.length > 0;
 
-// Fixed allowlist: no fixture or argument can reach another route.
-const routes = new Map([
-  ['/api/health/status', 'GET'],
-  ['/api/auth/login', 'POST'],
-  ['/api/ai-settings', 'GET'],
+// Fixed allowlist: no fixture or argument can reach another route. The PUT only
+// ever sends { model } (see setModel).
+const routes = new Set([
+  'GET /api/health/status',
+  'POST /api/auth/login',
+  'GET /api/ai-settings',
+  'PUT /api/ai-settings',
 ]);
 let token;
-async function request(path, body) {
-  const method = routes.get(path);
-  if (!method) throw new Error('Route is not allowed');
+async function request(path, body, method = body === undefined ? 'GET' : 'POST') {
+  if (!routes.has(`${method} ${path}`)) throw new Error('Route is not allowed');
   const start = performance.now();
   const entry = { path, method };
   report.requests.push(entry);
@@ -161,8 +168,40 @@ async function serverDiagnostics(requestId) {
   return { error: 'not_recorded' };
 }
 
-async function chat(item, repetition) {
-  const sessionId = `bench-${runId}-${item.id}-${repetition}`;
+let activeModel = null;
+async function setModel(model) {
+  if (model === activeModel) return;
+  const saved = await request('/api/ai-settings', { model }, 'PUT');
+  if (saved?.model !== model) throw new Error('AI settings did not take the requested model');
+  activeModel = model;
+}
+
+async function runAll(baselineModel) {
+  for (let repetition = 1; repetition <= (transportProbe ? 1 : repeat); repetition++) {
+    for (const [index, item] of selected.entries()) {
+      const variants = !compareModel ? [[null, baselineModel]]
+        : (index + repetition) % 2 === 0
+          ? [['baseline', baselineModel], ['candidate', compareModel]]
+          : [['candidate', compareModel], ['baseline', baselineModel]];
+      for (const [variant, model] of variants) {
+        if (variant) await setModel(model);
+        const sample = await chat(item, repetition, variant);
+        if (variant) {
+          Object.assign(sample, { variant, model });
+          if (sample.server && sample.server.model !== model) sample.modelMismatch = true;
+        }
+        report.samples.push(sample);
+        console.error((variant ? `[${variant}] ` : '')
+          + `${sample.id}#${repetition} ${sample.outcome} firstText=${sample.firstTextMs ?? '-'}ms complete=${sample.bodyEndMs ?? '-'}ms`
+          + ` server=${sample.server ? `${sample.server.outcome} prepare=${sample.server.spans.prepareMs}ms` : sample.serverDiagnosticsError ?? '-'}`);
+      }
+    }
+  }
+}
+
+async function chat(item, repetition, variant = null) {
+  // Each request is a fresh session, so neither model sees the other's answer.
+  const sessionId = `bench-${runId}-${item.id}-${repetition}${variant ? `-${variant}` : ''}`;
   const url = new URL('/api/chat', base.origin);
   url.searchParams.set('academicYear', year);
   const controller = new AbortController();
@@ -258,7 +297,19 @@ function score(item, parsed, server) {
   };
 }
 
-function summarize(samples) {
+function summarize(samples, single = false) {
+  if (!single && compareModel && samples.some((sample) => sample.variant)) {
+    return {
+      requests: samples.length,
+      comparison: Object.fromEntries(['baseline', 'candidate'].map((variant) => [variant, {
+        model: samples.find((sample) => sample.variant === variant)?.model ?? null,
+        // A request that ran on another model (settings cache, a parallel edit) is excluded.
+        mismatchedModel: samples.filter((sample) => sample.variant === variant && sample.modelMismatch).length,
+        ...summarize(samples.filter((sample) => sample.variant === variant && !sample.modelMismatch), true),
+      }])),
+      note: 'Requests alternate between models; the first model of each pair alternates too.',
+    };
+  }
   const completed = samples.filter((sample) => sample.outcome === 'completed');
   const byOutcome = {};
   for (const sample of samples) byOutcome[sample.outcome] = (byOutcome[sample.outcome] ?? 0) + 1;
@@ -352,18 +403,23 @@ try {
     throw new Error('Assistant is disabled or has no saved provider key; no chat requests were sent');
   }
 
-  for (let repetition = 1; repetition <= (transportProbe ? 1 : repeat); repetition++) {
-    for (const item of selected) {
-      const sample = await chat(item, repetition);
-      report.samples.push(sample);
-      console.error(`${sample.id}#${repetition} ${sample.outcome} firstText=${sample.firstTextMs ?? '-'}ms complete=${sample.bodyEndMs ?? '-'}ms`
-        + ` server=${sample.server ? `${sample.server.outcome} prepare=${sample.server.spans.prepareMs}ms` : sample.serverDiagnosticsError ?? '-'}`);
+  const baselineModel = settings.model;
+  report.comparison = compareModel ? { baseline: baselineModel, candidate: compareModel } : null;
+  activeModel = baselineModel;
+  try {
+    await runAll(baselineModel);
+  } finally {
+    // Always put the saved model back, even after a failure.
+    if (compareModel && activeModel !== baselineModel) {
+      await setModel(baselineModel).catch(() => {
+        report.restoreFailed = `AI settings model left at ${activeModel}; set it back to ${baselineModel}`;
+      });
     }
   }
   report.summary = summarize(report.samples);
   report.outcome = transportProbe
     ? (report.samples[0].httpStatus === 200 && report.samples[0].streamProtocol ? 'transport_ok' : 'transport_failed')
-    : report.samples.every((sample) => sample.outcome === 'completed' && sample.checks.passed)
+    : report.samples.every((sample) => sample.outcome === 'completed' && sample.checks.passed && !sample.modelMismatch)
     ? 'passed' : 'failures';
 } catch (error) {
   report.blocker = error.message;
@@ -379,6 +435,7 @@ console.log(JSON.stringify({
   report: outputPath,
   provider: report.provider ?? null,
   blocker: report.blocker,
+  restoreFailed: report.restoreFailed,
   summary: report.summary,
 }, null, 2));
 process.exit(['passed', 'transport_ok'].includes(report.outcome) ? 0 : 1);

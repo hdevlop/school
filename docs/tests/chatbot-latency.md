@@ -95,6 +95,27 @@ Forbidden writes are scored from the server's tool outcome (`executed` versus
 `blocked`), because the stream shows both as an output event. Without a server
 record the runner falls back to the stream (`forbiddenCheckSource`).
 
+## Comparing models
+
+`--compare-model=<id>` runs every question once on the saved model and once on
+`<id>`, using the same provider and key. Each pair alternates which model goes
+first, and each request uses a fresh session. Between requests the runner sends
+`PUT /api/ai-settings { model }` and checks each server record's `model`; a
+mismatched sample is excluded and fails the run. The saved model is restored at
+the end, even after a failure. Any failure to restore is reported as
+`restoreFailed`. The budget counts both variants: 12 questions need
+`--max-requests=24`.
+
+```sh
+bun --env-file=apps/dashboard/.env.local scripts/chatbot-benchmark.mjs \
+  --max-requests=24 --compare-model=openai/gpt-oss-120b:nitro \
+  --output=docs/evidence/chatbot-latency/model-<name>-YYYYMMDD.json
+```
+
+The summary holds one block per variant under `summary.comparison`. Do not run
+it while someone is using the assistant: the saved model changes for everyone
+during the run.
+
 ## Limits
 
 - API-client timings including local transport; not browser rendering.
