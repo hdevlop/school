@@ -274,6 +274,9 @@ describe('SEC-014 one-time fee schedule', () => {
     expect(h.fee.schedule).toBe('oneTime');
     expect(h.installments).toHaveLength(1);
     expect(Number(h.fee.netAmount)).toBe(90);
+    await h.service.update('audit-fee', updateFeeDto.parse({ baseAmount: 5 }), 'accountant', 'accounting');
+    expect(Number(h.fee.discountAmount)).toBe(5);
+    expect(Number(h.fee.netAmount)).toBe(0);
   });
 });
 

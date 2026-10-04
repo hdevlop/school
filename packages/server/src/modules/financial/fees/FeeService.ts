@@ -370,7 +370,7 @@ export class FeeService {
           startMonth, endMonth, effectiveDate: existingFee.effectiveDate }) : 1;
       if (data.discountAmount === undefined && monthsRemaining === previousMonths) {
         // Preserve even an aggregate with a cent remainder on an unrelated edit.
-        totalDiscount = Number(existingFee.discountAmount || 0);
+        totalDiscount = Math.min(Number(existingFee.discountAmount || 0), grossAmount);
         netAmount = Math.max(0, Math.round((grossAmount - totalDiscount) * 100) / 100);
       }
 

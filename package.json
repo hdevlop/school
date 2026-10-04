@@ -60,6 +60,8 @@
     "test:teacher-dashboard": "bun test packages/server/tests/teacherDashboard",
     "test:ownership": "bun test packages/server/tests/ownership",
     "test:security": "bun test packages/server/tests/security",
+    "test:finance": "bun test packages/server/tests/security/FinanceIntegrity.test.ts apps/dashboard/src/features/Financial",
+    "test:finance:integration": "bun scripts/run-finance-acceptance.ts",
     "test:chat": "bun test packages/server/tests/chat",
     "test:security:transport": "bun test packages/server/tests/acceptance/RouteSecurityTransport.test.ts && bun test packages/server/tests/acceptance/ConcurrentRefreshTransport.test.ts",
     "db:generate": "bun --env-file=apps/dashboard/.env.local drizzle-kit generate",
