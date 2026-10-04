@@ -24,6 +24,6 @@
     "@sms/server": "workspace:*",
     "bcryptjs": "^3.0.3",
     "drizzle-orm": "0.45.2",
-    "najm-auth": "4.2.4"
+    "najm-auth": "5.0.0"
   }
 }
