@@ -1,0 +1,12 @@
+﻿{
+    "capturedAt":  "2026-10-04T22:51:01.8031992Z",
+    "source":  "https://openrouter.ai/api/v1/key",
+    "credentialSource":  "existing local environment; selected School key identity not independently verified",
+    "limit":  50,
+    "limit_remaining":  49.336582316,
+    "limit_reset":  null,
+    "usage":  0.663417684,
+    "usage_daily":  0.286989859,
+    "byok_usage":  0,
+    "include_byok_in_limit":  false
+}

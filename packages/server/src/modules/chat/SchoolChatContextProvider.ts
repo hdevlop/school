@@ -12,9 +12,11 @@ import { ParentRepository } from '../parents/ParentRepository';
 import { ParentChildrenRepository } from '../parents/ParentChildrenRepository';
 import { TeacherRepository } from '../teachers/TeacherRepository';
 import { StudentRepository } from '../students/StudentRepository';
+import { schoolReplyContext } from './schoolReplyContext';
 
-// Only prompt text is stored here; the shared year boundary remains its source.
-export const schoolChatYearContext = new AsyncLocalStorage<string>();
+// A snapshot of the validated year for prompt text and MCP arguments; the
+// shared year boundary remains the only resolver and authorization owner.
+export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string }>();
 
 export interface ChatActor { id?: string; role?: string }
 
@@ -42,6 +44,10 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
   async describe(actor: ChatActor = {}, now = new Date()) {
     return [await this.describeToday(now), this.describeYear(actor.role), await this.describeActor(actor)]
       .filter(Boolean).join('\n');
+  }
+
+  async snapshot(actor: ChatActor = {}) {
+    return { prompt: await this.describe(actor), academicYear: this.year.label };
   }
 
   /**
@@ -94,9 +100,10 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
     ].join('\n');
   }
 
-  async getContext(userText: string) {
+  async getContext(userText: string, request?: { latestUserText: string; channel: string }) {
     const knowledge = await this.knowledge.getContext(userText);
-    return [schoolChatYearContext.getStore(), knowledge].filter(Boolean).join('\n\n') || null;
+    return [schoolChatYearContext.getStore()?.prompt, knowledge, schoolReplyContext(request?.latestUserText ?? userText)]
+      .filter(Boolean).join('\n\n') || null;
   }
 
   getContextTrace(userText: string) {

@@ -12,6 +12,6 @@ describe('student chat tool routing', () => {
 
   it('does not classify a student mutation as a read', () => {
     expect(getMcpAnnotations(StudentController.prototype.create)?.readOnlyHint).not.toBe(true);
-    expect(getMcpAnnotations(StudentController.prototype.delete)?.readOnlyHint).not.toBe(true);
+    expect(getMcpAnnotations(StudentController.prototype.deleteById)?.readOnlyHint).not.toBe(true);
   });
 });

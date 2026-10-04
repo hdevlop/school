@@ -123,7 +123,7 @@ export class AnnouncementController {
   @Validate({ params: announcementIdParam })
   @McpTool({ description: 'Get an announcement by ID', readOnly: true })
   @ResMsg('announcements.success.retrieved')
-  async getAnnouncement(@Params('id') id: string) {
+  async getAnnouncementById(@Params('id') id: string) {
     return this.announcementService.getById(id);
   }
 
@@ -188,7 +188,7 @@ export class AnnouncementController {
   @Validate({ params: announcementIdParam })
   @McpTool('Delete an announcement')
   @ResMsg('announcements.success.deleted')
-  async delete(@Params('id') id: string, @User() actor: AnnouncementActor) {
+  async deleteById(@Params('id') id: string, @User() actor: AnnouncementActor) {
     return this.announcementService.delete(id, actor);
   }
 

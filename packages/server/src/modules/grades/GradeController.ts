@@ -156,7 +156,7 @@ export class GradeController {
   @Validate({ params: gradeIdParam })
   @McpTool({ description: 'Delete a grade by ID', confirm: { level: 'danger', message: 'confirm.grades.delete' } })
   @ResMsg('grades.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.gradeService.delete(id);
   }
 

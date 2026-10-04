@@ -88,7 +88,7 @@ export class ParentController {
   @Validate({ params: parentIdParam })
   @McpTool({ description: 'Get a parent by ID', readOnly: true })
   @ResMsg('parents.success.retrieved')
-  async getParent(@Params('id') id: string) {
+  async getParentById(@Params('id') id: string) {
     return this.parentService.getById(id);
   }
 
@@ -141,7 +141,7 @@ export class ParentController {
   @Validate({ params: parentIdParam })
   @McpTool({ description: 'Delete a parent by ID', confirm: { level: 'danger', message: 'confirm.parents.delete' } })
   @ResMsg('parents.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.parentService.delete(id);
   }
 

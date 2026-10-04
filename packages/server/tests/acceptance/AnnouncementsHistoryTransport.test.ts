@@ -155,7 +155,7 @@ describe('authenticated Announcements transport on the marked PostgreSQL fixture
       expect(created.isError).not.toBe(true);
       id = (JSON.parse(created.content[0].text) as { id: string }).id;
       expect((await request(`/announcements/${id}`, '2025-2026')).status).toBe(200);
-      const wrongYear = await client.callTool({ name: 'announcements_delete', arguments: {
+      const wrongYear = await client.callTool({ name: 'announcements_delete_by_id', arguments: {
         id, academicYear: '2026-2027',
       } }) as { isError?: boolean };
       expect(wrongYear.isError).toBe(true);

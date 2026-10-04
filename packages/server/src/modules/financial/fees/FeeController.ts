@@ -48,7 +48,7 @@ export class FeeController {
   @isFinancial()
   @McpTool({ description: 'List all overdue fees with student info. Frais impayés en retard. الرسوم المتأخرة غير المدفوعة.', readOnly: true })
   @ResMsg('fees.success.retrieved')
-  async getOverdue() {
+  async listOverdue() {
     return this.feeService.getOverdue();
   }
 
@@ -85,7 +85,7 @@ export class FeeController {
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get fees for a student by student ID. Frais d’un élève. رسوم تلميذ.', readOnly: true })
   @ResMsg('fees.success.retrieved')
-  async getByStudent(@Params('studentId') studentId: string) {
+  async getStudentFees(@Params('studentId') studentId: string) {
     return this.feeService.getByStudent(studentId);
   }
 
@@ -94,7 +94,7 @@ export class FeeController {
   @Validate({ params: feeIdParam })
   @McpTool({ description: 'Get a fee by ID', readOnly: true })
   @ResMsg('fees.success.retrieved')
-  async getFee(@Params('id') id: string) {
+  async getFeeById(@Params('id') id: string) {
     return this.feeService.getById(id);
   }
 
@@ -103,7 +103,7 @@ export class FeeController {
   @Validate(createFeeDto)
   @McpTool({ description: 'Create a new fee', confirm: { level: 'warning', message: 'confirm.fees.create' } })
   @ResMsg('fees.success.created')
-  async create(@Body() body: CreateFeeDto, @User() user: { id: string; role?: string }) {
+  async createFee(@Body() body: CreateFeeDto, @User() user: { id: string; role?: string }) {
     return this.feeService.create(body, user.id, user.role);
   }
 
@@ -156,7 +156,7 @@ export class FeeController {
   @Validate({ params: feeIdParam })
   @McpTool({ description: 'Delete a fee by ID', confirm: { level: 'danger', message: 'confirm.fees.delete' } })
   @ResMsg('fees.success.deleted')
-  async delete(@Params('id') id: string, @User() user: { id: string; role?: string }) {
+  async deleteById(@Params('id') id: string, @User() user: { id: string; role?: string }) {
     return this.feeService.delete(id, user.id, user.role);
   }
 

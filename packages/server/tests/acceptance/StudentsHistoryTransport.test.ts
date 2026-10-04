@@ -184,9 +184,9 @@ describe('student history over authenticated REST and MCP', () => {
       });
       await client.connect(transport);
       try {
-        const tool = (await client.listTools()).tools.find((item) => item.name === 'students_get_student');
+        const tool = (await client.listTools()).tools.find((item) => item.name === 'students_get_student_by_id');
         expect(tool?.inputSchema.properties).toHaveProperty('academicYear');
-        return await client.callTool({ name: 'students_get_student', arguments: { id: 'history-student-05',
+        return await client.callTool({ name: 'students_get_student_by_id', arguments: { id: 'history-student-05',
           ...(toolYear ? { academicYear: toolYear } : {}) } }) as { content: Array<{ text: string }>; isError?: boolean };
       } finally { await transport.close(); }
     };

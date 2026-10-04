@@ -1,0 +1,14 @@
+{
+  "mode": "offline register correction; original tool/fact/model/cache checks retained",
+  "rawAutomaticPasses": 29,
+  "correctedAutomaticPasses": 30,
+  "scorerSha256": "03416a3dc100f061acebd566cec4dd86f3c7c9ba9610c12a0b157cdc27329fdb",
+  "changed": [
+    {
+      "id": "student-count-ary",
+      "text": "عدد التلاميذ المسجلين فهاد العام هو **100**.",
+      "originalWrongRegister": true,
+      "correctedWrongRegister": false
+    }
+  ]
+}

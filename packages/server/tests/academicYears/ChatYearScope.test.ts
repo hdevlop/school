@@ -162,6 +162,21 @@ describe('published chat controller year boundary', () => {
     }
   });
 
+  it('preserves knowledge and uses the latest message for School policy hints', async () => {
+    const provider = await (await boot()).container.resolve(SchoolChatContextProvider);
+    const [french, arabic, darija] = await Promise.all([
+      provider.getContext('Combien d’élèves cette année ?'),
+      provider.getContext('كم عدد التلاميذ هذه السنة؟'),
+      provider.getContext('شحال من تلميذ هاد العام؟'),
+    ]);
+    for (const context of [french, arabic, darija]) expect(context).toContain('Existing knowledge context');
+    for (const context of [french, arabic, darija]) expect(context).toBe('Existing knowledge context');
+    const latest = await provider.getContext('Quels examens sont prévus prochainement ?\n---\nشحال من تلميذ؟',
+      { latestUserText: 'شحال من تلميذ؟', channel: 'web' });
+    expect(latest).not.toContain('at most five');
+    expect(await provider.getContextTrace('شحال من تلميذ؟')).toEqual({ used: false, chunks: [] });
+  });
+
   it('keeps overlapping chat prompts on their validated year and does not affect other knowledge consumers', async () => {
     const instance = await boot();
     const responses = await Promise.all([

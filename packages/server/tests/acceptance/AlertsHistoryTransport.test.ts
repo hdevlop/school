@@ -124,7 +124,7 @@ describe('authenticated Alerts REST on the marked PostgreSQL fixture', () => {
       });
       await client.connect(transport);
       try {
-        const result = await client.callTool({ name: 'alerts_update',
+        const result = await client.callTool({ name: 'alerts_update_by_id',
           arguments: { id, title: 'History MCP corrected concern', academicYear: '2025-2026' } });
         expect(result.isError, JSON.stringify(result.content)).not.toBe(true);
       } finally { await transport.close(); }
@@ -208,7 +208,7 @@ describe('authenticated Alerts REST on the marked PostgreSQL fixture', () => {
   it('uses the same year selection and permission rules over authenticated MCP', async () => {
     const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
     const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
-    const call = async (token: string, headerYear?: string, toolYear?: string, name = 'alerts_get_alerts') => {
+    const call = async (token: string, headerYear?: string, toolYear?: string, name = 'alerts_list_alerts') => {
       const client = new Client({ name: 'school-alert-history-test', version: '1.0.0' });
       const transport = new StreamableHTTPClientTransport(new URL(`http://localhost:${port}/api/mcp`), {
         requestInit: { headers: { Authorization: `Bearer ${token}`,

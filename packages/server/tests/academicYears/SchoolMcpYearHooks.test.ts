@@ -9,7 +9,7 @@ describe('School MCP year hook prepared for the published Najm API', () => {
   it('reuses the charged year in fee write bodies as their MCP selection', async () => {
     const hooks = schoolMcpYearHooks(['fees']);
     expect(hooks.toolInput({ group: 'fees', methodKey: 'getFees' })).toHaveProperty('academicYear');
-    expect(hooks.toolInput({ group: 'fees', methodKey: 'create' })).toBeUndefined();
+    expect(hooks.toolInput({ group: 'fees', methodKey: 'createFee' })).toBeUndefined();
     expect(hooks.toolInput({ group: 'fees', methodKey: 'update' })).toBeUndefined();
     const container = Container.create();
     let input: unknown;
@@ -20,7 +20,7 @@ describe('School MCP year hook prepared for the published Najm API', () => {
       },
     });
     await container.run({ [USER.key]: { role: 'admin' } }, () => hooks.aroundInvoke({
-      tool: { group: 'fees', methodKey: 'create' },
+      tool: { group: 'fees', methodKey: 'createFee' },
       input: { academicYear: '2025-2026' }, toolInput: {}, container,
       header: () => undefined,
     }, async () => null));
@@ -56,6 +56,15 @@ describe('School MCP year hook prepared for the published Najm API', () => {
     });
     expect(result).toEqual({ id: 'year-2025', label: '2025-2026' });
     expect(container.store.get('school:resolvedAcademicYear')).toBeUndefined();
+  });
+
+  // Models send null for optional arguments they do not use. It must select
+  // the active year like an absent value, not fail the call.
+  it('accepts a null year as no selection', () => {
+    const year = schoolMcpYearHooks(['alerts']).toolInput({ group: 'alerts' })?.academicYear;
+    expect(year?.parse(null)).toBeNull();
+    expect(year?.parse(undefined)).toBeUndefined();
+    expect(year?.parse('2025-2026')).toBe('2025-2026');
   });
 
   it('maps selection failures to MCP errors and leaves the handler uncalled', async () => {

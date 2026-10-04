@@ -1,6 +1,6 @@
 # Chatbot latency and cost plan
 
-Status: **LOCAL SMOKE CHECKS PASS; CONTROLLED ACCEPTANCE AND PRODUCTION VERIFICATION REMAIN. DEFAULT GPT-OSS-120B RETAINED.**
+Status: **CEREBRAS-FIRST GPT-OSS AND SHARED MOROCCAN REPLY POLICY ADOPTED; LATEST REVIEWED HYBRID RUN PASSES 30/30. REPEATED ACCEPTANCE, CURRENT BILLING, BROADER CORRECTNESS AND PRODUCTION/BROWSER VERIFICATION REMAIN. NEMOTRON REJECTED; JEV DEFERRED.**
 
 ## 0. Current status and next work — 2026-10-04
 
@@ -11,60 +11,117 @@ review does not establish the effective settings of a running deployment.
 
 | Work | Current state | Evidence or remaining action |
 |---|---|---|
-| Published packages | Adopted | Root pins: `najm-chatbot` 2.2.1, `najm-rag` 2.4.0, `najm-mcp` 2.2.4, `najm-api` 4.0.0; matching Desktop reference versions checked |
+| Published packages | Adopted | Current root pins: `najm-chatbot` 3.3.0, `najm-rag` 3.2.0, `najm-mcp` 2.2.5, `najm-api` 5.0.0; RAG/chatbot Desktop reference versions match; earlier releases below are dated history |
+| Provider routing and reasoning | Configured; earlier serial run measured | OpenRouter `openai/gpt-oss-120b`, Cerebras first, fallbacks allowed, Groq excluded, reasoning effort low; [routing report](docs/evidence/chatbot-latency/step3-cerebras-low-20261004.md); actual host and fallback acceptance remain |
+| MCP tool-name compatibility and index cleanup | Implemented; published RAG adopted | Prefix collisions removed; year inputs accept unused nulls; RAG 3.2.0 removes retired tool embeddings; [rename report](docs/evidence/chatbot-latency/cerebras-tool-prefix-20261004.md), [cleanup report](docs/evidence/chatbot-latency/step3-cerebras-low-20261004.md) |
+| Latest-message language policy and School templates | Published and adopted; 30/30 reviewed | Najm owns opt-in language instructions and guarded template execution; School supplies unqualified count and write-refusal templates; [reply report](docs/evidence/chatbot-latency/najm-reply-results-20261004.md); qualified/unrecognized requests retain the model path |
 | Streaming runner and School diagnostics | Implemented; local traces captured | `scripts/chatbot-benchmark.mjs`, admin-only in-memory diagnostics; embedding-call/attempt spans and all-outcome summaries available |
-| Embedding diagnostics | Published and adopted; controlled live acceptance pending | Request-scoped cache/attempt/timing/outcome records, tool-side capture, concurrency and cancellation regressions; [release review](docs/evidence/chatbot-latency/embedding-diagnostics-20261004.md) |
+| Embedding diagnostics | Published and adopted; serial live correlation verified | 100/100 complete correlated traces; request-scoped cache/attempt/timing/outcome records; live concurrent acceptance remains; [release review](docs/evidence/chatbot-latency/embedding-diagnostics-20261004.md) |
 | Concurrent benchmark runner | Implemented; mocked CLI checks pass | Bounded workers 1/2/4, chat/embedding ID validation and load summaries; [runner review](docs/evidence/chatbot-latency/concurrent-runner-20261004.md); controlled live traffic still pending |
-| Preflight and estimated-spend stop | Implemented; local read-only preflight passes | Reservations account for in-flight requests; unknown cost stops scheduling; [control review](docs/evidence/chatbot-latency/budget-preflight-20261004.md); hard provider cap and paid budget still needed |
+| Preflight and estimated-spend stop | Latest isolated preflight ready; paid dispatch pending budget | Frozen published-dependency app at port 3102: health, saved GPT-OSS and cache controls verified; [run preparation](docs/evidence/chatbot-latency/current60-plan-20261004.md). Earlier [status refresh](docs/evidence/chatbot-latency/status-refresh-preflight-20261004.json) found no app there. SDK prices are not host-aware; existing key's $50 total cap is not a benchmark-sized cap |
+| Application-cache controls | Implemented; 100/100 live samples verified | Opt-in dev/admin resets, matching instance/reset IDs and completed routing embedding misses/attempts; [cache review](docs/evidence/chatbot-latency/cache-controls-20261004.md); cold-model and provider-cache conditions remain uncontrolled |
 | Read-only chat and argument schemas | Fixed; local checks pass | Confirmation-marked writes blocked; AI SDK `inputSchema`; [schema review](docs/evidence/chatbot-latency/tool-schemas-20261003.md) |
-| Scoring and Darija source fixes | Implemented; offline regression checks pass | [Source-fix review](docs/evidence/chatbot-latency/source-fixes-20261004.md); write promises, arguments, facts, language review and vowelled Darija fixed; live re-run pending |
+| Attendance refusal and concise exam replies | Implemented; latest Moroccan replies reviewed | Latest run: six template refusals and three model-generated exam answers passed; earlier 15/15 schedule review and median improvement remain dated evidence. [Latest](docs/evidence/chatbot-latency/najm-reply-results-20261004.md), [earlier](docs/evidence/chatbot-latency/reply-fixes-results-20261004.md) |
+| Scoring, facts and Darija register | Implemented; latest Moroccan checks 30/30 | Per-row class/exam facts, argument boundaries, mixed-language/register checks and write promises; all latest replies reviewed, with wording caveats retained. [Latest review](docs/evidence/chatbot-latency/najm-reply-results-20261004.md); native fluency and held-out coverage remain |
 | Reusable Darija rewriting | Published and adopted | `najm-rag@2.3.0` exports an opt-in factory; School retains domain vocabulary and literal rules; [migration review](docs/evidence/chatbot-latency/darija-shared-20261004.md), 109/109 output parity |
-| Multilingual answers and routing | Local smoke coverage | Five-language 50-case set passes; latest preview: core 18/20, Darija/French 30/31; [tool-cap review](docs/evidence/chatbot-latency/tool-cap-20261004.md) |
+| Multilingual answers and routing | Latest coverage: Darija, Arabic, French | Default corpus `morocco.json`: 30 cases; current policy reviewed 10/10 per language. Legacy five-language evidence and core 18/20, Darija/French 30/31 routing previews predate current acceptance; English/Spanish and routing misses remain |
 | Parent, teacher, student and follow-ups | Separate smoke checks: 10/10 | `scripts/chatbot-roles.mjs`; [role review](docs/evidence/chatbot-latency/roles-20261003.md); broader repeated coverage remains |
 | Embedding availability and failure handling | Local fixes and outage checks complete | Queries 5 s, indexing 60 s, failure cooldown 30 s, router-error fallback `none`, Ollama residency; hanging requests and populated knowledge need controlled acceptance |
 | Tool cap and context | Evaluated locally | Keep cap 12 / semantic hits 8; shorter prompt passes 50/50 and cuts input tokens 21%; one-run evidence |
-| Faster model | No replacement accepted | `120b:nitro` rejected at 47/50; Nemotron Lightning passed only 12 smoke questions |
-| Acceptance baseline | Pending | Explicit gates, verified cache/load conditions, repeated samples and concurrency (section 6) |
+| Faster model | Nemotron full-corpus comparison rejected | Final prompt, same 50 questions/checks per model: GPT-OSS 47/50, Nemotron 45/50; completion p50/p95 6.367/18.802 vs 2.105/5.000 s. Nemotron wrong/mixed language and invented exam count; estimated cost gate failed. [Results](docs/evidence/chatbot-latency/reply-fixes-results-20261004.md) |
+| Repeated-call termination | Published and adopted; package tests | Chatbot 3.2.0 introduced termination after two identical tool-call steps; no live trigger in the routing run; verify termination and legitimate multi-step work separately |
+| Acceptance baseline | Latest hybrid smoke passes; controlled acceptance incomplete | [Latest 30-case report](docs/evidence/chatbot-latency/najm-reply-results-20261004.md): completion 0.523/1.345 s p50/p95; model subset 0.951/1.584 s, templates 0.305/0.523 s. Earlier [100-request baseline](docs/evidence/chatbot-latency/default100-fresh-20261004.md) failed its gates and must not stand in for current behavior |
+| Current cost gate | Unproven by invoice | Latest hybrid model-token estimate $0.003020093 for 30 replies; earlier Cerebras routing measured about $1.03/1,000 answers, above the $0.25 gate. Reconcile current hybrid spend, failures and embeddings; keep path estimates separate |
 | Production and browser measurements | Unrun | Deployment revision, runtime connectivity/schema, production API and submit-to-render evidence |
 
 Remaining work, in order:
 
-1. **School:** argument/fact-boundary validation, write-promise detection and
-   inconclusive-language review are now implemented, with regression tests and
-   required search arguments in all five missing-student fixtures. The prompt
-   now forbids promises or requests for IDs to perform a write. Darija rewriting
-   handles vowelled count/negation phrases and preserves the marking shadda under
-   attached conjunctions. Re-run live after these source changes; older 50/50
-   reports predate the stricter scoring and changed prompt. Extend authoritative
-   facts, ambiguity, topic switches, role denials and populated knowledge before
-   judging another model.
-2. **Shared diagnostics are now available:** request-scoped embedding hit/miss,
-   attempts, timeouts and durations are published and adopted (section 5.1).
-   `EmbeddingService.clearQueryCache()` provides one instance-scoped control;
-   establish controls for other cache layers and verify live correlation under
-   concurrency. The runner now supports 1/2/4 workers with correlation checks;
-   mocked CLI coverage does not establish a controlled live baseline.
-3. **School:** capture the controlled default-model baseline against the proposed
-   gates and sample/budget plan in section 6.4. Uncontrolled older runs remain
-   smoke evidence. Interaction-table logging is optional; continue using the
-   redacted sink unless a retention/access rule is established.
-4. **Next model experiment:** compare
-   `nvidia/nemotron-3.5-lightning:nitro` with the retained default using the full
-   corpus, role checks and the same controls. Recheck availability, tool schema
-   compatibility and pricing when the experiment runs. Its 12/12 result is
-   candidate evidence, not approval to switch. If it fails, investigate provider
-   preferences in a published Najm release; re-test a correct faster host before
-   adopting it. Repeated identical failing calls need their own termination
-   experiment, preserving legitimate multi-step work.
-5. **Rollout:** complete production preflight and API measurements, then measure
-   dashboard submit-to-first-render separately. Keep Jev deferred.
+The latest [shared-policy run](docs/evidence/chatbot-latency/najm-reply-results-20261004.md)
+completed 30/30 original Moroccan cases with all replies reviewed, correlated
+diagnostics and verified fresh application caches. Fifteen replies were templates
+and fifteen used GPT-OSS. This is one serial admin run in an isolated development
+checkout, not repeated acceptance or production evidence. It does not establish
+native fluency, an interleaved speed improvement or current billed cost.
 
-The Darija extraction was published as `najm-rag@2.3.0` and adopted in School.
-Embedding diagnostics followed in `najm-rag@2.4.0` and `najm-chatbot@2.2.1`.
-No paid benchmark, database migration or deployment was performed. The next
-paid run must have its request and monetary budget recorded before execution.
+1. **Current-configuration acceptance:** freeze published pins, provider policy,
+   corpus/scorer/template/context hashes, authoritative facts and history; repeat
+   the serial warm-embedding/fresh-application-cache baseline against section 6.4.
+   Report hybrid, model and template paths separately. Retain earlier failures.
+   Measure cache hits, cold-model conditions and concurrency 2/4 in separate runs;
+   verify live request/embedding correlation and avoid pooling their percentiles.
+   The [60-request run is prepared](docs/evidence/chatbot-latency/current60-plan-20261004.md):
+   304 local tests pass, current internal facts match all fixtures, isolated health
+   and cache status pass. Paid dispatch awaits the monetary ceiling and resolution
+   of the isolated-provider-cap requirement; zero paid chats sent in preparation.
+2. **Correctness:** extend role/year denials, ambiguity, topic switches, follow-ups,
+   qualified count requests, held-out paraphrases and synthetic populated knowledge.
+   Recheck English/Spanish using the legacy corpus on the current configuration.
+   Review all replies for facts and language/register, including the documented
+   wording caveats; do not treat heuristic passes as native-speaker fluency.
+3. **Failure paths:** exercise Cerebras unavailability/fallback, hanging embedding
+   requests, provider errors, client cancellation and repeated identical calls in
+   isolation. Preserve legitimate multi-step work and verify terminal diagnostics.
+4. **Cost:** reconcile the current hybrid workload with isolated provider billing,
+   current host prices, cached/reasoning usage, retries/failures and embedding costs.
+   The earlier $1.03/1,000 Cerebras result exceeds the existing $0.25 gate; the
+   latest SDK estimate is not a billed pass. Declare each run's request/monetary
+   budget and verified provider limit before execution; do not relax gates after a run.
+5. **Rollout:** record production revision, effective embedding connectivity,
+   pgvector schema/indexes and a redacted diagnostics collector across app instances;
+   then measure production API and dashboard submit-to-first-render separately.
+   Keep interaction-table logging optional until retention/access rules exist.
+   Keep GPT-OSS configured, Nemotron rejected and Jev deferred.
+
+This status refresh changes documentation only. Further paid runs require their
+own recorded request and monetary budget; deployment and database migration remain
+separate work. Local verification for this refresh is recorded in
+[status-refresh checks](docs/evidence/chatbot-latency/status-refresh-20261004.md).
+That refresh's default-target preflight failed to reach the health endpoint.
+Subsequent acceptance preparation found no app on ports 3000–3200, launched a
+frozen isolated app at 3102 and passed read-only readiness; the earlier failure
+remains recorded. Current preparation is not a paid acceptance result.
 
 ## Experiment history
+
+2026-10-04, shared Moroccan reply policy
+([results](docs/evidence/chatbot-latency/najm-reply-results-20261004.md)):
+published `najm-chatbot@3.3.0`, original 30-case corpus, 30/30 completed and
+reviewed, no rescoring or model switch. Completion p50/p95: hybrid 0.523/1.345 s,
+model subset 0.951/1.584 s, templates 0.305/0.523 s. Fifteen templates used no
+generation tokens but still routed and, for counts, executed guarded reads.
+Model-token estimate $0.003020093; serial fresh-cache development run, billing,
+broader roles and production acceptance unproven.
+
+2026-10-04, Cerebras-first routing and low reasoning
+([results](docs/evidence/chatbot-latency/step3-cerebras-low-20261004.md)):
+chatbot/RAG 3.2.0 adopted provider preferences, repeated-call termination and
+retired-tool index cleanup. Thirty Moroccan cases: 28/30 automatic passes,
+completion 0.81/1.26 s p50/p95; two unreviewed Darija register flags. Account
+usage delta about $0.0309 ($1.03/1,000 answers); actual host per request and
+fallback behavior unverified. Sequential comparison, uncontrolled caches.
+The earlier [prefix probe and rename](docs/evidence/chatbot-latency/cerebras-tool-prefix-20261004.md)
+removed the teacher-count tool-name truncation; language/register failures
+remained in its 30-case comparison. These findings do not erase the earlier Nitro failures.
+
+2026-10-04, attendance/exam fixes and full model comparison
+([results](docs/evidence/chatbot-latency/reply-fixes-results-20261004.md)):
+current model first, original corpus twice (100 requests), then corrected exam
+recheck (10), then interleaved GPT-OSS/Nemotron pairs (100, plus one price-stopped
+greeting). Final-prompt GPT-OSS exam rows passed direct factual review 15/15;
+exam median completion 27.273 → 15.128 s. Original automatic paired checks were
+47/50 and 45/50; language/factual failures remain documented. Nemotron was faster
+but rejected, and the saved model was restored. An explicit price-file fallback
+now budgets missing installed prices without changing raw SDK metadata.
+No deployment or domain-data write.
+
+2026-10-04, 100 requests with the retained default ([report](docs/evidence/chatbot-latency/default100-fresh-20261004.md)):
+50 cases repeated twice, concurrency 1, fresh application caches verified on all
+100 samples. All completed; 99/100 automatic checks passed, with one English
+attendance-write offer flagged. First text: 6.053 s p50 / 11.413 s p95;
+completion: 8.235 s / 27.273 s. Estimated cost $0.015093. These were one-shot
+development-API requests, with resident local embeddings and uncontrolled
+provider prompt caching. The proposed latency and read-only reply gates failed;
+the saved model remains unchanged.
 
 2026-10-04, context size ([review](docs/evidence/chatbot-latency/context-size-20261004.md)): the
 system message was 55% of input tokens (960 per model step, uncached), tool
@@ -374,16 +431,19 @@ paid provider is a prerequisite; paid chat runs need a declared budget.
    18/20 core, 30/31 Darija/French. Remaining misses are not silently accepted.**
 2. Build the section 4.2 runner and establish an external baseline using the
    actual streaming chat route. **Runner and 50-case corpus built; local full-set
-   smoke runs pass. An acceptance baseline still needs controlled caches/load,
+   smoke runs recorded; default is now the 30-case Moroccan corpus with richer
+   facts/register scoring. Latest reviewed hybrid run passes 30/30. An acceptance baseline still needs controlled caches/load,
    stronger scoring, broader cases and repeated samples.**
 3. Add shared instrumentation in Najm and establish a controlled internal baseline.
    **`najm-chatbot` diagnostics released in 2.0.5, wired into School and the
    runner; local internal traces captured (2026-10-03), with caches/load
    uncontrolled. Request-scoped embedding spans followed in RAG 2.4.0 / chatbot
-   2.2.1 (2026-10-04); a controlled live baseline remains.**
+   2.2.1 (2026-10-04); serial fresh-cache traces are verified. Current repeated,
+   cold-model and concurrent acceptance remains.**
 4. Compare configuration, model, routing, and tool-call improvements separately.
-   **Timeout/fallback, tool-cap and prompt-size experiments done locally; current
-   model retained. Next candidate: full-set Nemotron Lightning, after baseline gates.**
+   **Timeout/fallback, tool-cap and prompt-size experiments done locally. Nemotron
+   full-corpus comparison rejected. GPT-OSS retained with Cerebras-first/low-effort
+   policy and guarded School templates; validate this configuration before any new candidate.**
 5. Consider Jev only if measured traffic and avoidable LLM spending justify it.
 
 Do not assume that the LLM dominates latency. Embedding timeouts, database/tool
@@ -400,9 +460,9 @@ completion ledger and keep paid runs within their recorded budgets.
 ## 2. Verified source findings and runtime unknowns
 
 Reconciled **2026-10-04** against School source and the matching read-only
-reference at `C:\Users\pc\Desktop\najm`. Root pins: `najm-rag` `2.4.0`,
-`najm-chatbot` `2.2.1`, `najm-mcp` `2.2.4`, `najm-theme` `0.2.3`,
-`najm-core` `3.0.2`, `najm-api` `4.0.0`. Runtime claims remain tied to the
+reference at `C:\Users\pc\Desktop\najm`. Root pins: `najm-rag` `3.2.0`,
+`najm-chatbot` `3.3.0`, `najm-mcp` `2.2.5`, `najm-theme` `0.3.0`,
+`najm-core` `3.0.3`, `najm-api` `5.0.0`. Runtime claims remain tied to the
 dated reports; this source review does not re-run their benchmarks. Compare
 reference versions with root pins again before any shared implementation.
 
@@ -447,7 +507,15 @@ In `packages/server/src/config/ragConfig.ts` and `chatbotConfig.ts`, re-read
 - Chat allows up to 10 LLM steps and stores conversations in the database.
   Ten is a ceiling, not an observed step count. The stream stall bound is 30 s.
   Interaction logging is disabled; the redacted `onDiagnostics` sink is enabled.
-  The configured model is OpenRouter / `openai/gpt-oss-120b`.
+  The retained saved model is OpenRouter / `openai/gpt-oss-120b`. Source config
+  requests Cerebras first with fallbacks allowed, ignores Groq and sets reasoning
+  effort low; source policy does not prove which host handled a live request.
+- `reply.detectLanguage` uses Najm's opt-in Moroccan latest-message detector;
+  `reply.template` uses School's domain templates and already-validated year.
+  Unqualified student/teacher totals execute guarded reads; recognized school
+  writes return localized refusals. Qualified or unfamiliar requests fall back
+  to the model. Templates preserve the stream/memory/diagnostics contract and
+  have no generation tokens; routing/knowledge work still occurs.
 - Chat runs in the dashboard's selected academic year. `ChatController` is a
   REST year consumer in `config/yearScope.ts`; each request validates the year
   before provider work, and `SchoolChatContextProvider` adds the year and role
@@ -492,21 +560,28 @@ In `packages/server/src/config/ragConfig.ts` and `chatbotConfig.ts`, re-read
 - Tools marked with confirmation metadata are **blocked** by the chat adapter.
   It does not implement an executable approval/resume flow. Benchmark the blocked
   outcome; do not introduce writes as part of latency optimization.
+- Published chatbot 3.2.0 added termination after two identical tool-call steps;
+  live triggering and preservation of legitimate multi-step work remain acceptance
+  items. RAG 3.2.0 prunes retired tool embeddings during indexing. School's MCP
+  names avoid prefix collisions; REST route paths were preserved by the rename.
 
 ### 2.3 Evidence available and still missing
 
 - Correlated streaming diagnostics now record preparation stages, steps, tool
-  outcomes/durations/sizes, aggregate usage and estimated cost. Embedding cache
-  hits/misses, attempts and per-call spans remain missing. The sink holds only
+  outcomes/durations/sizes, aggregate usage and estimated cost, plus request-scoped
+  embedding cache hits/misses, attempts and per-call spans. Serial correlation and
+  fresh-cache checks passed; live concurrent correlation remains. Reply diagnostics
+  identify template/model paths. The sink holds only
   200 records per process and is lost on restart; durable/multi-instance
   collection needs its own design before production measurement.
 - The admin-only `POST /api/rag-studio/chat-debug` returns tool traces and
   `latencyMs`, but uses `generateText` and performs extra trace work. Its latency
   cannot substitute for the actual streaming route.
 - Multi-step usage now uses SDK `totalUsage`, normalized input/output counts.
-  Estimated prices and browser metadata are not authoritative bills. The Nitro
-  report reconciles an account usage delta for that run; require current price
-  dates and billed failure/retry reconciliation for acceptance comparisons.
+  Estimated prices and browser metadata are not authoritative bills. Earlier Nitro
+  and Cerebras reports reconcile account usage deltas for those runs; the latest
+  shared-policy run supplies SDK estimates only. Require current host/price dates
+  and billed failure/retry reconciliation for acceptance comparisons.
 - Local settings, seeded data and indexed tools have dated evidence. Controlled
   cache/load/concurrency comparisons, populated knowledge, production connectivity
   and production schema/billing remain unverified. Recheck effective settings
@@ -547,6 +622,13 @@ held-out paraphrases, record remaining misses, and verify actual chat execution
 after a routing change instead of certifying it from preview alone.
 
 ## 3. Test prerequisites and required APIs
+
+The met prerequisites below describe the earlier dated local runs. Subsequent
+[current acceptance preparation](docs/evidence/chatbot-latency/current60-plan-20261004.md)
+establishes isolated health/settings/cache readiness at port 3102, superseding
+the unavailable-app status-refresh check. It does not prove paid provider
+connectivity, current billed-cost acceptance or production readiness. Confirm
+the intended instance before execution; do not infer readiness from source pins.
 
 | Requirement | Purpose and configuration |
 |---|---|
@@ -709,7 +791,8 @@ for the redacted sink or the next local benchmark. Define retention/access first
 
 **Gate:** usable correlated traces and a controlled baseline report. Claims about
 which internal stage dominates require this evidence; Phase 0 still provides an
-external baseline while the releases are pending.
+external baseline. Shared diagnostics releases are adopted; broader controlled
+acceptance remains pending.
 
 ## 6. Benchmark contract
 
@@ -725,22 +808,34 @@ Files (created 2026-10-02 unless noted):
   comparisons remain serial. Non-admin accounts and conversation replay still
   need integration in this runner. Separate `scripts/chatbot-roles.mjs` supplies the
    10/10 role/follow-up smoke checks; integrate broader coverage and reporting.
-- `datasets/chatbot-latency/questions.json`: 50 independent cases, 10 per
+- The runner now defaults to `datasets/chatbot-latency/morocco.json`: 30 independent
+  admin cases, ten each in Darija, Modern Standard Arabic and French, with frozen
+  class/exam facts and register checks. `scripts/chatbot-school-facts.ps1` reads
+  authoritative internal facts; `scripts/chatbot-morocco-corpus.mjs` binds the corpus
+  to their capture time/hash. Recheck facts before a run; never overwrite historical
+  evidence to match a changed fixture.
+- `datasets/chatbot-latency/questions.json`: legacy 50 independent cases, 10 per
   language (English, French, Spanish, Modern Standard Arabic, Darija), since
    2026-10-03. Missing-student cases exist; ambiguity, populated knowledge,
    topic changes and broader role/follow-up/denial cases still need inclusion.
 - `datasets/chatbot-latency/routing-cases.json` (20) and `routing-darija-fr.json`
   (31): routing-only cases for `scripts/chatbot-routing-preflight.mjs`
   (`--cases=<file>`).
-- `docs/tests/chatbot-latency.md`: setup, execution, and scoring; cache
-  controls arrive with section 6.2 work.
+- `docs/tests/chatbot-latency.md`: setup, execution, scoring and opt-in fresh
+  query/knowledge cache controls; model residency/provider caches remain separate.
 - `docs/evidence/chatbot-latency/`: sanitized raw samples and comparison reports.
+- `scripts/chatbot-run-lock.mjs`: cooperative machine-wide lock across updated
+  checkouts. The runner verifies provider/model before each chat and retains
+  corpus/scorer/prompt/template/context hashes. Older runners and other settings
+  writers bypass this lock; freeze the app build during measurement.
 
 ### 6.1 Corpus and correctness
 
-The current 50 questions cover small talk, single/multi-tool reads, missing
-students and blocked-write requests in five languages. Extend this frozen core
-with grounded knowledge and broader role/conversation cases; version additions.
+The default 30 Moroccan questions cover small talk, single/multi-tool reads,
+missing students and blocked-write requests in three languages with authoritative
+class/exam rows. The legacy 50-case corpus remains available explicitly for five-language
+regressions. Extend these frozen cores with grounded knowledge, held-out wording
+and broader role/conversation cases; version additions and record each corpus hash.
 The extended fixture contract must specify role, selected academic year, fixture
 IDs, expected tools/alternatives, important arguments, answer facts, and refusal
 behavior. Role/year are currently corpus-level; per-case arguments can be scored
@@ -760,6 +855,13 @@ read-only refusals that never call a tool, and distinguish those from adapter
 blocking proved by a `blocked` server outcome. Check knowledge citations and
 the honest knowledge-unavailable reply using synthetic indexed documents.
 
+The Moroccan scorer additionally checks exact class sections, each displayed exam
+row/date/time and next-five order, mixed-language prose and Arabic/Darija register.
+Exact stored names are exempted at word boundaries. This does not establish native
+fluency or correctness of every narrative claim. Qualified counts must retain
+their qualifier on the model path; test that templates do not answer with a school
+total when the user asks for a class, gender, attendance state or another year.
+
 Add controlled follow-ups, ambiguity, missing records, authorization denials, and
 routing misses. Freeze dataset, indexed semantics, documents, and history fixtures
 for comparisons. Independent cases use fresh sessions; conversation cases replay
@@ -773,8 +875,8 @@ Write cases validate the existing block, not a hypothetical confirmation flow.
 | Condition | Setup and evidence |
 |---|---|
 | Application cache hit | Pre-run the exact input/history and verify the observed hit |
-| Empty application caches, warm embedding model | Clear both caches through supported test controls or restart the isolated app; verify an actual embedding call without a model reload |
-| Empty application caches, cold embedding model | Empty both caches, then unload the isolated Ollama model or restart the isolated llama.cpp process; verify a real call and reload |
+| Empty query/knowledge caches, warm embedding model | Use opt-in isolated-dev controls with serial `--cache-mode=fresh`; verify same instance/reset and an actual completed routing embedding miss/attempt; separately prove no model reload |
+| Empty query/knowledge caches, cold embedding model | Use the same fresh-cache controls, then unload the isolated Ollama model or restart the isolated llama.cpp process; verify a real call and reload |
 | Embedding process down | Stop the isolated llama.cpp process and measure the outcome; this is the failure seen on 2026-10-01 |
 | Concurrent traffic | Declare client concurrency; report queueing, rate limits, errors, and results separately |
 | Failure paths | Exercise refused connections, hanging embedding requests, provider failures, and client cancellation in isolation |
@@ -796,6 +898,14 @@ Report p50/p95 first text and completion, internal spans, errors/aborts, tool an
 answer correctness by language/role, usage, cost per attempt, and cost per correct
 completed answer. Separate cache/load conditions. State treatment of failures
 and timeouts; never silently remove them to improve percentiles.
+
+Report hybrid totals and separate template/model distributions with sample counts.
+Use `server.reply.source` rather than the selected model label to identify templates;
+they report zero generation usage and derived `modelAndStreamMs`, but still incur
+routing/knowledge and guarded-read work. Template share is a corpus property, not
+a measured production traffic mix. Preserve unknown billing separately from zero
+template generation cost. The cooperative run lock and provider/model checks do
+not replace a frozen build/configuration or actual per-request host evidence.
 
 Keep observed results separate from traffic-weighted monthly projections. A
 balanced fixture set does not establish the distribution of real user questions.
@@ -821,14 +931,36 @@ old sub-second aspirations and must be recorded in the run report before testing
 | Estimated API cost | ≤ $0.25 per 1,000 correct completed answers, including failed-attempt spend; reconcile provider billing where available |
 | Candidate improvement | At least 20% lower completion p95 than the interleaved default; first-text/completion p50 may not regress more than 10%; preserve the gates above |
 
-Start with 50 frozen core questions × 2 repetitions × 2 variants = **200 paid
-chat requests**, 100 per variant. Run serially with warm embeddings and verified
-empty application caches for each independent sample, after supported controls
-exist. Alternate baseline/candidate order as the runner does. Do not claim
-per-language p95 acceptance from the resulting 20 observations per language;
-expand important language/role groups toward 100 observations if the decision
-depends on them. Role/conversation, cache-hit, cold-model and concurrency-2/4
-runs have separate counts, conditions and budgets; do not pool their percentiles.
+Next, validate the retained configuration before considering another model:
+30 frozen Moroccan cases × 2 repetitions = **60 outer chat requests** at
+concurrency 1, warm embeddings and verified fresh application caches. Keep the
+current Cerebras-first/low-effort/template policy fixed and review every reply.
+This repeat is regression evidence, not enough to establish per-language p95 or
+a 1% failure guarantee. Templates can avoid provider generation, but every outer
+request counts toward the request budget; do not assume an unobserved path is free.
+Recheck the legacy 50-case English/Spanish coverage separately with explicit
+`--cases=datasets/chatbot-latency/questions.json` and its own budget.
+
+If a candidate is justified after current acceptance, use 50 frozen legacy
+questions × 2 repetitions × 2 variants = **200 outer chat requests**, 100 per
+variant, or predeclare a versioned Moroccan/extended corpus and its sample counts.
+Hold reply templates constant and compare the model-generated subset as well as
+hybrid totals; templates cannot prove one model is faster. Alternate variant
+order as the runner does. Expand important language/role groups toward 100
+observations when the decision depends on them. Role/conversation, cache-hit,
+cold-model and concurrency-2/4 runs have separate conditions and budgets;
+`--cache-mode=fresh` supports serial execution only. Declare a supported cache
+condition for concurrent runs and verify live correlation; do not pool percentiles.
+
+Current evidence against these gates:
+
+| Gate | Evidence | Still required |
+|---|---|---|
+| Latency/non-empty completion | Latest 30-case serial hybrid smoke is within timing targets, 30/30 completed | Repeated current-config runs and other declared cache/load conditions |
+| Read-only policy and correctness | Latest 30/30 reviewed Moroccan cases; no executed writes, false claims or promises | Held-out facts/wording, role/year denials, knowledge and current English/Spanish coverage |
+| Cost | Latest $0.003020093 model-token estimate for 30 hybrid replies; earlier routing invoice delta exceeds the gate | Current hybrid billing reconciliation, failed-attempt spend and embedding costs |
+| Candidate improvement | No current interleaved candidate comparison; Nemotron rejected | Only if a new candidate is proposed after current acceptance |
+| Production/browser | No evidence from the latest development run | Production API and submit-to-first-render measurements |
 
 Before execution, record the exact corpus/configuration hashes, prices/date,
 maximum requests and maximum monetary spend, counting warmups, probes, role
@@ -887,10 +1019,13 @@ also require indexing and failure-path checks.
 
 Current disposition: items 1–3 have local residency/timeout/outage evidence,
 with populated-knowledge and hanging-request acceptance still pending. Item 4
-retains cap 12 and semantic hits 8. Item 5 retains the default after rejecting
-Nitro; full-set Nemotron comparison is next. Item 6 shortened the system prompt
-with a 21% input-token reduction; longer history and populated knowledge remain
-unmeasured. Do not repeat a rejected cap or adopt a model from smoke results.
+retains cap 12 and semantic hits 8. Item 5 rejected Nemotron and retains GPT-OSS;
+the later tool-name fix removed the observed Cerebras truncation and School now
+configures Cerebras-first/low-effort routing. Live fallback and current cost gates
+remain. Item 6 shortened the system prompt with a 21% input-token reduction;
+longer history and populated knowledge remain unmeasured. The latest guarded
+templates bypass generation for recognized counts/refusals. Do not repeat a
+rejected cap or adopt another model from smoke results.
 
 ## 8. Phase 3 — reduce unnecessary work
 
@@ -915,6 +1050,13 @@ multi-tool cases have separate expectations.
 
 **Deliverable:** explain which work each adopted change removes, its measured
 latency/cost effect, and the evidence that complete answers remain correct.
+
+Already adopted: School's unqualified count/write-refusal templates remove LLM
+generation for those recognized requests, with authorization/validation retained
+for real count reads. The latest 30-case run exercised 15 templates and 15 model
+answers; template completion was 0.305/0.523 s p50/p95 with zero generation
+tokens. Routing/knowledge work remains. Broader intent wording, qualified counts,
+denied/failed reads and conversation behavior still need acceptance coverage.
 
 ## 9. Phase 4 — optional Jev experiment
 
@@ -1059,6 +1201,10 @@ versions before relying on it after a pin change.
 
 - `package.json`, `bun.lock`: pins and resolved dependencies.
 - `packages/server/src/config/index.ts`: embedding/chatbot policy.
+- `packages/server/src/config/ragConfig.ts`, `chatbotConfig.ts` and
+  `chatbotSystemPrompt.ts`: policy implementations re-exported by `index.ts`.
+- `packages/server/src/modules/chat/schoolReplyTemplates.ts` and
+  `schoolReplyContext.ts`: School's count/refusal templates and domain reply hints.
 - `packages/server/src/modules/chat/SchoolChatContextProvider.ts` and
   `config/yearScope.ts`: per-request year validation and prompt context.
 - `scripts/start-local-embeddings.ps1`, `docs/tests/local-embeddings.md`: local

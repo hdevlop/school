@@ -26,7 +26,7 @@ export class StaffController {
   @isAdmin()
   @McpTool({ description: 'List all staff', readOnly: true })
   @ResMsg('staff.success.retrieved')
-  async getStaff() {
+  async listStaff() {
     return this.staffService.getAll();
   }
 
@@ -114,7 +114,7 @@ export class StaffController {
   @Validate({ params: staffIdParam })
   @McpTool({ description: 'Delete a staff member by ID', confirm: { level: 'danger', message: 'confirm.staff.delete' } })
   @ResMsg('staff.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.staffService.delete(id);
   }
 }

@@ -24,7 +24,7 @@ export class VehicleController {
   @canAccessAllVehicles()
   @McpTool({ description: 'List all vehicles. School buses and other vehicles. Liste des véhicules et bus scolaires. لائحة المركبات والحافلات المدرسية.', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
-  async getVehicles() {
+  async listVehicles() {
     return this.vehicleService.getAll();
   }
 
@@ -41,7 +41,7 @@ export class VehicleController {
   @Validate({ params: vehicleIdParam })
   @McpTool({ description: 'Get a vehicle by ID', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
-  async getVehicle(@Params('id') id: string) {
+  async getVehicleById(@Params('id') id: string) {
     return this.vehicleService.getById(id);
   }
 
@@ -76,7 +76,7 @@ export class VehicleController {
   @Validate({ params: vehicleIdParam })
   @McpTool('Delete a vehicle by ID')
   @ResMsg('vehicles.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.vehicleService.delete(id);
   }
 

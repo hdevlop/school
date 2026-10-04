@@ -83,7 +83,7 @@ export class PayrollController {
   @Validate({ body: payStaffDto })
   @McpTool({ description: 'Create and pay a payslip for a staff member in one step', confirm: { level: 'warning', message: 'confirm.payroll.pay' } })
   @ResMsg('payroll.success.paid')
-  async payStaff(@Body() body: PayStaffDto, @User() user: { id: string }) {
+  async payStaffMember(@Body() body: PayStaffDto, @User() user: { id: string }) {
     return this.payrollService.payStaff(body, user.id);
   }
 
@@ -110,7 +110,7 @@ export class PayrollController {
   @Validate({ params: payslipIdParam, body: payPayslipDto })
   @McpTool({ description: 'Mark a payslip as paid', confirm: { level: 'warning', message: 'confirm.payroll.pay' } })
   @ResMsg('payroll.success.paid')
-  async pay(@Params('id') id: string, @Body() body: PayPayslipDto, @User() user: { id: string }) {
+  async payPayslip(@Params('id') id: string, @Body() body: PayPayslipDto, @User() user: { id: string }) {
     return this.payrollService.pay(id, body, user.id);
   }
 
@@ -137,7 +137,7 @@ export class PayrollController {
   @Validate({ params: payslipIdParam })
   @McpTool({ description: 'Delete a payslip by ID', confirm: { level: 'danger', message: 'confirm.payroll.delete' } })
   @ResMsg('payroll.success.deleted')
-  async delete(@Params('id') id: string, @User() user: { id: string }) {
+  async deleteById(@Params('id') id: string, @User() user: { id: string }) {
     return this.payrollService.delete(id, user.id);
   }
 }

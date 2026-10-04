@@ -125,7 +125,7 @@ export class ExamController {
   @Validate({ params: examIdParam })
   @McpTool({ description: 'Delete an exam by ID', confirm: { level: 'danger', message: 'confirm.exams.delete' } })
   @ResMsg('exams.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.examService.delete(id);
   }
 

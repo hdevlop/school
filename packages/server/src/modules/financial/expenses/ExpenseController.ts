@@ -76,7 +76,7 @@ export class ExpenseController {
   @Validate({ params: expenseIdParam })
   @McpTool({ description: 'Get an expense by ID', readOnly: true })
   @ResMsg('expenses.success.retrieved')
-  async getExpense(@Params('id') id: string) {
+  async getExpenseById(@Params('id') id: string) {
     return this.expenseService.getById(id);
   }
 

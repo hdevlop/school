@@ -26,7 +26,7 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool({ description: 'Get a class by ID', readOnly: true })
   @ResMsg('classes.success.retrieved')
-  async getClass(@Params('id') id: string) {
+  async getClassById(@Params('id') id: string) {
     return this.classService.getById(id);
   }
 
@@ -121,7 +121,7 @@ export class ClassController {
   @Validate({ params: classIdParam })
   @McpTool({ description: 'Delete a class by ID', confirm: { level: 'danger', message: 'confirm.classes.delete' } })
   @ResMsg('classes.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.classService.delete(id);
   }
 

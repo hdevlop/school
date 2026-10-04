@@ -1,0 +1,106 @@
+{
+  "capturedAt": "2026-10-04T19:48:14.351Z",
+  "runId": "e09e736d",
+  "target": "http://localhost:3167",
+  "mode": "read-only-preflight",
+  "corpusSha256": "a3a78d40918bd2dfed1c704197ebb2e866fbe6275dfc1b38f8817067a3136304",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "languages": null,
+  "plannedRequests": 0,
+  "maxRequests": 0,
+  "concurrency": 1,
+  "cacheMode": "fresh",
+  "timeoutMs": 120000,
+  "textStored": false,
+  "declaredPricing": null,
+  "packagePins": {
+    "najm-rag": "3.1.0",
+    "najm-chatbot": "3.1.0",
+    "najm-mcp": "2.2.5",
+    "ai": "6.0.275"
+  },
+  "outcome": "preflight_ok",
+  "limitations": [
+    "API-client timings including local transport; not browser submit-to-render.",
+    "First byte is not first answer text; firstTextMs is the first non-empty text-delta.",
+    "Small samples are smoke coverage, not p95 estimates; cache and Ollama state are not controlled.",
+    "Admin account only; teacher, parent and student behavior is not measured.",
+    "Server timings come from najm-chatbot diagnostics (>= 2.0.5) matched by x-request-id; modelAndStreamMs is derived, not measured."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 9362
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 335
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 36
+    },
+    {
+      "path": "/api/chat-benchmark/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 17
+    }
+  ],
+  "samples": [],
+  "gitHead": "36c05413e1cedbe439671d31a3c80d82cb8e327d",
+  "workingTreeDirty": true,
+  "configSourceSha256": {
+    "index.ts": "53cbbd3928d4ab5af4d40ded29e7520ee878bfccf370942017ad290dec4b6e05",
+    "ragConfig.ts": "8a2fbc62d7429b2886a63b246ca5e76acecb34bda965a996f94a930fa5a5be08",
+    "chatbotConfig.ts": "ee4c6a0191fb873f78735d7bf4eb993deff98fd4583f7685193e3fc93709864a",
+    "chatbotSystemPrompt.ts": "8a1cf1fd8f130a000aa72b3396c3f0b879ad665c4c2a882f2e22d91540ff70e5"
+  },
+  "scoringSourceSha256": {
+    "chatbot-scoring.mjs": "fffd4a5eb403a6012b8d429ae0f1789ef61a43f1a599cfce577c37494eed58dc",
+    "chatbot-facts.mjs": "abfe51023250d533e34d269155a9521ecbb14acaa1d4c5669ab08bfc4c628dd0",
+    "chatbot-language.mjs": "5a360a3dad318cb92fa9ff39f33463a6c3d75043c07201ac683e029196740fa2",
+    "chatbot-claims.mjs": "9c3e65c84d82de078ac8529cf559787d0d5d0e05e4f418e1d8e24595ebaef5bf"
+  },
+  "conditions": {
+    "applicationCaches": "uncontrolled",
+    "embeddingModelResidency": "unverified",
+    "providerPromptCache": "uncontrolled",
+    "note": "Source hashes describe the checkout, not the effective running configuration. Query/knowledge resets only apply in fresh mode; embedding models are never unloaded."
+  },
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "comparison": null,
+  "cacheControl": {
+    "enabled": true,
+    "instanceId": "8479d927-d026-49bd-ab58-1afddb1aec90",
+    "resetCount": 0,
+    "caches": [
+      "query-embedding",
+      "knowledge-context"
+    ]
+  },
+  "readyForChat": true,
+  "estimatedBudget": null
+}

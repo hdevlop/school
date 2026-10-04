@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
 import { getRoutes } from 'najm-core';
-import { getMcpAnnotations, getMcpConfirmation, getMcpControllerTools } from 'najm-mcp';
+import { getMcpAnnotations, getMcpConfirmation, getMcpControllerTools, getMcpToolGroup, getMcpTools } from 'najm-mcp';
 import * as modules from '../../src/modules';
 
 // The chat assistant is read-only: najm-chatbot refuses any MCP tool that
@@ -17,7 +17,7 @@ const AUTO_CONFIRMED = /delete|remove|destroy|drop|purge|wipe|refund|revoke/i;
 const READ_ONLY_POSTS = new Set([
   'AttendanceController.getAll',
   'AttendanceController.getByDate',
-  'AttendanceController.getToday',
+  'AttendanceController.getTodayAll',
   'AttendanceController.getTodayStaff',
   'AttendanceController.getTodayStudents',
   'EventController.getByDateRangeMcp',
@@ -87,5 +87,22 @@ describe('chat-callable tools', () => {
       }
     }
     expect([...READ_ONLY_POSTS].filter((key) => !tools.has(key))).toEqual([]);
+  });
+
+  // Cerebras, OpenRouter's fastest gpt-oss-120b host, returned calls to
+  // `teachers_get_teacher_count` as `teachers_get_teacher`: a real tool whose
+  // name starts the other one. Renaming the shorter tool fixed it (6/6 probes,
+  // 2026-10-04), so no tool name may begin another.
+  it('keep every tool name from starting another tool name', () => {
+    const names: string[] = [];
+    for (const controller of controllers()) {
+      const group = getMcpToolGroup(controller);
+      for (const tool of getMcpTools(controller)) names.push(group ? `${group}_${tool.name}` : tool.name);
+    }
+    expect(names.length).toBeGreaterThan(400);
+    const prefixes = names.flatMap((short) => names
+      .filter((long) => long !== short && long.startsWith(short))
+      .map((long) => `${short} < ${long}`));
+    expect(prefixes).toEqual([]);
   });
 });

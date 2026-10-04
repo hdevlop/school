@@ -26,15 +26,32 @@ bun --env-file=apps/dashboard/.env.local scripts/chatbot-benchmark.mjs --limit=1
 | `--max-requests` | 0 | Budget: chat requests this run may send (cases × repeats) |
 | `--preflight` | off | Read health and saved AI settings after login; zero chat requests or model updates |
 | `--max-estimated-usd` / `--request-reserve-usd` | unset | Optional client estimate stop / declared estimate reserved per in-flight request; both positive and supplied together |
-| `--cases` | `datasets/chatbot-latency/questions.json` | Fixture file |
+| `--pricing-file` | unset | Explicit OpenRouter estimates for missing installed prices; requires the estimate budget, coherent token counts and matching stream/server model; raw metadata stays unchanged |
+| `--cases` | `datasets/chatbot-latency/morocco.json` | Complete Morocco corpus: Darija, Arabic, French; frozen school facts |
 | `--languages` | all | Comma-separated case languages, e.g. `fr,ary` (Darija); `--limit` applies after |
 | `--limit` / `--repeat` | all / 1 | First N cases, repeated; baseline/candidate pairs interleave when `--compare-model` is set |
 | `--compare-model` / `--baseline-model` | unset | Candidate ID / optional baseline override; saved model restored afterwards |
 | `--year` | fixture `academicYear` | Sent as `?academicYear=`, as the widget does |
 | `--timeout-ms` | 120000 | Per request, including the whole stream |
 | `--concurrency` | 1 | Bounded workers: 1, 2 or 4; comparison and transport-probe modes require 1 |
+| `--cache-mode` | uncontrolled | `fresh` resets query-embedding and knowledge-context caches before each serial chat and verifies the resulting routing miss |
 | `--keep-text` | off | Store answer text; off by default because answers can name students |
 | `--transport-probe` | off | Send one request even without a key, to prove body, year and stream framing |
+
+Live runs hold a machine-wide `school-chatbot-benchmark.lock` in the temporary
+directory. This prevents overlapping runs from updated School checkouts,
+including comparisons that change shared model settings. Preflight remains
+read-only and needs no lock. Provider/model settings are checked before every
+chat. A process killed without cleanup may leave a stale lock; verify that its
+recorded PID is no longer running before removing it. Older runners do not
+participate in this cooperative lock.
+
+`najm-chatbot` template replies identify `server.reply.source = "template"`,
+emit actual guarded tool reads and report zero LLM usage/cost. Their selected
+model label does not mean a provider generated their text. The derived
+`modelAndStreamMs` is zero for these replies; keep template and model samples
+separate when interpreting generation speed. Template/helper hashes are retained
+in the report alongside the corpus, prompt and scoring hashes.
 
 Only loopback URLs are accepted. Requests run serially by default; each
 concurrent worker holds its slot through stream completion and diagnostic
@@ -61,6 +78,17 @@ estimates, in-flight calls continue, and missing usage/retries/provider charges
 may exceed them. Use a verified isolated-provider limit for a hard monetary
 ceiling. Record the reservation assumption and current price source/date in the
 run evidence. No paid run or amount is authorized by these example commands.
+
+For a model missing from installed pricing, `--pricing-file=<path>` accepts a
+frozen JSON object with `provider: "openrouter"`, `capturedAt`, `source` and
+`models: { "exact-model-id": { "inputUsdPerMillion": 0.14, "outputUsdPerMillion": 0.4 } }`.
+Rates must be positive finite numbers. Declare and justify them before execution.
+Fallback budgeting requires complete coherent token counts and the same exact
+model in SDK metadata and correlated server diagnostics. Missing usage or an
+unknown/mismatched model still stops scheduling. `sample.declaredCost` and
+`summary.declaredCosts` report these estimates separately; `summary.usage` keeps
+the original SDK pricing coverage and metadata unchanged. A declared rate is
+not a provider charge or guaranteed upper bound.
 
 ## What is recorded
 
@@ -94,7 +122,20 @@ reply language, false completed-write claims (`falseWriteClaims`) and future
 write offers (`writePromises`). Darija expects Arabic-script output. Null
 language detection now fails automatic acceptance and sets `reviewRequired`;
 an explicitly language-neutral fixture may set `replyLanguage: null`.
-These are heuristics: whole-answer factual correctness still needs human review.
+`schoolFacts` binds every displayed exam's date, start/end time, name,
+class/section and next-five order to its own authoritative row. Class lists
+require every class and its exact sections; numeric prefixes such as `2A`
+fail when the stored name is `A`. Inconsistent total/remaining count claims
+also fail. These checks are scoped to the recorded list facts and supported
+date/count forms; they do not prove every possible narrative claim.
+
+`storedNames` exempts only exact values at word boundaries (Unicode whitespace
+is normalized). Language checks inspect tables, parenthetical text and list
+glosses, catch foreign prose and unsupported scripts, and flag formal Arabic
+for Darija. This register heuristic is not native-speaker quality assurance.
+Reports include `factFailures` (codes/indices, no private values),
+`mixedLanguage`, `wrongRegister`, and scoring-source hashes. Inconclusive
+language and factual failures cannot receive an automatic pass.
 Blocked-write cases without server diagnostics also require review and cannot
 receive an automatic pass. Older reports used weaker scoring and must be re-run.
 
@@ -112,7 +153,25 @@ fields are allowed):
 
 ## Fixture
 
-`datasets/chatbot-latency/questions.json` contains 50 independent cases, ten
+The default `datasets/chatbot-latency/morocco.json` has **30 cases**, all ten
+original scenarios in each of Darija, Modern Standard Arabic and French.
+Refresh its authoritative snapshot before a paid run, without provider calls:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/chatbot-school-facts.ps1 -BaseUrl http://localhost:3104 -Output docs/evidence/chatbot-latency/morocco-school-facts.json
+bun scripts/chatbot-morocco-corpus.mjs --facts=docs/evidence/chatbot-latency/morocco-school-facts.json
+bun test scripts/tests
+bun scripts/chatbot-benchmark.mjs --validate
+```
+
+The PowerShell reader explicitly decodes UTF-8 even if the JSON response lacks
+a charset, protecting stored French/Arabic names. The corpus records the facts'
+capture time and SHA-256. A full two-repeat Morocco run needs 60 outer requests;
+one interleaved baseline/candidate pair per case also needs 60. Record budgets
+and routing prices separately before spending.
+
+The legacy `datasets/chatbot-latency/questions.json` remains available via
+`--cases=...`. It contains 50 independent cases, ten
 each in English, French, Spanish, Modern Standard Arabic and Darija: greetings,
 counts, classes, attendance, upcoming exams, multi-tool reads, missing students
 and blocked writes. The initial corpus had 12 cases; `--limit=12` now selects
@@ -169,6 +228,40 @@ overlap routing/context/preparation/tool execution. Do not add their durations.
 Restart a running app after package adoption before measuring the new contract.
 See [release evidence](../evidence/chatbot-latency/embedding-diagnostics-20261004.md).
 
+## Fresh application-cache samples
+
+On an **isolated local dev app**, set `CHATBOT_BENCHMARK_CONTROLS=true` before
+starting it. Production resets are always refused, regardless of this flag.
+The REST-only `GET /api/chat-benchmark/status` and
+`POST /api/chat-benchmark/reset-caches` require a signed-in administrator.
+Leave the flag unset on the shared app.
+
+First check readiness without resetting or chatting:
+
+```powershell
+bun --env-file=apps/dashboard/.env.local scripts/chatbot-benchmark.mjs --preflight --cache-mode=fresh --output=docs/evidence/chatbot-latency/cache-preflight-YYYYMMDD.json
+```
+
+Then use `--cache-mode=fresh` on the separately budgeted live run. Only
+concurrency 1 is supported for this mode: clearing shared process caches during
+another benchmark request would invalidate the condition. Every sample records
+the reset instance/count and verifies matching terminal diagnostics, complete
+embedding capture, and a routing `cache: miss` with a completed provider attempt.
+A successful reset alone cannot pass. Wrong instances, another reset, cache hits,
+cooldown skips, routing disabled/no call, failures and partial traces fail the
+condition. `summary.cacheConditions` reports verified and failed samples.
+Failed fresh-cache verification retains the sample and stops further scheduling.
+Reset HTTP timings are recorded in `report.requests`, outside chat first-text
+and completion timings; they are included in the overall `loadElapsedMs`.
+
+The public controls clear `EmbeddingService.clearQueryCache()` and
+`KnowledgeContextProvider.clearCache()` on their injected app instances. They
+do not clear the failure cooldown, settings caches, conversation data, provider
+prompt cache or embedding model residency, and do not alter the database/index.
+Within-request knowledge embedding reuse can still be a hit after routing
+embedded the same text. These controls do not establish a cold-model or populated
+knowledge baseline. See [cache-control evidence](../evidence/chatbot-latency/cache-controls-20261004.md).
+
 The runner validates each diagnostic record's `correlationId` and each embedding
 span's ID against the request's `x-request-id`. Mismatched records are discarded
 before scoring and summaries, with `sample.correlationError` recorded. Such a
@@ -213,13 +306,14 @@ first, and each request uses a fresh session. Between requests the runner sends
 `PUT /api/ai-settings { model }` and checks each server record's `model`; a
 mismatched sample is excluded and fails the run. The saved model is restored at
 the end, even after a failure. Any failure to restore is reported as
-`restoreFailed`. The budget counts both variants: all 50 questions once need
-`--max-requests=100`; two repetitions need 200. Settings updates apply to all
-chat users; use an isolated test app for comparisons.
+`restoreFailed`. The budget counts both variants: the default 30 Moroccan
+questions once need `--max-requests=60`; two repetitions need 120. Settings
+updates apply to every app sharing the database, including separate checkouts.
+Coordinate comparisons so a second runner cannot change a measured model.
 
 ```sh
 bun --env-file=apps/dashboard/.env.local scripts/chatbot-benchmark.mjs \
-  --max-requests=100 --compare-model=nvidia/nemotron-3.5-lightning:nitro \
+  --max-requests=60 --compare-model=openai/gpt-oss-120b:nitro \
   --output=docs/evidence/chatbot-latency/model-<name>-YYYYMMDD.json
 ```
 
@@ -230,9 +324,10 @@ The summary holds one block per variant under `summary.comparison`. Do not run
 it while someone is using the assistant: the saved model changes for everyone
 during the run.
 
-Nemotron Lightning is the next candidate, not an accepted replacement. GPT-OSS
-120b Nitro failed the 50-case comparison and is retained only as historical
-evidence. Recheck model availability and prices before any new comparison;
+Nemotron Lightning was rejected after the reply-fix comparison. The saved
+model remains GPT-OSS. GPT-OSS 120b Nitro previously failed the older 50-case
+comparison; any new route comparison must pass the stronger Moroccan checks.
+Recheck model availability and prices before any new comparison;
 use the proposed gates in CHATBOT-LATENCY-PLAN section 6.4.
 
 ## Limits
@@ -247,8 +342,9 @@ See [migration evidence](../evidence/chatbot-latency/darija-shared-20261004.md).
 
 - API-client timings including local transport; not browser rendering.
 - Main runner: admin only; separate role/follow-up smoke runner exists.
-- Application caches, the embedding model's load state and provider prompt
-  caching are not controlled; label results accordingly (section 6.2).
+- Default runs leave application caches uncontrolled. Fresh mode supports
+  verified query/knowledge resets; embedding model load state and provider
+  prompt caching still need separate controls (section 6.2).
   Repeating a question hits the routing cache: about 6 ms instead of about
   150 ms for a new one.
 - Embedding capture is available; historical records and running apps that have

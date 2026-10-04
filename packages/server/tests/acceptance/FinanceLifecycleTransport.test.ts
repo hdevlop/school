@@ -69,7 +69,7 @@ async function newFee(amount = 100, recurring = false) {
   await db.insert(feeTypes).values({ id: typeId, name: `Scolarite ${typeId}`, category: 'tuition',
     amount: String(amount), paymentType: recurring ? 'recurring' : 'oneTime', status: 'active' });
   // Inspect the registry in beforeAll, then exercise the actual MCP write.
-  const result = await client.callTool({ name: 'fees_create', arguments: {
+  const result = await client.callTool({ name: 'fees_create_fee', arguments: {
     studentId, feeTypeId: typeId, schedule: recurring ? 'monthly' : 'oneTime',
     academicYear: year, effectiveDate: '2026-09-01', ...(recurring ? { discountAmount: 10 } : {}),
   } }) as { content: Array<{ text: string }>; isError?: boolean };
@@ -124,7 +124,7 @@ beforeAll(async () => {
   });
   await client.connect(transport);
   const registry = await client.listTools();
-  expect(registry.tools.find(tool => tool.name === 'fees_create')?.inputSchema.properties)
+  expect(registry.tools.find(tool => tool.name === 'fees_create_fee')?.inputSchema.properties)
     .toHaveProperty('academicYear');
 });
 

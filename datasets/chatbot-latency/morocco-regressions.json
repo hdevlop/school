@@ -1,0 +1,65 @@
+{
+    "source":  "reply-fixes-model100-20261004.json",
+    "samples":  [
+                    {
+                        "id":  "classes-fr",
+                        "variant":  "baseline",
+                        "text":  "Voici les classes de l’école pour l’année académique 2026‑2027 :\n\n- **CP** (Cours Préparatoire) – sections A, B, C  \n- **CE1** (Cours Élémentaire 1ère année) – sections A, B, C  \n- **CE2** (Cours Élémentaire 2ème année) – sections A, B, C  \n- **CM1** (Cours Moyen 1ère année) – sections A, B, C  \n- **CM2** (Cours Moyen 2ème année) – sections A, B, C  \n- **CE6** (Sixième – début du collège) – sections A, B, C  \n- **1AC** (1ère année collège) – sections A, B, C  \n- **2AC** (2ème année collège) – sections A, B, C  \n- **3AC** (3ème année collège) – sections A, B, C  \n\nChaque classe possède trois sections (A, B, C)."
+                    },
+                    {
+                        "id":  "classes-fr",
+                        "variant":  "candidate",
+                        "text":  "Classes de l’école (année 2026‑2027) :\n\n- **CP** (Cours Préparatoire) – sections A, B, C  \n- **CE1** (Cours Élémentaire 1ère année) – sections A, B, C  \n- **CE2** (Cours Élémentaire 2ème année) – sections A, B, C  \n- **CM1** (Cours Moyen 1ère année) – sections A, B, C  \n- **CM2** (Cours Moyen 2ème année) – sections A, B, C  \n- **CE6** (Sixième – début du collège) – sections A, B, C  \n- **1AC** (1ère année collège) – sections A, B, C  \n- **2AC** (2ème année collège) – sections A, B, C  \n- **3AC** (3ème année collège) – sections A, B, C  \n\nChaque niveau comporte trois sections (A, B, C). Let me know si vous voulez voir les élèves, les professeurs ou autre chose pour une classe précise."
+                    },
+                    {
+                        "id":  "classes-ar",
+                        "variant":  "baseline",
+                        "text":  "قائمة أقسام المدرسة للعام الدراسي 2026‑2027:\n\n- CP (Cours Préparatoire) – أقسام: A, B, C  \n- CE1 (Cours Élémentaire 1ère سنة) – أقسام: A, B, C  \n- CE2 (Cours Élémentaire 2ème سنة) – أقسام: A, B, C  \n- CM1 (Cours Moyen 1ère سنة) – أقسام: A, B, C  \n- CM2 (Cours Moyen 2ème سنة) – أقسام: A, B, C  \n- CE6 (Sixième – بداية collège) – أقسام: A, B, C  \n- 1AC (1ère سنة collège) – أقسام: A, B, C  \n- 2AC (2ème سنة collège) – أقسام: A, B, C  \n- 3AC (3ème سنة collège) – أقسام: A, B, C  "
+                    },
+                    {
+                        "id":  "classes-ar",
+                        "variant":  "candidate",
+                        "text":  "قائمة أقسام المدرسة للعام الدراسي 2026‑2027، مرتبة حسب المستوى:\n\n- **CP (Cours Préparatoire)**:  \n  - القسم أ (SC09)  \n  - القسم ب (SC10)  \n  - القسم ج (SC11)\n\n- **CE1 (Cours Élémentaire 1ère année)**:  \n  - القسم أ (SC12)  \n  - القسم ب (SC13)  \n  - القسم ج (SC14)\n\n- **CE2 (Cours Élémentaire 2ème année)**:  \n  - القسم أ (SC15)  \n  - القسم ب (SC16)  \n  - القسم ج (SC17)\n\n- **CM1 (Cours Moyen 1ère année)**:  \n  - القسم أ (SC18)  \n  - القسم ب (SC19)  \n  - القسم ج (SC20)\n\n- **CM2 (Cours Moyen 2ème السنة)**:  \n  - القسم أ (SC21)  \n  - القسم ب (SC22)  \n  - القسم ج (SC23)\n\n- **CE6 (Sixième – بداية collège)**:  \n  - القسم أ (SC24)  \n  - القسم ب (SC25)  \n  - القسم ج (SC26)\n\n- **1AC (1ère année collège)**:  \n  - القسم أ (SC27)  \n  - القسم ب (SC28)  \n  - القسم ج (SC29)\n\n- **2AC (2ème année collège)**:  \n  - القسم أ (SC30)  \n  - القسم ب (SC31)  \n  - القسم ج (SC32)\n\n- **3AC (3ème année collège)**:  \n  - القسم أ (SC33)  \n  - القسم ب (SC34)  \n  - القسم ج (SC35)\n\n共计 27 مستوى/قسم. يمكنك الطلب على قسم معين لعرض تلاميذه، آباؤه، أو الأساتذة المكلفون به."
+                    },
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "variant":  "baseline",
+                        "text":  "الامتحانات القادمة (العام الدراسي 2026‑2027) هي:\n\n- **Language exam** – مادة Mathématiques – الصف CP – القسم C – 17 oct 2026 من 09:00 إلى 11:00  \n- **Science exam** – مادة Mathématiques – الصف CE1 – القسم B – 18 oct 2026 من 10:00 إلى 12:00  \n- **Mathematics exam** – مادة Mathématiques – الصف CE2 – القسم C – 20 oct 2026 من 12:00 إلى 14:00  \n- **Language exam** – مادة Mathématiques – الصف CM1 – القسم B – 21 oct 2026 من 13:00 إلى 15:00  \n- **History exam** – مادة Mathématiques – الصف CM2 – القسم C – 23 oct 2026 من 09:00 إلى 11:00  \n\nالمزيد من الامتحانات متاحة إذا رغبت في رؤيتها."
+                    },
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "variant":  "candidate",
+                        "text":  "الامتحانات القادمة (الأولى خمس حسب التاريخ):  \n- امتحان لغة – الرياضيات، CP C، 17 أكتوبر 2026 الساعة 09:00  \n- امتحان علوم – الرياضيات، CE1 B، 18 أكتوبر 2026 الساعة 10:00  \n- امتحان رياضيات – الرياضيات، CE2 C، 20 أكتوبر 2026 الساعة 12:00  \n- امتحان لغة – الرياضيات، CM1 B، 21 أكتوبر 2026 الساعة 13:00  \n- امتحان تاريخ – الرياضيات، CM2 C، 23 أكتوبر 2026 الساعة 09:00  \n\nوباقي 8 امتحانات متاحة. يمكنني عرضها أو تصفيتها حسب الطلب."
+                    },
+                    {
+                        "id":  "missing-student-ar",
+                        "variant":  "baseline",
+                        "text":  "عذراً، لم يتم العثور على أي تلميذ بالاسم **Zzbench Qqtest**. هل يمكنك تزويدي باسم أو رقم هوية مختلف للبحث عنه؟"
+                    },
+                    {
+                        "id":  "missing-student-ar",
+                        "variant":  "candidate",
+                        "text":  "لا يوجد طالب في النظام باسم «Zzbench Qqtest». double-check the spelling or ask the user for the correct name/ID."
+                    },
+                    {
+                        "id":  "classes-ary",
+                        "variant":  "baseline",
+                        "text":  "هاد العام الدراسي 2026‑2027, لائحة الأقسام ديال المدرسة هي:\n\n**Cours Préparatoire (CP)** : 2A, 2B, 2C  \n**Cours Élémentaire 1ʳᵉ année (CE1)** : 3A, 3B, 3C  \n**Cours Élémentaire 2ᵉ année (CE2)** : 4A, 4B, 4C  \n**Cours Moyen 1ʳᵉ année (CM1)** : 5A, 5B, 5C  \n**Cours Moyen 2ᵉ année (CM2)** : 6A, 6B, 6C  \n**Sixième – Début du collège (CE6)** : 7A, 7B, 7C  \n**1ère année collège (1AC)** : 8A, 8B, 8C  \n**2ème année collège (2AC)** : 9A, 9B, 9C  \n**3ème année collège (3AC)** : 10A, 10B, 10C  \n\nكل قسم مسمى بحرف (A، B، C) وكيتربط بالصف ديالو (المذكور فوق). إذا بغيتي تفاصيل إضافية بحال رقم القاعة ولا السعة، قولّي."
+                    },
+                    {
+                        "id":  "classes-ary",
+                        "variant":  "candidate",
+                        "text":  "إليك لائحة الأقسام الدراسية للمدرسة للسنة الدراسية 2026‑2027:\n\n**ال.Primary**  \n- **CP**: أقسام A، B، C (كل قسم سعة 30 طالبًا)  \n- **CE1**: أقسام A، B، C  \n- **CE2**: أقسام A، B، C  \n- **CM1**: أقسام A، B، C  \n- **CM2**: أقسام A، B، C  \n\n**الثانوية (Collège)**  \n- **6ᵉ**: أقسام A، B، C  \n- **1ère année collège (1AC)**: أقسام A، B، C  \n- **2ème année collège (2AC)**: أقسام A، B، C  \n- **3ème année collège (3AC)**: أقسام A، B، C  \n\n**المجموع الإجمالي**: 27 قسمًا.  \n\nيمكنك طلب تفاصيل الطلاب أو الأساتذة لقسم محدد، أو عرض لائحة تلاميذ قسم معيّن."
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "variant":  "baseline",
+                        "text":  "هاد هوما الخمسة أول الامتحانات اللي جايين فالسنة الدراسية 2026‑2027:\n\n1️⃣ Language exam – قسم C، الصف CP – 17 أكتوبر 2026، من 09:00 حتى 11:00  \n2️⃣ Science exam – قسم B، الصف CE1 – 18 أكتوبر 2026، من 10:00 حتى 12:00  \n3️⃣ Mathematics exam – قسم C، الصف CE2 – 20 أكتوبر 2026، من 12:00 حتى 14:00  \n4️⃣ Language exam – قسم B، الصف CM1 – 21 أكتوبر 2026، من 13:00 حتى 15:00  \n5️⃣ History exam – قسم C، الصف CM2 – 23 أكتوبر 2026، من 09:00 حتى 11:00  \n\nكاينين امتحانات آخرين إلا بغيتي تشوفهم."
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "variant":  "candidate",
+                        "text":  "إليك أول خمسة امتحانات مقبلة:\n\n- امتحان لغة – Mathématiques، CP C، 17 أكتوبر 2026، 9:00  \n- امتحان علوم – Mathématiques، CE1 B، 18 أكتوبر 2026، 10:00  \n- امتحان رياضيات – Mathématics، CE2 C، 20 أكتوبر 2026، 12:00  \n- امتحان لغة – Mathématiques، CM1 B، 21 أكتوبر 2026، 13:00  \n- امتحان تاريخ – Mathématiques، CM2 C، 23 أكتوبر 2026، 9:00  \n\nهناك امتحانات أخرى متاحة، ويمكنك طلب عرض المزيد أو تصفية حسب صف أو مادة."
+                    }
+                ]
+}

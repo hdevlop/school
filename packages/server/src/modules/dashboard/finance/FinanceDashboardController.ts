@@ -34,7 +34,7 @@ export class FinanceDashboardController {
   @Get('/aging')
   @McpTool({ description: 'Get finance dashboard aging summary', readOnly: true })
   @ResMsg('dashboards.success.retrieved')
-  async getAging() {
+  async getAgingSummary() {
     return this.financeDashboardService.getAging();
   }
 

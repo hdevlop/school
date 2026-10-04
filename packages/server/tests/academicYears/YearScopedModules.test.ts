@@ -31,7 +31,7 @@ describe('controllers registered for the request year', () => {
         for (const target of ['params', 'query', 'body'] as const) {
           const shape = (validation?.[target] as { shape?: object } | undefined)?.shape;
           const feeWriteBody = controller.name === 'FeeController' && target === 'body'
-            && ['create', 'createClassBulk', 'update'].includes(String(method));
+            && ['createFee', 'createClassBulk', 'update'].includes(String(method));
           if (shape && 'academicYear' in shape && !feeWriteBody) {
             declaredTwice.push(`${controller.name}.${String(method)} ${target}`);
           }
@@ -41,7 +41,7 @@ describe('controllers registered for the request year', () => {
     expect(declaredTwice).toEqual([]);
     const hooks = schoolMcpYearHooks(Object.keys(yearScopedModules));
     expect(hooks.toolInput({ group: 'students', methodKey: 'getStudents' })).toHaveProperty('academicYear');
-    expect(hooks.toolInput({ group: 'students', methodKey: 'getStudent' })).toHaveProperty('academicYear');
+    expect(hooks.toolInput({ group: 'students', methodKey: 'getStudentById' })).toHaveProperty('academicYear');
     expect(hooks.toolInput({ group: 'teachers', methodKey: 'getClasses' })).toHaveProperty('academicYear');
   });
 

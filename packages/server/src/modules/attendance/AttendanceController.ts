@@ -62,7 +62,7 @@ export class AttendanceController {
   @Validate({ body: typeQueryParam })
   @McpTool({ description: "List today's attendance records", readOnly: true })
   @ResMsg('attendance.success.retrieved')
-  async getToday(@Body() body: AttendanceTypeQueryDto) {
+  async getTodayAll(@Body() body: AttendanceTypeQueryDto) {
     return this.attendanceService.getToday(body?.type);
   }
 
@@ -199,7 +199,7 @@ export class AttendanceController {
   @Validate({ params: attendanceIdParam, body: updateAttendanceDto })
   @McpTool({ description: 'Update an attendance record by ID', confirm: { level: 'warning', message: 'confirm.attendance.update' } })
   @ResMsg('attendance.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateAttendanceDto, @User() user: { id: string; role?: string; teacherId?: string }) {
+  async updateById(@Params('id') id: string, @Body() body: UpdateAttendanceDto, @User() user: { id: string; role?: string; teacherId?: string }) {
     return this.attendanceService.update(id, body, user);
   }
 
@@ -208,7 +208,7 @@ export class AttendanceController {
   @Validate({ params: attendanceIdParam })
   @McpTool({ description: 'Delete an attendance record by ID', confirm: { level: 'danger', message: 'confirm.attendance.delete' } })
   @ResMsg('attendance.success.deleted')
-  async delete(@Params('id') id: string, @User() user: { role?: string }) {
+  async deleteById(@Params('id') id: string, @User() user: { role?: string }) {
     return this.attendanceService.delete(id, user.role);
   }
 

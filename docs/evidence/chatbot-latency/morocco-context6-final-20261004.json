@@ -1,0 +1,1420 @@
+{
+  "capturedAt": "2026-10-04T20:15:51.780Z",
+  "runId": "3c6ffb14",
+  "target": "http://localhost:3169",
+  "mode": "api-client-streaming",
+  "corpusSha256": "8171e65897383182177c7e84450f99dc906316e6dd0915c609d72b61a0c9f765",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "languages": null,
+  "plannedRequests": 6,
+  "maxRequests": 6,
+  "concurrency": 1,
+  "cacheMode": "fresh",
+  "timeoutMs": 120000,
+  "textStored": true,
+  "declaredPricing": null,
+  "packagePins": {
+    "najm-rag": "3.1.0",
+    "najm-chatbot": "3.1.0",
+    "najm-mcp": "2.2.5",
+    "ai": "6.0.275"
+  },
+  "outcome": "passed",
+  "limitations": [
+    "API-client timings including local transport; not browser submit-to-render.",
+    "First byte is not first answer text; firstTextMs is the first non-empty text-delta.",
+    "Small samples are smoke coverage, not p95 estimates; cache and Ollama state are not controlled.",
+    "Admin account only; teacher, parent and student behavior is not measured.",
+    "Server timings come from najm-chatbot diagnostics (>= 2.0.5) matched by x-request-id; modelAndStreamMs is derived, not measured."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 17
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 161
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/chat-benchmark/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    }
+  ],
+  "samples": [
+    {
+      "id": "attendance-mark-blocked-ar",
+      "language": "ar",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-3c6ffb14-attendance-mark-blocked-ar-1",
+      "requestId": "bench-3c6ffb14-attendance-mark-blocked-ar-1",
+      "httpStatus": 200,
+      "headersMs": 276,
+      "streamProtocol": "v1",
+      "firstByteMs": 277,
+      "firstTextMs": 4258,
+      "finishChunkMs": 4763,
+      "bodyEndMs": 4764,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 29,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 1682,
+        "completionTokens": 173,
+        "totalTokens": 1855,
+        "inputCost": 0.00006559799999999999,
+        "outputCost": 0.00003287,
+        "totalCost": 0.00009846799999999999,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 104,
+      "text": "لا يمكنني تسجيل أو تعديل الحضور والغياب في هذه الدردشة. يرجى استخدام صفحة الحضور والغياب في لوحة التحكم.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-3c6ffb14-attendance-mark-blocked-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 2,
+          "historyMs": 0,
+          "routingMs": 215.7,
+          "contextMs": 6.2,
+          "prepareMs": 223.8,
+          "persistenceMs": 0.3
+        },
+        "marks": {
+          "firstTextMs": 4227,
+          "finishMs": 4732.1
+        },
+        "steps": [
+          {
+            "endMs": 4730.9,
+            "finishReason": "stop",
+            "inputTokens": 1682,
+            "outputTokens": 173,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 1682,
+          "outputTokens": 173,
+          "totalTokens": 1855,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 275
+        },
+        "cost": {
+          "promptTokens": 1682,
+          "completionTokens": 173,
+          "totalTokens": 1855,
+          "inputCost": 0.00006559799999999999,
+          "outputCost": 0.00003287,
+          "totalCost": 0.00009846799999999999,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-3c6ffb14-attendance-mark-blocked-ar-1",
+            "startMs": 10.6,
+            "durationMs": 196.5,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 11,
+                "durationMs": 195.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 1
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 1,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 0,
+      "clientQueueMs": 0,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "attendance-mark-blocked-ary",
+      "language": "ary",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-3c6ffb14-attendance-mark-blocked-ary-1",
+      "requestId": "bench-3c6ffb14-attendance-mark-blocked-ary-1",
+      "httpStatus": 200,
+      "headersMs": 201,
+      "streamProtocol": "v1",
+      "firstByteMs": 201,
+      "firstTextMs": 2191,
+      "finishChunkMs": 2626,
+      "bodyEndMs": 2626,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 32,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 1969,
+        "completionTokens": 140,
+        "totalTokens": 2109,
+        "inputCost": 0.00007679099999999999,
+        "outputCost": 0.0000266,
+        "totalCost": 0.00010339099999999999,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 87,
+      "text": "ما نقدرش نسجل أو نبدل الحضور والغياب هنا. خاصك تستعمل صفحة الحضور والغياب فلوحة التحكم.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-3c6ffb14-attendance-mark-blocked-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 172.4,
+          "contextMs": 4.1,
+          "prepareMs": 177.2,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 2172.1,
+          "finishMs": 2607.1
+        },
+        "steps": [
+          {
+            "endMs": 2606.5,
+            "finishReason": "stop",
+            "inputTokens": 1969,
+            "outputTokens": 140,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 1969,
+          "outputTokens": 140,
+          "totalTokens": 2109,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 158
+        },
+        "cost": {
+          "promptTokens": 1969,
+          "completionTokens": 140,
+          "totalTokens": 2109,
+          "inputCost": 0.00007679099999999999,
+          "outputCost": 0.0000266,
+          "totalCost": 0.00010339099999999999,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-3c6ffb14-attendance-mark-blocked-ary-1",
+            "startMs": 0.5,
+            "durationMs": 163.9,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.8,
+                "durationMs": 163.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 2
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 2,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 1,
+      "clientQueueMs": 4807,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "attendance-mark-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-3c6ffb14-attendance-mark-blocked-fr-1",
+      "requestId": "bench-3c6ffb14-attendance-mark-blocked-fr-1",
+      "httpStatus": 200,
+      "headersMs": 260,
+      "streamProtocol": "v1",
+      "firstByteMs": 260,
+      "firstTextMs": 2344,
+      "finishChunkMs": 2794,
+      "bodyEndMs": 2795,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 31,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 1594,
+        "completionTokens": 109,
+        "totalTokens": 1703,
+        "inputCost": 0.000062166,
+        "outputCost": 0.00002071,
+        "totalCost": 0.000082876,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 144,
+      "text": "Je ne peux pas enregistrer ou modifier les présences et les absences dans cette conversation. Utilisez la page des présences du tableau de bord.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-3c6ffb14-attendance-mark-blocked-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 5,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 2.1,
+          "historyMs": 0,
+          "routingMs": 235.9,
+          "contextMs": 1.6,
+          "prepareMs": 237.7,
+          "persistenceMs": 0.2
+        },
+        "marks": {
+          "firstTextMs": 2328.2,
+          "finishMs": 2777.7
+        },
+        "steps": [
+          {
+            "endMs": 2777.1,
+            "finishReason": "stop",
+            "inputTokens": 1594,
+            "outputTokens": 109,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 1594,
+          "outputTokens": 109,
+          "totalTokens": 1703,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 81
+        },
+        "cost": {
+          "promptTokens": 1594,
+          "completionTokens": 109,
+          "totalTokens": 1703,
+          "inputCost": 0.000062166,
+          "outputCost": 0.00002071,
+          "totalCost": 0.000082876,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-3c6ffb14-attendance-mark-blocked-fr-1",
+            "startMs": 4,
+            "durationMs": 226.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 4.3,
+                "durationMs": 225.8,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 3
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 3,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 2,
+      "clientQueueMs": 7479,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "upcoming-exams-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-3c6ffb14-upcoming-exams-fr-1",
+      "requestId": "bench-3c6ffb14-upcoming-exams-fr-1",
+      "httpStatus": 200,
+      "headersMs": 204,
+      "streamProtocol": "v1",
+      "firstByteMs": 204,
+      "firstTextMs": 8098,
+      "finishChunkMs": 10302,
+      "bodyEndMs": 10302,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 1,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 157,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 7351,
+        "completionTokens": 577,
+        "totalTokens": 7928,
+        "inputCost": 0.000286689,
+        "outputCost": 0.00010963,
+        "totalCost": 0.000396319,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 382,
+      "text": "Voici les cinq prochains examens :\n\n- Language exam – CP C – 2026‑10‑17 – 09:00‑11:00  \n- Science exam – CE1 B – 2026‑10‑18 – 10:00‑12:00  \n- Mathematics exam – CE2 C – 2026‑10‑20 – 12:00‑14:00  \n- Language exam – CM1 B – 2026‑10‑21 – 13:00‑15:00  \n- History exam – CM2 C – 2026‑10‑23 – 09:00‑11:00  \n\nPlus d’examens sont prévus ; vous pouvez demander à les afficher ou les filtrer.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-3c6ffb14-upcoming-exams-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 181.1,
+          "contextMs": 2.2,
+          "prepareMs": 183.7,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 8078.6,
+          "finishMs": 10285.7
+        },
+        "steps": [
+          {
+            "endMs": 2417.2,
+            "finishReason": "tool-calls",
+            "inputTokens": 1584,
+            "outputTokens": 95,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 10285.3,
+            "finishReason": "stop",
+            "inputTokens": 5767,
+            "outputTokens": 482,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "chatcmpl-tool-9f9165e3780f4b27aa3a1992213168ef",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 11934,
+            "startMs": 2401.8,
+            "durationMs": 14.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 7351,
+          "outputTokens": 577,
+          "totalTokens": 7928,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 313
+        },
+        "cost": {
+          "promptTokens": 7351,
+          "completionTokens": 577,
+          "totalTokens": 7928,
+          "inputCost": 0.000286689,
+          "outputCost": 0.00010963,
+          "totalCost": 0.000396319,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-3c6ffb14-upcoming-exams-fr-1",
+            "startMs": 0.5,
+            "durationMs": 174.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.7,
+                "durationMs": 173.8,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 4
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 4,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 3,
+      "clientQueueMs": 10307,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "upcoming-exams-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-3c6ffb14-upcoming-exams-ar-1",
+      "requestId": "bench-3c6ffb14-upcoming-exams-ar-1",
+      "httpStatus": 200,
+      "headersMs": 189,
+      "streamProtocol": "v1",
+      "firstByteMs": 189,
+      "firstTextMs": 10549,
+      "finishChunkMs": 12722,
+      "bodyEndMs": 12722,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 1,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 175,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 7311,
+        "completionTokens": 792,
+        "totalTokens": 8103,
+        "inputCost": 0.000285129,
+        "outputCost": 0.00015047999999999998,
+        "totalCost": 0.000435609,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 412,
+      "text": "الامتحانات القادمة في العام الدراسي 2026‑2027 هي:\n\n- Language exam – الصف CP – القسم C – 2026‑10‑17 09:00‑11:00  \n- Science exam – الصف CE1 – القسم B – 2026‑10‑18 10:00‑12:00  \n- Mathematics exam – الصف CE2 – القسم C – 2026‑10‑20 12:00‑14:00  \n- Language exam – الصف CM1 – القسم B – 2026‑10‑21 13:00‑15:00  \n- History exam – الصف CM2 – القسم C – 2026‑10‑23 09:00‑11:00  \n\nالمزيد متاح إذا رغبت في رؤيته أو تصفيته.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-3c6ffb14-upcoming-exams-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 1.9,
+          "historyMs": 0,
+          "routingMs": 164.3,
+          "contextMs": 1.9,
+          "prepareMs": 166.4,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 10532.5,
+          "finishMs": 12705.2
+        },
+        "steps": [
+          {
+            "endMs": 2333.6,
+            "finishReason": "tool-calls",
+            "inputTokens": 1564,
+            "outputTokens": 140,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 12704.8,
+            "finishReason": "stop",
+            "inputTokens": 5747,
+            "outputTokens": 652,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "chatcmpl-tool-d30a95c657ef4e79a87b63ed23fa50f8",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 11934,
+            "startMs": 2323.7,
+            "durationMs": 9.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 7311,
+          "outputTokens": 792,
+          "totalTokens": 8103,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 514
+        },
+        "cost": {
+          "promptTokens": 7311,
+          "completionTokens": 792,
+          "totalTokens": 8103,
+          "inputCost": 0.000285129,
+          "outputCost": 0.00015047999999999998,
+          "totalCost": 0.000435609,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-3c6ffb14-upcoming-exams-ar-1",
+            "startMs": 4.1,
+            "durationMs": 151.5,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 4.4,
+                "durationMs": 151.2,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 5
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 5,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 4,
+      "clientQueueMs": 20662,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "upcoming-exams-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-3c6ffb14-upcoming-exams-ary-1",
+      "requestId": "bench-3c6ffb14-upcoming-exams-ary-1",
+      "httpStatus": 200,
+      "headersMs": 170,
+      "streamProtocol": "v1",
+      "firstByteMs": 170,
+      "firstTextMs": 13178,
+      "finishChunkMs": 16790,
+      "bodyEndMs": 16791,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 1,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 141,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 7389,
+        "completionTokens": 720,
+        "totalTokens": 8109,
+        "inputCost": 0.000288171,
+        "outputCost": 0.00013680000000000002,
+        "totalCost": 0.000424971,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 312,
+      "text": "هنا هيّا الامتحانات الجايين:\n\nLanguage exam – CP C – 2026-10-17 – 09:00-11:00  \nScience exam – CE1 B – 2026-10-18 – 10:00-12:00  \nMathematics exam – CE2 C – 2026-10-20 – 12:00-14:00  \nLanguage exam – CM1 B – 2026-10-21 – 13:00-15:00  \nHistory exam – CM2 C – 2026-10-23 – 09:00-11:00  \n\nكاينين مزال امتحانات أخرى.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-3c6ffb14-upcoming-exams-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 2.1,
+          "historyMs": 0,
+          "routingMs": 146.3,
+          "contextMs": 1.6,
+          "prepareMs": 148,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 13161.5,
+          "finishMs": 16774
+        },
+        "steps": [
+          {
+            "endMs": 2544.7,
+            "finishReason": "tool-calls",
+            "inputTokens": 1603,
+            "outputTokens": 150,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 16773.6,
+            "finishReason": "stop",
+            "inputTokens": 5786,
+            "outputTokens": 570,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "chatcmpl-tool-3398975597cb4adda4c41afba29016f2",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 11934,
+            "startMs": 2531.2,
+            "durationMs": 12.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 7389,
+          "outputTokens": 720,
+          "totalTokens": 8109,
+          "cachedInputTokens": 0,
+          "reasoningTokens": 487
+        },
+        "cost": {
+          "promptTokens": 7389,
+          "completionTokens": 720,
+          "totalTokens": 8109,
+          "inputCost": 0.000288171,
+          "outputCost": 0.00013680000000000002,
+          "totalCost": 0.000424971,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-3c6ffb14-upcoming-exams-ary-1",
+            "startMs": 4.1,
+            "durationMs": 137.2,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 4.5,
+                "durationMs": 136.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 6
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+          "resetCount": 6,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 5,
+      "clientQueueMs": 33434,
+      "model": "openai/gpt-oss-120b"
+    }
+  ],
+  "gitHead": "36c05413e1cedbe439671d31a3c80d82cb8e327d",
+  "workingTreeDirty": true,
+  "configSourceSha256": {
+    "index.ts": "53cbbd3928d4ab5af4d40ded29e7520ee878bfccf370942017ad290dec4b6e05",
+    "ragConfig.ts": "62a2e67aca3808033faa9736fe6abaf95ada1fba3dd792868829934c1641dbca",
+    "chatbotConfig.ts": "ee4c6a0191fb873f78735d7bf4eb993deff98fd4583f7685193e3fc93709864a",
+    "chatbotSystemPrompt.ts": "e895cc2675e61f1f7dc2b49f1823d43def9ec96148dc90a08c43758ca72b0465"
+  },
+  "scoringSourceSha256": {
+    "chatbot-scoring.mjs": "4bd8f061722349fdc07a02e597702aee62fd9e6deb1d017c97cb29a7a3978c0e",
+    "chatbot-facts.mjs": "abfe51023250d533e34d269155a9521ecbb14acaa1d4c5669ab08bfc4c628dd0",
+    "chatbot-language.mjs": "03416a3dc100f061acebd566cec4dd86f3c7c9ba9610c12a0b157cdc27329fdb",
+    "chatbot-claims.mjs": "9c3e65c84d82de078ac8529cf559787d0d5d0e05e4f418e1d8e24595ebaef5bf"
+  },
+  "chatContextSourceSha256": {
+    "SchoolChatContextProvider.ts": "2e63acbd853241dfa17b1625a59d9340ec5083da32eade06c886ddb70076cff9",
+    "schoolReplyContext.ts": "1f76652ee762d9e977f12949af060ecb4debb68cf15b74b9e250c53583d6e1ff"
+  },
+  "conditions": {
+    "applicationCaches": "reset-before-each-request; verification required",
+    "embeddingModelResidency": "unverified",
+    "providerPromptCache": "uncontrolled",
+    "note": "Source hashes describe the checkout, not the effective running configuration. Query/knowledge resets only apply in fresh mode; embedding models are never unloaded."
+  },
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "comparison": null,
+  "cacheControl": {
+    "enabled": true,
+    "instanceId": "d6df4188-f7ac-460f-8a8d-f91c1b6440d3",
+    "resetCount": 0,
+    "caches": [
+      "query-embedding",
+      "knowledge-context"
+    ]
+  },
+  "loadElapsedMs": 50282,
+  "summary": {
+    "requests": 6,
+    "load": {
+      "concurrency": 1,
+      "duplicateRequestIds": 0,
+      "requestsWithVerifiedDiagnostics": 6,
+      "requestsWithoutDiagnostics": 0,
+      "correlationErrors": 0,
+      "http429": 0,
+      "clientQueueMs": {
+        "p50": 7479,
+        "p95": 33434
+      },
+      "note": "Client queue time is the wait for a worker, separate from request latency; server/provider queueing is not directly measured. Each worker includes diagnostic retrieval. Run each concurrency level separately."
+    },
+    "cacheConditions": {
+      "mode": "fresh",
+      "verifiedFresh": 6,
+      "failedVerification": 0,
+      "note": "Fresh verifies supported query-embedding/knowledge-context resets and a completed routing miss with a provider attempt on the same app instance. Model residency, settings caches and provider prompt caching remain uncontrolled."
+    },
+    "byOutcome": {
+      "completed": 6
+    },
+    "server": {
+      "n": 6,
+      "missing": 0,
+      "p50": {
+        "settingsMs": 1.9,
+        "historyMs": 0,
+        "routingMs": 172.4,
+        "contextMs": 1.9,
+        "prepareMs": 177.2,
+        "persistenceMs": 0.1,
+        "toolMs": 0,
+        "modelAndStreamMs": 4506.3,
+        "serverFirstTextMs": 4227,
+        "serverFinishMs": 4732.1,
+        "clientOverheadFirstTextMs": 16.5,
+        "steps": 1
+      },
+      "p95": {
+        "settingsMs": 2.1,
+        "historyMs": 0,
+        "routingMs": 235.9,
+        "contextMs": 6.2,
+        "prepareMs": 237.7,
+        "persistenceMs": 0.3,
+        "toolMs": 14.1,
+        "modelAndStreamMs": 16611.300000000003,
+        "serverFirstTextMs": 13161.5,
+        "serverFinishMs": 16774,
+        "clientOverheadFirstTextMs": 31,
+        "steps": 2
+      },
+      "toolOutcomes": {
+        "executed": 3
+      },
+      "note": "prepareMs contains routingMs and contextMs; do not add them."
+    },
+    "embeddings": {
+      "requestsWithCapture": 6,
+      "requestsWithoutCapture": 0,
+      "requestsWithIncompleteCapture": 0,
+      "requestsWithNoCalls": 0,
+      "logicalCalls": 6,
+      "providerAttempts": 6,
+      "byCache": {
+        "miss": 6
+      },
+      "byOperation": {
+        "tool-routing": 6
+      },
+      "byOutcome": {
+        "completed": 6
+      },
+      "attemptOutcomes": {
+        "completed": 6
+      },
+      "logicalCallMs": {
+        "p50": 163.9,
+        "p95": 226.1
+      },
+      "providerAttemptMs": {
+        "p50": 163.6,
+        "p95": 225.8
+      },
+      "note": "All outcomes included; incomplete capture contains partial counts. Attempts nest inside logical calls, which overlap routing/context/preparation/tool execution; do not add durations. Missing capture is unknown."
+    },
+    "usage": {
+      "requestsWithUsage": 6,
+      "requestsWithKnownCost": 6,
+      "requestsWithoutKnownCost": 0,
+      "promptTokens": 27296,
+      "completionTokens": 2511,
+      "estimatedCostUsd": 0.001541634,
+      "pricingFoundForAll": true,
+      "note": "Totals include known values only, including failed attempts. Unknown cost is not zero; provider billing is authoritative."
+    },
+    "declaredCosts": {
+      "requestsWithDeclaredCost": 0,
+      "estimatedCostUsd": 0,
+      "note": "Explicit price-file estimates for missing installed prices; separate from raw SDK metadata and provider billing."
+    },
+    "completedAndChecksPassed": 6,
+    "wrongLanguage": 0,
+    "languageInconclusive": 0,
+    "mixedLanguage": 0,
+    "wrongRegister": 0,
+    "factualFailures": 0,
+    "reviewRequired": 0,
+    "wrongToolArguments": 0,
+    "falseWriteClaims": 0,
+    "writePromises": 0,
+    "completed": {
+      "n": 6,
+      "firstTextP50": 4258,
+      "firstTextP95": 13178,
+      "completeP50": 4764,
+      "completeP95": 16791
+    },
+    "completedByKind": {
+      "blocked-write": {
+        "n": 3,
+        "firstTextP50": 2344,
+        "firstTextP95": 4258,
+        "completeP50": 2795,
+        "completeP95": 4764
+      },
+      "single-read": {
+        "n": 3,
+        "firstTextP50": 10549,
+        "firstTextP95": 13178,
+        "completeP50": 12722,
+        "completeP95": 16791
+      }
+    },
+    "completedByLanguage": {
+      "ar": {
+        "n": 2,
+        "firstTextP50": 4258,
+        "firstTextP95": 10549,
+        "completeP50": 4764,
+        "completeP95": 12722
+      },
+      "ary": {
+        "n": 2,
+        "firstTextP50": 2191,
+        "firstTextP95": 13178,
+        "completeP50": 2626,
+        "completeP95": 16791
+      },
+      "fr": {
+        "n": 2,
+        "firstTextP50": 2344,
+        "firstTextP95": 8098,
+        "completeP50": 2795,
+        "completeP95": 10302
+      }
+    },
+    "note": "Failures and timeouts are counted in byOutcome and excluded only from the completed timing rows."
+  },
+  "estimatedBudget": {
+    "maxEstimatedUsd": 0.15,
+    "requestReserveUsd": 0.01,
+    "observedEstimatedUsd": 0.001541634,
+    "reservedUsd": 0,
+    "requestsSettled": 6,
+    "requestsWithUnknownCost": 0,
+    "inFlight": 0,
+    "stoppedReason": null,
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+  }
+}

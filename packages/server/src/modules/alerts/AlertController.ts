@@ -35,7 +35,7 @@ export class AlertController {
   @CanList()
   @McpTool({ description: 'List all alerts', readOnly: true })
   @ResMsg('alerts.success.retrieved')
-  async getAlerts() {
+  async listAlerts() {
     return this.alertService.getAll();
   }
 
@@ -92,7 +92,7 @@ export class AlertController {
   @Validate({ query: recentAlertsQueryDto })
   @McpTool({ description: 'List recent alerts', readOnly: true })
   @ResMsg('alerts.success.retrieved')
-  async getRecentAlerts(@Query() query: RecentAlertsQueryDto) {
+  async listRecentAlerts(@Query() query: RecentAlertsQueryDto) {
     return this.alertService.getRecentAlerts(query.limit ?? 10);
   }
 
@@ -199,7 +199,7 @@ export class AlertController {
   @Validate({ params: alertIdParam, body: updateAlertDto })
   @McpTool({ description: 'Update an alert', confirm: { level: 'warning', message: 'confirm.alerts.update' } })
   @ResMsg('alerts.success.updated')
-  async update(@Params('id') id: string, @Body() updateData: UpdateAlertDto, @User() actor: AlertActor) {
+  async updateById(@Params('id') id: string, @Body() updateData: UpdateAlertDto, @User() actor: AlertActor) {
     return this.alertService.update(id, updateData, actor);
   }
 
@@ -225,7 +225,7 @@ export class AlertController {
   @Validate({ params: alertIdParam })
   @McpTool('Delete an alert by ID')
   @ResMsg('alerts.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.alertService.delete(id);
   }
 

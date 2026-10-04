@@ -1,0 +1,209 @@
+{
+    "capturedAt":  "2026-10-04T19:13:54.5357304Z",
+    "academicYear":  "2026-2027",
+    "source":  "Internal Najm MCP read tools and GET /api/classes",
+    "studentCount":  100,
+    "teacherCount":  50,
+    "classes":  [
+                    {
+                        "name":  "CP",
+                        "description":  "Cours PrÃ©paratoire",
+                        "level":  "Primaire",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "CE1",
+                        "description":  "Cours ÃlÃ©mentaire 1Ã¨re annÃ©e",
+                        "level":  "Primaire",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "CE2",
+                        "description":  "Cours ÃlÃ©mentaire 2Ã¨me annÃ©e",
+                        "level":  "Primaire",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "CM1",
+                        "description":  "Cours Moyen 1Ã¨re annÃ©e",
+                        "level":  "Primaire",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "CM2",
+                        "description":  "Cours Moyen 2Ã¨me annÃ©e",
+                        "level":  "Primaire",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "CE6",
+                        "description":  "SixiÃ¨me - DÃ©but du collÃ¨ge",
+                        "level":  "CollÃ¨ge",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "1AC",
+                        "description":  "1Ã¨re annÃ©e collÃ¨ge",
+                        "level":  "CollÃ¨ge",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "2AC",
+                        "description":  "2Ã¨me annÃ©e collÃ¨ge",
+                        "level":  "CollÃ¨ge",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    },
+                    {
+                        "name":  "3AC",
+                        "description":  "3Ã¨me annÃ©e collÃ¨ge",
+                        "level":  "CollÃ¨ge",
+                        "sections":  [
+                                         "A",
+                                         "B",
+                                         "C"
+                                     ]
+                    }
+                ],
+    "upcomingExams":  [
+                          {
+                              "title":  "Language exam",
+                              "subject":  "MathÃ©matiques",
+                              "class":  "CP",
+                              "section":  "C",
+                              "date":  "2026-10-17",
+                              "startTime":  "09:00:00",
+                              "endTime":  "11:00:00"
+                          },
+                          {
+                              "title":  "Science exam",
+                              "subject":  "MathÃ©matiques",
+                              "class":  "CE1",
+                              "section":  "B",
+                              "date":  "2026-10-18",
+                              "startTime":  "10:00:00",
+                              "endTime":  "12:00:00"
+                          },
+                          {
+                              "title":  "Mathematics exam",
+                              "subject":  "MathÃ©matiques",
+                              "class":  "CE2",
+                              "section":  "C",
+                              "date":  "2026-10-20",
+                              "startTime":  "12:00:00",
+                              "endTime":  "14:00:00"
+                          },
+                          {
+                              "title":  "Language exam",
+                              "subject":  "MathÃ©matiques",
+                              "class":  "CM1",
+                              "section":  "B",
+                              "date":  "2026-10-21",
+                              "startTime":  "13:00:00",
+                              "endTime":  "15:00:00"
+                          },
+                          {
+                              "title":  "History exam",
+                              "subject":  "MathÃ©matiques",
+                              "class":  "CM2",
+                              "section":  "C",
+                              "date":  "2026-10-23",
+                              "startTime":  "09:00:00",
+                              "endTime":  "11:00:00"
+                          },
+                          {
+                              "title":  "Mathematics exam",
+                              "subject":  "MathÃ©matiques",
+                              "class":  "CE6",
+                              "section":  "B",
+                              "date":  "2026-10-24",
+                              "startTime":  "10:00:00",
+                              "endTime":  "12:00:00"
+                          },
+                          {
+                              "title":  "Science exam",
+                              "subject":  "FranÃ§ais",
+                              "class":  "CP",
+                              "section":  "C",
+                              "date":  "2026-10-26",
+                              "startTime":  "12:00:00",
+                              "endTime":  "14:00:00"
+                          },
+                          {
+                              "title":  "History exam",
+                              "subject":  "FranÃ§ais",
+                              "class":  "CE1",
+                              "section":  "B",
+                              "date":  "2026-10-27",
+                              "startTime":  "13:00:00",
+                              "endTime":  "15:00:00"
+                          },
+                          {
+                              "title":  "Language exam",
+                              "subject":  "FranÃ§ais",
+                              "class":  "CE2",
+                              "section":  "C",
+                              "date":  "2026-10-29",
+                              "startTime":  "09:00:00",
+                              "endTime":  "11:00:00"
+                          },
+                          {
+                              "title":  "Science exam",
+                              "subject":  "FranÃ§ais",
+                              "class":  "CM1",
+                              "section":  "B",
+                              "date":  "2026-10-30",
+                              "startTime":  "10:00:00",
+                              "endTime":  "12:00:00"
+                          },
+                          {
+                              "title":  "Mathematics exam",
+                              "subject":  "FranÃ§ais",
+                              "class":  "CM2",
+                              "section":  "C",
+                              "date":  "2026-11-01",
+                              "startTime":  "12:00:00",
+                              "endTime":  "14:00:00"
+                          },
+                          {
+                              "title":  "Language exam",
+                              "subject":  "FranÃ§ais",
+                              "class":  "CE6",
+                              "section":  "B",
+                              "date":  "2026-11-02",
+                              "startTime":  "13:00:00",
+                              "endTime":  "15:00:00"
+                          }
+                      ]
+}

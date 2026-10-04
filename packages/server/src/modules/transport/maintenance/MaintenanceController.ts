@@ -28,7 +28,7 @@ export class MaintenanceController {
   @Get()
   @McpTool({ description: 'List all maintenance records', readOnly: true })
   @ResMsg('maintenance.success.retrieved')
-  async getMaintenances() {
+  async listMaintenances() {
     return this.maintenanceService.getAll();
   }
 
@@ -112,7 +112,7 @@ export class MaintenanceController {
   @Validate({ params: maintenanceIdParam, body: updateMaintenanceDto })
   @McpTool({ description: 'Update a maintenance record', confirm: { level: 'warning', message: 'confirm.vehicleMaintenance.update' } })
   @ResMsg('maintenance.success.updated')
-  async update(@Params('id') id: string, @Body() updateData: UpdateMaintenanceDto) {
+  async updateById(@Params('id') id: string, @Body() updateData: UpdateMaintenanceDto) {
     return this.maintenanceService.update(id, updateData);
   }
 
@@ -136,7 +136,7 @@ export class MaintenanceController {
   @Validate({ params: maintenanceIdParam })
   @McpTool('Delete a maintenance record')
   @ResMsg('maintenance.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.maintenanceService.delete(id);
   }
 

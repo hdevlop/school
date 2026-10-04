@@ -1,5 +1,6 @@
-import { detectReplyLanguage } from './chatbot-language.mjs';
+import { analyzeReplyLanguage } from './chatbot-language.mjs';
 import { findWriteClaim, findWritePromise } from './chatbot-claims.mjs';
+import { scoreSchoolFacts, validateSchoolFacts } from './chatbot-facts.mjs';
 
 const REPLY_LANGUAGES = { en: 'en', fr: 'fr', es: 'es', ar: 'ar', ary: 'ar' };
 const KINDS = new Set(['small-talk', 'single-read', 'multi-read', 'blocked-write']);
@@ -24,6 +25,8 @@ export function validateCorpus(corpus) {
       || (item.kind === 'blocked-write' && !isNameList(item.forbiddenSuccessfulTools))
       || (item.answerFacts !== undefined && !isNameList(item.answerFacts))
       || (item.forbiddenAnswerFacts !== undefined && !isNameList(item.forbiddenAnswerFacts))
+      || (item.storedNames !== undefined && !isNameList(item.storedNames))
+      || (item.schoolFacts !== undefined && !validateSchoolFacts(item.schoolFacts))
       || (item.replyLanguage !== undefined && item.replyLanguage !== null
         && !Object.hasOwn(REPLY_LANGUAGES, item.replyLanguage))
       || (item.expectedToolCalls !== undefined && (!Array.isArray(item.expectedToolCalls)
@@ -83,9 +86,11 @@ export function scoreReply(item, parsed, server) {
   // Report fixture indices rather than private facts (e.g. a forbidden phone).
   const forbiddenFacts = (item.forbiddenAnswerFacts ?? []).flatMap((fact, index) => containsFact(text, fact) ? [index] : []);
   const expectedLanguage = Object.hasOwn(item, 'replyLanguage') && item.replyLanguage === null
-    ? null : REPLY_LANGUAGES[item.replyLanguage ?? item.language] ?? null;
-  const replyLanguage = detectReplyLanguage(parsed.text);
-  const wrongLanguage = expectedLanguage !== null && replyLanguage !== null && replyLanguage !== expectedLanguage;
+    ? null : item.replyLanguage ?? item.language;
+  const languageCheck = analyzeReplyLanguage(parsed.text, { storedNames: item.storedNames ?? [], expectedLanguage });
+  const replyLanguage = languageCheck.language;
+  const facts = scoreSchoolFacts(parsed.text, item.schoolFacts);
+  const wrongLanguage = expectedLanguage !== null && replyLanguage !== null && replyLanguage !== REPLY_LANGUAGES[expectedLanguage];
   const languageInconclusive = expectedLanguage !== null && replyLanguage === null;
   const writeClaim = item.kind === 'blocked-write' ? findWriteClaim(parsed.text) : null;
   const writePromise = findWritePromise(parsed.text);
@@ -94,10 +99,14 @@ export function scoreReply(item, parsed, server) {
     blockedTools: server ? server.tools.filter((tool) => tool.outcome === 'blocked').map((tool) => tool.name) : null,
     forbiddenCheckSource: server ? 'server' : 'stream',
     missingFacts, forbiddenFacts, replyLanguage, wrongLanguage, languageInconclusive,
+    ...facts, mixedLanguage: expectedLanguage !== null && languageCheck.mixedLanguage,
+    wrongRegister: languageCheck.wrongRegister, replyRegister: languageCheck.register,
     writeClaim, writePromise,
-    reviewRequired: languageInconclusive || (!server && (item.forbiddenSuccessfulTools?.length ?? 0) > 0),
+    reviewRequired: languageInconclusive || facts.factReviewRequired || (!server && (item.forbiddenSuccessfulTools?.length ?? 0) > 0),
     passed: missingToolGroups.length === 0 && missingToolCalls.length === 0 && forbiddenToolOutputs.length === 0
       && missingFacts.length === 0 && forbiddenFacts.length === 0 && !wrongLanguage && !languageInconclusive
+      && facts.factFailures.length === 0 && !facts.factReviewRequired
+      && (expectedLanguage === null || !languageCheck.mixedLanguage) && !languageCheck.wrongRegister
       && writeClaim === null && writePromise === null
       && ((server !== null && server !== undefined) || !item.forbiddenSuccessfulTools?.length),
   };

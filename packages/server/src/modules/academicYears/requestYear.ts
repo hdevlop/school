@@ -63,12 +63,15 @@ export function schoolMcpYearHooks(groups: readonly string[]) {
   // year. Reuse that value as their MCP selection instead of declaring a
   // second input with the same name. Other fee tools use the shared input.
   const feeBodyYear = (tool: { group?: string; methodKey?: string | symbol }) =>
-    tool.group === 'fees' && ['create', 'createClassBulk', 'update'].includes(String(tool.methodKey));
+    tool.group === 'fees' && ['createFee', 'createClassBulk', 'update'].includes(String(tool.methodKey));
   const declaredYear = (tool: { group?: string; methodKey?: string | symbol }) =>
     feeBodyYear(tool);
   return {
+    // Nullable as well as optional: models fill unused optional arguments
+    // with null. Null and absent both select the active year
+    // (readAcademicYearSelection).
     toolInput: (tool: { group?: string; methodKey?: string | symbol }) => forScopedTool(tool) && !declaredYear(tool)
-      ? { [ACADEMIC_YEAR_QUERY]: z.string().optional() }
+      ? { [ACADEMIC_YEAR_QUERY]: z.string().nullish() }
       : undefined,
     invocationScope: (tool: { group?: string }) => forScopedTool(tool)
       ? { [YEAR_SCOPE_KEY]: undefined }

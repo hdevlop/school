@@ -19,7 +19,7 @@ describe('Najm decorated request parameter resolution', () => {
       ['dashboard widgets', DashboardController.prototype.getWidgets, 0],
       ['finance KPI', FinanceDashboardController.prototype.getKpis, 0],
       ['finance overdue', FinanceDashboardController.prototype.getOverdue, 1],
-      ['fee create', FeeController.prototype.create, 2],
+      ['fee create', FeeController.prototype.createFee, 2],
       ['routine list', ClassRoutineController.prototype.list, 1],
       ['staff roster', StaffController.prototype.getAttendanceRoster, 1],
       ['notification cron list', NotificationController.prototype.listRecent, 2],

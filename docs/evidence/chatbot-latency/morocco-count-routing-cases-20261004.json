@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "id": "students-and-teachers-fr",
+      "language": "fr",
+      "query": "Combien y a-t-il d'élèves et combien d'enseignants cette année ?",
+      "requiredToolGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ]
+    },
+    {
+      "id": "students-and-teachers-ar",
+      "language": "ar",
+      "query": "كم عدد التلاميذ وكم عدد الأساتذة هذه السنة؟",
+      "requiredToolGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ]
+    },
+    {
+      "id": "students-and-teachers-ary",
+      "language": "ary",
+      "query": "شحال من تلميذ وشحال من أستاذ كاينين هاد العام؟",
+      "requiredToolGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ]
+    }
+  ]
+}

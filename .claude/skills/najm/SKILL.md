@@ -522,7 +522,7 @@ Login:    POST /api/auth/login  →  returns accessToken
 | teachers | `get_teachers`, `get_teacher`, `get_by_cin`, `get_by_email`, `get_by_phone`, `get_classes`, `get_students`, `create`, `update`, `delete`, `delete_bulk`, `delete_all` |
 | parents | `get_parents`, `get_parent`, `get_by_cin`, `get_by_phone`, `get_children`, `create`, `link_student`, `update`, `delete`, `delete_bulk`, `unlink_student`, `delete_all` |
 
-Tool name format: `{group}_{method_snake_case}` — e.g. `students_get_student`, `parents_link_student`
+Tool name format: `{group}_{method_snake_case}` — e.g. `students_get_student_by_id`, `parents_link_student`
 
 ### Env Setup in Monorepo
 

@@ -46,10 +46,15 @@ async function withMock(run) {
       query: `Hello ${index}`, replyLanguage: null })) }));
   const records = new Map();
   const state = { chats: 0, active: 0, peak: 0, puts: 0, requests: 0, fault: false, model: 'mock-model',
-    cost: 0.001, unknownCost: false };
+    cost: 0.001, unknownCost: false, resets: 0, cacheEnabled: true, cacheHit: false };
   const server = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
     state.requests++;
     const path = new URL(request.url).pathname;
+    if (path === '/api/chat-benchmark/status' || path === '/api/chat-benchmark/reset-caches') {
+      if (request.method === 'POST') state.resets++;
+      return Response.json({ data: { enabled: state.cacheEnabled, instanceId: 'mock-instance',
+        resetCount: state.resets, caches: ['query-embedding', 'knowledge-context'] } });
+    }
     if (path === '/api/health/status') return Response.json({ data: { status: 'healthy' } });
     if (path === '/api/auth/login') return Response.json({ data: { accessToken: 'mock-token' } });
     if (path === '/api/ai-settings') {
@@ -75,14 +80,18 @@ async function withMock(run) {
     await Bun.sleep(80 + (3 - ordinal % 4) * 20);
     state.active--;
     const embedding = { correlationId: state.fault && ordinal === 2 ? 'wrong-embedding' : id,
-      cache: 'miss', operation: 'tool-routing', outcome: 'completed', durationMs: 10,
+      cache: state.cacheHit ? 'hit' : 'miss', purpose: 'query', operation: 'tool-routing', outcome: 'completed', durationMs: 10,
       attempts: [{ outcome: 'completed', durationMs: 10 }] };
     records.set(id, { correlationId: state.fault && ordinal === 1 ? 'wrong-chat' : id,
-      outcome: 'completed', model: requestModel, spans: { prepareMs: 10 },
+      outcome: 'completed', model: state.wrongModel ? 'wrong-model' : requestModel, spans: { prepareMs: 10 },
+      benchmark: { instanceId: 'mock-instance', resetCount: state.resets },
       marks: { firstTextMs: 20, finishMs: 30 }, tools: [], steps: [], embeddings: [embedding] });
     if (state.fault && ordinal === 0) return new Response(null, { status: 429 });
     const events = [{ type: 'text-delta', delta: 'Hello! How can I help you today?' },
       { type: 'finish', finishReason: 'stop', messageMetadata: state.unknownCost ? null
+        : state.unpricedCandidate && requestModel === 'mock-candidate'
+          ? { totalTokens: 1500, promptTokens: 1000, completionTokens: 500,
+            pricingFound: false, totalCost: 0, provider: 'openrouter', model: requestModel }
         : { totalTokens: 10, promptTokens: 5, completionTokens: 5, pricingFound: true, totalCost: state.cost } }, '[DONE]'];
     return new Response(events.map((event) => `data: ${typeof event === 'string' ? event : JSON.stringify(event)}\n\n`).join(''), {
       headers: { 'content-type': 'text/event-stream', 'x-vercel-ai-ui-message-stream': 'v1' },
@@ -100,10 +109,70 @@ async function withMock(run) {
       new Response(process.stdout).text(), new Response(process.stderr).text()]);
     return { exitCode, stdout, stderr, report: await Bun.file(output).exists() ? await Bun.file(output).json() : null };
   };
-  try { await run({ cli, state }); } finally { server.stop(true); await rm(directory, { recursive: true, force: true }); }
+  try { await run({ cli, state, directory }); } finally { server.stop(true); await rm(directory, { recursive: true, force: true }); }
 }
 
 describe('benchmark CLI load integration', () => {
+  it('uses declared prices for matched candidate usage, preserves unknown metadata and restores settings', async () => {
+    await withMock(async ({ cli, state, directory }) => {
+      state.unpricedCandidate = true;
+      const pricesPath = join(directory, 'prices.json');
+      await Bun.write(pricesPath, JSON.stringify({ provider: 'openrouter', source: 'https://openrouter.ai/api/v1/models',
+        capturedAt: '2026-10-04T18:00:00Z', models: { 'mock-candidate': { inputUsdPerMillion: 0.1, outputUsdPerMillion: 0.2 } } }));
+      const result = await cli('--limit=2', '--compare-model=mock-candidate', '--max-requests=4',
+        '--max-estimated-usd=0.1', '--request-reserve-usd=0.01', `--pricing-file=${pricesPath}`);
+      expect(result.exitCode).toBe(0);
+      expect(state.model).toBe('mock-model');
+      expect(result.report.declaredPricing.sha256).toMatch(/^[a-f0-9]{64}$/);
+      expect(result.report.summary.comparison.candidate.declaredCosts).toMatchObject({ requestsWithDeclaredCost: 2, estimatedCostUsd: 0.0004 });
+      expect(result.report.summary.comparison.candidate.usage.requestsWithoutKnownCost).toBe(2);
+      expect(result.report.samples.filter((sample) => sample.variant === 'candidate')
+        .every((sample) => sample.metadata.pricingFound === false && sample.metadata.totalCost === 0)).toBe(true);
+      expect(result.report.estimatedBudget).toMatchObject({ observedEstimatedUsd: 0.0024, requestsWithUnknownCost: 0, stoppedReason: null });
+      state.wrongModel = true;
+      const mismatch = await cli('--limit=1', '--compare-model=mock-candidate', '--max-requests=2',
+        '--max-estimated-usd=0.1', '--request-reserve-usd=0.01', `--pricing-file=${pricesPath}`);
+      expect(mismatch.exitCode).toBe(1);
+      expect(mismatch.report.samples).toHaveLength(1);
+      expect(mismatch.report.samples[0].declaredCost).toBeUndefined();
+      expect(mismatch.report.estimatedBudget.stoppedReason).toBe('unknown_request_cost');
+      expect(state.model).toBe('mock-model');
+    });
+  });
+  it('resets before each serial chat and verifies actual fresh routing spans', async () => {
+    await withMock(async ({ cli, state }) => {
+      const result = await cli('--cache-mode=fresh', '--max-requests=6');
+      expect(result.exitCode).toBe(0);
+      expect(state.resets).toBe(6);
+      expect(result.report.samples.map((sample) => sample.cacheCondition.reset.resetCount)).toEqual([1, 2, 3, 4, 5, 6]);
+      expect(result.report.summary.cacheConditions).toMatchObject({ verifiedFresh: 6, failedVerification: 0 });
+    });
+  }, 10000);
+
+  it('rejects disabled controls without chat calls and does not accept a routing cache hit as fresh', async () => {
+    await withMock(async ({ cli, state }) => {
+      state.cacheEnabled = false;
+      const blocked = await cli('--cache-mode=fresh', '--max-requests=6');
+      expect(blocked.exitCode).toBe(1);
+      expect(state.chats).toBe(0);
+      expect(state.resets).toBe(0);
+      state.cacheEnabled = true;
+      state.cacheHit = true;
+      const failed = await cli('--cache-mode=fresh', '--max-requests=6');
+      expect(failed.exitCode).toBe(1);
+      expect(state.chats).toBe(1);
+      expect(state.resets).toBe(1);
+      expect(failed.report.samples[0].cacheCondition.verified).toBe(false);
+    });
+  });
+
+  it('fresh preflight checks controls without resetting them or sending chats', async () => {
+    await withMock(async ({ cli, state }) => {
+      expect((await cli('--preflight', '--cache-mode=fresh')).exitCode).toBe(0);
+      expect(state.chats).toBe(0);
+      expect(state.resets).toBe(0);
+    });
+  });
   it('preflights without chats or model writes, even with no request budget', async () => {
     await withMock(async ({ cli, state }) => {
       const result = await cli('--preflight');
@@ -174,6 +243,8 @@ describe('benchmark CLI load integration', () => {
         ['--max-estimated-usd=0.01', '--max-requests=6'],
         ['--request-reserve-usd=0.001', '--max-requests=6'],
         ['--preflight', '--compare-model=other'],
+        ['--cache-mode=fresh', '--concurrency=2', '--max-requests=6'],
+        ['--cache-mode=fresh', '--transport-probe', '--max-requests=1'],
       ]) {
         expect((await cli(...options)).exitCode).toBe(1);
       }

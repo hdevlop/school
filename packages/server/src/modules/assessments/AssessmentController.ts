@@ -150,7 +150,7 @@ export class AssessmentController {
   @Validate({ params: assessmentIdParam })
   @McpTool('Delete an assessment by ID')
   @ResMsg('assessments.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.assessmentService.delete(id);
   }
 

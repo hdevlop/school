@@ -22,7 +22,7 @@ export class SubjectController {
   @Validate({ params: subjectIdParam })
   @McpTool({ description: 'Get a subject by ID', readOnly: true })
   @ResMsg('subjects.success.retrieved')
-  async getSubject(@Params('id') id: string) {
+  async getSubjectById(@Params('id') id: string) {
     return this.subjectService.getById(id);
   }
 
@@ -58,7 +58,7 @@ export class SubjectController {
   @Validate({ params: subjectIdParam })
   @McpTool({ description: 'Delete a subject', confirm: { level: 'danger', message: 'confirm.subjects.delete' } })
   @ResMsg('subjects.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.subjectService.delete(id);
   }
 

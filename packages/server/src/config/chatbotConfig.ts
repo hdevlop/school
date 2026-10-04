@@ -1,9 +1,10 @@
 import { plugin } from 'najm-core';
-import { chatbot, CHATBOT_CONTEXT_PROVIDER } from 'najm-chatbot';
+import { chatbot, CHATBOT_CONTEXT_PROVIDER, detectMoroccanReplyLanguage } from 'najm-chatbot';
 import { studioAssistant } from 'najm-chatbot/studio-assistant';
 
 import { chatDiagnosticsLog } from '../modules/chat/ChatDiagnosticsLog';
-import { SchoolChatContextProvider } from '../modules/chat/SchoolChatContextProvider';
+import { SchoolChatContextProvider, schoolChatYearContext } from '../modules/chat/SchoolChatContextProvider';
+import { schoolReplyTemplate } from '../modules/chat/schoolReplyTemplates';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
 
 /** The dashboard's read-only chat. Tool routing and embeddings are in ragConfig. */
@@ -11,10 +12,22 @@ export const chatbotConfig = () =>
   chatbot({
     dialect: 'pg',
     defaultSystemPrompt: chatbotSystemPrompt,
+    reply: {
+      detectLanguage: detectMoroccanReplyLanguage,
+      template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear),
+    },
     maxSteps: 10,
     // Ends an answer whose provider stream goes silent. It also runs while a
     // tool executes; School's tools are database reads well under this.
     streamTimeout: { chunkMs: 30_000 },
+    // Applies only while the AI settings provider is OpenRouter. Cerebras
+    // served gpt-oss-120b in 0.9 s p50 against 8.2 s on OpenRouter's cheapest
+    // hosts (docs/evidence/chatbot-latency/cerebras-tool-prefix-20261004.md).
+    // Fallbacks keep the chat up when Cerebras is not; Groq is excluded.
+    openrouter: {
+      provider: { order: ['cerebras'], allow_fallbacks: true, ignore: ['groq'] },
+      reasoning: { effort: 'low' },
+    },
     conversationStore: 'db',
     // The interaction log table would store questions and tool arguments, and
     // School has set no retention rule for them, so it stays off. Diagnostics

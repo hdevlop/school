@@ -174,7 +174,7 @@ export class EventController {
   @Validate({ params: eventIdParam })
   @McpTool({ description: 'Get an event by ID', readOnly: true })
   @ResMsg('events.success.retrieved')
-  async getEvent(@Params('id') id: string) {
+  async getEventById(@Params('id') id: string) {
     return this.eventService.getById(id);
   }
 

@@ -112,7 +112,7 @@ describe('authenticated fee year scope', () => {
       expect(isError).not.toBe(true);
       expect((JSON.parse(content[0].text) as Array<{ fees: Array<{ id: string }> }>)
         .flatMap((row) => row.fees.map((fee) => fee.id))).toContain(oldId);
-      const create = tools.tools.find((item) => item.name === 'fees_create');
+      const create = tools.tools.find((item) => item.name === 'fees_create_fee');
       expect(create?.inputSchema.properties).toHaveProperty('academicYear');
       const created = await client.callTool({ name: create!.name, arguments: {
         studentId: 'history-student-02', feeTypeId, schedule: 'oneTime',

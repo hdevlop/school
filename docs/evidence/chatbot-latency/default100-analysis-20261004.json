@@ -1,0 +1,69 @@
+{
+    "capturedAt":  "2026-10-04T17:46:44.9608331Z",
+    "requests":  100,
+    "completed":  100,
+    "checksPassed":  99,
+    "failedCases":  [
+                        {
+                            "id":  "attendance-mark-blocked-en",
+                            "repetition":  2
+                        }
+                    ],
+    "catalogTokenSubtotalUsd":  0.014084148,
+    "installedPricingEstimateUsd":  0.015092955999999998,
+    "estimatedUsdPer1000AutomaticallyCorrect":  0.1524541010101009898989899000,
+    "modelMismatches":  0,
+    "forbiddenExecutedTools":  0,
+    "repetitions":  [
+                        {
+                            "repetition":  1,
+                            "requests":  50,
+                            "checksPassed":  50,
+                            "firstTextP50":  6133,
+                            "firstTextP95":  11183,
+                            "completeP50":  8055,
+                            "completeP95":  25770
+                        },
+                        {
+                            "repetition":  2,
+                            "requests":  50,
+                            "checksPassed":  49,
+                            "firstTextP50":  5945,
+                            "firstTextP95":  11477,
+                            "completeP50":  8235,
+                            "completeP95":  27785
+                        }
+                    ],
+    "slowest":  [
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "repetition":  2,
+                        "bodyEndMs":  32840,
+                        "firstTextMs":  9507
+                    },
+                    {
+                        "id":  "upcoming-exams-en",
+                        "repetition":  2,
+                        "bodyEndMs":  32030,
+                        "firstTextMs":  5924
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "repetition":  2,
+                        "bodyEndMs":  27785,
+                        "firstTextMs":  10560
+                    },
+                    {
+                        "id":  "upcoming-exams-es",
+                        "repetition":  2,
+                        "bodyEndMs":  27742,
+                        "firstTextMs":  4591
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "repetition":  1,
+                        "bodyEndMs":  27688,
+                        "firstTextMs":  11183
+                    }
+                ]
+}

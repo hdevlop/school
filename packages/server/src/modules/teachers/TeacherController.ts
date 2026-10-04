@@ -53,7 +53,7 @@ export class TeacherController {
   @Validate({ params: teacherIdParam })
   @McpTool({ description: 'Get a teacher by ID', readOnly: true })
   @ResMsg('teachers.success.retrieved')
-  async getTeacher(@Params('id') id: string) {
+  async getTeacherById(@Params('id') id: string) {
     return this.teacherService.getById(id);
   }
 
@@ -182,7 +182,7 @@ export class TeacherController {
   @Validate({ params: teacherIdParam })
   @McpTool({ description: 'Delete a teacher by ID', confirm: { level: 'danger', message: 'confirm.teachers.delete' } })
   @ResMsg('teachers.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.teacherService.delete(id);
   }
 

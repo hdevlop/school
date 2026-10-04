@@ -143,7 +143,7 @@ describe('maintenance history on the local fixture', () => {
     });
     await client.connect(transport);
     try {
-      const result = await client.callTool({ name: 'vehicle-maintenance_get_maintenances', arguments: {} }) as {
+      const result = await client.callTool({ name: 'vehicle-maintenance_list_maintenances', arguments: {} }) as {
         content: Array<{ text: string }>; isError?: boolean;
       };
       if (result.isError) throw new Error(JSON.stringify(result.content));

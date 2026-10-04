@@ -1,0 +1,11 @@
+{
+    "provider":  "openrouter",
+    "source":  "reply-fixes-model-prices-20261004.json: OpenRouter candidate endpoints snapshot; twice the highest observed input/output rates for budgeting headroom",
+    "capturedAt":  "2026-10-04T18:45:45.3617947Z",
+    "models":  {
+                   "nvidia/nemotron-3.5-lightning:nitro":  {
+                                                               "inputUsdPerMillion":  0.14,
+                                                               "outputUsdPerMillion":  0.4
+                                                           }
+               }
+}

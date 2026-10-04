@@ -1,0 +1,12 @@
+{
+    "capturedAt":  "2026-10-04T17:45:51.1827617Z",
+    "stage":  "after",
+    "models":  [
+                   {
+                       "name":  "qwen3-embedding:latest",
+                       "size":  2371270737,
+                       "size_vram":  0,
+                       "expires_at":  "2319-01-14T17:32:47.568046107Z"
+                   }
+               ]
+}

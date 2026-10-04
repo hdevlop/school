@@ -28,7 +28,7 @@ describe('parseUiStream', () => {
 });
 
 describe('findLeaks', () => {
-  const tools = [{ name: 'students_get_student', output: { id: 'Ab12Cd', name: 'Selma Guessous', parents: [{ phone: '+212 600 000 001' }] } }];
+  const tools = [{ name: 'students_get_student_by_id', output: { id: 'Ab12Cd', name: 'Selma Guessous', parents: [{ phone: '+212 600 000 001' }] } }];
 
   it('finds a forbidden id, full name or phone in any tool output, ignoring case', () => {
     expect(findLeaks(tools, ['ab12cd', 'SELMA GUESSOUS', '+212 600 000 001', 'Other Name'])).toEqual(['ab12cd', 'SELMA GUESSOUS', '+212 600 000 001']);

@@ -1,0 +1,10 @@
+{
+    "capturedAt":  "2026-10-04T17:26:01.3966664Z",
+    "source":  "https://openrouter.ai/api/v1/models",
+    "model":  "openai/gpt-oss-120b",
+    "pricingPerTokenUsd":  {
+                               "prompt":  "0.000000037",
+                               "completion":  "0.00000017"
+                           },
+    "supportsTools":  true
+}

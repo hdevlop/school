@@ -1,0 +1,1895 @@
+{
+  "capturedAt": "2026-10-04T18:34:18.222Z",
+  "before": "default100-fresh-20261004.json",
+  "after": "reply-fixes100-fresh-20261004.json",
+  "sameCorpus": true,
+  "sameModel": true,
+  "samePins": true,
+  "beforeProvider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "afterProvider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "configHashes": {
+    "before": {
+      "index.ts": "6ef7ce63dad1ec715eacdbabfdd99dca1c43cb84d570e6a5a6859be80357a248",
+      "ragConfig.ts": "cbb66a1a9f05e1cfe450382acc5f829a84fb1a4105beb36c4fb5ba5980e05df9",
+      "chatbotConfig.ts": "343ed301f7c1082746049602f2e7de5a7fcfa0d9639c3010b3a8cfdcd580db84",
+      "chatbotSystemPrompt.ts": "86de1b3ccedef84b79d13fa9aec7f413b9ff2599700ea5bedf8430de07432c1f"
+    },
+    "after": {
+      "index.ts": "6ef7ce63dad1ec715eacdbabfdd99dca1c43cb84d570e6a5a6859be80357a248",
+      "ragConfig.ts": "cbb66a1a9f05e1cfe450382acc5f829a84fb1a4105beb36c4fb5ba5980e05df9",
+      "chatbotConfig.ts": "343ed301f7c1082746049602f2e7de5a7fcfa0d9639c3010b3a8cfdcd580db84",
+      "chatbotSystemPrompt.ts": "76fdb5c480885a50e1cdc56237674f26a2ec2ab3a82c38b05981ed03a1d00f39"
+    }
+  },
+  "groups": {
+    "all": {
+      "before": {
+        "n": 100,
+        "completed": 100,
+        "checksPassed": 99,
+        "firstTextMs": {
+          "p50": 6053,
+          "p95": 11413
+        },
+        "completionMs": {
+          "p50": 8235,
+          "p95": 27273
+        },
+        "textLength": {
+          "p50": 157,
+          "p95": 1277
+        },
+        "outputTokens": 22894,
+        "writePromises": 1,
+        "writeClaims": 0
+      },
+      "after": {
+        "n": 100,
+        "completed": 100,
+        "checksPassed": 97,
+        "firstTextMs": {
+          "p50": 4660,
+          "p95": 14435
+        },
+        "completionMs": {
+          "p50": 6597,
+          "p95": 18242
+        },
+        "textLength": {
+          "p50": 134,
+          "p95": 579
+        },
+        "outputTokens": 22021,
+        "writePromises": 0,
+        "writeClaims": 0
+      },
+      "pairedCompletionDeltaMs": {
+        "p50": -2108,
+        "p95": 5661
+      },
+      "pairs": [
+        {
+          "id": "greeting-en",
+          "repetition": 1,
+          "beforeMs": 4515,
+          "afterMs": 6366,
+          "beforeLength": 303,
+          "afterLength": 321
+        },
+        {
+          "id": "student-count-en",
+          "repetition": 1,
+          "beforeMs": 4540,
+          "afterMs": 3115,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-en",
+          "repetition": 1,
+          "beforeMs": 5672,
+          "afterMs": 2515,
+          "beforeLength": 63,
+          "afterLength": 63
+        },
+        {
+          "id": "classes-en",
+          "repetition": 1,
+          "beforeMs": 12862,
+          "afterMs": 9321,
+          "beforeLength": 824,
+          "afterLength": 557
+        },
+        {
+          "id": "attendance-today-en",
+          "repetition": 1,
+          "beforeMs": 4565,
+          "afterMs": 6841,
+          "beforeLength": 50,
+          "afterLength": 50
+        },
+        {
+          "id": "upcoming-exams-en",
+          "repetition": 1,
+          "beforeMs": 24138,
+          "afterMs": 22360,
+          "beforeLength": 1124,
+          "afterLength": 543
+        },
+        {
+          "id": "students-and-teachers-en",
+          "repetition": 1,
+          "beforeMs": 5700,
+          "afterMs": 8742,
+          "beforeLength": 88,
+          "afterLength": 87
+        },
+        {
+          "id": "missing-student-en",
+          "repetition": 1,
+          "beforeMs": 8675,
+          "afterMs": 6715,
+          "beforeLength": 203,
+          "afterLength": 149
+        },
+        {
+          "id": "attendance-mark-blocked-en",
+          "repetition": 1,
+          "beforeMs": 8055,
+          "afterMs": 2994,
+          "beforeLength": 201,
+          "afterLength": 130
+        },
+        {
+          "id": "announcement-blocked-en",
+          "repetition": 1,
+          "beforeMs": 8664,
+          "afterMs": 4359,
+          "beforeLength": 222,
+          "afterLength": 149
+        },
+        {
+          "id": "greeting-fr",
+          "repetition": 1,
+          "beforeMs": 3607,
+          "afterMs": 5201,
+          "beforeLength": 298,
+          "afterLength": 304
+        },
+        {
+          "id": "student-count-fr",
+          "repetition": 1,
+          "beforeMs": 5196,
+          "afterMs": 2989,
+          "beforeLength": 65,
+          "afterLength": 63
+        },
+        {
+          "id": "teacher-count-fr",
+          "repetition": 1,
+          "beforeMs": 7629,
+          "afterMs": 5126,
+          "beforeLength": 66,
+          "afterLength": 66
+        },
+        {
+          "id": "classes-fr",
+          "repetition": 1,
+          "beforeMs": 9671,
+          "afterMs": 17582,
+          "beforeLength": 679,
+          "afterLength": 553
+        },
+        {
+          "id": "attendance-today-fr",
+          "repetition": 1,
+          "beforeMs": 6398,
+          "afterMs": 5684,
+          "beforeLength": 111,
+          "afterLength": 161
+        },
+        {
+          "id": "upcoming-exams-fr",
+          "repetition": 1,
+          "beforeMs": 23064,
+          "afterMs": 20823,
+          "beforeLength": 1283,
+          "afterLength": 504
+        },
+        {
+          "id": "students-and-teachers-fr",
+          "repetition": 1,
+          "beforeMs": 5541,
+          "afterMs": 5173,
+          "beforeLength": 88,
+          "afterLength": 81
+        },
+        {
+          "id": "missing-student-fr",
+          "repetition": 1,
+          "beforeMs": 9450,
+          "afterMs": 16706,
+          "beforeLength": 203,
+          "afterLength": 123
+        },
+        {
+          "id": "grade-create-blocked-fr",
+          "repetition": 1,
+          "beforeMs": 11947,
+          "afterMs": 7033,
+          "beforeLength": 160,
+          "afterLength": 163
+        },
+        {
+          "id": "announcement-blocked-fr",
+          "repetition": 1,
+          "beforeMs": 5201,
+          "afterMs": 3134,
+          "beforeLength": 175,
+          "afterLength": 132
+        },
+        {
+          "id": "greeting-ar",
+          "repetition": 1,
+          "beforeMs": 6538,
+          "afterMs": 4223,
+          "beforeLength": 264,
+          "afterLength": 220
+        },
+        {
+          "id": "student-count-ar",
+          "repetition": 1,
+          "beforeMs": 4808,
+          "afterMs": 4173,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-ar",
+          "repetition": 1,
+          "beforeMs": 4773,
+          "afterMs": 10434,
+          "beforeLength": 34,
+          "afterLength": 30
+        },
+        {
+          "id": "classes-ar",
+          "repetition": 1,
+          "beforeMs": 19018,
+          "afterMs": 11180,
+          "beforeLength": 642,
+          "afterLength": 517
+        },
+        {
+          "id": "attendance-today-ar",
+          "repetition": 1,
+          "beforeMs": 8938,
+          "afterMs": 7008,
+          "beforeLength": 147,
+          "afterLength": 113
+        },
+        {
+          "id": "upcoming-exams-ar",
+          "repetition": 1,
+          "beforeMs": 25770,
+          "afterMs": 8068,
+          "beforeLength": 1046,
+          "afterLength": 598
+        },
+        {
+          "id": "students-and-teachers-ar",
+          "repetition": 1,
+          "beforeMs": 11469,
+          "afterMs": 6425,
+          "beforeLength": 73,
+          "afterLength": 75
+        },
+        {
+          "id": "missing-student-ar",
+          "repetition": 1,
+          "beforeMs": 10144,
+          "afterMs": 7275,
+          "beforeLength": 193,
+          "afterLength": 120
+        },
+        {
+          "id": "attendance-mark-blocked-ar",
+          "repetition": 1,
+          "beforeMs": 9659,
+          "afterMs": 4009,
+          "beforeLength": 121,
+          "afterLength": 115
+        },
+        {
+          "id": "announcement-blocked-ar",
+          "repetition": 1,
+          "beforeMs": 4434,
+          "afterMs": 8682,
+          "beforeLength": 108,
+          "afterLength": 141
+        },
+        {
+          "id": "greeting-es",
+          "repetition": 1,
+          "beforeMs": 5001,
+          "afterMs": 4240,
+          "beforeLength": 333,
+          "afterLength": 326
+        },
+        {
+          "id": "student-count-es",
+          "repetition": 1,
+          "beforeMs": 7078,
+          "afterMs": 7382,
+          "beforeLength": 64,
+          "afterLength": 59
+        },
+        {
+          "id": "teacher-count-es",
+          "repetition": 1,
+          "beforeMs": 4747,
+          "afterMs": 5312,
+          "beforeLength": 65,
+          "afterLength": 65
+        },
+        {
+          "id": "classes-es",
+          "repetition": 1,
+          "beforeMs": 12209,
+          "afterMs": 8113,
+          "beforeLength": 666,
+          "afterLength": 512
+        },
+        {
+          "id": "attendance-today-es",
+          "repetition": 1,
+          "beforeMs": 5229,
+          "afterMs": 6960,
+          "beforeLength": 140,
+          "afterLength": 81
+        },
+        {
+          "id": "upcoming-exams-es",
+          "repetition": 1,
+          "beforeMs": 26442,
+          "afterMs": 14238,
+          "beforeLength": 1294,
+          "afterLength": 705
+        },
+        {
+          "id": "students-and-teachers-es",
+          "repetition": 1,
+          "beforeMs": 9053,
+          "afterMs": 7402,
+          "beforeLength": 49,
+          "afterLength": 49
+        },
+        {
+          "id": "missing-student-es",
+          "repetition": 1,
+          "beforeMs": 11736,
+          "afterMs": 5812,
+          "beforeLength": 178,
+          "afterLength": 134
+        },
+        {
+          "id": "grade-create-blocked-es",
+          "repetition": 1,
+          "beforeMs": 6240,
+          "afterMs": 9786,
+          "beforeLength": 157,
+          "afterLength": 174
+        },
+        {
+          "id": "announcement-blocked-es",
+          "repetition": 1,
+          "beforeMs": 8433,
+          "afterMs": 3022,
+          "beforeLength": 131,
+          "afterLength": 152
+        },
+        {
+          "id": "greeting-ary",
+          "repetition": 1,
+          "beforeMs": 5681,
+          "afterMs": 6152,
+          "beforeLength": 269,
+          "afterLength": 265
+        },
+        {
+          "id": "student-count-ary",
+          "repetition": 1,
+          "beforeMs": 6681,
+          "afterMs": 6597,
+          "beforeLength": 66,
+          "afterLength": 44
+        },
+        {
+          "id": "teacher-count-ary",
+          "repetition": 1,
+          "beforeMs": 7607,
+          "afterMs": 6659,
+          "beforeLength": 30,
+          "afterLength": 30
+        },
+        {
+          "id": "classes-ary",
+          "repetition": 1,
+          "beforeMs": 15403,
+          "afterMs": 9335,
+          "beforeLength": 850,
+          "afterLength": 1142
+        },
+        {
+          "id": "attendance-today-ary",
+          "repetition": 1,
+          "beforeMs": 8272,
+          "afterMs": 14841,
+          "beforeLength": 110,
+          "afterLength": 101
+        },
+        {
+          "id": "upcoming-exams-ary",
+          "repetition": 1,
+          "beforeMs": 27688,
+          "afterMs": 19969,
+          "beforeLength": 953,
+          "afterLength": 523
+        },
+        {
+          "id": "students-and-teachers-ary",
+          "repetition": 1,
+          "beforeMs": 12391,
+          "afterMs": 7338,
+          "beforeLength": 53,
+          "afterLength": 57
+        },
+        {
+          "id": "missing-student-ary",
+          "repetition": 1,
+          "beforeMs": 9934,
+          "afterMs": 7895,
+          "beforeLength": 135,
+          "afterLength": 162
+        },
+        {
+          "id": "attendance-mark-blocked-ary",
+          "repetition": 1,
+          "beforeMs": 6810,
+          "afterMs": 5809,
+          "beforeLength": 121,
+          "afterLength": 99
+        },
+        {
+          "id": "announcement-blocked-ary",
+          "repetition": 1,
+          "beforeMs": 11678,
+          "afterMs": 7587,
+          "beforeLength": 216,
+          "afterLength": 199
+        },
+        {
+          "id": "greeting-en",
+          "repetition": 2,
+          "beforeMs": 8302,
+          "afterMs": 4043,
+          "beforeLength": 275,
+          "afterLength": 324
+        },
+        {
+          "id": "student-count-en",
+          "repetition": 2,
+          "beforeMs": 4985,
+          "afterMs": 3402,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-en",
+          "repetition": 2,
+          "beforeMs": 6848,
+          "afterMs": 3707,
+          "beforeLength": 62,
+          "afterLength": 62
+        },
+        {
+          "id": "classes-en",
+          "repetition": 2,
+          "beforeMs": 12751,
+          "afterMs": 7857,
+          "beforeLength": 824,
+          "afterLength": 493
+        },
+        {
+          "id": "attendance-today-en",
+          "repetition": 2,
+          "beforeMs": 6145,
+          "afterMs": 4143,
+          "beforeLength": 103,
+          "afterLength": 103
+        },
+        {
+          "id": "upcoming-exams-en",
+          "repetition": 2,
+          "beforeMs": 32030,
+          "afterMs": 33240,
+          "beforeLength": 1525,
+          "afterLength": 489
+        },
+        {
+          "id": "students-and-teachers-en",
+          "repetition": 2,
+          "beforeMs": 8772,
+          "afterMs": 6664,
+          "beforeLength": 88,
+          "afterLength": 87
+        },
+        {
+          "id": "missing-student-en",
+          "repetition": 2,
+          "beforeMs": 6914,
+          "afterMs": 5967,
+          "beforeLength": 228,
+          "afterLength": 171
+        },
+        {
+          "id": "attendance-mark-blocked-en",
+          "repetition": 2,
+          "beforeMs": 9975,
+          "afterMs": 1839,
+          "beforeLength": 171,
+          "afterLength": 130
+        },
+        {
+          "id": "announcement-blocked-en",
+          "repetition": 2,
+          "beforeMs": 13802,
+          "afterMs": 4341,
+          "beforeLength": 171,
+          "afterLength": 164
+        },
+        {
+          "id": "greeting-fr",
+          "repetition": 2,
+          "beforeMs": 5898,
+          "afterMs": 2974,
+          "beforeLength": 367,
+          "afterLength": 280
+        },
+        {
+          "id": "student-count-fr",
+          "repetition": 2,
+          "beforeMs": 5027,
+          "afterMs": 3971,
+          "beforeLength": 63,
+          "afterLength": 63
+        },
+        {
+          "id": "teacher-count-fr",
+          "repetition": 2,
+          "beforeMs": 6744,
+          "afterMs": 4139,
+          "beforeLength": 66,
+          "afterLength": 66
+        },
+        {
+          "id": "classes-fr",
+          "repetition": 2,
+          "beforeMs": 15284,
+          "afterMs": 7501,
+          "beforeLength": 679,
+          "afterLength": 584
+        },
+        {
+          "id": "attendance-today-fr",
+          "repetition": 2,
+          "beforeMs": 11333,
+          "afterMs": 8630,
+          "beforeLength": 111,
+          "afterLength": 76
+        },
+        {
+          "id": "upcoming-exams-fr",
+          "repetition": 2,
+          "beforeMs": 27273,
+          "afterMs": 12830,
+          "beforeLength": 1277,
+          "afterLength": 490
+        },
+        {
+          "id": "students-and-teachers-fr",
+          "repetition": 2,
+          "beforeMs": 19817,
+          "afterMs": 10422,
+          "beforeLength": 88,
+          "afterLength": 69
+        },
+        {
+          "id": "missing-student-fr",
+          "repetition": 2,
+          "beforeMs": 8558,
+          "afterMs": 7403,
+          "beforeLength": 173,
+          "afterLength": 148
+        },
+        {
+          "id": "grade-create-blocked-fr",
+          "repetition": 2,
+          "beforeMs": 11047,
+          "afterMs": 4903,
+          "beforeLength": 160,
+          "afterLength": 119
+        },
+        {
+          "id": "announcement-blocked-fr",
+          "repetition": 2,
+          "beforeMs": 6014,
+          "afterMs": 3330,
+          "beforeLength": 217,
+          "afterLength": 132
+        },
+        {
+          "id": "greeting-ar",
+          "repetition": 2,
+          "beforeMs": 4836,
+          "afterMs": 3238,
+          "beforeLength": 231,
+          "afterLength": 226
+        },
+        {
+          "id": "student-count-ar",
+          "repetition": 2,
+          "beforeMs": 5408,
+          "afterMs": 6218,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-ar",
+          "repetition": 2,
+          "beforeMs": 4696,
+          "afterMs": 4041,
+          "beforeLength": 34,
+          "afterLength": 30
+        },
+        {
+          "id": "classes-ar",
+          "repetition": 2,
+          "beforeMs": 18801,
+          "afterMs": 10835,
+          "beforeLength": 541,
+          "afterLength": 528
+        },
+        {
+          "id": "attendance-today-ar",
+          "repetition": 2,
+          "beforeMs": 7559,
+          "afterMs": 11878,
+          "beforeLength": 128,
+          "afterLength": 119
+        },
+        {
+          "id": "upcoming-exams-ar",
+          "repetition": 2,
+          "beforeMs": 32840,
+          "afterMs": 15068,
+          "beforeLength": 1262,
+          "afterLength": 591
+        },
+        {
+          "id": "students-and-teachers-ar",
+          "repetition": 2,
+          "beforeMs": 9190,
+          "afterMs": 6360,
+          "beforeLength": 73,
+          "afterLength": 74
+        },
+        {
+          "id": "missing-student-ar",
+          "repetition": 2,
+          "beforeMs": 11727,
+          "afterMs": 7179,
+          "beforeLength": 193,
+          "afterLength": 141
+        },
+        {
+          "id": "attendance-mark-blocked-ar",
+          "repetition": 2,
+          "beforeMs": 8790,
+          "afterMs": 5455,
+          "beforeLength": 182,
+          "afterLength": 128
+        },
+        {
+          "id": "announcement-blocked-ar",
+          "repetition": 2,
+          "beforeMs": 5526,
+          "afterMs": 5101,
+          "beforeLength": 112,
+          "afterLength": 134
+        },
+        {
+          "id": "greeting-es",
+          "repetition": 2,
+          "beforeMs": 4122,
+          "afterMs": 5577,
+          "beforeLength": 285,
+          "afterLength": 294
+        },
+        {
+          "id": "student-count-es",
+          "repetition": 2,
+          "beforeMs": 6831,
+          "afterMs": 4093,
+          "beforeLength": 64,
+          "afterLength": 63
+        },
+        {
+          "id": "teacher-count-es",
+          "repetition": 2,
+          "beforeMs": 5975,
+          "afterMs": 5311,
+          "beforeLength": 65,
+          "afterLength": 35
+        },
+        {
+          "id": "classes-es",
+          "repetition": 2,
+          "beforeMs": 10869,
+          "afterMs": 9747,
+          "beforeLength": 666,
+          "afterLength": 548
+        },
+        {
+          "id": "attendance-today-es",
+          "repetition": 2,
+          "beforeMs": 6536,
+          "afterMs": 4512,
+          "beforeLength": 147,
+          "afterLength": 115
+        },
+        {
+          "id": "upcoming-exams-es",
+          "repetition": 2,
+          "beforeMs": 27742,
+          "afterMs": 10727,
+          "beforeLength": 1485,
+          "afterLength": 491
+        },
+        {
+          "id": "students-and-teachers-es",
+          "repetition": 2,
+          "beforeMs": 10932,
+          "afterMs": 5790,
+          "beforeLength": 85,
+          "afterLength": 70
+        },
+        {
+          "id": "missing-student-es",
+          "repetition": 2,
+          "beforeMs": 13213,
+          "afterMs": 7733,
+          "beforeLength": 186,
+          "afterLength": 177
+        },
+        {
+          "id": "grade-create-blocked-es",
+          "repetition": 2,
+          "beforeMs": 5345,
+          "afterMs": 11945,
+          "beforeLength": 242,
+          "afterLength": 173
+        },
+        {
+          "id": "announcement-blocked-es",
+          "repetition": 2,
+          "beforeMs": 4708,
+          "afterMs": 7486,
+          "beforeLength": 181,
+          "afterLength": 209
+        },
+        {
+          "id": "greeting-ary",
+          "repetition": 2,
+          "beforeMs": 6305,
+          "afterMs": 5262,
+          "beforeLength": 274,
+          "afterLength": 238
+        },
+        {
+          "id": "student-count-ary",
+          "repetition": 2,
+          "beforeMs": 7069,
+          "afterMs": 3822,
+          "beforeLength": 66,
+          "afterLength": 61
+        },
+        {
+          "id": "teacher-count-ary",
+          "repetition": 2,
+          "beforeMs": 8296,
+          "afterMs": 3617,
+          "beforeLength": 30,
+          "afterLength": 26
+        },
+        {
+          "id": "classes-ary",
+          "repetition": 2,
+          "beforeMs": 16063,
+          "afterMs": 18242,
+          "beforeLength": 839,
+          "afterLength": 579
+        },
+        {
+          "id": "attendance-today-ary",
+          "repetition": 2,
+          "beforeMs": 16184,
+          "afterMs": 7888,
+          "beforeLength": 110,
+          "afterLength": 132
+        },
+        {
+          "id": "upcoming-exams-ary",
+          "repetition": 2,
+          "beforeMs": 27785,
+          "afterMs": 26712,
+          "beforeLength": 1500,
+          "afterLength": 427
+        },
+        {
+          "id": "students-and-teachers-ary",
+          "repetition": 2,
+          "beforeMs": 8089,
+          "afterMs": 4335,
+          "beforeLength": 65,
+          "afterLength": 45
+        },
+        {
+          "id": "missing-student-ary",
+          "repetition": 2,
+          "beforeMs": 8082,
+          "afterMs": 16477,
+          "beforeLength": 131,
+          "afterLength": 161
+        },
+        {
+          "id": "attendance-mark-blocked-ary",
+          "repetition": 2,
+          "beforeMs": 8235,
+          "afterMs": 3486,
+          "beforeLength": 127,
+          "afterLength": 136
+        },
+        {
+          "id": "announcement-blocked-ary",
+          "repetition": 2,
+          "beforeMs": 6356,
+          "afterMs": 7657,
+          "beforeLength": 122,
+          "afterLength": 182
+        }
+      ]
+    },
+    "exams": {
+      "before": {
+        "n": 10,
+        "completed": 10,
+        "checksPassed": 10,
+        "firstTextMs": {
+          "p50": 9383,
+          "p95": 11696
+        },
+        "completionMs": {
+          "p50": 27273,
+          "p95": 32840
+        },
+        "textLength": {
+          "p50": 1277,
+          "p95": 1525
+        },
+        "outputTokens": 6234,
+        "writePromises": 0,
+        "writeClaims": 0
+      },
+      "after": {
+        "n": 10,
+        "completed": 10,
+        "checksPassed": 10,
+        "firstTextMs": {
+          "p50": 10718,
+          "p95": 26198
+        },
+        "completionMs": {
+          "p50": 15068,
+          "p95": 33240
+        },
+        "textLength": {
+          "p50": 504,
+          "p95": 705
+        },
+        "outputTokens": 6315,
+        "writePromises": 0,
+        "writeClaims": 0
+      },
+      "pairedCompletionDeltaMs": {
+        "p50": -12204,
+        "p95": 1210
+      },
+      "pairs": [
+        {
+          "id": "upcoming-exams-en",
+          "repetition": 1,
+          "beforeMs": 24138,
+          "afterMs": 22360,
+          "beforeLength": 1124,
+          "afterLength": 543
+        },
+        {
+          "id": "upcoming-exams-fr",
+          "repetition": 1,
+          "beforeMs": 23064,
+          "afterMs": 20823,
+          "beforeLength": 1283,
+          "afterLength": 504
+        },
+        {
+          "id": "upcoming-exams-ar",
+          "repetition": 1,
+          "beforeMs": 25770,
+          "afterMs": 8068,
+          "beforeLength": 1046,
+          "afterLength": 598
+        },
+        {
+          "id": "upcoming-exams-es",
+          "repetition": 1,
+          "beforeMs": 26442,
+          "afterMs": 14238,
+          "beforeLength": 1294,
+          "afterLength": 705
+        },
+        {
+          "id": "upcoming-exams-ary",
+          "repetition": 1,
+          "beforeMs": 27688,
+          "afterMs": 19969,
+          "beforeLength": 953,
+          "afterLength": 523
+        },
+        {
+          "id": "upcoming-exams-en",
+          "repetition": 2,
+          "beforeMs": 32030,
+          "afterMs": 33240,
+          "beforeLength": 1525,
+          "afterLength": 489
+        },
+        {
+          "id": "upcoming-exams-fr",
+          "repetition": 2,
+          "beforeMs": 27273,
+          "afterMs": 12830,
+          "beforeLength": 1277,
+          "afterLength": 490
+        },
+        {
+          "id": "upcoming-exams-ar",
+          "repetition": 2,
+          "beforeMs": 32840,
+          "afterMs": 15068,
+          "beforeLength": 1262,
+          "afterLength": 591
+        },
+        {
+          "id": "upcoming-exams-es",
+          "repetition": 2,
+          "beforeMs": 27742,
+          "afterMs": 10727,
+          "beforeLength": 1485,
+          "afterLength": 491
+        },
+        {
+          "id": "upcoming-exams-ary",
+          "repetition": 2,
+          "beforeMs": 27785,
+          "afterMs": 26712,
+          "beforeLength": 1500,
+          "afterLength": 427
+        }
+      ]
+    },
+    "attendanceWrites": {
+      "before": {
+        "n": 6,
+        "completed": 6,
+        "checksPassed": 5,
+        "firstTextMs": {
+          "p50": 5951,
+          "p95": 7963
+        },
+        "completionMs": {
+          "p50": 8235,
+          "p95": 9975
+        },
+        "textLength": {
+          "p50": 127,
+          "p95": 201
+        },
+        "outputTokens": 1103,
+        "writePromises": 1,
+        "writeClaims": 0
+      },
+      "after": {
+        "n": 6,
+        "completed": 6,
+        "checksPassed": 6,
+        "firstTextMs": {
+          "p50": 3070,
+          "p95": 4660
+        },
+        "completionMs": {
+          "p50": 3486,
+          "p95": 5809
+        },
+        "textLength": {
+          "p50": 128,
+          "p95": 136
+        },
+        "outputTokens": 759,
+        "writePromises": 0,
+        "writeClaims": 0
+      },
+      "pairedCompletionDeltaMs": {
+        "p50": -5061,
+        "p95": -1001
+      },
+      "pairs": [
+        {
+          "id": "attendance-mark-blocked-en",
+          "repetition": 1,
+          "beforeMs": 8055,
+          "afterMs": 2994,
+          "beforeLength": 201,
+          "afterLength": 130
+        },
+        {
+          "id": "attendance-mark-blocked-ar",
+          "repetition": 1,
+          "beforeMs": 9659,
+          "afterMs": 4009,
+          "beforeLength": 121,
+          "afterLength": 115
+        },
+        {
+          "id": "attendance-mark-blocked-ary",
+          "repetition": 1,
+          "beforeMs": 6810,
+          "afterMs": 5809,
+          "beforeLength": 121,
+          "afterLength": 99
+        },
+        {
+          "id": "attendance-mark-blocked-en",
+          "repetition": 2,
+          "beforeMs": 9975,
+          "afterMs": 1839,
+          "beforeLength": 171,
+          "afterLength": 130
+        },
+        {
+          "id": "attendance-mark-blocked-ar",
+          "repetition": 2,
+          "beforeMs": 8790,
+          "afterMs": 5455,
+          "beforeLength": 182,
+          "afterLength": 128
+        },
+        {
+          "id": "attendance-mark-blocked-ary",
+          "repetition": 2,
+          "beforeMs": 8235,
+          "afterMs": 3486,
+          "beforeLength": 127,
+          "afterLength": 136
+        }
+      ]
+    },
+    "other": {
+      "before": {
+        "n": 84,
+        "completed": 84,
+        "checksPassed": 84,
+        "firstTextMs": {
+          "p50": 5945,
+          "p95": 11413
+        },
+        "completionMs": {
+          "p50": 7078,
+          "p95": 16063
+        },
+        "textLength": {
+          "p50": 131,
+          "p95": 679
+        },
+        "outputTokens": 15557,
+        "writePromises": 0,
+        "writeClaims": 0
+      },
+      "after": {
+        "n": 84,
+        "completed": 84,
+        "checksPassed": 81,
+        "firstTextMs": {
+          "p50": 4574,
+          "p95": 11022
+        },
+        "completionMs": {
+          "p50": 6366,
+          "p95": 14841
+        },
+        "textLength": {
+          "p50": 132,
+          "p95": 553
+        },
+        "outputTokens": 14947,
+        "writePromises": 0,
+        "writeClaims": 0
+      },
+      "pairedCompletionDeltaMs": {
+        "p50": -2002,
+        "p95": 6569
+      },
+      "pairs": [
+        {
+          "id": "greeting-en",
+          "repetition": 1,
+          "beforeMs": 4515,
+          "afterMs": 6366,
+          "beforeLength": 303,
+          "afterLength": 321
+        },
+        {
+          "id": "student-count-en",
+          "repetition": 1,
+          "beforeMs": 4540,
+          "afterMs": 3115,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-en",
+          "repetition": 1,
+          "beforeMs": 5672,
+          "afterMs": 2515,
+          "beforeLength": 63,
+          "afterLength": 63
+        },
+        {
+          "id": "classes-en",
+          "repetition": 1,
+          "beforeMs": 12862,
+          "afterMs": 9321,
+          "beforeLength": 824,
+          "afterLength": 557
+        },
+        {
+          "id": "attendance-today-en",
+          "repetition": 1,
+          "beforeMs": 4565,
+          "afterMs": 6841,
+          "beforeLength": 50,
+          "afterLength": 50
+        },
+        {
+          "id": "students-and-teachers-en",
+          "repetition": 1,
+          "beforeMs": 5700,
+          "afterMs": 8742,
+          "beforeLength": 88,
+          "afterLength": 87
+        },
+        {
+          "id": "missing-student-en",
+          "repetition": 1,
+          "beforeMs": 8675,
+          "afterMs": 6715,
+          "beforeLength": 203,
+          "afterLength": 149
+        },
+        {
+          "id": "announcement-blocked-en",
+          "repetition": 1,
+          "beforeMs": 8664,
+          "afterMs": 4359,
+          "beforeLength": 222,
+          "afterLength": 149
+        },
+        {
+          "id": "greeting-fr",
+          "repetition": 1,
+          "beforeMs": 3607,
+          "afterMs": 5201,
+          "beforeLength": 298,
+          "afterLength": 304
+        },
+        {
+          "id": "student-count-fr",
+          "repetition": 1,
+          "beforeMs": 5196,
+          "afterMs": 2989,
+          "beforeLength": 65,
+          "afterLength": 63
+        },
+        {
+          "id": "teacher-count-fr",
+          "repetition": 1,
+          "beforeMs": 7629,
+          "afterMs": 5126,
+          "beforeLength": 66,
+          "afterLength": 66
+        },
+        {
+          "id": "classes-fr",
+          "repetition": 1,
+          "beforeMs": 9671,
+          "afterMs": 17582,
+          "beforeLength": 679,
+          "afterLength": 553
+        },
+        {
+          "id": "attendance-today-fr",
+          "repetition": 1,
+          "beforeMs": 6398,
+          "afterMs": 5684,
+          "beforeLength": 111,
+          "afterLength": 161
+        },
+        {
+          "id": "students-and-teachers-fr",
+          "repetition": 1,
+          "beforeMs": 5541,
+          "afterMs": 5173,
+          "beforeLength": 88,
+          "afterLength": 81
+        },
+        {
+          "id": "missing-student-fr",
+          "repetition": 1,
+          "beforeMs": 9450,
+          "afterMs": 16706,
+          "beforeLength": 203,
+          "afterLength": 123
+        },
+        {
+          "id": "grade-create-blocked-fr",
+          "repetition": 1,
+          "beforeMs": 11947,
+          "afterMs": 7033,
+          "beforeLength": 160,
+          "afterLength": 163
+        },
+        {
+          "id": "announcement-blocked-fr",
+          "repetition": 1,
+          "beforeMs": 5201,
+          "afterMs": 3134,
+          "beforeLength": 175,
+          "afterLength": 132
+        },
+        {
+          "id": "greeting-ar",
+          "repetition": 1,
+          "beforeMs": 6538,
+          "afterMs": 4223,
+          "beforeLength": 264,
+          "afterLength": 220
+        },
+        {
+          "id": "student-count-ar",
+          "repetition": 1,
+          "beforeMs": 4808,
+          "afterMs": 4173,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-ar",
+          "repetition": 1,
+          "beforeMs": 4773,
+          "afterMs": 10434,
+          "beforeLength": 34,
+          "afterLength": 30
+        },
+        {
+          "id": "classes-ar",
+          "repetition": 1,
+          "beforeMs": 19018,
+          "afterMs": 11180,
+          "beforeLength": 642,
+          "afterLength": 517
+        },
+        {
+          "id": "attendance-today-ar",
+          "repetition": 1,
+          "beforeMs": 8938,
+          "afterMs": 7008,
+          "beforeLength": 147,
+          "afterLength": 113
+        },
+        {
+          "id": "students-and-teachers-ar",
+          "repetition": 1,
+          "beforeMs": 11469,
+          "afterMs": 6425,
+          "beforeLength": 73,
+          "afterLength": 75
+        },
+        {
+          "id": "missing-student-ar",
+          "repetition": 1,
+          "beforeMs": 10144,
+          "afterMs": 7275,
+          "beforeLength": 193,
+          "afterLength": 120
+        },
+        {
+          "id": "announcement-blocked-ar",
+          "repetition": 1,
+          "beforeMs": 4434,
+          "afterMs": 8682,
+          "beforeLength": 108,
+          "afterLength": 141
+        },
+        {
+          "id": "greeting-es",
+          "repetition": 1,
+          "beforeMs": 5001,
+          "afterMs": 4240,
+          "beforeLength": 333,
+          "afterLength": 326
+        },
+        {
+          "id": "student-count-es",
+          "repetition": 1,
+          "beforeMs": 7078,
+          "afterMs": 7382,
+          "beforeLength": 64,
+          "afterLength": 59
+        },
+        {
+          "id": "teacher-count-es",
+          "repetition": 1,
+          "beforeMs": 4747,
+          "afterMs": 5312,
+          "beforeLength": 65,
+          "afterLength": 65
+        },
+        {
+          "id": "classes-es",
+          "repetition": 1,
+          "beforeMs": 12209,
+          "afterMs": 8113,
+          "beforeLength": 666,
+          "afterLength": 512
+        },
+        {
+          "id": "attendance-today-es",
+          "repetition": 1,
+          "beforeMs": 5229,
+          "afterMs": 6960,
+          "beforeLength": 140,
+          "afterLength": 81
+        },
+        {
+          "id": "students-and-teachers-es",
+          "repetition": 1,
+          "beforeMs": 9053,
+          "afterMs": 7402,
+          "beforeLength": 49,
+          "afterLength": 49
+        },
+        {
+          "id": "missing-student-es",
+          "repetition": 1,
+          "beforeMs": 11736,
+          "afterMs": 5812,
+          "beforeLength": 178,
+          "afterLength": 134
+        },
+        {
+          "id": "grade-create-blocked-es",
+          "repetition": 1,
+          "beforeMs": 6240,
+          "afterMs": 9786,
+          "beforeLength": 157,
+          "afterLength": 174
+        },
+        {
+          "id": "announcement-blocked-es",
+          "repetition": 1,
+          "beforeMs": 8433,
+          "afterMs": 3022,
+          "beforeLength": 131,
+          "afterLength": 152
+        },
+        {
+          "id": "greeting-ary",
+          "repetition": 1,
+          "beforeMs": 5681,
+          "afterMs": 6152,
+          "beforeLength": 269,
+          "afterLength": 265
+        },
+        {
+          "id": "student-count-ary",
+          "repetition": 1,
+          "beforeMs": 6681,
+          "afterMs": 6597,
+          "beforeLength": 66,
+          "afterLength": 44
+        },
+        {
+          "id": "teacher-count-ary",
+          "repetition": 1,
+          "beforeMs": 7607,
+          "afterMs": 6659,
+          "beforeLength": 30,
+          "afterLength": 30
+        },
+        {
+          "id": "classes-ary",
+          "repetition": 1,
+          "beforeMs": 15403,
+          "afterMs": 9335,
+          "beforeLength": 850,
+          "afterLength": 1142
+        },
+        {
+          "id": "attendance-today-ary",
+          "repetition": 1,
+          "beforeMs": 8272,
+          "afterMs": 14841,
+          "beforeLength": 110,
+          "afterLength": 101
+        },
+        {
+          "id": "students-and-teachers-ary",
+          "repetition": 1,
+          "beforeMs": 12391,
+          "afterMs": 7338,
+          "beforeLength": 53,
+          "afterLength": 57
+        },
+        {
+          "id": "missing-student-ary",
+          "repetition": 1,
+          "beforeMs": 9934,
+          "afterMs": 7895,
+          "beforeLength": 135,
+          "afterLength": 162
+        },
+        {
+          "id": "announcement-blocked-ary",
+          "repetition": 1,
+          "beforeMs": 11678,
+          "afterMs": 7587,
+          "beforeLength": 216,
+          "afterLength": 199
+        },
+        {
+          "id": "greeting-en",
+          "repetition": 2,
+          "beforeMs": 8302,
+          "afterMs": 4043,
+          "beforeLength": 275,
+          "afterLength": 324
+        },
+        {
+          "id": "student-count-en",
+          "repetition": 2,
+          "beforeMs": 4985,
+          "afterMs": 3402,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-en",
+          "repetition": 2,
+          "beforeMs": 6848,
+          "afterMs": 3707,
+          "beforeLength": 62,
+          "afterLength": 62
+        },
+        {
+          "id": "classes-en",
+          "repetition": 2,
+          "beforeMs": 12751,
+          "afterMs": 7857,
+          "beforeLength": 824,
+          "afterLength": 493
+        },
+        {
+          "id": "attendance-today-en",
+          "repetition": 2,
+          "beforeMs": 6145,
+          "afterMs": 4143,
+          "beforeLength": 103,
+          "afterLength": 103
+        },
+        {
+          "id": "students-and-teachers-en",
+          "repetition": 2,
+          "beforeMs": 8772,
+          "afterMs": 6664,
+          "beforeLength": 88,
+          "afterLength": 87
+        },
+        {
+          "id": "missing-student-en",
+          "repetition": 2,
+          "beforeMs": 6914,
+          "afterMs": 5967,
+          "beforeLength": 228,
+          "afterLength": 171
+        },
+        {
+          "id": "announcement-blocked-en",
+          "repetition": 2,
+          "beforeMs": 13802,
+          "afterMs": 4341,
+          "beforeLength": 171,
+          "afterLength": 164
+        },
+        {
+          "id": "greeting-fr",
+          "repetition": 2,
+          "beforeMs": 5898,
+          "afterMs": 2974,
+          "beforeLength": 367,
+          "afterLength": 280
+        },
+        {
+          "id": "student-count-fr",
+          "repetition": 2,
+          "beforeMs": 5027,
+          "afterMs": 3971,
+          "beforeLength": 63,
+          "afterLength": 63
+        },
+        {
+          "id": "teacher-count-fr",
+          "repetition": 2,
+          "beforeMs": 6744,
+          "afterMs": 4139,
+          "beforeLength": 66,
+          "afterLength": 66
+        },
+        {
+          "id": "classes-fr",
+          "repetition": 2,
+          "beforeMs": 15284,
+          "afterMs": 7501,
+          "beforeLength": 679,
+          "afterLength": 584
+        },
+        {
+          "id": "attendance-today-fr",
+          "repetition": 2,
+          "beforeMs": 11333,
+          "afterMs": 8630,
+          "beforeLength": 111,
+          "afterLength": 76
+        },
+        {
+          "id": "students-and-teachers-fr",
+          "repetition": 2,
+          "beforeMs": 19817,
+          "afterMs": 10422,
+          "beforeLength": 88,
+          "afterLength": 69
+        },
+        {
+          "id": "missing-student-fr",
+          "repetition": 2,
+          "beforeMs": 8558,
+          "afterMs": 7403,
+          "beforeLength": 173,
+          "afterLength": 148
+        },
+        {
+          "id": "grade-create-blocked-fr",
+          "repetition": 2,
+          "beforeMs": 11047,
+          "afterMs": 4903,
+          "beforeLength": 160,
+          "afterLength": 119
+        },
+        {
+          "id": "announcement-blocked-fr",
+          "repetition": 2,
+          "beforeMs": 6014,
+          "afterMs": 3330,
+          "beforeLength": 217,
+          "afterLength": 132
+        },
+        {
+          "id": "greeting-ar",
+          "repetition": 2,
+          "beforeMs": 4836,
+          "afterMs": 3238,
+          "beforeLength": 231,
+          "afterLength": 226
+        },
+        {
+          "id": "student-count-ar",
+          "repetition": 2,
+          "beforeMs": 5408,
+          "afterMs": 6218,
+          "beforeLength": 67,
+          "afterLength": 67
+        },
+        {
+          "id": "teacher-count-ar",
+          "repetition": 2,
+          "beforeMs": 4696,
+          "afterMs": 4041,
+          "beforeLength": 34,
+          "afterLength": 30
+        },
+        {
+          "id": "classes-ar",
+          "repetition": 2,
+          "beforeMs": 18801,
+          "afterMs": 10835,
+          "beforeLength": 541,
+          "afterLength": 528
+        },
+        {
+          "id": "attendance-today-ar",
+          "repetition": 2,
+          "beforeMs": 7559,
+          "afterMs": 11878,
+          "beforeLength": 128,
+          "afterLength": 119
+        },
+        {
+          "id": "students-and-teachers-ar",
+          "repetition": 2,
+          "beforeMs": 9190,
+          "afterMs": 6360,
+          "beforeLength": 73,
+          "afterLength": 74
+        },
+        {
+          "id": "missing-student-ar",
+          "repetition": 2,
+          "beforeMs": 11727,
+          "afterMs": 7179,
+          "beforeLength": 193,
+          "afterLength": 141
+        },
+        {
+          "id": "announcement-blocked-ar",
+          "repetition": 2,
+          "beforeMs": 5526,
+          "afterMs": 5101,
+          "beforeLength": 112,
+          "afterLength": 134
+        },
+        {
+          "id": "greeting-es",
+          "repetition": 2,
+          "beforeMs": 4122,
+          "afterMs": 5577,
+          "beforeLength": 285,
+          "afterLength": 294
+        },
+        {
+          "id": "student-count-es",
+          "repetition": 2,
+          "beforeMs": 6831,
+          "afterMs": 4093,
+          "beforeLength": 64,
+          "afterLength": 63
+        },
+        {
+          "id": "teacher-count-es",
+          "repetition": 2,
+          "beforeMs": 5975,
+          "afterMs": 5311,
+          "beforeLength": 65,
+          "afterLength": 35
+        },
+        {
+          "id": "classes-es",
+          "repetition": 2,
+          "beforeMs": 10869,
+          "afterMs": 9747,
+          "beforeLength": 666,
+          "afterLength": 548
+        },
+        {
+          "id": "attendance-today-es",
+          "repetition": 2,
+          "beforeMs": 6536,
+          "afterMs": 4512,
+          "beforeLength": 147,
+          "afterLength": 115
+        },
+        {
+          "id": "students-and-teachers-es",
+          "repetition": 2,
+          "beforeMs": 10932,
+          "afterMs": 5790,
+          "beforeLength": 85,
+          "afterLength": 70
+        },
+        {
+          "id": "missing-student-es",
+          "repetition": 2,
+          "beforeMs": 13213,
+          "afterMs": 7733,
+          "beforeLength": 186,
+          "afterLength": 177
+        },
+        {
+          "id": "grade-create-blocked-es",
+          "repetition": 2,
+          "beforeMs": 5345,
+          "afterMs": 11945,
+          "beforeLength": 242,
+          "afterLength": 173
+        },
+        {
+          "id": "announcement-blocked-es",
+          "repetition": 2,
+          "beforeMs": 4708,
+          "afterMs": 7486,
+          "beforeLength": 181,
+          "afterLength": 209
+        },
+        {
+          "id": "greeting-ary",
+          "repetition": 2,
+          "beforeMs": 6305,
+          "afterMs": 5262,
+          "beforeLength": 274,
+          "afterLength": 238
+        },
+        {
+          "id": "student-count-ary",
+          "repetition": 2,
+          "beforeMs": 7069,
+          "afterMs": 3822,
+          "beforeLength": 66,
+          "afterLength": 61
+        },
+        {
+          "id": "teacher-count-ary",
+          "repetition": 2,
+          "beforeMs": 8296,
+          "afterMs": 3617,
+          "beforeLength": 30,
+          "afterLength": 26
+        },
+        {
+          "id": "classes-ary",
+          "repetition": 2,
+          "beforeMs": 16063,
+          "afterMs": 18242,
+          "beforeLength": 839,
+          "afterLength": 579
+        },
+        {
+          "id": "attendance-today-ary",
+          "repetition": 2,
+          "beforeMs": 16184,
+          "afterMs": 7888,
+          "beforeLength": 110,
+          "afterLength": 132
+        },
+        {
+          "id": "students-and-teachers-ary",
+          "repetition": 2,
+          "beforeMs": 8089,
+          "afterMs": 4335,
+          "beforeLength": 65,
+          "afterLength": 45
+        },
+        {
+          "id": "missing-student-ary",
+          "repetition": 2,
+          "beforeMs": 8082,
+          "afterMs": 16477,
+          "beforeLength": 131,
+          "afterLength": 161
+        },
+        {
+          "id": "announcement-blocked-ary",
+          "repetition": 2,
+          "beforeMs": 6356,
+          "afterMs": 7657,
+          "beforeLength": 122,
+          "afterLength": 182
+        }
+      ]
+    }
+  },
+  "failures": [
+    {
+      "id": "classes-es",
+      "repetition": 1,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": null,
+        "wrongLanguage": false,
+        "languageInconclusive": true,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": true,
+        "passed": false
+      }
+    },
+    {
+      "id": "teacher-count-es",
+      "repetition": 2,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": null,
+        "wrongLanguage": false,
+        "languageInconclusive": true,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": true,
+        "passed": false
+      }
+    },
+    {
+      "id": "classes-es",
+      "repetition": 2,
+      "outcome": "completed",
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": null,
+        "wrongLanguage": false,
+        "languageInconclusive": true,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": true,
+        "passed": false
+      }
+    }
+  ]
+}

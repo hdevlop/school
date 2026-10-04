@@ -22,7 +22,7 @@ export class ZoneController {
   @Validate({ params: zoneIdParam })
   @McpTool({ description: 'Get a zone by ID', readOnly: true })
   @ResMsg('zones.success.retrieved')
-  async getZone(@Params('id') id: string) {
+  async getZoneById(@Params('id') id: string) {
     return this.zoneService.getById(id);
   }
 

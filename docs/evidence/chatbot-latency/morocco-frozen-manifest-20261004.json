@@ -1,0 +1,20 @@
+{
+  "capturedAt": "2026-10-04T19:50:05.781Z",
+  "baseRevision": "36c05413e1cedbe439671d31a3c80d82cb8e327d",
+  "port": 3167,
+  "sha256": {
+    "package.json": "404a52750dd318741d1fccd6c543db7c6fef8efb9c3a3b310deb7b53b1ef29e3",
+    "bun.lock": "a4f26a5a265383ad5c3c582c08e09ef1eb882fa7d1b4c5bdc1f37bd309dae4af",
+    "datasets/chatbot-latency/morocco.json": "a3a78d40918bd2dfed1c704197ebb2e866fbe6275dfc1b38f8817067a3136304",
+    "packages/server/src/config/chatbotSystemPrompt.ts": "8a1cf1fd8f130a000aa72b3396c3f0b879ad665c4c2a882f2e22d91540ff70e5",
+    "packages/server/src/config/ragConfig.ts": "8a2fbc62d7429b2886a63b246ca5e76acecb34bda965a996f94a930fa5a5be08",
+    "packages/server/src/modules/academicYears/requestYear.ts": "4f41003a27e6039e41adceb64b355a696bae7bba122d598bea5794ac9af89ee1",
+    "scripts/chatbot-benchmark.mjs": "e13560deae2645cf544675cfd4d5893ef9545faf460f380b60eaf24ada8248bd",
+    "scripts/chatbot-scoring.mjs": "fffd4a5eb403a6012b8d429ae0f1789ef61a43f1a599cfce577c37494eed58dc",
+    "scripts/chatbot-facts.mjs": "abfe51023250d533e34d269155a9521ecbb14acaa1d4c5669ab08bfc4c628dd0",
+    "scripts/chatbot-language.mjs": "5a360a3dad318cb92fa9ff39f33463a6c3d75043c07201ac683e029196740fa2",
+    "scripts/chatbot-budget.mjs": "817d266632f373b0e9b5464153248349d2a30a12ef40c4bcbf3ac0e0b74c8fed",
+    "scripts/chatbot-cache.mjs": "0b90c61856685d32705dd4181b4f8821966dd58cf278dd63d1d7a92849df7f6c"
+  },
+  "conditions": "Frozen School worktree with independent Bun workspace links; domain DB/settings shared; no package sources copied from Desktop checkouts."
+}

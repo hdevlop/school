@@ -1,0 +1,6254 @@
+{
+  "capturedAt": "2026-10-04T21:22:20.586Z",
+  "runId": "fcf70cb1",
+  "target": "http://localhost:3171",
+  "mode": "api-client-streaming",
+  "corpusSha256": "a3a78d40918bd2dfed1c704197ebb2e866fbe6275dfc1b38f8817067a3136304",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "languages": null,
+  "plannedRequests": 30,
+  "maxRequests": 30,
+  "concurrency": 1,
+  "cacheMode": "fresh",
+  "timeoutMs": 120000,
+  "textStored": true,
+  "declaredPricing": null,
+  "packagePins": {
+    "najm-rag": "3.2.0",
+    "najm-chatbot": "3.3.0",
+    "najm-mcp": "2.2.5",
+    "ai": "6.0.275"
+  },
+  "outcome": "passed",
+  "limitations": [
+    "API-client timings including local transport; not browser submit-to-render.",
+    "First byte is not first answer text; firstTextMs is the first non-empty text-delta.",
+    "Small samples are smoke coverage, not p95 estimates; cache and Ollama state are not controlled.",
+    "Admin account only; teacher, parent and student behavior is not measured.",
+    "Server timings come from najm-chatbot diagnostics (>= 2.0.5) matched by x-request-id; modelAndStreamMs is derived, not measured."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 22
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 118
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/chat-benchmark/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 10
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 17
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 10
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 10
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 17
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 10
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 10
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 17
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 19
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 19
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 18
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 19
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 30
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 18
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 12
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 10
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 15
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 13
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 11
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 14
+    },
+    {
+      "path": "/api/chat-benchmark/reset-caches",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 70
+    }
+  ],
+  "samples": [
+    {
+      "id": "greeting-fr",
+      "language": "fr",
+      "kind": "small-talk",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-greeting-fr-1",
+      "requestId": "bench-fcf70cb1-greeting-fr-1",
+      "httpStatus": 200,
+      "headersMs": 243,
+      "streamProtocol": "v1",
+      "firstByteMs": 243,
+      "firstTextMs": 915,
+      "finishChunkMs": 947,
+      "bodyEndMs": 947,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 7,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 1945,
+        "completionTokens": 75,
+        "totalTokens": 2020,
+        "inputCost": 0.000075855,
+        "outputCost": 0.000014249999999999999,
+        "totalCost": 0.00009010499999999999,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 209,
+      "text": "Bonjour ! Je peux rechercher et résumer les données de l’école (élèves, absences, notes, frais, examens, etc.). Par exemple : « Quel est le nombre d’élèves ? » ou « Quels examens sont prévus cette semaine ? ».",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-greeting-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 2.6,
+          "historyMs": 0,
+          "routingMs": 188.5,
+          "contextMs": 2.9,
+          "prepareMs": 193.8,
+          "persistenceMs": 0.3
+        },
+        "marks": {
+          "firstTextMs": 887.8,
+          "finishMs": 919.9
+        },
+        "steps": [
+          {
+            "endMs": 918.6,
+            "finishReason": "stop",
+            "inputTokens": 1945,
+            "outputTokens": 75,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 1945,
+          "outputTokens": 75,
+          "totalTokens": 2020,
+          "cachedInputTokens": 128,
+          "reasoningTokens": 5
+        },
+        "cost": {
+          "promptTokens": 1945,
+          "completionTokens": 75,
+          "totalTokens": 2020,
+          "inputCost": 0.000075855,
+          "outputCost": 0.000014249999999999999,
+          "totalCost": 0.00009010499999999999,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-greeting-fr-1",
+            "startMs": 11.2,
+            "durationMs": 173.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 11.6,
+                "durationMs": 172.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 1
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 1,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 0,
+      "clientQueueMs": 0,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "student-count-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-student-count-fr-1",
+      "requestId": "bench-fcf70cb1-student-count-fr-1",
+      "httpStatus": 200,
+      "headersMs": 219,
+      "streamProtocol": "v1",
+      "firstByteMs": 220,
+      "firstTextMs": 220,
+      "finishChunkMs": 220,
+      "bodyEndMs": 221,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 39,
+      "text": "Il y a 100 élèves inscrits cette année.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-student-count-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 192,
+          "contextMs": 1.7,
+          "prepareMs": 200.8,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 200.9,
+          "finishMs": 200.9
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "d3105358-bced-4f9a-9cdd-31d3d88fa38c",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 61,
+            "startMs": 196.1,
+            "durationMs": 4.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-student-count-fr-1",
+            "startMs": 0.3,
+            "durationMs": 183.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.6,
+                "durationMs": 182.8,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 2
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 2,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 1,
+      "clientQueueMs": 993,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "teacher-count-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-teacher-count-fr-1",
+      "requestId": "bench-fcf70cb1-teacher-count-fr-1",
+      "httpStatus": 200,
+      "headersMs": 163,
+      "streamProtocol": "v1",
+      "firstByteMs": 165,
+      "firstTextMs": 165,
+      "finishChunkMs": 165,
+      "bodyEndMs": 165,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 35,
+      "text": "Il y a 50 enseignants dans l'école.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-teacher-count-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 136.4,
+          "contextMs": 2,
+          "prepareMs": 144.4,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 144.5,
+          "finishMs": 144.5
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "896f9c6f-c214-4453-8ef1-c49fc29cb01d",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 60,
+            "startMs": 139.3,
+            "durationMs": 5.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-teacher-count-fr-1",
+            "startMs": 0.3,
+            "durationMs": 127.7,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.7,
+                "durationMs": 127.3,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 3
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 3,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 2,
+      "clientQueueMs": 1252,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "classes-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-classes-fr-1",
+      "requestId": "bench-fcf70cb1-classes-fr-1",
+      "httpStatus": 200,
+      "headersMs": 200,
+      "streamProtocol": "v1",
+      "firstByteMs": 200,
+      "firstTextMs": 928,
+      "finishChunkMs": 989,
+      "bodyEndMs": 990,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 8,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 4916,
+        "completionTokens": 178,
+        "totalTokens": 5094,
+        "inputCost": 0.000191724,
+        "outputCost": 0.00003382,
+        "totalCost": 0.000225544,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 233,
+      "text": "Voici les classes et leurs sections pour l'année académique 2026‑2027 :\n\n- CP : A, B, C  \n- CE1 : A, B, C  \n- CE2 : A, B, C  \n- CM1 : A, B, C  \n- CM2 : A, B, C  \n- CE6 : A, B, C  \n- 1AC : A, B, C  \n- 2AC : A, B, C  \n- 3AC : A, B, C  ",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-classes-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 171.4,
+          "contextMs": 1.8,
+          "prepareMs": 173.5,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 908.8,
+          "finishMs": 970.1
+        },
+        "steps": [
+          {
+            "endMs": 542.2,
+            "finishReason": "tool-calls",
+            "inputTokens": 1580,
+            "outputTokens": 54,
+            "toolCalls": [
+              "classes_get_classes"
+            ]
+          },
+          {
+            "endMs": 969.6,
+            "finishReason": "stop",
+            "inputTokens": 3336,
+            "outputTokens": 124,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "classes_get_classes",
+            "toolCallId": "c6c6bf89f",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 4542,
+            "startMs": 534.8,
+            "durationMs": 6.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4916,
+          "outputTokens": 178,
+          "totalTokens": 5094,
+          "cachedInputTokens": 1408,
+          "reasoningTokens": 24
+        },
+        "cost": {
+          "promptTokens": 4916,
+          "completionTokens": 178,
+          "totalTokens": 5094,
+          "inputCost": 0.000191724,
+          "outputCost": 0.00003382,
+          "totalCost": 0.000225544,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-classes-fr-1",
+            "startMs": 0.3,
+            "durationMs": 162.8,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.7,
+                "durationMs": 162.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 4
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 4,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 3,
+      "clientQueueMs": 1461,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "attendance-today-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-attendance-today-fr-1",
+      "requestId": "bench-fcf70cb1-attendance-today-fr-1",
+      "httpStatus": 200,
+      "headersMs": 188,
+      "streamProtocol": "v1",
+      "firstByteMs": 188,
+      "firstTextMs": 818,
+      "finishChunkMs": 855,
+      "bodyEndMs": 855,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 4,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 3422,
+        "completionTokens": 80,
+        "totalTokens": 3502,
+        "inputCost": 0.000133458,
+        "outputCost": 0.000015200000000000002,
+        "totalCost": 0.000148658,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 109,
+      "text": "Aujourd'hui, il n'y a aucune présence ou absence enregistrée pour les élèves de l'année académique 2026-2027.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-attendance-today-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0.1,
+          "routingMs": 164.4,
+          "contextMs": 1.7,
+          "prepareMs": 166.5,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 802.1,
+          "finishMs": 838.6
+        },
+        "steps": [
+          {
+            "endMs": 509,
+            "finishReason": "tool-calls",
+            "inputTokens": 1689,
+            "outputTokens": 48,
+            "toolCalls": [
+              "attendance_get_today_students"
+            ]
+          },
+          {
+            "endMs": 838.3,
+            "finishReason": "stop",
+            "inputTokens": 1733,
+            "outputTokens": 32,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "attendance_get_today_students",
+            "toolCallId": "c2297fa87",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 498.1,
+            "durationMs": 10
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 3422,
+          "outputTokens": 80,
+          "totalTokens": 3502,
+          "cachedInputTokens": 1408,
+          "reasoningTokens": 16
+        },
+        "cost": {
+          "promptTokens": 3422,
+          "completionTokens": 80,
+          "totalTokens": 3502,
+          "inputCost": 0.000133458,
+          "outputCost": 0.000015200000000000002,
+          "totalCost": 0.000148658,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-attendance-today-fr-1",
+            "startMs": 0.4,
+            "durationMs": 156,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.6,
+                "durationMs": 155.7,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 5
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 5,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 4,
+      "clientQueueMs": 2534,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "upcoming-exams-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-upcoming-exams-fr-1",
+      "requestId": "bench-fcf70cb1-upcoming-exams-fr-1",
+      "httpStatus": 200,
+      "headersMs": 214,
+      "streamProtocol": "v1",
+      "firstByteMs": 214,
+      "firstTextMs": 1477,
+      "finishChunkMs": 1583,
+      "bodyEndMs": 1584,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 14,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 7381,
+        "completionTokens": 209,
+        "totalTokens": 7590,
+        "inputCost": 0.000287859,
+        "outputCost": 0.000039710000000000004,
+        "totalCost": 0.000327569,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 351,
+      "text": "Les prochains examens (chronologiques) :\n\n- Language exam – CP C – 2026‑10‑17 09:00‑11:00  \n- Science exam – CE1 B – 2026‑10‑18 10:00‑12:00  \n- Mathematics exam – CE2 C – 2026‑10‑20 12:00‑14:00  \n- Language exam – CM1 B – 2026‑10‑21 13:00‑15:00  \n- History exam – CM2 C – 2026‑10‑23 09:00‑11:00  \n\nPlus d'examens sont disponibles si vous le souhaitez.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-upcoming-exams-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 192.9,
+          "contextMs": 1.9,
+          "prepareMs": 195.4,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 1462.1,
+          "finishMs": 1568.1
+        },
+        "steps": [
+          {
+            "endMs": 536.1,
+            "finishReason": "tool-calls",
+            "inputTokens": 1598,
+            "outputTokens": 60,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 1567.6,
+            "finishReason": "stop",
+            "inputTokens": 5783,
+            "outputTokens": 149,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "198496728",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 11934,
+            "startMs": 528,
+            "durationMs": 7.4
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 7381,
+          "outputTokens": 209,
+          "totalTokens": 7590,
+          "cachedInputTokens": 128,
+          "reasoningTokens": 26
+        },
+        "cost": {
+          "promptTokens": 7381,
+          "completionTokens": 209,
+          "totalTokens": 7590,
+          "inputCost": 0.000287859,
+          "outputCost": 0.000039710000000000004,
+          "totalCost": 0.000327569,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-upcoming-exams-fr-1",
+            "startMs": 0.2,
+            "durationMs": 185.5,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 185.2,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 6
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 6,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 5,
+      "clientQueueMs": 3427,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "students-and-teachers-fr",
+      "language": "fr",
+      "kind": "multi-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-students-and-teachers-fr-1",
+      "requestId": "bench-fcf70cb1-students-and-teachers-fr-1",
+      "httpStatus": 200,
+      "headersMs": 304,
+      "streamProtocol": "v1",
+      "firstByteMs": 305,
+      "firstTextMs": 305,
+      "finishChunkMs": 305,
+      "bodyEndMs": 305,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 2,
+        "tool-output-available": 2,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 70,
+      "text": "Il y a 100 élèves inscrits cette année et 50 enseignants dans l'école.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-students-and-teachers-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 1.7,
+          "historyMs": 0,
+          "routingMs": 273.4,
+          "contextMs": 2.3,
+          "prepareMs": 285.6,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 287.5,
+          "finishMs": 287.5
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "262658fe-f68d-41ad-a3b4-4e39efff68a1",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 61,
+            "startMs": 278.1,
+            "durationMs": 5.1
+          },
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "a7ba7228-961b-4658-a2d6-0f63817826b8",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 60,
+            "startMs": 283.3,
+            "durationMs": 4.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-students-and-teachers-fr-1",
+            "startMs": 3.4,
+            "durationMs": 265,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 3.7,
+                "durationMs": 264.7,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 7
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 7,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 6,
+      "clientQueueMs": 5059,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "missing-student-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-missing-student-fr-1",
+      "requestId": "bench-fcf70cb1-missing-student-fr-1",
+      "httpStatus": 200,
+      "headersMs": 206,
+      "streamProtocol": "v1",
+      "firstByteMs": 207,
+      "firstTextMs": 855,
+      "finishChunkMs": 1022,
+      "bodyEndMs": 1022,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 5,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 3416,
+        "completionTokens": 100,
+        "totalTokens": 3516,
+        "inputCost": 0.000133224,
+        "outputCost": 0.000019,
+        "totalCost": 0.000152224,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 134,
+      "text": "Je n’ai trouvé aucun élève correspondant à « Zzbench Qqtest ». Veuillez vérifier l’orthographe du nom ou fournir un autre identifiant.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-missing-student-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 187.6,
+          "contextMs": 1.4,
+          "prepareMs": 189.3,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 841.1,
+          "finishMs": 1008.4
+        },
+        "steps": [
+          {
+            "endMs": 514.5,
+            "finishReason": "tool-calls",
+            "inputTokens": 1686,
+            "outputTokens": 41,
+            "toolCalls": [
+              "search_search_students"
+            ]
+          },
+          {
+            "endMs": 1007.9,
+            "finishReason": "stop",
+            "inputTokens": 1730,
+            "outputTokens": 59,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "search_search_students",
+            "toolCallId": "203e58eb5",
+            "outcome": "executed",
+            "inputChars": 32,
+            "resultChars": 2,
+            "startMs": 508.9,
+            "durationMs": 4.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 3416,
+          "outputTokens": 100,
+          "totalTokens": 3516,
+          "cachedInputTokens": 1408,
+          "reasoningTokens": 21
+        },
+        "cost": {
+          "promptTokens": 3416,
+          "completionTokens": 100,
+          "totalTokens": 3516,
+          "inputCost": 0.000133224,
+          "outputCost": 0.000019,
+          "totalCost": 0.000152224,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-missing-student-fr-1",
+            "startMs": 0.3,
+            "durationMs": 181.7,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 181.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 8
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 8,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 7,
+      "clientQueueMs": 5402,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "grade-create-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-grade-create-blocked-fr-1",
+      "requestId": "bench-fcf70cb1-grade-create-blocked-fr-1",
+      "httpStatus": 200,
+      "headersMs": 309,
+      "streamProtocol": "v1",
+      "firstByteMs": 310,
+      "firstTextMs": 310,
+      "finishChunkMs": 310,
+      "bodyEndMs": 310,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 97,
+      "text": "Je ne peux pas effectuer cette modification dans cette conversation. Utilisez le tableau de bord.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-grade-create-blocked-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 286.1,
+          "contextMs": 2.2,
+          "prepareMs": 288.9,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 289,
+          "finishMs": 289
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-grade-create-blocked-fr-1",
+            "startMs": 0.3,
+            "durationMs": 277.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 277,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 9
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 9,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 8,
+      "clientQueueMs": 6465,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "announcement-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-announcement-blocked-fr-1",
+      "requestId": "bench-fcf70cb1-announcement-blocked-fr-1",
+      "httpStatus": 200,
+      "headersMs": 410,
+      "streamProtocol": "v1",
+      "firstByteMs": 411,
+      "firstTextMs": 411,
+      "finishChunkMs": 411,
+      "bodyEndMs": 411,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 97,
+      "text": "Je ne peux pas effectuer cette modification dans cette conversation. Utilisez le tableau de bord.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-announcement-blocked-fr-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 3,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 389.6,
+          "contextMs": 1.5,
+          "prepareMs": 391.6,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 391.8,
+          "finishMs": 391.8
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-announcement-blocked-fr-1",
+            "startMs": 0.3,
+            "durationMs": 382.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 382.1,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 10
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "fr",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": null,
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 10,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 9,
+      "clientQueueMs": 6812,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "greeting-ar",
+      "language": "ar",
+      "kind": "small-talk",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-greeting-ar-1",
+      "requestId": "bench-fcf70cb1-greeting-ar-1",
+      "httpStatus": 200,
+      "headersMs": 190,
+      "streamProtocol": "v1",
+      "firstByteMs": 190,
+      "firstTextMs": 549,
+      "finishChunkMs": 595,
+      "bodyEndMs": 595,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 9,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 1943,
+        "completionTokens": 78,
+        "totalTokens": 2021,
+        "inputCost": 0.000075777,
+        "outputCost": 0.00001482,
+        "totalCost": 0.000090597,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 183,
+      "text": "مرحبًا! يمكنني استعراض بيانات المدرسة مثل عدد الطلبة والطلاب، الحضور، الدرجات، الرسوم، الامتحانات وغيرها. على سبيل المثال يمكنك سؤال عن عدد الطلبة الحالي أو مواعيد الامتحانات القادمة.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-greeting-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 164.3,
+          "contextMs": 3.3,
+          "prepareMs": 168.6,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 531.1,
+          "finishMs": 576.7
+        },
+        "steps": [
+          {
+            "endMs": 576.3,
+            "finishReason": "stop",
+            "inputTokens": 1943,
+            "outputTokens": 78,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 1943,
+          "outputTokens": 78,
+          "totalTokens": 2021,
+          "cachedInputTokens": 1152,
+          "reasoningTokens": 17
+        },
+        "cost": {
+          "promptTokens": 1943,
+          "completionTokens": 78,
+          "totalTokens": 2021,
+          "inputCost": 0.000075777,
+          "outputCost": 0.00001482,
+          "totalCost": 0.000090597,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-greeting-ar-1",
+            "startMs": 0.6,
+            "durationMs": 151.4,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.8,
+                "durationMs": 151.1,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 11
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 11,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 10,
+      "clientQueueMs": 7269,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "student-count-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-student-count-ar-1",
+      "requestId": "bench-fcf70cb1-student-count-ar-1",
+      "httpStatus": 200,
+      "headersMs": 235,
+      "streamProtocol": "v1",
+      "firstByteMs": 236,
+      "firstTextMs": 236,
+      "finishChunkMs": 236,
+      "bodyEndMs": 236,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 39,
+      "text": "عدد التلاميذ المسجلين هذه السنة هو 100.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-student-count-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 208.8,
+          "contextMs": 1.6,
+          "prepareMs": 218.3,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 218.4,
+          "finishMs": 218.4
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "2c33f797-7add-4ab9-b066-d461b6e8a2bc",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 61,
+            "startMs": 212.1,
+            "durationMs": 6.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-student-count-ar-1",
+            "startMs": 0.4,
+            "durationMs": 200.9,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.6,
+                "durationMs": 200.7,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 12
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 12,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 11,
+      "clientQueueMs": 7905,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "teacher-count-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-teacher-count-ar-1",
+      "requestId": "bench-fcf70cb1-teacher-count-ar-1",
+      "httpStatus": 200,
+      "headersMs": 227,
+      "streamProtocol": "v1",
+      "firstByteMs": 228,
+      "firstTextMs": 228,
+      "finishChunkMs": 228,
+      "bodyEndMs": 228,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 30,
+      "text": "عدد الأساتذة في المدرسة هو 50.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-teacher-count-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 194.7,
+          "contextMs": 1.7,
+          "prepareMs": 201.5,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 201.7,
+          "finishMs": 201.7
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "82fa6186-2c9b-4ed5-8327-0194a36d3e22",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 60,
+            "startMs": 197,
+            "durationMs": 4.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-teacher-count-ar-1",
+            "startMs": 0.4,
+            "durationMs": 188.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.8,
+                "durationMs": 187.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 13
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 13,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 12,
+      "clientQueueMs": 8182,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "classes-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-classes-ar-1",
+      "requestId": "bench-fcf70cb1-classes-ar-1",
+      "httpStatus": 200,
+      "headersMs": 184,
+      "streamProtocol": "v1",
+      "firstByteMs": 184,
+      "firstTextMs": 851,
+      "finishChunkMs": 907,
+      "bodyEndMs": 907,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 9,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 4936,
+        "completionTokens": 173,
+        "totalTokens": 5109,
+        "inputCost": 0.000192504,
+        "outputCost": 0.00003287,
+        "totalCost": 0.000225374,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 200,
+      "text": "قائمة الأقسام وفقاً للعام الدراسي 2026‑2027 هي:\n\n- CP: A, B, C  \n- CE1: A, B, C  \n- CE2: A, B, C  \n- CM1: A, B, C  \n- CM2: A, B, C  \n- CE6: A, B, C  \n- 1AC: A, B, C  \n- 2AC: A, B, C  \n- 3AC: A, B, C  ",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-classes-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 161.3,
+          "contextMs": 1.4,
+          "prepareMs": 163,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 832.4,
+          "finishMs": 888.1
+        },
+        "steps": [
+          {
+            "endMs": 513.4,
+            "finishReason": "tool-calls",
+            "inputTokens": 1590,
+            "outputTokens": 60,
+            "toolCalls": [
+              "classes_get_classes"
+            ]
+          },
+          {
+            "endMs": 887.4,
+            "finishReason": "stop",
+            "inputTokens": 3346,
+            "outputTokens": 113,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "classes_get_classes",
+            "toolCallId": "1454b34cf",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 4542,
+            "startMs": 506.3,
+            "durationMs": 5
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4936,
+          "outputTokens": 173,
+          "totalTokens": 5109,
+          "cachedInputTokens": 2432,
+          "reasoningTokens": 30
+        },
+        "cost": {
+          "promptTokens": 4936,
+          "completionTokens": 173,
+          "totalTokens": 5109,
+          "inputCost": 0.000192504,
+          "outputCost": 0.00003287,
+          "totalCost": 0.000225374,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-classes-ar-1",
+            "startMs": 0.3,
+            "durationMs": 154.9,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 154.7,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 14
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 14,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 13,
+      "clientQueueMs": 8448,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "attendance-today-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-attendance-today-ar-1",
+      "requestId": "bench-fcf70cb1-attendance-today-ar-1",
+      "httpStatus": 200,
+      "headersMs": 161,
+      "streamProtocol": "v1",
+      "firstByteMs": 161,
+      "firstTextMs": 765,
+      "finishChunkMs": 799,
+      "bodyEndMs": 800,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 5,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 3382,
+        "completionTokens": 85,
+        "totalTokens": 3467,
+        "inputCost": 0.000131898,
+        "outputCost": 0.000016150000000000003,
+        "totalCost": 0.00014804800000000002,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 75,
+      "text": "حضور التلاميذ اليوم غير متوفر. يرجى التحقق من تسجيل الحضور في لوحة الإدارة.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-attendance-today-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0.1,
+          "historyMs": 0,
+          "routingMs": 140.1,
+          "contextMs": 1.6,
+          "prepareMs": 141.8,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 749.4,
+          "finishMs": 783.4
+        },
+        "steps": [
+          {
+            "endMs": 474.4,
+            "finishReason": "tool-calls",
+            "inputTokens": 1669,
+            "outputTokens": 58,
+            "toolCalls": [
+              "attendance_get_today_students"
+            ]
+          },
+          {
+            "endMs": 782.6,
+            "finishReason": "stop",
+            "inputTokens": 1713,
+            "outputTokens": 27,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "attendance_get_today_students",
+            "toolCallId": "e129a1940",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 465.1,
+            "durationMs": 8.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 3382,
+          "outputTokens": 85,
+          "totalTokens": 3467,
+          "cachedInputTokens": 2944,
+          "reasoningTokens": 26
+        },
+        "cost": {
+          "promptTokens": 3382,
+          "completionTokens": 85,
+          "totalTokens": 3467,
+          "inputCost": 0.000131898,
+          "outputCost": 0.000016150000000000003,
+          "totalCost": 0.00014804800000000002,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-attendance-today-ar-1",
+            "startMs": 0.3,
+            "durationMs": 132.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 131.8,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 15
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 15,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 14,
+      "clientQueueMs": 9409,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "upcoming-exams-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-upcoming-exams-ar-1",
+      "requestId": "bench-fcf70cb1-upcoming-exams-ar-1",
+      "httpStatus": 200,
+      "headersMs": 541,
+      "streamProtocol": "v1",
+      "firstByteMs": 541,
+      "firstTextMs": 1234,
+      "finishChunkMs": 1345,
+      "bodyEndMs": 1345,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 20,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 7333,
+        "completionTokens": 261,
+        "totalTokens": 7594,
+        "inputCost": 0.000285987,
+        "outputCost": 0.00004959,
+        "totalCost": 0.00033557700000000004,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 416,
+      "text": "الامتحانات القادمة (العام الدراسي 2026‑2027) هي:\n\n- Language exam – CP قسم C – 2026‑10‑17 من 09:00 إلى 11:00  \n- Science exam – CE1 قسم B – 2026‑10‑18 من 10:00 إلى 12:00  \n- Mathematics exam – CE2 قسم C – 2026‑10‑20 من 12:00 إلى 14:00  \n- Language exam – CM1 قسم B – 2026‑10‑21 من 13:00 إلى 15:00  \n- History exam – CM2 قسم C – 2026‑10‑23 من 09:00 إلى 11:00  \n\nمزيد من الامتحانات متوفرة إذا رغبت في عرضها أو تصفيتها.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-upcoming-exams-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 3,
+          "historyMs": 0,
+          "routingMs": 502,
+          "contextMs": 2.2,
+          "prepareMs": 504.4,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 1204.6,
+          "finishMs": 1315.7
+        },
+        "steps": [
+          {
+            "endMs": 851.8,
+            "finishReason": "tool-calls",
+            "inputTokens": 1574,
+            "outputTokens": 70,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 1315.1,
+            "finishReason": "stop",
+            "inputTokens": 5759,
+            "outputTokens": 191,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "8a82ee4c8",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 11934,
+            "startMs": 842.3,
+            "durationMs": 8.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 7333,
+          "outputTokens": 261,
+          "totalTokens": 7594,
+          "cachedInputTokens": 2688,
+          "reasoningTokens": 36
+        },
+        "cost": {
+          "promptTokens": 7333,
+          "completionTokens": 261,
+          "totalTokens": 7594,
+          "inputCost": 0.000285987,
+          "outputCost": 0.00004959,
+          "totalCost": 0.00033557700000000004,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-upcoming-exams-ar-1",
+            "startMs": 6.7,
+            "durationMs": 488.7,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 7.3,
+                "durationMs": 488.1,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 16
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 16,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 15,
+      "clientQueueMs": 10252,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "students-and-teachers-ar",
+      "language": "ar",
+      "kind": "multi-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-students-and-teachers-ar-1",
+      "requestId": "bench-fcf70cb1-students-and-teachers-ar-1",
+      "httpStatus": 200,
+      "headersMs": 344,
+      "streamProtocol": "v1",
+      "firstByteMs": 344,
+      "firstTextMs": 344,
+      "finishChunkMs": 344,
+      "bodyEndMs": 345,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 2,
+        "tool-output-available": 2,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 60,
+      "text": "عدد التلاميذ المسجلين هذه السنة هو 100، وعدد الأساتذة هو 50.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-students-and-teachers-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 296.9,
+          "contextMs": 2,
+          "prepareMs": 311.1,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 311.2,
+          "finishMs": 311.2
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "6443752a-06ce-4c5e-bf81-c954ad232c85",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 61,
+            "startMs": 299.4,
+            "durationMs": 6.6
+          },
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "839083fc-4a00-4d10-8387-ecd8969b90fe",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 60,
+            "startMs": 306,
+            "durationMs": 5.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-students-and-teachers-ar-1",
+            "startMs": 0.3,
+            "durationMs": 287.9,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.7,
+                "durationMs": 287.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 17
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 17,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 16,
+      "clientQueueMs": 11661,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "missing-student-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-missing-student-ar-1",
+      "requestId": "bench-fcf70cb1-missing-student-ar-1",
+      "httpStatus": 200,
+      "headersMs": 267,
+      "streamProtocol": "v1",
+      "firstByteMs": 268,
+      "firstTextMs": 904,
+      "finishChunkMs": 932,
+      "bodyEndMs": 933,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 8,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 3372,
+        "completionTokens": 131,
+        "totalTokens": 3503,
+        "inputCost": 0.000131508,
+        "outputCost": 0.000024890000000000004,
+        "totalCost": 0.000156398,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 146,
+      "text": "عذرًا، لا يوجد أي تلميذ يُطابق الاسم **Zzbench Qqtest** في سجلات النظام للعام الدراسي 2026‑2027. الرجاء التحقق من الكتابة أو تقديم معلومات إضافية.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-missing-student-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 235.8,
+          "contextMs": 1.7,
+          "prepareMs": 237.8,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 878.4,
+          "finishMs": 907.2
+        },
+        "steps": [
+          {
+            "endMs": 570.4,
+            "finishReason": "tool-calls",
+            "inputTokens": 1664,
+            "outputTokens": 58,
+            "toolCalls": [
+              "search_search_students"
+            ]
+          },
+          {
+            "endMs": 906.6,
+            "finishReason": "stop",
+            "inputTokens": 1708,
+            "outputTokens": 73,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "search_search_students",
+            "toolCallId": "b3d251ef2",
+            "outcome": "executed",
+            "inputChars": 32,
+            "resultChars": 2,
+            "startMs": 563.7,
+            "durationMs": 5.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 3372,
+          "outputTokens": 131,
+          "totalTokens": 3503,
+          "cachedInputTokens": 2560,
+          "reasoningTokens": 38
+        },
+        "cost": {
+          "promptTokens": 3372,
+          "completionTokens": 131,
+          "totalTokens": 3503,
+          "inputCost": 0.000131508,
+          "outputCost": 0.000024890000000000004,
+          "totalCost": 0.000156398,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-missing-student-ar-1",
+            "startMs": 0.5,
+            "durationMs": 227.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 1,
+                "durationMs": 226.5,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 18
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 18,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 17,
+      "clientQueueMs": 12056,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "attendance-mark-blocked-ar",
+      "language": "ar",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-attendance-mark-blocked-ar-1",
+      "requestId": "bench-fcf70cb1-attendance-mark-blocked-ar-1",
+      "httpStatus": 200,
+      "headersMs": 320,
+      "streamProtocol": "v1",
+      "firstByteMs": 321,
+      "firstTextMs": 321,
+      "finishChunkMs": 321,
+      "bodyEndMs": 322,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 104,
+      "text": "لا يمكنني تسجيل أو تعديل الحضور والغياب في هذه الدردشة. يرجى استخدام صفحة الحضور والغياب في لوحة التحكم.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-attendance-mark-blocked-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 296.6,
+          "contextMs": 1.9,
+          "prepareMs": 299.1,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 299.3,
+          "finishMs": 299.3
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-attendance-mark-blocked-ar-1",
+            "startMs": 0.3,
+            "durationMs": 287.4,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.6,
+                "durationMs": 287.1,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 19
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 19,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 18,
+      "clientQueueMs": 13043,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "announcement-blocked-ar",
+      "language": "ar",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-announcement-blocked-ar-1",
+      "requestId": "bench-fcf70cb1-announcement-blocked-ar-1",
+      "httpStatus": 200,
+      "headersMs": 491,
+      "streamProtocol": "v1",
+      "firstByteMs": 491,
+      "firstTextMs": 491,
+      "finishChunkMs": 491,
+      "bodyEndMs": 491,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 69,
+      "text": "لا يمكنني إجراء هذا التغيير في هذه الدردشة. يرجى استخدام لوحة التحكم.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-announcement-blocked-ar-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 3,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 465.4,
+          "contextMs": 1.6,
+          "prepareMs": 467.4,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 467.5,
+          "finishMs": 467.5
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-announcement-blocked-ar-1",
+            "startMs": 0.4,
+            "durationMs": 457,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.8,
+                "durationMs": 456.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 20
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ar",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 20,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 19,
+      "clientQueueMs": 13412,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "greeting-ary",
+      "language": "ary",
+      "kind": "small-talk",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-greeting-ary-1",
+      "requestId": "bench-fcf70cb1-greeting-ary-1",
+      "httpStatus": 200,
+      "headersMs": 205,
+      "streamProtocol": "v1",
+      "firstByteMs": 205,
+      "firstTextMs": 534,
+      "finishChunkMs": 607,
+      "bodyEndMs": 607,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 1,
+        "text-start": 1,
+        "text-delta": 16,
+        "text-end": 1,
+        "finish-step": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 1893,
+        "completionTokens": 119,
+        "totalTokens": 2012,
+        "inputCost": 0.000073827,
+        "outputCost": 0.000022610000000000002,
+        "totalCost": 0.000096437,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 244,
+      "text": "السلام! نقدر نبحث على معلومات الحَصاد ديال المدرسة، بحال عدد التلاميذ أو الأساتذة، الحضور، الدرجات، الأقسام، المواد، الفلوس، الامتحانات، … مثال: “شحال عدد التلاميذ هاد العام؟” ولا “شنو هوما الامتحانات الجاية?”. إذا بغيتي شي حاجة أخرى قوليها لي.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-greeting-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 6,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 179.5,
+          "contextMs": 1.7,
+          "prepareMs": 181.4,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 515.5,
+          "finishMs": 588.6
+        },
+        "steps": [
+          {
+            "endMs": 588.2,
+            "finishReason": "stop",
+            "inputTokens": 1893,
+            "outputTokens": 119,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 1893,
+          "outputTokens": 119,
+          "totalTokens": 2012,
+          "cachedInputTokens": 1152,
+          "reasoningTokens": 21
+        },
+        "cost": {
+          "promptTokens": 1893,
+          "completionTokens": 119,
+          "totalTokens": 2012,
+          "inputCost": 0.000073827,
+          "outputCost": 0.000022610000000000002,
+          "totalCost": 0.000096437,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-greeting-ary-1",
+            "startMs": 0.3,
+            "durationMs": 171,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.7,
+                "durationMs": 170.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 21
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 21,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 20,
+      "clientQueueMs": 13965,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "student-count-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-student-count-ary-1",
+      "requestId": "bench-fcf70cb1-student-count-ary-1",
+      "httpStatus": 200,
+      "headersMs": 210,
+      "streamProtocol": "v1",
+      "firstByteMs": 210,
+      "firstTextMs": 210,
+      "finishChunkMs": 210,
+      "bodyEndMs": 211,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 35,
+      "text": "كاينين 100 تلميذ مسجلين فهاد العام.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-student-count-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 185.3,
+          "contextMs": 1.8,
+          "prepareMs": 192.7,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 192.8,
+          "finishMs": 192.8
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "51d45867-ee44-4322-b7e3-38438931fc31",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 61,
+            "startMs": 187.6,
+            "durationMs": 5.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-student-count-ary-1",
+            "startMs": 0.4,
+            "durationMs": 176.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.8,
+                "durationMs": 175.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 22
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 22,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 21,
+      "clientQueueMs": 14611,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "teacher-count-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-teacher-count-ary-1",
+      "requestId": "bench-fcf70cb1-teacher-count-ary-1",
+      "httpStatus": 200,
+      "headersMs": 173,
+      "streamProtocol": "v1",
+      "firstByteMs": 174,
+      "firstTextMs": 174,
+      "finishChunkMs": 174,
+      "bodyEndMs": 174,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 25,
+      "text": "كاينين 50 أستاذ فالمدرسة.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-teacher-count-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 146.3,
+          "contextMs": 1.6,
+          "prepareMs": 152.5,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 152.6,
+          "finishMs": 152.6
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "14441072-1ba7-4794-ac84-4f18056638bf",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 60,
+            "startMs": 148.2,
+            "durationMs": 4.3
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-teacher-count-ary-1",
+            "startMs": 0.3,
+            "durationMs": 137.6,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 137.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 23
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 23,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 22,
+      "clientQueueMs": 14861,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "classes-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-classes-ary-1",
+      "requestId": "bench-fcf70cb1-classes-ary-1",
+      "httpStatus": 200,
+      "headersMs": 211,
+      "streamProtocol": "v1",
+      "firstByteMs": 211,
+      "firstTextMs": 948,
+      "finishChunkMs": 1052,
+      "bodyEndMs": 1052,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 20,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 8977,
+        "completionTokens": 166,
+        "totalTokens": 9143,
+        "inputCost": 0.00035010300000000005,
+        "outputCost": 0.00003154,
+        "totalCost": 0.00038164300000000003,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 211,
+      "text": "هنا لائحة الأقسام ديال المدرسة فـالسنة الدراسية 2026‑2027:\n\n- CP: A, B, C  \n- CE1: A, B, C  \n- CE2: A, B, C  \n- CM1: A, B, C  \n- CM2: A, B, C  \n- CE6: A, B, C  \n- 1AC: A, B, C  \n- 2AC: A, B, C  \n- 3AC: A, B, C  ",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-classes-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 186.2,
+          "contextMs": 3.3,
+          "prepareMs": 189.7,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 930.5,
+          "finishMs": 1034.5
+        },
+        "steps": [
+          {
+            "endMs": 532.5,
+            "finishReason": "tool-calls",
+            "inputTokens": 1612,
+            "outputTokens": 48,
+            "toolCalls": [
+              "sections_get_sections"
+            ]
+          },
+          {
+            "endMs": 1033.9,
+            "finishReason": "stop",
+            "inputTokens": 7365,
+            "outputTokens": 118,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "sections_get_sections",
+            "toolCallId": "8d3872b2a",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 14347,
+            "startMs": 526.6,
+            "durationMs": 5.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 8977,
+          "outputTokens": 166,
+          "totalTokens": 9143,
+          "cachedInputTokens": 2688,
+          "reasoningTokens": 18
+        },
+        "cost": {
+          "promptTokens": 8977,
+          "completionTokens": 166,
+          "totalTokens": 9143,
+          "inputCost": 0.00035010300000000005,
+          "outputCost": 0.00003154,
+          "totalCost": 0.00038164300000000003,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-classes-ary-1",
+            "startMs": 0.3,
+            "durationMs": 178.7,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.7,
+                "durationMs": 178.3,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 24
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 24,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 23,
+      "clientQueueMs": 15092,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "attendance-today-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-attendance-today-ary-1",
+      "requestId": "bench-fcf70cb1-attendance-today-ary-1",
+      "httpStatus": 200,
+      "headersMs": 161,
+      "streamProtocol": "v1",
+      "firstByteMs": 161,
+      "firstTextMs": 921,
+      "finishChunkMs": 958,
+      "bodyEndMs": 959,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 2,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 6,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 3410,
+        "completionTokens": 97,
+        "totalTokens": 3507,
+        "inputCost": 0.00013298999999999999,
+        "outputCost": 0.00001843,
+        "totalCost": 0.00015141999999999998,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 85,
+      "text": "الحضور ديال التلاميذ اليوم ما فيه حتى سجل. ما كاينش حتى حضور ولا غياب مسجلين اليوم.  ",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-attendance-today-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 1.6,
+          "historyMs": 0,
+          "routingMs": 139.2,
+          "contextMs": 1.7,
+          "prepareMs": 141.1,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 905.8,
+          "finishMs": 943.5
+        },
+        "steps": [
+          {
+            "endMs": 486.7,
+            "finishReason": "tool-calls",
+            "inputTokens": 1683,
+            "outputTokens": 63,
+            "toolCalls": [
+              "attendance_get_today_students"
+            ]
+          },
+          {
+            "endMs": 942.9,
+            "finishReason": "stop",
+            "inputTokens": 1727,
+            "outputTokens": 34,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "attendance_get_today_students",
+            "toolCallId": "40b6c91f4",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 475.3,
+            "durationMs": 10.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 3410,
+          "outputTokens": 97,
+          "totalTokens": 3507,
+          "cachedInputTokens": 2816,
+          "reasoningTokens": 31
+        },
+        "cost": {
+          "promptTokens": 3410,
+          "completionTokens": 97,
+          "totalTokens": 3507,
+          "inputCost": 0.00013298999999999999,
+          "outputCost": 0.00001843,
+          "totalCost": 0.00015141999999999998,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-attendance-today-ary-1",
+            "startMs": 1.8,
+            "durationMs": 131.2,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 2.2,
+                "durationMs": 130.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 25
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 25,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 24,
+      "clientQueueMs": 16193,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "upcoming-exams-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-upcoming-exams-ary-1",
+      "requestId": "bench-fcf70cb1-upcoming-exams-ary-1",
+      "httpStatus": 200,
+      "headersMs": 222,
+      "streamProtocol": "v1",
+      "firstByteMs": 222,
+      "firstTextMs": 924,
+      "finishChunkMs": 1022,
+      "bodyEndMs": 1022,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 3,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 20,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 7405,
+        "completionTokens": 266,
+        "totalTokens": 7671,
+        "inputCost": 0.000288795,
+        "outputCost": 0.00005054,
+        "totalCost": 0.000339335,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 431,
+      "text": "الامتحانات الجايين (العام الدراسي 2026‑2027) :\n\n- Language exam – CP, قسم C – 2026‑10‑17, 09:00‑11:00  \n- Science exam – CE1, قسم B – 2026‑10‑18, 10:00‑12:00  \n- Mathematics exam – CE2, قسم C – 2026‑10‑20, 12:00‑14:00  \n- Language exam – CM1, قسم B – 2026‑10‑21, 13:00‑15:00  \n- History exam – CM2, قسم C – 2026‑10‑23, 09:00‑11:00  \n\nكاينين امتحانات أخرى متاحة. إذا كنتي باغي تشوف باقي الامتحانات أو تصفي على شي فئة معينة، قولي لي.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-upcoming-exams-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 187.3,
+          "contextMs": 13.5,
+          "prepareMs": 201,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 905.5,
+          "finishMs": 1003.5
+        },
+        "steps": [
+          {
+            "endMs": 533.6,
+            "finishReason": "tool-calls",
+            "inputTokens": 1610,
+            "outputTokens": 76,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 1003.2,
+            "finishReason": "stop",
+            "inputTokens": 5795,
+            "outputTokens": 190,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "f549b5074",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 11934,
+            "startMs": 525,
+            "durationMs": 7.9
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 7405,
+          "outputTokens": 266,
+          "totalTokens": 7671,
+          "cachedInputTokens": 2304,
+          "reasoningTokens": 42
+        },
+        "cost": {
+          "promptTokens": 7405,
+          "completionTokens": 266,
+          "totalTokens": 7671,
+          "inputCost": 0.000288795,
+          "outputCost": 0.00005054,
+          "totalCost": 0.000339335,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-upcoming-exams-ary-1",
+            "startMs": 0.3,
+            "durationMs": 179.6,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 179.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 26
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 26,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 25,
+      "clientQueueMs": 17186,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "students-and-teachers-ary",
+      "language": "ary",
+      "kind": "multi-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-students-and-teachers-ary-1",
+      "requestId": "bench-fcf70cb1-students-and-teachers-ary-1",
+      "httpStatus": 200,
+      "headersMs": 318,
+      "streamProtocol": "v1",
+      "firstByteMs": 319,
+      "firstTextMs": 319,
+      "finishChunkMs": 319,
+      "bodyEndMs": 319,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "tool-input-available": 2,
+        "tool-output-available": 2,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 61,
+      "text": "كاينين 100 تلميذ مسجلين فهاد العام وكاينين 50 أستاذ فالمدرسة.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-students-and-teachers-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 278.7,
+          "contextMs": 2.1,
+          "prepareMs": 294.3,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 294.5,
+          "finishMs": 294.5
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "effbfe8b-ff99-4d93-9ff9-9ca29e2880fd",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 61,
+            "startMs": 281.3,
+            "durationMs": 7.8
+          },
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "6e0505bf-1f55-4040-b3f9-8e89cacdf05a",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 60,
+            "startMs": 289.2,
+            "durationMs": 5.3
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-students-and-teachers-ary-1",
+            "startMs": 0.5,
+            "durationMs": 268.7,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.9,
+                "durationMs": 268.3,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 27
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 27,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 26,
+      "clientQueueMs": 18257,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "missing-student-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-missing-student-ary-1",
+      "requestId": "bench-fcf70cb1-missing-student-ary-1",
+      "httpStatus": 200,
+      "headersMs": 211,
+      "streamProtocol": "v1",
+      "firstByteMs": 211,
+      "firstTextMs": 913,
+      "finishChunkMs": 950,
+      "bodyEndMs": 951,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "start-step": 2,
+        "text-start": 2,
+        "tool-input-start": 1,
+        "tool-input-delta": 5,
+        "text-end": 2,
+        "tool-input-available": 1,
+        "tool-output-available": 1,
+        "finish-step": 2,
+        "text-delta": 9,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "input": true,
+          "outcome": "output"
+        }
+      ],
+      "streamErrors": [],
+      "metadata": {
+        "promptTokens": 3306,
+        "completionTokens": 117,
+        "totalTokens": 3423,
+        "inputCost": 0.000128934,
+        "outputCost": 0.00002223,
+        "totalCost": 0.00015116400000000002,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "textLength": 139,
+      "text": "ما لقيتش التلميذ اللي سميتو **Zzbench Qqtest** فهاد العام الدراسي. إلا بغيتي شي معلومات على تلميذ آخر ولا عندك رقم تعريف ديالو، عاود سولي .",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-missing-student-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 188.8,
+          "contextMs": 1.2,
+          "prepareMs": 190.2,
+          "persistenceMs": 0.1
+        },
+        "marks": {
+          "firstTextMs": 895.3,
+          "finishMs": 932.6
+        },
+        "steps": [
+          {
+            "endMs": 577.2,
+            "finishReason": "tool-calls",
+            "inputTokens": 1631,
+            "outputTokens": 43,
+            "toolCalls": [
+              "search_search_students"
+            ]
+          },
+          {
+            "endMs": 932.2,
+            "finishReason": "stop",
+            "inputTokens": 1675,
+            "outputTokens": 74,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "search_search_students",
+            "toolCallId": "f4c39e443",
+            "outcome": "executed",
+            "inputChars": 32,
+            "resultChars": 2,
+            "startMs": 573,
+            "durationMs": 3.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 3306,
+          "outputTokens": 117,
+          "totalTokens": 3423,
+          "cachedInputTokens": 2816,
+          "reasoningTokens": 23
+        },
+        "cost": {
+          "promptTokens": 3306,
+          "completionTokens": 117,
+          "totalTokens": 3423,
+          "inputCost": 0.000128934,
+          "outputCost": 0.00002223,
+          "totalCost": 0.00015116400000000002,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-missing-student-ary-1",
+            "startMs": 0.3,
+            "durationMs": 183,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.6,
+                "durationMs": 182.7,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 28
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 28,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 27,
+      "clientQueueMs": 18621,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "attendance-mark-blocked-ary",
+      "language": "ary",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-attendance-mark-blocked-ary-1",
+      "requestId": "bench-fcf70cb1-attendance-mark-blocked-ary-1",
+      "httpStatus": 200,
+      "headersMs": 221,
+      "streamProtocol": "v1",
+      "firstByteMs": 222,
+      "firstTextMs": 222,
+      "finishChunkMs": 222,
+      "bodyEndMs": 222,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 87,
+      "text": "ما نقدرش نسجل أو نبدل الحضور والغياب هنا. خاصك تستعمل صفحة الحضور والغياب فلوحة التحكم.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-attendance-mark-blocked-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 203.3,
+          "contextMs": 1.6,
+          "prepareMs": 205.1,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 205.2,
+          "finishMs": 205.2
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-attendance-mark-blocked-ary-1",
+            "startMs": 0.2,
+            "durationMs": 195.6,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.5,
+                "durationMs": 195.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 29
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 29,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 28,
+      "clientQueueMs": 19612,
+      "model": "openai/gpt-oss-120b"
+    },
+    {
+      "id": "announcement-blocked-ary",
+      "language": "ary",
+      "kind": "blocked-write",
+      "repetition": 1,
+      "sessionId": "bench-fcf70cb1-announcement-blocked-ary-1",
+      "requestId": "bench-fcf70cb1-announcement-blocked-ary-1",
+      "httpStatus": 200,
+      "headersMs": 522,
+      "streamProtocol": "v1",
+      "firstByteMs": 523,
+      "firstTextMs": 523,
+      "finishChunkMs": 523,
+      "bodyEndMs": 523,
+      "finishReason": "stop",
+      "sawDone": true,
+      "chunkCounts": {
+        "start": 1,
+        "text-start": 1,
+        "text-delta": 1,
+        "text-end": 1,
+        "finish": 1
+      },
+      "malformedEvents": 0,
+      "tools": [],
+      "streamErrors": [],
+      "metadata": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "textLength": 64,
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "outcome": "completed",
+      "correlationError": null,
+      "server": {
+        "version": 1,
+        "correlationId": "bench-fcf70cb1-announcement-blocked-ary-1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 4,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 497.1,
+          "contextMs": 3.2,
+          "prepareMs": 500.7,
+          "persistenceMs": 0
+        },
+        "marks": {
+          "firstTextMs": 500.8,
+          "finishMs": 500.8
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "bench-fcf70cb1-announcement-blocked-ary-1",
+            "startMs": 0.5,
+            "durationMs": 488.7,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.9,
+                "durationMs": 488.3,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 30
+        }
+      },
+      "checks": {
+        "missingToolGroups": [],
+        "missingToolCalls": [],
+        "forbiddenToolOutputs": [],
+        "blockedTools": [],
+        "forbiddenCheckSource": "server",
+        "missingFacts": [],
+        "forbiddenFacts": [],
+        "replyLanguage": "ar",
+        "wrongLanguage": false,
+        "languageInconclusive": false,
+        "factFailures": [],
+        "factReviewRequired": false,
+        "mixedLanguage": false,
+        "wrongRegister": false,
+        "replyRegister": "ary",
+        "writeClaim": null,
+        "writePromise": null,
+        "reviewRequired": false,
+        "passed": true
+      },
+      "cacheCondition": {
+        "mode": "fresh",
+        "reset": {
+          "enabled": true,
+          "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+          "resetCount": 30,
+          "caches": [
+            "query-embedding",
+            "knowledge-context"
+          ]
+        },
+        "verified": true,
+        "failures": []
+      },
+      "scheduleIndex": 29,
+      "clientQueueMs": 19871,
+      "model": "openai/gpt-oss-120b"
+    }
+  ],
+  "gitHead": "36c05413e1cedbe439671d31a3c80d82cb8e327d",
+  "workingTreeDirty": true,
+  "configSourceSha256": {
+    "index.ts": "6ef7ce63dad1ec715eacdbabfdd99dca1c43cb84d570e6a5a6859be80357a248",
+    "ragConfig.ts": "17cf2a1bef79eba4aedcc6b875a09c312ac0e11b9541ae155013e7dacbb1486d",
+    "chatbotConfig.ts": "ca610e93debb99edbca01e603146d13367f4c7118becc4144dec0ff79a11ae72",
+    "chatbotSystemPrompt.ts": "b2a280a188260f29855ee8941d374834a57620674170ece859bb64e7bb839a63"
+  },
+  "scoringSourceSha256": {
+    "chatbot-scoring.mjs": "fffd4a5eb403a6012b8d429ae0f1789ef61a43f1a599cfce577c37494eed58dc",
+    "chatbot-facts.mjs": "eeea0b8a026ec30ecb99ecede14c776c46097aaca2a273c3111d9497d1adb482",
+    "chatbot-language.mjs": "03416a3dc100f061acebd566cec4dd86f3c7c9ba9610c12a0b157cdc27329fdb",
+    "chatbot-claims.mjs": "9c3e65c84d82de078ac8529cf559787d0d5d0e05e4f418e1d8e24595ebaef5bf"
+  },
+  "chatContextSourceSha256": {
+    "SchoolChatContextProvider.ts": "7453131e09600bae572c79693c14f7a6de91f6c6a28657169cd909f89b28cd96",
+    "schoolReplyContext.ts": "026ca22c8a3a584a3b94369137d347fc649e6ba9d1032a385a8c8912a53adb5e",
+    "schoolReplyTemplates.ts": "00a10eb1be9ec17aac16601847035025f4979df10f636a521fa6a641e5718a09"
+  },
+  "conditions": {
+    "applicationCaches": "reset-before-each-request; verification required",
+    "embeddingModelResidency": "unverified",
+    "providerPromptCache": "uncontrolled",
+    "note": "Source hashes describe the checkout, not the effective running configuration. Query/knowledge resets only apply in fresh mode; embedding models are never unloaded."
+  },
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "comparison": null,
+  "cacheControl": {
+    "enabled": true,
+    "instanceId": "3318baa5-433a-42e8-97ba-e22130390bc6",
+    "resetCount": 0,
+    "caches": [
+      "query-embedding",
+      "knowledge-context"
+    ]
+  },
+  "loadElapsedMs": 20493,
+  "summary": {
+    "requests": 30,
+    "load": {
+      "concurrency": 1,
+      "duplicateRequestIds": 0,
+      "requestsWithVerifiedDiagnostics": 30,
+      "requestsWithoutDiagnostics": 0,
+      "correlationErrors": 0,
+      "http429": 0,
+      "clientQueueMs": {
+        "p50": 9409,
+        "p95": 19612
+      },
+      "note": "Client queue time is the wait for a worker, separate from request latency; server/provider queueing is not directly measured. Each worker includes diagnostic retrieval. Run each concurrency level separately."
+    },
+    "cacheConditions": {
+      "mode": "fresh",
+      "verifiedFresh": 30,
+      "failedVerification": 0,
+      "note": "Fresh verifies supported query-embedding/knowledge-context resets and a completed routing miss with a provider attempt on the same app instance. Model residency, settings caches and provider prompt caching remain uncontrolled."
+    },
+    "byOutcome": {
+      "completed": 30
+    },
+    "server": {
+      "n": 30,
+      "replySources": {
+        "template": 15,
+        "model": 15
+      },
+      "missing": 0,
+      "p50": {
+        "settingsMs": 0,
+        "historyMs": 0,
+        "routingMs": 188.8,
+        "contextMs": 1.7,
+        "prepareMs": 195.4,
+        "persistenceMs": 0.1,
+        "toolMs": 5,
+        "modelAndStreamMs": 0,
+        "serverFirstTextMs": 500.8,
+        "serverFinishMs": 500.8,
+        "clientOverheadFirstTextMs": 18.600000000000023,
+        "steps": 0
+      },
+      "p95": {
+        "settingsMs": 2.6,
+        "historyMs": 0,
+        "routingMs": 497.1,
+        "contextMs": 3.3,
+        "prepareMs": 500.7,
+        "persistenceMs": 0.1,
+        "toolMs": 11.7,
+        "modelAndStreamMs": 839.5999999999999,
+        "serverFirstTextMs": 1204.6,
+        "serverFinishMs": 1315.7,
+        "clientOverheadFirstTextMs": 29.40000000000009,
+        "steps": 2
+      },
+      "toolOutcomes": {
+        "executed": 24
+      },
+      "note": "prepareMs contains routingMs and contextMs; do not add them."
+    },
+    "embeddings": {
+      "requestsWithCapture": 30,
+      "requestsWithoutCapture": 0,
+      "requestsWithIncompleteCapture": 0,
+      "requestsWithNoCalls": 0,
+      "logicalCalls": 30,
+      "providerAttempts": 30,
+      "byCache": {
+        "miss": 30
+      },
+      "byOperation": {
+        "tool-routing": 30
+      },
+      "byOutcome": {
+        "completed": 30
+      },
+      "attemptOutcomes": {
+        "completed": 30
+      },
+      "logicalCallMs": {
+        "p50": 183,
+        "p95": 488.7
+      },
+      "providerAttemptMs": {
+        "p50": 182.7,
+        "p95": 488.1
+      },
+      "note": "All outcomes included; incomplete capture contains partial counts. Attempts nest inside logical calls, which overlap routing/context/preparation/tool execution; do not add durations. Missing capture is unknown."
+    },
+    "usage": {
+      "requestsWithUsage": 30,
+      "requestsWithKnownCost": 30,
+      "requestsWithoutKnownCost": 0,
+      "promptTokens": 67037,
+      "completionTokens": 2135,
+      "estimatedCostUsd": 0.0030200930000000006,
+      "pricingFoundForAll": true,
+      "note": "Totals include known values only, including failed attempts. Unknown cost is not zero; provider billing is authoritative."
+    },
+    "declaredCosts": {
+      "requestsWithDeclaredCost": 0,
+      "estimatedCostUsd": 0,
+      "note": "Explicit price-file estimates for missing installed prices; separate from raw SDK metadata and provider billing."
+    },
+    "completedAndChecksPassed": 30,
+    "wrongLanguage": 0,
+    "languageInconclusive": 0,
+    "mixedLanguage": 0,
+    "wrongRegister": 0,
+    "factualFailures": 0,
+    "reviewRequired": 0,
+    "wrongToolArguments": 0,
+    "falseWriteClaims": 0,
+    "writePromises": 0,
+    "completed": {
+      "n": 30,
+      "firstTextP50": 523,
+      "firstTextP95": 1234,
+      "completeP50": 523,
+      "completeP95": 1345
+    },
+    "completedByKind": {
+      "small-talk": {
+        "n": 3,
+        "firstTextP50": 549,
+        "firstTextP95": 915,
+        "completeP50": 607,
+        "completeP95": 947
+      },
+      "single-read": {
+        "n": 18,
+        "firstTextP50": 851,
+        "firstTextP95": 1477,
+        "completeP50": 907,
+        "completeP95": 1584
+      },
+      "multi-read": {
+        "n": 3,
+        "firstTextP50": 319,
+        "firstTextP95": 344,
+        "completeP50": 319,
+        "completeP95": 345
+      },
+      "blocked-write": {
+        "n": 6,
+        "firstTextP50": 321,
+        "firstTextP95": 523,
+        "completeP50": 322,
+        "completeP95": 523
+      }
+    },
+    "completedByLanguage": {
+      "fr": {
+        "n": 10,
+        "firstTextP50": 411,
+        "firstTextP95": 1477,
+        "completeP50": 411,
+        "completeP95": 1584
+      },
+      "ar": {
+        "n": 10,
+        "firstTextP50": 491,
+        "firstTextP95": 1234,
+        "completeP50": 491,
+        "completeP95": 1345
+      },
+      "ary": {
+        "n": 10,
+        "firstTextP50": 523,
+        "firstTextP95": 948,
+        "completeP50": 523,
+        "completeP95": 1052
+      }
+    },
+    "note": "Failures and timeouts are counted in byOutcome and excluded only from the completed timing rows."
+  },
+  "estimatedBudget": {
+    "maxEstimatedUsd": 0.5,
+    "requestReserveUsd": 0.01,
+    "observedEstimatedUsd": 0.003020097,
+    "reservedUsd": 0,
+    "requestsSettled": 30,
+    "requestsWithUnknownCost": 0,
+    "inFlight": 0,
+    "stoppedReason": null,
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+  }
+}

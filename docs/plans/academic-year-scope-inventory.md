@@ -94,7 +94,7 @@ handler; overlapping requests and batched tool calls keep their own years.
 | Route | Tool | Today | Target | Notes |
 | --- | --- | --- | --- | --- |
 | `GET /students` | `students_get_students` | year → `getAllForYear`; year+`onDate` → roster; none → current projection | **S**; `onDate` **D** inside the year | Consolidate `getAll`/`getAllForYear` into one filtered read; latest placement annually, dated placement for rosters |
-| `GET /students/:id` | `students_get_student` | year → `getByIdForYear`; none → identity + current class | **S** detail | No enrollment → identity with `enrollment: null`, unknown class |
+| `GET /students/:id` | `students_get_student_by_id` | year → `getByIdForYear`; none → identity + current class | **S** detail | No enrollment → identity with `enrollment: null`, unknown class |
 | `GET /students/:id/parents` | yes | links | **C** | Current parent links |
 | `GET /students/:id/enrollments` | no | admin history | **A** | Administrator enrollment-history tab |
 | `POST /students` | yes | class/section year, `yearEnrolledOn` | **W** | Enrollment service owns projections |

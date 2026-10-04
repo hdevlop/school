@@ -1,4 +1,39 @@
 /** Estimates only: SDK metadata cannot enforce or reconcile provider billing. */
+export function validateDeclaredPrices(value) {
+  if (!value || value.provider !== 'openrouter' || typeof value.source !== 'string' || !value.source.trim()
+    || typeof value.capturedAt !== 'string' || !Number.isFinite(Date.parse(value.capturedAt))
+    || !value.models || Array.isArray(value.models) || typeof value.models !== 'object'
+    || !Object.keys(value.models).length) throw new Error('Invalid declared pricing file');
+  for (const [model, rates] of Object.entries(value.models)) {
+    if (!/^[\w.:/-]{1,120}$/.test(model) || !rates
+      || ![rates.inputUsdPerMillion, rates.outputUsdPerMillion]
+        .every((rate) => typeof rate === 'number' && Number.isFinite(rate) && rate > 0 && rate <= 1000000)) {
+      throw new Error('Invalid declared model rates');
+    }
+  }
+  return value;
+}
+
+/** Explicit fallback estimates only; never replace SDK metadata or installed pricing. */
+export function estimateDeclaredCost(metadata, model, prices) {
+  if (!prices || metadata?.pricingFound === true || metadata?.model !== model
+    || metadata?.provider !== prices.provider || !Object.hasOwn(prices.models, model)) return null;
+  const { promptTokens, completionTokens, totalTokens } = metadata;
+  if (![promptTokens, completionTokens, totalTokens].every((count) => Number.isSafeInteger(count) && count >= 0)
+    || totalTokens !== promptTokens + completionTokens) return null;
+  const rates = prices.models[model];
+  return { source: 'declared-price-file', model, provider: prices.provider,
+    promptTokens, completionTokens, ...rates,
+    totalCost: (promptTokens * rates.inputUsdPerMillion + completionTokens * rates.outputUsdPerMillion) / 1000000 };
+}
+
+export function summarizeDeclaredCosts(samples) {
+  const rows = samples.filter((sample) => sample.declaredCost);
+  return { requestsWithDeclaredCost: rows.length,
+    estimatedCostUsd: rows.reduce((total, sample) => total + sample.declaredCost.totalCost, 0),
+    note: 'Explicit price-file estimates for missing installed prices; separate from raw SDK metadata and provider billing.' };
+}
+
 export function createEstimatedBudget(maxUsd, reserveUsd) {
   if (!Number.isFinite(maxUsd) || maxUsd <= 0 || !Number.isFinite(reserveUsd)
     || reserveUsd <= 0 || reserveUsd > maxUsd || maxUsd > 1000000) {

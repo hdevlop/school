@@ -33,7 +33,7 @@ export class DriverController {
   @isAdmin()
   @McpTool({ description: 'List all drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
-  async getDrivers() {
+  async listDrivers() {
     return this.driverService.getAll();
   }
 
@@ -82,7 +82,7 @@ export class DriverController {
   @Validate({ params: driverIdParam })
   @McpTool({ description: 'Get a driver by ID', readOnly: true })
   @ResMsg('drivers.success.retrieved')
-  async getDriver(@Params('id') id: string) {
+  async getDriverById(@Params('id') id: string) {
     return this.driverService.getById(id);
   }
 
@@ -144,7 +144,7 @@ export class DriverController {
   @Validate(updateDriverMcpDto)
   @McpTool({ description: 'Update a driver by ID', confirm: { level: 'warning', message: 'confirm.drivers.update' } })
   @ResMsg('drivers.success.updated')
-  async update(@Body() _body: UpdateDriverMcpDto) {
+  async updateById(@Body() _body: UpdateDriverMcpDto) {
     Err(410, t('drivers.errors.updatedFromStaff'));
   }
 
@@ -178,7 +178,7 @@ export class DriverController {
   @Validate({ params: driverIdParam })
   @McpTool('Delete a driver by ID')
   @ResMsg('drivers.success.deleted')
-  async delete(@Params('id') _id: string) {
+  async deleteById(@Params('id') _id: string) {
     Err(410, t('drivers.errors.deletedFromStaff'));
   }
 

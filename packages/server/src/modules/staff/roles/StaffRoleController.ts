@@ -19,7 +19,7 @@ export class StaffRoleController {
   @isAdmin()
   @McpTool({ description: 'List all staff roles', readOnly: true })
   @ResMsg('staffRoles.success.retrieved')
-  async list() {
+  async listAll() {
     return this.staffRoleService.list();
   }
 

@@ -98,7 +98,7 @@ describe('vehicle identity remains shared across school years', () => {
     });
     await client.connect(transport);
     try {
-      const result = await client.callTool({ name: 'vehicles_get_vehicles', arguments: {} }) as {
+      const result = await client.callTool({ name: 'vehicles_list_vehicles', arguments: {} }) as {
         content: Array<{ text: string }>; isError?: boolean;
       };
       if (result.isError) throw new Error(JSON.stringify(result.content));

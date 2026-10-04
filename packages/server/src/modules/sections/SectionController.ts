@@ -71,7 +71,7 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool({ description: 'Get a section by ID', readOnly: true })
   @ResMsg('sections.success.retrieved')
-  async getSection(@Params('id') id: string) {
+  async getSectionById(@Params('id') id: string) {
     return this.sectionService.getById(id);
   }
 
@@ -112,7 +112,7 @@ export class SectionController {
   @Validate({ params: sectionIdParam })
   @McpTool({ description: 'Delete a section by ID', confirm: { level: 'danger', message: 'confirm.sections.delete' } })
   @ResMsg('sections.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.sectionService.delete(id);
   }
 

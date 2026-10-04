@@ -30,7 +30,7 @@ export class CycleController {
   @Validate({ params: cycleIdParam })
   @McpTool({ description: 'Get a school cycle by ID', readOnly: true })
   @ResMsg('cycles.success.retrieved')
-  async getCycle(@Params('id') id: string) {
+  async getCycleById(@Params('id') id: string) {
     return this.cycleService.getById(id);
   }
 

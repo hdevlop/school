@@ -1,5 +1,47 @@
 import { describe, expect, it } from 'bun:test';
-import { createEstimatedBudget, summarizeUsage } from '../chatbot-budget.mjs';
+import { createEstimatedBudget, summarizeUsage, validateDeclaredPrices, estimateDeclaredCost, summarizeDeclaredCosts } from '../chatbot-budget.mjs';
+
+describe('explicit benchmark prices', () => {
+  const prices = { provider: 'openrouter', source: 'https://openrouter.ai/api/v1/models',
+    capturedAt: '2026-10-04T18:00:00Z', models: { candidate: { inputUsdPerMillion: 0.1, outputUsdPerMillion: 0.2 } } };
+  const metadata = { provider: 'openrouter', model: 'candidate', pricingFound: false,
+    promptTokens: 1000, completionTokens: 500, totalTokens: 1500, totalCost: 0 };
+
+  it('prices measured tokens without mutating raw unknown-cost metadata', () => {
+    validateDeclaredPrices(prices);
+    const original = structuredClone(metadata);
+    const cost = estimateDeclaredCost(metadata, 'candidate', prices);
+    expect(cost.totalCost).toBeCloseTo(0.0002, 10);
+    expect(metadata).toEqual(original);
+    const rows = [{ metadata, declaredCost: cost }];
+    expect(summarizeUsage(rows).requestsWithoutKnownCost).toBe(1);
+    expect(summarizeDeclaredCosts(rows)).toMatchObject({ requestsWithDeclaredCost: 1, estimatedCostUsd: 0.0002 });
+    const budget = createEstimatedBudget(1, 0.01);
+    budget.reserve('candidate');
+    budget.settle('candidate', { pricingFound: true, totalCost: cost.totalCost });
+    expect(budget.snapshot()).toMatchObject({ reservedUsd: 0, requestsWithUnknownCost: 0, stoppedReason: null });
+  });
+
+  it('refuses absent, mismatched or incomplete usage and leaves installed estimates alone', () => {
+    for (const value of [null, {}, { ...metadata, model: 'other' }, { ...metadata, provider: 'other' },
+      { ...metadata, pricingFound: true }, { ...metadata, completionTokens: undefined },
+      { ...metadata, promptTokens: -1 }, { ...metadata, completionTokens: NaN },
+      { ...metadata, totalTokens: 1501 }, { ...metadata, promptTokens: 1.5 }]) {
+      expect(estimateDeclaredCost(value, 'candidate', prices)).toBeNull();
+    }
+    expect(estimateDeclaredCost(metadata, 'missing', prices)).toBeNull();
+    expect(estimateDeclaredCost(metadata, 'candidate', null)).toBeNull();
+  });
+
+  it('rejects invalid rates or missing provenance before network calls', () => {
+    for (const value of [null, {}, { ...prices, provider: 'other' }, { ...prices, source: '' },
+      { ...prices, capturedAt: 'invalid' }, { ...prices, models: {} }, { ...prices, models: [] },
+      ...[0, -1, Infinity, '0.1', 1000001].map((rate) => ({ ...prices,
+        models: { candidate: { inputUsdPerMillion: rate, outputUsdPerMillion: 0.2 } } }))]) {
+      expect(() => validateDeclaredPrices(value)).toThrow();
+    }
+  });
+});
 
 describe('estimated benchmark budget', () => {
   it('counts unknown and failed-attempt usage without claiming complete pricing coverage', () => {

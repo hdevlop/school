@@ -147,13 +147,13 @@ function guards(controller: any, method: string) {
 
 describe('alert and announcement routes', () => {
   it('lets anyone with read:alerts list and read alerts, narrowed by ownership', () => {
-    for (const route of ['getAlerts', 'getAlertsCount', 'getDashboardSummary', 'getAlertsByStudent', 'getAlertById']) {
+    for (const route of ['listAlerts', 'getAlertsCount', 'getDashboardSummary', 'getAlertsByStudent', 'getAlertById']) {
       expect(guards(AlertController, route)).toEqual([['AuthGuard', null], ['PermissionGuard', 'read:alerts']]);
     }
   });
 
   it('handles status and edits with update:alerts; the service keeps edits with staff', () => {
-    for (const route of ['updateStatus', 'update']) {
+    for (const route of ['updateStatus', 'updateById']) {
       expect(guards(AlertController, route)).toEqual([['AuthGuard', null], ['PermissionGuard', 'update:alerts']]);
     }
   });
@@ -169,7 +169,7 @@ describe('alert and announcement routes', () => {
   });
 
   it('requires sign-in and read:announcements for the published and active lists', () => {
-    for (const route of ['getPublished', 'getActiveForAudience', 'getAnnouncements', 'getAnnouncement']) {
+    for (const route of ['getPublished', 'getActiveForAudience', 'getAnnouncements', 'getAnnouncementById']) {
       expect(guards(AnnouncementController, route))
         .toEqual([['AuthGuard', null], ['PermissionGuard', 'read:announcements']]);
     }

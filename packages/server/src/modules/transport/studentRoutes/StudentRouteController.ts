@@ -92,7 +92,7 @@ export class StudentRouteController {
   @Validate({ params: studentRouteIdParam })
   @McpTool({ description: 'Unassign a student from a route', confirm: { level: 'warning', message: 'confirm.studentRoutes.unassign' } })
   @ResMsg('studentRoutes.success.unassigned')
-  async unassign(@Params('id') id: string, @User() user: { id: string }) {
+  async unassignNow(@Params('id') id: string, @User() user: { id: string }) {
     return this.studentRouteService.unassign(id, undefined, user.id);
   }
 

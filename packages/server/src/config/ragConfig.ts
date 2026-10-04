@@ -63,8 +63,8 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   attendance_get_by_student: ['search_search_students'],
   // "Yesterday" or "last Monday" routes like "today"; the date tool answers it.
   attendance_get_today_students: ['attendance_get_by_date'],
-  attendance_get_today: ['attendance_get_by_date'],
-  fees_get_by_student: ['search_search_students'],
+  attendance_get_today_all: ['attendance_get_by_date'],
+  fees_get_student_fees: ['search_search_students'],
   payments_get_by_student: ['search_search_students'],
   students_get_student_parents: ['search_search_students'],
   'student-routes_get_by_student': ['search_search_students'],

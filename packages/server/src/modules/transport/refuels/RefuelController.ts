@@ -94,7 +94,7 @@ export class RefuelController {
   @Validate({ params: refuelIdParam })
   @McpTool({ description: 'Get a refuel by ID', readOnly: true })
   @ResMsg('refuels.success.retrieved')
-  async getRefuel(@Params('id') id: string) {
+  async getRefuelById(@Params('id') id: string) {
     return this.refuelService.getById(id);
   }
 
@@ -129,7 +129,7 @@ export class RefuelController {
   @Validate({ params: refuelIdParam })
   @McpTool('Delete a refuel record')
   @ResMsg('refuels.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.refuelService.delete(id);
   }
 

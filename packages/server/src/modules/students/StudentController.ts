@@ -46,7 +46,7 @@ export class StudentController {
   @Validate({ params: studentIdParam, query: studentYearQuery })
   @McpTool({ description: 'Get a student by ID', readOnly: true })
   @ResMsg('students.success.retrieved')
-  async getStudent(@Params('id') id: string) {
+  async getStudentById(@Params('id') id: string) {
     return this.studentService.getById(id);
   }
 
@@ -107,7 +107,7 @@ export class StudentController {
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Delete a student by ID', confirm: { level: 'danger', message: 'confirm.students.delete' } })
   @ResMsg('students.success.deleted')
-  async delete(@Params('id') id: string) {
+  async deleteById(@Params('id') id: string) {
     return this.studentService.delete(id);
   }
 

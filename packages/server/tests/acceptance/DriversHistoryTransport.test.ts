@@ -102,8 +102,8 @@ describe('driver identity remains shared across school years', () => {
     await client.connect(transport);
     try {
       const tools = await client.listTools();
-      expect(tools.tools.some((tool) => tool.name === 'drivers_get_drivers')).toBe(true);
-      const result = await client.callTool({ name: 'drivers_get_drivers' }) as {
+      expect(tools.tools.some((tool) => tool.name === 'drivers_list_drivers')).toBe(true);
+      const result = await client.callTool({ name: 'drivers_list_drivers' }) as {
         content: Array<{ text: string }>; isError?: boolean;
       };
       expect(result.isError).not.toBe(true);

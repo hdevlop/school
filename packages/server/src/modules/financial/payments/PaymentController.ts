@@ -176,7 +176,7 @@ export class PaymentController {
   @Validate({ params: paymentIdParam, body: updatePaymentDto })
   @McpTool({ description: 'Update a payment by ID', confirm: { level: 'warning', message: 'confirm.payments.update' } })
   @ResMsg('fees.success.paymentUpdated')
-  async update(@Params('id') id: string, @Body() body: UpdatePaymentDto, @User() user: { id: string }) {
+  async updateById(@Params('id') id: string, @Body() body: UpdatePaymentDto, @User() user: { id: string }) {
     return this.paymentService.update(id, body, user.id);
   }
 

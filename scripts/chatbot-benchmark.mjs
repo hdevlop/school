@@ -9,7 +9,9 @@ import { createUiStreamParser, percentile } from './chatbot-stream.mjs';
 import { scoreReply, validateCorpus } from './chatbot-scoring.mjs';
 import { summarizeEmbeddingDiagnostics } from './chatbot-embedding-diagnostics.mjs';
 import { runLoad, summarizeLoad, validateCorrelation, validateLoadOptions } from './chatbot-load.mjs';
-import { createEstimatedBudget, summarizeUsage } from './chatbot-budget.mjs';
+import { createEstimatedBudget, summarizeUsage, validateDeclaredPrices, estimateDeclaredCost, summarizeDeclaredCosts } from './chatbot-budget.mjs';
+import { validateCacheMode, validateCacheControl, verifyFreshCache, summarizeCacheConditions } from './chatbot-cache.mjs';
+import { acquireChatbotRunLock } from './chatbot-run-lock.mjs';
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
   const entry = args.find((value) => value.startsWith(`--${name}=`));
@@ -23,7 +25,7 @@ const integer = (name, fallback, min, max) => {
   return value;
 };
 
-const casesPath = resolve(option('cases', 'datasets/chatbot-latency/questions.json'));
+const casesPath = resolve(option('cases', 'datasets/chatbot-latency/morocco.json'));
 const corpusText = await Bun.file(casesPath).text();
 const corpus = JSON.parse(corpusText);
 const caseCount = validateCorpus(corpus);
@@ -54,6 +56,8 @@ const compareModel = option('compare-model', '');
 const baselineOverride = option('baseline-model', '');
 const concurrency = integer('concurrency', '1', 1, 4);
 validateLoadOptions({ concurrency, compareModel, transportProbe });
+const cacheMode = option('cache-mode', 'uncontrolled');
+validateCacheMode(cacheMode, concurrency, transportProbe);
 if (preflight && (compareModel || baselineOverride || transportProbe || concurrency !== 1)) {
   throw new Error('--preflight requires concurrency 1 without comparison or transport probe');
 }
@@ -63,6 +67,10 @@ if (Boolean(maxEstimatedUsd) !== Boolean(requestReserveUsd)) {
   throw new Error('--max-estimated-usd and --request-reserve-usd must be supplied together');
 }
 const budget = maxEstimatedUsd ? createEstimatedBudget(Number(maxEstimatedUsd), Number(requestReserveUsd)) : null;
+const pricingPath = option('pricing-file', '');
+if (pricingPath && !budget) throw new Error('--pricing-file requires an explicit estimated budget');
+const pricingText = pricingPath ? await Bun.file(resolve(pricingPath)).text() : null;
+const declaredPrices = pricingText ? validateDeclaredPrices(JSON.parse(pricingText.replace(/^\uFEFF/, ''))) : null;
 const modelId = /^[\w.:/-]{1,120}$/;
 if (compareModel && (transportProbe || !modelId.test(compareModel))) {
   throw new Error('Use --compare-model=<provider model id> without --transport-probe');
@@ -93,8 +101,11 @@ const report = {
   plannedRequests: planned,
   maxRequests,
   concurrency,
+  cacheMode,
   timeoutMs,
   textStored: keepText,
+  declaredPricing: declaredPrices ? { ...declaredPrices,
+    sha256: createHash('sha256').update(pricingText).digest('hex') } : null,
   packagePins: {},
   outcome: 'blocked',
   limitations: [
@@ -116,12 +127,21 @@ const revision = Bun.spawnSync(['git', 'rev-parse', 'HEAD']);
 report.gitHead = revision.exitCode === 0 ? revision.stdout.toString().trim() : null;
 report.workingTreeDirty = Bun.spawnSync(['git', 'status', '--porcelain']).stdout.length > 0;
 report.configSourceSha256 = {};
+report.scoringSourceSha256 = {};
+report.chatContextSourceSha256 = {};
+for (const name of ['SchoolChatContextProvider.ts', 'schoolReplyContext.ts', 'schoolReplyTemplates.ts']) {
+  const file = Bun.file(`packages/server/src/modules/chat/${name}`);
+  report.chatContextSourceSha256[name] = await file.exists() ? createHash('sha256').update(await file.text()).digest('hex') : null;
+}
+for (const name of ['chatbot-scoring.mjs', 'chatbot-facts.mjs', 'chatbot-language.mjs', 'chatbot-claims.mjs']) {
+  report.scoringSourceSha256[name] = createHash('sha256').update(await Bun.file(`scripts/${name}`).text()).digest('hex');
+}
 for (const name of ['index.ts', 'ragConfig.ts', 'chatbotConfig.ts', 'chatbotSystemPrompt.ts']) {
   const file = Bun.file(`packages/server/src/config/${name}`);
   report.configSourceSha256[name] = await file.exists() ? createHash('sha256').update(await file.text()).digest('hex') : null;
 }
-report.conditions = { applicationCaches: 'uncontrolled', embeddingModelResidency: 'unverified',
-  providerPromptCache: 'uncontrolled', note: 'Source hashes describe the checkout, not the effective running configuration. No caches or model processes were reset.' };
+report.conditions = { applicationCaches: cacheMode === 'fresh' && !preflight ? 'reset-before-each-request; verification required' : 'uncontrolled', embeddingModelResidency: 'unverified',
+  providerPromptCache: 'uncontrolled', note: 'Source hashes describe the checkout, not the effective running configuration. Query/knowledge resets only apply in fresh mode; embedding models are never unloaded.' };
 
 // Fixed allowlist: no fixture or argument can reach another route. The PUT only
 // ever sends { model } (see setModel).
@@ -130,6 +150,8 @@ const routes = new Set([
   'POST /api/auth/login',
   'GET /api/ai-settings',
   'PUT /api/ai-settings',
+  'GET /api/chat-benchmark/status',
+  'POST /api/chat-benchmark/reset-caches',
 ]);
 let token;
 async function request(path, body, method = body === undefined ? 'GET' : 'POST') {
@@ -187,6 +209,7 @@ async function serverDiagnostics(requestId) {
 }
 
 let activeModel = null;
+let cacheControl = null;
 async function setModel(model) {
   if (model === activeModel) return;
   const saved = await request('/api/ai-settings', { model }, 'PUT');
@@ -216,8 +239,25 @@ async function runAll(baselineModel) {
       let sample;
       try {
         if (variant) await setModel(model);
+        const current = await request('/api/ai-settings');
+        if (current.model !== model || current.provider !== report.provider.provider) {
+          throw new Error('Shared provider/model changed during this benchmark; stopped before sending chat');
+        }
+        let reset = null;
+        if (cacheMode === 'fresh') {
+          reset = validateCacheControl(await request('/api/chat-benchmark/reset-caches', {}, 'POST'));
+          if (reset.instanceId !== cacheControl.instanceId || reset.resetCount <= cacheControl.resetCount) {
+            throw new Error('Cache reset reached another app instance or did not advance');
+          }
+          cacheControl = reset;
+        }
         sample = await chat(item, repetition, variant);
-        budget?.settle(reservationId, sample.metadata);
+        if (reset) sample.cacheCondition = verifyFreshCache(reset, sample.server);
+        // A matching server record is required before pricing an unknown model.
+        const declaredCost = sample.server?.model === model
+          ? estimateDeclaredCost(sample.metadata, model, declaredPrices) : null;
+        if (declaredCost) sample.declaredCost = declaredCost;
+        budget?.settle(reservationId, declaredCost ? { pricingFound: true, totalCost: declaredCost.totalCost } : sample.metadata);
         settled = true;
       } finally {
         if (!settled) budget?.settle(reservationId, null);
@@ -229,6 +269,9 @@ async function runAll(baselineModel) {
       console.error((variant ? `[${variant}] ` : '')
         + `${sample.id}#${repetition} ${sample.outcome} firstText=${sample.firstTextMs ?? '-'}ms complete=${sample.bodyEndMs ?? '-'}ms`
         + ` server=${sample.server ? `${sample.server.outcome} prepare=${sample.server.spans.prepareMs}ms` : sample.serverDiagnosticsError ?? '-'}`);
+      if (sample.cacheCondition && !sample.cacheCondition.verified) {
+        throw new Error('Fresh-cache verification failed; stopped scheduling');
+      }
       if (budget?.stopped) throw new Error(`Estimated budget stopped: ${budget.snapshot().stoppedReason}`);
     });
   } finally {
@@ -317,6 +360,7 @@ function summarize(samples, single = false) {
     return {
       requests: samples.length,
       load: summarizeLoad(samples, concurrency),
+      cacheConditions: summarizeCacheConditions(samples, cacheMode),
       comparison: Object.fromEntries(['baseline', 'candidate'].map((variant) => [variant, {
         model: samples.find((sample) => sample.variant === variant)?.model ?? null,
         // A request that ran on another model (settings cache, a parallel edit) is excluded.
@@ -342,13 +386,18 @@ function summarize(samples, single = false) {
   return {
     requests: samples.length,
     load: summarizeLoad(samples, concurrency),
+    cacheConditions: summarizeCacheConditions(samples, cacheMode),
     byOutcome,
     server: serverSummary(completed),
     embeddings: summarizeEmbeddingDiagnostics(samples),
     usage: summarizeUsage(samples),
+    declaredCosts: summarizeDeclaredCosts(samples),
     completedAndChecksPassed: completed.filter((sample) => sample.checks.passed).length,
     wrongLanguage: completed.filter((sample) => sample.checks.wrongLanguage).length,
     languageInconclusive: completed.filter((sample) => sample.checks.languageInconclusive).length,
+    mixedLanguage: completed.filter((sample) => sample.checks.mixedLanguage).length,
+    wrongRegister: completed.filter((sample) => sample.checks.wrongRegister).length,
+    factualFailures: completed.filter((sample) => sample.checks.factFailures.length > 0).length,
     reviewRequired: completed.filter((sample) => sample.checks.reviewRequired).length,
     wrongToolArguments: completed.filter((sample) => sample.checks.missingToolCalls.length > 0).length,
     falseWriteClaims: completed.filter((sample) => sample.checks.writeClaim).length,
@@ -374,7 +423,8 @@ function serverSummary(completed) {
       toolMs: toolMs(sample.server),
       // Provider time plus SDK streaming: whatever the finish mark holds beyond
       // preparation and tool execution.
-      modelAndStreamMs: marks.finishMs === null ? null : marks.finishMs - beforeModel - toolMs(sample.server),
+      modelAndStreamMs: sample.server.reply?.source === 'template' ? 0
+        : marks.finishMs === null ? null : marks.finishMs - beforeModel - toolMs(sample.server),
       steps: sample.server.steps.length,
       // Local transport, Next.js and stream parsing between server and client.
       clientOverheadFirstTextMs: sample.firstTextMs === null || marks.firstTextMs === null
@@ -389,6 +439,10 @@ function serverSummary(completed) {
   }
   return {
     n: rows.length,
+    replySources: {
+      template: rows.filter(sample => sample.server.reply?.source === 'template').length,
+      model: rows.filter(sample => sample.server.reply?.source !== 'template').length,
+    },
     missing: completed.length - rows.length,
     p50: Object.fromEntries(keys.map((key) => [key, percentile(derived.map((row) => row[key]), 50)])),
     p95: Object.fromEntries(keys.map((key) => [key, percentile(derived.map((row) => row[key]), 95)])),
@@ -397,10 +451,12 @@ function serverSummary(completed) {
   };
 }
 
+let releaseRunLock;
 try {
   if (planned > maxRequests) {
     throw new Error(`Planned ${planned} chat requests exceed --max-requests=${maxRequests}; set an explicit budget`);
   }
+  if (!preflight) releaseRunLock = acquireChatbotRunLock();
   report.health = await request('/api/health/status');
   if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) {
     throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD are required from the existing local environment');
@@ -422,6 +478,10 @@ try {
   const baselineModel = baselineOverride || savedModel;
   report.comparison = compareModel ? { saved: savedModel, baseline: baselineModel, candidate: compareModel } : null;
   activeModel = savedModel;
+  if (cacheMode === 'fresh') {
+    cacheControl = validateCacheControl(await request('/api/chat-benchmark/status'));
+    report.cacheControl = cacheControl;
+  }
   if (preflight) {
     report.readyForChat = Boolean(settings?.isEnabled && settings?.hasKey && savedModel);
     report.outcome = 'preflight_ok';
@@ -441,6 +501,7 @@ try {
       ? (report.samples[0].httpStatus === 200 && report.samples[0].streamProtocol ? 'transport_ok' : 'transport_failed')
       : report.samples.every((sample) => sample.outcome === 'completed' && sample.checks.passed && !sample.modelMismatch
         && !sample.correlationError && (concurrency === 1 || sample.server))
+      && report.samples.every((sample) => cacheMode !== 'fresh' || sample.cacheCondition?.verified)
       ? 'passed' : 'failures';
   }
 } catch (error) {
@@ -449,6 +510,8 @@ try {
     report.summary = summarize(report.samples);
     report.outcome = 'interrupted';
   }
+} finally {
+  releaseRunLock?.();
 }
 
 report.estimatedBudget = budget?.snapshot() ?? null;
