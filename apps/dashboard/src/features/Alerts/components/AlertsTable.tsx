@@ -12,6 +12,8 @@ import { useAlerts } from '../hooks/useAlerts';
 import { useAlertsTableColumns } from '../hooks/useAlertsTableColumns';
 import { isAboutSomeone, type AlertRecord } from '../alertConstants';
 import AlertCard from './AlertCard';
+import { useMemo } from 'react';
+import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
 
 const STATUS_ACTIONS: Array<{ status: AlertStatus; action: 'acknowledge' | 'resolve' | 'dismiss'; icon: typeof CheckCheck }> = [
   { status: 'acknowledged', action: 'acknowledge', icon: CheckCheck },
@@ -28,9 +30,15 @@ export default function AlertsTable() {
   const { t } = useTranslation();
   const { role, isFamily } = useViewerRole();
   const columns = useAlertsTableColumns();
+  const scope = useClassSectionTableScope();
   const { confirmDelete } = useDialog();
   const { alerts, isAlertsLoading, error, updateAlertStatus, deleteAlert, isDeleting } = useAlerts();
-  const rows = (alerts ?? []) as AlertRecord[];
+  const rows = useMemo(() => (alerts ?? []) as AlertRecord[], [alerts]);
+  const { matches } = scope;
+  const filteredRows = useMemo(() => rows.filter((alert) => matches({
+    classId: alert.classId ?? alert.studentClassId,
+    sectionId: alert.studentId ? alert.studentSectionId : null,
+  })), [rows, matches]);
 
   const statusActions = (alert: AlertRecord) => {
     const allowed = isFamily
@@ -74,7 +82,8 @@ export default function AlertsTable() {
       <NTable
         responsiveSkeleton
         className="min-h-0 flex-1"
-        data={rows}
+        data={filteredRows}
+        filters={scope.filters}
         columns={columns}
         loading={isAlertsLoading}
         error={failed ? error : null}
@@ -97,9 +106,9 @@ export default function AlertsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={FEATURE_ICONS.alerts}
-            title={t('alerts.page.emptyTitle')}
-            description={t('alerts.page.emptyDescription')}
+            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.alerts}
+            title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'alerts.page.emptyTitle')}
+            description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'alerts.page.emptyDescription')}
           />
         )}
         renderFilteredEmpty={() => (

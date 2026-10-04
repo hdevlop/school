@@ -118,6 +118,7 @@ export class FinanceDashboardRepository {
     const rows = await this.db.select({
       studentId: students.id,
       studentName: students.name,
+      studentCode: students.studentCode,
       studentImage: users.image,
       gender: students.gender,
       totalOverdue: sql<string>`COALESCE(SUM(${installments.balance}), 0)`,
@@ -126,7 +127,7 @@ export class FinanceDashboardRepository {
       .innerJoin(students, eq(installments.studentId, students.id))
       .leftJoin(users, eq(students.userId, users.id))
       .where(and(lt(installments.dueDate, today), gt(installments.balance, '0')))
-      .groupBy(students.id, students.name, users.image, students.gender)
+      .groupBy(students.id, students.name, students.studentCode, users.image, students.gender)
       .orderBy(sql`MIN(${installments.dueDate}) ASC`)
       .limit(limit);
 
@@ -135,6 +136,7 @@ export class FinanceDashboardRepository {
       return {
         studentId: row.studentId,
         studentName: row.studentName,
+        studentCode: row.studentCode,
         studentImage: row.studentImage,
         gender: row.gender,
         totalOverdue: Number(row.totalOverdue ?? 0),

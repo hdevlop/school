@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { Layers, Plus, SearchX } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
 import SectionForm from './SectionForm';
 import { useSections } from '../hooks/useSections';
 import { useTranslation } from 'najm-i18n/react';
@@ -17,7 +18,9 @@ function SectionsTable() {
 
   const { t } = useTranslation();
   const columns = useSectionsTableColumns();
-  const rawFilters = useSectionsTableFilters();
+  const scope = useClassSectionTableScope({ includeSection: false });
+  const sectionFilters = useSectionsTableFilters();
+  const rawFilters = useMemo(() => [...sectionFilters, ...scope.filters], [sectionFilters, scope.filters]);
 
   const {
     sections,
@@ -30,6 +33,7 @@ function SectionsTable() {
     isCreating,
     isDeleting
   } = useSections();
+  const filteredSections = useMemo(() => (sections || []).filter(scope.matches), [sections, scope.matches]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -106,7 +110,7 @@ function SectionsTable() {
       <NTable
         responsiveSkeleton
         className='min-h-0 flex-1'
-        data={sections}
+        data={filteredSections}
         columns={columns}
         filters={rawFilters}
         onCreate={handleAddClick}
@@ -126,10 +130,10 @@ function SectionsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={FEATURE_ICONS.sections}
-            title={t('emptyStates.sections.title')}
-            description={t('emptyStates.sections.description')}
-            action={(
+            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.sections}
+            title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.sections.title')}
+            description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.sections.description')}
+            action={scope.hasSelection ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('sections.dialogs.createButton')}

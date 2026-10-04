@@ -201,12 +201,12 @@ describe('fee-year balances and collection', () => {
     expect(statements[0].params).toContain(getBusinessDateOnly());
   });
 
-  it('counts days overdue from the business date', async () => {
+  it('returns the student code and counts days overdue from the business date', async () => {
     const today = getBusinessDateOnly();
     const tenDaysBefore = new Date(Date.parse(today) - 10 * 86_400_000).toISOString().slice(0, 10);
-    const { repo } = recordingRepository(() => [['s1', 'Salma', null, 'F', '44.75', tenDaysBefore]]);
+    const { repo } = recordingRepository(() => [['s1', 'Salma', 'ST-001', null, 'F', '44.75', tenDaysBefore]]);
     expect(await repo.getOverdue(6)).toEqual([{
-      studentId: 's1', studentName: 'Salma', studentImage: null, gender: 'F',
+      studentId: 's1', studentName: 'Salma', studentCode: 'ST-001', studentImage: null, gender: 'F',
       totalOverdue: 44.75, daysOverdue: 10, oldestDueDate: tenDaysBefore,
     }]);
   });
@@ -241,7 +241,30 @@ describe('collection by class for the selected year', () => {
   });
 });
 
-describe('aging detail placement', () => {
+describe('finance student placement', () => {
+  it('gives overdue reminders the latest class and section in the selected year', async () => {
+    const requests: unknown[] = [];
+    const rows = await financeService(
+      { getOverdue: async () => [
+        { studentId: 's1', studentCode: 'ST-001', totalOverdue: 40 },
+        { studentId: 's2', studentCode: 'ST-002', totalOverdue: 20 },
+      ] },
+      { id: 'y1', label: '2025-2026' },
+      { enrollments: { listYearPlacements: async (yearId: string, ids: string[]) => {
+        requests.push({ yearId, ids });
+        return [
+          { studentId: 's1', classId: 'new', className: 'New', sectionId: 'b', sectionName: 'B', validFrom: '2026-01-01' },
+          { studentId: 's1', classId: 'old', className: 'Old', sectionId: 'a', sectionName: 'A', validFrom: '2025-09-01' },
+        ];
+      } } },
+    ).getOverdue(100);
+    expect(requests).toEqual([{ yearId: 'y1', ids: ['s1', 's2'] }]);
+    expect<unknown>(rows).toEqual([
+      { studentId: 's1', studentCode: 'ST-001', totalOverdue: 40, classId: 'new', className: 'New', sectionId: 'b', sectionName: 'B' },
+      { studentId: 's2', studentCode: 'ST-002', totalOverdue: 20, classId: null, className: 'No class', sectionId: null, sectionName: null },
+    ]);
+  });
+
   it("shows the selected year's latest dated placement and leaves fee-only students without a class", async () => {
     const years: unknown[] = [];
     const rows = await financeService(

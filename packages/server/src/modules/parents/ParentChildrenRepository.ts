@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, inArray } from 'drizzle-orm';
 import { Repository } from '../../najm';
 import { Owned, ScopeContext, type OwnedWhere } from '../../auth';
 import { DB } from '../../database/db';
@@ -43,6 +43,31 @@ export class ParentChildrenRepository {
       studentTeacherInYear(this.year.id, this._scopeCtx),
       eq(studentParents.parentId, parentId),
     );
+  }
+
+  /** Minimal filter context for a readable parent list, one latest placement per child and parent. */
+  async getListPlacements(parentIds: string[]) {
+    if (!parentIds.length) return [];
+    return this.db
+      .selectDistinctOn([studentParents.parentId, students.id], {
+        parentId: studentParents.parentId,
+        studentId: students.id,
+        classId: studentEnrollmentPlacements.classId,
+        sectionId: studentEnrollmentPlacements.sectionId,
+      })
+      .from(studentParents)
+      .innerJoin(students, eq(studentParents.studentId, students.id))
+      .innerJoin(studentEnrollments, and(
+        eq(studentEnrollments.studentId, students.id),
+        eq(studentEnrollments.academicYearId, this.year.id),
+      ))
+      .leftJoin(studentEnrollmentPlacements, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(and(
+        this.ownedWhere(),
+        studentTeacherInYear(this.year.id, this._scopeCtx),
+        inArray(studentParents.parentId, parentIds),
+      ))
+      .orderBy(studentParents.parentId, students.id, desc(studentEnrollmentPlacements.validFrom));
   }
 
   /**

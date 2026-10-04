@@ -78,7 +78,7 @@ export class FinanceDashboardService {
   }
 
   async getOverdue(limit: number) {
-    return this.repo.getOverdue(limit);
+    return this.withLatestPlacement(await this.repo.getOverdue(limit));
   }
 
   async getRecentPayments(limit: number) {
@@ -97,7 +97,10 @@ export class FinanceDashboardService {
   }
 
   async getAgingDetail() {
-    const rows = await this.repo.getAgingDetail();
+    return this.withLatestPlacement(await this.repo.getAgingDetail());
+  }
+
+  private async withLatestPlacement<T extends { studentId: string }>(rows: T[]) {
     const placements = await this.enrollments.listYearPlacements(
       this.year.id, rows.map((row) => row.studentId),
     );
@@ -114,6 +117,8 @@ export class FinanceDashboardService {
         ...row,
         classId: placement?.classId ?? null,
         className: placement?.className ?? 'No class',
+        sectionId: placement?.sectionId ?? null,
+        sectionName: placement?.sectionName ?? null,
       };
     });
   }

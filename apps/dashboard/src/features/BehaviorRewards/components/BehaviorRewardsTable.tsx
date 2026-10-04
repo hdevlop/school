@@ -1,7 +1,8 @@
 'use client';
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
 import { Award, Plus, SearchX } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
@@ -23,14 +24,9 @@ const BehaviorRewardsTable = () => {
   // Parents and students read their own or their children's records only.
   const isFamily = role === 'parent' || role === 'student';
   const columns = useBehaviorRewardsTableColumns();
-  const [classFilter, setClassFilter] = useState('');
-  const [sectionFilter, setSectionFilter] = useState('');
-  const filters = useBehaviorRewardsTableFilters({
-    classFilter,
-    onClassFilterChange: setClassFilter,
-    sectionFilter,
-    onSectionFilterChange: setSectionFilter,
-  });
+  const scope = useClassSectionTableScope();
+  const rewardFilters = useBehaviorRewardsTableFilters();
+  const filters = useMemo(() => [...rewardFilters, ...scope.filters], [rewardFilters, scope.filters]);
   const { openDialog, confirmDelete } = useDialog();
   const {
     behaviorRewards,
@@ -45,15 +41,14 @@ const BehaviorRewardsTable = () => {
   } = useBehaviorRewards();
 
   const tableData = useMemo(() => (behaviorRewards || [])
-    .filter((reward) => !classFilter || reward.classId === classFilter)
-    .filter((reward) => !sectionFilter || reward.sectionId === sectionFilter)
+    .filter(scope.matches)
     .map((reward) => ({
       ...reward,
       searchText: [reward.student?.name, reward.student?.studentCode, reward.description]
         .filter(Boolean)
         .join(' '),
       classSection: `${reward.class?.name || ''} ${reward.section?.name || ''}`,
-    })), [behaviorRewards, classFilter, sectionFilter]);
+    })), [behaviorRewards, scope.matches]);
 
   const handleCreate = () => openDialog({
     title: t('behaviorRewards.dialogs.createTitle'),

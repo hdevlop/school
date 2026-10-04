@@ -1,6 +1,7 @@
 'use client'
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import * as parentApi from '@/services/parentApi';
+import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
 
 export const useParents = (options?) => {
   const { parentId, enabled = true } = options || {};
@@ -15,7 +16,9 @@ export const useParents = (options?) => {
     createBulk: parentApi.createBulkParentsApi
   });
 
-  const { data: parents, isLoading: isParentsLoading, isError, error, refetch } = crud.useGetAll(enabled);
+  const { data: parents, isLoading: isParentsLoading, isError, error, refetch } = useYearScopedList({
+    resource: 'parents', fetch: parentApi.getParentsApi, enabled,
+  });
   const { data: parent, isLoading: isParentLoading } = crud.useGetById(parentId, !!parentId);
 
   const { mutateAsync: createParent, isLoading: isCreating } = crud.useCreate();

@@ -9,6 +9,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 import { isAuthorizationError } from '@/services/apiError';
 import { cn } from 'najm-kit';
+import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
 
 type AgingRow = {
   studentId: string;
@@ -16,6 +17,8 @@ type AgingRow = {
   studentCode: string;
   classId: string | null;
   className: string;
+  sectionId: string | null;
+  sectionName: string | null;
   current: number;
   d1_30: number;
   d31_60: number;
@@ -45,16 +48,17 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
   const rows: AgingRow[] = useMemo(() => Array.isArray(data) ? data : [], [data]);
+  const { matches, filters: scopeFilters } = useClassSectionTableScope({ placements: rows });
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
     return rows.filter(
-      (r) =>
+      (r) => matches(r) && (
         r.studentName.toLowerCase().includes(q) ||
         r.studentCode.toLowerCase().includes(q) ||
-        r.className.toLowerCase().includes(q),
+        r.className.toLowerCase().includes(q)),
     );
-  }, [rows, search]);
+  }, [rows, search, matches]);
 
   const sorted = useMemo(() => {
     const dir = sortDir === 'asc' ? 1 : -1;
@@ -142,14 +146,28 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
         </div>
 
         {/* Search */}
-        <div className="relative">
+        <div className="flex flex-col gap-2 lg:flex-row">
           <input
             type="text"
+            aria-label={t('reports.aging.searchPlaceholder')}
             placeholder={t('reports.aging.searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
+          {scopeFilters.map((filter) => (
+            <select
+              key={filter.name}
+              aria-label={filter.placeholder}
+              value={filter.value}
+              onChange={(event) => filter.onChange(event.target.value)}
+              disabled={'disabled' in filter && filter.disabled}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 lg:w-48 lg:shrink-0"
+            >
+              <option value="">{filter.placeholder}</option>
+              {filter.options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          ))}
         </div>
 
         {/* Table */}
@@ -177,6 +195,9 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
               </tr>
             </thead>
             <tbody>
+              {sorted.length === 0 && rows.length > 0 && (
+                <tr><td colSpan={7} className="py-8 text-center text-muted-foreground">{t('emptyStates.filtered.title')}</td></tr>
+              )}
               {sorted.map((r) => (
                 <tr key={r.studentId} className="border-b border-border/40 hover:bg-muted/30">
                   <td className="py-2 px-3">

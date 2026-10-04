@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { createDarijaQueryRewriter } from 'najm-rag/query-rewrites';
 import { rewriteDarijaForRouting } from '../../src/modules/chat/darijaRouting';
 
 // najm-rag's normalizeQuery, which runs before the rewrite.
@@ -47,11 +48,33 @@ describe('rewriteDarijaForRouting', () => {
     expect(rewriteDarijaForRouting('فالقسم وفالمدرسه وديال')).toBe('في القسم وفي المدرسه');
   });
 
-  it('writes its keys in the folded spelling routing hands it', async () => {
-    const source = readFileSync(resolve(import.meta.dir, '../../src/modules/chat/darijaRouting.ts'), 'utf8');
-    const keys = [...source.matchAll(/^ {2}([ء-ي]+): '/gm)].map((match) => match[1]);
-    expect(keys.length).toBeGreaterThan(80);
-    expect(keys.filter((key) => key !== normalize(key))).toEqual([]);
-    expect(new Set(keys).size).toBe(keys.length);
+  it('extends shared Darija wording without leaking School meanings to other apps', () => {
+    const shared = createDarijaQueryRewriter();
+    const query = normalize('وريني النقط ديال ياسين');
+    expect(shared(query)).toBe('اعرض النقط ياسين');
+    expect(rewriteDarijaForRouting(query)).toBe('اعرض النقاط ياسين');
+    expect(shared('علّم ياسين غايب')).toBe('علّم ياسين غايب');
+    expect(rewriteDarijaForRouting('علّم ياسين غايب')).toBe('سجل ياسين غائب');
+    expect(shared('الرقم ديال الطلب')).toBe('الرقم الطلب');
+    expect(rewriteDarijaForRouting('الرقم ديال باباه')).toBe('رقم هاتف والده');
+  });
+
+  it('keeps the marking shadda when an attached conjunction or vowels are present', () => {
+    expect(rewriteDarijaForRouting(normalize('عَلِّمْ ياسين غايب'))).toBe('سجل ياسين غائب');
+    expect(rewriteDarijaForRouting(normalize('وَعَلِّمْ ياسين غايب'))).toBe('وسجل ياسين غائب');
+    expect(rewriteDarijaForRouting('وعلم الاحياء')).toBe('وعلم الاحياء');
+    expect(rewriteDarijaForRouting('عِلْمُ الاحياء')).toBe('عِلْمُ الاحياء');
+    expect(rewriteDarijaForRouting('يَاسِين')).toBe('يَاسِين');
+  });
+
+  it('recognizes vowelled two-word count and negation phrases', () => {
+    expect(rewriteDarijaForRouting(normalize('شْحال من تلميذ'))).toBe('كم عدد تلميذ');
+    expect(rewriteDarijaForRouting(normalize('شكون ما جاشْ البارح'))).toBe('من لم يحضر امس');
+  });
+
+  it('handles long attached conjunctions without recursive stack overflow', () => {
+    const prefix = 'و'.repeat(12000);
+    expect(rewriteDarijaForRouting(`${prefix}شحال`)).toBe(`${prefix}كم`);
+    expect(rewriteDarijaForRouting(`${prefix}وقت`)).toBe(`${prefix}وقت`);
   });
 });

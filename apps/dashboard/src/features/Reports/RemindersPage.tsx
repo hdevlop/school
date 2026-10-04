@@ -1,7 +1,7 @@
 'use client';
 
 import { NBadge, NAvatar, NButton, NEmptyState, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Bell, BellRing, Search, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -14,11 +14,20 @@ import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewin
 type OverdueRow = {
   studentId: string;
   studentName: string;
+  studentCode: string;
   studentImage: string | null;
+  classId: string | null;
+  className: string;
+  sectionId: string | null;
+  sectionName: string | null;
   totalOverdue: number;
   daysOverdue: number;
   oldestDueDate: string | null;
 };
+
+const matchesStudent = (row: OverdueRow, query: string) =>
+  row.studentName.toLowerCase().includes(query)
+  || (row.studentCode ?? '').toLowerCase().includes(query);
 
 const urgencyRowColor = (days: number) => {
   if (days > 60) return 'border-l-red-500 bg-red-50/40';
@@ -39,14 +48,35 @@ const RemindersPage: React.FC = () => {
   const { data, error, isLoading } = useFinanceOverdue(100);
   const yearKey = viewingYear ?? 'all';
   const [search, setSearch] = useState('');
+  const [placementFilter, setPlacementFilter] = useState({ yearKey, classId: '', sectionId: '' });
+  const classId = placementFilter.yearKey === yearKey ? placementFilter.classId : '';
+  const sectionId = placementFilter.yearKey === yearKey ? placementFilter.sectionId : '';
   const [reminded, setReminded] = useState<Set<string>>(new Set());
+
+  useEffect(() => {
+    setPlacementFilter({ yearKey, classId: '', sectionId: '' });
+  }, [yearKey]);
 
   const rows: OverdueRow[] = useMemo(() => Array.isArray(data) ? data : [], [data]);
 
+  const classOptions = useMemo(() => Array.from(new Map(rows
+    .filter((row) => row.classId)
+    .map((row) => [row.classId!, { value: row.classId!, label: row.className }])).values())
+    .sort((a, b) => a.label.localeCompare(b.label)), [rows]);
+
+  const sectionOptions = useMemo(() => Array.from(new Map(rows
+    .filter((row) => row.sectionId && (!classId || row.classId === classId))
+    .map((row) => [row.sectionId!, {
+      value: row.sectionId!,
+      label: classId ? row.sectionName! : `${row.className} / ${row.sectionName}`,
+    }])).values()).sort((a, b) => a.label.localeCompare(b.label)), [rows, classId]);
+
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return rows.filter((r) => r.studentName.toLowerCase().includes(q));
-  }, [rows, search]);
+    return rows.filter((r) => matchesStudent(r, q)
+      && (!classId || r.classId === classId)
+      && (!sectionId || r.sectionId === sectionId));
+  }, [rows, search, classId, sectionId]);
 
   const handleRemind = useCallback((studentId: string, name: string) => {
     setReminded((prev) => new Set(prev).add(`${yearKey}:${studentId}`));
@@ -73,13 +103,49 @@ const RemindersPage: React.FC = () => {
       onChange: setSearch,
       className: 'w-full lg:w-72',
     },
-  ], [search, t]);
+    {
+      name: 'classId',
+      type: 'combobox',
+      showIcon: false,
+      placeholder: t('students.filters.filterByClass'),
+      options: classOptions,
+      value: classId,
+      onChange: (value: string) => setPlacementFilter({
+        yearKey, classId: value === '__clear__' ? '' : value, sectionId: '',
+      }),
+      className: 'w-full lg:w-48',
+    },
+    {
+      name: 'sectionId',
+      type: 'combobox',
+      showIcon: false,
+      placeholder: t('students.filters.filterBySection'),
+      options: sectionOptions,
+      value: sectionId,
+      onChange: (value: string) => setPlacementFilter({
+        yearKey, classId, sectionId: value === '__clear__' ? '' : value,
+      }),
+      className: 'w-full lg:w-48',
+    },
+  ], [search, t, classOptions, sectionOptions, classId, sectionId, yearKey]);
 
   const columns = useMemo(() => [
+    {
+      accessorKey: 'studentCode',
+      header: t('students.table.studentCode'),
+      enableSorting: true,
+      cell: ({ getValue }: any) => (
+        <span className="whitespace-nowrap font-medium text-sm">
+          {getValue() || '-'}
+        </span>
+      ),
+    },
     {
       accessorKey: 'studentName',
       header: t('reports.aging.student') || 'Student',
       enableSorting: true,
+      filterFn: (row: any, _id: string, value: unknown) =>
+        matchesStudent(row.original, String(value ?? '').toLowerCase()),
       cell: ({ row }: any) => {
         const done = reminded.has(`${yearKey}:${row.original.studentId}`);
         return (
@@ -194,7 +260,7 @@ const RemindersPage: React.FC = () => {
         showCheckbox
         loadingText={t('common.loading') || 'Loading reminders...'}
         noDataText={t('reports.reminders.noData')}
-        noResultsText={t('reports.reminders.noResults', { search })}
+        noResultsText={search ? t('reports.reminders.noResults', { search }) : t('emptyStates.filtered.title')}
         isEmpty={!isLoading && rows.length === 0}
         isFilteredEmpty={!isLoading && rows.length > 0 && filtered.length === 0}
         renderEmpty={() => (
@@ -203,7 +269,7 @@ const RemindersPage: React.FC = () => {
         renderFilteredEmpty={() => (
           <NEmptyState
             icon={Search}
-            title={t('reports.reminders.noResults', { search })}
+            title={search ? t('reports.reminders.noResults', { search }) : t('emptyStates.filtered.title')}
             className="min-h-64"
           />
         )}

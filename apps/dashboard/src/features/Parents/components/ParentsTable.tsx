@@ -3,7 +3,9 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { HeartHandshake, Plus, SearchX } from 'lucide-react';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { matchesAnyChild } from '@/shared/classSectionScope';
 import ParentForm from './SimpleParentForm';
 import { useParents } from '../hooks/useParents';
 import { useTranslation } from 'najm-i18n/react';
@@ -28,7 +30,9 @@ function ParentsTable() {
   // Opening a parent keeps an explicitly viewed year.
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
   const columns = useParentsTableColumns();
-  const rawFilters = useParentsTableFilters();
+  const scope = useClassSectionTableScope();
+  const parentFilters = useParentsTableFilters();
+  const rawFilters = useMemo(() => [...parentFilters, ...scope.filters], [parentFilters, scope.filters]);
 
   const {
     parents,
@@ -43,6 +47,9 @@ function ParentsTable() {
     isCreating,
     isDeleting
   } = useParents();
+  const filteredParents = useMemo(() => (parents || []).filter((parent) =>
+    matchesAnyChild(parent.childPlacements, scope.classId, scope.sectionId)),
+  [parents, scope.classId, scope.sectionId]);
 
   const { openDialog, confirmDelete } = useDialog();
 
@@ -126,7 +133,7 @@ function ParentsTable() {
       </NPageHeader>
 
       <NTable
-        data={parents}
+        data={filteredParents}
         columns={columns}
         filters={rawFilters}
         onCreate={handleAddClick}
@@ -150,10 +157,10 @@ function ParentsTable() {
         renderEmpty={() => (
           <NEmptyState
             surface="panel"
-            icon={FEATURE_ICONS.parents}
-            title={t('emptyStates.parents.title')}
-            description={t('emptyStates.parents.description')}
-            action={(
+            icon={scope.hasSelection ? SearchX : FEATURE_ICONS.parents}
+            title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.parents.title')}
+            description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.parents.description')}
+            action={scope.hasSelection ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('parents.dialogs.createButton')}

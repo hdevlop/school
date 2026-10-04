@@ -6,12 +6,10 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { createUiStreamParser, percentile } from './chatbot-stream.mjs';
-import { detectReplyLanguage } from './chatbot-language.mjs';
-import { findWriteClaim } from './chatbot-claims.mjs';
-
-const REPLY_LANGUAGES = { en: 'en', fr: 'fr', es: 'es', ar: 'ar', ary: 'ar' };
-
-const KINDS = new Set(['small-talk', 'single-read', 'multi-read', 'blocked-write']);
+import { scoreReply, validateCorpus } from './chatbot-scoring.mjs';
+import { summarizeEmbeddingDiagnostics } from './chatbot-embedding-diagnostics.mjs';
+import { runLoad, summarizeLoad, validateCorrelation, validateLoadOptions } from './chatbot-load.mjs';
+import { createEstimatedBudget, summarizeUsage } from './chatbot-budget.mjs';
 const args = process.argv.slice(2);
 const option = (name, fallback) => {
   const entry = args.find((value) => value.startsWith(`--${name}=`));
@@ -28,25 +26,9 @@ const integer = (name, fallback, min, max) => {
 const casesPath = resolve(option('cases', 'datasets/chatbot-latency/questions.json'));
 const corpusText = await Bun.file(casesPath).text();
 const corpus = JSON.parse(corpusText);
-const isNameList = (list) => Array.isArray(list) && list.length > 0
-  && list.every((name) => typeof name === 'string' && name.trim());
-const ids = new Set();
-for (const item of corpus.cases) {
-  if (!item.id || ids.has(item.id) || !item.language || !item.query?.trim() || !KINDS.has(item.kind)
-    || (item.expectedToolGroups !== undefined
-      && (!Array.isArray(item.expectedToolGroups) || !item.expectedToolGroups.every(isNameList)))
-    || (item.forbiddenSuccessfulTools !== undefined && !isNameList(item.forbiddenSuccessfulTools))
-    || (item.kind === 'blocked-write' && !item.forbiddenSuccessfulTools)
-    || (item.answerFacts !== undefined && !isNameList(item.answerFacts))) {
-    throw new Error(`Invalid benchmark fixture: ${item.id ?? '(no id)'}`);
-  }
-  ids.add(item.id);
-}
-if (corpus.role !== 'admin' || typeof corpus.academicYear !== 'string') {
-  throw new Error('Fixture needs role "admin" (the only role this runner signs in as) and academicYear');
-}
+const caseCount = validateCorpus(corpus);
 if (args.includes('--validate')) {
-  console.log(JSON.stringify({ valid: true, cases: ids.size }));
+  console.log(JSON.stringify({ valid: true, cases: caseCount }));
   process.exit(0);
 }
 
@@ -64,11 +46,23 @@ const keepText = args.includes('--keep-text');
 // One request that may run without a saved key: proves body, year and stream
 // framing (the provider then refuses inside the stream). Not a latency sample.
 const transportProbe = args.includes('--transport-probe');
+const preflight = args.includes('--preflight');
 // Interleaves a baseline (the saved model unless --baseline-model is given) with
 // a candidate, request by request, on the same provider and key, then restores
 // the saved model.
 const compareModel = option('compare-model', '');
 const baselineOverride = option('baseline-model', '');
+const concurrency = integer('concurrency', '1', 1, 4);
+validateLoadOptions({ concurrency, compareModel, transportProbe });
+if (preflight && (compareModel || baselineOverride || transportProbe || concurrency !== 1)) {
+  throw new Error('--preflight requires concurrency 1 without comparison or transport probe');
+}
+const maxEstimatedUsd = option('max-estimated-usd', '');
+const requestReserveUsd = option('request-reserve-usd', '');
+if (Boolean(maxEstimatedUsd) !== Boolean(requestReserveUsd)) {
+  throw new Error('--max-estimated-usd and --request-reserve-usd must be supplied together');
+}
+const budget = maxEstimatedUsd ? createEstimatedBudget(Number(maxEstimatedUsd), Number(requestReserveUsd)) : null;
 const modelId = /^[\w.:/-]{1,120}$/;
 if (compareModel && (transportProbe || !modelId.test(compareModel))) {
   throw new Error('Use --compare-model=<provider model id> without --transport-probe');
@@ -83,7 +77,7 @@ if (unknownLanguages.length) throw new Error(`No cases for --languages=${unknown
 const selected = corpus.cases
   .filter((item) => !languages.length || languages.includes(item.language))
   .slice(0, transportProbe ? 1 : limit);
-const planned = transportProbe ? 1 : selected.length * repeat * (compareModel ? 2 : 1);
+const planned = preflight ? 0 : transportProbe ? 1 : selected.length * repeat * (compareModel ? 2 : 1);
 const outputPath = resolve(option('output', 'docs/evidence/chatbot-latency/stream-baseline.json'));
 
 const runId = randomUUID().slice(0, 8);
@@ -91,14 +85,14 @@ const report = {
   capturedAt: new Date().toISOString(),
   runId,
   target: base.origin,
-  mode: transportProbe ? 'transport-probe' : compareModel ? 'api-client-streaming-comparison' : 'api-client-streaming',
+  mode: preflight ? 'read-only-preflight' : transportProbe ? 'transport-probe' : compareModel ? 'api-client-streaming-comparison' : 'api-client-streaming',
   corpusSha256: createHash('sha256').update(corpusText).digest('hex'),
   role: corpus.role,
   academicYear: year,
   languages: languages.length ? languages : null,
   plannedRequests: planned,
   maxRequests,
-  concurrency: 1,
+  concurrency,
   timeoutMs,
   textStored: keepText,
   packagePins: {},
@@ -121,6 +115,13 @@ report.packagePins.ai = (await Bun.file('node_modules/ai/package.json').json()).
 const revision = Bun.spawnSync(['git', 'rev-parse', 'HEAD']);
 report.gitHead = revision.exitCode === 0 ? revision.stdout.toString().trim() : null;
 report.workingTreeDirty = Bun.spawnSync(['git', 'status', '--porcelain']).stdout.length > 0;
+report.configSourceSha256 = {};
+for (const name of ['index.ts', 'ragConfig.ts', 'chatbotConfig.ts', 'chatbotSystemPrompt.ts']) {
+  const file = Bun.file(`packages/server/src/config/${name}`);
+  report.configSourceSha256[name] = await file.exists() ? createHash('sha256').update(await file.text()).digest('hex') : null;
+}
+report.conditions = { applicationCaches: 'uncontrolled', embeddingModelResidency: 'unverified',
+  providerPromptCache: 'uncontrolled', note: 'Source hashes describe the checkout, not the effective running configuration. No caches or model processes were reset.' };
 
 // Fixed allowlist: no fixture or argument can reach another route. The PUT only
 // ever sends { model } (see setModel).
@@ -194,6 +195,7 @@ async function setModel(model) {
 }
 
 async function runAll(baselineModel) {
+  const jobs = [];
   for (let repetition = 1; repetition <= (transportProbe ? 1 : repeat); repetition++) {
     for (const [index, item] of selected.entries()) {
       const variants = !compareModel ? [[null, baselineModel]]
@@ -201,18 +203,37 @@ async function runAll(baselineModel) {
           ? [['baseline', baselineModel], ['candidate', compareModel]]
           : [['candidate', compareModel], ['baseline', baselineModel]];
       for (const [variant, model] of variants) {
-        if (variant) await setModel(model);
-        const sample = await chat(item, repetition, variant);
-        if (variant) {
-          Object.assign(sample, { variant, model });
-          if (sample.server && sample.server.model !== model) sample.modelMismatch = true;
-        }
-        report.samples.push(sample);
-        console.error((variant ? `[${variant}] ` : '')
-          + `${sample.id}#${repetition} ${sample.outcome} firstText=${sample.firstTextMs ?? '-'}ms complete=${sample.bodyEndMs ?? '-'}ms`
-          + ` server=${sample.server ? `${sample.server.outcome} prepare=${sample.server.spans.prepareMs}ms` : sample.serverDiagnosticsError ?? '-'}`);
+        jobs.push({ item, repetition, variant, model });
       }
     }
+  }
+  const loadStart = performance.now();
+  try {
+    await runLoad(jobs, concurrency, async ({ item, repetition, variant, model }, scheduling) => {
+      const reservationId = String(scheduling.scheduleIndex);
+      budget?.reserve(reservationId);
+      let settled = false;
+      let sample;
+      try {
+        if (variant) await setModel(model);
+        sample = await chat(item, repetition, variant);
+        budget?.settle(reservationId, sample.metadata);
+        settled = true;
+      } finally {
+        if (!settled) budget?.settle(reservationId, null);
+      }
+      Object.assign(sample, scheduling, { model });
+      if (variant) sample.variant = variant;
+      if (sample.server && sample.server.model !== model) sample.modelMismatch = true;
+      report.samples.push(sample);
+      console.error((variant ? `[${variant}] ` : '')
+        + `${sample.id}#${repetition} ${sample.outcome} firstText=${sample.firstTextMs ?? '-'}ms complete=${sample.bodyEndMs ?? '-'}ms`
+        + ` server=${sample.server ? `${sample.server.outcome} prepare=${sample.server.spans.prepareMs}ms` : sample.serverDiagnosticsError ?? '-'}`);
+      if (budget?.stopped) throw new Error(`Estimated budget stopped: ${budget.snapshot().stoppedReason}`);
+    });
+  } finally {
+    report.loadElapsedMs = Math.round(performance.now() - loadStart);
+    report.samples.sort((a, b) => a.scheduleIndex - b.scheduleIndex);
   }
 }
 
@@ -223,7 +244,7 @@ async function chat(item, repetition, variant = null) {
   url.searchParams.set('academicYear', year);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  const parser = createUiStreamParser();
+  const parser = createUiStreamParser({ captureToolInputs: true });
   const sample = { id: item.id, language: item.language, kind: item.kind, repetition, sessionId, requestId: sessionId };
   const start = performance.now();
   const since = () => Math.round(performance.now() - start);
@@ -250,10 +271,10 @@ async function chat(item, repetition, variant = null) {
     if (!response.ok || !response.body) {
       sample.outcome = 'http_error';
       await response.body?.cancel();
-      return sample;
+    } else {
+      for await (const bytes of response.body) parser.push(bytes, since());
+      streamEnd = since();
     }
-    for await (const bytes of response.body) parser.push(bytes, since());
-    streamEnd = since();
   } catch (error) {
     sample.outcome = controller.signal.aborted ? 'timeout' : 'request_failed';
     sample.errorName = error.name;
@@ -271,7 +292,8 @@ async function chat(item, repetition, variant = null) {
     sawDone: parsed.done,
     chunkCounts: parsed.chunkCounts,
     malformedEvents: parsed.malformed,
-    tools: parsed.tools,
+    // Argument values are used only for scoring, never persisted in reports.
+    tools: parsed.tools.map(({ arguments: _arguments, ...tool }) => tool),
     streamErrors: parsed.errors,
     metadata: parsed.metadata,
     textLength: parsed.text.length,
@@ -283,60 +305,18 @@ async function chat(item, repetition, variant = null) {
     : parsed.text.trim() === '' ? 'empty_answer'
     : 'completed';
   const server = await serverDiagnostics(sessionId);
-  sample.server = server.diagnostics ?? null;
+  sample.correlationError = server.diagnostics ? validateCorrelation(sessionId, server.diagnostics) : null;
+  sample.server = sample.correlationError ? null : server.diagnostics ?? null;
   if (server.error) sample.serverDiagnosticsError = server.error;
-  sample.checks = score(item, parsed, sample.server);
+  sample.checks = scoreReply(item, parsed, sample.server);
   return sample;
-}
-
-/** Automatic checks only; answer quality still needs human review per language. */
-function score(item, parsed, server) {
-  // A call whose input failed validation, or that errored, did not answer the
-  // question; only a tool that returned output (a blocked write's refusal
-  // included) satisfies an expected group.
-  const called = new Set(parsed.tools.filter((tool) => tool.outcome === 'output').map((tool) => tool.name).filter(Boolean));
-  const missingGroups = (item.expectedToolGroups ?? [])
-    .filter((group) => !group.some((name) => called.has(name)));
-  const forbidden = (name) => item.forbiddenSuccessfulTools?.includes(name) ?? false;
-  // The server knows whether a tool ran or was blocked by the read-only adapter;
-  // the stream shows both as an output event.
-  const forbiddenOutputs = server
-    ? server.tools.filter((tool) => forbidden(tool.name) && tool.outcome === 'executed').map((tool) => tool.name)
-    : parsed.tools.filter((tool) => forbidden(tool.name) && tool.outcome === 'output').map((tool) => tool.name);
-  // Arabic replies may write ١٠٠ for 100; facts are written with ASCII digits.
-  const lowerText = parsed.text.toLowerCase()
-    .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 0x0660))
-    .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 0x06f0));
-  const missingFacts = (item.answerFacts ?? []).filter((fact) => !lowerText.includes(fact.toLowerCase()));
-  // Darija questions expect an Arabic-script reply; a mixed-language question
-  // sets replyLanguage or is not checked.
-  const expectedLanguage = REPLY_LANGUAGES[item.replyLanguage ?? item.language] ?? null;
-  const replyLanguage = detectReplyLanguage(parsed.text);
-  const wrongLanguage = expectedLanguage !== null && replyLanguage !== null && replyLanguage !== expectedLanguage;
-  // The write was refused, so a reply saying it happened is false.
-  const writeClaim = item.kind === 'blocked-write' ? findWriteClaim(parsed.text) : null;
-  return {
-    missingToolGroups: missingGroups,
-    // Without server diagnostics an output event may still be the adapter's
-    // "blocked" result: review, do not assume a write.
-    forbiddenToolOutputs: forbiddenOutputs,
-    blockedTools: server ? server.tools.filter((tool) => tool.outcome === 'blocked').map((tool) => tool.name) : null,
-    forbiddenCheckSource: server ? 'server' : 'stream',
-    missingFacts,
-    // null when the reply was too short or mixed to call.
-    replyLanguage,
-    wrongLanguage,
-    // The claiming phrase, or null.
-    writeClaim,
-    passed: missingGroups.length === 0 && forbiddenOutputs.length === 0 && missingFacts.length === 0 && !wrongLanguage
-      && writeClaim === null,
-  };
 }
 
 function summarize(samples, single = false) {
   if (!single && compareModel && samples.some((sample) => sample.variant)) {
     return {
       requests: samples.length,
+      load: summarizeLoad(samples, concurrency),
       comparison: Object.fromEntries(['baseline', 'candidate'].map((variant) => [variant, {
         model: samples.find((sample) => sample.variant === variant)?.model ?? null,
         // A request that ran on another model (settings cache, a parallel edit) is excluded.
@@ -359,23 +339,20 @@ function summarize(samples, single = false) {
   const groups = (key) => Object.fromEntries([...new Set(completed.map((row) => row[key]))]
     .map((value) => [value, stats(completed.filter((row) => row[key] === value))]));
   // najm-chatbot >= 2.0.4 reports usage on the finish event; older streams leave it unknown.
-  const withUsage = samples.filter((sample) => Number.isFinite(sample.metadata?.totalTokens));
-  const sum = (key) => withUsage.reduce((total, sample) => total + sample.metadata[key], 0);
   return {
     requests: samples.length,
+    load: summarizeLoad(samples, concurrency),
     byOutcome,
     server: serverSummary(completed),
-    usage: {
-      requestsWithUsage: withUsage.length,
-      promptTokens: sum('promptTokens'),
-      completionTokens: sum('completionTokens'),
-      estimatedCostUsd: sum('totalCost'),
-      pricingFoundForAll: withUsage.every((sample) => sample.metadata.pricingFound === true),
-      note: 'Estimate from najm-chatbot model pricing; provider billing is authoritative.',
-    },
+    embeddings: summarizeEmbeddingDiagnostics(samples),
+    usage: summarizeUsage(samples),
     completedAndChecksPassed: completed.filter((sample) => sample.checks.passed).length,
     wrongLanguage: completed.filter((sample) => sample.checks.wrongLanguage).length,
+    languageInconclusive: completed.filter((sample) => sample.checks.languageInconclusive).length,
+    reviewRequired: completed.filter((sample) => sample.checks.reviewRequired).length,
+    wrongToolArguments: completed.filter((sample) => sample.checks.missingToolCalls.length > 0).length,
     falseWriteClaims: completed.filter((sample) => sample.checks.writeClaim).length,
+    writePromises: completed.filter((sample) => sample.checks.writePromise).length,
     completed: stats(completed),
     completedByKind: groups('kind'),
     completedByLanguage: groups('language'),
@@ -437,7 +414,7 @@ try {
   // Identifiers only; never the key.
   report.provider = { provider: settings?.provider ?? null, model: settings?.model ?? null,
     baseUrl: settings?.baseUrl ?? null, enabled: settings?.isEnabled ?? null, hasKey: settings?.hasKey ?? null };
-  if (!settings?.isEnabled || (!settings?.hasKey && !transportProbe)) {
+  if (!preflight && (!settings?.isEnabled || (!settings?.hasKey && !transportProbe))) {
     throw new Error('Assistant is disabled or has no saved provider key; no chat requests were sent');
   }
 
@@ -445,21 +422,27 @@ try {
   const baselineModel = baselineOverride || savedModel;
   report.comparison = compareModel ? { saved: savedModel, baseline: baselineModel, candidate: compareModel } : null;
   activeModel = savedModel;
-  try {
-    await runAll(baselineModel);
-  } finally {
-    // Always put the saved model back, even after a failure.
-    if (compareModel && activeModel !== savedModel) {
-      await setModel(savedModel).catch(() => {
-        report.restoreFailed = `AI settings model left at ${activeModel}; set it back to ${savedModel}`;
-      });
+  if (preflight) {
+    report.readyForChat = Boolean(settings?.isEnabled && settings?.hasKey && savedModel);
+    report.outcome = 'preflight_ok';
+  } else {
+    try {
+      await runAll(baselineModel);
+    } finally {
+      // Always put the saved model back, even after a failure.
+      if (compareModel && activeModel !== savedModel) {
+        await setModel(savedModel).catch(() => {
+          report.restoreFailed = `AI settings model left at ${activeModel}; set it back to ${savedModel}`;
+        });
+      }
     }
+    report.summary = summarize(report.samples);
+    report.outcome = transportProbe
+      ? (report.samples[0].httpStatus === 200 && report.samples[0].streamProtocol ? 'transport_ok' : 'transport_failed')
+      : report.samples.every((sample) => sample.outcome === 'completed' && sample.checks.passed && !sample.modelMismatch
+        && !sample.correlationError && (concurrency === 1 || sample.server))
+      ? 'passed' : 'failures';
   }
-  report.summary = summarize(report.samples);
-  report.outcome = transportProbe
-    ? (report.samples[0].httpStatus === 200 && report.samples[0].streamProtocol ? 'transport_ok' : 'transport_failed')
-    : report.samples.every((sample) => sample.outcome === 'completed' && sample.checks.passed && !sample.modelMismatch)
-    ? 'passed' : 'failures';
 } catch (error) {
   report.blocker = error.message;
   if (report.samples.length > 0) {
@@ -468,6 +451,7 @@ try {
   }
 }
 
+report.estimatedBudget = budget?.snapshot() ?? null;
 await Bun.write(outputPath, `${JSON.stringify(report, null, 2)}\n`);
 console.log(JSON.stringify({
   outcome: report.outcome,
@@ -475,6 +459,8 @@ console.log(JSON.stringify({
   provider: report.provider ?? null,
   blocker: report.blocker,
   restoreFailed: report.restoreFailed,
+  readyForChat: report.readyForChat,
+  estimatedBudget: report.estimatedBudget,
   summary: report.summary,
 }, null, 2));
-process.exit(['passed', 'transport_ok'].includes(report.outcome) ? 0 : 1);
+process.exit(['passed', 'transport_ok', 'preflight_ok'].includes(report.outcome) ? 0 : 1);

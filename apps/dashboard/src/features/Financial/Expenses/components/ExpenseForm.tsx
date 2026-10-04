@@ -4,7 +4,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import { DollarSign, FileText, Layers, Calendar, CreditCard, CalendarClock, Receipt, Hash, Activity } from 'lucide-react'
+import { DollarSign, FileText, Layers, Calendar, CreditCard, Receipt, Hash, Activity } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { expenseSchema } from '../config/expenseSchemas'
@@ -12,6 +12,9 @@ import { buildExpenseCategoryOptions, buildExpenseStatusOptions } from '../confi
 import { buildPaymentMethodOptions } from '@/features/Financial/Payment/config/paymentOptions'
 import { buildFill, isDevFill } from '@/lib/devFill'
 import { useWatch } from 'react-hook-form'
+
+// Payment dates are recorded in the payment workflow; this form uses one date and receipt reference.
+const expenseFormSchema = expenseSchema.omit({ paymentDate: true, invoiceNumber: true });
 
 const ExpenseForm = ({ expense = null }) => {
    const { pop } = useDialog();
@@ -24,8 +27,6 @@ const ExpenseForm = ({ expense = null }) => {
       amount: expense?.amount || '',
       expenseDate: expense?.expenseDate || '',
       paymentMethod: expense?.paymentMethod || 'cash',
-      paymentDate: expense?.paymentDate || '',
-      invoiceNumber: expense?.invoiceNumber || '',
       receiptNumber: expense?.receiptNumber || '',
       checkNumber: expense?.checkNumber || '',
       ...(isEdit && { status: expense?.status || 'pending' }),
@@ -33,17 +34,22 @@ const ExpenseForm = ({ expense = null }) => {
    }
 
    const handleSubmit = async (expenseData) => {
+      const data = {
+         ...expenseData,
+         checkNumber: expenseData.paymentMethod === 'check' ? expenseData.checkNumber : null,
+      };
+
       if (isEdit) {
-         pop(expenseData);
+         pop(data);
          return;
       }
 
-      const { status: _status, ...createData } = expenseData;
+      const { status: _status, ...createData } = data;
       pop(createData);
    }
 
    return (
-      <NForm id='expense-form' schema={expenseSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(expenseSchema) }} >
+      <NForm id='expense-form' schema={expenseFormSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(expenseFormSchema) }} >
          <ExpenseFormContent isEdit={isEdit} />
       </NForm>
    )
@@ -117,21 +123,6 @@ const ExpenseFormContent = ({ isEdit }) => {
             />
 
             <FormInput
-               name='paymentDate'
-               type='date'
-               icon={CalendarClock}
-               formLabel={t('expenses.form.paymentDate')}
-            />
-
-            <FormInput
-               name='invoiceNumber'
-               type='text'
-               icon={Receipt}
-               formLabel={t('expenses.form.invoiceNumber')}
-               placeholder={t('expenses.form.invoiceNumberPlaceholder')}
-            />
-
-            <FormInput
                name='receiptNumber'
                type='text'
                icon={Receipt}
@@ -139,16 +130,17 @@ const ExpenseFormContent = ({ isEdit }) => {
                placeholder={t('expenses.form.receiptNumberPlaceholder')}
             />
 
-            <div className='md:col-span-2'>
-               <FormInput
-                  name='checkNumber'
-                  type='text'
-                  icon={Hash}
-                  formLabel={t('expenses.form.checkNumber')}
-                  placeholder={t('expenses.form.checkNumberPlaceholder')}
-                  disabled={paymentMethod !== 'check'}
-               />
-            </div>
+            {paymentMethod === 'check' && (
+               <div className='md:col-span-2'>
+                  <FormInput
+                     name='checkNumber'
+                     type='text'
+                     icon={Hash}
+                     formLabel={t('expenses.form.checkNumber')}
+                     placeholder={t('expenses.form.checkNumberPlaceholder')}
+                  />
+               </div>
+            )}
 
             {isEdit && (
                <FormInput

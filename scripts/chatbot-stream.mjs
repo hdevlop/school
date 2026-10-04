@@ -3,7 +3,7 @@
  * Network chunks can split an event or a UTF-8 character anywhere; feed raw
  * bytes to `push` and call `end` once the body closes.
  */
-export function createUiStreamParser() {
+export function createUiStreamParser({ captureToolInputs = false } = {}) {
   const decoder = new TextDecoder();
   let buffer = '';
   const state = {
@@ -52,6 +52,9 @@ export function createUiStreamParser() {
       case 'tool-input-start':
       case 'tool-input-available':
         tool(chunk.toolCallId, chunk.toolName).input ||= type === 'tool-input-available';
+        if (captureToolInputs && type === 'tool-input-available') {
+          tool(chunk.toolCallId, chunk.toolName).arguments = chunk.input;
+        }
         break;
       case 'tool-input-error':
         tool(chunk.toolCallId, chunk.toolName).outcome = 'input-error';

@@ -59,10 +59,28 @@ export class AlertRepository {
     return and(this.ownedWhere(), alertVisibleInYear(this.year.id), ...filters);
   }
 
-  private joinedQuery() {
+  private joinedQuery(placementYearId: string) {
+    // A student's filter context is the latest placement in the selected
+    // year. Keep the alert's own class target intact, including class notices.
+    const placement = this.db
+      .selectDistinctOn([studentEnrollments.studentId], {
+        studentId: studentEnrollments.studentId,
+        classId: studentEnrollmentPlacements.classId,
+        sectionId: studentEnrollmentPlacements.sectionId,
+      })
+      .from(studentEnrollments)
+      .innerJoin(studentEnrollmentPlacements, eq(studentEnrollmentPlacements.enrollmentId, studentEnrollments.id))
+      .where(eq(studentEnrollments.academicYearId, placementYearId))
+      .orderBy(studentEnrollments.studentId, desc(studentEnrollmentPlacements.validFrom))
+      .as('alertStudentPlacement');
     return this.db
-      .select(this.alertSelect)
+      .select({
+        ...this.alertSelect,
+        studentClassId: placement.classId,
+        studentSectionId: placement.sectionId,
+      })
       .from(alerts)
+      .leftJoin(placement, eq(alerts.studentId, placement.studentId))
       .leftJoin(students, eq(alerts.studentId, students.id))
       .leftJoin(teachers, eq(alerts.teacherId, teachers.id))
       .leftJoin(staff, eq(teachers.staffId, staff.id))
@@ -72,7 +90,7 @@ export class AlertRepository {
 
   // Never chain another .where() on this: it would replace the read condition.
   private baseQuery(...filters: (SQL | undefined)[]) {
-    return this.joinedQuery().where(this.readCondition(...filters));
+    return this.joinedQuery(this.year.id).where(this.readCondition(...filters));
   }
 
   async getAll() {
@@ -208,7 +226,7 @@ export class AlertRepository {
   async createFromSourceYear(data, sourceYearId: string) {
     const [created] = await this.db.insert(alerts)
       .values({ ...data, academicYearId: sourceYearId }).returning();
-    const [alert] = await this.joinedQuery()
+    const [alert] = await this.joinedQuery(sourceYearId)
       .where(and(eq(alerts.id, created.id), eq(alerts.academicYearId, sourceYearId))).limit(1);
     return alert;
   }

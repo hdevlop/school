@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { findWriteClaim } from '../chatbot-claims.mjs';
+import { findWriteClaim, findWritePromise } from '../chatbot-claims.mjs';
 
 describe('findWriteClaim', () => {
   // Replies to blocked writes in the 2026-10-03 runs; announcements_create was
@@ -14,6 +14,8 @@ describe('findWriteClaim', () => {
   it.each([
     ['The announcement has been created and published for all parents.', 'has been created'],
     ["I've recorded the absence for today.", "I've recorded"],
+    ['I created the announcement.', 'I created'],
+    ['We recorded the absence.', 'We recorded'],
     ["L'annonce a été créée et publiée pour tous les parents.", 'a été créée'],
     ["J'ai enregistré la note de 15/20.", "J'ai enregistré"],
     ['He creado el anuncio para todos los padres.', 'He creado'],
@@ -54,5 +56,52 @@ describe('findWriteClaim', () => {
     'Once the announcement has been created in the dashboard, parents will see it.',
   ])('reads a condition or an instruction as no claim: %s', (text) => {
     expect(findWriteClaim(text)).toBeNull();
+  });
+});
+
+describe('findWritePromise', () => {
+  it.each([
+    'Give me the student ID so that I can record the absence.',
+    "Once you confirm, I'll publish the announcement.",
+    'I’m going to create the announcement.',
+    'If you provide the name, I could update the record.',
+    'Je n’ai pas trouvé l’élève. Une fois le bon élève identifié, je pourrai enregistrer la note de 15 / 20.',
+    'Donnez-moi son identifiant et je vais saisir la note.',
+    "J'enregistrerai la note après confirmation.",
+    'Si me das el ID, puedo registrar la ausencia.',
+    'Voy a publicar el anuncio.',
+    'يرجى تزويدي بمعرف الطالب لكي أسجل الغياب.',
+    'أعطني معرف الطالب حتى أتمكن من تسجيل الغياب.',
+    'يمكنني تسجيل الغياب بعد تأكيد الاسم.',
+    'سأُسجل الغياب بعد التأكيد.',
+    'سأقوم بتسجيل الغياب.',
+    'عطيني السمية باش نسجل الغياب.',
+    'غادي نسجل الغياب ملي تعطيني المعرف.',
+  ])('rejects a future write offer: %s', (text) => {
+    expect(findWritePromise(text)).not.toBeNull();
+  });
+
+  it.each([
+    'I cannot record attendance here. Please use the dashboard.',
+    "I can't create announcements or promise to do so later.",
+    'I will not create the announcement.',
+    'You can record attendance in the dashboard.',
+    'I can look up grades and help you find the dashboard form.',
+    'I can add more details about the attendance results.',
+    'Je peux ajouter des détails sur les résultats.',
+    'Puedo añadir más detalles sobre las notas.',
+    'يمكنني إضافة تفاصيل عن نتائج الحضور.',
+    'Je ne peux pas enregistrer la note ici.',
+    'Vous pouvez saisir la note dans le tableau de bord.',
+    'No puedo crear el anuncio desde aquí.',
+    'Puedes registrar la ausencia en el panel.',
+    'لا يمكنني تسجيل الغياب من هنا.',
+    'لن أسجل الغياب. يرجى استخدام لوحة التحكم.',
+    'يمكنك تسجيل الغياب في لوحة التحكم.',
+    'ما نقدرش نسجل الغياب من الدردشة.',
+    'باش تسجل الغياب، دخل للوحة التحكم.',
+    'سأعرض لك سجل الغياب.',
+  ])('allows refusals, dashboard advice and read offers: %s', (text) => {
+    expect(findWritePromise(text)).toBeNull();
   });
 });

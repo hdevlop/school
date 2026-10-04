@@ -22,6 +22,21 @@ function parentService(validator: Record<string, unknown>, children: Record<stri
 }
 
 describe('parent children year scope', () => {
+  it('enriches only the readable parent list in one batch, retaining parents with no placements', async () => {
+    const service = new ParentService(
+      { getAll: async () => [{ id: 'p1' }, { id: 'p2' }] } as any,
+      {} as any, {} as any, {} as any, {} as any,
+      { getListPlacements: async (ids: string[]) => {
+        expect(ids).toEqual(['p1', 'p2']);
+        return [{ parentId: 'p1', studentId: 's1', classId: 'c1', sectionId: 'a' }];
+      } } as any,
+    );
+    expect<unknown>(await service.getAll()).toEqual([
+      { id: 'p1', childPlacements: [{ parentId: 'p1', studentId: 's1', classId: 'c1', sectionId: 'a' }] },
+      { id: 'p2', childPlacements: [] },
+    ]);
+  });
+
   it('places each child in the request year after checking the parent', async () => {
     const calls: unknown[] = [];
     const service = parentService(
@@ -56,6 +71,22 @@ describe('parent children year scope', () => {
 });
 
 describe('parent children query', () => {
+  it('filters list placements by year, readable students and requested parents, picking the latest placement', async () => {
+    let captured = { sql: '', params: [] as unknown[] };
+    const repo: any = inYear(new ParentChildrenRepository(), oldYear);
+    repo.db = drizzle(async (sql, params) => { captured = { sql, params }; return { rows: [] }; });
+    repo._scopeCtx = { hasActiveContext: () => true, getUser: () => ({ id: 'teacher-1', role: 'teacher' }) };
+    await repo.getListPlacements(['p1', 'p2']);
+    expect(captured.sql).toContain('select distinct on ("student_parents"."parent_id", "students"."id")');
+    expect(captured.sql).toContain('"student_enrollments"."academic_year_id" = $');
+    expect(captured.sql).toContain('"student_parents"."parent_id" in (');
+    expect(captured.sql).toContain('"students"."id" in (select');
+    expect(captured.sql).toContain('"student_enrollment_placements"."valid_from" desc');
+    expect(captured.sql).not.toContain('"students"."class_id"');
+    expect(captured.params).toEqual(expect.arrayContaining(['year-old', 'teacher-1', 'p1', 'p2']));
+    expect(await repo.getListPlacements([])).toEqual([]);
+  });
+
   async function statement(method: 'getChildren' | 'getLinkedChildren' = 'getChildren', role?: string) {
     let captured = { sql: '', params: [] as unknown[] };
     const repo: any = inYear(new ParentChildrenRepository(), oldYear);

@@ -59,7 +59,7 @@ function StudentsTable() {
     isDeleting,
     isBulkDeleting
   } = useStudents();
-  const { filters, filteredStudents } = useStudentsTableFilters(classes, students);
+  const { filters, filteredStudents } = useStudentsTableFilters(students);
 
   const { openDialog, confirmDelete, pop } = useDialog();
 

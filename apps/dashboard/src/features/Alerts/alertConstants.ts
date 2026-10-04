@@ -13,6 +13,8 @@ export type AlertRecord = {
   teacherId: string | null;
   teacherAssignmentId: string | null;
   classId: string | null;
+  studentClassId?: string | null;
+  studentSectionId?: string | null;
   studentName: string | null;
   teacherName: string | null;
   className: string | null;

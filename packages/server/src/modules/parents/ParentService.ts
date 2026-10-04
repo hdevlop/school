@@ -29,7 +29,15 @@ export class ParentService {
   // ========== RETRIEVAL METHODS ==========
 
   async getAll() {
-    return await this.parentRepository.getAll();
+    const parents = await this.parentRepository.getAll();
+    const placements = await this.parentChildrenRepository.getListPlacements(parents.map((parent) => parent.id));
+    const byParent = new Map<string, typeof placements>();
+    for (const placement of placements) {
+      const children = byParent.get(placement.parentId) ?? [];
+      children.push(placement);
+      byParent.set(placement.parentId, children);
+    }
+    return parents.map((parent) => ({ ...parent, childPlacements: byParent.get(parent.id) ?? [] }));
   }
 
   async getCount() {

@@ -1,6 +1,70 @@
 # Chatbot latency and cost plan
 
-Status: **GPT-OSS-120B:NITRO REJECTED ON THE FULL SET: 47/50, CEREBRAS TRUNCATES TOOL NAMES; THE DEFAULT ROUTE STAYS (50/50)**
+Status: **LOCAL SMOKE CHECKS PASS; CONTROLLED ACCEPTANCE AND PRODUCTION VERIFICATION REMAIN. DEFAULT GPT-OSS-120B RETAINED.**
+
+## 0. Current status and next work — 2026-10-04
+
+This section and sections 1–11 describe the current plan. The dated entries
+below are experiment history; their package versions, pending work and provider
+prices describe that run, not the current installation. Source/configuration
+review does not establish the effective settings of a running deployment.
+
+| Work | Current state | Evidence or remaining action |
+|---|---|---|
+| Published packages | Adopted | Root pins: `najm-chatbot` 2.2.1, `najm-rag` 2.4.0, `najm-mcp` 2.2.4, `najm-api` 4.0.0; matching Desktop reference versions checked |
+| Streaming runner and School diagnostics | Implemented; local traces captured | `scripts/chatbot-benchmark.mjs`, admin-only in-memory diagnostics; embedding-call/attempt spans and all-outcome summaries available |
+| Embedding diagnostics | Published and adopted; controlled live acceptance pending | Request-scoped cache/attempt/timing/outcome records, tool-side capture, concurrency and cancellation regressions; [release review](docs/evidence/chatbot-latency/embedding-diagnostics-20261004.md) |
+| Concurrent benchmark runner | Implemented; mocked CLI checks pass | Bounded workers 1/2/4, chat/embedding ID validation and load summaries; [runner review](docs/evidence/chatbot-latency/concurrent-runner-20261004.md); controlled live traffic still pending |
+| Preflight and estimated-spend stop | Implemented; local read-only preflight passes | Reservations account for in-flight requests; unknown cost stops scheduling; [control review](docs/evidence/chatbot-latency/budget-preflight-20261004.md); hard provider cap and paid budget still needed |
+| Read-only chat and argument schemas | Fixed; local checks pass | Confirmation-marked writes blocked; AI SDK `inputSchema`; [schema review](docs/evidence/chatbot-latency/tool-schemas-20261003.md) |
+| Scoring and Darija source fixes | Implemented; offline regression checks pass | [Source-fix review](docs/evidence/chatbot-latency/source-fixes-20261004.md); write promises, arguments, facts, language review and vowelled Darija fixed; live re-run pending |
+| Reusable Darija rewriting | Published and adopted | `najm-rag@2.3.0` exports an opt-in factory; School retains domain vocabulary and literal rules; [migration review](docs/evidence/chatbot-latency/darija-shared-20261004.md), 109/109 output parity |
+| Multilingual answers and routing | Local smoke coverage | Five-language 50-case set passes; latest preview: core 18/20, Darija/French 30/31; [tool-cap review](docs/evidence/chatbot-latency/tool-cap-20261004.md) |
+| Parent, teacher, student and follow-ups | Separate smoke checks: 10/10 | `scripts/chatbot-roles.mjs`; [role review](docs/evidence/chatbot-latency/roles-20261003.md); broader repeated coverage remains |
+| Embedding availability and failure handling | Local fixes and outage checks complete | Queries 5 s, indexing 60 s, failure cooldown 30 s, router-error fallback `none`, Ollama residency; hanging requests and populated knowledge need controlled acceptance |
+| Tool cap and context | Evaluated locally | Keep cap 12 / semantic hits 8; shorter prompt passes 50/50 and cuts input tokens 21%; one-run evidence |
+| Faster model | No replacement accepted | `120b:nitro` rejected at 47/50; Nemotron Lightning passed only 12 smoke questions |
+| Acceptance baseline | Pending | Explicit gates, verified cache/load conditions, repeated samples and concurrency (section 6) |
+| Production and browser measurements | Unrun | Deployment revision, runtime connectivity/schema, production API and submit-to-render evidence |
+
+Remaining work, in order:
+
+1. **School:** argument/fact-boundary validation, write-promise detection and
+   inconclusive-language review are now implemented, with regression tests and
+   required search arguments in all five missing-student fixtures. The prompt
+   now forbids promises or requests for IDs to perform a write. Darija rewriting
+   handles vowelled count/negation phrases and preserves the marking shadda under
+   attached conjunctions. Re-run live after these source changes; older 50/50
+   reports predate the stricter scoring and changed prompt. Extend authoritative
+   facts, ambiguity, topic switches, role denials and populated knowledge before
+   judging another model.
+2. **Shared diagnostics are now available:** request-scoped embedding hit/miss,
+   attempts, timeouts and durations are published and adopted (section 5.1).
+   `EmbeddingService.clearQueryCache()` provides one instance-scoped control;
+   establish controls for other cache layers and verify live correlation under
+   concurrency. The runner now supports 1/2/4 workers with correlation checks;
+   mocked CLI coverage does not establish a controlled live baseline.
+3. **School:** capture the controlled default-model baseline against the proposed
+   gates and sample/budget plan in section 6.4. Uncontrolled older runs remain
+   smoke evidence. Interaction-table logging is optional; continue using the
+   redacted sink unless a retention/access rule is established.
+4. **Next model experiment:** compare
+   `nvidia/nemotron-3.5-lightning:nitro` with the retained default using the full
+   corpus, role checks and the same controls. Recheck availability, tool schema
+   compatibility and pricing when the experiment runs. Its 12/12 result is
+   candidate evidence, not approval to switch. If it fails, investigate provider
+   preferences in a published Najm release; re-test a correct faster host before
+   adopting it. Repeated identical failing calls need their own termination
+   experiment, preserving legitimate multi-step work.
+5. **Rollout:** complete production preflight and API measurements, then measure
+   dashboard submit-to-first-render separately. Keep Jev deferred.
+
+The Darija extraction was published as `najm-rag@2.3.0` and adopted in School.
+Embedding diagnostics followed in `najm-rag@2.4.0` and `najm-chatbot@2.2.1`.
+No paid benchmark, database migration or deployment was performed. The next
+paid run must have its request and monetary budget recorded before execution.
+
+## Experiment history
 
 2026-10-04, context size ([review](docs/evidence/chatbot-latency/context-size-20261004.md)): the
 system message was 55% of input tokens (960 per model step, uncached), tool
@@ -109,10 +173,10 @@ until `maxSteps` and returned an empty answer. It was not faster than
 I scanned all 101 cheap, tool-capable OpenRouter models, then compared four
 fast ones against `120b:nitro` ([review](docs/evidence/chatbot-latency/model-candidates-20261003.md)).
 
-Viable:
+Candidate from the small smoke set:
 - `nvidia/nemotron-3.5-lightning:nitro` passed 12/12 with the right
   languages and facts, at 0.97 s p50 and about $0.18 per 1,000 answers. It is
-  the cheaper fallback.
+  a candidate for full-corpus comparison, not an accepted fallback.
 
 Rejected:
 - `gemini-2.5-flash-lite` answered an Arabic count question in English with
@@ -120,8 +184,9 @@ Rejected:
 - `mercury-2` had one server stream error and one hang.
 - `nemotron-3-nano` took 78 s and 9 steps on one write request.
 
-The runner does not yet check reply language, so automatic checks alone cannot
-pick a model.
+At candidate-test time the runner did not check reply language. It now checks
+language and false completed-write claims; these heuristics still require human
+review and stronger factual/argument scoring before model acceptance.
 
 2026-10-03, internal baseline ([review](docs/evidence/chatbot-latency/stream-diagnostics-20261003.md)):
 School now sends each chat's diagnostics to an in-memory, admin-only log at
@@ -288,31 +353,37 @@ teacher review screen. Both are feature work, not latency work, and belong in
 their own plan; this plan only benchmarks that writes stay blocked (section
 2.2). Until they exist, retain the direct dashboard correction path for
 teachers. Limited-role selected-year refusals were proven locally in 0.1j of
-the academic-year plan; teacher permission behavior inside routing is still
-unproven (section 2.4).
+the academic-year plan. The separate 10/10 role check now provides local ownership
+and follow-up evidence; permission-filtered routing and broader repeated coverage
+remain unverified (section 2.4).
 
 Scope: School's dashboard assistant, built on `najm-chatbot` and `najm-rag`,
 from sending a question through receiving the completed answer. Preserve answer
-quality and authorization in English, French, Arabic, and Spanish.
+quality and authorization in English, French, Modern Standard Arabic, Darija,
+and Spanish; Darija checks currently require Arabic-script output.
 
 ## 1. Decision and order of work
 
-**Local llama.cpp embeddings and the configured OpenRouter chat model are both
-in place. Jev is optional and is not needed for the initial tests.** No new
+**Local Qwen embeddings (Ollama here, llama.cpp on the original workstation) and
+the configured OpenRouter chat model have local evidence. Jev remains optional.** No new
 paid provider is a prerequisite; paid chat runs need a declared budget.
 
 1. Re-run the 20 routing cases under the current Qwen instruction and tool
    descriptions; check runtime configuration, embedding connectivity, the
-   database's pgvector schema, and routing failures. **Done 2026-10-02: 14/20.**
+   database's pgvector schema, and routing failures. **Latest preview, 2026-10-04:
+   18/20 core, 30/31 Darija/French. Remaining misses are not silently accepted.**
 2. Build the section 4.2 runner and establish an external baseline using the
-   actual streaming chat route. **Runner built; smoke runs on empty and seeded
-   data are done (35/36 completed on seeded data). An acceptance baseline still
-   needs a larger corpus and sample.**
+   actual streaming chat route. **Runner and 50-case corpus built; local full-set
+   smoke runs pass. An acceptance baseline still needs controlled caches/load,
+   stronger scoring, broader cases and repeated samples.**
 3. Add shared instrumentation in Najm and establish a controlled internal baseline.
    **`najm-chatbot` diagnostics released in 2.0.5, wired into School and the
-   runner; internal baseline captured (2026-10-03). `najm-rag` embedding spans
-   remain.**
+   runner; local internal traces captured (2026-10-03), with caches/load
+   uncontrolled. Request-scoped embedding spans followed in RAG 2.4.0 / chatbot
+   2.2.1 (2026-10-04); a controlled live baseline remains.**
 4. Compare configuration, model, routing, and tool-call improvements separately.
+   **Timeout/fallback, tool-cap and prompt-size experiments done locally; current
+   model retained. Next candidate: full-set Nemotron Lightning, after baseline gates.**
 5. Consider Jev only if measured traffic and avoidable LLM spending justify it.
 
 Do not assume that the LLM dominates latency. Embedding timeouts, database/tool
@@ -320,33 +391,25 @@ calls, large tool prompts, and provider retries are competing hypotheses.
 The former 1.5-second first-text and 1-second completed-answer targets remain
 aspirations until a baseline supports realistic acceptance thresholds.
 
-The original rewrite changed documentation only. Local read-only routing
-diagnostics and a routing-only runner were added on 2026-09-30. Shared embedding
-adapter publication, School adoption, and a local routing trial are complete.
-The chat provider was configured and focused functional chat checks passed
-locally on 2026-10-01/02. The streaming benchmark runner, instrumentation, and
-deployment have not started. A local database schema repair was required;
-production schema state remains unknown. Execute remaining activities within
-their subsequently agreed scope and budget.
+The streaming runner, shared chatbot instrumentation, published School adoption
+and local internal smoke baseline are complete. Per-embedding telemetry is now
+available; controlled acceptance and deployment measurements remain. A local database schema repair
+was required; production schema state remains unknown. Use section 0 as the
+completion ledger and keep paid runs within their recorded budgets.
 
 ## 2. Verified source findings and runtime unknowns
 
-Reviewed on **2026-09-23** against School's configuration, installed
-`najm-chatbot@2.0.3`, `najm-rag@2.0.3`, and AI SDK declarations. This is a source
-snapshot, not a measured baseline. **Pins as of 2026-10-03 (night):
-`najm-rag` `2.2.0`, `najm-chatbot` `2.1.1`, `najm-mcp` `2.2.3`, `najm-theme`
-`0.2.3`, `najm-core` `3.0.2`, `najm-api` `3.1.1`.** The 2.1.x releases added the
-`openai-compatible` adapter, opt-in vector shortening, `rewriteRoutingQuery`
-(2.1.3) and re-indexing on an embedder change (2.1.4). Re-read in 2.1.3: the
-router falls back per `fallbackOnRouterError` (default `all`), expands
-dependencies after matching, sums each tool's top three phrase scores to pick
-the primary, and uses phrase matches alone whenever one clears the threshold.
-Caches and the default embedding timeout have not been re-checked. Recheck
-root pins before implementation.
+Reconciled **2026-10-04** against School source and the matching read-only
+reference at `C:\Users\pc\Desktop\najm`. Root pins: `najm-rag` `2.4.0`,
+`najm-chatbot` `2.2.1`, `najm-mcp` `2.2.4`, `najm-theme` `0.2.3`,
+`najm-core` `3.0.2`, `najm-api` `4.0.0`. Runtime claims remain tied to the
+dated reports; this source review does not re-run their benchmarks. Compare
+reference versions with root pins again before any shared implementation.
 
 ### 2.1 School configuration
 
-In `packages/server/src/config/index.ts`, re-read 2026-10-02:
+In `packages/server/src/config/ragConfig.ts` and `chatbotConfig.ts`, re-read
+2026-10-04 (`config/index.ts` re-exports the plugin factories):
 
 - `RAG_EMBEDDING_PROVIDER` selects `ollama` (default) or `openai-compatible`.
   The source defaults are still Ollama, `embeddinggemma`, 768 dimensions, and
@@ -362,20 +425,28 @@ In `packages/server/src/config/index.ts`, re-read 2026-10-02:
   change requires reindexing.
 - On the original workstation the Qwen server is a manually started process
   (`scripts/start-local-embeddings.ps1 -Model Qwen3`), not a supervised service.
-  Ollama on the second workstation was already running; whether it starts at
-  login was not checked. On
+  Ollama on the second workstation starts at login through a Startup shortcut
+  per the 2026-10-03 residency review. `OLLAMA_KEEP_ALIVE=-1` was applied and
+  verified after restart; it keeps loaded models resident but does not preload
+  after a reboot. On
   2026-10-01 chat failed in preparation because it had stopped and its model
   file was missing (academic-year plan 0.1h). Treat embedding-process
   availability as a latency and failure risk, not only model residency.
-- School's default `RAG_EMBEDDING_TIMEOUT_MS` is **60,000 ms**. The installed
-  RAG package default was 8,000 ms in 2.0.3. Query and indexing embedding calls
-  share this timeout; health probes have a separate timeout.
+- School's indexing timeout is **60,000 ms** (`RAG_EMBEDDING_TIMEOUT_MS`).
+  Questions have a separate **5,000 ms** bound
+  (`RAG_EMBEDDING_QUERY_TIMEOUT_MS`) and **30,000 ms** failure cooldown
+  (`RAG_EMBEDDING_QUERY_COOLDOWN_MS`); health probes have a separate timeout.
 - Tool routing and knowledge support are enabled, with explicit lookup
-  dependencies for `attendance_mark`, `grades_get_student_report`,
-  `grades_get_by_student`, and `grades_create`. Effective RAG Studio settings
-  can override routing limits and disable knowledge retrieval.
+  student-search dependencies for per-student reads and blocked writes, plus
+  assessment/date dependencies where needed. `rewriteDarijaForRouting` wraps
+  the published `createDarijaQueryRewriter` from `najm-rag/query-rewrites` with
+  School's domain vocabulary and phone-number rule. Common wording and the
+  engine are shared; semantic phrases remain tool-linked examples. Rewriting
+  applies to routing input only; the model still sees the original question. Effective RAG
+  Studio settings can override routing limits and disable knowledge retrieval.
 - Chat allows up to 10 LLM steps and stores conversations in the database.
-  Ten is a ceiling, not an observed step count. Interaction logging is disabled.
+  Ten is a ceiling, not an observed step count. The stream stall bound is 30 s.
+  Interaction logging is disabled; the redacted `onDiagnostics` sink is enabled.
   The configured model is OpenRouter / `openai/gpt-oss-120b`.
 - Chat runs in the dashboard's selected academic year. `ChatController` is a
   REST year consumer in `config/yearScope.ts`; each request validates the year
@@ -389,23 +460,26 @@ In `packages/server/src/config/index.ts`, re-read 2026-10-02:
 
 ### 2.2 Installed behavior that matters to this plan
 
-- School source declares 453 `@McpTool` methods across 49 files. This is not the
-  runtime inventory or the number available to a particular signed-in user.
+- Tool counts in older reports are snapshots, not a current runtime inventory
+  or the number available to a particular signed-in user. Recount registered
+  and indexed tools in each controlled run.
 - Successful routing defaults to `maxTools: 12`, `topSemanticHits: 8`, and
   similarity threshold 0.45. Dependencies are expanded before the final slice;
   lowering `maxTools` can remove a required lookup tool.
-- **Twelve is not a global cap.** Router errors default to
-  `fallbackOnRouterError: 'all'`, returning all routable tools without that slice.
-  No-match behavior defaults to `none`. Disabled routing also returns the
-  routable inventory.
+- **Twelve is not a global cap.** The package's router-error default is `all`,
+  but School explicitly uses `fallbackOnRouterError: 'none'`. An error therefore
+  supplies no data tools and a notice that data is unreachable. No-match behavior
+  defaults to `none`. Disabled routing or an effective `all` fallback can still
+  return the routable inventory; record effective settings, not defaults alone.
 - Selected tool definitions remain available across LLM steps. Actual input
   charges depend on provider usage and prompt caching; schema estimates are not
   billing evidence.
-- Preparation awaits routing and then knowledge context sequentially. A failed
-  routing embedding can be followed by another embedding attempt for an uncached
-  knowledge search. Two 60-second waits are possible when both calls hang;
-  refused connections can fail much faster. The knowledge error is not caught
-  in that preparation path, so successful LLM fallback is not guaranteed.
+- Preparation still awaits routing and then knowledge context sequentially.
+  `najm-rag` now skips query embedding for an empty knowledge index and returns
+  an unavailable notice when knowledge search fails. Query failures open the
+  cooldown, avoiding another full wait. A populated index and Darija's rewritten
+  routing/original knowledge queries can still require distinct embeddings;
+  measure that path rather than assuming deduplication.
 - Query embeddings have an in-process LRU cache, default size 256. Knowledge
   context has another cache, size 32. A repeated question can avoid embedding
   or retrieval even after the embedding model has been unloaded or stopped.
@@ -419,36 +493,36 @@ In `packages/server/src/config/index.ts`, re-read 2026-10-02:
   It does not implement an executable approval/resume flow. Benchmark the blocked
   outcome; do not introduce writes as part of latency optimization.
 
-### 2.3 Evidence currently missing
+### 2.3 Evidence available and still missing
 
-The 2026-09-30 local preflight verifies the local inventory, effective routing
-settings, and embedding failure only. The remaining statements below describe
-gaps in chat-stream, internal timing, production, and billing evidence.
-
-- Interaction logs, when enabled, capture questions, routed/attempted tools, tool
-  calls, and estimated tool-prompt tokens. The agent does not populate internal
-  stage timings, aggregate token usage, or `steps_count` there.
+- Correlated streaming diagnostics now record preparation stages, steps, tool
+  outcomes/durations/sizes, aggregate usage and estimated cost. Embedding cache
+  hits/misses, attempts and per-call spans remain missing. The sink holds only
+  200 records per process and is lost on restart; durable/multi-instance
+  collection needs its own design before production measurement.
 - The admin-only `POST /api/rag-studio/chat-debug` returns tool traces and
   `latencyMs`, but uses `generateText` and performs extra trace work. Its latency
   cannot substitute for the actual streaming route.
-- Browser usage metadata is not an authoritative bill. The installed cost helper
-  reads legacy `promptTokens`/`completionTokens` while the installed SDK exposes
-  `inputTokens`/`outputTokens`; validate and normalize that contract.
-- Live AI settings, database contents, indexed tools/documents, production
-  connectivity, and provider costs have not been verified during this review.
-  The previous draft's empty-local-database statement is not current evidence.
+- Multi-step usage now uses SDK `totalUsage`, normalized input/output counts.
+  Estimated prices and browser metadata are not authoritative bills. The Nitro
+  report reconciles an account usage delta for that run; require current price
+  dates and billed failure/retry reconciliation for acceptance comparisons.
+- Local settings, seeded data and indexed tools have dated evidence. Controlled
+  cache/load/concurrency comparisons, populated knowledge, production connectivity
+  and production schema/billing remain unverified. Recheck effective settings
+  and fixture facts before the next run.
 
 ### 2.4 Routing correctness prerequisites before cap tuning
 
-The matching Desktop sources for `najm-rag@2.0.3` and `najm-chatbot@2.0.3`
-were reviewed again on 2026-09-30; recheck them against the `najm-rag@2.1.2`
-pin. Before comparing a smaller tool limit:
+The 2026-10-04 cap experiment rejects six and retains cap 12 / semantic hits 8.
+The following remain prerequisites for future routing changes:
 
 - Evaluate complete operation-plus-lookup coverage. Dependency expansion followed
   by a final slice can remove a required lookup even if the primary tool survives.
 - Compare selection after permission-based candidate filtering. The current
   routable-tools filter only excludes RAG Studio internals; execution guards remain
-  a separate boundary. Admin preview does not establish teacher authorization.
+  a separate boundary. The 10/10 role run tests ownership at execution, not
+  permission-filtered candidate selection or every denied route.
 - Test unequal example-phrase coverage. Summing the strongest three scores can
   favor a tool with several weaker phrases over one stronger match. Tool-description
   retrieval only runs when no semantic phrase qualifies.
@@ -466,10 +540,11 @@ The initial 20-case routing corpus includes English, French, Arabic, Spanish,
 Darija, mixed language, follow-up text, and a topic switch. Its expected tool groups
 are minimum candidate coverage checks, not proof of valid arguments or completed
 school operations. Expand to the section 6 benchmark before making accuracy claims.
-The last result, 12/20 in `routing-final.json`, predates the 2026-10-02 query
-instruction and description changes; re-run all 20 cases (and confirm the tool
-index covers the new count tool and changed descriptions) before treating any
-routing number as current.
+The latest preview is 18/20 core, 30/31 Darija/French and 44/45 tool-requiring
+benchmark questions (2026-10-04). These are selection checks, not completed
+answer scores; a blocked write may be refused without its tool. Add independent
+held-out paraphrases, record remaining misses, and verify actual chat execution
+after a routing change instead of certifying it from preview alone.
 
 ## 3. Test prerequisites and required APIs
 
@@ -559,7 +634,15 @@ status, initial stream results, routing observations, gaps, and the full-run bud
 | `najm-rag` | Embedding/cache, routing/retrieval spans, and a public request-scoped diagnostics contract |
 | School | Configuration, additive log-table migration, fixtures, runner, reports, and published package adoption |
 
-Define a public diagnostics contract between the packages. School must not inspect
+The public contract is available in RAG 2.4.0 / chatbot 2.2.1. Embedding calls
+and attempts are scoped through `RAG_DIAGNOSTICS`, with separate cache status,
+operation, timing and terminal category. Chat includes preparation and tool-side
+events with request-relative offsets. Unfinished capture at a terminal outcome
+is marked partial. School's runner summarizes all outcomes, keeping missing
+capture distinct from zero calls. No private cache inspection is needed;
+`clearQueryCache()` clears only one embedder's cache, not every cache/model state.
+
+School must not inspect
 private caches or monkey-patch installed code. Correlate events per request under
 concurrency. Logging failures must not break answers or consume a stream twice.
 
@@ -602,6 +685,11 @@ set retention/access rules before logging real questions or tool arguments.
 
 ### 5.3 Integrate in School
 
+**Current path:** School uses `onDiagnostics` with interaction logging disabled.
+The interaction table is not exported in School's schema. Steps 1–3 below are
+conditional on choosing durable interaction logging; they are not prerequisites
+for the redacted sink or the next local benchmark. Define retention/access first.
+
 1. Export `chatbotInteractionLogsTable as chatbotInteractionLogs` from
    `najm-chatbot/pg` in `packages/server/src/database/schema/index.ts`.
 2. Run `bun run db:generate`; review the SQL and target migration history. Accept
@@ -609,7 +697,7 @@ set retention/access rules before logging real questions or tool arguments.
 3. Apply the reviewed migration using `bun run db:migrate` on the designated
    development/test database. Production application is a separate rollout step.
 4. Decide logging explicitly in `chatbotConfig()`. `chatLogging.enabled`
-   already defaults to `true`, which today inserts into a missing table. Either
+    defaults to `true` in the package, but School overrides it to `false`. Either
    enable it with the table and a retention rule, or use `onDiagnostics` alone,
    which carries no question text or tool arguments. The benchmark runner can
    match rows to cases by sending `x-request-id`, which is recorded as
@@ -632,11 +720,15 @@ Files (created 2026-10-02 unless noted):
   limits, and budget controls. `.mjs` follows the other `scripts/` runners.
   Server diagnostics are read for each request by `x-request-id` (2026-10-03).
   `--compare-model` interleaves the saved model with a candidate, and
-  `--languages=fr,ary` runs only those cases (2026-10-03). Still to add:
-  declared concurrency above one, non-admin accounts, and conversation cases.
+  `--languages=fr,ary` runs only those cases (2026-10-03). Bounded concurrency
+  1/2/4 and chat/embedding correlation validation were added on 2026-10-04;
+  comparisons remain serial. Non-admin accounts and conversation replay still
+  need integration in this runner. Separate `scripts/chatbot-roles.mjs` supplies the
+   10/10 role/follow-up smoke checks; integrate broader coverage and reporting.
 - `datasets/chatbot-latency/questions.json`: 50 independent cases, 10 per
   language (English, French, Spanish, Modern Standard Arabic, Darija), since
-  2026-10-03. Follow-ups, ambiguity and authorization denials are still to add.
+   2026-10-03. Missing-student cases exist; ambiguity, populated knowledge,
+   topic changes and broader role/follow-up/denial cases still need inclusion.
 - `datasets/chatbot-latency/routing-cases.json` (20) and `routing-darija-fr.json`
   (31): routing-only cases for `scripts/chatbot-routing-preflight.mjs`
   (`--cases=<file>`).
@@ -646,13 +738,27 @@ Files (created 2026-10-02 unless noted):
 
 ### 6.1 Corpus and correctness
 
-Start with 40 questions, 10 per language: small talk, grounded knowledge,
-single-tool reads, multi-tool reads, and attempted writes that must remain blocked.
-Each case specifies role, selected academic year, fixture IDs, expected
-tools/alternatives, important arguments, answer facts, and refusal behavior.
+The current 50 questions cover small talk, single/multi-tool reads, missing
+students and blocked-write requests in five languages. Extend this frozen core
+with grounded knowledge and broader role/conversation cases; version additions.
+The extended fixture contract must specify role, selected academic year, fixture
+IDs, expected tools/alternatives, important arguments, answer facts, and refusal
+behavior. Role/year are currently corpus-level; per-case arguments can be scored
+through `expectedToolCalls`, initially populated for the five missing-student cases.
 Include count questions: list-based counting took 71–79 s and gave wrong totals
 before the aggregate tool existed. Human-review quality in every
 language; a fast incorrect answer fails.
+
+Current automatic scoring checks successful tool-output groups, exact required
+argument subsets (`expectedToolCalls`), required/forbidden fact boundaries,
+reply language, completed-write claims and write promises. A null language
+detection now fails automatic acceptance and sets `reviewRequired`, unless a
+fixture explicitly opts out with `replyLanguage: null`. Arguments remain in
+memory for scoring and are stripped from saved tool reports. Whole-answer
+factual correctness still requires richer fixture facts and human review. Include
+read-only refusals that never call a tool, and distinguish those from adapter
+blocking proved by a `blocked` server outcome. Check knowledge citations and
+the honest knowledge-unavailable reply using synthetic indexed documents.
 
 Add controlled follow-ups, ambiguity, missing records, authorization denials, and
 routing misses. Freeze dataset, indexed semantics, documents, and history fixtures
@@ -699,6 +805,49 @@ regression budget, and sample plan. Require no observed authorization or blocked
 write regressions, review all correctness regressions, and reject improvements
 that merely hide a weaker language or fall within measurement variability.
 
+### 6.4 Proposed acceptance targets and next comparison
+
+These are planning targets for the next controlled experiment, **not achieved
+results or a production SLA**. They are deliberately less aggressive than the
+old sub-second aspirations and must be recorded in the run report before testing.
+
+| Metric | Proposed gate |
+|---|---|
+| API first answer text | p50 ≤ 3 s, p95 ≤ 8 s |
+| API completed answer | p50 ≤ 5 s, p95 ≤ 15 s |
+| Completed, non-empty answers | At least 99% of attempts; all failures counted |
+| Authorization and read-only policy | Zero observed leaks, executed writes, false write claims or promises to perform writes |
+| Answer/tool correctness | All fixture checks pass on completed answers; inconclusive language and factual cases receive human review |
+| Estimated API cost | ≤ $0.25 per 1,000 correct completed answers, including failed-attempt spend; reconcile provider billing where available |
+| Candidate improvement | At least 20% lower completion p95 than the interleaved default; first-text/completion p50 may not regress more than 10%; preserve the gates above |
+
+Start with 50 frozen core questions × 2 repetitions × 2 variants = **200 paid
+chat requests**, 100 per variant. Run serially with warm embeddings and verified
+empty application caches for each independent sample, after supported controls
+exist. Alternate baseline/candidate order as the runner does. Do not claim
+per-language p95 acceptance from the resulting 20 observations per language;
+expand important language/role groups toward 100 observations if the decision
+depends on them. Role/conversation, cache-hit, cold-model and concurrency-2/4
+runs have separate counts, conditions and budgets; do not pool their percentiles.
+
+Before execution, record the exact corpus/configuration hashes, prices/date,
+maximum requests and maximum monetary spend, counting warmups, probes, role
+checks, failures and retries. `--max-requests` is a request-count control, not a
+dollar cap. The runner now has optional `--max-estimated-usd` and
+`--request-reserve-usd` accounting: reserve before dispatch, stop on unknown cost
+or insufficient remaining estimates, and drain in-flight work. This is not a
+proven billing ceiling; missing usage, retries and provider charges can exceed
+it. Enforce a hard ceiling through a verified isolated-provider limit. Read-only
+`--preflight` records readiness and hashes without chatting or changing the model;
+cache/model conditions remain unverified. No amount or paid execution is
+authorized by this plan.
+
+Report observed failure rates with counts/uncertainty: 100 observations cannot
+establish a real-world 1% error guarantee. Keep the default if the candidate
+fails, misses the improvement threshold, or the observed difference is within
+variability. Publish a repeat comparison before adopting a new model. A failing
+default baseline is a recorded gap, not grounds to relax a target after the run.
+
 ## 7. Phase 2 — configuration and failure-path improvements
 
 Apply one change per experiment and retain before/after evidence.
@@ -735,6 +884,13 @@ Apply one change per experiment and retain before/after evidence.
 **Gate:** meet the declared latency/cost objective, preserve the correctness
 contract, and stay within the recorded timeout/error budget. Embedding changes
 also require indexing and failure-path checks.
+
+Current disposition: items 1–3 have local residency/timeout/outage evidence,
+with populated-knowledge and hanging-request acceptance still pending. Item 4
+retains cap 12 and semantic hits 8. Item 5 retains the default after rejecting
+Nitro; full-set Nemotron comparison is next. Item 6 shortened the system prompt
+with a 21% input-token reduction; longer history and populated knowledge remain
+unmeasured. Do not repeat a rejected cap or adopt a model from smoke results.
 
 ## 8. Phase 3 — reduce unnecessary work
 
@@ -883,15 +1039,23 @@ Unrun stages remain explicitly unrun. Publishing, migration, and deployment are
 separate execution steps; prepare reviewable changes and validation before any
 approval actually required by the execution scope.
 
+Use section 0 for current states. Production completion requires the deployed
+commit/package pins, effective embedding endpoint reachable from the app runtime,
+live pgvector column/index checks, representative synthetic-data API runs, and
+a diagnostic collection method that works across app instances. Record browser
+submit-to-first-render separately, including network/render time. None of those
+stages is established by a local development build or the existing API smoke runs.
+
 ## 11. Sources and verification references
 
 School's published package pins and live runtime are authoritative. Per AGENTS.md,
 inspect matching Desktop package sources as read-only references; do not read
 Najm internals from `node_modules` or make School consume the Desktop checkouts.
-**Source location unresolved (2026-10-02):** AGENTS.md names
-`C:\Users\hdevlop\Desktop\najm`, the paths below assume `../najm`, and neither
-exists on the current machine (`C:\Users\pc\Desktop`). Section 2 cannot be
-re-verified until the Najm checkout is located or cloned at the matching tag.
+**Source location resolved (2026-10-04):** AGENTS.md names
+`C:\Users\hdevlop\Desktop\najm`; the available read-only checkout here is
+`C:\Users\pc\Desktop\najm` (`../najm`). Its chatbot/RAG/MCP/API package
+versions match School's current pins. Use it for reference only and recheck
+versions before relying on it after a pin change.
 
 - `package.json`, `bun.lock`: pins and resolved dependencies.
 - `packages/server/src/config/index.ts`: embedding/chatbot policy.

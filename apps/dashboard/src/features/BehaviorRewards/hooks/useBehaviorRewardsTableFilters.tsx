@@ -1,27 +1,13 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
-import { useClasses } from '@/features/Classes/hooks/useClasses';
-import { useSections } from '@/features/Sections/hooks/useSections';
 import {
   buildBehaviorRecognitionLevelOptions,
   buildBehaviorRewardCategoryOptions,
   buildBehaviorRewardTypeOptions,
 } from '../config/behaviorRewardOptions';
 
-export const useBehaviorRewardsTableFilters = ({
-  classFilter,
-  onClassFilterChange,
-  sectionFilter,
-  onSectionFilterChange,
-}: {
-  classFilter: string;
-  onClassFilterChange: (value: string) => void;
-  sectionFilter: string;
-  onSectionFilterChange: (value: string) => void;
-}) => {
+export const useBehaviorRewardsTableFilters = () => {
   const { t } = useTranslation();
-  const { classes } = useClasses();
-  const { sections } = useSections();
 
   return useMemo(() => [
     {
@@ -51,23 +37,5 @@ export const useBehaviorRewardsTableFilters = ({
       showIcon: false,
       options: buildBehaviorRewardTypeOptions(t),
     },
-    {
-      name: 'classId',
-      placeholder: t('behaviorRewards.filters.class'),
-      type: 'combobox',
-      showIcon: false,
-      options: (classes || []).map((item) => ({ value: item.id, label: item.name })),
-      value: classFilter,
-      onChange: onClassFilterChange,
-    },
-    {
-      name: 'sectionId',
-      placeholder: t('behaviorRewards.filters.section'),
-      type: 'combobox',
-      showIcon: false,
-      options: (sections || []).map((item) => ({ value: item.id, label: item.name })),
-      value: sectionFilter,
-      onChange: onSectionFilterChange,
-    },
-  ], [classes, sections, t, classFilter, onClassFilterChange, sectionFilter, onSectionFilterChange]);
+  ], [t]);
 };
