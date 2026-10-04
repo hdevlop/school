@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Calendar, DollarSign, CheckCircle, AlertCircle, Clock } from 'lucide-react';
-import { NSectionInfo } from 'najm-kit';
+import { NBadge, NSectionInfo } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
@@ -55,9 +55,9 @@ const InstallmentCard = ({ data }: any) => {
           <Label className="text-md font-bold">
             {t('fees.installment')} #{installment.number}
           </Label>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium border ${config.bg} ${config.text} ${config.border}`}>
+          <NBadge className={`rounded-full font-medium border ${config.bg} ${config.text} ${config.border}`}>
             {config.label}
-          </span>
+          </NBadge>
         </div>
 
         <div className="space-y-2">

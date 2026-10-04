@@ -19,6 +19,7 @@ export const useFeeTypesTableFilters = () => {
         name: 'category',
         placeholder: t('feeTypes.filters.filterByCategory'),
         type: 'select',
+        showIcon: false,
         options: categoryOptions,
         className: 'w-full lg:w-48'
       }

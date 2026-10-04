@@ -11,7 +11,7 @@ import {
   Percent,
   UserRound,
 } from 'lucide-react';
-import { NAvatar, NStatCard } from 'najm-kit';
+import { NAvatar, NBadge, NStatCard } from 'najm-kit';
 import { useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
@@ -196,18 +196,18 @@ export default function LeftSidebar({
 
           <div className="mt-3 flex flex-wrap justify-center gap-2">
             {student?.class && (
-              <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
+              <NBadge className="rounded-full border-amber-200 bg-amber-50 font-bold text-amber-700">
                 {student.class.name}{student.section ? ` · ${student.section.name}` : ''}
-              </span>
+              </NBadge>
             )}
             {/* A viewed-year read carries enrollment; null means none that year. */}
             {viewingYear && student && student.enrollment === null && (
-              <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600">
+              <NBadge className="rounded-full border-slate-200 bg-slate-50 font-bold text-slate-600">
                 {t('academicYearViewing.notEnrolled', { year: viewingYear })}
-              </span>
+              </NBadge>
             )}
-            <span
-              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${
+            <NBadge
+              className={`gap-1.5 rounded-full font-bold ${
                 student?.status === 'active'
                   ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
                   : 'border-slate-200 bg-white text-slate-600'
@@ -215,7 +215,7 @@ export default function LeftSidebar({
             >
               <span className={`h-1.5 w-1.5 rounded-full ${student?.status === 'active' ? 'bg-emerald-500' : 'bg-slate-400'}`} />
               {student?.status ? t(`students.status.${student.status}`) : t('students.profile.unknown')}
-            </span>
+            </NBadge>
           </div>
         </div>
       </div>

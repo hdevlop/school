@@ -42,6 +42,7 @@ export const useExpensesTableFilters = () => {
         name: 'category',
         placeholder: t('expenses.filters.filterByCategory'),
         type: 'select',
+        showIcon: false,
         options: categoryOptions,
         className: 'w-full lg:w-48'
       },
@@ -49,6 +50,7 @@ export const useExpensesTableFilters = () => {
         name: 'status',
         placeholder: t('expenses.filters.filterByStatus'),
         type: 'select',
+        showIcon: false,
         options: statusOptions,
         className: 'w-full lg:w-48'
       }

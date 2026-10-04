@@ -1,7 +1,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, AlertTriangle, Clock, CheckCircle2, LockKeyhole, SearchX } from 'lucide-react';
-import { Label, NajmScroll, NTable, NEmptyState } from 'najm-kit';
+import { NBadge, Label, NajmScroll, NTable, NEmptyState } from 'najm-kit';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -20,10 +20,10 @@ const StatusBadge = ({ status, reservedAmount = 0, availableAmount = 0 }) => {
    const Icon = config.icon;
 
    return (
-      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${config.className}`}>
+      <NBadge className={`inline-flex items-center gap-1 rounded-full font-medium border ${config.className}`}>
          {Icon && <Icon size={12} />}
          {config.label}
-      </span>
+      </NBadge>
    );
 };
 
@@ -276,10 +276,10 @@ export const InstallmentList = ({ studentFees }) => {
                         </div>
                         <div className="ml-3 flex shrink-0 items-center gap-2">
                            {stats.fullyPaid && (
-                              <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700">
+                              <NBadge className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 font-semibold text-emerald-700">
                                  <CheckCircle2 size={12} />
                                  Fully Paid
-                              </span>
+                              </NBadge>
                            )}
                            {expandedFees[fee.id] ? <ChevronUp className="text-muted-foreground" size={18} /> : <ChevronDown className="text-muted-foreground" size={18} />}
                         </div>

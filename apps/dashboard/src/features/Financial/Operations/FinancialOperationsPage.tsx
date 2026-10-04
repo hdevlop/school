@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { NButton, useNSidebar } from 'najm-kit';
+import { NBadge, NButton, useNSidebar } from 'najm-kit';
 import { toast } from 'sonner';
 import { Activity, Banknote, BellRing, History, Menu, RefreshCw, RotateCw } from 'lucide-react';
 import { getStudentsApi } from '@/services/studentApi';
@@ -40,7 +40,7 @@ function Panel({ title, description, icon: Icon, badge, action, children }: any)
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <h2 className="font-semibold">{title}</h2>
-              {badge != null ? <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{badge}</span> : null}
+              {badge != null ? <NBadge className="rounded-full bg-primary/10 font-semibold text-primary">{badge}</NBadge> : null}
             </div>
             <p className="text-sm text-muted-foreground">{description}</p>
           </div>
@@ -197,7 +197,7 @@ export default function FinancialOperationsPage() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="truncate font-medium">{payment.student?.name || payment.studentId}</p>
-                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold capitalize ${checkStatusBadge[payment.status] ?? 'bg-muted text-muted-foreground'}`}>{t(`financialOperations.checkStatuses.${payment.status}`)}</span>
+                      <NBadge className={`rounded-full font-semibold capitalize ${checkStatusBadge[payment.status] ?? 'bg-muted text-muted-foreground'}`}>{t(`financialOperations.checkStatuses.${payment.status}`)}</NBadge>
                     </div>
                     <p className="mt-0.5 text-xs text-muted-foreground">{payment.checkNumber} · {t('financialOperations.due', { date: payment.checkDueDate })}</p>
                   </div>

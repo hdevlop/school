@@ -75,7 +75,7 @@ const TodayScheduleCard = ({ sessions, nextEntryId, loading, error, onRetry, cla
                       {lesson.roomNumber ? ` • ${t('dashboard.teacher.nextClass.room', { room: lesson.roomNumber })}` : ''}
                     </p>
                   </div>
-                  <NBadge status={lesson.status} statusMap={STATUS_COLORS} size="sm" />
+                  <NBadge status={lesson.status} statusMap={STATUS_COLORS} />
                 </div>
               </li>
             );

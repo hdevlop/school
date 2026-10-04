@@ -6,6 +6,7 @@ import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import FeeCategoryIcon from '@/features/Financial/Fees/components/FeeCategoryIcon';
 
 const FeeTypeCard = ({ data }: any) => {
   const { t } = useTranslation();
@@ -18,8 +19,12 @@ const FeeTypeCard = ({ data }: any) => {
   return (
     <div className="flex items-start gap-4 p-4">
       <div className="shrink-0">
-        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center dark:bg-primary">
-          <DollarSign className="w-6 h-6 text-primary dark:text-white" />
+        <div className="w-12 h-12 flex items-center justify-center">
+          <FeeCategoryIcon
+            category={feeType.category}
+            size={48}
+            fallback={<DollarSign className="w-6 h-6 text-muted-foreground" />}
+          />
         </div>
       </div>
 

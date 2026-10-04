@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Phone, Mail, Wallet } from 'lucide-react';
-import { Label, NAvatar, NSectionInfo } from 'najm-kit';
+import { NBadge, Label, NAvatar, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -40,9 +40,9 @@ const StaffCard = ({ data }) => {
             {staff?.name}
           </Label>
 
-          <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">
+          <NBadge className="inline-flex w-fit items-center rounded-full bg-primary/10 font-medium text-primary ring-1 ring-inset ring-primary/20">
             {resolveRoleLabel(staff, language, t)}
-          </span>
+          </NBadge>
         </div>
 
         <div className="space-y-2">

@@ -83,14 +83,14 @@ export const useFeesTableColumns = () => {
         const totalDue = Number(row.original.totalDue ?? 0);
 
         if (overdue > 0) {
-          return <NBadge status="overdue" size="md" look="solid" showIcon>{overdue} {t('fees.status.overdue')}</NBadge>;
+          return <NBadge status="overdue" look="solid" showIcon>{overdue} {t('fees.status.overdue')}</NBadge>;
         }
 
         if (totalDue <= 0) {
-          return <NBadge status="paid" size="md" look="solid" showIcon>{t('fees.status.paid')}</NBadge>;
+          return <NBadge status="paid" look="solid" showIcon>{t('fees.status.paid')}</NBadge>;
         }
 
-        return <NBadge status="processing" size="md" look="solid" showIcon>{t('fees.status.paying') || 'Paying'}</NBadge>;
+        return <NBadge status="processing" look="solid" showIcon>{t('fees.status.paying') || 'Paying'}</NBadge>;
       },
       size: 160,
     },

@@ -1,11 +1,11 @@
 "use client"
 
-import { NButton, NErrorState, NForbiddenState, NForm, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { NButton, NErrorState, NForbiddenState, NSkeleton, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
 
 import { useTranslation } from "najm-i18n/react";
 import { StudentHeader } from "./header";
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { useDialog } from "najm-kit";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useDialog, useDialogStore } from "najm-kit";
 import { useFees } from "@/features/Financial/Fees/hooks/useFees";
 import MultiFeesPayment from "@/features/Financial/Payment/components/MultiFeesPayment";
 import { CreditCard, Receipt, History, FileText, Tag, Plus } from "lucide-react";
@@ -16,9 +16,9 @@ import { DiscountsTab } from "./discounts";
 import { usePayments } from "@/features/Financial/Payment/hooks/usePayments";
 import { useFeeTypes } from "@/features/Financial/FeeTypes/hooks/useFeeTypes";
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from "@/features/Financial/Payment/store/paymentStore";
-import { BulkFeeFormContent } from "@/features/Financial/Fees/components/BulkFeeForm";
+import { FeeTypeDialogContent } from "@/features/Financial/FeeTypes/components/FeeTypeDialog";
 import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
-import { injectStudentIdToFees, withFeeYear } from "@/features/Financial/Fees/utils/feeUtils";
+import { FeeFactory, withFeeYear } from "@/features/Financial/Fees/utils/feeUtils";
 import { useActiveAcademicYear } from "@/features/Settings/hooks/useSettings";
 import { useSetViewingYear, useViewingAcademicYear } from "@/features/AcademicYears/hooks/useViewingAcademicYear";
 import { hasFailedToLoad, isAuthorizationError } from "@/services/apiError";
@@ -34,34 +34,55 @@ const getFeeBalance = (fee: any) => {
   return Math.max(netAmount - paidAmount, 0);
 };
 
-const AddStudentFeesForm = ({
-  studentId,
-  feeTypes,
-}: {
-  studentId: string;
+const SelectStudentFeeTypes = ({ feeTypes, onAdd }: {
   feeTypes: any[];
+  onAdd: (selectedIds: string[]) => Promise<void>;
 }) => {
-  const { pop } = useDialog();
+  const { t } = useTranslation();
+  const dialogStore = useDialogStore();
+  const dialogId = useRef(dialogStore.getState().getCurrentDialog()?.id);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = async (formData: any) => {
-    pop({
-      fees: injectStudentIdToFees(formData.fees || [], studentId),
-    });
+  const close = () => {
+    if (dialogId.current) dialogStore.getState().closeDialog(dialogId.current);
+  };
+
+  const handleAdd = async () => {
+    if (selectedIds.length === 0 || isSaving) return;
+    setIsSaving(true);
+    setSubmitError(null);
+
+    try {
+      await onAdd(selectedIds);
+      close();
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : t('common.feedback.errorTitle'));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
-    <NForm
-      id="student-bulk-fee-form"
-      schema={feesSchema}
-      defaultValues={{ fees: [] }}
-      onSubmit={handleSubmit}
-    >
-      <BulkFeeFormContent
-        feeTypes={feeTypes}
-        showInstallmentPreview={false}
-        showEffectiveDateField={false}
-      />
-    </NForm>
+    <div className="space-y-4">
+      <div className={isSaving ? 'pointer-events-none opacity-60' : undefined} aria-busy={isSaving}>
+        <FeeTypeDialogContent
+          feeTypes={feeTypes}
+          initialSelectedIds={[]}
+          onSelectionChange={setSelectedIds}
+        />
+      </div>
+      {submitError && <p role="alert" className="text-sm text-destructive">{submitError}</p>}
+      <div className="flex justify-end gap-2">
+        <NButton variant="outline" disabled={isSaving} onClick={close}>
+          {t('common.cancel')}
+        </NButton>
+        <NButton disabled={selectedIds.length === 0 || isSaving} loading={isSaving} onClick={handleAdd}>
+          {t('fees.studentView.addFees')}
+        </NButton>
+      </div>
+    </div>
   );
 };
 
@@ -127,7 +148,6 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
     isStudentFeesLoading,
     studentAllYearFees,
     createBulkFees,
-    isBulkCreating,
   } = useFees({ studentId, studentAllYears: true, enabled: false });
   const { isAcademicYearLoading } = useActiveAcademicYear();
   const { createPayment } = usePayments();
@@ -195,18 +215,27 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
 
   const handleAddFee = () => {
     openDialog({
-      title: t('fees.studentView.addFees'),
-      children: <AddStudentFeesForm studentId={studentId} feeTypes={addableFeeTypes} />,
-      width: 'xxl',
-      height: 'xl',
-      primaryButton: {
-        form: 'student-bulk-fee-form',
-        text: t('fees.studentView.addFees'),
-        loading: isBulkCreating,
-        onClick: async (bulkData: any) => {
-          await createBulkFees(withFeeYear(bulkData, viewingYear));
-        }
-      }
+      title: t('fees.form.selectFeeTypes'),
+      children: (
+        <SelectStudentFeeTypes
+          feeTypes={addableFeeTypes}
+          onAdd={async (selectedIds) => {
+            const { fees } = feesSchema.parse(withFeeYear({
+              fees: addableFeeTypes
+                .filter((feeType) => selectedIds.includes(feeType.id))
+                .map((feeType) => ({
+                  ...FeeFactory.createFromFeeType(feeType),
+                  baseAmount: Number(feeType.amount),
+                })),
+            }, viewingYear));
+
+            await createBulkFees({ fees: fees.map((fee) => ({ ...fee, studentId })) });
+          }}
+        />
+      ),
+      width: '5xl',
+      height: 'auto',
+      showButtons: false,
     });
   };
 

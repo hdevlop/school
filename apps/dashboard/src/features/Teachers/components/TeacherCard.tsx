@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Phone, GraduationCap, Mail } from 'lucide-react';
-import { NAvatar } from 'najm-kit';
+import { NAvatar, NBadge } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
@@ -42,9 +42,9 @@ const TeacherCard = ({ data }) => {
                </Label>
 
                {teacher.specialization && (
-                  <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary ring-1 ring-inset ring-primary/20">
+                  <NBadge className="rounded-full bg-primary/10 text-primary ring-1 ring-inset ring-primary/20">
                      {teacher.specialization}
-                  </span>
+                  </NBadge>
                )}
             </div>
 

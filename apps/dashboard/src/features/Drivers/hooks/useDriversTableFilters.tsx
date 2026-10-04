@@ -29,6 +29,7 @@ export const useDriversTableFilters = () => {
         name: 'status',
         placeholder: t('drivers.filters.filterByStatus'),
         type: 'select',
+        showIcon: false,
         options: statusOptions,
         className: 'w-full lg:w-48'
       }

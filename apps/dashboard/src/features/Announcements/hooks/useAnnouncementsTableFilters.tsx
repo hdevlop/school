@@ -14,6 +14,7 @@ export const useAnnouncementsTableFilters = (classFilter = '', onClassFilterChan
       name: 'targetAudience',
       placeholder: t('announcements.filters.filterByAudience'),
       type: 'select',
+      showIcon: false,
       options: [
         { value: 'all', label: t('announcements.audience.all') },
         { value: 'students', label: t('announcements.audience.students') },
@@ -26,6 +27,7 @@ export const useAnnouncementsTableFilters = (classFilter = '', onClassFilterChan
       name: 'classScope',
       placeholder: t('students.filters.filterByClass'),
       type: 'combobox',
+      showIcon: false,
       options: classes.map((item) => ({ value: item.id, label: item.name })),
       value: classFilter,
       onChange: onClassFilterChange,
@@ -35,6 +37,7 @@ export const useAnnouncementsTableFilters = (classFilter = '', onClassFilterChan
       name: 'isPublished',
       placeholder: t('announcements.filters.filterByStatus'),
       type: 'select',
+      showIcon: false,
       options: [
         { value: 'true', label: t('announcements.status.published') },
         { value: 'false', label: t('announcements.status.draft') },

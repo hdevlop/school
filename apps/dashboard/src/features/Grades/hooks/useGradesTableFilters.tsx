@@ -40,58 +40,62 @@ export const useGradesTableFilters = (params: Params) => {
   } = params;
 
   return useMemo(() => {
-    const noIconClass = 'grades-filter-no-icon';
     const base: any[] = [
       {
         name: 'class',
         type: 'combobox',
+        showIcon: false,
         placeholder: isClassesLoading ? t('common.loading') : t('grades.form.class'),
         searchPlaceholder: t('grades.form.classPlaceholder'),
         value: classId,
         onChange: setClassId,
         options: classOptions,
         disabled: isClassesLoading,
-        className: `${noIconClass} w-full lg:w-32 xl:w-32`,
+        className: 'w-full lg:w-32 xl:w-32',
       },
       {
         name: 'section',
         type: 'select',
+        showIcon: false,
         placeholder: !classId ? t('grades.toolbar.selectClass') : t('grades.form.section'),
         searchPlaceholder: t('grades.form.sectionPlaceholder'),
         value: sectionId,
         onChange: setSectionId,
         options: sectionOptions,
         disabled: !classId || isSectionsLoading || sectionOptions.length === 0,
-        className: `${noIconClass} w-full lg:w-32 xl:w-32`,
+        className: 'w-full lg:w-32 xl:w-32',
       },
       {
         name: 'subject',
         type: 'combobox',
+        showIcon: false,
         placeholder: t('grades.form.subject'),
         searchPlaceholder: t('grades.form.subjectPlaceholder'),
         value: subjectId,
         onChange: setSubjectId,
         options: subjectOptions,
         disabled: isSubjectsLoading,
-        className: `${noIconClass} w-full lg:w-40`,
+        className: 'w-full lg:w-40',
       },
     ];
     if (isAdminOrPrincipal) {
       base.push({
         name: 'teacher',
         type: 'combobox',
+        showIcon: false,
         placeholder: subjectId ? t('grades.toolbar.teacherForSubject') : t('grades.form.teacher'),
         searchPlaceholder: t('grades.form.teacherPlaceholder'),
         value: teacherId,
         onChange: setTeacherId,
         options: teacherOptions,
         disabled: isTeachersLoading || teacherOptions.length === 0,
-        className: `${noIconClass} w-full lg:w-40`,
+        className: 'w-full lg:w-40',
       });
     }
     base.push({
       name: 'source',
       type: 'combobox',
+      showIcon: false,
       placeholder: isSourceLoading
         ? t('common.loading')
         : sourceType === 'assessment'
@@ -102,13 +106,13 @@ export const useGradesTableFilters = (params: Params) => {
       onChange: setSourceId,
       options: sourceOptions,
       disabled: !sectionId || isSourceLoading || sourceOptions.length === 0,
-      className: `${noIconClass} w-full lg:w-56`,
+      className: 'w-full lg:w-56',
     });
     base.push({
       name: 'studentName',
       placeholder: t('grades.table.student'),
       type: 'text',
-      className: `${noIconClass} w-full lg:w-48`,
+      className: 'w-full lg:w-48',
     });
     return base;
   }, [

@@ -1,6 +1,6 @@
 'use client';
 
-import { NEmptyState, NStatCard, NTable } from 'najm-kit';
+import { NBadge, NEmptyState, NStatCard, NTable } from 'najm-kit';
 import { useMemo } from 'react';
 import { CalendarCheck, CalendarDays, CheckCircle2, Clock3, UserX } from 'lucide-react';
 import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';
@@ -21,9 +21,9 @@ const StatusBadge = ({ status }: { status?: string | null }) => {
   const className = statusClassNames[status || ''] ?? 'border-slate-200 bg-slate-50 text-slate-600';
 
   return (
-    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-bold ${className}`}>
+    <NBadge className={`inline-flex items-center rounded-full border font-bold ${className}`}>
       {label}
-    </span>
+    </NBadge>
   );
 };
 

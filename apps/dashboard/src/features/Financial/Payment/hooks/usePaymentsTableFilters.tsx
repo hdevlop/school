@@ -24,6 +24,7 @@ export const usePaymentsTableFilters = () => {
         name: 'paymentMethod',
         placeholder: t('payments.filters.filterByPaymentMethod'),
         type: 'select',
+        showIcon: false,
         options: paymentMethodOptions,
         className: 'w-full lg:w-64'
       },
@@ -31,6 +32,7 @@ export const usePaymentsTableFilters = () => {
         name: 'status',
         placeholder: t('payments.filters.filterByStatus'),
         type: 'select',
+        showIcon: false,
         options: statusOptions,
         className: 'w-full lg:w-64'
       }

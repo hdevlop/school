@@ -40,7 +40,7 @@ export default function RoutineGrid({ days, periods, entries, duties = [], defau
                 const duty = dutyMap.get(`${day}:${period.id}`);
                 if (period.isBreak) {
                   const content = duty ? (
-                    <NBadge color="primary" look="dash" size="lg" icon={UserRound} className="max-w-full whitespace-normal text-center normal-case tracking-normal">
+                    <NBadge color="primary" look="dash" icon={UserRound} className="max-w-full whitespace-normal text-center normal-case tracking-normal">
                       {duty.staffName}
                     </NBadge>
                   ) : <span className="text-xs font-medium">{routinePeriodLabel(period.name, t)}</span>;

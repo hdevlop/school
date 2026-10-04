@@ -131,7 +131,7 @@ function FeeTypesTable() {
             description={t('emptyStates.filtered.description')}
           />
         )}
-        defaultMode='table'
+        defaultMode='cards'
       />
     </div>
   );

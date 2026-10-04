@@ -223,6 +223,7 @@ function StudentAttendanceTableForYear() {
       {
         name: 'class',
         type: 'combobox',
+        showIcon: false,
         placeholder: isClassesLoading ? 'Loading classes...' : t('attendance.roster.class'),
         value: selectedClassId,
         onChange: setSelectedClassId,
@@ -233,6 +234,7 @@ function StudentAttendanceTableForYear() {
       {
         name: 'section',
         type: 'select',
+        showIcon: false,
         placeholder: isAllClasses
           ? t('common.all')
           : !selectedClassId
@@ -253,6 +255,7 @@ function StudentAttendanceTableForYear() {
         : [{
             name: 'assignment',
             type: 'combobox',
+            showIcon: false,
             placeholder: !selectedSectionId
               ? 'Select a section first'
               : isAssignmentsLoading
@@ -284,6 +287,7 @@ function StudentAttendanceTableForYear() {
         name: 'status',
         placeholder: t('attendance.roster.status'),
         type: 'select',
+        showIcon: false,
         options: [
           { value: 'present', label: t('attendance.roster.present') },
           { value: 'absent', label: t('attendance.roster.absent') },

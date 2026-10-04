@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { NAvatar } from 'najm-kit';
+import { NBadge, NAvatar } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
@@ -46,9 +46,9 @@ export const useBehaviorRewardsTableColumns = () => {
       header: t('behaviorRewards.table.positiveBehavior'),
       cell: ({ row }) => (
         <div className="max-w-72 space-y-1.5">
-          <span className="inline-flex rounded-md bg-emerald-50 px-2 py-1 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+          <NBadge className="inline-flex rounded-md bg-emerald-50 font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
             {t(`behaviorRewards.categories.${row.original.category}`)}
-          </span>
+          </NBadge>
           <p className="line-clamp-2 text-xs leading-5 text-muted-foreground">{row.original.description}</p>
         </div>
       ),
@@ -58,7 +58,7 @@ export const useBehaviorRewardsTableColumns = () => {
       header: t('behaviorRewards.table.recognition'),
       cell: ({ getValue }) => {
         const value = getValue() as string;
-        return <span className={tagClass(recognitionClasses, value)}>{t(`behaviorRewards.recognitionLevels.${value}`)}</span>;
+        return <NBadge className={tagClass(recognitionClasses, value)}>{t(`behaviorRewards.recognitionLevels.${value}`)}</NBadge>;
       },
     },
     {
@@ -66,7 +66,7 @@ export const useBehaviorRewardsTableColumns = () => {
       header: t('behaviorRewards.table.reward'),
       cell: ({ getValue }) => {
         const value = getValue() as string;
-        return <span className={tagClass(rewardClasses, value)}>{t(`behaviorRewards.rewardTypes.${value}`)}</span>;
+        return <NBadge className={tagClass(rewardClasses, value)}>{t(`behaviorRewards.rewardTypes.${value}`)}</NBadge>;
       },
     },
     {
@@ -76,9 +76,9 @@ export const useBehaviorRewardsTableColumns = () => {
       cell: ({ getValue }) => {
         const points = Number(getValue() || 0);
         return points > 0 ? (
-          <span className="inline-flex min-w-8 justify-center rounded-full bg-emerald-100 px-2 py-1 text-xs font-bold text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200">
+          <NBadge className="inline-flex min-w-8 justify-center rounded-full bg-emerald-100 font-bold text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-200">
             +{points}
-          </span>
+          </NBadge>
         ) : <span className="text-muted-foreground">—</span>;
       },
     },

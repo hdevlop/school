@@ -53,11 +53,11 @@ const FeeCard = ({ data }: any) => {
           </div>
         </div>
         {isPaid ? (
-          <NBadge status="paid" size="md" look="solid" showIcon className="mr-2">
+          <NBadge status="paid" look="solid" showIcon className="mr-2">
             {t('fees.status.paid') || 'Paid'}
           </NBadge>
         ) : overdueCount > 0 && (
-          <NBadge status="overdue" size="md" look="solid" showIcon className="mr-2">
+          <NBadge status="overdue" look="solid" showIcon className="mr-2">
             {overdueCount} {t('fees.status.overdue') || 'Overdue'}
           </NBadge>
         )}

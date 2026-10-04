@@ -7,15 +7,15 @@ export const useDisciplineTableFilters = () => {
   return useMemo(() => [
     { name: 'studentSearch', type: 'text', placeholder: t('discipline.filters.search') },
     {
-      name: 'category', type: 'select', placeholder: t('discipline.filters.category'),
+      name: 'category', type: 'select', showIcon: false, placeholder: t('discipline.filters.category'),
       options: DISCIPLINE_CATEGORIES.map((value) => ({ value, label: t(`discipline.categories.${value}`) })),
     },
     {
-      name: 'severity', type: 'select', placeholder: t('discipline.filters.severity'),
+      name: 'severity', type: 'select', showIcon: false, placeholder: t('discipline.filters.severity'),
       options: DISCIPLINE_SEVERITIES.map((value) => ({ value, label: t(`discipline.severity.${value}`) })),
     },
     {
-      name: 'status', type: 'select', placeholder: t('discipline.filters.status'),
+      name: 'status', type: 'select', showIcon: false, placeholder: t('discipline.filters.status'),
       options: DISCIPLINE_STATUSES.map((value) => ({ value, label: t(`discipline.status.${value}`) })),
     },
   ], [t]);

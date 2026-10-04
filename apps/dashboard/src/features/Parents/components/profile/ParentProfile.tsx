@@ -346,7 +346,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                             {child.section?.name ? ` · ${child.section.name}` : ''}
                           </p>
                           <div className="mt-1 flex flex-wrap items-center gap-2">
-                            <NBadge size="sm" look="soft">
+                            <NBadge look="soft">
                               {child.status
                                 ? t(`students.status.${child.status}`)
                                 : t('common.notSpecified')}
@@ -489,7 +489,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                             })}
                           </p>
                         </div>
-                        <NBadge size="sm" look="soft">
+                        <NBadge look="soft">
                           {percentage}%
                         </NBadge>
                       </div>

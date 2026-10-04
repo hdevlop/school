@@ -77,7 +77,6 @@ export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (insta
             <NBadge
               status={status}
               showIcon
-              size="md"
               look="solid"
             />
             {unavailableReason && <span className="text-xs text-amber-700">{unavailableReason}</span>}

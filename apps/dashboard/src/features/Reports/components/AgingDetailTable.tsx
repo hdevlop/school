@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { NCard } from 'najm-kit';
-import { AlertTriangle, Search } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { NSkeletonEventList } from 'najm-kit';
 import { useFinanceAgingDetail } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -143,13 +143,12 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
             placeholder={t('reports.aging.searchPlaceholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full px-3 py-2 text-sm border border-border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
           />
         </div>
 

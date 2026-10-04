@@ -28,6 +28,7 @@ export const useTeachersTableFilters = () => {
         name: 'status',
         placeholder: t('teachers.filters.filterByStatus'),
         type: 'select',
+        showIcon: false,
         options: statusOptions,
         className: 'w-full lg:w-48'
       }

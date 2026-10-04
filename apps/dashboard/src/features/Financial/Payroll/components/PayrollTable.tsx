@@ -255,6 +255,7 @@ const PayrollTable = () => {
     {
       name: 'period',
       type: 'select',
+      showIcon: false,
       value: effectivePeriod,
       onChange: (value: string) => setPeriod(value || undefined),
       placeholder: t('payroll.stats.period'),
@@ -270,6 +271,7 @@ const PayrollTable = () => {
     {
       name: 'contractType',
       type: 'select',
+      showIcon: false,
       placeholder: t('payroll.filters.filterByType'),
       className: 'w-full lg:w-48',
       options: [
@@ -280,6 +282,7 @@ const PayrollTable = () => {
     {
       name: 'paymentStatus',
       type: 'select',
+      showIcon: false,
       placeholder: t('payroll.filters.filterByStatus'),
       className: 'w-full lg:w-48',
       options: [

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'najm-i18n/react';
 import { Download, Save } from 'lucide-react';
-import { NAvatar, NButton } from 'najm-kit';
+import { NAvatar, NBadge, NButton } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
@@ -69,18 +69,18 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
         </p>
 
         <div className="flex gap-2 mb-6 flex-wrap justify-center">
-          <Label className="px-3 py-1 rounded-full text-xs font-bold text-white bg-secondary">
+          <NBadge className="rounded-full font-bold text-white bg-secondary">
             {t(`teachers.employmentType.${source?.employmentType}`)}
-          </Label>
-          <Label
-            className={`px-3 py-1 rounded-full text-xs font-bold ${
+          </NBadge>
+          <NBadge
+            className={`rounded-full font-bold ${
               status === 'active'
                 ? 'bg-green-100 text-green-700'
                 : 'bg-slate-100 text-slate-600'
             }`}
           >
             {t(`teachers.status.${status}`)}
-          </Label>
+          </NBadge>
         </div>
 
         <div className="grid grid-cols-2 gap-3 w-full mb-6">

@@ -26,7 +26,7 @@ export const useAlertsTableColumns = () => {
       accessorKey: 'type',
       header: t('alerts.page.columns.type'),
       cell: ({ row }: { row: { original: AlertRecord } }) => (
-        <NBadge color={TYPE_COLORS[row.original.type]} label={t(`alerts.page.types.${row.original.type}`)} look="soft" size="sm" />
+        <NBadge color={TYPE_COLORS[row.original.type]} label={t(`alerts.page.types.${row.original.type}`)} look="soft" />
       ),
     },
     {
@@ -40,14 +40,14 @@ export const useAlertsTableColumns = () => {
       accessorKey: 'priority',
       header: t('alerts.page.columns.priority'),
       cell: ({ row }: { row: { original: AlertRecord } }) => (
-        <NBadge color={PRIORITY_COLORS[row.original.priority]} label={t(`alerts.page.priorities.${row.original.priority}`)} look="soft" size="sm" />
+        <NBadge color={PRIORITY_COLORS[row.original.priority]} label={t(`alerts.page.priorities.${row.original.priority}`)} look="soft" />
       ),
     },
     {
       accessorKey: 'status',
       header: t('alerts.page.columns.status'),
       cell: ({ row }: { row: { original: AlertRecord } }) => (
-        <NBadge color={STATUS_COLORS[row.original.status]} label={t(`alerts.page.statuses.${row.original.status}`)} look="soft" size="sm" />
+        <NBadge color={STATUS_COLORS[row.original.status]} label={t(`alerts.page.statuses.${row.original.status}`)} look="soft" />
       ),
     },
     {

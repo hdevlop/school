@@ -20,8 +20,8 @@ export default function DisciplineCard({ data }: { data: DisciplineIncident }) {
       <div className="min-w-0 flex-1 space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-semibold">{t(`discipline.categories.${data.category}`)}</span>
-          <NBadge color={SEVERITY_COLORS[data.severity]} className={severityClassName(data.severity)} label={t(`discipline.severity.${data.severity}`)} look="soft" size="sm" />
-          <NBadge color={STATUS_COLORS[data.status]} label={t(`discipline.status.${data.status}`)} look="soft" size="sm" />
+          <NBadge color={SEVERITY_COLORS[data.severity]} className={severityClassName(data.severity)} label={t(`discipline.severity.${data.severity}`)} look="soft" />
+          <NBadge color={STATUS_COLORS[data.status]} label={t(`discipline.status.${data.status}`)} look="soft" />
         </div>
         <NSectionInfo
           icon={School}

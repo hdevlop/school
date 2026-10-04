@@ -1,7 +1,7 @@
 'use client';
 
 import { Award, CalendarClock, Gift, School, Star, UserRound } from 'lucide-react';
-import { NAvatar, NSectionInfo } from 'najm-kit';
+import { NBadge, NAvatar, NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
@@ -22,12 +22,12 @@ const BehaviorRewardDetails = ({ behaviorReward }: { behaviorReward: any }) => {
         <NAvatar src={reward.student?.image} title={reward.student?.name} subtitle={reward.student?.studentCode || '—'} size="lg" version={reward.updatedAt} />
         <div className="min-w-0 flex-1">
           <div className="mt-2 flex flex-wrap gap-2">
-            <span className={tagClass(recognitionClasses, reward.recognitionLevel)}>
+            <NBadge className={tagClass(recognitionClasses, reward.recognitionLevel)}>
               {t(`behaviorRewards.recognitionLevels.${reward.recognitionLevel}`)}
-            </span>
-            <span className={tagClass(rewardClasses, reward.rewardType)}>
+            </NBadge>
+            <NBadge className={tagClass(rewardClasses, reward.rewardType)}>
               {t(`behaviorRewards.rewardTypes.${reward.rewardType}`)}
-            </span>
+            </NBadge>
           </div>
         </div>
       </div>

@@ -189,7 +189,12 @@ body {
   color: var(--primary-foreground) !important;
 }
 
-.grades-filter-no-icon span:first-child:has(svg.lucide-filter) {
+/* Najm's table toolbar adds search icons on mobile and calendar icons to date
+   filters independently of the dropdown filters' showIcon setting. */
+:is([data-ntable-desktop-filters], [data-ntable-mobile-primary-filter]) span:first-child:has(> svg.lucide-search),
+:is([data-ntable-desktop-filters], [data-ntable-mobile-primary-filter]) [data-bordered] > svg.lucide-calendar,
+/* The mobile filter popover is portaled outside the table's toolbar. */
+[data-slot="popover-content"] > div > [data-bordered] > svg.lucide-calendar {
   display: none;
 }
 

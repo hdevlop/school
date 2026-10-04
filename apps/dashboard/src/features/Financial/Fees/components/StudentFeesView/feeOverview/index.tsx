@@ -36,7 +36,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
 
   const handleEdit = useCallback((fee: any) => {
     openDialog({
-      title: `${t('fees.dialogs.editTitle')} - ${fee.student?.name}`,
+      title: `${t('fees.dialogs.editTitle')} - ${fee.name}`,
       children: <EditFeeForm fee={fee} feeTypes={feeTypes} />,
       width: 'xl',
       primaryButton: {

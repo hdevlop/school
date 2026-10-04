@@ -17,6 +17,7 @@ export const useUsersTableFilters = () => {
     },
     {
       type: "select",
+      showIcon: false,
       name: "roleName",
       placeholder: t('users.filters.filterByRole'),
       options: [

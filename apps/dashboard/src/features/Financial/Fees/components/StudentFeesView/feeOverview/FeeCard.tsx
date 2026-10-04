@@ -6,8 +6,9 @@ import { AlertTriangle, Calendar, CalendarDays, CheckCircle2, CreditCard, Receip
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import FeeCategoryIcon from '../../FeeCategoryIcon';
 
-const FeeCard = ({ data }) => {
+const FeeCard = ({ data }: { data: any }) => {
   const { t } = useTranslation();
   const fee = data;
 
@@ -16,19 +17,15 @@ const FeeCard = ({ data }) => {
   const statusStyles = {
     paid: {
       card: 'border-green-300 bg-gradient-to-br from-green-50 to-white',
-      icon: 'bg-green-100 text-green-700',
     },
     partial: {
       card: 'border-blue-300 bg-gradient-to-br from-blue-50 to-white',
-      icon: 'bg-blue-100 text-blue-700',
     },
     pending: {
       card: 'border-gray-200 bg-white',
-      icon: 'bg-gray-100 text-gray-700',
     },
     overdue: {
       card: 'border-red-300 bg-gradient-to-br from-red-50 to-white',
-      icon: 'bg-red-100 text-red-700',
     },
   };
 
@@ -48,20 +45,23 @@ const FeeCard = ({ data }) => {
     <div className={`flex h-full min-h-[132px] flex-col justify-between overflow-hidden rounded-lg border p-3 transition-colors ${style.card}`}>
       {/* Header */}
       <div className="flex items-start gap-3">
-        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-2xl ${style.icon}`}>
-          {fee.icon}
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center text-2xl">
+          <FeeCategoryIcon
+            category={fee.type ?? fee.feeTypeCategory ?? fee.category ?? fee.feeType?.category}
+            fallback={fee.icon}
+          />
         </div>
         <div className="flex-1 min-w-0">
           <Label className="text-base text-gray-800 mb-1 block truncate">{fee.name}</Label>
           <div className="flex gap-1.5 flex-wrap">
-            <Label className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded">
+            <NBadge className="gap-1 bg-gray-100 text-gray-700 rounded">
               <Calendar className="h-3 w-3" />
               {t(`fees.schedule.${fee.schedule}`)}
-            </Label>
-            <Label className="inline-flex items-center gap-1 text-xs px-2 py-0.5 bg-gray-100 text-gray-700 rounded">
+            </NBadge>
+            <NBadge className="gap-1 bg-gray-100 text-gray-700 rounded">
               <CalendarDays className="h-3 w-3" />
               {fee.academicYear}
-            </Label>
+            </NBadge>
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@ const FeeCard = ({ data }) => {
       <div className="flex items-center justify-between">
         <div className="flex min-w-0 items-center">
           {isFullyPaid ? (
-            <NBadge look='solid' color='success' size='md' className="gap-1.5 px-2.5 py-1">
+            <NBadge look='solid' color='success' className="gap-1.5">
               <CheckCircle2 className="h-4 w-4" />
               <span className="font-semibold">{t('fees.status.paid')}</span>
               {majorMoney(fee.paidAmount)}

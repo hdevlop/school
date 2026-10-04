@@ -155,6 +155,7 @@ function FeesTableForYear() {
     {
       name: 'scope',
       type: 'select',
+      showIcon: false,
       placeholder: t('fees.historyView.scope'),
       value: feeScope,
       onChange: (scope: FeeScope) => {
@@ -170,6 +171,7 @@ function FeesTableForYear() {
     {
       name: 'class',
       type: 'combobox',
+      showIcon: false,
       placeholder: t('fees.filters.class') || 'Class',
       value: selectedClassId,
       onChange: setSelectedClassId,
@@ -179,6 +181,7 @@ function FeesTableForYear() {
     {
       name: 'section',
       type: 'select',
+      showIcon: false,
       placeholder: isAllClasses
         ? (t('fees.filters.selectClass') || 'Select a class')
         : sectionOptions.length === 0
@@ -201,6 +204,7 @@ function FeesTableForYear() {
     {
       name: 'status',
       type: 'select',
+      showIcon: false,
       placeholder: t('fees.filters.filterByStatus') || 'Status',
       value: statusFilter,
       onChange: setStatusFilter,

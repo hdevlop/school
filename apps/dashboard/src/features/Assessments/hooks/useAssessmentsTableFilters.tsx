@@ -14,6 +14,7 @@ export const useAssessmentsTableFilters = () => {
       name: 'type',
       placeholder: t('assessments.filters.filterByType'),
       type: 'select',
+      showIcon: false,
       options: [
         { value: 'quiz', label: t('assessments.type.quiz') },
         { value: 'assignment', label: t('assessments.type.assignment') },
@@ -27,6 +28,7 @@ export const useAssessmentsTableFilters = () => {
       name: 'status',
       placeholder: t('assessments.filters.filterByStatus'),
       type: 'select',
+      showIcon: false,
       options: [
         { value: 'scheduled', label: t('assessments.status.scheduled') },
         { value: 'active', label: t('assessments.status.active') },

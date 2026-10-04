@@ -31,6 +31,7 @@ export const useParentsTableFilters = () => {
         name: 'relationshipType',
         placeholder: t('parents.filters.filterByRelationship'),
         type: 'select',
+        showIcon: false,
         options: relationshipOptions,
         className: 'w-full lg:w-48'
       }

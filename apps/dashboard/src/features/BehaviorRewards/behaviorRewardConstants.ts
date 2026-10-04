@@ -26,7 +26,7 @@ export const rewardClasses: Record<string, string> = {
 };
 
 export const tagClass = (classes: Record<string, string>, value?: string | null) =>
-  `inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${classes[value || ''] || rewardClasses.other}`;
+  `rounded-full font-semibold ${classes[value || ''] || rewardClasses.other}`;
 
 export const toLocalDateTimeInput = (value?: string | null) => {
   const date = value ? new Date(value) : new Date();

@@ -4,11 +4,12 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import Link from 'next/link';
 import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText, SearchX } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
-import { NCard, NStatCard, NTable, NEmptyState } from 'najm-kit';
+import { NBadge, NCard, NStatCard, NTable, NEmptyState } from 'najm-kit';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import FeeCategoryIcon from '@/features/Financial/Fees/components/FeeCategoryIcon';
 
 interface FeesTabProps {
   studentId?: string;
@@ -60,10 +61,10 @@ const StatusBadge = ({ status }: { status?: string | null }) => {
   const Icon = config.icon;
 
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold ${config.className}`}>
+    <NBadge className={`inline-flex items-center gap-1 rounded-full border font-bold ${config.className}`}>
       <Icon className="h-3.5 w-3.5" />
       {t(config.labelKey)}
-    </span>
+    </NBadge>
   );
 };
 
@@ -177,8 +178,12 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
 
         return (
           <div className="flex min-w-0 items-center gap-2">
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slate-100 text-sm">
-              {fee.icon || '$'}
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center text-sm">
+              <FeeCategoryIcon
+                category={fee.type ?? fee.feeTypeCategory ?? fee.category ?? fee.feeType?.category}
+                fallback={fee.icon || '$'}
+                size={28}
+              />
             </span>
             <div className="min-w-0">
               <p className="truncate font-bold text-slate-800">{fee.name || t('students.profile.feeDetails.fee')}</p>

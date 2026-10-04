@@ -19,9 +19,9 @@ export default function AlertCard({ data }: { data: AlertRecord }) {
     <div className="space-y-2 p-3">
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-semibold">{data.title}</span>
-        <NBadge color={TYPE_COLORS[data.type]} label={t(`alerts.page.types.${data.type}`)} look="soft" size="sm" />
-        <NBadge color={PRIORITY_COLORS[data.priority]} label={t(`alerts.page.priorities.${data.priority}`)} look="soft" size="sm" />
-        <NBadge color={STATUS_COLORS[data.status]} label={t(`alerts.page.statuses.${data.status}`)} look="soft" size="sm" />
+        <NBadge color={TYPE_COLORS[data.type]} label={t(`alerts.page.types.${data.type}`)} look="soft" />
+        <NBadge color={PRIORITY_COLORS[data.priority]} label={t(`alerts.page.priorities.${data.priority}`)} look="soft" />
+        <NBadge color={STATUS_COLORS[data.status]} label={t(`alerts.page.statuses.${data.status}`)} look="soft" />
       </div>
       <NSectionInfo
         icon={UserRound}

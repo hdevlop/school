@@ -2,7 +2,7 @@
 
 import React, { useCallback, useMemo, useState } from 'react';
 import { Badge, Checkbox } from 'najm-kit';
-import { Loader2, Search, ShieldCheck } from 'lucide-react';
+import { Loader2, ShieldCheck } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { usePermissions } from '@/features/Permissions/hooks/usePermissions';
 import { useRolePermissions } from '../hooks/usePermissions';
@@ -87,13 +87,12 @@ const RolePermissionsDialog = ({ role }) => {
       </div>
 
       <div className="relative">
-        <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={tf('permissions.filters.searchByName', 'Search permissions...')}
-          className="w-full rounded-md border bg-background py-2 pl-8 pr-3 text-sm outline-none focus:ring-1 focus:ring-ring"
+          className="w-full rounded-md border bg-background py-2 px-3 text-sm outline-none focus:ring-1 focus:ring-ring"
         />
       </div>
 
@@ -135,7 +134,7 @@ const RolePermissionsDialog = ({ role }) => {
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-medium">{permission.name}</span>
                         {permission.action && (
-                          <Badge variant="outline" className="text-[10px] font-mono">
+                          <Badge variant="outline" className="font-mono">
                             {permission.action}
                           </Badge>
                         )}

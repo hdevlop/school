@@ -14,6 +14,7 @@ export const useExamsTableFilters = () => {
       name: 'type',
       placeholder: t('exams.filters.filterByType'),
       type: 'select',
+      showIcon: false,
       options: [
         { value: 'midterm', label: t('exams.type.midterm') },
         { value: 'final', label: t('exams.type.final') },
@@ -24,6 +25,7 @@ export const useExamsTableFilters = () => {
       name: 'status',
       placeholder: t('exams.filters.filterByStatus'),
       type: 'select',
+      showIcon: false,
       options: [
         { value: 'scheduled', label: t('exams.status.scheduled') },
         { value: 'active', label: t('exams.status.active') },

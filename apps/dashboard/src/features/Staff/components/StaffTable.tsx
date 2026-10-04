@@ -275,6 +275,7 @@ const StaffTable = () => {
     {
       name: 'role',
       type: 'select',
+      showIcon: false,
       placeholder: t('staff.filters.filterByRole'),
       className: 'w-full lg:w-48',
       options: roleOptions,
@@ -282,6 +283,7 @@ const StaffTable = () => {
     {
       name: 'roleCategory',
       type: 'select',
+      showIcon: false,
       placeholder: t('staff.filters.filterByCategory'),
       className: 'w-full lg:w-48',
       options: categoryOptions,

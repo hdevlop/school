@@ -14,6 +14,7 @@ export const useStudentAttendanceTableFilters = () => {
       name: 'status',
       placeholder: t('attendance.filters.filterByStatus'),
       type: 'select',
+      showIcon: false,
       options: [
         { label: t('attendance.status.present'), value: 'present' },
         { label: t('attendance.status.absent'), value: 'absent' },
@@ -51,6 +52,7 @@ export const useStudentRosterFilters = (classes: any[] = [], date?: DateBinding)
         name: 'class',
         placeholder: t('attendance.roster.class'),
         type: 'combobox',
+        showIcon: false,
         options: classOptions,
         className: 'w-full lg:w-48',
       },
@@ -58,6 +60,7 @@ export const useStudentRosterFilters = (classes: any[] = [], date?: DateBinding)
         name: 'section',
         placeholder: t('attendance.roster.section'),
         type: 'select',
+        showIcon: false,
         options: sectionOptions,
         className: 'w-full lg:w-48',
       },
@@ -65,6 +68,7 @@ export const useStudentRosterFilters = (classes: any[] = [], date?: DateBinding)
         name: 'status',
         placeholder: t('attendance.roster.status'),
         type: 'select',
+        showIcon: false,
         options: [
           { value: 'present', label: t('attendance.roster.present') },
           { value: 'absent', label: t('attendance.roster.absent') },
@@ -107,6 +111,7 @@ export const useStaffRosterFilters = (date?: DateBinding, roles: any[] = []) => 
       name: 'role',
       placeholder: t('staff.table.role'),
       type: 'select',
+      showIcon: false,
       options: roleOptions,
       className: 'w-full lg:w-48',
     },
@@ -114,6 +119,7 @@ export const useStaffRosterFilters = (date?: DateBinding, roles: any[] = []) => 
       name: 'status',
       placeholder: t('attendance.roster.status'),
       type: 'select',
+      showIcon: false,
       options: [
         { value: 'present', label: t('attendance.roster.present') },
         { value: 'absent', label: t('attendance.roster.absent') },
@@ -141,6 +147,7 @@ export const useStaffAttendanceTableFilters = () => {
       name: 'status',
       placeholder: t('attendance.filters.filterByStatus'),
       type: 'select',
+      showIcon: false,
       options: [
         { label: t('attendance.status.present'), value: 'present' },
         { label: t('attendance.status.absent'), value: 'absent' },

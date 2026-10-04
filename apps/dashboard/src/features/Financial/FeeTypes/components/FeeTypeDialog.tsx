@@ -6,6 +6,7 @@ import { cn } from 'najm-kit'
 import { Badge } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
+import FeeCategoryIcon from '@/features/Financial/Fees/components/FeeCategoryIcon'
 
 const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
   const { t, language } = useTranslation()
@@ -54,8 +55,12 @@ const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
 
               {/* Fee Type Content */}
               <div className="space-y-2">
-                <div className="flex items-start gap-2 pr-8">
-                  <DollarSign className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+                <div className="flex items-center gap-3 pr-8">
+                  <FeeCategoryIcon
+                    category={feeType.category}
+                    size={32}
+                    fallback={<DollarSign className="h-5 w-5 text-muted-foreground shrink-0" />}
+                  />
                   <div className="flex-1">
                     <h3 className="font-semibold text-sm line-clamp-2">
                       {getFeeTypeDisplayName(feeType, t, language)}
