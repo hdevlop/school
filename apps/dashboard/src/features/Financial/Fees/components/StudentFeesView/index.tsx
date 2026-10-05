@@ -8,6 +8,7 @@ import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useDialog, useDialogStore } from "najm-kit";
 import { useFees } from "@/features/Financial/Fees/hooks/useFees";
 import MultiFeesPayment from "@/features/Financial/Payment/components/MultiFeesPayment";
+import { PaymentRecordedPrompt } from "@/features/Financial/Payment/components/ReceiptPrint/PaymentRecordedPrompt";
 import { CreditCard, Receipt, History, FileText, Tag, Plus } from "lucide-react";
 import { PaymentHistory } from "./paymentHistory";
 import { Documents } from "./documents";
@@ -330,7 +331,15 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       });
 
       if (paymentData) {
-        await createPayment(paymentData);
+        const response = await createPayment(paymentData);
+        const payment = response?.data;
+        if (payment?.id) {
+          openDialog({
+            title: t('payments.dialogs.recordedTitle'),
+            children: <PaymentRecordedPrompt payment={payment} student={visibleStudentFees.student} />,
+            showButtons: false,
+          });
+        }
       }
     } finally {
       resetPayment();

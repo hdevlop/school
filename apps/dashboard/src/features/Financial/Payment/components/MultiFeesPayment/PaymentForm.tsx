@@ -104,6 +104,8 @@ export const PaymentForm = ({ studentId }) => {
             return;
         }
 
+        // The caller records the payment once this dialog closes; useCreate
+        // reports the outcome, so a success toast here would precede the save.
         try {
             await pop({
                 ...formData,
@@ -113,7 +115,6 @@ export const PaymentForm = ({ studentId }) => {
                 allocations: shouldAutoAllocate ? undefined : allocations,
                 idempotencyKey: idempotencyKey.current,
             });
-            toast.success(t('payments.success.recorded'));
         } catch {
             toast.error(t('payments.errors.recordFailed'));
         }

@@ -2730,7 +2730,11 @@
     },
     "dialogs": {
       "deleteButton": "Eliminar",
-      "viewTitle": "Detalles"
+      "viewTitle": "Detalles",
+      "recordedTitle": "Pago registrado",
+      "receiptNumber": "Recibo N.º {{receiptNumber}}",
+      "printReceipt": "Imprimir recibo",
+      "receiptAfterCheck": "El recibo podrá imprimirse cuando se cobre el cheque."
     },
     "errors": {
       "recordFailed": "No se pudo registrar el pago. Inténtalo de nuevo.",

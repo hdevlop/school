@@ -2744,7 +2744,11 @@
     },
     "dialogs": {
       "deleteButton": "حذف",
-      "viewTitle": "التفاصيل"
+      "viewTitle": "التفاصيل",
+      "recordedTitle": "تم تسجيل الدفعة",
+      "receiptNumber": "وصل رقم {{receiptNumber}}",
+      "printReceipt": "طباعة الوصل",
+      "receiptAfterCheck": "يمكن طباعة الوصل بعد تحصيل الشيك."
     },
     "errors": {
       "recordFailed": "تعذر تسجيل الدفع. حاول مرة أخرى.",

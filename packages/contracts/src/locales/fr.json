@@ -3243,7 +3243,11 @@
     },
     "dialogs": {
       "deleteButton": "Supprimer",
-      "viewTitle": "Détails"
+      "viewTitle": "Détails",
+      "recordedTitle": "Paiement enregistré",
+      "receiptNumber": "Reçu N° {{receiptNumber}}",
+      "printReceipt": "Imprimer le reçu",
+      "receiptAfterCheck": "Le reçu pourra être imprimé une fois le chèque encaissé."
     },
     "errors": {
       "recordFailed": "Échec de l'enregistrement du paiement. Veuillez réessayer.",

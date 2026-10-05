@@ -2879,7 +2879,11 @@
       "viewReceipt": "View Receipt",
       "downloadReceipt": "Download Receipt",
       "confirmRefundTitle": "Confirm Refund",
-      "confirmRefundDescription": "This action will refund the payment amount. Continue?"
+      "confirmRefundDescription": "This action will refund the payment amount. Continue?",
+      "recordedTitle": "Payment recorded",
+      "receiptNumber": "Receipt No. {{receiptNumber}}",
+      "printReceipt": "Print receipt",
+      "receiptAfterCheck": "The receipt can be printed once the check is completed."
     },
     "table": {
       "allocatedToYear": "Allocated to {{year}}",
