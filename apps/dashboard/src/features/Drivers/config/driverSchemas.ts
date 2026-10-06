@@ -24,6 +24,10 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
+/** A cleared number input holds `null`; an optional field reads it as not given. */
+const optionalNumberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+
 export const driverSchema = z.object({
   id: optionalId,
   name: nameField,
@@ -36,8 +40,8 @@ export const driverSchema = z.object({
   licenseType: z.string().max(10, 'License type too long'),
   licenseExpiry: dateField,
   hireDate: dateField,
-  salary: numberField(z.number({ error: 'Must be a valid number' }).positive('Salary must be positive')).optional(),
-  yearsOfExperience: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Years of experience must be non-negative')).optional(),
+  salary: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Salary must be positive')),
+  yearsOfExperience: optionalNumberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Years of experience must be non-negative')),
   emergencyContact: nameField.optional(),
   emergencyPhone: phoneField.optional(),
   image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),

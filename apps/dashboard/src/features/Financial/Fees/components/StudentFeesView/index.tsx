@@ -246,7 +246,7 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
       feeId: fee.id,
       feeIcon: fee.icon,
       feeColor: fee.color,
-      feeName: fee.name?.split(' ')[0] || fee.name,
+      feeName: fee.name,
     }));
   }, []);
 

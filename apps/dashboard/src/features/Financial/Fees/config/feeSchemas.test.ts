@@ -35,6 +35,20 @@ describe('feeSchema', () => {
     expect(feeSchema.safeParse({ ...fee, discountAmount: -1 }).success).toBe(false);
   });
 
+  it('reads a cleared base amount (null from the number input) as not given', () => {
+    const parsed = feeSchema.parse({ ...fee, baseAmount: null });
+
+    expect(parsed.baseAmount).toBeUndefined();
+    expect(classBulkFeeFormSchema.shape.baseAmount.safeParse(null).success).toBe(true);
+    expect(feeSchema.safeParse({ ...fee, baseAmount: -1 }).success).toBe(false);
+  });
+
+  it('reads a cleared discount as no discount, so an edit removes it', () => {
+    expect(feeSchema.parse({ ...fee, discountAmount: null }).discountAmount).toBe(0);
+    expect(feeSchema.parse({ ...fee, discountAmount: undefined }).discountAmount).toBe(0);
+    expect(feeSchema.parse({ ...fee, discountAmount: '' }).discountAmount).toBe(0);
+  });
+
   /**
    * Both are derived by the server from the installments and the payments
    * allocated against them. The edit dialog renders a status select anyway;

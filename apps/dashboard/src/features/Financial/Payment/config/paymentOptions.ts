@@ -48,10 +48,29 @@ export const buildPaymentMethodOptionsFor = (
   );
 
 /**
+ * The methods the cashier's Record Payment dialog offers.
+ *
+ * A subset of `PAYMENT_METHOD_VALUES`: the four that dialog offered before
+ * its labels were translated, kept as they were. `debitCard`, `online` and
+ * `mobilePayment` stay accepted by the API and selectable when a stored
+ * payment is corrected; offering them at the desk is a product decision, not
+ * a translation one. `paymentOptions.test.ts` pins the list.
+ */
+export const DESK_PAYMENT_METHOD_VALUES = [
+  'cash',
+  'check',
+  'bankTransfer',
+  'creditCard',
+] as const satisfies readonly PaymentMethod[];
+
+export const buildDeskPaymentMethodOptions = (t: Translate): readonly EnumOption<PaymentMethod>[] =>
+  optionsFromValues(DESK_PAYMENT_METHOD_VALUES, t, PAYMENT_METHOD_TRANSLATION_PREFIX);
+
+/**
  * The payment states a user may filter the table by.
  *
- * A deliberate subset of `PAYMENT_STATUS_VALUES`, and the one place in the
- * dashboard where the API accepts more than the UI offers:
+ * A deliberate subset of `PAYMENT_STATUS_VALUES`, where the API accepts more
+ * than the UI offers (as the desk payment methods above):
  *
  * - `deposited`, `bounced` and `voided` are steps the server moves a check
  *   payment through. No form writes them, and they have no `payments.status.*`

@@ -189,6 +189,25 @@
       "amount": "Amount",
       "dueDate": "Due Date",
       "installment": "Installment"
+    },
+    "status": {
+      "upcoming": "Upcoming",
+      "reserved": "Reserved"
+    },
+    "showUpcoming": "Pay ahead ({{count}} upcoming)",
+    "hideUpcoming": "Hide upcoming",
+    "nothingDue": "Nothing due yet",
+    "dueAmount": "Due: {{amount}}",
+    "selectInstallment": "Select installment",
+    "noAvailableBalance": "No available balance",
+    "number": "Installment #{{number}}",
+    "reservedAmount": "Reserved {{amount}}",
+    "paidAmount": "Paid {{amount}}",
+    "noneToPay": "No installments to pay",
+    "summary": {
+      "installments": "Installments: {{count}}",
+      "payments": "Payments: {{count}}",
+      "overdue": "Overdue: {{count}}"
     }
   },
   "languages": {
@@ -1494,6 +1513,10 @@
       "discounts": "Discounts",
       "history": "Payment history (all years)",
       "documents": "Documents (all years)",
+      "receiptsTitle": "Payment receipts",
+      "receiptsAvailable": "Receipts available: {{count}}",
+      "noReceipts": "No receipts available",
+      "noReceiptsHint": "Receipts appear once a payment is completed.",
       "addFees": "Add fees",
       "noData": "No fee data available",
       "noFees": "No fees assigned to this student",
@@ -2883,7 +2906,18 @@
       "recordedTitle": "Payment recorded",
       "receiptNumber": "Receipt No. {{receiptNumber}}",
       "printReceipt": "Print receipt",
-      "receiptAfterCheck": "The receipt can be printed once the check is completed."
+      "receiptAfterCheck": "The receipt can be printed once the check is completed.",
+      "selectInstallments": "Select installments to pay",
+      "noFeeData": "No fee data available"
+    },
+    "register": {
+      "missing": "Missing",
+      "giveCustomer": "Give customer",
+      "selectHint": "Select the installments to pay",
+      "title": "Cashier register",
+      "totalSelected": "Total selected",
+      "cashReceived": "Cash received",
+      "selectedItems": "Selected: {{count}}"
     },
     "table": {
       "allocatedToYear": "Allocated to {{year}}",
@@ -2940,6 +2974,13 @@
       "partially_refunded": "Partially Refunded",
       "cancelled": "Cancelled",
       "on_hold": "On Hold"
+    },
+    "allocation": {
+      "title": "Smart auto-allocation",
+      "subtitle": "Automatically distribute the payment across fees",
+      "payAllOverdue": "Pay all overdue ({{amount}})",
+      "oldestFirst": "Oldest first",
+      "clearAll": "Clear all"
     }
   },
   "transport": {

@@ -189,6 +189,25 @@
       "amount": "Montant",
       "dueDate": "Date d'échéance",
       "installment": "Échéance"
+    },
+    "status": {
+      "upcoming": "À venir",
+      "reserved": "Réservé"
+    },
+    "showUpcoming": "Payer d’avance ({{count}} à venir)",
+    "hideUpcoming": "Masquer les échéances à venir",
+    "nothingDue": "Rien à payer pour le moment",
+    "dueAmount": "À payer : {{amount}}",
+    "selectInstallment": "Sélectionner l’échéance",
+    "noAvailableBalance": "Aucun solde disponible",
+    "number": "Échéance n° {{number}}",
+    "reservedAmount": "Réservé {{amount}}",
+    "paidAmount": "Payé {{amount}}",
+    "noneToPay": "Aucune échéance à payer",
+    "summary": {
+      "installments": "Échéances : {{count}}",
+      "payments": "Paiements : {{count}}",
+      "overdue": "En retard : {{count}}"
     }
   },
   "languages": {
@@ -2126,6 +2145,10 @@
       "discounts": "Réductions",
       "history": "Historique des paiements (toutes les années)",
       "documents": "Documents (toutes les années)",
+      "receiptsTitle": "Reçus de paiement",
+      "receiptsAvailable": "Reçus disponibles : {{count}}",
+      "noReceipts": "Aucun reçu disponible",
+      "noReceiptsHint": "Les reçus apparaissent après validation du paiement.",
       "addFees": "Ajouter des frais",
       "noData": "Aucune donnée de frais disponible",
       "noFees": "Aucun frais attribué à cet élève",
@@ -3247,7 +3270,19 @@
       "recordedTitle": "Paiement enregistré",
       "receiptNumber": "Reçu N° {{receiptNumber}}",
       "printReceipt": "Imprimer le reçu",
-      "receiptAfterCheck": "Le reçu pourra être imprimé une fois le chèque encaissé."
+      "receiptAfterCheck": "Le reçu pourra être imprimé une fois le chèque encaissé.",
+      "createButton": "Enregistrer le paiement",
+      "selectInstallments": "Sélectionner les échéances à payer",
+      "noFeeData": "Aucune donnée de frais disponible"
+    },
+    "register": {
+      "missing": "Manquant",
+      "giveCustomer": "À rendre",
+      "selectHint": "Sélectionnez les échéances à payer",
+      "title": "Caisse",
+      "totalSelected": "Total sélectionné",
+      "cashReceived": "Montant reçu",
+      "selectedItems": "Sélectionnés : {{count}}"
     },
     "errors": {
       "recordFailed": "Échec de l'enregistrement du paiement. Veuillez réessayer.",
@@ -3354,6 +3389,13 @@
     "type": {
       "recurring": "Récurrent",
       "oneTime": "Unique"
+    },
+    "allocation": {
+      "title": "Répartition automatique",
+      "subtitle": "Répartit automatiquement le paiement entre les frais",
+      "payAllOverdue": "Payer tout le retard ({{amount}})",
+      "oldestFirst": "Plus anciens d’abord",
+      "clearAll": "Tout effacer"
     }
   },
   "sections": {

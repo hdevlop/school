@@ -3,7 +3,9 @@ import { PAYMENT_METHOD_VALUES, PAYMENT_STATUS_VALUES } from '@sms/contracts';
 import { ar, en, es, fr } from '@sms/contracts/locales';
 
 import {
+  DESK_PAYMENT_METHOD_VALUES,
   FILTERABLE_PAYMENT_STATUS_VALUES,
+  buildDeskPaymentMethodOptions,
   buildPaymentMethodOptions,
   buildPaymentMethodOptionsFor,
   buildPaymentStatusFilterOptions,
@@ -26,8 +28,33 @@ describe('payment method options', () => {
   });
 });
 
+describe('the desk payment methods', () => {
+  it('offers the four methods the cashier dialog takes, in this order', () => {
+    expect(buildDeskPaymentMethodOptions(echo).map((option) => option.value)).toEqual([
+      'cash',
+      'check',
+      'bankTransfer',
+      'creditCard',
+    ]);
+  });
+
+  it('never offers a method the server would reject', () => {
+    for (const value of DESK_PAYMENT_METHOD_VALUES) {
+      expect(PAYMENT_METHOD_VALUES).toContain(value);
+    }
+  });
+
+  it('has a translation for each offered method in every catalog', () => {
+    for (const catalog of [en, fr, ar, es]) {
+      for (const value of DESK_PAYMENT_METHOD_VALUES) {
+        expect(typeof (catalog as any).payments.methods[value]).toBe('string');
+      }
+    }
+  });
+});
+
 /**
- * The one place the dashboard deliberately offers less than the API accepts.
+ * The status filter deliberately offers less than the API accepts.
  * Pinned so that widening it is a decision, made together with the four
  * translations it would need.
  */

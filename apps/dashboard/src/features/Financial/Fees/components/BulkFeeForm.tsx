@@ -4,7 +4,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { useEffect, useMemo } from 'react'
-import { IdCard, User, DollarSign, CalendarClock, CalendarDays, Percent, Wallet } from 'lucide-react'
+import { IdCard, User, DollarSign, CalendarClock, CalendarDays, BadgeMinus, Wallet } from 'lucide-react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { bulkFeeFormSchema } from '../config/feeSchemas'
@@ -142,7 +142,7 @@ const FeeItem = ({
              <FormInput
                 name="discountAmount"
                 type='number'
-                icon={Percent}
+                icon={BadgeMinus}
                 formLabel={t('fees.form.discountAmount')}
                 placeholder={t('fees.form.discountAmountPlaceholder')}
              />

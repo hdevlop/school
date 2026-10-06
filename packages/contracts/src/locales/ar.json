@@ -189,6 +189,25 @@
       "amount": "المبلغ",
       "dueDate": "تاريخ الاستحقاق",
       "installment": "القسط"
+    },
+    "status": {
+      "upcoming": "قادم",
+      "reserved": "محجوز"
+    },
+    "showUpcoming": "الدفع المسبق ({{count}} قادمة)",
+    "hideUpcoming": "إخفاء الأقساط القادمة",
+    "nothingDue": "لا شيء مستحق حاليًا",
+    "dueAmount": "المستحق: {{amount}}",
+    "selectInstallment": "اختيار القسط",
+    "noAvailableBalance": "لا يوجد رصيد متاح",
+    "number": "القسط رقم {{number}}",
+    "reservedAmount": "محجوز {{amount}}",
+    "paidAmount": "مدفوع {{amount}}",
+    "noneToPay": "لا توجد أقساط للدفع",
+    "summary": {
+      "installments": "الأقساط: {{count}}",
+      "payments": "الدفعات: {{count}}",
+      "overdue": "متأخر: {{count}}"
     }
   },
   "languages": {
@@ -1559,6 +1578,10 @@
       "discounts": "التخفيضات",
       "history": "سجل الدفعات (كل السنوات)",
       "documents": "المستندات (كل السنوات)",
+      "receiptsTitle": "إيصالات الدفع",
+      "receiptsAvailable": "الإيصالات المتاحة: {{count}}",
+      "noReceipts": "لا توجد إيصالات متاحة",
+      "noReceiptsHint": "تظهر الإيصالات بعد إتمام الدفع.",
       "addFees": "إضافة رسوم",
       "noData": "لا توجد بيانات رسوم",
       "noFees": "لا توجد رسوم لهذا الطالب",
@@ -2748,7 +2771,19 @@
       "recordedTitle": "تم تسجيل الدفعة",
       "receiptNumber": "وصل رقم {{receiptNumber}}",
       "printReceipt": "طباعة الوصل",
-      "receiptAfterCheck": "يمكن طباعة الوصل بعد تحصيل الشيك."
+      "receiptAfterCheck": "يمكن طباعة الوصل بعد تحصيل الشيك.",
+      "createButton": "تسجيل الدفعة",
+      "selectInstallments": "اختر الأقساط المراد دفعها",
+      "noFeeData": "لا توجد بيانات رسوم"
+    },
+    "register": {
+      "missing": "الناقص",
+      "giveCustomer": "الباقي للزبون",
+      "selectHint": "اختر الأقساط المراد دفعها",
+      "title": "الصندوق",
+      "totalSelected": "المجموع المحدد",
+      "cashReceived": "المبلغ المستلم",
+      "selectedItems": "المحدد: {{count}}"
     },
     "errors": {
       "recordFailed": "تعذر تسجيل الدفع. حاول مرة أخرى.",
@@ -2855,6 +2890,13 @@
     "type": {
       "recurring": "متكرر",
       "oneTime": "مرة واحدة"
+    },
+    "allocation": {
+      "title": "التوزيع التلقائي",
+      "subtitle": "توزيع الدفعة تلقائيًا على الرسوم",
+      "payAllOverdue": "دفع كل المتأخرات ({{amount}})",
+      "oldestFirst": "الأقدم أولًا",
+      "clearAll": "مسح الكل"
     }
   },
   "reports": {

@@ -11,6 +11,10 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
+/** A cleared number input holds `null`; an optional field reads it as not given. */
+const optionalNumberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+
 /**
  * What the subject form accepts. The server's `SubjectDto` validates the same
  * payload again; this only spares the user a round trip.
@@ -20,7 +24,7 @@ export const subjectSchema = z.object({
   code: z.string().min(2, 'Subject code must be at least 2 characters').max(10, 'Subject code too long'),
   name: z.string().min(2, 'Subject name must be at least 2 characters').max(100, 'Subject name too long'),
   description: z.string().max(500, 'Description too long').optional(),
-  gradeLevel: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(1, 'Must be at least 1').max(12, 'Cannot exceed 12')).optional(),
+  gradeLevel: optionalNumberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(1, 'Must be at least 1').max(12, 'Cannot exceed 12')),
 });
 
 export type SubjectFormValues = z.input<typeof subjectSchema>;

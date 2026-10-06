@@ -189,6 +189,25 @@
       "amount": "Importe",
       "dueDate": "Fecha de vencimiento",
       "installment": "Cuota"
+    },
+    "status": {
+      "upcoming": "Próximo",
+      "reserved": "Reservado"
+    },
+    "showUpcoming": "Pagar por adelantado ({{count}} próximas)",
+    "hideUpcoming": "Ocultar próximas",
+    "nothingDue": "Nada pendiente de pago",
+    "dueAmount": "A pagar: {{amount}}",
+    "selectInstallment": "Seleccionar cuota",
+    "noAvailableBalance": "Sin saldo disponible",
+    "number": "Cuota n.º {{number}}",
+    "reservedAmount": "Reservado {{amount}}",
+    "paidAmount": "Pagado {{amount}}",
+    "noneToPay": "No hay cuotas por pagar",
+    "summary": {
+      "installments": "Cuotas: {{count}}",
+      "payments": "Pagos: {{count}}",
+      "overdue": "Vencidas: {{count}}"
     }
   },
   "languages": {
@@ -1545,6 +1564,10 @@
       "discounts": "Descuentos",
       "history": "Historial de pagos (todos los cursos)",
       "documents": "Documentos (todos los cursos)",
+      "receiptsTitle": "Recibos de pago",
+      "receiptsAvailable": "Recibos disponibles: {{count}}",
+      "noReceipts": "No hay recibos disponibles",
+      "noReceiptsHint": "Los recibos aparecen una vez completado el pago.",
       "addFees": "Añadir cuotas",
       "noData": "No hay datos de cuotas",
       "noFees": "No hay cuotas asignadas al alumno",
@@ -2734,7 +2757,19 @@
       "recordedTitle": "Pago registrado",
       "receiptNumber": "Recibo N.º {{receiptNumber}}",
       "printReceipt": "Imprimir recibo",
-      "receiptAfterCheck": "El recibo podrá imprimirse cuando se cobre el cheque."
+      "receiptAfterCheck": "El recibo podrá imprimirse cuando se cobre el cheque.",
+      "createButton": "Registrar pago",
+      "selectInstallments": "Seleccionar las cuotas a pagar",
+      "noFeeData": "No hay datos de cuotas disponibles"
+    },
+    "register": {
+      "missing": "Faltante",
+      "giveCustomer": "Cambio",
+      "selectHint": "Seleccione las cuotas a pagar",
+      "title": "Caja",
+      "totalSelected": "Total seleccionado",
+      "cashReceived": "Importe recibido",
+      "selectedItems": "Seleccionados: {{count}}"
     },
     "errors": {
       "recordFailed": "No se pudo registrar el pago. Inténtalo de nuevo.",
@@ -2841,6 +2876,13 @@
     "type": {
       "recurring": "Recurrente",
       "oneTime": "Única vez"
+    },
+    "allocation": {
+      "title": "Asignación automática",
+      "subtitle": "Distribuye el pago automáticamente entre las cuotas",
+      "payAllOverdue": "Pagar todo lo vencido ({{amount}})",
+      "oldestFirst": "Más antiguas primero",
+      "clearAll": "Borrar todo"
     }
   },
   "reports": {

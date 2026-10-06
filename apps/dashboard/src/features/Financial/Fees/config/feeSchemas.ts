@@ -26,6 +26,21 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
+/** A cleared number input holds `null`; an optional field reads it as not given. */
+const optionalNumberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+
+/**
+ * A discount left empty is no discount. A cleared number field reports
+ * `undefined`, which an optional field would drop from the payload, and on an
+ * edit a dropped discount keeps the old one while the form shows none.
+ */
+const discountField = () =>
+  z.preprocess(
+    (value) => (value === undefined || value === null || (typeof value === 'string' && value.trim() === '') ? 0 : value),
+    numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Discount cannot be negative')),
+  );
+
 /**
  * Fees owed by a student.
  *
@@ -49,8 +64,8 @@ export const feeSchema = z.object({
   academicYear: academicYearField.optional(),
   effectiveDate: optionalDateField,
   schedule: z.enum(SCHEDULE_VALUES),
-  baseAmount: numberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')).optional(),
-  discountAmount: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Discount cannot be negative')).optional(),
+  baseAmount: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')),
+  discountAmount: discountField(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
   assignedBy: optionalId.nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
@@ -80,8 +95,8 @@ export const classBulkFeeFormSchema = z.object({
   schedule: z.enum(SCHEDULE_VALUES),
   academicYear: academicYearField.optional(),
   effectiveDate: optionalDateField,
-  baseAmount: numberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')).optional(),
-  discountAmount: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Discount cannot be negative')).optional(),
+  baseAmount: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Base amount must be positive')),
+  discountAmount: discountField(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
 }).superRefine((data, context) => {

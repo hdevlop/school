@@ -6,8 +6,10 @@ import { FileText, Printer } from "lucide-react";
 import { usePayments } from "@/features/Financial/Payment/hooks/usePayments";
 import { printReceipt } from "@/features/Financial/Payment/components/ReceiptPrint/printReceipt";
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useTranslation } from 'najm-i18n/react';
 
 export const Documents = ({ studentId }) => {
+  const { t } = useTranslation();
   const { currency, displayDateOnly, majorMoney } = useSchoolFormat();
   const { studentPayments, isStudentPaymentsLoading } = usePayments({ studentId });
 
@@ -58,9 +60,9 @@ export const Documents = ({ studentId }) => {
   return (
     <div className="flex h-[calc(100vh-180px)] min-h-[280px] flex-col rounded-lg border bg-card">
       <div className="shrink-0 border-b border-gray-200 p-4">
-        <h3 className="text-lg font-semibold text-gray-800">Reçus de paiement</h3>
+        <h3 className="text-lg font-semibold text-gray-800">{t('fees.studentView.receiptsTitle')}</h3>
         <p className="text-sm text-gray-600 mt-1">
-          {completedPayments.length} reçu{completedPayments.length !== 1 ? 's' : ''} disponible{completedPayments.length !== 1 ? 's' : ''}
+          {t('fees.studentView.receiptsAvailable', { count: completedPayments.length })}
         </p>
       </div>
 
@@ -69,8 +71,8 @@ export const Documents = ({ studentId }) => {
           <div className="p-4">
             <div className="text-center py-12">
               <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Aucun reçu disponible</p>
-              <p className="text-sm text-gray-400 mt-1">Les reçus apparaissent après validation du paiement.</p>
+              <p className="text-gray-600">{t('fees.studentView.noReceipts')}</p>
+              <p className="text-sm text-gray-400 mt-1">{t('fees.studentView.noReceiptsHint')}</p>
             </div>
           </div>
         ) : (
@@ -86,7 +88,7 @@ export const Documents = ({ studentId }) => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">
-                      Reçu N° {payment.receiptNumber ?? payment.id}
+                      {t('payments.dialogs.receiptNumber', { receiptNumber: payment.receiptNumber ?? payment.id })}
                     </p>
                     <p className="text-sm text-gray-500">
                       {displayDateOnly(payment.paymentDate)} &nbsp;·&nbsp;{' '}
@@ -101,7 +103,7 @@ export const Documents = ({ studentId }) => {
                   className="gap-1.5"
                 >
                   <Printer className="w-4 h-4" />
-                  Imprimer
+                  {t('payments.dialogs.printReceipt')}
                 </NButton>
               </div>
             ))}

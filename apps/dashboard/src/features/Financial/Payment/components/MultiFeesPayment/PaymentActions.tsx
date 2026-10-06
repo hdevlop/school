@@ -2,8 +2,10 @@ import { NButton, NSkeleton } from 'najm-kit';
 import React from 'react';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useDialogStore } from 'najm-kit';
+import { useTranslation } from 'najm-i18n/react';
 
 export const PaymentActions = () => {
+  const { t } = useTranslation();
 
   const paymentAmount = usePaymentStore((state) => state.paymentDetails.amount);
   const selectedCount = usePaymentStore((state) => state.getSelectedCount());
@@ -15,8 +17,13 @@ export const PaymentActions = () => {
     return currentDialog?.primaryButton?.loading || false;
   });
 
+  // A disabled button says what is missing.
+  const hint = isLoading ? null
+    : selectedCount === 0 ? t('payments.register.selectHint')
+      : null;
+
   return (
-    <div className="flex justify-end gap-3 w-full">
+    <div className="flex w-full shrink-0 flex-col gap-1.5">
       <NButton
         type="submit"
         form="payment-details-form"
@@ -29,9 +36,10 @@ export const PaymentActions = () => {
             <NSkeleton className="h-4 w-36 bg-primary-foreground/40" />
           </span>
         ) : (
-          'Record Payment'
+          t('payments.dialogs.createButton')
         )}
       </NButton>
+      {hint && <p className="text-center text-xs text-muted-foreground">{hint}</p>}
     </div>
   );
 };

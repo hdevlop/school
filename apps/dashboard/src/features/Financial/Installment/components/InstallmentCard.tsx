@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Calendar, DollarSign, CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { Calendar, CalendarClock, DollarSign, CheckCircle, AlertCircle } from 'lucide-react';
 import { NBadge, NSectionInfo } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -29,13 +29,14 @@ const InstallmentCard = ({ data }: any) => {
       iconColor: 'text-red-600',
       label: t('fees.installmentStatus.overdue')
     },
+    // Not yet due, so it reads as upcoming rather than awaiting something.
     pending: {
-      bg: 'bg-yellow-100',
-      text: 'text-yellow-700',
-      border: 'border-yellow-200',
-      icon: Clock,
-      iconColor: 'text-yellow-600',
-      label: t('fees.installmentStatus.pending')
+      bg: 'bg-sky-100',
+      text: 'text-sky-700',
+      border: 'border-sky-200',
+      icon: CalendarClock,
+      iconColor: 'text-sky-600',
+      label: t('status.upcoming')
     }
   };
 

@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from 'react'
 import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
-import { GraduationCap, LayoutGrid, Tag, CalendarClock, DollarSign, Percent, FileText } from 'lucide-react'
+import { GraduationCap, LayoutGrid, Tag, CalendarClock, DollarSign, BadgeMinus, FileText } from 'lucide-react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { classBulkFeeFormSchema } from '../config/feeSchemas'
@@ -232,7 +232,7 @@ export const ClassBulkFeeFormContent = ({ classes = [], feeTypes = [] }) => {
             <FormInput
                name='discountAmount'
                type='number'
-               icon={Percent}
+               icon={BadgeMinus}
                formLabel={t('fees.form.discountAmount')}
                placeholder={t('fees.form.discountAmountPlaceholder')}
             />

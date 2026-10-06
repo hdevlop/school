@@ -88,7 +88,7 @@ function PaymentsTable({studentId}) {
               className="gap-2 self-start"
             >
               <Printer className="w-4 h-4" />
-              Imprimer le reçu
+              {t('payments.dialogs.printReceipt')}
             </NButton>
           )}
           {payment.paymentMethod === 'check' && ['pending', 'deposited', 'completed'].includes(payment.status) && (

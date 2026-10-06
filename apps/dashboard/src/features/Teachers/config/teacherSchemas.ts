@@ -24,6 +24,10 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
+/** A cleared number input holds `null`; an optional field reads it as not given. */
+const optionalNumberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+
 /**
  * Hiring a teacher, in the three steps the wizard walks through.
  *
@@ -51,12 +55,12 @@ export const teacherPersonalSchema = z.object({
 /** Step 2 — the terms of their employment. */
 export const teacherProfessionalSchema = z.object({
   specialization: z.string().max(100, 'Specialization too long').optional(),
-  yearsOfExperience: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Years of experience must be non-negative')).optional(),
-  salary: numberField(z.number({ error: 'Must be a valid number' }).positive('Salary must be positive')).optional(),
+  yearsOfExperience: optionalNumberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Years of experience must be non-negative')),
+  salary: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Salary must be positive')),
   hireDate: dateField,
   bankAccount: z.coerce.string().max(100, { message: 'Bank account too long' }).optional(),
   employmentType: z.enum(EMPLOYMENT_TYPE_VALUES).optional(),
-  workloadHours: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Workload hours must be non-negative').max(60, 'Workload hours cannot exceed 60')).optional(),
+  workloadHours: optionalNumberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(0, 'Workload hours must be non-negative').max(60, 'Workload hours cannot exceed 60')),
   academicDegrees: z.string().max(500, 'Academic degrees description too long').optional(),
 });
 

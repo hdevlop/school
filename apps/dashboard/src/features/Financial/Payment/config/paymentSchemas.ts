@@ -21,6 +21,10 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
+/** A cleared number input holds `null`; an optional field reads it as not given. */
+const optionalNumberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+
 /**
  * Taking a payment, and correcting one that was already taken.
  *
@@ -36,7 +40,7 @@ const numberField = (schema: z.ZodNumber): any =>
  */
 export const feePaymentSchema = z.object({
   studentId: optionalId,
-  amount: numberField(z.number({ error: 'Must be a valid number' }).positive('Amount must be greater than 0').max(1_000_000, 'Amount too large')).optional(),
+  amount: optionalNumberField(z.number({ error: 'Must be a valid number' }).positive('Amount must be greater than 0').max(1_000_000, 'Amount too large')),
   paymentMethod: z.enum(PAYMENT_METHOD_VALUES),
   paymentDate: dateField,
   checkNumber: z.preprocess((val) => (val === '' ? null : val), z.string().max(50, 'Check number too long').optional().nullable()),

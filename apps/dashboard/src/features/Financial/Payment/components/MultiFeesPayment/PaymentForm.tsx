@@ -7,6 +7,7 @@ import { DollarSign, CreditCard, Calendar, Hash, CalendarClock, FileText } from 
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { feePaymentSchema } from '../../config/paymentSchemas';
+import { buildDeskPaymentMethodOptions } from '../../config/paymentOptions';
 import { usePaymentStore } from '../../store/paymentStore';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -135,9 +136,12 @@ export const PaymentForm = ({ studentId }) => {
 
 const PaymentDetailsFormContent = () => {
     const { t } = useTranslation();
-    const { watch } = useFormContext();
+    const { watch, getValues, setValue } = useFormContext();
     const setPaymentDetails = usePaymentStore((state) => state.setPaymentDetails);
+    const totalAllocated = usePaymentStore((state) => state.getTotalAllocated());
     const paymentMethod = useWatch({ name: 'paymentMethod' });
+    const formatAmount = (amount: number) => (amount > 0 ? amount.toFixed(2) : '');
+    const lastAutoAmount = useRef(formatAmount(totalAllocated));
 
     useEffect(() => {
         const subscription = watch((value) => {
@@ -146,12 +150,18 @@ const PaymentDetailsFormContent = () => {
         return () => subscription.unsubscribe();
     }, [watch, setPaymentDetails]);
 
-    const paymentMethodOptions = [
-        { value: 'cash', label: 'Cash' },
-        { value: 'check', label: 'Check' },
-        { value: 'bankTransfer', label: 'Bank Transfer' },
-        { value: 'creditCard', label: 'Credit Card' },
-    ];
+    // The amount received follows the selected total, so an exact payment
+    // needs no typing, until the cashier enters an amount of their own.
+    useEffect(() => {
+        const current = String(getValues('amount') ?? '');
+        const untouched = current === '' || Number(current) === 0 || current === lastAutoAmount.current;
+        if (!untouched) return;
+        const next = formatAmount(totalAllocated);
+        lastAutoAmount.current = next;
+        if (next !== current) setValue('amount', next);
+    }, [totalAllocated, getValues, setValue]);
+
+    const paymentMethodOptions = buildDeskPaymentMethodOptions(t);
 
     const isCheckPayment = paymentMethod === 'check';
 
@@ -172,7 +182,7 @@ const PaymentDetailsFormContent = () => {
                     type='select'
                     icon={CreditCard}
                     formLabel={t('payments.form.paymentMethod')}
-                    items={paymentMethodOptions}
+                    items={[...paymentMethodOptions]}
                     required={true}
                 />
 

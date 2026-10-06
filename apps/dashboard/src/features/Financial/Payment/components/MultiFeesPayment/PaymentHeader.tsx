@@ -2,8 +2,10 @@ import React from 'react';
 
 import { Label } from 'najm-kit';
 import { NAvatar } from 'najm-kit';
+import { useTranslation } from 'najm-i18n/react';
 
 export const PaymentHeader = ({ student }) => {
+    const { t } = useTranslation();
     const studentInfo = student.student;
     const { class: classInfo, section } = student.assignment;
 
@@ -17,7 +19,7 @@ export const PaymentHeader = ({ student }) => {
                     className=" border-2  bg-white "
                 />
                 <div>
-                    <Label className="text-xl font-bold text-white">Record Payment</Label>
+                    <Label className="text-xl font-bold text-white">{t('payments.dialogs.createButton')}</Label>
                     <Label className="text-pink-100 text-xs block mt-0.5">
                         {studentInfo.name} • {studentInfo.studentCode} • {classInfo.name}-{section.name}
                     </Label>

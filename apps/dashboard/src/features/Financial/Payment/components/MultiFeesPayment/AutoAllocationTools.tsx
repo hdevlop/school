@@ -2,19 +2,21 @@ import React from 'react';
 import { Zap, AlertTriangle, Trash2 } from 'lucide-react';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
+import { useTranslation } from 'najm-i18n/react';
 
 export const AutoAllocationTools = ({ studentFees }) => {
+    const { t } = useTranslation();
     const { majorMoney } = useSchoolFormat();
 
     const paymentAmount = usePaymentStore((state) => state.paymentDetails.amount);
     const handleAutoAllocate = usePaymentStore((state) => state.handleAutoAllocate);
     const selectAllOverdue = usePaymentStore((state) => state.selectAllOverdue);
     const clearAllSelections = usePaymentStore((state) => state.clearAllSelections);
-    const setPaymentDetails = usePaymentStore((state) => state.setPaymentDetails);
 
+    // The amount received follows the selection in the form itself; writing
+    // it here as well left the register and the field showing different sums.
     const handlePayAllOverdue = () => {
-        const total = selectAllOverdue(studentFees?.fees || []);
-        setPaymentDetails({ amount: total.toFixed(2) });
+        selectAllOverdue(studentFees?.fees || []);
     };
 
     const handleAutoAllocateOldest = () => {
@@ -39,10 +41,10 @@ export const AutoAllocationTools = ({ studentFees }) => {
                     {/* Text */}
                     <div className="flex flex-col">
                         <h3 className="text-sm font-semibold leading-tight text-foreground">
-                            Smart Auto-Allocation
+                            {t('payments.allocation.title')}
                         </h3>
                         <p className="mt-0.5 text-xs leading-tight text-muted-foreground">
-                            Automatically distribute payment across fees
+                            {t('payments.allocation.subtitle')}
                         </p>
                     </div>
                 </div>
@@ -56,7 +58,7 @@ export const AutoAllocationTools = ({ studentFees }) => {
                         className="flex items-center gap-2 rounded-md bg-destructive px-4 py-2 text-xs font-semibold text-destructive-foreground transition-colors hover:bg-destructive/90 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
                     >
                         <AlertTriangle size={14} strokeWidth={2.5} />
-                        <span>Pay All Overdue ({majorMoney(totalOverdue)})</span>
+                        <span>{t('payments.allocation.payAllOverdue', { amount: majorMoney(totalOverdue) })}</span>
                     </button>
 
                     {/* Oldest First Button */}
@@ -66,7 +68,7 @@ export const AutoAllocationTools = ({ studentFees }) => {
                         className="flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
                     >
                         <Zap size={14} strokeWidth={2.5} />
-                        <span>Oldest First</span>
+                        <span>{t('payments.allocation.oldestFirst')}</span>
                     </button>
 
                     {/* Clear All Button */}
@@ -75,7 +77,7 @@ export const AutoAllocationTools = ({ studentFees }) => {
                         className="flex items-center gap-2 rounded-md border border-border bg-background px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:bg-muted"
                     >
                         <Trash2 size={14} strokeWidth={2.5} />
-                        <span>Clear All</span>
+                        <span>{t('payments.allocation.clearAll')}</span>
                     </button>
                 </div>
             </div>

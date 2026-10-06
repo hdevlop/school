@@ -172,7 +172,7 @@ export const usePaymentStore = create<PaymentStore>((set, get) => ({
             feeId: feeId,
             feeIcon: fee.icon,
             feeColor: fee.color,
-            feeName: fee.name.split(' ')[0],
+            feeName: fee.name,
             availableAmount,
             allocatedAmount: availableAmount,
           };
@@ -287,7 +287,7 @@ export const usePaymentStore = create<PaymentStore>((set, get) => ({
           feeId: fee.id,
           feeIcon: fee.icon,
           feeColor: fee.color,
-          feeName: fee.name.split(' ')[0],
+          feeName: fee.name,
         }))
     );
   },

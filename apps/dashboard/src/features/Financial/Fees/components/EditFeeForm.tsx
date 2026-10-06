@@ -4,7 +4,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import { DollarSign, FileText, Tag, CalendarClock, Percent, Activity, Wallet } from 'lucide-react'
+import { DollarSign, FileText, Tag, CalendarClock, BadgeMinus, Activity, Wallet } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useCallback, useEffect } from 'react'
@@ -149,7 +149,7 @@ const SimpleFeeFormContent = ({ fee, feeTypes, isEditMode }) => {
                <FormInput
                   name='discountAmount'
                   type='number'
-                  icon={Percent}
+                  icon={BadgeMinus}
                   formLabel={t('fees.form.discountAmount')}
                   placeholder={t('fees.form.discountAmountPlaceholder')}
                />

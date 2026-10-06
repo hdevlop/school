@@ -6,6 +6,7 @@ import { InstallmentList } from './InstallmentList';
 import { PaymentSummary } from './PaymentSummary';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { Label, NSkeleton } from 'najm-kit';
+import { useTranslation } from 'najm-i18n/react';
 
 interface MultiFeesPaymentProps {
    studentId: string;
@@ -14,6 +15,7 @@ interface MultiFeesPaymentProps {
 }
 
 const MultiFeesPayment = ({ studentId, studentFees: initialStudentFees, compact = false }: MultiFeesPaymentProps) => {
+   const { t } = useTranslation();
 
    const shouldFetchStudentFees = !initialStudentFees && Boolean(studentId);
    const { studentFees: fetchedStudentFees, isStudentFeesLoading } = useFees({
@@ -29,14 +31,14 @@ const MultiFeesPayment = ({ studentId, studentFees: initialStudentFees, compact 
    if (!studentFees) {
       return (
          <div className="flex items-center justify-center h-full bg-white rounded-xl">
-            <p className="text-gray-600">No fee data available</p>
+            <p className="text-gray-600">{t('payments.dialogs.noFeeData')}</p>
          </div>
       );
    }
 
    const contentClassName = compact
       ? 'flex flex-col gap-3 p-4'
-      : 'grid grid-cols-[1fr_2fr] gap-4 flex-1 overflow-hidden p-4';
+      : 'grid min-h-0 grid-cols-[1fr_2fr] grid-rows-[minmax(0,1fr)] gap-4 flex-1 overflow-hidden p-4';
 
    return (
       <div className={`flex flex-col bg-white rounded-xl overflow-hidden ${compact ? '' : 'h-full'}`}>
@@ -44,9 +46,9 @@ const MultiFeesPayment = ({ studentId, studentFees: initialStudentFees, compact 
 
          <div className={contentClassName}>
 
-            <div className={`flex flex-col gap-3 ${compact ? '' : 'min-h-0'}`}>
+            <div className={`flex flex-col gap-3 ${compact ? '' : 'min-h-0 overflow-hidden'}`}>
                <div className="font-semibold text-gray-900 flex items-center gap-2">
-                  <Label className="text-sm font-semibold">💳 Payment Details</Label>
+                  <Label className="text-sm font-semibold">💳 {t('payments.form.paymentDetails')}</Label>
                </div>
                <PaymentForm studentId={studentId} />
                <PaymentSummary compact={compact} />
@@ -55,7 +57,7 @@ const MultiFeesPayment = ({ studentId, studentFees: initialStudentFees, compact 
             {!compact && (
                <div className='flex min-h-0 flex-col gap-3 overflow-hidden border-l-2 border-gray-300 pl-4'>
                   <div className="flex shrink-0 items-center gap-2 font-semibold text-gray-900">
-                     <Label className="text-sm font-semibold">📋 Select Installments to Pay</Label>
+                     <Label className="text-sm font-semibold">📋 {t('payments.dialogs.selectInstallments')}</Label>
                   </div>
                   <AutoAllocationTools studentFees={studentFees} />
                   <InstallmentList studentFees={studentFees} />

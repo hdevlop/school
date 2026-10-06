@@ -16,6 +16,10 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
+/** A cleared number input holds `null`; an optional field reads it as not given. */
+const optionalNumberField = (schema: z.ZodNumber): any =>
+  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+
 /**
  * What the section form accepts.
  *
@@ -27,7 +31,7 @@ export const sectionSchema = z.object({
   classId: requiredId,
   name: z.string().min(1, 'Section name is required').max(10, 'Section name too long'),
   maxStudents: numberField(z.number({ error: 'Must be a valid number' }).int('Must be an integer').min(1, 'Max students must be at least 1').max(100, 'Max students cannot exceed 100')).default(30),
-  roomNumber: numberField(z.number({ error: 'Must be a valid number' }).max(10000, 'Room number too long')).optional(),
+  roomNumber: optionalNumberField(z.number({ error: 'Must be a valid number' }).max(10000, 'Room number too long')),
   status: z.enum(SECTION_STATUS_VALUES).default('active'),
 });
 
