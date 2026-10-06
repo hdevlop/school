@@ -16,6 +16,9 @@ export function registerYearPropertyInjector(container: Container) {
     inject: (instance, constructor) => {
       if (!constructor) return;
       for (const propertyKey of yearProperties.get(constructor) ?? []) {
+        // A retried start (a dev reload whose first boot failed) injects the
+        // same instance again; its getter is already in place and locked.
+        if (Object.getOwnPropertyDescriptor(instance, propertyKey)?.get) continue;
         // Injection runs after the constructor, so it replaces any own field
         // emitted by TypeScript rather than leaving an `undefined` shadow.
         Object.defineProperty(instance, propertyKey, {
