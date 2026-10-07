@@ -1,7 +1,7 @@
 /** Plan/fixture mode is unpaid. Execute requires explicit frozen limits and marked local fixture controls. */
 import { randomUUID } from 'node:crypto';
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
-import { fullChatProtocol, fingerprint, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat } from './chatbot-jev-full-chat-lib.mjs';
+import { fullChatProtocol, modelComparisonProtocol, fingerprint, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat } from './chatbot-jev-full-chat-lib.mjs';
 import { createUiStreamParser } from './chatbot-stream.mjs';
 import { createEstimatedBudget } from './chatbot-budget.mjs';
 
@@ -14,7 +14,9 @@ if ([fixtureMode, execute, preflight].filter(Boolean).length > 1) throw new Erro
 const defaultPlan = 'docs/evidence/chatbot-latency/jev-billing-observer-plan-20261007.json';
 const planPath = option('plan', defaultPlan);
 if (!fixtureMode && !execute && !preflight) {
-  const plan = fullChatProtocol(option('continue-from')); plan.sourceFingerprint = fingerprint(plan.sourceHashes);
+  const plan = args.includes('--model-comparison') ? modelComparisonProtocol(option('continue-from'), option('generation-usage'))
+    : fullChatProtocol(option('continue-from'));
+  plan.sourceFingerprint = fingerprint(plan.sourceHashes);
   writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`, { flag: 'wx' });
   console.log(JSON.stringify({ plan: planPath, sourceFingerprint: plan.sourceFingerprint, chats: plan.maxChats,
     classifications: plan.maxClassifications, maxCombinedEstimatedUsd: plan.maxCombinedEstimatedUsd }));
@@ -37,15 +39,17 @@ const report = { stage: fixtureMode ? 'mock-full-chat-fixture' : preflight ? 'un
 writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
 const save = () => writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 let fixture, token;
-async function request(path, body, correlation = randomUUID()) {
+const comparison = protocol.purpose === 'two-model-jev-parallel-comparison';
+let selectedModel;
+async function request(path, body, correlation = randomUUID(), method) {
   if (fixture) return fixture.call(path, body, 'admin', option('year', '2026-2027'), correlation);
-  return fetch(new URL(`/api${path}`, base), { method: body === undefined ? 'GET' : 'POST', redirect: 'error',
+  return fetch(new URL(`/api${path}`, base), { method: method ?? (body === undefined ? 'GET' : 'POST'), redirect: 'error',
     signal: AbortSignal.timeout(body && path === '/chat' ? 120_000 : 10_000),
     headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', authorization: `Bearer ${token}`, 'x-request-id': correlation,
       'X-Academic-Year': option('year', '2026-2027') }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
 }
-async function json(path, body, correlation) {
-  const response = await request(path, body, correlation);
+async function json(path, body, correlation, method) {
+  const response = await request(path, body, correlation, method);
   if (!response.ok) throw new Error(`Benchmark control ${path}: HTTP ${response.status}`);
   return response.json();
 }
@@ -86,6 +90,7 @@ try {
     const settings = await json('/ai-settings');
     if (settings?.data?.provider !== 'openrouter' && settings?.provider !== 'openrouter') throw new Error('Require the selected OpenRouter settings');
     report.settings = { provider: settings.data?.provider ?? settings.provider, model: settings.data?.model ?? settings.model };
+    selectedModel = report.settings.model;
     if (report.settings.model !== 'openai/gpt-oss-120b') throw new Error('Keep the declared GPT-OSS model for this comparison');
     if ((settings.data ?? settings).isEnabled !== true) throw new Error('Require enabled model settings');
   }
@@ -106,6 +111,11 @@ try {
         const key = await json('/chat-benchmark/provider-usage');
         if (key.usage - report.keyBefore.usage >= protocol.maxCombinedEstimatedUsd) throw new Error('Observed key delta reached the spending stop');
         await Bun.sleep(Math.max(0, protocol.startSpacingMs - (performance.now() - previousStart)));
+        if (comparison && selectedModel !== job.model) {
+          const changed = await json('/ai-settings', { model: job.model }, undefined, 'PUT');
+          if ((changed.data ?? changed).model !== job.model) throw new Error('Fixture model did not switch');
+          selectedModel = job.model;
+        }
       }
       const mode = await json('/chat-benchmark/jev/mode', { mode: job.mode });
       if (mode.mode !== job.mode || mode.frameworkPreparationEnabled !== (job.mode !== 'off')) throw new Error('Framework mode did not switch');
@@ -116,7 +126,7 @@ try {
       const correlationId = randomUUID(); generationBudget.reserve(correlationId);
       const start = performance.now(); previousStart = start;
       report.chatsDispatched++;
-      const row = { ...job, correlationId, language: item.language, expectedIntent: item.intent,
+      const row = { ...job, correlationId, startedAt: new Date().toISOString(), language: item.language, expectedIntent: item.intent,
         firstTextMs: null, completionMs: null, done: false, errors: [], aborted: false, text: '',
         tools: [], generationEstimate: null, diagnostics: null };
       report.rows.push(row); save();
@@ -128,7 +138,7 @@ try {
       while (true) { const part = await reader.read(); if (part.done) break; parser.push(part.value, performance.now() - start); }
       const parsed = parser.end(performance.now() - start);
       Object.assign(row, {
-        firstTextMs: parsed.firstTextMs, completionMs: performance.now() - start,
+        firstTextMs: parsed.firstTextMs, completionMs: performance.now() - start, completedAt: new Date().toISOString(),
         done: parsed.done, errors: parsed.errors, aborted: parsed.aborted, text: parsed.text,
         tools: parsed.tools, generationEstimate: parsed.metadata, diagnostics: null });
       for (let i = 0; i < 12; i++) {
@@ -138,6 +148,7 @@ try {
         await Bun.sleep(100);
       }
       generationBudget.settle(correlationId, parsed.metadata);
+      if (comparison && row.diagnostics?.model !== job.model) throw new Error('Reply used a different model than the frozen arm');
       const billingStart = performance.now();
       while (true) {
         report.attempts = await json('/chat-benchmark/jev/attempts');
@@ -152,7 +163,10 @@ try {
       if (report.attempts.some(attempt => attempt.outcome === 'error' || attempt.httpStatus >= 400
         || attempt.transportCompleted === true && !attempt.choice)) throw new Error('Classifier request or decision validation failed');
       if (!row.done || row.errors.length || row.aborted || !row.diagnostics) throw new Error('Missing/failed reply diagnostics');
-      if (row.diagnostics.tools?.some(tool => tool.outcome === 'error' || tool.outcome === 'blocked')) throw new Error('Scoped chat tool failed');
+      if (row.diagnostics.tools?.some(tool => tool.outcome === 'error' || tool.outcome === 'blocked')) {
+        row.qualityErrors = ['Scoped chat tool failed']; save();
+        if (!comparison || protocol.retainModelToolErrors !== true) throw new Error('Scoped chat tool failed');
+      }
       const attempt = report.attempts.find(attempt => attempt.correlationId === correlationId);
       if (attempt?.selected === 'template' && attempt.choice !== item.intent) throw new Error('Accepted wrong assistant-provisional label');
       if (!fixtureMode && generationBudget.stopped) throw new Error('Generation cost is unknown or the estimate stop was reached');
@@ -166,9 +180,17 @@ try {
     try { restored = (await json('/chat-benchmark/jev/mode', { mode: 'off' })).mode === 'off'; } catch { /* explicit failed restoration below */ }
     try { report.attempts = await json('/chat-benchmark/jev/attempts'); } catch { /* preserve prior attempts */ }
     if (!fixture) try { report.keyAfter = await json('/chat-benchmark/provider-usage'); } catch { /* absent is unknown */ }
+    if (!fixture && comparison) {
+      try {
+        const settings = await json('/ai-settings', { model: protocol.restoresModel }, undefined, 'PUT');
+        report.modelRestored = (settings.data ?? settings).model === protocol.restoresModel;
+      } catch { report.modelRestored = false; }
+    }
   }
   report.modeRestoredOff = restored;
   report.summary = summarizeFullChat(report.rows); report.generationBudget = generationBudget.snapshot();
+  if (comparison) report.modelSummaries = Object.fromEntries(protocol.models.map(model =>
+    [model, summarizeFullChat(report.rows.filter(row => row.model === model))]));
   if (fixture) report.mockCalls = fixture.counts();
   if (report.keyBefore && report.keyAfter) report.aggregateKeyDeltaUsd = report.keyAfter.usage - report.keyBefore.usage;
   save(); await fixture?.server.stop();

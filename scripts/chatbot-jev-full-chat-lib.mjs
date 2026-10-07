@@ -18,16 +18,18 @@ export function fullChatProtocol(continuationPath) {
     costPolicy: 'Opt-in synthetic billing observation lets started requests finish under a separate 5s limit without delaying fallback. SDK generation estimates and response-reported classifier costs are separate; aggregate key delta is not an isolated per-mode invoice. Await terminal billing outside reply timing; unknown costs stop dispatch.',
     stopOn: ['unknown_cost', 'request_limit', 'combined_estimate_limit', 'provider_key_delta_limit', 'request_error', 'process_change', 'accepted_wrong'],
     restoresMode: 'off', sourceHashes: sourceHashes() };
-  if (!continuationPath) return protocol;
+  return continuationPath ? continueProtocol(protocol, continuationPath) : protocol;
+}
+function continueProtocol(protocol, continuationPath, generationUsagePath) {
   const bytes = readFileSync(continuationPath);
   const prior = JSON.parse(bytes.toString('utf8'));
-  const { sourceHashes: _oldHashes, sourceFingerprint: _oldFingerprint, ...oldProtocol } = prior.protocol;
-  const { sourceHashes: _newHashes, ...expected } = protocol;
+  const { sourceHashes: _oldHashes, sourceFingerprint: _oldFingerprint, retainModelToolErrors: _oldToolPolicy, ...oldProtocol } = prior.protocol;
+  const { sourceHashes: _newHashes, retainModelToolErrors: _newToolPolicy, ...expected } = protocol;
   const count = prior.chatsDispatched;
   if (!isDeepStrictEqual(oldProtocol, expected) || prior.status !== 'stopped'
     || prior.stoppedReason !== 'Scoped chat tool failed' || prior.modeRestoredOff !== true
     || !Number.isSafeInteger(count) || count <= 0 || count >= protocol.maxChats || prior.rows.length !== count
-    || !isDeepStrictEqual(prior.rows.map(({ caseId, mode }) => ({ caseId, mode })), protocol.jobs.slice(0, count))
+    || !isDeepStrictEqual(prior.rows.map(({ caseId, mode, model }) => model ? { caseId, model, mode } : { caseId, mode }), protocol.jobs.slice(0, count))
     || prior.rows.some(row => !row.done || row.errors.length || row.aborted)
     || prior.generationBudget?.requestsSettled !== count || prior.generationBudget.requestsWithUnknownCost
     || prior.generationBudget.inFlight || prior.generationBudget.reservedUsd || prior.generationBudget.stoppedReason
@@ -36,15 +38,30 @@ export function fullChatProtocol(continuationPath) {
     || !Number.isFinite(prior.aggregateKeyDeltaUsd) || prior.aggregateKeyDeltaUsd < 0
     || prior.rows.some(row => row.generationEstimate?.pricingFound !== true
       || !Number.isFinite(row.generationEstimate.totalCost) || row.generationEstimate.totalCost < 0))
-    throw new Error('Continuation requires a terminal known-cost prefix stopped by a fixture tool failure');
+    throw new Error('Continuation requires a terminal known-cost prefix stopped by a tool failure');
   const classificationUsd = prior.attempts.reduce((sum, attempt) => sum + attempt.costUsd, 0);
-  const carriedUsd = Math.max(prior.aggregateKeyDeltaUsd, classificationUsd + prior.generationBudget.observedEstimatedUsd);
+  let generationCost = prior.generationBudget.observedEstimatedUsd, generationEvidence;
+  if (protocol.models) {
+    if (!generationUsagePath || prior.modelRestored !== true) throw Error('Require terminal generation billing and restored fixture model');
+    const usageBytes = readFileSync(generationUsagePath);
+    const calls = usageBytes.toString('utf8').trim().split(/\r?\n/u).filter(Boolean).map(line => JSON.parse(line));
+    if (calls.length !== prior.rows.reduce((sum, row) => sum + row.diagnostics.steps.length, 0)
+      || new Set(calls.map(call => call.generationId)).size !== calls.length
+      || calls.some(call => !call.generationId || call.incomplete || !Number.isFinite(call.usage?.cost) || call.usage.cost < 0))
+      throw Error('Prior generation billing is incomplete');
+    generationCost = Math.max(generationCost, calls.reduce((sum, call) => sum + call.usage.cost, 0));
+    generationEvidence = { generationUsagePath, generationUsageSha256: createHash('sha256').update(usageBytes).digest('hex') };
+  }
+  const carriedUsd = Math.max(prior.aggregateKeyDeltaUsd, classificationUsd + generationCost);
   const remaining = value => Math.floor(value * 1e9) / 1e9;
   protocol.continuation = { reportPath: continuationPath, sha256: createHash('sha256').update(bytes).digest('hex'),
     completedChats: count, completedClassifications: prior.attempts.length, carriedUsd,
     originalMaxChats: protocol.maxChats, originalMaxClassifications: protocol.maxClassifications,
     originalMaxCombinedEstimatedUsd: protocol.maxCombinedEstimatedUsd,
-    note: 'Only undispatched jobs; failed reply retained. Fresh process and repaired fixture permissions change cache/permission conditions.' };
+    ...generationEvidence,
+    note: protocol.models
+      ? 'Only undispatched jobs; original model tool failure retained. Fresh process resets routing caches. Subsequent model tool failures are quality outcomes, not permission repairs.'
+      : 'Only undispatched jobs; failed reply retained. Fresh process and repaired fixture permissions change cache/permission conditions.' };
   protocol.jobs = protocol.jobs.slice(count);
   protocol.maxChats -= count;
   protocol.maxClassifications = Math.min(protocol.maxClassifications - prior.attempts.length,
@@ -66,13 +83,29 @@ export function sourceHashes() {
     'packages/server/src/modules/chat/chatYearContext.ts', 'packages/server/src/modules/chat/SchoolChatContextProvider.ts',
     'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolListReplies.ts',
     'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts',
-    'scripts/chatbot-jev-full-chat.mjs', 'scripts/chatbot-jev-full-chat-lib.mjs'];
+    'scripts/chatbot-jev-full-chat.mjs', 'scripts/chatbot-jev-full-chat-lib.mjs',
+    'scripts/chatbot-provider-observer.mjs'];
   return Object.fromEntries(files.sort().map(name => [name, createHash('sha256').update(readFileSync(name)).digest('hex')]));
+}
+export function modelComparisonProtocol(continuationPath, generationUsagePath) {
+  const protocol = fullChatProtocol();
+  const arms = [{ model: 'openai/gpt-oss-120b', mode: 'off' }, { model: 'openai/gpt-oss-120b', mode: 'on' },
+    { model: 'openai/gpt-oss-20b', mode: 'off' }, { model: 'openai/gpt-oss-20b', mode: 'on' }];
+  const comparison = { ...protocol, purpose: 'two-model-jev-parallel-comparison', models: [...new Set(arms.map(arm => arm.model))],
+    jobs: protocol.cases.flatMap((item, index) => [...arms.slice(index % 4), ...arms.slice(0, index % 4)]
+      .map(arm => ({ caseId: item.id, ...arm }))), maxChats: 96, generationReserveUsd: 0.0025,
+    restoresModel: 'openai/gpt-oss-120b', retainModelToolErrors: true,
+    providerPolicy: 'Unchanged School Cerebras preference, fallbacks enabled, Groq excluded. 20B has no listed Cerebras host; this compares operational configurations, not identical-host model speed.',
+    comparisonPolicy: 'Current parallel Jev policy, not Jev-first. Shared routing caches retained; rotated model/mode order. Capture actual model/provider/usage.cost through benchmark-only response observer; SDK prices remain estimates.' };
+  return continuationPath ? continueProtocol(comparison, continuationPath, generationUsagePath) : comparison;
 }
 export function fingerprint(hashes) { return createHash('sha256').update(JSON.stringify(hashes)).digest('hex'); }
 export function checkSource(protocol) {
   const { sourceFingerprint: _sourceFingerprint, ...declared } = protocol;
-  if (!isDeepStrictEqual(declared, fullChatProtocol(protocol.continuation?.reportPath))) throw new Error('Benchmark source or protocol changed; prepare a new frozen protocol');
+  const expected = protocol.purpose === 'two-model-jev-parallel-comparison'
+    ? modelComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath)
+    : fullChatProtocol(protocol.continuation?.reportPath);
+  if (!isDeepStrictEqual(declared, expected)) throw new Error('Benchmark source or protocol changed; prepare a new frozen protocol');
 }
 export function checkBase(value) {
   const url = new URL(value);
@@ -113,7 +146,8 @@ export function summarizeFullChat(rows) {
     && Number.isFinite(row.firstTextMs) && Number.isFinite(row.completionMs);
   const pairedFallbacks = rows.filter(row => complete(row) && row.mode === 'on' && row.diagnostics?.reply?.source === 'model')
     .flatMap(on => {
-      const off = rows.find(row => complete(row) && row.caseId === on.caseId && row.mode === 'off' && row.diagnostics?.reply?.source === 'model');
+      const off = rows.find(row => complete(row) && row.caseId === on.caseId && row.model === on.model
+        && row.mode === 'off' && row.diagnostics?.reply?.source === 'model');
       return off ? [{ caseId: on.caseId, firstTextDeltaMs: on.firstTextMs - off.firstTextMs,
         completionDeltaMs: on.completionMs - off.completionMs }] : [];
     });

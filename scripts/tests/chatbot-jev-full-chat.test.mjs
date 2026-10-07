@@ -2,7 +2,7 @@ import { expect, test } from 'bun:test';
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fullChatProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
+import { fullChatProtocol, modelComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
 
 test('frozen comparison is bounded, balanced and explicitly not native qualification', () => {
   const protocol = fullChatProtocol();
@@ -19,6 +19,29 @@ test('changing a frozen spending limit or job is rejected even with unchanged so
   expect(() => checkSource(protocol)).not.toThrow();
   expect(() => checkSource({ ...protocol, maxChats: 1000 })).toThrow();
   expect(() => checkSource({ ...protocol, jobs: protocol.jobs.slice(1) })).toThrow();
+});
+test('two-model comparison balances all four arms and refuses changed models or limits', () => {
+  const protocol = modelComparisonProtocol();
+  expect(protocol.jobs).toHaveLength(96); expect(protocol.maxClassifications).toBe(48);
+  for (const model of protocol.models) for (const mode of ['off', 'on'])
+    expect(protocol.jobs.filter(job => job.model === model && job.mode === mode)).toHaveLength(24);
+  expect(protocol.jobs.slice(0, 4).map(job => job.model + job.mode))
+    .not.toEqual(protocol.jobs.slice(4, 8).map(job => job.model + job.mode));
+  expect(protocol.maxChats * protocol.generationReserveUsd + protocol.classificationMaxUsd).toBeLessThanOrEqual(0.25);
+  expect(() => checkSource(protocol)).not.toThrow();
+  expect(() => checkSource({ ...protocol, models: ['openai/gpt-oss-120b'] })).toThrow();
+  expect(() => checkSource({ ...protocol, maxCombinedEstimatedUsd: 1 })).toThrow();
+});
+test('model continuation skips the failed request and carries response-reported generation charges', () => {
+  const protocol = modelComparisonProtocol('docs/evidence/chatbot-latency/jev-model-comparison-run-20261007.json',
+    'docs/evidence/chatbot-latency/jev-model-comparison-generation-first-20261007.jsonl');
+  expect(protocol.maxChats).toBe(67); expect(protocol.maxClassifications).toBe(33);
+  expect(protocol.jobs).toEqual(modelComparisonProtocol().jobs.slice(29));
+  expect(protocol.jobs[0]).not.toEqual(modelComparisonProtocol().jobs[28]);
+  expect(protocol.continuation.carriedUsd).toBeGreaterThan(0.00321434);
+  expect(protocol.maxCombinedEstimatedUsd + protocol.continuation.carriedUsd).toBeLessThanOrEqual(0.25);
+  expect(() => checkSource(protocol)).not.toThrow();
+  expect(() => modelComparisonProtocol('docs/evidence/chatbot-latency/jev-model-comparison-run-20261007.json')).toThrow();
 });
 test('continuation preserves spent limits, skips every dispatched job and rejects unknown costs', () => {
   const path = 'docs/evidence/chatbot-latency/jev-billing-observer-run-20261007.json';
@@ -71,6 +94,8 @@ test('fallback deltas compare the same cases; unfinished/empty replies do not be
     { ...row('c', 'on', 'model', 100), firstTextMs: null, text: '' }]);
   expect(summary.pairedFallbacks).toEqual([{ caseId: 'a', firstTextDeltaMs: 10, completionDeltaMs: 10 }]);
   expect(summary.all.valid).toBe(4); expect(summary.qualification).toBe(false);
+  expect(summarizeFullChat([{ ...row('a', 'off', 'model', 200), model: '120b' },
+    { ...row('a', 'on', 'model', 210), model: '20b' }]).pairedFallbacks).toHaveLength(0);
   expect(summarizeFullChat([{ ...row('denied', 'on', 'model', 100),
     diagnostics: { reply: { source: 'model' }, tools: [{ outcome: 'blocked' }] } }]).all.valid).toBe(0);
 });
