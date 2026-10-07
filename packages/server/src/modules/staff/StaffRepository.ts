@@ -64,6 +64,8 @@ const staffSelect = {
   roleLabel: staffRoles.label,
   roleLabels: staffRoles.labels,
   roleCategory: staffRoles.category,
+  // Set when this staff member is a teacher, whose profile lives at /teachers/:id.
+  teacherId: teachers.id,
 };
 
 @Repository()
@@ -76,7 +78,8 @@ export class StaffRepository {
       .from(staff)
       .leftJoin(users, eq(staff.userId, users.id))
       .leftJoin(staffRoles, eq(staff.role, staffRoles.code))
-      .leftJoin(drivers, eq(drivers.staffId, staff.id));
+      .leftJoin(drivers, eq(drivers.staffId, staff.id))
+      .leftJoin(teachers, eq(teachers.staffId, staff.id));
   }
 
   private async withAssignments<T extends { id: string }>(rows: T[]) {

@@ -2,6 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { Banknote, BriefcaseBusiness, CalendarDays, CheckCircle2, Clock, HandCoins, ReceiptText, Timer, Undo2, Wallet, SearchX } from 'lucide-react';
 import { Badge, NAvatar, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
@@ -102,6 +103,7 @@ const PayrollTable = () => {
         paymentAmount: Number(slip?.netAmount ?? calculateStaffPay(member)),
         paymentStatus: slip ? slip.status : 'notRun',
         payslipNumber: slip?.payslipNumber ?? null,
+        teacherId: member.teacherId ?? null,
       };
     });
     // A historical payslip remains visible when its staff member has left or
@@ -123,6 +125,7 @@ const PayrollTable = () => {
         paymentAmount: Number(slip.netAmount),
         paymentStatus: slip.status,
         payslipNumber: slip.payslipNumber,
+        teacherId: null,
       }));
     return [...currentRows, ...historicalRows];
   }, [eligibleStaff, payslipByStaff, payslips, effectivePeriod, locale]);
@@ -206,14 +209,26 @@ const PayrollTable = () => {
       accessorKey: 'name',
       header: t('payroll.table.staff'),
       enableSorting: true,
-      cell: ({ row }) => (
-        <NAvatar
-          src={row.original.image || getStaffAvatar(row.original.role, row.original.gender)}
-          title={row.original.name || '-'}
-          size="sm"
-          version={row.original.updatedAt}
-        />
-      ),
+      cell: ({ row }) => {
+        const avatar = (
+          <NAvatar
+            src={row.original.image || getStaffAvatar(row.original.role, row.original.gender)}
+            title={row.original.name || '-'}
+            size="sm"
+            version={row.original.updatedAt}
+          />
+        );
+        // Only teachers have a profile page to open.
+        if (!row.original.teacherId) return avatar;
+        return (
+          <Link
+            href={`/teachers/${row.original.teacherId}`}
+            className="inline-flex rounded-md hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {avatar}
+          </Link>
+        );
+      },
     },
     {
       accessorKey: 'payrollPeriod',
