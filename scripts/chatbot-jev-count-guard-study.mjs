@@ -9,12 +9,13 @@ import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolR
 import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
 
 const args = process.argv.slice(2);
-if (args.length < 1 || args.length > 2 || !args[0].startsWith('--output=') || !args[0].slice('--output='.length).trim()
-  || args.length === 2 && !['--current-language-profile', '--current-reply-profile'].includes(args[1])) {
-  throw new Error('Use --output=<new-json> with optional --current-language-profile or --current-reply-profile for explicit offline re-evaluation');
+if (args.length < 1 || args.length > 3 || !args[0].startsWith('--output=') || !args[0].slice('--output='.length).trim()
+  || args.slice(1).some(arg => !['--current-language-profile', '--current-reply-profile', '--current-protocol-profile'].includes(arg))) {
+  throw new Error('Use --output=<new-json> with explicit current language/reply/protocol profile flags for offline re-evaluation');
 }
 const currentReplyProfile = args.includes('--current-reply-profile');
 const currentLanguageProfile = args.includes('--current-language-profile') || currentReplyProfile;
+const currentProtocolProfile = args.includes('--current-protocol-profile');
 const outputPath = resolve(args[0].slice('--output='.length));
 if (await Bun.file(outputPath).exists()) throw new Error('Offline study output already exists');
 const read = path => Bun.file(path).json();
@@ -27,10 +28,12 @@ const sourcePaths = ['scripts/chatbot-jev-count-guard.mjs', 'scripts/chatbot-jev
   'packages/server/src/modules/chat/schoolReplyWrite.ts',
   'datasets/chatbot-latency/jev-count-guard-dev.json'];
 const sourceSha256 = Object.fromEntries(await Promise.all(sourcePaths.map(async path => [path, await hash(path)])));
+if (currentProtocolProfile) sourceSha256['packages/server/src/modules/chat/jevIntents.ts'] = await hash('packages/server/src/modules/chat/jevIntents.ts');
 const changedMeasuredSources = sourcePaths.slice(2, -1).filter(path => sourceSha256[path] !== measuredPlan.sourceSha256[path]);
 for (const path of changedMeasuredSources) {
   const allowed = path === 'packages/server/src/modules/chat/schoolReplyLanguage.ts'
-    || currentReplyProfile && ['packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts'].includes(path);
+    || currentProtocolProfile && path === 'scripts/chatbot-jev.mjs'
+    || currentReplyProfile && ['packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts', 'packages/server/src/modules/chat/schoolListReplies.ts'].includes(path);
   if (!currentLanguageProfile || !allowed) {
     throw new Error(`Measured classification source changed: ${path}`);
   }
@@ -90,6 +93,7 @@ const output = { capturedAtUtc: new Date().toISOString(), mode: 'offline-post-re
   totalSavedAttempts: rows.length, eligibleSavedAttempts: candidates.length,
   languageProfile: currentLanguageProfile ? 'current-post-result' : 'measured', changedMeasuredSources,
   replyProfile: currentReplyProfile ? 'current-post-result' : 'measured',
+  protocolProfile: currentProtocolProfile ? 'current-shared-owner-request-and-310-decisions-equivalence-checked' : 'measured',
   originalEligibilityAndAcceptanceReproduced: changedMeasuredSources.length === 0 && originalCountsReproduced,
   originalAcceptanceCountsReproduced: originalCountsReproduced,
   originalMeasuredAcceptance: { samples: measured.accepted, questions: measured.acceptedCases,

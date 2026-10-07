@@ -544,6 +544,7 @@
   },
   "chatBenchmark": {
     "errors": {
+      "fixtureRequired": "A marked local benchmark fixture is required",
       "controlsDisabled": "Benchmark controls are disabled",
       "providerUsageUnsupported": "Selected provider is not supported for usage reads",
       "providerUsageFailed": "Provider usage read failed"

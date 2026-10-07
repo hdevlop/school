@@ -37,6 +37,22 @@
     "./modules/seed": {
       "types": "./src/modules/seed/SeedContainer.ts",
       "default": "./src/modules/seed/SeedContainer.ts"
+    },
+    "./jev-intents": {
+      "types": "./src/modules/chat/jevIntents.ts",
+      "default": "./src/modules/chat/jevIntents.ts"
+    },
+    "./jev-cases": {
+      "types": "./src/modules/chat/jevSyntheticCases.ts",
+      "default": "./src/modules/chat/jevSyntheticCases.ts"
+    },
+    "./jev-query-guard": {
+      "types": "./src/modules/chat/jevQueryGuard.ts",
+      "default": "./src/modules/chat/jevQueryGuard.ts"
+    },
+    "./testing/jev": {
+      "types": "./tests/chat/jevFixture.ts",
+      "default": "./tests/chat/jevFixture.ts"
     }
   },
   "scripts": {

@@ -2,3 +2,7 @@ export * from './ChatDiagnosticsController';
 export * from './ChatDiagnosticsService';
 export * from './ChatBenchmarkController';
 export * from './ChatBenchmarkService';
+export * from './JevBenchmarkController';
+export * from './JevBenchmarkService';
+export * from './JevBenchmarkRepository';
+export * from './JevIntentClassifier';

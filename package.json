@@ -108,7 +108,8 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^10.2.0",
     "eslint-config-next": "16.3.6",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "@sms/server": "workspace:*"
   },
   "dependencies": {
     "@types/node": "^25.6.0",

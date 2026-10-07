@@ -1,0 +1,641 @@
+{
+  "stage": "unpaid-preflight",
+  "status": "ready",
+  "protocol": {
+    "version": 1,
+    "purpose": "synthetic-integration-comparison",
+    "assistantAuthored": true,
+    "independentQualification": false,
+    "cases": [
+      {
+        "id": "fr-student",
+        "language": "fr",
+        "query": "Je voudrais connaître le nombre total d’élèves de notre école.",
+        "intent": "student_count"
+      },
+      {
+        "id": "fr-teacher",
+        "language": "fr",
+        "query": "Donne-moi le nombre global d’enseignants de l’école.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "fr-dual",
+        "language": "fr",
+        "query": "Je voudrais les deux nombres, élèves et enseignants, séparément.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "fr-classes",
+        "language": "fr",
+        "query": "Je voudrais connaître la liste complète des classes de l’école.",
+        "intent": "class_list"
+      },
+      {
+        "id": "fr-attendance",
+        "language": "fr",
+        "query": "Je voudrais voir les présences des élèves aujourd’hui pour toute l’école.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "fr-greeting",
+        "language": "fr",
+        "query": "Bonjour, merci pour votre aide.",
+        "intent": "small_talk"
+      },
+      {
+        "id": "fr-write",
+        "language": "fr",
+        "query": "Ajoute un élève nommé ZzJevDemo.",
+        "intent": "write_request"
+      },
+      {
+        "id": "fr-filter",
+        "language": "fr",
+        "query": "Quel est le nombre de filles en CE2 ?",
+        "intent": "needs_llm"
+      },
+      {
+        "id": "ar-student",
+        "language": "ar",
+        "query": "أريد معرفة العدد الإجمالي للتلاميذ في المدرسة.",
+        "intent": "student_count"
+      },
+      {
+        "id": "ar-teacher",
+        "language": "ar",
+        "query": "أعطني العدد الكلي للأساتذة في المدرسة بالكامل.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "ar-dual",
+        "language": "ar",
+        "query": "أريد عدد التلاميذ وعدد الأساتذة كل واحد في سطر.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "ar-classes",
+        "language": "ar",
+        "query": "أريد القائمة الكاملة لأقسام المدرسة.",
+        "intent": "class_list"
+      },
+      {
+        "id": "ar-attendance",
+        "language": "ar",
+        "query": "أريد عرض سجل الحضور لجميع التلاميذ اليوم.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "ar-greeting",
+        "language": "ar",
+        "query": "شكرا لمساعدتك.",
+        "intent": "small_talk"
+      },
+      {
+        "id": "ar-write",
+        "language": "ar",
+        "query": "أضف تلميذا اسمه ZzJevDemo.",
+        "intent": "write_request"
+      },
+      {
+        "id": "ar-filter",
+        "language": "ar",
+        "query": "كم عدد التلميذات في قسم CE2؟",
+        "intent": "needs_llm"
+      },
+      {
+        "id": "ary-student",
+        "language": "ary",
+        "query": "بغيت العدد ديال التلاميذ فهاد العام بلا تفاصيل.",
+        "intent": "student_count"
+      },
+      {
+        "id": "ary-teacher",
+        "language": "ary",
+        "query": "عطيني العدد ديال الأساتذة فالمدرسة كاملة.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "ary-dual",
+        "language": "ary",
+        "query": "بغيت العدد ديال التلاميذ والعدد ديال الأساتذة، كل واحد فسطر.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "ary-classes",
+        "language": "ary",
+        "query": "بغيت اللائحة ديال الأقسام كاملة بلا معلومات أخرى.",
+        "intent": "class_list"
+      },
+      {
+        "id": "ary-attendance",
+        "language": "ary",
+        "query": "وريني سجل الحضور ديال التلاميذ اليوم فالمدرسة كاملة.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "ary-greeting",
+        "language": "ary",
+        "query": "واش نقدر نسولك على شي حاجة؟",
+        "intent": "small_talk"
+      },
+      {
+        "id": "ary-write",
+        "language": "ary",
+        "query": "زيد تلميذ جديد سميتو ZzJevDemo فهاد المدرسة.",
+        "intent": "write_request"
+      },
+      {
+        "id": "ary-filter",
+        "language": "ary",
+        "query": "شحال من بنت كاينة فقسم CE2؟",
+        "intent": "needs_llm"
+      }
+    ],
+    "jobs": [
+      {
+        "caseId": "fr-student",
+        "mode": "off"
+      },
+      {
+        "caseId": "fr-student",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-student",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-teacher",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-teacher",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-teacher",
+        "mode": "off"
+      },
+      {
+        "caseId": "fr-dual",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-dual",
+        "mode": "off"
+      },
+      {
+        "caseId": "fr-dual",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-classes",
+        "mode": "off"
+      },
+      {
+        "caseId": "fr-classes",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-classes",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-attendance",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-attendance",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-attendance",
+        "mode": "off"
+      },
+      {
+        "caseId": "fr-greeting",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-greeting",
+        "mode": "off"
+      },
+      {
+        "caseId": "fr-greeting",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-write",
+        "mode": "off"
+      },
+      {
+        "caseId": "fr-write",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-write",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-filter",
+        "mode": "on"
+      },
+      {
+        "caseId": "fr-filter",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "fr-filter",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-student",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-student",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-student",
+        "mode": "on"
+      },
+      {
+        "caseId": "ar-teacher",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-teacher",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-teacher",
+        "mode": "on"
+      },
+      {
+        "caseId": "ar-dual",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-dual",
+        "mode": "on"
+      },
+      {
+        "caseId": "ar-dual",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-classes",
+        "mode": "on"
+      },
+      {
+        "caseId": "ar-classes",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-classes",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-attendance",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-attendance",
+        "mode": "on"
+      },
+      {
+        "caseId": "ar-attendance",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-greeting",
+        "mode": "on"
+      },
+      {
+        "caseId": "ar-greeting",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-greeting",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-write",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-write",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-write",
+        "mode": "on"
+      },
+      {
+        "caseId": "ar-filter",
+        "mode": "off"
+      },
+      {
+        "caseId": "ar-filter",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ar-filter",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-student",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-student",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-student",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-teacher",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-teacher",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-teacher",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-dual",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-dual",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-dual",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-classes",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-classes",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-classes",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-attendance",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-attendance",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-attendance",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-greeting",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-greeting",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-greeting",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-write",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-write",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-write",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-filter",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-filter",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-filter",
+        "mode": "shadow"
+      }
+    ],
+    "maxChats": 72,
+    "maxClassifications": 48,
+    "maxCombinedEstimatedUsd": 0.25,
+    "generationReserveUsd": 0.003,
+    "classificationReserveUsd": 0.00015,
+    "classificationMaxUsd": 0.0072,
+    "retries": 0,
+    "concurrency": 1,
+    "startSpacingMs": 2000,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "cachePolicy": "same process, balanced mode order, caches retained and recorded",
+    "costPolicy": "SDK generation estimates and response-reported classifier costs are separate; aggregate key delta is not an isolated per-mode invoice. Unknown costs stop dispatch.",
+    "stopOn": [
+      "unknown_cost",
+      "request_limit",
+      "combined_estimate_limit",
+      "provider_key_delta_limit",
+      "request_error",
+      "process_change",
+      "accepted_wrong"
+    ],
+    "restoresMode": "off",
+    "sourceHashes": {
+      "bun.lock": "cbfbffd0655dc85ab0cec261f1f28ebcfaf2958c7a9f3780b63826e0b882cb75",
+      "package.json": "be9a05381d7130af065834c09b4e9c1e3d2245cfba364419515c2117325229eb",
+      "packages/server/package.json": "45b0dbc492dab21f026d9cb46ca75c351321bacc3ee9071a9c073433ebb5cb84",
+      "packages/server/src/config/chatbotConfig.ts": "f1141dcdcd627ade9343e8421afd0f14dad5b7bde0f732cf736f1feff39d4e3b",
+      "packages/server/src/config/coreConfig.ts": "7c00c81515cc18e0172b52612e3798f31e0f08b84be38ceef1a3150a3f9efe89",
+      "packages/server/src/config/ragConfig.ts": "e6b8549b4e11a1784cdecb50a40c2b66bcd026a06636f42ac84c6bebca1af193",
+      "packages/server/src/config/yearScope.ts": "df1157c772276ad16047cf6409568eabd17eb07bff0c964b2ea758a3a2127608",
+      "packages/server/src/modules/chat/JevAttemptLedger.ts": "b7ce3a55305389d6ba972ffea7fde3e49464b8559a6373ed5246f7c6a868a8f1",
+      "packages/server/src/modules/chat/JevBenchmarkController.ts": "7f11309b8666f2c2466d40051860985e79df443920c1782b8e3adf5106f08ebc",
+      "packages/server/src/modules/chat/JevBenchmarkDto.ts": "4d21058c6bded4a4621953df593e6c44ac8e55c43f2aae148405cdebc5dd1522",
+      "packages/server/src/modules/chat/JevBenchmarkRepository.ts": "2ab859698a95ebac927147aaa30499332bb4d235983a54ae9013a0974ecdea89",
+      "packages/server/src/modules/chat/JevBenchmarkService.ts": "812889fddfb027c85c24a437e131df1d0517fe3f4daca560c44dff1137523aad",
+      "packages/server/src/modules/chat/JevControls.ts": "dcd4381dd4496386ffd1f9fddc6354e461d6f37ce4c50bab838fb4d8e06205b7",
+      "packages/server/src/modules/chat/JevIntentClassifier.ts": "7581429fd6160347c32530ce84eef8b95ac953cc53a730685a1147cb9b03f332",
+      "packages/server/src/modules/chat/JevSessionGrants.ts": "1c099ced5c9c7ff5d7ab20fdadfdfa2e81952226612f87590d88c299c8e9a093",
+      "packages/server/src/modules/chat/SchoolChatContextProvider.ts": "1d1ff66f12a9ef6698fe2657e094def35d1555f5fc0908a3f4a247a0c274a457",
+      "packages/server/src/modules/chat/chatYearContext.ts": "cf67e0295df1b46bcf18635c529e21d9bcc86ceca7c02df1cc60af136b0d2335",
+      "packages/server/src/modules/chat/jevGuard/countV1.ts": "c2b21a77bab821ebd917bd952522d68198578ba7e29c73b66c94d7eea7c465b9",
+      "packages/server/src/modules/chat/jevGuard/countV2.ts": "86858165814cdc35cadb985c4fd4b357e25e35a1a4c3567c46749a68e8d39b8b",
+      "packages/server/src/modules/chat/jevGuard/queryV3.ts": "214e4ea0c57489e52b57ee0241e88a47b7c709f2ad0fe4b750ca52c03082cfda",
+      "packages/server/src/modules/chat/jevGuard/queryV4.ts": "4176191492a451e6a7f7637b492733a78ee70f1cb86a03f03dc9354b382f5975",
+      "packages/server/src/modules/chat/jevGuard/queryV5.ts": "f82c2fd3f0363718b91602b53d2baf13e5ef478e2124d87846032bad876f3900",
+      "packages/server/src/modules/chat/jevIntents.ts": "555fc7cf4c6c21f98cb46d3edf00220f3912350efa6bfd74a4db1060d2878318",
+      "packages/server/src/modules/chat/jevPreparationPolicy.ts": "a85b1e39b58ba94fdfb03d77075a8caf0029fc1d38f90578310e8a8e894b451e",
+      "packages/server/src/modules/chat/jevQueryGuard.ts": "fd4c6e79fdb35ab317fda3b9a53987171d43d076bddf6d1a0367e10a6fe43afc",
+      "packages/server/src/modules/chat/jevReplyPlan.ts": "14af919040e2ed0e74351ad4ef8db9cb34cfe578bd0755968d442536d41ff2d7",
+      "packages/server/src/modules/chat/jevSyntheticCases.ts": "f904c77ceaabc6a006d353629e9037797497b13a74c6216b09948cba6b60ad31",
+      "packages/server/src/modules/chat/schoolListReplies.ts": "ef0b8bf55437a7e0b16113de19f2b6cc769ec4049f10b90b55fe42078a1d642a",
+      "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+      "packages/server/src/modules/chat/schoolReplyTemplates.ts": "696dac4828e05fc7ff4fdb2d6b1c0518b89db49ba41fb23f5de871b18ea2a35f",
+      "packages/server/src/modules/chat/schoolReplyWrite.ts": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+      "scripts/chatbot-jev-full-chat-lib.mjs": "604ecb408a195e08ca6463dfc62b5cf2e4ffafc99c282009e5a3a8e4317893cd",
+      "scripts/chatbot-jev-full-chat.mjs": "226347c27a00c00d559b91f32aa079ad417deb8263e10e6ee8a98254c3f4f038"
+    },
+    "sourceFingerprint": "661b987dbcbe4c6a844aaad0de8143f9b3e699c96a211bc2787d288c54a41857"
+  },
+  "actualProviderCalls": null,
+  "generationPricesAreEstimates": true,
+  "modelAndClassifierMocked": false,
+  "chatsDispatched": 0,
+  "rows": [],
+  "attempts": [],
+  "qualification": false,
+  "initial": {
+    "instanceId": "4a7457ea-21e7-41ac-b151-07ff5f3bdbc0",
+    "resetCount": 0,
+    "mode": "off",
+    "budget": {
+      "mode": "off",
+      "threshold": 0.8,
+      "timeoutMs": 800,
+      "maxRequests": 48,
+      "maxCostUsd": 0.0072,
+      "unknownReserveUsd": 0.00015,
+      "requests": 0,
+      "knownCostUsd": 0,
+      "reservedUsd": 0,
+      "unknownCosts": 0,
+      "stoppedReason": null
+    },
+    "syntheticOnly": true,
+    "markedLocalFixture": true,
+    "guardVersion": 5,
+    "intentWordingVersion": 3,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "frameworkPreparationEnabled": false
+  },
+  "keyBefore": {
+    "capturedAt": "2026-10-07T20:24:22.585Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "usage": 0.974008638,
+    "limit": 50,
+    "limitRemaining": 49.025991362
+  },
+  "settings": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b"
+  },
+  "modeRestoredOff": true,
+  "summary": {
+    "all": {
+      "attempts": 0,
+      "valid": 0,
+      "firstTextMs": {
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "completionMs": {
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "jevTemplates": 0,
+      "regexTemplates": 0,
+      "modelReplies": 0
+    },
+    "modes": {
+      "off": {
+        "attempts": 0,
+        "valid": 0,
+        "firstTextMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "completionMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 0
+      },
+      "on": {
+        "attempts": 0,
+        "valid": 0,
+        "firstTextMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "completionMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 0
+      },
+      "shadow": {
+        "attempts": 0,
+        "valid": 0,
+        "firstTextMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "completionMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 0
+      }
+    },
+    "pairedFallbacks": [],
+    "fallbackCompletionDeltaP95Ms": null,
+    "qualification": false,
+    "note": "Small assistant-authored integration sample; no independent native accuracy or rollout qualification."
+  },
+  "generationBudget": {
+    "maxEstimatedUsd": 0.2428,
+    "requestReserveUsd": 0.003,
+    "observedEstimatedUsd": 0,
+    "reservedUsd": 0,
+    "requestsSettled": 0,
+    "requestsWithUnknownCost": 0,
+    "inFlight": 0,
+    "stoppedReason": null,
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+  }
+}

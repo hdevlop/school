@@ -484,6 +484,7 @@
   },
   "chatBenchmark": {
     "errors": {
+      "fixtureRequired": "Se necesita una base local de pruebas identificada",
       "controlsDisabled": "Los controles de medición del rendimiento están desactivados",
       "providerUsageUnsupported": "El proveedor seleccionado no permite consultar el uso",
       "providerUsageFailed": "No se pudo consultar el uso del proveedor"

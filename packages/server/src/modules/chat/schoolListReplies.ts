@@ -104,6 +104,10 @@ export function schoolListReply(userText: string, language: ReplyLanguage, acade
   if (/[«»“”"`]/u.test(userText)) return null;
   const kind = intents.get(intentText(userText));
   if (!kind) return null;
+  return schoolListReplyForKind(kind, language, academicYear);
+}
+
+export function schoolListReplyForKind(kind: ListKind, language: ReplyLanguage, academicYear: string): ReplyTemplate {
   const tool = { classes: 'classes_get_classes', exams: 'exams_get_upcoming_exams', attendance: 'attendance_get_today_students' }[kind];
   return { calls: [{ name: tool, input: { academicYear } }], render: results => {
     if (results.length !== 1) throw new Error('Invalid school list result count');

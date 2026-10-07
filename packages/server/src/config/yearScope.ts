@@ -1,4 +1,5 @@
 import { ChatController } from 'najm-chatbot';
+import { JevBenchmarkController } from '../modules/chat/JevBenchmarkController';
 import { AlertController } from '../modules/alerts/AlertController';
 import { AnnouncementController } from '../modules/announcements/AnnouncementController';
 import { BehaviorRewardController } from '../modules/behaviorRewards/BehaviorRewardController';
@@ -80,4 +81,4 @@ export const yearScopedModules = {
 };
 
 /** Chat is an HTTP consumer of scoped tools; it exposes no MCP tool group. */
-export const yearRequestControllers = [...Object.values(yearScopedModules), ChatController];
+export const yearRequestControllers = [...Object.values(yearScopedModules), ChatController, JevBenchmarkController];

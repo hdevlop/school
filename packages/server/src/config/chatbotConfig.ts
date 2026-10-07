@@ -7,6 +7,7 @@ import { SchoolChatContextProvider, schoolChatYearContext } from '../modules/cha
 import { schoolReplyTemplate } from '../modules/chat/schoolReplyTemplates';
 import { schoolReplyLanguage } from '../modules/chat/schoolReplyLanguage';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
+import { jevPreparationPolicy } from '../modules/chat/jevPreparationPolicy';
 
 /** The dashboard's read-only chat. Tool routing and embeddings are in ragConfig. */
 export const chatbotConfig = () =>
@@ -16,6 +17,7 @@ export const chatbotConfig = () =>
     reply: {
       detectLanguage: schoolReplyLanguage,
       template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear),
+      preparation: jevPreparationPolicy(),
     },
     maxSteps: 10,
     // Ends an answer whose provider stream goes silent. It also runs while a

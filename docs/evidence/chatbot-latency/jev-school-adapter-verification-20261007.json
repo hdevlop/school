@@ -1,0 +1,80 @@
+{
+  "capturedAtUtc": "2026-10-07T20:35:57.120Z",
+  "frameworkVersion": "3.4.0",
+  "najmCommit": "1d79369af3d0b912a7e59c7a3472259a8c5e2a63",
+  "schoolBaseCommit": "4f2f9a4125d3bb0305b09953376ae2d002e7509f",
+  "verification": [
+    {
+      "command": "bun run test",
+      "exitCode": 0,
+      "logFile": "C:/Users/pc/AppData/Local/Temp/school-jev-release-20261007-7e87beef/jev-final-sequential-tests.log",
+      "logSha256": "97f19ac3d468affd3d8af90571112473eac29bf4f47fa2ba1bf189e4108fd1ac"
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0,
+      "logFile": "C:/Users/pc/AppData/Local/Temp/school-jev-release-20261007-7e87beef/jev-final-source-lint.log",
+      "logSha256": "6531f8ee0e00cb5b0dcebe5dac43e8310632b6b5a7a7abb69668389083513262"
+    },
+    {
+      "command": "bun run typecheck",
+      "exitCode": 0,
+      "logFile": "C:/Users/pc/AppData/Local/Temp/school-jev-release-20261007-7e87beef/jev-verified-types.log",
+      "logSha256": "c99c49ec1932c7107702876ff8c54428dce21cb543727ba2f2168969d3b472a6"
+    },
+    {
+      "command": "bun run i18n:check",
+      "exitCode": 0,
+      "logFile": "C:/Users/pc/AppData/Local/Temp/school-jev-release-20261007-7e87beef/jev-verified-i18n.log",
+      "logSha256": "a837e8e4bc994903837dca10b3a0a5ebabef03e4821e59be2c2bd2ddb5d2e516"
+    },
+    {
+      "command": "bun run build (isolated output)",
+      "exitCode": 0,
+      "logFile": "C:/Users/pc/AppData/Local/Temp/school-jev-release-20261007-7e87beef/jev-adapter-build.log",
+      "logSha256": "7c87177f51b4acc1fa8d9603052fbd87c786d55758a757e02690e7efdc2e91cf"
+    }
+  ],
+  "rootTestGroups": [
+    342,
+    2,
+    60,
+    13,
+    365,
+    22,
+    173,
+    47,
+    328,
+    529
+  ],
+  "passingTestExecutions": 1881,
+  "failingTests": 0,
+  "artifactHashes": {
+    "docs/evidence/chatbot-latency/jev-full-chat-plan-20261007.json": "1d67dc13346e27935feb405cca571c193dc16ad141de0c6a0805eada62056e83",
+    "docs/evidence/chatbot-latency/jev-full-chat-preflight-20261007.json": "c92a42704d8694c0ebfd22a745b6df2d3478bcb09119f8700725682c5fb00a0b",
+    "docs/evidence/chatbot-latency/jev-full-chat-run-20261007.json": "88ed81eefb8cfe20575b0e4f6871d27bee94e40f734b7ef4efc7afc82592cfde",
+    "docs/evidence/chatbot-latency/jev-live-tool-check-20261007.json": "ef10dddc4ae8b8f1dc933a08c737e530cbdf7f5efb2f7513d772d2fbe070d9f9",
+    "docs/evidence/chatbot-latency/jev-full-chat-settlement-cleanup-20261007.json": "07e5fa358e0e054ac5033feaa157d9829d9418030ff15fa8edb078c6fd510ed2",
+    "docs/evidence/chatbot-latency/jev-full-chat-fixture-final-source-20261007.json": "a908a67446601bcdd658c73484ba2449d970110cd77ff7d4151e6c7fa25e54c9",
+    "docs/evidence/chatbot-latency/jev-full-chat-fixture-release-20261007.json": "4522184cd786615e51eefb195fa64ce46c840635570db92cb32c0425eb1f2ec8"
+  },
+  "priorFailedRootRun": {
+    "log": "C:/Users/pc/AppData/Local/Temp/school-jev-release-20261007-7e87beef/jev-ready-root-tests.log",
+    "scriptGroupPassed": 525,
+    "scriptGroupFailed": 3,
+    "reason": "Three CLI subprocess tests exceeded default 5000ms timeout under concurrent build/typecheck/lint; sequential root rerun passed without changing assertions or timeouts"
+  },
+  "productionJevEnabled": false,
+  "liveChatsDispatched": 2,
+  "liveClassifierAttempts": 1,
+  "unknownClassifierCosts": 1,
+  "qualification": false,
+  "cleanup": {
+    "fixtureApp3103Stopped": true,
+    "mainApp3102StillListening": true,
+    "fixtureSavedKeyRemoved": true,
+    "fixtureSettingsDisabled": true,
+    "primaryDatabaseChanged": false
+  },
+  "postVerificationFormatting": "Removed extra blank EOF lines in four extracted guards; release-source 72-chat mock replay passed afterwards"
+}

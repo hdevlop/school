@@ -485,6 +485,7 @@
   },
   "chatBenchmark": {
     "errors": {
+      "fixtureRequired": "يلزم استخدام قاعدة اختبار محلية مميزة",
       "controlsDisabled": "أدوات قياس الأداء معطلة",
       "providerUsageUnsupported": "لا يمكن الاطلاع على الاستخدام لدى المزود المحدد",
       "providerUsageFailed": "تعذر الاطلاع على الاستخدام لدى المزود"

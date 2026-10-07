@@ -60,6 +60,7 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
     {
       name: 'classScope',
       type: 'combobox',
+      showIcon: false,
       placeholder: t('students.filters.filterByClass'),
       value: classId,
       onChange: setClassId,
@@ -69,6 +70,7 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
     ...(includeSection ? [{
       name: 'sectionScope',
       type: 'select',
+      showIcon: false,
       placeholder: t('students.filters.filterBySection'),
       value: sectionId,
       onChange: setSectionId,

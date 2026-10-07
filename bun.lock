@@ -31,6 +31,7 @@
         "zod": "4.4.3",
       },
       "devDependencies": {
+        "@sms/server": "workspace:*",
         "@types/bun": "^1.3.12",
         "drizzle-kit": "^0.31.10",
         "eslint": "^10.2.0",

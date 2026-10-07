@@ -1,0 +1,21 @@
+{
+  "capturedAtUtc": "2026-10-07T20:26:19.615Z",
+  "paidCalls": 0,
+  "rows": [
+    {
+      "path": "/students/count",
+      "status": 403,
+      "body": "{\"code\":\"HTTP_403\",\"message\":\"Forbidden\",\"status\":403}"
+    },
+    {
+      "path": "/mcp",
+      "status": 200,
+      "body": "{\"result\":{\"content\":[{\"type\":\"text\",\"text\":\"Error (FORBIDDEN): Access denied\"}],\"isError\":true},\"jsonrpc\":\"2.0\",\"id\":1}"
+    },
+    {
+      "path": "/chat-benchmark/provider-usage",
+      "status": 200,
+      "body": "{\"capturedAt\":\"2026-10-07T20:26:19.615Z\",\"source\":\"https://openrouter.ai/api/v1/key\",\"credentialSource\":\"selected School provider key\",\"selectedKeyVerified\":true,\"matchesEnvironmentKey\":true,\"provider\":\"openrouter\",\"model\":\"openai/gpt-oss-120b\",\"usage\":0.976361188,\"limit\":50,\"limitRemaining\":49.023638812}"
+    }
+  ]
+}

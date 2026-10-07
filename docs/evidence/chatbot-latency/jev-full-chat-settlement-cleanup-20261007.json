@@ -1,0 +1,50 @@
+{
+  "capturedAtUtc": "2026-10-07T20:29:57.261Z",
+  "paidCalls": 0,
+  "settledKey": {
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "Environment key previously verified identical to fixture-selected key",
+    "usage": 0.976361188,
+    "limit": 50,
+    "limitRemaining": 49.023638812
+  },
+  "finalMode": {
+    "instanceId": "4a7457ea-21e7-41ac-b151-07ff5f3bdbc0",
+    "resetCount": 0,
+    "mode": "off",
+    "budget": {
+      "mode": "off",
+      "threshold": 0.8,
+      "timeoutMs": 800,
+      "maxRequests": 48,
+      "maxCostUsd": 0.0072,
+      "unknownReserveUsd": 0.00015,
+      "requests": 1,
+      "knownCostUsd": 0,
+      "reservedUsd": 0.00015,
+      "unknownCosts": 1,
+      "stoppedReason": "unknown_cost"
+    },
+    "syntheticOnly": true,
+    "markedLocalFixture": true,
+    "guardVersion": 5,
+    "intentWordingVersion": 3,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "frameworkPreparationEnabled": false
+  },
+  "fixtureAiSettings": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "isEnabled": false,
+    "hasKey": false
+  },
+  "cleanup": {
+    "modeOff": true,
+    "credentialRemoved": true,
+    "originalSettingsAbsent": true,
+    "disabledFixtureRowRetained": true,
+    "reason": "Public AI-settings API has no delete operation",
+    "primarySchoolDatabaseChanged": false
+  }
+}

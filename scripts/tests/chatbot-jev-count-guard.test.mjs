@@ -88,17 +88,21 @@ process.on('exit', () => writeFileSync(${JSON.stringify(audit)}, JSON.stringify(
       };
       const frozen = await run();
       expect(frozen.exitCode).toBe(1);
-      expect(frozen.stderr).toContain('Measured classification source changed: packages/server/src/modules/chat/schoolReplyLanguage.ts');
+      expect(frozen.stderr).toContain('Measured classification source changed: scripts/chatbot-jev.mjs');
       expect(await Bun.file(output).exists()).toBe(false);
       expect((await run(['--current-language-profile'])).exitCode).toBe(1);
       expect(await Bun.file(output).exists()).toBe(false);
-      expect((await run(['--current-reply-profile'])).exitCode).toBe(0);
+      expect((await run(['--current-reply-profile'])).exitCode).toBe(1);
+      expect(await Bun.file(output).exists()).toBe(false);
+      expect((await run(['--current-reply-profile', '--current-protocol-profile'])).exitCode).toBe(0);
       const text = await Bun.file(output).text();
       const result = JSON.parse(text);
       expect(result).toMatchObject({ parsedDecisionsReplayed: 310, originalEligibilityAndAcceptanceReproduced: false,
         languageProfile: 'current-post-result', replyProfile: 'current-post-result',
-        changedMeasuredSources: ['packages/server/src/modules/chat/schoolReplyLanguage.ts',
-          'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts'],
+        protocolProfile: 'current-shared-owner-request-and-310-decisions-equivalence-checked',
+        changedMeasuredSources: ['scripts/chatbot-jev.mjs', 'packages/server/src/modules/chat/schoolReplyLanguage.ts',
+          'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolListReplies.ts',
+          'packages/server/src/modules/chat/schoolReplyWrite.ts'],
         originalMeasuredAcceptance: { questions: 50, wrongQuestions: 1 }, historicalRawReportsChanged: false,
         liveProviderRequests: 0, productionAcceptance: false, runtimeGuardEnabled: false });
       expect(result.comparison.before.questions).toBeGreaterThanOrEqual(50);

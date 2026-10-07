@@ -36,6 +36,7 @@ function countEntities(text: string): Array<'students' | 'teachers'> | null {
 }
 
 function renderCounts(language: ReplyLanguage, entities: Array<'students' | 'teachers'>, results: unknown[]): string {
+  if (results.length !== entities.length) throw new Error('Invalid school count result count');
   const values = results.map(countResult);
   if (entities.length === 2) return language === 'ary'
     ? `كاينين ${values[0]} تلميذ مسجلين فهاد العام وكاينين ${values[1]} أستاذ فالمدرسة.`
@@ -46,6 +47,13 @@ function renderCounts(language: ReplyLanguage, entities: Array<'students' | 'tea
     : language === 'ar' ? student ? `عدد التلاميذ المسجلين هذه السنة هو ${values[0]}.` : `عدد الأساتذة في المدرسة هو ${values[0]}.`
       : student ? `Il y a ${values[0]} élèves inscrits cette année.` : `Il y a ${values[0]} enseignants dans l'école.`;
 }
+
+/** Intent mapping reuses these validated renderers; the MCP boundary owns every read. */
+export function schoolCountReply(language: ReplyLanguage, entities: Array<'students' | 'teachers'>, academicYear: string): ReplyTemplate {
+  return { calls: entities.map(entity => ({ name: entity === 'students' ? 'students_get_student_count' : 'teachers_get_teacher_count', input: { academicYear } })),
+    render: results => renderCounts(language, entities, results) };
+}
+export function schoolChangeRefusal(language: ReplyLanguage): ReplyTemplate { return { text: refusals[language].change }; }
 
 /** The caller supplies only the already-validated selected year. No new year resolution. */
 export function schoolReplyTemplate({ userText, language }: ReplyRequest, academicYear?: string): ReplyTemplate | null {
@@ -59,8 +67,5 @@ export function schoolReplyTemplate({ userText, language }: ReplyRequest, academ
   }
   const entities = countEntities(text);
   if (!entities || !academicYear) return null;
-  return {
-    calls: entities.map(entity => ({ name: entity === 'students' ? 'students_get_student_count' : 'teachers_get_teacher_count', input: { academicYear } })),
-    render: results => renderCounts(language, entities, results),
-  };
+  return schoolCountReply(language, entities, academicYear);
 }
