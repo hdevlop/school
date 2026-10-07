@@ -9,11 +9,11 @@ if (!runPath || !usagePath || !outPath || existsSync(outPath)) throw Error('Supp
 const inputs = paths => paths.split(',').map(path => ({ path, bytes: readFileSync(path) }));
 const runInputs = inputs(runPath), usageInputs = inputs(usagePath);
 const segments = runInputs.map(input => JSON.parse(input.bytes.toString('utf8')));
-if (segments.some(run => run.protocol.purpose !== 'two-model-jev-parallel-comparison')) throw Error('Require the frozen two-model comparison');
+if (segments.some(run => !['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison'].includes(run.protocol.purpose))) throw Error('Require the frozen model comparison');
 const run = { ...segments.at(-1), protocol: segments[0].protocol,
   rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts),
   chatsDispatched: segments.reduce((sum, segment) => sum + segment.chatsDispatched, 0) };
-if (new Set(run.rows.map(row => `${row.caseId}/${row.model}/${row.mode}`)).size !== run.rows.length)
+if (new Set(run.rows.map(row => `${row.caseId}/${row.experimentArm ?? `${row.model}/${row.mode}`}`)).size !== run.rows.length)
   throw Error('Duplicate arm/case dispatch; do not hide retries');
 const calls = usageInputs.flatMap(input => input.bytes.toString('utf8').trim().split(/\r?\n/u).filter(Boolean).map(line => JSON.parse(line)));
 const byId = new Set();
@@ -28,24 +28,38 @@ const rows = run.rows.map(row => {
   const callsComplete = Number.isSafeInteger(expectedCalls) && generationCalls.length === expectedCalls
     && known.length === generationCalls.length && generationCalls.every(call => call.model === row.model);
   return { ...row, generationCalls, providerCostComplete: callsComplete,
+    providerMatchesPolicy: row.provider !== 'coreweave-only' || generationCalls.every(call => call.provider === 'CoreWeave'),
     generationReportedCostUsd: known.reduce((sum, call) => sum + call.usage.cost, 0),
     classifierReportedCostUsd: classifier?.costUsd ?? null, classifierAttempted: Boolean(classifier),
+    classifierFailed: Boolean(classifier && (classifier.outcome === 'error' || classifier.httpStatus >= 400)),
     totalReportedCostUsd: callsComplete && (!classifier || Number.isFinite(classifier.costUsd))
       ? known.reduce((sum, call) => sum + call.usage.cost, 0) + (classifier?.costUsd ?? 0) : null };
 });
 const accountedIds = new Set(rows.flatMap(row => row.generationCalls.map(call => call.generationId)));
-const arms = run.protocol.models.flatMap(model => ['off', 'on'].map(mode => {
-  const list = rows.filter(row => row.model === model && row.mode === mode);
+const declaredArms = run.protocol.arms ?? run.protocol.models.flatMap(model => ['off', 'on'].map(mode => ({ model, mode })));
+const arms = declaredArms.map(arm => {
+  const { model, mode } = arm;
+  const list = rows.filter(row => row.model === model && row.mode === mode && (!arm.experimentArm || row.experimentArm === arm.experimentArm));
   const summary = summarizeFullChat(list).all;
+  const completed = list.filter(row => row.done && !row.aborted && !row.errors?.length && Number.isFinite(row.completionMs));
+  const streamCompletionMs = { mean: completed.length ? completed.reduce((sum, row) => sum + row.completionMs, 0) / completed.length : null,
+    p50: percentile(completed.map(row => row.completionMs), 50), p95: percentile(completed.map(row => row.completionMs), 95) };
   const allKnown = list.length > 0 && list.every(row => row.totalReportedCostUsd !== null);
   const total = allKnown ? list.reduce((sum, row) => sum + row.totalReportedCostUsd, 0) : null;
-  return { model, mode, ...summary, generationCalls: list.reduce((sum, row) => sum + row.generationCalls.length, 0),
+  return { ...arm, ...summary, completedStreams: completed.length, streamCompletionMs,
+    generationCalls: list.reduce((sum, row) => sum + row.generationCalls.length, 0),
+    providerPolicyViolations: list.filter(row => !row.providerMatchesPolicy).length,
+    toolFailures: list.filter(row => row.diagnostics?.tools?.some(tool => tool.outcome === 'error' || tool.outcome === 'blocked')).length,
+    classifierFailures: list.filter(row => row.classifierFailed).length,
     reportedCostComplete: allKnown, totalReportedCostUsd: total,
+    knownReportedCostUsd: list.reduce((sum, row) => sum + row.generationReportedCostUsd, 0)
+      + list.filter(row => Number.isFinite(row.classifierReportedCostUsd)).reduce((sum, row) => sum + row.classifierReportedCostUsd, 0),
+    costUnknownChats: list.filter(row => row.totalReportedCostUsd === null).length,
     observedAverageCostUsd: total === null ? null : total / list.length,
     projectedCostPer1000SimilarChatsUsd: total === null ? null : total / list.length * 1000,
     providers: [...new Set(list.flatMap(row => row.generationCalls.map(call => call.provider)))],
     classifierAttempts: list.filter(row => row.classifierAttempted).length };
-}));
+});
 const models = Object.fromEntries(run.protocol.models.map(model => {
   const summary = summarizeFullChat(rows.filter(row => row.model === model));
   return [model, summary];
@@ -54,6 +68,7 @@ const classifications = run.attempts.map(attempt => ({ ...attempt,
   expected: rows.find(row => row.correlationId === attempt.correlationId)?.expectedIntent }));
 const report = { status: run.status, stoppedReason: run.stoppedReason ?? null, qualification: false,
   source: { runs: runInputs.map(({ path, bytes }) => ({ path, sha256: createHash('sha256').update(bytes).digest('hex') })),
+    analyzerSha256: createHash('sha256').update(readFileSync('scripts/chatbot-jev-model-report.mjs')).digest('hex'),
     usage: usageInputs.map(({ path, bytes }) => ({ path, sha256: createHash('sha256').update(bytes).digest('hex') })) },
   segments: segments.map(segment => ({ status: segment.status, chats: segment.chatsDispatched,
     stoppedReason: segment.stoppedReason ?? null, sourceFingerprint: segment.protocol.sourceFingerprint,
@@ -73,7 +88,8 @@ const report = { status: run.status, stoppedReason: run.stoppedReason ?? null, q
     'Provider response usage.cost includes started model calls, including failed answers. No missing costs counted as zero.',
     'Per-1000 figures project this observed mix; they are not a price guarantee.',
     'Different hosts and retained routing caches; these are operational configurations, not a controlled same-host model comparison.',
-    'Parallel Jev policy; this does not test the proposed Jev-first scheduling tradeoff.'] };
+    run.protocol.arms ? 'Bounded candidate-first is experimental; fallback includes classification wait. One observation per case/arm; repeat under concurrent traffic before rollout.'
+      : 'Parallel Jev policy; this does not test the proposed Jev-first scheduling tradeoff.'] };
 writeFileSync(outPath, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
 console.log(JSON.stringify({ output: outPath, status: report.status, totalChats: report.totalChats,
   arms, unaccountedGenerationIds: report.unaccountedGenerationIds.length }));

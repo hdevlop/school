@@ -1,0 +1,11 @@
+{
+    "verifiedAt":  "2026-10-07T23:35:42.8653461Z",
+    "fixturePort":  3103,
+    "mode":  "off",
+    "model":  "openai/gpt-oss-120b",
+    "hasKey":  false,
+    "isEnabled":  false,
+    "useMemory":  false,
+    "providerKeyAbsent":  true,
+    "mainPort3102Unchanged":  true
+}

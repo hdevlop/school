@@ -4,7 +4,7 @@ import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
 import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
 
 const vars = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS', 'CHATBOT_JEV_MAX_REQUESTS', 'CHATBOT_JEV_MAX_COST_USD',
-  'CHATBOT_JEV_BILLING_MODE', 'CHATBOT_JEV_BILLING_TIMEOUT_MS'];
+  'CHATBOT_JEV_BILLING_MODE', 'CHATBOT_JEV_BILLING_TIMEOUT_MS', 'CHATBOT_JEV_EXPERIMENT'];
 const original = Object.fromEntries(vars.map(key => [key, process.env[key]]));
 let fixture: Awaited<ReturnType<typeof createJevFixture>> | undefined;
 beforeEach(() => {
@@ -12,6 +12,7 @@ beforeEach(() => {
   process.env.NODE_ENV = 'test'; process.env.CHATBOT_BENCHMARK_CONTROLS = 'true';
   process.env.CHATBOT_JEV_MAX_REQUESTS = '100'; process.env.CHATBOT_JEV_MAX_COST_USD = '0.01';
   process.env.CHATBOT_JEV_BILLING_MODE = 'abort';
+  delete process.env.CHATBOT_JEV_EXPERIMENT;
   setBenchmarkJevMode('on');
 });
 afterEach(async () => {
@@ -44,6 +45,25 @@ test('HTTP grant/read preserves historical year and blocks replay/altered text',
   const altered = await fixture.call('/chat', { sessionKey: fresh.sessionKey, messages: messages('Real private question') });
   expect(altered.status).toBe(200); await altered.text();
   expect(fixture.counts().decisions).toBe(1);
+});
+
+test('experiment grant is fixed, opt-in, marker-bound and one-use', async () => {
+  fixture = await createJevFixture();
+  const body = { caseId: 'fr-student', experimentArm: '20b-coreweave-first' };
+  expect((await fixture.call('/chat-benchmark/jev/session', body)).status).toBe(404);
+  process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+  fixture.setMarkedFixture(false);
+  expect((await fixture.call('/chat-benchmark/jev/session', body)).status).toBe(404);
+  fixture.setMarkedFixture(true);
+  const response = await fixture.call('/chat-benchmark/jev/session', body);
+  expect(response.status).toBe(200);
+  const grant = await response.json(); expect(grant.experimentArm).toBe(body.experimentArm);
+  const reply = await fixture.call('/chat', { sessionKey: grant.sessionKey, messages: messages(grant.query) });
+  expect(await reply.text()).toContain('9 élèves');
+  expect(fixture.counts()).toEqual({ decisions: 1, generations: 0 });
+  const replay = await fixture.call('/chat', { sessionKey: grant.sessionKey, messages: messages(grant.query) });
+  expect(await replay.text()).toContain('Fixture model fallback');
+  expect(fixture.counts()).toEqual({ decisions: 1, generations: 1 });
 });
 
 test('fixture read setup is fixed, admin-only, off-only, marker-bound and idempotent', async () => {

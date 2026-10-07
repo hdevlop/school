@@ -8,6 +8,7 @@ import { schoolReplyTemplate } from '../modules/chat/schoolReplyTemplates';
 import { schoolReplyLanguage } from '../modules/chat/schoolReplyLanguage';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
 import { jevPreparationPolicy } from '../modules/chat/jevPreparationPolicy';
+import { schoolOpenRouterProvider } from '../modules/chat/jevExperiment';
 
 /** The dashboard's read-only chat. Tool routing and embeddings are in ragConfig. */
 export const chatbotConfig = () =>
@@ -28,7 +29,7 @@ export const chatbotConfig = () =>
     // hosts (docs/evidence/chatbot-latency/cerebras-tool-prefix-20261004.md).
     // Fallbacks keep the chat up when Cerebras is not; Groq is excluded.
     openrouter: {
-      provider: { order: ['cerebras'], allow_fallbacks: true, ignore: ['groq'] },
+      get provider() { return schoolOpenRouterProvider(); },
       reasoning: { effort: 'low' },
     },
     conversationStore: 'db',

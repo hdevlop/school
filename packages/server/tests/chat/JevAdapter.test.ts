@@ -18,10 +18,11 @@ import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage'
 import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
 import { schoolChatYearContext } from '../../src/modules/chat/SchoolChatContextProvider';
 import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
+import { schoolOpenRouterProvider } from '../../src/modules/chat/jevExperiment';
 
 const names = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS', 'CHATBOT_JEV_MODE', 'CHATBOT_JEV_MAX_REQUESTS',
   'CHATBOT_JEV_MAX_COST_USD', 'CHATBOT_JEV_TIMEOUT_MS', 'CHATBOT_JEV_THRESHOLD', 'CHATBOT_JEV_UNKNOWN_RESERVE_USD',
-  'CHATBOT_JEV_BILLING_MODE', 'CHATBOT_JEV_BILLING_TIMEOUT_MS'];
+  'CHATBOT_JEV_BILLING_MODE', 'CHATBOT_JEV_BILLING_TIMEOUT_MS', 'CHATBOT_JEV_EXPERIMENT'];
 const original = Object.fromEntries(names.map(name => [name, process.env[name]]));
 beforeEach(() => {
   process.env.DB_URL = 'postgres://localhost/school_history_test';
@@ -30,6 +31,7 @@ beforeEach(() => {
   process.env.CHATBOT_JEV_TIMEOUT_MS = '800'; process.env.CHATBOT_JEV_THRESHOLD = '0.8';
   setBenchmarkJevMode('on');
   process.env.CHATBOT_JEV_BILLING_MODE = 'abort';
+  delete process.env.CHATBOT_JEV_EXPERIMENT;
 });
 afterEach(() => {
   for (const name of names) if (original[name] === undefined) delete process.env[name]; else process.env[name] = original[name];
@@ -142,6 +144,21 @@ describe('server-issued first-turn grants', () => {
     expect(jevSessionDto.safeParse({ caseId: 'unknown' }).success).toBe(false);
     expect(jevSessionDto.safeParse({ caseId: 'fr-student', historyComplete: true }).success).toBe(false);
     expect(jevModeDto.safeParse({ mode: 'on', maxRequests: 1000 }).success).toBe(false);
+    expect(jevSessionDto.safeParse({ caseId: 'fr-student', experimentArm: '20b-coreweave-first' }).success).toBe(true);
+    expect(jevSessionDto.safeParse({ caseId: 'fr-student', experimentArm: 'arbitrary-host' }).success).toBe(false);
+  });
+  test('experiment routing and strategy require the controlled context; normal and production keep defaults', () => {
+    const { instance } = classifier();
+    process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+    expect(schoolOpenRouterProvider()).toMatchObject({ order: ['cerebras'], allow_fallbacks: true });
+    expect(jevPreparationPolicy().strategy).toBe('parallel');
+    run(instance, () => {
+      expect(schoolOpenRouterProvider()).toEqual({ only: ['coreweave'], allow_fallbacks: false, require_parameters: true });
+      expect(jevPreparationPolicy().strategy).toBe('candidate-first');
+      process.env.NODE_ENV = 'production';
+      expect(schoolOpenRouterProvider()).toMatchObject({ order: ['cerebras'] });
+      expect(jevPreparationPolicy().strategy).toBe('parallel');
+    }, { experimentArm: '20b-coreweave-first' });
   });
   test('every control declares sign-in and the administrator role; grant setup excludes principal', () => {
     const methods = getRoutes(JevBenchmarkController).map(route => route.methodName);
@@ -256,6 +273,18 @@ describe('published readiness integration', () => {
     const { instance } = classifier(); const a = agent(instance, () => new Promise(() => {}));
     expect(await run(instance, () => a.value.runOnce(a.input))).toContain('7 élèves');
     expect(a.reads).toHaveBeenCalledTimes(1); expect(a.generation).not.toHaveBeenCalled();
+    expect(instance.ledger.recent()[0]).toMatchObject({ selected: 'template', costUsd: 0.00004 });
+  });
+  test('candidate-first waits for a valid decision and uses the last budget slot without routing or generation', async () => {
+    process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+    process.env.CHATBOT_JEV_MAX_REQUESTS = '1';
+    const { instance } = classifier();
+    instance.transport = mock(async () => { await new Promise(resolve => setTimeout(resolve, 15)); return Response.json(response()); }) as any;
+    const router = mock(async () => ({ status: 'routed', tools: [] }));
+    const a = agent(instance, router);
+    expect(await run(instance, () => a.value.runOnce(a.input), { experimentArm: '20b-coreweave-first' })).toContain('7 élèves');
+    expect(router).not.toHaveBeenCalled(); expect(a.generation).not.toHaveBeenCalled(); expect(a.reads).toHaveBeenCalledTimes(1);
+    expect(instance.ledger.snapshot()).toMatchObject({ requests: 1, stoppedReason: 'request_limit' });
     expect(instance.ledger.recent()[0]).toMatchObject({ selected: 'template', costUsd: 0.00004 });
   });
   test('ready fallback never waits for the hanging classifier; late costs stay separate', async () => {

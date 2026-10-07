@@ -1,7 +1,7 @@
 /** Plan/fixture mode is unpaid. Execute requires explicit frozen limits and marked local fixture controls. */
 import { randomUUID } from 'node:crypto';
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
-import { fullChatProtocol, modelComparisonProtocol, fingerprint, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat } from './chatbot-jev-full-chat-lib.mjs';
+import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, fingerprint, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat } from './chatbot-jev-full-chat-lib.mjs';
 import { createUiStreamParser } from './chatbot-stream.mjs';
 import { createEstimatedBudget } from './chatbot-budget.mjs';
 
@@ -14,7 +14,8 @@ if ([fixtureMode, execute, preflight].filter(Boolean).length > 1) throw new Erro
 const defaultPlan = 'docs/evidence/chatbot-latency/jev-billing-observer-plan-20261007.json';
 const planPath = option('plan', defaultPlan);
 if (!fixtureMode && !execute && !preflight) {
-  const plan = args.includes('--model-comparison') ? modelComparisonProtocol(option('continue-from'), option('generation-usage'))
+  const plan = args.includes('--first-comparison') ? firstComparisonProtocol(option('continue-from'), option('generation-usage'), args.includes('--retain-rejected-reservation'))
+    : args.includes('--model-comparison') ? modelComparisonProtocol(option('continue-from'), option('generation-usage'))
     : fullChatProtocol(option('continue-from'));
   plan.sourceFingerprint = fingerprint(plan.sourceHashes);
   writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`, { flag: 'wx' });
@@ -39,7 +40,7 @@ const report = { stage: fixtureMode ? 'mock-full-chat-fixture' : preflight ? 'un
 writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
 const save = () => writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 let fixture, token;
-const comparison = protocol.purpose === 'two-model-jev-parallel-comparison';
+const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison'].includes(protocol.purpose);
 let selectedModel;
 async function request(path, body, correlation = randomUUID(), method) {
   if (fixture) return fixture.call(path, body, 'admin', option('year', '2026-2027'), correlation);
@@ -119,8 +120,10 @@ try {
       }
       const mode = await json('/chat-benchmark/jev/mode', { mode: job.mode });
       if (mode.mode !== job.mode || mode.frameworkPreparationEnabled !== (job.mode !== 'off')) throw new Error('Framework mode did not switch');
-      const grant = await json('/chat-benchmark/jev/session', { caseId: job.caseId });
+      const grant = await json('/chat-benchmark/jev/session', { caseId: job.caseId,
+        ...(job.experimentArm ? { experimentArm: job.experimentArm } : {}) });
       if (grant.instanceId !== initial.instanceId) throw new Error('Session came from another process');
+      if (job.experimentArm && grant.experimentArm !== job.experimentArm) throw new Error('Server grant differs from frozen experiment arm');
       const item = protocol.cases.find(item => item.id === job.caseId);
       if (grant.query !== item.query) throw new Error('Server synthetic catalog differs from the frozen corpus');
       const correlationId = randomUUID(); generationBudget.reserve(correlationId);

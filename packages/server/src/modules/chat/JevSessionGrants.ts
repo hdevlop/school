@@ -3,11 +3,13 @@ import { AsyncLocalStorage } from 'node:async_hooks';
 import { jevSyntheticCases } from './jevSyntheticCases';
 import type { JevMode } from './JevControls';
 import type { ReplyPreparationRequest, ReplyPreparationSelection, ReplyTemplate } from 'najm-chatbot';
+import type { JevExperimentArm } from './jevExperiment';
 
 export interface JevRequestContext {
   actorId: string; role: string; academicYear: string; mode: JevMode;
   correlationId: string | null; caseId: string; query: string;
   historyComplete: true; priorUserTurns: 0;
+  experimentArm?: JevExperimentArm;
   /** Actual HTTP lifetime, separate from the framework's candidate selection signal. */
   requestSignal?: AbortSignal;
   prepare?: (request: ReplyPreparationRequest) => Promise<ReplyTemplate | null>;
@@ -19,16 +21,16 @@ export const schoolJevRequestContext = new AsyncLocalStorage<JevRequestContext>(
 
 /** Only server-issued, one-use synthetic benchmark sessions establish a first turn. */
 export class JevSessionGrants {
-  private grants = new Map<string, { actorId: string; academicYear: string; caseId: string; query: string; expiresAt: number }>();
-  issue(actorId: string, academicYear: string, caseId: string) {
+  private grants = new Map<string, { actorId: string; academicYear: string; caseId: string; query: string; expiresAt: number; experimentArm?: JevExperimentArm }>();
+  issue(actorId: string, academicYear: string, caseId: string, experimentArm?: JevExperimentArm) {
     const item = jevSyntheticCases.find(item => item.id === caseId);
     if (!item || !actorId || !academicYear) throw new Error('Invalid synthetic Jev session');
     const now = Date.now();
     for (const [key, grant] of this.grants) if (grant.expiresAt <= now) this.grants.delete(key);
     if (this.grants.size >= 500) throw new Error('Jev session capacity reached');
     const sessionKey = `jev-benchmark:${randomUUID()}`;
-    this.grants.set(sessionKey, { actorId, academicYear, caseId, query: item.query, expiresAt: now + 600_000 });
-    return { sessionKey, caseId, query: item.query };
+    this.grants.set(sessionKey, { actorId, academicYear, caseId, query: item.query, expiresAt: now + 600_000, experimentArm });
+    return { sessionKey, caseId, query: item.query, experimentArm };
   }
   consume(sessionKey: unknown, actorId: string | undefined, academicYear: string, messages: unknown) {
     if (typeof sessionKey !== 'string') return null;

@@ -2,7 +2,7 @@ import { expect, test } from 'bun:test';
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fullChatProtocol, modelComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
+import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
 
 test('frozen comparison is bounded, balanced and explicitly not native qualification', () => {
   const protocol = fullChatProtocol();
@@ -31,6 +31,28 @@ test('two-model comparison balances all four arms and refuses changed models or 
   expect(() => checkSource(protocol)).not.toThrow();
   expect(() => checkSource({ ...protocol, models: ['openai/gpt-oss-120b'] })).toThrow();
   expect(() => checkSource({ ...protocol, maxCombinedEstimatedUsd: 1 })).toThrow();
+});
+test('CoreWeave-first protocol distinguishes scheduling arms and freezes host, order and costs', () => {
+  const protocol = firstComparisonProtocol();
+  expect(protocol.jobs).toHaveLength(96);
+  for (const arm of protocol.arms) expect(protocol.jobs.filter(job => job.experimentArm === arm.experimentArm)).toHaveLength(24);
+  expect(protocol.jobs.filter(job => job.mode === 'on')).toHaveLength(protocol.maxClassifications);
+  expect(() => checkSource(protocol)).not.toThrow();
+  const changed = structuredClone(protocol); changed.arms[3].strategy = 'parallel';
+  expect(() => checkSource(changed)).toThrow();
+  expect(() => checkSource({ ...protocol, maxCombinedEstimatedUsd: 1 })).toThrow();
+});
+test('terminal 529 continuation requires an explicit retained reservation and never retries the prefix', () => {
+  const run = 'docs/evidence/chatbot-latency/jev-coreweave-first-run-20261008.json';
+  const usage = 'docs/evidence/chatbot-latency/jev-coreweave-first-generation-prefix-20261008.jsonl';
+  expect(() => firstComparisonProtocol(run, usage)).toThrow();
+  const protocol = firstComparisonProtocol(run, usage, true);
+  expect(protocol.maxChats).toBe(92); expect(protocol.maxClassifications).toBe(46);
+  expect(protocol.jobs).toEqual(firstComparisonProtocol().jobs.slice(4));
+  expect(protocol.continuation.retainedUnknownReserveUsd).toBe(0.00015);
+  expect(protocol.maxCombinedEstimatedUsd + protocol.continuation.carriedUsd).toBeLessThanOrEqual(0.25);
+  expect(protocol.classificationMaxUsd + 0.00015 + 0.000038934).toBeLessThanOrEqual(0.0072);
+  expect(() => checkSource(protocol)).not.toThrow();
 });
 test('model continuation skips the failed request and carries response-reported generation charges', () => {
   const protocol = modelComparisonProtocol('docs/evidence/chatbot-latency/jev-model-comparison-run-20261007.json',

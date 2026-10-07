@@ -11,7 +11,7 @@ export class JevBenchmarkController {
   @Post('/mode') @isAdministrator() @Validate({ body: jevModeDto })
   mode(@Body() body: JevModeDto) { return this.benchmark.setMode(body.mode); }
   @Post('/session') @isAdministrator() @Validate({ body: jevSessionDto })
-  session(@User('id') actorId: string, @Body() body: JevSessionDto) { return this.benchmark.issueSession(actorId, body.caseId); }
+  session(@User('id') actorId: string, @Body() body: JevSessionDto) { return this.benchmark.issueSession(actorId, body.caseId, body.experimentArm); }
   @Get('/attempts') @isAdministrator()
   attempts() { return this.benchmark.attempts(); }
   @Post('/fixture-reads') @isAdmin() @Validate({ body: jevFixtureReadsDto })

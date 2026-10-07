@@ -1897,3 +1897,23 @@ External references:
 - [TypeSafe documentation](https://docs.typesafe.ai/): verify the current API,
   model versions, and error contract before Phase 4. The API reference was not
   accessible during review; exact API/version claims remain unverified.
+# CoreWeave and Jev-first experiment (owner requested, 2026-10-08)
+
+Compare the current 120B/Cerebras baseline with 20B pinned to CoreWeave, both
+without Jev and with parallel/candidate-first Jev. Candidate-first belongs to
+Najm's existing selector, not a second School scheduler or MCP executor. It
+waits at most the existing 800 ms candidate deadline before fallback; report
+that wait as part of end-to-end latency. Synchronous templates still win first.
+
+Only marked local fixture controls may issue one-use synthetic sessions with
+these fixed experiment arms. Real questions and normal provider routing keep
+their current behavior. Freeze fresh limits (96 chats, at most 48 decisions,
+$0.25 combined stop), record actual response costs and provider identities,
+retain failures, and restore off/disabled settings afterward. This is an
+assistant-authored integration comparison, not independent Darija qualification.
+
+Experiment completed: 96 chats; CoreWeave/Jev-first 718 ms mean versus 867 ms
+120B baseline, 15 Jev templates, zero tool failures in the first arm. Original
+fallback +100 ms gate still fails (+612 ms paired p95). One 529 cost remains
+unknown and reserved; production defaults unchanged. Full results and next
+action: [CoreWeave/Jev-first report](docs/evidence/chatbot-latency/jev-coreweave-first-results-20261008.md).

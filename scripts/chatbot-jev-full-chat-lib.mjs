@@ -99,10 +99,72 @@ export function modelComparisonProtocol(continuationPath, generationUsagePath) {
     comparisonPolicy: 'Current parallel Jev policy, not Jev-first. Shared routing caches retained; rotated model/mode order. Capture actual model/provider/usage.cost through benchmark-only response observer; SDK prices remain estimates.' };
   return continuationPath ? continueProtocol(comparison, continuationPath, generationUsagePath) : comparison;
 }
+export function firstComparisonProtocol(continuationPath, generationUsagePath, retainRejectedReservation = false) {
+  const protocol = fullChatProtocol();
+  const arms = [
+    { experimentArm: '120b-baseline', model: 'openai/gpt-oss-120b', mode: 'off', strategy: 'parallel', provider: 'cerebras-preferred' },
+    { experimentArm: '20b-coreweave-off', model: 'openai/gpt-oss-20b', mode: 'off', strategy: 'parallel', provider: 'coreweave-only' },
+    { experimentArm: '20b-coreweave-parallel', model: 'openai/gpt-oss-20b', mode: 'on', strategy: 'parallel', provider: 'coreweave-only' },
+    { experimentArm: '20b-coreweave-first', model: 'openai/gpt-oss-20b', mode: 'on', strategy: 'candidate-first', provider: 'coreweave-only' },
+  ];
+  const comparison = { ...protocol, purpose: 'coreweave-jev-first-comparison', arms,
+    models: ['openai/gpt-oss-120b', 'openai/gpt-oss-20b'], experimentEnabled: true,
+    jobs: protocol.cases.flatMap((item, index) => [...arms.slice(index % 4), ...arms.slice(0, index % 4)]
+      .map(arm => ({ caseId: item.id, ...arm }))), maxChats: 96, generationReserveUsd: 0.0025,
+    restoresModel: 'openai/gpt-oss-120b', retainModelToolErrors: true,
+    providerPolicy: '120B keeps Cerebras preference/fallbacks/Groq exclusion. Granted 20B arms require CoreWeave only, no fallback and parameter support. Real chats retain the normal policy.',
+    comparisonPolicy: 'Rotated four-arm same-process synthetic experiment. Compare 20B off/parallel/candidate-first on the same fixed host against current 120B baseline. Candidate-first may wait 800ms; full stream timings include that wait. Actual response cost capture; no retries.' };
+  if (!continuationPath) return comparison;
+  if (!retainRejectedReservation || !generationUsagePath) throw Error('Require explicit retained rejection reservation and generation evidence');
+  const priorBytes = readFileSync(continuationPath), usageBytes = readFileSync(generationUsagePath);
+  const prior = JSON.parse(priorBytes.toString('utf8'));
+  const { sourceHashes: _oldHashes, sourceFingerprint: _fingerprint, ...declared } = prior.protocol;
+  const { sourceHashes: _newHashes, ...expected } = comparison;
+  const count = prior.chatsDispatched;
+  const unknown = prior.attempts?.filter(a => a.costUsd === null) ?? [];
+  const calls = usageBytes.toString('utf8').trim().split(/\r?\n/u).filter(Boolean).map(line => JSON.parse(line));
+  if (!isDeepStrictEqual(declared, expected) || prior.status !== 'stopped'
+    || prior.stoppedReason !== 'Classifier terminal cost remains unknown' || prior.modeRestoredOff !== true || prior.modelRestored !== true
+    || !Number.isSafeInteger(count) || count <= 0 || count >= comparison.maxChats || prior.rows.length !== count
+    || !isDeepStrictEqual(prior.rows.map(({ caseId, experimentArm, model, mode, strategy, provider }) =>
+      ({ caseId, experimentArm, model, mode, strategy, provider })), comparison.jobs.slice(0, count))
+    || prior.rows.some(row => !row.done || row.errors.length || row.aborted || !row.diagnostics)
+    || unknown.length !== 1 || unknown[0].httpStatus !== 529 || unknown[0].outcome !== 'error'
+    || unknown[0].transportCompleted !== true || unknown[0].reservedUsd !== comparison.classificationReserveUsd
+    || prior.attempts.some(a => a.outcome === 'pending' || a.costUsd !== null && (!Number.isFinite(a.costUsd) || a.costUsd < 0))
+    || prior.generationBudget?.requestsSettled !== count || prior.generationBudget.requestsWithUnknownCost || prior.generationBudget.inFlight
+    || !Number.isFinite(prior.generationBudget.observedEstimatedUsd) || prior.generationBudget.observedEstimatedUsd < 0
+    || prior.attempts.some(a => a.selected === 'template' && a.choice !== prior.rows.find(row => row.correlationId === a.correlationId)?.expectedIntent)
+    || calls.length !== prior.rows.reduce((n, row) => n + row.diagnostics.steps.length, 0)
+    || new Set(calls.map(c => c.generationId)).size !== calls.length
+    || calls.some(c => !c.generationId || c.incomplete || !Number.isFinite(c.usage?.cost) || c.usage.cost < 0)
+    || !Number.isFinite(prior.aggregateKeyDeltaUsd) || prior.aggregateKeyDeltaUsd < 0)
+    throw Error('Require a completed prefix stopped by exactly one terminal 529; all other costs must be known');
+  const classificationCarriedUsd = prior.attempts.reduce((sum, a) => sum + (a.costUsd ?? a.reservedUsd), 0);
+  const generationCarriedUsd = Math.max(prior.generationBudget.observedEstimatedUsd, calls.reduce((sum, c) => sum + c.usage.cost, 0));
+  const carriedUsd = Math.max(prior.aggregateKeyDeltaUsd, classificationCarriedUsd + generationCarriedUsd);
+  const remaining = value => Math.floor(value * 1e9) / 1e9;
+  comparison.continuation = { reportPath: continuationPath, sha256: createHash('sha256').update(priorBytes).digest('hex'),
+    generationUsagePath, generationUsageSha256: createHash('sha256').update(usageBytes).digest('hex'),
+    completedChats: count, completedClassifications: prior.attempts.length, retainedUnknownCosts: 1,
+    retainedUnknownReserveUsd: unknown[0].reservedUsd, carriedUsd,
+    originalMaxCombinedEstimatedUsd: comparison.maxCombinedEstimatedUsd,
+    note: 'Fresh reduced allowance for only undispatched cases after a terminal provider rejection. Original ledger is preserved, not reset or reconciled. Unknown cost stays null and its reservation is deducted from both caps. Another unknown cost stops this continuation; no retries or repeated cases.' };
+  comparison.jobs = comparison.jobs.slice(count); comparison.maxChats -= count;
+  comparison.maxClassifications -= prior.attempts.length;
+  comparison.classificationMaxUsd = remaining(comparison.classificationMaxUsd - classificationCarriedUsd);
+  comparison.maxCombinedEstimatedUsd = remaining(comparison.maxCombinedEstimatedUsd - carriedUsd);
+  if (comparison.maxClassifications !== comparison.jobs.filter(job => job.mode !== 'off').length
+    || comparison.classificationMaxUsd <= 0 || comparison.maxCombinedEstimatedUsd <= comparison.classificationMaxUsd)
+    throw Error('Insufficient remaining allowance');
+  return comparison;
+}
 export function fingerprint(hashes) { return createHash('sha256').update(JSON.stringify(hashes)).digest('hex'); }
 export function checkSource(protocol) {
   const { sourceFingerprint: _sourceFingerprint, ...declared } = protocol;
-  const expected = protocol.purpose === 'two-model-jev-parallel-comparison'
+  const expected = protocol.purpose === 'coreweave-jev-first-comparison'
+    ? firstComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.continuation?.retainedUnknownCosts === 1)
+    : protocol.purpose === 'two-model-jev-parallel-comparison'
     ? modelComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath)
     : fullChatProtocol(protocol.continuation?.reportPath);
   if (!isDeepStrictEqual(declared, expected)) throw new Error('Benchmark source or protocol changed; prepare a new frozen protocol');
@@ -123,6 +185,7 @@ export function checkReady(status, protocol) {
     || status.budget.maxRequests !== protocol.maxClassifications
     || status.budget.maxCostUsd !== protocol.classificationMaxUsd
     || status.budget.unknownReserveUsd !== protocol.classificationReserveUsd) throw new Error('Require a fresh marked fixture with the exact declared limits');
+  if (protocol.experimentEnabled === true && status.experimentEnabled !== true) throw new Error('Require the fixed experiment capability');
 }
 export function checkScopedRead(tool, response) {
   if (response?.result?.isError || response?.error || !Array.isArray(response?.result?.content)
@@ -148,7 +211,7 @@ export function summarizeFullChat(rows) {
     .flatMap(on => {
       const off = rows.find(row => complete(row) && row.caseId === on.caseId && row.model === on.model
         && row.mode === 'off' && row.diagnostics?.reply?.source === 'model');
-      return off ? [{ caseId: on.caseId, firstTextDeltaMs: on.firstTextMs - off.firstTextMs,
+      return off ? [{ caseId: on.caseId, ...(on.experimentArm ? { experimentArm: on.experimentArm } : {}), firstTextDeltaMs: on.firstTextMs - off.firstTextMs,
         completionDeltaMs: on.completionMs - off.completionMs }] : [];
     });
   return { all: group(rows), modes: Object.fromEntries(['off', 'on', 'shadow'].map(mode => [mode, group(rows.filter(row => row.mode === mode))])),

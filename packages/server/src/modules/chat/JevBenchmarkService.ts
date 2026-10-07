@@ -9,6 +9,7 @@ import { JevBenchmarkRepository } from './JevBenchmarkRepository';
 import { CHATBOT_CONFIG, type ChatbotConfig } from 'najm-chatbot';
 import { Inject } from '../../najm';
 import { PermissionService, RoleService } from 'najm-auth';
+import { jevExperimentEnabled, type JevExperimentArm } from './jevExperiment';
 
 const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'sections', 'attendance'] as const;
 
@@ -29,6 +30,7 @@ export class JevBenchmarkService {
       syntheticOnly: true, markedLocalFixture: true, guardVersion: 5, intentWordingVersion: 3,
       threshold: this.classifier.controls.threshold, timeoutMs: this.classifier.controls.timeoutMs,
       billingMode: this.classifier.controls.billingMode, billingTimeoutMs: this.classifier.controls.billingTimeoutMs,
+      experimentEnabled: jevExperimentEnabled(),
       frameworkPreparationEnabled: this.chatbotConfig.reply?.preparation?.enabled === true };
   }
   async setMode(mode: JevMode) {
@@ -36,9 +38,10 @@ export class JevBenchmarkService {
     if (mode === 'off') this.classifier.cancelInFlight();
     return this.status();
   }
-  async issueSession(actorId: string, caseId: string) {
+  async issueSession(actorId: string, caseId: string, experimentArm?: JevExperimentArm) {
     await this.ensureEnabled();
-    return { ...jevSessionGrants.issue(actorId, this.year.label, caseId), ...chatBenchmarkSnapshot() };
+    if (experimentArm && !jevExperimentEnabled()) Err(404, this.bt('fixtureRequired'));
+    return { ...jevSessionGrants.issue(actorId, this.year.label, caseId, experimentArm), ...chatBenchmarkSnapshot() };
   }
   async attempts() { await this.ensureEnabled(); return this.classifier.ledger.recent(); }
 

@@ -1,0 +1,2030 @@
+{
+  "stage": "paid-full-chat-comparison",
+  "status": "stopped",
+  "protocol": {
+    "version": 2,
+    "purpose": "coreweave-jev-first-comparison",
+    "assistantAuthored": true,
+    "independentQualification": false,
+    "cases": [
+      {
+        "id": "fr-student",
+        "language": "fr",
+        "query": "Je voudrais connaître le nombre total d’élèves de notre école.",
+        "intent": "student_count"
+      },
+      {
+        "id": "fr-teacher",
+        "language": "fr",
+        "query": "Donne-moi le nombre global d’enseignants de l’école.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "fr-dual",
+        "language": "fr",
+        "query": "Je voudrais les deux nombres, élèves et enseignants, séparément.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "fr-classes",
+        "language": "fr",
+        "query": "Je voudrais connaître la liste complète des classes de l’école.",
+        "intent": "class_list"
+      },
+      {
+        "id": "fr-attendance",
+        "language": "fr",
+        "query": "Je voudrais voir les présences des élèves aujourd’hui pour toute l’école.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "fr-greeting",
+        "language": "fr",
+        "query": "Bonjour, merci pour votre aide.",
+        "intent": "small_talk"
+      },
+      {
+        "id": "fr-write",
+        "language": "fr",
+        "query": "Ajoute un élève nommé ZzJevDemo.",
+        "intent": "write_request"
+      },
+      {
+        "id": "fr-filter",
+        "language": "fr",
+        "query": "Quel est le nombre de filles en CE2 ?",
+        "intent": "needs_llm"
+      },
+      {
+        "id": "ar-student",
+        "language": "ar",
+        "query": "أريد معرفة العدد الإجمالي للتلاميذ في المدرسة.",
+        "intent": "student_count"
+      },
+      {
+        "id": "ar-teacher",
+        "language": "ar",
+        "query": "أعطني العدد الكلي للأساتذة في المدرسة بالكامل.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "ar-dual",
+        "language": "ar",
+        "query": "أريد عدد التلاميذ وعدد الأساتذة كل واحد في سطر.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "ar-classes",
+        "language": "ar",
+        "query": "أريد القائمة الكاملة لأقسام المدرسة.",
+        "intent": "class_list"
+      },
+      {
+        "id": "ar-attendance",
+        "language": "ar",
+        "query": "أريد عرض سجل الحضور لجميع التلاميذ اليوم.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "ar-greeting",
+        "language": "ar",
+        "query": "شكرا لمساعدتك.",
+        "intent": "small_talk"
+      },
+      {
+        "id": "ar-write",
+        "language": "ar",
+        "query": "أضف تلميذا اسمه ZzJevDemo.",
+        "intent": "write_request"
+      },
+      {
+        "id": "ar-filter",
+        "language": "ar",
+        "query": "كم عدد التلميذات في قسم CE2؟",
+        "intent": "needs_llm"
+      },
+      {
+        "id": "ary-student",
+        "language": "ary",
+        "query": "بغيت العدد ديال التلاميذ فهاد العام بلا تفاصيل.",
+        "intent": "student_count"
+      },
+      {
+        "id": "ary-teacher",
+        "language": "ary",
+        "query": "عطيني العدد ديال الأساتذة فالمدرسة كاملة.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "ary-dual",
+        "language": "ary",
+        "query": "بغيت العدد ديال التلاميذ والعدد ديال الأساتذة، كل واحد فسطر.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "ary-classes",
+        "language": "ary",
+        "query": "بغيت اللائحة ديال الأقسام كاملة بلا معلومات أخرى.",
+        "intent": "class_list"
+      },
+      {
+        "id": "ary-attendance",
+        "language": "ary",
+        "query": "وريني سجل الحضور ديال التلاميذ اليوم فالمدرسة كاملة.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "ary-greeting",
+        "language": "ary",
+        "query": "واش نقدر نسولك على شي حاجة؟",
+        "intent": "small_talk"
+      },
+      {
+        "id": "ary-write",
+        "language": "ary",
+        "query": "زيد تلميذ جديد سميتو ZzJevDemo فهاد المدرسة.",
+        "intent": "write_request"
+      },
+      {
+        "id": "ary-filter",
+        "language": "ary",
+        "query": "شحال من بنت كاينة فقسم CE2؟",
+        "intent": "needs_llm"
+      }
+    ],
+    "jobs": [
+      {
+        "caseId": "fr-student",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-student",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-student",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-student",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-teacher",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-teacher",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-teacher",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-teacher",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-dual",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-dual",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-dual",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-dual",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-classes",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-classes",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-classes",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-classes",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-attendance",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-attendance",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-attendance",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-attendance",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-greeting",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-greeting",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-greeting",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-greeting",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-write",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-write",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-write",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-write",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-filter",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-filter",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "fr-filter",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "fr-filter",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-student",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-student",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-student",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-student",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-teacher",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-teacher",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-teacher",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-teacher",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-dual",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-dual",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-dual",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-dual",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-classes",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-classes",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-classes",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-classes",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-attendance",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-attendance",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-attendance",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-attendance",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-greeting",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-greeting",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-greeting",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-greeting",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-write",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-write",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-write",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-write",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-filter",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-filter",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ar-filter",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ar-filter",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-student",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-student",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-student",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-student",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-teacher",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-teacher",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-teacher",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-teacher",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-dual",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-dual",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-dual",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-dual",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-classes",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-classes",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-classes",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-classes",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-attendance",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-attendance",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-attendance",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-attendance",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-greeting",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-greeting",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-greeting",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-greeting",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-write",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-write",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-write",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-write",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-filter",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-filter",
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "caseId": "ary-filter",
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "ary-filter",
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      }
+    ],
+    "maxChats": 96,
+    "maxClassifications": 48,
+    "maxCombinedEstimatedUsd": 0.25,
+    "generationReserveUsd": 0.0025,
+    "classificationReserveUsd": 0.00015,
+    "classificationMaxUsd": 0.0072,
+    "retries": 0,
+    "concurrency": 1,
+    "startSpacingMs": 2000,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "billingMode": "observe",
+    "billingTimeoutMs": 5000,
+    "cachePolicy": "same process, balanced mode order, caches retained and recorded",
+    "costPolicy": "Opt-in synthetic billing observation lets started requests finish under a separate 5s limit without delaying fallback. SDK generation estimates and response-reported classifier costs are separate; aggregate key delta is not an isolated per-mode invoice. Await terminal billing outside reply timing; unknown costs stop dispatch.",
+    "stopOn": [
+      "unknown_cost",
+      "request_limit",
+      "combined_estimate_limit",
+      "provider_key_delta_limit",
+      "request_error",
+      "process_change",
+      "accepted_wrong"
+    ],
+    "restoresMode": "off",
+    "sourceHashes": {
+      "bun.lock": "1cec3a1bc08d38fd5a414e177fcbca8448075c5c1f0cadfa17ecac83359cb869",
+      "package.json": "cc2afa5790600d25e7b951e88420927aeef373d1e16547620d22cc62e6c833eb",
+      "packages/server/package.json": "99a4530c0ce1c0b7e31d2218d63d6ad3781d47451ed73772f01a632a8bfd73c9",
+      "packages/server/src/config/chatbotConfig.ts": "36b9b9c304e6d1f5458544c60b9a200f5457cb2a6f89d4490d941719a84ccadb",
+      "packages/server/src/config/coreConfig.ts": "7c00c81515cc18e0172b52612e3798f31e0f08b84be38ceef1a3150a3f9efe89",
+      "packages/server/src/config/ragConfig.ts": "e6b8549b4e11a1784cdecb50a40c2b66bcd026a06636f42ac84c6bebca1af193",
+      "packages/server/src/config/yearScope.ts": "df1157c772276ad16047cf6409568eabd17eb07bff0c964b2ea758a3a2127608",
+      "packages/server/src/modules/chat/JevAttemptLedger.ts": "31727a0d1aa400f0451cb0b5ff432e4312e6d19d9d9216e734fdd4c5b056de04",
+      "packages/server/src/modules/chat/JevBenchmarkController.ts": "c52cdd8be4b4fa87b1d68f4279da17d8d7828346e5a6046a7d35ce84f8cb0cef",
+      "packages/server/src/modules/chat/JevBenchmarkDto.ts": "9c7f95eeaeef609560601d1212fd2d41b67338eba0918109e69695135b48e7a8",
+      "packages/server/src/modules/chat/JevBenchmarkRepository.ts": "2ab859698a95ebac927147aaa30499332bb4d235983a54ae9013a0974ecdea89",
+      "packages/server/src/modules/chat/JevBenchmarkService.ts": "83d38660a47b941c478f5c249e4c1a18e4a1740983d1c10850689ab384f1563f",
+      "packages/server/src/modules/chat/JevControls.ts": "24a783242b93ce231ff2dd9f9808ba00d60cff5aad1fa7f9f8fd5f11a4fc616c",
+      "packages/server/src/modules/chat/JevIntentClassifier.ts": "e7041a67fb2e020ebcfe0052a474bf69f4deb5da172b8f23b0ca4c434b8d56ee",
+      "packages/server/src/modules/chat/JevSessionGrants.ts": "41b4306dfddf21f77a2c466ba0d3fd80588fc76c6973c5697bfc0a4fa0faaa84",
+      "packages/server/src/modules/chat/SchoolChatContextProvider.ts": "1d1ff66f12a9ef6698fe2657e094def35d1555f5fc0908a3f4a247a0c274a457",
+      "packages/server/src/modules/chat/chatYearContext.ts": "156c6cbf57b0c75904c4a34d3f44c9e964832dcb5b684dc3b562d1a570cb2ce1",
+      "packages/server/src/modules/chat/jevExperiment.ts": "429bd1262c89b6444514be9809338685d21305f89f542cb8c8a558cb7cd8e24d",
+      "packages/server/src/modules/chat/jevGuard/countV1.ts": "4218b4aa1a56d39a73d8935d5dc30b1a1bc64bc4f0a5efd1eb880e4280556933",
+      "packages/server/src/modules/chat/jevGuard/countV2.ts": "838a90d79feff7b48c369758761581398aa4d963f4d1fc409f1a055a8395a0af",
+      "packages/server/src/modules/chat/jevGuard/queryV3.ts": "b599b867282b723c6d0188abbb1f6e4e79b4e74c4e7c775ee29d119547a8a483",
+      "packages/server/src/modules/chat/jevGuard/queryV4.ts": "25b712122623c814e7297a081f737ffd78404ddb959337997c333d05f2e4a981",
+      "packages/server/src/modules/chat/jevGuard/queryV5.ts": "f82c2fd3f0363718b91602b53d2baf13e5ef478e2124d87846032bad876f3900",
+      "packages/server/src/modules/chat/jevIntents.ts": "555fc7cf4c6c21f98cb46d3edf00220f3912350efa6bfd74a4db1060d2878318",
+      "packages/server/src/modules/chat/jevPreparationPolicy.ts": "c2772e501ed24eaca3b206cc84d5311f539130f0035f187177f6a0a166eab5fa",
+      "packages/server/src/modules/chat/jevQueryGuard.ts": "fd4c6e79fdb35ab317fda3b9a53987171d43d076bddf6d1a0367e10a6fe43afc",
+      "packages/server/src/modules/chat/jevReplyPlan.ts": "14af919040e2ed0e74351ad4ef8db9cb34cfe578bd0755968d442536d41ff2d7",
+      "packages/server/src/modules/chat/jevSyntheticCases.ts": "f904c77ceaabc6a006d353629e9037797497b13a74c6216b09948cba6b60ad31",
+      "packages/server/src/modules/chat/schoolListReplies.ts": "ef0b8bf55437a7e0b16113de19f2b6cc769ec4049f10b90b55fe42078a1d642a",
+      "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+      "packages/server/src/modules/chat/schoolReplyTemplates.ts": "696dac4828e05fc7ff4fdb2d6b1c0518b89db49ba41fb23f5de871b18ea2a35f",
+      "packages/server/src/modules/chat/schoolReplyWrite.ts": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+      "scripts/chatbot-jev-full-chat-lib.mjs": "95a0e45ac7bbb83cc15df81a9613960c0c3fb4632f250b7623db5ca38264db44",
+      "scripts/chatbot-jev-full-chat.mjs": "064072a7937aa2404f828c98e133887c28e781ae5eaef89576cadb50876b73c4",
+      "scripts/chatbot-provider-observer.mjs": "c3b6c3b9632e91c4856796779ea5a7cda65525ac10917874cc9ac9bfd6c558e7"
+    },
+    "arms": [
+      {
+        "experimentArm": "120b-baseline",
+        "model": "openai/gpt-oss-120b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "cerebras-preferred"
+      },
+      {
+        "experimentArm": "20b-coreweave-off",
+        "model": "openai/gpt-oss-20b",
+        "mode": "off",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "experimentArm": "20b-coreweave-parallel",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "parallel",
+        "provider": "coreweave-only"
+      },
+      {
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      }
+    ],
+    "models": [
+      "openai/gpt-oss-120b",
+      "openai/gpt-oss-20b"
+    ],
+    "experimentEnabled": true,
+    "restoresModel": "openai/gpt-oss-120b",
+    "retainModelToolErrors": true,
+    "providerPolicy": "120B keeps Cerebras preference/fallbacks/Groq exclusion. Granted 20B arms require CoreWeave only, no fallback and parameter support. Real chats retain the normal policy.",
+    "comparisonPolicy": "Rotated four-arm same-process synthetic experiment. Compare 20B off/parallel/candidate-first on the same fixed host against current 120B baseline. Candidate-first may wait 800ms; full stream timings include that wait. Actual response cost capture; no retries.",
+    "sourceFingerprint": "9cb9b775674283d88fea7f75916e363a5ccd74cd049209d77181e9b53f215b36"
+  },
+  "actualProviderCalls": null,
+  "generationPricesAreEstimates": true,
+  "modelAndClassifierMocked": false,
+  "chatsDispatched": 4,
+  "rows": [
+    {
+      "caseId": "fr-student",
+      "experimentArm": "120b-baseline",
+      "model": "openai/gpt-oss-120b",
+      "mode": "off",
+      "strategy": "parallel",
+      "provider": "cerebras-preferred",
+      "correlationId": "94ac9650-daa6-4825-bd8d-87e598615e07",
+      "startedAt": "2026-10-07T23:27:17.077Z",
+      "language": "fr",
+      "expectedIntent": "student_count",
+      "firstTextMs": 1082.9461999999999,
+      "completionMs": 1106.4760999999999,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "Le nombre total d’élèves pour l'année scolaire 2026‑2027 est de **8**.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4130,
+        "completionTokens": 66,
+        "totalTokens": 4196,
+        "inputCost": 0.00016107,
+        "outputCost": 0.000012540000000000002,
+        "totalCost": 0.00017361,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "94ac9650-daa6-4825-bd8d-87e598615e07",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 282.1,
+          "contextMs": 13.6,
+          "prepareMs": 308.5,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1056.6,
+          "finishMs": 1078.1
+        },
+        "steps": [
+          {
+            "endMs": 795.3,
+            "finishReason": "tool-calls",
+            "inputTokens": 2040,
+            "outputTokens": 40,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 1076.4,
+            "finishReason": "stop",
+            "inputTokens": 2090,
+            "outputTokens": 26,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "818ccf13c",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 787.8,
+            "durationMs": 5.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4130,
+          "outputTokens": 66,
+          "totalTokens": 4196,
+          "cachedInputTokens": 1920,
+          "reasoningTokens": 9
+        },
+        "cost": {
+          "promptTokens": 4130,
+          "completionTokens": 66,
+          "totalTokens": 4196,
+          "inputCost": 0.00016107,
+          "outputCost": 0.000012540000000000002,
+          "totalCost": 0.00017361,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "94ac9650-daa6-4825-bd8d-87e598615e07",
+            "startMs": 10.3,
+            "durationMs": 257,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 10.7,
+                "durationMs": 256.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "9b1308b9-7f8c-489f-b011-f947ca1c914b",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-07T23:27:18.183Z",
+      "billingWaitMs": 21.18809999999985
+    },
+    {
+      "caseId": "fr-student",
+      "experimentArm": "20b-coreweave-off",
+      "model": "openai/gpt-oss-20b",
+      "mode": "off",
+      "strategy": "parallel",
+      "provider": "coreweave-only",
+      "correlationId": "770a860b-dbec-45cc-b0f3-70a6bd132984",
+      "startedAt": "2026-10-07T23:27:19.145Z",
+      "language": "fr",
+      "expectedIntent": "student_count",
+      "firstTextMs": 963.8178000000003,
+      "completionMs": 1104.4206000000004,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "Le nombre total d’élèves pour l’année scolaire 2026‑2027 est de **8**.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4130,
+        "completionTokens": 76,
+        "totalTokens": 4206,
+        "inputCost": 0.0000826,
+        "outputCost": 0.00000608,
+        "totalCost": 0.00008868,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "770a860b-dbec-45cc-b0f3-70a6bd132984",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 1.8,
+          "historyMs": null,
+          "routingMs": 6.1,
+          "contextMs": 0.4,
+          "prepareMs": 8.1,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 949.8,
+          "finishMs": 1090
+        },
+        "steps": [
+          {
+            "endMs": 567,
+            "finishReason": "tool-calls",
+            "inputTokens": 2041,
+            "outputTokens": 36,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 1089.5,
+            "finishReason": "stop",
+            "inputTokens": 2089,
+            "outputTokens": 40,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "chatcmpl-tool-816ff4dea568c547",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 561.2,
+            "durationMs": 5
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4130,
+          "outputTokens": 76,
+          "totalTokens": 4206,
+          "cachedInputTokens": 2048,
+          "reasoningTokens": 15
+        },
+        "cost": {
+          "promptTokens": 4130,
+          "completionTokens": 76,
+          "totalTokens": 4206,
+          "inputCost": 0.0000826,
+          "outputCost": 0.00000608,
+          "totalCost": 0.00008868,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "770a860b-dbec-45cc-b0f3-70a6bd132984",
+            "startMs": 2.3,
+            "durationMs": 0.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "9b1308b9-7f8c-489f-b011-f947ca1c914b",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-07T23:27:20.249Z",
+      "billingWaitMs": 11.83789999999999
+    },
+    {
+      "caseId": "fr-student",
+      "experimentArm": "20b-coreweave-parallel",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "parallel",
+      "provider": "coreweave-only",
+      "correlationId": "de777602-b0ca-43ae-88be-1a72b1988ea6",
+      "startedAt": "2026-10-07T23:27:21.180Z",
+      "language": "fr",
+      "expectedIntent": "student_count",
+      "firstTextMs": 1262.7253,
+      "completionMs": 1370.5058,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "Le nombre total d’élèves pour l’année scolaire 2026‑2027 est de **8**.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4130,
+        "completionTokens": 78,
+        "totalTokens": 4208,
+        "inputCost": 0.0000826,
+        "outputCost": 0.00000624,
+        "totalCost": 0.00008884,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "de777602-b0ca-43ae-88be-1a72b1988ea6",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 8.6,
+          "contextMs": 0.1,
+          "prepareMs": 11.1,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1250.6,
+          "finishMs": 1357.9
+        },
+        "steps": [
+          {
+            "endMs": 733.9,
+            "finishReason": "tool-calls",
+            "inputTokens": 2041,
+            "outputTokens": 37,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 1357.5,
+            "finishReason": "stop",
+            "inputTokens": 2089,
+            "outputTokens": 41,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "chatcmpl-tool-9c42e5e7ddbd5af3",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 728.5,
+            "durationMs": 4.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4130,
+          "outputTokens": 78,
+          "totalTokens": 4208,
+          "cachedInputTokens": 128,
+          "reasoningTokens": 18
+        },
+        "cost": {
+          "promptTokens": 4130,
+          "completionTokens": 78,
+          "totalTokens": 4208,
+          "inputCost": 0.0000826,
+          "outputCost": 0.00000624,
+          "totalCost": 0.00008884,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "de777602-b0ca-43ae-88be-1a72b1988ea6",
+            "startMs": 2.6,
+            "durationMs": 0,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 10.112999999983003,
+          "timedOut": false,
+          "candidateState": "pending",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "9b1308b9-7f8c-489f-b011-f947ca1c914b",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-07T23:27:22.550Z",
+      "billingWaitMs": 13.432000000000698
+    },
+    {
+      "caseId": "fr-student",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "ce0af57d-bc6d-4d6d-913e-04370a832914",
+      "startedAt": "2026-10-07T23:27:23.215Z",
+      "language": "fr",
+      "expectedIntent": "student_count",
+      "firstTextMs": 1431.3881999999994,
+      "completionMs": 1578.917300000001,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "Le nombre total d’élèves pour l’année scolaire 2026‑2027 est **8**.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4130,
+        "completionTokens": 82,
+        "totalTokens": 4212,
+        "inputCost": 0.0000826,
+        "outputCost": 0.00000656,
+        "totalCost": 0.00008916000000000001,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "ce0af57d-bc6d-4d6d-913e-04370a832914",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 9.7,
+          "contextMs": 0.1,
+          "prepareMs": 290.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1419.2,
+          "finishMs": 1566.2
+        },
+        "steps": [
+          {
+            "endMs": 1024.1,
+            "finishReason": "tool-calls",
+            "inputTokens": 2041,
+            "outputTokens": 42,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 1565.6,
+            "finishReason": "stop",
+            "inputTokens": 2089,
+            "outputTokens": 40,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "chatcmpl-tool-98c62b3c5c5f13db",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 1018.8,
+            "durationMs": 4.5
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4130,
+          "outputTokens": 82,
+          "totalTokens": 4212,
+          "cachedInputTokens": 2112,
+          "reasoningTokens": 19
+        },
+        "cost": {
+          "promptTokens": 4130,
+          "completionTokens": 82,
+          "totalTokens": 4212,
+          "inputCost": 0.0000826,
+          "outputCost": 0.00000656,
+          "totalCost": 0.00008916000000000001,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "ce0af57d-bc6d-4d6d-913e-04370a832914",
+            "startMs": 283.1,
+            "durationMs": 0.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "fr"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 290.3545999999915,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "9b1308b9-7f8c-489f-b011-f947ca1c914b",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-07T23:27:24.794Z",
+      "billingWaitMs": 10.730600000000777
+    }
+  ],
+  "attempts": [
+    {
+      "correlationId": "ce0af57d-bc6d-4d6d-913e-04370a832914",
+      "caseId": "fr-student",
+      "mode": "on",
+      "id": "d4d59b04-a9a6-4501-b0dd-43e49a66fdec",
+      "startedAt": "2026-10-07T23:27:23.218Z",
+      "outcome": "error",
+      "costUsd": null,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 279.5783999999985,
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 529,
+      "reason": "provider_rejected",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "de777602-b0ca-43ae-88be-1a72b1988ea6",
+      "caseId": "fr-student",
+      "mode": "on",
+      "id": "803cb904-aa52-468f-86d4-92c60969a36f",
+      "startedAt": "2026-10-07T23:27:21.184Z",
+      "outcome": "aborted",
+      "costUsd": 0.000038934,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 327.37690000000293,
+      "selected": "ordinary",
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791415640-jB1dBPztOa3qwafJhTV2",
+      "providerGenerationId": "gen-dec-1791415640-jB1dBPztOa3qwafJhTV2",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_count",
+      "confidence": 1,
+      "writeProbability": 0.03,
+      "reason": "candidate_cancelled_billing_completed"
+    }
+  ],
+  "qualification": false,
+  "initial": {
+    "instanceId": "9b1308b9-7f8c-489f-b011-f947ca1c914b",
+    "resetCount": 0,
+    "mode": "off",
+    "budget": {
+      "mode": "off",
+      "threshold": 0.8,
+      "timeoutMs": 800,
+      "maxRequests": 48,
+      "maxCostUsd": 0.0072,
+      "unknownReserveUsd": 0.00015,
+      "billingMode": "observe",
+      "billingTimeoutMs": 5000,
+      "requests": 0,
+      "pendingRequests": 0,
+      "knownCostUsd": 0,
+      "reservedUsd": 0,
+      "unknownCosts": 0,
+      "stoppedReason": null
+    },
+    "syntheticOnly": true,
+    "markedLocalFixture": true,
+    "guardVersion": 5,
+    "intentWordingVersion": 3,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "billingMode": "observe",
+    "billingTimeoutMs": 5000,
+    "experimentEnabled": true,
+    "frameworkPreparationEnabled": false
+  },
+  "scopedReadChecks": [
+    {
+      "tool": "students_get_student_count",
+      "passed": true
+    },
+    {
+      "tool": "teachers_get_teacher_count",
+      "passed": true
+    },
+    {
+      "tool": "classes_get_classes",
+      "passed": true
+    },
+    {
+      "tool": "sections_get_sections",
+      "passed": true
+    },
+    {
+      "tool": "attendance_get_today_students",
+      "passed": true
+    }
+  ],
+  "keyBefore": {
+    "capturedAt": "2026-10-07T23:27:16.933Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "usage": 1.133552775,
+    "limit": 50,
+    "limitRemaining": 48.866447225
+  },
+  "settings": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b"
+  },
+  "generationBudget": {
+    "maxEstimatedUsd": 0.2428,
+    "requestReserveUsd": 0.0025,
+    "observedEstimatedUsd": 0.00044029,
+    "reservedUsd": 0,
+    "requestsSettled": 4,
+    "requestsWithUnknownCost": 0,
+    "inFlight": 0,
+    "stoppedReason": null,
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+  },
+  "stoppedReason": "Classifier terminal cost remains unknown",
+  "keyAfter": {
+    "capturedAt": "2026-10-07T23:27:24.884Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-20b",
+    "usage": 1.133552775,
+    "limit": 50,
+    "limitRemaining": 48.866447225
+  },
+  "modelRestored": true,
+  "modeRestoredOff": true,
+  "summary": {
+    "all": {
+      "attempts": 4,
+      "valid": 4,
+      "firstTextMs": {
+        "mean": 1185.219375,
+        "p50": 1082.9461999999999,
+        "p95": 1431.3881999999994
+      },
+      "completionMs": {
+        "mean": 1290.0799500000003,
+        "p50": 1106.4760999999999,
+        "p95": 1578.917300000001
+      },
+      "jevTemplates": 0,
+      "regexTemplates": 0,
+      "modelReplies": 4
+    },
+    "modes": {
+      "off": {
+        "attempts": 2,
+        "valid": 2,
+        "firstTextMs": {
+          "mean": 1023.3820000000001,
+          "p50": 963.8178000000003,
+          "p95": 1082.9461999999999
+        },
+        "completionMs": {
+          "mean": 1105.4483500000001,
+          "p50": 1104.4206000000004,
+          "p95": 1106.4760999999999
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 2
+      },
+      "on": {
+        "attempts": 2,
+        "valid": 2,
+        "firstTextMs": {
+          "mean": 1347.0567499999997,
+          "p50": 1262.7253,
+          "p95": 1431.3881999999994
+        },
+        "completionMs": {
+          "mean": 1474.7115500000004,
+          "p50": 1370.5058,
+          "p95": 1578.917300000001
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 2
+      },
+      "shadow": {
+        "attempts": 0,
+        "valid": 0,
+        "firstTextMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "completionMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 0
+      }
+    },
+    "pairedFallbacks": [
+      {
+        "caseId": "fr-student",
+        "experimentArm": "20b-coreweave-parallel",
+        "firstTextDeltaMs": 298.9074999999998,
+        "completionDeltaMs": 266.08519999999953
+      },
+      {
+        "caseId": "fr-student",
+        "experimentArm": "20b-coreweave-first",
+        "firstTextDeltaMs": 467.57039999999915,
+        "completionDeltaMs": 474.4967000000006
+      }
+    ],
+    "fallbackCompletionDeltaP95Ms": 474.4967000000006,
+    "qualification": false,
+    "note": "Small assistant-authored integration sample; no independent native accuracy or rollout qualification."
+  },
+  "modelSummaries": {
+    "openai/gpt-oss-120b": {
+      "all": {
+        "attempts": 1,
+        "valid": 1,
+        "firstTextMs": {
+          "mean": 1082.9461999999999,
+          "p50": 1082.9461999999999,
+          "p95": 1082.9461999999999
+        },
+        "completionMs": {
+          "mean": 1106.4760999999999,
+          "p50": 1106.4760999999999,
+          "p95": 1106.4760999999999
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 1
+      },
+      "modes": {
+        "off": {
+          "attempts": 1,
+          "valid": 1,
+          "firstTextMs": {
+            "mean": 1082.9461999999999,
+            "p50": 1082.9461999999999,
+            "p95": 1082.9461999999999
+          },
+          "completionMs": {
+            "mean": 1106.4760999999999,
+            "p50": 1106.4760999999999,
+            "p95": 1106.4760999999999
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 1
+        },
+        "on": {
+          "attempts": 0,
+          "valid": 0,
+          "firstTextMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "completionMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 0
+        },
+        "shadow": {
+          "attempts": 0,
+          "valid": 0,
+          "firstTextMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "completionMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 0
+        }
+      },
+      "pairedFallbacks": [],
+      "fallbackCompletionDeltaP95Ms": null,
+      "qualification": false,
+      "note": "Small assistant-authored integration sample; no independent native accuracy or rollout qualification."
+    },
+    "openai/gpt-oss-20b": {
+      "all": {
+        "attempts": 3,
+        "valid": 3,
+        "firstTextMs": {
+          "mean": 1219.3104333333333,
+          "p50": 1262.7253,
+          "p95": 1431.3881999999994
+        },
+        "completionMs": {
+          "mean": 1351.2812333333338,
+          "p50": 1370.5058,
+          "p95": 1578.917300000001
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 3
+      },
+      "modes": {
+        "off": {
+          "attempts": 1,
+          "valid": 1,
+          "firstTextMs": {
+            "mean": 963.8178000000003,
+            "p50": 963.8178000000003,
+            "p95": 963.8178000000003
+          },
+          "completionMs": {
+            "mean": 1104.4206000000004,
+            "p50": 1104.4206000000004,
+            "p95": 1104.4206000000004
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 1
+        },
+        "on": {
+          "attempts": 2,
+          "valid": 2,
+          "firstTextMs": {
+            "mean": 1347.0567499999997,
+            "p50": 1262.7253,
+            "p95": 1431.3881999999994
+          },
+          "completionMs": {
+            "mean": 1474.7115500000004,
+            "p50": 1370.5058,
+            "p95": 1578.917300000001
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 2
+        },
+        "shadow": {
+          "attempts": 0,
+          "valid": 0,
+          "firstTextMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "completionMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 0
+        }
+      },
+      "pairedFallbacks": [
+        {
+          "caseId": "fr-student",
+          "experimentArm": "20b-coreweave-parallel",
+          "firstTextDeltaMs": 298.9074999999998,
+          "completionDeltaMs": 266.08519999999953
+        },
+        {
+          "caseId": "fr-student",
+          "experimentArm": "20b-coreweave-first",
+          "firstTextDeltaMs": 467.57039999999915,
+          "completionDeltaMs": 474.4967000000006
+        }
+      ],
+      "fallbackCompletionDeltaP95Ms": 474.4967000000006,
+      "qualification": false,
+      "note": "Small assistant-authored integration sample; no independent native accuracy or rollout qualification."
+    }
+  },
+  "aggregateKeyDeltaUsd": 0
+}
