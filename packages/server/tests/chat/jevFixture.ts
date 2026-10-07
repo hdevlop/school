@@ -1,10 +1,11 @@
 import 'reflect-metadata';
 import { ChatAgent, ChatController, AiSettingsService, CHATBOT_CONFIG, type ChatbotConfig } from 'najm-chatbot';
 import { scriptedModel } from 'najm-chatbot/testing';
-import { AuthGuard } from 'najm-auth';
+import { AuthGuard, PermissionService, RoleService } from 'najm-auth';
 import { guards, getGuardMetadata } from 'najm-guard';
 import { mcp, McpTool, ToolGroup, TOOL_PROVIDER } from 'najm-mcp';
 import { i18n } from 'najm-i18n';
+import { validation } from 'najm-validation';
 import { schoolI18n } from '@sms/contracts/locales';
 import { KnowledgeContextProvider } from 'najm-rag';
 import { CORRELATION_ID, Controller, Get, INJECTION_TYPES, Server, USER, ROLE } from '../../src/najm';
@@ -55,6 +56,9 @@ class AttendanceLists {
 
 /** Fully local: fake settings/classifier/model and synthetic repositories, real guards/MCP/year scope. */
 export async function createJevFixture() {
+  let markedFixture = true;
+  const permissions: Array<{ id: string; name: string; resource: string; action: string }> = [];
+  const grantIds = new Set<string>();
   const events: ChatDiagnostics[] = [];
   const settings = { getInternal: async () => ({ provider: 'openrouter', apiKey: 'fixture-unused-key',
     isEnabled: true, model: 'openai/gpt-oss-120b', useMemory: false }) };
@@ -71,7 +75,7 @@ export async function createJevFixture() {
     } });
   };
   const server = new Server({ isolated: true, silent: true }).base('/api')
-    .use(i18n(schoolI18n.options)).use(guards())
+    .use(i18n(schoolI18n.options)).use(guards()).use(validation())
     .use(mcp({ name: 'jev-fixture', version: '1', transports: ['http'], path: '/mcp',
       ...schoolMcpYearHooks(['students', 'teachers', 'classes', 'attendance']) }))
     .load({ AuthGuard, ChatController, JevBenchmarkController, JevBenchmarkService,
@@ -82,7 +86,16 @@ export async function createJevFixture() {
   const container = server.container;
   container.set(AiSettingsService, settings as any);
   container.set(JevIntentClassifier, classifier);
-  container.set(JevBenchmarkRepository, { isMarkedFixture: async () => true } as any);
+  container.set(JevBenchmarkRepository, { isMarkedFixture: async () => markedFixture } as any);
+  container.set(RoleService, { getByName: async () => ({ id: 'history-role-admin', name: 'admin' }) } as any);
+  container.set(PermissionService, {
+    getPermissionsByRole: async () => permissions.filter(item => grantIds.has(item.id)),
+    getByName: async (name: string) => permissions.find(item => item.name === name),
+    create: async (data: { name: string; resource: string; action: string }) => {
+      const permission = { ...data, id: `mock-${permissions.length}` }; permissions.push(permission); return permission;
+    },
+    assignPermissionToRole: async (_roleId: string, id: string) => { grantIds.add(id); },
+  } as any);
   container.set(KnowledgeContextProvider, { getContext: async () => null } as any);
   container.set(SettingsRepository, { getPublicSettings: async () => ({ timeZone: 'UTC' }) } as any);
   for (const token of [ParentRepository, TeacherRepository, StudentRepository]) container.set(token, { getByUserId: async () => null } as any);
@@ -110,7 +123,7 @@ export async function createJevFixture() {
     type: INJECTION_TYPES.MIDDLEWARE, target, order: 1,
     handler: async (context: any, next: () => Promise<void>) => {
       const actor = context.req.header('x-test-role');
-      if (actor) { container.set(USER, { id: actor, role: actor, status: 'active' } as any); container.set(ROLE, actor); }
+      if (actor) { container.set(USER, { id: context.req.header('x-test-actor-id') ?? actor, role: actor, status: 'active' } as any); container.set(ROLE, actor); }
       const correlation = context.req.header('x-request-id'); if (correlation) container.set(CORRELATION_ID, correlation);
       return next();
     },
@@ -124,10 +137,12 @@ export async function createJevFixture() {
           status: label === '2026-2027' ? 'active' : 'closed' } : null };
     },
   });
-  async function call(path: string, body?: unknown, role: string | null = 'admin', year = '2026-2027', correlation = crypto.randomUUID()) {
+  async function call(path: string, body?: unknown, role: string | null = 'admin', year = '2026-2027', correlation = crypto.randomUUID(), actorId?: string) {
     return server.fetch(new Request(`http://fixture.local/api${path}`, { method: body === undefined ? 'GET' : 'POST',
       headers: { 'content-type': 'application/json', 'X-Academic-Year': year, 'x-request-id': correlation,
-        ...(role ? { 'x-test-role': role } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }));
+        ...(role ? { 'x-test-role': role } : {}), ...(actorId ? { 'x-test-actor-id': actorId } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }));
   }
-  return { server, classifier, events, call, counts: () => ({ decisions, generations }) };
+  return { server, classifier, events, call, counts: () => ({ decisions, generations }),
+    setMarkedFixture: (value: boolean) => { markedFixture = value; },
+    readGrants: () => permissions.filter(item => grantIds.has(item.id)).map(item => ({ ...item })) };
 }

@@ -141,13 +141,13 @@ describe('server-issued first-turn grants', () => {
     expect(jevSessionDto.safeParse({ caseId: 'fr-student', historyComplete: true }).success).toBe(false);
     expect(jevModeDto.safeParse({ mode: 'on', maxRequests: 1000 }).success).toBe(false);
   });
-  test('every route declares sign-in and the existing administrator group', () => {
+  test('every control declares sign-in and the administrator role; grant setup excludes principal', () => {
     const methods = getRoutes(JevBenchmarkController).map(route => route.methodName);
-    expect(methods.sort()).toEqual(['attempts', 'mode', 'session', 'status']);
+    expect(methods.sort()).toEqual(['attempts', 'fixtureReads', 'mode', 'session', 'status']);
     for (const method of methods) {
       const guards = getGuardMetadata(JevBenchmarkController, method);
       expect(guards.some(guard => guard.guardClass.name === 'AuthGuard')).toBe(true);
-      expect(guards.find(guard => guard.guardClass.name === 'RoleGuard')?.params).toEqual(['principal', 'admin']);
+      expect(guards.find(guard => guard.guardClass.name === 'RoleGuard')?.params).toEqual(method === 'fixtureReads' ? 'admin' : ['principal', 'admin']);
     }
   });
 });

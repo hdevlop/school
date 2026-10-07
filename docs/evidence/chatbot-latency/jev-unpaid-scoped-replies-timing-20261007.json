@@ -1,0 +1,708 @@
+{
+  "stage": "unpaid-live-scoped-template-replies",
+  "capturedAtUtc": "2026-10-07T21:21:03.280Z",
+  "modelNetworkCalls": 0,
+  "paidProviderCalls": 0,
+  "classifierCalls": 0,
+  "rows": [
+    {
+      "caseId": "student-count-fr",
+      "year": "2025-2026",
+      "expectedStudentCount": 8,
+      "firstTextMs": 215.475,
+      "completionMs": 217.5477,
+      "diagnosticLookupMs": 12.43530000000004,
+      "text": "Il y a 8 élèves inscrits cette année.",
+      "done": true,
+      "errors": [],
+      "streamTools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2025-2026"
+          },
+          "resultSummary": null
+        }
+      ],
+      "diagnostic": {
+        "version": 1,
+        "correlationId": "cdc7e379-08c3-4db6-9bdf-da9933fc7238",
+        "channel": "web",
+        "provider": "custom",
+        "model": "fixture-never-generate",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 1.4,
+          "historyMs": null,
+          "routingMs": 184.2,
+          "contextMs": 1.4,
+          "prepareMs": 190.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 192.3,
+          "finishMs": 192.3
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "cf115074-b9c6-4a48-a61d-ea122e30006f",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 187.7,
+            "durationMs": 4.5
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "custom",
+          "model": "fixture-never-generate",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "cdc7e379-08c3-4db6-9bdf-da9933fc7238",
+            "startMs": 3.2,
+            "durationMs": 176.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 3.6,
+                "durationMs": 175.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+          "resetCount": 1
+        }
+      }
+    },
+    {
+      "caseId": "student-count-ar",
+      "year": "2025-2026",
+      "expectedStudentCount": 8,
+      "firstTextMs": 191.83369999999996,
+      "completionMs": 191.9513,
+      "diagnosticLookupMs": 12.972800000000007,
+      "text": "عدد التلاميذ المسجلين هذه السنة هو 8.",
+      "done": true,
+      "errors": [],
+      "streamTools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2025-2026"
+          },
+          "resultSummary": null
+        }
+      ],
+      "diagnostic": {
+        "version": 1,
+        "correlationId": "a8885cdc-8365-46c7-a915-27f2beb02c88",
+        "channel": "web",
+        "provider": "custom",
+        "model": "fixture-never-generate",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 166.2,
+          "contextMs": 1.5,
+          "prepareMs": 172.9,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 173,
+          "finishMs": 173
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "e345d02f-2660-4618-bfd5-fcc58b8579ae",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 168.3,
+            "durationMs": 4.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "custom",
+          "model": "fixture-never-generate",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "a8885cdc-8365-46c7-a915-27f2beb02c88",
+            "startMs": 0.4,
+            "durationMs": 160,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.6,
+                "durationMs": 159.8,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+          "resetCount": 1
+        }
+      }
+    },
+    {
+      "caseId": "student-count-ary",
+      "year": "2025-2026",
+      "expectedStudentCount": 8,
+      "firstTextMs": 156.37649999999996,
+      "completionMs": 156.53470000000004,
+      "diagnosticLookupMs": 14.042500000000018,
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام.",
+      "done": true,
+      "errors": [],
+      "streamTools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2025-2026"
+          },
+          "resultSummary": null
+        }
+      ],
+      "diagnostic": {
+        "version": 1,
+        "correlationId": "2ddc345d-c3a2-4b2d-b76c-5be0d3bc0914",
+        "channel": "web",
+        "provider": "custom",
+        "model": "fixture-never-generate",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 128.7,
+          "contextMs": 1.5,
+          "prepareMs": 136,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 136.2,
+          "finishMs": 136.2
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "f5f955d7-d84f-4f2a-8fd3-e7591c819970",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 130.9,
+            "durationMs": 5.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "custom",
+          "model": "fixture-never-generate",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "2ddc345d-c3a2-4b2d-b76c-5be0d3bc0914",
+            "startMs": 0.3,
+            "durationMs": 121.8,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.6,
+                "durationMs": 121.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+          "resetCount": 1
+        }
+      }
+    },
+    {
+      "caseId": "student-count-fr",
+      "year": "2026-2027",
+      "expectedStudentCount": 8,
+      "firstTextMs": 35.68870000000004,
+      "completionMs": 36.10530000000006,
+      "diagnosticLookupMs": 11.927500000000009,
+      "text": "Il y a 8 élèves inscrits cette année.",
+      "done": true,
+      "errors": [],
+      "streamTools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "diagnostic": {
+        "version": 1,
+        "correlationId": "fa163919-d132-4d7d-886d-443f0e87af68",
+        "channel": "web",
+        "provider": "custom",
+        "model": "fixture-never-generate",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 7.2,
+          "contextMs": 0.1,
+          "prepareMs": 11.4,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 11.5,
+          "finishMs": 11.5
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "4352eafc-040a-4657-8398-84cce82448b5",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 7.7,
+            "durationMs": 3.8
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "custom",
+          "model": "fixture-never-generate",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "fa163919-d132-4d7d-886d-443f0e87af68",
+            "startMs": 0.4,
+            "durationMs": 0.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "fr"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+          "resetCount": 1
+        }
+      }
+    },
+    {
+      "caseId": "student-count-ar",
+      "year": "2026-2027",
+      "expectedStudentCount": 8,
+      "firstTextMs": 31.64479999999992,
+      "completionMs": 32.22199999999998,
+      "diagnosticLookupMs": 11.68369999999993,
+      "text": "عدد التلاميذ المسجلين هذه السنة هو 8.",
+      "done": true,
+      "errors": [],
+      "streamTools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "diagnostic": {
+        "version": 1,
+        "correlationId": "a4936221-f0df-4b2f-a1db-7d681af521fa",
+        "channel": "web",
+        "provider": "custom",
+        "model": "fixture-never-generate",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 5.3,
+          "contextMs": 0.1,
+          "prepareMs": 10.1,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 10.1,
+          "finishMs": 10.1
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "e5faa880-a960-4c3e-803c-25afb26be3fb",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 5.7,
+            "durationMs": 4.4
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "custom",
+          "model": "fixture-never-generate",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "a4936221-f0df-4b2f-a1db-7d681af521fa",
+            "startMs": 0.2,
+            "durationMs": 0,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ar"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+          "resetCount": 1
+        }
+      }
+    },
+    {
+      "caseId": "student-count-ary",
+      "year": "2026-2027",
+      "expectedStudentCount": 8,
+      "firstTextMs": 33.68810000000008,
+      "completionMs": 33.88850000000002,
+      "diagnosticLookupMs": 13.128199999999993,
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام.",
+      "done": true,
+      "errors": [],
+      "streamTools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "diagnostic": {
+        "version": 1,
+        "correlationId": "4ad4ee86-d5e4-4c57-921a-894a02ae4cc1",
+        "channel": "web",
+        "provider": "custom",
+        "model": "fixture-never-generate",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 6.5,
+          "contextMs": 0.1,
+          "prepareMs": 10.9,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 11,
+          "finishMs": 11
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "50d4aca3-8214-431d-a8c7-31d5c04d8000",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 6.9,
+            "durationMs": 4
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "custom",
+          "model": "fixture-never-generate",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "4ad4ee86-d5e4-4c57-921a-894a02ae4cc1",
+            "startMs": 0.3,
+            "durationMs": 0,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+          "resetCount": 1
+        }
+      }
+    }
+  ],
+  "settingsRestored": true,
+  "status": "completed",
+  "cacheReset": {
+    "enabled": true,
+    "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+    "resetCount": 1,
+    "caches": [
+      "query-embedding",
+      "knowledge-context"
+    ]
+  },
+  "finalJevStatus": {
+    "instanceId": "34e2b035-6489-47ed-8555-067d82f9b735",
+    "resetCount": 1,
+    "mode": "off",
+    "budget": {
+      "mode": "off",
+      "threshold": 0.8,
+      "timeoutMs": 800,
+      "maxRequests": 0,
+      "maxCostUsd": 0,
+      "unknownReserveUsd": 0.00015,
+      "requests": 0,
+      "knownCostUsd": 0,
+      "reservedUsd": 0,
+      "unknownCosts": 0,
+      "stoppedReason": "request_limit"
+    },
+    "syntheticOnly": true,
+    "markedLocalFixture": true,
+    "guardVersion": 5,
+    "intentWordingVersion": 3,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "frameworkPreparationEnabled": false
+  }
+}

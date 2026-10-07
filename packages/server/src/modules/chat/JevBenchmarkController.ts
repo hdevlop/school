@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, User, Validate } from '../../najm';
-import { isAdministrator } from '../../auth';
+import { isAdmin, isAdministrator } from '../../auth';
 import { JevBenchmarkService } from './JevBenchmarkService';
-import { jevModeDto, jevSessionDto, type JevModeDto, type JevSessionDto } from './JevBenchmarkDto';
+import { jevModeDto, jevSessionDto, jevFixtureReadsDto, type JevModeDto, type JevSessionDto, type JevFixtureReadsDto } from './JevBenchmarkDto';
 
 @Controller('/chat-benchmark/jev')
 export class JevBenchmarkController {
@@ -14,4 +14,6 @@ export class JevBenchmarkController {
   session(@User('id') actorId: string, @Body() body: JevSessionDto) { return this.benchmark.issueSession(actorId, body.caseId); }
   @Get('/attempts') @isAdministrator()
   attempts() { return this.benchmark.attempts(); }
+  @Post('/fixture-reads') @isAdmin() @Validate({ body: jevFixtureReadsDto })
+  fixtureReads(@User('id') actorId: string, @Body() _body: JevFixtureReadsDto) { return this.benchmark.prepareFixtureReads(actorId); }
 }

@@ -43,6 +43,44 @@ test('HTTP grant/read preserves historical year and blocks replay/altered text',
   expect(altered.status).toBe(200); await altered.text();
   expect(fixture.counts().decisions).toBe(1);
 });
+
+test('fixture read setup is fixed, admin-only, off-only, marker-bound and idempotent', async () => {
+  fixture = await createJevFixture();
+  const path = '/chat-benchmark/jev/fixture-reads';
+  const setup = (body: unknown = { action: 'prepare' }, role: string | null = 'admin', actorId = 'history-admin') =>
+    fixture!.call(path, body, role, '2026-2027', crypto.randomUUID(), actorId);
+  setBenchmarkJevMode('off');
+  expect((await setup({}, null)).status).toBe(401);
+  for (const role of ['principal', 'teacher', 'parent', 'student', 'accounting'])
+    expect((await setup({}, role)).status).toBe(403);
+  expect((await setup({ action: 'prepare', roleId: 'another-role', permissions: ['*:*'] })).status).toBe(400);
+  expect((await setup({})).status).toBe(400);
+  expect((await setup({ action: 'prepare' }, 'admin', 'another-admin')).status).toBe(404);
+  process.env.NODE_ENV = 'production';
+  expect((await setup()).status).toBe(404);
+  process.env.NODE_ENV = 'test';
+  process.env.DB_URL = 'postgres://localhost/school';
+  expect((await setup()).status).toBe(404);
+  process.env.DB_URL = 'postgres://localhost/school_history_test';
+  fixture.setMarkedFixture(false);
+  expect((await setup()).status).toBe(404);
+  fixture.setMarkedFixture(true);
+  setBenchmarkJevMode('on');
+  expect((await setup()).status).toBe(404);
+  expect(fixture.readGrants()).toHaveLength(0);
+  setBenchmarkJevMode('off');
+  const response = await setup();
+  expect(response.status).toBe(200);
+  const result = await response.json();
+  expect(result).toMatchObject({ fixtureOnly: true, roleId: 'history-role-admin',
+    added: ['read:students', 'read:teachers', 'read:classes', 'read:attendance'], requiresFreshLogin: true, jevMode: 'off' });
+  const again = await setup();
+  expect(again.status).toBe(200);
+  expect(await again.json()).toMatchObject({ added: [], requiresFreshLogin: false });
+  expect(fixture.readGrants().map(item => item.name)).toEqual(result.requiredPermissions);
+  expect(fixture.readGrants().every(item => item.action === 'read' && item.resource !== '*')).toBe(true);
+  expect(fixture.counts()).toEqual({ decisions: 0, generations: 0 });
+});
 test('all 24 synthetic cases stream through off/on/shadow without classifier/tool escape', async () => {
   fixture = await createJevFixture();
   for (const item of jevSyntheticCases) for (const mode of ['off', 'on', 'shadow']) {
