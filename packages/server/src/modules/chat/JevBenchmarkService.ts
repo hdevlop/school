@@ -10,7 +10,7 @@ import { CHATBOT_CONFIG, type ChatbotConfig } from 'najm-chatbot';
 import { Inject } from '../../najm';
 import { PermissionService, RoleService } from 'najm-auth';
 
-const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'attendance'] as const;
+const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'sections', 'attendance'] as const;
 
 @Service()
 export class JevBenchmarkService {
@@ -28,9 +28,14 @@ export class JevBenchmarkService {
     return { ...chatBenchmarkSnapshot(), mode: effectiveJevMode(), budget: this.classifier.ledger.snapshot(),
       syntheticOnly: true, markedLocalFixture: true, guardVersion: 5, intentWordingVersion: 3,
       threshold: this.classifier.controls.threshold, timeoutMs: this.classifier.controls.timeoutMs,
+      billingMode: this.classifier.controls.billingMode, billingTimeoutMs: this.classifier.controls.billingTimeoutMs,
       frameworkPreparationEnabled: this.chatbotConfig.reply?.preparation?.enabled === true };
   }
-  async setMode(mode: JevMode) { await this.ensureEnabled(); setBenchmarkJevMode(mode); return this.status(); }
+  async setMode(mode: JevMode) {
+    await this.ensureEnabled(); setBenchmarkJevMode(mode);
+    if (mode === 'off') this.classifier.cancelInFlight();
+    return this.status();
+  }
   async issueSession(actorId: string, caseId: string) {
     await this.ensureEnabled();
     return { ...jevSessionGrants.issue(actorId, this.year.label, caseId), ...chatBenchmarkSnapshot() };

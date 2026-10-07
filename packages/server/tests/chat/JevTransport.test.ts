@@ -3,13 +3,15 @@ import { createJevFixture } from './jevFixture';
 import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
 import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
 
-const vars = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS', 'CHATBOT_JEV_MAX_REQUESTS', 'CHATBOT_JEV_MAX_COST_USD'];
+const vars = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS', 'CHATBOT_JEV_MAX_REQUESTS', 'CHATBOT_JEV_MAX_COST_USD',
+  'CHATBOT_JEV_BILLING_MODE', 'CHATBOT_JEV_BILLING_TIMEOUT_MS'];
 const original = Object.fromEntries(vars.map(key => [key, process.env[key]]));
 let fixture: Awaited<ReturnType<typeof createJevFixture>> | undefined;
 beforeEach(() => {
   process.env.DB_URL = 'postgres://localhost/school_history_test';
   process.env.NODE_ENV = 'test'; process.env.CHATBOT_BENCHMARK_CONTROLS = 'true';
   process.env.CHATBOT_JEV_MAX_REQUESTS = '100'; process.env.CHATBOT_JEV_MAX_COST_USD = '0.01';
+  process.env.CHATBOT_JEV_BILLING_MODE = 'abort';
   setBenchmarkJevMode('on');
 });
 afterEach(async () => {
@@ -73,7 +75,7 @@ test('fixture read setup is fixed, admin-only, off-only, marker-bound and idempo
   expect(response.status).toBe(200);
   const result = await response.json();
   expect(result).toMatchObject({ fixtureOnly: true, roleId: 'history-role-admin',
-    added: ['read:students', 'read:teachers', 'read:classes', 'read:attendance'], requiresFreshLogin: true, jevMode: 'off' });
+    added: ['read:students', 'read:teachers', 'read:classes', 'read:sections', 'read:attendance'], requiresFreshLogin: true, jevMode: 'off' });
   const again = await setup();
   expect(again.status).toBe(200);
   expect(await again.json()).toMatchObject({ added: [], requiresFreshLogin: false });

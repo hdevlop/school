@@ -20,7 +20,8 @@ import { schoolChatYearContext } from '../../src/modules/chat/SchoolChatContextP
 import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
 
 const names = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS', 'CHATBOT_JEV_MODE', 'CHATBOT_JEV_MAX_REQUESTS',
-  'CHATBOT_JEV_MAX_COST_USD', 'CHATBOT_JEV_TIMEOUT_MS', 'CHATBOT_JEV_THRESHOLD', 'CHATBOT_JEV_UNKNOWN_RESERVE_USD'];
+  'CHATBOT_JEV_MAX_COST_USD', 'CHATBOT_JEV_TIMEOUT_MS', 'CHATBOT_JEV_THRESHOLD', 'CHATBOT_JEV_UNKNOWN_RESERVE_USD',
+  'CHATBOT_JEV_BILLING_MODE', 'CHATBOT_JEV_BILLING_TIMEOUT_MS'];
 const original = Object.fromEntries(names.map(name => [name, process.env[name]]));
 beforeEach(() => {
   process.env.DB_URL = 'postgres://localhost/school_history_test';
@@ -28,6 +29,7 @@ beforeEach(() => {
   process.env.CHATBOT_JEV_MAX_REQUESTS = '10'; process.env.CHATBOT_JEV_MAX_COST_USD = '0.01';
   process.env.CHATBOT_JEV_TIMEOUT_MS = '800'; process.env.CHATBOT_JEV_THRESHOLD = '0.8';
   setBenchmarkJevMode('on');
+  process.env.CHATBOT_JEV_BILLING_MODE = 'abort';
 });
 afterEach(() => {
   for (const name of names) if (original[name] === undefined) delete process.env[name]; else process.env[name] = original[name];
@@ -220,6 +222,19 @@ describe('shared intent renderers', () => {
 });
 
 describe('published readiness integration', () => {
+  function observation() {
+    process.env.CHATBOT_JEV_BILLING_MODE = 'observe';
+    process.env.CHATBOT_JEV_TIMEOUT_MS = '20'; process.env.CHATBOT_JEV_BILLING_TIMEOUT_MS = '150';
+    const { instance } = classifier(); const lifetime = new AbortController();
+    const scope = <T>(work: () => T) => run(instance, work, { requestSignal: lifetime.signal });
+    return { instance, lifetime, scope };
+  }
+  async function terminal(instance: JevIntentClassifier) {
+    const end = performance.now() + 500;
+    while (instance.ledger.snapshot().pendingRequests && performance.now() < end)
+      await new Promise(resolve => setTimeout(resolve, 2));
+    expect(instance.ledger.snapshot().pendingRequests).toBe(0);
+  }
   function agent(instance: JevIntentClassifier, router: () => Promise<any>) {
     const events: any[] = []; const reads = mock(async () => ({ content: [{ type: 'text', text: '{"count":7}' }] }));
     const value = new ChatAgent({ getInternal: async () => ({ isEnabled: true, provider: 'openrouter', model: 'test', useMemory: false }) } as any,
@@ -260,5 +275,82 @@ describe('published readiness integration', () => {
     a.input.messages[0].parts[0].text = 'Ajoute un élève nommé ZzJevDemo.';
     expect(await run(instance, () => a.value.runOnce(a.input))).toContain('Je ne peux pas');
     expect(instance.transport).not.toHaveBeenCalled(); expect(router).not.toHaveBeenCalled();
+  });
+  test('observer returns fallback before billing, then records cost and both provider identifiers without a late read', async () => {
+    const { instance, scope } = observation(); let release!: (value: Response) => void; let network!: AbortSignal;
+    instance.transport = mock((_url: unknown, init: RequestInit) => {
+      network = init.signal!; return new Promise(resolve => { release = resolve; });
+    }) as any;
+    const a = agent(instance, async () => ({ status: 'routed', tools: [] }));
+    expect(await scope(() => a.value.runOnce(a.input))).toBe('model fallback');
+    expect(network.aborted).toBe(false);
+    expect(instance.ledger.recent()[0]).toMatchObject({ outcome: 'pending', selected: 'ordinary' });
+    expect(a.events[0].replyPreparation.elapsedMs).toBeLessThan(100);
+    const saved = JSON.stringify(a.events);
+    release(Response.json({ ...response(), id: 'gen-dec-owned' }, { headers: { 'x-request-id': 'req-owned' } }));
+    await terminal(instance);
+    expect(instance.ledger.recent()[0]).toMatchObject({ outcome: 'aborted', costUsd: 0.00004,
+      costSource: 'decisions_response', providerRequestId: 'req-owned', providerGenerationId: 'gen-dec-owned',
+      billingMode: 'observe', transportCompleted: true, selected: 'ordinary' });
+    expect(instance.ledger.snapshot().unknownCosts).toBe(0);
+    expect(a.reads).not.toHaveBeenCalled(); expect(JSON.stringify(a.events)).toBe(saved);
+  });
+  test('observer deadline rejects a late candidate while its known bill can settle', async () => {
+    const { instance, scope } = observation(); let release!: (value: Response) => void;
+    instance.transport = mock(() => new Promise(resolve => { release = resolve; })) as any;
+    expect(await scope(() => instance.prepare(request()))).toBeNull();
+    expect(instance.ledger.recent()[0].outcome).toBe('pending');
+    release(Response.json(response())); await terminal(instance);
+    expect(instance.ledger.recent()[0]).toMatchObject({ outcome: 'aborted', costUsd: 0.00004, transportCompleted: true });
+  });
+  test.each(['disconnect', 'off'])('observer stops network work on %s after ordinary selection', async reason => {
+    const { instance, lifetime, scope } = observation(); let network!: AbortSignal;
+    instance.transport = mock((_url: unknown, init: RequestInit) => { network = init.signal!; return new Promise(() => {}); }) as any;
+    const a = agent(instance, async () => ({ status: 'routed', tools: [] }));
+    await scope(() => a.value.runOnce(a.input));
+    if (reason === 'disconnect') lifetime.abort(); else { setBenchmarkJevMode('off'); instance.cancelInFlight(); }
+    await terminal(instance);
+    expect(network.aborted).toBe(true); expect(a.reads).not.toHaveBeenCalled();
+    expect(instance.ledger.snapshot()).toMatchObject({ unknownCosts: 1, reservedUsd: 0.00015, stoppedReason: 'unknown_cost' });
+  });
+  test('observer stops on a disconnect before any ordinary selection', async () => {
+    const { instance, lifetime, scope } = observation(); let started!: () => void;
+    const dispatched = new Promise<void>(resolve => { started = resolve; });
+    instance.transport = mock(() => { started(); return new Promise(() => {}); }) as any;
+    const pending = scope(() => instance.prepare(request())); await dispatched; lifetime.abort();
+    expect(await pending).toBeNull(); await terminal(instance);
+    expect(instance.ledger.recent()[0]).toMatchObject({ outcome: 'aborted', costUsd: null });
+  });
+  test('observer hard lifetime settles unknown even if the transport ignores abort', async () => {
+    const { instance, scope } = observation();
+    instance.transport = mock(() => new Promise(() => {})) as any;
+    expect(await scope(() => instance.prepare(request()))).toBeNull(); await terminal(instance);
+    expect(instance.transport).toHaveBeenCalledTimes(1);
+    expect(instance.ledger.snapshot()).toMatchObject({ requests: 1, unknownCosts: 1, stoppedReason: 'unknown_cost' });
+  });
+  test('observer refuses missing HTTP lifetime and retains malformed-response known costs', async () => {
+    const { instance, scope } = observation();
+    expect(await run(instance, () => instance.prepare(request()))).toBeNull(); expect(instance.transport).not.toHaveBeenCalled();
+    const bad = response(); bad.answers.intent.confidence = 1.5;
+    instance.transport = mock(async () => Response.json(bad)) as any;
+    expect(await scope(() => instance.prepare(request()))).toBeNull();
+    expect(instance.ledger.recent()[0]).toMatchObject({ costUsd: 0.00004, outcome: 'error', transportCompleted: true });
+  });
+  test('observer remains bounded for an oversized response or a hanging response body', async () => {
+    for (const response of [new Response('x'.repeat(65537)), new Response(new ReadableStream({ start() {} }))]) {
+      const { instance, scope } = observation(); instance.transport = mock(async () => response) as any;
+      expect(await scope(() => instance.prepare(request()))).toBeNull(); await terminal(instance);
+      expect(instance.ledger.snapshot()).toMatchObject({ unknownCosts: 1, stoppedReason: 'unknown_cost' });
+    }
+  });
+  test('observer may still select an early valid read once', async () => {
+    const { instance, scope } = observation(); const a = agent(instance, () => new Promise(() => {}));
+    expect(await scope(() => a.value.runOnce(a.input))).toContain('7 élèves');
+    expect(a.reads).toHaveBeenCalledTimes(1); expect(a.generation).not.toHaveBeenCalled();
+    expect(instance.ledger.recent()[0]).toMatchObject({ selected: 'template', outcome: 'candidate', costUsd: 0.00004 });
+  });
+  test('observer cannot use a billing lifetime shorter than candidate eligibility', () => {
+    process.env.CHATBOT_JEV_BILLING_MODE = 'observe'; process.env.CHATBOT_JEV_BILLING_TIMEOUT_MS = '1';
+    expect(readJevControls).toThrow();
   });
 });

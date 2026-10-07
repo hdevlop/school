@@ -1,0 +1,35 @@
+{
+    "capturedAt":  "2026-10-07T22:38:25.1846961Z",
+    "finalProviderKey":  {
+                             "capturedAt":  "2026-10-07T22:38:25.021Z",
+                             "source":  "https://openrouter.ai/api/v1/key",
+                             "credentialSource":  "selected School provider key",
+                             "selectedKeyVerified":  true,
+                             "matchesEnvironmentKey":  true,
+                             "provider":  "openrouter",
+                             "model":  "openai/gpt-oss-120b",
+                             "usage":  1.06344978,
+                             "limit":  50,
+                             "limitRemaining":  48.93655022
+                         },
+    "modeOff":  true,
+    "pendingClassifications":  0,
+    "credentialRemoved":  true,
+    "fixtureDisabled":  true,
+    "fixtureReadRepair":  {
+                              "freshLoginUsed":  true,
+                              "added":  [
+                                            "read:sections"
+                                        ]
+                          },
+    "primarySchoolDatabaseChanged":  false,
+    "realEnvFileChanged":  false,
+    "credentialVerification":  {
+                                   "hasKey":  false,
+                                   "processRestartedWithZeroAllowance":  true,
+                                   "verifiedAt":  "2026-10-07T22:39:23.0049343Z",
+                                   "providerKeys":  {
+
+                                                    }
+                               }
+}

@@ -1,0 +1,2433 @@
+{
+  "stage": "paid-full-chat-comparison",
+  "status": "completed",
+  "protocol": {
+    "version": 2,
+    "purpose": "synthetic-integration-comparison-with-bounded-billing-observation",
+    "assistantAuthored": true,
+    "independentQualification": false,
+    "cases": [
+      {
+        "id": "fr-student",
+        "language": "fr",
+        "query": "Je voudrais connaître le nombre total d’élèves de notre école.",
+        "intent": "student_count"
+      },
+      {
+        "id": "fr-teacher",
+        "language": "fr",
+        "query": "Donne-moi le nombre global d’enseignants de l’école.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "fr-dual",
+        "language": "fr",
+        "query": "Je voudrais les deux nombres, élèves et enseignants, séparément.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "fr-classes",
+        "language": "fr",
+        "query": "Je voudrais connaître la liste complète des classes de l’école.",
+        "intent": "class_list"
+      },
+      {
+        "id": "fr-attendance",
+        "language": "fr",
+        "query": "Je voudrais voir les présences des élèves aujourd’hui pour toute l’école.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "fr-greeting",
+        "language": "fr",
+        "query": "Bonjour, merci pour votre aide.",
+        "intent": "small_talk"
+      },
+      {
+        "id": "fr-write",
+        "language": "fr",
+        "query": "Ajoute un élève nommé ZzJevDemo.",
+        "intent": "write_request"
+      },
+      {
+        "id": "fr-filter",
+        "language": "fr",
+        "query": "Quel est le nombre de filles en CE2 ?",
+        "intent": "needs_llm"
+      },
+      {
+        "id": "ar-student",
+        "language": "ar",
+        "query": "أريد معرفة العدد الإجمالي للتلاميذ في المدرسة.",
+        "intent": "student_count"
+      },
+      {
+        "id": "ar-teacher",
+        "language": "ar",
+        "query": "أعطني العدد الكلي للأساتذة في المدرسة بالكامل.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "ar-dual",
+        "language": "ar",
+        "query": "أريد عدد التلاميذ وعدد الأساتذة كل واحد في سطر.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "ar-classes",
+        "language": "ar",
+        "query": "أريد القائمة الكاملة لأقسام المدرسة.",
+        "intent": "class_list"
+      },
+      {
+        "id": "ar-attendance",
+        "language": "ar",
+        "query": "أريد عرض سجل الحضور لجميع التلاميذ اليوم.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "ar-greeting",
+        "language": "ar",
+        "query": "شكرا لمساعدتك.",
+        "intent": "small_talk"
+      },
+      {
+        "id": "ar-write",
+        "language": "ar",
+        "query": "أضف تلميذا اسمه ZzJevDemo.",
+        "intent": "write_request"
+      },
+      {
+        "id": "ar-filter",
+        "language": "ar",
+        "query": "كم عدد التلميذات في قسم CE2؟",
+        "intent": "needs_llm"
+      },
+      {
+        "id": "ary-student",
+        "language": "ary",
+        "query": "بغيت العدد ديال التلاميذ فهاد العام بلا تفاصيل.",
+        "intent": "student_count"
+      },
+      {
+        "id": "ary-teacher",
+        "language": "ary",
+        "query": "عطيني العدد ديال الأساتذة فالمدرسة كاملة.",
+        "intent": "teacher_count"
+      },
+      {
+        "id": "ary-dual",
+        "language": "ary",
+        "query": "بغيت العدد ديال التلاميذ والعدد ديال الأساتذة، كل واحد فسطر.",
+        "intent": "student_and_teacher_count"
+      },
+      {
+        "id": "ary-classes",
+        "language": "ary",
+        "query": "بغيت اللائحة ديال الأقسام كاملة بلا معلومات أخرى.",
+        "intent": "class_list"
+      },
+      {
+        "id": "ary-attendance",
+        "language": "ary",
+        "query": "وريني سجل الحضور ديال التلاميذ اليوم فالمدرسة كاملة.",
+        "intent": "attendance_today"
+      },
+      {
+        "id": "ary-greeting",
+        "language": "ary",
+        "query": "واش نقدر نسولك على شي حاجة؟",
+        "intent": "small_talk"
+      },
+      {
+        "id": "ary-write",
+        "language": "ary",
+        "query": "زيد تلميذ جديد سميتو ZzJevDemo فهاد المدرسة.",
+        "intent": "write_request"
+      },
+      {
+        "id": "ary-filter",
+        "language": "ary",
+        "query": "شحال من بنت كاينة فقسم CE2؟",
+        "intent": "needs_llm"
+      }
+    ],
+    "jobs": [
+      {
+        "caseId": "ary-classes",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-classes",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-attendance",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-attendance",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-attendance",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-greeting",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-greeting",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-greeting",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-write",
+        "mode": "shadow"
+      },
+      {
+        "caseId": "ary-write",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-write",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-filter",
+        "mode": "on"
+      },
+      {
+        "caseId": "ary-filter",
+        "mode": "off"
+      },
+      {
+        "caseId": "ary-filter",
+        "mode": "shadow"
+      }
+    ],
+    "maxChats": 14,
+    "maxClassifications": 9,
+    "maxCombinedEstimatedUsd": 0.210964445,
+    "generationReserveUsd": 0.003,
+    "classificationReserveUsd": 0.00015,
+    "classificationMaxUsd": 0.00575142,
+    "retries": 0,
+    "concurrency": 1,
+    "startSpacingMs": 2000,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "billingMode": "observe",
+    "billingTimeoutMs": 5000,
+    "cachePolicy": "same process, balanced mode order, caches retained and recorded",
+    "costPolicy": "Opt-in synthetic billing observation lets started requests finish under a separate 5s limit without delaying fallback. SDK generation estimates and response-reported classifier costs are separate; aggregate key delta is not an isolated per-mode invoice. Await terminal billing outside reply timing; unknown costs stop dispatch.",
+    "stopOn": [
+      "unknown_cost",
+      "request_limit",
+      "combined_estimate_limit",
+      "provider_key_delta_limit",
+      "request_error",
+      "process_change",
+      "accepted_wrong"
+    ],
+    "restoresMode": "off",
+    "sourceHashes": {
+      "bun.lock": "cbfbffd0655dc85ab0cec261f1f28ebcfaf2958c7a9f3780b63826e0b882cb75",
+      "package.json": "be9a05381d7130af065834c09b4e9c1e3d2245cfba364419515c2117325229eb",
+      "packages/server/package.json": "45b0dbc492dab21f026d9cb46ca75c351321bacc3ee9071a9c073433ebb5cb84",
+      "packages/server/src/config/chatbotConfig.ts": "f1141dcdcd627ade9343e8421afd0f14dad5b7bde0f732cf736f1feff39d4e3b",
+      "packages/server/src/config/coreConfig.ts": "7c00c81515cc18e0172b52612e3798f31e0f08b84be38ceef1a3150a3f9efe89",
+      "packages/server/src/config/ragConfig.ts": "e6b8549b4e11a1784cdecb50a40c2b66bcd026a06636f42ac84c6bebca1af193",
+      "packages/server/src/config/yearScope.ts": "df1157c772276ad16047cf6409568eabd17eb07bff0c964b2ea758a3a2127608",
+      "packages/server/src/modules/chat/JevAttemptLedger.ts": "31727a0d1aa400f0451cb0b5ff432e4312e6d19d9d9216e734fdd4c5b056de04",
+      "packages/server/src/modules/chat/JevBenchmarkController.ts": "8f19fa885cb7960ed5a4ba50226b476beb9af3f8e3627923209a263db971cc58",
+      "packages/server/src/modules/chat/JevBenchmarkDto.ts": "7ae9027d84b2c0624ced01550acf2022f858339c4dfc17841874640517d5fb6c",
+      "packages/server/src/modules/chat/JevBenchmarkRepository.ts": "2ab859698a95ebac927147aaa30499332bb4d235983a54ae9013a0974ecdea89",
+      "packages/server/src/modules/chat/JevBenchmarkService.ts": "1fa86d4e4217b872241442a1fa3b43813cd72cea0ce50302141aecb382d2c061",
+      "packages/server/src/modules/chat/JevControls.ts": "24a783242b93ce231ff2dd9f9808ba00d60cff5aad1fa7f9f8fd5f11a4fc616c",
+      "packages/server/src/modules/chat/JevIntentClassifier.ts": "e7041a67fb2e020ebcfe0052a474bf69f4deb5da172b8f23b0ca4c434b8d56ee",
+      "packages/server/src/modules/chat/JevSessionGrants.ts": "3b973269eeaf63a5ad28073392619c920e9288e73f3a38211572b98f7f648d9a",
+      "packages/server/src/modules/chat/SchoolChatContextProvider.ts": "1d1ff66f12a9ef6698fe2657e094def35d1555f5fc0908a3f4a247a0c274a457",
+      "packages/server/src/modules/chat/chatYearContext.ts": "156c6cbf57b0c75904c4a34d3f44c9e964832dcb5b684dc3b562d1a570cb2ce1",
+      "packages/server/src/modules/chat/jevGuard/countV1.ts": "4218b4aa1a56d39a73d8935d5dc30b1a1bc64bc4f0a5efd1eb880e4280556933",
+      "packages/server/src/modules/chat/jevGuard/countV2.ts": "838a90d79feff7b48c369758761581398aa4d963f4d1fc409f1a055a8395a0af",
+      "packages/server/src/modules/chat/jevGuard/queryV3.ts": "b599b867282b723c6d0188abbb1f6e4e79b4e74c4e7c775ee29d119547a8a483",
+      "packages/server/src/modules/chat/jevGuard/queryV4.ts": "25b712122623c814e7297a081f737ffd78404ddb959337997c333d05f2e4a981",
+      "packages/server/src/modules/chat/jevGuard/queryV5.ts": "f82c2fd3f0363718b91602b53d2baf13e5ef478e2124d87846032bad876f3900",
+      "packages/server/src/modules/chat/jevIntents.ts": "555fc7cf4c6c21f98cb46d3edf00220f3912350efa6bfd74a4db1060d2878318",
+      "packages/server/src/modules/chat/jevPreparationPolicy.ts": "a85b1e39b58ba94fdfb03d77075a8caf0029fc1d38f90578310e8a8e894b451e",
+      "packages/server/src/modules/chat/jevQueryGuard.ts": "fd4c6e79fdb35ab317fda3b9a53987171d43d076bddf6d1a0367e10a6fe43afc",
+      "packages/server/src/modules/chat/jevReplyPlan.ts": "14af919040e2ed0e74351ad4ef8db9cb34cfe578bd0755968d442536d41ff2d7",
+      "packages/server/src/modules/chat/jevSyntheticCases.ts": "f904c77ceaabc6a006d353629e9037797497b13a74c6216b09948cba6b60ad31",
+      "packages/server/src/modules/chat/schoolListReplies.ts": "ef0b8bf55437a7e0b16113de19f2b6cc769ec4049f10b90b55fe42078a1d642a",
+      "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+      "packages/server/src/modules/chat/schoolReplyTemplates.ts": "696dac4828e05fc7ff4fdb2d6b1c0518b89db49ba41fb23f5de871b18ea2a35f",
+      "packages/server/src/modules/chat/schoolReplyWrite.ts": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+      "scripts/chatbot-jev-full-chat-lib.mjs": "e38dade7ef7001a9ff9aa122049c39cc2ed3c7385f5808404ae6689813cc9fc2",
+      "scripts/chatbot-jev-full-chat.mjs": "f6eb2a2edec1bf277e85a816ef2b2294e87f7851fa9774811f8d185fc3fe1bcf"
+    },
+    "continuation": {
+      "reportPath": "docs/evidence/chatbot-latency/jev-billing-observer-run-20261007.json",
+      "sha256": "a4153e56715d7a55fcaf29815cda98edd98c79fd76fcecd0fd15006cd6055918",
+      "completedChats": 58,
+      "completedClassifications": 37,
+      "carriedUsd": 0.03903555400000003,
+      "originalMaxChats": 72,
+      "originalMaxClassifications": 48,
+      "originalMaxCombinedEstimatedUsd": 0.25,
+      "note": "Only undispatched jobs; failed reply retained. Fresh process and repaired fixture permissions change cache/permission conditions."
+    },
+    "sourceFingerprint": "94a82268a9240d53fdbdedd1ab19fec1da383b4b04cd4a7ba543cff8c97d08d5"
+  },
+  "actualProviderCalls": null,
+  "generationPricesAreEstimates": true,
+  "modelAndClassifierMocked": false,
+  "chatsDispatched": 14,
+  "rows": [
+    {
+      "caseId": "ary-classes",
+      "mode": "shadow",
+      "correlationId": "2ba9c551-e785-4f66-abee-47adbb607288",
+      "language": "ary",
+      "expectedIntent": "class_list",
+      "firstTextMs": 1175.6475,
+      "completionMs": 1234.4897,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "هنا لائحة الأقسام ديال هاد العام الدراسي 2026-2027:\n\n- A  \n- B  \n\nهاد اللائحة هي الأقسام اللي موجودة فالسنة المختارة، وما فيهاش معلومات أخرى.  ",
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4235,
+        "completionTokens": 111,
+        "totalTokens": 4346,
+        "inputCost": 0.000165165,
+        "outputCost": 0.00002109,
+        "totalCost": 0.000186255,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "2ba9c551-e785-4f66-abee-47adbb607288",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 288.7,
+          "contextMs": 9.3,
+          "prepareMs": 320.8,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1140.3,
+          "finishMs": 1195.2
+        },
+        "steps": [
+          {
+            "endMs": 804.6,
+            "finishReason": "tool-calls",
+            "inputTokens": 1897,
+            "outputTokens": 60,
+            "toolCalls": [
+              "sections_get_sections"
+            ]
+          },
+          {
+            "endMs": 1190.4,
+            "finishReason": "stop",
+            "inputTokens": 2338,
+            "outputTokens": 51,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "sections_get_sections",
+            "toolCallId": "a59cc8c66",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 1070,
+            "startMs": 791.5,
+            "durationMs": 10.4
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4235,
+          "outputTokens": 111,
+          "totalTokens": 4346,
+          "cachedInputTokens": 3712,
+          "reasoningTokens": 30
+        },
+        "cost": {
+          "promptTokens": 4235,
+          "completionTokens": 111,
+          "totalTokens": 4346,
+          "inputCost": 0.000165165,
+          "outputCost": 0.00002109,
+          "totalCost": 0.000186255,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "2ba9c551-e785-4f66-abee-47adbb607288",
+            "startMs": 34,
+            "durationMs": 260.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 34.4,
+                "durationMs": 259,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 303.3353999999963,
+          "timedOut": false,
+          "candidateState": "pending",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 18.125
+    },
+    {
+      "caseId": "ary-classes",
+      "mode": "off",
+      "correlationId": "0cfb5363-ed63-4c08-b3a9-b00d182ab21c",
+      "language": "ary",
+      "expectedIntent": "class_list",
+      "firstTextMs": 1307.4009000000005,
+      "completionMs": 1349.1484,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "هنا لائحة الأقسام ديال هاد العام الدراسي:\n\n- A  \n- B",
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4235,
+        "completionTokens": 68,
+        "totalTokens": 4303,
+        "inputCost": 0.000165165,
+        "outputCost": 0.00001292,
+        "totalCost": 0.000178085,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "0cfb5363-ed63-4c08-b3a9-b00d182ab21c",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 7.7,
+          "contextMs": 0.2,
+          "prepareMs": 8.5,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1281.7,
+          "finishMs": 1324.3
+        },
+        "steps": [
+          {
+            "endMs": 1006.2,
+            "finishReason": "tool-calls",
+            "inputTokens": 1897,
+            "outputTokens": 46,
+            "toolCalls": [
+              "sections_get_sections"
+            ]
+          },
+          {
+            "endMs": 1323,
+            "finishReason": "stop",
+            "inputTokens": 2338,
+            "outputTokens": 22,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "sections_get_sections",
+            "toolCallId": "0a840ffce",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 1070,
+            "startMs": 998.6,
+            "durationMs": 5.5
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4235,
+          "outputTokens": 68,
+          "totalTokens": 4303,
+          "cachedInputTokens": 4096,
+          "reasoningTokens": 16
+        },
+        "cost": {
+          "promptTokens": 4235,
+          "completionTokens": 68,
+          "totalTokens": 4303,
+          "inputCost": 0.000165165,
+          "outputCost": 0.00001292,
+          "totalCost": 0.000178085,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "0cfb5363-ed63-4c08-b3a9-b00d182ab21c",
+            "startMs": 0.5,
+            "durationMs": 0.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 20.03979999999956
+    },
+    {
+      "caseId": "ary-attendance",
+      "mode": "shadow",
+      "correlationId": "51d97ef2-25f3-420c-bc56-8832d91ef2b4",
+      "language": "ary",
+      "expectedIntent": "attendance_today",
+      "firstTextMs": 1346.2397,
+      "completionMs": 1358.0190999999995,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما كاين حتى شي سجل ديال الحضور ولا الغياب فهاد التاريخ.",
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4218,
+        "completionTokens": 100,
+        "totalTokens": 4318,
+        "inputCost": 0.00016450200000000002,
+        "outputCost": 0.000019,
+        "totalCost": 0.00018350200000000002,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "51d97ef2-25f3-420c-bc56-8832d91ef2b4",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 13.3,
+          "historyMs": null,
+          "routingMs": 405.7,
+          "contextMs": 3.3,
+          "prepareMs": 411.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1311.9,
+          "finishMs": 1320.6
+        },
+        "steps": [
+          {
+            "endMs": 832.3,
+            "finishReason": "tool-calls",
+            "inputTokens": 2087,
+            "outputTokens": 51,
+            "toolCalls": [
+              "attendance_get_today_students"
+            ]
+          },
+          {
+            "endMs": 1319.2,
+            "finishReason": "stop",
+            "inputTokens": 2131,
+            "outputTokens": 49,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "attendance_get_today_students",
+            "toolCallId": "f8d228576",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 813,
+            "durationMs": 17.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4218,
+          "outputTokens": 100,
+          "totalTokens": 4318,
+          "cachedInputTokens": 256,
+          "reasoningTokens": 40
+        },
+        "cost": {
+          "promptTokens": 4218,
+          "completionTokens": 100,
+          "totalTokens": 4318,
+          "inputCost": 0.00016450200000000002,
+          "outputCost": 0.000019,
+          "totalCost": 0.00018350200000000002,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "51d97ef2-25f3-420c-bc56-8832d91ef2b4",
+            "startMs": 16.7,
+            "durationMs": 392.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 18.9,
+                "durationMs": 389.7,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 410.96250000000146,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 19.654099999999744
+    },
+    {
+      "caseId": "ary-attendance",
+      "mode": "off",
+      "correlationId": "954f11c8-6b76-4934-9eef-5734b3c6bf86",
+      "language": "ary",
+      "expectedIntent": "attendance_today",
+      "firstTextMs": 781.1956,
+      "completionMs": 802.8354000000008,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما كاين حتى شي سجل ديال الحضور ولا الغياب فهاد التاريخ.",
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4218,
+        "completionTokens": 115,
+        "totalTokens": 4333,
+        "inputCost": 0.00016450200000000002,
+        "outputCost": 0.000021850000000000003,
+        "totalCost": 0.00018635200000000003,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "954f11c8-6b76-4934-9eef-5734b3c6bf86",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 12.5,
+          "contextMs": 0.2,
+          "prepareMs": 13.1,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 750.4,
+          "finishMs": 772.2
+        },
+        "steps": [
+          {
+            "endMs": 401.7,
+            "finishReason": "tool-calls",
+            "inputTokens": 2087,
+            "outputTokens": 45,
+            "toolCalls": [
+              "attendance_get_today_students"
+            ]
+          },
+          {
+            "endMs": 771.5,
+            "finishReason": "stop",
+            "inputTokens": 2131,
+            "outputTokens": 70,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "attendance_get_today_students",
+            "toolCallId": "ca40d8085",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 386.4,
+            "durationMs": 12.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4218,
+          "outputTokens": 115,
+          "totalTokens": 4333,
+          "cachedInputTokens": 4096,
+          "reasoningTokens": 55
+        },
+        "cost": {
+          "promptTokens": 4218,
+          "completionTokens": 115,
+          "totalTokens": 4333,
+          "inputCost": 0.00016450200000000002,
+          "outputCost": 0.000021850000000000003,
+          "totalCost": 0.00018635200000000003,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "954f11c8-6b76-4934-9eef-5734b3c6bf86",
+            "startMs": 2.8,
+            "durationMs": 0,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 16.52759999999944
+    },
+    {
+      "caseId": "ary-attendance",
+      "mode": "on",
+      "correlationId": "297c37bb-70fa-47bc-a8ab-d968c465eee9",
+      "language": "ary",
+      "expectedIntent": "attendance_today",
+      "firstTextMs": 1410.4917000000005,
+      "completionMs": 1422.1038000000008,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما كاين حتى شي سجل ديال الحضور ولا الغياب فهاد التاريخ.",
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4218,
+        "completionTokens": 99,
+        "totalTokens": 4317,
+        "inputCost": 0.00016450200000000002,
+        "outputCost": 0.000018809999999999998,
+        "totalCost": 0.000183312,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "297c37bb-70fa-47bc-a8ab-d968c465eee9",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 9,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 31.9,
+          "contextMs": 0.2,
+          "prepareMs": 37.1,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1305.3,
+          "finishMs": 1316.4
+        },
+        "steps": [
+          {
+            "endMs": 733.9,
+            "finishReason": "tool-calls",
+            "inputTokens": 2087,
+            "outputTokens": 55,
+            "toolCalls": [
+              "attendance_get_today_students"
+            ]
+          },
+          {
+            "endMs": 1315.6,
+            "finishReason": "stop",
+            "inputTokens": 2131,
+            "outputTokens": 44,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "attendance_get_today_students",
+            "toolCallId": "6f577a9b0",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 711.4,
+            "durationMs": 20.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4218,
+          "outputTokens": 99,
+          "totalTokens": 4317,
+          "cachedInputTokens": 4096,
+          "reasoningTokens": 39
+        },
+        "cost": {
+          "promptTokens": 4218,
+          "completionTokens": 99,
+          "totalTokens": 4317,
+          "inputCost": 0.00016450200000000002,
+          "outputCost": 0.000018809999999999998,
+          "totalCost": 0.000183312,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "297c37bb-70fa-47bc-a8ab-d968c465eee9",
+            "startMs": 6.4,
+            "durationMs": 0,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 33.67899999999645,
+          "timedOut": false,
+          "candidateState": "pending",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 13.974699999998847
+    },
+    {
+      "caseId": "ary-greeting",
+      "mode": "off",
+      "correlationId": "42f3b4c0-6d76-4040-8c59-ccac952f35f2",
+      "language": "ary",
+      "expectedIntent": "small_talk",
+      "firstTextMs": 643.5835999999999,
+      "completionMs": 695.1376,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "بالطبع، تقدر تسولني على أي معلومات فالمسح الدراسي: بحال عدد التلامذ، الحضور، العلامات، الأقسام، الأساتذة ولا أي سؤال آخر. غير عاونيك بشي سؤال محدد!",
+      "tools": [],
+      "generationEstimate": {
+        "promptTokens": 2171,
+        "completionTokens": 87,
+        "totalTokens": 2258,
+        "inputCost": 0.00008466900000000001,
+        "outputCost": 0.00001653,
+        "totalCost": 0.000101199,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "42f3b4c0-6d76-4040-8c59-ccac952f35f2",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 274.1,
+          "contextMs": 1.8,
+          "prepareMs": 276.6,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 613.6,
+          "finishMs": 662.9
+        },
+        "steps": [
+          {
+            "endMs": 661.8,
+            "finishReason": "stop",
+            "inputTokens": 2171,
+            "outputTokens": 87,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 2171,
+          "outputTokens": 87,
+          "totalTokens": 2258,
+          "cachedInputTokens": 1536,
+          "reasoningTokens": 24
+        },
+        "cost": {
+          "promptTokens": 2171,
+          "completionTokens": 87,
+          "totalTokens": 2258,
+          "inputCost": 0.00008466900000000001,
+          "outputCost": 0.00001653,
+          "totalCost": 0.000101199,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "42f3b4c0-6d76-4040-8c59-ccac952f35f2",
+            "startMs": 0.5,
+            "durationMs": 261.9,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 0.9,
+                "durationMs": 261.5,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 19.830200000000332
+    },
+    {
+      "caseId": "ary-greeting",
+      "mode": "shadow",
+      "correlationId": "821e3976-6567-4f2b-9867-03445346bde5",
+      "language": "ary",
+      "expectedIntent": "small_talk",
+      "firstTextMs": 443.2563000000009,
+      "completionMs": 513.4145000000008,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "طبعاً! نقدر نعاونك فالباحث ديال المدرسة: نجيب ليك معلومات على التلاميذ، الحضور، العلامات، الرسوم، الامتحانات، ... مثلا سؤل على عدد التلاميذ ولا جدول الامتحانات الجايين. شنو بغيتي؟",
+      "tools": [],
+      "generationEstimate": {
+        "promptTokens": 2171,
+        "completionTokens": 92,
+        "totalTokens": 2263,
+        "inputCost": 0.00008466900000000001,
+        "outputCost": 0.00001748,
+        "totalCost": 0.00010214900000000001,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "821e3976-6567-4f2b-9867-03445346bde5",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 14.3,
+          "contextMs": 0.2,
+          "prepareMs": 16.2,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 412.3,
+          "finishMs": 482.1
+        },
+        "steps": [
+          {
+            "endMs": 481.6,
+            "finishReason": "stop",
+            "inputTokens": 2171,
+            "outputTokens": 92,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 2171,
+          "outputTokens": 92,
+          "totalTokens": 2263,
+          "cachedInputTokens": 2048,
+          "reasoningTokens": 16
+        },
+        "cost": {
+          "promptTokens": 2171,
+          "completionTokens": 92,
+          "totalTokens": 2263,
+          "inputCost": 0.00008466900000000001,
+          "outputCost": 0.00001748,
+          "totalCost": 0.00010214900000000001,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "821e3976-6567-4f2b-9867-03445346bde5",
+            "startMs": 5.4,
+            "durationMs": 0,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 15.6846000000005,
+          "timedOut": false,
+          "candidateState": "pending",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 15.90650000000096
+    },
+    {
+      "caseId": "ary-greeting",
+      "mode": "on",
+      "correlationId": "cc77ede0-0dde-4636-8677-b1957c314315",
+      "language": "ary",
+      "expectedIntent": "small_talk",
+      "firstTextMs": 327.8760999999995,
+      "completionMs": 380.0487000000012,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "نعم، تقدر تسولني على أي معلومات ف المدرسة: الطلبة، الحضور، النقاط، الأجور، ... مثلاً “شحال عدد الطلبة هاد العام؟” أو “شنو آخر الامتحانات المرتابطة بالصف”.\u0003",
+      "tools": [],
+      "generationEstimate": {
+        "promptTokens": 2171,
+        "completionTokens": 78,
+        "totalTokens": 2249,
+        "inputCost": 0.00008466900000000001,
+        "outputCost": 0.00001482,
+        "totalCost": 0.00009948900000000001,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "cc77ede0-0dde-4636-8677-b1957c314315",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 7,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 8.9,
+          "contextMs": 0.2,
+          "prepareMs": 10.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 309.9,
+          "finishMs": 361.5
+        },
+        "steps": [
+          {
+            "endMs": 361.1,
+            "finishReason": "stop",
+            "inputTokens": 2171,
+            "outputTokens": 78,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 2171,
+          "outputTokens": 78,
+          "totalTokens": 2249,
+          "cachedInputTokens": 2048,
+          "reasoningTokens": 12
+        },
+        "cost": {
+          "promptTokens": 2171,
+          "completionTokens": 78,
+          "totalTokens": 2249,
+          "inputCost": 0.00008466900000000001,
+          "outputCost": 0.00001482,
+          "totalCost": 0.00009948900000000001,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "cc77ede0-0dde-4636-8677-b1957c314315",
+            "startMs": 2,
+            "durationMs": 0,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 10.075199999999313,
+          "timedOut": false,
+          "candidateState": "pending",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 17.634399999999005
+    },
+    {
+      "caseId": "ary-write",
+      "mode": "shadow",
+      "correlationId": "235ea0d5-8b76-44b1-8bc7-bf4c83c8b581",
+      "language": "ary",
+      "expectedIntent": "write_request",
+      "firstTextMs": 35.880199999999604,
+      "completionMs": 36.01619999999821,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "tools": [],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "235ea0d5-8b76-44b1-8bc7-bf4c83c8b581",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 0,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 1.4,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1.7,
+          "finishMs": 1.7
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 15.925500000001193
+    },
+    {
+      "caseId": "ary-write",
+      "mode": "on",
+      "correlationId": "757d1299-27a6-43fc-b3b4-ae83fd133d5a",
+      "language": "ary",
+      "expectedIntent": "write_request",
+      "firstTextMs": 30.637399999999616,
+      "completionMs": 30.907400000000052,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "tools": [],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "757d1299-27a6-43fc-b3b4-ae83fd133d5a",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 0,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 1,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1.1,
+          "finishMs": 1.1
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 18.880099999998492
+    },
+    {
+      "caseId": "ary-write",
+      "mode": "off",
+      "correlationId": "011efbc2-4b7b-4334-95b1-46fc27be04de",
+      "language": "ary",
+      "expectedIntent": "write_request",
+      "firstTextMs": 416.0663999999997,
+      "completionMs": 416.21770000000106,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "tools": [],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "011efbc2-4b7b-4334-95b1-46fc27be04de",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 2,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 3.9,
+          "historyMs": null,
+          "routingMs": 374,
+          "contextMs": 2.7,
+          "prepareMs": 378,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 382.2,
+          "finishMs": 382.2
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "011efbc2-4b7b-4334-95b1-46fc27be04de",
+            "startMs": 6.5,
+            "durationMs": 363,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 6.9,
+                "durationMs": 362.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "template",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 33.021199999999226
+    },
+    {
+      "caseId": "ary-filter",
+      "mode": "on",
+      "correlationId": "626473ba-282c-4454-8d8b-38f25d10ece0",
+      "language": "ary",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 1033.684000000001,
+      "completionMs": 1111.2118999999984,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما نقدرش نجيب عدد البنات غير بلا ما نعرف معرف (ID) ديال القسم “CE2”. عافاك عطي لينا الـ ID ديال القسم ولا سميتو الكامل باش نقدروا نستعملو الأدات `sections_get_students` ونشوفو عدد البنات.",
+      "tools": [],
+      "generationEstimate": {
+        "promptTokens": 1932,
+        "completionTokens": 187,
+        "totalTokens": 2119,
+        "inputCost": 0.000075348,
+        "outputCost": 0.00003553,
+        "totalCost": 0.00011087799999999999,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "626473ba-282c-4454-8d8b-38f25d10ece0",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 259.4,
+          "contextMs": 2.2,
+          "prepareMs": 266.8,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1016.7,
+          "finishMs": 1093.1
+        },
+        "steps": [
+          {
+            "endMs": 1092.3,
+            "finishReason": "stop",
+            "inputTokens": 1932,
+            "outputTokens": 187,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 1932,
+          "outputTokens": 187,
+          "totalTokens": 2119,
+          "cachedInputTokens": 1536,
+          "reasoningTokens": 111
+        },
+        "cost": {
+          "promptTokens": 1932,
+          "completionTokens": 187,
+          "totalTokens": 2119,
+          "inputCost": 0.000075348,
+          "outputCost": 0.00003553,
+          "totalCost": 0.00011087799999999999,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "626473ba-282c-4454-8d8b-38f25d10ece0",
+            "startMs": 5.7,
+            "durationMs": 248.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 6,
+                "durationMs": 247.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 263.62399999999616,
+          "timedOut": false,
+          "candidateState": "pending",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 20.121800000000803
+    },
+    {
+      "caseId": "ary-filter",
+      "mode": "off",
+      "correlationId": "7f6744e3-378c-4296-b53a-2d723d760e35",
+      "language": "ary",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 975.5373999999974,
+      "completionMs": 1074.4702999999972,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما كايناش قسم سميتو CE2 فالعام الدراسي لي مختار (2026‑2027). ما نقدروش نحدد عدد البنات فالقسم حيث ما لقيناش القسم المطلوب. إذا بغيتي تشوف الأقسام المتواجدين دابا فالعام الدراسي، ممكن تسول على لائحة الأقسام المتاحة.",
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 1
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4061,
+        "completionTokens": 280,
+        "totalTokens": 4341,
+        "inputCost": 0.00015837900000000002,
+        "outputCost": 0.0000532,
+        "totalCost": 0.00021157900000000002,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "7f6744e3-378c-4296-b53a-2d723d760e35",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 10,
+          "contextMs": 0.2,
+          "prepareMs": 11.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 945,
+          "finishMs": 1034.7
+        },
+        "steps": [
+          {
+            "endMs": 631.9,
+            "finishReason": "tool-calls",
+            "inputTokens": 1932,
+            "outputTokens": 172,
+            "toolCalls": [
+              "classes_get_classes"
+            ]
+          },
+          {
+            "endMs": 1026.9,
+            "finishReason": "stop",
+            "inputTokens": 2129,
+            "outputTokens": 108,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "classes_get_classes",
+            "toolCallId": "6024da99a",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 445,
+            "startMs": 613.6,
+            "durationMs": 16.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4061,
+          "outputTokens": 280,
+          "totalTokens": 4341,
+          "cachedInputTokens": 3456,
+          "reasoningTokens": 164
+        },
+        "cost": {
+          "promptTokens": 4061,
+          "completionTokens": 280,
+          "totalTokens": 4341,
+          "inputCost": 0.00015837900000000002,
+          "outputCost": 0.0000532,
+          "totalCost": 0.00021157900000000002,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "7f6744e3-378c-4296-b53a-2d723d760e35",
+            "startMs": 0.4,
+            "durationMs": 0.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 87.52059999999983
+    },
+    {
+      "caseId": "ary-filter",
+      "mode": "shadow",
+      "correlationId": "811b1bf1-c4aa-4798-a9e2-0f5cf57792a5",
+      "language": "ary",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 787.984199999999,
+      "completionMs": 843.5797999999995,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ماكانش شي قسم سميتو **CE2** فالسنة الدراسية 2026‑2027. إذن مايمكنش نعرف عدد البنات فهاد القسم. إذا بغيتي تعرف عدد البنات فشي قسم آخر ولا تشوف شي قسم آخر، سيفط لي اسم القسم.",
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 1
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4061,
+        "completionTokens": 212,
+        "totalTokens": 4273,
+        "inputCost": 0.00015837900000000002,
+        "outputCost": 0.00004028,
+        "totalCost": 0.000198659,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "811b1bf1-c4aa-4798-a9e2-0f5cf57792a5",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-120b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 28.6,
+          "contextMs": 0.2,
+          "prepareMs": 30.6,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 749.3,
+          "finishMs": 803.4
+        },
+        "steps": [
+          {
+            "endMs": 424,
+            "finishReason": "tool-calls",
+            "inputTokens": 1932,
+            "outputTokens": 107,
+            "toolCalls": [
+              "classes_get_classes"
+            ]
+          },
+          {
+            "endMs": 800.8,
+            "finishReason": "stop",
+            "inputTokens": 2129,
+            "outputTokens": 105,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "classes_get_classes",
+            "toolCallId": "b056f92fd",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 445,
+            "startMs": 410.5,
+            "durationMs": 12.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4061,
+          "outputTokens": 212,
+          "totalTokens": 4273,
+          "cachedInputTokens": 3968,
+          "reasoningTokens": 108
+        },
+        "cost": {
+          "promptTokens": 4061,
+          "completionTokens": 212,
+          "totalTokens": 4273,
+          "inputCost": 0.00015837900000000002,
+          "outputCost": 0.00004028,
+          "totalCost": 0.000198659,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-120b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "hit",
+            "version": 1,
+            "correlationId": "811b1bf1-c4aa-4798-a9e2-0f5cf57792a5",
+            "startMs": 12.2,
+            "durationMs": 0.2,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": []
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 30.015400000003865,
+          "timedOut": false,
+          "candidateState": "pending",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+          "resetCount": 0
+        }
+      },
+      "billingWaitMs": 39.157499999997526
+    }
+  ],
+  "attempts": [
+    {
+      "correlationId": "811b1bf1-c4aa-4798-a9e2-0f5cf57792a5",
+      "caseId": "ary-filter",
+      "mode": "shadow",
+      "id": "5ab5caf4-e22e-4048-9125-12c7ae007d42",
+      "startedAt": "2026-10-07T22:36:52.808Z",
+      "outcome": "aborted",
+      "costUsd": 0.000039102,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 321.8335999999981,
+      "selected": "ordinary",
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791412612-a1TY67JNd4HuSIeTD2ew",
+      "providerGenerationId": "gen-dec-1791412612-a1TY67JNd4HuSIeTD2ew",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "needs_llm",
+      "confidence": 0.98,
+      "writeProbability": 0.04,
+      "reason": "candidate_cancelled_billing_completed"
+    },
+    {
+      "correlationId": "626473ba-282c-4454-8d8b-38f25d10ece0",
+      "caseId": "ary-filter",
+      "mode": "on",
+      "id": "8b7e6380-0fb2-4c26-b446-3784e6a9b120",
+      "startedAt": "2026-10-07T22:36:48.667Z",
+      "outcome": "aborted",
+      "costUsd": 0.000039102,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 304.17399999999907,
+      "selected": "ordinary",
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791412608-bDRmsClPjIDUczhd9Coo",
+      "providerGenerationId": "gen-dec-1791412608-bDRmsClPjIDUczhd9Coo",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "needs_llm",
+      "confidence": 0.97,
+      "writeProbability": 0.04,
+      "reason": "candidate_cancelled_billing_completed"
+    },
+    {
+      "correlationId": "cc77ede0-0dde-4636-8677-b1957c314315",
+      "caseId": "ary-greeting",
+      "mode": "on",
+      "id": "220fa037-c2ad-486b-a97b-3766286c7a7c",
+      "startedAt": "2026-10-07T22:36:40.492Z",
+      "outcome": "aborted",
+      "costUsd": 0.000039018,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 311.47589999999764,
+      "selected": "ordinary",
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791412600-VVXTdegIIq4QzHX1NiB1",
+      "providerGenerationId": "gen-dec-1791412600-VVXTdegIIq4QzHX1NiB1",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "small_talk",
+      "confidence": 0.94,
+      "writeProbability": 0.12,
+      "reason": "candidate_cancelled_billing_completed"
+    },
+    {
+      "correlationId": "821e3976-6567-4f2b-9867-03445346bde5",
+      "caseId": "ary-greeting",
+      "mode": "shadow",
+      "id": "1fb053df-c892-4044-87a5-9a59d942b818",
+      "startedAt": "2026-10-07T22:36:38.444Z",
+      "outcome": "aborted",
+      "costUsd": 0.000039018,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 352.0262999999977,
+      "selected": "ordinary",
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791412598-86Nats9VDckclr13tUVA",
+      "providerGenerationId": "gen-dec-1791412598-86Nats9VDckclr13tUVA",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "small_talk",
+      "confidence": 0.97,
+      "writeProbability": 0.1,
+      "reason": "candidate_cancelled_billing_completed"
+    },
+    {
+      "correlationId": "297c37bb-70fa-47bc-a8ab-d968c465eee9",
+      "caseId": "ary-attendance",
+      "mode": "on",
+      "id": "fd403ac6-d7a1-4cb8-8617-c0a546b9f072",
+      "startedAt": "2026-10-07T22:36:34.284Z",
+      "outcome": "aborted",
+      "costUsd": 0.000039774,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 291.95010000000184,
+      "selected": "ordinary",
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791412593-dOu9nEgX2EY1eepBYT21",
+      "providerGenerationId": "gen-dec-1791412593-dOu9nEgX2EY1eepBYT21",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "attendance_today",
+      "confidence": 0.45,
+      "writeProbability": 0.52,
+      "reason": "candidate_cancelled_billing_completed"
+    },
+    {
+      "correlationId": "51d97ef2-25f3-420c-bc56-8832d91ef2b4",
+      "caseId": "ary-attendance",
+      "mode": "shadow",
+      "id": "6ff9d434-5d7a-4c0c-804a-559c7a29d56e",
+      "startedAt": "2026-10-07T22:36:30.096Z",
+      "outcome": "declined",
+      "costUsd": 0.000039774,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 332.8325000000041,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791412589-0AgnbCdExfhrD6N9db34",
+      "providerGenerationId": "gen-dec-1791412589-0AgnbCdExfhrD6N9db34",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "write_request",
+      "confidence": 0.61,
+      "writeProbability": 0.37,
+      "reason": "shadow_only",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "2ba9c551-e785-4f66-abee-47adbb607288",
+      "caseId": "ary-classes",
+      "mode": "shadow",
+      "id": "cf79bb00-a4a3-4e38-a851-1ab762492520",
+      "startedAt": "2026-10-07T22:36:25.998Z",
+      "outcome": "aborted",
+      "costUsd": 0.000039396,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 353.4303,
+      "selected": "ordinary",
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791412585-tLTgYr9SDTZTya1vV7Oc",
+      "providerGenerationId": "gen-dec-1791412585-tLTgYr9SDTZTya1vV7Oc",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "class_list",
+      "confidence": 0.99,
+      "writeProbability": 0.06,
+      "reason": "candidate_cancelled_billing_completed"
+    }
+  ],
+  "qualification": false,
+  "initial": {
+    "instanceId": "3f5d5bac-61a0-497d-9d98-436c1851f57b",
+    "resetCount": 0,
+    "mode": "off",
+    "budget": {
+      "mode": "off",
+      "threshold": 0.8,
+      "timeoutMs": 800,
+      "maxRequests": 9,
+      "maxCostUsd": 0.00575142,
+      "unknownReserveUsd": 0.00015,
+      "billingMode": "observe",
+      "billingTimeoutMs": 5000,
+      "requests": 0,
+      "pendingRequests": 0,
+      "knownCostUsd": 0,
+      "reservedUsd": 0,
+      "unknownCosts": 0,
+      "stoppedReason": null
+    },
+    "syntheticOnly": true,
+    "markedLocalFixture": true,
+    "guardVersion": 5,
+    "intentWordingVersion": 3,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "billingMode": "observe",
+    "billingTimeoutMs": 5000,
+    "frameworkPreparationEnabled": false
+  },
+  "scopedReadChecks": [
+    {
+      "tool": "students_get_student_count",
+      "passed": true
+    },
+    {
+      "tool": "teachers_get_teacher_count",
+      "passed": true
+    },
+    {
+      "tool": "classes_get_classes",
+      "passed": true
+    },
+    {
+      "tool": "sections_get_sections",
+      "passed": true
+    },
+    {
+      "tool": "attendance_get_today_students",
+      "passed": true
+    }
+  ],
+  "keyBefore": {
+    "capturedAt": "2026-10-07T22:36:25.750Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "usage": 1.053874718,
+    "limit": 50,
+    "limitRemaining": 48.946125282
+  },
+  "settings": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b"
+  },
+  "generationBudget": {
+    "maxEstimatedUsd": 0.205213025,
+    "requestReserveUsd": 0.003,
+    "observedEstimatedUsd": 0.001741464,
+    "reservedUsd": 0,
+    "requestsSettled": 14,
+    "requestsWithUnknownCost": 0,
+    "inFlight": 0,
+    "stoppedReason": null,
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+  },
+  "keyAfter": {
+    "capturedAt": "2026-10-07T22:36:53.904Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "usage": 1.053874718,
+    "limit": 50,
+    "limitRemaining": 48.946125282
+  },
+  "modeRestoredOff": true,
+  "summary": {
+    "all": {
+      "attempts": 14,
+      "valid": 14,
+      "firstTextMs": {
+        "mean": 765.3914999999998,
+        "p50": 781.1956,
+        "p95": 1410.4917000000005
+      },
+      "completionMs": {
+        "mean": 804.8286071428569,
+        "p50": 802.8354000000008,
+        "p95": 1422.1038000000008
+      },
+      "jevTemplates": 0,
+      "regexTemplates": 3,
+      "modelReplies": 11
+    },
+    "modes": {
+      "off": {
+        "attempts": 5,
+        "valid": 5,
+        "firstTextMs": {
+          "mean": 824.7567799999995,
+          "p50": 781.1956,
+          "p95": 1307.4009000000005
+        },
+        "completionMs": {
+          "mean": 867.5618799999999,
+          "p50": 802.8354000000008,
+          "p95": 1349.1484
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 1,
+        "modelReplies": 4
+      },
+      "on": {
+        "attempts": 4,
+        "valid": 4,
+        "firstTextMs": {
+          "mean": 700.6723000000002,
+          "p50": 327.8760999999995,
+          "p95": 1410.4917000000005
+        },
+        "completionMs": {
+          "mean": 736.0679500000001,
+          "p50": 380.0487000000012,
+          "p95": 1422.1038000000008
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 1,
+        "modelReplies": 3
+      },
+      "shadow": {
+        "attempts": 5,
+        "valid": 5,
+        "firstTextMs": {
+          "mean": 757.80158,
+          "p50": 787.984199999999,
+          "p95": 1346.2397
+        },
+        "completionMs": {
+          "mean": 797.1038599999996,
+          "p50": 843.5797999999995,
+          "p95": 1358.0190999999995
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 1,
+        "modelReplies": 4
+      }
+    },
+    "pairedFallbacks": [
+      {
+        "caseId": "ary-attendance",
+        "firstTextDeltaMs": 629.2961000000005,
+        "completionDeltaMs": 619.2683999999999
+      },
+      {
+        "caseId": "ary-greeting",
+        "firstTextDeltaMs": -315.70750000000044,
+        "completionDeltaMs": -315.08889999999883
+      },
+      {
+        "caseId": "ary-filter",
+        "firstTextDeltaMs": 58.14660000000367,
+        "completionDeltaMs": 36.7416000000012
+      }
+    ],
+    "fallbackCompletionDeltaP95Ms": 619.2683999999999,
+    "qualification": false,
+    "note": "Small assistant-authored integration sample; no independent native accuracy or rollout qualification."
+  },
+  "aggregateKeyDeltaUsd": 0
+}

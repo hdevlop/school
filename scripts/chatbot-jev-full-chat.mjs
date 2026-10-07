@@ -11,10 +11,10 @@ const fixtureMode = args.includes('--fixture');
 const execute = args.includes('--execute');
 const preflight = args.includes('--preflight');
 if ([fixtureMode, execute, preflight].filter(Boolean).length > 1) throw new Error('Choose one of --fixture, --preflight or --execute');
-const defaultPlan = 'docs/evidence/chatbot-latency/jev-full-chat-plan-20261007.json';
+const defaultPlan = 'docs/evidence/chatbot-latency/jev-billing-observer-plan-20261007.json';
 const planPath = option('plan', defaultPlan);
 if (!fixtureMode && !execute && !preflight) {
-  const plan = fullChatProtocol(); plan.sourceFingerprint = fingerprint(plan.sourceHashes);
+  const plan = fullChatProtocol(option('continue-from')); plan.sourceFingerprint = fingerprint(plan.sourceHashes);
   writeFileSync(planPath, `${JSON.stringify(plan, null, 2)}\n`, { flag: 'wx' });
   console.log(JSON.stringify({ plan: planPath, sourceFingerprint: plan.sourceFingerprint, chats: plan.maxChats,
     classifications: plan.maxClassifications, maxCombinedEstimatedUsd: plan.maxCombinedEstimatedUsd }));
@@ -28,8 +28,8 @@ if (execute && (Number(option('max-requests', '0')) !== protocol.maxChats
   || Number(option('max-estimated-usd', '0')) !== protocol.maxCombinedEstimatedUsd
   || Number(option('request-reserve-usd', '0')) !== protocol.generationReserveUsd
   || option('source-fingerprint', '') !== fingerprint(protocol.sourceHashes))) throw new Error('Supply the exact frozen count/cost limits and source fingerprint');
-const out = option('output', fixtureMode ? 'docs/evidence/chatbot-latency/jev-full-chat-fixture-20261007.json'
-  : preflight ? 'docs/evidence/chatbot-latency/jev-full-chat-preflight-20261007.json' : 'docs/evidence/chatbot-latency/jev-full-chat-run-20261007.json');
+const out = option('output', fixtureMode ? 'docs/evidence/chatbot-latency/jev-billing-observer-fixture-20261007.json'
+  : preflight ? 'docs/evidence/chatbot-latency/jev-billing-observer-preflight-20261007.json' : 'docs/evidence/chatbot-latency/jev-billing-observer-run-20261007.json');
 if (existsSync(out)) throw new Error('Refusing to overwrite benchmark evidence');
 const report = { stage: fixtureMode ? 'mock-full-chat-fixture' : preflight ? 'unpaid-preflight' : 'paid-full-chat-comparison',
   status: 'preparing', protocol, actualProviderCalls: fixtureMode ? 0 : null,
@@ -57,6 +57,8 @@ try {
     process.env.CHATBOT_BENCHMARK_CONTROLS = 'true'; process.env.CHATBOT_JEV_MAX_REQUESTS = String(protocol.maxClassifications);
     process.env.CHATBOT_JEV_MAX_COST_USD = String(protocol.classificationMaxUsd);
     process.env.CHATBOT_JEV_TIMEOUT_MS = String(protocol.timeoutMs); process.env.CHATBOT_JEV_THRESHOLD = String(protocol.threshold);
+    process.env.CHATBOT_JEV_BILLING_MODE = protocol.billingMode;
+    process.env.CHATBOT_JEV_BILLING_TIMEOUT_MS = String(protocol.billingTimeoutMs);
     const { createJevFixture } = await import('@sms/server/testing/jev');
     fixture = await createJevFixture();
     await json('/chat-benchmark/jev/mode', { mode: 'off' });
@@ -74,7 +76,7 @@ try {
   report.initial = initial;
   if (!fixtureMode) {
     report.scopedReadChecks = [];
-    for (const tool of ['students_get_student_count', 'teachers_get_teacher_count', 'classes_get_classes', 'attendance_get_today_students']) {
+    for (const tool of ['students_get_student_count', 'teachers_get_teacher_count', 'classes_get_classes', 'sections_get_sections', 'attendance_get_today_students']) {
       const result = await json('/mcp', { jsonrpc: '2.0', id: randomUUID(), method: 'tools/call',
         params: { name: tool, arguments: { academicYear: option('year', '2026-2027') } } });
       checkScopedRead(tool, result);
@@ -85,6 +87,7 @@ try {
     if (settings?.data?.provider !== 'openrouter' && settings?.provider !== 'openrouter') throw new Error('Require the selected OpenRouter settings');
     report.settings = { provider: settings.data?.provider ?? settings.provider, model: settings.data?.model ?? settings.model };
     if (report.settings.model !== 'openai/gpt-oss-120b') throw new Error('Keep the declared GPT-OSS model for this comparison');
+    if ((settings.data ?? settings).isEnabled !== true) throw new Error('Require enabled model settings');
   }
   if (preflight) {
     restored = true; // Read-only preflight required mode off and did not change it.
@@ -96,7 +99,8 @@ try {
     for (const job of protocol.jobs) {
       checkSource(protocol);
       const status = await json('/chat-benchmark/jev/status');
-      if (status.instanceId !== initial.instanceId || status.budget.unknownCosts || status.budget.requests > protocol.maxClassifications)
+      if (status.instanceId !== initial.instanceId || status.budget.unknownCosts || status.budget.pendingRequests
+        || status.budget.requests > protocol.maxClassifications)
         throw new Error('Process changed or classifier cost remains unknown');
       if (!fixtureMode) {
         const key = await json('/chat-benchmark/provider-usage');
@@ -134,8 +138,19 @@ try {
         await Bun.sleep(100);
       }
       generationBudget.settle(correlationId, parsed.metadata);
-      report.attempts = await json('/chat-benchmark/jev/attempts'); report.generationBudget = generationBudget.snapshot();
+      const billingStart = performance.now();
+      while (true) {
+        report.attempts = await json('/chat-benchmark/jev/attempts');
+        if (!report.attempts.some(attempt => attempt.outcome === 'pending')) break;
+        if (performance.now() - billingStart > protocol.billingTimeoutMs + 250) throw new Error('Classifier billing did not settle within its bounded lifetime');
+        await Bun.sleep(50);
+      }
+      row.billingWaitMs = performance.now() - billingStart;
+      report.generationBudget = generationBudget.snapshot();
       save();
+      if (report.attempts.some(attempt => attempt.costUsd === null)) throw new Error('Classifier terminal cost remains unknown');
+      if (report.attempts.some(attempt => attempt.outcome === 'error' || attempt.httpStatus >= 400
+        || attempt.transportCompleted === true && !attempt.choice)) throw new Error('Classifier request or decision validation failed');
       if (!row.done || row.errors.length || row.aborted || !row.diagnostics) throw new Error('Missing/failed reply diagnostics');
       if (row.diagnostics.tools?.some(tool => tool.outcome === 'error' || tool.outcome === 'blocked')) throw new Error('Scoped chat tool failed');
       const attempt = report.attempts.find(attempt => attempt.correlationId === correlationId);

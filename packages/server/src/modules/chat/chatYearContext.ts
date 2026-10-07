@@ -25,6 +25,7 @@ export function registerChatYearContext(container: Container) {
       try { correlationId = container.get(CORRELATION_ID) ?? null; } catch { /* optional outside transport */ }
       return schoolJevRequestContext.run({ ...grant, actorId: actor.id, role: actor.role,
         academicYear: snapshot.academicYear, mode: effectiveJevMode(), correlationId,
+        requestSignal: context.req.raw.signal,
         eligible: request => classifier.eligible(request), prepare: request => classifier.prepare(request),
         onSelection: classifier.onSelection }, next);
     });

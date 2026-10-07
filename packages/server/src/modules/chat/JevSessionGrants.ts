@@ -8,6 +8,8 @@ export interface JevRequestContext {
   actorId: string; role: string; academicYear: string; mode: JevMode;
   correlationId: string | null; caseId: string; query: string;
   historyComplete: true; priorUserTurns: 0;
+  /** Actual HTTP lifetime, separate from the framework's candidate selection signal. */
+  requestSignal?: AbortSignal;
   prepare?: (request: ReplyPreparationRequest) => Promise<ReplyTemplate | null>;
   eligible?: (request: ReplyPreparationRequest) => boolean;
   onSelection?: (event: ReplyPreparationSelection) => void;

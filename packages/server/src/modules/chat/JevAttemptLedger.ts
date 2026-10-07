@@ -7,6 +7,10 @@ export interface JevAttempt {
   outcome: 'pending' | 'candidate' | 'declined' | 'error' | 'aborted';
   costUsd: number | null; reservedUsd: number; elapsedMs: number | null;
   providerRequestId?: string; choice?: JevIntent; confidence?: number; writeProbability?: number;
+  providerGenerationId?: string;
+  billingMode?: 'abort' | 'observe';
+  transportCompleted?: boolean;
+  costSource?: 'decisions_response';
   httpStatus?: number;
   reason?: string;
   selected?: 'template' | 'ordinary';
@@ -25,7 +29,8 @@ export class JevAttemptLedger {
     const knownCostUsd = rows.reduce((sum, row) => sum + (row.costUsd ?? 0), 0);
     const reservedUsd = rows.filter(row => row.costUsd === null).reduce((sum, row) => sum + row.reservedUsd, 0);
     const unknownCosts = rows.filter(row => row.outcome !== 'pending' && row.costUsd === null).length;
-    return { ...this.limits, requests: rows.length, knownCostUsd, reservedUsd, unknownCosts,
+    return { ...this.limits, requests: rows.length, pendingRequests: rows.filter(row => row.outcome === 'pending').length,
+      knownCostUsd, reservedUsd, unknownCosts,
       stoppedReason: unknownCosts ? 'unknown_cost' : rows.length >= this.limits.maxRequests ? 'request_limit'
         : knownCostUsd + reservedUsd + this.limits.unknownReserveUsd > this.limits.maxCostUsd + 1e-12 ? 'cost_limit' : null };
   }

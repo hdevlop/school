@@ -1,4 +1,7 @@
 import { expect, test } from 'bun:test';
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fullChatProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
 
 test('frozen comparison is bounded, balanced and explicitly not native qualification', () => {
@@ -17,6 +20,27 @@ test('changing a frozen spending limit or job is rejected even with unchanged so
   expect(() => checkSource({ ...protocol, maxChats: 1000 })).toThrow();
   expect(() => checkSource({ ...protocol, jobs: protocol.jobs.slice(1) })).toThrow();
 });
+test('continuation preserves spent limits, skips every dispatched job and rejects unknown costs', () => {
+  const path = 'docs/evidence/chatbot-latency/jev-billing-observer-run-20261007.json';
+  const prior = JSON.parse(readFileSync(path, 'utf8'));
+  const protocol = fullChatProtocol(path);
+  expect(protocol.jobs).toEqual(fullChatProtocol().jobs.slice(58));
+  expect(protocol.maxChats).toBe(14); expect(protocol.maxClassifications).toBe(9);
+  expect(protocol.maxCombinedEstimatedUsd + protocol.continuation.carriedUsd).toBeLessThanOrEqual(0.25);
+  expect(() => checkSource(protocol)).not.toThrow();
+  expect(() => checkSource({ ...protocol, maxChats: 72 })).toThrow();
+  const dir = mkdtempSync(join(tmpdir(), 'jev-continuation-'));
+  try {
+    const invalid = join(dir, 'invalid.json');
+    prior.generationBudget.observedEstimatedUsd = null;
+    writeFileSync(invalid, JSON.stringify(prior));
+    expect(() => fullChatProtocol(invalid)).toThrow();
+    prior.generationBudget.observedEstimatedUsd = 0.008949216;
+    prior.attempts[0].costUsd = null;
+    const unknown = join(dir, 'unknown.json'); writeFileSync(unknown, JSON.stringify(prior));
+    expect(() => fullChatProtocol(unknown)).toThrow();
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 test.each(['https://example.com', 'http://user:password@localhost:3103', 'http://localhost:3103/api',
   'http://localhost:3103/?url=https://example.com'])('refuses an unsafe/non-origin app URL: %s', value => {
   expect(() => checkBase(value)).toThrow();
@@ -25,7 +49,8 @@ test('requires fresh marked-fixture limits before spending', () => {
   const protocol = fullChatProtocol();
   const ready = { instanceId: 'isolated', markedLocalFixture: true, syntheticOnly: true, mode: 'off',
     frameworkPreparationEnabled: false, threshold: 0.8, timeoutMs: 800, guardVersion: 5, intentWordingVersion: 3,
-    budget: { requests: 0, unknownCosts: 0, maxRequests: 48, maxCostUsd: 0.0072, unknownReserveUsd: 0.00015 } };
+    billingMode: 'observe', billingTimeoutMs: 5000,
+    budget: { requests: 0, pendingRequests: 0, unknownCosts: 0, maxRequests: 48, maxCostUsd: 0.0072, unknownReserveUsd: 0.00015 } };
   expect(() => checkReady(ready, protocol)).not.toThrow();
   for (const patch of [{ markedLocalFixture: false }, { syntheticOnly: false }, { mode: 'on' },
     { frameworkPreparationEnabled: true }, { budget: { ...ready.budget, requests: 1 } },
@@ -46,4 +71,6 @@ test('fallback deltas compare the same cases; unfinished/empty replies do not be
     { ...row('c', 'on', 'model', 100), firstTextMs: null, text: '' }]);
   expect(summary.pairedFallbacks).toEqual([{ caseId: 'a', firstTextDeltaMs: 10, completionDeltaMs: 10 }]);
   expect(summary.all.valid).toBe(4); expect(summary.qualification).toBe(false);
+  expect(summarizeFullChat([{ ...row('denied', 'on', 'model', 100),
+    diagnostics: { reply: { source: 'model' }, tools: [{ outcome: 'blocked' }] } }]).all.valid).toBe(0);
 });
