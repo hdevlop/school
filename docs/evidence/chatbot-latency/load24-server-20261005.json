@@ -1,0 +1,14 @@
+{
+    "capturedAt":  "2026-10-05T13:53:09.4584821Z",
+    "listenerPid":  13144,
+    "listenerCreatedAt":  "2026-10-05T13:51:42.6356490Z",
+    "snapshot":  "C:\\Users\\pc\\AppData\\Local\\Temp\\school-chatbot-list60-20261005-5792dad4",
+    "port":  3102,
+    "sourceManifest":  "list60-manifest-20261005.json",
+    "sourceMatches":  true,
+    "privateEnvironmentMatches":  true,
+    "controls":  true,
+    "distDirectory":  ".next-load24-live",
+    "executionSession":  13352,
+    "launcher":  "foreground bun run dev"
+}

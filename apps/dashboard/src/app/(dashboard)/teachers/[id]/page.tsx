@@ -1,11 +1,11 @@
 "use client";
 
-import { TeacherProfile } from '@/features/Teachers/components/profile';
+import TeacherView from '@/features/Teachers/components/view/TeacherView';
 import { useParams } from 'next/navigation';
 
-export default function TeacherProfilePage() {
+export default function TeacherViewPage() {
   const params = useParams();
   const teacherId = params?.id as string;
 
-  return <TeacherProfile teacherId={teacherId} />;
+  return <TeacherView teacherId={teacherId} />;
 }

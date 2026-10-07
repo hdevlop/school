@@ -1,0 +1,1074 @@
+{
+  "capturedAt": "2026-10-07T09:01:53.341Z",
+  "model": "typesafe/jev-1.13",
+  "endpoint": "https://openrouter.ai/api/alpha/decisions",
+  "corpusSha256": "bcbb23d11f5c3c876acbbeeeac8eeddd2ff9fb2a9d95defb234185a69451df12",
+  "requestShape": {
+    "model": "typesafe/jev-1.13",
+    "state": "<query>",
+    "questions": {
+      "intent": {
+        "type": "choice",
+        "instructions": "The message was typed by a school administrator in the chat of a Moroccan school management dashboard. It can be English, French, Spanish, Modern Standard Arabic or Moroccan Darija in Arabic or Latin script, or a mix. Which kind of request is it?",
+        "criteria": {
+          "small_talk": "Only a greeting, thanks, goodbye, or a question about what the assistant can do. No request for school data.",
+          "student_count": "Asks only how many students are enrolled in the whole school this year: one number, not a list of students, with no filter by class, section, gender, status, date or anything else.",
+          "teacher_count": "Asks only how many teachers the whole school has: one number, not a list or names of teachers, with no filter by subject, class or anything else.",
+          "student_and_teacher_count": "Asks for both the total number of students and the total number of teachers, with no filter.",
+          "class_list": "Asks to list or name the school's classes, with no filter and no question about their students, teachers or timetable.",
+          "attendance_today": "Asks to see today's attendance for the whole school (who is present or absent today), with no class, student or other date, and not a number to compute.",
+          "upcoming_exams": "Asks which exams are coming up or when the next exam is, for the whole school, with no class, subject or student filter.",
+          "write_request": "Asks the assistant to create, add, record, mark, change, publish, send or delete something now, for example to record a student as absent or present today, including short Darija commands. Asking how to do it oneself is not this.",
+          "needs_llm": "Anything else: a question with a filter or qualifier (a class, a student, a name, a gender, a past or other date, last year, a number to compute), a list of teachers or students, grades, fees, payments, timetables, how-to questions, a short follow-up that starts with \"and\" (et, y, و, w) or needs an earlier message, unclear requests and topics unrelated to the school."
+        }
+      },
+      "is_write": {
+        "type": "noul",
+        "instructions": "The message was typed by a school administrator in the chat of a Moroccan school management dashboard. It can be English, French, Spanish, Modern Standard Arabic or Moroccan Darija in Arabic or Latin script, or a mix. Does it ask the assistant itself to create, add, record, mark, change, publish or delete data?",
+        "criteria": {
+          "true": "The user wants the assistant to make a change now.",
+          "false": "The user only asks to see information, asks how to do something themselves, or makes small talk."
+        }
+      }
+    }
+  },
+  "intentWordingVersion": 3,
+  "writeWordingVersion": 3,
+  "sourceSha256": {
+    "scripts/chatbot-jev-probe.mjs": "72e0cd0545812f4db98c19fffa4a356aeef52fb078e5d897d51994a97ba48519",
+    "scripts/chatbot-budget.mjs": "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+    "scripts/chatbot-jev.mjs": "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+    "scripts/chatbot-jev-accuracy.mjs": "7dad02ca4b5657311dbc8a6f4f9f3e26d7cf5e81348507ca22598d0eba67dfce",
+    "scripts/chatbot-jev-resume.mjs": "ee65d6f365d7850ed87235b699daf2455f6ce6feb7e7da5f43908fd17dfc61a0",
+    "scripts/chatbot-jev-native.mjs": "650dc72f969d45f4fabfe4bd52f10e918f119d86d56c38b2e8ce9d5092992eb5",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+    "packages/server/src/modules/chat/schoolListReplies.ts": "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153",
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "14ac221103b2d1087b4896151a3c7e2291151a75f05a22cb439f9dff5e5d9701"
+  },
+  "split": "all",
+  "gateThreshold": 0.8,
+  "acceptancePolicy": "core",
+  "repetitions": 1,
+  "nativeCollection": null,
+  "languageGateSource": "School reply profile applied to query text, not fixture language labels",
+  "freshness": {
+    "cases": 100,
+    "families": 50,
+    "nativeReviewedCases": 0,
+    "operatorWorkflow": {
+      "workflow": "assistant-draft-operator-review",
+      "nativeAuthorshipRequired": false,
+      "languageReviewComplete": true,
+      "labels": "assistant-provisional",
+      "nativeReviewedCases": 0
+    },
+    "provenance": "Assistant-authored synthetic cases; explicit native-authorship waiver; operator reviews wording, labels remain assistant-provisional"
+  },
+  "productionAcceptance": false,
+  "budgetUsd": 0.02,
+  "maxRequests": 100,
+  "requestReserveUsd": 0.00015,
+  "allowanceScope": "cumulative",
+  "continuation": {
+    "priorReports": [
+      {
+        "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-run-20261007.json",
+        "sha256": "53cf31ad33d07c912f895b334c7d624be3c8966cd74fd9d943be5b99b382bcd5",
+        "attempts": 77
+      },
+      {
+        "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-continuation-run-20261007.json",
+        "sha256": "219aab75d953632eaa33371d9a051002d255421aa8543214225a551a46801af8",
+        "attempts": 3
+      },
+      {
+        "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-final-run-20261007.json",
+        "sha256": "fd24df7528a433e7aac48572241c570f0a53c4e60a3fe585a3d16341d7226c89",
+        "attempts": 2
+      }
+    ],
+    "transportChanges": [
+      "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-run-20261007.json",
+      "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-continuation-run-20261007.json",
+      "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-final-run-20261007.json"
+    ],
+    "priorAttempts": 82,
+    "priorReportedCostUsd": 0.0031074120000000012,
+    "priorObservedEstimatedUsd": 0.003107412,
+    "retainedUnknownReservationUsd": 0.00045,
+    "priorUnknownAttempts": 3,
+    "retainUnknownCosts": true,
+    "remainingRequestAllowance": 18,
+    "remainingEstimatedBudgetUsd": 0.016442588,
+    "remainingPlannedRequests": 18,
+    "nextAttempt": {
+      "id": "jev-operator-q83",
+      "repetition": 1
+    },
+    "readyToDispatch": true,
+    "blockReasons": [],
+    "note": "Earlier unknown costs remain reserved, not settled as zero. Explicit continuation does not retry earlier failures or prove provider availability. Allowances are cumulative client stops, not billing caps."
+  },
+  "intervalMs": 2000,
+  "connectionReuse": "off",
+  "skippedRequests": 82,
+  "totalPlannedRequests": 100,
+  "plannedRequests": 18,
+  "limitations": [
+    "Latency is measured from this machine through OpenRouter, including TLS and network time.",
+    "Cases and intent wording were written by the same author; the dev/test split is not an independent evaluation.",
+    "Synthetic single-turn questions only: no follow-ups, conversation history or real school traffic.",
+    "Classification only: no reply, tool or template ran, so answer correctness is not measured.",
+    "Language/regex gate summaries project synthetic first-turn eligibility only; role/history, readiness selection and tool execution are not exercised."
+  ],
+  "keyUsageBefore": {
+    "capturedAt": "2026-10-07T09:01:53.605Z",
+    "usage": 0.957515322,
+    "limit": 50,
+    "limitRemaining": 49.042484678
+  },
+  "samples": [
+    {
+      "id": "jev-operator-q83",
+      "repetition": 1,
+      "durationMs": 346.58410000000003,
+      "reportedCostUsd": 0.000039354,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 0.93,
+        "topProbability": 0.94,
+        "probabilities": {
+          "teacher_count": 0,
+          "student_count": 0,
+          "needs_llm": 0.05,
+          "class_list": 0,
+          "student_and_teacher_count": 0,
+          "upcoming_exams": 0,
+          "write_request": 0.94,
+          "small_talk": 0.01,
+          "attendance_today": 0
+        },
+        "writeProbability": 0.71,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 937,
+        "costUsd": 0.000039354
+      }
+    },
+    {
+      "id": "jev-operator-q84",
+      "repetition": 1,
+      "durationMs": 518.0248999999999,
+      "reportedCostUsd": 0.000038976,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "needs_llm",
+        "confidence": 0.39,
+        "topProbability": 0.45999999999999996,
+        "probabilities": {
+          "upcoming_exams": 0.01,
+          "teacher_count": 0.03,
+          "small_talk": 0.09,
+          "student_count": 0.06,
+          "write_request": 0.27,
+          "needs_llm": 0.45999999999999996,
+          "attendance_today": 0.02,
+          "class_list": 0.04,
+          "student_and_teacher_count": 0.02
+        },
+        "writeProbability": 0.54,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 928,
+        "costUsd": 0.000038976
+      }
+    },
+    {
+      "id": "jev-operator-q85",
+      "repetition": 1,
+      "durationMs": 348.67199999999957,
+      "reportedCostUsd": 0.000038808,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 0.84,
+        "topProbability": 0.86,
+        "probabilities": {
+          "upcoming_exams": 0,
+          "teacher_count": 0,
+          "write_request": 0.86,
+          "class_list": 0,
+          "attendance_today": 0,
+          "needs_llm": 0.11,
+          "small_talk": 0.03,
+          "student_and_teacher_count": 0,
+          "student_count": 0
+        },
+        "writeProbability": 0.73,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 924,
+        "costUsd": 0.000038808
+      }
+    },
+    {
+      "id": "jev-operator-q86",
+      "repetition": 1,
+      "durationMs": 428.8230999999996,
+      "reportedCostUsd": 0.000038808,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 0.44,
+        "topProbability": 0.5,
+        "probabilities": {
+          "student_count": 0,
+          "needs_llm": 0.43,
+          "upcoming_exams": 0,
+          "write_request": 0.5,
+          "class_list": 0.01,
+          "student_and_teacher_count": 0,
+          "small_talk": 0.02,
+          "attendance_today": 0,
+          "teacher_count": 0.04
+        },
+        "writeProbability": 0.6,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 924,
+        "costUsd": 0.000038808
+      }
+    },
+    {
+      "id": "jev-operator-q87",
+      "repetition": 1,
+      "durationMs": 390.0149999999994,
+      "reportedCostUsd": 0.000039102,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 0.94,
+        "topProbability": 0.95,
+        "probabilities": {
+          "student_count": 0,
+          "write_request": 0.95,
+          "teacher_count": 0,
+          "needs_llm": 0.04,
+          "attendance_today": 0,
+          "small_talk": 0,
+          "upcoming_exams": 0.01,
+          "class_list": 0,
+          "student_and_teacher_count": 0
+        },
+        "writeProbability": 0.93,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 931,
+        "costUsd": 0.000039102
+      }
+    },
+    {
+      "id": "jev-operator-q88",
+      "repetition": 1,
+      "durationMs": 465.7569999999996,
+      "reportedCostUsd": 0.000038724,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "needs_llm",
+        "confidence": 0.74,
+        "topProbability": 0.77,
+        "probabilities": {
+          "class_list": 0.01,
+          "upcoming_exams": 0.06,
+          "teacher_count": 0,
+          "small_talk": 0,
+          "needs_llm": 0.77,
+          "student_count": 0,
+          "attendance_today": 0.01,
+          "write_request": 0.15000000000000002,
+          "student_and_teacher_count": 0
+        },
+        "writeProbability": 0.44,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 922,
+        "costUsd": 0.000038724
+      }
+    },
+    {
+      "id": "jev-operator-q89",
+      "repetition": 1,
+      "durationMs": 361.90620000000126,
+      "reportedCostUsd": 0.000039396,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 0.98,
+        "topProbability": 0.98,
+        "probabilities": {
+          "student_count": 0,
+          "teacher_count": 0,
+          "attendance_today": 0,
+          "upcoming_exams": 0,
+          "class_list": 0,
+          "write_request": 0.98,
+          "needs_llm": 0.02,
+          "small_talk": 0,
+          "student_and_teacher_count": 0
+        },
+        "writeProbability": 0.93,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 938,
+        "costUsd": 0.000039396
+      }
+    },
+    {
+      "id": "jev-operator-q90",
+      "repetition": 1,
+      "durationMs": 502.46380000000136,
+      "reportedCostUsd": 0.000038934,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "needs_llm",
+        "confidence": 0.55,
+        "topProbability": 0.6,
+        "probabilities": {
+          "small_talk": 0,
+          "write_request": 0.37,
+          "class_list": 0,
+          "needs_llm": 0.6,
+          "teacher_count": 0,
+          "attendance_today": 0.02,
+          "upcoming_exams": 0.01,
+          "student_and_teacher_count": 0,
+          "student_count": 0
+        },
+        "writeProbability": 0.75,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 927,
+        "costUsd": 0.000038934
+      }
+    },
+    {
+      "id": "jev-operator-q91",
+      "repetition": 1,
+      "durationMs": 796.8197,
+      "reportedCostUsd": 0.000039186,
+      "httpStatus": 200,
+      "retryAfter": null,
+      "rateLimitHeaders": {
+        "x-ratelimit-limit": null,
+        "x-ratelimit-remaining": null,
+        "x-ratelimit-reset": null
+      },
+      "providerError": null,
+      "decision": {
+        "choice": "needs_llm",
+        "confidence": 0.94,
+        "topProbability": 0.95,
+        "probabilities": {
+          "upcoming_exams": 0,
+          "student_count": 0.05,
+          "write_request": 0,
+          "class_list": 0,
+          "needs_llm": 0.95,
+          "attendance_today": 0,
+          "small_talk": 0,
+          "student_and_teacher_count": 0,
+          "teacher_count": 0
+        },
+        "writeProbability": 0.04,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 933,
+        "costUsd": 0.000039186
+      }
+    },
+    {
+      "id": "jev-operator-q92",
+      "repetition": 1,
+      "durationMs": 10000.830800000003,
+      "reportedCostUsd": null,
+      "httpStatus": null,
+      "retryAfter": null,
+      "rateLimitHeaders": null,
+      "providerError": null,
+      "error": "The operation timed out."
+    }
+  ],
+  "stoppedReason": "unknown_request_cost",
+  "estimatedBudget": {
+    "maxEstimatedUsd": 0.016442588,
+    "requestReserveUsd": 0.00015,
+    "observedEstimatedUsd": 0.000351288,
+    "reservedUsd": 0.00015,
+    "requestsSettled": 10,
+    "requestsWithUnknownCost": 1,
+    "inFlight": 0,
+    "stoppedReason": "unknown_request_cost",
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling.",
+    "settlementSource": "Valid provider-reported usage.cost, including failed decisions; missing/invalid cost retains its reservation and stops dispatch."
+  },
+  "cumulativeAccounting": {
+    "attempts": 92,
+    "reportedCostUsd": 0.003458700000000001,
+    "observedEstimatedUsd": 0.0034587,
+    "retainedUnknownReservationUsd": 0.0006,
+    "unknownAttempts": 4,
+    "costComplete": false
+  },
+  "keyUsageAfter": {
+    "error": "The operation timed out."
+  },
+  "summary": {
+    "nativeStudy": null,
+    "exploration": {
+      "mode": "operator-reviewed-synthetic",
+      "productionAcceptance": false,
+      "reasons": [
+        "incomplete_or_failed_run",
+        "fewer_than_150_unique_accepted_questions",
+        "fewer_than_150_independent_question_families",
+        "warm_classification_p95_over_500ms_or_unknown"
+      ],
+      "classificationGatePassed": false,
+      "operatorWorkflow": {
+        "workflow": "assistant-draft-operator-review",
+        "nativeAuthorshipRequired": false,
+        "languageReviewComplete": true,
+        "labels": "assistant-provisional",
+        "nativeReviewedCases": 0
+      },
+      "threshold": 0.8,
+      "acceptancePolicy": "core",
+      "candidateSummary": {
+        "acceptancePolicy": "core",
+        "samples": 10,
+        "errors": 1,
+        "topChoiceAccuracy": 0.6666666666666666,
+        "writeAccuracy": 0.8888888888888888,
+        "accepted": 4,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.5,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 4,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.5271291954984121
+      },
+      "acceptedFamilies": 4,
+      "nativeReviewedCases": 0,
+      "latencyWarmMs": {
+        "count": 8,
+        "p50": 428.8230999999996,
+        "p95": 796.8197,
+        "max": 796.8197
+      },
+      "note": "Native authorship was explicitly waived. Wording review does not independently verify assistant labels. Linked variants remain clustered; no native precision bound or runtime acceptance is claimed. Original B0 remains failed."
+    },
+    "gate": {
+      "threshold": 0.8,
+      "guarded": true,
+      "test": {
+        "all": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 4,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.5,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 4,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.5271291954984121
+        },
+        "byLanguage": {
+          "ary": {
+            "acceptancePolicy": "core",
+            "samples": 5,
+            "errors": 0,
+            "topChoiceAccuracy": 1,
+            "writeAccuracy": 1,
+            "accepted": 4,
+            "acceptedWrong": 0,
+            "precision": 1,
+            "coverage": 1,
+            "writeAnsweredAsRead": 0,
+            "readRefusedAsWrite": 0,
+            "wrongCases": [],
+            "acceptedCases": 4,
+            "wrongCaseCount": 0,
+            "errorUpperBound95": 0.5271291954984121
+          },
+          "ary-latn": {
+            "acceptancePolicy": "core",
+            "samples": 5,
+            "errors": 1,
+            "topChoiceAccuracy": 0.25,
+            "writeAccuracy": 0.75,
+            "accepted": 0,
+            "acceptedWrong": 0,
+            "precision": null,
+            "coverage": 0,
+            "writeAnsweredAsRead": 0,
+            "readRefusedAsWrite": 0,
+            "wrongCases": [],
+            "acceptedCases": 0,
+            "wrongCaseCount": 0,
+            "errorUpperBound95": null
+          }
+        }
+      },
+      "testTemplateLanguages": {
+        "acceptancePolicy": "core",
+        "samples": 10,
+        "errors": 1,
+        "topChoiceAccuracy": 0.6666666666666666,
+        "writeAccuracy": 0.8888888888888888,
+        "accepted": 4,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.5,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 4,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.5271291954984121
+      },
+      "testAfterLanguageGate": {
+        "acceptancePolicy": "core",
+        "samples": 10,
+        "errors": 1,
+        "topChoiceAccuracy": 0.6666666666666666,
+        "writeAccuracy": 0.8888888888888888,
+        "accepted": 4,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.5,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 4,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.5271291954984121
+      },
+      "testAfterLanguageAndRegexGate": {
+        "acceptancePolicy": "core",
+        "samples": 10,
+        "errors": 1,
+        "topChoiceAccuracy": 0.6666666666666666,
+        "writeAccuracy": 0.8888888888888888,
+        "accepted": 4,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.5,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 4,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.5271291954984121
+      },
+      "languageSkippedCases": [
+        "jev-operator-q04",
+        "jev-operator-q16",
+        "jev-operator-q22",
+        "jev-operator-q24",
+        "jev-operator-q40",
+        "jev-operator-q44",
+        "jev-operator-q46",
+        "jev-operator-q68",
+        "jev-operator-q82"
+      ],
+      "dev": {
+        "all": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "byLanguage": {}
+      }
+    },
+    "reportedCostUsd": 0.00035128800000000006,
+    "requestsWithKnownCost": 9,
+    "requestsWithUnknownCost": 1,
+    "costComplete": false,
+    "costNote": "reportedCostUsd sums known usage.cost only, including failed decisions. Unknown cost is not zero; reservations are estimates, not a provider billing cap. Key ledger reads are separate observations.",
+    "inputTokens": 8364,
+    "errors": [
+      "jev-operator-q92#1: The operation timed out."
+    ],
+    "latencyAllMs": {
+      "count": 9,
+      "p50": 428.8230999999996,
+      "p95": 796.8197,
+      "max": 796.8197
+    },
+    "latencyWarmMs": {
+      "count": 8,
+      "p50": 428.8230999999996,
+      "p95": 796.8197,
+      "max": 796.8197
+    },
+    "latencyByLanguageMs": {
+      "ary-latn": {
+        "count": 4,
+        "p50": 465.7569999999996,
+        "p95": 518.0248999999999,
+        "max": 518.0248999999999
+      },
+      "ary": {
+        "count": 4,
+        "p50": 361.90620000000126,
+        "p95": 796.8197,
+        "max": 796.8197
+      }
+    },
+    "stability": {
+      "cases": 9,
+      "stable": 9,
+      "unstable": []
+    },
+    "thresholds": {
+      "raw": null,
+      "guarded": null
+    },
+    "curve": [
+      {
+        "threshold": 0.5,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 4,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.5,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 4,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.5271291954984121
+        }
+      },
+      {
+        "threshold": 0.6,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 4,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.5,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 4,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.5271291954984121
+        }
+      },
+      {
+        "threshold": 0.7,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 4,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.5,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 4,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.5271291954984121
+        }
+      },
+      {
+        "threshold": 0.8,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 4,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.5,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 4,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.5271291954984121
+        }
+      },
+      {
+        "threshold": 0.85,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 3,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.375,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 3,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.6315968501359612
+        }
+      },
+      {
+        "threshold": 0.9,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 3,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.375,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 3,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.6315968501359612
+        }
+      },
+      {
+        "threshold": 0.95,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 1,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.125,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 1,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.95
+        }
+      },
+      {
+        "threshold": 0.97,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 1,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.125,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 1,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.95
+        }
+      },
+      {
+        "threshold": 0.99,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 10,
+          "errors": 1,
+          "topChoiceAccuracy": 0.6666666666666666,
+          "writeAccuracy": 0.8888888888888888,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": 0,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        }
+      }
+    ],
+    "test": {
+      "raw": null,
+      "guarded": null
+    },
+    "regexBaseline": {
+      "all": {
+        "cases": 100,
+        "matched": 2,
+        "wrong": [],
+        "coverage": 0.02702702702702703
+      },
+      "test": {
+        "cases": 100,
+        "matched": 2,
+        "wrong": [],
+        "coverage": 0.02702702702702703
+      },
+      "byLanguage": {
+        "ary": {
+          "cases": 50,
+          "matched": 2,
+          "wrong": [],
+          "coverage": 0.05405405405405406
+        },
+        "ary-latn": {
+          "cases": 50,
+          "matched": 0,
+          "wrong": [],
+          "coverage": 0
+        }
+      }
+    }
+  }
+}

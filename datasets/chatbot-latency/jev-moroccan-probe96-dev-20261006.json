@@ -1,0 +1,973 @@
+{
+    "version":  1,
+    "scope":  "Classifier-development subset of the seen assistant draft; provisional labels, correlated linked families, no held-out/native acceptance",
+    "developmentOnly":  true,
+    "acceptancePolicy":  "core",
+    "sourceCorpus":  "datasets/chatbot-latency/jev-moroccan-development.json",
+    "sourceCorpusSha256":  "fb7e20021d874a678ba1882d778ad3f99a21ff5b6c8adeb3a1fdb0a782048fba",
+    "nativeAuthoredCases":  0,
+    "nativeReviewedCases":  0,
+    "productionAcceptance":  false,
+    "cases":  [
+                  {
+                      "id":  "mda26-small_talk-01-fr",
+                      "familyId":  "mda26-small_talk-01",
+                      "language":  "fr",
+                      "query":  "Salut, j\u0027espère que tu vas bien aujourd\u0027hui.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-small_talk-01-ar",
+                      "familyId":  "mda26-small_talk-01",
+                      "language":  "ar",
+                      "query":  "مرحبا، أتمنى أن تكون بخير اليوم.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-small_talk-01-ary",
+                      "familyId":  "mda26-small_talk-01",
+                      "language":  "ary",
+                      "query":  "سلام، نتمنى تكون بخير اليوم.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-small_talk-01-ary-latn",
+                      "familyId":  "mda26-small_talk-01",
+                      "language":  "ary-latn",
+                      "query":  "salam ntmenna tkoun bikhir lyoum.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-small_talk-07-fr",
+                      "familyId":  "mda26-small_talk-07",
+                      "language":  "fr",
+                      "query":  "Bonsoir, je viens juste te dire bonjour.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-small_talk-07-ar",
+                      "familyId":  "mda26-small_talk-07",
+                      "language":  "ar",
+                      "query":  "مساء الخير، أردت فقط إلقاء التحية.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-small_talk-07-ary",
+                      "familyId":  "mda26-small_talk-07",
+                      "language":  "ary",
+                      "query":  "مسا الخير، غير جيت نسلم عليك.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-small_talk-07-ary-latn",
+                      "familyId":  "mda26-small_talk-07",
+                      "language":  "ary-latn",
+                      "query":  "msa lkhir ghir jit nsellem 3lik.",
+                      "split":  "dev",
+                      "intent":  "small_talk",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-01-fr",
+                      "familyId":  "mda26-student_count-01",
+                      "language":  "fr",
+                      "query":  "L\u0027école compte combien d\u0027élèves inscrits cette année, au total ?",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-01-ar",
+                      "familyId":  "mda26-student_count-01",
+                      "language":  "ar",
+                      "query":  "كم يبلغ مجموع التلاميذ المسجلين في المدرسة هذه السنة؟",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-01-ary",
+                      "familyId":  "mda26-student_count-01",
+                      "language":  "ary",
+                      "query":  "المدرسة فيها شحال من تلميذ مسجل هاد العام كاملين؟",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-01-ary-latn",
+                      "familyId":  "mda26-student_count-01",
+                      "language":  "ary-latn",
+                      "query":  "lmdrasa fiha ch7al mn tilmid msjjel had l3am kamlin?",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-14-fr",
+                      "familyId":  "mda26-student_count-14",
+                      "language":  "fr",
+                      "query":  "J\u0027ai besoin du total des élèves, pas de leurs noms.",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-14-ar",
+                      "familyId":  "mda26-student_count-14",
+                      "language":  "ar",
+                      "query":  "أحتاج إلى عدد التلاميذ الإجمالي دون أسمائهم.",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-14-ary",
+                      "familyId":  "mda26-student_count-14",
+                      "language":  "ary",
+                      "query":  "خاصني العدد ديال التلاميذ، ماشي السميات ديالهم.",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-14-ary-latn",
+                      "familyId":  "mda26-student_count-14",
+                      "language":  "ary-latn",
+                      "query":  "khasni l3adad dyal tlamid machi smiyat dyalhom.",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-26-fr",
+                      "familyId":  "mda26-student_count-26",
+                      "language":  "fr",
+                      "query":  "Sans liste détaillée, combien d\u0027élèves l\u0027école compte-t-elle ?",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-26-ar",
+                      "familyId":  "mda26-student_count-26",
+                      "language":  "ar",
+                      "query":  "دون قائمة تفصيلية، كم تلميذا تضم المدرسة؟",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-26-ary",
+                      "familyId":  "mda26-student_count-26",
+                      "language":  "ary",
+                      "query":  "بلا لائحة مفصلة، المدرسة فيها شحال من تلميذ؟",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_count-26-ary-latn",
+                      "familyId":  "mda26-student_count-26",
+                      "language":  "ary-latn",
+                      "query":  "bla liste mfassla lmdrasa fiha ch7al mn tilmid?",
+                      "split":  "dev",
+                      "intent":  "student_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-01-fr",
+                      "familyId":  "mda26-teacher_count-01",
+                      "language":  "fr",
+                      "query":  "L\u0027école emploie combien d\u0027enseignants au total cette année ?",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-01-ar",
+                      "familyId":  "mda26-teacher_count-01",
+                      "language":  "ar",
+                      "query":  "كم مدرسا يوجد في المدرسة إجمالا هذه السنة؟",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-01-ary",
+                      "familyId":  "mda26-teacher_count-01",
+                      "language":  "ary",
+                      "query":  "المدرسة فيها شحال من أستاذ كاملين هاد العام؟",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-01-ary-latn",
+                      "familyId":  "mda26-teacher_count-01",
+                      "language":  "ary-latn",
+                      "query":  "lmdrasa fiha ch7al mn ostad kamlin had l3am?",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-07-fr",
+                      "familyId":  "mda26-teacher_count-07",
+                      "language":  "fr",
+                      "query":  "Je demande le total des enseignants, sans leurs noms.",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-07-ar",
+                      "familyId":  "mda26-teacher_count-07",
+                      "language":  "ar",
+                      "query":  "أطلب العدد الكلي للأساتذة دون أسمائهم.",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-07-ary",
+                      "familyId":  "mda26-teacher_count-07",
+                      "language":  "ary",
+                      "query":  "بغيت العدد كامل ديال الأساتذة بلا سمياتهم.",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-07-ary-latn",
+                      "familyId":  "mda26-teacher_count-07",
+                      "language":  "ary-latn",
+                      "query":  "bghit l3adad kamel dyal l asatida bla smiyathom.",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-18-fr",
+                      "familyId":  "mda26-teacher_count-18",
+                      "language":  "fr",
+                      "query":  "Quel est notre total de professeurs actuellement ?",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-18-ar",
+                      "familyId":  "mda26-teacher_count-18",
+                      "language":  "ar",
+                      "query":  "ما مجموع الأساتذة لدينا حاليا؟",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-18-ary",
+                      "familyId":  "mda26-teacher_count-18",
+                      "language":  "ary",
+                      "query":  "شحال هو مجموع الأساتذة اللي عندنا دابا؟",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-teacher_count-18-ary-latn",
+                      "familyId":  "mda26-teacher_count-18",
+                      "language":  "ary-latn",
+                      "query":  "ch7al howa mjmo3 l asatida lli 3ndna daba?",
+                      "split":  "dev",
+                      "intent":  "teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-01-fr",
+                      "familyId":  "mda26-student_and_teacher_count-01",
+                      "language":  "fr",
+                      "query":  "J\u0027aimerais les deux effectifs de l\u0027école : élèves et enseignants.",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-01-ar",
+                      "familyId":  "mda26-student_and_teacher_count-01",
+                      "language":  "ar",
+                      "query":  "أريد عددي التلاميذ والمدرسين في المدرسة معا.",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-01-ary",
+                      "familyId":  "mda26-student_and_teacher_count-01",
+                      "language":  "ary",
+                      "query":  "بغيت جوج أعداد ديال المدرسة: التلاميذ والأساتذة.",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-01-ary-latn",
+                      "familyId":  "mda26-student_and_teacher_count-01",
+                      "language":  "ary-latn",
+                      "query":  "bghit jouj a3dad dyal lmdrasa tlamid w l asatida.",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-12-fr",
+                      "familyId":  "mda26-student_and_teacher_count-12",
+                      "language":  "fr",
+                      "query":  "Je cherche les deux totaux, sans les listes de noms.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-12-ar",
+                      "familyId":  "mda26-student_and_teacher_count-12",
+                      "language":  "ar",
+                      "query":  "أبحث عن مجموعي التلاميذ والأساتذة دون قوائم الأسماء.",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-12-ary",
+                      "familyId":  "mda26-student_and_teacher_count-12",
+                      "language":  "ary",
+                      "query":  "كنقلب على مجموع التلاميذ والأساتذة بلا لوائح السميات.",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-12-ary-latn",
+                      "familyId":  "mda26-student_and_teacher_count-12",
+                      "language":  "ary-latn",
+                      "query":  "kan9elleb 3la mjmo3 tlamid w l asatida bla lway7 smiyat.",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-25-fr",
+                      "familyId":  "mda26-student_and_teacher_count-25",
+                      "language":  "fr",
+                      "query":  "Quels chiffres avons-nous au total pour les élèves et pour les professeurs ?",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-25-ar",
+                      "familyId":  "mda26-student_and_teacher_count-25",
+                      "language":  "ar",
+                      "query":  "ما الأعداد الإجمالية لدينا للتلاميذ وللأساتذة؟",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-25-ary",
+                      "familyId":  "mda26-student_and_teacher_count-25",
+                      "language":  "ary",
+                      "query":  "شنو هما الأعداد الإجمالية ديال التلاميذ وديال الأساتذة عندنا؟",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-student_and_teacher_count-25-ary-latn",
+                      "familyId":  "mda26-student_and_teacher_count-25",
+                      "language":  "ary-latn",
+                      "query":  "chnou homa l a3dad l ijmaliya dyal tlamid w dyal l asatida 3ndna?",
+                      "split":  "dev",
+                      "intent":  "student_and_teacher_count",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-01-fr",
+                      "familyId":  "mda26-class_list-01",
+                      "language":  "fr",
+                      "query":  "Peux-tu afficher les classes de toute l\u0027école avec leurs noms ?",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-01-ar",
+                      "familyId":  "mda26-class_list-01",
+                      "language":  "ar",
+                      "query":  "هل يمكنك عرض أسماء أقسام المدرسة كلها؟",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-01-ary",
+                      "familyId":  "mda26-class_list-01",
+                      "language":  "ary",
+                      "query":  "تقدر توريني سميات الأقسام ديال المدرسة كاملة؟",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-01-ary-latn",
+                      "familyId":  "mda26-class_list-01",
+                      "language":  "ary-latn",
+                      "query":  "t9der twerrini smiyat l a9sam dyal lmdrasa kamla?",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-16-fr",
+                      "familyId":  "mda26-class_list-16",
+                      "language":  "fr",
+                      "query":  "Liste les classes en indiquant leurs noms exacts.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-16-ar",
+                      "familyId":  "mda26-class_list-16",
+                      "language":  "ar",
+                      "query":  "اسرد الأقسام مع ذكر أسمائها كما هي.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-16-ary",
+                      "familyId":  "mda26-class_list-16",
+                      "language":  "ary",
+                      "query":  "عطيني لائحة الأقسام بالسميات ديالهم كيف ما هما.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-16-ary-latn",
+                      "familyId":  "mda26-class_list-16",
+                      "language":  "ary-latn",
+                      "query":  "3tini liste l a9sam b smiyat dyalhom kif ma homa.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-25-fr",
+                      "familyId":  "mda26-class_list-25",
+                      "language":  "fr",
+                      "query":  "Donne une ligne par classe avec ses sections, pour toute l\u0027école.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-25-ar",
+                      "familyId":  "mda26-class_list-25",
+                      "language":  "ar",
+                      "query":  "أعطني سطرا لكل قسم مع شعبه في المدرسة كلها.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-25-ary",
+                      "familyId":  "mda26-class_list-25",
+                      "language":  "ary",
+                      "query":  "عطيني سطر لكل قسم مع الشعب ديالو فالمدرسة كلها.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-class_list-25-ary-latn",
+                      "familyId":  "mda26-class_list-25",
+                      "language":  "ary-latn",
+                      "query":  "3tini ster l kol 9ism m3a sections dyalo flmdrasa kolha.",
+                      "split":  "dev",
+                      "intent":  "class_list",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-01-fr",
+                      "familyId":  "mda26-attendance_today-01",
+                      "language":  "fr",
+                      "query":  "Peux-tu afficher les relevés de présence des élèves pour aujourd\u0027hui ?",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-01-ar",
+                      "familyId":  "mda26-attendance_today-01",
+                      "language":  "ar",
+                      "query":  "هل يمكنك عرض سجلات حضور التلاميذ لهذا اليوم؟",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-01-ary",
+                      "familyId":  "mda26-attendance_today-01",
+                      "language":  "ary",
+                      "query":  "تقدر توريني سجلات حضور التلاميذ ديال اليوم؟",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-01-ary-latn",
+                      "familyId":  "mda26-attendance_today-01",
+                      "language":  "ary-latn",
+                      "query":  "t9der twerrini sijillat 7odour tlamid dyal lyoum?",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-08-fr",
+                      "familyId":  "mda26-attendance_today-08",
+                      "language":  "fr",
+                      "query":  "Quels sont les états d\u0027assiduité des élèves enregistrés aujourd\u0027hui ?",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-08-ar",
+                      "familyId":  "mda26-attendance_today-08",
+                      "language":  "ar",
+                      "query":  "ما حالات مواظبة التلاميذ المسجلة اليوم؟",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-08-ary",
+                      "familyId":  "mda26-attendance_today-08",
+                      "language":  "ary",
+                      "query":  "شنو حالات حضور التلاميذ اللي تسجلو اليوم؟",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-08-ary-latn",
+                      "familyId":  "mda26-attendance_today-08",
+                      "language":  "ary-latn",
+                      "query":  "chnou 7alat 7odour tlamid lli tsjjlou lyoum?",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-25-fr",
+                      "familyId":  "mda26-attendance_today-25",
+                      "language":  "fr",
+                      "query":  "L\u0027état de présence des élèves de toute l\u0027école ce jour, s\u0027il te plaît.",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-25-ar",
+                      "familyId":  "mda26-attendance_today-25",
+                      "language":  "ar",
+                      "query":  "أريد حالة حضور تلاميذ المدرسة كلها لهذا اليوم.",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-25-ary",
+                      "familyId":  "mda26-attendance_today-25",
+                      "language":  "ary",
+                      "query":  "حالة حضور تلاميذ المدرسة كاملة فهاد النهار عافاك.",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-attendance_today-25-ary-latn",
+                      "familyId":  "mda26-attendance_today-25",
+                      "language":  "ary-latn",
+                      "query":  "7alat 7odour tlamid lmdrasa kamla fhad nhar 3afak.",
+                      "split":  "dev",
+                      "intent":  "attendance_today",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-01-fr",
+                      "familyId":  "mda26-upcoming_exams-01",
+                      "language":  "fr",
+                      "query":  "Quelles sont les prochaines épreuves prévues pour toute l\u0027école ?",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-01-ar",
+                      "familyId":  "mda26-upcoming_exams-01",
+                      "language":  "ar",
+                      "query":  "ما الاختبارات المقبلة المقررة للمدرسة كلها؟",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-01-ary",
+                      "familyId":  "mda26-upcoming_exams-01",
+                      "language":  "ary",
+                      "query":  "شنو هما الاختبارات الجايين المبرمجين للمدرسة كاملة؟",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-01-ary-latn",
+                      "familyId":  "mda26-upcoming_exams-01",
+                      "language":  "ary-latn",
+                      "query":  "chnou homa l ikhtibarat jayyin lmbermjin l lmdrasa kamla?",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-10-fr",
+                      "familyId":  "mda26-upcoming_exams-10",
+                      "language":  "fr",
+                      "query":  "Montre les prochains examens programmés, du plus proche au plus lointain.",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-10-ar",
+                      "familyId":  "mda26-upcoming_exams-10",
+                      "language":  "ar",
+                      "query":  "اعرض الامتحانات المقبلة من الأقرب إلى الأبعد.",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-10-ary",
+                      "familyId":  "mda26-upcoming_exams-10",
+                      "language":  "ary",
+                      "query":  "وريني الامتحانات الجايين من الأقرب للأبعد.",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-upcoming_exams-10-ary-latn",
+                      "familyId":  "mda26-upcoming_exams-10",
+                      "language":  "ary-latn",
+                      "query":  "werrini imti7anat jayyin mn l a9rab l l ab3ad.",
+                      "split":  "dev",
+                      "intent":  "upcoming_exams",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-01-fr",
+                      "familyId":  "mda26-write_request-01",
+                      "language":  "fr",
+                      "query":  "Ajoute un nouvel élève nommé ZzAmine Exemple.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-01-ar",
+                      "familyId":  "mda26-write_request-01",
+                      "language":  "ar",
+                      "query":  "أضف تلميذا جديدا باسم ZzAmine Exemple.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-01-ary",
+                      "familyId":  "mda26-write_request-01",
+                      "language":  "ary",
+                      "query":  "زيد تلميذ جديد سميتو ZzAmine Exemple.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-01-ary-latn",
+                      "familyId":  "mda26-write_request-01",
+                      "language":  "ary-latn",
+                      "query":  "zid tilmid jdid smitou ZzAmine Exemple.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-27-fr",
+                      "familyId":  "mda26-write_request-27",
+                      "language":  "fr",
+                      "query":  "Transfère ZzEleveDemo de ZzClasseA vers ZzClasseB.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-27-ar",
+                      "familyId":  "mda26-write_request-27",
+                      "language":  "ar",
+                      "query":  "انقل التلميذ ZzEleveDemo من ZzClasseA إلى ZzClasseB.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-27-ary",
+                      "familyId":  "mda26-write_request-27",
+                      "language":  "ary",
+                      "query":  "حول ZzEleveDemo من ZzClasseA ل ZzClasseB.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-write_request-27-ary-latn",
+                      "familyId":  "mda26-write_request-27",
+                      "language":  "ary-latn",
+                      "query":  "7awwel ZzEleveDemo mn ZzClasseA l ZzClasseB.",
+                      "split":  "dev",
+                      "intent":  "write_request",
+                      "isWrite":  true,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-01-fr",
+                      "familyId":  "mda26-needs_llm-01",
+                      "language":  "fr",
+                      "query":  "Combien d\u0027élèves sont inscrits dans la classe ZzCP uniquement ?",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-01-ar",
+                      "familyId":  "mda26-needs_llm-01",
+                      "language":  "ar",
+                      "query":  "كم تلميذا مسجلا في القسم ZzCP فقط؟",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-01-ary",
+                      "familyId":  "mda26-needs_llm-01",
+                      "language":  "ary",
+                      "query":  "شحال من تلميذ مسجل غير فالقسم ZzCP؟",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-01-ary-latn",
+                      "familyId":  "mda26-needs_llm-01",
+                      "language":  "ary-latn",
+                      "query":  "ch7al mn tilmid msjjel ghir f 9ism ZzCP?",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-10-fr",
+                      "familyId":  "mda26-needs_llm-10",
+                      "language":  "fr",
+                      "query":  "Je veux les noms des professeurs, pas un chiffre total.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-10-ar",
+                      "familyId":  "mda26-needs_llm-10",
+                      "language":  "ar",
+                      "query":  "أريد أسماء الأساتذة وليس رقم المجموع.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-10-ary",
+                      "familyId":  "mda26-needs_llm-10",
+                      "language":  "ary",
+                      "query":  "بغيت سميات الأساتذة، ماشي رقم المجموع.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-10-ary-latn",
+                      "familyId":  "mda26-needs_llm-10",
+                      "language":  "ary-latn",
+                      "query":  "bghit smiyat l asatida machi ra9m lmjmo3.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-40-fr",
+                      "familyId":  "mda26-needs_llm-40",
+                      "language":  "fr",
+                      "query":  "Affiche les mêmes informations pour l\u0027autre enfant.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-40-ar",
+                      "familyId":  "mda26-needs_llm-40",
+                      "language":  "ar",
+                      "query":  "اعرض المعلومات نفسها للطفل الآخر.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-40-ary",
+                      "familyId":  "mda26-needs_llm-40",
+                      "language":  "ary",
+                      "query":  "وريني نفس المعلومات ديال الطفل الآخر.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  },
+                  {
+                      "id":  "mda26-needs_llm-40-ary-latn",
+                      "familyId":  "mda26-needs_llm-40",
+                      "language":  "ary-latn",
+                      "query":  "werrini nefs lma3loumat dyal tifel lakhor.",
+                      "split":  "dev",
+                      "intent":  "needs_llm",
+                      "isWrite":  false,
+                      "source":  "assistant"
+                  }
+              ]
+}

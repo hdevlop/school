@@ -14,6 +14,7 @@ import { useParentsTableColumns } from '../hooks/useParentsTableColumns';
 import { useParentsTableFilters } from '../hooks/useParentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
+import { usePermissions } from 'najm-auth/client/react';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 const getParentRowClassName = (parent) => {
@@ -27,6 +28,11 @@ function ParentsTable() {
 
   const { t } = useTranslation();
   const router = useRouter();
+  // A teacher reads parents; only roles that may change them get the actions.
+  const { can } = usePermissions();
+  const canCreate = can('create:parents');
+  const canUpdate = can('update:parents');
+  const canDelete = can('delete:parents');
   // Opening a parent keeps an explicitly viewed year.
   const [rowSelection, setRowSelection] = React.useState<Record<string, boolean>>({});
   const columns = useParentsTableColumns();
@@ -136,11 +142,11 @@ function ParentsTable() {
         data={filteredParents}
         columns={columns}
         filters={rawFilters}
-        onCreate={handleAddClick}
+        onCreate={canCreate ? handleAddClick : undefined}
         onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onBulkDelete={handleBulkDelete}
+        onEdit={canUpdate ? handleEdit : undefined}
+        onDelete={canDelete ? handleDelete : undefined}
+        onBulkDelete={canDelete ? handleBulkDelete : undefined}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
         loading={isParentsLoading}
@@ -160,7 +166,7 @@ function ParentsTable() {
             icon={scope.hasSelection ? SearchX : FEATURE_ICONS.parents}
             title={t(scope.hasSelection ? 'emptyStates.filtered.title' : 'emptyStates.parents.title')}
             description={t(scope.hasSelection ? 'emptyStates.filtered.description' : 'emptyStates.parents.description')}
-            action={scope.hasSelection ? undefined : (
+            action={scope.hasSelection || !canCreate ? undefined : (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('parents.dialogs.createButton')}

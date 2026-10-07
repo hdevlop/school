@@ -1,6 +1,7 @@
 import { analyzeReplyLanguage } from './chatbot-language.mjs';
 import { findWriteClaim, findWritePromise } from './chatbot-claims.mjs';
 import { scoreSchoolFacts, validateSchoolFacts } from './chatbot-facts.mjs';
+import { scoreEmptyReads } from './chatbot-empty-reads.mjs';
 
 const REPLY_LANGUAGES = { en: 'en', fr: 'fr', es: 'es', ar: 'ar', ary: 'ar' };
 const KINDS = new Set(['small-talk', 'single-read', 'multi-read', 'blocked-write']);
@@ -27,6 +28,7 @@ export function validateCorpus(corpus) {
       || (item.forbiddenAnswerFacts !== undefined && !isNameList(item.forbiddenAnswerFacts))
       || (item.storedNames !== undefined && !isNameList(item.storedNames))
       || (item.schoolFacts !== undefined && !validateSchoolFacts(item.schoolFacts))
+      || (item.emptyResultTools !== undefined && !isNameList(item.emptyResultTools))
       || (item.replyLanguage !== undefined && item.replyLanguage !== null
         && !Object.hasOwn(REPLY_LANGUAGES, item.replyLanguage))
       || (item.expectedToolCalls !== undefined && (!Array.isArray(item.expectedToolCalls)
@@ -89,7 +91,10 @@ export function scoreReply(item, parsed, server) {
     ? null : item.replyLanguage ?? item.language;
   const languageCheck = analyzeReplyLanguage(parsed.text, { storedNames: item.storedNames ?? [], expectedLanguage });
   const replyLanguage = languageCheck.language;
-  const facts = scoreSchoolFacts(parsed.text, item.schoolFacts);
+  const schoolFacts = scoreSchoolFacts(parsed.text, item.schoolFacts);
+  const emptyReads = scoreEmptyReads(item, parsed, server);
+  const facts = { factFailures: [...schoolFacts.factFailures, ...emptyReads.failures],
+    factReviewRequired: schoolFacts.factReviewRequired || emptyReads.reviewRequired };
   const wrongLanguage = expectedLanguage !== null && replyLanguage !== null && replyLanguage !== REPLY_LANGUAGES[expectedLanguage];
   const languageInconclusive = expectedLanguage !== null && replyLanguage === null;
   const writeClaim = item.kind === 'blocked-write' ? findWriteClaim(parsed.text) : null;

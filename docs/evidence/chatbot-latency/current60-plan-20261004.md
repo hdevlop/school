@@ -78,8 +78,10 @@ including failures/retries and embeddings, rather than the SDK estimate alone.
 - Frozen 30-case expectations match the refreshed internal facts.
 - Read-only preflight and admin-only cache status passed.
 
-The isolated app is left running for the authorized run. Its launcher record
-identifies the task-owned process; do not stop unrelated app/embedding processes.
+The isolated app was kept running for the authorized run. After completion,
+its task-owned process tree was stopped, with launcher identity verified and
+port 3102 no longer listening. Ollama was left running and the frozen snapshot
+was retained. [Cleanup record](current60-cleanup-20261004.json).
 
 ## Authorized command
 
@@ -89,3 +91,6 @@ School's evidence directory:
 ```powershell
 bun --env-file=apps/dashboard/.env.local scripts/chatbot-benchmark.mjs --base-url=http://localhost:3102 --cases=C:/Users/pc/Desktop/school/docs/evidence/chatbot-latency/current60-corpus-20261004.json --repeat=2 --max-requests=60 --max-estimated-usd=0.50 --request-reserve-usd=0.01 --concurrency=1 --cache-mode=fresh --keep-text --output=C:/Users/pc/Desktop/school/docs/evidence/chatbot-latency/current60-run-20261004.json
 ```
+
+Executed once: [60-request results](current60-results-20261004.md). No remaining
+paid requests are authorized by this completed run's 60-request allowance.

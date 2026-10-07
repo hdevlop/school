@@ -50,6 +50,10 @@ async function withMock(run) {
   const server = Bun.serve({ hostname: '127.0.0.1', port: 0, async fetch(request) {
     state.requests++;
     const path = new URL(request.url).pathname;
+    if (path === '/api/chat-benchmark/provider-usage') {
+      return Response.json({ data: { selectedKeyVerified: true, matchesEnvironmentKey: true,
+        usage: state.chats * 0.005, limit: 50, limitRemaining: 50 - state.chats * 0.005 } });
+    }
     if (path === '/api/chat-benchmark/status' || path === '/api/chat-benchmark/reset-caches') {
       if (request.method === 'POST') state.resets++;
       return Response.json({ data: { enabled: state.cacheEnabled, instanceId: 'mock-instance',
@@ -62,7 +66,7 @@ async function withMock(run) {
         state.puts++;
         state.model = (await request.json()).model;
       }
-      return Response.json({ data: { provider: 'mock', model: state.model, isEnabled: true, hasKey: true } });
+      return Response.json({ data: { provider: state.provider ?? 'mock', model: state.model, isEnabled: true, hasKey: true } });
     }
     if (path.startsWith('/api/chat-diagnostics/')) {
       const id = decodeURIComponent(path.split('/').at(-1));
@@ -83,7 +87,8 @@ async function withMock(run) {
       cache: state.cacheHit ? 'hit' : 'miss', purpose: 'query', operation: 'tool-routing', outcome: 'completed', durationMs: 10,
       attempts: [{ outcome: 'completed', durationMs: 10 }] };
     records.set(id, { correlationId: state.fault && ordinal === 1 ? 'wrong-chat' : id,
-      outcome: 'completed', model: state.wrongModel ? 'wrong-model' : requestModel, spans: { prepareMs: 10 },
+      outcome: 'completed', provider: state.wrongProvider ? 'other' : state.provider ?? 'mock',
+      model: state.wrongModel ? 'wrong-model' : requestModel, spans: { prepareMs: 10 },
       benchmark: { instanceId: 'mock-instance', resetCount: state.resets },
       marks: { firstTextMs: 20, finishMs: 30 }, tools: [], steps: [], embeddings: [embedding] });
     if (state.fault && ordinal === 0) return new Response(null, { status: 429 });
@@ -92,7 +97,8 @@ async function withMock(run) {
         : state.unpricedCandidate && requestModel === 'mock-candidate'
           ? { totalTokens: 1500, promptTokens: 1000, completionTokens: 500,
             pricingFound: false, totalCost: 0, provider: 'openrouter', model: requestModel }
-        : { totalTokens: 10, promptTokens: 5, completionTokens: 5, pricingFound: true, totalCost: state.cost } }, '[DONE]'];
+        : { totalTokens: 10, promptTokens: 5, completionTokens: 5, pricingFound: true, totalCost: state.cost,
+          provider: state.provider ?? 'mock', model: requestModel } }, '[DONE]'];
     return new Response(events.map((event) => `data: ${typeof event === 'string' ? event : JSON.stringify(event)}\n\n`).join(''), {
       headers: { 'content-type': 'text/event-stream', 'x-vercel-ai-ui-message-stream': 'v1' },
     });
@@ -113,6 +119,36 @@ async function withMock(run) {
 }
 
 describe('benchmark CLI load integration', () => {
+  it('budgets from declared rates despite known SDK prices and stops on missing or mismatched evidence', async () => {
+    await withMock(async ({ cli, state, directory }) => {
+      state.provider = 'openrouter';
+      const pricesPath = join(directory, 'prices.json');
+      await Bun.write(pricesPath, JSON.stringify({ provider: 'openrouter', source: 'mock endpoint catalog',
+        capturedAt: '2026-10-05T00:00:00Z', models: { 'mock-model': { inputUsdPerMillion: 500, outputUsdPerMillion: 500 } } }));
+      const options = ['--limit=2', '--max-requests=2', '--max-estimated-usd=0.02', '--request-reserve-usd=0.01',
+        '--pricing-mode=declared', '--capture-provider-usage', `--pricing-file=${pricesPath}`];
+      const result = await cli(...options);
+      expect(result.exitCode).toBe(0);
+      expect(result.report.estimatedBudget.observedEstimatedUsd).toBe(0.01);
+      expect(result.report.summary.usage.estimatedCostUsd).toBe(0.002);
+      expect(result.report.summary.declaredCosts.estimatedCostUsd).toBe(0.01);
+      expect(result.report.samples[0].metadata.totalCost).toBe(0.001);
+      expect(result.report.providerUsageDelta).toMatchObject({ observedUsd: 0.01, matchesEnvironmentKeyAtBothReads: true });
+      const stopped = await cli(...options.map(option => option.startsWith('--max-estimated-usd=')
+        ? '--max-estimated-usd=0.01' : option.startsWith('--request-reserve-usd=') ? '--request-reserve-usd=0.006' : option));
+      expect(stopped.report.samples).toHaveLength(1);
+      expect(stopped.report.estimatedBudget.stoppedReason).toBe('insufficient_remaining_estimated_budget');
+      for (const fault of ['unknownCost', 'wrongProvider', 'wrongModel']) {
+        state[fault] = true;
+        const failed = await cli(...options);
+        expect(failed.exitCode).toBe(1);
+        expect(failed.report.samples).toHaveLength(1);
+        expect(failed.report.estimatedBudget.stoppedReason).toBe('unknown_request_cost');
+        state[fault] = false;
+      }
+      expect(state.puts).toBe(0);
+    });
+  });
   it('uses declared prices for matched candidate usage, preserves unknown metadata and restores settings', async () => {
     await withMock(async ({ cli, state, directory }) => {
       state.unpricedCandidate = true;
@@ -245,6 +281,8 @@ describe('benchmark CLI load integration', () => {
         ['--preflight', '--compare-model=other'],
         ['--cache-mode=fresh', '--concurrency=2', '--max-requests=6'],
         ['--cache-mode=fresh', '--transport-probe', '--max-requests=1'],
+        ['--pricing-mode=declared', '--max-requests=6'],
+        ['--pricing-mode=unknown', '--max-requests=6'],
       ]) {
         expect((await cli(...options)).exitCode).toBe(1);
       }

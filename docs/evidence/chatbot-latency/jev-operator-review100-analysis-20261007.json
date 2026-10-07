@@ -1,0 +1,644 @@
+{
+  "version": 1,
+  "mode": "operator-reviewed-synthetic",
+  "corpus": "datasets/chatbot-latency/jev-operator-review100-frozen-20261007.json",
+  "corpusSha256": "bcbb23d11f5c3c876acbbeeeac8eeddd2ff9fb2a9d95defb234185a69451df12",
+  "casesSha256": "46cf7ea2c62127fe50d79b8243bc9af8f86fd6877e3614d69bbc67101906a5c0",
+  "reports": [
+    {
+      "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-run-20261007.json",
+      "sha256": "53cf31ad33d07c912f895b334c7d624be3c8966cd74fd9d943be5b99b382bcd5",
+      "attempts": 77,
+      "valid": 76,
+      "transport": "default",
+      "successfulLatencyMs": {
+        "count": 76,
+        "p50": 311.966499999995,
+        "p95": 622.1293000000005,
+        "max": 781.5391999999993,
+        "mean": 362.53084078947444
+      },
+      "capturedAt": "2026-10-07T00:09:14.278Z"
+    },
+    {
+      "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-continuation-run-20261007.json",
+      "sha256": "219aab75d953632eaa33371d9a051002d255421aa8543214225a551a46801af8",
+      "attempts": 3,
+      "valid": 2,
+      "transport": "default",
+      "successfulLatencyMs": {
+        "count": 2,
+        "p50": 447.01839999999993,
+        "p95": 459.14969999999994,
+        "max": 459.14969999999994,
+        "mean": 453.08404999999993
+      },
+      "capturedAt": "2026-10-07T08:56:17.360Z"
+    },
+    {
+      "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-final-run-20261007.json",
+      "sha256": "fd24df7528a433e7aac48572241c570f0a53c4e60a3fe585a3d16341d7226c89",
+      "attempts": 2,
+      "valid": 1,
+      "transport": "default",
+      "successfulLatencyMs": {
+        "count": 1,
+        "p50": 401.9027,
+        "p95": 401.9027,
+        "max": 401.9027,
+        "mean": 401.9027
+      },
+      "capturedAt": "2026-10-07T08:57:09.319Z"
+    },
+    {
+      "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-connection-close-run-20261007.json",
+      "sha256": "6d1988102fdd07f1d7ce91ac2c3f86e6e96973bf82811f484b3ff4c07ce3584a",
+      "attempts": 10,
+      "valid": 9,
+      "transport": "off",
+      "successfulLatencyMs": {
+        "count": 9,
+        "p50": 428.8230999999996,
+        "p95": 796.8197,
+        "max": 796.8197,
+        "mean": 462.11842222222225
+      },
+      "capturedAt": "2026-10-07T09:01:53.341Z"
+    },
+    {
+      "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-operator-review100-completion-run-20261007.json",
+      "sha256": "67ac4adcf4563cbd6ea5bb129b0e6110266fb2a4227a9a4afd0f7f28d401bba7",
+      "attempts": 8,
+      "valid": 8,
+      "transport": "off",
+      "successfulLatencyMs": {
+        "count": 8,
+        "p50": 407.97800000000007,
+        "p95": 5334.9069,
+        "max": 5334.9069,
+        "mean": 1076.1810000000003
+      },
+      "capturedAt": "2026-10-07T09:07:19.358Z"
+    }
+  ],
+  "attempts": 100,
+  "valid": 96,
+  "errors": [
+    {
+      "id": "jev-operator-q77",
+      "error": "getaddrinfo ENOTFOUND openrouter.ai",
+      "durationMs": 292.171399999992,
+      "httpStatus": null,
+      "transport": "default"
+    },
+    {
+      "id": "jev-operator-q80",
+      "error": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+      "durationMs": 42.36970000000019,
+      "httpStatus": null,
+      "transport": "default"
+    },
+    {
+      "id": "jev-operator-q82",
+      "error": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+      "durationMs": 43.3137999999999,
+      "httpStatus": null,
+      "transport": "default"
+    },
+    {
+      "id": "jev-operator-q92",
+      "error": "The operation timed out.",
+      "durationMs": 10000.830800000003,
+      "httpStatus": null,
+      "transport": "off"
+    }
+  ],
+  "sourceChecks": {
+    "frozenClassificationAndEligibilitySources": true,
+    "normalizedDecisionsReparsed": 96,
+    "contiguousNoRetrySchedule": true,
+    "originalAttemptCapExhausted": true
+  },
+  "models": [
+    "typesafe/jev-1.13-20260917"
+  ],
+  "raw": {
+    "acceptancePolicy": "core",
+    "samples": 100,
+    "errors": 4,
+    "topChoiceAccuracy": 0.8541666666666666,
+    "writeAccuracy": 0.9270833333333334,
+    "accepted": 41,
+    "acceptedWrong": 0,
+    "precision": 1,
+    "coverage": 0.6119402985074627,
+    "writeAnsweredAsRead": 0,
+    "readRefusedAsWrite": 0,
+    "wrongCases": [],
+    "acceptedCases": 41,
+    "wrongCaseCount": 0,
+    "acceptedFamilies": 33
+  },
+  "afterLanguageGate": {
+    "acceptancePolicy": "core",
+    "samples": 91,
+    "errors": 3,
+    "topChoiceAccuracy": 0.8636363636363636,
+    "writeAccuracy": 0.9204545454545454,
+    "accepted": 40,
+    "acceptedWrong": 0,
+    "precision": 1,
+    "coverage": 0.6666666666666666,
+    "writeAnsweredAsRead": 0,
+    "readRefusedAsWrite": 0,
+    "wrongCases": [],
+    "acceptedCases": 40,
+    "wrongCaseCount": 0,
+    "acceptedFamilies": 33
+  },
+  "candidates": {
+    "acceptancePolicy": "core",
+    "samples": 89,
+    "errors": 3,
+    "topChoiceAccuracy": 0.8604651162790697,
+    "writeAccuracy": 0.9186046511627907,
+    "accepted": 38,
+    "acceptedWrong": 0,
+    "precision": 1,
+    "coverage": 0.6551724137931034,
+    "writeAnsweredAsRead": 0,
+    "readRefusedAsWrite": 0,
+    "wrongCases": [],
+    "acceptedCases": 38,
+    "wrongCaseCount": 0,
+    "acceptedFamilies": 31
+  },
+  "byLanguage": {
+    "ary": {
+      "raw": {
+        "acceptancePolicy": "core",
+        "samples": 50,
+        "errors": 1,
+        "topChoiceAccuracy": 0.9795918367346939,
+        "writeAccuracy": 0.9795918367346939,
+        "accepted": 32,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.9411764705882353,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 32,
+        "wrongCaseCount": 0,
+        "acceptedFamilies": 32
+      },
+      "candidates": {
+        "acceptancePolicy": "core",
+        "samples": 48,
+        "errors": 1,
+        "topChoiceAccuracy": 0.9787234042553191,
+        "writeAccuracy": 0.9787234042553191,
+        "accepted": 30,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.9375,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 30,
+        "wrongCaseCount": 0,
+        "acceptedFamilies": 30
+      }
+    },
+    "ary-latn": {
+      "raw": {
+        "acceptancePolicy": "core",
+        "samples": 50,
+        "errors": 3,
+        "topChoiceAccuracy": 0.723404255319149,
+        "writeAccuracy": 0.8723404255319149,
+        "accepted": 9,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.2727272727272727,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 9,
+        "wrongCaseCount": 0,
+        "acceptedFamilies": 9
+      },
+      "candidates": {
+        "acceptancePolicy": "core",
+        "samples": 41,
+        "errors": 2,
+        "topChoiceAccuracy": 0.717948717948718,
+        "writeAccuracy": 0.8461538461538461,
+        "accepted": 8,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.3076923076923077,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 8,
+        "wrongCaseCount": 0,
+        "acceptedFamilies": 8
+      }
+    }
+  },
+  "acceptedWrong": [],
+  "topChoiceDisagreements": [
+    {
+      "id": "jev-operator-q14",
+      "query": "chno homa l2a9sam li 3ndna f lmdrasa?",
+      "language": "ary-latn",
+      "label": "class_list",
+      "choice": "upcoming_exams",
+      "confidence": 0.26,
+      "writeProbability": 0.15
+    },
+    {
+      "id": "jev-operator-q20",
+      "query": "beddel nmra dyal tilifon dyal had wali l2amr.",
+      "language": "ary-latn",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.52,
+      "writeProbability": 0.79
+    },
+    {
+      "id": "jev-operator-q29",
+      "query": "جمع ليا عدد التلاميذ مع عدد الأساتذة وعطيني المجموع.",
+      "language": "ary",
+      "label": "needs_llm",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.48,
+      "writeProbability": 0.27
+    },
+    {
+      "id": "jev-operator-q30",
+      "query": "jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.",
+      "language": "ary-latn",
+      "label": "needs_llm",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.97,
+      "writeProbability": 0.6
+    },
+    {
+      "id": "jev-operator-q40",
+      "query": "w b nnisba lhadok, chno ban lik?",
+      "language": "ary-latn",
+      "label": "needs_llm",
+      "choice": "small_talk",
+      "confidence": 0.37,
+      "writeProbability": 0.27
+    },
+    {
+      "id": "jev-operator-q58",
+      "query": "lasatida dyalna ch7al homa kamlin?",
+      "language": "ary-latn",
+      "label": "teacher_count",
+      "choice": "needs_llm",
+      "confidence": 0.46,
+      "writeProbability": 0.3
+    },
+    {
+      "id": "jev-operator-q68",
+      "query": "chmen a9sam kaynin f lmdrasa?",
+      "language": "ary-latn",
+      "label": "class_list",
+      "choice": "student_count",
+      "confidence": 0.46,
+      "writeProbability": 0.14
+    },
+    {
+      "id": "jev-operator-q70",
+      "query": "werini l2a9sam dyal lmdrasa.",
+      "language": "ary-latn",
+      "label": "class_list",
+      "choice": "student_count",
+      "confidence": 0.22,
+      "writeProbability": 0.46
+    },
+    {
+      "id": "jev-operator-q72",
+      "query": "chkoun ghayeb lyoum mn tlamd?",
+      "language": "ary-latn",
+      "label": "attendance_today",
+      "choice": "needs_llm",
+      "confidence": 0.6,
+      "writeProbability": 0.11
+    },
+    {
+      "id": "jev-operator-q78",
+      "query": "imta lfard jay?",
+      "language": "ary-latn",
+      "label": "upcoming_exams",
+      "choice": "small_talk",
+      "confidence": 0.26,
+      "writeProbability": 0.25
+    },
+    {
+      "id": "jev-operator-q84",
+      "query": "sifet i3lan lwalidin bli ghedda 3otla.",
+      "language": "ary-latn",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.39,
+      "writeProbability": 0.54
+    },
+    {
+      "id": "jev-operator-q88",
+      "query": "mse7 had lfard mn ljadwal.",
+      "language": "ary-latn",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.74,
+      "writeProbability": 0.44
+    },
+    {
+      "id": "jev-operator-q90",
+      "query": "beddel l9ism dyal had tilmid l lkhamis.",
+      "language": "ary-latn",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.55,
+      "writeProbability": 0.75
+    },
+    {
+      "id": "jev-operator-q94",
+      "query": "ch7al khelles had lwali had chher?",
+      "language": "ary-latn",
+      "label": "needs_llm",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.36,
+      "writeProbability": 0.26
+    }
+  ],
+  "falseWriteScoresOnReads": [
+    {
+      "id": "jev-operator-q05",
+      "query": "وريني التواريخ ديال الفروض الجايين فالمدرسة كاملة.",
+      "language": "ary",
+      "label": "upcoming_exams",
+      "choice": "upcoming_exams",
+      "confidence": 0.78,
+      "writeProbability": 0.75
+    },
+    {
+      "id": "jev-operator-q06",
+      "query": "werini tawarikh dyal lforod jayin f lmdrasa kamla.",
+      "language": "ary-latn",
+      "label": "upcoming_exams",
+      "choice": "upcoming_exams",
+      "confidence": 0.75,
+      "writeProbability": 0.65
+    },
+    {
+      "id": "jev-operator-q12",
+      "query": "3tini 3adad tlamd bo7do w 3adad lasatida bo7do, dyal lmdrasa kamla.",
+      "language": "ary-latn",
+      "label": "student_and_teacher_count",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.99,
+      "writeProbability": 0.69
+    },
+    {
+      "id": "jev-operator-q30",
+      "query": "jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.",
+      "language": "ary-latn",
+      "label": "needs_llm",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.97,
+      "writeProbability": 0.6
+    },
+    {
+      "id": "jev-operator-q36",
+      "query": "werini lghiyab dyal tlamd f chher li fat.",
+      "language": "ary-latn",
+      "label": "needs_llm",
+      "choice": "needs_llm",
+      "confidence": 0.92,
+      "writeProbability": 0.54
+    },
+    {
+      "id": "jev-operator-q50",
+      "query": "gouli ghir ch7al mn tilmid kayn f lmdrasa kamla.",
+      "language": "ary-latn",
+      "label": "student_count",
+      "choice": "student_count",
+      "confidence": 0.89,
+      "writeProbability": 0.54
+    }
+  ],
+  "missedWriteScores": [
+    {
+      "id": "jev-operator-q88",
+      "query": "mse7 had lfard mn ljadwal.",
+      "language": "ary-latn",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.74,
+      "writeProbability": 0.44
+    }
+  ],
+  "writes": {
+    "planned": 18,
+    "valid": 17
+  },
+  "latencySuccessfulMs": {
+    "count": 96,
+    "p50": 339.91879999999946,
+    "p95": 663.0552000000025,
+    "max": 5334.9069,
+    "mean": 433.6346718750007
+  },
+  "latencyWarmDroppingInitialRequestMs": {
+    "count": 95,
+    "p50": 346.58410000000003,
+    "p95": 663.0552000000025,
+    "max": 5334.9069,
+    "mean": 435.0734452631585
+  },
+  "byTransport": {
+    "default": {
+      "attempts": 82,
+      "errors": 3,
+      "successfulLatencyMs": {
+        "count": 79,
+        "p50": 323.38499999999476,
+        "p95": 622.1293000000005,
+        "max": 781.5391999999993,
+        "mean": 365.3217050632919
+      }
+    },
+    "off": {
+      "attempts": 18,
+      "errors": 1,
+      "successfulLatencyMs": {
+        "count": 17,
+        "p50": 428.8230999999996,
+        "p95": 5334.9069,
+        "max": 5334.9069,
+        "mean": 751.0890470588237
+      }
+    }
+  },
+  "unknownLanguageCases": [
+    "jev-operator-q04",
+    "jev-operator-q16",
+    "jev-operator-q22",
+    "jev-operator-q24",
+    "jev-operator-q40",
+    "jev-operator-q44",
+    "jev-operator-q46",
+    "jev-operator-q68",
+    "jev-operator-q82"
+  ],
+  "separateOfflineCountV2Replay": {
+    "threshold": 0.8,
+    "acceptancePolicy": "core",
+    "guardVersion": 2,
+    "before": {
+      "samples": 38,
+      "questions": 38,
+      "wrongSamples": 0,
+      "wrongQuestions": 0,
+      "acceptedFamilies": 31
+    },
+    "after": {
+      "samples": 35,
+      "questions": 35,
+      "wrongSamples": 0,
+      "wrongQuestions": 0,
+      "acceptedFamilies": 29
+    },
+    "preventedWrong": {
+      "samples": 0,
+      "questions": 0,
+      "wrongSamples": 0,
+      "wrongQuestions": 0,
+      "acceptedFamilies": 0
+    },
+    "lostCorrect": {
+      "samples": 3,
+      "questions": 3,
+      "wrongSamples": 0,
+      "wrongQuestions": 0,
+      "acceptedFamilies": 2
+    },
+    "declined": [
+      {
+        "id": "jev-operator-q07",
+        "repetition": 1,
+        "label": "student_count",
+        "choice": "student_count",
+        "previouslyCorrect": true,
+        "reason": "name_or_list_signal"
+      },
+      {
+        "id": "jev-operator-q08",
+        "repetition": 1,
+        "label": "student_count",
+        "choice": "student_count",
+        "previouslyCorrect": true,
+        "reason": "name_or_list_signal"
+      },
+      {
+        "id": "jev-operator-q55",
+        "repetition": 1,
+        "label": "teacher_count",
+        "choice": "teacher_count",
+        "previouslyCorrect": true,
+        "reason": "name_or_list_signal"
+      }
+    ],
+    "productionAcceptance": false,
+    "note": "Post-result dev candidate: closed exclusion grammar only. Not a general count-intent validator, native acceptance or runtime integration.",
+    "version1After": {
+      "samples": 35,
+      "questions": 35,
+      "wrongSamples": 0,
+      "wrongQuestions": 0,
+      "acceptedFamilies": 29
+    }
+  },
+  "classificationGate": {
+    "mode": "operator-reviewed-synthetic",
+    "productionAcceptance": false,
+    "reasons": [
+      "incomplete_or_failed_run",
+      "fewer_than_150_unique_accepted_questions",
+      "fewer_than_150_independent_question_families",
+      "warm_classification_p95_over_500ms_or_unknown"
+    ],
+    "classificationGatePassed": false,
+    "operatorWorkflow": {
+      "workflow": "assistant-draft-operator-review",
+      "nativeAuthorshipRequired": false,
+      "languageReviewComplete": true,
+      "labels": "assistant-provisional",
+      "nativeReviewedCases": 0
+    },
+    "threshold": 0.8,
+    "acceptancePolicy": "core",
+    "candidateSummary": {
+      "acceptancePolicy": "core",
+      "samples": 89,
+      "errors": 3,
+      "topChoiceAccuracy": 0.8604651162790697,
+      "writeAccuracy": 0.9186046511627907,
+      "accepted": 38,
+      "acceptedWrong": 0,
+      "precision": 1,
+      "coverage": 0.6551724137931034,
+      "writeAnsweredAsRead": 0,
+      "readRefusedAsWrite": 0,
+      "wrongCases": [],
+      "acceptedCases": 38,
+      "wrongCaseCount": 0
+    },
+    "acceptedFamilies": 31,
+    "nativeReviewedCases": 0,
+    "latencyWarmMs": {
+      "count": 95,
+      "p50": 346.58410000000003,
+      "p95": 663.0552000000025,
+      "max": 5334.9069
+    },
+    "note": "Native authorship was explicitly waived. Wording review does not independently verify assistant labels. Linked variants remain clustered; no native precision bound or runtime acceptance is claimed. Original B0 remains failed."
+  },
+  "accounting": {
+    "knownReportedCostUsd": 0.003770844000000002,
+    "retainedUnknownReservationUsd": 0.0006,
+    "clientAccountedUsd": 0.0043708440000000005,
+    "costComplete": false,
+    "unknownAttempts": 4,
+    "originalBudgetUsd": 0.02,
+    "ledgerBefore": {
+      "capturedAt": "2026-10-07T00:09:14.539Z",
+      "usage": 0.95440791,
+      "limit": 50,
+      "limitRemaining": 49.04559209
+    },
+    "ledgerLater": {
+      "capturedAt": "2026-10-07T09:09:54.005Z",
+      "usage": 0.958178754,
+      "limit": 50,
+      "limitRemaining": 49.041821246
+    },
+    "laterSharedKeyDeltaUsd": 0.00377084399999994,
+    "laterDeltaMatchesKnownSum": true,
+    "note": "Aggregate shared-key delta matches known reported costs; it is not per-request billing evidence. Four unknown costs remain reserved, never settled as zero."
+  },
+  "productionAcceptance": false,
+  "limitations": [
+    "Assistant-provisional labels; operator approved wording only",
+    "Linked language variants and synthetic questions are clustered; no native precision confidence bound is claimed",
+    "Failed attempts are preserved; successful-response latency excludes the four transport failures",
+    "Transport changed only after socket failures; this is not an interleaved causal comparison",
+    "Classification-only: no School tools, answers, model fallbacks or readiness races exercised",
+    "All 100 attempt slots are consumed; unused dollars do not authorize new classification requests"
+  ]
+}

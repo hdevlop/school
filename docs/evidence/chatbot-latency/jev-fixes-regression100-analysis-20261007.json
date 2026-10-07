@@ -1,0 +1,310 @@
+{
+  "mode": "same-corpus-regression-after-fixes",
+  "freshHeldout": false,
+  "corpusSha256": "3bfb0cec8c0c7c4a5f54e16014fae5b3934671313e41859443ce52854ecd993c",
+  "sourcePlan": {
+    "authorization": "ok fix all bench and report",
+    "stage": "New bounded same-corpus regression benchmark after fixes",
+    "newAllowance": true,
+    "maxRequests": 100,
+    "budgetUsd": 0.02,
+    "requestReserveUsd": 0.00015,
+    "intervalMs": 2000,
+    "timeoutMs": 10000,
+    "repetitions": 1,
+    "acceptancePolicy": "core",
+    "gateThreshold": 0.8,
+    "intentWordingVersion": 3,
+    "writeWordingVersion": 3,
+    "queryGuardVersion": 3,
+    "connectionReuse": "off",
+    "retries": 0,
+    "corpus": "datasets/chatbot-latency/jev-fixes-regression100-20261007.json",
+    "corpusSha256": "3bfb0cec8c0c7c4a5f54e16014fae5b3934671313e41859443ce52854ecd993c",
+    "sourceSha256": {
+      "scripts/chatbot-jev-probe.mjs": "f35ae1f24bedcd8832ab8c5fe6e233e0d2a009754bd03f2d6f07e784362dbae5",
+      "scripts/chatbot-jev-resume.mjs": "c1a646c9a047368f3cb316006b49635a661cc1b881472c9b29eec124d6b98b5f",
+      "scripts/chatbot-budget.mjs": "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+      "scripts/chatbot-jev.mjs": "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+      "scripts/chatbot-jev-accuracy.mjs": "0e12734405e53bdf99481927fbf1a9ba45cb9e8456b3bfe8c9bc48524ba8dce8",
+      "scripts/chatbot-jev-query-guard-v3.mjs": "772a8abcedf48c241a5872e29bfd9bfc34321f440a6af954c18d3bf352ba06cc",
+      "scripts/chatbot-jev-count-guard-v2.mjs": "5a5899c7b9a2afbbebc961587a7569b93c66fbac5d7d5ddcffa7ced81efb2460",
+      "scripts/chatbot-jev-count-guard.mjs": "1171a9f51d593e8b44fb9a0684a378c95d98438ed983546ea54bc5eda231e8ed",
+      "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+      "packages/server/src/modules/chat/schoolReplyTemplates.ts": "6e0892406a4369dcb9cfc9d93761f1f1ef857ab0d0e63428c183acbb91e9feca",
+      "packages/server/src/modules/chat/schoolReplyWrite.ts": "311d68d3139aef8afca89b76757ad6a0490a9452a3ec60ec85499a60fd54d47f",
+      "packages/server/src/modules/chat/schoolListReplies.ts": "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153"
+    },
+    "validation": {
+      "mode": "same-corpus-regression",
+      "cases": 100,
+      "families": 50,
+      "operatorWorkflow": {
+        "workflow": "assistant-draft-operator-review",
+        "nativeAuthorshipRequired": false,
+        "languageReviewComplete": true,
+        "labels": "assistant-provisional",
+        "nativeReviewedCases": 0
+      },
+      "freshHeldout": false,
+      "productionAcceptance": false
+    },
+    "output": "docs/evidence/chatbot-latency/jev-fixes-regression100-run-20261007.json",
+    "controls": [
+      "All source checks/tests/build complete before dispatch; avoid concurrent builds/test load during timing",
+      "Each failed attempt consumes its slot; unknown costs remain reserved",
+      "Stop on provider 429 or budget exhaustion",
+      "Any new leg must preserve the source/corpus hashes and total 100-request/$0.02 limits"
+    ],
+    "limitations": [
+      "The previous 100-request allowance is consumed; this is a separate explicitly recorded recheck stage",
+      "Reusing spent questions cannot clear the 150 accepted-case/family gate or establish generalization",
+      "Classifier and template eligibility projections only; no School tools or full-chat benchmark",
+      "Fixed connection-reuse mode does not prove the network is stable or improve latency"
+    ]
+  },
+  "reports": [
+    {
+      "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-fixes-regression100-run-20261007.json",
+      "sha256": "88503dc2111f72d16bcdaf6acec21c01e6aae0f6e131e4b299ebef4da75a4261"
+    },
+    {
+      "path": "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-fixes-regression100-continuation-run-20261007.json",
+      "sha256": "cd7b0fdcc73becbde3a8f36bd17ce6f378e0d23bc78ab5bfffb4e3e2fa7395ad"
+    }
+  ],
+  "attempts": 100,
+  "valid": 99,
+  "errors": [
+    {
+      "id": "jev-operator-q68",
+      "error": "The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+      "durationMs": 68.78829999998561
+    }
+  ],
+  "latencySuccessfulMs": {
+    "count": 99,
+    "p50": 476.3438000000024,
+    "p95": 729.7350000000006,
+    "max": 1183.9090000000033,
+    "mean": 511.38817373737396
+  },
+  "latencyWarmMs": {
+    "count": 98,
+    "p50": 470.77069999999367,
+    "p95": 729.7350000000006,
+    "max": 1183.9090000000033,
+    "mean": 509.25036326530636
+  },
+  "raw": {
+    "acceptancePolicy": "core",
+    "samples": 100,
+    "errors": 1,
+    "topChoiceAccuracy": 0.8484848484848485,
+    "writeAccuracy": 0.9191919191919192,
+    "accepted": 41,
+    "acceptedWrong": 0,
+    "precision": 1,
+    "coverage": 0.6119402985074627,
+    "writeAnsweredAsRead": 0,
+    "readRefusedAsWrite": 0,
+    "wrongCases": [],
+    "acceptedCases": 41,
+    "wrongCaseCount": 0
+  },
+  "comparison": {
+    "version": 3,
+    "before": {
+      "samples": 33,
+      "questions": 33,
+      "families": 25,
+      "wrong": 0
+    },
+    "after": {
+      "samples": 33,
+      "questions": 33,
+      "families": 25,
+      "wrong": 0
+    },
+    "preventedWrong": {
+      "samples": 0,
+      "questions": 0,
+      "families": 0,
+      "wrong": 0
+    },
+    "lostCorrect": {
+      "samples": 0,
+      "questions": 0,
+      "families": 0,
+      "wrong": 0
+    },
+    "declined": [],
+    "productionAcceptance": false,
+    "note": "Post-result offline semantic veto candidate; finite patterns do not prove all remaining classifications correct."
+  },
+  "baseline": {
+    "matched": 18,
+    "wrong": [],
+    "writesRefused": 18,
+    "unknownLanguage": 0
+  },
+  "combinedEligibleShortcutProjection": 51,
+  "topChoiceDisagreements": [
+    {
+      "id": "jev-operator-q10",
+      "label": "teacher_count",
+      "choice": "needs_llm",
+      "confidence": 0.39,
+      "writeProbability": 0.21
+    },
+    {
+      "id": "jev-operator-q14",
+      "label": "class_list",
+      "choice": "upcoming_exams",
+      "confidence": 0.28,
+      "writeProbability": 0.15
+    },
+    {
+      "id": "jev-operator-q20",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.58,
+      "writeProbability": 0.79
+    },
+    {
+      "id": "jev-operator-q29",
+      "label": "needs_llm",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.63,
+      "writeProbability": 0.24
+    },
+    {
+      "id": "jev-operator-q30",
+      "label": "needs_llm",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.97,
+      "writeProbability": 0.54
+    },
+    {
+      "id": "jev-operator-q40",
+      "label": "needs_llm",
+      "choice": "small_talk",
+      "confidence": 0.35,
+      "writeProbability": 0.27
+    },
+    {
+      "id": "jev-operator-q58",
+      "label": "teacher_count",
+      "choice": "needs_llm",
+      "confidence": 0.44,
+      "writeProbability": 0.32
+    },
+    {
+      "id": "jev-operator-q70",
+      "label": "class_list",
+      "choice": "student_count",
+      "confidence": 0.24,
+      "writeProbability": 0.46
+    },
+    {
+      "id": "jev-operator-q72",
+      "label": "attendance_today",
+      "choice": "needs_llm",
+      "confidence": 0.67,
+      "writeProbability": 0.1
+    },
+    {
+      "id": "jev-operator-q78",
+      "label": "upcoming_exams",
+      "choice": "small_talk",
+      "confidence": 0.28,
+      "writeProbability": 0.23
+    },
+    {
+      "id": "jev-operator-q80",
+      "label": "upcoming_exams",
+      "choice": "student_count",
+      "confidence": 0.38,
+      "writeProbability": 0.34
+    },
+    {
+      "id": "jev-operator-q84",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.33,
+      "writeProbability": 0.55
+    },
+    {
+      "id": "jev-operator-q88",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.65,
+      "writeProbability": 0.5
+    },
+    {
+      "id": "jev-operator-q90",
+      "label": "write_request",
+      "choice": "needs_llm",
+      "confidence": 0.53,
+      "writeProbability": 0.76
+    },
+    {
+      "id": "jev-operator-q94",
+      "label": "needs_llm",
+      "choice": "student_and_teacher_count",
+      "confidence": 0.3,
+      "writeProbability": 0.26
+    }
+  ],
+  "accounting": {
+    "knownCostUsd": 0.003887352000000002,
+    "unknownReservationsUsd": 0.00015,
+    "clientAccountedUsd": 0.004037352,
+    "unknownAttempts": 1,
+    "laterKeyDeltaUsd": 0.0038873520000000106,
+    "laterDeltaMatchesKnownCost": true,
+    "keyBefore": {
+      "capturedAt": "2026-10-07T10:53:43.833Z",
+      "usage": 0.958178754,
+      "limit": 50,
+      "limitRemaining": 49.041821246
+    },
+    "keyLater": {
+      "capturedAt": "2026-10-07T12:30:29.469Z",
+      "usage": 0.962066106,
+      "limit": 50,
+      "limitRemaining": 49.037933894
+    }
+  },
+  "before": {
+    "valid": 96,
+    "errors": 4,
+    "latencySuccessfulMs": {
+      "count": 96,
+      "p50": 339.91879999999946,
+      "p95": 663.0552000000025,
+      "max": 5334.9069,
+      "mean": 433.6346718750007
+    },
+    "acceptedEligible": 38,
+    "eligibleShortcutProjection": 40,
+    "unknownLanguage": 9,
+    "knownCostUsd": 0.003770844000000002
+  },
+  "postBenchmarkChange": {
+    "file": "packages/server/src/modules/chat/schoolReplyWrite.ts",
+    "measuredSha256": "311d68d3139aef8afca89b76757ad6a0490a9452a3ec60ec85499a60fd54d47f",
+    "finalSha256": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+    "all100RefusalPredictionsUnchanged": true,
+    "description": "Additional dir/دير list-and-total read exclusions were tested offline after the live recheck; not an independent live validation of those extra cases."
+  },
+  "productionAcceptance": false,
+  "jevEnabled": false,
+  "limitations": [
+    "Sequential recheck on spent questions; no generalization or causal latency improvement claim",
+    "Successful classifier timing excludes the preserved transport failure; no School reply/tool/readiness-race timing",
+    "Unknown costs remain reserved even when aggregate key delta matches known costs",
+    "Shortcut counts project assumed first-turn admin/web eligibility, not actual readiness wins or money saved",
+    "Source fixes do not establish deployment; the published async hook and fresh accepted-family gate remain"
+  ]
+}

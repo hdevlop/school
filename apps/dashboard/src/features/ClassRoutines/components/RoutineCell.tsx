@@ -13,7 +13,7 @@ const accents = [
   'bg-cyan-100 text-cyan-950 dark:bg-cyan-950/55 dark:text-cyan-100',
 ];
 
-const colorFor = (subjectId: string) => accents[[...subjectId].reduce((total, char) => total + char.charCodeAt(0), 0) % accents.length];
+export const colorFor = (subjectId: string) => accents[[...subjectId].reduce((total, char) => total + char.charCodeAt(0), 0) % accents.length];
 
 export default function RoutineCell({
   subjectId,

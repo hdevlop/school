@@ -80,7 +80,7 @@ export class ClassRoutineController {
   @ResMsg('classRoutines.success.retrieved')
   async getTeacherRoutine(
     @Params('teacherId') teacherId: string,
-    @User() user: { role?: string; teacherId?: string },
+    @User() user: { id?: string; role?: string; teacherId?: string },
   ) {
     return this.service.getTeacherSchedule(teacherId, user);
   }

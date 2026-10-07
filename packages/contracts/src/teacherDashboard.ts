@@ -78,6 +78,18 @@ export interface TeacherDashboardOverview {
     name: string;
     specialization: string | null;
     image: string | null;
+    email: string | null;
+    phone: string | null;
+    address: string | null;
+    /** The staff status token (`active`, `inactive`, `on_leave`). */
+    status: string | null;
+    /** `YYYY-MM-DD`. */
+    hireDate: string | null;
+    yearsOfExperience: number | null;
+    /** An `EMPLOYMENT_TYPE_VALUES` token. */
+    employmentType: string | null;
+    /** Weekly teaching hours. */
+    workloadHours: number | null;
   };
   kpis: {
     totalStudents: number;

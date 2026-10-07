@@ -1,0 +1,53 @@
+{
+    "capturedAt":  "2026-10-05T21:44:06.3858578Z",
+    "scope":  "Remaining synthetic classification-only study",
+    "healthCheck":  "12 parsed successful decisions, zero throttle, zero accepted wrong; small recovery window only",
+    "maxNewAttempts":  239,
+    "cumulativeMaxRequests":  312,
+    "cumulativeBudgetUsd":  0.02,
+    "requestReserveUsd":  0.002,
+    "intervalMs":  2000,
+    "retries":  0,
+    "priorAttempts":  73,
+    "retainedEarlierUnknownReservationsUsd":  0.004,
+    "unknownCostsResolved":  false,
+    "remainingEstimatedBudgetUsd":  0.013196668,
+    "nextAttempt":  {
+                        "id":  "core3-ary-22",
+                        "repetition":  1
+                    },
+    "threshold":  0.8,
+    "acceptancePolicy":  "core",
+    "intentWordingVersion":  3,
+    "sourceSha256":  {
+                         "scripts/chatbot-jev-probe.mjs":  "52ab667eae4cb0f2519172e0aaa66aa6ca7652da1be8340b2fcaab2e52ed5c7e",
+                         "scripts/chatbot-budget.mjs":  "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+                         "scripts/chatbot-jev.mjs":  "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+                         "scripts/chatbot-jev-accuracy.mjs":  "8b8136b97fb7ab92a40ec7b263f73750abd600d73dc6e1a0d83b2d0247e6153a",
+                         "scripts/chatbot-jev-resume.mjs":  "3a26968a7bfc8d53836ef75bb98406d905221954eb3076a848f3dbfcf5ed0951",
+                         "packages/server/src/modules/chat/schoolReplyTemplates.ts":  "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+                         "packages/server/src/modules/chat/schoolListReplies.ts":  "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153",
+                         "packages/server/src/modules/chat/schoolReplyLanguage.ts":  "dc36099b20e35f8357f8bd94c4eb320a6403f011615eb27f781aaf35d2d951f3"
+                     },
+    "earlierReports":  [
+                           {
+                               "path":  "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-core-exploration-20261005.json",
+                               "sha256":  "36734425e8b2410fae66578f299e00b1f1b8f5c7d58370a28d22c89743b8174c",
+                               "attempts":  20
+                           },
+                           {
+                               "path":  "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-core-continuation-20261005.json",
+                               "sha256":  "5ebdce7a12438cd4e3446ce78eb9f1950f91eb1710192a5fea06766a10afdb8e",
+                               "attempts":  41
+                           },
+                           {
+                               "path":  "C:\\Users\\pc\\Desktop\\school\\docs\\evidence\\chatbot-latency\\jev-core-health-20261005.json",
+                               "sha256":  "11840f2053f6cfdd892259e24822b690089fbfef8edd4e5d99090b1aa5a90d45",
+                               "attempts":  12
+                           }
+                       ],
+    "output":  "docs/evidence/chatbot-latency/jev-core-finish-20261005.json",
+    "stop":  "First HTTP 429, unknown cost, request cap or budget stop; no additional restart this turn if throttled",
+    "productionAcceptance":  false,
+    "nativeReviewedCases":  0
+}

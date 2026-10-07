@@ -1,0 +1,667 @@
+﻿{
+    "capturedAt":  "2026-10-05T15:16:39.6615284Z",
+    "runId":  "71c195d2",
+    "total":  60,
+    "automaticPassed":  59,
+    "assistantAccepted":  60,
+    "originalGatesAccepted":  false,
+    "note":  "Timing/cost pass; raw automatic language gate retains one false positive. Separate audited correction does not mutate this live result or authorize paid expansion.",
+    "initialClearInstanceResetStable":  true,
+    "templateParityWithReviewedSerial":  48,
+    "embeddingStates":  {
+                            "miss":  30,
+                            "hit":  30
+                        },
+    "providerGenerationSteps":  18,
+    "paths":  {
+                  "hybrid":  {
+                                 "n":  60,
+                                 "firstTextP50":  329,
+                                 "firstTextP95":  1854,
+                                 "completeP50":  329,
+                                 "completeP95":  1879
+                             },
+                  "model":  {
+                                "n":  12,
+                                "firstTextP50":  1201,
+                                "firstTextP95":  2296,
+                                "completeP50":  1240,
+                                "completeP95":  2384
+                            },
+                  "template":  {
+                                   "n":  48,
+                                   "firstTextP50":  130,
+                                   "firstTextP95":  817,
+                                   "completeP50":  130,
+                                   "completeP95":  817
+                               }
+              },
+    "reviews":  [
+                    {
+                        "id":  "greeting-fr",
+                        "repetition":  1,
+                        "automaticPassed":  false,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct French greeting; original automatic mixed-language failure is a confirmed shared-word nombre false positive. Raw failure retained, separate language-only audit."
+                    },
+                    {
+                        "id":  "student-count-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "grade-create-blocked-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-fr",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "greeting-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "student-count-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-ar",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "greeting-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "student-count-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-ary",
+                        "repetition":  1,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "greeting-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "student-count-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "grade-create-blocked-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-fr",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "greeting-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "student-count-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-ar",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "greeting-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "student-count-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Model reply reviewed against scoped lookup outcome and requested language/register; no invented records, writes or promises."
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-ary",
+                        "repetition":  2,
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact text parity with reviewed serial templates, refreshed facts/guarded reads pass."
+                    }
+                ],
+    "modelArrivalStages":  [
+                               {
+                                   "id":  "greeting-fr",
+                                   "repetition":  1,
+                                   "streamStartMs":  494,
+                                   "firstToolSignalMs":  null,
+                                   "toolResultMs":  null,
+                                   "beforeFirstToolSignalMs":  null,
+                                   "afterToolToFirstTextMs":  null,
+                                   "firstTextMs":  2002,
+                                   "firstTextToLastTextMs":  65,
+                                   "bodyEndMs":  2075,
+                                   "prepareMs":  428.1,
+                                   "toolDurationsMs":  [
+                                                           null
+                                                       ]
+                               },
+                               {
+                                   "id":  "missing-student-fr",
+                                   "repetition":  1,
+                                   "streamStartMs":  613,
+                                   "firstToolSignalMs":  1361,
+                                   "toolResultMs":  1374,
+                                   "beforeFirstToolSignalMs":  748,
+                                   "afterToolToFirstTextMs":  609,
+                                   "firstTextMs":  1983,
+                                   "firstTextToLastTextMs":  56,
+                                   "bodyEndMs":  2044,
+                                   "prepareMs":  582.9,
+                                   "toolDurationsMs":  [
+                                                           5.7
+                                                       ]
+                               },
+                               {
+                                   "id":  "greeting-ar",
+                                   "repetition":  1,
+                                   "streamStartMs":  504,
+                                   "firstToolSignalMs":  null,
+                                   "toolResultMs":  null,
+                                   "beforeFirstToolSignalMs":  null,
+                                   "afterToolToFirstTextMs":  null,
+                                   "firstTextMs":  884,
+                                   "firstTextToLastTextMs":  36,
+                                   "bodyEndMs":  928,
+                                   "prepareMs":  471.2,
+                                   "toolDurationsMs":  [
+                                                           null
+                                                       ]
+                               },
+                               {
+                                   "id":  "missing-student-ar",
+                                   "repetition":  1,
+                                   "streamStartMs":  477,
+                                   "firstToolSignalMs":  1192,
+                                   "toolResultMs":  1254,
+                                   "beforeFirstToolSignalMs":  715,
+                                   "afterToolToFirstTextMs":  600,
+                                   "firstTextMs":  1854,
+                                   "firstTextToLastTextMs":  14,
+                                   "bodyEndMs":  1879,
+                                   "prepareMs":  427.8,
+                                   "toolDurationsMs":  [
+                                                           5.6
+                                                       ]
+                               },
+                               {
+                                   "id":  "greeting-ary",
+                                   "repetition":  1,
+                                   "streamStartMs":  974,
+                                   "firstToolSignalMs":  null,
+                                   "toolResultMs":  null,
+                                   "beforeFirstToolSignalMs":  null,
+                                   "afterToolToFirstTextMs":  null,
+                                   "firstTextMs":  1416,
+                                   "firstTextToLastTextMs":  18,
+                                   "bodyEndMs":  1441,
+                                   "prepareMs":  952.3,
+                                   "toolDurationsMs":  [
+                                                           null
+                                                       ]
+                               },
+                               {
+                                   "id":  "missing-student-ary",
+                                   "repetition":  1,
+                                   "streamStartMs":  387,
+                                   "firstToolSignalMs":  789,
+                                   "toolResultMs":  812,
+                                   "beforeFirstToolSignalMs":  402,
+                                   "afterToolToFirstTextMs":  389,
+                                   "firstTextMs":  1201,
+                                   "firstTextToLastTextMs":  36,
+                                   "bodyEndMs":  1240,
+                                   "prepareMs":  342.8,
+                                   "toolDurationsMs":  [
+                                                           12.9
+                                                       ]
+                               },
+                               {
+                                   "id":  "greeting-fr",
+                                   "repetition":  2,
+                                   "streamStartMs":  28,
+                                   "firstToolSignalMs":  null,
+                                   "toolResultMs":  null,
+                                   "beforeFirstToolSignalMs":  null,
+                                   "afterToolToFirstTextMs":  null,
+                                   "firstTextMs":  417,
+                                   "firstTextToLastTextMs":  76,
+                                   "bodyEndMs":  498,
+                                   "prepareMs":  6.7,
+                                   "toolDurationsMs":  [
+                                                           null
+                                                       ]
+                               },
+                               {
+                                   "id":  "missing-student-fr",
+                                   "repetition":  2,
+                                   "streamStartMs":  69,
+                                   "firstToolSignalMs":  379,
+                                   "toolResultMs":  399,
+                                   "beforeFirstToolSignalMs":  310,
+                                   "afterToolToFirstTextMs":  302,
+                                   "firstTextMs":  701,
+                                   "firstTextToLastTextMs":  20,
+                                   "bodyEndMs":  725,
+                                   "prepareMs":  11.4,
+                                   "toolDurationsMs":  [
+                                                           8.7
+                                                       ]
+                               },
+                               {
+                                   "id":  "greeting-ar",
+                                   "repetition":  2,
+                                   "streamStartMs":  72,
+                                   "firstToolSignalMs":  null,
+                                   "toolResultMs":  null,
+                                   "beforeFirstToolSignalMs":  null,
+                                   "afterToolToFirstTextMs":  null,
+                                   "firstTextMs":  530,
+                                   "firstTextToLastTextMs":  60,
+                                   "bodyEndMs":  592,
+                                   "prepareMs":  15.5,
+                                   "toolDurationsMs":  [
+                                                           null
+                                                       ]
+                               },
+                               {
+                                   "id":  "missing-student-ar",
+                                   "repetition":  2,
+                                   "streamStartMs":  44,
+                                   "firstToolSignalMs":  572,
+                                   "toolResultMs":  590,
+                                   "beforeFirstToolSignalMs":  528,
+                                   "afterToolToFirstTextMs":  998,
+                                   "firstTextMs":  1588,
+                                   "firstTextToLastTextMs":  53,
+                                   "bodyEndMs":  1643,
+                                   "prepareMs":  10.7,
+                                   "toolDurationsMs":  [
+                                                           5
+                                                       ]
+                               },
+                               {
+                                   "id":  "greeting-ary",
+                                   "repetition":  2,
+                                   "streamStartMs":  25,
+                                   "firstToolSignalMs":  null,
+                                   "toolResultMs":  null,
+                                   "beforeFirstToolSignalMs":  null,
+                                   "afterToolToFirstTextMs":  null,
+                                   "firstTextMs":  460,
+                                   "firstTextToLastTextMs":  49,
+                                   "bodyEndMs":  523,
+                                   "prepareMs":  6.8,
+                                   "toolDurationsMs":  [
+                                                           null
+                                                       ]
+                               },
+                               {
+                                   "id":  "missing-student-ary",
+                                   "repetition":  2,
+                                   "streamStartMs":  32,
+                                   "firstToolSignalMs":  1224,
+                                   "toolResultMs":  1233,
+                                   "beforeFirstToolSignalMs":  1192,
+                                   "afterToolToFirstTextMs":  1063,
+                                   "firstTextMs":  2296,
+                                   "firstTextToLastTextMs":  83,
+                                   "bodyEndMs":  2384,
+                                   "prepareMs":  9.2,
+                                   "toolDurationsMs":  [
+                                                           3.2
+                                                       ]
+                               }
+                           ],
+    "editorialCaveats":  [
+                             "Darija greeting uses الأجور for money/fees and آخر امتحان قريب for upcoming exam; awkward domain wording, no asserted fixture fact.",
+                             "Generic ID abbreviation in Darija lookup remains a loan abbreviation, not the prohibited English student ID label; native fluency remains unproven."
+                         ],
+    "billing":  {
+                    "laterStableDeltaUsd":  0.012767300,
+                    "declaredEstimateUsd":  0.0130361,
+                    "rawSdkEstimateUsd":  0.001565682,
+                    "declaredPer1000RawAutomaticPasses":  0.2209508474576271186440677966,
+                    "stableObservationsSeconds":  159.60999999999999,
+                    "note":  "Final delta matches aggregate tokens at Cerebras catalog rates; consistency only, not per-generation host or invoice proof. File named settled was an intermediate increased read; final read establishes later stability."
+                }
+}

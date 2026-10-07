@@ -1,7 +1,6 @@
 import { Label } from 'najm-kit';
 import { NAvatar, NButton, useNSidebar } from 'najm-kit';
 import { CreditCard, Menu } from 'lucide-react';
-import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { useTranslation } from 'najm-i18n/react';
 
 export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) => {
@@ -70,7 +69,6 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
          )}
 
          <div className="ms-auto flex shrink-0 items-center gap-1">
-            <ViewingYearSelector />
             <NButton
                onClick={onPayClick}
                disabled={payDisabled}

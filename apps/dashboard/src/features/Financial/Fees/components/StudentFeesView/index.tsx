@@ -19,6 +19,7 @@ import { useFeeTypes } from "@/features/Financial/FeeTypes/hooks/useFeeTypes";
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from "@/features/Financial/Payment/store/paymentStore";
 import { FeeTypeDialogContent } from "@/features/Financial/FeeTypes/components/FeeTypeDialog";
 import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
+import { sortFeesByCategory } from "@/features/Financial/Fees/config/feeOrder";
 import { FeeFactory, withFeeYear } from "@/features/Financial/Fees/utils/feeUtils";
 import { useActiveAcademicYear } from "@/features/Settings/hooks/useSettings";
 import { useSetViewingYear, useViewingAcademicYear } from "@/features/AcademicYears/hooks/useViewingAcademicYear";
@@ -155,8 +156,9 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   const { feeTypes } = useFeeTypes();
   const [selectedFeeId, setSelectedFeeId] = useState(initialFeeId);
   const [activeTab, setActiveTab] = useState("overview");
-  // The server has already limited the fees to the viewed year.
-  const visibleFees = useMemo(() => studentFees?.fees || [], [studentFees?.fees]);
+  // The server has already limited the fees to the viewed year. The cards,
+  // and the fee selected by default, follow the category display order.
+  const visibleFees = useMemo(() => sortFeesByCategory<any>(studentFees?.fees || []), [studentFees?.fees]);
   // Other years' unpaid fees stay reachable without entering this year's
   // fees or totals.
   const otherYearDebts = useMemo(() => {

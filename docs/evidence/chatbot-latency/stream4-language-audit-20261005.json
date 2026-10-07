@@ -1,0 +1,32 @@
+{
+  "capturedAt": "2026-10-05T15:16:39.025Z",
+  "scope": "Offline language-only audit; not a new paid run or a complete rescore of arguments/facts",
+  "originalRawSha256": "278f5ba61cb601cbe49ca4cab9a9fa27d9c42fabe15df65fd8353aab2bc47df9",
+  "currentLanguageSourceSha256": "57cf2cfca98ea614d1e6a79290dc94cc64bfb5b3401b6d67408c695d0906f54a",
+  "rawAutomaticPassesUnchanged": 59,
+  "rawReportsModified": false,
+  "changed": [
+    {
+      "id": "greeting-fr",
+      "repetition": 1,
+      "before": {
+        "language": "fr",
+        "mixedLanguage": true,
+        "unsupportedScript": false,
+        "foreignLanguages": [],
+        "register": null,
+        "wrongRegister": false
+      },
+      "after": {
+        "language": "fr",
+        "mixedLanguage": false,
+        "unsupportedScript": false,
+        "foreignLanguages": [],
+        "register": null,
+        "wrongRegister": false
+      }
+    }
+  ],
+  "historicalEnglishLabelStillRejected": true,
+  "explanation": "nombre is valid in French and Spanish, so shared vocabulary contributes to neither exclusive score. Short student ID remains foreign prose outside English unless an exact stored fixture name."
+}

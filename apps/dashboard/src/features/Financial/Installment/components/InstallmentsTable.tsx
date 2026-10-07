@@ -4,12 +4,13 @@ import { SearchX } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NTable, NEmptyState } from 'najm-kit';
 import InstallmentCard from './InstallmentCard';
+import InstallmentDetails from './InstallmentDetails';
 import { useDialog } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useInstallmentsTableColumns } from '../hooks/useInstallmentsTableColumns';
 import { useInstallmentsTableFilters } from '../hooks/useInstallmentsTableFilters';
 
-function InstallmentsTable({ fee, className = '', onPayInstallment }) {
+function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment }) {
   const { t } = useTranslation();
 
   const rawFilters = useInstallmentsTableFilters();
@@ -17,9 +18,11 @@ function InstallmentsTable({ fee, className = '', onPayInstallment }) {
   const { openDialog } = useDialog();
 
   const handleView = (installment) => {
+    const installmentTitle = t('fees.studentView.installmentNumber', { number: installment.number });
     openDialog({
-      title: t('fees.studentView.installmentNumber', { number: installment.number }),
-      children: <InstallmentCard data={installment} />,
+      title: feeName ? `${feeName} · ${installmentTitle}` : installmentTitle,
+      children: <InstallmentDetails installment={installment} />,
+      width: 'md',
       showButtons: false,
     });
   };

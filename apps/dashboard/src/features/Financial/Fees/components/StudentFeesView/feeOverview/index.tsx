@@ -148,6 +148,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
           <InstallmentsTable
             key={selectedFee.id}
             fee={selectedFee.installments}
+            feeName={selectedFee.name}
             className="min-h-0 flex-1"
             onPayInstallment={onPayInstallment}
           />

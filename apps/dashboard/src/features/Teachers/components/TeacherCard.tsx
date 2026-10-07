@@ -6,12 +6,15 @@ import { NAvatar, NBadge } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
+import { useRouter } from 'next/navigation';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 
 const TeacherCard = ({ data }) => {
    const { t } = useTranslation();
+   const router = useRouter();
    const teacher = data;
+   const openTeacher = () => router.push(`/teachers/${teacher.id}`);
 
    const { viewingYear } = useViewingAcademicYear();
    const { classes = [] } = useClasses({ enabled: !!viewingYear });
@@ -29,7 +32,19 @@ const TeacherCard = ({ data }) => {
    };
 
    return (
-      <div className="flex items-start gap-4 p-4">
+      <div
+         role="link"
+         tabIndex={0}
+         aria-label={teacher.name}
+         onClick={openTeacher}
+         onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+               event.preventDefault();
+               openTeacher();
+            }
+         }}
+         className="flex cursor-pointer items-start gap-4 p-4 transition-all hover:bg-primary/[0.035] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
+      >
          <div className="shrink-0">
             <NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={teacher?.updatedAt} />
          </div>

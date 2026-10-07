@@ -7,7 +7,7 @@
     "status": "acknowledged",
     "isRead": true,
     "targetAudience": "all",
-    "studentId": "6xJJZ"
+    "studentId": "qd5L9"
   },
   {
     "type": "attendance",
@@ -17,7 +17,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "students",
-    "studentId": "p68TH"
+    "studentId": "sJmBh"
   },
   {
     "type": "behavioral",
@@ -27,7 +27,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "teachers",
-    "studentId": "NGfMG"
+    "studentId": "9_JDL"
   },
   {
     "type": "health",
@@ -37,7 +37,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "parents",
-    "studentId": "4zqCE"
+    "studentId": "66PgP"
   },
   {
     "type": "system",
@@ -46,8 +46,7 @@
     "priority": "low",
     "status": "active",
     "isRead": false,
-    "targetAudience": "all",
-    "subjectId": "SB04"
+    "targetAudience": "all"
   },
   {
     "type": "announcement",
@@ -57,7 +56,7 @@
     "status": "acknowledged",
     "isRead": true,
     "targetAudience": "students",
-    "classId": "CLS08"
+    "classId": "2026-2027-CLS08"
   },
   {
     "type": "reminder",
@@ -67,7 +66,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "teachers",
-    "teacherId": "UXP4v"
+    "teacherId": "6l4HI"
   },
   {
     "type": "emergency",
@@ -86,7 +85,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "all",
-    "studentId": "mgY5m"
+    "studentId": "hRXk9"
   },
   {
     "type": "attendance",
@@ -96,7 +95,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "students",
-    "studentId": "d-IYy"
+    "studentId": "KjBcB"
   },
   {
     "type": "behavioral",
@@ -106,7 +105,7 @@
     "status": "acknowledged",
     "isRead": true,
     "targetAudience": "teachers",
-    "studentId": "atKQr"
+    "studentId": "hHPf_"
   },
   {
     "type": "health",
@@ -116,7 +115,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "parents",
-    "studentId": "0e68V"
+    "studentId": "QAaZz"
   },
   {
     "type": "system",
@@ -125,8 +124,7 @@
     "priority": "low",
     "status": "active",
     "isRead": false,
-    "targetAudience": "all",
-    "subjectId": "SB02"
+    "targetAudience": "all"
   },
   {
     "type": "announcement",
@@ -136,7 +134,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "students",
-    "classId": "CLS07"
+    "classId": "2026-2027-CLS07"
   },
   {
     "type": "reminder",
@@ -146,7 +144,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "teachers",
-    "teacherId": "i7XRN"
+    "teacherId": "E9Mvh"
   },
   {
     "type": "emergency",
@@ -165,7 +163,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "all",
-    "studentId": "LspX6"
+    "studentId": "MCxJp"
   },
   {
     "type": "attendance",
@@ -175,7 +173,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "students",
-    "studentId": "Oy5ur"
+    "studentId": "YFgcP"
   },
   {
     "type": "behavioral",
@@ -185,7 +183,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "teachers",
-    "studentId": "WCYLk"
+    "studentId": "5dDcp"
   },
   {
     "type": "health",
@@ -195,7 +193,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "parents",
-    "studentId": "EiSHu"
+    "studentId": "gqD-O"
   },
   {
     "type": "system",
@@ -204,8 +202,7 @@
     "priority": "low",
     "status": "acknowledged",
     "isRead": true,
-    "targetAudience": "all",
-    "subjectId": "SB00"
+    "targetAudience": "all"
   },
   {
     "type": "announcement",
@@ -215,7 +212,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "students",
-    "classId": "CLS06"
+    "classId": "2026-2027-CLS06"
   },
   {
     "type": "reminder",
@@ -225,7 +222,7 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "teachers",
-    "teacherId": "4zPZ8"
+    "teacherId": "XC05D"
   },
   {
     "type": "emergency",
@@ -244,6 +241,6 @@
     "status": "active",
     "isRead": false,
     "targetAudience": "all",
-    "studentId": "QE4O4"
+    "studentId": "BLHdC"
   }
 ]

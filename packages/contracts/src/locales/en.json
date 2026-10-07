@@ -78,40 +78,23 @@
     "includeOneTimeFees": "Include one-time fees",
     "copyDiscounts": "Copy discounts",
     "createPreviewFirst": "Create a preview first",
-    "selectStudentAmount": "Select a student and enter an amount",
-    "amountPlaceholder": "Amount",
-    "notificationsDescription": "Idempotent overdue and check-due delivery claims.",
-    "notificationsTitle": "Notification delivery log",
-    "creditDescription": "Apply settled unapplied funds to the oldest available installments.",
-    "creditTitle": "Student credit",
     "checksDescription": "Pending checks reserve balances until completion or release.",
-    "checksTitle": "Checks awaiting settlement",
-    "eyebrow": "Financial controls",
-    "title": "Operations and reconciliation",
-    "description": "Manage checks, credit, audit history, notifications, and academic-year rollover.",
+    "title": "Pending checks",
+    "description": "Settle checks waiting to clear, and roll fees over into a new school year.",
     "failed": "Financial operation failed",
     "bounceReason": "Reason for bounced check",
     "voidReason": "Reason for voiding this payment",
-    "creditApplied": "Student credit applied",
     "previewCreated": "Rollover preview created",
     "rolloverCompleted": "Rollover completed",
     "noChecks": "No pending or deposited checks.",
-    "due": "Due {{date}}",
     "deposit": "Deposit",
     "complete": "Complete",
     "bounce": "Bounce",
     "void": "Void",
-    "creditScope": "Apply to fees in {{year}}. Available credit is shared across years.",
-    "selectedYear": "the selected school year",
-    "selectStudent": "Select student",
-    "applyCredit": "Apply credit",
-    "availableBalance": "Available balance",
     "rolloverTitle": "Academic-year rollover",
     "rolloverDescription": "Preview prior-year assignments before creating target-year fees.",
     "preview": "Preview",
     "commitPreview": "Commit preview",
-    "noNotifications": "No delivery records yet.",
-    "student": "Student",
     "auditTitle": "Financial audit history",
     "auditDescription": "Latest records across all school years.",
     "entity": "Entity",
@@ -177,7 +160,29 @@
       "deposited": "Deposited",
       "completed": "Settled",
       "bounced": "Bounced"
-    }
+    },
+    "fromYear": "From year",
+    "toYear": "To year",
+    "chooseYear": "Choose a year",
+    "chooseTwoYears": "Choose two different school years",
+    "noAuditEntries": "No financial changes recorded yet.",
+    "subtitle": "{{count}} checks awaiting settlement",
+    "searchPlaceholder": "Search student or check number...",
+    "rolloverButton": "Year rollover",
+    "bounceTitle": "Bounce check",
+    "voidTitle": "Void check",
+    "noEarlierYear": "There is no earlier school year to copy fees from.",
+    "summary": {
+      "students": "Students",
+      "feesToCreate": "Fees to create",
+      "alreadyExist": "Already exist",
+      "notEnrolled": "Not enrolled",
+      "errors": "Errors",
+      "projectedTotal": "Projected total"
+    },
+    "advanceSelected": "Next step",
+    "bulkUpdated": "{{count}} checks updated",
+    "bulkPartial": "{{done}} of {{total}} checks updated"
   },
   "installments": {
     "table": {
@@ -537,6 +542,13 @@
       "invalidSeedApiKey": "Invalid seed API key provided"
     }
   },
+  "chatBenchmark": {
+    "errors": {
+      "controlsDisabled": "Benchmark controls are disabled",
+      "providerUsageUnsupported": "Selected provider is not supported for usage reads",
+      "providerUsageFailed": "Provider usage read failed"
+    }
+  },
   "files": {
     "success": {
       "retrieved": "File retrieved successfully",
@@ -588,8 +600,9 @@
         "totalStudents": "Total Students",
         "classesToday": "Classes Today",
         "pendingTasks": "Pending Tasks",
-        "attendance": "Attendance",
-        "notifications": "Unread Notifications"
+        "notifications": "Unread Notifications",
+        "attendanceRate": "Attendance (7 days)",
+        "assignedClasses": "Assigned Classes"
       },
       "duration": {
         "minutes": "{{minutes}} min",
@@ -620,7 +633,21 @@
         "notifications": "Notifications",
         "notificationsHint": "Unread notifications",
         "concerns": "Student Concerns",
-        "concernsHint": "Open incidents in your sections"
+        "concernsHint": "Open incidents in your sections",
+        "allClear": "All clear"
+      },
+      "quickActions": {
+        "title": "Quick actions",
+        "takeAttendance": "Take attendance",
+        "takeAttendanceHint": "Record today’s register for a class",
+        "enterGrades": "Enter grades",
+        "enterGradesHint": "Mark an assessment for a section",
+        "planAssessment": "Plan an assessment",
+        "planAssessmentHint": "Schedule a quiz, test or exam",
+        "reportIncident": "Report an incident",
+        "reportIncidentHint": "Log a student behaviour concern",
+        "viewTimetable": "View timetable",
+        "viewTimetableHint": "Your lessons for the week"
       },
       "classes": {
         "title": "My Classes",
@@ -634,16 +661,38 @@
         "due": "Due {{date}}",
         "empty": "No assessments this year"
       },
-      "trend": {
-        "title": "Attendance Trend",
-        "range7d": "Last 7 days",
-        "range30d": "Last 30 days",
-        "overall": "Overall Attendance",
-        "vsPrevious": "vs previous period",
-        "classesHeld": "Classes Held",
-        "outOf": "out of {{count}} scheduled",
-        "rate": "Attendance",
-        "empty": "No attendance recorded in this period"
+      "welcomeBack": "Welcome back, {{name}}",
+      "subtitle": "Here's your teaching day at a glance.",
+      "backToTeachers": "Back to teachers",
+      "tabs": {
+        "overview": "Overview",
+        "details": "Details",
+        "timetable": "Timetable",
+        "payroll": "Payroll"
+      },
+      "info": {
+        "title": "About",
+        "viewDetails": "View details",
+        "hoursPerWeek": "{{hours}} h/week",
+        "yearsCount": "{{count}} years",
+        "actions": {
+          "email": "Send an email",
+          "map": "Show address on map",
+          "call": "Call",
+          "whatsapp": "Message on WhatsApp",
+          "unavailable": "Not on file"
+        }
+      },
+      "details": {
+        "employment": "Employment",
+        "academicEmergency": "Academic & emergency"
+      },
+      "timetable": {
+        "title": "Weekly timetable"
+      },
+      "payroll": {
+        "history": "Payment history",
+        "hourlyRate": "Hourly rate"
       }
     },
     "widgets": {
@@ -2157,6 +2206,10 @@
         "attendancePercent": "{{percent}}% attendance",
         "assessment": "Assessment",
         "outstandingBalance": "Outstanding balance",
+        "overdueAmount": "Overdue amount",
+        "viewAllAttendance": "View all attendance",
+        "viewAllGrades": "View all grades",
+        "viewAllEvents": "View all events",
         "familyAccount": "Family account",
         "paymentStatus": "Payment status",
         "percentPaid": "{{percent}}% paid",
@@ -2913,7 +2966,6 @@
     "register": {
       "missing": "Missing",
       "giveCustomer": "Give customer",
-      "selectHint": "Select the installments to pay",
       "title": "Cashier register",
       "totalSelected": "Total selected",
       "cashReceived": "Cash received",
@@ -3642,16 +3694,115 @@
     }
   },
   "discipline": {
-    "table": { "student": "Student", "classSection": "Class / section", "violation": "Violation", "severity": "Severity", "status": "Status", "incidentAt": "Incident date", "action": "Action", "reportedBy": "Reported by", "createdAt": "Created", "updatedAt": "Updated", "resolvedBy": "Resolved by", "resolvedAt": "Resolved at", "count": "{{count}} discipline records" },
-    "filters": { "search": "Search student, code, or description...", "category": "Filter by category", "severity": "Filter by severity", "status": "Filter by status" },
-    "form": { "incidentDetails": "Violation details", "student": "Student", "studentPlaceholder": "Select a student", "studentSearch": "Search students...", "noStudents": "No active students found", "incidentDate": "Incident date", "incidentTime": "Incident time", "category": "Category", "severity": "Severity", "location": "Location", "locationPlaceholder": "Where did it happen?", "description": "Description", "descriptionPlaceholder": "Describe the facts clearly...", "actionType": "Disciplinary action", "actionNote": "Action details", "actionNotePlaceholder": "Optional details about the action...", "resolutionNote": "Resolution note", "resolutionNotePlaceholder": "Explain how the incident was resolved..." },
-    "categories": { "classroom_disruption": "Classroom disruption", "disrespect": "Disrespect", "bullying": "Bullying", "fighting": "Fighting", "cheating": "Cheating", "vandalism": "Vandalism", "uniform_violation": "Uniform violation", "device_misuse": "Device misuse", "prohibited_item": "Prohibited item", "other": "Other" },
-    "severity": { "low": "Low", "medium": "Medium", "high": "High", "critical": "Critical" },
-    "status": { "open": "Open", "resolved": "Resolved" },
-    "actions": { "verbal_warning": "Verbal warning", "written_warning": "Written warning", "detention": "Detention", "counseling": "Counseling", "parent_meeting": "Parent meeting", "suspension": "Suspension", "other": "Other" },
-    "dialogs": { "createTitle": "Add violation", "createButton": "Add violation", "viewTitle": "Violation details", "editTitle": "Edit violation", "updateButton": "Update violation", "deleteButton": "Delete violation", "resolveTitle": "Resolve violation", "resolveDescription": "Record the disciplinary action and resolution.", "resolveButton": "Resolve", "resolutionTitle": "Resolution", "reopenTitle": "Reopen violation", "reopenDescription": "Reopening returns this record to open.", "reopenWarning": "The current action and resolution fields will be cleared because resolution history is not available in this release.", "reopenButton": "Reopen" },
-    "success": { "retrieved": "Discipline records retrieved successfully", "created": "Violation created successfully", "updated": "Violation updated successfully", "resolved": "Violation resolved successfully", "reopened": "Violation reopened successfully", "deleted": "Violation deleted successfully" },
-    "errors": { "notFound": "Discipline record not found", "studentNotFound": "Student not found", "outsideSelectedYear": "The incident date is outside the selected school year", "notPlacedOnDate": "The student was not in a class and section on that date", "teacherStudentForbidden": "You are not assigned to this student's section", "recordForbidden": "You cannot access this discipline record", "recordNotOpen": "Only open violations can be changed or resolved", "recordNotResolved": "Only resolved violations can be reopened", "adminRequired": "Administrator access is required", "invalidIncidentDate": "Incident date is invalid", "futureIncidentDate": "Incident date cannot be in the future" }
+    "table": {
+      "student": "Student",
+      "classSection": "Class / section",
+      "violation": "Violation",
+      "severity": "Severity",
+      "status": "Status",
+      "incidentAt": "Incident date",
+      "action": "Action",
+      "reportedBy": "Reported by",
+      "createdAt": "Created",
+      "updatedAt": "Updated",
+      "resolvedBy": "Resolved by",
+      "resolvedAt": "Resolved at",
+      "count": "{{count}} discipline records"
+    },
+    "filters": {
+      "search": "Search student, code, or description...",
+      "category": "Filter by category",
+      "severity": "Filter by severity",
+      "status": "Filter by status"
+    },
+    "form": {
+      "incidentDetails": "Violation details",
+      "student": "Student",
+      "studentPlaceholder": "Select a student",
+      "studentSearch": "Search students...",
+      "noStudents": "No active students found",
+      "incidentDate": "Incident date",
+      "incidentTime": "Incident time",
+      "category": "Category",
+      "severity": "Severity",
+      "location": "Location",
+      "locationPlaceholder": "Where did it happen?",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the facts clearly...",
+      "actionType": "Disciplinary action",
+      "actionNote": "Action details",
+      "actionNotePlaceholder": "Optional details about the action...",
+      "resolutionNote": "Resolution note",
+      "resolutionNotePlaceholder": "Explain how the incident was resolved..."
+    },
+    "categories": {
+      "classroom_disruption": "Classroom disruption",
+      "disrespect": "Disrespect",
+      "bullying": "Bullying",
+      "fighting": "Fighting",
+      "cheating": "Cheating",
+      "vandalism": "Vandalism",
+      "uniform_violation": "Uniform violation",
+      "device_misuse": "Device misuse",
+      "prohibited_item": "Prohibited item",
+      "other": "Other"
+    },
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "status": {
+      "open": "Open",
+      "resolved": "Resolved"
+    },
+    "actions": {
+      "verbal_warning": "Verbal warning",
+      "written_warning": "Written warning",
+      "detention": "Detention",
+      "counseling": "Counseling",
+      "parent_meeting": "Parent meeting",
+      "suspension": "Suspension",
+      "other": "Other"
+    },
+    "dialogs": {
+      "createTitle": "Add violation",
+      "createButton": "Add violation",
+      "viewTitle": "Violation details",
+      "editTitle": "Edit violation",
+      "updateButton": "Update violation",
+      "deleteButton": "Delete violation",
+      "resolveTitle": "Resolve violation",
+      "resolveDescription": "Record the disciplinary action and resolution.",
+      "resolveButton": "Resolve",
+      "resolutionTitle": "Resolution",
+      "reopenTitle": "Reopen violation",
+      "reopenDescription": "Reopening returns this record to open.",
+      "reopenWarning": "The current action and resolution fields will be cleared because resolution history is not available in this release.",
+      "reopenButton": "Reopen"
+    },
+    "success": {
+      "retrieved": "Discipline records retrieved successfully",
+      "created": "Violation created successfully",
+      "updated": "Violation updated successfully",
+      "resolved": "Violation resolved successfully",
+      "reopened": "Violation reopened successfully",
+      "deleted": "Violation deleted successfully"
+    },
+    "errors": {
+      "notFound": "Discipline record not found",
+      "studentNotFound": "Student not found",
+      "outsideSelectedYear": "The incident date is outside the selected school year",
+      "notPlacedOnDate": "The student was not in a class and section on that date",
+      "teacherStudentForbidden": "You are not assigned to this student's section",
+      "recordForbidden": "You cannot access this discipline record",
+      "recordNotOpen": "Only open violations can be changed or resolved",
+      "recordNotResolved": "Only resolved violations can be reopened",
+      "adminRequired": "Administrator access is required",
+      "invalidIncidentDate": "Incident date is invalid",
+      "futureIncidentDate": "Incident date cannot be in the future"
+    }
   },
   "classes": {
     "subtitle": {
@@ -4211,7 +4362,8 @@
     "behaviorRewardsShort": "Rewards",
     "alerts": "Alerts",
     "myChildren": "My children",
-    "myProfile": "My profile"
+    "myProfile": "My profile",
+    "pendingChecks": "Checks"
   },
   "classRoutines": {
     "success": {
@@ -4249,79 +4401,161 @@
       "teacherNotFound": "Teacher not found",
       "layoutPastMidnight": "The generated routine cannot extend past midnight",
       "layoutRemovesLessons": "Remove lessons from periods that will no longer exist before changing these settings",
-    "layoutRemovesDuties": "Remove teacher duties from breaks that will no longer exist before changing these settings",
-    "outsideSelectedYear": "The routine's section must belong to the selected school year"
-  },
-  "ui": {
-    "title": "Routine",
-    "subtitle": "Build a conflict-safe weekly timetable for every section",
-    "fields": {
-      "class": "Class", "section": "Section", "period": "Period", "subjectTeacher": "Subject and teacher",
-      "room": "Room", "notes": "Notes", "supervisingStaff": "Supervising staff member", "supervisingTeacher": "Supervising teacher",
-      "dutyNotes": "Duty notes", "teachingDays": "Teaching days", "type": "Type", "nameLabel": "Name / label",
-      "startTime": "Start time", "endTime": "End time", "periodName": "Period name", "order": "Order",
-      "starts": "Starts", "ends": "Ends", "breakPeriod": "Break period", "active": "Active"
+      "layoutRemovesDuties": "Remove teacher duties from breaks that will no longer exist before changing these settings",
+      "outsideSelectedYear": "The routine's section must belong to the selected school year"
     },
-    "actions": {
-      "days": "Days", "periods": "Periods", "saveDays": "Save days", "savePeriods": "Save periods",
-      "createRoutine": "Create routine", "addLesson": "Add lesson", "updateLesson": "Update lesson", "removeLesson": "Remove lesson",
-      "addSupervisor": "Add supervisor", "assignSupervisor": "Assign supervisor", "updateSupervision": "Update supervision",
-      "removeSupervision": "Remove supervision", "addTeachingPeriod": "Add teaching period", "addBreak": "Add break / recess"
-    },
-    "dialogs": {
-      "daysTitle": "Teaching days", "daysDescription": "Choose the days included in this section routine.",
-      "periodsTitle": "Periods and breaks", "periodsDescription": "Control teaching periods, breaks, and times for this section.",
-      "editLesson": "Edit lesson", "addLesson": "Add lesson", "editSupervision": "Edit supervision",
-      "assignSupervisor": "Assign supervisor · {{period}}"
-    },
-    "placeholders": {
-      "chooseTeacher": "Choose an assigned teacher", "searchAssignments": "Search assignments...",
-      "selectStaff": "Select a staff member", "selectTeacher": "Select a teacher"
-    },
-    "empty": {
-      "title": "No routine for this section", "description": "Create the section routine once, then edit lessons directly from the grid.",
-      "noAssignments": "No teacher assignments for this section."
-    },
-    "grid": { "noRoom": "No room" },
-    "content": {
-      "title": "Nested subjects", "help": "The teacher divides this period and rotates alternatives as needed; no separate times are required.",
-      "item": "Subject {{number}}", "label": "Subject or activity", "or": "OR",
-      "optionA": "Option A", "optionB": "Option B", "addSubject": "Add subject", "addAlternative": "Add alternative",
-      "useOne": "Use one subject", "remove": "Remove subject", "moveUp": "Move subject up", "moveDown": "Move subject down", "preview": "Timetable preview"
-    },
-    "validation": {
-      "chooseAssignment": "Choose a teacher and subject", "notesMax": "Notes cannot exceed 500 characters",
-      "contentLabelRequired": "Enter a subject or activity", "contentLabelMax": "Keep each label under 100 characters", "alternativesDiffer": "The two alternatives must differ",
-      "chooseSupervisor": "Choose a supervisor", "selectDay": "Select at least one teaching day", "timeFormat": "Use HH:mm",
-      "nameRequired": "Enter a name", "teachingPeriodRequired": "Add at least one teaching period",
-      "endAfterStart": "End time must be after start time", "noOverlap": "Timeline rows cannot overlap"
-    },
-    "periodForm": {
-      "teachingPeriod": "Teaching period", "breakRecess": "Break / recess", "dragRow": "Drag row {{number}} to reorder",
-      "removeRow": "Remove {{name}}"
-    },
-    "defaultNames": {
-      "period": "Period {{number}}", "break": "Break {{number}}", "morningBreak": "Morning break",
-      "lunchBreak": "Lunch break", "afternoonBreak": "Afternoon break"
-    },
-    "days": {
-      "monday": "Monday", "tuesday": "Tuesday", "wednesday": "Wednesday", "thursday": "Thursday",
-      "friday": "Friday", "saturday": "Saturday", "sunday": "Sunday"
-    },
-    "loading": { "timetable": "Loading timetable", "weeklyRoutine": "Loading weekly routine..." },
-    "messages": {
-      "saveError": "Unable to save the routine.", "routineCreated": "Routine created.", "routineUpdated": "Routine updated.",
-      "timesUpdated": "Routine times updated.", "routineDeleted": "Draft routine deleted.", "routinePublished": "Routine published.",
-      "routineArchived": "Routine archived.", "lessonAdded": "Lesson added.", "lessonUpdated": "Lesson updated.",
-      "lessonRemoved": "Lesson removed.", "supervisionAssigned": "Supervision assigned.", "supervisionUpdated": "Supervision updated.",
-      "supervisionRemoved": "Supervision removed.", "periodCreated": "Period created.", "periodUpdated": "Period updated."
-    },
-    "teacher": {
-      "weeklyLessons": "Weekly lessons", "sections": "Sections", "noRoutine": "No routine",
-      "noRoutineDescription": "Assigned lessons will appear here automatically."
-    },
-    "errors": { "loadFailed": "The routine could not be loaded." }
-  }
+    "ui": {
+      "title": "Routine",
+      "subtitle": "Build a conflict-safe weekly timetable for every section",
+      "fields": {
+        "class": "Class",
+        "section": "Section",
+        "period": "Period",
+        "subjectTeacher": "Subject and teacher",
+        "room": "Room",
+        "notes": "Notes",
+        "supervisingStaff": "Supervising staff member",
+        "supervisingTeacher": "Supervising teacher",
+        "dutyNotes": "Duty notes",
+        "teachingDays": "Teaching days",
+        "type": "Type",
+        "nameLabel": "Name / label",
+        "startTime": "Start time",
+        "endTime": "End time",
+        "periodName": "Period name",
+        "order": "Order",
+        "starts": "Starts",
+        "ends": "Ends",
+        "breakPeriod": "Break period",
+        "active": "Active"
+      },
+      "actions": {
+        "days": "Days",
+        "periods": "Periods",
+        "saveDays": "Save days",
+        "savePeriods": "Save periods",
+        "createRoutine": "Create routine",
+        "addLesson": "Add lesson",
+        "updateLesson": "Update lesson",
+        "removeLesson": "Remove lesson",
+        "addSupervisor": "Add supervisor",
+        "assignSupervisor": "Assign supervisor",
+        "updateSupervision": "Update supervision",
+        "removeSupervision": "Remove supervision",
+        "addTeachingPeriod": "Add teaching period",
+        "addBreak": "Add break / recess"
+      },
+      "dialogs": {
+        "daysTitle": "Teaching days",
+        "daysDescription": "Choose the days included in this section routine.",
+        "periodsTitle": "Periods and breaks",
+        "periodsDescription": "Control teaching periods, breaks, and times for this section.",
+        "editLesson": "Edit lesson",
+        "addLesson": "Add lesson",
+        "editSupervision": "Edit supervision",
+        "assignSupervisor": "Assign supervisor · {{period}}"
+      },
+      "placeholders": {
+        "chooseTeacher": "Choose an assigned teacher",
+        "searchAssignments": "Search assignments...",
+        "selectStaff": "Select a staff member",
+        "selectTeacher": "Select a teacher"
+      },
+      "empty": {
+        "title": "No routine for this section",
+        "description": "Create the section routine once, then edit lessons directly from the grid.",
+        "noAssignments": "No teacher assignments for this section."
+      },
+      "grid": {
+        "noRoom": "No room"
+      },
+      "content": {
+        "title": "Nested subjects",
+        "help": "The teacher divides this period and rotates alternatives as needed; no separate times are required.",
+        "item": "Subject {{number}}",
+        "label": "Subject or activity",
+        "or": "OR",
+        "optionA": "Option A",
+        "optionB": "Option B",
+        "addSubject": "Add subject",
+        "addAlternative": "Add alternative",
+        "useOne": "Use one subject",
+        "remove": "Remove subject",
+        "moveUp": "Move subject up",
+        "moveDown": "Move subject down",
+        "preview": "Timetable preview"
+      },
+      "validation": {
+        "chooseAssignment": "Choose a teacher and subject",
+        "notesMax": "Notes cannot exceed 500 characters",
+        "contentLabelRequired": "Enter a subject or activity",
+        "contentLabelMax": "Keep each label under 100 characters",
+        "alternativesDiffer": "The two alternatives must differ",
+        "chooseSupervisor": "Choose a supervisor",
+        "selectDay": "Select at least one teaching day",
+        "timeFormat": "Use HH:mm",
+        "nameRequired": "Enter a name",
+        "teachingPeriodRequired": "Add at least one teaching period",
+        "endAfterStart": "End time must be after start time",
+        "noOverlap": "Timeline rows cannot overlap"
+      },
+      "periodForm": {
+        "teachingPeriod": "Teaching period",
+        "breakRecess": "Break / recess",
+        "dragRow": "Drag row {{number}} to reorder",
+        "removeRow": "Remove {{name}}"
+      },
+      "defaultNames": {
+        "period": "Period {{number}}",
+        "break": "Break {{number}}",
+        "morningBreak": "Morning break",
+        "lunchBreak": "Lunch break",
+        "afternoonBreak": "Afternoon break"
+      },
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "loading": {
+        "timetable": "Loading timetable",
+        "weeklyRoutine": "Loading weekly routine..."
+      },
+      "messages": {
+        "saveError": "Unable to save the routine.",
+        "routineCreated": "Routine created.",
+        "routineUpdated": "Routine updated.",
+        "timesUpdated": "Routine times updated.",
+        "routineDeleted": "Draft routine deleted.",
+        "routinePublished": "Routine published.",
+        "routineArchived": "Routine archived.",
+        "lessonAdded": "Lesson added.",
+        "lessonUpdated": "Lesson updated.",
+        "lessonRemoved": "Lesson removed.",
+        "supervisionAssigned": "Supervision assigned.",
+        "supervisionUpdated": "Supervision updated.",
+        "supervisionRemoved": "Supervision removed.",
+        "periodCreated": "Period created.",
+        "periodUpdated": "Period updated."
+      },
+      "teacher": {
+        "weeklyLessons": "Weekly lessons",
+        "sections": "Sections",
+        "noRoutine": "No routine",
+        "noRoutineDescription": "Assigned lessons will appear here automatically.",
+        "myWeekTitle": "My timetable",
+        "myWeekSubtitle": "Your lessons this week across all your sections",
+        "today": "Today",
+        "noLessonsOnDay": "No lessons this day"
+      },
+      "errors": {
+        "loadFailed": "The routine could not be loaded."
+      }
+    }
   },
   "payroll": {
     "subtitle": {
@@ -4409,7 +4643,7 @@
       "noData": "No overdue payments",
       "searchPlaceholder": "Search student…",
       "studentsOverdue": "student(s) overdue",
-        "studentsOverdueCount": "{{count}} student(s) overdue",
+      "studentsOverdueCount": "{{count}} student(s) overdue",
       "overdueAmount": "overdue",
       "remindAll": "Remind all ({{count}})",
       "daysOverdue": "{{count}} day{{plural}} overdue",
@@ -4555,7 +4789,16 @@
       "loading": "Loading…",
       "nothingToSave": "No changes to save",
       "submitError": "Failed to submit attendance",
-      "submitSuccess": "Attendance submitted successfully"
+      "submitSuccess": "Attendance submitted successfully",
+      "teacherSubject": "Teacher & subject",
+      "selectClass": "Select a class first",
+      "selectSection": "Select a section first",
+      "noSections": "No sections",
+      "noAssignments": "No teacher assignments",
+      "noStudents": "No students found.",
+      "noStudentsInSection": "No students found in the selected section.",
+      "resetFilters": "Reset filters",
+      "search": "Search"
     }
   },
   "behaviorRewards": {
@@ -4659,7 +4902,13 @@
     }
   },
   "confirm": {
-    "discipline": { "create": "Create this violation record?", "update": "Update this violation record?", "resolve": "Resolve this violation record?", "reopen": "Reopen this violation and clear its resolution?", "delete": "Delete this violation record? This action cannot be undone." },
+    "discipline": {
+      "create": "Create this violation record?",
+      "update": "Update this violation record?",
+      "resolve": "Resolve this violation record?",
+      "reopen": "Reopen this violation and clear its resolution?",
+      "delete": "Delete this violation record? This action cannot be undone."
+    },
     "behaviorRewards": {
       "create": "Create this recognition record?",
       "update": "Update this recognition record?",
@@ -4727,7 +4976,7 @@
       "deleteAll": "Delete all grades? This action cannot be undone.",
       "seed": "Seed grades demo data? This will create sample grade records."
     },
-  "classes": {
+    "classes": {
       "create": "Create this class?",
       "update": "Update this class?",
       "delete": "Delete this class? This action cannot be undone.",
@@ -4747,7 +4996,11 @@
       "deleteAll": "Delete all exams? This action cannot be undone.",
       "seed": "Seed exams demo data? This will create sample exam records."
     },
-    "cycles": { "create": "Create this cycle?", "update": "Update this cycle?", "delete": "Delete this cycle? This action cannot be undone." },
+    "cycles": {
+      "create": "Create this cycle?",
+      "update": "Update this cycle?",
+      "delete": "Delete this cycle? This action cannot be undone."
+    },
     "subjects": {
       "create": "Create this subject?",
       "update": "Update this subject?",
@@ -4782,24 +5035,95 @@
       "update": "Update this staff role?",
       "delete": "Deactivate this staff role? Roles in use are deactivated, not deleted."
     },
-    "alerts": { "create": "Create this alert?", "update": "Update this alert?", "updateStatus": "Update this alert's status?" },
-    "announcements": { "create": "Create this announcement?", "publish": "Publish this announcement?", "unpublish": "Unpublish this announcement?", "update": "Update this announcement?" },
-    "assessments": { "create": "Create this assessment?", "update": "Update this assessment?" },
-    "drivers": { "create": "Add this driver?", "update": "Update this driver?", "updateStatus": "Change this driver's status?" },
-    "expenses": { "create": "Create this expense?", "handleApproval": "Approve or reject this expense?", "recordPayment": "Record a payment for this expense?", "update": "Update this expense?" },
-    "feeTypes": { "create": "Create this fee type?", "update": "Update this fee type?" },
-    "installments": { "create": "Create this installment?", "update": "Update this installment?" },
-    "vehicleMaintenance": { "create": "Create this maintenance record?", "update": "Update this maintenance record?", "updateStatus": "Change this maintenance record's status?", "complete": "Mark this maintenance as completed?", "markOverdue": "Mark overdue maintenance records?" },
-    "payments": { "record": "Record this payment?", "update": "Update this payment?", "void": "Void this payment? It stays on record as voided.", "checkStatus": "Change this check's status?" },
-    "vehicleRefuels": { "create": "Record this refuel?", "update": "Update this refuel record?" },
-    "studentRoutes": { "assign": "Assign this student to the route?", "update": "Update this route assignment?", "reassign": "Move this student to another route?", "unassign": "Remove this student from the route?", "unassignAt": "Remove this student from the route on this date?" },
-    "vehicleAssignments": { "create": "Create this vehicle assignment?", "assignDriver": "Assign this driver to the vehicle?", "update": "Update this vehicle assignment?", "unassign": "End this vehicle assignment?" },
-    "vehicles": { "create": "Add this vehicle?", "update": "Update this vehicle?" },
-    "staff": { "create": "Add this staff member?", "update": "Update this staff member?", "bulkDelete": "Delete these staff members? This action cannot be undone.", "delete": "Delete this staff member? This action cannot be undone." },
-    "zones": { "create": "Create this zone?", "update": "Update this zone?", "delete": "Delete this zone? This action cannot be undone." },
-    "rollover": { "preview": "Preview the move to the next academic year?", "commit": "Move to the next academic year? This changes enrollments and balances." },
-    "credits": { "apply": "Apply this credit to the fee?" },
-    "classRoutines": { "create": "Create this timetable?" }
+    "alerts": {
+      "create": "Create this alert?",
+      "update": "Update this alert?",
+      "updateStatus": "Update this alert's status?"
+    },
+    "announcements": {
+      "create": "Create this announcement?",
+      "publish": "Publish this announcement?",
+      "unpublish": "Unpublish this announcement?",
+      "update": "Update this announcement?"
+    },
+    "assessments": {
+      "create": "Create this assessment?",
+      "update": "Update this assessment?"
+    },
+    "drivers": {
+      "create": "Add this driver?",
+      "update": "Update this driver?",
+      "updateStatus": "Change this driver's status?"
+    },
+    "expenses": {
+      "create": "Create this expense?",
+      "handleApproval": "Approve or reject this expense?",
+      "recordPayment": "Record a payment for this expense?",
+      "update": "Update this expense?"
+    },
+    "feeTypes": {
+      "create": "Create this fee type?",
+      "update": "Update this fee type?"
+    },
+    "installments": {
+      "create": "Create this installment?",
+      "update": "Update this installment?"
+    },
+    "vehicleMaintenance": {
+      "create": "Create this maintenance record?",
+      "update": "Update this maintenance record?",
+      "updateStatus": "Change this maintenance record's status?",
+      "complete": "Mark this maintenance as completed?",
+      "markOverdue": "Mark overdue maintenance records?"
+    },
+    "payments": {
+      "record": "Record this payment?",
+      "update": "Update this payment?",
+      "void": "Void this payment? It stays on record as voided.",
+      "checkStatus": "Change this check's status?"
+    },
+    "vehicleRefuels": {
+      "create": "Record this refuel?",
+      "update": "Update this refuel record?"
+    },
+    "studentRoutes": {
+      "assign": "Assign this student to the route?",
+      "update": "Update this route assignment?",
+      "reassign": "Move this student to another route?",
+      "unassign": "Remove this student from the route?",
+      "unassignAt": "Remove this student from the route on this date?"
+    },
+    "vehicleAssignments": {
+      "create": "Create this vehicle assignment?",
+      "assignDriver": "Assign this driver to the vehicle?",
+      "update": "Update this vehicle assignment?",
+      "unassign": "End this vehicle assignment?"
+    },
+    "vehicles": {
+      "create": "Add this vehicle?",
+      "update": "Update this vehicle?"
+    },
+    "staff": {
+      "create": "Add this staff member?",
+      "update": "Update this staff member?",
+      "bulkDelete": "Delete these staff members? This action cannot be undone.",
+      "delete": "Delete this staff member? This action cannot be undone."
+    },
+    "zones": {
+      "create": "Create this zone?",
+      "update": "Update this zone?",
+      "delete": "Delete this zone? This action cannot be undone."
+    },
+    "rollover": {
+      "preview": "Preview the move to the next academic year?",
+      "commit": "Move to the next academic year? This changes enrollments and balances."
+    },
+    "credits": {
+      "apply": "Apply this credit to the fee?"
+    },
+    "classRoutines": {
+      "create": "Create this timetable?"
+    }
   },
   "events": {
     "sections": {

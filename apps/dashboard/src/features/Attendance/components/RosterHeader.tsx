@@ -36,7 +36,7 @@ function StatItem({
     : 'text-foreground';
 
   return (
-    <div className="flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap text-sm">
+    <div className="flex items-center justify-center gap-1.5 whitespace-nowrap text-xs sm:text-sm">
       <Icon className={cn('h-3.5 w-3.5 shrink-0', toneClass)} />
       <span className="text-muted-foreground">{label}:</span>
       <span className={cn('font-mono font-semibold', toneClass)}>{value}</span>
@@ -53,14 +53,14 @@ export default function RosterHeader({
   const title = submitTitle ?? t('attendance.roster.submit');
 
   return (
-    <div className="flex items-stretch gap-2 ml-auto">
-      <div className="flex items-center rounded-md border bg-card px-3 h-10 gap-4">
+    <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2 sm:flex-none">
+      <div className="grid min-w-0 flex-1 grid-cols-2 items-center gap-x-3 gap-y-2 rounded-md border bg-card px-3 py-2 sm:flex sm:h-10 sm:flex-none sm:gap-4 sm:py-0">
         <StatItem icon={Users} label={t('attendance.roster.total')} value={stats.total} tone="blue" />
-        <span className="h-4 w-px bg-border shrink-0" />
+        <span className="hidden h-4 w-px shrink-0 bg-border sm:block" />
         <StatItem icon={CheckCircle2} label={t('attendance.roster.present')} value={stats.present} tone="emerald" />
-        <span className="h-4 w-px bg-border shrink-0" />
+        <span className="hidden h-4 w-px shrink-0 bg-border sm:block" />
         <StatItem icon={XCircle} label={t('attendance.roster.absent')} value={stats.absent} tone="red" />
-        <span className="h-4 w-px bg-border shrink-0" />
+        <span className="hidden h-4 w-px shrink-0 bg-border sm:block" />
         <StatItem icon={Clock3} label={t('attendance.roster.late')} value={stats.late} tone="amber" />
       </div>
       <NButton
@@ -68,7 +68,7 @@ export default function RosterHeader({
         disabled={isSubmitting || !hasChanges || !canSubmit}
         aria-label={title}
         title={title}
-        className="h-10 w-10 cursor-pointer p-0 disabled:cursor-not-allowed"
+        className="h-10 w-10 shrink-0 cursor-pointer p-0 disabled:cursor-not-allowed"
       >
         {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       </NButton>

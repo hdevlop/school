@@ -736,7 +736,8 @@ export function generateExpense(options = null) {
       paymentDate: options?.paymentDate || fake.paymentDate(status, eDate),
       invoiceNumber: options?.invoiceNumber || fake.invoiceNumber(),
       receiptNumber: options?.receiptNumber ?? fake.receiptNumber(),
-      checkNumber: options?.checkNumber ?? (paymentMethod === 'check' ? fake.checkNumber() : null),
+      // A check payment cannot be recorded without its number.
+      checkNumber: options?.checkNumber ?? (paymentMethod === 'check' ? fake.checkNumber() ?? String(fake.randomInt(100000, 999999)) : null),
       status,
       rejectionReason: status === 'rejected' ? (options?.rejectionReason || fake.rejectionReason()) : null,
       notes: options?.notes || fake.expenseNotes(category),
@@ -747,6 +748,7 @@ export function generateExpense(options = null) {
  * Generate realistic monthly school expenses from this September school year to today.
  * Each month gets a core set of recurring expenses (rent, salaries, utilities)
  * plus some variable ones (maintenance, supplies, etc.).
+ * `options.scale` multiplies every amount (1 = a 300-student campus).
  */
 export function generateExpenses(count = 30, options: any = {}) {
    const now = options.referenceDate ? new Date(options.referenceDate) : new Date();
@@ -775,6 +777,13 @@ export function generateExpenses(count = 30, options: any = {}) {
    const VARIABLE_CATEGORIES = ['maintenance', 'supplies', 'equipment', 'food', 'marketing', 'training', 'technology', 'insurance', 'tax', 'miscellaneous'];
 
    const expenses: any[] = [];
+   // A day of the month that has already happened: the current month stops at `end`.
+   const pastDay = (month: number, year: number) => {
+      const lastDay = year === endYear && month === endMonth
+         ? end.getDate() : new Date(year, month + 1, 0).getDate();
+      const day = fake.randomInt(1, lastDay);
+      return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+   };
 
    for (const { month, year } of months) {
       const isSummerBreakMonth = month === 6 || month === 7;
@@ -797,7 +806,7 @@ export function generateExpenses(count = 30, options: any = {}) {
 
       // Recurring: one expense per category per month
       for (const cat of RECURRING_CATEGORIES) {
-         expenses.push(generateExpense({ ...options, category: cat, month, year, status: 'paid' }));
+         expenses.push(generateExpense({ ...options, category: cat, expenseDate: pastDay(month, year), status: 'paid' }));
       }
 
       // Variable: 2-5 random extras per month
@@ -809,8 +818,15 @@ export function generateExpenses(count = 30, options: any = {}) {
          const status = isPastMonth
             ? (Math.random() < 0.85 ? 'paid' : 'approved')
             : fake.expenseStatus();
-         expenses.push(generateExpense({ ...options, category: cat, month, year, status }));
+         expenses.push(generateExpense({ ...options, category: cat, expenseDate: pastDay(month, year), status }));
       }
+   }
+
+   // The amount ranges describe a 300-student campus; `scale` sizes them to the
+   // demo school so a small one is not billed a large one's rent.
+   const scale = Number(options.scale ?? 1);
+   for (const expense of expenses) {
+      expense.amount = Math.max(100, Math.round(expense.amount * scale));
    }
 
    // If a specific count was requested and it's less, trim; if more, we return all

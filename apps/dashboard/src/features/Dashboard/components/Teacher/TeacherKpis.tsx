@@ -1,6 +1,6 @@
 'use client';
 
-import { BarChart3, Bell, ClipboardList, GraduationCap, UsersRound } from 'lucide-react';
+import { Bell, CalendarCheck, ClipboardList, GraduationCap, Layers3, UsersRound } from 'lucide-react';
 import { NStatCard } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardOverview } from '@sms/contracts/teacher-dashboard';
@@ -8,20 +8,20 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 type TeacherKpisProps = {
   kpis: TeacherDashboardOverview['kpis'] | undefined;
+  classes: TeacherDashboardOverview['classes'] | undefined;
   loading: boolean;
 };
 
-// Phones keep the three figures that change through the day; the totals
-// join them from the large breakpoint.
-const TeacherKpis = ({ kpis, loading }: TeacherKpisProps) => {
+// Phones show two figures a row so labels stay whole.
+const TeacherKpis = ({ kpis, classes, loading }: TeacherKpisProps) => {
   const { t } = useTranslation();
   const { number, percent } = useSchoolFormat();
+  const assignedClasses = new Set((classes ?? []).map((item) => item.sectionId)).size;
   const alertValue = (value: number | undefined) => (value ? 'text-destructive' : undefined);
 
   return (
-    <div className="grid grid-cols-3 gap-2 lg:grid-cols-5 lg:gap-3">
+    <div className="grid shrink-0 grid-cols-2 gap-2 md:grid-cols-3 xl:grid-cols-6 lg:gap-3">
       <NStatCard
-        className="hidden lg:flex"
         loading={loading}
         icon={UsersRound}
         label={t('dashboard.teacher.kpis.totalStudents')}
@@ -42,18 +42,22 @@ const TeacherKpis = ({ kpis, loading }: TeacherKpisProps) => {
       />
       <NStatCard
         loading={loading}
-        icon={BarChart3}
-        label={t('dashboard.teacher.kpis.attendance')}
-        value={percent(kpis?.attendanceRate == null ? null : kpis.attendanceRate / 100, 0)}
-        subtext={t('dashboard.teacher.trend.range7d')}
-      />
-      <NStatCard
-        className="hidden lg:flex"
-        loading={loading}
         icon={Bell}
         label={t('dashboard.teacher.kpis.notifications')}
         value={number(kpis?.unreadNotifications ?? 0)}
         classNames={{ value: alertValue(kpis?.unreadNotifications) }}
+      />
+      <NStatCard
+        loading={loading}
+        icon={CalendarCheck}
+        label={t('dashboard.teacher.kpis.attendanceRate')}
+        value={percent(kpis?.attendanceRate == null ? null : kpis.attendanceRate / 100, 0)}
+      />
+      <NStatCard
+        loading={loading}
+        icon={Layers3}
+        label={t('dashboard.teacher.kpis.assignedClasses')}
+        value={number(assignedClasses)}
       />
     </div>
   );

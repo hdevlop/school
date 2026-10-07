@@ -78,40 +78,23 @@
     "includeOneTimeFees": "Incluir tarifas únicas",
     "copyDiscounts": "Copiar descuentos",
     "createPreviewFirst": "Crea primero una vista previa",
-    "selectStudentAmount": "Selecciona un estudiante e introduce un importe",
-    "amountPlaceholder": "Importe",
-    "notificationsDescription": "Envíos idempotentes de vencidos y cheques.",
-    "notificationsTitle": "Registro de envío de notificaciones",
-    "creditDescription": "Aplica fondos liquidados no aplicados a las cuotas más antiguas.",
-    "creditTitle": "Crédito del estudiante",
     "checksDescription": "Los cheques pendientes reservan saldos hasta su liquidación o liberación.",
-    "checksTitle": "Cheques pendientes de liquidación",
-    "eyebrow": "Control financiero",
-    "title": "Operaciones y conciliación",
-    "description": "Gestione cheques, créditos, historial, notificaciones y traslado de cuotas.",
+    "title": "Cheques pendientes",
+    "description": "Liquide los cheques pendientes de cobro y traslade las cuotas a un nuevo año escolar.",
     "failed": "Error en la operación financiera",
     "bounceReason": "Motivo del rechazo del cheque",
     "voidReason": "Motivo de anulación del pago",
-    "creditApplied": "Crédito del alumno aplicado",
     "previewCreated": "Vista previa creada",
     "rolloverCompleted": "Traslado completado",
     "noChecks": "No hay cheques pendientes o depositados.",
-    "due": "Vencimiento: {{date}}",
     "deposit": "Depositar",
     "complete": "Cobrar",
     "bounce": "Rechazar",
     "void": "Anular",
-    "creditScope": "Aplicar a cuotas de {{year}}. El crédito se comparte entre años.",
-    "selectedYear": "el curso seleccionado",
-    "selectStudent": "Seleccionar alumno",
-    "applyCredit": "Aplicar crédito",
-    "availableBalance": "Saldo disponible",
     "rolloverTitle": "Traslado al nuevo curso",
     "rolloverDescription": "Revise las asignaciones anteriores antes de crear las cuotas del nuevo curso.",
     "preview": "Vista previa",
     "commitPreview": "Confirmar traslado",
-    "noNotifications": "No hay envíos registrados.",
-    "student": "Alumno",
     "auditTitle": "Historial financiero",
     "auditDescription": "Últimas operaciones de todos los cursos.",
     "entity": "Elemento",
@@ -177,7 +160,29 @@
       "deposited": "Depositado",
       "completed": "Cobrado",
       "bounced": "Rechazado"
-    }
+    },
+    "fromYear": "Año de origen",
+    "toYear": "Año de destino",
+    "chooseYear": "Elija un año",
+    "chooseTwoYears": "Elija dos años escolares diferentes",
+    "noAuditEntries": "Aún no hay cambios financieros registrados.",
+    "subtitle": "{{count}} cheques pendientes de liquidar",
+    "searchPlaceholder": "Buscar alumno o número de cheque...",
+    "rolloverButton": "Traspaso de año",
+    "bounceTitle": "Cheque devuelto",
+    "voidTitle": "Anular cheque",
+    "noEarlierYear": "No hay un año escolar anterior del que copiar las cuotas.",
+    "summary": {
+      "students": "Alumnos",
+      "feesToCreate": "Cuotas a crear",
+      "alreadyExist": "Ya existen",
+      "notEnrolled": "No matriculados",
+      "errors": "Errores",
+      "projectedTotal": "Total previsto"
+    },
+    "advanceSelected": "Siguiente paso",
+    "bulkUpdated": "{{count}} cheques actualizados",
+    "bulkPartial": "{{done}} de {{total}} cheques actualizados"
   },
   "installments": {
     "table": {
@@ -477,6 +482,13 @@
       "invalidSeedApiKey": "Clave API de inicialización inválida proporcionada"
     }
   },
+  "chatBenchmark": {
+    "errors": {
+      "controlsDisabled": "Los controles de medición del rendimiento están desactivados",
+      "providerUsageUnsupported": "El proveedor seleccionado no permite consultar el uso",
+      "providerUsageFailed": "No se pudo consultar el uso del proveedor"
+    }
+  },
   "files": {
     "success": {
       "retrieved": "Archivo recuperado exitosamente",
@@ -684,8 +696,9 @@
         "totalStudents": "Total de alumnos",
         "classesToday": "Clases de hoy",
         "pendingTasks": "Tareas pendientes",
-        "attendance": "Asistencia",
-        "notifications": "Notificaciones sin leer"
+        "notifications": "Notificaciones sin leer",
+        "attendanceRate": "Asistencia (7 días)",
+        "assignedClasses": "Clases asignadas"
       },
       "duration": {
         "minutes": "{{minutes}} min",
@@ -716,7 +729,21 @@
         "notifications": "Notificaciones",
         "notificationsHint": "Notificaciones sin leer",
         "concerns": "Seguimiento de alumnos",
-        "concernsHint": "Incidencias abiertas en tus secciones"
+        "concernsHint": "Incidencias abiertas en tus secciones",
+        "allClear": "Todo al día"
+      },
+      "quickActions": {
+        "title": "Acciones rápidas",
+        "takeAttendance": "Pasar lista",
+        "takeAttendanceHint": "Registrar la asistencia de hoy de una clase",
+        "enterGrades": "Introducir notas",
+        "enterGradesHint": "Calificar una evaluación de una sección",
+        "planAssessment": "Planificar una evaluación",
+        "planAssessmentHint": "Programar un control, prueba o examen",
+        "reportIncident": "Informar de un incidente",
+        "reportIncidentHint": "Registrar un problema de conducta",
+        "viewTimetable": "Ver horario",
+        "viewTimetableHint": "Tus clases de la semana"
       },
       "classes": {
         "title": "Mis clases",
@@ -730,16 +757,38 @@
         "due": "Fecha: {{date}}",
         "empty": "No hay evaluaciones este año"
       },
-      "trend": {
-        "title": "Tendencia de asistencia",
-        "range7d": "Últimos 7 días",
-        "range30d": "Últimos 30 días",
-        "overall": "Asistencia global",
-        "vsPrevious": "vs periodo anterior",
-        "classesHeld": "Clases impartidas",
-        "outOf": "de {{count}} programadas",
-        "rate": "Asistencia",
-        "empty": "No hay asistencia registrada en este periodo"
+      "welcomeBack": "Bienvenido de nuevo, {{name}}",
+      "subtitle": "Este es tu día de clases de un vistazo.",
+      "backToTeachers": "Volver a docentes",
+      "tabs": {
+        "overview": "Resumen",
+        "details": "Detalles",
+        "timetable": "Horario",
+        "payroll": "Nómina"
+      },
+      "info": {
+        "title": "Acerca de",
+        "viewDetails": "Ver detalles",
+        "hoursPerWeek": "{{hours}} h/semana",
+        "yearsCount": "{{count}} años",
+        "actions": {
+          "email": "Enviar un correo",
+          "map": "Ver la dirección en el mapa",
+          "call": "Llamar",
+          "whatsapp": "Escribir por WhatsApp",
+          "unavailable": "No registrado"
+        }
+      },
+      "details": {
+        "employment": "Empleo",
+        "academicEmergency": "Formación y emergencia"
+      },
+      "timetable": {
+        "title": "Horario semanal"
+      },
+      "payroll": {
+        "history": "Historial de pagos",
+        "hourlyRate": "Tarifa por hora"
       }
     },
     "widgets": {
@@ -1064,9 +1113,9 @@
     "violations": "Infracciones",
     "behaviorRewards": "Conducta positiva y recompensas",
     "behaviorRewardsShort": "Recompensas",
-    "alerts": "Alertas",
     "myChildren": "Mis hijos",
-    "myProfile": "Mi perfil"
+    "myProfile": "Mi perfil",
+    "pendingChecks": "Cheques"
   },
   "classRoutines": {
     "success": {
@@ -1104,79 +1153,161 @@
       "teacherNotFound": "Profesor no encontrado",
       "layoutPastMidnight": "El horario generado no puede superar la medianoche",
       "layoutRemovesLessons": "Elimina las clases de los periodos que desaparecerán antes de cambiar estos ajustes",
-    "layoutRemovesDuties": "Elimina las supervisiones de los descansos que desaparecerán antes de cambiar estos ajustes",
-    "outsideSelectedYear": "La sección del horario debe pertenecer al año escolar seleccionado"
-  },
-  "ui": {
-    "title": "Horario",
-    "subtitle": "Crea un horario semanal sin conflictos para cada sección",
-    "fields": {
-      "class": "Clase", "section": "Sección", "period": "Periodo", "subjectTeacher": "Asignatura y profesor",
-      "room": "Aula", "notes": "Notas", "supervisingStaff": "Miembro del personal supervisor", "supervisingTeacher": "Profesor supervisor",
-      "dutyNotes": "Notas de supervisión", "teachingDays": "Días lectivos", "type": "Tipo", "nameLabel": "Nombre / etiqueta",
-      "startTime": "Hora de inicio", "endTime": "Hora de fin", "periodName": "Nombre del periodo", "order": "Orden",
-      "starts": "Inicio", "ends": "Fin", "breakPeriod": "Periodo de descanso", "active": "Activo"
+      "layoutRemovesDuties": "Elimina las supervisiones de los descansos que desaparecerán antes de cambiar estos ajustes",
+      "outsideSelectedYear": "La sección del horario debe pertenecer al año escolar seleccionado"
     },
-    "actions": {
-      "days": "Días", "periods": "Periodos", "saveDays": "Guardar días", "savePeriods": "Guardar periodos",
-      "createRoutine": "Crear horario", "addLesson": "Añadir clase", "updateLesson": "Actualizar clase", "removeLesson": "Eliminar clase",
-      "addSupervisor": "Añadir supervisor", "assignSupervisor": "Asignar supervisor", "updateSupervision": "Actualizar supervisión",
-      "removeSupervision": "Eliminar supervisión", "addTeachingPeriod": "Añadir periodo lectivo", "addBreak": "Añadir descanso"
-    },
-    "dialogs": {
-      "daysTitle": "Días lectivos", "daysDescription": "Elige los días incluidos en el horario de esta sección.",
-      "periodsTitle": "Periodos y descansos", "periodsDescription": "Gestiona los periodos lectivos, descansos y horas de esta sección.",
-      "editLesson": "Editar clase", "addLesson": "Añadir clase", "editSupervision": "Editar supervisión",
-      "assignSupervisor": "Asignar supervisor · {{period}}"
-    },
-    "placeholders": {
-      "chooseTeacher": "Elige un profesor asignado", "searchAssignments": "Buscar asignaciones...",
-      "selectStaff": "Selecciona un miembro del personal", "selectTeacher": "Selecciona un profesor"
-    },
-    "empty": {
-      "title": "No hay horario para esta sección", "description": "Crea el horario de la sección y edita las clases directamente desde la cuadrícula.",
-      "noAssignments": "No hay asignaciones de profesores para esta sección."
-    },
-    "grid": { "noRoom": "Sin aula" },
-    "content": {
-      "title": "Submaterias", "help": "El docente organiza el periodo y alterna las opciones según sea necesario, sin horarios separados.",
-      "item": "Materia {{number}}", "label": "Materia o actividad", "or": "O",
-      "optionA": "Opción A", "optionB": "Opción B", "addSubject": "Añadir materia", "addAlternative": "Añadir alternativa",
-      "useOne": "Usar una materia", "remove": "Quitar materia", "moveUp": "Subir materia", "moveDown": "Bajar materia", "preview": "Vista previa del horario"
-    },
-    "validation": {
-      "chooseAssignment": "Elige un profesor y una asignatura", "notesMax": "Las notas no pueden superar los 500 caracteres",
-      "contentLabelRequired": "Introduce una materia o actividad", "contentLabelMax": "Limita cada nombre a 100 caracteres", "alternativesDiffer": "Las dos alternativas deben ser diferentes",
-      "chooseSupervisor": "Elige un supervisor", "selectDay": "Selecciona al menos un día lectivo", "timeFormat": "Usa HH:mm",
-      "nameRequired": "Introduce un nombre", "teachingPeriodRequired": "Añade al menos un periodo lectivo",
-      "endAfterStart": "La hora de fin debe ser posterior a la de inicio", "noOverlap": "Los periodos no pueden solaparse"
-    },
-    "periodForm": {
-      "teachingPeriod": "Periodo lectivo", "breakRecess": "Descanso / recreo", "dragRow": "Arrastra la fila {{number}} para reordenarla",
-      "removeRow": "Eliminar {{name}}"
-    },
-    "defaultNames": {
-      "period": "Periodo {{number}}", "break": "Descanso {{number}}", "morningBreak": "Descanso de la mañana",
-      "lunchBreak": "Pausa para comer", "afternoonBreak": "Descanso de la tarde"
-    },
-    "days": {
-      "monday": "Lunes", "tuesday": "Martes", "wednesday": "Miércoles", "thursday": "Jueves",
-      "friday": "Viernes", "saturday": "Sábado", "sunday": "Domingo"
-    },
-    "loading": { "timetable": "Cargando horario", "weeklyRoutine": "Cargando horario semanal..." },
-    "messages": {
-      "saveError": "No se pudo guardar el horario.", "routineCreated": "Horario creado.", "routineUpdated": "Horario actualizado.",
-      "timesUpdated": "Horas del horario actualizadas.", "routineDeleted": "Borrador eliminado.", "routinePublished": "Horario publicado.",
-      "routineArchived": "Horario archivado.", "lessonAdded": "Clase añadida.", "lessonUpdated": "Clase actualizada.",
-      "lessonRemoved": "Clase eliminada.", "supervisionAssigned": "Supervisión asignada.", "supervisionUpdated": "Supervisión actualizada.",
-      "supervisionRemoved": "Supervisión eliminada.", "periodCreated": "Periodo creado.", "periodUpdated": "Periodo actualizado."
-    },
-    "teacher": {
-      "weeklyLessons": "Clases semanales", "sections": "Secciones", "noRoutine": "Sin horario",
-      "noRoutineDescription": "Las clases asignadas aparecerán aquí automáticamente."
-    },
-    "errors": { "loadFailed": "No se pudo cargar el horario." }
-  }
+    "ui": {
+      "title": "Horario",
+      "subtitle": "Crea un horario semanal sin conflictos para cada sección",
+      "fields": {
+        "class": "Clase",
+        "section": "Sección",
+        "period": "Periodo",
+        "subjectTeacher": "Asignatura y profesor",
+        "room": "Aula",
+        "notes": "Notas",
+        "supervisingStaff": "Miembro del personal supervisor",
+        "supervisingTeacher": "Profesor supervisor",
+        "dutyNotes": "Notas de supervisión",
+        "teachingDays": "Días lectivos",
+        "type": "Tipo",
+        "nameLabel": "Nombre / etiqueta",
+        "startTime": "Hora de inicio",
+        "endTime": "Hora de fin",
+        "periodName": "Nombre del periodo",
+        "order": "Orden",
+        "starts": "Inicio",
+        "ends": "Fin",
+        "breakPeriod": "Periodo de descanso",
+        "active": "Activo"
+      },
+      "actions": {
+        "days": "Días",
+        "periods": "Periodos",
+        "saveDays": "Guardar días",
+        "savePeriods": "Guardar periodos",
+        "createRoutine": "Crear horario",
+        "addLesson": "Añadir clase",
+        "updateLesson": "Actualizar clase",
+        "removeLesson": "Eliminar clase",
+        "addSupervisor": "Añadir supervisor",
+        "assignSupervisor": "Asignar supervisor",
+        "updateSupervision": "Actualizar supervisión",
+        "removeSupervision": "Eliminar supervisión",
+        "addTeachingPeriod": "Añadir periodo lectivo",
+        "addBreak": "Añadir descanso"
+      },
+      "dialogs": {
+        "daysTitle": "Días lectivos",
+        "daysDescription": "Elige los días incluidos en el horario de esta sección.",
+        "periodsTitle": "Periodos y descansos",
+        "periodsDescription": "Gestiona los periodos lectivos, descansos y horas de esta sección.",
+        "editLesson": "Editar clase",
+        "addLesson": "Añadir clase",
+        "editSupervision": "Editar supervisión",
+        "assignSupervisor": "Asignar supervisor · {{period}}"
+      },
+      "placeholders": {
+        "chooseTeacher": "Elige un profesor asignado",
+        "searchAssignments": "Buscar asignaciones...",
+        "selectStaff": "Selecciona un miembro del personal",
+        "selectTeacher": "Selecciona un profesor"
+      },
+      "empty": {
+        "title": "No hay horario para esta sección",
+        "description": "Crea el horario de la sección y edita las clases directamente desde la cuadrícula.",
+        "noAssignments": "No hay asignaciones de profesores para esta sección."
+      },
+      "grid": {
+        "noRoom": "Sin aula"
+      },
+      "content": {
+        "title": "Submaterias",
+        "help": "El docente organiza el periodo y alterna las opciones según sea necesario, sin horarios separados.",
+        "item": "Materia {{number}}",
+        "label": "Materia o actividad",
+        "or": "O",
+        "optionA": "Opción A",
+        "optionB": "Opción B",
+        "addSubject": "Añadir materia",
+        "addAlternative": "Añadir alternativa",
+        "useOne": "Usar una materia",
+        "remove": "Quitar materia",
+        "moveUp": "Subir materia",
+        "moveDown": "Bajar materia",
+        "preview": "Vista previa del horario"
+      },
+      "validation": {
+        "chooseAssignment": "Elige un profesor y una asignatura",
+        "notesMax": "Las notas no pueden superar los 500 caracteres",
+        "contentLabelRequired": "Introduce una materia o actividad",
+        "contentLabelMax": "Limita cada nombre a 100 caracteres",
+        "alternativesDiffer": "Las dos alternativas deben ser diferentes",
+        "chooseSupervisor": "Elige un supervisor",
+        "selectDay": "Selecciona al menos un día lectivo",
+        "timeFormat": "Usa HH:mm",
+        "nameRequired": "Introduce un nombre",
+        "teachingPeriodRequired": "Añade al menos un periodo lectivo",
+        "endAfterStart": "La hora de fin debe ser posterior a la de inicio",
+        "noOverlap": "Los periodos no pueden solaparse"
+      },
+      "periodForm": {
+        "teachingPeriod": "Periodo lectivo",
+        "breakRecess": "Descanso / recreo",
+        "dragRow": "Arrastra la fila {{number}} para reordenarla",
+        "removeRow": "Eliminar {{name}}"
+      },
+      "defaultNames": {
+        "period": "Periodo {{number}}",
+        "break": "Descanso {{number}}",
+        "morningBreak": "Descanso de la mañana",
+        "lunchBreak": "Pausa para comer",
+        "afternoonBreak": "Descanso de la tarde"
+      },
+      "days": {
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo"
+      },
+      "loading": {
+        "timetable": "Cargando horario",
+        "weeklyRoutine": "Cargando horario semanal..."
+      },
+      "messages": {
+        "saveError": "No se pudo guardar el horario.",
+        "routineCreated": "Horario creado.",
+        "routineUpdated": "Horario actualizado.",
+        "timesUpdated": "Horas del horario actualizadas.",
+        "routineDeleted": "Borrador eliminado.",
+        "routinePublished": "Horario publicado.",
+        "routineArchived": "Horario archivado.",
+        "lessonAdded": "Clase añadida.",
+        "lessonUpdated": "Clase actualizada.",
+        "lessonRemoved": "Clase eliminada.",
+        "supervisionAssigned": "Supervisión asignada.",
+        "supervisionUpdated": "Supervisión actualizada.",
+        "supervisionRemoved": "Supervisión eliminada.",
+        "periodCreated": "Periodo creado.",
+        "periodUpdated": "Periodo actualizado."
+      },
+      "teacher": {
+        "weeklyLessons": "Clases semanales",
+        "sections": "Secciones",
+        "noRoutine": "Sin horario",
+        "noRoutineDescription": "Las clases asignadas aparecerán aquí automáticamente.",
+        "myWeekTitle": "Mi horario",
+        "myWeekSubtitle": "Tus clases de la semana en todas tus secciones",
+        "today": "Hoy",
+        "noLessonsOnDay": "Sin clases este día"
+      },
+      "errors": {
+        "loadFailed": "No se pudo cargar el horario."
+      }
+    }
   },
   "payroll": {
     "subtitle": {
@@ -1366,6 +1497,15 @@
       "loading": "Cargando…",
       "nothingToSave": "No hay cambios que guardar",
       "submitSuccess": "Asistencia guardada correctamente",
+      "teacherSubject": "Profesor y asignatura",
+      "selectClass": "Seleccione primero una clase",
+      "selectSection": "Seleccione primero una sección",
+      "noSections": "Sin secciones",
+      "noAssignments": "Sin asignaciones de profesores",
+      "noStudents": "No se encontraron alumnos.",
+      "noStudentsInSection": "No se encontraron alumnos en la sección seleccionada.",
+      "resetFilters": "Restablecer filtros",
+      "search": "Buscar",
       "submitError": "Error al guardar la asistencia"
     }
   },
@@ -1484,6 +1624,7 @@
       "dueDate": "Fecha de vencimiento",
       "netAmount": "Monto neto",
       "paidAmount": "Monto pagado",
+      "remainingAmount": "Restante",
       "status": "Estado",
       "student": "Estudiante",
       "studentCode": "Código del estudiante"
@@ -1694,7 +1835,13 @@
     }
   },
   "confirm": {
-    "discipline": { "create": "¿Crear este registro de infracción?", "update": "¿Actualizar este registro de infracción?", "resolve": "¿Resolver este registro de infracción?", "reopen": "¿Reabrir esta infracción y borrar su resolución?", "delete": "¿Eliminar este registro de infracción? Esta acción no se puede deshacer." },
+    "discipline": {
+      "create": "¿Crear este registro de infracción?",
+      "update": "¿Actualizar este registro de infracción?",
+      "resolve": "¿Resolver este registro de infracción?",
+      "reopen": "¿Reabrir esta infracción y borrar su resolución?",
+      "delete": "¿Eliminar este registro de infracción? Esta acción no se puede deshacer."
+    },
     "behaviorRewards": {
       "create": "¿Crear este reconocimiento?",
       "update": "¿Actualizar este reconocimiento?",
@@ -1822,24 +1969,94 @@
       "update": "¿Actualizar este rol del personal?",
       "delete": "¿Desactivar este rol del personal? Los roles en uso se desactivan, no se eliminan."
     },
-    "alerts": { "create": "¿Crear esta alerta?", "update": "¿Actualizar esta alerta?", "updateStatus": "¿Actualizar el estado de esta alerta?" },
-    "announcements": { "create": "¿Crear este anuncio?", "publish": "¿Publicar este anuncio?", "unpublish": "¿Despublicar este anuncio?", "update": "¿Actualizar este anuncio?" },
-    "assessments": { "create": "¿Crear esta evaluación?", "update": "¿Actualizar esta evaluación?" },
-    "drivers": { "create": "¿Añadir este conductor?", "update": "¿Actualizar este conductor?", "updateStatus": "¿Cambiar el estado de este conductor?" },
-    "expenses": { "create": "¿Crear este gasto?", "handleApproval": "¿Aprobar o rechazar este gasto?", "recordPayment": "¿Registrar un pago para este gasto?", "update": "¿Actualizar este gasto?" },
-    "feeTypes": { "create": "¿Crear este tipo de cuota?", "update": "¿Actualizar este tipo de cuota?" },
-    "installments": { "create": "¿Crear este plazo?", "update": "¿Actualizar este plazo?" },
-    "vehicleMaintenance": { "create": "¿Crear este registro de mantenimiento?", "update": "¿Actualizar este registro de mantenimiento?", "updateStatus": "¿Cambiar el estado de este registro de mantenimiento?", "complete": "¿Marcar este mantenimiento como completado?", "markOverdue": "¿Marcar los mantenimientos vencidos?" },
-    "payments": { "record": "¿Registrar este pago?", "update": "¿Actualizar este pago?", "void": "¿Anular este pago? Quedará registrado como anulado.", "checkStatus": "¿Cambiar el estado de este cheque?" },
-    "vehicleRefuels": { "create": "¿Registrar esta carga de combustible?", "update": "¿Actualizar esta carga de combustible?" },
-    "studentRoutes": { "assign": "¿Asignar este alumno a la ruta?", "update": "¿Actualizar esta asignación de ruta?", "reassign": "¿Mover este alumno a otra ruta?", "unassign": "¿Quitar este alumno de la ruta?", "unassignAt": "¿Quitar este alumno de la ruta en esta fecha?" },
-    "vehicleAssignments": { "create": "¿Crear esta asignación de vehículo?", "assignDriver": "¿Asignar este conductor al vehículo?", "update": "¿Actualizar esta asignación de vehículo?", "unassign": "¿Finalizar esta asignación de vehículo?" },
-    "vehicles": { "create": "¿Añadir este vehículo?", "update": "¿Actualizar este vehículo?" },
-    "zones": { "create": "¿Crear esta zona?", "update": "¿Actualizar esta zona?", "delete": "¿Eliminar esta zona? Esta acción no se puede deshacer." },
-    "rollover": { "preview": "¿Previsualizar el paso al siguiente año escolar?", "commit": "¿Pasar al siguiente año escolar? Se modificarán las matrículas y los saldos." },
-    "credits": { "apply": "¿Aplicar este crédito a la cuota?" },
-    "cycles": { "create": "¿Crear este ciclo?", "update": "¿Actualizar este ciclo?", "delete": "¿Eliminar este ciclo? Esta acción no se puede deshacer." },
-    "classRoutines": { "create": "¿Crear este horario?" }
+    "alerts": {
+      "create": "¿Crear esta alerta?",
+      "update": "¿Actualizar esta alerta?",
+      "updateStatus": "¿Actualizar el estado de esta alerta?"
+    },
+    "announcements": {
+      "create": "¿Crear este anuncio?",
+      "publish": "¿Publicar este anuncio?",
+      "unpublish": "¿Despublicar este anuncio?",
+      "update": "¿Actualizar este anuncio?"
+    },
+    "assessments": {
+      "create": "¿Crear esta evaluación?",
+      "update": "¿Actualizar esta evaluación?"
+    },
+    "drivers": {
+      "create": "¿Añadir este conductor?",
+      "update": "¿Actualizar este conductor?",
+      "updateStatus": "¿Cambiar el estado de este conductor?"
+    },
+    "expenses": {
+      "create": "¿Crear este gasto?",
+      "handleApproval": "¿Aprobar o rechazar este gasto?",
+      "recordPayment": "¿Registrar un pago para este gasto?",
+      "update": "¿Actualizar este gasto?"
+    },
+    "feeTypes": {
+      "create": "¿Crear este tipo de cuota?",
+      "update": "¿Actualizar este tipo de cuota?"
+    },
+    "installments": {
+      "create": "¿Crear este plazo?",
+      "update": "¿Actualizar este plazo?"
+    },
+    "vehicleMaintenance": {
+      "create": "¿Crear este registro de mantenimiento?",
+      "update": "¿Actualizar este registro de mantenimiento?",
+      "updateStatus": "¿Cambiar el estado de este registro de mantenimiento?",
+      "complete": "¿Marcar este mantenimiento como completado?",
+      "markOverdue": "¿Marcar los mantenimientos vencidos?"
+    },
+    "payments": {
+      "record": "¿Registrar este pago?",
+      "update": "¿Actualizar este pago?",
+      "void": "¿Anular este pago? Quedará registrado como anulado.",
+      "checkStatus": "¿Cambiar el estado de este cheque?"
+    },
+    "vehicleRefuels": {
+      "create": "¿Registrar esta carga de combustible?",
+      "update": "¿Actualizar esta carga de combustible?"
+    },
+    "studentRoutes": {
+      "assign": "¿Asignar este alumno a la ruta?",
+      "update": "¿Actualizar esta asignación de ruta?",
+      "reassign": "¿Mover este alumno a otra ruta?",
+      "unassign": "¿Quitar este alumno de la ruta?",
+      "unassignAt": "¿Quitar este alumno de la ruta en esta fecha?"
+    },
+    "vehicleAssignments": {
+      "create": "¿Crear esta asignación de vehículo?",
+      "assignDriver": "¿Asignar este conductor al vehículo?",
+      "update": "¿Actualizar esta asignación de vehículo?",
+      "unassign": "¿Finalizar esta asignación de vehículo?"
+    },
+    "vehicles": {
+      "create": "¿Añadir este vehículo?",
+      "update": "¿Actualizar este vehículo?"
+    },
+    "zones": {
+      "create": "¿Crear esta zona?",
+      "update": "¿Actualizar esta zona?",
+      "delete": "¿Eliminar esta zona? Esta acción no se puede deshacer."
+    },
+    "rollover": {
+      "preview": "¿Previsualizar el paso al siguiente año escolar?",
+      "commit": "¿Pasar al siguiente año escolar? Se modificarán las matrículas y los saldos."
+    },
+    "credits": {
+      "apply": "¿Aplicar este crédito a la cuota?"
+    },
+    "cycles": {
+      "create": "¿Crear este ciclo?",
+      "update": "¿Actualizar este ciclo?",
+      "delete": "¿Eliminar este ciclo? Esta acción no se puede deshacer."
+    },
+    "classRoutines": {
+      "create": "¿Crear este horario?"
+    }
   },
   "announcements": {
     "errors": {
@@ -2020,16 +2237,115 @@
     }
   },
   "discipline": {
-    "table": { "student": "Estudiante", "classSection": "Clase / sección", "violation": "Infracción", "severity": "Gravedad", "status": "Estado", "incidentAt": "Fecha del incidente", "action": "Medida", "reportedBy": "Reportado por", "createdAt": "Creado", "updatedAt": "Actualizado", "resolvedBy": "Resuelto por", "resolvedAt": "Resuelto el", "count": "{{count}} registros disciplinarios" },
-    "filters": { "search": "Buscar estudiante, código o descripción...", "category": "Filtrar por categoría", "severity": "Filtrar por gravedad", "status": "Filtrar por estado" },
-    "form": { "incidentDetails": "Detalles de la infracción", "student": "Estudiante", "studentPlaceholder": "Seleccionar estudiante", "studentSearch": "Buscar estudiantes...", "noStudents": "No hay estudiantes activos", "incidentDate": "Fecha del incidente", "incidentTime": "Hora del incidente", "category": "Categoría", "severity": "Gravedad", "location": "Lugar", "locationPlaceholder": "¿Dónde ocurrió?", "description": "Descripción", "descriptionPlaceholder": "Describe los hechos claramente...", "actionType": "Medida disciplinaria", "actionNote": "Detalles de la medida", "actionNotePlaceholder": "Detalles opcionales...", "resolutionNote": "Nota de resolución", "resolutionNotePlaceholder": "Explica cómo se resolvió el incidente..." },
-    "categories": { "classroom_disruption": "Interrupción en clase", "disrespect": "Falta de respeto", "bullying": "Acoso", "fighting": "Pelea", "cheating": "Trampa", "vandalism": "Vandalismo", "uniform_violation": "Infracción de uniforme", "device_misuse": "Uso indebido de dispositivo", "prohibited_item": "Objeto prohibido", "other": "Otra" },
-    "severity": { "low": "Baja", "medium": "Media", "high": "Alta", "critical": "Crítica" },
-    "status": { "open": "Abierta", "resolved": "Resuelta" },
-    "actions": { "verbal_warning": "Advertencia verbal", "written_warning": "Advertencia escrita", "detention": "Detención", "counseling": "Orientación", "parent_meeting": "Reunión con padres", "suspension": "Suspensión", "other": "Otra" },
-    "dialogs": { "createTitle": "Añadir infracción", "createButton": "Añadir infracción", "viewTitle": "Detalles de la infracción", "editTitle": "Editar infracción", "updateButton": "Actualizar", "deleteButton": "Eliminar", "resolveTitle": "Resolver infracción", "resolveDescription": "Registra la medida disciplinaria y la resolución.", "resolveButton": "Resolver", "resolutionTitle": "Resolución", "reopenTitle": "Reabrir infracción", "reopenDescription": "Al reabrir, el registro vuelve a estar abierto.", "reopenWarning": "Se borrarán la medida y resolución actuales porque el historial no está disponible en esta versión.", "reopenButton": "Reabrir" },
-    "success": { "retrieved": "Registros disciplinarios obtenidos", "created": "Infracción creada", "updated": "Infracción actualizada", "resolved": "Infracción resuelta", "reopened": "Infracción reabierta", "deleted": "Infracción eliminada" },
-    "errors": { "notFound": "Registro disciplinario no encontrado", "studentNotFound": "Estudiante no encontrado", "outsideSelectedYear": "La fecha del incidente está fuera del año escolar seleccionado", "notPlacedOnDate": "El estudiante no estaba en una clase y sección en esa fecha", "teacherStudentForbidden": "No estás asignado a la sección de este estudiante", "recordForbidden": "No puedes acceder a este registro", "recordNotOpen": "Solo se pueden modificar o resolver infracciones abiertas", "recordNotResolved": "Solo se pueden reabrir infracciones resueltas", "adminRequired": "Se requiere acceso de administrador", "invalidIncidentDate": "La fecha del incidente no es válida", "futureIncidentDate": "La fecha del incidente no puede ser futura" }
+    "table": {
+      "student": "Estudiante",
+      "classSection": "Clase / sección",
+      "violation": "Infracción",
+      "severity": "Gravedad",
+      "status": "Estado",
+      "incidentAt": "Fecha del incidente",
+      "action": "Medida",
+      "reportedBy": "Reportado por",
+      "createdAt": "Creado",
+      "updatedAt": "Actualizado",
+      "resolvedBy": "Resuelto por",
+      "resolvedAt": "Resuelto el",
+      "count": "{{count}} registros disciplinarios"
+    },
+    "filters": {
+      "search": "Buscar estudiante, código o descripción...",
+      "category": "Filtrar por categoría",
+      "severity": "Filtrar por gravedad",
+      "status": "Filtrar por estado"
+    },
+    "form": {
+      "incidentDetails": "Detalles de la infracción",
+      "student": "Estudiante",
+      "studentPlaceholder": "Seleccionar estudiante",
+      "studentSearch": "Buscar estudiantes...",
+      "noStudents": "No hay estudiantes activos",
+      "incidentDate": "Fecha del incidente",
+      "incidentTime": "Hora del incidente",
+      "category": "Categoría",
+      "severity": "Gravedad",
+      "location": "Lugar",
+      "locationPlaceholder": "¿Dónde ocurrió?",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Describe los hechos claramente...",
+      "actionType": "Medida disciplinaria",
+      "actionNote": "Detalles de la medida",
+      "actionNotePlaceholder": "Detalles opcionales...",
+      "resolutionNote": "Nota de resolución",
+      "resolutionNotePlaceholder": "Explica cómo se resolvió el incidente..."
+    },
+    "categories": {
+      "classroom_disruption": "Interrupción en clase",
+      "disrespect": "Falta de respeto",
+      "bullying": "Acoso",
+      "fighting": "Pelea",
+      "cheating": "Trampa",
+      "vandalism": "Vandalismo",
+      "uniform_violation": "Infracción de uniforme",
+      "device_misuse": "Uso indebido de dispositivo",
+      "prohibited_item": "Objeto prohibido",
+      "other": "Otra"
+    },
+    "severity": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta",
+      "critical": "Crítica"
+    },
+    "status": {
+      "open": "Abierta",
+      "resolved": "Resuelta"
+    },
+    "actions": {
+      "verbal_warning": "Advertencia verbal",
+      "written_warning": "Advertencia escrita",
+      "detention": "Detención",
+      "counseling": "Orientación",
+      "parent_meeting": "Reunión con padres",
+      "suspension": "Suspensión",
+      "other": "Otra"
+    },
+    "dialogs": {
+      "createTitle": "Añadir infracción",
+      "createButton": "Añadir infracción",
+      "viewTitle": "Detalles de la infracción",
+      "editTitle": "Editar infracción",
+      "updateButton": "Actualizar",
+      "deleteButton": "Eliminar",
+      "resolveTitle": "Resolver infracción",
+      "resolveDescription": "Registra la medida disciplinaria y la resolución.",
+      "resolveButton": "Resolver",
+      "resolutionTitle": "Resolución",
+      "reopenTitle": "Reabrir infracción",
+      "reopenDescription": "Al reabrir, el registro vuelve a estar abierto.",
+      "reopenWarning": "Se borrarán la medida y resolución actuales porque el historial no está disponible en esta versión.",
+      "reopenButton": "Reabrir"
+    },
+    "success": {
+      "retrieved": "Registros disciplinarios obtenidos",
+      "created": "Infracción creada",
+      "updated": "Infracción actualizada",
+      "resolved": "Infracción resuelta",
+      "reopened": "Infracción reabierta",
+      "deleted": "Infracción eliminada"
+    },
+    "errors": {
+      "notFound": "Registro disciplinario no encontrado",
+      "studentNotFound": "Estudiante no encontrado",
+      "outsideSelectedYear": "La fecha del incidente está fuera del año escolar seleccionado",
+      "notPlacedOnDate": "El estudiante no estaba en una clase y sección en esa fecha",
+      "teacherStudentForbidden": "No estás asignado a la sección de este estudiante",
+      "recordForbidden": "No puedes acceder a este registro",
+      "recordNotOpen": "Solo se pueden modificar o resolver infracciones abiertas",
+      "recordNotResolved": "Solo se pueden reabrir infracciones resueltas",
+      "adminRequired": "Se requiere acceso de administrador",
+      "invalidIncidentDate": "La fecha del incidente no es válida",
+      "futureIncidentDate": "La fecha del incidente no puede ser futura"
+    }
   },
   "classes": {
     "errors": {
@@ -2707,6 +3023,10 @@
         "attendancePercent": "{{percent}} % de asistencia",
         "assessment": "Evaluación",
         "outstandingBalance": "Saldo pendiente",
+        "overdueAmount": "Importe vencido",
+        "viewAllAttendance": "Ver toda la asistencia",
+        "viewAllGrades": "Ver todas las calificaciones",
+        "viewAllEvents": "Ver todos los eventos",
         "familyAccount": "Cuenta familiar",
         "paymentStatus": "Estado del pago",
         "percentPaid": "{{percent}} % pagado",
@@ -2765,7 +3085,6 @@
     "register": {
       "missing": "Faltante",
       "giveCustomer": "Cambio",
-      "selectHint": "Seleccione las cuotas a pagar",
       "title": "Caja",
       "totalSelected": "Total seleccionado",
       "cashReceived": "Importe recibido",
@@ -2871,7 +3190,8 @@
       "receiptNumber": "Número de recibo",
       "status": "Estado",
       "student": "Estudiante",
-      "transactionRef": "Ref. de transacción"
+      "transactionRef": "Ref. de transacción",
+      "studentCode": "Código del alumno"
     },
     "type": {
       "recurring": "Recurrente",
@@ -2919,7 +3239,7 @@
       "reminded": "Recordado",
       "searchPlaceholder": "Buscar...",
       "studentsOverdue": "Estudiantes atrasados",
-        "studentsOverdueCount": "{{count}} estudiantes atrasados",
+      "studentsOverdueCount": "{{count}} estudiantes atrasados",
       "title": "Título",
       "toastReminded": "Recordatorio enviado",
       "toastRemindedAll": "Todos los recordatorios enviados",
@@ -3498,27 +3818,85 @@
       "saveParents": "Guardar padres",
       "alertsPlaceholder": "El contenido de las alertas aparecerá aquí",
       "academicsPlaceholder": "El contenido académico aparecerá aquí",
-      "tabs": { "schoolYears": "Años escolares", "overview": "Resumen", "attendance": "Asistencia", "grades": "Notas", "fees": "Cuotas", "transport": "Transporte", "alerts": "Alertas" },
-      "genders": { "M": "Masculino", "F": "Femenino", "Other": "Otro" },
-      "relationships": { "father": "Padre", "mother": "Madre", "guardian": "Tutor", "stepparent": "Padrastro/Madrastra", "grandparent": "Abuelo/a", "other": "Otro" },
-      "maritalStatuses": { "single": "Soltero/a", "married": "Casado/a", "divorced": "Divorciado/a", "widowed": "Viudo/a", "separated": "Separado/a" },
+      "tabs": {
+        "schoolYears": "Años escolares",
+        "overview": "Resumen",
+        "attendance": "Asistencia",
+        "grades": "Notas",
+        "fees": "Cuotas",
+        "transport": "Transporte",
+        "alerts": "Alertas"
+      },
+      "genders": {
+        "M": "Masculino",
+        "F": "Femenino",
+        "Other": "Otro"
+      },
+      "relationships": {
+        "father": "Padre",
+        "mother": "Madre",
+        "guardian": "Tutor",
+        "stepparent": "Padrastro/Madrastra",
+        "grandparent": "Abuelo/a",
+        "other": "Otro"
+      },
+      "maritalStatuses": {
+        "single": "Soltero/a",
+        "married": "Casado/a",
+        "divorced": "Divorciado/a",
+        "widowed": "Viudo/a",
+        "separated": "Separado/a"
+      },
       "attendanceDetails": {
-        "date": "Fecha", "status": "Estado", "class": "Clase", "subject": "Asignatura", "notes": "Notas", "daily": "Diario",
-        "present": "Presente", "absent": "Ausente", "late": "Tarde", "loading": "Cargando asistencia...", "noExceptions": "No hay ausencias ni retrasos registrados"
+        "date": "Fecha",
+        "status": "Estado",
+        "class": "Clase",
+        "subject": "Asignatura",
+        "notes": "Notas",
+        "daily": "Diario",
+        "present": "Presente",
+        "absent": "Ausente",
+        "late": "Tarde",
+        "loading": "Cargando asistencia...",
+        "noExceptions": "No hay ausencias ni retrasos registrados"
       },
       "gradeDetails": {
-        "subject": "Asignatura", "assessment": "Evaluación", "marks": "Calificaciones", "marksFor": "Calificación de {{assessment}}",
-        "feedback": "Comentario", "feedbackFor": "Comentario de {{assessment}}", "result": "Resultado", "graded": "Calificado",
-        "pending": "Pendiente", "missed": "No realizado", "average": "Promedio", "averageShort": "Prom.",
-        "loading": "Cargando notas...", "noneRecorded": "No hay notas registradas"
+        "subject": "Asignatura",
+        "assessment": "Evaluación",
+        "marks": "Calificaciones",
+        "marksFor": "Calificación de {{assessment}}",
+        "feedback": "Comentario",
+        "feedbackFor": "Comentario de {{assessment}}",
+        "result": "Resultado",
+        "graded": "Calificado",
+        "pending": "Pendiente",
+        "missed": "No realizado",
+        "average": "Promedio",
+        "averageShort": "Prom.",
+        "loading": "Cargando notas...",
+        "noneRecorded": "No hay notas registradas"
       },
       "feeDetails": {
-        "fee": "Cuota", "paid": "Pagado", "overdue": "Vencido", "partiallyPaid": "Pagado parcialmente", "pending": "Pendiente", "remaining": "Restante",
-        "installmentCount": "{{count}} cuota(s)", "overdueCount": "{{count}} vencida(s)", "studentIdRequired": "Se requiere el ID del estudiante para ver las cuotas.",
-        "noneAssigned": "No hay cuotas asignadas a este estudiante", "noneAssignedShort": "No hay cuotas asignadas",
-        "noneAssignedHelp": "Use el expediente completo de cuotas para asignarlas o gestionar pagos.", "openRecord": "Abrir expediente de cuotas",
-        "assignedCount": "{{count}} cuota(s) asignada(s)", "collectedPercent": "{{count}} % cobrado", "overdueInstallmentCount": "{{count}} cuota(s) vencida(s)",
-        "oldestUnpaid": "Cuota impagada más antigua", "assignedFees": "Cuotas asignadas", "feesWithInstallments": "{{fees}} cuota(s) con {{installments}} plazo(s) en total", "lastPayment": "Último pago"
+        "fee": "Cuota",
+        "paid": "Pagado",
+        "overdue": "Vencido",
+        "partiallyPaid": "Pagado parcialmente",
+        "pending": "Pendiente",
+        "remaining": "Restante",
+        "installmentCount": "{{count}} cuota(s)",
+        "overdueCount": "{{count}} vencida(s)",
+        "studentIdRequired": "Se requiere el ID del estudiante para ver las cuotas.",
+        "noneAssigned": "No hay cuotas asignadas a este estudiante",
+        "noneAssignedShort": "No hay cuotas asignadas",
+        "noneAssignedHelp": "Use el expediente completo de cuotas para asignarlas o gestionar pagos.",
+        "openRecord": "Abrir expediente de cuotas",
+        "assignedCount": "{{count}} cuota(s) asignada(s)",
+        "collectedPercent": "{{count}} % cobrado",
+        "overdueInstallmentCount": "{{count}} cuota(s) vencida(s)",
+        "oldestUnpaid": "Cuota impagada más antigua",
+        "assignedFees": "Cuotas asignadas",
+        "feesWithInstallments": "{{fees}} cuota(s) con {{installments}} plazo(s) en total",
+        "lastPayment": "Último pago"
       }
     },
     "title": "Título"
@@ -3609,7 +3987,19 @@
     }
   },
   "teachers": {
-    "errors": { "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente", "notFound": "Docente no encontrado", "datedRosterUnreviewed": "Las listas fechadas de un docente requieren un historial de asignaciones revisado", "dateOutsideYear": "La fecha está fuera del periodo del año escolar", "assignmentNotFound": "Asignación no encontrada", "classHasNoSections": "La clase no tiene secciones", "phoneExists": "Ya existe un docente con este número de teléfono", "notInSection": "El docente no imparte clase en esta sección", "idExists": "Este docente ya existe", "cinExists": "Ya existe un docente con este DNI", "emailExists": "Ya existe un docente con este correo electrónico" },
+    "errors": {
+      "hasAssignmentHistory": "Este docente tiene asignaciones de clase en un curso escolar. Elimínelas antes de borrar al docente",
+      "notFound": "Docente no encontrado",
+      "datedRosterUnreviewed": "Las listas fechadas de un docente requieren un historial de asignaciones revisado",
+      "dateOutsideYear": "La fecha está fuera del periodo del año escolar",
+      "assignmentNotFound": "Asignación no encontrada",
+      "classHasNoSections": "La clase no tiene secciones",
+      "phoneExists": "Ya existe un docente con este número de teléfono",
+      "notInSection": "El docente no imparte clase en esta sección",
+      "idExists": "Este docente ya existe",
+      "cinExists": "Ya existe un docente con este DNI",
+      "emailExists": "Ya existe un docente con este correo electrónico"
+    },
     "subtitle": {
       "count": "{{count}} profesores en total"
     },
@@ -4180,13 +4570,68 @@
       "student": "Estudiante"
     },
     "form": {
-      "stepTitle": "Transporte", "title": "Transporte escolar", "description": "Asigna un vehículo, confirma el punto de recogida y revisa la cuota mensual.", "usesTransport": "Usa transporte escolar", "chooseVehicle": "Elegir vehículo", "chooseVehicleHint": "Solo los vehículos activos con plazas disponibles aceptan nuevos alumnos.", "vehicle": "Vehículo", "vehiclePlaceholder": "Selecciona un vehículo disponible", "searchVehicle": "Buscar vehículos...", "noVehicles": "No hay vehículos disponibles", "seatsAvailable": "plazas disponibles", "seatsLeft": "plazas restantes", "driver": "Conductor", "unassignedDriver": "Sin conductor asignado", "occupancy": "Ocupación", "pickupLocation": "Punto de recogida", "pickupPlaceholder": "Introduce la dirección de recogida", "dropoffLocation": "Punto de llegada", "dropoffPlaceholder": "Introduce el punto de llegada a la escuela", "useHomeAddress": "Usar dirección del domicilio", "startDate": "Fecha de inicio", "notes": "Notas de transporte", "notesPlaceholder": "Instrucciones de acceso o recogida...", "feePreview": "Cuota de transporte", "monthlyBilling": "La facturación mensual se creará automáticamente", "missingFeeType": "Configura una cuota de transporte activa antes de asignar el transporte.", "optionalTitle": "El transporte es opcional", "optionalDescription": "Activa el transporte escolar para elegir vehículo y confirmar la recogida."
+      "stepTitle": "Transporte",
+      "title": "Transporte escolar",
+      "description": "Asigna un vehículo, confirma el punto de recogida y revisa la cuota mensual.",
+      "usesTransport": "Usa transporte escolar",
+      "chooseVehicle": "Elegir vehículo",
+      "chooseVehicleHint": "Solo los vehículos activos con plazas disponibles aceptan nuevos alumnos.",
+      "vehicle": "Vehículo",
+      "vehiclePlaceholder": "Selecciona un vehículo disponible",
+      "searchVehicle": "Buscar vehículos...",
+      "noVehicles": "No hay vehículos disponibles",
+      "seatsAvailable": "plazas disponibles",
+      "seatsLeft": "plazas restantes",
+      "driver": "Conductor",
+      "unassignedDriver": "Sin conductor asignado",
+      "occupancy": "Ocupación",
+      "pickupLocation": "Punto de recogida",
+      "pickupPlaceholder": "Introduce la dirección de recogida",
+      "dropoffLocation": "Punto de llegada",
+      "dropoffPlaceholder": "Introduce el punto de llegada a la escuela",
+      "useHomeAddress": "Usar dirección del domicilio",
+      "startDate": "Fecha de inicio",
+      "notes": "Notas de transporte",
+      "notesPlaceholder": "Instrucciones de acceso o recogida...",
+      "feePreview": "Cuota de transporte",
+      "monthlyBilling": "La facturación mensual se creará automáticamente",
+      "missingFeeType": "Configura una cuota de transporte activa antes de asignar el transporte.",
+      "optionalTitle": "El transporte es opcional",
+      "optionalDescription": "Activa el transporte escolar para elegir vehículo y confirmar la recogida."
     },
     "location": {
-      "search": "Buscar una dirección", "chooseTitle": "Elegir punto de recogida", "chooseOnMap": "Elegir en el mapa", "map": "Mapa", "dragHint": "Busca, haz clic en el mapa o arrastra el marcador para ajustar la ubicación.", "loadingMap": "Cargando mapa...", "selectedLocation": "Ubicación seleccionada", "resolving": "Obteniendo dirección...", "noLocation": "Sin ubicación seleccionada", "confirm": "Confirmar ubicación", "pinSaved": "Marcador exacto guardado", "manualAllowed": "Se permite introducir la dirección manualmente", "unavailableTitle": "Google Maps no está disponible", "unavailableDescription": "Comprueba la clave de Maps API y sus restricciones. Puedes cerrar e introducir la dirección manualmente."
+      "search": "Buscar una dirección",
+      "chooseTitle": "Elegir punto de recogida",
+      "chooseOnMap": "Elegir en el mapa",
+      "map": "Mapa",
+      "dragHint": "Busca, haz clic en el mapa o arrastra el marcador para ajustar la ubicación.",
+      "loadingMap": "Cargando mapa...",
+      "selectedLocation": "Ubicación seleccionada",
+      "resolving": "Obteniendo dirección...",
+      "noLocation": "Sin ubicación seleccionada",
+      "confirm": "Confirmar ubicación",
+      "pinSaved": "Marcador exacto guardado",
+      "manualAllowed": "Se permite introducir la dirección manualmente",
+      "unavailableTitle": "Google Maps no está disponible",
+      "unavailableDescription": "Comprueba la clave de Maps API y sus restricciones. Puedes cerrar e introducir la dirección manualmente."
     },
     "profile": {
-      "assignTitle": "Asignar transporte escolar", "editTitle": "Editar recogida", "changeTitle": "Cambiar vehículo", "assign": "Asignar transporte", "active": "Activo", "noAssignment": "Sin asignación de transporte activa", "noAssignmentDescription": "Asigna este alumno a un vehículo disponible y confirma su recogida.", "noPickup": "Sin punto de recogida", "schoolDefault": "Entrada principal de la escuela", "editPickup": "Editar recogida", "changeBus": "Cambiar vehículo", "unassignTitle": "Finalizar transporte", "unassignDescription": "Finaliza la asignación activa y conserva el historial de cuotas y pagos.", "unassign": "Desasignar", "unassigned": "Asignación de transporte finalizada", "history": "Historial de transporte"
+      "assignTitle": "Asignar transporte escolar",
+      "editTitle": "Editar recogida",
+      "changeTitle": "Cambiar vehículo",
+      "assign": "Asignar transporte",
+      "active": "Activo",
+      "noAssignment": "Sin asignación de transporte activa",
+      "noAssignmentDescription": "Asigna este alumno a un vehículo disponible y confirma su recogida.",
+      "noPickup": "Sin punto de recogida",
+      "schoolDefault": "Entrada principal de la escuela",
+      "editPickup": "Editar recogida",
+      "changeBus": "Cambiar vehículo",
+      "unassignTitle": "Finalizar transporte",
+      "unassignDescription": "Finaliza la asignación activa y conserva el historial de cuotas y pagos.",
+      "unassign": "Desasignar",
+      "unassigned": "Asignación de transporte finalizada",
+      "history": "Historial de transporte"
     }
   },
   "staffScopes": {

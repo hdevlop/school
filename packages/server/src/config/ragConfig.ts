@@ -64,6 +64,9 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   // "Yesterday" or "last Monday" routes like "today"; the date tool answers it.
   attendance_get_today_students: ['attendance_get_by_date'],
   attendance_get_today_all: ['attendance_get_by_date'],
+  // Darija class-list queries may route to sections; the guarded list template
+  // needs the class read, which includes its sections, available on that path.
+  sections_get_sections: ['classes_get_classes'],
   fees_get_student_fees: ['search_search_students'],
   payments_get_by_student: ['search_search_students'],
   students_get_student_parents: ['search_search_students'],

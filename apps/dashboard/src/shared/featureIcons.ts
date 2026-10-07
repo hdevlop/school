@@ -19,7 +19,7 @@ import {
   KeyRound,
   LayoutDashboard,
   LayoutGrid,
-  LineChart,
+  ReceiptText,
   Megaphone,
   Receipt,
   School,
@@ -63,7 +63,7 @@ export const FEATURE_ICONS = {
   payments: CreditCard,
   installments: CalendarClock,
   reminders: BellRing,
-  financialOperations: LineChart,
+  financialOperations: ReceiptText,
 
   attendance: CalendarCheck,
   studentAttendance: UserCheck,

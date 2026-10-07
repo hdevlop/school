@@ -1,0 +1,12 @@
+{
+  "mode": "key-precheck",
+  "classifierRequests": 0,
+  "readyForBudget": true,
+  "budgetUsd": 0.02,
+  "ledger": {
+    "capturedAt": "2026-10-06T18:45:06.052Z",
+    "usage": 0.949292856,
+    "limit": 50,
+    "limitRemaining": 49.050707144
+  }
+}

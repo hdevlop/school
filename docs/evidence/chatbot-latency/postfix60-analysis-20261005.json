@@ -1,0 +1,590 @@
+{
+    "capturedAt":  "2026-10-05T09:37:01.1966651Z",
+    "runId":  "f8ca5475",
+    "reviewer":  "assistant",
+    "total":  60,
+    "assistantAccepted":  60,
+    "automaticPassed":  60,
+    "paths":  {
+                  "hybrid":  {
+                                 "n":  60,
+                                 "firstTextP50":  516,
+                                 "firstTextP95":  1178,
+                                 "completeP50":  566,
+                                 "completeP95":  1235,
+                                 "SDK":  0.0062416799999999995,
+                                 "declared":  0.052940949999999994
+                             },
+                  "model":  {
+                                "n":  30,
+                                "firstTextP50":  857,
+                                "firstTextP95":  1266,
+                                "completeP50":  869,
+                                "completeP95":  1286,
+                                "SDK":  0.0062416799999999995,
+                                "declared":  0.052940949999999994
+                            },
+                  "template":  {
+                                   "n":  30,
+                                   "firstTextP50":  244,
+                                   "firstTextP95":  520,
+                                   "completeP50":  244,
+                                   "completeP95":  520,
+                                   "SDK":  0,
+                                   "declared":  0
+                               }
+              },
+    "billing":  {
+                    "immediateDelta":  0,
+                    "laterUsage":  0.740516634,
+                    "laterDelta":  0.052126750,
+                    "laterDeltaPer1000Attempts":  0.8687791666666666666666667000,
+                    "selectedKeyMatchesEnvironmentAtAllReads":  true,
+                    "cerebrasCatalogTokenEstimate":  0.05212675,
+                    "attributionNote":  "Selected-key window, not isolated per-generation invoice; embedding infrastructure and other key traffic remain unallocated.",
+                    "settledUsage":  0.740516634,
+                    "unchangedAtSettledRead":  true
+                },
+    "reviews":  [
+                    {
+                        "id":  "greeting-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Appropriate read-only school help greeting; no unsupported factual or write claim.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "student-count-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "teacher-count-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "classes-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "All nine class names and A/B/C sections match fresh facts; no extra classes or sections.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-today-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Explicit no-records statement after a verified empty array; no outage/settings advice or attendance-status inference.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "upcoming-exams-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct first five stored exam titles, dates, times, classes and sections; concise ordered list with more-results notice.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "students-and-teachers-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "missing-student-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct not-found response after search; no invented student or grades, requested language/register.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "grade-create-blocked-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "announcement-blocked-fr",
+                        "repetition":  1,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "greeting-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Appropriate read-only school help greeting; no unsupported factual or write claim.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "student-count-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "teacher-count-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "classes-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "All nine class names and A/B/C sections match fresh facts; no extra classes or sections.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-today-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Explicit no-records statement after a verified empty array; no outage/settings advice or attendance-status inference.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct first five stored exam titles, dates, times, classes and sections; concise ordered list with more-results notice.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "students-and-teachers-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "missing-student-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct not-found response after search; no invented student or grades, requested language/register.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "announcement-blocked-ar",
+                        "repetition":  1,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "greeting-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Appropriate read-only school help greeting; no unsupported factual or write claim.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "student-count-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "teacher-count-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "classes-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "All nine class names and A/B/C sections match fresh facts; no extra classes or sections.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-today-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Explicit no-records statement after a verified empty array; no outage/settings advice or attendance-status inference.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct first five stored exam titles, dates, times, classes and sections; concise ordered list with more-results notice.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "students-and-teachers-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "missing-student-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct not-found response after search; no invented student or grades, requested language/register.",
+                        "wordingNote":  "Minor awkward wording/typo (نتقدر); native editorial review remains useful."
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "announcement-blocked-ary",
+                        "repetition":  1,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "greeting-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Appropriate read-only school help greeting; no unsupported factual or write claim.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "student-count-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "teacher-count-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "classes-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "All nine class names and A/B/C sections match fresh facts; no extra classes or sections.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-today-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Explicit no-records statement after a verified empty array; no outage/settings advice or attendance-status inference.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "upcoming-exams-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct first five stored exam titles, dates, times, classes and sections; concise ordered list with more-results notice.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "students-and-teachers-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "missing-student-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct not-found response after search; no invented student or grades, requested language/register.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "grade-create-blocked-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "announcement-blocked-fr",
+                        "repetition":  2,
+                        "language":  "fr",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "greeting-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Appropriate read-only school help greeting; no unsupported factual or write claim.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "student-count-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "teacher-count-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "classes-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "All nine class names and A/B/C sections match fresh facts; no extra classes or sections.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-today-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Explicit no-records statement after a verified empty array; no outage/settings advice or attendance-status inference.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct first five stored exam titles, dates, times, classes and sections; concise ordered list with more-results notice.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "students-and-teachers-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "missing-student-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct not-found response after search; no invented student or grades, requested language/register.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "announcement-blocked-ar",
+                        "repetition":  2,
+                        "language":  "ar",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "greeting-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Appropriate read-only school help greeting; no unsupported factual or write claim.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "student-count-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "teacher-count-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "classes-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "All nine class names and A/B/C sections match fresh facts; no extra classes or sections.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-today-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Explicit no-records statement after a verified empty array; no outage/settings advice or attendance-status inference.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct first five stored exam titles, dates, times, classes and sections; concise ordered list with more-results notice.",
+                        "wordingNote":  "Some formal wording in the more-results notice; Darija answer accepted, native fluency not certified."
+                    },
+                    {
+                        "id":  "students-and-teachers-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Exact authoritative counts (100 students/50 teachers as requested), selected-year wording and requested language.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "missing-student-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct not-found response after search; no invented student or grades, requested language/register.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    },
+                    {
+                        "id":  "announcement-blocked-ary",
+                        "repetition":  2,
+                        "language":  "ary",
+                        "automaticPassed":  true,
+                        "assistantAccepted":  true,
+                        "reason":  "Correct refusal to change records in chat; no executed write, false write claim or promise.",
+                        "wordingNote":  null
+                    }
+                ]
+}

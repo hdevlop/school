@@ -12,7 +12,7 @@ const WORDS = {
     'would', 'what', 'which', 'enrolled', 'year', 'name', 'i', 'here', 'help', 'look', 'up', 'data', 'let', 'me', 'know', 'check', 'spelling'],
   fr: ['le', 'la', 'les', 'des', 'du', 'est', 'sont', 'et', 'il', 'elle', 'y', 'pour', 'pas', 'aucun', 'aucune',
     'vous', 'je', 'une', 'dans', 'sur', 'avec', 'élèves', 'élève', 'aujourd', 'peux', 'voulez', 'ce', 'cette',
-    'qui', 'nom', 'année', 'scolaire', 'inscrits', 'été', 'trouvé', 'données', 'école', 'aider',
+    'qui', 'nom', 'nombre', 'année', 'scolaire', 'inscrits', 'été', 'trouvé', 'données', 'école', 'aider',
     'voici', 'prochains', 'examens', 'enseignants', 'professeurs', 'cinq', 'cinquante', 'cent'],
   es: ['el', 'los', 'las', 'hay', 'es', 'y', 'para', 'una', 'del', 'al', 'con', 'puedo', 'puedes', 'alumnos',
     'alumno', 'estudiantes', 'hoy', 'por', 'tu', 'su', 'este', 'esta', 'año', 'nombre', 'escolar', 'matriculados',
@@ -81,7 +81,12 @@ export function analyzeReplyLanguage(text, { storedNames = [], expectedLanguage 
     for (const [language, hits] of ranked) if (hits >= 2 && language !== expected) foreignLanguages.add(language);
   }
   if (arabic && expected && expected !== 'ar') foreignLanguages.add('ar');
-  const mixedLanguage = unsupportedScript || (arabic && latin)
+  // A short English identifier label has only one vocabulary hit, but remains
+  // foreign prose. Exact stored names have already been masked above.
+  const englishStudentLabel = Boolean(expected && expected !== 'en'
+    && /(?<!\p{L})student\s+id(?!\p{L})/iu.test(plain));
+  if (englishStudentLabel) foreignLanguages.add('en');
+  const mixedLanguage = englishStudentLabel || unsupportedScript || (arabic && latin)
     || (best[1] >= 2 && second[1] >= 2);
   const language = arabic && !latin ? 'ar' : !arabic && latin && best[1] >= second[1] * 2 ? best[0] : null;
   const darija = DARIJA.test(plain);

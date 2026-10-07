@@ -1,0 +1,46 @@
+﻿{
+    "capturedAt":  "2026-10-05T14:43:23.5081412Z",
+    "verifiedOwnedProcesses":  [
+                                   {
+                                       "pid":  16252,
+                                       "parentPid":  7224,
+                                       "createdAt":  "2026-10-05T13:51:41.2445410Z"
+                                   },
+                                   {
+                                       "pid":  14560,
+                                       "parentPid":  16252,
+                                       "createdAt":  "2026-10-05T13:51:41.2592820Z"
+                                   },
+                                   {
+                                       "pid":  1460,
+                                       "parentPid":  14560,
+                                       "createdAt":  "2026-10-05T13:51:41.2713020Z"
+                                   },
+                                   {
+                                       "pid":  9140,
+                                       "parentPid":  1460,
+                                       "createdAt":  "2026-10-05T13:51:42.4073660Z"
+                                   },
+                                   {
+                                       "pid":  13144,
+                                       "parentPid":  9140,
+                                       "createdAt":  "2026-10-05T13:51:42.6356490Z"
+                                   },
+                                   {
+                                       "pid":  14644,
+                                       "parentPid":  13144,
+                                       "createdAt":  "2026-10-05T14:19:24.6382730Z"
+                                   },
+                                   {
+                                       "pid":  12200,
+                                       "parentPid":  13144,
+                                       "createdAt":  "2026-10-05T14:19:25.0723470Z"
+                                   }
+                               ],
+    "remainingOwnedProcesses":  0,
+    "remainingListeners":  0,
+    "taskAppStopped":  true,
+    "snapshotRetained":  true,
+    "unrelatedProcessesTouched":  false,
+    "finalVerifiedAt":  "2026-10-05T14:43:42.9729111Z"
+}

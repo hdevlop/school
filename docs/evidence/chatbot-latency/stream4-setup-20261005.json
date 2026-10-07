@@ -1,0 +1,22 @@
+{
+    "capturedAt":  "2026-10-05T15:11:56.3540444Z",
+    "reset":  {
+                  "enabled":  true,
+                  "instanceId":  "f02fc0e0-6413-457c-b8f3-80ea6e7b1779",
+                  "resetCount":  7,
+                  "caches":  [
+                                 "query-embedding",
+                                 "knowledge-context"
+                             ]
+              },
+    "status":  {
+                   "enabled":  true,
+                   "instanceId":  "f02fc0e0-6413-457c-b8f3-80ea6e7b1779",
+                   "resetCount":  7,
+                   "caches":  [
+                                  "query-embedding",
+                                  "knowledge-context"
+                              ]
+               },
+    "note":  "One initial cache clear, no chat active; no reset during overlap."
+}

@@ -7,7 +7,6 @@ import {
    generateFees,
    generateStudent,
    generateTeacher,
-   generateTeachers,
    generateVehicle,
    subjectsData,
    vehiclesData,
@@ -15,6 +14,15 @@ import {
 import settingsData from '../school/data/settings.json';
 import { schoolSeedData, seedAcademicId, seedAcademicYear } from '../shared/school-seed-data';
 import { getDemoReferenceDate } from '../shared/academic-year';
+import {
+   MAX_TEACHER_LESSONS,
+   PART_TIME_BELOW,
+   fillSections,
+   shareEvenly,
+   shareUnits,
+   subjectFamily,
+   weeklyLessons,
+} from '../shared/timetable';
 
 const { classesData, sectionsData } = schoolSeedData;
 const getClassByName = (name: string) => classesData.find((item) => item.name === name)!;
@@ -41,11 +49,11 @@ function getCliArg(long: string, short?: string): string | undefined {
 
 export const DEFAULT_DEMO_COUNTS = {
    students: 100,
-   teachers: 50,
+   teachers: 0, // 0 = auto (sized to the student count, see demoHeadcount)
    announcements: 12,
    events: 12,
-   assessments: 30,
-   exams: 18,
+   assessments: 0, // 0 = auto (the full calendar for every taught section and subject)
+   exams: 0, // 0 = auto (both semester exams for every taught section and subject)
    grades: 0, // 0 = auto (one grade per student for every completed assessment/exam)
    alerts: 25,
    disciplineIncidents: 40,
@@ -56,7 +64,7 @@ export const DEFAULT_DEMO_COUNTS = {
    studentRoutes: 20,
    refuels: 24,
    maintenance: 16,
-   staff: 40,
+   staff: 0, // 0 = auto (sized to the student count, see demoHeadcount)
 };
 
 export const DEFAULT_DEMO_CLASSES = ['CP','CE1','CE2','CM1','CM2','CE6','1AC','2AC','3AC'];
@@ -65,7 +73,7 @@ const DEFAULT_STUDENT_COUNT = DEFAULT_DEMO_COUNTS.students;
 const DEFAULT_TEACHER_LIMIT = DEFAULT_DEMO_COUNTS.teachers;
 
 const totalStudents      = parseInt(getCliArg('students', 's') ?? String(DEFAULT_STUDENT_COUNT), 10); // total across selected classes
-const teacherLimit       = parseInt(getCliArg('teachers', 't') ?? String(DEFAULT_TEACHER_LIMIT), 10); // 0 = no limit
+const teacherLimit       = parseInt(getCliArg('teachers', 't') ?? String(DEFAULT_TEACHER_LIMIT), 10); // 0 = auto
 const classesArg         = getCliArg('classes', 'c') ?? DEFAULT_CLASSES_ARG;
 const parseCount = (name: keyof typeof DEFAULT_DEMO_COUNTS, alias?: string) =>
    parseInt(getCliArg(name, alias) ?? String(DEFAULT_DEMO_COUNTS[name]), 10);
@@ -104,6 +112,7 @@ const selectedClasses = (() => {
 export const selectedDemoClassNames = selectedClasses;
 
 // Distribute totalStudents evenly across selected classes, spreading remainder to first N classes.
+// Within a class, fillSections opens sections as they fill.
 function distributeStudents(total: number, classCount: number): number[] {
    if (classCount === 0) return [];
    const base = Math.floor(total / classCount);
@@ -133,15 +142,15 @@ const CONFIG = {
       },
    },
 
-   // Only selected classes receive students. Each class gets its share of totalStudents
-   // spread across its available sections.
+   // Only selected classes receive students. Each class gets its share of totalStudents,
+   // filling a section before the next one opens.
    ASSIGNMENTS: selectedClasses.map((name, i) => {
       const classObj = getClassByName(name);
       const sections = classObj ? getSectionsByClass(classObj.id) : [];
 
       return {
          CLASS_NAME: name,
-         SECTION_COUNTS: distributeStudents(perClassCounts[i], sections.length || 1),
+         SECTION_COUNTS: fillSections(perClassCounts[i], sections.length || 1),
       };
    }),
 
@@ -157,15 +166,33 @@ const CONFIG = {
     },
 };
 
+// A demo school is sized like a real private one: as many teachers as its
+// sections' timetables need (see teachersPack), one support employee per 35
+// students, one bus per 40 riders, and running costs in proportion to a
+// 300-student campus. Fixed headcounts made a 100-student demo pay 100
+// salaries, so payroll alone outran tuition.
+const STUDENTS_PER_SUPPORT_EMPLOYEE = 35;
+const RIDERS_PER_BUS = 40;
+const REFERENCE_CAMPUS_STUDENTS = 300;
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+export const demoHeadcount = {
+   staff: featureCounts.staff > 0
+      ? featureCounts.staff
+      : Math.max(3, Math.ceil(totalStudents / STUDENTS_PER_SUPPORT_EMPLOYEE)),
+   vehicles: clamp(Math.ceil(totalStudents * CONFIG.FEE_POLICY.FEES.TRANSPORT / RIDERS_PER_BUS), 2, vehiclesData.length),
+   operatingCostScale: clamp(totalStudents / REFERENCE_CAMPUS_STUDENTS, 0.3, 2),
+};
+
 // ============================================
 // 📦 DATA PACKS
 // ============================================
 
-/** New students per class, spread over each class's sections. */
+/** New students per class, filling each class's sections in order. */
 export function demoIntakeAssignments(counts: Array<{ className: string; students: number }>) {
    return counts.map(({ className, students }) => ({
       CLASS_NAME: className,
-      SECTION_COUNTS: distributeStudents(students, getSectionsByClass(getClassByName(className).id).length || 1),
+      SECTION_COUNTS: fillSections(students, getSectionsByClass(getClassByName(className).id).length || 1),
    }));
 }
 
@@ -226,23 +253,67 @@ export async function studentsPack(
    return db;
 }
 
+// Monthly pay (MAD) of a full-time private-school teacher: a base by level plus seniority.
+function teacherSalary(level: string, yearsOfExperience: number) {
+   const base = level === 'Primaire' ? 4400 : 5200;
+   return base + yearsOfExperience * 120 + Math.round(Math.random() * 6) * 100;
+}
+
+/**
+ * Teachers for the sections that have students: every section is taught each
+ * subject's weekly lessons, and each subject (history and geography count as
+ * one) is shared evenly among as few teachers as a
+ * full-time load allows, so the timetable fits and payroll follows the
+ * school's size. A lighter load is a part-time contract paid in proportion.
+ */
 export async function teachersPack() {
-   const teachers = generateTeachers({
-      ASSIGNMENTS: CONFIG.ASSIGNMENTS,
-   }).map((teacher: any) => ({
-      ...teacher,
-      hireDate: teacher.hireDate > `${seedAcademicYear.slice(0, 4)}-09-01`
-         ? `${seedAcademicYear.slice(0, 4)}-09-01` : teacher.hireDate,
-      assignments: teacher.assignments.map((assignment: any) => ({
-         ...assignment,
-         classId: seedAcademicId(assignment.classId),
-         sectionIds: assignment.sectionIds.map(seedAcademicId),
-      })),
-   }));
+   const yearStart = `${seedAcademicYear.slice(0, 4)}-09-01`;
+   const units = CONFIG.ASSIGNMENTS.flatMap(({ CLASS_NAME, SECTION_COUNTS }) => {
+      const classEntity = getClassByName(CLASS_NAME);
+      return getSectionsByClass(classEntity.id)
+         .filter((_, index) => (SECTION_COUNTS[index] ?? 0) > 0)
+         .flatMap((section) => subjectsData.map((subject, subjectIndex) => ({
+            family: subjectFamily(subject.code),
+            subjectIndex,
+            level: classEntity.level,
+            classId: classEntity.id,
+            sectionId: section.id,
+            subjectId: subject.id,
+            subjectName: subject.name,
+            lessons: weeklyLessons(classEntity.level, subject.code),
+         })));
+   }).sort((a, b) => a.family - b.family || a.level.localeCompare(b.level));
 
-   if (teacherLimit <= 0) return { teachers };
+   const families = [...new Set(units.map((unit) => unit.family))];
+   const shares = teacherLimit > 0
+      ? shareUnits(units, teacherLimit)
+      : families.flatMap((family) => shareEvenly(units.filter((unit) => unit.family === family)));
 
-   const selectedTeachers = teachers.slice(0, teacherLimit);
+   const selectedTeachers: any[] = shares.map((share) => {
+      const yearsOfExperience = 2 + Math.floor(Math.random() * 24);
+      const bySection = new Map<string, any>();
+      for (const unit of [...share].sort((a, b) => a.subjectIndex - b.subjectIndex)) {
+         const assignment = bySection.get(unit.sectionId)
+            ?? { classId: unit.classId, sectionIds: [unit.sectionId], subjectIds: [] };
+         assignment.subjectIds.push(unit.subjectId);
+         bySection.set(unit.sectionId, assignment);
+      }
+      const lessonsBySubject = new Map<string, number>();
+      for (const unit of share) lessonsBySubject.set(unit.subjectName, (lessonsBySubject.get(unit.subjectName) ?? 0) + unit.lessons);
+      const specialization = [...lessonsBySubject].sort((a, b) => b[1] - a[1])[0][0];
+      const workloadHours = share.reduce((sum, unit) => sum + unit.lessons, 0);
+      const partTime = workloadHours < PART_TIME_BELOW;
+      const fullSalary = teacherSalary(share[0].level, yearsOfExperience);
+      const teacher = generateTeacher({
+         specialization,
+         yearsOfExperience,
+         workloadHours,
+         employmentType: partTime ? 'partTime' : 'fullTime',
+         salary: partTime ? Math.round(fullSalary * workloadHours / MAX_TEACHER_LESSONS / 100) * 100 : fullSalary,
+         assignments: [...bySection.values()],
+      });
+      return { ...teacher, hireDate: teacher.hireDate > yearStart ? yearStart : teacher.hireDate };
+   });
 
    for (let i = selectedTeachers.length; i < teacherLimit; i++) {
       const classEntity = selectedClassRecords()[i % selectedClassRecords().length];
@@ -273,7 +344,7 @@ export async function transportPack() {
    const drivers = [];
    const vehicles = [];
 
-   for (const vehicleData of vehiclesData) {
+   for (const vehicleData of vehiclesData.slice(0, demoHeadcount.vehicles)) {
       const driver = generateDriver({ POLICY:CONFIG.DRIVER, hireDate: `${seedAcademicYear.slice(0, 4)}-09-01` });
       drivers.push(driver);
 
@@ -293,7 +364,11 @@ export async function transportPack() {
 }
 
 export async function expensesPack() {
-    const expenses = generateExpenses(CONFIG.EXPENSES.COUNT, { academicYear: seedAcademicYear, referenceDate: demoReferenceDate });
+    const expenses = generateExpenses(CONFIG.EXPENSES.COUNT, {
+       academicYear: seedAcademicYear,
+       referenceDate: demoReferenceDate,
+       scale: demoHeadcount.operatingCostScale,
+    });
     return { expenses };
 }
 
@@ -393,39 +468,75 @@ export function announcementsPack(count = featureCounts.announcements) {
    };
 }
 
+// A day of the seed's teaching year: September to December fall in its first
+// calendar year, January to August in the second.
+function teachingDate(month: number, day: number) {
+   const year = seedAcademicYear.slice(month >= 9 ? 0 : 5, month >= 9 ? 4 : 9);
+   return `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function addDays(date: string, days: number) {
+   const moved = new Date(`${date}T12:00:00.000Z`);
+   moved.setUTCDate(moved.getUTCDate() + days);
+   return dateOnly(moved);
+}
+
+/** The date itself, or the Monday after when it falls on a Sunday. */
+function schoolDay(date: string) {
+   return new Date(`${date}T12:00:00.000Z`).getUTCDay() === 0 ? addDays(date, 1) : date;
+}
+
+/** The Monday of the week that starts on or after the date. */
+function weekStarting(date: string) {
+   const weekday = new Date(`${date}T12:00:00.000Z`).getUTCDay();
+   return addDays(date, (8 - weekday) % 7);
+}
+
+/** What has already happened by today is done; the rest of the year is still ahead. */
+function statusOn(date: string) {
+   return date <= dateOnly(new Date()) ? 'completed' : 'scheduled';
+}
+
+// One school year's events, September to June.
+const EVENT_CALENDAR = [
+   { month: 9, day: 15, title: 'Back-to-school assembly', type: 'ceremony', location: 'Main Hall', visibility: 'public' },
+   { month: 10, day: 17, title: 'Parent-teacher meeting', type: 'meeting', location: 'Main Hall', visibility: 'parents' },
+   { month: 11, day: 12, title: 'Reading workshop', type: 'workshop', location: 'Library', visibility: 'students' },
+   { month: 12, day: 10, title: 'Science fair', type: 'academic', location: 'Science Lab', visibility: 'public' },
+   { month: 1, day: 28, title: 'Winter sports tournament', type: 'sports', location: 'Sports Field', visibility: 'students' },
+   { month: 2, day: 6, title: 'First-semester results meeting', type: 'meeting', location: 'Main Hall', visibility: 'parents' },
+   { month: 3, day: 11, title: 'Cultural week', type: 'cultural', location: 'Main Hall', visibility: 'public' },
+   { month: 4, day: 15, title: 'Museum field trip', type: 'fieldtrip', location: 'City museum', visibility: 'students' },
+   { month: 4, day: 29, title: 'Teacher training day', type: 'workshop', location: 'Library', visibility: 'teachers' },
+   { month: 5, day: 13, title: 'Sports day', type: 'sports', location: 'Sports Field', visibility: 'public' },
+   { month: 6, day: 12, title: 'Awards ceremony', type: 'ceremony', location: 'Main Hall', visibility: 'public' },
+   { month: 6, day: 26, title: 'End-of-year show', type: 'cultural', location: 'Main Hall', visibility: 'public' },
+];
+
 export function eventsPack(count = featureCounts.events) {
-   const eventTypes = ['academic', 'sports', 'cultural', 'meeting', 'workshop', 'fieldtrip', 'ceremony'];
    return {
       events: Array.from({ length: Math.max(0, count) }, (_, i) => {
-         // Events belong to the year their dates overlap: keep past ones inside the seed year.
-         const yearStart = new Date(`${seedAcademicYear.slice(0, 4)}-09-01T12:00:00.000Z`);
-         const offset = offsetDate(i % 4 === 0 ? -10 - i : 5 + i * 3);
-         const start = offset < yearStart ? yearStart : offset;
-         const registrationDeadline = new Date(start);
-         registrationDeadline.setDate(registrationDeadline.getDate() - 2);
-         const scoped = i % 3 === 0 ? randomClassSection() : {};
-         const status = start < new Date() ? 'completed' : 'scheduled';
+         const event = EVENT_CALENDAR[i % EVENT_CALENDAR.length];
+         // Past the calendar, events repeat a week later so their dates stay apart.
+         const startDate = schoolDay(addDays(teachingDate(event.month, event.day), Math.floor(i / EVENT_CALENDAR.length) * 7));
+         const scoped = event.type === 'fieldtrip' || event.type === 'workshop' && event.visibility === 'students'
+            ? randomClassSection() : {};
+         const hour = event.type === 'meeting' ? 16 : 9;
          return {
-            title: [
-               'Science fair',
-               'Parent-teacher meeting',
-               'Sports day',
-               'Reading workshop',
-               'Awards ceremony',
-            ][i % 5],
+            title: event.title,
             description: 'Generated demo event for dashboard calendar and operations views.',
-            type: eventTypes[i % eventTypes.length],
-            startDate: dateOnly(start),
-            endDate: dateOnly(start),
-            startTime: `${String(8 + (i % 7)).padStart(2, '0')}:00`,
-            endTime: `${String(10 + (i % 7)).padStart(2, '0')}:00`,
-            location: ['Main Hall', 'Library', 'Sports Field', 'Science Lab'][i % 4],
-            venue: ['Main Hall', 'Library', 'Sports Field', 'Science Lab'][i % 4],
-            visibility: ['public', 'students', 'parents', 'teachers'][i % 4],
-            status,
+            type: event.type,
+            startDate,
+            endDate: startDate,
+            startTime: `${String(hour).padStart(2, '0')}:00`,
+            endTime: `${String(hour + 2).padStart(2, '0')}:00`,
+            location: event.location,
+            venue: event.location,
+            visibility: event.visibility,
+            status: statusOn(startDate),
             capacity: 40 + (i * 10),
             registrationRequired: i % 2 === 0,
-            registrationDeadline: i % 2 === 0 ? dateOnly(registrationDeadline) : null,
+            registrationDeadline: i % 2 === 0 ? addDays(startDate, -2) : null,
             ...scoped,
             notes: 'Demo seed event.',
          };
@@ -433,62 +544,96 @@ export function eventsPack(count = featureCounts.events) {
    };
 }
 
-function withinInstructionYear(date: string) {
-   const startsOn = `${seedAcademicYear.slice(0, 4)}-09-01`;
-   const endsOn = `${seedAcademicYear.slice(5)}-06-30`;
-   return date < startsOn ? startsOn : date > endsOn ? endsOn : date;
+// Every section's subjects, numbered within the section so its exams can be
+// laid out over the exam week.
+function sectionContexts(teachers: any[]) {
+   const bySection = new Map<string, number>();
+   return teacherContexts(teachers).map((context) => {
+      const ordinal = bySection.get(context.sectionId) ?? 0;
+      bySection.set(context.sectionId, ordinal + 1);
+      return { ...context, ordinal };
+   });
 }
 
+const subjectNames = new Map(subjectsData.map((subject) => [subject.id, subject.name]));
+
+// Continuous assessment: a test in every subject about every six weeks.
+const ASSESSMENT_CALENDAR = [
+   { month: 9, day: 29, type: 'quiz', title: 'Diagnostic quiz', totalMarks: 10, duration: 30 },
+   { month: 11, day: 10, type: 'test', title: 'Test 1', totalMarks: 20, duration: 60 },
+   { month: 12, day: 15, type: 'assignment', title: 'Homework 1', totalMarks: 20, duration: 45 },
+   { month: 2, day: 16, type: 'test', title: 'Test 2', totalMarks: 20, duration: 60 },
+   { month: 4, day: 6, type: 'project', title: 'Class project', totalMarks: 20, duration: 90 },
+   { month: 5, day: 18, type: 'test', title: 'Test 3', totalMarks: 20, duration: 60 },
+];
+
+/**
+ * Every subject of every taught section follows the assessment calendar, a
+ * section's subjects spread over the same week. Those already past are
+ * completed and graded. A positive count keeps the first ones, round by round.
+ */
 export function assessmentsPack(teachers: any[], count = featureCounts.assessments) {
-   const contexts = teacherContexts(teachers);
-   const types = ['quiz', 'assignment', 'project', 'participation', 'test', 'presentation'];
-   return {
-      assessments: Array.from({ length: Math.max(0, Math.min(count, contexts.length || count)) }, (_, i) => {
-         const context = contexts.length ? contexts[i % contexts.length] : randomClassSection();
-         const totalMarks = [10, 20, 40, 100][i % 4];
-         return {
-            id: demoRecordId(`ASM${String(i + 1).padStart(4, '0')}`),
-            ...context,
-            title: ['Weekly quiz', 'Unit test', 'Class project', 'Oral presentation'][i % 4],
-            description: 'Generated assessment for demo academic history.',
-            type: types[i % types.length],
-            date: withinInstructionYear(dateOnly(offsetDate(i % 3 === 0 ? -20 - i : 7 + i))),
-            duration: [30, 45, 60, 90][i % 4],
-            totalMarks,
-            passingMarks: Math.floor(totalMarks / 2),
-            instructions: 'Complete the assessment according to teacher instructions.',
-            status: i % 3 === 0 ? 'completed' : 'scheduled',
-         };
-      }),
-   };
+   const contexts = sectionContexts(teachers);
+   const assessments = ASSESSMENT_CALENDAR.flatMap((round, roundIndex) => contexts.map((context, contextIndex) => {
+      const { ordinal, ...placement } = context;
+      const date = schoolDay(addDays(teachingDate(round.month, round.day), ordinal % 5));
+      return {
+         id: demoRecordId(`ASM${String(roundIndex * contexts.length + contextIndex + 1).padStart(4, '0')}`),
+         ...placement,
+         title: `${subjectNames.get(context.subjectId) ?? 'Subject'} · ${round.title}`,
+         description: 'Generated assessment for demo academic history.',
+         type: round.type,
+         date,
+         duration: round.duration,
+         totalMarks: round.totalMarks,
+         passingMarks: Math.floor(round.totalMarks / 2),
+         instructions: 'Complete the assessment according to teacher instructions.',
+         status: statusOn(date),
+      };
+   }));
+   return { assessments: count > 0 ? assessments.slice(0, count) : assessments };
 }
 
+// Two semester exams, each section sitting two subjects a day, morning and afternoon.
+const EXAM_CALENDAR = [
+   { month: 1, day: 19, type: 'midterm', title: 'First-semester exam' },
+   { month: 6, day: 1, type: 'final', title: 'Final exam' },
+];
+
+/** Every subject of every taught section sits both semester exams; see `assessmentsPack` for the count. */
 export function examsPack(teachers: any[], count = featureCounts.exams) {
-   const contexts = teacherContexts(teachers);
-   const types = ['midterm', 'final', 'standardized'];
-   return {
-      exams: Array.from({ length: Math.max(0, Math.min(count, contexts.length || count)) }, (_, i) => {
-         const context = contexts.length ? contexts[(i * 2) % contexts.length] : randomClassSection();
-         const totalMarks = [20, 40, 60, 100][i % 4];
-         const hour = 8 + (i % 6);
-         return {
-            id: demoRecordId(`EXM${String(i + 1).padStart(4, '0')}`),
-            ...context,
-            title: ['Mathematics exam', 'Language exam', 'Science exam', 'History exam'][i % 4],
-            description: 'Generated exam for demo academic records.',
-            type: types[i % types.length],
-            date: withinInstructionYear(dateOnly(offsetDate(i % 3 === 0 ? -30 - i : 14 + i))),
-            startTime: `${String(hour).padStart(2, '0')}:00`,
-            endTime: `${String(hour + 2).padStart(2, '0')}:00`,
-            duration: 120,
-            totalMarks,
-            passingMarks: Math.floor(totalMarks / 2),
-            roomNumber: String(10 + i),
-            instructions: 'Read all questions carefully before answering.',
-            status: i % 3 === 0 ? 'completed' : 'scheduled',
-         };
-      }),
-   };
+   const contexts = sectionContexts(teachers);
+   const rooms = new Map([...new Set(contexts.map((context) => context.sectionId))].map((sectionId, index) => [sectionId, String(10 + index)]));
+   const exams = EXAM_CALENDAR.flatMap((session, sessionIndex) => contexts.map((context, contextIndex) => {
+      const { ordinal, ...placement } = context;
+      const date = addDays(weekStarting(teachingDate(session.month, session.day)), Math.floor(ordinal / 2) % 6);
+      const hour = ordinal % 2 === 0 ? 8 : 14;
+      return {
+         id: demoRecordId(`EXM${String(sessionIndex * contexts.length + contextIndex + 1).padStart(4, '0')}`),
+         ...placement,
+         title: `${subjectNames.get(context.subjectId) ?? 'Subject'} · ${session.title}`,
+         description: 'Generated exam for demo academic records.',
+         type: session.type,
+         date,
+         startTime: `${String(hour).padStart(2, '0')}:00`,
+         endTime: `${String(hour + 2).padStart(2, '0')}:00`,
+         duration: 120,
+         totalMarks: 20,
+         passingMarks: 10,
+         roomNumber: rooms.get(context.sectionId),
+         instructions: 'Read all questions carefully before answering.',
+         status: statusOn(date),
+      };
+   }));
+   return { exams: count > 0 ? exams.slice(0, count) : exams };
+}
+
+// A student's usual level, from 0.45 to 0.9 of the marks, so their results
+// read like one pupil's rather than a fresh draw each time.
+function studentLevel(studentId: string) {
+   let hash = 0;
+   for (const char of studentId) hash = (hash * 31 + char.charCodeAt(0)) | 0;
+   return 0.45 + (Math.abs(hash) % 46) / 100;
 }
 
 export function gradesPack(
@@ -516,12 +661,13 @@ export function gradesPack(
       const sectionStudents = students.filter((student: any) =>
          student.sectionId === source.sectionId && student.yearEnrolledOn <= source.date);
       for (const student of sectionStudents) {
-         const missed = Math.random() < 0.08;
+         const missed = Math.random() < 0.04;
          const max = Number(source.totalMarks || 20);
+         const share = Math.min(1, Math.max(0.15, studentLevel(student.id) + (Math.random() - 0.5) * 0.3));
          grades.push({
             studentId: student.id,
             [source.sourceKey]: source.id,
-            marksObtained: missed ? 0 : Math.max(1, Math.round((max * (0.45 + Math.random() * 0.5)) * 100) / 100),
+            marksObtained: missed ? 0 : Math.max(0.5, Math.round(max * share * 4) / 4),
             feedback: missed
                ? `Absent during ${source.sourceLabel}.`
                : `Generated ${source.sourceLabel} feedback for the demo profile.`,
@@ -771,12 +917,30 @@ export function maintenancePack(vehicles: any[], count = featureCounts.maintenan
    };
 }
 
-export function staffPack(count = featureCounts.staff) {
-   const secondaryRoles = ['principal', 'secretary', 'receptionist', 'accountant', 'librarian', 'itSupport', 'busAssistant', 'cleaner', 'security'];
+// Hiring order and monthly pay (MAD) of a private school's support staff: the
+// posts every campus needs come first, at or above the SMIG.
+const SUPPORT_STAFF_POSTS = [
+   { role: 'principal', department: 'Administration', salary: 9500 },
+   { role: 'accountant', department: 'Administration', salary: 5500 },
+   { role: 'secretary', department: 'Administration', salary: 4200 },
+   { role: 'cleaner', department: 'Operations', salary: 3300 },
+   { role: 'security', department: 'Operations', salary: 3500 },
+   { role: 'assistant', department: 'Support', salary: 3600 },
+   { role: 'busAssistant', department: 'Transport', salary: 3300 },
+   { role: 'receptionist', department: 'Administration', salary: 3800 },
+   { role: 'itSupport', department: 'Support', salary: 6000 },
+   { role: 'librarian', department: 'Support', salary: 4200 },
+];
+// Larger campuses add these posts again once every post above is filled.
+const REPEATED_SUPPORT_POSTS = ['assistant', 'cleaner', 'busAssistant', 'secretary', 'security']
+   .map((role) => SUPPORT_STAFF_POSTS.find((post) => post.role === role)!);
+
+export function staffPack(count = demoHeadcount.staff) {
    return {
       staff: Array.from({ length: Math.max(0, count) }, (_, i) => {
          const base = generateDriver({ id: `STF${String(i + 1).padStart(4, '0')}` });
-         const role = i % 2 === 0 ? 'assistant' : secondaryRoles[Math.floor(i / 2) % secondaryRoles.length];
+         const post = SUPPORT_STAFF_POSTS[i]
+            ?? REPEATED_SUPPORT_POSTS[(i - SUPPORT_STAFF_POSTS.length) % REPEATED_SUPPORT_POSTS.length];
          return {
             id: demoRecordId(`STF${String(i + 1).padStart(4, '0')}`),
              employeeCode: `DEMO-${seedAcademicYear}-${demoRunId}-STF-${String(i + 1).padStart(3, '0')}`,
@@ -786,11 +950,11 @@ export function staffPack(count = featureCounts.staff) {
             gender: base.gender,
             phone: base.phone,
             address: base.address,
-            role,
-            department: ['Administration', 'Operations', 'Support', 'Transport'][i % 4],
+            role: post.role,
+            department: post.department,
             compensationMode: 'monthly',
-            salary: 3200 + (i % 6) * 600,
-            employmentType: ['fullTime', 'partTime', 'contract'][i % 3],
+            salary: post.salary + (i % 3) * 200,
+            employmentType: i < SUPPORT_STAFF_POSTS.length ? 'fullTime' : ['fullTime', 'partTime', 'contract'][i % 3],
             hireDate: base.hireDate > `${seedAcademicYear.slice(0, 4)}-09-01`
                ? `${seedAcademicYear.slice(0, 4)}-09-01` : base.hireDate,
             status: 'active',

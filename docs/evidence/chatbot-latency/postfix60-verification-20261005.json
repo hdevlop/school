@@ -1,0 +1,21 @@
+{
+    "capturedAt":  "2026-10-05T09:47:47.0048444Z",
+    "tests":  {
+                  "passed":  306,
+                  "failed":  0,
+                  "assertions":  903,
+                  "frozenCheckoutAlsoPassed":  true
+              },
+    "sourceAndTestTypechecks":  "passed",
+    "lint":  "passed",
+    "productionBuild":  "passed",
+    "missingDocumentationLinks":  0,
+    "diffWhitespaceCheck":  "passed",
+    "runAndPostflightCorpusMatch":  true,
+    "completed":  60,
+    "automaticPassed":  60,
+    "assistantAccepted":  60,
+    "costGate":  "failed",
+    "conditionalPaidExpansion":  "not performed",
+    "taskAppStopped":  true
+}

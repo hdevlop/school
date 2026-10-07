@@ -1,0 +1,10 @@
+{
+    "pid":  19732,
+    "snapshot":  "C:\\Users\\pc\\AppData\\Local\\Temp\\school-chatbot-empty-read-20261005-698676dc",
+    "port":  3102,
+    "startedAt":  "2026-10-05T01:16:23.0535312Z",
+    "command":  "bun run dev",
+    "controls":  true,
+    "sourceFrozen":  true,
+    "distDirectory":  ".next-empty-read-live"
+}

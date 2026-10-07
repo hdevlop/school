@@ -1,0 +1,183 @@
+{
+  "clientDate": "2026-10-06",
+  "capturedAtUtc": "2026-10-06T14:53:49.633Z",
+  "scope": "Focused local repeated recheck of two known cases, assistant review only",
+  "attempts": 6,
+  "plannedAttempts": 6,
+  "uniqueQuestions": 2,
+  "repetitions": 3,
+  "originalAutomaticPassed": 5,
+  "assistantReviewedPassed": 6,
+  "correctedOfflineScorerPassed": 6,
+  "focusedResponseCheckPassed": true,
+  "broaderRoleAcceptance": false,
+  "nativeHumanAcceptance": false,
+  "productionAcceptance": false,
+  "jevEnabled": false,
+  "latencyMs": {
+    "mean": 2131.6666666666665,
+    "p50": 1062,
+    "p95": 7838,
+    "min": 375,
+    "max": 7838,
+    "note": "Per-turn HTTP/body completion excluding diagnostics; six samples, two cache misses/four hits, not first-text/browser timing or stable p95."
+  },
+  "accounting": {
+    "declaredEstimateUsd": 0.0073489,
+    "clientLimitUsd": 0.05,
+    "reservePerAttemptUsd": 0.005,
+    "sdkEstimatedUsd": 0.0008622109999999999,
+    "knownCostAttempts": 6,
+    "unknownCostAttempts": 0,
+    "retainedReserveUsd": 0,
+    "observedLateSharedKeyDeltaUsd": 0.0079722,
+    "note": "Immediate and five-second key windows were zero; later billing update is not free-call evidence or an isolated run invoice. Estimates differ from the shared-key delta; host, cached/reasoning charges and other traffic remain unallocated."
+  },
+  "completeCorrelatedCaptures": 6,
+  "embeddings": {
+    "requestsWithCapture": 6,
+    "requestsWithoutCapture": 0,
+    "requestsWithIncompleteCapture": 0,
+    "requestsWithNoCalls": 0,
+    "logicalCalls": 6,
+    "providerAttempts": 2,
+    "byCache": {
+      "miss": 2,
+      "hit": 4
+    },
+    "byOperation": {
+      "tool-routing": 6
+    },
+    "byOutcome": {
+      "completed": 6
+    },
+    "attemptOutcomes": {
+      "completed": 2
+    },
+    "logicalCallMs": {
+      "p50": 0,
+      "p95": 206.6
+    },
+    "providerAttemptMs": {
+      "p50": 186.2,
+      "p95": 205.9
+    },
+    "note": "All outcomes included; incomplete capture contains partial counts. Attempts nest inside logical calls, which overlap routing/context/preparation/tool execution; do not add durations. Missing capture is unknown."
+  },
+  "terminalToolErrors": 0,
+  "terminalToolBlocks": 0,
+  "runSourceChanges": {
+    "scripts/chatbot-role-scoring.mjs": {
+      "before": "8705fe8a671ecdfbf223eaf91e97670dba2e374aa7df269ec07df5bae8b0811a",
+      "after": "0f1a84f1c8b595af64808b6bdc613d6bc2f92dcf09a8d119e5306bd17c4949da",
+      "reason": "Post-run correction of record-of-student versus attendance-record false positive; no new paid calls."
+    }
+  },
+  "reviewed": [
+    {
+      "id": "parent-children-en",
+      "repetition": 1,
+      "passed": true,
+      "originalAutomaticPass": true,
+      "correctedScorerPass": true,
+      "expectedNamesMatched": true,
+      "toolWarnings": [],
+      "note": "Expected children matched scoped fixture; no finance-profile or other tool call."
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "repetition": 1,
+      "passed": true,
+      "originalAutomaticPass": false,
+      "correctedScorerPass": true,
+      "expectedNamesMatched": null,
+      "toolWarnings": [],
+      "note": "Reports a scoped student lookup failure and inability to verify attendance; no empty-attendance or invented-date claim."
+    },
+    {
+      "id": "parent-children-en",
+      "repetition": 2,
+      "passed": true,
+      "originalAutomaticPass": true,
+      "correctedScorerPass": true,
+      "expectedNamesMatched": true,
+      "toolWarnings": [],
+      "note": "Expected children matched scoped fixture; no finance-profile or other tool call."
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "repetition": 2,
+      "passed": true,
+      "originalAutomaticPass": true,
+      "correctedScorerPass": true,
+      "expectedNamesMatched": null,
+      "toolWarnings": [],
+      "note": "Reports a scoped student lookup failure and inability to verify attendance; no empty-attendance or invented-date claim."
+    },
+    {
+      "id": "parent-children-en",
+      "repetition": 3,
+      "passed": true,
+      "originalAutomaticPass": true,
+      "correctedScorerPass": true,
+      "expectedNamesMatched": true,
+      "toolWarnings": [],
+      "note": "Expected children matched scoped fixture; no finance-profile or other tool call."
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "repetition": 3,
+      "passed": true,
+      "originalAutomaticPass": true,
+      "correctedScorerPass": true,
+      "expectedNamesMatched": null,
+      "toolWarnings": [],
+      "note": "Reports a scoped student lookup failure and inability to verify attendance; no empty-attendance or invented-date claim."
+    }
+  ],
+  "anonymizedTranscript": [
+    {
+      "id": "parent-children-en",
+      "repetition": 1,
+      "query": "What are the names of my children?",
+      "answer": "Your children this year are: - <person-1> - <person-2> - <person-3>"
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "repetition": 1,
+      "query": "وريني الغياب ديال <person-4>",
+      "answer": "ما كاين حتى شي سجل ديال التلميذ اسميتو <person-4> فهاد العام الدراسي. ميمكنش نلقاو معلومات الحضور أو الغياب ديالو. إذا بغيتي شي معلومة أخرى ولا اسم آخر، قولها."
+    },
+    {
+      "id": "parent-children-en",
+      "repetition": 2,
+      "query": "What are the names of my children?",
+      "answer": "Your children this year are: - <person-1> - <person-2> - <person-3>"
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "repetition": 2,
+      "query": "وريني الغياب ديال <person-4>",
+      "answer": "ماكينش أي سجل ديال الطالب مسمى <person-4> فالسنة الأكاديمية المختارة. ما نقدرش نعطيك معلومات على الحضور أو الغياب ديالو."
+    },
+    {
+      "id": "parent-children-en",
+      "repetition": 3,
+      "query": "What are the names of my children?",
+      "answer": "Your children this year are: - <person-1> - <person-2> - <person-3> "
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "repetition": 3,
+      "query": "وريني الغياب ديال <person-4>",
+      "answer": "ما كانش شي طالب سميتو <person-4> فالسنة الدراسية لي مختارة. ما نقدروش نشوفو الغياب ديالو."
+    }
+  ],
+  "rawPrivateSha256": {
+    "report": "2db753ff03221a120650e6c231170a621099c96f7f512d94be236d04a37f512c",
+    "fixtures": "6963e42e259dd34fe09ff6328824c92c895910d4f940a68e232cd9c003fdb836"
+  },
+  "remainingPaidSlots": 0,
+  "retries": 0,
+  "note": "The original scorer falsely flagged a student-record refusal. The fix requires actual attendance words in the same negative clause. Original live results and earlier 9/10 role failure retained."
+}

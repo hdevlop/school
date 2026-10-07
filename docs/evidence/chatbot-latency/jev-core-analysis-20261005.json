@@ -1,0 +1,179 @@
+{
+  "capturedAt": "2026-10-05T20:30:59.695Z",
+  "scope": "Frozen core policy synthetic exploration; no rendered answers, school tools or runtime readiness race",
+  "requestsAttempted": 61,
+  "maxRequests": 312,
+  "decisionsValidated": 59,
+  "attemptsUnique": true,
+  "requestShapeUnchangedBetweenLegs": true,
+  "requestShapeMatchesFrozenB0V3": true,
+  "sourceHashesMatch": true,
+  "originalPaidEvidenceModified": false,
+  "reportedKnownCostUsd": 0.0023254559999999996,
+  "knownCostAttempts": 59,
+  "unknownCostAttempts": 2,
+  "retainedUnknownReservationsUsd": 0.004,
+  "accountedCostAndReservationsUsd": 0.006325456,
+  "declaredBudgetUsd": 0.02,
+  "withinDeclaredRequestAndAccountingAllowance": true,
+  "costComplete": false,
+  "full": {
+    "acceptancePolicy": "core",
+    "samples": 61,
+    "errors": 2,
+    "topChoiceAccuracy": 0.9830508474576272,
+    "writeAccuracy": 1,
+    "accepted": 37,
+    "acceptedWrong": 0,
+    "precision": 1,
+    "coverage": 0.925,
+    "writeAnsweredAsRead": 0,
+    "readRefusedAsWrite": 0,
+    "wrongCases": [],
+    "acceptedCases": 37,
+    "wrongCaseCount": 0,
+    "errorUpperBound95": 0.07777471100513789
+  },
+  "afterLanguage": {
+    "acceptancePolicy": "core",
+    "samples": 57,
+    "errors": 2,
+    "topChoiceAccuracy": 0.9818181818181818,
+    "writeAccuracy": 1,
+    "accepted": 35,
+    "acceptedWrong": 0,
+    "precision": 1,
+    "coverage": 0.9210526315789473,
+    "writeAnsweredAsRead": 0,
+    "readRefusedAsWrite": 0,
+    "wrongCases": [],
+    "acceptedCases": 35,
+    "wrongCaseCount": 0,
+    "errorUpperBound95": 0.0820316358566705
+  },
+  "afterLanguageAndRegex": {
+    "acceptancePolicy": "core",
+    "samples": 55,
+    "errors": 2,
+    "topChoiceAccuracy": 0.9811320754716981,
+    "writeAccuracy": 1,
+    "accepted": 33,
+    "acceptedWrong": 0,
+    "precision": 1,
+    "coverage": 0.9166666666666666,
+    "writeAnsweredAsRead": 0,
+    "readRefusedAsWrite": 0,
+    "wrongCases": [],
+    "acceptedCases": 33,
+    "wrongCaseCount": 0,
+    "errorUpperBound95": 0.08678118929147494
+  },
+  "allParsedDecisionLatencyMs": {
+    "count": 59,
+    "p50": 357.01600000000053,
+    "p95": 431.8657999999996,
+    "max": 589.6879999999983
+  },
+  "warmParsedDecisionLatencyMs": {
+    "count": 57,
+    "p50": 352.8587000000007,
+    "p95": 431.8657999999996,
+    "max": 589.6879999999983
+  },
+  "warmParsedDecisionMeanMs": 354.62886140350895,
+  "latencyNote": "Successful parsed decisions only; two process connection-setup requests remain raw but are excluded from combined warm metrics. Pacing is excluded from each request duration.",
+  "acceptedMeanMs": 355.1012333333336,
+  "acceptedQuestionFamilies": 15,
+  "errors": [
+    {
+      "id": "core3-fr-20",
+      "repetition": 1,
+      "error": "HTTP 429: {\"error\":{\"message\":\"HTTP 429: {\\\"detail\\\":{\\\"error_type\\\":\\\"api_usage_error\\\",\\\"message\\\":\\\"Rate limit exceeded. Please retry shortly.\\\"}}\",\"code\":429}}",
+      "reportedCostUsd": null
+    },
+    {
+      "id": "core3-ary-09",
+      "repetition": 1,
+      "error": "HTTP 429: {\"error\":{\"message\":\"HTTP 429: {\\\"detail\\\":{\\\"error_type\\\":\\\"api_usage_error\\\",\\\"message\\\":\\\"Rate limit exceeded. Please retry shortly.\\\"}}\",\"code\":429}}",
+      "reportedCostUsd": null
+    }
+  ],
+  "wrongAcceptedQueries": [],
+  "nativeReviewedCases": 0,
+  "acceptance": {
+    "mode": "synthetic-exploratory",
+    "productionAcceptance": false,
+    "reasons": [
+      "incomplete_or_failed_run",
+      "fewer_than_150_unique_accepted_questions",
+      "fewer_than_150_independent_question_families",
+      "native_authorship_and_review_outstanding"
+    ],
+    "threshold": 0.8,
+    "acceptancePolicy": "core",
+    "candidateSummary": {
+      "acceptancePolicy": "core",
+      "samples": 55,
+      "errors": 2,
+      "topChoiceAccuracy": 0.9811320754716981,
+      "writeAccuracy": 1,
+      "accepted": 33,
+      "acceptedWrong": 0,
+      "precision": 1,
+      "coverage": 0.9166666666666666,
+      "writeAnsweredAsRead": 0,
+      "readRefusedAsWrite": 0,
+      "wrongCases": [],
+      "acceptedCases": 33,
+      "wrongCaseCount": 0,
+      "errorUpperBound95": 0.08678118929147494
+    },
+    "acceptedFamilies": 15,
+    "nativeReviewedCases": 0,
+    "latencyWarmMs": {
+      "count": 58,
+      "p50": 352.8587000000007,
+      "p95": 431.8657999999996,
+      "max": 589.6879999999983
+    },
+    "note": "Repetitions and language variants in one family are not independent. Original B0 remains failed; this is not rendered-answer or readiness-race validation."
+  },
+  "legs": [
+    {
+      "path": "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json",
+      "attempts": 20,
+      "intervalMs": 0,
+      "stoppedReason": "unknown_request_cost",
+      "knownReportedCostUsd": 0.000743316,
+      "reservedUsd": 0.002,
+      "ledgerBefore": {
+        "capturedAt": "2026-10-05T19:59:03.425Z",
+        "usage": 0.906000734,
+        "limitRemaining": 49.093999266
+      },
+      "ledgerAfter": {
+        "capturedAt": "2026-10-05T19:59:10.830Z",
+        "usage": 0.906000734,
+        "limitRemaining": 49.093999266
+      }
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/jev-core-continuation-20261005.json",
+      "attempts": 41,
+      "intervalMs": 1000,
+      "stoppedReason": "unknown_request_cost",
+      "knownReportedCostUsd": 0.0015821399999999995,
+      "reservedUsd": 0.002,
+      "ledgerBefore": {
+        "capturedAt": "2026-10-05T20:07:06.519Z",
+        "usage": 0.90674405,
+        "limitRemaining": 49.09325595
+      },
+      "ledgerAfter": {
+        "capturedAt": "2026-10-05T20:07:46.887Z",
+        "usage": 0.90674405,
+        "limitRemaining": 49.09325595
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "purpose": "offline-freshness-check",
+  "paidCalls": 0,
+  "schoolCalls": 0,
+  "corpusPath": "datasets/chatbot-latency/jev-fresh-stress304-20261007.json",
+  "corpusSha256": "cc43f22713c73380027c538e3c5fbc6537d76573ef0a1dec7c830847d958ec71",
+  "previousCorpusSha256": {
+    "datasets/chatbot-latency/questions.json": "d0723f38110513e51c4b7035244e6dbabe9c739f575eb0335071939eef14bb0e",
+    "datasets/chatbot-latency/jev-intents.json": "b990576678c4114331fbb9e6a1de32855610570bced8783e99585b62f9027fd8",
+    "datasets/chatbot-latency/jev-core-exploration.json": "3e2a7192cdebfba6df2f9665186f2d619f762b405201dcad9078f94e92f00434",
+    "datasets/chatbot-latency/jev-count-guard-dev.json": "fb4e5e7e785e10d5a77114cf3c54b500f3171a60a72a2726a57e0859011f2e82",
+    "datasets/chatbot-latency/jev-moroccan-development.json": "fb7e20021d874a678ba1882d778ad3f99a21ff5b6c8adeb3a1fdb0a782048fba",
+    "datasets/chatbot-latency/jev-moroccan-probe96-dev-20261006.json": "a11ae8613f89353ef7d040e5fe73ad82133423db4f6295f13a29c56a75e9d5f0",
+    "datasets/chatbot-latency/jev-native-first-batch.json": "df4e167c8dace7c58b908d35fd0492af32647b1d9fbd6fdad48e2d152b400f1f",
+    "datasets/chatbot-latency/jev-operator-review100-frozen-20261007.json": "bcbb23d11f5c3c876acbbeeeac8eeddd2ff9fb2a9d95defb234185a69451df12",
+    "datasets/chatbot-latency/jev-fixes-regression100-20261007.json": "3bfb0cec8c0c7c4a5f54e16014fae5b3934671313e41859443ce52854ecd993c"
+  },
+  "freshness": {
+    "cases": 304,
+    "families": 61,
+    "nativeReviewedCases": 0,
+    "operatorWorkflow": {
+      "workflow": "assistant-draft-operator-review",
+      "nativeAuthorshipRequired": false,
+      "languageReviewComplete": false,
+      "labels": "assistant-provisional",
+      "nativeReviewedCases": 0
+    },
+    "provenance": "Assistant-authored synthetic cases; explicit native-authorship waiver; operator reviews wording, labels remain assistant-provisional"
+  },
+  "scenarios": 76,
+  "familyLimit": "Synthetic clustering, not independent observations. Cannot meet the 150-family gate.",
+  "questionCountByIntent": {
+    "student_count": 12,
+    "teacher_count": 12,
+    "student_and_teacher_count": 12,
+    "class_list": 12,
+    "attendance_today": 16,
+    "small_talk": 16,
+    "upcoming_exams": 8,
+    "write_request": 120,
+    "needs_llm": 96
+  }
+}

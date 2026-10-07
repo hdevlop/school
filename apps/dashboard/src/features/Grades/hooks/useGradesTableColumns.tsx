@@ -55,6 +55,8 @@ export const useGradesTableColumns = ({
     },
     {
       accessorKey: 'gender',
+      // Secondary to grading: shown only where the table has room, so names never truncate.
+      meta: { hiddenBelow: '2xl' },
       header: t('grades.table.gender'),
       enableSorting: true,
       cell: ({ row }) => {
@@ -65,6 +67,8 @@ export const useGradesTableColumns = ({
     },
     {
       accessorKey: 'phone',
+      // Secondary to grading: shown only where the table has room, so names never truncate.
+      meta: { hiddenBelow: '2xl' },
       header: t('grades.table.phone'),
       enableSorting: false,
       cell: ({ row }) => {
@@ -74,6 +78,8 @@ export const useGradesTableColumns = ({
     },
     {
       accessorKey: 'className',
+      // Secondary to grading: shown only where the table has room, so names never truncate.
+      meta: { hiddenBelow: '2xl' },
       header: t('grades.table.class'),
       enableSorting: false,
       cell: ({ row }) => {
@@ -83,6 +89,8 @@ export const useGradesTableColumns = ({
     },
     {
       accessorKey: 'sectionName',
+      // Secondary to grading: shown only where the table has room, so names never truncate.
+      meta: { hiddenBelow: '2xl' },
       header: t('grades.table.section'),
       enableSorting: false,
       cell: ({ row }) => {

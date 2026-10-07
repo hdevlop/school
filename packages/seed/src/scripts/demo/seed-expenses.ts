@@ -2,6 +2,7 @@
 
 import { ExpenseService } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
+import { findAdministratorId } from '../shared/demo-phases';
 import expensesData from './data/expenses.json';
 
 runSeedTask('expenses seed', async (server) => {
@@ -9,7 +10,7 @@ runSeedTask('expenses seed', async (server) => {
 
   console.log('🌱 Starting expenses seeding...');
 
-  const created = await expenseService.seedDemoExpenses(expensesData);
+  const created = await expenseService.seedDemoExpenses(expensesData, await findAdministratorId());
   console.log(`✅ Expenses seeded (${created.length} records)`);
 
   console.log('\n✨ Expenses seed completed successfully!');

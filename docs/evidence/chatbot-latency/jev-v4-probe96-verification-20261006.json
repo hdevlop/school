@@ -1,0 +1,83 @@
+{
+    "clientDate":  "2026-10-06",
+    "stage":  "Authorized binary wording v4 development comparison with saved v3",
+    "classifierRequests":  96,
+    "keyLedgerReads":  4,
+    "schoolToolCalls":  0,
+    "validDecisions":  96,
+    "apiErrors":  0,
+    "unknownRequestCosts":  0,
+    "retainedReservationUsd":  0,
+    "threshold":  0.8,
+    "acceptancePolicy":  "core",
+    "falseWriteScoresBefore":  9,
+    "falseWriteScoresAfter":  4,
+    "falseNegativeWriteScoresAfter":  0,
+    "eligibleAcceptedBefore":  57,
+    "eligibleAcceptedAfter":  58,
+    "acceptedLabelErrorsAfter":  0,
+    "arabiziAcceptedBefore":  6,
+    "arabiziAcceptedAfter":  7,
+    "arabiziEligibleSupported":  18,
+    "classifierMeanMs":  320.38987604166749,
+    "warmClassifierP95Ms":  374.97350000002189,
+    "reportedCostUsd":  0.005115054,
+    "laterObservedSharedKeyDeltaUsd":  0.005115054,
+    "developmentCriteriaPass":  true,
+    "nativeAcceptance":  false,
+    "humanReviewedCases":  0,
+    "defaultWriteWordingVersion":  3,
+    "jevEnabled":  false,
+    "countV2AcceptedAfter":  57,
+    "v3RawOrCorpusLabelsChanged":  false,
+    "postResultThresholdOrWordingChanged":  false,
+    "checks":  [
+                   {
+                       "command":  "pre-dispatch analyzer/probe/wording tests",
+                       "exitCode":  0,
+                       "testsPassed":  28,
+                       "assertions":  264
+                   },
+                   {
+                       "command":  "bun run test:boundaries",
+                       "exitCode":  0,
+                       "testsPassed":  395,
+                       "assertions":  2570,
+                       "workspaceFiles":  1288,
+                       "clientEntries":  294
+                   },
+                   {
+                       "command":  "bun run lint",
+                       "exitCode":  0
+                   },
+                   {
+                       "command":  "paired source/corpus/raw hashes, input token differences and evidence links",
+                       "exitCode":  0,
+                       "extraInputTokensPerQuestion":  335,
+                       "pairedQuestions":  96
+                   }
+               ],
+    "sourceSha256":  {
+                         "scripts/chatbot-jev-development-study.mjs":  "4bcc3668e9938b53b39dee9889f4ac1e53124d86ed099d0e0dc148d54cec79c4",
+                         "scripts/tests/chatbot-jev-development-study.test.mjs":  "b29effe747efed591b43329bf454df2735cf41f880bb3b8f533104fa8e489977",
+                         "scripts/chatbot-jev-wording-comparison.mjs":  "4c1e6417dcd0b4794b340e06086d13f3bc4f1d05ba41f19f14e6e1b25e4dea00",
+                         "scripts/tests/chatbot-jev-wording-comparison.test.mjs":  "6cb3b997e5c214a61d86e719312124fb0d7d9069ca898fe8207a4e9644d1a26e",
+                         "scripts/chatbot-jev-wording-v4.mjs":  "3df2321d58c158607b373fcb6f507bfb57f1da9e4c18dcfa1de2001736aa162b",
+                         "datasets/chatbot-latency/jev-moroccan-probe96-dev-20261006.json":  "a11ae8613f89353ef7d040e5fe73ad82133423db4f6295f13a29c56a75e9d5f0",
+                         "docs/evidence/chatbot-latency/jev-draft-probe96-run-20261006.json":  "3a555eec67ac792d3fcfd7cba400b471c32e3ecd82cfe2995fb1b4c520065dfb",
+                         "docs/evidence/chatbot-latency/jev-v4-probe96-plan-20261006.json":  "85efc5bb93e58cc9cca2ef00592f0e6eac6c3520f18992b3859bcc8d12df1628",
+                         "docs/evidence/chatbot-latency/jev-v4-probe96-key-precheck-20261006.json":  "92aa95024c1e6ae5926158a1c2f546210cf12bf5c4f45235fe1585a213654133",
+                         "docs/evidence/chatbot-latency/jev-v4-probe96-run-20261006.json":  "e3106314d6110b8e9a1e1d8e63417690b007c71dd8ba6384dfeeadaf1281d931",
+                         "docs/evidence/chatbot-latency/jev-v4-probe96-comparison-20261006.json":  "481a2baa06b22c6a2e74bad1dc05be0e100ce15c2c8b577929b25de7911fa89f",
+                         "docs/evidence/chatbot-latency/jev-v4-probe96-key-later-20261006.json":  "d57c07213bcb0eacad8547c6b70c40065b03460e51bf3d01a2621ba07d406d04"
+                     },
+    "limitations":  [
+                        "Historical sequential comparison, not randomized or interleaved",
+                        "Spent assistant development questions, linked translations and provisional labels",
+                        "Both response models match, but network/model variability is uncontrolled",
+                        "No rendered-answer, tool-permission or readiness-race timing measured",
+                        "Only two write families per style; no native validation",
+                        "V2 declines one newly accepted choice, removing the net acceptance gain",
+                        "96-request allowance consumed; no further calls from remaining dollars"
+                    ]
+}

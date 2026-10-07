@@ -21,15 +21,10 @@ const safely = async <T,>(request: Promise<any>, fallback: T): Promise<T> => {
   }
 };
 
-const safelyCollection = async (
-  request: Promise<any>,
-  nestedKey?: string,
-): Promise<any[]> => {
+const safelyCollection = async (request: Promise<any>): Promise<any[]> => {
   try {
     const payload = responseData<any>(await request, []);
-    if (Array.isArray(payload)) return payload;
-    if (nestedKey && Array.isArray(payload?.[nestedKey])) return payload[nestedKey];
-    return [];
+    return Array.isArray(payload) ? payload : [];
   } catch {
     return [];
   }
@@ -40,6 +35,8 @@ export interface ParentChildDashboardData {
   attendance: any[];
   grades: any[];
   fees: any[];
+  // The year's overdue installments, from the same fees read.
+  overdueAmount: number;
 }
 
 export function useParentDashboard(parentId: string) {
@@ -77,13 +74,15 @@ export function useParentDashboard(parentId: string) {
     queryFn: () => withAcademicYear(viewingYear, () =>
       Promise.all(
         children.map(async (child: any): Promise<ParentChildDashboardData> => {
-          const [attendance, grades, fees] = await Promise.all([
+          const [attendance, grades, feeAccount] = await Promise.all([
             safelyCollection(getAttendanceByStudentApi(child.id)),
             safelyCollection(getGradesByStudentApi(child.id)),
-            safelyCollection(getFeesByStudentApi(child.id), 'fees'),
+            safely<any>(getFeesByStudentApi(child.id), null),
           ]);
+          const fees = Array.isArray(feeAccount?.fees) ? feeAccount.fees : [];
+          const overdueAmount = Number(feeAccount?.summary?.totalOverdueAmount) || 0;
 
-          return { child, attendance, grades, fees };
+          return { child, attendance, grades, fees, overdueAmount };
         }),
       )),
     enabled: familyQuery.isSuccess && children.length > 0,

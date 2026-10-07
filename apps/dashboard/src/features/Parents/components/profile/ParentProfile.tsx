@@ -18,6 +18,7 @@ import {
   NStatCard,
 } from 'najm-kit';
 import {
+  AlertTriangle,
   ArrowLeft,
   Award,
   BookOpenCheck,
@@ -31,6 +32,7 @@ import {
   ReceiptText,
   Star,
   UsersRound,
+  Wallet,
 } from 'lucide-react';
 import {
   CartesianGrid,
@@ -45,7 +47,6 @@ import { useTranslation } from 'najm-i18n/react';
 import type { TranslationParams } from 'najm-i18n';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
-import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { useParentDashboard } from '../../hooks/useParentDashboard';
 
 interface ParentProfileProps {
@@ -175,6 +176,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
     const totalPaid = feeRows.reduce((sum, fee) => sum + toNumber(fee.paidAmount), 0);
     const outstandingFees = Math.max(0, totalFees - totalPaid);
     const paymentProgress = totalFees > 0 ? Math.min(100, (totalPaid / totalFees) * 100) : 0;
+    const overdueFees = childData.reduce((sum, item) => sum + item.overdueAmount, 0);
     const nextFee = feeRows
       .filter((fee) => toNumber(fee.netAmount) > toNumber(fee.paidAmount))
       .toSorted((a, b) =>
@@ -209,6 +211,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
       totalFees,
       totalPaid,
       outstandingFees,
+      overdueFees,
       paymentProgress,
       nextFee,
       attendanceChart,
@@ -247,7 +250,6 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
         subtitle={text('subtitle')}
       >
         <NPageHeaderActions>
-          <ViewingYearSelector />
           <NButton
             type="button"
             variant="outline"
@@ -271,8 +273,8 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
       </NPageHeader>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
-        <div className="flex flex-col gap-3 pb-1">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="flex min-h-full flex-col gap-3 pb-1">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
             <NStatCard
               icon={UsersRound}
               label={t('parents.profile.totalChildren')}
@@ -297,13 +299,26 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
               value={dashboard.pendingAssessments.length}
               onClick={() => router.push('/assessments')}
             />
+            <NStatCard
+              icon={Wallet}
+              label={text('outstandingBalance')}
+              value={majorMoney(dashboard.outstandingFees)}
+              onClick={() => router.push('/fees')}
+            />
+            <NStatCard
+              icon={AlertTriangle}
+              label={text('overdueAmount')}
+              value={majorMoney(dashboard.overdueFees)}
+              classNames={dashboard.overdueFees > 0 ? { value: 'text-destructive' } : undefined}
+              onClick={() => router.push('/fees')}
+            />
           </div>
 
-          <div className="grid min-h-[320px] grid-cols-1 gap-3 xl:grid-cols-12 [&>*]:min-h-0 [&>*]:min-w-0">
+          <div className="grid min-h-[320px] flex-1 grid-cols-1 gap-3 xl:grid-cols-12 [&>*]:min-h-0 [&>*]:min-w-0">
             <NCard
               title={text('myChildren')}
               icon={UsersRound}
-              className="flex h-full w-full xl:col-span-3"
+              className="flex h-full w-full xl:col-span-4"
             >
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/students')}>
@@ -368,7 +383,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             <NCard
               title={text('childrenAttendance')}
               icon={CalendarRange}
-              className="flex h-full w-full xl:col-span-9"
+              className="flex h-full w-full xl:col-span-8"
             >
               <NCardAction>
                 <NButton
@@ -377,7 +392,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   size="sm"
                   onClick={() => router.push('/attendance/students')}
                 >
-                  {text('childrenAttendance')}
+                  {text('viewAllAttendance')}
                 </NButton>
               </NCardAction>
 
@@ -449,11 +464,11 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             </NCard>
           </div>
 
-          <div className="grid min-h-[320px] grid-cols-1 gap-3 xl:grid-cols-3 [&>*]:min-h-0 [&>*]:min-w-0">
+          <div className="grid min-h-[320px] flex-1 grid-cols-1 gap-3 xl:grid-cols-3 [&>*]:min-h-0 [&>*]:min-w-0">
             <NCard title={text('recentGrades')} icon={Award} className="flex h-full w-full">
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/grades')}>
-                  {text('recentGrades')}
+                  {text('viewAllGrades')}
                 </NButton>
               </NCardAction>
 
@@ -571,7 +586,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             <NCard title={text('upcomingEvents')} icon={CalendarDays} className="flex h-full w-full">
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/calendar')}>
-                  {text('upcomingEvents')}
+                  {text('viewAllEvents')}
                 </NButton>
               </NCardAction>
 

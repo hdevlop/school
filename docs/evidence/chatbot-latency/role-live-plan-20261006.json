@@ -1,0 +1,43 @@
+{
+    "clientDate":  "2026-10-06",
+    "capturedAtUtc":  "2026-10-06T10:12:13.0413988Z",
+    "target":  "http://127.0.0.1:3103",
+    "scope":  "One current-configuration role/follow-up smoke; unchanged Cerebras/fallback policy",
+    "plannedCases":  10,
+    "plannedRequests":  12,
+    "maxRequests":  12,
+    "maxEstimatedUsd":  0.1,
+    "requestReserveUsd":  0.005,
+    "applicationCaches":  "uncontrolled",
+    "providerCap":  50,
+    "providerRemaining":  49.081779828,
+    "providerLimitIsRunCap":  false,
+    "selectedKeySharedWithOtherTraffic":  true,
+    "keyMatchesEnvironment":  true,
+    "jevEnabled":  false,
+    "controls":  {
+                     "enabled":  true,
+                     "instanceId":  "471153ff-fa40-4af5-9747-2bd080a6d8a3",
+                     "resetCount":  0,
+                     "caches":  [
+                                    "query-embedding",
+                                    "knowledge-context"
+                                ]
+                 },
+    "sourceSha256":  {
+                         "package.json":  "657aae931a4608fb45f6a8fd12d79acf14915e40aed5f24119028f6dce5b1d93",
+                         "bun.lock":  "1f7e25cc4c6ca300bd86cff16eb981547284bb619aff21083c7aa241f9d40f90",
+                         "scripts/chatbot-roles.mjs":  "aac718b6f89e4488174b369df6beb25ab6a7a694e113da66287b7e65b536a9a8",
+                         "scripts/chatbot-role-measurement.mjs":  "be48bdee3faf126ed04773913f111b91f7a27965ab4f87a9873679f1552fdeb2",
+                         "scripts/chatbot-budget.mjs":  "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+                         "scripts/chatbot-role-fixtures.mjs":  "b6003fa1132f8a0839c607afcc6817ffed3870066b0ce06c0fa2713670f6f935",
+                         "packages/server/src/config/chatbotConfig.ts":  "55b2f99e0c929fc55bd24b86587ad6ae5b447530a81fb120f80dafd207c56c64",
+                         "packages/server/src/config/ragConfig.ts":  "e6b8549b4e11a1784cdecb50a40c2b66bcd026a06636f42ac84c6bebca1af193",
+                         "packages/server/src/modules/chat/schoolReplyTemplates.ts":  "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+                         "packages/server/src/modules/chat/schoolReplyContext.ts":  "d77d306f9300e5a65f901c929e6c5e3a69a01c85853e5fd320b7f7f09e00616d"
+                     },
+    "fixturesSha256":  "47c974f6a80e6b1e2cdd21fec6cad85e3f165a8bfa5b168cde6f87716bee9347",
+    "privateTextEvidence":  true,
+    "paidScheduleRetries":  0,
+    "productionRollout":  false
+}

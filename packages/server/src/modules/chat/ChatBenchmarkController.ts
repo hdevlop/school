@@ -13,6 +13,12 @@ export class ChatBenchmarkController {
     return this.benchmark.status();
   }
 
+  @Get('/provider-usage')
+  @isAdministrator()
+  providerUsage() {
+    return this.benchmark.providerUsage();
+  }
+
   @Post('/reset-caches')
   @isAdministrator()
   resetCaches() {

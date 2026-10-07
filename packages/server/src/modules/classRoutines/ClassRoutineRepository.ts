@@ -351,6 +351,15 @@ export class ClassRoutineRepository {
     return schedule;
   }
 
+  async teacherIdForUser(userId: string) {
+    const [row] = await this.db.select({ id: teachers.id })
+      .from(teachers)
+      .innerJoin(staff, eq(teachers.staffId, staff.id))
+      .where(eq(staff.userId, userId))
+      .limit(1);
+    return row?.id ?? null;
+  }
+
   async getTeacherScheduleIdsInSelectedYear(teacherId: string) {
     return this.getTeacherScheduleIds(teacherId, this.year.label);
   }

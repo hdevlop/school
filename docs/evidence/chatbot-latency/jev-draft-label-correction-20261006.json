@@ -1,0 +1,12 @@
+{
+    "scope":  "Provisional assistant-label correction; no question text change",
+    "id":  "mda26-student_and_teacher_count-12-fr",
+    "previousIntent":  "student_and_teacher_count",
+    "correctedIntent":  "needs_llm",
+    "reason":  "Question omits which two totals and requires context",
+    "sourceSha256":  {
+                         "datasets/chatbot-latency/jev-moroccan-development.json":  "96efb38e0820056b4204ea8886d82c458d94e3aa7c0ef540ebb7d36d84c21296",
+                         "datasets/chatbot-latency/jev-native-collection.json":  "0869a97d986c7605f87c7c98cc888fc29eb6260573f47aad3d156d93986912c1",
+                         "datasets/chatbot-latency/jev-moroccan-review-worksheet.json":  "333dd1b916db044149d2af3df6eab275907d0b83ee10e0fc8701b19ac93638c5"
+                     }
+}

@@ -1,0 +1,21 @@
+{
+    "capturedAt":  "2026-10-05T13:53:19.0871450Z",
+    "run":  "concurrency-2",
+    "condition":  "One supported cache clear before the batch; no per-request resets; subsequent caches evolve naturally",
+    "reset":  null,
+    "embeddingResidency":  {
+                               "name":  "qwen3-embedding:latest",
+                               "expires_at":  "2319-01-15T13:40:34.939791507Z",
+                               "size_vram":  0
+                           },
+    "verifiedPostResetStatus":  {
+                                    "enabled":  true,
+                                    "instanceId":  "046b25ee-b7f2-4932-8c6e-d64c0356e104",
+                                    "resetCount":  1,
+                                    "caches":  [
+                                                   "query-embedding",
+                                                   "knowledge-context"
+                                               ]
+                                },
+    "recordingNote":  "The reset returned an unenveloped object; the initial setup reset field is null because preparation looked for .data. The read-only preflight immediately after reset captured its valid instance/reset count; compare every diagnostic to that status."
+}

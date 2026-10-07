@@ -1,0 +1,69 @@
+{
+    "capturedAt":  "2026-10-05T19:15:40.8933288Z",
+    "scope":  "Localized benchmark errors and repository verification",
+    "paidRequests":  0,
+    "liveAppRequests":  0,
+    "packagePinsChanged":  false,
+    "jevMode":  "off / runtime integration not implemented",
+    "b0AccuracyGate":  "still failed",
+    "sourceSha256":  {
+                         "packages/server/src/modules/chat/ChatBenchmarkService.ts":  "3b6f7ba386afe85898ac3beac94ef5e84c0e291d7ef49b98275560e30709b897",
+                         "packages/server/tests/chat/ChatBenchmarkControls.test.ts":  "2dd5bb029ed70d0dfd0bf88bf9c24a5b5b5f1d2be20a2eb9299b16447acfa242",
+                         "packages/contracts/src/locales/en.json":  "d9247934253740309da15e24495bb21cb2c6fcdaf939ebba3ec6f5ef7b0c907b",
+                         "packages/contracts/src/locales/fr.json":  "38b5cbf998f2f9ef9f0597529b9d5a1ef0ae7f1d531056a814368ac199bdda31",
+                         "packages/contracts/src/locales/ar.json":  "768de7b32af2ce4d23b7e1af59e43cb4e96bada21328f845452e1883c87e014d",
+                         "packages/contracts/src/locales/es.json":  "43da3a4e424c49f3627d52dba1103ad31a9c9d1854b7995e2750c8520a080ce9"
+                     },
+    "focusedTests":  {
+                         "pass":  11,
+                         "fail":  0,
+                         "assertions":  68,
+                         "command":  "bun test packages/server/tests/chat/ChatBenchmarkControls.test.ts packages/server/tests/i18n"
+                     },
+    "rootTests":  {
+                      "command":  "bun run test",
+                      "exitCode":  0,
+                      "pass":  1446,
+                      "fail":  0,
+                      "assertions":  6743,
+                      "testGroups":  10,
+                      "boundariesPassed":  true,
+                      "filesChecked":  1275,
+                      "browserEntriesChecked":  288
+                  },
+    "lint":  {
+                 "command":  "bun run lint",
+                 "exitCode":  0
+             },
+    "typecheck":  {
+                      "command":  "bun run typecheck",
+                      "exitCode":  0
+                  },
+    "translations":  {
+                         "command":  "bun run i18n:check",
+                         "exitCode":  0,
+                         "missingKeys":  0,
+                         "locales":  [
+                                         "en",
+                                         "fr",
+                                         "ar",
+                                         "es"
+                                     ]
+                     },
+    "build":  {
+                  "command":  "bun run build",
+                  "status":  "passed; sequentially after typecheck",
+                  "exitCode":  0
+              },
+    "publicErrors":  [
+                         "chatBenchmark.errors.controlsDisabled",
+                         "chatBenchmark.errors.providerUsageUnsupported",
+                         "chatBenchmark.errors.providerUsageFailed"
+                     ],
+    "historicalLanguageReadinessVerificationModified":  false,
+    "remaining":  [
+                      "Fresh independent B0 accuracy acceptance",
+                      "Published async readiness hook and terminal diagnostics",
+                      "Runtime tests and end-to-end comparison after prerequisites pass"
+                  ]
+}

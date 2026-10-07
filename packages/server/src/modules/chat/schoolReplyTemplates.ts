@@ -1,4 +1,6 @@
 import { normalizeReplyText, type ReplyLanguage, type ReplyRequest, type ReplyTemplate } from 'najm-chatbot';
+import { schoolListReply } from './schoolListReplies';
+import { schoolWriteRefusalKind } from './schoolReplyWrite';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -49,11 +51,11 @@ function renderCounts(language: ReplyLanguage, entities: Array<'students' | 'tea
 export function schoolReplyTemplate({ userText, language }: ReplyRequest, academicYear?: string): ReplyTemplate | null {
   if (!language) return null;
   const text = normalizeReplyText(userText);
-  // Match commands at the start, never quoted bodies or read requests about writes.
-  const write = /^(?:enregistre(?:r|z)?|marque(?:r|z)?|crée|cree|publie|supprime|modifie|سجل|علم|دير|انشئ|انشر|احذف|عدل)(?!\p{L})/u.test(text);
-  if (write && /élève|eleve|notes?|controle|contrôle|annonce|parent|presence|présence|absence|absent|حضور|غياب|غايب|غائب|حاضر|تلميذ|نقط|اعلان|الاباء|اولياء/u.test(text)) {
-    const attendance = /presence|présence|absence|absent|حضور|غياب|غايب|غائب|حاضر/u.test(text);
-    return { text: refusals[language][attendance ? 'attendance' : 'change'] };
+  const writeKind = schoolWriteRefusalKind(userText);
+  if (writeKind) return { text: refusals[language][writeKind] };
+  if (academicYear) {
+    const list = schoolListReply(userText, language, academicYear);
+    if (list) return list;
   }
   const entities = countEntities(text);
   if (!entities || !academicYear) return null;

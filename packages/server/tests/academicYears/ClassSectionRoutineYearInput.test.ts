@@ -37,4 +37,15 @@ describe("a teacher's routine", () => {
     expect(await routines.getTeacherSchedule('teacher-1', { role: 'teacher', teacherId: 'teacher-1' })).toEqual([]);
     expect(read).toBe(true);
   });
+
+  it('finds a signed-in teacher from their account, whose session names no teacher', async () => {
+    const routines = new ClassRoutineService({
+      teacherIdForUser: async (userId: string) => userId === 'user-1' ? 'teacher-1' : null,
+      getTeacherScheduleIdsInSelectedYear: async () => [],
+    } as any, new ClassRoutineValidator({} as any));
+
+    expect(await routines.getTeacherSchedule('teacher-1', { id: 'user-1', role: 'teacher' })).toEqual([]);
+    await expect(routines.getTeacherSchedule('teacher-2', { id: 'user-1', role: 'teacher' })).rejects.toThrow();
+    await expect(routines.getTeacherSchedule('teacher-1', { id: 'user-9', role: 'teacher' })).rejects.toThrow();
+  });
 });

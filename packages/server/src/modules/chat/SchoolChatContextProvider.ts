@@ -71,6 +71,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
         return [
           `The signed-in user is a parent, parentId ${parent.id}.`,
           listed.length ? `Their children this year: ${listed.join('; ')}.` : 'No child is linked to them this year.',
+          'For their children\'s names, answer from this authorized list; parent-profile_get_children is a finance profile and is not needed for names.',
           '"My child" means one of these children; for their grades, attendance or overview use the student-profile tools with that studentId.',
         ].join(' ');
       }

@@ -1,0 +1,203 @@
+{
+    "capturedAt":  "2026-10-05T15:57:50.9684463Z",
+    "block":  "cerebras-a1",
+    "runId":  "dcad4168",
+    "total":  30,
+    "automaticPassed":  30,
+    "assistantAccepted":  30,
+    "verifiedFresh":  30,
+    "verifiedCorrelation":  30,
+    "templateParity":  24,
+    "generationSteps":  9,
+    "paths":  {
+                  "hybrid":  {
+                                 "n":  30,
+                                 "firstTextMean":  434.2,
+                                 "completeMean":  442.333,
+                                 "firstTextP50":  231,
+                                 "firstTextP95":  1252,
+                                 "completeP50":  231,
+                                 "completeP95":  1308
+                             },
+                  "model":  {
+                                "n":  6,
+                                "firstTextMean":  1169.167,
+                                "completeMean":  1208.5,
+                                "firstTextP50":  1114,
+                                "firstTextP95":  1676,
+                                "completeP50":  1134,
+                                "completeP95":  1689
+                            },
+                  "template":  {
+                                   "n":  24,
+                                   "firstTextMean":  250.458,
+                                   "completeMean":  250.792,
+                                   "firstTextP50":  226,
+                                   "firstTextP95":  471,
+                                   "completeP50":  227,
+                                   "completeP95":  471
+                               }
+              },
+    "reviews":  [
+                    {
+                        "id":  "greeting-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Model text reviewed before this approval: correct language/register and scoped empty lookup or read-only help; no invented records or write promises."
+                    },
+                    {
+                        "id":  "student-count-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Model text reviewed before this approval: correct language/register and scoped empty lookup or read-only help; no invented records or write promises."
+                    },
+                    {
+                        "id":  "grade-create-blocked-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-fr",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "greeting-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Model text reviewed before this approval: correct language/register and scoped empty lookup or read-only help; no invented records or write promises."
+                    },
+                    {
+                        "id":  "student-count-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Model text reviewed before this approval: correct language/register and scoped empty lookup or read-only help; no invented records or write promises."
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-ar",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "greeting-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Model text reviewed before this approval: correct language/register and scoped empty lookup or read-only help; no invented records or write promises."
+                    },
+                    {
+                        "id":  "student-count-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "teacher-count-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "classes-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "attendance-today-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "upcoming-exams-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "students-and-teachers-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "missing-student-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Model text reviewed before this approval: correct language/register and scoped empty lookup or read-only help; no invented records or write promises."
+                    },
+                    {
+                        "id":  "attendance-mark-blocked-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    },
+                    {
+                        "id":  "announcement-blocked-ary",
+                        "assistantAccepted":  true,
+                        "reason":  "Exact reviewed-template parity and current fixture facts/guarded reads pass."
+                    }
+                ],
+    "editorialCaveat":  "Darija lookup ending عاود سولت is awkward wording; native fluency remains unproven.",
+    "declaredBatchEstimateUsd":  0.00636115,
+    "ledgerAttribution":  "Unallocated selected-key observation; repeated read unchanged for 78.282 seconds, but earlier/later drift exceeds own batch estimate. Not an isolated Cerebras bill.",
+    "billing":  {
+                    "observedWindowIncreaseUsd":  0.015907582,
+                    "declaredBatchEstimateUsd":  0.00636115,
+                    "usedForProviderCostComparison":  "declared strict-provider estimate only",
+                    "nextBlockDispatchAllowed":  true,
+                    "note":  "Read unchanged, no confirmed isolation; model tokens/declared budget known and under stop."
+                }
+}

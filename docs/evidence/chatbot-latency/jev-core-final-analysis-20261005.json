@@ -1,0 +1,428 @@
+{
+  "capturedAt": "2026-10-05T21:52:40.764Z",
+  "scope": "Synthetic classification only; no School reply, tool, database or live readiness-race execution",
+  "plannedAttempts": 312,
+  "attempts": 312,
+  "validDecisions": 310,
+  "scheduledAttemptsComplete": true,
+  "allAttemptsValid": false,
+  "errors": [
+    {
+      "id": "core3-fr-20",
+      "repetition": 1,
+      "error": "HTTP 429: {\"error\":{\"message\":\"HTTP 429: {\\\"detail\\\":{\\\"error_type\\\":\\\"api_usage_error\\\",\\\"message\\\":\\\"Rate limit exceeded. Please retry shortly.\\\"}}\",\"code\":429}}",
+      "reportedCostUsd": null,
+      "httpStatus": null,
+      "retryAfter": null,
+      "rateLimitHeaders": null,
+      "providerError": null
+    },
+    {
+      "id": "core3-ary-09",
+      "repetition": 1,
+      "error": "HTTP 429: {\"error\":{\"message\":\"HTTP 429: {\\\"detail\\\":{\\\"error_type\\\":\\\"api_usage_error\\\",\\\"message\\\":\\\"Rate limit exceeded. Please retry shortly.\\\"}}\",\"code\":429}}",
+      "reportedCostUsd": null,
+      "httpStatus": 429,
+      "retryAfter": null,
+      "rateLimitHeaders": null,
+      "providerError": null
+    }
+  ],
+  "attemptsUniqueAndContiguous": true,
+  "modelRequestMatchesFrozenB0V3": true,
+  "sourceHashesMatchFinishPlan": true,
+  "originalPaidEvidenceChanged": false,
+  "reportHashes": {
+    "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json": "36734425e8b2410fae66578f299e00b1f1b8f5c7d58370a28d22c89743b8174c",
+    "docs/evidence/chatbot-latency/jev-core-continuation-20261005.json": "5ebdce7a12438cd4e3446ce78eb9f1950f91eb1710192a5fea06766a10afdb8e",
+    "docs/evidence/chatbot-latency/jev-core-health-20261005.json": "11840f2053f6cfdd892259e24822b690089fbfef8edd4e5d99090b1aa5a90d45",
+    "docs/evidence/chatbot-latency/jev-core-finish-20261005.json": "7b3e5e02e5cc96570f373d977290355024cc08e7cf73b5c05301e6203ee2f143"
+  },
+  "classification": {
+    "all": {
+      "acceptancePolicy": "core",
+      "samples": 312,
+      "errors": 2,
+      "topChoiceAccuracy": 0.9483870967741935,
+      "writeAccuracy": 0.964516129032258,
+      "accepted": 167,
+      "acceptedWrong": 1,
+      "precision": 0.9940119760479041,
+      "coverage": 0.8691099476439791,
+      "writeAnsweredAsRead": 0,
+      "readRefusedAsWrite": 0,
+      "wrongCases": [
+        "core3-ary-21 -> teacher_count"
+      ],
+      "acceptedCases": 57,
+      "wrongCaseCount": 1,
+      "errorUpperBound95": null
+    },
+    "afterLanguage": {
+      "acceptancePolicy": "core",
+      "samples": 285,
+      "errors": 2,
+      "topChoiceAccuracy": 0.9540636042402827,
+      "writeAccuracy": 0.9611307420494699,
+      "accepted": 155,
+      "acceptedWrong": 1,
+      "precision": 0.9935483870967742,
+      "coverage": 0.8603351955307262,
+      "writeAnsweredAsRead": 0,
+      "readRefusedAsWrite": 0,
+      "wrongCases": [
+        "core3-ary-21 -> teacher_count"
+      ],
+      "acceptedCases": 53,
+      "wrongCaseCount": 1,
+      "errorUpperBound95": null
+    },
+    "afterLanguageAndRegex": {
+      "acceptancePolicy": "core",
+      "samples": 276,
+      "errors": 2,
+      "topChoiceAccuracy": 0.9525547445255474,
+      "writeAccuracy": 0.9598540145985401,
+      "accepted": 146,
+      "acceptedWrong": 1,
+      "precision": 0.9931506849315068,
+      "coverage": 0.8529411764705882,
+      "writeAnsweredAsRead": 0,
+      "readRefusedAsWrite": 0,
+      "wrongCases": [
+        "core3-ary-21 -> teacher_count"
+      ],
+      "acceptedCases": 50,
+      "wrongCaseCount": 1,
+      "errorUpperBound95": null
+    },
+    "acceptedFamilies": 16,
+    "byLanguage": {
+      "fr": {
+        "attempts": 78,
+        "validDecisions": 77,
+        "candidate": {
+          "acceptancePolicy": "core",
+          "samples": 63,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 39,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 13,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.20581666518655073
+        },
+        "warmClassificationMs": {
+          "count": 75,
+          "p50": 319.0725000000093,
+          "p95": 446.5576000000001,
+          "max": 540.6644999999999,
+          "mean": 327.3701826666641
+        }
+      },
+      "ar": {
+        "attempts": 78,
+        "validDecisions": 78,
+        "candidate": {
+          "acceptancePolicy": "core",
+          "samples": 75,
+          "errors": 0,
+          "topChoiceAccuracy": 0.96,
+          "writeAccuracy": 1,
+          "accepted": 39,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.8666666666666667,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 13,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.20581666518655073
+        },
+        "warmClassificationMs": {
+          "count": 78,
+          "p50": 297.8475000000035,
+          "p95": 422.27400000000125,
+          "max": 589.6879999999983,
+          "mean": 312.97370641025753
+        }
+      },
+      "ary": {
+        "attempts": 78,
+        "validDecisions": 77,
+        "candidate": {
+          "acceptancePolicy": "core",
+          "samples": 75,
+          "errors": 1,
+          "topChoiceAccuracy": 0.9459459459459459,
+          "writeAccuracy": 0.972972972972973,
+          "accepted": 41,
+          "acceptedWrong": 1,
+          "precision": 0.975609756097561,
+          "coverage": 0.9090909090909091,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [
+            "core3-ary-21 -> teacher_count"
+          ],
+          "acceptedCases": 15,
+          "wrongCaseCount": 1,
+          "errorUpperBound95": null
+        },
+        "warmClassificationMs": {
+          "count": 75,
+          "p50": 310.7583999999988,
+          "p95": 419.23379999998724,
+          "max": 561.4868000000133,
+          "mean": 320.51228666666776
+        }
+      },
+      "ary-latn": {
+        "attempts": 78,
+        "validDecisions": 78,
+        "candidate": {
+          "acceptancePolicy": "core",
+          "samples": 63,
+          "errors": 0,
+          "topChoiceAccuracy": 0.9047619047619048,
+          "writeAccuracy": 0.8571428571428571,
+          "accepted": 27,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.6428571428571429,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 9,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.2831288355631135
+        },
+        "warmClassificationMs": {
+          "count": 78,
+          "p50": 309.73199999998906,
+          "p95": 427.63790000000154,
+          "max": 517.317699999985,
+          "mean": 318.7405423076928
+        }
+      }
+    },
+    "stability": {
+      "cases": 104,
+      "stable": 103,
+      "unstable": [
+        "core3-ary-23"
+      ]
+    },
+    "warmClassificationMs": {
+      "count": 306,
+      "p50": 309.460699999996,
+      "p95": 422.27400000000125,
+      "max": 589.6879999999983,
+      "mean": 319.81992352941177
+    },
+    "acceptedClassificationMeanMs": 329.4987472602739,
+    "languageSkippedCases": [
+      "core3-fr-05",
+      "core3-fr-08",
+      "core3-fr-23",
+      "core3-fr-26",
+      "core3-ary-latn-12",
+      "core3-ary-latn-15",
+      "core3-ary-latn-18",
+      "core3-ary-latn-23",
+      "core3-ary-latn-24"
+    ],
+    "wrongAcceptedQueries": [
+      {
+        "id": "core3-ary-21",
+        "repetition": 3,
+        "query": "وريني سميات الأساتذة ديال المدرسة، ماشي شحال عددهم.",
+        "label": "needs_llm",
+        "choice": "teacher_count",
+        "confidence": 0.8,
+        "writeProbability": 0.14
+      }
+    ]
+  },
+  "accounting": {
+    "knownReportedCostUsd": 0.012219437999999996,
+    "observedEstimatedUsd": 0.012219438,
+    "unknownAttempts": 2,
+    "retainedUnknownReservationsUsd": 0.004,
+    "accountedCostAndReservationsUsd": 0.016219438,
+    "cumulativeBudgetUsd": 0.02,
+    "cumulativeMaxRequests": 312,
+    "costComplete": false,
+    "withinDeclaredRequestAndEstimateAllowance": true,
+    "newAttemptCount": 251,
+    "newKnownCostUsd": 0.009893981999999994,
+    "note": "Unknown earlier costs remain reserved. Provider usage and shared-key ledger observations are separate; client reservations are not billing caps."
+  },
+  "legs": [
+    {
+      "path": "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json",
+      "attempts": 20,
+      "validDecisions": 19,
+      "intervalMs": 0,
+      "stoppedReason": "unknown_request_cost",
+      "knownReportedCostUsd": 0.000743316,
+      "reservedUsd": 0.002,
+      "keyBefore": {
+        "capturedAt": "2026-10-05T19:59:03.425Z",
+        "usage": 0.906000734,
+        "limitRemaining": 49.093999266
+      },
+      "keyAfter": {
+        "capturedAt": "2026-10-05T19:59:10.830Z",
+        "usage": 0.906000734,
+        "limitRemaining": 49.093999266
+      },
+      "warmClassificationMs": {
+        "count": 18,
+        "p50": 360.0657999999994,
+        "p95": 540.6644999999999,
+        "max": 540.6644999999999,
+        "mean": 368.8242666666667
+      }
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/jev-core-continuation-20261005.json",
+      "attempts": 41,
+      "validDecisions": 40,
+      "intervalMs": 1000,
+      "stoppedReason": "unknown_request_cost",
+      "knownReportedCostUsd": 0.0015821399999999995,
+      "reservedUsd": 0.002,
+      "keyBefore": {
+        "capturedAt": "2026-10-05T20:07:06.519Z",
+        "usage": 0.90674405,
+        "limitRemaining": 49.09325595
+      },
+      "keyAfter": {
+        "capturedAt": "2026-10-05T20:07:46.887Z",
+        "usage": 0.90674405,
+        "limitRemaining": 49.09325595
+      },
+      "warmClassificationMs": {
+        "count": 39,
+        "p50": 341.8648000000003,
+        "p95": 431.8657999999996,
+        "max": 589.6879999999983,
+        "mean": 348.0771358974361
+      }
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/jev-core-health-20261005.json",
+      "attempts": 12,
+      "validDecisions": 12,
+      "intervalMs": 2000,
+      "stoppedReason": "max_requests_reached",
+      "knownReportedCostUsd": 0.00047787599999999996,
+      "reservedUsd": 0,
+      "keyBefore": {
+        "capturedAt": "2026-10-05T21:42:38.012Z",
+        "usage": 0.90832619,
+        "limitRemaining": 49.09167381
+      },
+      "keyAfter": {
+        "capturedAt": "2026-10-05T21:43:00.315Z",
+        "usage": 0.90832619,
+        "limitRemaining": 49.09167381
+      },
+      "warmClassificationMs": {
+        "count": 11,
+        "p50": 266.2401000000009,
+        "p95": 327.3035999999993,
+        "max": 327.3035999999993,
+        "mean": 274.6015454545455
+      }
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/jev-core-finish-20261005.json",
+      "attempts": 239,
+      "validDecisions": 239,
+      "intervalMs": 2000,
+      "stoppedReason": null,
+      "knownReportedCostUsd": 0.009416105999999994,
+      "reservedUsd": 0,
+      "keyBefore": {
+        "capturedAt": "2026-10-05T21:44:07.488Z",
+        "usage": 0.90832619,
+        "limitRemaining": 49.09167381
+      },
+      "keyAfter": {
+        "capturedAt": "2026-10-05T21:52:04.039Z",
+        "usage": 0.916046252,
+        "limitRemaining": 49.083953748
+      },
+      "warmClassificationMs": {
+        "count": 238,
+        "p50": 302.7974000000104,
+        "p95": 419.23379999998724,
+        "max": 561.4868000000133,
+        "mean": 313.5732542016807
+      }
+    }
+  ],
+  "acceptance": {
+    "mode": "synthetic-exploratory",
+    "productionAcceptance": false,
+    "reasons": [
+      "incomplete_or_failed_run",
+      "accepted_wrong_question",
+      "fewer_than_150_unique_accepted_questions",
+      "fewer_than_150_independent_question_families",
+      "native_authorship_and_review_outstanding"
+    ],
+    "threshold": 0.8,
+    "acceptancePolicy": "core",
+    "candidateSummary": {
+      "acceptancePolicy": "core",
+      "samples": 276,
+      "errors": 2,
+      "topChoiceAccuracy": 0.9525547445255474,
+      "writeAccuracy": 0.9598540145985401,
+      "accepted": 146,
+      "acceptedWrong": 1,
+      "precision": 0.9931506849315068,
+      "coverage": 0.8529411764705882,
+      "writeAnsweredAsRead": 0,
+      "readRefusedAsWrite": 0,
+      "wrongCases": [
+        "core3-ary-21 -> teacher_count"
+      ],
+      "acceptedCases": 50,
+      "wrongCaseCount": 1,
+      "errorUpperBound95": null
+    },
+    "acceptedFamilies": 16,
+    "nativeReviewedCases": 0,
+    "latencyWarmMs": {
+      "count": 309,
+      "p50": 309.460699999996,
+      "p95": 422.27400000000125,
+      "max": 589.6879999999983
+    },
+    "note": "Repetitions and language variants in one family are not independent. Original B0 remains failed; this is not rendered-answer or readiness-race validation."
+  },
+  "nativeAuthoredCases": 0,
+  "nativeReviewedCases": 0,
+  "productionAcceptance": false,
+  "jevEnabled": false,
+  "limitations": [
+    "Assistant-authored questions and wording; no independent native held-out review.",
+    "104 questions in 26 families; repetitions and linked language variants are correlated.",
+    "Warm metrics exclude the first attempted request from each of four processes; pacing is excluded from request duration.",
+    "Classification speed is not complete reply latency or actual runtime fallback readiness.",
+    "Scheduled completion does not repair earlier failures or resolve unknown costs.",
+    "Provider availability in this paced window is not a production reliability guarantee.",
+    "Current language/regex projections do not test role/history eligibility, tools or response correctness."
+  ]
+}

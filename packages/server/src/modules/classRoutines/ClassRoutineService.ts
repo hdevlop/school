@@ -246,8 +246,13 @@ export class ClassRoutineService {
     return schedule ? this.getById(schedule.id) : null;
   }
 
-  async getTeacherSchedule(teacherId: string, user?: { role?: string; teacherId?: string }) {
-    this.validator.ensureTeacherScheduleAccess(teacherId, user);
+  // The session carries no teacher id: a signed-in teacher is found from
+  // their account, so they can read their own week and no one else's.
+  async getTeacherSchedule(teacherId: string, user?: { id?: string; role?: string; teacherId?: string }) {
+    const viewerTeacherId = user?.role === 'teacher' && user.id
+      ? await this.repository.teacherIdForUser(user.id) ?? undefined
+      : user?.teacherId;
+    this.validator.ensureTeacherScheduleAccess(teacherId, user && { role: user.role, teacherId: viewerTeacherId });
     const ids = await this.repository.getTeacherScheduleIdsInSelectedYear(teacherId);
     const schedules = await Promise.all(ids.map((id) => this.getById(id)));
     return schedules.map((schedule) => ({

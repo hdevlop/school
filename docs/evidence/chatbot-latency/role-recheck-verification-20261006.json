@@ -1,0 +1,94 @@
+{
+    "clientDate":  "2026-10-06",
+    "capturedAtUtc":  "2026-10-06T14:58:44.0921231Z",
+    "liveChatRequests":  6,
+    "plannedChatRequests":  6,
+    "uniqueQuestions":  2,
+    "repetitions":  3,
+    "remainingPaidSlots":  0,
+    "retries":  0,
+    "originalAutomaticPassed":  5,
+    "assistantReviewedPassed":  6,
+    "correctedOfflineScorerPassed":  6,
+    "broaderRoleAcceptance":  false,
+    "nativeHumanAcceptance":  false,
+    "productionRollout":  false,
+    "jevEnabled":  false,
+    "terminalToolErrors":  0,
+    "terminalToolBlocks":  0,
+    "completeCorrelatedCaptures":  6,
+    "scorerEditedAfterLiveRun":  true,
+    "liveAfterScorerEdit":  false,
+    "replayContract":  "Saved wording with confirmed scoped-empty-search contract; raw wire outputs not archived",
+    "rawPrivateReportHashVerified":  true,
+    "rawOriginalStatusRetained":  "checks_failed",
+    "earlier9of10EvidenceChanged":  false,
+    "publicFixtureIdentityCheckPassed":  true,
+    "applicationCaches":  "2 routing misses and 4 hits",
+    "sharedKeyWindowIsolated":  false,
+    "providerLimitIsRunCap":  false,
+    "checks":  [
+                   {
+                       "assertions":  191,
+                       "exitCode":  0,
+                       "command":  "focused role/scoring/fixture tests",
+                       "testsPassed":  36
+                   },
+                   {
+                       "assertions":  242,
+                       "exitCode":  0,
+                       "command":  "bun test scripts/tests/chatbot-load.test.mjs scripts/tests/chatbot-role-measurement.test.mjs",
+                       "note":  "Recovery after a timed-out mock run left a dead-process lock",
+                       "testsPassed":  23
+                   },
+                   {
+                       "assertions":  1502,
+                       "clientEntries":  288,
+                       "exitCode":  0,
+                       "testsPassed":  341,
+                       "command":  "bun run test:boundaries",
+                       "workspaceFiles":  1275,
+                       "testsFailed":  0
+                   },
+                   {
+                       "command":  "bun run lint",
+                       "exitCode":  0
+                   }
+               ],
+    "earlierTestFailure":  {
+                               "ownerVerifiedNotRunning":  true,
+                               "mockTimeout":  true,
+                               "staleLockRemoved":  true,
+                               "affectedChecksRerunPassed":  true,
+                               "deadLockPid":  18056,
+                               "newPaidRequests":  0
+                           },
+    "sourceSha256":  {
+                         "scripts/chatbot-roles.mjs":  "90fac33f7478798afbf7dd6167076e0b1df688263f5d3d90a07355bb8cdd6eba",
+                         "scripts/chatbot-role-scoring.mjs":  "0f1a84f1c8b595af64808b6bdc613d6bc2f92dcf09a8d119e5306bd17c4949da",
+                         "scripts/chatbot-role-measurement.mjs":  "6467e88d3cb382934030048cee29890c94a2e9e5a8ebf84500114dc968884c02",
+                         "scripts/tests/chatbot-roles.test.mjs":  "f3f856b24f66f14d52439e98c6e9d43c295d6b88ddc540fc47b491924839a75a",
+                         "scripts/tests/chatbot-role-scoring.test.mjs":  "737ad0f1fae38aa05169620b3bb154449c3d9511142d07f40f9a180adeff94e0",
+                         "scripts/tests/chatbot-role-measurement.test.mjs":  "a62977ea1ea92f1657395cfaa6ee31c3ebf8fc806db047999f7994e6e52cb7b1"
+                     },
+    "artifactSha256":  {
+                           "role-recheck-run-20261006.json":  "62de9abb39218bfaff09ccbcceb5de5b658dba438d1acc668ae45e153174e370",
+                           "role-recheck-analysis-20261006.json":  "1551c11a86e872fcabd74030c3a5eeb26bedfaf93f374ddbe98efa49339e85d2",
+                           "role-recheck-plan-20261006.json":  "9d0ac0e9479e3ec4adbafa080fde9ef70f8f0d9d9f8e98720a05166e9bd312dc",
+                           "role-recheck-prices-20261006.json":  "028bc4d013eec98f2c6ab68f8d1f5bb596514ea13d64b155891e93c6334f4147",
+                           "role-recheck-endpoints-20261006.json":  "b11673986ee44cc6faf77919ea3076446f60df16ae8dd763ac7e4bbb31cdb489",
+                           "role-recheck-key-before-20261006.json":  "81cacc091026b3b2b83ec5a9580b239ed1e9c460d210a6a64141bd9dc58f34bb",
+                           "role-recheck-key-after-20261006.json":  "cf26a85cdcccf8f26ce59b1f65472f315d8c4b3c8d56803333bbdfef26bcd1df",
+                           "role-recheck-key-settled-20261006.json":  "b3d3b954a87d92fe0b12d76643fcb6a6452f39e6f4c0a082da1edd018b937e86",
+                           "role-recheck-key-late-20261006.json":  "a31232da510f1c6826de5c7c1cca1079d8d9b778ce70364eb584b8d678b721a5"
+                       },
+    "limitations":  [
+                        "Two known cases repeated, not fresh independent acceptance",
+                        "Scorer correction is post-result development and still heuristic",
+                        "One slow first parent reply; no provider-cause or latency-improvement claim",
+                        "Late selected-key delta includes unallocated shared traffic/host/cache charges"
+                    ],
+    "taskAppStopped":  true,
+    "originalAppAvailable":  true,
+    "privateEvidenceFilesRemoved":  true
+}

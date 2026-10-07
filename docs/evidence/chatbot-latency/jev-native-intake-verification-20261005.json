@@ -1,0 +1,114 @@
+{
+  "capturedAt": "2026-10-05T22:29:36.864Z",
+  "scope": "Offline native intake preparation, empty-template check and mocked tests",
+  "liveProviderRequests": 0,
+  "liveLedgerReads": 0,
+  "schoolAppToolDatabaseCalls": 0,
+  "actualCollectedNativeCases": 0,
+  "actualReviewedNativeCases": 0,
+  "syntheticUnitFixturesAreNotHumanEvidence": true,
+  "readyForExport": false,
+  "productionAcceptance": false,
+  "jevEnabled": false,
+  "checks": [
+    {
+      "command": "bun run test:boundaries",
+      "exitCode": 0,
+      "testsPassed": 301,
+      "testsFailed": 0,
+      "assertions": 1207,
+      "workspaceFilesChecked": 1275,
+      "clientEntriesChecked": 288
+    },
+    {
+      "command": "bun run lint",
+      "exitCode": 0
+    },
+    {
+      "command": "bun scripts/chatbot-jev-native-intake.mjs --check",
+      "exitCode": 1,
+      "expected": "empty collection is not ready"
+    },
+    {
+      "command": "offline historical core parser/request replay",
+      "exitCode": 0,
+      "normalizedDecisionsReplayed": 310,
+      "originalV3RequestUnchanged": true,
+      "allFourCoreRawReportsUnchanged": true,
+      "originalStageAAndB0Unchanged": true
+    }
+  ],
+  "emptyCollection": {
+    "purpose": "native-intake",
+    "acceptancePolicy": "core",
+    "cases": 0,
+    "heldOutCases": 0,
+    "reviewedHeldOutCases": 0,
+    "reviewedSupportedFamilies": 0,
+    "declaredNativeAuthoredReviewedCases": 0,
+    "reviewedWriteFamiliesByLanguage": {
+      "fr": 0,
+      "ar": 0,
+      "ary": 0,
+      "ary-latn": 0
+    },
+    "reviewedCasesByIntent": {
+      "small_talk": 0,
+      "student_count": 0,
+      "teacher_count": 0,
+      "student_and_teacher_count": 0,
+      "class_list": 0,
+      "attendance_today": 0,
+      "upcoming_exams": 0,
+      "write_request": 0,
+      "needs_llm": 0
+    },
+    "blockedCaseCount": 0,
+    "blockedCases": [],
+    "blockedCasesTruncated": false,
+    "readyForExport": false,
+    "blockers": [
+      "no_held_out_cases",
+      "fewer_than_150_reviewed_supported_families",
+      "fewer_than_40_declared_native_darija_arabizi_cases",
+      "fewer_than_30_reviewed_write_families:fr",
+      "fewer_than_30_reviewed_write_families:ar",
+      "fewer_than_30_reviewed_write_families:ary",
+      "fewer_than_30_reviewed_write_families:ary-latn",
+      "missing_reviewed_intent:small_talk",
+      "missing_reviewed_intent:student_count",
+      "missing_reviewed_intent:teacher_count",
+      "missing_reviewed_intent:student_and_teacher_count",
+      "missing_reviewed_intent:class_list",
+      "missing_reviewed_intent:attendance_today",
+      "missing_reviewed_intent:write_request",
+      "missing_reviewed_intent:needs_llm"
+    ],
+    "provenance": "Declared human intake records; author/reviewer identities and truth of attestations are not verified by this tool",
+    "productionAcceptance": false
+  },
+  "sha256": {
+    "scripts/chatbot-jev-native.mjs": "b52ac9bf3accb9ec47a6e3c4be8bb82bcec34eeb2914f05fc958501a8acd7d12",
+    "scripts/chatbot-jev-native-intake.mjs": "7094ddda9efa7db72674c49edb34f8e692025fb577566f3902baf538e3d03fb6",
+    "scripts/chatbot-jev-probe.mjs": "2163a5f60d5cc5033c2db83adeeb60a08503584ed10054f76fca39d988e8f7cc",
+    "scripts/chatbot-jev-resume.mjs": "ee65d6f365d7850ed87235b699daf2455f6ce6feb7e7da5f43908fd17dfc61a0",
+    "scripts/chatbot-jev.mjs": "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+    "scripts/tests/chatbot-jev-native.test.mjs": "e6573e52d5ce25986a5db89c1b22e53d7427559ecdab7a87ca79345b9cf55280",
+    "scripts/tests/chatbot-jev-probe.test.mjs": "2c8e9147a932f03c3589430824007654df504e78dd2465c8e0f7404829fadf1f",
+    "scripts/tests/chatbot-jev-resume.test.mjs": "3dd5939e47e4318dae49a10c077f25ee50fff60f96e9db58561f7495a2eef2a2",
+    "datasets/chatbot-latency/jev-native-intake.example.json": "4ea4d52d50ba49e40a1286344f562a9c26d1551c85b88b44d7124dd82b4cd9fe"
+  },
+  "historicalCoreReportHashes": {
+    "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json": "36734425e8b2410fae66578f299e00b1f1b8f5c7d58370a28d22c89743b8174c",
+    "docs/evidence/chatbot-latency/jev-core-continuation-20261005.json": "5ebdce7a12438cd4e3446ce78eb9f1950f91eb1710192a5fea06766a10afdb8e",
+    "docs/evidence/chatbot-latency/jev-core-health-20261005.json": "11840f2053f6cfdd892259e24822b690089fbfef8edd4e5d99090b1aa5a90d45",
+    "docs/evidence/chatbot-latency/jev-core-finish-20261005.json": "7b3e5e02e5cc96570f373d977290355024cc08e7cf73b5c05301e6203ee2f143"
+  },
+  "limitations": [
+    "Human questions and review records are still required",
+    "Authorship, family links and review independence are declarations requiring human audit",
+    "Canonical freshness is checked against the three currently registered spent corpora; future spent native exports must be registered",
+    "Export readiness and numerical classification checks do not authorize production enablement",
+    "Scripts/tests/dataset/documentation changes only; no production build or package upgrade"
+  ]
+}

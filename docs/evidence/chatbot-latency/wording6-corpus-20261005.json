@@ -1,0 +1,34 @@
+{
+    "version":  4,
+    "scope":  "Original missing-student-fr case only, six new-session repetitions; diagnostic wording recheck, not full-workload cost acceptance.",
+    "role":  "admin",
+    "academicYear":  "2026-2027",
+    "factsCapturedAt":  "2026-10-05T15:07:22.4305177Z",
+    "factsSha256":  "c1cdf41c4c83e2cdd9449077747eda6252a36960a1f80d32d9e6745369beca9b",
+    "cases":  [
+                  {
+                      "id":  "missing-student-fr",
+                      "language":  "fr",
+                      "kind":  "single-read",
+                      "query":  "Affiche le bulletin de notes de l\u0027élève Zzbench Qqtest.",
+                      "expectedToolGroups":  [
+                                                 [
+                                                     "search_search_students"
+                                                 ]
+                                             ],
+                      "expectedToolCalls":  [
+                                                {
+                                                    "tools":  [
+                                                                  "search_search_students"
+                                                              ],
+                                                    "arguments":  {
+                                                                      "q":  "Zzbench Qqtest"
+                                                                  }
+                                                }
+                                            ],
+                      "storedNames":  [
+                                          "Zzbench Qqtest"
+                                      ]
+                  }
+              ]
+}

@@ -1,0 +1,386 @@
+﻿{
+    "capturedAt":  "2026-10-05T16:01:40.0451516Z",
+    "allFrozenMatch":  true,
+    "worktreeSameExceptExpectedVariantRouting":  true,
+    "productionRoutingChanged":  false,
+    "checks":  [
+                   {
+                       "provider":  "cerebras",
+                       "path":  "package.json",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "bun.lock",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/config/index.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/config/chatbotConfig.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  false,
+                       "expectedRoutingDifference":  true
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/config/chatbotSystemPrompt.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/config/ragConfig.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/modules/chat/SchoolChatContextProvider.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/modules/chat/schoolReplyContext.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/modules/chat/schoolReplyTemplates.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/modules/chat/schoolListReplies.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/modules/chat/ChatBenchmarkController.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "packages/server/src/modules/chat/ChatBenchmarkService.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "datasets/chatbot-latency/morocco.json",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-benchmark.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-stream.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-scoring.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-budget.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-empty-reads.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-load.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-cache.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-role-fixtures.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-role-fixtures.ps1",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-roles.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-language.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-facts.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-claims.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "cerebras",
+                       "path":  "scripts/chatbot-embedding-diagnostics.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "package.json",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "bun.lock",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/config/index.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/config/chatbotConfig.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  false,
+                       "expectedRoutingDifference":  true
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/config/chatbotSystemPrompt.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/config/ragConfig.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/modules/chat/SchoolChatContextProvider.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/modules/chat/schoolReplyContext.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/modules/chat/schoolReplyTemplates.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/modules/chat/schoolListReplies.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/modules/chat/ChatBenchmarkController.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "packages/server/src/modules/chat/ChatBenchmarkService.ts",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "datasets/chatbot-latency/morocco.json",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-benchmark.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-stream.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-scoring.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-budget.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-empty-reads.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-load.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-cache.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-role-fixtures.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-role-fixtures.ps1",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-roles.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-language.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-facts.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-claims.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   },
+                   {
+                       "provider":  "crusoe",
+                       "path":  "scripts/chatbot-embedding-diagnostics.mjs",
+                       "frozenMatchesManifest":  true,
+                       "worktreeMatchesFrozen":  true,
+                       "expectedRoutingDifference":  false
+                   }
+               ]
+}

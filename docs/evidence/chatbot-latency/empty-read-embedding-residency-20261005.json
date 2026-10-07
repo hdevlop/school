@@ -1,0 +1,12 @@
+{
+    "capturedAt":  "2026-10-05T01:15:23.2611347Z",
+    "source":  "http://127.0.0.1:11434/api/ps",
+    "models":  [
+                   {
+                       "name":  "qwen3-embedding:latest",
+                       "expires_at":  "2319-01-14T22:38:12.657875907Z",
+                       "size_vram":  0
+                   }
+               ],
+    "note":  "Observed before preparation; no model unload or paid warmup"
+}

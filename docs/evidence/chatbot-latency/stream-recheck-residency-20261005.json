@@ -1,0 +1,12 @@
+﻿{
+    "capturedAt":  "2026-10-05T15:07:25.0072762Z",
+    "source":  "http://localhost:11434/api/ps",
+    "residentModels":  [
+                           {
+                               "name":  "qwen3-embedding:latest",
+                               "expiresAt":  "2319-01-15T14:54:04.513532207Z",
+                               "sizeVram":  0
+                           }
+                       ],
+    "note":  "Observed residency only; no model unload or inference warmup issued"
+}

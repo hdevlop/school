@@ -1,0 +1,52 @@
+{
+  "stage": "Implemented source fixes plus completed same-corpus recheck",
+  "currentSourceSha256": {
+    "scripts/chatbot-jev-query-guard-v3.mjs": "772a8abcedf48c241a5872e29bfd9bfc34321f440a6af954c18d3bf352ba06cc",
+    "scripts/chatbot-jev-fix-study.mjs": "3a3d36237f0b9a5edee86e39e03deaffcb6c23f9fce0f265d44b5fce0626b44b",
+    "scripts/chatbot-jev-probe.mjs": "f35ae1f24bedcd8832ab8c5fe6e233e0d2a009754bd03f2d6f07e784362dbae5",
+    "scripts/chatbot-jev-resume.mjs": "c1a646c9a047368f3cb316006b49635a661cc1b881472c9b29eec124d6b98b5f",
+    "scripts/chatbot-jev-accuracy.mjs": "0e12734405e53bdf99481927fbf1a9ba45cb9e8456b3bfe8c9bc48524ba8dce8",
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "6e0892406a4369dcb9cfc9d93761f1f1ef857ab0d0e63428c183acbb91e9feca",
+    "packages/server/src/modules/chat/schoolReplyWrite.ts": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+    "package.json": "657aae931a4608fb45f6a8fd12d79acf14915e40aed5f24119028f6dce5b1d93",
+    "bun.lock": "1f7e25cc4c6ca300bd86cff16eb981547284bb619aff21083c7aa241f9d40f90"
+  },
+  "attempts": 100,
+  "valid": 99,
+  "unknownCostAttempts": 1,
+  "retries": 0,
+  "original100AndNew100RawReportsPreserved": true,
+  "currentOperatorUnknownLanguages": 0,
+  "currentOperatorWriteRefusals": 18,
+  "readExclusionPostBenchmarkLimit": {
+    "file": "packages/server/src/modules/chat/schoolReplyWrite.ts",
+    "measuredSha256": "311d68d3139aef8afca89b76757ad6a0490a9452a3ec60ec85499a60fd54d47f",
+    "finalSha256": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+    "all100RefusalPredictionsUnchanged": true,
+    "description": "Additional dir/دير list-and-total read exclusions were tested offline after the live recheck; not an independent live validation of those extra cases."
+  },
+  "checks": {
+    "initialFullRootTestExitCode": 1,
+    "initialFailure": "Old replay CLI test required explicit changed reply-profile opt-in; corrected and verified",
+    "fullRootRerunExitCode": 0,
+    "scriptTestsPassedInRootRerun": 447,
+    "scriptAssertions": 2745,
+    "finalFocusedTestsPassed": 266,
+    "finalFocusedAssertions": 610,
+    "finalBuildExitCode": 0,
+    "typecheckExitCode": 0,
+    "finalLintExitCode": 0,
+    "checkedLocalLinks": 20,
+    "diffWhitespaceExitCode": 0
+  },
+  "modelRequestOrFrozenLabelsChanged": false,
+  "productionAcceptance": false,
+  "jevEnabled": false,
+  "furtherRequestsAuthorized": false,
+  "remainingActions": [
+    "Transport reliability and p95 diagnosis",
+    "Fresh larger family coverage",
+    "Supported async package and full-chat validation"
+  ]
+}

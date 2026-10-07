@@ -35,4 +35,28 @@ describe('Moroccan request reply context', () => {
     expect(template('سجل بلي التلميذ غايب اليوم.')).toEqual({ text: expect.stringContaining('نسجل أو نبدل الحضور') });
     for (const query of ['اعرض حضور التلاميذ اليوم.', 'اعرض سجلات الحضور والغياب اليوم.', 'وريني سجلات الحضور ديال التلاميذ.', 'هل تعلم عدد سجلات الحضور؟']) expect(template(query)).toBeNull();
   });
+  it('distinguishes successful empty attendance reads from errors in each request language', () => {
+    for (const [query, example] of [
+      ["Affiche les présences des élèves aujourd'hui.", 'Aucun enregistrement de présence'],
+      ['اعرض حضور التلاميذ اليوم.', 'لا توجد سجلات حضور'],
+      ['وريني الحضور ديال التلاميذ اليوم.', 'ما كاين حتى شي سجل'],
+    ]) {
+      const context = schoolReplyContext(query);
+      expect(context).toContain(example);
+      expect(context).toContain('successful attendance tool returning []');
+      expect(context).toContain('Only an actual tool error or denial');
+    }
+    expect(schoolReplyContext('Liste les classes.') ?? '').not.toContain('successful []');
+  });
+  it('does not treat the retained Darija named-student lookup as empty attendance', () => {
+    const context = schoolReplyContext('وريني الغياب ديال Zzbench Qqtest');
+    expect(context).toContain('search_search_students means no matching student');
+    expect(context).toContain('it establishes nothing about attendance');
+    expect(context).toContain('do not claim no absence records, invent a date');
+  });
+  it('keeps student identifier labels French without changing stored names or other-language hints', () => {
+    expect(schoolReplyContext('Montre-moi les notes de Zzbench Qqtest.')).toContain('identifiant de l’élève');
+    expect(schoolReplyContext('Affiche les notes de l’élève.')).toContain('Preserve actual stored names and codes unchanged');
+    expect(schoolReplyContext('اعرض نقاط التلميذ.') ?? '').not.toContain('student ID');
+  });
 });

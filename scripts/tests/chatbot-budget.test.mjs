@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { createEstimatedBudget, summarizeUsage, validateDeclaredPrices, estimateDeclaredCost, summarizeDeclaredCosts } from '../chatbot-budget.mjs';
+import { createEstimatedBudget, summarizeUsage, validateDeclaredPrices, validatePricingMode, estimateDeclaredCost, summarizeDeclaredCosts } from '../chatbot-budget.mjs';
 
 describe('explicit benchmark prices', () => {
   const prices = { provider: 'openrouter', source: 'https://openrouter.ai/api/v1/models',
@@ -40,6 +40,23 @@ describe('explicit benchmark prices', () => {
         models: { candidate: { inputUsdPerMillion: rate, outputUsdPerMillion: 0.2 } } }))]) {
       expect(() => validateDeclaredPrices(value)).toThrow();
     }
+  });
+
+  it('explicitly reprices known SDK usage while preserving raw estimates and counting failed attempts', () => {
+    const raw = { ...metadata, pricingFound: true, totalCost: 0.00001 };
+    const before = structuredClone(raw);
+    const declaredCost = estimateDeclaredCost(raw, 'candidate', prices, 'declared');
+    expect(declaredCost).toMatchObject({ totalCost: 0.0002, pricingMode: 'declared' });
+    expect(raw).toEqual(before);
+    const samples = [{ outcome: 'stream_error', metadata: raw, declaredCost }];
+    expect(summarizeUsage(samples).estimatedCostUsd).toBe(0.00001);
+    expect(summarizeDeclaredCosts(samples).estimatedCostUsd).toBe(0.0002);
+    for (const invalid of [null, { ...raw, model: 'other' }, { ...raw, provider: 'other' },
+      { ...raw, totalTokens: 1499 }, { ...raw, completionTokens: undefined }]) {
+      expect(estimateDeclaredCost(invalid, 'candidate', prices, 'declared')).toBeNull();
+    }
+    expect(() => validatePricingMode('declared', false)).toThrow();
+    expect(() => validatePricingMode('unknown', true)).toThrow();
   });
 });
 

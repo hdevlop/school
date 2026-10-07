@@ -110,7 +110,7 @@ const createSidebarItems = (t: (key: string) => string, viewer: NavViewer): NavI
         { id: '/payroll', label: t('navigation.payroll'), icon: FEATURE_ICONS.payroll, href: '/payroll', access: 'payroll' },
         { id: '/fee-types', label: t('navigation.feeTypes'), icon: FEATURE_ICONS.feeTypes, href: '/fee-types', access: 'feeTypes' },
         { id: '/reminders', label: t('navigation.reminders'), icon: FEATURE_ICONS.reminders, href: '/reminders', access: 'reminders' },
-        { id: '/financial-operations', label: 'Operations', icon: FEATURE_ICONS.financialOperations, href: '/financial-operations', access: 'financialOperations' },
+        { id: '/financial-operations', label: t('navigation.pendingChecks'), icon: FEATURE_ICONS.financialOperations, href: '/financial-operations', access: 'financialOperations' },
       ],
     },
     {
@@ -179,6 +179,21 @@ const createSidebarItems = (t: (key: string) => string, viewer: NavViewer): NavI
     notifications,
   ], viewer);
 };
+
+const STUDENT_FEES_PATH = /^\/students\/[^/]+\/fees(?:\/|$)/;
+
+function hasNavHref(items: NavItem[], href: string): boolean {
+  return items.some((item) => item.href === href || (item.children ? hasNavHref(item.children, href) : false));
+}
+
+/**
+ * A student's fee record lives at `/students/[id]/fees` but belongs to Fees, so
+ * it highlights Fees wherever it was opened from. Parents and students have no
+ * Fees item and reach it through their own profile, which stays highlighted.
+ */
+function sidebarActivePath(pathname: string, navItems: NavItem[]) {
+  return STUDENT_FEES_PATH.test(pathname) && hasNavHref(navItems, '/fees') ? '/fees' : pathname;
+}
 
 function isSidebarItemActive(item: NavItem, activePath: string) {
   if (!item.href) return false;
@@ -280,7 +295,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         // Only the drawer renders below lg, so this never reaches the rail.
         classNames={{ sidebarHeader: 'max-sm:h-auto max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:pt-1 max-sm:pb-3' }}
         navItems={navItems}
-        activePath={pathname}
+        activePath={sidebarActivePath(pathname, navItems)}
         isActive={isSidebarItemActive}
         linkComponent={LinkAdapter}
         onNavigate={(target) => {

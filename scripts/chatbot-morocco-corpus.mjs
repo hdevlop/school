@@ -26,7 +26,7 @@ const cases = original.cases.filter((item) => ['ary', 'ar', 'fr'].includes(item.
   if (item.id.startsWith('missing-student-')) updated.storedNames = ['Zzbench Qqtest'];
   return updated;
 });
-const corpus = { version: 3, scope: 'Complete Moroccan school corpus: all ten original scenarios in Darija, Modern Standard Arabic and French. Exact stored names exempt from language scoring; per-row exam/class facts required. Darija register checked heuristically.',
+const corpus = { version: 4, scope: 'Complete Moroccan school corpus: all ten original scenarios in Darija, Modern Standard Arabic and French. Exact stored names exempt from language scoring; per-row exam/class facts and successful-empty attendance wording required. Darija register checked heuristically.',
   role: 'admin', academicYear: facts.academicYear, factsCapturedAt: facts.capturedAt,
   factsSha256: createHash('sha256').update(factsText).digest('hex'), cases };
 validateCorpus(corpus);

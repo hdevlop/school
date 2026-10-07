@@ -1,10 +1,11 @@
 import { plugin } from 'najm-core';
-import { chatbot, CHATBOT_CONTEXT_PROVIDER, detectMoroccanReplyLanguage } from 'najm-chatbot';
+import { chatbot, CHATBOT_CONTEXT_PROVIDER } from 'najm-chatbot';
 import { studioAssistant } from 'najm-chatbot/studio-assistant';
 
 import { chatDiagnosticsLog } from '../modules/chat/ChatDiagnosticsLog';
 import { SchoolChatContextProvider, schoolChatYearContext } from '../modules/chat/SchoolChatContextProvider';
 import { schoolReplyTemplate } from '../modules/chat/schoolReplyTemplates';
+import { schoolReplyLanguage } from '../modules/chat/schoolReplyLanguage';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
 
 /** The dashboard's read-only chat. Tool routing and embeddings are in ragConfig. */
@@ -13,7 +14,7 @@ export const chatbotConfig = () =>
     dialect: 'pg',
     defaultSystemPrompt: chatbotSystemPrompt,
     reply: {
-      detectLanguage: detectMoroccanReplyLanguage,
+      detectLanguage: schoolReplyLanguage,
       template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear),
     },
     maxSteps: 10,

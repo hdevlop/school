@@ -1,0 +1,36 @@
+{
+  "stage": "Offline guard5 repair of19 additional v4 fallbacks",
+  "providerCalls": 0,
+  "schoolToolCalls": 0,
+  "jevEnabled": false,
+  "productionAcceptance": false,
+  "artifactSha256": {
+    "docs/evidence/chatbot-latency/jev-guard5-coverage-replay-20261007.json": "94bcb26f34ccccf2253c9fb41d7e7c9328a8446bd803219df0cedd5b023f8096",
+    "scripts/chatbot-jev-query-guard-v5.mjs": "6bf2e6912e399f623b5ec0a4457f7ee081eb78fbe547c6641cc2d09a9ea93745",
+    "scripts/chatbot-jev-guard5-study.mjs": "97b233aec09e5c73821b80929b5184fe00d838f98b042d8dc9a7c1920a62cf8e",
+    "scripts/tests/chatbot-jev-query-guard-v5.test.mjs": "333960c0b23adbe1a25dcce3705f1acf87061fdaf19856b5b586c8b6c1ce34dd",
+    "docs/evidence/chatbot-latency/jev-guard5-coverage-results-20261007.md": "7234fec5b7da834dbac9200c3511b683af214331f37364add0b38234b3dfd4df"
+  },
+  "allMeasuredSourcesAndRawInputsUnchanged": true,
+  "restoredCases": 19,
+  "projectedAcceptedCases": 107,
+  "acceptedProvisionalLabelDisagreements": 0,
+  "faultChecks": 6604,
+  "unblockedWrongReads": 0,
+  "checks": {
+    "focusedTestsPassed": 76,
+    "focusedAssertions": 372,
+    "fullScriptTestsPassed": 520,
+    "fullScriptAssertions": 2937,
+    "fullScriptFiles": 41,
+    "lintExitCode": 0,
+    "lintWarnings": 0,
+    "gitDiffWhitespaceExitCode": 0,
+    "localLinksVerified": 4
+  },
+  "limitations": [
+    "Guard5 is post-result development; not a live probe or runtime callback",
+    "Measured latency/cost remain the unchanged guard4 run",
+    "Language abstentions and qualification/published-hook requirements remain"
+  ]
+}

@@ -1,7 +1,23 @@
 import { describe, expect, it } from 'bun:test';
-import { findLeaks, parseUiStream } from '../chatbot-roles.mjs';
+import { findLeaks, parseUiStream, planRoleSchedule } from '../chatbot-roles.mjs';
 
 const sse = (...events) => `${events.map((event) => `data: ${JSON.stringify(event)}`).join('\n\n')}\n\ndata: [DONE]\n`;
+
+describe('bounded role schedule', () => {
+  it('keeps the original ten scenarios/twelve turns and counts repeated follow-ups twice', () => {
+    expect(planRoleSchedule()).toMatchObject({ repeat: 1, plannedChatRequests: 12 });
+    const focus = planRoleSchedule(['parent-children-en', 'parent-other-absences-ary'], 3);
+    expect(focus.plannedChatRequests).toBe(6);
+    expect(focus.jobs).toHaveLength(6);
+    expect(planRoleSchedule(['admin-follow-up-fr'], 3).plannedChatRequests).toBe(6);
+  });
+  it('rejects unknown/duplicate/empty choices and invalid repetitions', () => {
+    for (const ids of [[], ['unknown'], ['parent-children-en', 'parent-children-en'], ['']]) {
+      expect(() => planRoleSchedule(ids)).toThrow();
+    }
+    for (const repeat of [0, 6, 1.5, NaN, Infinity]) expect(() => planRoleSchedule(['parent-children-en'], repeat)).toThrow();
+  });
+});
 
 describe('parseUiStream', () => {
   it('collects text and pairs each tool call with its output or error', () => {
@@ -15,8 +31,8 @@ describe('parseUiStream', () => {
     ));
     expect(parsed.text).toBe('No student found.');
     expect(parsed.tools).toEqual([
-      { name: 'search_search_students', input: { q: 'Selma' }, output: '[]', outcome: 'output' },
-      { name: 'teacher-profile_get_my_students', input: {}, outcome: 'error', error: 'Tool execution failed' },
+      { toolCallId: 'a', name: 'search_search_students', input: { q: 'Selma' }, output: '[]', outcome: 'output' },
+      { toolCallId: 'b', name: 'teacher-profile_get_my_students', input: {}, outcome: 'error', error: 'Tool execution failed' },
     ]);
     expect(parsed.errors).toEqual([]);
   });

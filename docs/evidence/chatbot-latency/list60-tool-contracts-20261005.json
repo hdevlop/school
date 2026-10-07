@@ -1,0 +1,76 @@
+{
+    "capturedAt":  "2026-10-05T10:25:38.3961389Z",
+    "source":  "authorized internal MCP attendance_get_today_students",
+    "academicYear":  "2026-2027",
+    "successful":  true,
+    "recordCount":  0,
+    "arrayResult":  true,
+    "schemas":  [
+                    {
+                        "name":  "attendance_get_today_students",
+                        "inputSchema":  {
+                                            "$schema":  "http://json-schema.org/draft-07/schema#",
+                                            "type":  "object",
+                                            "properties":  {
+                                                               "academicYear":  {
+                                                                                    "anyOf":  [
+                                                                                                  {
+                                                                                                      "type":  "string"
+                                                                                                  },
+                                                                                                  {
+                                                                                                      "type":  "null"
+                                                                                                  }
+                                                                                              ]
+                                                                                }
+                                                           }
+                                        },
+                        "annotations":  {
+                                            "readOnlyHint":  true
+                                        }
+                    },
+                    {
+                        "name":  "classes_get_classes",
+                        "inputSchema":  {
+                                            "$schema":  "http://json-schema.org/draft-07/schema#",
+                                            "type":  "object",
+                                            "properties":  {
+                                                               "academicYear":  {
+                                                                                    "anyOf":  [
+                                                                                                  {
+                                                                                                      "type":  "string"
+                                                                                                  },
+                                                                                                  {
+                                                                                                      "type":  "null"
+                                                                                                  }
+                                                                                              ]
+                                                                                }
+                                                           }
+                                        },
+                        "annotations":  {
+                                            "readOnlyHint":  true
+                                        }
+                    },
+                    {
+                        "name":  "exams_get_upcoming_exams",
+                        "inputSchema":  {
+                                            "$schema":  "http://json-schema.org/draft-07/schema#",
+                                            "type":  "object",
+                                            "properties":  {
+                                                               "academicYear":  {
+                                                                                    "anyOf":  [
+                                                                                                  {
+                                                                                                      "type":  "string"
+                                                                                                  },
+                                                                                                  {
+                                                                                                      "type":  "null"
+                                                                                                  }
+                                                                                              ]
+                                                                                }
+                                                           }
+                                        },
+                        "annotations":  {
+                                            "readOnlyHint":  true
+                                        }
+                    }
+                ]
+}

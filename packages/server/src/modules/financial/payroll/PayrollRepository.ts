@@ -20,6 +20,7 @@ export class PayrollRepository {
 
   private buildQuery() {
     const processorUsers = alias(users, 'processor_users');
+    const staffUsers = alias(users, 'staff_users');
 
     return this.db
       .select({
@@ -53,11 +54,15 @@ export class PayrollRepository {
           department: staff.department,
           employmentType: staff.employmentType,
           status: staff.status,
+          gender: staff.gender,
+          image: staffUsers.image,
+          updatedAt: staff.updatedAt,
         },
       })
       .from(payslips)
       .leftJoin(processorUsers, eq(payslips.processedBy, processorUsers.id))
-      .leftJoin(staff, eq(payslips.staffId, staff.id));
+      .leftJoin(staff, eq(payslips.staffId, staff.id))
+      .leftJoin(staffUsers, eq(staff.userId, staffUsers.id));
   }
 
   async getAll() {

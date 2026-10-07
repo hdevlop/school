@@ -9,7 +9,7 @@ import { createUiStreamParser, percentile } from './chatbot-stream.mjs';
 import { scoreReply, validateCorpus } from './chatbot-scoring.mjs';
 import { summarizeEmbeddingDiagnostics } from './chatbot-embedding-diagnostics.mjs';
 import { runLoad, summarizeLoad, validateCorrelation, validateLoadOptions } from './chatbot-load.mjs';
-import { createEstimatedBudget, summarizeUsage, validateDeclaredPrices, estimateDeclaredCost, summarizeDeclaredCosts } from './chatbot-budget.mjs';
+import { createEstimatedBudget, summarizeUsage, validateDeclaredPrices, validatePricingMode, estimateDeclaredCost, summarizeDeclaredCosts } from './chatbot-budget.mjs';
 import { validateCacheMode, validateCacheControl, verifyFreshCache, summarizeCacheConditions } from './chatbot-cache.mjs';
 import { acquireChatbotRunLock } from './chatbot-run-lock.mjs';
 const args = process.argv.slice(2);
@@ -49,6 +49,7 @@ const keepText = args.includes('--keep-text');
 // framing (the provider then refuses inside the stream). Not a latency sample.
 const transportProbe = args.includes('--transport-probe');
 const preflight = args.includes('--preflight');
+const captureProviderUsage = args.includes('--capture-provider-usage');
 // Interleaves a baseline (the saved model unless --baseline-model is given) with
 // a candidate, request by request, on the same provider and key, then restores
 // the saved model.
@@ -69,6 +70,8 @@ if (Boolean(maxEstimatedUsd) !== Boolean(requestReserveUsd)) {
 const budget = maxEstimatedUsd ? createEstimatedBudget(Number(maxEstimatedUsd), Number(requestReserveUsd)) : null;
 const pricingPath = option('pricing-file', '');
 if (pricingPath && !budget) throw new Error('--pricing-file requires an explicit estimated budget');
+const pricingMode = option('pricing-mode', 'fallback');
+validatePricingMode(pricingMode, Boolean(pricingPath));
 const pricingText = pricingPath ? await Bun.file(resolve(pricingPath)).text() : null;
 const declaredPrices = pricingText ? validateDeclaredPrices(JSON.parse(pricingText.replace(/^\uFEFF/, ''))) : null;
 const modelId = /^[\w.:/-]{1,120}$/;
@@ -104,6 +107,8 @@ const report = {
   cacheMode,
   timeoutMs,
   textStored: keepText,
+  pricingMode,
+  captureProviderUsage,
   declaredPricing: declaredPrices ? { ...declaredPrices,
     sha256: createHash('sha256').update(pricingText).digest('hex') } : null,
   packagePins: {},
@@ -128,12 +133,13 @@ report.gitHead = revision.exitCode === 0 ? revision.stdout.toString().trim() : n
 report.workingTreeDirty = Bun.spawnSync(['git', 'status', '--porcelain']).stdout.length > 0;
 report.configSourceSha256 = {};
 report.scoringSourceSha256 = {};
+report.budgetSourceSha256 = createHash('sha256').update(await Bun.file('scripts/chatbot-budget.mjs').text()).digest('hex');
 report.chatContextSourceSha256 = {};
-for (const name of ['SchoolChatContextProvider.ts', 'schoolReplyContext.ts', 'schoolReplyTemplates.ts']) {
+for (const name of ['SchoolChatContextProvider.ts', 'schoolReplyContext.ts', 'schoolReplyTemplates.ts', 'schoolListReplies.ts']) {
   const file = Bun.file(`packages/server/src/modules/chat/${name}`);
   report.chatContextSourceSha256[name] = await file.exists() ? createHash('sha256').update(await file.text()).digest('hex') : null;
 }
-for (const name of ['chatbot-scoring.mjs', 'chatbot-facts.mjs', 'chatbot-language.mjs', 'chatbot-claims.mjs']) {
+for (const name of ['chatbot-scoring.mjs', 'chatbot-facts.mjs', 'chatbot-language.mjs', 'chatbot-claims.mjs', 'chatbot-empty-reads.mjs']) {
   report.scoringSourceSha256[name] = createHash('sha256').update(await Bun.file(`scripts/${name}`).text()).digest('hex');
 }
 for (const name of ['index.ts', 'ragConfig.ts', 'chatbotConfig.ts', 'chatbotSystemPrompt.ts']) {
@@ -151,6 +157,7 @@ const routes = new Set([
   'GET /api/ai-settings',
   'PUT /api/ai-settings',
   'GET /api/chat-benchmark/status',
+  'GET /api/chat-benchmark/provider-usage',
   'POST /api/chat-benchmark/reset-caches',
 ]);
 let token;
@@ -253,11 +260,13 @@ async function runAll(baselineModel) {
         }
         sample = await chat(item, repetition, variant);
         if (reset) sample.cacheCondition = verifyFreshCache(reset, sample.server);
-        // A matching server record is required before pricing an unknown model.
+        // Declared mode never falls back to SDK prices when usage or correlation is unknown.
         const declaredCost = sample.server?.model === model
-          ? estimateDeclaredCost(sample.metadata, model, declaredPrices) : null;
+          && (pricingMode !== 'declared' || sample.server.provider === declaredPrices.provider)
+          ? estimateDeclaredCost(sample.metadata, model, declaredPrices, pricingMode) : null;
         if (declaredCost) sample.declaredCost = declaredCost;
-        budget?.settle(reservationId, declaredCost ? { pricingFound: true, totalCost: declaredCost.totalCost } : sample.metadata);
+        budget?.settle(reservationId, declaredCost ? { pricingFound: true, totalCost: declaredCost.totalCost }
+          : pricingMode === 'declared' ? null : sample.metadata);
         settled = true;
       } finally {
         if (!settled) budget?.settle(reservationId, null);
@@ -287,7 +296,7 @@ async function chat(item, repetition, variant = null) {
   url.searchParams.set('academicYear', year);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
-  const parser = createUiStreamParser({ captureToolInputs: true });
+  const parser = createUiStreamParser({ captureToolInputs: true, captureToolResultSummaries: true, captureStreamTimings: true });
   const sample = { id: item.id, language: item.language, kind: item.kind, repetition, sessionId, requestId: sessionId };
   const start = performance.now();
   const since = () => Math.round(performance.now() - start);
@@ -334,6 +343,7 @@ async function chat(item, repetition, variant = null) {
     finishReason: parsed.finishReason,
     sawDone: parsed.done,
     chunkCounts: parsed.chunkCounts,
+    streamTimings: parsed.streamTimings,
     malformedEvents: parsed.malformed,
     // Argument values are used only for scoring, never persisted in reports.
     tools: parsed.tools.map(({ arguments: _arguments, ...tool }) => tool),
@@ -482,6 +492,13 @@ try {
     cacheControl = validateCacheControl(await request('/api/chat-benchmark/status'));
     report.cacheControl = cacheControl;
   }
+  if (captureProviderUsage) {
+    report.providerUsageBefore = await request('/api/chat-benchmark/provider-usage');
+    if (report.providerUsageBefore.selectedKeyVerified !== true
+      || !Number.isFinite(report.providerUsageBefore.usage)) {
+      throw new Error('Selected provider usage could not be verified; stopped before chat');
+    }
+  }
   if (preflight) {
     report.readyForChat = Boolean(settings?.isEnabled && settings?.hasKey && savedModel);
     report.outcome = 'preflight_ok';
@@ -511,6 +528,20 @@ try {
     report.outcome = 'interrupted';
   }
 } finally {
+  if (captureProviderUsage && report.providerUsageBefore && !preflight) {
+    try {
+      report.providerUsageAfter = await request('/api/chat-benchmark/provider-usage');
+      const before = report.providerUsageBefore;
+      const after = report.providerUsageAfter;
+      report.providerUsageDelta = {
+        observedUsd: after.selectedKeyVerified === true && Number.isFinite(after.usage) ? after.usage - before.usage : null,
+        matchesEnvironmentKeyAtBothReads: before.matchesEnvironmentKey === true && after.matchesEnvironmentKey === true,
+        note: 'Selected-key ledger window; other account traffic, per-generation hosts and embedding infrastructure costs are not attributed.',
+      };
+    } catch {
+      report.providerUsageReadFailed = true;
+    }
+  }
   releaseRunLock?.();
 }
 

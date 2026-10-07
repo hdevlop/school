@@ -287,7 +287,7 @@ async function main() {
     classes = await askClassesCheckbox(`${blue('🏫')}  Classes`);
     rl.resume();
     teachers = await askInt(
-      `  ${magenta('👩‍🏫')}  Teachers limit       ${gray(`(default ${DEFAULT_TEACHERS})`)}:  `,
+      `  ${magenta('👩‍🏫')}  Teachers limit       ${gray(`(default ${DEFAULT_TEACHERS || 'auto, sized to the timetable'})`)}:  `,
       DEFAULT_TEACHERS,
     );
     expenses = await askInt(

@@ -1,0 +1,73 @@
+﻿{
+    "date":  "2026-10-05",
+    "sharedSourceValidation":  {
+                                   "priorTestsPassed":  354,
+                                   "priorAssertions":  1077,
+                                   "priorLint":  "passed",
+                                   "note":  "No root application/runner changes in this experiment; source hashes verify shared code. Preserve parallel Jev work. No new full test/build run claimed."
+                               },
+    "experimentalConfigurations":  {
+                                       "independentFrozenInstalls":  "both passed",
+                                       "serverSourceTypechecks":  "both passed",
+                                       "serverTestTypechecks":  "both passed",
+                                       "onlyVariantSourceDifference":  "packages/server/src/config/chatbotConfig.ts provider routing object",
+                                       "rootProductionRoutingChanged":  false,
+                                       "savedModelKeyMutated":  false
+                                   },
+    "live":  {
+                 "design":  "Cerebras A1, Crusoe B1, Crusoe B2, Cerebras A2; thirty serial/fresh chats each",
+                 "completed":  120,
+                 "automaticPassed":  120,
+                 "assistantAccepted":  120,
+                 "verifiedFreshCaches":  120,
+                 "completeCorrelatedDiagnostics":  120,
+                 "embeddingAttempts":  120,
+                 "modelReplies":  24,
+                 "templateReplies":  96,
+                 "exactReviewedTemplateParity":  96,
+                 "generationSteps":  36,
+                 "writesLeaksPromisesOrFixtureErrors":  0,
+                 "duplicateIdsMissingSpansOr429s":  0,
+                 "milestoneTruncations":  0,
+                 "correctedScorerPaidEvidence":  "120/120 on current Moroccan corpus; previous raw failures unchanged"
+             },
+    "comparison":  {
+                       "cerebrasModelMeanCompletionMs":  1317.5,
+                       "crusoeModelMeanCompletionMs":  3306,
+                       "cerebrasModelCompletionP95Ms":  3142,
+                       "crusoeModelCompletionP95Ms":  9269,
+                       "cerebrasDeclaredSixtyReplyEstimateUsd":  0.012706550,
+                       "crusoeDeclaredSixtyReplyEstimateUsd":  0.002020800,
+                       "declaredCostReductionPercent":  84.09639123129409,
+                       "configuredHybridAndValueGates":  "passed on corpus",
+                       "fasterCandidateEstablished":  false,
+                       "productionAcceptance":  false,
+                       "perGenerationHostInvoiceAttribution":  false
+                   },
+    "accounting":  {
+                       "ownDeclaredEstimateUsd":  0.014727350,
+                       "maximumClientEstimateAllowancesUsd":  0.50,
+                       "outerRequestAllowancesConsumed":  120,
+                       "existingKeyTotalCapUsd":  50,
+                       "hardProviderCapMatchingOwnRunAllowances":  false,
+                       "sharedKeyOverlappingExperiment":  "Jev Stage A, separately recorded",
+                       "combinedObservedWindowIncreaseUsd":  0.029458346,
+                       "sharedJevReportedAndSmokeCostUsd":  0.014730996,
+                       "aggregateReconciles":  true,
+                       "note":  "Shared-key whole-window increase includes both experiments; not wholly this benchmark\u0027s spend or isolated provider invoices."
+                   },
+    "completion":  {
+                       "cleanupEvidence":  "provider-compare-cleanup-20261005.json",
+                       "bothTaskAppsStopped":  true,
+                       "privateAuthHeadersRemoved":  true,
+                       "snapshotsRetained":  true,
+                       "unrelatedProcessesTouched":  false,
+                       "paidExpansion":  "none",
+                       "coreweaveTest":  "unrun",
+                       "productionDefault":  "Cerebras preferred, fallbacks allowed, unchanged",
+                       "deployment":  "none"
+                   },
+    "completedAt":  "2026-10-05T16:14:15.8983807Z",
+    "documentationLinks":  "passed",
+    "gitDiffCheck":  "passed"
+}

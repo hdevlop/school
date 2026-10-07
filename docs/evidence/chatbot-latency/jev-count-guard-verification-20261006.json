@@ -1,0 +1,101 @@
+{
+    "clientDate":  "2026-10-06",
+    "clientTimezone":  "Africa/Casablanca",
+    "capturedAtUtc":  "2026-10-05T23:59:40.7848065Z",
+    "scope":  "Offline development prototype and saved-decision replay",
+    "liveProviderRequests":  0,
+    "liveLedgerReads":  0,
+    "schoolAppToolDatabaseCalls":  0,
+    "runtimeGuardEnabled":  false,
+    "jevEnabled":  false,
+    "productionAcceptance":  false,
+    "actualNativeAuthoredOrReviewedCases":  0,
+    "priorFailuresRetained":  true,
+    "before":  {
+                   "samples":  146,
+                   "questions":  50,
+                   "wrongSamples":  1,
+                   "wrongQuestions":  1,
+                   "acceptedFamilies":  16
+               },
+    "after":  {
+                  "samples":  136,
+                  "questions":  46,
+                  "wrongSamples":  0,
+                  "wrongQuestions":  0,
+                  "acceptedFamilies":  15
+              },
+    "preventedWrong":  {
+                           "samples":  1,
+                           "questions":  1,
+                           "wrongSamples":  1,
+                           "wrongQuestions":  1,
+                           "acceptedFamilies":  1
+                       },
+    "lostCorrect":  {
+                        "samples":  9,
+                        "questions":  3,
+                        "wrongSamples":  0,
+                        "wrongQuestions":  0,
+                        "acceptedFamilies":  1
+                    },
+    "checks":  [
+                   {
+                       "command":  "bun test scripts/tests/chatbot-jev-native.test.mjs scripts/tests/chatbot-jev-count-guard.test.mjs",
+                       "exitCode":  0,
+                       "testsPassed":  19,
+                       "assertions":  158
+                   },
+                   {
+                       "command":  "bun run test:boundaries",
+                       "exitCode":  0,
+                       "testsPassed":  308,
+                       "testsFailed":  0,
+                       "assertions":  1292,
+                       "workspaceFiles":  1275,
+                       "clientEntries":  288
+                   },
+                   {
+                       "command":  "bun run lint",
+                       "exitCode":  0
+                   },
+                   {
+                       "command":  "offline saved-decision guard study",
+                       "exitCode":  0,
+                       "parsedDecisions":  310,
+                       "devCases":  15,
+                       "originalEligibilityAndAcceptanceReproduced":  true,
+                       "oldFourCoreRawReportsChanged":  false,
+                       "originalStageAAndB0Changed":  false,
+                       "allFetchesBlockedInCliTest":  true
+                   },
+                   {
+                       "command":  "empty native intake check",
+                       "exitCode":  1,
+                       "expected":  "zero actual human cases, export blocked"
+                   }
+               ],
+    "sha256":  {
+                   "scripts/chatbot-jev-count-guard.mjs":  "1171a9f51d593e8b44fb9a0684a378c95d98438ed983546ea54bc5eda231e8ed",
+                   "scripts/chatbot-jev-count-guard-study.mjs":  "5cfeb94cfdac4e3f7885803ef1765f656e32a14f5a9788bd41d0b961b8141b1a",
+                   "scripts/tests/chatbot-jev-count-guard.test.mjs":  "2480ed6ff52882a92dc9ab8deccb1cbf082c9f9279b30d621b5bcb1c55e85b04",
+                   "scripts/chatbot-jev-native.mjs":  "c26eca7ad0fcc4bc1a207aab6d2be3de2b49507bb3b49ef86d2e0eb26770795e",
+                   "scripts/tests/chatbot-jev-native.test.mjs":  "bcefb5932c349ed5a95dd1bc7a69910655a19a2130e5748a60ba76b1bf8c546e",
+                   "datasets/chatbot-latency/jev-count-guard-dev.json":  "fb4e5e7e785e10d5a77114cf3c54b500f3171a60a72a2726a57e0859011f2e82",
+                   "scripts/chatbot-jev.mjs":  "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199"
+               },
+    "historicalCoreRawHashes":  {
+                                    "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json":  "36734425e8b2410fae66578f299e00b1f1b8f5c7d58370a28d22c89743b8174c",
+                                    "docs/evidence/chatbot-latency/jev-core-continuation-20261005.json":  "5ebdce7a12438cd4e3446ce78eb9f1950f91eb1710192a5fea06766a10afdb8e",
+                                    "docs/evidence/chatbot-latency/jev-core-health-20261005.json":  "11840f2053f6cfdd892259e24822b690089fbfef8edd4e5d99090b1aa5a90d45",
+                                    "docs/evidence/chatbot-latency/jev-core-finish-20261005.json":  "7b3e5e02e5cc96570f373d977290355024cc08e7cf73b5c05301e6203ee2f143"
+                                },
+    "limitations":  [
+                        "Post-result development on spent synthetic data, not fresh acceptance",
+                        "Finite lexical veto can miss other qualifiers and declines some legitimate counts",
+                        "No actual fallback/reply latency or cost measured",
+                        "The guard is not in the live probe or School runtime",
+                        "Development questions registered to avoid future held-out reuse",
+                        "Native questions and independent human review remain required"
+                    ]
+}

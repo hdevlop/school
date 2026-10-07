@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { AlertCircle, Bell, CalendarX2, ChevronRight, FileWarning, UsersRound } from 'lucide-react';
-import { NCard, NSkeleton, cn, type NIconSource } from 'najm-kit';
+import { AlertCircle, Bell, CalendarX2, Check, FileWarning, UsersRound, type LucideIcon } from 'lucide-react';
+import { NCard, NSkeleton, cn } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardAttention } from '@sms/contracts/teacher-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { TEACHER_DASHBOARD_LINKS } from '../../config/teacherDashboardLinks';
-import { IconTile, type Tone } from './shared';
+import { FILL_CARD } from './shared';
 
 type NeedsAttentionCardProps = {
   attention: TeacherDashboardAttention | undefined;
@@ -20,18 +20,19 @@ type NeedsAttentionCardProps = {
 type AttentionRow = {
   key: keyof TeacherDashboardAttention;
   label: string;
-  hint: string;
-  icon: NIconSource;
-  tone: Tone;
+  icon: LucideIcon;
+  // The dot that tells the rows apart at a glance.
+  dot: string;
   href: string;
 };
 
 const AttentionSkeleton = () => (
   <div className="flex flex-col gap-3" aria-hidden="true">
-    {Array.from({ length: 4 }, (_, index) => <NSkeleton key={index} className="h-14 w-full rounded-lg" />)}
+    {Array.from({ length: 4 }, (_, index) => <NSkeleton key={index} className="h-6 w-full rounded-md" />)}
   </div>
 );
 
+// One line per kind of pending work: its count, or a check once it is clear.
 const NeedsAttentionCard = ({ attention, loading, error, onRetry, className }: NeedsAttentionCardProps) => {
   const { t } = useTranslation();
   const { number } = useSchoolFormat();
@@ -40,33 +41,29 @@ const NeedsAttentionCard = ({ attention, loading, error, onRetry, className }: N
     {
       key: 'missingAttendance',
       label: t('dashboard.teacher.attention.missingAttendance'),
-      hint: t('dashboard.teacher.attention.missingAttendanceHint'),
       icon: CalendarX2,
-      tone: 'destructive',
+      dot: 'bg-rose-500',
       href: TEACHER_DASHBOARD_LINKS.attendance,
     },
     {
       key: 'missingGrades',
       label: t('dashboard.teacher.attention.missingGrades'),
-      hint: t('dashboard.teacher.attention.missingGradesHint'),
       icon: FileWarning,
-      tone: 'warning',
+      dot: 'bg-amber-500',
       href: TEACHER_DASHBOARD_LINKS.grades,
     },
     {
       key: 'unreadNotifications',
       label: t('dashboard.teacher.attention.notifications'),
-      hint: t('dashboard.teacher.attention.notificationsHint'),
       icon: Bell,
-      tone: 'primary',
+      dot: 'bg-sky-500',
       href: TEACHER_DASHBOARD_LINKS.notifications,
     },
     {
       key: 'openConcerns',
       label: t('dashboard.teacher.attention.concerns'),
-      hint: t('dashboard.teacher.attention.concernsHint'),
       icon: UsersRound,
-      tone: 'info',
+      dot: 'bg-violet-500',
       href: TEACHER_DASHBOARD_LINKS.discipline,
     },
   ];
@@ -75,33 +72,35 @@ const NeedsAttentionCard = ({ attention, loading, error, onRetry, className }: N
     <NCard
       title={t('dashboard.teacher.attention.title')}
       icon={AlertCircle}
-      iconColor="text-destructive"
       className={cn('h-full', className)}
+      classNames={FILL_CARD}
       loading={loading}
       skeleton={<AttentionSkeleton />}
       error={error}
       errorText={t('common.feedback.errorMessage')}
       onRetry={onRetry}
     >
-      <ul className="flex flex-col divide-y divide-border">
-        {rows.map((row) => {
-          const count = attention?.[row.key] ?? 0;
+      <ul className="flex flex-col divide-y divide-border/70">
+        {rows.map(({ key, label, icon: Icon, dot, href }) => {
+          const count = attention?.[key] ?? 0;
+          const clear = count === 0;
           return (
-            <li key={row.key}>
+            <li key={key} className="first:[&>a]:pt-0 last:[&>a]:pb-0">
               <Link
-                href={row.href}
+                href={href}
                 prefetch={false}
-                className="flex items-center gap-3 rounded-lg px-1 py-2.5 transition-colors hover:bg-accent/50"
+                className="flex items-center justify-between gap-3 py-3 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                <IconTile icon={row.icon} tone={row.tone} />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-foreground">{row.label}</p>
-                  <p className="truncate text-xs text-muted-foreground">{row.hint}</p>
-                </div>
-                <span className={cn('text-base font-semibold tabular-nums', count ? 'text-destructive' : 'text-muted-foreground')}>
-                  {number(count)}
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <span className={cn('size-2 shrink-0 rounded-full', dot)} aria-hidden="true" />
+                  <Icon className={cn('size-4 shrink-0', clear ? 'text-muted-foreground/60' : 'text-muted-foreground')} aria-hidden="true" />
+                  <span className={cn('truncate text-sm', clear ? 'text-muted-foreground' : 'text-foreground')}>{label}</span>
                 </span>
-                <ChevronRight className="size-4 shrink-0 text-muted-foreground rtl:rotate-180" aria-hidden="true" />
+                {clear ? (
+                  <Check className="size-4 shrink-0 text-success" aria-label={t('dashboard.teacher.attention.allClear')} />
+                ) : (
+                  <strong className="shrink-0 text-sm tabular-nums text-foreground">{number(count)}</strong>
+                )}
               </Link>
             </li>
           );

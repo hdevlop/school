@@ -1,0 +1,12 @@
+{
+    "capturedAt":  "2026-10-05T15:15:03.023Z",
+    "source":  "https://openrouter.ai/api/v1/key",
+    "credentialSource":  "selected School provider key",
+    "selectedKeyVerified":  true,
+    "matchesEnvironmentKey":  true,
+    "provider":  "openrouter",
+    "model":  "openai/gpt-oss-120b",
+    "usage":  0.792264894,
+    "limit":  50,
+    "limitRemaining":  49.207735106
+}

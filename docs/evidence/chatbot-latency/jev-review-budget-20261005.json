@@ -1,0 +1,8 @@
+﻿{
+    "scope":  "Offline mocked CLI; all fetch calls intercepted, no network",
+    "simulatedDecisionCalls":  3,
+    "reportedCostUsd":  0,
+    "stoppedReason":  null,
+    "budgetUsd":  0.000001,
+    "missingCostSamples":  3
+}

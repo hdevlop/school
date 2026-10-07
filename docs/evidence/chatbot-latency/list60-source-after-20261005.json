@@ -1,0 +1,114 @@
+{
+    "capturedAt":  "2026-10-05T10:34:13.3356671Z",
+    "allMatch":  true,
+    "hashes":  [
+                   {
+                       "path":  "package.json",
+                       "source":  "125fbf54d679e29ff5c266946d86533ad0a9c89c01a00d773db2f7d6c1b2a3a0",
+                       "snapshot":  "125fbf54d679e29ff5c266946d86533ad0a9c89c01a00d773db2f7d6c1b2a3a0",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "bun.lock",
+                       "source":  "26e8f770eddefd1b55e3fa8e58cb8daf0589896b481a94a605646b4f5ab6fab8",
+                       "snapshot":  "26e8f770eddefd1b55e3fa8e58cb8daf0589896b481a94a605646b4f5ab6fab8",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/config/index.ts",
+                       "source":  "6ef7ce63dad1ec715eacdbabfdd99dca1c43cb84d570e6a5a6859be80357a248",
+                       "snapshot":  "6ef7ce63dad1ec715eacdbabfdd99dca1c43cb84d570e6a5a6859be80357a248",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/config/chatbotConfig.ts",
+                       "source":  "ca610e93debb99edbca01e603146d13367f4c7118becc4144dec0ff79a11ae72",
+                       "snapshot":  "ca610e93debb99edbca01e603146d13367f4c7118becc4144dec0ff79a11ae72",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/config/chatbotSystemPrompt.ts",
+                       "source":  "a6f9ce099faabbf2eb737de6b51ea1a9d2033447a830747861e3f3eb4f6fa0a5",
+                       "snapshot":  "a6f9ce099faabbf2eb737de6b51ea1a9d2033447a830747861e3f3eb4f6fa0a5",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/config/ragConfig.ts",
+                       "source":  "e6b8549b4e11a1784cdecb50a40c2b66bcd026a06636f42ac84c6bebca1af193",
+                       "snapshot":  "e6b8549b4e11a1784cdecb50a40c2b66bcd026a06636f42ac84c6bebca1af193",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/modules/chat/SchoolChatContextProvider.ts",
+                       "source":  "7453131e09600bae572c79693c14f7a6de91f6c6a28657169cd909f89b28cd96",
+                       "snapshot":  "7453131e09600bae572c79693c14f7a6de91f6c6a28657169cd909f89b28cd96",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/modules/chat/schoolReplyContext.ts",
+                       "source":  "77ecd61af36b861b03cd7370b49ae911925851515485dd3faf760feb27da3bc3",
+                       "snapshot":  "77ecd61af36b861b03cd7370b49ae911925851515485dd3faf760feb27da3bc3",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/modules/chat/schoolReplyTemplates.ts",
+                       "source":  "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+                       "snapshot":  "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/modules/chat/schoolListReplies.ts",
+                       "source":  "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153",
+                       "snapshot":  "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/modules/chat/ChatBenchmarkController.ts",
+                       "source":  "26aebe3a74c109a41353587957ddbe67382617bf9cd8bf47cb0b73338e580b68",
+                       "snapshot":  "26aebe3a74c109a41353587957ddbe67382617bf9cd8bf47cb0b73338e580b68",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "packages/server/src/modules/chat/ChatBenchmarkService.ts",
+                       "source":  "718433e0b0a7b08c7dbbcea0259b265b35d1a50987eb1616b71c4b0f991be6a4",
+                       "snapshot":  "718433e0b0a7b08c7dbbcea0259b265b35d1a50987eb1616b71c4b0f991be6a4",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "datasets/chatbot-latency/morocco.json",
+                       "source":  "79a349d6dfd16793a6ed71889a55fcb81dbfb63d15a694141aebbff854bc5069",
+                       "snapshot":  "79a349d6dfd16793a6ed71889a55fcb81dbfb63d15a694141aebbff854bc5069",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "scripts/chatbot-benchmark.mjs",
+                       "source":  "8d0895d1c590d23456f4d66e2f0878bf1aada3cebf4217367780cca14282658a",
+                       "snapshot":  "8d0895d1c590d23456f4d66e2f0878bf1aada3cebf4217367780cca14282658a",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "scripts/chatbot-stream.mjs",
+                       "source":  "445d9f3c7b31ad366c72465c3f04f4f74369d76c8b537167349463f337eb1202",
+                       "snapshot":  "445d9f3c7b31ad366c72465c3f04f4f74369d76c8b537167349463f337eb1202",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "scripts/chatbot-scoring.mjs",
+                       "source":  "3e7930ab72221c82588b60694b7939f647e74719033859d885df514fd1ee8f01",
+                       "snapshot":  "3e7930ab72221c82588b60694b7939f647e74719033859d885df514fd1ee8f01",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "scripts/chatbot-budget.mjs",
+                       "source":  "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+                       "snapshot":  "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+                       "matchesManifest":  true
+                   },
+                   {
+                       "path":  "scripts/chatbot-empty-reads.mjs",
+                       "source":  "093e0de71630e571691a8b15123e83868d57fc2c70891eaa7da868a0862a8e21",
+                       "snapshot":  "093e0de71630e571691a8b15123e83868d57fc2c70891eaa7da868a0862a8e21",
+                       "matchesManifest":  true
+                   }
+               ]
+}

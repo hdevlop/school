@@ -91,3 +91,57 @@ describe('percentile', () => {
     expect(percentile([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 50)).toBe(5);
   });
 });
+
+describe('client stream milestones', () => {
+  it('separates tool and answer steps while retaining no event payloads', () => {
+    const parser = createUiStreamParser({ captureStreamTimings: true });
+    const push = (chunk, ms) => parser.push(encoder.encode(sse(chunk)), ms);
+    push({ type: 'start', messageId: 'private-message-id' }, 20);
+    push({ type: 'start-step' }, 30);
+    push({ type: 'tool-input-available', toolCallId: 'c', toolName: 'private-tool', input: { secret: 'private-input' } }, 2000);
+    push({ type: 'tool-output-available', toolCallId: 'c', output: 'private-result' }, 2005);
+    push({ type: 'finish-step' }, 2010);
+    push({ type: 'start-step' }, 2020);
+    push({ type: 'text-delta', delta: '' }, 3000);
+    push({ type: 'text-delta', delta: 'private-answer' }, 8000);
+    push({ type: 'text-delta', delta: '.' }, 8010);
+    push({ type: 'finish-step' }, 8020);
+    push({ type: 'finish', messageMetadata: { private: 'private-metadata' } }, 8030);
+    const result = parser.end(8040);
+    expect(result.streamTimings).toEqual({ events: [
+      { type: 'start', atMs: 20, stepIndex: null },
+      { type: 'start-step', atMs: 30, stepIndex: 0 },
+      { type: 'tool-input-available', atMs: 2000, stepIndex: 0 },
+      { type: 'tool-output-available', atMs: 2005, stepIndex: 0 },
+      { type: 'finish-step', atMs: 2010, stepIndex: 0 },
+      { type: 'start-step', atMs: 2020, stepIndex: 1 },
+      { type: 'first-text', atMs: 8000, stepIndex: 1 },
+      { type: 'finish-step', atMs: 8020, stepIndex: 1 },
+      { type: 'finish', atMs: 8030, stepIndex: 1 },
+    ], droppedEvents: 0, lastTextMs: 8010 });
+    expect(JSON.stringify(result.streamTimings)).not.toContain('private');
+    expect(result.firstTextMs).toBe(8000);
+  });
+
+  it('handles fragmented template events without inventing model steps', () => {
+    const parser = createUiStreamParser({ captureStreamTimings: true });
+    const bytes = encoder.encode(sse({ type: 'text-delta', delta: 'مرحبا' }) + sse({ type: 'finish' }));
+    for (let i = 0; i < bytes.length; i++) parser.push(bytes.slice(i, i + 1), i);
+    const result = parser.end(bytes.length);
+    expect(result.text).toBe('مرحبا');
+    expect(result.streamTimings.events.map(event => [event.type, event.stepIndex])).toEqual([['first-text', null], ['finish', null]]);
+    expect(result.streamTimings.events[0].atMs).toBe(result.firstTextMs);
+    expect(result.streamTimings.events[1].atMs).toBe(result.finishMs);
+  });
+
+  it('bounds milestone storage and makes truncation visible; default capture stays off', () => {
+    const parser = createUiStreamParser({ captureStreamTimings: true });
+    for (let i = 0; i < 140; i++) parser.push(encoder.encode(sse({ type: 'start-step' })), i);
+    parser.push(encoder.encode(sse({ type: 'finish' })), 150);
+    const result = parser.end(151);
+    expect(result.streamTimings.events).toHaveLength(128);
+    expect(result.streamTimings.droppedEvents).toBe(13);
+    expect(result.finishMs).toBe(150);
+    expect(createUiStreamParser().end(0).streamTimings).toBeUndefined();
+  });
+});

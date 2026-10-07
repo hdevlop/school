@@ -1,9 +1,5 @@
 import { api } from './http';
-import type {
-  TeacherAttendanceTrend,
-  TeacherDashboardOverview,
-  TeacherTrendRange,
-} from '@sms/contracts/teacher-dashboard';
+import type { TeacherDashboardOverview } from '@sms/contracts/teacher-dashboard';
 
 type ApiEnvelope<T> = { data: T; message?: string; status?: string };
 
@@ -28,14 +24,14 @@ export const getStaffAttendanceMonthlyApi = async () => {
   return res.data;
 };
 
-// The signed-in teacher's own home page; the server resolves the teacher.
-export const getTeacherDashboardOverviewApi = async (): Promise<ApiEnvelope<TeacherDashboardOverview>> => {
-  const res = await api.get('/dashboard/teacher/overview');
-  return res.data;
-};
+// Without a teacher id, the signed-in teacher's own home page (the server
+// resolves the teacher); with one, that teacher's page as a reader of
+// teachers opens it from the teachers list.
+const teacherDashboardPath = (teacherId?: string) =>
+  teacherId ? `/dashboard/teachers/${encodeURIComponent(teacherId)}` : '/dashboard/teacher';
 
-export const getTeacherAttendanceTrendApi = async (range: TeacherTrendRange): Promise<ApiEnvelope<TeacherAttendanceTrend>> => {
-  const res = await api.get('/dashboard/teacher/attendance-trend', { params: { range } });
+export const getTeacherDashboardOverviewApi = async (teacherId?: string): Promise<ApiEnvelope<TeacherDashboardOverview>> => {
+  const res = await api.get(`${teacherDashboardPath(teacherId)}/overview`);
   return res.data;
 };
 

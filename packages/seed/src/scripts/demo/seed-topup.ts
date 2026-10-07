@@ -14,6 +14,7 @@ import { ExpenseService, PaymentService, PayrollService } from '@sms/server/modu
 import { runSeedTask } from '../shared/run-seed';
 import { fake, generateExpense, pickRandom } from '@sms/contracts/fixtures';
 import { isDemoCollectionDay } from '../shared/academic-year';
+import { findAdministratorId } from '../shared/demo-phases';
 
 const LATE_PAYMENT_METHODS = ['cash', 'bankTransfer', 'creditCard', 'debitCard', 'online'];
 
@@ -146,7 +147,7 @@ runSeedTask('finance top-up', async (server) => {
         return generateExpense({ category: cat, expenseDate: pastOrTodayDate(year, month, now), status });
       }),
     ];
-    const created = await expenseService.seedDemoExpenses(generated);
+    const created = await expenseService.seedDemoExpenses(generated, await findAdministratorId());
     console.log(`✅ Expenses seeded for ${period} (${created.length} records)`);
   }
 

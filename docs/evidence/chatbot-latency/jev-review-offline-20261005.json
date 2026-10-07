@@ -1,0 +1,145 @@
+{
+  "capturedAt": "2026-10-05T16:33:15.370Z",
+  "scope": "Offline review only; no paid requests/app changes",
+  "probeCorpusHashesMatch": true,
+  "numericValidationRepro": {
+    "confidence": "1.5",
+    "writeProbability": "-0.1",
+    "costUsd": -1,
+    "acceptedAtPoint8WithWriteGuard": true
+  },
+  "currentLanguageGate": {
+    "testSamples": 204,
+    "allAcceptedSamples": 125,
+    "allAcceptedUnique": 42,
+    "gateEligibleSamples": 123,
+    "gateEligibleUnique": 41,
+    "acceptedGateEligibleSamples": 66,
+    "acceptedGateEligibleUnique": 22,
+    "actualJeVInvokedSamplesWithRegexFirst": 120,
+    "actualJeVAcceptedSamplesWithRegexFirst": 63,
+    "actualJeVAcceptedUniqueWithRegexFirst": 21,
+    "acceptedButSkippedUnique": 20,
+    "acceptedLocalizedButSkippedUnique": 8,
+    "localizedSkippedExamples": [
+      {
+        "id": "jev-fr-total-students",
+        "language": "fr",
+        "split": "test",
+        "intent": "student_count",
+        "isWrite": false,
+        "query": "Tu peux me dire le nombre total d'élèves ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-students-en-tout",
+        "language": "fr",
+        "split": "test",
+        "intent": "student_count",
+        "isWrite": false,
+        "query": "On a combien d'élèves en tout ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-profs",
+        "language": "fr",
+        "split": "test",
+        "intent": "teacher_count",
+        "isWrite": false,
+        "query": "Il y a combien de profs à l'école ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-who-absent",
+        "language": "fr",
+        "split": "test",
+        "intent": "attendance_today",
+        "isWrite": false,
+        "query": "Qui est absent aujourd'hui ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-next-exam",
+        "language": "fr",
+        "split": "test",
+        "intent": "upcoming_exams",
+        "isWrite": false,
+        "query": "C'est quand le prochain examen ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-add-teacher",
+        "language": "fr",
+        "split": "test",
+        "intent": "write_request",
+        "isWrite": true,
+        "query": "Ajoute un nouvel enseignant nommé Zzbench Qqtest.",
+        "detected": null
+      }
+    ],
+    "frArAryNullLanguageCases": [
+      {
+        "id": "jev-fr-total-students",
+        "language": "fr",
+        "query": "Tu peux me dire le nombre total d'élèves ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-students-en-tout",
+        "language": "fr",
+        "query": "On a combien d'élèves en tout ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-profs",
+        "language": "fr",
+        "query": "Il y a combien de profs à l'école ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-who-absent",
+        "language": "fr",
+        "query": "Qui est absent aujourd'hui ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-next-exam",
+        "language": "fr",
+        "query": "C'est quand le prochain examen ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-add-teacher",
+        "language": "fr",
+        "query": "Ajoute un nouvel enseignant nommé Zzbench Qqtest.",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-delete-class",
+        "language": "fr",
+        "query": "Supprime la classe Zzbench.",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-student-average",
+        "language": "fr",
+        "query": "Quelle est la moyenne de l'élève Zzbench Qqtest ?",
+        "detected": null
+      },
+      {
+        "id": "jev-fr-weather",
+        "language": "fr",
+        "query": "Quel temps fait-il demain à Rabat ?",
+        "detected": null
+      }
+    ]
+  },
+  "fallbackSchedulingExample": {
+    "routingReadyMs": 50,
+    "jevTimeoutMs": 800,
+    "modelStartsIfWaitingForTemplateMs": 800,
+    "addedDelayMs": 750,
+    "proposedMaximumRegressionMs": 100
+  },
+  "uniqueEligibleZeroError95UpperBound": 0.12730543165483876
+}

@@ -1,0 +1,16 @@
+﻿{
+    "capturedAt":  "2026-10-05T16:10:54.5752369Z",
+    "comparisonOwnDeclaredEstimateUsd":  0.01472735,
+    "comparisonStartKeyUsage":  0.794645706,
+    "finalObservedKeyUsage":  0.82172324,
+    "comparisonObservedKeyWindowIncreaseUsd":  0.027077534,
+    "sharedProbe":  "jev-probe-20261005.json",
+    "sharedProbeReportedCostUsd":  0.014694750,
+    "sharedProbeDocumentedSmokeCostUsd":  0.000036246,
+    "combinedStartKeyUsage":  0.792264894,
+    "combinedObservedKeyIncreaseUsd":  0.029458346,
+    "combinedReportedAndDeclaredCostsUsd":  0.029458346,
+    "aggregateResidualUsd":  0.000000000,
+    "aggregateReconciles":  true,
+    "note":  "The Jev probe reads the same OPENROUTER_API_KEY from the same env file. Its run overlaps A1; the full shared window matches Jev reported costs plus strict-provider comparison token estimates. This is aggregate consistency, not isolated invoices/per-generation host/retry proof. Comparison-window delta alone includes only part of Jev charges and is not benchmark spend."
+}

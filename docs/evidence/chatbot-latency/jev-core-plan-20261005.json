@@ -1,0 +1,44 @@
+{
+    "capturedAt":  "2026-10-05T19:59:02.2362860Z",
+    "scope":  "Classification-only synthetic exploration; no app/tool/database or runtime enablement",
+    "model":  "typesafe/jev-1.13",
+    "intentWordingVersion":  3,
+    "acceptancePolicy":  "core",
+    "excludedAcceptanceIntents":  [
+                                      "upcoming_exams",
+                                      "needs_llm"
+                                  ],
+    "threshold":  0.8,
+    "writeAgreementRequired":  true,
+    "uniqueQueries":  104,
+    "independentFamilies":  26,
+    "nativeReviewedCases":  0,
+    "repetitions":  3,
+    "plannedRequests":  312,
+    "maxRequests":  312,
+    "budgetUsd":  0.02,
+    "requestReserveUsd":  0.002,
+    "timeoutMs":  10000,
+    "retries":  0,
+    "corpus":  "datasets/chatbot-latency/jev-core-exploration.json",
+    "output":  "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json",
+    "sourceSha256":  {
+                         "scripts/chatbot-jev.mjs":  "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+                         "scripts/chatbot-jev-probe.mjs":  "5e3ca8341e1005afdf7a7daf6385192bb8029620d11c83a9eae03e4601bab020",
+                         "scripts/chatbot-jev-accuracy.mjs":  "8b8136b97fb7ab92a40ec7b263f73750abd600d73dc6e1a0d83b2d0247e6153a",
+                         "packages/server/src/modules/chat/schoolReplyLanguage.ts":  "dc36099b20e35f8357f8bd94c4eb320a6403f011615eb27f781aaf35d2d951f3",
+                         "packages/server/src/modules/chat/schoolReplyTemplates.ts":  "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+                         "packages/server/src/modules/chat/schoolListReplies.ts":  "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153",
+                         "datasets/chatbot-latency/jev-core-exploration.json":  "3e2a7192cdebfba6df2f9665186f2d619f762b405201dcad9078f94e92f00434"
+                     },
+    "historicalReportedMeanCostUsd":  3.9E-05,
+    "projectedReportedCostUsd":  0.012168,
+    "costNote":  "Projection from the old B0 reported mean, not a bill or per-call bound. Client reservations do not enforce a provider billing cap.",
+    "prices":  "docs/evidence/chatbot-latency/jev-core-prices-20261005.json",
+    "productionAcceptance":  false,
+    "reason":  "Exploration is too small and assistant-authored; B0 remains failed until fresh independent/native acceptance and later integration gates.",
+    "originalEvidenceSha256":  {
+                                   "stageA":  "951782b96fbec4654a5fa9c38f815ddf462f4a7d0e345a3b8dbf030598fbb5ba",
+                                   "b0":  "936aa48bf15db69f58d68d923342bda5fbcc65255ea8cd19bfe528c700bb1234"
+                               }
+}

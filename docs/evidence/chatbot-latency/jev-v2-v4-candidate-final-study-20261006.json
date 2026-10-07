@@ -1,0 +1,192 @@
+{
+  "stage": "post-result offline development candidates",
+  "threshold": 0.8,
+  "acceptancePolicy": "core",
+  "providerRequests": 0,
+  "keyLedgerReads": 0,
+  "schoolToolCalls": 0,
+  "jevEnabled": false,
+  "productionAcceptance": false,
+  "inputSha256": {
+    "docs/evidence/chatbot-latency/jev-core-final-analysis-20261005.json": "6497f56818359a56dbd2547a0f2615f13c969554179eafbb369c0ef1ad51245b",
+    "datasets/chatbot-latency/jev-core-exploration.json": "3e2a7192cdebfba6df2f9665186f2d619f762b405201dcad9078f94e92f00434",
+    "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json": "36734425e8b2410fae66578f299e00b1f1b8f5c7d58370a28d22c89743b8174c",
+    "docs/evidence/chatbot-latency/jev-core-continuation-20261005.json": "5ebdce7a12438cd4e3446ce78eb9f1950f91eb1710192a5fea06766a10afdb8e",
+    "docs/evidence/chatbot-latency/jev-core-health-20261005.json": "11840f2053f6cfdd892259e24822b690089fbfef8edd4e5d99090b1aa5a90d45",
+    "docs/evidence/chatbot-latency/jev-core-finish-20261005.json": "7b3e5e02e5cc96570f373d977290355024cc08e7cf73b5c05301e6203ee2f143",
+    "docs/evidence/chatbot-latency/jev-draft-probe96-run-20261006.json": "3a555eec67ac792d3fcfd7cba400b471c32e3ecd82cfe2995fb1b4c520065dfb",
+    "datasets/chatbot-latency/jev-moroccan-probe96-dev-20261006.json": "a11ae8613f89353ef7d040e5fe73ad82133423db4f6295f13a29c56a75e9d5f0"
+  },
+  "sourceSha256": {
+    "scripts/chatbot-jev-candidate-study.mjs": "a31ef5c9f4ae4c5b773b921f681ba82cc77f27751fd19214775a4cbbf979bd60",
+    "scripts/chatbot-jev-count-guard-v2.mjs": "5a5899c7b9a2afbbebc961587a7569b93c66fbac5d7d5ddcffa7ced81efb2460",
+    "scripts/chatbot-jev-count-guard.mjs": "1171a9f51d593e8b44fb9a0684a378c95d98438ed983546ea54bc5eda231e8ed",
+    "scripts/chatbot-jev-wording-v4.mjs": "fad8905b3cab84b2ae112c4edaac5772c077f001d23733100dcf3f7fd2eb525c",
+    "scripts/chatbot-jev.mjs": "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "14ac221103b2d1087b4896151a3c7e2291151a75f05a22cb439f9dff5e5d9701",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497"
+  },
+  "core": {
+    "savedAttempts": 312,
+    "validDecisions": 310,
+    "currentLanguageEligibleAttempts": 285,
+    "comparison": {
+      "threshold": 0.8,
+      "acceptancePolicy": "core",
+      "guardVersion": 2,
+      "before": {
+        "samples": 152,
+        "questions": 52,
+        "wrongSamples": 1,
+        "wrongQuestions": 1,
+        "acceptedFamilies": 16
+      },
+      "after": {
+        "samples": 151,
+        "questions": 51,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 15
+      },
+      "preventedWrong": {
+        "samples": 1,
+        "questions": 1,
+        "wrongSamples": 1,
+        "wrongQuestions": 1,
+        "acceptedFamilies": 1
+      },
+      "lostCorrect": {
+        "samples": 0,
+        "questions": 0,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 0
+      },
+      "declined": [
+        {
+          "id": "core3-ary-21",
+          "repetition": 3,
+          "label": "needs_llm",
+          "choice": "teacher_count",
+          "previouslyCorrect": false,
+          "reason": "name_or_list_signal"
+        }
+      ],
+      "productionAcceptance": false,
+      "note": "Post-result dev candidate: closed exclusion grammar only. Not a general count-intent validator, native acceptance or runtime integration.",
+      "version1After": {
+        "samples": 142,
+        "questions": 48,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 15
+      }
+    },
+    "restoredCorrect": [
+      "core3-ar-03",
+      "core3-ary-03",
+      "core3-ary-latn-03"
+    ],
+    "productionAcceptance": false,
+    "note": "Saved v3 choices with current language gating; v4 write scores were not measured."
+  },
+  "draft96": {
+    "savedAttempts": 96,
+    "validDecisions": 96,
+    "currentLanguageEligibleAttempts": 95,
+    "comparison": {
+      "threshold": 0.8,
+      "acceptancePolicy": "core",
+      "guardVersion": 2,
+      "before": {
+        "samples": 57,
+        "questions": 57,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 19
+      },
+      "after": {
+        "samples": 57,
+        "questions": 57,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 19
+      },
+      "preventedWrong": {
+        "samples": 0,
+        "questions": 0,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 0
+      },
+      "lostCorrect": {
+        "samples": 0,
+        "questions": 0,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 0
+      },
+      "declined": [],
+      "productionAcceptance": false,
+      "note": "Post-result dev candidate: closed exclusion grammar only. Not a general count-intent validator, native acceptance or runtime integration.",
+      "version1After": {
+        "samples": 47,
+        "questions": 47,
+        "wrongSamples": 0,
+        "wrongQuestions": 0,
+        "acceptedFamilies": 17
+      }
+    },
+    "restoredCorrect": [
+      "mda26-student_count-14-fr",
+      "mda26-student_count-14-ary-latn",
+      "mda26-student_count-26-fr",
+      "mda26-student_count-26-ar",
+      "mda26-student_count-26-ary",
+      "mda26-student_count-26-ary-latn",
+      "mda26-teacher_count-07-fr",
+      "mda26-teacher_count-07-ary",
+      "mda26-teacher_count-07-ary-latn",
+      "mda26-student_and_teacher_count-12-ar"
+    ],
+    "productionAcceptance": false,
+    "note": "Saved v3 choices with current language gating; v4 write scores were not measured."
+  },
+  "candidateRequestShape": {
+    "model": "typesafe/jev-1.13",
+    "state": "<query>",
+    "questions": {
+      "intent": {
+        "type": "choice",
+        "instructions": "The message was typed by a school administrator in the chat of a Moroccan school management dashboard. It can be English, French, Spanish, Modern Standard Arabic or Moroccan Darija in Arabic or Latin script, or a mix. Which kind of request is it?",
+        "criteria": {
+          "small_talk": "Only a greeting, thanks, goodbye, or a question about what the assistant can do. No request for school data.",
+          "student_count": "Asks only how many students are enrolled in the whole school this year: one number, not a list of students, with no filter by class, section, gender, status, date or anything else.",
+          "teacher_count": "Asks only how many teachers the whole school has: one number, not a list or names of teachers, with no filter by subject, class or anything else.",
+          "student_and_teacher_count": "Asks for both the total number of students and the total number of teachers, with no filter.",
+          "class_list": "Asks to list or name the school's classes, with no filter and no question about their students, teachers or timetable.",
+          "attendance_today": "Asks to see today's attendance for the whole school (who is present or absent today), with no class, student or other date, and not a number to compute.",
+          "upcoming_exams": "Asks which exams are coming up or when the next exam is, for the whole school, with no class, subject or student filter.",
+          "write_request": "Asks the assistant to create, add, record, mark, change, publish, send or delete something now, for example to record a student as absent or present today, including short Darija commands. Asking how to do it oneself is not this.",
+          "needs_llm": "Anything else: a question with a filter or qualifier (a class, a student, a name, a gender, a past or other date, last year, a number to compute), a list of teachers or students, grades, fees, payments, timetables, how-to questions, a short follow-up that starts with \"and\" (et, y, و, w) or needs an earlier message, unclear requests and topics unrelated to the school."
+        }
+      },
+      "is_write": {
+        "type": "noul",
+        "instructions": "The message was typed by a school administrator in the chat of a Moroccan school management dashboard. It can be English, French, Spanish, Modern Standard Arabic or Moroccan Darija in Arabic or Latin script, or a mix. Does it ask the assistant itself to create, add, record, mark, change, publish or delete data? Classify the requested effect on stored school data, not imperative tone. A command to display, read, list, count or explain existing information is read-only. Quoted examples, negated changes and instructions about doing something oneself are not requests to execute a change. Use the operation and its object: showing an attendance register is different from recording an absence.",
+        "criteria": {
+          "true": "The assistant is asked to persist a change now: create, update, record, mark, delete, publish or send. Examples: \"enregistre cet élève absent\", \"سجل غياب التلميذ\", \"سجل هاد التلميذ غايب\", \"sjjel tilmid ghayb\", \"zid tilmid jdid\", \"beddel smit section\". Do not treat a polite wording or a question form as read-only when it still requests this action.",
+          "false": "No stored-data change is requested: show, list or count existing data, explain how, greet, or ask an unclear follow-up. Examples: \"montre le registre de présence\", \"اعرض سجل الحضور\", \"وريني سجل الحضور\", \"werrini sijillat 7odour\", \"bghit jouj a3dad dyal tlamid w l asatida\", \"kan9elleb 3la mjmo3 tlamid\", \"3tini smiyat l a9sam\", \"kifach nsjjel lghiyab bo7di\". Words such as bghit (want), 3tini (give me) and werrini (show me) do not by themselves request a mutation."
+        }
+      }
+    }
+  },
+  "candidateWriteWordingMeasured": false,
+  "nativeAuthoredOrReviewedCases": 0,
+  "limitations": [
+    "Tuned on spent assistant development data; no independent/native acceptance.",
+    "V2 changes count-veto decisions, never classifier scores or write agreement.",
+    "V4 request wording is prepared only; no prediction, coverage, timing or billing improvement claimed.",
+    "Original v1/v3 files and all raw reports/labels remain unchanged. No runtime integration."
+  ]
+}

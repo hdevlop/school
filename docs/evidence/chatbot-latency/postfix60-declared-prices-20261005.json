@@ -1,0 +1,13 @@
+{
+    "provider":  "openrouter",
+    "source":  "https://openrouter.ai/api/v1/models/openai/gpt-oss-120b/endpoints",
+    "capturedAt":  "2026-10-05T09:24:41.3797611Z",
+    "basis":  "Independent maximum input/output catalog rates across listed eligible hosts; Groq excluded. Conservative assumption, not verified host pricing or a guaranteed billing cap.",
+    "catalogSha256":  "05713bc65319bd2982178fe74eb20cf5296766ae0e6accdd2ebcae7314bfc6e4",
+    "models":  {
+                   "openai/gpt-oss-120b":  {
+                                               "inputUsdPerMillion":  0.35,
+                                               "outputUsdPerMillion":  0.95
+                                           }
+               }
+}

@@ -4,11 +4,7 @@ import { NBadge, NButton } from 'najm-kit';
 import { CalendarClock, CreditCard, Eye } from 'lucide-react';
 import { isInstallmentPayable } from '@/features/Financial/Payment/store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
-
-// An installment is `pending` until its due date passes, so it reads as
-// upcoming: it can be paid ahead, and nobody is waiting on it.
-const UPCOMING_STATUS_COLOR = { upcoming: 'info' } as const;
-const displayStatus = (status: string) => (status === 'pending' ? 'upcoming' : status);
+import { UPCOMING_STATUS_COLOR, displayInstallmentStatus as displayStatus } from '../config/installmentStatus';
 
 export const useInstallmentsTableColumns = ({ onView, onPay }: { onView?: (installment: any) => void; onPay?: (installment: any) => void } = {}) => {
   const { t } = useTranslation();

@@ -15,6 +15,12 @@ export const getPayrollByIdApi = async (id) => {
   return res.data
 }
 
+// One staff member's payslips in the selected year, newest period first.
+export const getPayrollByStaffApi = async (staffId: string) => {
+  const res = await api.get(`/payroll/staff/${encodeURIComponent(staffId)}`)
+  return res.data
+}
+
 export const getPayrollByPeriodApi = async (period) => {
   const res = await api.get(`/payroll/period/${period}`)
   return res.data

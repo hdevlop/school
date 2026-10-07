@@ -1,0 +1,62 @@
+{
+    "clientDate":  "2026-10-06",
+    "scope":  "Blind review v3: remove intent hints in original identifiers and label-group ordering",
+    "providerCalls":  0,
+    "keyLedgerReads":  0,
+    "schoolToolCalls":  0,
+    "jevEnabled":  false,
+    "productionAcceptance":  false,
+    "worksheetVersion":  3,
+    "questions":  960,
+    "linkedFamilies":  240,
+    "actualNativeAuthoredCases":  0,
+    "actualHumanReviews":  0,
+    "opaqueQuestionIds":  true,
+    "opaqueFamilyIds":  true,
+    "originalAuthorAndSplitMetadataOmitted":  true,
+    "hashSortedRows":  true,
+    "oldIntakeAndV2WorksheetChanged":  false,
+    "questionsAndContextHashesChanged":  false,
+    "legacyWorksheetImportRefused":  true,
+    "nativeExportReady":  false,
+    "checks":  [
+                   {
+                       "command":  "bun test scripts/tests/chatbot-jev-native.test.mjs scripts/tests/chatbot-jev-draft.test.mjs",
+                       "exitCode":  0,
+                       "testsPassed":  25,
+                       "assertions":  883,
+                       "note":  "Before adding the full 960-record pending-import test"
+                   },
+                   {
+                       "command":  "bun run test:boundaries",
+                       "exitCode":  0,
+                       "testsPassed":  398,
+                       "assertions":  2595,
+                       "workspaceFiles":  1282,
+                       "clientEntries":  289
+                   },
+                   {
+                       "command":  "bun run lint",
+                       "exitCode":  0
+                   },
+                   {
+                       "command":  "960 text/context hashes, original files, opaque IDs, 240 families, documentation links and whitespace",
+                       "exitCode":  0
+                   }
+               ],
+    "sourceSha256":  {
+                         "scripts/chatbot-jev-native.mjs":  "650dc72f969d45f4fabfe4bd52f10e918f119d86d56c38b2e8ce9d5092992eb5",
+                         "scripts/tests/chatbot-jev-native.test.mjs":  "f4118eb37b52ff899f3117d46e70ef245c41b52cf68a02b8b98095a3689d3b48",
+                         "datasets/chatbot-latency/jev-native-collection.json":  "fd55b0f0752e777246d8ce31d196d035344915a9e780d0c7818b55efa6312883",
+                         "datasets/chatbot-latency/jev-moroccan-review-worksheet.json":  "333dd1b916db044149d2af3df6eab275907d0b83ee10e0fc8701b19ac93638c5",
+                         "datasets/chatbot-latency/jev-moroccan-review-worksheet-v3.json":  "c9070d30fefee6b4219a8614f310cfa5528417478d1045f96f144858e4a982bd",
+                         "docs/tests/jev-native-reviewer-guide.md":  "7c62f869df8a3c21fe0b2ece3b6a5b4502fd7c027210d42886663b47aeff940d"
+                     },
+    "limitations":  [
+                        "Opaque metadata does not authenticate reviewers or prove true blind review",
+                        "Actual text remains unchanged and naturally contains intent information",
+                        "Only the v3 worksheet/category guide should be shared with reviewers; intake and predictions remain with the operator",
+                        "Assistant draft review does not create native authorship or acceptance",
+                        "Actual native questions and independent human review remain required"
+                    ]
+}

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "purpose": "native-intake",
+  "acceptancePolicy": "core",
+  "scope": "Empty collection template. No native questions or reviews have been supplied. Copy caseTemplate into cases only after collecting a real question; complete each declaration from actual records.",
+  "caseTemplate": {
+    "id": "",
+    "query": "",
+    "language": "ary",
+    "familyId": "",
+    "split": "test",
+    "intent": null,
+    "isWrite": null,
+    "source": "native_author",
+    "authorId": null,
+    "authoredAt": null,
+    "authorNativeDarijaSpeaker": null,
+    "reviewerId": null,
+    "reviewedAt": null,
+    "reviewStatus": "pending",
+    "reviewBlind": null,
+    "reviewQuestionSha256": null,
+    "anonymization": { "confirmed": false, "notes": "" }
+  },
+  "cases": []
+}

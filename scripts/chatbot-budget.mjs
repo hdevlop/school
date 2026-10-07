@@ -14,15 +14,22 @@ export function validateDeclaredPrices(value) {
   return value;
 }
 
-/** Explicit fallback estimates only; never replace SDK metadata or installed pricing. */
-export function estimateDeclaredCost(metadata, model, prices) {
-  if (!prices || metadata?.pricingFound === true || metadata?.model !== model
+export function validatePricingMode(mode, hasPrices) {
+  if (!['fallback', 'declared'].includes(mode) || (mode === 'declared' && !hasPrices)) {
+    throw new Error('Use --pricing-mode=fallback or declared; declared requires --pricing-file and an estimated budget');
+  }
+}
+
+/** A separate estimate; declared mode can price known SDK usage without mutating it. */
+export function estimateDeclaredCost(metadata, model, prices, mode = 'fallback') {
+  validatePricingMode(mode, Boolean(prices));
+  if (!prices || (mode === 'fallback' && metadata?.pricingFound === true) || metadata?.model !== model
     || metadata?.provider !== prices.provider || !Object.hasOwn(prices.models, model)) return null;
   const { promptTokens, completionTokens, totalTokens } = metadata;
   if (![promptTokens, completionTokens, totalTokens].every((count) => Number.isSafeInteger(count) && count >= 0)
     || totalTokens !== promptTokens + completionTokens) return null;
   const rates = prices.models[model];
-  return { source: 'declared-price-file', model, provider: prices.provider,
+  return { source: 'declared-price-file', pricingMode: mode, model, provider: prices.provider,
     promptTokens, completionTokens, ...rates,
     totalCost: (promptTokens * rates.inputUsdPerMillion + completionTokens * rates.outputUsdPerMillion) / 1000000 };
 }
@@ -31,7 +38,7 @@ export function summarizeDeclaredCosts(samples) {
   const rows = samples.filter((sample) => sample.declaredCost);
   return { requestsWithDeclaredCost: rows.length,
     estimatedCostUsd: rows.reduce((total, sample) => total + sample.declaredCost.totalCost, 0),
-    note: 'Explicit price-file estimates for missing installed prices; separate from raw SDK metadata and provider billing.' };
+    note: 'Explicit price-file estimates, including known SDK usage when declared mode is selected; separate from unchanged SDK metadata and provider billing.' };
 }
 
 export function createEstimatedBudget(maxUsd, reserveUsd) {

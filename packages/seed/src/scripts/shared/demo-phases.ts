@@ -1,5 +1,6 @@
 import { db } from '@sms/server/database';
-import { staffRoles } from '@sms/server/database/schema';
+import { roles, staffRoles, users } from '@sms/server/database/schema';
+import { eq } from 'drizzle-orm';
 import type {
   BehaviorRewardService,
   DisciplineService,
@@ -10,6 +11,16 @@ import type {
 import { getDemoReferenceDate } from './academic-year';
 
 // Phases shared by the single-year demo seed and the history seed's later years.
+
+// Enrollment, transition, rollover and expense approval records name the account that made them.
+export async function findAdministratorId() {
+  const [admin] = await db.select({ id: users.id }).from(users)
+    .innerJoin(roles, eq(users.roleId, roles.id))
+    .where(eq(roles.name, 'admin'))
+    .limit(1);
+  if (!admin) throw new Error('The demo seed needs an administrator account: run bun seed admin first');
+  return admin.id;
+}
 
 const STAFF_ROLE_DATA = [
   { code: 'teacher', label: 'Teacher', labels: { fr: 'Enseignant', ar: 'أستاذ', es: 'Profesor' }, category: 'teaching', sortOrder: 10, isSystem: true },
@@ -481,6 +492,13 @@ export async function seedUniqueFees(feeService: FeeService, fees: any[]) {
   return createdFees;
 }
 
+/** The demo's today for the teaching year that holds a `YYYY-MM` payroll period. */
+function payrollToday(period: string) {
+  const year = Number(period.slice(0, 4));
+  const startYear = Number(period.slice(5, 7)) >= 9 ? year : year - 1;
+  return getDemoReferenceDate(`${startYear}-${startYear + 1}`).toISOString().split('T')[0];
+}
+
 export async function seedPayroll(payrollService: PayrollService, periods: string[], staffIds: Set<string>) {
   let createdCount = 0;
   let paidCount = 0;
@@ -492,12 +510,15 @@ export async function seedPayroll(payrollService: PayrollService, periods: strin
       const result = await payrollService.runPayrollForSeed({ period }, staffIds);
       createdCount += result.createdCount;
 
+      // Staff are paid on the 28th; a payday still ahead of the demo's today
+      // leaves that month's payslips pending instead of booking future cash out.
       const paymentDate = `${period}-28`;
+      const isPayday = paymentDate <= payrollToday(period);
       const logPayslipProgress = createProgressLogger(`Payroll ${period} payments`, result.created.length, 25);
       logPayslipProgress(0, `paid ${paidCount}`);
 
       for (const [index, payslip] of result.created.entries()) {
-        if (index % 3 !== 0) {
+        if (isPayday) {
           await payrollService.pay(payslip.id, {
             paymentMethod: 'bankTransfer',
             paymentDate,

@@ -472,8 +472,16 @@ export function expenseNotes(category?: string) {
 }
 
 // Basic utilities
+// Occupations of Moroccan parents, in French as the demo school writes them.
+const OCCUPATIONS = [
+  'Enseignant', 'Médecin', 'Infirmière', 'Pharmacien', 'Ingénieur', 'Comptable', 'Avocat',
+  'Commerçant', 'Fonctionnaire', 'Policier', 'Militaire', 'Chauffeur', 'Technicien',
+  'Agent administratif', 'Banquier', 'Architecte', 'Entrepreneur', 'Artisan', 'Agriculteur',
+  'Secrétaire', 'Électricien', 'Informaticien', 'Cadre commercial', 'Dentiste',
+];
+
 export function occupation(): string {
-  return faker.person.jobTitle();
+  return faker.helpers.arrayElement(OCCUPATIONS);
 }
 
 export function boolean(): boolean {

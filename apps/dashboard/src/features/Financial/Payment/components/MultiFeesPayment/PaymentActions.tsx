@@ -17,13 +17,8 @@ export const PaymentActions = () => {
     return currentDialog?.primaryButton?.loading || false;
   });
 
-  // A disabled button says what is missing.
-  const hint = isLoading ? null
-    : selectedCount === 0 ? t('payments.register.selectHint')
-      : null;
-
   return (
-    <div className="flex w-full shrink-0 flex-col gap-1.5">
+    <div className="flex w-full shrink-0 flex-col">
       <NButton
         type="submit"
         form="payment-details-form"
@@ -39,7 +34,6 @@ export const PaymentActions = () => {
           t('payments.dialogs.createButton')
         )}
       </NButton>
-      {hint && <p className="text-center text-xs text-muted-foreground">{hint}</p>}
     </div>
   );
 };

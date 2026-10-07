@@ -1,0 +1,12 @@
+﻿{
+    "provider":  "openrouter",
+    "source":  "https://openrouter.ai/api/v1/models/openai/gpt-oss-120b/endpoints",
+    "capturedAt":  "2026-10-05T15:42:34.9619602Z",
+    "basis":  "Maximum catalog rates among Cerebras endpoints, strict only-provider/no-fallback experiment; not invoice or a hard cap.",
+    "models":  {
+                   "openai/gpt-oss-120b":  {
+                                               "inputUsdPerMillion":  0.35,
+                                               "outputUsdPerMillion":  0.75
+                                           }
+               }
+}

@@ -1,0 +1,54 @@
+{
+  "stage": "Completed authorized unreviewed assistant development benchmark",
+  "artifactSha256": {
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-execution-20261007.json": "4dc7cad565de5e16f778f65d38ef871cd6c55108ee26d04282dc16bf967de313",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-run-20261007.json": "a9dd71fd992347167b7df79af2c287be9f535ca86bcd93df3e1c6a0b572d6329",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-analysis-20261007.json": "0efd91991b458cedf5f4e3fc220aa4bd8d006b2db5fb595e0592c3e01795e72b",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-settlement-20261007.json": "de9080f92e5a68c7084b4f828cfd047b7d8955b982aabf5bc804fbadf3add066",
+    "scripts/chatbot-jev-stress304-analysis.mjs": "875c9f0355326705cb2fe15cd5e95169ab0f6b434a49b28e5e877e85c775b991",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-results-20261007.md": "d869b7de1df3d403c33d2a1942f96d9fda59afed3758c2cbd1b04f5fa216de0a",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-key-precheck-20261007.json": "77f7eba375a3fec77f25b9217d8209420b44f336321932f0cc56eac63ed1b08c",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-key-later-20261007.json": "65d3e92e6c5e8befe056625d58c98ff72449358e9de510c6d50f3930dc0a2b8c",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-key-settled-20261007.json": "c690de078c22c6422415eac88361f3f69d774bf428af9d8add5c56ed8b8ca027"
+  },
+  "attempts": 304,
+  "valid": 304,
+  "errors": 0,
+  "retries": 0,
+  "knownCostUsd": 0.01194253199999998,
+  "unknownCostReservationsUsd": 0,
+  "aggregateReconciled": true,
+  "averageMs": 436.7773888157875,
+  "p95Ms": 602.4980000000214,
+  "guardedAcceptedCases": 88,
+  "guardedAcceptedFamilies": 30,
+  "guardedWrong": 0,
+  "guard4AdditionalCorrectDeclinesComparedWithGuard3": 19,
+  "wordingReviewStatus": "pending",
+  "qualificationPassed": false,
+  "jevEnabled": false,
+  "schoolToolCalls": 0,
+  "additionalClassificationAllowance": false,
+  "checks": {
+    "initialScriptRun": {
+      "passed": 497,
+      "failed": 2,
+      "reason": "Default 5-second subprocess test timeouts; no API timeout or assertion changed"
+    },
+    "fullScriptRerunPassed": 499,
+    "scriptAssertions": 2867,
+    "scriptFiles": 40,
+    "lintExitCode": 0,
+    "lintWarnings": 0,
+    "offlineModeTestsPassed": true,
+    "allValidDecisionsReparsed": true,
+    "allFrozenInputsAndSourcesVerified": true,
+    "localLinksVerified": 6,
+    "gitDiffWhitespaceExitCode": 0
+  },
+  "remaining": [
+    "Offline language/guard coverage improvement",
+    "Published compatible async hook and paired full-chat benchmark",
+    "Qualification coverage and classifier p95 target"
+  ]
+}

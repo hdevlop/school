@@ -1,0 +1,32 @@
+{
+    "capturedAt":  "2026-10-05T10:26:36.3566637Z",
+    "sourceAndSnapshotHashesMatch":  true,
+    "selectedKeyMatchesEnvironment":  true,
+    "providerLimit":  50,
+    "providerRemaining":  49.259483366,
+    "routingPreview":  {
+                           "passed":  9,
+                           "total":  9,
+                           "note":  "Preview alone does not prove execution/authorization."
+                       },
+    "embeddingModels":  [
+                            {
+                                "name":  "qwen3-embedding:latest",
+                                "expires_at":  "2319-01-15T10:12:59.208253507Z",
+                                "size_vram":  0
+                            }
+                        ],
+    "localChecks":  {
+                        "tests":  332,
+                        "failed":  0,
+                        "assertions":  986,
+                        "frozenCheckoutAlsoPassed":  true,
+                        "lint":  "passed",
+                        "serverSourceTypecheck":  "passed",
+                        "serverTestTypecheck":  "passed",
+                        "i18n":  "passed",
+                        "productionBuild":  "passed",
+                        "buildDist":  ".next-chat-list-check"
+                    },
+    "paidChatsDuringPreparation":  0
+}

@@ -1,0 +1,963 @@
+{
+  "capturedAt": "2026-10-06T10:12:13.179Z",
+  "runId": "e924d82d",
+  "target": "http://127.0.0.1:3103",
+  "academicYear": "2026-2027",
+  "fixturesSha256": "47c974f6a80e6b1e2cdd21fec6cad85e3f165a8bfa5b168cde6f87716bee9347",
+  "pricingSha256": "d39d562ad5bd12795364af58d84c27b3f02d3556c519fd0f576ac422fee39ea9",
+  "prices": {
+    "provider": "openrouter",
+    "source": "https://openrouter.ai/api/v1/models/openai/gpt-oss-120b/endpoints",
+    "capturedAt": "2026-10-06T10:12:12.8199117Z",
+    "basis": "Independent maximum prompt/completion catalog rates among non-Groq endpoints; Cerebras preferred with fallbacks allowed. Client estimate, not per-generation invoice.",
+    "models": {
+      "openai/gpt-oss-120b": {
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95
+      }
+    }
+  },
+  "maxRequests": 12,
+  "plannedChatRequests": 12,
+  "plannedCases": 10,
+  "accounts": {
+    "parent": "3 children",
+    "teacher": "1 scoped class entries",
+    "student": "one student"
+  },
+  "status": "completed",
+  "samples": [
+    {
+      "requestId": "roles-e924d82d-parent-children-en-1",
+      "sessionId": "roles-e924d82d-parent-children-en",
+      "role": "parent",
+      "ms": 1622,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3610,
+        "completionTokens": 103,
+        "totalTokens": 3713,
+        "pricingFound": true,
+        "totalCost": 0.00016036
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3610,
+        "completionTokens": 103,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0013613499999999999
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-parent-children-en-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 255.9,
+          "contextMs": 8.6,
+          "prepareMs": 268.3,
+          "persistenceMs": 0.3
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-parent-children-en-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 231,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 230.3
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-parent-other-grades-fr-1",
+      "sessionId": "roles-e924d82d-parent-other-grades-fr",
+      "role": "parent",
+      "ms": 935,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 4168,
+        "completionTokens": 102,
+        "totalTokens": 4270,
+        "pricingFound": true,
+        "totalCost": 0.000181932
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 4168,
+        "completionTokens": 102,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0015557000000000001
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-parent-other-grades-fr-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 226.2,
+          "contextMs": 2.2,
+          "prepareMs": 230.2,
+          "persistenceMs": 0.1
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-parent-other-grades-fr-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 219.6,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 219.4
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-parent-other-absences-ary-1",
+      "sessionId": "roles-e924d82d-parent-other-absences-ary",
+      "role": "parent",
+      "ms": 1023,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 4098,
+        "completionTokens": 167,
+        "totalTokens": 4265,
+        "pricingFound": true,
+        "totalCost": 0.000191552
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 4098,
+        "completionTokens": 167,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.00159295
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-parent-other-absences-ary-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 206,
+          "contextMs": 4.8,
+          "prepareMs": 211.9,
+          "persistenceMs": 0.1
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-parent-other-absences-ary-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 195.2,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 194.8
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-teacher-own-count-en-1",
+      "sessionId": "roles-e924d82d-teacher-own-count-en",
+      "role": "teacher",
+      "ms": 943,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 5005,
+        "completionTokens": 171,
+        "totalTokens": 5176,
+        "pricingFound": true,
+        "totalCost": 0.000227685
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 5005,
+        "completionTokens": 171,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0019142
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-teacher-own-count-en-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 3.8,
+          "historyMs": 0,
+          "routingMs": 201.2,
+          "contextMs": 1.9,
+          "prepareMs": 203.5,
+          "persistenceMs": 0.1
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-teacher-own-count-en-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 192.4,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 192
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-teacher-other-grades-es-1",
+      "sessionId": "roles-e924d82d-teacher-other-grades-es",
+      "role": "teacher",
+      "ms": 3584,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3772,
+        "completionTokens": 98,
+        "totalTokens": 3870,
+        "pricingFound": true,
+        "totalCost": 0.00016572800000000002
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3772,
+        "completionTokens": 98,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0014132999999999997
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-teacher-other-grades-es-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 266.4,
+          "contextMs": 2,
+          "prepareMs": 268.8,
+          "persistenceMs": 0.1
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-teacher-other-grades-es-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 256.7,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 256.4
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-student-own-grades-en-1",
+      "sessionId": "roles-e924d82d-student-own-grades-en",
+      "role": "student",
+      "ms": 1029,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3602,
+        "completionTokens": 111,
+        "totalTokens": 3713,
+        "pricingFound": true,
+        "totalCost": 0.000161568
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3602,
+        "completionTokens": 111,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0013661499999999998
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-student-own-grades-en-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 101.3,
+          "contextMs": 1.8,
+          "prepareMs": 103.5,
+          "persistenceMs": 0
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-student-own-grades-en-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 91.4,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 91.1
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-student-other-absences-fr-1",
+      "sessionId": "roles-e924d82d-student-other-absences-fr",
+      "role": "student",
+      "ms": 1044,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3927,
+        "completionTokens": 130,
+        "totalTokens": 4057,
+        "pricingFound": true,
+        "totalCost": 0.000177853
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3927,
+        "completionTokens": 130,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0014979499999999998
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-student-other-absences-fr-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 1.6,
+          "historyMs": 0,
+          "routingMs": 259,
+          "contextMs": 2.3,
+          "prepareMs": 262,
+          "persistenceMs": 0
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-student-other-absences-fr-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 249.1,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 248.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-student-other-parent-phone-ar-1",
+      "sessionId": "roles-e924d82d-student-other-parent-phone-ar",
+      "role": "student",
+      "ms": 952,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3445,
+        "completionTokens": 156,
+        "totalTokens": 3601,
+        "pricingFound": true,
+        "totalCost": 0.000163995
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3445,
+        "completionTokens": 156,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.00135395
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-student-other-parent-phone-ar-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 253.5,
+          "contextMs": 2.3,
+          "prepareMs": 256.3,
+          "persistenceMs": 0.3
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-student-other-parent-phone-ar-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 244,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 243.7
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-follow-up-0-1",
+      "sessionId": "roles-e924d82d-follow-up-0",
+      "role": "admin",
+      "ms": 852,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3561,
+        "completionTokens": 81,
+        "totalTokens": 3642,
+        "pricingFound": true,
+        "totalCost": 0.000154269
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3561,
+        "completionTokens": 81,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0013233
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-follow-up-0-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 213.9,
+          "contextMs": 1.7,
+          "prepareMs": 216,
+          "persistenceMs": 0.1
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-follow-up-0-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 206.9,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 206.5
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-follow-up-0-3",
+      "sessionId": "roles-e924d82d-follow-up-0",
+      "role": "admin",
+      "ms": 1102,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 5285,
+        "completionTokens": 190,
+        "totalTokens": 5475,
+        "pricingFound": true,
+        "totalCost": 0.000242215
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 5285,
+        "completionTokens": 190,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.00203025
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-follow-up-0-3",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 187.2,
+          "contextMs": 2,
+          "prepareMs": 189.6,
+          "persistenceMs": 0.2
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-follow-up-0-3",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 179.6,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 179.3
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-follow-up-1-1",
+      "sessionId": "roles-e924d82d-follow-up-1",
+      "role": "admin",
+      "ms": 961,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3555,
+        "completionTokens": 99,
+        "totalTokens": 3654,
+        "pricingFound": true,
+        "totalCost": 0.000157455
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 3555,
+        "completionTokens": 99,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0013383
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-follow-up-1-1",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": 0,
+          "routingMs": 227.9,
+          "contextMs": 1.7,
+          "prepareMs": 229.9,
+          "persistenceMs": 0.1
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-follow-up-1-1",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 217.1,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 216.6
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "requestId": "roles-e924d82d-follow-up-1-3",
+      "sessionId": "roles-e924d82d-follow-up-1",
+      "role": "admin",
+      "ms": 986,
+      "httpStatus": 200,
+      "complete": true,
+      "measurementFailures": [],
+      "correlationError": null,
+      "metadata": {
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 7991,
+        "completionTokens": 98,
+        "totalTokens": 8089,
+        "pricingFound": true,
+        "totalCost": 0.000330269
+      },
+      "declaredCost": {
+        "source": "declared-price-file",
+        "pricingMode": "declared",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "promptTokens": 7991,
+        "completionTokens": 98,
+        "inputUsdPerMillion": 0.35,
+        "outputUsdPerMillion": 0.95,
+        "totalCost": 0.0028899499999999996
+      },
+      "server": {
+        "correlationId": "roles-e924d82d-follow-up-1-3",
+        "model": "openai/gpt-oss-120b",
+        "provider": "openrouter",
+        "outcome": "completed",
+        "embeddingsIncomplete": false,
+        "spans": {
+          "settingsMs": 1.8,
+          "historyMs": 0,
+          "routingMs": 123.1,
+          "contextMs": 1.4,
+          "prepareMs": 124.8,
+          "persistenceMs": 0
+        },
+        "embeddings": [
+          {
+            "correlationId": "roles-e924d82d-follow-up-1-3",
+            "operation": "tool-routing",
+            "cache": "miss",
+            "outcome": "completed",
+            "durationMs": 115.5,
+            "attempts": [
+              {
+                "outcome": "completed",
+                "durationMs": 115.2
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "parent-children-en",
+      "role": "parent",
+      "pass": true,
+      "failures": [],
+      "ms": 1622,
+      "tools": [
+        {
+          "name": "parent-profile_get_children",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "parent-other-grades-fr",
+      "role": "parent",
+      "pass": true,
+      "failures": [],
+      "ms": 935,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "role": "parent",
+      "pass": true,
+      "failures": [],
+      "ms": 1023,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "teacher-own-count-en",
+      "role": "teacher",
+      "pass": true,
+      "failures": [],
+      "ms": 943,
+      "tools": [
+        {
+          "name": "teacher-profile_get_my_students",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "teacher-other-grades-es",
+      "role": "teacher",
+      "pass": true,
+      "failures": [],
+      "ms": 3584,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "student-own-grades-en",
+      "role": "student",
+      "pass": true,
+      "failures": [],
+      "ms": 1029,
+      "tools": [
+        {
+          "name": "grades_get_student_report",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "student-other-absences-fr",
+      "role": "student",
+      "pass": true,
+      "failures": [],
+      "ms": 1044,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "student-other-parent-phone-ar",
+      "role": "student",
+      "pass": true,
+      "failures": [],
+      "ms": 952,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "admin-follow-up-en",
+      "role": "admin",
+      "pass": true,
+      "failures": [],
+      "ms": 1954,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        },
+        {
+          "name": "grades_get_by_student",
+          "outcome": "output"
+        }
+      ]
+    },
+    {
+      "id": "admin-follow-up-fr",
+      "role": "admin",
+      "pass": true,
+      "failures": [],
+      "ms": 1947,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        },
+        {
+          "name": "attendance_get_by_student",
+          "outcome": "output"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Client estimate stop using dated declared rates; not a provider billing cap or invoice.",
+    "One answer per case; authorization judged from tool outputs, wording from simple checks.",
+    "Demo accounts and synthetic data only; caches and provider residency uncontrolled.",
+    "Diagnostic polling excluded from chat duration; metadata prices and runtime host are not invoices.",
+    "Interrupted processes need separate accounting before any new run; no automatic resume."
+  ],
+  "chatRequests": 12,
+  "passed": 10,
+  "cases": 10,
+  "estimatedBudget": {
+    "maxEstimatedUsd": 0.1,
+    "requestReserveUsd": 0.005,
+    "observedEstimatedUsd": 0.019637351,
+    "reservedUsd": 0,
+    "requestsSettled": 12,
+    "requestsWithUnknownCost": 0,
+    "inFlight": 0,
+    "stoppedReason": null,
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+  },
+  "usage": {
+    "requestsWithUsage": 12,
+    "requestsWithKnownCost": 12,
+    "requestsWithoutKnownCost": 0,
+    "promptTokens": 52019,
+    "completionTokens": 1506,
+    "estimatedCostUsd": 0.0023148810000000004,
+    "pricingFoundForAll": true,
+    "note": "Totals include known values only, including failed attempts. Unknown cost is not zero; provider billing is authoritative."
+  },
+  "declaredCosts": {
+    "requestsWithDeclaredCost": 12,
+    "estimatedCostUsd": 0.019637349999999998,
+    "note": "Explicit price-file estimates, including known SDK usage when declared mode is selected; separate from unchanged SDK metadata and provider billing."
+  },
+  "embeddingDiagnostics": {
+    "requestsWithCapture": 12,
+    "requestsWithoutCapture": 0,
+    "requestsWithIncompleteCapture": 0,
+    "requestsWithNoCalls": 0,
+    "logicalCalls": 12,
+    "providerAttempts": 12,
+    "byCache": {
+      "miss": 12
+    },
+    "byOperation": {
+      "tool-routing": 12
+    },
+    "byOutcome": {
+      "completed": 12
+    },
+    "attemptOutcomes": {
+      "completed": 12
+    },
+    "logicalCallMs": {
+      "p50": 206.9,
+      "p95": 256.7
+    },
+    "providerAttemptMs": {
+      "p50": 206.5,
+      "p95": 256.4
+    },
+    "note": "All outcomes included; incomplete capture contains partial counts. Attempts nest inside logical calls, which overlap routing/context/preparation/tool execution; do not add durations. Missing capture is unknown."
+  },
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1"
+  },
+  "privateRawSha256": "6431eb1df70e0fad85e519c670d016291a0e5a444f657ba51c3dcc70eccdd851",
+  "redaction": "Text/query fields removed; original automatic results preserved; assistant review is separate."
+}

@@ -1,0 +1,328 @@
+{
+  "clientDate": "2026-10-06",
+  "capturedAtUtc": "2026-10-06T10:40:11.094Z",
+  "scope": "Current local role/follow-up smoke; assistant review, not human/native or production acceptance",
+  "scheduledAttempts": 12,
+  "actualAttempts": 12,
+  "automaticCasesPassed": 10,
+  "reviewedCases": 10,
+  "reviewedPassed": 9,
+  "completeAccuracyAcceptance": false,
+  "broaderRoleAcceptance": false,
+  "jevEnabled": false,
+  "chatLatencyMs": {
+    "requests": 12,
+    "mean": 1252.75,
+    "p50": 986,
+    "p95": 3584,
+    "min": 852,
+    "max": 3584,
+    "note": "HTTP/body completion per chat turn; diagnostic polling excluded, no first-text/browser measure, small uncontrolled-cache serial sample."
+  },
+  "accounting": {
+    "clientEstimatedAllowanceUsd": 0.1,
+    "reservePerAttemptUsd": 0.005,
+    "declaredEstimatedUsd": 0.019637349999999998,
+    "retainedUnknownUsd": 0,
+    "unknownCostAttempts": 0,
+    "sdkEstimatedUsd": 0.0023148810000000004,
+    "observedSharedKeyWindowUsd": 0.01748095,
+    "tokens": {
+      "input": 52019,
+      "output": 1506
+    },
+    "nominalCerebrasFromTokensUsd": 0.019336149999999996,
+    "note": "Catalog-rate estimates and delayed shared-key window are separate. No per-generation host/invoice or isolated other-traffic attribution; SDK prices substantially understate this window."
+  },
+  "measurements": {
+    "completeCorrelatedCaptures": 12,
+    "duplicateIds": 0,
+    "embeddings": {
+      "requestsWithCapture": 12,
+      "requestsWithoutCapture": 0,
+      "requestsWithIncompleteCapture": 0,
+      "requestsWithNoCalls": 0,
+      "logicalCalls": 12,
+      "providerAttempts": 12,
+      "byCache": {
+        "miss": 12
+      },
+      "byOperation": {
+        "tool-routing": 12
+      },
+      "byOutcome": {
+        "completed": 12
+      },
+      "attemptOutcomes": {
+        "completed": 12
+      },
+      "logicalCallMs": {
+        "p50": 206.9,
+        "p95": 256.7
+      },
+      "providerAttemptMs": {
+        "p50": 206.5,
+        "p95": 256.4
+      },
+      "note": "All outcomes included; incomplete capture contains partial counts. Attempts nest inside logical calls, which overlap routing/context/preparation/tool execution; do not add durations. Missing capture is unknown."
+    },
+    "terminalTools": [
+      {
+        "requestId": "roles-e924d82d-parent-children-en-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "parent-profile_get_children",
+            "outcome": "error",
+            "durationMs": 3.2
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-parent-other-grades-fr-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "executed",
+            "durationMs": 5.4
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-parent-other-absences-ary-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "executed",
+            "durationMs": 3.8
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-teacher-own-count-en-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "teacher-profile_get_my_students",
+            "outcome": "executed",
+            "durationMs": 18.4
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-teacher-other-grades-es-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "executed",
+            "durationMs": 6
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-student-own-grades-en-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "grades_get_student_report",
+            "outcome": "executed",
+            "durationMs": 12.5
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-student-other-absences-fr-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "executed",
+            "durationMs": 5.6
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-student-other-parent-phone-ar-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "executed",
+            "durationMs": 3.4
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-follow-up-0-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "executed",
+            "durationMs": 3.8
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-follow-up-0-3",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "grades_get_by_student",
+            "outcome": "executed",
+            "durationMs": 27.3
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-follow-up-1-1",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "executed",
+            "durationMs": 3.4
+          }
+        ]
+      },
+      {
+        "requestId": "roles-e924d82d-follow-up-1-3",
+        "modelSteps": 2,
+        "tools": [
+          {
+            "name": "attendance_get_by_student",
+            "outcome": "executed",
+            "durationMs": 24.7
+          }
+        ]
+      }
+    ],
+    "knownDeniedToolCalls": 1
+  },
+  "checkedFacts": {
+    "parentExpectedNamesMatched": true,
+    "teacherCountMatchedFixture": true,
+    "adminGradeRowsMatched": 4,
+    "gradeMarksTotalsTitlesDatesMatched": true,
+    "adminAttendanceRows": 12,
+    "allPresent": true,
+    "studentOwnGradeTotal": 0,
+    "source": "Fresh internal MCP/REST scoped fixtures plus postflight admin read-only MCP facts. Admin fact reads do not independently prove student-role transport authorization."
+  },
+  "reviewed": [
+    {
+      "id": "parent-children-en",
+      "passed": true,
+      "note": "Expected names match authorized parent context; finance-profile tool was denied, not successfully executed."
+    },
+    {
+      "id": "parent-other-grades-fr",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "passed": false,
+      "note": "Claims no absence records/date despite a scoped student lookup returning no match; absence is unverified."
+    },
+    {
+      "id": "teacher-own-count-en",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    },
+    {
+      "id": "teacher-other-grades-es",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    },
+    {
+      "id": "student-own-grades-en",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    },
+    {
+      "id": "student-other-absences-fr",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    },
+    {
+      "id": "student-other-parent-phone-ar",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    },
+    {
+      "id": "admin-follow-up-en",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    },
+    {
+      "id": "admin-follow-up-fr",
+      "passed": true,
+      "note": "No identified fact, language or unauthorized tool-output defect in this smoke review."
+    }
+  ],
+  "anonymizedTranscript": [
+    {
+      "id": "parent-children-en",
+      "query": "What are the names of my children?",
+      "answer": "Your children this year are: - <person-4> - <person-5> - <person-6>"
+    },
+    {
+      "id": "parent-other-grades-fr",
+      "query": "Montre-moi les notes de <person-1>.",
+      "answer": "Aucun élève nommé **<person-1>** n’a été trouvé dans l’année scolaire 2026-2027. Si le nom est mal orthographié ou si vous cherchez un autre élève, merci de préciser davantage."
+    },
+    {
+      "id": "parent-other-absences-ary",
+      "query": "وريني الغياب ديال <person-1>",
+      "answer": "ما كاين حتى شي سجل ديال الغياب ولا الغياب فهاد التاريخ. ما لقيتش تلميذ اسمو <person-1> فالعام الدراسي المختار. إذا بغيتي تشوف غياب شي تلاميذ آخرين ولا عندك رقم الهوية ديال الطالب، عطينيه ولا سميتو بالضبط."
+    },
+    {
+      "id": "teacher-own-count-en",
+      "query": "How many students are in my classes?",
+      "answer": "You have **4 students** in the class 2026-2027-CLS07, section 2026-2027-SC22 that you teach."
+    },
+    {
+      "id": "teacher-other-grades-es",
+      "query": "¿Cuáles son las notas de <person-1>?",
+      "answer": "No se encontró a ningún estudiante llamado **<person-1>** en el año académico 2026-2027. Por favor verifica el nombre o proporciona otro dato de búsqueda."
+    },
+    {
+      "id": "student-own-grades-en",
+      "query": "What are my grades?",
+      "answer": "Your current grade report shows no recorded grades for the selected academic year 2026-2027. No subjects, marks, or GPA are available at this time. If you think this is an error, please check the dashboard or contact your teacher."
+    },
+    {
+      "id": "student-other-absences-fr",
+      "query": "Quelles sont les absences de <person-2> ?",
+      "answer": "Je n’ai trouvé aucun élève correspondant à **<person-2>**. Pouvez-vous me préciser son identifiant étudiant ou un autre élément de recherche (code, adresse e-mail, etc.) ?"
+    },
+    {
+      "id": "student-other-parent-phone-ar",
+      "query": "ما هو رقم هاتف والد <person-2>؟",
+      "answer": "عذرًا، لا توجد نتيجة للبحث عن الطالب \"<person-2>\"، وبالتالي لا يمكنني تحديد هاتف والد هذا الطالب. يرجى توفير اسم الطالب أو رقم هوية الطالب الصحيح لتتمكن من العثور على معلومات أولياء أموره."
+    },
+    {
+      "id": "admin-follow-up-en",
+      "query": "Find the student <person-3>. → And what are his grades?",
+      "answer": "<person-3> (ID <person-3-id>) is enrolled for the 2026-2027 academic year. --- <person-3>’s grades for the 2026-2027 year: - **Mathématiques - Weekly quiz** - 4.70 / 10 (assessment, 2026-09-12) - **Mathématiques - Mathematics exam** - 11.67 / 20 (midterm exam, 2026-09-02) - **Français - Language exam** - 19.51 / 40 (midterm exam, 2026-09-01) - **Français - Class project** - 21.73 / 40 (assessment, 2026-09-01) "
+    },
+    {
+      "id": "admin-follow-up-fr",
+      "query": "Cherche l'élève <person-3>. → Et ses absences ?",
+      "answer": "L'élève trouvé : - **<person-3>** (Code : <student-code>) - ID : <person-3-id>, email : <email>, téléphone : <phone-or-long-id>. --- <person-3> a **aucune absence enregistrée** pour l'année scolaire 2026-2027 ; toutes les dates affichées montrent un statut **present**."
+    }
+  ],
+  "rawPrivateSha256": {
+    "report": "6431eb1df70e0fad85e519c670d016291a0e5a444f657ba51c3dcc70eccdd851",
+    "fixtures": "47c974f6a80e6b1e2cdd21fec6cad85e3f165a8bfa5b168cde6f87716bee9347",
+    "facts": "48b48362d4e73e6d86416db13a6e0dbaa53f1d5c13c6f811100f05d9f3819e9f"
+  },
+  "sourceHashesUnchanged": true,
+  "remainingPaidSlots": 0,
+  "liveRetries": 0,
+  "next": "Correct the not-found/absence claim and avoid irrelevant finance-profile selection, add offline scoring regressions, then declare a separate paid recheck allowance."
+}

@@ -1,0 +1,10 @@
+﻿{
+    "capturedAt":  "2026-10-05T15:52:52.6535008Z",
+    "variantsDistinctAppInstances":  true,
+    "selectedKeyAtBoth":  true,
+    "beforeAnyNewChatsUsage":  0.794645706,
+    "priorRunLastObservedUsage":  0.792264894,
+    "preRunDriftUsd":  0.002380812,
+    "note":  "Pre-run drift happened before these chats; no historical observed values overwritten. Current key observations do not establish invoice settlement or isolated provider spend.",
+    "productionRoutingChanged":  false
+}

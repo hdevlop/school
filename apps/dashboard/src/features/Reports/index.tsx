@@ -6,14 +6,18 @@ import { NPageHeader, NPageHeaderActions } from 'najm-kit';
 import IncomeExpensesTrend from '@/features/Dashboard/components/IncomeExpensesTrend';
 import ExpenseBreakdownChart from './components/ExpenseBreakdownChart';
 import CollectionByClassChart from './components/CollectionByClassChart';
+import FinancialAuditCard from './components/FinancialAuditCard';
 import { useDashboardYear } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
+import { useViewerRole } from '@/shared/useViewerRole';
 
 const ReportsPage: React.FC = () => {
   const { t } = useTranslation();
   // The viewed year, or the active one with history off.
   const { year } = useDashboardYear();
+  // The financial audit API is admin-only.
+  const { role } = useViewerRole();
 
   return (
     <div className="flex flex-col gap-2 h-full overflow-auto pb-4">
@@ -41,6 +45,9 @@ const ReportsPage: React.FC = () => {
           <CollectionByClassChart academicYear={year} />
         </div>
       </div>
+
+      {/* Row 3: Financial audit history (admins) */}
+      {role === 'admin' && <FinancialAuditCard />}
     </div>
   );
 };

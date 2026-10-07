@@ -16,6 +16,7 @@ import RoutineDutyForm from './RoutineDutyForm';
 import RoutineDaysForm from './RoutineDaysForm';
 import RoutineGrid from './RoutineGrid';
 import RoutineScheduleForm from './RoutineScheduleForm';
+import TeacherRoutinePage from './TeacherRoutinePage';
 import {
   useRoutine,
   useRoutineAssignments,
@@ -315,8 +316,11 @@ function ClassRoutinePageForYear() {
 }
 
 export default function ClassRoutinePage() {
+  const { user } = useAuth();
   const { isResolving } = useViewingAcademicYear();
   const yearKey = useViewingYearKey();
   if (isResolving) return <ClassRoutineSkeleton />;
+  // A teacher plans nothing here: they see their own week.
+  if ((user as any)?.role === 'teacher') return <TeacherRoutinePage key={yearKey} />;
   return <ClassRoutinePageForYear key={yearKey} />;
 }

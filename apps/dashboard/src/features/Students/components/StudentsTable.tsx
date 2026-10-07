@@ -42,7 +42,8 @@ function StudentsTable() {
   const viewsOtherYear = !!viewingYear && !!activeYear && viewingYear !== activeYear;
   const { classes: activeYearClasses } = useClasses({ academicYear: activeYear, enabled: viewsOtherYear });
   const newStudentClasses = viewsOtherYear ? activeYearClasses : classes;
-  const { feeTypes } = useFeeTypes({ enabled: !isFamily });
+  // Fee types only fill the new-student form.
+  const { feeTypes } = useFeeTypes({ enabled: canCreate });
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const columns = useStudentsTableColumns();

@@ -1,0 +1,138 @@
+{
+    "capturedAt":  "2026-10-05T21:58:24.9465016Z",
+    "scope":  "Frozen synthetic core exploration continuation, classification only",
+    "newPaidAttempts":  251,
+    "newErrors":  0,
+    "scheduledAttempts":  312,
+    "validDecisions":  310,
+    "earlierErrorsRetained":  2,
+    "schoolReplyToolDatabaseCalls":  0,
+    "jevEnabled":  false,
+    "productionAcceptance":  false,
+    "nativeAuthoredCases":  0,
+    "nativeReviewedCases":  0,
+    "accuracy":  {
+                     "acceptedQuestions":  50,
+                     "acceptedFamilies":  16,
+                     "acceptedDecisionSamples":  146,
+                     "wrongAcceptedQuestions":  1,
+                     "writeAcceptedAsRead":  0,
+                     "gatePassed":  false,
+                     "failureCase":  "core3-ary-21#3",
+                     "threshold":  0.8,
+                     "postResultThresholdOrWordingChanges":  false
+                 },
+    "warmClassificationMs":  {
+                                 "count":  306,
+                                 "p50":  309.460699999996,
+                                 "p95":  422.27400000000125,
+                                 "max":  589.6879999999983,
+                                 "mean":  319.81992352941177
+                             },
+    "accounting":  {
+                       "knownReportedCostUsd":  0.012219437999999996,
+                       "observedEstimatedUsd":  0.012219438,
+                       "unknownAttempts":  2,
+                       "retainedUnknownReservationsUsd":  0.004,
+                       "accountedCostAndReservationsUsd":  0.016219438,
+                       "cumulativeBudgetUsd":  0.02,
+                       "cumulativeMaxRequests":  312,
+                       "costComplete":  false,
+                       "withinDeclaredRequestAndEstimateAllowance":  true,
+                       "newAttemptCount":  251,
+                       "newKnownCostUsd":  0.009893981999999994,
+                       "note":  "Unknown earlier costs remain reserved. Provider usage and shared-key ledger observations are separate; client reservations are not billing caps."
+                   },
+    "observedKeyWindow":  {
+                              "before":  {
+                                             "capturedAt":  "2026-10-05T21:42:23.017Z",
+                                             "usage":  0.90832619,
+                                             "limitRemaining":  49.09167381
+                                         },
+                              "afterSettled":  {
+                                                   "capturedAt":  "2026-10-05T21:56:12.289Z",
+                                                   "usage":  0.918220172,
+                                                   "limitRemaining":  49.081779828
+                                               },
+                              "deltaUsd":  0.009893982,
+                              "matchesNewReportedKnownCost":  true,
+                              "unknownCostsResolved":  false,
+                              "note":  "Shared-key observation, not an isolated invoice or proof that earlier unknown failures were free"
+                          },
+    "checks":  [
+                   {
+                       "command":  "bun test scripts/tests/chatbot-jev-probe.test.mjs scripts/tests/chatbot-jev-resume.test.mjs",
+                       "exitCode":  0,
+                       "testsPassed":  26,
+                       "assertions":  224
+                   },
+                   {
+                       "command":  "bun run test:boundaries",
+                       "exitCode":  0,
+                       "testsPassed":  287,
+                       "testsFailed":  0,
+                       "assertions":  1109,
+                       "workspaceFiles":  1275,
+                       "clientEntries":  288
+                   },
+                   {
+                       "command":  "bun run lint",
+                       "exitCode":  0
+                   },
+                   {
+                       "command":  "bounded 12-attempt live recovery check",
+                       "exitCode":  1,
+                       "expectedStop":  "max_requests_reached",
+                       "errors":  0
+                   },
+                   {
+                       "command":  "remaining 239-attempt live continuation",
+                       "exitCode":  0,
+                       "errors":  0
+                   },
+                   {
+                       "command":  "all-four-reports offline final preflight",
+                       "exitCode":  1,
+                       "expectedStops":  [
+                                             "max_requests_reached",
+                                             "schedule_complete"
+                                         ],
+                       "readyToDispatch":  false
+                   },
+                   {
+                       "command":  "offline final analysis and unchanged normalized parser replay",
+                       "exitCode":  0,
+                       "parsedDecisions":  310,
+                       "contiguousScheduleAndReportHashes":  true,
+                       "sourceHashesMatchFreeze":  true,
+                       "originalB0AndStageARawEvidenceChanged":  false
+                   }
+               ],
+    "sha256":  {
+                   "scripts/chatbot-jev-probe.mjs":  "52ab667eae4cb0f2519172e0aaa66aa6ca7652da1be8340b2fcaab2e52ed5c7e",
+                   "scripts/tests/chatbot-jev-probe.test.mjs":  "052f95a5f3aff4d01f334ecccd8bbb213614ee469369a6d840656d65c16d9903",
+                   "scripts/chatbot-jev-resume.mjs":  "3a26968a7bfc8d53836ef75bb98406d905221954eb3076a848f3dbfcf5ed0951",
+                   "scripts/chatbot-jev.mjs":  "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+                   "scripts/chatbot-jev-accuracy.mjs":  "8b8136b97fb7ab92a40ec7b263f73750abd600d73dc6e1a0d83b2d0247e6153a",
+                   "scripts/chatbot-budget.mjs":  "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+                   "packages/server/src/modules/chat/schoolReplyTemplates.ts":  "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+                   "packages/server/src/modules/chat/schoolListReplies.ts":  "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153",
+                   "packages/server/src/modules/chat/schoolReplyLanguage.ts":  "dc36099b20e35f8357f8bd94c4eb320a6403f011615eb27f781aaf35d2d951f3",
+                   "datasets/chatbot-latency/jev-core-exploration.json":  "3e2a7192cdebfba6df2f9665186f2d619f762b405201dcad9078f94e92f00434",
+                   "docs/evidence/chatbot-latency/jev-core-exploration-20261005.json":  "36734425e8b2410fae66578f299e00b1f1b8f5c7d58370a28d22c89743b8174c",
+                   "docs/evidence/chatbot-latency/jev-core-continuation-20261005.json":  "5ebdce7a12438cd4e3446ce78eb9f1950f91eb1710192a5fea06766a10afdb8e",
+                   "docs/evidence/chatbot-latency/jev-core-health-20261005.json":  "11840f2053f6cfdd892259e24822b690089fbfef8edd4e5d99090b1aa5a90d45",
+                   "docs/evidence/chatbot-latency/jev-core-finish-20261005.json":  "7b3e5e02e5cc96570f373d977290355024cc08e7cf73b5c05301e6203ee2f143",
+                   "docs/evidence/chatbot-latency/jev-probe-20261005.json":  "951782b96fbec4654a5fa9c38f815ddf462f4a7d0e345a3b8dbf030598fbb5ba",
+                   "docs/evidence/chatbot-latency/jev-b0-20261005.json":  "936aa48bf15db69f58d68d923342bda5fbcc65255ea8cd19bfe528c700bb1234"
+               },
+    "limitations":  [
+                        "Assistant-authored, correlated question families, no native held-out acceptance",
+                        "Failed accuracy gate; classifier latency does not measure full School replies",
+                        "Earlier failures and unknown reservations remain",
+                        "Client estimates are not provider billing caps",
+                        "Healthy two-second paced window does not prove production availability",
+                        "Human collection protocol prepared; human intake/export validation still needed",
+                        "Script/test/documentation changes only; no new production build, package upgrade or deployment"
+                    ]
+}

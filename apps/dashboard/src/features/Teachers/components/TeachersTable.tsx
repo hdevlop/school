@@ -4,6 +4,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { Users, Plus, SearchX } from 'lucide-react';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import TeacherForm from './TeacherForm';
 import { useTeachers } from '../hooks/useTeachers';
 import { useTranslation } from 'najm-i18n/react';
@@ -12,13 +13,13 @@ import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSubjects } from '@/features/Subjects/hooks/useSubjects';
 import { useTeachersTableColumns } from '../hooks/useTeachersTableColumns';
 import { useTeachersTableFilters } from '../hooks/useTeachersTableFilters';
-import { TeacherProfile } from './profile';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 
 function TeachersTable() {
 
   const { t } = useTranslation();
+  const router = useRouter();
   const columns = useTeachersTableColumns();
   const rawFilters = useTeachersTableFilters();
 
@@ -57,13 +58,7 @@ function TeachersTable() {
   };
 
   const handleView = (teacher) => {
-    openDialog({
-      title: t('teachers.dialogs.viewTitle'),
-      children: <TeacherProfile teacherId={teacher.id} />,
-      width: 'full',
-      height: 'full',
-      showButtons: false,
-    });
+    router.push(`/teachers/${teacher.id}`);
   };
 
   const handleEdit = (teacher) => {

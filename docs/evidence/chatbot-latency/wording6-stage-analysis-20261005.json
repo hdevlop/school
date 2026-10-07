@@ -1,0 +1,79 @@
+﻿{
+    "capturedAt":  "2026-10-05T15:10:48.0349548Z",
+    "source":  "wording6-run-20261005.json",
+    "note":  "Client arrival intervals include network/SDK buffering; start-step is an arrival marker, not the provider generation start. No host/queue/retry attribution.",
+    "rows":  [
+                 {
+                     "repetition":  1,
+                     "streamStartMs":  332,
+                     "firstToolSignalMs":  3077,
+                     "toolResultMs":  3811,
+                     "beforeFirstToolSignalMs":  2745,
+                     "afterToolToFirstTextMs":  1418,
+                     "firstTextToLastTextMs":  2507,
+                     "bodyEndMs":  7791,
+                     "toolMs":  5.2,
+                     "eventsDropped":  0
+                 },
+                 {
+                     "repetition":  2,
+                     "streamStartMs":  80,
+                     "firstToolSignalMs":  2090,
+                     "toolResultMs":  2103,
+                     "beforeFirstToolSignalMs":  2010,
+                     "afterToolToFirstTextMs":  1428,
+                     "firstTextToLastTextMs":  756,
+                     "bodyEndMs":  4302,
+                     "toolMs":  6.7,
+                     "eventsDropped":  0
+                 },
+                 {
+                     "repetition":  3,
+                     "streamStartMs":  115,
+                     "firstToolSignalMs":  1674,
+                     "toolResultMs":  1685,
+                     "beforeFirstToolSignalMs":  1559,
+                     "afterToolToFirstTextMs":  1145,
+                     "firstTextToLastTextMs":  941,
+                     "bodyEndMs":  3783,
+                     "toolMs":  4.8,
+                     "eventsDropped":  0
+                 },
+                 {
+                     "repetition":  4,
+                     "streamStartMs":  80,
+                     "firstToolSignalMs":  1757,
+                     "toolResultMs":  1770,
+                     "beforeFirstToolSignalMs":  1677,
+                     "afterToolToFirstTextMs":  1664,
+                     "firstTextToLastTextMs":  1867,
+                     "bodyEndMs":  5304,
+                     "toolMs":  5.8,
+                     "eventsDropped":  0
+                 },
+                 {
+                     "repetition":  5,
+                     "streamStartMs":  82,
+                     "firstToolSignalMs":  1969,
+                     "toolResultMs":  1988,
+                     "beforeFirstToolSignalMs":  1887,
+                     "afterToolToFirstTextMs":  1442,
+                     "firstTextToLastTextMs":  1388,
+                     "bodyEndMs":  4880,
+                     "toolMs":  4.8,
+                     "eventsDropped":  0
+                 },
+                 {
+                     "repetition":  6,
+                     "streamStartMs":  77,
+                     "firstToolSignalMs":  1826,
+                     "toolResultMs":  1841,
+                     "beforeFirstToolSignalMs":  1749,
+                     "afterToolToFirstTextMs":  1161,
+                     "firstTextToLastTextMs":  934,
+                     "bodyEndMs":  3954,
+                     "toolMs":  7,
+                     "eventsDropped":  0
+                 }
+             ]
+}

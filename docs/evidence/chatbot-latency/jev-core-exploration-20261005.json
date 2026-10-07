@@ -1,0 +1,1175 @@
+{
+  "capturedAt": "2026-10-05T19:59:03.078Z",
+  "model": "typesafe/jev-1.13",
+  "endpoint": "https://openrouter.ai/api/alpha/decisions",
+  "corpusSha256": "3e2a7192cdebfba6df2f9665186f2d619f762b405201dcad9078f94e92f00434",
+  "requestShape": {
+    "model": "typesafe/jev-1.13",
+    "state": "<query>",
+    "questions": {
+      "intent": {
+        "type": "choice",
+        "instructions": "The message was typed by a school administrator in the chat of a Moroccan school management dashboard. It can be English, French, Spanish, Modern Standard Arabic or Moroccan Darija in Arabic or Latin script, or a mix. Which kind of request is it?",
+        "criteria": {
+          "small_talk": "Only a greeting, thanks, goodbye, or a question about what the assistant can do. No request for school data.",
+          "student_count": "Asks only how many students are enrolled in the whole school this year: one number, not a list of students, with no filter by class, section, gender, status, date or anything else.",
+          "teacher_count": "Asks only how many teachers the whole school has: one number, not a list or names of teachers, with no filter by subject, class or anything else.",
+          "student_and_teacher_count": "Asks for both the total number of students and the total number of teachers, with no filter.",
+          "class_list": "Asks to list or name the school's classes, with no filter and no question about their students, teachers or timetable.",
+          "attendance_today": "Asks to see today's attendance for the whole school (who is present or absent today), with no class, student or other date, and not a number to compute.",
+          "upcoming_exams": "Asks which exams are coming up or when the next exam is, for the whole school, with no class, subject or student filter.",
+          "write_request": "Asks the assistant to create, add, record, mark, change, publish, send or delete something now, for example to record a student as absent or present today, including short Darija commands. Asking how to do it oneself is not this.",
+          "needs_llm": "Anything else: a question with a filter or qualifier (a class, a student, a name, a gender, a past or other date, last year, a number to compute), a list of teachers or students, grades, fees, payments, timetables, how-to questions, a short follow-up that starts with \"and\" (et, y, و, w) or needs an earlier message, unclear requests and topics unrelated to the school."
+        }
+      },
+      "is_write": {
+        "type": "noul",
+        "instructions": "The message was typed by a school administrator in the chat of a Moroccan school management dashboard. It can be English, French, Spanish, Modern Standard Arabic or Moroccan Darija in Arabic or Latin script, or a mix. Does it ask the assistant itself to create, add, record, mark, change, publish or delete data?",
+        "criteria": {
+          "true": "The user wants the assistant to make a change now.",
+          "false": "The user only asks to see information, asks how to do something themselves, or makes small talk."
+        }
+      }
+    }
+  },
+  "languageGateSource": "School reply profile applied to query text, not fixture language labels",
+  "intentWordingVersion": 3,
+  "sourceSha256": {
+    "scripts/chatbot-jev-probe.mjs": "5e3ca8341e1005afdf7a7daf6385192bb8029620d11c83a9eae03e4601bab020",
+    "scripts/chatbot-budget.mjs": "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+    "scripts/chatbot-jev.mjs": "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+    "scripts/chatbot-jev-accuracy.mjs": "8b8136b97fb7ab92a40ec7b263f73750abd600d73dc6e1a0d83b2d0247e6153a",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+    "packages/server/src/modules/chat/schoolListReplies.ts": "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153",
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "dc36099b20e35f8357f8bd94c4eb320a6403f011615eb27f781aaf35d2d951f3"
+  },
+  "split": "test",
+  "gateThreshold": 0.8,
+  "acceptancePolicy": "core",
+  "freshness": {
+    "cases": 104,
+    "families": 26,
+    "nativeReviewedCases": 0,
+    "provenance": "Assistant-authored exploratory cases; native review is outstanding"
+  },
+  "repetitions": 3,
+  "budgetUsd": 0.02,
+  "maxRequests": 312,
+  "requestReserveUsd": 0.002,
+  "plannedRequests": 312,
+  "limitations": [
+    "Latency is measured from this machine through OpenRouter, including TLS and network time.",
+    "Cases and intent wording were written by the same author; the dev/test split is not an independent evaluation.",
+    "Synthetic single-turn questions only: no follow-ups, conversation history or real school traffic.",
+    "Classification only: no reply, tool or template ran, so answer correctness is not measured.",
+    "Language/regex gate summaries project synthetic first-turn eligibility only; role/history, readiness selection and tool execution are not exercised."
+  ],
+  "keyUsageBefore": {
+    "capturedAt": "2026-10-05T19:59:03.425Z",
+    "usage": 0.906000734,
+    "limitRemaining": 49.093999266
+  },
+  "samples": [
+    {
+      "id": "core3-fr-01",
+      "repetition": 1,
+      "durationMs": 370.7202,
+      "reportedCostUsd": 0.000039144,
+      "decision": {
+        "choice": "student_count",
+        "confidence": 0.98,
+        "topProbability": 0.99,
+        "probabilities": {
+          "write_request": 0,
+          "student_and_teacher_count": 0,
+          "upcoming_exams": 0,
+          "attendance_today": 0,
+          "student_count": 0.99,
+          "needs_llm": 0.01,
+          "small_talk": 0,
+          "class_list": 0,
+          "teacher_count": 0
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 932,
+        "costUsd": 0.000039144
+      }
+    },
+    {
+      "id": "core3-fr-02",
+      "repetition": 1,
+      "durationMs": 386.6165000000001,
+      "reportedCostUsd": 0.000039144,
+      "decision": {
+        "choice": "student_count",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "attendance_today": 0,
+          "upcoming_exams": 0,
+          "needs_llm": 0,
+          "class_list": 0,
+          "small_talk": 0,
+          "student_count": 1,
+          "student_and_teacher_count": 0,
+          "teacher_count": 0,
+          "write_request": 0
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 932,
+        "costUsd": 0.000039144
+      }
+    },
+    {
+      "id": "core3-fr-03",
+      "repetition": 1,
+      "durationMs": 392.21849999999995,
+      "reportedCostUsd": 0.00003927,
+      "decision": {
+        "choice": "student_count",
+        "confidence": 0.98,
+        "topProbability": 0.98,
+        "probabilities": {
+          "attendance_today": 0,
+          "student_and_teacher_count": 0,
+          "needs_llm": 0.02,
+          "class_list": 0,
+          "teacher_count": 0,
+          "upcoming_exams": 0,
+          "small_talk": 0,
+          "write_request": 0,
+          "student_count": 0.98
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 935,
+        "costUsd": 0.00003927
+      }
+    },
+    {
+      "id": "core3-fr-04",
+      "repetition": 1,
+      "durationMs": 540.6644999999999,
+      "reportedCostUsd": 0.00003927,
+      "decision": {
+        "choice": "teacher_count",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "write_request": 0,
+          "needs_llm": 0,
+          "student_and_teacher_count": 0,
+          "upcoming_exams": 0,
+          "teacher_count": 1,
+          "class_list": 0,
+          "student_count": 0,
+          "attendance_today": 0,
+          "small_talk": 0
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 935,
+        "costUsd": 0.00003927
+      }
+    },
+    {
+      "id": "core3-fr-05",
+      "repetition": 1,
+      "durationMs": 406.42350000000033,
+      "reportedCostUsd": 0.000039186,
+      "decision": {
+        "choice": "teacher_count",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "student_count": 0,
+          "upcoming_exams": 0,
+          "teacher_count": 1,
+          "needs_llm": 0,
+          "attendance_today": 0,
+          "student_and_teacher_count": 0,
+          "write_request": 0,
+          "class_list": 0,
+          "small_talk": 0
+        },
+        "writeProbability": 0.04,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 933,
+        "costUsd": 0.000039186
+      }
+    },
+    {
+      "id": "core3-fr-06",
+      "repetition": 1,
+      "durationMs": 349.47249999999985,
+      "reportedCostUsd": 0.00003906,
+      "decision": {
+        "choice": "student_and_teacher_count",
+        "confidence": 0.99,
+        "topProbability": 0.99,
+        "probabilities": {
+          "student_and_teacher_count": 0.99,
+          "teacher_count": 0,
+          "upcoming_exams": 0,
+          "student_count": 0,
+          "small_talk": 0,
+          "class_list": 0,
+          "attendance_today": 0,
+          "needs_llm": 0.01,
+          "write_request": 0
+        },
+        "writeProbability": 0.05,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 930,
+        "costUsd": 0.00003906
+      }
+    },
+    {
+      "id": "core3-fr-07",
+      "repetition": 1,
+      "durationMs": 360.8595,
+      "reportedCostUsd": 0.000039564,
+      "decision": {
+        "choice": "student_and_teacher_count",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "needs_llm": 0,
+          "student_count": 0,
+          "write_request": 0,
+          "student_and_teacher_count": 1,
+          "teacher_count": 0,
+          "small_talk": 0,
+          "class_list": 0,
+          "upcoming_exams": 0,
+          "attendance_today": 0
+        },
+        "writeProbability": 0.04,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 942,
+        "costUsd": 0.000039564
+      }
+    },
+    {
+      "id": "core3-fr-08",
+      "repetition": 1,
+      "durationMs": 343.69849999999997,
+      "reportedCostUsd": 0.000039312,
+      "decision": {
+        "choice": "class_list",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "small_talk": 0,
+          "upcoming_exams": 0,
+          "student_and_teacher_count": 0,
+          "needs_llm": 0,
+          "student_count": 0,
+          "attendance_today": 0,
+          "teacher_count": 0,
+          "write_request": 0,
+          "class_list": 1
+        },
+        "writeProbability": 0.04,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 936,
+        "costUsd": 0.000039312
+      }
+    },
+    {
+      "id": "core3-fr-09",
+      "repetition": 1,
+      "durationMs": 327.2597999999998,
+      "reportedCostUsd": 0.00003885,
+      "decision": {
+        "choice": "class_list",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "upcoming_exams": 0,
+          "class_list": 1,
+          "teacher_count": 0,
+          "small_talk": 0,
+          "write_request": 0,
+          "needs_llm": 0,
+          "student_and_teacher_count": 0,
+          "student_count": 0,
+          "attendance_today": 0
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 925,
+        "costUsd": 0.00003885
+      }
+    },
+    {
+      "id": "core3-fr-10",
+      "repetition": 1,
+      "durationMs": 360.0657999999994,
+      "reportedCostUsd": 0.000039018,
+      "decision": {
+        "choice": "attendance_today",
+        "confidence": 0.99,
+        "topProbability": 0.99,
+        "probabilities": {
+          "write_request": 0,
+          "needs_llm": 0.01,
+          "student_and_teacher_count": 0,
+          "upcoming_exams": 0,
+          "small_talk": 0,
+          "class_list": 0,
+          "attendance_today": 0.99,
+          "teacher_count": 0,
+          "student_count": 0
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 929,
+        "costUsd": 0.000039018
+      }
+    },
+    {
+      "id": "core3-fr-11",
+      "repetition": 1,
+      "durationMs": 371.64870000000064,
+      "reportedCostUsd": 0.00003948,
+      "decision": {
+        "choice": "attendance_today",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "small_talk": 0,
+          "student_count": 0,
+          "upcoming_exams": 0,
+          "needs_llm": 0,
+          "class_list": 0,
+          "teacher_count": 0,
+          "write_request": 0,
+          "student_and_teacher_count": 0,
+          "attendance_today": 1
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 940,
+        "costUsd": 0.00003948
+      }
+    },
+    {
+      "id": "core3-fr-12",
+      "repetition": 1,
+      "durationMs": 264.4282999999996,
+      "reportedCostUsd": 0.000038808,
+      "decision": {
+        "choice": "small_talk",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "upcoming_exams": 0,
+          "class_list": 0,
+          "student_and_teacher_count": 0,
+          "teacher_count": 0,
+          "attendance_today": 0,
+          "needs_llm": 0,
+          "student_count": 0,
+          "small_talk": 1,
+          "write_request": 0
+        },
+        "writeProbability": 0.02,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 924,
+        "costUsd": 0.000038808
+      }
+    },
+    {
+      "id": "core3-fr-13",
+      "repetition": 1,
+      "durationMs": 381.9501,
+      "reportedCostUsd": 0.000038808,
+      "decision": {
+        "choice": "small_talk",
+        "confidence": 0.99,
+        "topProbability": 1,
+        "probabilities": {
+          "attendance_today": 0,
+          "class_list": 0,
+          "small_talk": 1,
+          "student_and_teacher_count": 0,
+          "teacher_count": 0,
+          "needs_llm": 0,
+          "write_request": 0,
+          "upcoming_exams": 0,
+          "student_count": 0
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 924,
+        "costUsd": 0.000038808
+      }
+    },
+    {
+      "id": "core3-fr-14",
+      "repetition": 1,
+      "durationMs": 320.85440000000017,
+      "reportedCostUsd": 0.000039186,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 0.99,
+        "topProbability": 0.99,
+        "probabilities": {
+          "teacher_count": 0,
+          "small_talk": 0,
+          "attendance_today": 0,
+          "write_request": 0.99,
+          "needs_llm": 0.01,
+          "student_count": 0,
+          "student_and_teacher_count": 0,
+          "class_list": 0,
+          "upcoming_exams": 0
+        },
+        "writeProbability": 0.94,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 933,
+        "costUsd": 0.000039186
+      }
+    },
+    {
+      "id": "core3-fr-15",
+      "repetition": 1,
+      "durationMs": 352.33970000000045,
+      "reportedCostUsd": 0.000038976,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "needs_llm": 0,
+          "class_list": 0,
+          "teacher_count": 0,
+          "small_talk": 0,
+          "upcoming_exams": 0,
+          "student_and_teacher_count": 0,
+          "attendance_today": 0,
+          "student_count": 0,
+          "write_request": 1
+        },
+        "writeProbability": 0.92,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 928,
+        "costUsd": 0.000038976
+      }
+    },
+    {
+      "id": "core3-fr-16",
+      "repetition": 1,
+      "durationMs": 357.01600000000053,
+      "reportedCostUsd": 0.00003906,
+      "decision": {
+        "choice": "write_request",
+        "confidence": 0.99,
+        "topProbability": 0.99,
+        "probabilities": {
+          "small_talk": 0,
+          "student_count": 0,
+          "teacher_count": 0,
+          "student_and_teacher_count": 0,
+          "class_list": 0,
+          "attendance_today": 0,
+          "upcoming_exams": 0.01,
+          "write_request": 0.99,
+          "needs_llm": 0
+        },
+        "writeProbability": 0.97,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 930,
+        "costUsd": 0.00003906
+      }
+    },
+    {
+      "id": "core3-fr-17",
+      "repetition": 1,
+      "durationMs": 397.92069999999967,
+      "reportedCostUsd": 0.000039186,
+      "decision": {
+        "choice": "upcoming_exams",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "teacher_count": 0,
+          "attendance_today": 0,
+          "student_and_teacher_count": 0,
+          "needs_llm": 0,
+          "class_list": 0,
+          "write_request": 0,
+          "small_talk": 0,
+          "upcoming_exams": 1,
+          "student_count": 0
+        },
+        "writeProbability": 0.04,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 933,
+        "costUsd": 0.000039186
+      }
+    },
+    {
+      "id": "core3-fr-18",
+      "repetition": 1,
+      "durationMs": 312.64649999999983,
+      "reportedCostUsd": 0.000039018,
+      "decision": {
+        "choice": "upcoming_exams",
+        "confidence": 1,
+        "topProbability": 1,
+        "probabilities": {
+          "attendance_today": 0,
+          "student_and_teacher_count": 0,
+          "needs_llm": 0,
+          "class_list": 0,
+          "teacher_count": 0,
+          "small_talk": 0,
+          "upcoming_exams": 1,
+          "write_request": 0,
+          "student_count": 0
+        },
+        "writeProbability": 0.03,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 929,
+        "costUsd": 0.000039018
+      }
+    },
+    {
+      "id": "core3-fr-19",
+      "repetition": 1,
+      "durationMs": 412.7533000000003,
+      "reportedCostUsd": 0.000038976,
+      "decision": {
+        "choice": "needs_llm",
+        "confidence": 0.6,
+        "topProbability": 0.65,
+        "probabilities": {
+          "write_request": 0,
+          "needs_llm": 0.65,
+          "student_count": 0,
+          "attendance_today": 0,
+          "student_and_teacher_count": 0,
+          "class_list": 0,
+          "teacher_count": 0,
+          "upcoming_exams": 0.35,
+          "small_talk": 0
+        },
+        "writeProbability": 0.04,
+        "model": "typesafe/jev-1.13-20260917",
+        "inputTokens": 928,
+        "costUsd": 0.000038976
+      }
+    },
+    {
+      "id": "core3-fr-20",
+      "repetition": 1,
+      "durationMs": 343.86009999999897,
+      "reportedCostUsd": null,
+      "error": "HTTP 429: {\"error\":{\"message\":\"HTTP 429: {\\\"detail\\\":{\\\"error_type\\\":\\\"api_usage_error\\\",\\\"message\\\":\\\"Rate limit exceeded. Please retry shortly.\\\"}}\",\"code\":429}}"
+    }
+  ],
+  "stoppedReason": "unknown_request_cost",
+  "estimatedBudget": {
+    "maxEstimatedUsd": 0.02,
+    "requestReserveUsd": 0.002,
+    "observedEstimatedUsd": 0.000743316,
+    "reservedUsd": 0.002,
+    "requestsSettled": 20,
+    "requestsWithUnknownCost": 1,
+    "inFlight": 0,
+    "stoppedReason": "unknown_request_cost",
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling.",
+    "settlementSource": "Valid provider-reported usage.cost, including failed decisions; missing/invalid cost retains its reservation and stops dispatch."
+  },
+  "keyUsageAfter": {
+    "capturedAt": "2026-10-05T19:59:10.830Z",
+    "usage": 0.906000734,
+    "limitRemaining": 49.093999266
+  },
+  "summary": {
+    "exploration": {
+      "mode": "synthetic-exploratory",
+      "productionAcceptance": false,
+      "reasons": [
+        "incomplete_or_failed_run",
+        "fewer_than_150_unique_accepted_questions",
+        "fewer_than_150_independent_question_families",
+        "warm_classification_p95_over_500ms_or_unknown",
+        "native_authorship_and_review_outstanding"
+      ],
+      "threshold": 0.8,
+      "acceptancePolicy": "core",
+      "candidateSummary": {
+        "acceptancePolicy": "core",
+        "samples": 17,
+        "errors": 1,
+        "topChoiceAccuracy": 1,
+        "writeAccuracy": 1,
+        "accepted": 13,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 1,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 13,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.20581666518655073
+      },
+      "acceptedFamilies": 13,
+      "nativeReviewedCases": 0,
+      "latencyWarmMs": {
+        "count": 18,
+        "p50": 360.0657999999994,
+        "p95": 540.6644999999999,
+        "max": 540.6644999999999
+      },
+      "note": "Repetitions and language variants in one family are not independent. Original B0 remains failed; this is not rendered-answer or readiness-race validation."
+    },
+    "gate": {
+      "threshold": 0.8,
+      "guarded": true,
+      "test": {
+        "all": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        },
+        "byLanguage": {
+          "fr": {
+            "acceptancePolicy": "core",
+            "samples": 20,
+            "errors": 1,
+            "topChoiceAccuracy": 1,
+            "writeAccuracy": 1,
+            "accepted": 16,
+            "acceptedWrong": 0,
+            "precision": 1,
+            "coverage": 1,
+            "writeAnsweredAsRead": 0,
+            "readRefusedAsWrite": 0,
+            "wrongCases": [],
+            "acceptedCases": 16,
+            "wrongCaseCount": 0,
+            "errorUpperBound95": 0.17074972298248092
+          }
+        }
+      },
+      "testTemplateLanguages": {
+        "acceptancePolicy": "core",
+        "samples": 20,
+        "errors": 1,
+        "topChoiceAccuracy": 1,
+        "writeAccuracy": 1,
+        "accepted": 16,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 1,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 16,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.17074972298248092
+      },
+      "testAfterLanguageGate": {
+        "acceptancePolicy": "core",
+        "samples": 18,
+        "errors": 1,
+        "topChoiceAccuracy": 1,
+        "writeAccuracy": 1,
+        "accepted": 14,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 1,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 14,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.19263617565013536
+      },
+      "testAfterLanguageAndRegexGate": {
+        "acceptancePolicy": "core",
+        "samples": 17,
+        "errors": 1,
+        "topChoiceAccuracy": 1,
+        "writeAccuracy": 1,
+        "accepted": 13,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 1,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 13,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.20581666518655073
+      },
+      "languageSkippedCases": [
+        "core3-fr-05",
+        "core3-fr-08",
+        "core3-fr-23",
+        "core3-fr-26",
+        "core3-ary-latn-12",
+        "core3-ary-latn-15",
+        "core3-ary-latn-18",
+        "core3-ary-latn-23",
+        "core3-ary-latn-24"
+      ],
+      "dev": {
+        "all": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "byLanguage": {}
+      }
+    },
+    "reportedCostUsd": 0.000743316,
+    "requestsWithKnownCost": 19,
+    "requestsWithUnknownCost": 1,
+    "costComplete": false,
+    "costNote": "reportedCostUsd sums known usage.cost only, including failed decisions. Unknown cost is not zero; reservations are estimates, not a provider billing cap. Key ledger reads are separate observations.",
+    "inputTokens": 17698,
+    "errors": [
+      "core3-fr-20#1: HTTP 429: {\"error\":{\"message\":\"HTTP 429: {\\\"detail\\\":{\\\"error_type\\\":\\\"api_usage_error\\\",\\\"message\\\":\\\"Rate limit exceeded. Please retry shortly.\\\"}}\",\"code\":429}}"
+    ],
+    "latencyAllMs": {
+      "count": 19,
+      "p50": 360.8595,
+      "p95": 540.6644999999999,
+      "max": 540.6644999999999
+    },
+    "latencyWarmMs": {
+      "count": 18,
+      "p50": 360.0657999999994,
+      "p95": 540.6644999999999,
+      "max": 540.6644999999999
+    },
+    "latencyByLanguageMs": {
+      "fr": {
+        "count": 18,
+        "p50": 360.0657999999994,
+        "p95": 540.6644999999999,
+        "max": 540.6644999999999
+      }
+    },
+    "stability": {
+      "cases": 19,
+      "stable": 19,
+      "unstable": []
+    },
+    "thresholds": {
+      "raw": null,
+      "guarded": null
+    },
+    "curve": [
+      {
+        "threshold": 0.5,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.6,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.7,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.8,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.85,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.9,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.95,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.97,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 16,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 1,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 16,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.17074972298248092
+        }
+      },
+      {
+        "threshold": 0.99,
+        "dev": {
+          "acceptancePolicy": "core",
+          "samples": 0,
+          "errors": 0,
+          "topChoiceAccuracy": null,
+          "writeAccuracy": null,
+          "accepted": 0,
+          "acceptedWrong": 0,
+          "precision": null,
+          "coverage": null,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 0,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": null
+        },
+        "test": {
+          "acceptancePolicy": "core",
+          "samples": 20,
+          "errors": 1,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 14,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.875,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 14,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.19263617565013536
+        }
+      }
+    ],
+    "test": {
+      "raw": null,
+      "guarded": null
+    },
+    "regexBaseline": {
+      "all": {
+        "cases": 104,
+        "matched": 3,
+        "wrong": [],
+        "coverage": 0.041666666666666664
+      },
+      "test": {
+        "cases": 104,
+        "matched": 3,
+        "wrong": [],
+        "coverage": 0.041666666666666664
+      },
+      "byLanguage": {
+        "fr": {
+          "cases": 26,
+          "matched": 1,
+          "wrong": [],
+          "coverage": 0.05555555555555555
+        },
+        "ar": {
+          "cases": 26,
+          "matched": 1,
+          "wrong": [],
+          "coverage": 0.05555555555555555
+        },
+        "ary": {
+          "cases": 26,
+          "matched": 1,
+          "wrong": [],
+          "coverage": 0.05555555555555555
+        },
+        "ary-latn": {
+          "cases": 26,
+          "matched": 0,
+          "wrong": [],
+          "coverage": 0
+        }
+      }
+    }
+  }
+}

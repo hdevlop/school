@@ -150,7 +150,9 @@ describe('published chat controller year boundary', () => {
     const provider = await (await boot()).container.resolve(SchoolChatContextProvider);
     expect(await provider.describeActor({ id: 'u-parent', role: 'parent' })).toBe(
       'The signed-in user is a parent, parentId P1. Their children this year: Salma Idrissi (studentId S1, CE2 A); '
-      + 'Omar Idrissi (studentId S2). "My child" means one of these children; for their grades, attendance or '
+      + 'Omar Idrissi (studentId S2). '
+      + 'For their children\'s names, answer from this authorized list; parent-profile_get_children is a finance profile and is not needed for names. '
+      + '"My child" means one of these children; for their grades, attendance or '
       + 'overview use the student-profile tools with that studentId.',
     );
     expect(await provider.describeActor({ id: 'u-teacher', role: 'teacher' })).toContain('teacherId T1');

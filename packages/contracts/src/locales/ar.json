@@ -78,40 +78,23 @@
     "includeOneTimeFees": "تضمين الرسوم لمرة واحدة",
     "copyDiscounts": "نسخ التخفيضات",
     "createPreviewFirst": "أنشئ معاينة أولاً",
-    "selectStudentAmount": "اختر تلميذاً وأدخل مبلغاً",
-    "amountPlaceholder": "المبلغ",
-    "notificationsDescription": "إشعارات التأخير واستحقاق الشيكات.",
-    "notificationsTitle": "سجل تسليم الإشعارات",
-    "creditDescription": "تطبيق الأموال المسواة غير المخصصة على أقدم الأقساط.",
-    "creditTitle": "رصيد التلميذ",
     "checksDescription": "الشيكات المعلقة تحجز الأرصدة حتى التسوية أو الإفراج.",
-    "checksTitle": "شيكات بانتظار التسوية",
-    "eyebrow": "الإدارة المالية",
-    "title": "العمليات والمطابقة",
-    "description": "إدارة الشيكات والأرصدة وسجل العمليات والإشعارات وترحيل الرسوم.",
+    "title": "الشيكات المعلقة",
+    "description": "تسوية الشيكات في انتظار التحصيل ونقل الرسوم إلى سنة دراسية جديدة.",
     "failed": "فشلت العملية المالية",
     "bounceReason": "سبب رفض الشيك",
     "voidReason": "سبب إلغاء الدفعة",
-    "creditApplied": "تم تطبيق رصيد الطالب",
     "previewCreated": "تم إنشاء معاينة الترحيل",
     "rolloverCompleted": "تم الترحيل",
     "noChecks": "لا توجد شيكات معلقة أو مودعة.",
-    "due": "الاستحقاق: {{date}}",
     "deposit": "إيداع",
     "complete": "تحصيل",
     "bounce": "رفض",
     "void": "إلغاء",
-    "creditScope": "تطبيق على رسوم {{year}}. الرصيد المتاح مشترك بين السنوات.",
-    "selectedYear": "السنة الدراسية المحددة",
-    "selectStudent": "اختر طالبًا",
-    "applyCredit": "تطبيق الرصيد",
-    "availableBalance": "الرصيد المتاح",
     "rolloverTitle": "الترحيل إلى سنة دراسية جديدة",
     "rolloverDescription": "عاين تكليفات السنة السابقة قبل إنشاء رسوم السنة الجديدة.",
     "preview": "معاينة",
     "commitPreview": "تأكيد الترحيل",
-    "noNotifications": "لا توجد سجلات إرسال بعد.",
-    "student": "الطالب",
     "auditTitle": "سجل العمليات المالية",
     "auditDescription": "آخر العمليات لجميع السنوات الدراسية.",
     "entity": "العنصر",
@@ -177,7 +160,29 @@
       "deposited": "????",
       "completed": "????",
       "bounced": "?????"
-    }
+    },
+    "fromYear": "من السنة",
+    "toYear": "إلى السنة",
+    "chooseYear": "اختر سنة",
+    "chooseTwoYears": "اختر سنتين دراسيتين مختلفتين",
+    "noAuditEntries": "لا توجد تغييرات مالية مسجلة بعد.",
+    "subtitle": "{{count}} شيكات في انتظار التسوية",
+    "searchPlaceholder": "ابحث عن تلميذ أو رقم شيك...",
+    "rolloverButton": "ترحيل السنة",
+    "bounceTitle": "شيك مرتجع",
+    "voidTitle": "إلغاء الشيك",
+    "noEarlierYear": "لا توجد سنة دراسية سابقة لنسخ الرسوم منها.",
+    "summary": {
+      "students": "التلاميذ",
+      "feesToCreate": "رسوم سيتم إنشاؤها",
+      "alreadyExist": "موجودة مسبقًا",
+      "notEnrolled": "غير مسجلين",
+      "errors": "أخطاء",
+      "projectedTotal": "الإجمالي المتوقع"
+    },
+    "advanceSelected": "الخطوة التالية",
+    "bulkUpdated": "تم تحديث {{count}} شيكات",
+    "bulkPartial": "تم تحديث {{done}} من {{total}} شيكات"
   },
   "installments": {
     "table": {
@@ -478,6 +483,13 @@
       "invalidSeedApiKey": "مفتاح API للتهيئة غير صحيح"
     }
   },
+  "chatBenchmark": {
+    "errors": {
+      "controlsDisabled": "أدوات قياس الأداء معطلة",
+      "providerUsageUnsupported": "لا يمكن الاطلاع على الاستخدام لدى المزود المحدد",
+      "providerUsageFailed": "تعذر الاطلاع على الاستخدام لدى المزود"
+    }
+  },
   "files": {
     "success": {
       "retrieved": "تم استرداد الملف بنجاح",
@@ -695,8 +707,9 @@
         "totalStudents": "مجموع التلاميذ",
         "classesToday": "حصص اليوم",
         "pendingTasks": "مهام معلقة",
-        "attendance": "الحضور",
-        "notifications": "إشعارات غير مقروءة"
+        "notifications": "إشعارات غير مقروءة",
+        "attendanceRate": "الحضور (7 أيام)",
+        "assignedClasses": "الأقسام المسندة"
       },
       "duration": {
         "minutes": "{{minutes}} د",
@@ -727,7 +740,21 @@
         "notifications": "الإشعارات",
         "notificationsHint": "إشعارات غير مقروءة",
         "concerns": "متابعة التلاميذ",
-        "concernsHint": "حوادث مفتوحة في أقسامك"
+        "concernsHint": "حوادث مفتوحة في أقسامك",
+        "allClear": "لا شيء معلق"
+      },
+      "quickActions": {
+        "title": "إجراءات سريعة",
+        "takeAttendance": "تسجيل الغياب",
+        "takeAttendanceHint": "سجّل حضور اليوم لقسم",
+        "enterGrades": "إدخال النقاط",
+        "enterGradesHint": "نقط تقييماً لشعبة",
+        "planAssessment": "برمجة تقييم",
+        "planAssessmentHint": "حدّد موعد فرض أو اختبار أو امتحان",
+        "reportIncident": "الإبلاغ عن حادث",
+        "reportIncidentHint": "سجّل ملاحظة عن سلوك تلميذ",
+        "viewTimetable": "عرض استعمال الزمن",
+        "viewTimetableHint": "حصصك لهذا الأسبوع"
       },
       "classes": {
         "title": "أقسامي",
@@ -741,16 +768,38 @@
         "due": "بتاريخ {{date}}",
         "empty": "لا توجد تقييمات هذه السنة"
       },
-      "trend": {
-        "title": "منحنى الحضور",
-        "range7d": "آخر 7 أيام",
-        "range30d": "آخر 30 يومًا",
-        "overall": "نسبة الحضور العامة",
-        "vsPrevious": "مقارنة بالفترة السابقة",
-        "classesHeld": "الحصص المنجزة",
-        "outOf": "من أصل {{count}} مبرمجة",
-        "rate": "الحضور",
-        "empty": "لا يوجد حضور مسجل في هذه الفترة"
+      "welcomeBack": "مرحباً بعودتك، {{name}}",
+      "subtitle": "إليك يومك الدراسي في لمحة.",
+      "backToTeachers": "العودة إلى الأساتذة",
+      "tabs": {
+        "overview": "نظرة عامة",
+        "details": "التفاصيل",
+        "timetable": "جدول الحصص",
+        "payroll": "الأجور"
+      },
+      "info": {
+        "title": "نبذة",
+        "viewDetails": "عرض التفاصيل",
+        "hoursPerWeek": "{{hours}} ساعة/أسبوع",
+        "yearsCount": "{{count}} سنوات",
+        "actions": {
+          "email": "إرسال بريد إلكتروني",
+          "map": "عرض العنوان على الخريطة",
+          "call": "اتصال",
+          "whatsapp": "مراسلة عبر واتساب",
+          "unavailable": "غير مسجّل"
+        }
+      },
+      "details": {
+        "employment": "التوظيف",
+        "academicEmergency": "المؤهلات والطوارئ"
+      },
+      "timetable": {
+        "title": "الجدول الأسبوعي"
+      },
+      "payroll": {
+        "history": "سجل الأداءات",
+        "hourlyRate": "الأجر بالساعة"
       }
     },
     "widgets": {
@@ -1078,9 +1127,9 @@
     "violations": "المخالفات",
     "behaviorRewards": "السلوك الإيجابي والمكافآت",
     "behaviorRewardsShort": "المكافآت",
-    "alerts": "التنبيهات",
     "myChildren": "أبنائي",
-    "myProfile": "ملفي"
+    "myProfile": "ملفي",
+    "pendingChecks": "الشيكات"
   },
   "classRoutines": {
     "success": {
@@ -1118,79 +1167,161 @@
       "teacherNotFound": "الأستاذ غير موجود",
       "layoutPastMidnight": "لا يمكن أن يمتد الجدول بعد منتصف الليل",
       "layoutRemovesLessons": "احذف الحصص من الفترات التي ستزال قبل تغيير الإعدادات",
-    "layoutRemovesDuties": "احذف مهام الإشراف من الاستراحات التي ستزال قبل تغيير الإعدادات",
-    "outsideSelectedYear": "يجب أن تنتمي شعبة جدول الحصص إلى السنة الدراسية المحددة"
-  },
-  "ui": {
-    "title": "الجدول",
-    "subtitle": "أنشئ جدولاً أسبوعياً خالياً من التعارض لكل فوج",
-    "fields": {
-      "class": "القسم", "section": "الفوج", "period": "الحصة", "subjectTeacher": "المادة والأستاذ",
-      "room": "القاعة", "notes": "ملاحظات", "supervisingStaff": "الموظف المشرف", "supervisingTeacher": "الأستاذ المشرف",
-      "dutyNotes": "ملاحظات الإشراف", "teachingDays": "أيام الدراسة", "type": "النوع", "nameLabel": "الاسم / التسمية",
-      "startTime": "وقت البداية", "endTime": "وقت النهاية", "periodName": "اسم الحصة", "order": "الترتيب",
-      "starts": "البداية", "ends": "النهاية", "breakPeriod": "فترة استراحة", "active": "مفعّل"
+      "layoutRemovesDuties": "احذف مهام الإشراف من الاستراحات التي ستزال قبل تغيير الإعدادات",
+      "outsideSelectedYear": "يجب أن تنتمي شعبة جدول الحصص إلى السنة الدراسية المحددة"
     },
-    "actions": {
-      "days": "الأيام", "periods": "الحصص", "saveDays": "حفظ الأيام", "savePeriods": "حفظ الحصص",
-      "createRoutine": "إنشاء الجدول", "addLesson": "إضافة حصة", "updateLesson": "تحديث الحصة", "removeLesson": "حذف الحصة",
-      "addSupervisor": "إضافة مشرف", "assignSupervisor": "تعيين مشرف", "updateSupervision": "تحديث الإشراف",
-      "removeSupervision": "حذف الإشراف", "addTeachingPeriod": "إضافة حصة دراسية", "addBreak": "إضافة استراحة"
-    },
-    "dialogs": {
-      "daysTitle": "أيام الدراسة", "daysDescription": "اختر الأيام المدرجة في جدول هذا الفوج.",
-      "periodsTitle": "الحصص والاستراحات", "periodsDescription": "تحكم في الحصص والاستراحات وأوقاتها لهذا الفوج.",
-      "editLesson": "تعديل الحصة", "addLesson": "إضافة حصة", "editSupervision": "تعديل الإشراف",
-      "assignSupervisor": "تعيين مشرف · {{period}}"
-    },
-    "placeholders": {
-      "chooseTeacher": "اختر أستاذاً مكلفاً", "searchAssignments": "البحث في التكليفات...",
-      "selectStaff": "اختر موظفاً", "selectTeacher": "اختر أستاذاً"
-    },
-    "empty": {
-      "title": "لا يوجد جدول لهذا الفوج", "description": "أنشئ جدول الفوج ثم عدّل الحصص مباشرة من الشبكة.",
-      "noAssignments": "لا توجد تكليفات أساتذة لهذا الفوج."
-    },
-    "grid": { "noRoom": "دون قاعة" },
-    "content": {
-      "title": "المواد الفرعية", "help": "ينظم الأستاذ وقت الحصة ويبدّل بين الخيارات حسب الحاجة، دون تحديد أوقات فرعية.",
-      "item": "مادة {{number}}", "label": "المادة أو النشاط", "or": "أو",
-      "optionA": "الخيار أ", "optionB": "الخيار ب", "addSubject": "إضافة مادة", "addAlternative": "إضافة بديل",
-      "useOne": "الاكتفاء بمادة واحدة", "remove": "حذف المادة", "moveUp": "نقل المادة للأعلى", "moveDown": "نقل المادة للأسفل", "preview": "معاينة الجدول"
-    },
-    "validation": {
-      "chooseAssignment": "اختر أستاذاً ومادة", "notesMax": "يجب ألا تتجاوز الملاحظات 500 حرف",
-      "contentLabelRequired": "أدخل مادة أو نشاطاً", "contentLabelMax": "لا تتجاوز 100 حرف لكل عنوان", "alternativesDiffer": "يجب أن يختلف البديلان",
-      "chooseSupervisor": "اختر مشرفاً", "selectDay": "اختر يوماً دراسياً واحداً على الأقل", "timeFormat": "استخدم الصيغة HH:mm",
-      "nameRequired": "أدخل اسماً", "teachingPeriodRequired": "أضف حصة دراسية واحدة على الأقل",
-      "endAfterStart": "يجب أن يكون وقت النهاية بعد وقت البداية", "noOverlap": "لا يمكن أن تتداخل الحصص الزمنية"
-    },
-    "periodForm": {
-      "teachingPeriod": "حصة دراسية", "breakRecess": "استراحة", "dragRow": "اسحب السطر {{number}} لإعادة ترتيبه",
-      "removeRow": "حذف {{name}}"
-    },
-    "defaultNames": {
-      "period": "الحصة {{number}}", "break": "استراحة {{number}}", "morningBreak": "استراحة الصباح",
-      "lunchBreak": "استراحة الغداء", "afternoonBreak": "استراحة بعد الظهر"
-    },
-    "days": {
-      "monday": "الاثنين", "tuesday": "الثلاثاء", "wednesday": "الأربعاء", "thursday": "الخميس",
-      "friday": "الجمعة", "saturday": "السبت", "sunday": "الأحد"
-    },
-    "loading": { "timetable": "جارٍ تحميل الجدول", "weeklyRoutine": "جارٍ تحميل الجدول الأسبوعي..." },
-    "messages": {
-      "saveError": "تعذر حفظ الجدول.", "routineCreated": "تم إنشاء الجدول.", "routineUpdated": "تم تحديث الجدول.",
-      "timesUpdated": "تم تحديث أوقات الجدول.", "routineDeleted": "تم حذف المسودة.", "routinePublished": "تم نشر الجدول.",
-      "routineArchived": "تمت أرشفة الجدول.", "lessonAdded": "تمت إضافة الحصة.", "lessonUpdated": "تم تحديث الحصة.",
-      "lessonRemoved": "تم حذف الحصة.", "supervisionAssigned": "تم تعيين الإشراف.", "supervisionUpdated": "تم تحديث الإشراف.",
-      "supervisionRemoved": "تم حذف الإشراف.", "periodCreated": "تم إنشاء الحصة.", "periodUpdated": "تم تحديث الحصة."
-    },
-    "teacher": {
-      "weeklyLessons": "الحصص الأسبوعية", "sections": "الأفواج", "noRoutine": "لا يوجد جدول",
-      "noRoutineDescription": "ستظهر الحصص المكلف بها هنا تلقائياً."
-    },
-    "errors": { "loadFailed": "تعذر تحميل الجدول." }
-  }
+    "ui": {
+      "title": "الجدول",
+      "subtitle": "أنشئ جدولاً أسبوعياً خالياً من التعارض لكل فوج",
+      "fields": {
+        "class": "القسم",
+        "section": "الفوج",
+        "period": "الحصة",
+        "subjectTeacher": "المادة والأستاذ",
+        "room": "القاعة",
+        "notes": "ملاحظات",
+        "supervisingStaff": "الموظف المشرف",
+        "supervisingTeacher": "الأستاذ المشرف",
+        "dutyNotes": "ملاحظات الإشراف",
+        "teachingDays": "أيام الدراسة",
+        "type": "النوع",
+        "nameLabel": "الاسم / التسمية",
+        "startTime": "وقت البداية",
+        "endTime": "وقت النهاية",
+        "periodName": "اسم الحصة",
+        "order": "الترتيب",
+        "starts": "البداية",
+        "ends": "النهاية",
+        "breakPeriod": "فترة استراحة",
+        "active": "مفعّل"
+      },
+      "actions": {
+        "days": "الأيام",
+        "periods": "الحصص",
+        "saveDays": "حفظ الأيام",
+        "savePeriods": "حفظ الحصص",
+        "createRoutine": "إنشاء الجدول",
+        "addLesson": "إضافة حصة",
+        "updateLesson": "تحديث الحصة",
+        "removeLesson": "حذف الحصة",
+        "addSupervisor": "إضافة مشرف",
+        "assignSupervisor": "تعيين مشرف",
+        "updateSupervision": "تحديث الإشراف",
+        "removeSupervision": "حذف الإشراف",
+        "addTeachingPeriod": "إضافة حصة دراسية",
+        "addBreak": "إضافة استراحة"
+      },
+      "dialogs": {
+        "daysTitle": "أيام الدراسة",
+        "daysDescription": "اختر الأيام المدرجة في جدول هذا الفوج.",
+        "periodsTitle": "الحصص والاستراحات",
+        "periodsDescription": "تحكم في الحصص والاستراحات وأوقاتها لهذا الفوج.",
+        "editLesson": "تعديل الحصة",
+        "addLesson": "إضافة حصة",
+        "editSupervision": "تعديل الإشراف",
+        "assignSupervisor": "تعيين مشرف · {{period}}"
+      },
+      "placeholders": {
+        "chooseTeacher": "اختر أستاذاً مكلفاً",
+        "searchAssignments": "البحث في التكليفات...",
+        "selectStaff": "اختر موظفاً",
+        "selectTeacher": "اختر أستاذاً"
+      },
+      "empty": {
+        "title": "لا يوجد جدول لهذا الفوج",
+        "description": "أنشئ جدول الفوج ثم عدّل الحصص مباشرة من الشبكة.",
+        "noAssignments": "لا توجد تكليفات أساتذة لهذا الفوج."
+      },
+      "grid": {
+        "noRoom": "دون قاعة"
+      },
+      "content": {
+        "title": "المواد الفرعية",
+        "help": "ينظم الأستاذ وقت الحصة ويبدّل بين الخيارات حسب الحاجة، دون تحديد أوقات فرعية.",
+        "item": "مادة {{number}}",
+        "label": "المادة أو النشاط",
+        "or": "أو",
+        "optionA": "الخيار أ",
+        "optionB": "الخيار ب",
+        "addSubject": "إضافة مادة",
+        "addAlternative": "إضافة بديل",
+        "useOne": "الاكتفاء بمادة واحدة",
+        "remove": "حذف المادة",
+        "moveUp": "نقل المادة للأعلى",
+        "moveDown": "نقل المادة للأسفل",
+        "preview": "معاينة الجدول"
+      },
+      "validation": {
+        "chooseAssignment": "اختر أستاذاً ومادة",
+        "notesMax": "يجب ألا تتجاوز الملاحظات 500 حرف",
+        "contentLabelRequired": "أدخل مادة أو نشاطاً",
+        "contentLabelMax": "لا تتجاوز 100 حرف لكل عنوان",
+        "alternativesDiffer": "يجب أن يختلف البديلان",
+        "chooseSupervisor": "اختر مشرفاً",
+        "selectDay": "اختر يوماً دراسياً واحداً على الأقل",
+        "timeFormat": "استخدم الصيغة HH:mm",
+        "nameRequired": "أدخل اسماً",
+        "teachingPeriodRequired": "أضف حصة دراسية واحدة على الأقل",
+        "endAfterStart": "يجب أن يكون وقت النهاية بعد وقت البداية",
+        "noOverlap": "لا يمكن أن تتداخل الحصص الزمنية"
+      },
+      "periodForm": {
+        "teachingPeriod": "حصة دراسية",
+        "breakRecess": "استراحة",
+        "dragRow": "اسحب السطر {{number}} لإعادة ترتيبه",
+        "removeRow": "حذف {{name}}"
+      },
+      "defaultNames": {
+        "period": "الحصة {{number}}",
+        "break": "استراحة {{number}}",
+        "morningBreak": "استراحة الصباح",
+        "lunchBreak": "استراحة الغداء",
+        "afternoonBreak": "استراحة بعد الظهر"
+      },
+      "days": {
+        "monday": "الاثنين",
+        "tuesday": "الثلاثاء",
+        "wednesday": "الأربعاء",
+        "thursday": "الخميس",
+        "friday": "الجمعة",
+        "saturday": "السبت",
+        "sunday": "الأحد"
+      },
+      "loading": {
+        "timetable": "جارٍ تحميل الجدول",
+        "weeklyRoutine": "جارٍ تحميل الجدول الأسبوعي..."
+      },
+      "messages": {
+        "saveError": "تعذر حفظ الجدول.",
+        "routineCreated": "تم إنشاء الجدول.",
+        "routineUpdated": "تم تحديث الجدول.",
+        "timesUpdated": "تم تحديث أوقات الجدول.",
+        "routineDeleted": "تم حذف المسودة.",
+        "routinePublished": "تم نشر الجدول.",
+        "routineArchived": "تمت أرشفة الجدول.",
+        "lessonAdded": "تمت إضافة الحصة.",
+        "lessonUpdated": "تم تحديث الحصة.",
+        "lessonRemoved": "تم حذف الحصة.",
+        "supervisionAssigned": "تم تعيين الإشراف.",
+        "supervisionUpdated": "تم تحديث الإشراف.",
+        "supervisionRemoved": "تم حذف الإشراف.",
+        "periodCreated": "تم إنشاء الحصة.",
+        "periodUpdated": "تم تحديث الحصة."
+      },
+      "teacher": {
+        "weeklyLessons": "الحصص الأسبوعية",
+        "sections": "الأفواج",
+        "noRoutine": "لا يوجد جدول",
+        "noRoutineDescription": "ستظهر الحصص المكلف بها هنا تلقائياً.",
+        "myWeekTitle": "جدولي الأسبوعي",
+        "myWeekSubtitle": "حصصك هذا الأسبوع في جميع أفواجك",
+        "today": "اليوم",
+        "noLessonsOnDay": "لا توجد حصص في هذا اليوم"
+      },
+      "errors": {
+        "loadFailed": "تعذر تحميل الجدول."
+      }
+    }
   },
   "payroll": {
     "subtitle": {
@@ -1380,6 +1511,15 @@
       "loading": "جارٍ التحميل…",
       "nothingToSave": "لا توجد تغييرات للحفظ",
       "submitSuccess": "تم حفظ الحضور بنجاح",
+      "teacherSubject": "المعلم والمادة",
+      "selectClass": "اختر صفاً أولاً",
+      "selectSection": "اختر فصلاً أولاً",
+      "noSections": "لا توجد فصول",
+      "noAssignments": "لا توجد تكليفات للمعلمين",
+      "noStudents": "لم يتم العثور على طلاب.",
+      "noStudentsInSection": "لم يتم العثور على طلاب في الفصل المحدد.",
+      "resetFilters": "إعادة تعيين التصفية",
+      "search": "بحث",
       "submitError": "فشل حفظ الحضور"
     }
   },
@@ -1498,6 +1638,7 @@
       "dueDate": "تاريخ الاستحقاق",
       "netAmount": "المبلغ الصافي",
       "paidAmount": "المبلغ المدفوع",
+      "remainingAmount": "المتبقي",
       "status": "الحالة",
       "student": "التلميذ",
       "studentCode": "رمز التلميذ"
@@ -1708,7 +1849,13 @@
     }
   },
   "confirm": {
-    "discipline": { "create": "إنشاء سجل المخالفة؟", "update": "تحديث سجل المخالفة؟", "resolve": "معالجة سجل المخالفة؟", "reopen": "إعادة فتح المخالفة ومسح معالجتها؟", "delete": "حذف سجل المخالفة؟ لا يمكن التراجع عن هذا الإجراء." },
+    "discipline": {
+      "create": "إنشاء سجل المخالفة؟",
+      "update": "تحديث سجل المخالفة؟",
+      "resolve": "معالجة سجل المخالفة؟",
+      "reopen": "إعادة فتح المخالفة ومسح معالجتها؟",
+      "delete": "حذف سجل المخالفة؟ لا يمكن التراجع عن هذا الإجراء."
+    },
     "behaviorRewards": {
       "create": "هل تريد إنشاء سجل التقدير هذا؟",
       "update": "هل تريد تحديث سجل التقدير هذا؟",
@@ -1836,24 +1983,94 @@
       "update": "تحديث دور الموظف هذا؟",
       "delete": "إلغاء تنشيط دور الموظف هذا؟ الأدوار المستخدمة يتم إلغاء تنشيطها، وليس حذفها."
     },
-    "alerts": { "create": "هل تريد إنشاء هذا التنبيه؟", "update": "هل تريد تحديث هذا التنبيه؟", "updateStatus": "هل تريد تحديث حالة هذا التنبيه؟" },
-    "announcements": { "create": "هل تريد إنشاء هذا الإعلان؟", "publish": "هل تريد نشر هذا الإعلان؟", "unpublish": "هل تريد إلغاء نشر هذا الإعلان؟", "update": "هل تريد تحديث هذا الإعلان؟" },
-    "assessments": { "create": "هل تريد إنشاء هذا التقييم؟", "update": "هل تريد تحديث هذا التقييم؟" },
-    "drivers": { "create": "هل تريد إضافة هذا السائق؟", "update": "هل تريد تحديث بيانات هذا السائق؟", "updateStatus": "هل تريد تغيير حالة هذا السائق؟" },
-    "expenses": { "create": "هل تريد إنشاء هذا المصروف؟", "handleApproval": "هل تريد قبول هذا المصروف أو رفضه؟", "recordPayment": "هل تريد تسجيل دفعة لهذا المصروف؟", "update": "هل تريد تحديث هذا المصروف؟" },
-    "feeTypes": { "create": "هل تريد إنشاء نوع الرسوم هذا؟", "update": "هل تريد تحديث نوع الرسوم هذا؟" },
-    "installments": { "create": "هل تريد إنشاء هذا القسط؟", "update": "هل تريد تحديث هذا القسط؟" },
-    "vehicleMaintenance": { "create": "هل تريد إنشاء سجل الصيانة هذا؟", "update": "هل تريد تحديث سجل الصيانة هذا؟", "updateStatus": "هل تريد تغيير حالة سجل الصيانة هذا؟", "complete": "هل تريد تسجيل هذه الصيانة كمكتملة؟", "markOverdue": "هل تريد تحديد سجلات الصيانة المتأخرة؟" },
-    "payments": { "record": "هل تريد تسجيل هذه الدفعة؟", "update": "هل تريد تحديث هذه الدفعة؟", "void": "هل تريد إلغاء هذه الدفعة؟ ستبقى مسجلة كدفعة ملغاة.", "checkStatus": "هل تريد تغيير حالة هذا الشيك؟" },
-    "vehicleRefuels": { "create": "هل تريد تسجيل عملية التزود بالوقود هذه؟", "update": "هل تريد تحديث عملية التزود بالوقود هذه؟" },
-    "studentRoutes": { "assign": "هل تريد إسناد هذا التلميذ إلى المسار؟", "update": "هل تريد تحديث إسناد المسار هذا؟", "reassign": "هل تريد نقل هذا التلميذ إلى مسار آخر؟", "unassign": "هل تريد إزالة هذا التلميذ من المسار؟", "unassignAt": "هل تريد إزالة هذا التلميذ من المسار في هذا التاريخ؟" },
-    "vehicleAssignments": { "create": "هل تريد إنشاء إسناد المركبة هذا؟", "assignDriver": "هل تريد إسناد هذا السائق إلى المركبة؟", "update": "هل تريد تحديث إسناد المركبة هذا؟", "unassign": "هل تريد إنهاء إسناد المركبة هذا؟" },
-    "vehicles": { "create": "هل تريد إضافة هذه المركبة؟", "update": "هل تريد تحديث هذه المركبة؟" },
-    "zones": { "create": "هل تريد إنشاء هذه المنطقة؟", "update": "هل تريد تحديث هذه المنطقة؟", "delete": "هل تريد حذف هذه المنطقة؟ لا يمكن التراجع عن هذا الإجراء." },
-    "rollover": { "preview": "هل تريد معاينة الانتقال إلى السنة الدراسية التالية؟", "commit": "هل تريد الانتقال إلى السنة الدراسية التالية؟ سيؤدي ذلك إلى تغيير التسجيلات والأرصدة." },
-    "credits": { "apply": "هل تريد تطبيق هذا الرصيد على الرسوم؟" },
-    "cycles": { "create": "هل تريد إنشاء هذه المرحلة؟", "update": "هل تريد تحديث هذه المرحلة؟", "delete": "هل تريد حذف هذه المرحلة؟ لا يمكن التراجع عن هذا الإجراء." },
-    "classRoutines": { "create": "هل تريد إنشاء هذا الجدول الزمني؟" }
+    "alerts": {
+      "create": "هل تريد إنشاء هذا التنبيه؟",
+      "update": "هل تريد تحديث هذا التنبيه؟",
+      "updateStatus": "هل تريد تحديث حالة هذا التنبيه؟"
+    },
+    "announcements": {
+      "create": "هل تريد إنشاء هذا الإعلان؟",
+      "publish": "هل تريد نشر هذا الإعلان؟",
+      "unpublish": "هل تريد إلغاء نشر هذا الإعلان؟",
+      "update": "هل تريد تحديث هذا الإعلان؟"
+    },
+    "assessments": {
+      "create": "هل تريد إنشاء هذا التقييم؟",
+      "update": "هل تريد تحديث هذا التقييم؟"
+    },
+    "drivers": {
+      "create": "هل تريد إضافة هذا السائق؟",
+      "update": "هل تريد تحديث بيانات هذا السائق؟",
+      "updateStatus": "هل تريد تغيير حالة هذا السائق؟"
+    },
+    "expenses": {
+      "create": "هل تريد إنشاء هذا المصروف؟",
+      "handleApproval": "هل تريد قبول هذا المصروف أو رفضه؟",
+      "recordPayment": "هل تريد تسجيل دفعة لهذا المصروف؟",
+      "update": "هل تريد تحديث هذا المصروف؟"
+    },
+    "feeTypes": {
+      "create": "هل تريد إنشاء نوع الرسوم هذا؟",
+      "update": "هل تريد تحديث نوع الرسوم هذا؟"
+    },
+    "installments": {
+      "create": "هل تريد إنشاء هذا القسط؟",
+      "update": "هل تريد تحديث هذا القسط؟"
+    },
+    "vehicleMaintenance": {
+      "create": "هل تريد إنشاء سجل الصيانة هذا؟",
+      "update": "هل تريد تحديث سجل الصيانة هذا؟",
+      "updateStatus": "هل تريد تغيير حالة سجل الصيانة هذا؟",
+      "complete": "هل تريد تسجيل هذه الصيانة كمكتملة؟",
+      "markOverdue": "هل تريد تحديد سجلات الصيانة المتأخرة؟"
+    },
+    "payments": {
+      "record": "هل تريد تسجيل هذه الدفعة؟",
+      "update": "هل تريد تحديث هذه الدفعة؟",
+      "void": "هل تريد إلغاء هذه الدفعة؟ ستبقى مسجلة كدفعة ملغاة.",
+      "checkStatus": "هل تريد تغيير حالة هذا الشيك؟"
+    },
+    "vehicleRefuels": {
+      "create": "هل تريد تسجيل عملية التزود بالوقود هذه؟",
+      "update": "هل تريد تحديث عملية التزود بالوقود هذه؟"
+    },
+    "studentRoutes": {
+      "assign": "هل تريد إسناد هذا التلميذ إلى المسار؟",
+      "update": "هل تريد تحديث إسناد المسار هذا؟",
+      "reassign": "هل تريد نقل هذا التلميذ إلى مسار آخر؟",
+      "unassign": "هل تريد إزالة هذا التلميذ من المسار؟",
+      "unassignAt": "هل تريد إزالة هذا التلميذ من المسار في هذا التاريخ؟"
+    },
+    "vehicleAssignments": {
+      "create": "هل تريد إنشاء إسناد المركبة هذا؟",
+      "assignDriver": "هل تريد إسناد هذا السائق إلى المركبة؟",
+      "update": "هل تريد تحديث إسناد المركبة هذا؟",
+      "unassign": "هل تريد إنهاء إسناد المركبة هذا؟"
+    },
+    "vehicles": {
+      "create": "هل تريد إضافة هذه المركبة؟",
+      "update": "هل تريد تحديث هذه المركبة؟"
+    },
+    "zones": {
+      "create": "هل تريد إنشاء هذه المنطقة؟",
+      "update": "هل تريد تحديث هذه المنطقة؟",
+      "delete": "هل تريد حذف هذه المنطقة؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "rollover": {
+      "preview": "هل تريد معاينة الانتقال إلى السنة الدراسية التالية؟",
+      "commit": "هل تريد الانتقال إلى السنة الدراسية التالية؟ سيؤدي ذلك إلى تغيير التسجيلات والأرصدة."
+    },
+    "credits": {
+      "apply": "هل تريد تطبيق هذا الرصيد على الرسوم؟"
+    },
+    "cycles": {
+      "create": "هل تريد إنشاء هذه المرحلة؟",
+      "update": "هل تريد تحديث هذه المرحلة؟",
+      "delete": "هل تريد حذف هذه المرحلة؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "classRoutines": {
+      "create": "هل تريد إنشاء هذا الجدول الزمني؟"
+    }
   },
   "announcements": {
     "errors": {
@@ -2034,16 +2251,115 @@
     }
   },
   "discipline": {
-    "table": { "student": "التلميذ", "classSection": "القسم / الشعبة", "violation": "المخالفة", "severity": "الخطورة", "status": "الحالة", "incidentAt": "تاريخ الواقعة", "action": "الإجراء", "reportedBy": "أبلغ عنها", "createdAt": "تاريخ الإنشاء", "updatedAt": "آخر تحديث", "resolvedBy": "عالجها", "resolvedAt": "تاريخ المعالجة", "count": "{{count}} سجلات انضباط" },
-    "filters": { "search": "ابحث بالاسم أو الرمز أو الوصف...", "category": "تصفية حسب الفئة", "severity": "تصفية حسب الخطورة", "status": "تصفية حسب الحالة" },
-    "form": { "incidentDetails": "تفاصيل المخالفة", "student": "التلميذ", "studentPlaceholder": "اختر تلميذاً", "studentSearch": "ابحث عن تلميذ...", "noStudents": "لا يوجد تلاميذ نشطون", "incidentDate": "تاريخ الواقعة", "incidentTime": "وقت الواقعة", "category": "الفئة", "severity": "الخطورة", "location": "المكان", "locationPlaceholder": "أين وقعت؟", "description": "الوصف", "descriptionPlaceholder": "صف الوقائع بوضوح...", "actionType": "الإجراء التأديبي", "actionNote": "تفاصيل الإجراء", "actionNotePlaceholder": "تفاصيل اختيارية عن الإجراء...", "resolutionNote": "ملاحظة المعالجة", "resolutionNotePlaceholder": "اشرح كيف تمت معالجة الواقعة..." },
-    "categories": { "classroom_disruption": "إخلال بالنظام داخل الفصل", "disrespect": "قلة احترام", "bullying": "تنمر", "fighting": "شجار", "cheating": "غش", "vandalism": "تخريب", "uniform_violation": "مخالفة الزي", "device_misuse": "سوء استعمال جهاز", "prohibited_item": "غرض محظور", "other": "أخرى" },
-    "severity": { "low": "منخفضة", "medium": "متوسطة", "high": "مرتفعة", "critical": "حرجة" },
-    "status": { "open": "مفتوحة", "resolved": "تمت المعالجة" },
-    "actions": { "verbal_warning": "إنذار شفهي", "written_warning": "إنذار كتابي", "detention": "احتجاز مدرسي", "counseling": "إرشاد", "parent_meeting": "اجتماع مع ولي الأمر", "suspension": "توقيف", "other": "أخرى" },
-    "dialogs": { "createTitle": "إضافة مخالفة", "createButton": "إضافة مخالفة", "viewTitle": "تفاصيل المخالفة", "editTitle": "تعديل المخالفة", "updateButton": "تحديث", "deleteButton": "حذف", "resolveTitle": "معالجة المخالفة", "resolveDescription": "سجّل الإجراء التأديبي وملخص المعالجة.", "resolveButton": "معالجة", "resolutionTitle": "المعالجة", "reopenTitle": "إعادة فتح المخالفة", "reopenDescription": "إعادة الفتح تعيد السجل إلى الحالة المفتوحة.", "reopenWarning": "سيتم مسح الإجراء والمعالجة الحاليين لأن سجل التغييرات غير متاح في هذا الإصدار.", "reopenButton": "إعادة الفتح" },
-    "success": { "retrieved": "تم جلب سجلات الانضباط", "created": "تم إنشاء المخالفة", "updated": "تم تحديث المخالفة", "resolved": "تمت معالجة المخالفة", "reopened": "تمت إعادة فتح المخالفة", "deleted": "تم حذف المخالفة" },
-    "errors": { "notFound": "سجل الانضباط غير موجود", "studentNotFound": "التلميذ غير موجود", "outsideSelectedYear": "تاريخ الحادثة خارج السنة الدراسية المحددة", "notPlacedOnDate": "لم يكن التلميذ مسجلاً في قسم وشعبة في ذلك التاريخ", "teacherStudentForbidden": "أنت غير مكلّف بشعبة هذا التلميذ", "recordForbidden": "لا يمكنك الوصول إلى هذا السجل", "recordNotOpen": "لا يمكن تعديل أو معالجة إلا المخالفات المفتوحة", "recordNotResolved": "لا يمكن إعادة فتح إلا المخالفات المعالجة", "adminRequired": "صلاحية المدير مطلوبة", "invalidIncidentDate": "تاريخ الواقعة غير صالح", "futureIncidentDate": "لا يمكن أن يكون تاريخ الواقعة في المستقبل" }
+    "table": {
+      "student": "التلميذ",
+      "classSection": "القسم / الشعبة",
+      "violation": "المخالفة",
+      "severity": "الخطورة",
+      "status": "الحالة",
+      "incidentAt": "تاريخ الواقعة",
+      "action": "الإجراء",
+      "reportedBy": "أبلغ عنها",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "آخر تحديث",
+      "resolvedBy": "عالجها",
+      "resolvedAt": "تاريخ المعالجة",
+      "count": "{{count}} سجلات انضباط"
+    },
+    "filters": {
+      "search": "ابحث بالاسم أو الرمز أو الوصف...",
+      "category": "تصفية حسب الفئة",
+      "severity": "تصفية حسب الخطورة",
+      "status": "تصفية حسب الحالة"
+    },
+    "form": {
+      "incidentDetails": "تفاصيل المخالفة",
+      "student": "التلميذ",
+      "studentPlaceholder": "اختر تلميذاً",
+      "studentSearch": "ابحث عن تلميذ...",
+      "noStudents": "لا يوجد تلاميذ نشطون",
+      "incidentDate": "تاريخ الواقعة",
+      "incidentTime": "وقت الواقعة",
+      "category": "الفئة",
+      "severity": "الخطورة",
+      "location": "المكان",
+      "locationPlaceholder": "أين وقعت؟",
+      "description": "الوصف",
+      "descriptionPlaceholder": "صف الوقائع بوضوح...",
+      "actionType": "الإجراء التأديبي",
+      "actionNote": "تفاصيل الإجراء",
+      "actionNotePlaceholder": "تفاصيل اختيارية عن الإجراء...",
+      "resolutionNote": "ملاحظة المعالجة",
+      "resolutionNotePlaceholder": "اشرح كيف تمت معالجة الواقعة..."
+    },
+    "categories": {
+      "classroom_disruption": "إخلال بالنظام داخل الفصل",
+      "disrespect": "قلة احترام",
+      "bullying": "تنمر",
+      "fighting": "شجار",
+      "cheating": "غش",
+      "vandalism": "تخريب",
+      "uniform_violation": "مخالفة الزي",
+      "device_misuse": "سوء استعمال جهاز",
+      "prohibited_item": "غرض محظور",
+      "other": "أخرى"
+    },
+    "severity": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "مرتفعة",
+      "critical": "حرجة"
+    },
+    "status": {
+      "open": "مفتوحة",
+      "resolved": "تمت المعالجة"
+    },
+    "actions": {
+      "verbal_warning": "إنذار شفهي",
+      "written_warning": "إنذار كتابي",
+      "detention": "احتجاز مدرسي",
+      "counseling": "إرشاد",
+      "parent_meeting": "اجتماع مع ولي الأمر",
+      "suspension": "توقيف",
+      "other": "أخرى"
+    },
+    "dialogs": {
+      "createTitle": "إضافة مخالفة",
+      "createButton": "إضافة مخالفة",
+      "viewTitle": "تفاصيل المخالفة",
+      "editTitle": "تعديل المخالفة",
+      "updateButton": "تحديث",
+      "deleteButton": "حذف",
+      "resolveTitle": "معالجة المخالفة",
+      "resolveDescription": "سجّل الإجراء التأديبي وملخص المعالجة.",
+      "resolveButton": "معالجة",
+      "resolutionTitle": "المعالجة",
+      "reopenTitle": "إعادة فتح المخالفة",
+      "reopenDescription": "إعادة الفتح تعيد السجل إلى الحالة المفتوحة.",
+      "reopenWarning": "سيتم مسح الإجراء والمعالجة الحاليين لأن سجل التغييرات غير متاح في هذا الإصدار.",
+      "reopenButton": "إعادة الفتح"
+    },
+    "success": {
+      "retrieved": "تم جلب سجلات الانضباط",
+      "created": "تم إنشاء المخالفة",
+      "updated": "تم تحديث المخالفة",
+      "resolved": "تمت معالجة المخالفة",
+      "reopened": "تمت إعادة فتح المخالفة",
+      "deleted": "تم حذف المخالفة"
+    },
+    "errors": {
+      "notFound": "سجل الانضباط غير موجود",
+      "studentNotFound": "التلميذ غير موجود",
+      "outsideSelectedYear": "تاريخ الحادثة خارج السنة الدراسية المحددة",
+      "notPlacedOnDate": "لم يكن التلميذ مسجلاً في قسم وشعبة في ذلك التاريخ",
+      "teacherStudentForbidden": "أنت غير مكلّف بشعبة هذا التلميذ",
+      "recordForbidden": "لا يمكنك الوصول إلى هذا السجل",
+      "recordNotOpen": "لا يمكن تعديل أو معالجة إلا المخالفات المفتوحة",
+      "recordNotResolved": "لا يمكن إعادة فتح إلا المخالفات المعالجة",
+      "adminRequired": "صلاحية المدير مطلوبة",
+      "invalidIncidentDate": "تاريخ الواقعة غير صالح",
+      "futureIncidentDate": "لا يمكن أن يكون تاريخ الواقعة في المستقبل"
+    }
   },
   "classes": {
     "errors": {
@@ -2721,6 +3037,10 @@
         "attendancePercent": "نسبة الحضور {{percent}}٪",
         "assessment": "التقييم",
         "outstandingBalance": "الرصيد المتبقي",
+        "overdueAmount": "المبلغ المتأخر",
+        "viewAllAttendance": "عرض كل الحضور",
+        "viewAllGrades": "عرض كل النقط",
+        "viewAllEvents": "عرض كل الأحداث",
         "familyAccount": "حساب الأسرة",
         "paymentStatus": "حالة الدفع",
         "percentPaid": "تم دفع {{percent}}٪",
@@ -2779,7 +3099,6 @@
     "register": {
       "missing": "الناقص",
       "giveCustomer": "الباقي للزبون",
-      "selectHint": "اختر الأقساط المراد دفعها",
       "title": "الصندوق",
       "totalSelected": "المجموع المحدد",
       "cashReceived": "المبلغ المستلم",
@@ -2885,7 +3204,8 @@
       "receiptNumber": "رقم الإيصال",
       "status": "الحالة",
       "student": "التلميذ",
-      "transactionRef": "مرجع المعاملة"
+      "transactionRef": "مرجع المعاملة",
+      "studentCode": "رمز التلميذ"
     },
     "type": {
       "recurring": "متكرر",
@@ -2933,7 +3253,7 @@
       "reminded": "تم التذكير",
       "searchPlaceholder": "ابحث...",
       "studentsOverdue": "التلاميذ المتأخرون",
-        "studentsOverdueCount": "{{count}} تلميذ متأخر",
+      "studentsOverdueCount": "{{count}} تلميذ متأخر",
       "title": "العنوان",
       "toastReminded": "تم إرسال التذكير",
       "toastRemindedAll": "تم إرسال جميع التذكيرات",
@@ -3512,27 +3832,85 @@
       "saveParents": "حفظ أولياء الأمور",
       "alertsPlaceholder": "سيظهر محتوى التنبيهات هنا",
       "academicsPlaceholder": "سيظهر المحتوى الدراسي هنا",
-      "tabs": { "schoolYears": "السنوات الدراسية", "overview": "نظرة عامة", "attendance": "الحضور", "grades": "النقط", "fees": "الرسوم", "transport": "النقل", "alerts": "التنبيهات" },
-      "genders": { "M": "ذكر", "F": "أنثى", "Other": "آخر" },
-      "relationships": { "father": "الأب", "mother": "الأم", "guardian": "الوصي", "stepparent": "زوج/زوجة الوالد", "grandparent": "الجد/الجدة", "other": "آخر" },
-      "maritalStatuses": { "single": "أعزب", "married": "متزوج", "divorced": "مطلق", "widowed": "أرمل", "separated": "منفصل" },
+      "tabs": {
+        "schoolYears": "السنوات الدراسية",
+        "overview": "نظرة عامة",
+        "attendance": "الحضور",
+        "grades": "النقط",
+        "fees": "الرسوم",
+        "transport": "النقل",
+        "alerts": "التنبيهات"
+      },
+      "genders": {
+        "M": "ذكر",
+        "F": "أنثى",
+        "Other": "آخر"
+      },
+      "relationships": {
+        "father": "الأب",
+        "mother": "الأم",
+        "guardian": "الوصي",
+        "stepparent": "زوج/زوجة الوالد",
+        "grandparent": "الجد/الجدة",
+        "other": "آخر"
+      },
+      "maritalStatuses": {
+        "single": "أعزب",
+        "married": "متزوج",
+        "divorced": "مطلق",
+        "widowed": "أرمل",
+        "separated": "منفصل"
+      },
       "attendanceDetails": {
-        "date": "التاريخ", "status": "الحالة", "class": "القسم", "subject": "المادة", "notes": "ملاحظات", "daily": "يومي",
-        "present": "حاضر", "absent": "غائب", "late": "متأخر", "loading": "جار تحميل الحضور...", "noExceptions": "لا توجد غيابات أو حالات تأخر مسجلة"
+        "date": "التاريخ",
+        "status": "الحالة",
+        "class": "القسم",
+        "subject": "المادة",
+        "notes": "ملاحظات",
+        "daily": "يومي",
+        "present": "حاضر",
+        "absent": "غائب",
+        "late": "متأخر",
+        "loading": "جار تحميل الحضور...",
+        "noExceptions": "لا توجد غيابات أو حالات تأخر مسجلة"
       },
       "gradeDetails": {
-        "subject": "المادة", "assessment": "التقييم", "marks": "النقط", "marksFor": "نقطة {{assessment}}",
-        "feedback": "ملاحظة", "feedbackFor": "ملاحظة حول {{assessment}}", "result": "النتيجة", "graded": "تم التنقيط",
-        "pending": "قيد الانتظار", "missed": "فائت", "average": "المعدل", "averageShort": "المعدل",
-        "loading": "جار تحميل النقط...", "noneRecorded": "لا توجد نقط مسجلة"
+        "subject": "المادة",
+        "assessment": "التقييم",
+        "marks": "النقط",
+        "marksFor": "نقطة {{assessment}}",
+        "feedback": "ملاحظة",
+        "feedbackFor": "ملاحظة حول {{assessment}}",
+        "result": "النتيجة",
+        "graded": "تم التنقيط",
+        "pending": "قيد الانتظار",
+        "missed": "فائت",
+        "average": "المعدل",
+        "averageShort": "المعدل",
+        "loading": "جار تحميل النقط...",
+        "noneRecorded": "لا توجد نقط مسجلة"
       },
       "feeDetails": {
-        "fee": "الرسم", "paid": "مدفوع", "overdue": "متأخر", "partiallyPaid": "مدفوع جزئيا", "pending": "قيد الانتظار", "remaining": "المتبقي",
-        "installmentCount": "{{count}} قسط", "overdueCount": "{{count}} متأخر", "studentIdRequired": "معرف التلميذ مطلوب لعرض الرسوم.",
-        "noneAssigned": "لا توجد رسوم مخصصة لهذا التلميذ", "noneAssignedShort": "لا توجد رسوم مخصصة",
-        "noneAssignedHelp": "استخدم سجل الرسوم الكامل لتخصيص الرسوم أو إدارة المدفوعات.", "openRecord": "فتح سجل الرسوم",
-        "assignedCount": "{{count}} رسم مخصص", "collectedPercent": "تم تحصيل {{count}}٪", "overdueInstallmentCount": "{{count}} قسط متأخر",
-        "oldestUnpaid": "أقدم قسط غير مدفوع", "assignedFees": "الرسوم المخصصة", "feesWithInstallments": "{{fees}} رسم مع {{installments}} قسط إجمالا", "lastPayment": "آخر دفعة"
+        "fee": "الرسم",
+        "paid": "مدفوع",
+        "overdue": "متأخر",
+        "partiallyPaid": "مدفوع جزئيا",
+        "pending": "قيد الانتظار",
+        "remaining": "المتبقي",
+        "installmentCount": "{{count}} قسط",
+        "overdueCount": "{{count}} متأخر",
+        "studentIdRequired": "معرف التلميذ مطلوب لعرض الرسوم.",
+        "noneAssigned": "لا توجد رسوم مخصصة لهذا التلميذ",
+        "noneAssignedShort": "لا توجد رسوم مخصصة",
+        "noneAssignedHelp": "استخدم سجل الرسوم الكامل لتخصيص الرسوم أو إدارة المدفوعات.",
+        "openRecord": "فتح سجل الرسوم",
+        "assignedCount": "{{count}} رسم مخصص",
+        "collectedPercent": "تم تحصيل {{count}}٪",
+        "overdueInstallmentCount": "{{count}} قسط متأخر",
+        "oldestUnpaid": "أقدم قسط غير مدفوع",
+        "assignedFees": "الرسوم المخصصة",
+        "feesWithInstallments": "{{fees}} رسم مع {{installments}} قسط إجمالا",
+        "lastPayment": "آخر دفعة"
       }
     },
     "title": "العنوان"
@@ -3623,7 +4001,19 @@
     }
   },
   "teachers": {
-    "errors": { "hasAssignmentHistory": "لدى هذا المعلم تكليفات صفية في سنة دراسية. أزلها قبل حذف المعلم", "notFound": "الأستاذ غير موجود", "datedRosterUnreviewed": "تتطلب قوائم الأستاذ المؤرخة سجل إسنادات مُراجَعًا", "dateOutsideYear": "التاريخ خارج فترة السنة الدراسية", "assignmentNotFound": "الإسناد غير موجود", "classHasNoSections": "لا توجد أقسام في هذا الفصل", "phoneExists": "يوجد مسبقًا أستاذ بهذا الرقم الهاتفي", "notInSection": "الأستاذ لا يدرّس هذا القسم", "idExists": "هذا الأستاذ موجود مسبقًا", "cinExists": "يوجد مسبقًا أستاذ بهذا الرقم للبطاقة الوطنية", "emailExists": "يوجد مسبقًا أستاذ بهذا البريد الإلكتروني" },
+    "errors": {
+      "hasAssignmentHistory": "لدى هذا المعلم تكليفات صفية في سنة دراسية. أزلها قبل حذف المعلم",
+      "notFound": "الأستاذ غير موجود",
+      "datedRosterUnreviewed": "تتطلب قوائم الأستاذ المؤرخة سجل إسنادات مُراجَعًا",
+      "dateOutsideYear": "التاريخ خارج فترة السنة الدراسية",
+      "assignmentNotFound": "الإسناد غير موجود",
+      "classHasNoSections": "لا توجد أقسام في هذا الفصل",
+      "phoneExists": "يوجد مسبقًا أستاذ بهذا الرقم الهاتفي",
+      "notInSection": "الأستاذ لا يدرّس هذا القسم",
+      "idExists": "هذا الأستاذ موجود مسبقًا",
+      "cinExists": "يوجد مسبقًا أستاذ بهذا الرقم للبطاقة الوطنية",
+      "emailExists": "يوجد مسبقًا أستاذ بهذا البريد الإلكتروني"
+    },
     "subtitle": {
       "count": "{{count}} أستاذ إجمالاً"
     },
@@ -4194,13 +4584,68 @@
       "student": "التلميذ"
     },
     "form": {
-      "stepTitle": "النقل", "title": "النقل المدرسي", "description": "عيّن حافلة وحدد نقطة الركوب وراجع الرسوم الشهرية.", "usesTransport": "يستخدم النقل المدرسي", "chooseVehicle": "اختر حافلة", "chooseVehicleHint": "يمكن تعيين التلميذ فقط للحافلات النشطة التي تتوفر فيها مقاعد.", "vehicle": "الحافلة", "vehiclePlaceholder": "اختر حافلة متاحة", "searchVehicle": "ابحث عن حافلة...", "noVehicles": "لا توجد حافلات متاحة", "seatsAvailable": "مقاعد متاحة", "seatsLeft": "مقاعد متبقية", "driver": "السائق", "unassignedDriver": "لم يتم تعيين سائق", "occupancy": "الإشغال", "pickupLocation": "نقطة الركوب", "pickupPlaceholder": "أدخل عنوان ركوب التلميذ", "dropoffLocation": "نقطة النزول", "dropoffPlaceholder": "أدخل نقطة النزول بالمدرسة", "useHomeAddress": "استخدم عنوان المنزل", "startDate": "تاريخ بدء النقل", "notes": "ملاحظات النقل", "notesPlaceholder": "تعليمات الوصول أو ملاحظات الركوب...", "feePreview": "رسوم النقل", "monthlyBilling": "سيتم إنشاء الفوترة الشهرية تلقائياً", "missingFeeType": "قم بإعداد نوع رسوم نقل نشط قبل تعيين النقل.", "optionalTitle": "النقل اختياري", "optionalDescription": "فعّل النقل المدرسي لاختيار الحافلة وتحديد نقطة الركوب."
+      "stepTitle": "النقل",
+      "title": "النقل المدرسي",
+      "description": "عيّن حافلة وحدد نقطة الركوب وراجع الرسوم الشهرية.",
+      "usesTransport": "يستخدم النقل المدرسي",
+      "chooseVehicle": "اختر حافلة",
+      "chooseVehicleHint": "يمكن تعيين التلميذ فقط للحافلات النشطة التي تتوفر فيها مقاعد.",
+      "vehicle": "الحافلة",
+      "vehiclePlaceholder": "اختر حافلة متاحة",
+      "searchVehicle": "ابحث عن حافلة...",
+      "noVehicles": "لا توجد حافلات متاحة",
+      "seatsAvailable": "مقاعد متاحة",
+      "seatsLeft": "مقاعد متبقية",
+      "driver": "السائق",
+      "unassignedDriver": "لم يتم تعيين سائق",
+      "occupancy": "الإشغال",
+      "pickupLocation": "نقطة الركوب",
+      "pickupPlaceholder": "أدخل عنوان ركوب التلميذ",
+      "dropoffLocation": "نقطة النزول",
+      "dropoffPlaceholder": "أدخل نقطة النزول بالمدرسة",
+      "useHomeAddress": "استخدم عنوان المنزل",
+      "startDate": "تاريخ بدء النقل",
+      "notes": "ملاحظات النقل",
+      "notesPlaceholder": "تعليمات الوصول أو ملاحظات الركوب...",
+      "feePreview": "رسوم النقل",
+      "monthlyBilling": "سيتم إنشاء الفوترة الشهرية تلقائياً",
+      "missingFeeType": "قم بإعداد نوع رسوم نقل نشط قبل تعيين النقل.",
+      "optionalTitle": "النقل اختياري",
+      "optionalDescription": "فعّل النقل المدرسي لاختيار الحافلة وتحديد نقطة الركوب."
     },
     "location": {
-      "search": "ابحث عن عنوان", "chooseTitle": "اختر نقطة الركوب", "chooseOnMap": "اختر على الخريطة", "map": "الخريطة", "dragHint": "ابحث أو انقر على الخريطة أو اسحب العلامة لضبط الموقع.", "loadingMap": "جارٍ تحميل الخريطة...", "selectedLocation": "الموقع المحدد", "resolving": "جارٍ تحديد العنوان...", "noLocation": "لم يتم تحديد موقع", "confirm": "تأكيد الموقع", "pinSaved": "تم حفظ العلامة الدقيقة", "manualAllowed": "يمكن إدخال العنوان يدوياً", "unavailableTitle": "خرائط Google غير متاحة", "unavailableDescription": "تحقق من مفتاح Maps API وقيوده. يمكنك إغلاق النافذة وإدخال العنوان يدوياً."
+      "search": "ابحث عن عنوان",
+      "chooseTitle": "اختر نقطة الركوب",
+      "chooseOnMap": "اختر على الخريطة",
+      "map": "الخريطة",
+      "dragHint": "ابحث أو انقر على الخريطة أو اسحب العلامة لضبط الموقع.",
+      "loadingMap": "جارٍ تحميل الخريطة...",
+      "selectedLocation": "الموقع المحدد",
+      "resolving": "جارٍ تحديد العنوان...",
+      "noLocation": "لم يتم تحديد موقع",
+      "confirm": "تأكيد الموقع",
+      "pinSaved": "تم حفظ العلامة الدقيقة",
+      "manualAllowed": "يمكن إدخال العنوان يدوياً",
+      "unavailableTitle": "خرائط Google غير متاحة",
+      "unavailableDescription": "تحقق من مفتاح Maps API وقيوده. يمكنك إغلاق النافذة وإدخال العنوان يدوياً."
     },
     "profile": {
-      "assignTitle": "تعيين النقل المدرسي", "editTitle": "تعديل نقطة الركوب", "changeTitle": "تغيير الحافلة", "assign": "تعيين النقل", "active": "نشط", "noAssignment": "لا يوجد تعيين نقل نشط", "noAssignmentDescription": "عيّن التلميذ لحافلة متاحة وحدد نقطة الركوب.", "noPickup": "لم يتم تسجيل نقطة ركوب", "schoolDefault": "المدخل الرئيسي للمدرسة", "editPickup": "تعديل نقطة الركوب", "changeBus": "تغيير الحافلة", "unassignTitle": "إنهاء تعيين النقل", "unassignDescription": "ينهي هذا تعيين الحافلة النشط مع الحفاظ على سجل الرسوم والمدفوعات.", "unassign": "إلغاء التعيين", "unassigned": "تم إنهاء تعيين نقل التلميذ", "history": "سجل النقل"
+      "assignTitle": "تعيين النقل المدرسي",
+      "editTitle": "تعديل نقطة الركوب",
+      "changeTitle": "تغيير الحافلة",
+      "assign": "تعيين النقل",
+      "active": "نشط",
+      "noAssignment": "لا يوجد تعيين نقل نشط",
+      "noAssignmentDescription": "عيّن التلميذ لحافلة متاحة وحدد نقطة الركوب.",
+      "noPickup": "لم يتم تسجيل نقطة ركوب",
+      "schoolDefault": "المدخل الرئيسي للمدرسة",
+      "editPickup": "تعديل نقطة الركوب",
+      "changeBus": "تغيير الحافلة",
+      "unassignTitle": "إنهاء تعيين النقل",
+      "unassignDescription": "ينهي هذا تعيين الحافلة النشط مع الحفاظ على سجل الرسوم والمدفوعات.",
+      "unassign": "إلغاء التعيين",
+      "unassigned": "تم إنهاء تعيين نقل التلميذ",
+      "history": "سجل النقل"
     }
   },
   "staffScopes": {

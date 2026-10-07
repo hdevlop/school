@@ -1,0 +1,54 @@
+{
+  "stage": "Guard4 development coverage repair and benchmark support",
+  "classificationRequests": 0,
+  "schoolToolCalls": 0,
+  "jevEnabled": false,
+  "productionAcceptance": false,
+  "newPaidAllowanceAuthorized": false,
+  "newWordingApprovalRecorded": false,
+  "sourceAndArtifactSha256": {
+    "docs/evidence/chatbot-latency/jev-guard4-coverage-release-20261007.json": "b4b3fe878415c096db8b0854d7c6cfdd35582d8b60e2f5e2afc19944878134ea",
+    "docs/evidence/chatbot-latency/jev-stress304-guard4-proposal-20261007.json": "940d56aee4eaa804148aeb90be16abbf95f367f577c7ca7f9219ac10d5757b1e",
+    "docs/evidence/chatbot-latency/jev-guard4-coverage-results-20261007.md": "4a39d906889e2b832cefdc3f74b52aa10a18814a0a6fedcb2692d16798cfd39a",
+    "scripts/chatbot-jev-probe.mjs": "df2596cb35378e961545dc098a72789e793265712be0c73e8b731ae270bc2def",
+    "scripts/chatbot-jev-resume.mjs": "e595d0dac955ce533dfb8ff6c035c9c2a41c88f792dab9caa20b8f531be6b916",
+    "scripts/chatbot-jev-query-guard-v4.mjs": "9d20b99e25d5529c95fae239b7188309678f31e0352c951e7150f144312a541d",
+    "scripts/chatbot-jev-offline-safety-study.mjs": "bb1fdd59b0b6191cda5bcb839ac14d86146a9139a0a946b1a3b50dabe5a67ada",
+    "scripts/tests/chatbot-jev-probe.test.mjs": "78887b2643c31c6dfedf658408571fbaa0b6d8dd7dc19354481e47167caa04c3",
+    "scripts/tests/chatbot-jev-resume.test.mjs": "1052396508c7cf85cb3adcccea3de6f2fd4c5ad09641ae0f8f81cb0bdfaaaecd",
+    "scripts/tests/chatbot-jev-offline-safety-study.test.mjs": "72e99142f57c4eccab497d7b4bc30ac96c7f4a7d130783e108fb04bbbc1e201f",
+    "scripts/tests/chatbot-jev-guard4-probe.test.mjs": "1f7eea8a77f3feb689d444c7d0cde8718e88140118460bcf5e44a3a67a3b8943"
+  },
+  "productionAndPinsUnchanged": {
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": true,
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": true,
+    "packages/server/src/modules/chat/schoolReplyWrite.ts": true,
+    "package.json": true,
+    "bun.lock": true
+  },
+  "historicalRawReportsAndLabelsVerified": true,
+  "savedAcceptedAttemptsRetained": 284,
+  "additionalCorrectDeclines": 0,
+  "injectedWrongPairs": 6604,
+  "injectedWrongPairsUnblocked": 0,
+  "checks": {
+    "focusedTestsPassed": 112,
+    "focusedAssertions": 456,
+    "fullScriptSuitePassed": 496,
+    "fullScriptAssertions": 2845,
+    "fullScriptFiles": 40,
+    "lastTestOnlyChange": "Parameterize the mocked projection/source-hash CLI test for modes3 and4",
+    "postChangeMockedCLITestsPassed": 2,
+    "postChangeMockedCLIAssertions": 17,
+    "finalLintExitCode": 0,
+    "finalLintWarnings": 0,
+    "guard4OfflineCLIValidationPassed": true,
+    "localLinksVerified": 3,
+    "gitDiffWhitespaceExitCode": 0
+  },
+  "limitations": [
+    "Tuned synthetic development and fault evidence; not independently reviewed labels or untouched held-out pipeline accuracy",
+    "Virtual timing is not live chat latency",
+    "Guard4 is benchmark-only; published async package/full-chat and qualification gates remain open"
+  ]
+}

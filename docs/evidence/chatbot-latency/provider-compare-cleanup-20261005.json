@@ -1,0 +1,79 @@
+﻿{
+    "capturedAt":  "2026-10-05T16:13:01.3710972Z",
+    "servers":  [
+                    {
+                        "provider":  "cerebras",
+                        "port":  3102,
+                        "verifiedOwnedProcesses":  [
+                                                       {
+                                                           "pid":  2232,
+                                                           "parentPid":  3668,
+                                                           "createdAt":  "2026-10-05T15:46:00.4743390Z"
+                                                       },
+                                                       {
+                                                           "pid":  13760,
+                                                           "parentPid":  2232,
+                                                           "createdAt":  "2026-10-05T15:46:00.4978540Z"
+                                                       },
+                                                       {
+                                                           "pid":  13124,
+                                                           "parentPid":  13760,
+                                                           "createdAt":  "2026-10-05T15:46:00.5509670Z"
+                                                       },
+                                                       {
+                                                           "pid":  16052,
+                                                           "parentPid":  13124,
+                                                           "createdAt":  "2026-10-05T15:46:00.5767210Z"
+                                                       },
+                                                       {
+                                                           "pid":  3536,
+                                                           "parentPid":  16052,
+                                                           "createdAt":  "2026-10-05T15:46:00.9807870Z"
+                                                       }
+                                                   ],
+                        "remainingOwnedProcesses":  0,
+                        "remainingListeners":  0,
+                        "taskAppStopped":  true,
+                        "snapshotRetained":  true
+                    },
+                    {
+                        "provider":  "crusoe",
+                        "port":  3103,
+                        "verifiedOwnedProcesses":  [
+                                                       {
+                                                           "pid":  11288,
+                                                           "parentPid":  6452,
+                                                           "createdAt":  "2026-10-05T15:46:00.4904210Z"
+                                                       },
+                                                       {
+                                                           "pid":  10172,
+                                                           "parentPid":  11288,
+                                                           "createdAt":  "2026-10-05T15:46:00.5122950Z"
+                                                       },
+                                                       {
+                                                           "pid":  15840,
+                                                           "parentPid":  10172,
+                                                           "createdAt":  "2026-10-05T15:46:00.5598420Z"
+                                                       },
+                                                       {
+                                                           "pid":  19332,
+                                                           "parentPid":  15840,
+                                                           "createdAt":  "2026-10-05T15:46:00.5875300Z"
+                                                       },
+                                                       {
+                                                           "pid":  8304,
+                                                           "parentPid":  19332,
+                                                           "createdAt":  "2026-10-05T15:46:00.9884330Z"
+                                                       }
+                                                   ],
+                        "remainingOwnedProcesses":  0,
+                        "remainingListeners":  0,
+                        "taskAppStopped":  true,
+                        "snapshotRetained":  true
+                    }
+                ],
+    "bothTaskAppsStopped":  true,
+    "privateAuthHeadersRemoved":  true,
+    "unrelatedProcessesTouched":  false,
+    "productionRoutingChanged":  false
+}

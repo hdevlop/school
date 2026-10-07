@@ -1,0 +1,61 @@
+{
+  "authorization": "ok fix all bench and report",
+  "stage": "New bounded same-corpus regression benchmark after fixes",
+  "newAllowance": true,
+  "maxRequests": 100,
+  "budgetUsd": 0.02,
+  "requestReserveUsd": 0.00015,
+  "intervalMs": 2000,
+  "timeoutMs": 10000,
+  "repetitions": 1,
+  "acceptancePolicy": "core",
+  "gateThreshold": 0.8,
+  "intentWordingVersion": 3,
+  "writeWordingVersion": 3,
+  "queryGuardVersion": 3,
+  "connectionReuse": "off",
+  "retries": 0,
+  "corpus": "datasets/chatbot-latency/jev-fixes-regression100-20261007.json",
+  "corpusSha256": "3bfb0cec8c0c7c4a5f54e16014fae5b3934671313e41859443ce52854ecd993c",
+  "sourceSha256": {
+    "scripts/chatbot-jev-probe.mjs": "f35ae1f24bedcd8832ab8c5fe6e233e0d2a009754bd03f2d6f07e784362dbae5",
+    "scripts/chatbot-jev-resume.mjs": "c1a646c9a047368f3cb316006b49635a661cc1b881472c9b29eec124d6b98b5f",
+    "scripts/chatbot-budget.mjs": "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+    "scripts/chatbot-jev.mjs": "a24e40f3f6597569cb303c18005300117f671a29e3fe0b0a8a6a60c8941da199",
+    "scripts/chatbot-jev-accuracy.mjs": "0e12734405e53bdf99481927fbf1a9ba45cb9e8456b3bfe8c9bc48524ba8dce8",
+    "scripts/chatbot-jev-query-guard-v3.mjs": "772a8abcedf48c241a5872e29bfd9bfc34321f440a6af954c18d3bf352ba06cc",
+    "scripts/chatbot-jev-count-guard-v2.mjs": "5a5899c7b9a2afbbebc961587a7569b93c66fbac5d7d5ddcffa7ced81efb2460",
+    "scripts/chatbot-jev-count-guard.mjs": "1171a9f51d593e8b44fb9a0684a378c95d98438ed983546ea54bc5eda231e8ed",
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "6e0892406a4369dcb9cfc9d93761f1f1ef857ab0d0e63428c183acbb91e9feca",
+    "packages/server/src/modules/chat/schoolReplyWrite.ts": "311d68d3139aef8afca89b76757ad6a0490a9452a3ec60ec85499a60fd54d47f",
+    "packages/server/src/modules/chat/schoolListReplies.ts": "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153"
+  },
+  "validation": {
+    "mode": "same-corpus-regression",
+    "cases": 100,
+    "families": 50,
+    "operatorWorkflow": {
+      "workflow": "assistant-draft-operator-review",
+      "nativeAuthorshipRequired": false,
+      "languageReviewComplete": true,
+      "labels": "assistant-provisional",
+      "nativeReviewedCases": 0
+    },
+    "freshHeldout": false,
+    "productionAcceptance": false
+  },
+  "output": "docs/evidence/chatbot-latency/jev-fixes-regression100-run-20261007.json",
+  "controls": [
+    "All source checks/tests/build complete before dispatch; avoid concurrent builds/test load during timing",
+    "Each failed attempt consumes its slot; unknown costs remain reserved",
+    "Stop on provider 429 or budget exhaustion",
+    "Any new leg must preserve the source/corpus hashes and total 100-request/$0.02 limits"
+  ],
+  "limitations": [
+    "The previous 100-request allowance is consumed; this is a separate explicitly recorded recheck stage",
+    "Reusing spent questions cannot clear the 150 accepted-case/family gate or establish generalization",
+    "Classifier and template eligibility projections only; no School tools or full-chat benchmark",
+    "Fixed connection-reuse mode does not prove the network is stable or improve latency"
+  ]
+}

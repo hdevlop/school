@@ -1,0 +1,84 @@
+﻿{
+    "date":  "2026-10-05",
+    "localChecks":  {
+                        "command":  "bun test scripts/tests packages/server/tests/chat packages/server/tests/security/ChatReadOnlyTools.test.ts packages/server/tests/academicYears/ChatYearScope.test.ts",
+                        "passed":  354,
+                        "failed":  0,
+                        "assertions":  1077,
+                        "files":  24,
+                        "lint":  "passed",
+                        "beforePaidStagesTests":  353,
+                        "independentFrozenInstall":  "passed",
+                        "applicationTypechecksAndBuild":  "Previously passed for unchanged application/French hint; new edits are runner/parser/scorer scripts only. No new production build claimed.",
+                        "documentationLinks":  "passed",
+                        "gitDiffCheck":  "passed"
+                    },
+    "focusedLive":  {
+                        "completed":  6,
+                        "automaticPassed":  6,
+                        "assistantAccepted":  6,
+                        "verifiedFreshCache":  6,
+                        "correlatedDiagnostics":  6,
+                        "generationSteps":  12,
+                        "observedKeyIncreaseUsd":  0.000874260,
+                        "declaredEstimateUsd":  0.008311850,
+                        "firstTextP95Ms":  5229,
+                        "completionP95Ms":  7791,
+                        "scope":  "French lookup diagnostic, not full hybrid workload cost acceptance"
+                    },
+    "fullLive":  {
+                     "concurrency":  4,
+                     "completed":  60,
+                     "rawAutomaticPassed":  59,
+                     "assistantAccepted":  60,
+                     "originalGatesAccepted":  false,
+                     "firstTextP95Ms":  1854,
+                     "completionP95Ms":  1879,
+                     "timingGatesPassed":  true,
+                     "estimatedCostGatePassed":  true,
+                     "correlatedDiagnostics":  60,
+                     "templates":  48,
+                     "modelReplies":  12,
+                     "generationSteps":  18,
+                     "observedEmbeddingCache":  {
+                                                    "miss":  30,
+                                                    "hit":  30
+                                                },
+                     "cacheResetDuringOverlap":  false,
+                     "instanceAndResetStable":  true,
+                     "templateParityWithReviewedSerial":  48,
+                     "observedKeyIncreaseUsd":  0.012767300,
+                     "declaredEstimateUsd":  0.013036100,
+                     "rawFailure":  "greeting-fr repetition 1: shared French/Spanish nombre falsely scored as exclusively Spanish"
+                 },
+    "scorerFollowUp":  {
+                           "implementedAfterFrozenLiveRuns":  true,
+                           "sharedNombreCorrection":  true,
+                           "explicitEnglishStudentIdLabelCheck":  true,
+                           "offlineLanguageAuditChangedRows":  1,
+                           "historicalEnglishLabelStillRejected":  true,
+                           "rawReportsModified":  false,
+                           "paidCorrectedScorerRun":  "unrun"
+                       },
+    "scope":  {
+                  "outerRequestAllowancesConsumed":  66,
+                  "maximumClientEstimateAllowancesUsd":  0.35,
+                  "combinedObservedKeyIncreaseUsd":  0.013641560,
+                  "hardProviderCapMatchingRunAllowances":  false,
+                  "providerHostQueueRetryAttribution":  false,
+                  "latencyCausalityOrFixEstablished":  false,
+                  "pooledPercentiles":  false,
+                  "milestoneTruncations":  0,
+                  "paidRoleChats":  0,
+                  "paidExpansion":  "none",
+                  "deployment":  "none"
+              },
+    "cleanup":  {
+                    "evidence":  "stream-recheck-cleanup-20261005.json",
+                    "taskAppStopped":  true,
+                    "privateAuthHeadersRemoved":  true,
+                    "snapshotRetained":  true,
+                    "unrelatedProcessesTouched":  false
+                },
+    "completedAt":  "2026-10-05T15:24:03.9905537Z"
+}

@@ -1,0 +1,52 @@
+{
+    "clientDate":  "2026-10-06",
+    "capturedAtUtc":  "2026-10-06T15:39:42.2773624Z",
+    "scope":  "Offline preparation eligibility and readiness contract",
+    "liveProviderRequests":  0,
+    "liveLedgerReads":  0,
+    "liveSchoolToolCalls":  0,
+    "runtimeIntegrationImplemented":  false,
+    "jevEnabled":  false,
+    "B1Started":  false,
+    "actualNativeQuestions":  0,
+    "actualNativeReviews":  0,
+    "productionAcceptance":  false,
+    "contextFlagsAuthenticatedByThisReference":  false,
+    "losingAttemptAccountingImplemented":  false,
+    "checks":  [
+                   {
+                       "assertions":  237,
+                       "exitCode":  0,
+                       "command":  "bun test scripts/tests/chatbot-reply-readiness.test.mjs",
+                       "testsPassed":  17
+                   },
+                   {
+                       "assertions":  1688,
+                       "clientEntries":  289,
+                       "exitCode":  0,
+                       "testsPassed":  346,
+                       "command":  "bun run test:boundaries",
+                       "workspaceFiles":  1279,
+                       "testsFailed":  0
+                   },
+                   {
+                       "command":  "bun run lint",
+                       "exitCode":  0
+                   },
+                   {
+                       "command":  "app source import check",
+                       "noReferenceImportsFound":  true
+                   }
+               ],
+    "sourceSha256":  {
+                         "scripts/chatbot-reply-readiness.mjs":  "a95e49d3f97f626fd40985b1b3404705064f6ac7cae17a7a8e3dc8416b92b62c",
+                         "scripts/tests/chatbot-reply-readiness.test.mjs":  "9583ae486e0bea8b58410c76cbdd981111aa242de04c8d7f09b70658e5cdaa9d",
+                         "datasets/chatbot-latency/jev-native-collection.json":  "9ed6f9c7b84ae09d677de7b0a8aaf180673e35eabf43ae2b90b9eb1bc8fbd125"
+                     },
+    "limitations":  [
+                        "Fake-clock reference, not measured app latency",
+                        "Server must derive eligibility; flags are not authentication",
+                        "No published async hook or terminal attempt accounting",
+                        "Fresh actual native questions and independent review still required"
+                    ]
+}

@@ -216,6 +216,17 @@ export class TeacherRepository {
     return teacher;
   }
 
+  // The record without the year's assignments, for reads outside the year
+  // scope such as the teacher dashboard.
+  async getOwnedRecord(id: string) {
+    const [teacher] = await this.db.select(teacherSelect).from(teachers)
+      .innerJoin(staff, eq(teachers.staffId, staff.id))
+      .leftJoin(users, eq(staff.userId, users.id))
+      .where(and(this.ownedWhere(), eq(teachers.id, id)))
+      .limit(1);
+    return teacher;
+  }
+
   // The students placed that year in the teacher's assigned sections of that
   // year's classes; with `onDate`, those enrolled and placed there that day.
   // The assignment's class and the student's placement must both belong to

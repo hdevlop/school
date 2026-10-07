@@ -1,0 +1,119 @@
+{
+  "capturedAt": "2026-10-05T15:08:45.332Z",
+  "runId": "83fd1a4c",
+  "target": "http://localhost:3102",
+  "mode": "read-only-preflight",
+  "corpusSha256": "79a349d6dfd16793a6ed71889a55fcb81dbfb63d15a694141aebbff854bc5069",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "languages": null,
+  "plannedRequests": 0,
+  "maxRequests": 0,
+  "concurrency": 1,
+  "cacheMode": "uncontrolled",
+  "timeoutMs": 120000,
+  "textStored": false,
+  "pricingMode": "fallback",
+  "captureProviderUsage": true,
+  "declaredPricing": null,
+  "packagePins": {
+    "najm-rag": "3.2.0",
+    "najm-chatbot": "3.3.0",
+    "najm-mcp": "2.2.5",
+    "ai": "6.0.275"
+  },
+  "outcome": "preflight_ok",
+  "limitations": [
+    "API-client timings including local transport; not browser submit-to-render.",
+    "First byte is not first answer text; firstTextMs is the first non-empty text-delta.",
+    "Small samples are smoke coverage, not p95 estimates; cache and Ollama state are not controlled.",
+    "Admin account only; teacher, parent and student behavior is not measured.",
+    "Server timings come from najm-chatbot diagnostics (>= 2.0.5) matched by x-request-id; modelAndStreamMs is derived, not measured."
+  ],
+  "requests": [
+    {
+      "path": "/api/health/status",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 20
+    },
+    {
+      "path": "/api/auth/login",
+      "method": "POST",
+      "httpStatus": 200,
+      "elapsedMs": 117
+    },
+    {
+      "path": "/api/ai-settings",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 16
+    },
+    {
+      "path": "/api/chat-benchmark/provider-usage",
+      "method": "GET",
+      "httpStatus": 200,
+      "elapsedMs": 286
+    }
+  ],
+  "samples": [],
+  "gitHead": null,
+  "workingTreeDirty": false,
+  "configSourceSha256": {
+    "index.ts": "6ef7ce63dad1ec715eacdbabfdd99dca1c43cb84d570e6a5a6859be80357a248",
+    "ragConfig.ts": "e6b8549b4e11a1784cdecb50a40c2b66bcd026a06636f42ac84c6bebca1af193",
+    "chatbotConfig.ts": "ca610e93debb99edbca01e603146d13367f4c7118becc4144dec0ff79a11ae72",
+    "chatbotSystemPrompt.ts": "a6f9ce099faabbf2eb737de6b51ea1a9d2033447a830747861e3f3eb4f6fa0a5"
+  },
+  "scoringSourceSha256": {
+    "chatbot-scoring.mjs": "3e7930ab72221c82588b60694b7939f647e74719033859d885df514fd1ee8f01",
+    "chatbot-facts.mjs": "eeea0b8a026ec30ecb99ecede14c776c46097aaca2a273c3111d9497d1adb482",
+    "chatbot-language.mjs": "03416a3dc100f061acebd566cec4dd86f3c7c9ba9610c12a0b157cdc27329fdb",
+    "chatbot-claims.mjs": "9c3e65c84d82de078ac8529cf559787d0d5d0e05e4f418e1d8e24595ebaef5bf",
+    "chatbot-empty-reads.mjs": "093e0de71630e571691a8b15123e83868d57fc2c70891eaa7da868a0862a8e21"
+  },
+  "budgetSourceSha256": "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+  "chatContextSourceSha256": {
+    "SchoolChatContextProvider.ts": "7453131e09600bae572c79693c14f7a6de91f6c6a28657169cd909f89b28cd96",
+    "schoolReplyContext.ts": "9c416c7179c84a88153d67e02b85331634aed975bf0078fb0197e80e4e1cbb6d",
+    "schoolReplyTemplates.ts": "e480be31cb8aa4c4b217459a7cb847378d7076324d47e4dd353ce0af21042497",
+    "schoolListReplies.ts": "766f084b4bb5a0ffcc04f364cd2c2a19255fd253f63218d80547b1480a2ba153"
+  },
+  "conditions": {
+    "applicationCaches": "uncontrolled",
+    "embeddingModelResidency": "unverified",
+    "providerPromptCache": "uncontrolled",
+    "note": "Source hashes describe the checkout, not the effective running configuration. Query/knowledge resets only apply in fresh mode; embedding models are never unloaded."
+  },
+  "health": {
+    "checks": {
+      "cache": "ok",
+      "database": "ok"
+    },
+    "service": "school",
+    "status": "ready",
+    "version": "0.1.0"
+  },
+  "provider": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "baseUrl": "https://openrouter.ai/api/v1",
+    "enabled": true,
+    "hasKey": true
+  },
+  "comparison": null,
+  "providerUsageBefore": {
+    "capturedAt": "2026-10-05T15:08:45.833Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "usage": 0.778623334,
+    "limit": 50,
+    "limitRemaining": 49.221376666
+  },
+  "readyForChat": true,
+  "estimatedBudget": null
+}

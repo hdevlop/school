@@ -1,0 +1,41 @@
+{
+    "clientDate":  "2026-10-06",
+    "scope":  "Offline assistant-draft pipeline audit",
+    "providerCalls":  0,
+    "schoolToolCalls":  0,
+    "productionAcceptance":  false,
+    "checks":  [
+                   {
+                       "command":  "bun test scripts/tests/chatbot-jev-draft-audit.test.mjs",
+                       "exitCode":  0,
+                       "testsPassed":  4,
+                       "assertions":  17
+                   },
+                   {
+                       "command":  "bun run lint",
+                       "exitCode":  0
+                   },
+                   {
+                       "command":  "bun run test:boundaries",
+                       "exitCode":  0,
+                       "testsPassed":  355,
+                       "testsFailed":  0,
+                       "assertions":  2444,
+                       "workspaceFiles":  1280,
+                       "clientEntries":  290
+                   },
+                   {
+                       "command":  "artifact hashes, documentation links, whitespace",
+                       "exitCode":  0
+                   }
+               ],
+    "sourceSha256":  {
+                         "scripts/chatbot-jev-draft-audit.mjs":  "5aedef7ba947ae6de41093b54fe8a66d0efc57e93a4403b76c6df3c3dd823ebf",
+                         "scripts/tests/chatbot-jev-draft-audit.test.mjs":  "b77fc72cde740fc45cd1b78fb034337059d7840c43ea39e796de43982faa9b6e",
+                         "docs/evidence/chatbot-latency/jev-draft-coverage-20261006.json":  "6d661da0c98ebac111ae4a901b67c3c92ed121dee8ca360b734d6dbdffc71750",
+                         "docs/evidence/chatbot-latency/jev-draft-coverage-20261006.md":  "5a28cf44c098ea41895d1c069b8ed304c4b57d2597e8ca270acbe569bf38bf54"
+                     },
+    "corpusEdited":  false,
+    "provisionalLabelsEdited":  false,
+    "runtimeIntegrationChanged":  false
+}

@@ -14,6 +14,23 @@ export const TONE_CLASSES = {
 
 export type Tone = keyof typeof TONE_CLASSES;
 
+// Where the overview fits (the `fit` variant in globals.css), a card keeps its
+// row's height and scrolls its own body, so the page itself never scrolls.
+export const FILL_CARD = {
+  root: 'fit:min-h-0',
+  content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto',
+};
+
+// A card whose list scrolls in a NajmScroll: the body only lays the list out,
+// so the overlay scrollbar is the only one.
+export const SCROLL_CARD = {
+  root: 'fit:min-h-0',
+  content: 'fit:flex fit:min-h-0 fit:flex-1 fit:flex-col fit:overflow-hidden',
+};
+
+// The NajmScroll inside a SCROLL_CARD: it takes the height the card has left.
+export const SCROLL_LIST = 'fit:min-h-0 fit:flex-1';
+
 export function CardLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
     <NButton asChild variant="link" size="sm" className="h-auto p-0 text-xs font-medium lg:text-sm">

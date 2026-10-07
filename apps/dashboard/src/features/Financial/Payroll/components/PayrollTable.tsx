@@ -2,8 +2,8 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Banknote, BriefcaseBusiness, CalendarDays, CheckCircle2, Clock, HandCoins, ReceiptText, Timer, Undo2, UserRound, Wallet, SearchX } from 'lucide-react';
-import { Badge, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { Banknote, BriefcaseBusiness, CalendarDays, CheckCircle2, Clock, HandCoins, ReceiptText, Timer, Undo2, Wallet, SearchX } from 'lucide-react';
+import { Badge, NAvatar, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
 import { useTranslation } from 'najm-i18n/react';
@@ -13,6 +13,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { payrollPeriods, shownPayrollPeriod } from '@/features/Financial/Payroll/config/payrollPeriods';
+import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
 
 const calculateStaffPay = (member) => {
   if (member?.compensationMode === 'hourly') {
@@ -93,6 +94,9 @@ const PayrollTable = () => {
         staffId: member.id,
         name: slip?.staffName ?? member.name ?? '-',
         role: slip?.staffRole ?? member.role,
+        gender: member.gender,
+        image: member.image,
+        updatedAt: member.updatedAt,
         contractType: normalizeEmploymentType(member?.employmentType),
         payrollPeriod: formatPeriod(effectivePeriod, locale),
         paymentAmount: Number(slip?.netAmount ?? calculateStaffPay(member)),
@@ -111,6 +115,9 @@ const PayrollTable = () => {
         staffId: slip.staffId,
         name: slip.staffName,
         role: slip.staffRole,
+        gender: slip.staff?.gender,
+        image: slip.staff?.image,
+        updatedAt: slip.staff?.updatedAt,
         contractType: normalizeEmploymentType(slip.staff?.employmentType),
         payrollPeriod: formatPeriod(effectivePeriod, locale),
         paymentAmount: Number(slip.netAmount),
@@ -200,10 +207,12 @@ const PayrollTable = () => {
       header: t('payroll.table.staff'),
       enableSorting: true,
       cell: ({ row }) => (
-        <div className="flex items-center gap-2 font-medium text-slate-700">
-          <UserRound className="h-4 w-4 text-primary" />
-          {row.original.name || '-'}
-        </div>
+        <NAvatar
+          src={row.original.image || getStaffAvatar(row.original.role, row.original.gender)}
+          title={row.original.name || '-'}
+          size="sm"
+          version={row.original.updatedAt}
+        />
       ),
     },
     {

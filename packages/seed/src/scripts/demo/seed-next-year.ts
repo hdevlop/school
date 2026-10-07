@@ -1,10 +1,7 @@
 #!/usr/bin/env bun
 
 import { randomUUID } from 'crypto';
-import { eq } from 'drizzle-orm';
 import { defaultSchoolYearCalendar } from '@sms/contracts/academic-years';
-import { db } from '@sms/server/database';
-import { roles, users } from '@sms/server/database/schema';
 import {
   SettingsService,
   SettingsRepository,
@@ -37,15 +34,18 @@ import {
   MaintenanceService,
   DisciplineService,
   BehaviorRewardService,
+  ClassRoutineService,
   runWithResolvedYear,
 } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
 import { schoolSeedData, seedAcademicYear } from '../shared/school-seed-data';
 import { remapDemoAcademicReferences } from '../shared/demo-references';
 import { seedAttendance } from '../shared/seed-attendance';
+import { seedTimetables } from '../shared/seed-timetables';
 import {
   createPhaseRunner,
   createSequential,
+  findAdministratorId,
   normalizeDemoFees,
   seedConductRecords,
   seedPayments,
@@ -90,20 +90,10 @@ const selectedClassesData = schoolSeedData.classesData.filter((item) => classOrd
 const selectedClassIds = new Set(selectedClassesData.map((item) => item.id));
 const selectedSectionsData = schoolSeedData.sectionsData.filter((item) => selectedClassIds.has(item.classId));
 
-const seedPhase = createPhaseRunner(20);
+const seedPhase = createPhaseRunner(21);
 
 function pickRandom<T>(items: T[]): T {
   return items[Math.floor(Math.random() * items.length)];
-}
-
-// Enrollment, transition and rollover records name the account that made them.
-async function findAdministratorId() {
-  const [admin] = await db.select({ id: users.id }).from(users)
-    .innerJoin(roles, eq(users.roleId, roles.id))
-    .where(eq(roles.name, 'admin'))
-    .limit(1);
-  if (!admin) throw new Error('The history seed needs an administrator account: run bun seed admin first');
-  return admin.id;
 }
 
 runSeedTask(`history year ${targetLabel}`, async (server) => {
@@ -137,6 +127,7 @@ runSeedTask(`history year ${targetLabel}`, async (server) => {
   const alertService = await resolve(AlertService);
   const refuelService = await resolve(RefuelService);
   const maintenanceService = await resolve(MaintenanceService);
+  const classRoutineService = await resolve(ClassRoutineService);
   const disciplineService = await resolve(DisciplineService);
   const behaviorRewardService = await resolve(BehaviorRewardService);
 
@@ -352,7 +343,7 @@ runSeedTask(`history year ${targetLabel}`, async (server) => {
     console.log(`✅ Payments seeded (${payments.paymentCount} records, ${payments.skippedCount} students left unpaid)`);
 
     const createdExpenses = await seedPhase('Expenses', async () =>
-      expenseService.seedDemoExpenses((await expensesPack()).expenses));
+      expenseService.seedDemoExpenses((await expensesPack()).expenses, actorId));
     console.log(`✅ Expenses seeded (${createdExpenses.length} records)`);
 
     const payroll = await seedPhase('Payroll', () => seedPayroll(payrollService, payrollPack().payrollPeriods, staffIds));
@@ -413,6 +404,9 @@ runSeedTask(`history year ${targetLabel}`, async (server) => {
     const createdMaintenance = await seedPhase('Maintenance', () =>
       maintenanceService.seedDemoMaintenances(maintenancePack(vehicles).maintenance));
     console.log(`✅ Maintenance seeded (${createdMaintenance.length} records)`);
+
+    const timetables = await seedPhase('Timetables', () => seedTimetables(classRoutineService, sectionService));
+    console.log(`✅ Timetables seeded (${timetables.timetableCount} sections, ${timetables.lessonCount} lessons, ${timetables.skippedCount} left out)`);
 
     console.log(`\n✨ ${targetLabel} seeded as the continuation of ${sourceLabel}`);
   });

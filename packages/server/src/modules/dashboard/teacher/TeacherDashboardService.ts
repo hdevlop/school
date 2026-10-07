@@ -30,6 +30,7 @@ import {
 } from './teacherDashboardMetrics';
 
 type DashboardUser = { id: string; role?: string };
+type DashboardTeacher = NonNullable<Awaited<ReturnType<TeacherRepository['getByUserId']>>>;
 type WeekEntry = Awaited<ReturnType<TeacherDashboardRepository['getWeekEntries']>>[number];
 
 const ASSESSMENT_LIMIT = 4;
@@ -51,8 +52,46 @@ export class TeacherDashboardService {
   ) {}
 
   async getOverview(user: DashboardUser): Promise<TeacherDashboardOverview> {
-    const context = await this.context(user);
-    const { teacher, year, clock, assignments, scope } = context;
+    return this.overview(await this.ownTeacher(user), user.id, user.role);
+  }
+
+  /** The same page for one teacher, as a school-wide reader opens it. */
+  async getTeacherOverview(teacherId: string, viewer: DashboardUser): Promise<TeacherDashboardOverview> {
+    const teacher = await this.teacherById(teacherId);
+    return this.overview(teacher, teacher.userId ?? null, viewer.role);
+  }
+
+  async getAttendanceTrend(user: DashboardUser, range: TeacherTrendRange): Promise<TeacherAttendanceTrend> {
+    return this.attendanceTrend(await this.ownTeacher(user), user.role, range);
+  }
+
+  async getTeacherAttendanceTrend(
+    teacherId: string,
+    viewer: DashboardUser,
+    range: TeacherTrendRange,
+  ): Promise<TeacherAttendanceTrend> {
+    return this.attendanceTrend(await this.teacherById(teacherId), viewer.role, range);
+  }
+
+  private async ownTeacher(user: DashboardUser) {
+    return this.validator.ensureTeacherExists(await this.teacherRepository.getByUserId(user.id));
+  }
+
+  // Read through the teachers ownership rules, so a teacher reaches only
+  // their own record and parents and students none.
+  private async teacherById(teacherId: string) {
+    return this.validator.ensureTeacherExists(await this.teacherRepository.getOwnedRecord(teacherId));
+  }
+
+  // The unread count is the teacher's own inbox; a teacher without an
+  // account has none.
+  private async overview(
+    teacher: DashboardTeacher,
+    notificationUserId: string | null,
+    role: string | undefined,
+  ): Promise<TeacherDashboardOverview> {
+    const context = await this.context(teacher, role);
+    const { year, clock, assignments, scope } = context;
     const today = clock.date;
     const kpiFrom = addDays(today, 1 - KPI_ATTENDANCE_DAYS);
 
@@ -60,7 +99,7 @@ export class TeacherDashboardService {
       this.repository.getRegisters(scope, today, today),
       this.repository.getAttendanceByDay(scope, kpiFrom, today),
       this.repository.getAssessments(teacher.id, year.id),
-      this.notifications.unreadCount(user.id),
+      notificationUserId ? this.notifications.unreadCount(notificationUserId) : 0,
       this.repository.countOpenIncidents(scope.sectionIds),
     ]);
 
@@ -89,6 +128,14 @@ export class TeacherDashboardService {
         name: teacher.name,
         specialization: teacher.specialization ?? null,
         image: teacher.image ?? null,
+        email: teacher.email ?? null,
+        phone: teacher.phone ?? null,
+        address: teacher.address ?? null,
+        status: teacher.status ?? null,
+        hireDate: teacher.hireDate ? String(teacher.hireDate).slice(0, 10) : null,
+        yearsOfExperience: teacher.yearsOfExperience ?? null,
+        employmentType: teacher.employmentType ?? null,
+        workloadHours: teacher.workloadHours ?? null,
       },
       kpis: {
         totalStudents,
@@ -105,8 +152,12 @@ export class TeacherDashboardService {
     };
   }
 
-  async getAttendanceTrend(user: DashboardUser, range: TeacherTrendRange): Promise<TeacherAttendanceTrend> {
-    const { year, clock, scope, weekEntries } = await this.context(user);
+  private async attendanceTrend(
+    teacher: DashboardTeacher,
+    role: string | undefined,
+    range: TeacherTrendRange,
+  ): Promise<TeacherAttendanceTrend> {
+    const { year, clock, scope, weekEntries } = await this.context(teacher, role);
     const days = TEACHER_TREND_RANGE_DAYS[range];
     const to = clock.date;
     const from = addDays(to, 1 - days);
@@ -164,13 +215,11 @@ export class TeacherDashboardService {
     };
   }
 
-  /** The signed-in teacher, this year's assignments and weekly lessons. */
-  private async context(user: DashboardUser) {
-    const teacher = this.validator.ensureTeacherExists(await this.teacherRepository.getByUserId(user.id));
-
+  /** The teacher's assignments and weekly lessons in the active year. */
+  private async context(teacher: DashboardTeacher, role: string | undefined) {
     const [settings, year] = await Promise.all([
       this.settingsRepository.getPublicSettings(),
-      this.academicYears.resolve(undefined, user.role),
+      this.academicYears.resolve(undefined, role),
     ]);
     const [assignments, scheduleIds] = await Promise.all([
       this.repository.getAssignments(teacher.id, year.label),

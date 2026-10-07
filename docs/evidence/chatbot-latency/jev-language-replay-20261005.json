@@ -1,0 +1,553 @@
+{
+  "capturedAt": "2026-10-05T18:56:54.895Z",
+  "paidRequests": 0,
+  "decisionsReplayed": 1491,
+  "sourceSha256": {
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "dc36099b20e35f8357f8bd94c4eb320a6403f011615eb27f781aaf35d2d951f3",
+    "packages/server/src/config/chatbotConfig.ts": "55b2f99e0c929fc55bd24b86587ad6ae5b447530a81fb120f80dafd207c56c64",
+    "scripts/chatbot-reply-readiness.mjs": "5514310955469f6d1c3737fa70965b4af6929029cf603806283629a4cfd430d4",
+    "scripts/chatbot-jev-probe.mjs": "e0e535bc83c2d214feaca192bc624c93bdaaecdbdcc4634d58ee8ff5145e2022"
+  },
+  "scope": "Offline replay of saved normalized decisions against hash-matched retained corpus text. Hypothetical administrator web first turns with unknown histories excluded; no runtime readiness or tool execution measured.",
+  "reports": [
+    {
+      "name": "Stage A",
+      "corpusSha256MatchesOriginal": true,
+      "corpusSha256": "05a2654eddb1174165a5b40ce1ac4d8065529dc8174b3e5f8cd8f8b4ab7e3090",
+      "rawReportSha256": "951782b96fbec4654a5fa9c38f815ddf462f4a7d0e345a3b8dbf030598fbb5ba",
+      "rawReportModified": false,
+      "testSamples": 204,
+      "classifierAll": {
+        "samples": 204,
+        "errors": 0,
+        "topChoiceAccuracy": 0.9950980392156863,
+        "writeAccuracy": 1,
+        "accepted": 125,
+        "acceptedWrong": 0,
+        "precision": 1,
+        "coverage": 0.9259259259259259,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [],
+        "acceptedCases": 42,
+        "wrongCaseCount": 0,
+        "errorUpperBound95": 0.06884260784039486
+      },
+      "before": {
+        "afterLanguage": {
+          "samples": 123,
+          "errors": 0,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 66,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.9166666666666666,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 22,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.12730543165483876
+        },
+        "afterLanguageAndRegex": {
+          "samples": 120,
+          "errors": 0,
+          "topChoiceAccuracy": 1,
+          "writeAccuracy": 1,
+          "accepted": 63,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.9130434782608695,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 21,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.13294591102652342
+        }
+      },
+      "after": {
+        "afterLanguage": {
+          "samples": 159,
+          "errors": 0,
+          "topChoiceAccuracy": 0.9937106918238994,
+          "writeAccuracy": 1,
+          "accepted": 89,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.898989898989899,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 30,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.09503385285530419
+        },
+        "afterLanguageAndRegex": {
+          "samples": 156,
+          "errors": 0,
+          "topChoiceAccuracy": 0.9935897435897436,
+          "writeAccuracy": 1,
+          "accepted": 86,
+          "acceptedWrong": 0,
+          "precision": 1,
+          "coverage": 0.8958333333333334,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [],
+          "acceptedCases": 29,
+          "wrongCaseCount": 0,
+          "errorUpperBound95": 0.0981446276772957
+        }
+      },
+      "recovered": [
+        {
+          "id": "jev-fr-total-students",
+          "query": "Tu peux me dire le nombre total d'élèves ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-students-en-tout",
+          "query": "On a combien d'élèves en tout ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-profs",
+          "query": "Il y a combien de profs à l'école ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-who-absent",
+          "query": "Qui est absent aujourd'hui ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-next-exam",
+          "query": "C'est quand le prochain examen ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-add-teacher",
+          "query": "Ajoute un nouvel enseignant nommé Zzbench Qqtest.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-student-average",
+          "query": "Quelle est la moyenne de l'élève Zzbench Qqtest ?",
+          "detected": "fr",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev-fr-weather",
+          "query": "Quel temps fait-il demain à Rabat ?",
+          "detected": "fr",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev-ary-latn-absent",
+          "query": "chkoun ghayb lyoum?",
+          "detected": "ary",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev-ary-latn-next-exam",
+          "query": "imta l'examen jay?",
+          "detected": "ary",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-ary-latn-announcement",
+          "query": "zid wa7d l'annonce l les parents",
+          "detected": "ary",
+          "acceptedRepetitions": 2
+        },
+        {
+          "id": "jev-ary-latn-howto-add",
+          "query": "kifach nzid tilmid jdid?",
+          "detected": "ary",
+          "acceptedRepetitions": 0
+        }
+      ],
+      "stillSkipped": []
+    },
+    {
+      "name": "B0 failed gate",
+      "corpusSha256MatchesOriginal": true,
+      "corpusSha256": "23d098cf1cbdc4ef762726ec0ed79b252f5dd3a39ccb6708732135fdf60af9cf",
+      "rawReportSha256": "936aa48bf15db69f58d68d923342bda5fbcc65255ea8cd19bfe528c700bb1234",
+      "rawReportModified": false,
+      "testSamples": 759,
+      "classifierAll": {
+        "samples": 759,
+        "errors": 0,
+        "topChoiceAccuracy": 0.9262187088274044,
+        "writeAccuracy": 0.9578392621870883,
+        "accepted": 479,
+        "acceptedWrong": 1,
+        "precision": 0.9979123173277662,
+        "coverage": 0.8430335097001763,
+        "writeAnsweredAsRead": 0,
+        "readRefusedAsWrite": 0,
+        "wrongCases": [
+          "jev2-ary-needs-llm-2 -> upcoming_exams"
+        ],
+        "acceptedCases": 161,
+        "wrongCaseCount": 1,
+        "errorUpperBound95": null
+      },
+      "before": {
+        "afterLanguage": {
+          "samples": 519,
+          "errors": 0,
+          "topChoiceAccuracy": 0.9190751445086706,
+          "writeAccuracy": 0.9499036608863198,
+          "accepted": 311,
+          "acceptedWrong": 1,
+          "precision": 0.9967845659163987,
+          "coverage": 0.8201058201058201,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [
+            "jev2-ary-needs-llm-2 -> upcoming_exams"
+          ],
+          "acceptedCases": 105,
+          "wrongCaseCount": 1,
+          "errorUpperBound95": null
+        },
+        "afterLanguageAndRegex": {
+          "samples": 498,
+          "errors": 0,
+          "topChoiceAccuracy": 0.9176706827309237,
+          "writeAccuracy": 0.9477911646586346,
+          "accepted": 296,
+          "acceptedWrong": 1,
+          "precision": 0.9966216216216216,
+          "coverage": 0.8263305322128851,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [
+            "jev2-ary-needs-llm-2 -> upcoming_exams"
+          ],
+          "acceptedCases": 100,
+          "wrongCaseCount": 1,
+          "errorUpperBound95": null
+        }
+      },
+      "after": {
+        "afterLanguage": {
+          "samples": 624,
+          "errors": 0,
+          "topChoiceAccuracy": 0.9294871794871795,
+          "writeAccuracy": 0.9535256410256411,
+          "accepted": 392,
+          "acceptedWrong": 1,
+          "precision": 0.9974489795918368,
+          "coverage": 0.8408602150537634,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [
+            "jev2-ary-needs-llm-2 -> upcoming_exams"
+          ],
+          "acceptedCases": 132,
+          "wrongCaseCount": 1,
+          "errorUpperBound95": null
+        },
+        "afterLanguageAndRegex": {
+          "samples": 603,
+          "errors": 0,
+          "topChoiceAccuracy": 0.9286898839137645,
+          "writeAccuracy": 0.9519071310116086,
+          "accepted": 377,
+          "acceptedWrong": 1,
+          "precision": 0.9973474801061007,
+          "coverage": 0.8468468468468469,
+          "writeAnsweredAsRead": 0,
+          "readRefusedAsWrite": 0,
+          "wrongCases": [
+            "jev2-ary-needs-llm-2 -> upcoming_exams"
+          ],
+          "acceptedCases": 127,
+          "wrongCaseCount": 1,
+          "errorUpperBound95": null
+        }
+      },
+      "recovered": [
+        {
+          "id": "jev-fr-total-students",
+          "query": "Tu peux me dire le nombre total d'élèves ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-students-en-tout",
+          "query": "On a combien d'élèves en tout ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-profs",
+          "query": "Il y a combien de profs à l'école ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-who-absent",
+          "query": "Qui est absent aujourd'hui ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-next-exam",
+          "query": "C'est quand le prochain examen ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-add-teacher",
+          "query": "Ajoute un nouvel enseignant nommé Zzbench Qqtest.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-fr-student-average",
+          "query": "Quelle est la moyenne de l'élève Zzbench Qqtest ?",
+          "detected": "fr",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev-fr-weather",
+          "query": "Quel temps fait-il demain à Rabat ?",
+          "detected": "fr",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev-ary-latn-absent",
+          "query": "chkoun ghayb lyoum?",
+          "detected": "ary",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev-ary-latn-next-exam",
+          "query": "imta l'examen jay?",
+          "detected": "ary",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-ary-latn-announcement",
+          "query": "zid wa7d l'annonce l les parents",
+          "detected": "ary",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev-ary-latn-howto-add",
+          "query": "kifach nzid tilmid jdid?",
+          "detected": "ary",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev2-fr-small-talk-2",
+          "query": "Merci beaucoup, c'est parfait.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-small-talk-3",
+          "query": "Au revoir et bonne journée.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-small-talk-4",
+          "query": "Qu'est-ce que tu sais faire ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-small-talk-5",
+          "query": "Coucou, ça va ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-student-count-1",
+          "query": "Quel est l'effectif total de l'école ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-student-count-4",
+          "query": "J'aimerais connaître le nombre d'élèves.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-student-count-5",
+          "query": "Ça fait combien d'élèves au total ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-teacher-count-2",
+          "query": "Quel est le nombre total d'enseignants ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-teacher-count-4",
+          "query": "Dis-moi combien d'enseignants travaillent ici.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-teacher-count-5",
+          "query": "L'école a combien d'enseignants ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-student-and-teacher-count-3",
+          "query": "Effectif des élèves et des enseignants, s'il te plaît.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-attendance-today-2",
+          "query": "Qui manque aujourd'hui ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-attendance-today-4",
+          "query": "Est-ce qu'il y a des absents aujourd'hui ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-upcoming-exams-3",
+          "query": "Il y a des contrôles prévus bientôt ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-upcoming-exams-4",
+          "query": "Les prochains examens, c'est quand ?",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-write-request-1",
+          "query": "Marque Zzbench Qqtest comme présent.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-write-request-4",
+          "query": "Inscris un nouvel élève nommé Zzbench Qqtest.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-write-request-5",
+          "query": "Efface la note de Zzbench Qqtest.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-write-request-6",
+          "query": "Envoie un message à tous les parents pour dire que l'école ferme vendredi.",
+          "detected": "fr",
+          "acceptedRepetitions": 3
+        },
+        {
+          "id": "jev2-fr-needs-llm-5",
+          "query": "Quel est l'emploi du temps de la 6A ?",
+          "detected": "fr",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev2-fr-needs-llm-7",
+          "query": "Et les enseignants ?",
+          "detected": "fr",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev2-fr-needs-llm-12",
+          "query": "Écris-moi un poème sur l'école.",
+          "detected": "fr",
+          "acceptedRepetitions": 0
+        },
+        {
+          "id": "jev2-ary-latn-attendance-today-1",
+          "query": "chkoun li ghayb lyouma?",
+          "detected": "ary",
+          "acceptedRepetitions": 0
+        }
+      ],
+      "stillSkipped": [
+        {
+          "id": "jev2-ary-latn-small-talk-2",
+          "query": "chokran bzaf",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-small-talk-3",
+          "query": "bslama",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-small-talk-4",
+          "query": "chno t9der dir?",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-small-talk-5",
+          "query": "mrhba, labas?",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-student-count-5",
+          "query": "9dach mn tilmid had l3am?",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-upcoming-exams-3",
+          "query": "imta les contrôles jayin?",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-write-request-5",
+          "query": "sift message l ga3 les parents bli lmadrasa msdouda nhar jom3a",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-write-request-6",
+          "query": "7ayed le prof Zzbench Qqtest",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-needs-llm-4",
+          "query": "w les profs?",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-needs-llm-6",
+          "query": "kifach nsjel l'absence?",
+          "fixtureLanguage": "ary-latn"
+        },
+        {
+          "id": "jev2-ary-latn-needs-llm-7",
+          "query": "chkoun les parents li ma khlsouch?",
+          "fixtureLanguage": "ary-latn"
+        }
+      ]
+    }
+  ],
+  "remaining": "B0 accuracy gate remains failed. Runtime readiness race needs a supported published upgrade; this replay is not fresh held-out acceptance or measured answer latency."
+}

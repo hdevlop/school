@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "scope": "Complete Moroccan school corpus: all ten original scenarios in Darija, Modern Standard Arabic and French. Exact stored names exempt from language scoring; per-row exam/class facts required. Darija register checked heuristically.",
+  "version": 4,
+  "scope": "Complete Moroccan school corpus: all ten original scenarios in Darija, Modern Standard Arabic and French. Exact stored names exempt from language scoring; per-row exam/class facts and successful-empty attendance wording required. Darija register checked heuristically.",
   "role": "admin",
   "academicYear": "2026-2027",
   "factsCapturedAt": "2026-10-04T19:22:13.2364745Z",
@@ -170,6 +170,7 @@
       "language": "fr",
       "kind": "single-read",
       "query": "Affiche les présences des élèves aujourd'hui.",
+      "emptyResultTools": ["attendance_get_today_students", "attendance_get_today_all", "attendance_get_by_date", "attendance_get_all"],
       "expectedToolGroups": [
         [
           "attendance_get_today_students",
@@ -487,6 +488,7 @@
       "language": "ar",
       "kind": "single-read",
       "query": "اعرض حضور التلاميذ اليوم.",
+      "emptyResultTools": ["attendance_get_today_students", "attendance_get_today_all", "attendance_get_by_date", "attendance_get_all"],
       "expectedToolGroups": [
         [
           "attendance_get_today_students",
@@ -804,6 +806,7 @@
       "language": "ary",
       "kind": "single-read",
       "query": "وريني الحضور ديال التلاميذ اليوم.",
+      "emptyResultTools": ["attendance_get_today_students", "attendance_get_today_all", "attendance_get_by_date", "attendance_get_all"],
       "expectedToolGroups": [
         [
           "attendance_get_today_students",

@@ -1,0 +1,102 @@
+{
+  "stage": "Publish najm-chatbot 3.4.0, adopt registry release and commit School pending work",
+  "date": "2026-10-07",
+  "ownerAuthorization": "Publish, push Najm clean, update School, then commit/push all School changes",
+  "published": true,
+  "registry": {
+    "package": "najm-chatbot",
+    "version": "3.4.0",
+    "latest": "3.4.0",
+    "integrity": "sha512-xRxa5yDOzplvI0moFUFndyIsmIfKyIbWkceQ+6X5dqQ6qIdyXCI8wyaNyIQzpIoFIRK6mndQX/1ErKmmjrgnmQ==",
+    "shasum": "644f251ceb0f599420dbebd417530a87b77919b1",
+    "tarball": "https://registry.npmjs.org/najm-chatbot/-/najm-chatbot-3.4.0.tgz",
+    "sha256": "6c28898b5195d352edd839ca01deecff65f1bb7073e816f824455e21991a2b6f",
+    "registryBytesMatchCandidate": true,
+    "verifiedAt": "2026-10-07T18:05:35.088Z"
+  },
+  "najmSourceCommit": "1d79369af3d0b912a7e59c7a3472259a8c5e2a63",
+  "najmRemoteBranch": "origin/master",
+  "desktopNajmClean": true,
+  "schoolPins": {
+    "package.json": "3.4.0",
+    "apps/dashboard/package.json": "3.4.0",
+    "packages/server/package.json": "3.4.0"
+  },
+  "rootOverride": "$najm-chatbot",
+  "bunLockUpdated": true,
+  "installedPublicEntrySmoke": {
+    "publicRegistryEntry": "C:\\Users\\pc\\Desktop\\school\\node_modules\\najm-chatbot\\dist\\index.mjs",
+    "asyncWinnerVerified": true,
+    "modelCalls": 0,
+    "schoolDataOperations": 0
+  },
+  "checks": {
+    "rootTestCommandExit": 0,
+    "passingTestExecutions": 1825,
+    "rootTestGroups": 10,
+    "groupPassCounts": [
+      342,
+      2,
+      60,
+      13,
+      365,
+      22,
+      173,
+      47,
+      281,
+      520
+    ],
+    "note": "Counts are executions; some shared tests occur in more than one group.",
+    "lintExit": 0,
+    "typecheckExit": 0,
+    "productionBuildExit": 0,
+    "productionBuildDirectory": ".next-release-jev-20261007",
+    "i18nExit": 0,
+    "najmPinTests": {
+      "passed": 2,
+      "failed": 0,
+      "assertions": 45
+    },
+    "stagedWhitespaceExit": 0,
+    "stagedSchoolFiles": 588,
+    "corpusEvidenceStagedByteChecks": {
+      "files": 361,
+      "mismatches": 0
+    }
+  },
+  "additionalSeedCheck": {
+    "passed": 10,
+    "failed": 1,
+    "changedToHideFailure": false,
+    "failure": "Default demo payroll 114073 exceeded the test payroll cap 111160 (70% of generated recurring fees).",
+    "source": "packages/seed/src/scripts/demo/generator.test.ts:38",
+    "initialVersion": "3.3.0",
+    "note": "This extra seed check failed before dependency adoption. Salary rules and margin assertion were preserved."
+  },
+  "jevinSchool": "not integrated or enabled",
+  "newPaidClassificationRequests": 0,
+  "schoolLiveRecordOperations": 0,
+  "schoolBranch": "main",
+  "schoolRemote": "origin/main",
+  "schoolBaseCommit": "7dbecd7e00f0e8ed557d07d328115548334d340b",
+  "commitScope": "All current tracked modifications/deletions and non-ignored untracked School work, as requested.",
+  "localLogsDirectory": "C:\\Users\\pc\\AppData\\Local\\Temp\\school-jev-release-20261007-7e87beef",
+  "logSha256": {
+    "publish.log": "db4a30e61508e50bd757999900cae828abcc5d3a03ff4e92a5067065fc1f63f8",
+    "pack.log": "73cf90777d6fd09a7ec0ee745ad948d352e75c5e4b75bd0df711c3c3081f1c5d",
+    "published-3.4.0.json": "ba7fa9939925b3b97672045b45cb08be84d26e7bca081f32a95266c9faad4d51",
+    "school-registry-smoke.json": "09f55879d0e0df8a7765009fd5acd2f624fc4ba62fb2bfb2d74811b98a9478ac",
+    "school-tests-3.4.0.log": "272b4762c2f00ff2d59d7ff87c42aa8b35db453b8742017f78f76512406e57f6",
+    "school-typecheck-3.4.0.log": "296317c2fcd5c97da15b6c69535721a6693099a2b177f8abfda8e4b7d0f53ab3",
+    "school-lint.log": "9c1c44404aed4d11644c8137709c91c819fb57057875c2d8057933d342eff6f3",
+    "school-i18n.log": "b0b71f63f9371bff33412e029963cfeefe41b86efed3fd8b3c6076576665cd35",
+    "school-build-3.4.0.log": "c16d4f4457f44bae73b2acc85452c7c31fc275cc73990a3853e01bca50dc6c67",
+    "school-seed-tests.log": "cc835a28a112c6fe0c0b4e82a99e1638a090a13180092e722e3ff9cab5782fb8"
+  },
+  "followup": [
+    "Implement trusted School eligibility and classifier adapter default off.",
+    "Resolve the pending demo payroll-margin test without weakening its assertion.",
+    "Prepare a bounded paired synthetic full-chat benchmark; classification p95/coverage gates remain unmet."
+  ],
+  "corpusEvidenceLineEndings": ".gitattributes disables conversion for frozen corpora/evidence so recorded byte hashes survive checkout."
+}

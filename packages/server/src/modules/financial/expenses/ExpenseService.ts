@@ -238,13 +238,28 @@ export class ExpenseService {
   }
   // ========== SEED METHOD ==========
 
-  async seedDemoExpenses(expensesData) {
+  // `create` always records a pending expense; a demo expense then goes through
+  // the same approval and payment steps a user takes to reach its status.
+  async seedDemoExpenses(expensesData, actorId: string) {
     const createdExpenses = [];
 
     for (const expenseData of expensesData) {
       try {
-        const expense = await this.create(expenseData);
-        createdExpenses.push(expense);
+        const { id } = await this.create(expenseData, actorId);
+        const { status } = expenseData;
+        if (status === 'approved' || status === 'paid') await this.approve(id, actorId);
+        if (status === 'paid') {
+          await this.recordPayment(id, {
+            paymentMethod: expenseData.paymentMethod,
+            paymentDate: expenseData.paymentDate ?? expenseData.expenseDate,
+            checkNumber: expenseData.checkNumber,
+            transactionRef: expenseData.transactionRef,
+            notes: expenseData.notes,
+          }, actorId);
+        }
+        if (status === 'rejected') await this.reject(id, actorId, expenseData.rejectionReason);
+        if (status === 'cancelled') await this.update(id, { status }, actorId);
+        createdExpenses.push(await this.getById(id));
       } catch {
         continue;
       }

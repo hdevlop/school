@@ -7,6 +7,8 @@ import { useSearchParams } from 'next/navigation';
 import { NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { CalendarCheck, SearchX } from 'lucide-react';
 import RosterHeader from './RosterHeader';
+import RosterFilters from './RosterFilters';
+import { filterRoster } from '../config/filterRoster';
 import RosterCard from './RosterCard';
 import { useStudentAttendance } from '../hooks/useAttendance';
 import { useAttendanceRoster } from '../hooks/useAttendanceRoster';
@@ -52,9 +54,11 @@ function StudentAttendanceTableForYear() {
   const searchParams = useSearchParams();
   const requestedSectionId = searchParams.get('sectionId') ?? '';
   const requestedAssignmentId = searchParams.get('assignmentId') ?? '';
-  const [selectedClassId, setSelectedClassId] = useState(() => searchParams.get('classId') ?? '');
+  const [selectedClassId, setSelectedClassId] = useState(() => searchParams.get('classId') ?? 'all');
   const [selectedSectionId, setSelectedSectionId] = useState('');
   const [selectedAssignmentId, setSelectedAssignmentId] = useState('');
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState('');
   const isAllClasses = selectedClassId === 'all';
 
   const { data: sectionTeachersResponse, isLoading: isAssignmentsLoading } = useQuery({
@@ -93,7 +97,7 @@ function StudentAttendanceTableForYear() {
 
   const classOptions = useMemo(
     () => [
-      { value: 'all', label: t('common.all') },
+      { value: 'all', label: t('attendance.roster.allClasses') },
       ...(classes || []).map((cls) => ({ value: cls.id, label: cls.name })),
     ],
     [classes, t],
@@ -218,85 +222,98 @@ function StudentAttendanceTableForYear() {
     ),
     [roster.getStatus, roster.setStatus],
   );
+  const visibleStudents = useMemo(
+    () => filterRoster(filteredStudents, { search, status }, roster.getStatus),
+    [filteredStudents, search, status, roster.getStatus],
+  );
+  const resetFilters = () => {
+    setSelectedClassId('all');
+    setSearch('');
+    setStatus('');
+  };
+
   const filters = useMemo(
     () => [
       {
         name: 'class',
+        label: t('attendance.roster.class'),
         type: 'combobox',
-        showIcon: false,
-        placeholder: isClassesLoading ? 'Loading classes...' : t('attendance.roster.class'),
+        placeholder: isClassesLoading ? t('attendance.roster.loading') : t('attendance.roster.class'),
         value: selectedClassId,
         onChange: setSelectedClassId,
         options: classOptions,
         disabled: isClassesLoading || classOptions.length === 0,
-        className: 'w-full lg:w-32',
       },
       {
         name: 'section',
+        label: t('attendance.roster.section'),
         type: 'select',
-        showIcon: false,
         placeholder: isAllClasses
           ? t('common.all')
           : !selectedClassId
-            ? 'Select a class first'
+            ? t('attendance.roster.selectClass')
             : isSectionsLoading
-              ? 'Loading sections...'
+              ? t('attendance.roster.loading')
               : sectionOptions.length === 0
-                ? 'No sections'
+                ? t('attendance.roster.noSections')
                 : t('attendance.roster.section'),
         value: selectedSectionId,
         onChange: setSelectedSectionId,
         options: sectionOptions,
         disabled: isAllClasses || !selectedClassId || isSectionsLoading || sectionOptions.length === 0,
-        className: 'w-full lg:w-28',
       },
       ...(isDailyMode
         ? []
         : [{
             name: 'assignment',
+            label: t('attendance.roster.teacherSubject'),
             type: 'combobox',
-            showIcon: false,
             placeholder: !selectedSectionId
-              ? 'Select a section first'
+              ? t('attendance.roster.selectSection')
               : isAssignmentsLoading
-                ? 'Loading assignments...'
+                ? t('attendance.roster.loading')
                 : assignmentOptions.length === 0
-                  ? 'No teacher assignments'
-                  : 'Teacher & Subject',
+                  ? t('attendance.roster.noAssignments')
+                  : t('attendance.roster.teacherSubject'),
             value: selectedAssignmentId,
             onChange: setSelectedAssignmentId,
             options: assignmentOptions,
             disabled: !selectedSectionId || isAssignmentsLoading || assignmentOptions.length === 0,
-            className: 'w-full lg:w-48',
           }]),
       {
         name: 'date',
+        label: t('attendance.roster.date'),
         type: 'date',
         placeholder: t('attendance.roster.date'),
         value: roster.selectedDate,
         onChange: roster.goToDate,
-        className: 'w-full lg:w-40',
       },
       {
         name: 'name',
+        label: t('attendance.roster.search'),
+        value: search,
+        onChange: setSearch,
         placeholder: t('attendance.roster.searchPlaceholder'),
         type: 'text',
-        className: 'w-full lg:w-64',
       },
       {
         name: 'status',
+        label: t('attendance.roster.status'),
+        value: status,
+        onChange: setStatus,
         placeholder: t('attendance.roster.status'),
         type: 'select',
-        showIcon: false,
         options: [
+          { value: '', label: t('common.all') },
           { value: 'present', label: t('attendance.roster.present') },
           { value: 'absent', label: t('attendance.roster.absent') },
           { value: 'late', label: t('attendance.roster.late') },
         ],
-        className: 'w-full lg:w-32',
       },
     ],
     [
+      search,
+      status,
       roster.goToDate,
       roster.selectedDate,
       t,
@@ -318,20 +335,20 @@ function StudentAttendanceTableForYear() {
   const submitTitle = isAllClasses
     ? t('attendance.roster.submit')
     : !selectedSectionId
-      ? 'Select a section first'
+      ? t('attendance.roster.selectSection')
       : !isDailyMode && !selectedAssignmentId
-        ? 'Select a teacher & subject first'
+        ? t('attendance.errors.selectTeacherSubject')
         : t('attendance.roster.submit');
   const noDataText = isAllClasses
-    ? 'No students found.'
+    ? t('attendance.roster.noStudents')
     : selectedSectionId
-      ? 'No students found in the selected section.'
+      ? t('attendance.roster.noStudentsInSection')
       : selectedClassId
-        ? 'Select a section to start marking student attendance.'
-        : 'Select a class and section to start marking student attendance.';
+        ? t('attendance.roster.selectSection')
+        : t('attendance.roster.selectClass');
 
   return (
-    <div className="flex flex-col gap-2 h-full">
+    <div className="flex h-full min-h-0 flex-col gap-2">
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.studentAttendance')}
@@ -342,21 +359,26 @@ function StudentAttendanceTableForYear() {
         </NPageHeaderActions>
       </NPageHeader>
 
+      <RosterFilters
+        filters={filters}
+        onReset={resetFilters}
+        canReset={!isAllClasses || !!search || !!status}
+      >
+        <RosterHeader
+          hasChanges={roster.hasChanges}
+          isSubmitting={isSubmitting}
+          stats={roster.stats}
+          onSubmit={roster.handleSubmit}
+          canSubmit={canSubmit && filteredStudents.length > 0 && !isStudentsLoading}
+          submitTitle={submitTitle}
+        />
+      </RosterFilters>
+
       <NTable
         responsiveSkeleton
-        data={filteredStudents}
+        data={visibleStudents}
+        isFilteredEmpty={filteredStudents.length > 0 && visibleStudents.length === 0}
         columns={columns}
-        filters={filters}
-        headerSlot={
-          <RosterHeader
-            hasChanges={roster.hasChanges}
-            isSubmitting={isSubmitting}
-            stats={roster.stats}
-            onSubmit={roster.handleSubmit}
-            canSubmit={canSubmit}
-            submitTitle={submitTitle}
-          />
-        }
         loading={isStudentsLoading || isSectionsLoading || isClassesLoading}
         error={hasFailedToLoad(studentsError, filteredStudents) ? studentsError : null}
         renderError={(currentError) => (

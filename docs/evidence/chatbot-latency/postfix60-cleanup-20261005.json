@@ -1,0 +1,12 @@
+{
+    "capturedAt":  "2026-10-05T09:40:31.7145860Z",
+    "launcherPid":  10080,
+    "launcherIdentityVerifiedBeforeShutdown":  true,
+    "taskTreeShutdownInitiated":  true,
+    "launcherStillRunning":  false,
+    "port3102Listening":  false,
+    "snapshotProcessesRemaining":  0,
+    "snapshotRetained":  true,
+    "ollamaLeftRunning":  true,
+    "note":  "Shutdown began after launcher creation-time and descendant/port ownership verification. A parent exited during subsequent StartTime lookup; follow-up inventory confirmed no launcher, snapshot process or port listener remained."
+}

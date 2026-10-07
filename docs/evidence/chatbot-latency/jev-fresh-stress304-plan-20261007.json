@@ -1,0 +1,40 @@
+{
+  "status": "concrete-proposal-not-authorized-not-run",
+  "authorized": false,
+  "purpose": "Multilingual synthetic safety stress study; cannot qualify the 150-family accuracy gate",
+  "corpus": "datasets/chatbot-latency/jev-fresh-stress304-20261007.json",
+  "draftCorpusSha256": "cc43f22713c73380027c538e3c5fbc6537d76573ef0a1dec7c830847d958ec71",
+  "operatorWordingReview": "Pending actual feedback for this new batch; original 100-case approval does not transfer",
+  "model": "typesafe/jev-1.13",
+  "maxRequests": 304,
+  "repetitions": 1,
+  "budgetUsd": 0.05,
+  "requestReserveUsd": 0.00015,
+  "allSlotsReservationUsd": 0.0456,
+  "budgetInterpretation": "Client spending stop, not a provider invoice guarantee. Known costs count; unknown cost retains its reservation and stops dispatch. No retry or extra allowance from unused dollars.",
+  "paceMs": 2000,
+  "timeoutMs": 10000,
+  "retries": 0,
+  "writeWordingVersion": 3,
+  "queryGuardVersion": 3,
+  "confidenceThreshold": 0.8,
+  "acceptancePolicy": "core",
+  "connectionReuse": "off",
+  "transportReason": "Preserves the last regression transport profile. Metadata GET results alone cannot select the best authenticated Decisions POST transport.",
+  "classificationOnly": true,
+  "schoolToolCalls": 0,
+  "runtimeEnablement": false,
+  "beforeDispatch": [
+    "Record actual operator wording feedback and recompute approval/hash after any corrections",
+    "Require explicit approval of this new 304-request/$0.05 allowance",
+    "Repeat offline validation, freeze actual corpus and source hashes",
+    "Metadata-only key precheck; no builds or tests during the timing run"
+  ],
+  "reportRequirements": [
+    "Preserve every failed slot and every unknown-cost reserve",
+    "Report raw decisions separately from language, baseline and semantic guard projections",
+    "Report per-style results, provisional-label disagreements and write/read errors",
+    "Retain 61 semantic family groups; never claim 304 independent observations",
+    "Do not claim model-call savings, full-chat latency or deployment readiness"
+  ]
+}

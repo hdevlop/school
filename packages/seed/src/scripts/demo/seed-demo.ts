@@ -36,6 +36,7 @@ import {
   MaintenanceService,
   DisciplineService,
   BehaviorRewardService,
+  ClassRoutineService,
 } from '@sms/server/modules/seed';
 import rolesData from '../admin/data/roles.json';
 import { runSeedTask } from '../shared/run-seed';
@@ -44,10 +45,12 @@ import { prepareDemoYear } from '../shared/demo-year';
 import { remapDemoAcademicReferences } from '../shared/demo-references';
 import { getDemoResumeFrom } from '../shared/demo-resume';
 import { seedAttendance } from '../shared/seed-attendance';
+import { seedTimetables } from '../shared/seed-timetables';
 import {
   createPhaseRunner,
   createRequiredSequential,
   createSequential,
+  findAdministratorId,
   normalizeDemoFees,
   seedConductRecords,
   seedPayments,
@@ -123,7 +126,7 @@ const normalizedVehiclesData = vehicles.map((vehicle: any) => ({
 
 const uniqueFeesData = normalizeDemoFees(feesData);
 
-const TOTAL_SEED_PHASES = 29;
+const TOTAL_SEED_PHASES = 30;
 const seedPhase = createPhaseRunner(TOTAL_SEED_PHASES);
 // The history seed installs the school with its oldest year as the active one.
 const historyStart = process.argv.slice(2).includes('--history-start');
@@ -168,6 +171,7 @@ runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
   const maintenanceService = await server.container.resolve(MaintenanceService);
   const disciplineService = await server.container.resolve(DisciplineService);
   const behaviorRewardService = await server.container.resolve(BehaviorRewardService);
+  const classRoutineService = await server.container.resolve(ClassRoutineService);
 
   console.log('🌱 Starting school demo data seeding...');
 
@@ -324,7 +328,7 @@ runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
       );
 
       console.log('💸 Seeding expenses...');
-      const createdExpenses = await seedPhase('Expenses', () => expenseService.seedDemoExpenses(expensesData));
+      const createdExpenses = await seedPhase('Expenses', async () => expenseService.seedDemoExpenses(expensesData, await findAdministratorId()));
       console.log(`✅ Expenses seeded (${createdExpenses.length} records)`);
 
       console.log('🧾 Seeding payroll...');
@@ -388,6 +392,9 @@ runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
 
     const createdMaintenance = await seedPhase('Maintenance', () => maintenanceService.seedDemoMaintenances(maintenanceData));
     console.log(`✅ Maintenance seeded (${createdMaintenance.length} records)`);
+
+    const timetables = await seedPhase('Timetables', () => seedTimetables(classRoutineService, sectionService));
+    console.log(`✅ Timetables seeded (${timetables.timetableCount} sections, ${timetables.lessonCount} lessons, ${timetables.skippedCount} left out)`);
 
     console.log('\n✨ Demo seed completed successfully!');
   });

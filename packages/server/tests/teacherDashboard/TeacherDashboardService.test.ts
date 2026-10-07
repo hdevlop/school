@@ -91,6 +91,10 @@ function build(options: { mode?: 'daily' | 'per_class'; teacher?: unknown } = {}
       record('getByUserId', args);
       return 'teacher' in options ? options.teacher : { id: 't1', name: 'Sara Benali', specialization: 'Mathematics', image: null };
     },
+    getOwnedRecord: async (...args: unknown[]) => {
+      record('getOwnedRecord', args);
+      return 'teacher' in options ? options.teacher : { id: 't1', userId: 'teacher-user', name: 'Sara Benali', specialization: 'Mathematics', image: null };
+    },
   };
   const routineRepository = {
     getTeacherScheduleIds: async (...args: unknown[]) => { record('getTeacherScheduleIds', args); return ['sched-1', 'sched-2']; },
@@ -217,5 +221,51 @@ describe('teacher attendance trend', () => {
     // without one, e3 not started yet. e5's routine does not run on Mondays.
     expect(trend.sessionsScheduled).toBe(3);
     expect(trend.sessionsHeld).toBe(2);
+  });
+});
+
+describe("one teacher's dashboard opened from the teachers list", () => {
+  const admin = { id: 'admin-user', role: 'admin' };
+  let savedOverride: string | undefined;
+  beforeEach(() => { savedOverride = process.env.APP_BUSINESS_DATE; delete process.env.APP_BUSINESS_DATE; });
+  afterEach(() => {
+    if (savedOverride === undefined) delete process.env.APP_BUSINESS_DATE;
+    else process.env.APP_BUSINESS_DATE = savedOverride;
+  });
+
+  it("reads the teacher by id through ownership, never the viewer's own record", async () => {
+    const { service, calls } = build();
+    const overview = await service.getTeacherOverview('t1', admin);
+    expect(calls.getOwnedRecord).toEqual([['t1']]);
+    expect(calls.getByUserId).toBeUndefined();
+    expect(calls.resolve).toEqual([[undefined, 'admin']]);
+    expect(calls.getAssignments).toEqual([['t1', '2026-2027']]);
+    expect(overview.teacher.name).toBe('Sara Benali');
+  });
+
+  it("counts the teacher's unread notifications, not the viewer's", async () => {
+    const { service, calls } = build();
+    await service.getTeacherOverview('t1', admin);
+    expect(calls.unreadCount).toEqual([['teacher-user']]);
+  });
+
+  it('counts none for a teacher without an account', async () => {
+    const { service, calls } = build({ teacher: { id: 't1', userId: null, name: 'Sara Benali', image: null } });
+    const overview = await service.getTeacherOverview('t1', admin);
+    expect(calls.unreadCount).toBeUndefined();
+    expect(overview.kpis.unreadNotifications).toBe(0);
+  });
+
+  it('refuses a teacher the viewer cannot read', async () => {
+    const { service } = build({ teacher: undefined });
+    await expect(service.getTeacherOverview('t9', admin)).rejects.toThrow();
+    await expect(service.getTeacherAttendanceTrend('t9', admin, '7d')).rejects.toThrow();
+  });
+
+  it('builds the trend for that teacher', async () => {
+    const { service, calls } = build();
+    await service.getTeacherAttendanceTrend('t1', admin, '7d');
+    expect(calls.getOwnedRecord).toEqual([['t1']]);
+    expect(calls.getWeekEntries).toEqual([['t1', ['sched-1', 'sched-2']]]);
   });
 });

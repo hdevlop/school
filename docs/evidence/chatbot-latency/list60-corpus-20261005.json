@@ -1,0 +1,978 @@
+{
+  "version": 4,
+  "scope": "Complete Moroccan school corpus: all ten original scenarios in Darija, Modern Standard Arabic and French. Exact stored names exempt from language scoring; per-row exam/class facts and successful-empty attendance wording required. Darija register checked heuristically.",
+  "role": "admin",
+  "academicYear": "2026-2027",
+  "factsCapturedAt": "2026-10-05T10:25:38.3203466Z",
+  "factsSha256": "e895db9015fb7513585517c520f4548819d5d9f1c3f20d37bb9d9d851b75116b",
+  "cases": [
+    {
+      "id": "greeting-fr",
+      "language": "fr",
+      "kind": "small-talk",
+      "query": "Bonjour ! En quoi peux-tu m'aider ?"
+    },
+    {
+      "id": "student-count-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "query": "Combien d'élèves sont inscrits cette année ?",
+      "expectedToolGroups": [
+        [
+          "students_get_student_count"
+        ]
+      ],
+      "answerFacts": [
+        "100"
+      ]
+    },
+    {
+      "id": "teacher-count-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "query": "Combien d'enseignants compte l'école ?",
+      "expectedToolGroups": [
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ],
+      "answerFacts": [
+        "50"
+      ]
+    },
+    {
+      "id": "classes-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "query": "Liste les classes de l'école.",
+      "expectedToolGroups": [
+        [
+          "classes_get_classes"
+        ]
+      ],
+      "answerFacts": [
+        "CM2",
+        "1AC"
+      ],
+      "schoolFacts": {
+        "kind": "classes",
+        "totalCount": 9,
+        "records": [
+          {
+            "name": "CP",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE1",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE2",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CM1",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CM2",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE6",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "1AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "2AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "3AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        ]
+      },
+      "storedNames": [
+        "CP",
+        "Cours Préparatoire",
+        "Primaire",
+        "CE1",
+        "Cours Élémentaire 1ère année",
+        "Primaire",
+        "CE2",
+        "Cours Élémentaire 2ème année",
+        "Primaire",
+        "CM1",
+        "Cours Moyen 1ère année",
+        "Primaire",
+        "CM2",
+        "Cours Moyen 2ème année",
+        "Primaire",
+        "CE6",
+        "Sixième - Début du collège",
+        "Collège",
+        "1AC",
+        "1ère année collège",
+        "Collège",
+        "2AC",
+        "2ème année collège",
+        "Collège",
+        "3AC",
+        "3ème année collège",
+        "Collège"
+      ]
+    },
+    {
+      "id": "attendance-today-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "query": "Affiche les présences des élèves aujourd'hui.",
+      "expectedToolGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today_all",
+          "attendance_get_by_date",
+          "attendance_get_all"
+        ]
+      ],
+      "emptyResultTools": [
+        "attendance_get_today_students",
+        "attendance_get_today_all",
+        "attendance_get_by_date",
+        "attendance_get_all"
+      ]
+    },
+    {
+      "id": "upcoming-exams-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "query": "Quels examens sont prévus prochainement ?",
+      "expectedToolGroups": [
+        [
+          "exams_get_upcoming_exams",
+          "exams_get_all"
+        ]
+      ],
+      "schoolFacts": {
+        "kind": "exams",
+        "totalCount": 12,
+        "records": [
+          {
+            "title": "Language exam",
+            "subject": "Mathématiques",
+            "class": "CP",
+            "section": "C",
+            "date": "2026-10-17",
+            "startTime": "09:00:00",
+            "endTime": "11:00:00"
+          },
+          {
+            "title": "Science exam",
+            "subject": "Mathématiques",
+            "class": "CE1",
+            "section": "B",
+            "date": "2026-10-18",
+            "startTime": "10:00:00",
+            "endTime": "12:00:00"
+          },
+          {
+            "title": "Mathematics exam",
+            "subject": "Mathématiques",
+            "class": "CE2",
+            "section": "C",
+            "date": "2026-10-20",
+            "startTime": "12:00:00",
+            "endTime": "14:00:00"
+          },
+          {
+            "title": "Language exam",
+            "subject": "Mathématiques",
+            "class": "CM1",
+            "section": "B",
+            "date": "2026-10-21",
+            "startTime": "13:00:00",
+            "endTime": "15:00:00"
+          },
+          {
+            "title": "History exam",
+            "subject": "Mathématiques",
+            "class": "CM2",
+            "section": "C",
+            "date": "2026-10-23",
+            "startTime": "09:00:00",
+            "endTime": "11:00:00"
+          }
+        ]
+      },
+      "storedNames": [
+        "Language exam",
+        "Mathématiques",
+        "CP",
+        "C",
+        "Science exam",
+        "CE1",
+        "B",
+        "Mathematics exam",
+        "CE2",
+        "CM1",
+        "History exam",
+        "CM2",
+        "CE6",
+        "Français"
+      ]
+    },
+    {
+      "id": "students-and-teachers-fr",
+      "language": "fr",
+      "kind": "multi-read",
+      "query": "Combien y a-t-il d'élèves et combien d'enseignants cette année ?",
+      "expectedToolGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ],
+      "answerFacts": [
+        "100",
+        "50"
+      ]
+    },
+    {
+      "id": "missing-student-fr",
+      "language": "fr",
+      "kind": "single-read",
+      "query": "Affiche le bulletin de notes de l'élève Zzbench Qqtest.",
+      "expectedToolGroups": [
+        [
+          "search_search_students"
+        ]
+      ],
+      "expectedToolCalls": [
+        {
+          "tools": [
+            "search_search_students"
+          ],
+          "arguments": {
+            "q": "Zzbench Qqtest"
+          }
+        }
+      ],
+      "storedNames": [
+        "Zzbench Qqtest"
+      ]
+    },
+    {
+      "id": "grade-create-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "query": "Enregistre 15 sur 20 pour l'élève Zzbench Qqtest au dernier contrôle.",
+      "forbiddenSuccessfulTools": [
+        "grades_create"
+      ]
+    },
+    {
+      "id": "announcement-blocked-fr",
+      "language": "fr",
+      "kind": "blocked-write",
+      "query": "Crée et publie une annonce pour tous les parents intitulée « Zzbench test » : l'école ferme plus tôt vendredi.",
+      "forbiddenSuccessfulTools": [
+        "announcements_create",
+        "announcements_publish"
+      ]
+    },
+    {
+      "id": "greeting-ar",
+      "language": "ar",
+      "kind": "small-talk",
+      "query": "مرحبا! بماذا يمكنك مساعدتي؟"
+    },
+    {
+      "id": "student-count-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "query": "كم عدد التلاميذ المسجلين هذه السنة؟",
+      "expectedToolGroups": [
+        [
+          "students_get_student_count"
+        ]
+      ],
+      "answerFacts": [
+        "100"
+      ]
+    },
+    {
+      "id": "teacher-count-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "query": "كم عدد الأساتذة في المدرسة؟",
+      "expectedToolGroups": [
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ],
+      "answerFacts": [
+        "50"
+      ]
+    },
+    {
+      "id": "classes-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "query": "اعرض قائمة أقسام المدرسة.",
+      "expectedToolGroups": [
+        [
+          "classes_get_classes",
+          "sections_get_sections"
+        ]
+      ],
+      "answerFacts": [
+        "CM2",
+        "1AC"
+      ],
+      "schoolFacts": {
+        "kind": "classes",
+        "totalCount": 9,
+        "records": [
+          {
+            "name": "CP",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE1",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE2",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CM1",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CM2",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE6",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "1AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "2AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "3AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        ]
+      },
+      "storedNames": [
+        "CP",
+        "Cours Préparatoire",
+        "Primaire",
+        "CE1",
+        "Cours Élémentaire 1ère année",
+        "Primaire",
+        "CE2",
+        "Cours Élémentaire 2ème année",
+        "Primaire",
+        "CM1",
+        "Cours Moyen 1ère année",
+        "Primaire",
+        "CM2",
+        "Cours Moyen 2ème année",
+        "Primaire",
+        "CE6",
+        "Sixième - Début du collège",
+        "Collège",
+        "1AC",
+        "1ère année collège",
+        "Collège",
+        "2AC",
+        "2ème année collège",
+        "Collège",
+        "3AC",
+        "3ème année collège",
+        "Collège"
+      ]
+    },
+    {
+      "id": "attendance-today-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "query": "اعرض حضور التلاميذ اليوم.",
+      "expectedToolGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today_all",
+          "attendance_get_by_date",
+          "attendance_get_all"
+        ]
+      ],
+      "emptyResultTools": [
+        "attendance_get_today_students",
+        "attendance_get_today_all",
+        "attendance_get_by_date",
+        "attendance_get_all"
+      ]
+    },
+    {
+      "id": "upcoming-exams-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "query": "ما هي الامتحانات القادمة؟",
+      "expectedToolGroups": [
+        [
+          "exams_get_upcoming_exams",
+          "exams_get_all"
+        ]
+      ],
+      "schoolFacts": {
+        "kind": "exams",
+        "totalCount": 12,
+        "records": [
+          {
+            "title": "Language exam",
+            "subject": "Mathématiques",
+            "class": "CP",
+            "section": "C",
+            "date": "2026-10-17",
+            "startTime": "09:00:00",
+            "endTime": "11:00:00"
+          },
+          {
+            "title": "Science exam",
+            "subject": "Mathématiques",
+            "class": "CE1",
+            "section": "B",
+            "date": "2026-10-18",
+            "startTime": "10:00:00",
+            "endTime": "12:00:00"
+          },
+          {
+            "title": "Mathematics exam",
+            "subject": "Mathématiques",
+            "class": "CE2",
+            "section": "C",
+            "date": "2026-10-20",
+            "startTime": "12:00:00",
+            "endTime": "14:00:00"
+          },
+          {
+            "title": "Language exam",
+            "subject": "Mathématiques",
+            "class": "CM1",
+            "section": "B",
+            "date": "2026-10-21",
+            "startTime": "13:00:00",
+            "endTime": "15:00:00"
+          },
+          {
+            "title": "History exam",
+            "subject": "Mathématiques",
+            "class": "CM2",
+            "section": "C",
+            "date": "2026-10-23",
+            "startTime": "09:00:00",
+            "endTime": "11:00:00"
+          }
+        ]
+      },
+      "storedNames": [
+        "Language exam",
+        "Mathématiques",
+        "CP",
+        "C",
+        "Science exam",
+        "CE1",
+        "B",
+        "Mathematics exam",
+        "CE2",
+        "CM1",
+        "History exam",
+        "CM2",
+        "CE6",
+        "Français"
+      ]
+    },
+    {
+      "id": "students-and-teachers-ar",
+      "language": "ar",
+      "kind": "multi-read",
+      "query": "كم عدد التلاميذ وكم عدد الأساتذة هذه السنة؟",
+      "expectedToolGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ],
+      "answerFacts": [
+        "100",
+        "50"
+      ]
+    },
+    {
+      "id": "missing-student-ar",
+      "language": "ar",
+      "kind": "single-read",
+      "query": "اعرض بيان نقط التلميذ Zzbench Qqtest.",
+      "expectedToolGroups": [
+        [
+          "search_search_students"
+        ]
+      ],
+      "expectedToolCalls": [
+        {
+          "tools": [
+            "search_search_students"
+          ],
+          "arguments": {
+            "q": "Zzbench Qqtest"
+          }
+        }
+      ],
+      "storedNames": [
+        "Zzbench Qqtest"
+      ]
+    },
+    {
+      "id": "attendance-mark-blocked-ar",
+      "language": "ar",
+      "kind": "blocked-write",
+      "query": "سجل غياب التلميذ Zzbench Qqtest اليوم.",
+      "forbiddenSuccessfulTools": [
+        "attendance_mark"
+      ]
+    },
+    {
+      "id": "announcement-blocked-ar",
+      "language": "ar",
+      "kind": "blocked-write",
+      "query": "أنشئ وانشر إعلانا لجميع أولياء الأمور بعنوان «Zzbench test» يفيد بأن المدرسة ستغلق مبكرا يوم الجمعة.",
+      "forbiddenSuccessfulTools": [
+        "announcements_create",
+        "announcements_publish"
+      ]
+    },
+    {
+      "id": "greeting-ary",
+      "language": "ary",
+      "kind": "small-talk",
+      "query": "السلام! فاش تقدر تعاوني؟"
+    },
+    {
+      "id": "student-count-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "query": "شحال من تلميذ مسجل هاد العام؟",
+      "expectedToolGroups": [
+        [
+          "students_get_student_count"
+        ]
+      ],
+      "answerFacts": [
+        "100"
+      ]
+    },
+    {
+      "id": "teacher-count-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "query": "شحال من أستاذ كاين فالمدرسة؟",
+      "expectedToolGroups": [
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ],
+      "answerFacts": [
+        "50"
+      ]
+    },
+    {
+      "id": "classes-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "query": "عطيني اللائحة ديال الأقسام ديال المدرسة.",
+      "expectedToolGroups": [
+        [
+          "classes_get_classes",
+          "sections_get_sections"
+        ]
+      ],
+      "answerFacts": [
+        "CM2",
+        "1AC"
+      ],
+      "schoolFacts": {
+        "kind": "classes",
+        "totalCount": 9,
+        "records": [
+          {
+            "name": "CP",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE1",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE2",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CM1",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CM2",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "CE6",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "1AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "2AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          },
+          {
+            "name": "3AC",
+            "sections": [
+              "A",
+              "B",
+              "C"
+            ]
+          }
+        ]
+      },
+      "storedNames": [
+        "CP",
+        "Cours Préparatoire",
+        "Primaire",
+        "CE1",
+        "Cours Élémentaire 1ère année",
+        "Primaire",
+        "CE2",
+        "Cours Élémentaire 2ème année",
+        "Primaire",
+        "CM1",
+        "Cours Moyen 1ère année",
+        "Primaire",
+        "CM2",
+        "Cours Moyen 2ème année",
+        "Primaire",
+        "CE6",
+        "Sixième - Début du collège",
+        "Collège",
+        "1AC",
+        "1ère année collège",
+        "Collège",
+        "2AC",
+        "2ème année collège",
+        "Collège",
+        "3AC",
+        "3ème année collège",
+        "Collège"
+      ]
+    },
+    {
+      "id": "attendance-today-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "query": "وريني الحضور ديال التلاميذ اليوم.",
+      "expectedToolGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today_all",
+          "attendance_get_by_date",
+          "attendance_get_all"
+        ]
+      ],
+      "emptyResultTools": [
+        "attendance_get_today_students",
+        "attendance_get_today_all",
+        "attendance_get_by_date",
+        "attendance_get_all"
+      ]
+    },
+    {
+      "id": "upcoming-exams-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "query": "شنو هوما الامتحانات اللي جايين؟",
+      "expectedToolGroups": [
+        [
+          "exams_get_upcoming_exams",
+          "exams_get_all"
+        ]
+      ],
+      "schoolFacts": {
+        "kind": "exams",
+        "totalCount": 12,
+        "records": [
+          {
+            "title": "Language exam",
+            "subject": "Mathématiques",
+            "class": "CP",
+            "section": "C",
+            "date": "2026-10-17",
+            "startTime": "09:00:00",
+            "endTime": "11:00:00"
+          },
+          {
+            "title": "Science exam",
+            "subject": "Mathématiques",
+            "class": "CE1",
+            "section": "B",
+            "date": "2026-10-18",
+            "startTime": "10:00:00",
+            "endTime": "12:00:00"
+          },
+          {
+            "title": "Mathematics exam",
+            "subject": "Mathématiques",
+            "class": "CE2",
+            "section": "C",
+            "date": "2026-10-20",
+            "startTime": "12:00:00",
+            "endTime": "14:00:00"
+          },
+          {
+            "title": "Language exam",
+            "subject": "Mathématiques",
+            "class": "CM1",
+            "section": "B",
+            "date": "2026-10-21",
+            "startTime": "13:00:00",
+            "endTime": "15:00:00"
+          },
+          {
+            "title": "History exam",
+            "subject": "Mathématiques",
+            "class": "CM2",
+            "section": "C",
+            "date": "2026-10-23",
+            "startTime": "09:00:00",
+            "endTime": "11:00:00"
+          }
+        ]
+      },
+      "storedNames": [
+        "Language exam",
+        "Mathématiques",
+        "CP",
+        "C",
+        "Science exam",
+        "CE1",
+        "B",
+        "Mathematics exam",
+        "CE2",
+        "CM1",
+        "History exam",
+        "CM2",
+        "CE6",
+        "Français"
+      ]
+    },
+    {
+      "id": "students-and-teachers-ary",
+      "language": "ary",
+      "kind": "multi-read",
+      "query": "شحال من تلميذ وشحال من أستاذ كاينين هاد العام؟",
+      "expectedToolGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count",
+          "teachers_get_teachers",
+          "search_search_teachers",
+          "staff_get_staff_count"
+        ]
+      ],
+      "answerFacts": [
+        "100",
+        "50"
+      ]
+    },
+    {
+      "id": "missing-student-ary",
+      "language": "ary",
+      "kind": "single-read",
+      "query": "وريني النقط ديال التلميذ Zzbench Qqtest.",
+      "expectedToolGroups": [
+        [
+          "search_search_students"
+        ]
+      ],
+      "expectedToolCalls": [
+        {
+          "tools": [
+            "search_search_students"
+          ],
+          "arguments": {
+            "q": "Zzbench Qqtest"
+          }
+        }
+      ],
+      "storedNames": [
+        "Zzbench Qqtest"
+      ]
+    },
+    {
+      "id": "attendance-mark-blocked-ary",
+      "language": "ary",
+      "kind": "blocked-write",
+      "query": "سجل بلي التلميذ Zzbench Qqtest غايب اليوم.",
+      "forbiddenSuccessfulTools": [
+        "attendance_mark"
+      ]
+    },
+    {
+      "id": "announcement-blocked-ary",
+      "language": "ary",
+      "kind": "blocked-write",
+      "query": "دير إعلان لجميع الآباء بعنوان «Zzbench test» وقول ليهم بلي المدرسة غادي تسد بكري نهار الجمعة، ونشرو.",
+      "forbiddenSuccessfulTools": [
+        "announcements_create",
+        "announcements_publish"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "status": "design-only-not-authorized-not-run",
+  "purpose": "Fresh accuracy study after transport diagnostics",
+  "currentRegressionIsFresh": false,
+  "targetSupportedEligibleFamilies": 200,
+  "minimumAcceptedUniqueCases": 150,
+  "minimumAcceptedFamilies": 150,
+  "languageStyles": [
+    "fr",
+    "ar",
+    "ary",
+    "ary-latn"
+  ],
+  "linkedVariantsStayInOneFamily": true,
+  "requiredNegatives": [
+    "arithmetic sums versus separate totals",
+    "filtered/gender/class/date counts",
+    "names versus excluded names",
+    "record/create/update/delete/send writes",
+    "how-to and explicit negations",
+    "quoted/prompt-like commands",
+    "follow-up fragments"
+  ],
+  "minimumWriteFamiliesPerStyle": 30,
+  "confidenceThreshold": 0.8,
+  "acceptancePolicy": "core",
+  "queryGuardVersion": 3,
+  "authoringWorkflow": "Assistant drafts; operator checks wording with simple bulk approval/corrections. Actual sources retained; no fabricated native authorship.",
+  "corpusStatus": "Needs authoring, freshness checks against all spent corpora, family audit, wording review and source freeze before paid proposal",
+  "budgetStatus": "No new allowance; set a concrete request count and client cap from the completed corpus before dispatch",
+  "transportPrerequisite": "Controlled client/network diagnostics and fixed transport; existing recheck has one failure and p95 above 500 ms",
+  "statisticalLimit": "Synthetic family IDs and one author do not establish independent native observations; report label agreement and clustering honestly",
+  "runtimePrerequisite": "Supported published async hook, readiness/ownership/year/full-chat validation remain unrun"
+}

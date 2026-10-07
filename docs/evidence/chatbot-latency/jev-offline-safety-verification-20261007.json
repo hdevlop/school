@@ -1,0 +1,45 @@
+{
+  "purpose": "Offline guard and virtual readiness verification",
+  "providerCalls": 0,
+  "schoolToolCalls": 0,
+  "jevEnabled": false,
+  "productionAcceptance": false,
+  "artifactSha256": {
+    "docs/evidence/chatbot-latency/jev-offline-guard4-verified-study-20261007.json": "7a8ea168b1ce29e40956adae3ef610061e859372c87fbdf7c10ae4890a948a76",
+    "scripts/tests/chatbot-jev-offline-safety-study.test.mjs": "96678eaab8446b93774d08445ad5b6e3ea54a1c099fb71f6314d3c11605cd2f8",
+    "docs/architecture/jev-async-reply-contract.md": "1a66a28940a53a9aa20aaaf858d4f365ff049376a5b7c6d438d7f0eae5c871ba",
+    "docs/evidence/chatbot-latency/jev-offline-safety-and-readiness-20261007.md": "af9651bd509b06e1993d4ec737f0f7a74a5a0c23f931053f9a13c96e45a6c736"
+  },
+  "frameworkReferenceSha256": {
+    "C:/Users/pc/Desktop/najm/packages/najm-chatbot/package.json": "90bb9e939e8587ff4250094cf100915fbeafa0569b5e32e30807ab9474d77290",
+    "C:/Users/pc/Desktop/najm/packages/najm-chatbot/src/agent/replyPolicy.ts": "d5fcaebef5655e81a06fb6cca2c5c5c3c7f546f941faf287212a878d054562b9",
+    "C:/Users/pc/Desktop/najm/packages/najm-chatbot/src/agent/ChatAgent.ts": "fa453ec9e8de2d062d741f2ff883e0d1fd338b2ee9d4271901ec33df32abacca"
+  },
+  "referenceVersion": "3.3.0",
+  "previousProductionAndProbeSourcesUnchanged": true,
+  "sourceAndInputHashesVerified": true,
+  "observed": {
+    "v3UnblockedPairs": 227,
+    "v4UnblockedPairs": 0,
+    "regressionAcceptance": 33,
+    "maximumVirtualFallbackDelayMs": 0
+  },
+  "checks": {
+    "focusedTestsPassed": 82,
+    "assertions": 370,
+    "initialFocusedFailures": 3,
+    "initialCause": "Two missing ordinary French vocabulary entries caused two positive failures and one candidate-selection failure; corrected before final replay",
+    "finalLintExitCode": 0,
+    "finalLintWarnings": 0,
+    "localLinksVerified": 6,
+    "gitDiffWhitespaceExitCode": 0
+  },
+  "v4Adopted": false,
+  "wordingReview": "New 304-case review pending; no feedback fabricated",
+  "newPaidAllowanceAuthorized": false,
+  "remainingWork": [
+    "V4 coverage regression resolution and separate evaluation",
+    "Published async preparation hook",
+    "Paired full-chat readiness and terminal cost validation"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+    "capturedAt":  "2026-10-05T18:05:22.9635154Z",
+    "scope":  "Finding 2 spending-stop fix; offline assertions against the actual CLI with every fetch intercepted",
+    "paidRequests":  0,
+    "appCodeChanged":  false,
+    "frameworkCodeChanged":  false,
+    "jevRuntimeIntegration":  "off / not implemented",
+    "verification":  {
+                         "tests":  {
+                                       "command":  "bun test scripts/tests/chatbot-jev-probe.test.mjs scripts/tests/chatbot-jev.test.mjs scripts/tests/chatbot-budget.test.mjs",
+                                       "pass":  35,
+                                       "fail":  0,
+                                       "assertions":  353,
+                                       "newCliTests":  10
+                                   },
+                         "lint":  {
+                                      "command":  "bun run lint",
+                                      "exitCode":  0
+                                  },
+                         "corpusValidation":  {
+                                                  "command":  "bun scripts/chatbot-jev-probe.mjs --validate",
+                                                  "exitCode":  0,
+                                                  "cases":  361,
+                                                  "uniqueQueries":  361,
+                                                  "baselineMatches":  32,
+                                                  "note":  "Corpus is being expanded separately; this records the validation observed for this fix."
+                                              }
+                     },
+    "sourceSha256":  {
+                         "scripts/chatbot-jev-probe.mjs":  "d230619f9ab1498be9a9114a0edbcad1143cc89e26b316b7a7bbe1238dc9194b",
+                         "scripts/chatbot-budget.mjs":  "704790f93ab426b9f1bd7af75fef967a884f0890304c2bf63ea0190611f53250",
+                         "scripts/tests/chatbot-jev-probe.test.mjs":  "82d6b20670a7e2a64733157381305b08faac5056c5038cf05bd4360fd0b05c36",
+                         "scripts/chatbot-jev.mjs":  "d7ec8586eb785916bcfcd3643b295d798b46cd01c6bd7b873b9e235c34b88727",
+                         "scripts/tests/chatbot-jev.test.mjs":  "44285df3498403e79d977b3aa980303c7194506cc5eba818ae0ab993a5098f58"
+                     },
+    "originalMissingCostReproduction":  {
+                                            "evidenceKind":  "Assertions in chatbot-jev-probe.test.mjs, not paid usage",
+                                            "budgetUsd":  1E-06,
+                                            "requestReserveUsd":  1E-06,
+                                            "maxRequests":  3,
+                                            "plannedRequests":  3,
+                                            "simulatedDecisionCalls":  1,
+                                            "retainedReservationUsd":  1E-06,
+                                            "knownReportedCostUsd":  0,
+                                            "requestsWithUnknownCost":  1,
+                                            "costComplete":  false,
+                                            "stoppedReason":  "unknown_request_cost",
+                                            "exitCode":  1
+                                        },
+    "historicalEvidence":  {
+                               "originalMockSha256":  "f00705e50765767165cbcbc80e4f5cec64cbc36da7725c2759e4b9852d495937",
+                               "originalPaidProbeSha256":  "951782b96fbec4654a5fa9c38f815ddf462f4a7d0e345a3b8dbf030598fbb5ba",
+                               "originalMockModified":  false,
+                               "originalPaidProbeModified":  false
+                           },
+    "limit":  "Client reservations and spending stops do not enforce a provider billing cap",
+    "remaining":  [
+                      "Readiness race / fallback scheduling",
+                      "Language eligibility",
+                      "Abandoned routing terminal diagnostics",
+                      "Supported published runtime integration"
+                  ]
+}

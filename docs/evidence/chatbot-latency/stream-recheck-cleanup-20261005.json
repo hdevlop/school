@@ -1,0 +1,36 @@
+﻿{
+    "capturedAt":  "2026-10-05T15:20:35.9790101Z",
+    "verifiedOwnedProcesses":  [
+                                   {
+                                       "pid":  16880,
+                                       "parentPid":  8264,
+                                       "createdAt":  "2026-10-05T15:06:08.5979760Z"
+                                   },
+                                   {
+                                       "pid":  10676,
+                                       "parentPid":  16880,
+                                       "createdAt":  "2026-10-05T15:06:08.6110570Z"
+                                   },
+                                   {
+                                       "pid":  16488,
+                                       "parentPid":  10676,
+                                       "createdAt":  "2026-10-05T15:06:08.6554110Z"
+                                   },
+                                   {
+                                       "pid":  2228,
+                                       "parentPid":  16488,
+                                       "createdAt":  "2026-10-05T15:06:08.6694820Z"
+                                   },
+                                   {
+                                       "pid":  11288,
+                                       "parentPid":  2228,
+                                       "createdAt":  "2026-10-05T15:06:08.9083640Z"
+                                   }
+                               ],
+    "remainingOwnedProcesses":  0,
+    "remainingListeners":  0,
+    "taskAppStopped":  true,
+    "privateAuthHeadersRemoved":  true,
+    "snapshotRetained":  true,
+    "unrelatedProcessesTouched":  false
+}

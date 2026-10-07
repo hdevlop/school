@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
 import { NPageHeader, NPageHeaderActions, NTable, NTabs, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import GradesHeader from './GradesHeader';
+import GradeRosterCard from './GradeRosterCard';
+import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
 import { ClipboardList, FileText, GraduationCap, SearchX } from 'lucide-react';
 import { useGrades } from '../hooks/useGrades';
 import { useStudentsOnDate } from '@/features/Students/hooks/useStudents';
@@ -62,6 +64,7 @@ function GradesTableForYear() {
   const { user } = useAuth();
   const role = (user as any)?.role;
   const isAdminOrPrincipal = role === 'admin' || role === 'principal';
+  const isTeacher = role === 'teacher';
 
   const { grades, error: gradesError, submitGrades, isSubmittingBatch, isGradesLoading } = useGrades();
   const { classes, isClassesLoading } = useClasses();
@@ -84,27 +87,39 @@ function GradesTableForYear() {
   const [draft, setDraft] = useState<Record<string, { marksObtained?: any; status?: string; feedback?: string }>>({});
   const resetDraft = useCallback(() => setDraft({}), []);
 
+  // A teacher grades only what they teach: their own assignments narrow the
+  // class, section and subject choices. Other roles see every option.
+  const { data: ownOverview } = useTeacherOverview(undefined, isTeacher);
+  const ownAssignments = useMemo(() => {
+    if (!isTeacher) return null;
+    const self = (teachers || []).find((tc) => tc.id === ownOverview?.teacher.id);
+    return Array.isArray(self?.assignments) ? self.assignments : [];
+  }, [isTeacher, teachers, ownOverview]);
+
   const classOptions = useMemo(
-    () => (classes || []).map((c) => ({ value: c.id, label: c.name })),
-    [classes]
+    () => (classes || [])
+      .filter((c) => !ownAssignments || ownAssignments.some((a) => a.classId === c.id))
+      .map((c) => ({ value: c.id, label: c.name })),
+    [classes, ownAssignments]
   );
   const sectionOptions = useMemo(
     () => (sections || [])
       .filter((s) => !classId || s.classId === classId)
+      .filter((s) => !ownAssignments || ownAssignments.some((a) => a.classId === s.classId && a.sectionIds?.includes(s.id)))
       .map((s) => ({ value: s.id, label: s.name })),
-    [sections, classId]
+    [sections, classId, ownAssignments]
   );
 
   // Auto-select a default class (first one that has sections) on mount so the
   // roster is populated and NTable's filter header renders — matches the
   // Attendance roster flow instead of dead-ending on an empty table.
   useEffect(() => {
-    if (classId || isClassesLoading || !classes?.length) return;
-    const classWithSections = (classes || []).find((c) =>
-      (sections || []).some((s) => s.classId === c.id)
+    if (classId || isClassesLoading || !classOptions.length) return;
+    const classWithSections = classOptions.find((option) =>
+      (sections || []).some((s) => s.classId === option.value)
     );
-    setClassId((classWithSections ?? classes[0]).id);
-  }, [classes, sections, isClassesLoading, classId]);
+    setClassId((classWithSections ?? classOptions[0]).value);
+  }, [classOptions, sections, isClassesLoading, classId]);
 
   // Keep the selected section valid for the current class, falling back to the
   // first available section when the current choice no longer applies.
@@ -140,12 +155,25 @@ function GradesTableForYear() {
     resetDraft();
   }, [sectionId, sourceId, sourceType, resetDraft]);
   const subjectOptions = useMemo(
-    () => (subjects || []).map((s) => ({
-      value: s.id,
-      label: s.code || s.name,
-    })),
-    [subjects]
+    () => (subjects || [])
+      .filter((s) => !ownAssignments || ownAssignments.some((a) =>
+        (!classId || a.classId === classId)
+        && (!sectionId || a.sectionIds?.includes(sectionId))
+        && a.subjectIds?.includes(s.id)))
+      .map((s) => ({
+        value: s.id,
+        label: s.code || s.name,
+      })),
+    [subjects, ownAssignments, classId, sectionId]
   );
+
+  // A teacher opens on a subject they teach in the chosen section.
+  useEffect(() => {
+    if (!ownAssignments) return;
+    setSubjectId((current) =>
+      subjectOptions.some((option) => option.value === current) ? current : (subjectOptions[0]?.value ?? '')
+    );
+  }, [ownAssignments, subjectOptions]);
   const teacherOptions = useMemo(
     () => (teachers || [])
       .filter((tc) => teacherMatchesAcademicFilter(tc, { classId, sectionId, subjectId }))
@@ -351,6 +379,14 @@ function GradesTableForYear() {
   };
 
   const columns = useGradesTableColumns({ canEdit, onToggleStatus: handleStatusToggle });
+  const renderRosterCard = (props: any) => (
+    <GradeRosterCard {...props} canEdit={canEdit} onEdit={handleCellEdit} onToggleStatus={handleStatusToggle} />
+  );
+  // The server cannot know the screen width: offering cards only after mount
+  // keeps the first client render equal to the server's table, then phones
+  // switch to cards.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const rawFilters = useGradesTableFilters({
     classId, sectionId, subjectId, teacherId,
     // The filter row is the deliberate half: every change made here drops the
@@ -430,6 +466,7 @@ function GradesTableForYear() {
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'
+        renderCard={mounted ? renderRosterCard : undefined}
         dynamicHeight={true}
         renderEmpty={() => (
           <NEmptyState

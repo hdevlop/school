@@ -5,6 +5,17 @@ const classNames = ['Cours Préparatoire', 'Cours Élémentaire 1ère année', '
   '1ère année collège', 'Primaire', 'Collège', 'Primary', 'CP', 'CE1', 'CE2', 'CM1', 'CM2', 'CE6', '1AC'];
 
 describe('detectReplyLanguage', () => {
+  it('treats nombre as shared French/Spanish vocabulary without hiding foreign labels', () => {
+    const french = 'Bonjour ! Je peux rechercher les données de l’école : nombre d’élèves ou d’enseignants. Par exemple : « Quel est le nombre total d’élèves ? ».';
+    const spanish = 'Hay alumnos inscritos para este año escolar. Puedes buscar por nombre; confirma el nombre del alumno.';
+    expect(analyzeReplyLanguage(french, { expectedLanguage: 'fr' }).mixedLanguage).toBe(false);
+    expect(detectReplyLanguage(french)).toBe('fr');
+    expect(detectReplyLanguage(spanish)).toBe('es');
+    expect(analyzeReplyLanguage('Je n’ai trouvé aucun élève. Fournissez son identifiant (student ID).', { expectedLanguage: 'fr' }).foreignLanguages).toContain('en');
+    expect(analyzeReplyLanguage('Je n’ai trouvé aucun élève. Fournissez son identifiant (student ID).', { expectedLanguage: 'fr' }).mixedLanguage).toBe(true);
+    expect(analyzeReplyLanguage('Aucun élève nommé Student ID ne correspond à la recherche.', { expectedLanguage: 'fr', storedNames: ['Student ID'] }).mixedLanguage).toBe(false);
+    expect(analyzeReplyLanguage('Je n’ai trouvé aucun élève. Student records were not found.', { expectedLanguage: 'fr' }).mixedLanguage).toBe(true);
+  });
   // Replies the assistant gave in the 2026-10-03 model comparisons.
   it.each([
     ['There are **100 students** enrolled in the 2026‑2027 academic year.', 'en'],

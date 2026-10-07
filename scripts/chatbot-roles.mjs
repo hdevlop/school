@@ -9,41 +9,71 @@
  * forbidden student's id, full name, or a parent's phone number. The reply may
  * repeat a name the user typed.
  *
- * Accounts come from the local seed:demo database, read-only, and sign in with
- * the demo default password. Local app and database only; nothing is written
+ * Accounts come from private fixtures captured through internal MCP/REST, and
+ * sign in with the demo default password. Local app only; nothing is written
  * except chat sessions. Each run signs in four times (login rate limit: eight
  * per ten minutes).
  *
  *   bun --env-file=apps/dashboard/.env.local scripts/chatbot-roles.mjs \
+ *     --fixtures-file=<private API capture> --max-requests=12 \
+ *     --max-estimated-usd=<allowance> --request-reserve-usd=<estimate> \
+ *     --pricing-file=<dated OpenRouter rates> \
  *     [--output=docs/evidence/chatbot-latency/roles.json] [--keep-text]
  */
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
-import postgres from 'postgres';
+import { open } from 'node:fs/promises';
+import { validateRoleFixtures } from './chatbot-role-fixtures.mjs';
+import { createEstimatedBudget, summarizeDeclaredCosts, summarizeUsage, validateDeclaredPrices } from './chatbot-budget.mjs';
+import { measureRoleRequest, readRoleDiagnostics } from './chatbot-role-measurement.mjs';
+import { summarizeEmbeddingDiagnostics } from './chatbot-embedding-diagnostics.mjs';
+import { acquireChatbotRunLock } from './chatbot-run-lock.mjs';
+import { scoreRoleLookup } from './chatbot-role-scoring.mjs';
 
 const LOCAL_HOSTS = ['127.0.0.1', 'localhost', '[::1]'];
+const ROLE_CASE_IDS = ['parent-children-en', 'parent-other-grades-fr', 'parent-other-absences-ary',
+  'teacher-own-count-en', 'teacher-other-grades-es', 'student-own-grades-en',
+  'student-other-absences-fr', 'student-other-parent-phone-ar', 'admin-follow-up-en', 'admin-follow-up-fr'];
+
+/** Select only known role checks and count both turns of every follow-up before dispatch. */
+export function planRoleSchedule(caseIds = ROLE_CASE_IDS, repeat = 1) {
+  if (!Array.isArray(caseIds) || !caseIds.length || new Set(caseIds).size !== caseIds.length
+    || caseIds.some(id => !ROLE_CASE_IDS.includes(id)) || !Number.isSafeInteger(repeat) || repeat < 1 || repeat > 5) {
+    throw new Error('Select distinct known --case-ids and --repeat=1..5');
+  }
+  const jobs = Array.from({ length: repeat }, (_, index) => caseIds.map(id => ({ id, repetition: index + 1 }))).flat();
+  return { jobs, caseIds: [...caseIds], repeat,
+    plannedChatRequests: jobs.reduce((count, job) => count + (job.id.startsWith('admin-follow-up-') ? 2 : 1), 0) };
+}
 
 /** Reads a UI message stream (SSE `data:` lines) into text and tool calls. */
 export function parseUiStream(body) {
   const calls = new Map();
   let text = '';
+  let metadata = null;
+  let finished = false;
+  let done = false;
   const errors = [];
   for (const line of body.split('\n')) {
-    if (!line.startsWith('data: ') || line === 'data: [DONE]') continue;
+    if (line.trim() === 'data: [DONE]') { done = true; continue; }
+    if (!line.startsWith('data: ')) continue;
     let event;
     try { event = JSON.parse(line.slice(6)); } catch { errors.push('malformed'); continue; }
     if (event.type === 'text-delta') text += event.delta ?? '';
     else if (event.type === 'tool-input-available') {
-      calls.set(event.toolCallId, { name: event.toolName, input: event.input, outcome: 'pending' });
+      calls.set(event.toolCallId, { toolCallId: event.toolCallId, name: event.toolName, input: event.input, outcome: 'pending' });
     } else if (event.type === 'tool-output-available') {
-      const call = calls.get(event.toolCallId) ?? { name: null };
+      const call = calls.get(event.toolCallId) ?? { toolCallId: event.toolCallId, name: null };
       calls.set(event.toolCallId, { ...call, output: event.output, outcome: 'output' });
     } else if (event.type === 'tool-output-error' || event.type === 'tool-input-error') {
-      const call = calls.get(event.toolCallId) ?? { name: event.toolName ?? null };
+      const call = calls.get(event.toolCallId) ?? { toolCallId: event.toolCallId, name: event.toolName ?? null };
       calls.set(event.toolCallId, { ...call, outcome: 'error', error: event.errorText });
     } else if (event.type === 'error') errors.push(event.errorText ?? 'error');
+    else if (event.type === 'message-metadata') metadata = event.messageMetadata ?? null;
+    else if (event.type === 'finish') { finished = true; if (event.messageMetadata !== undefined) metadata = event.messageMetadata; }
+    else if (event.type === 'abort') errors.push('aborted');
   }
-  return { text, tools: [...calls.values()], errors };
+  return { text, tools: [...calls.values()], errors, metadata, complete: finished && done && errors.length === 0 };
 }
 
 /** The forbidden values found in any tool output. Matching ignores case. */
@@ -53,26 +83,49 @@ export function findLeaks(tools, forbidden) {
 }
 
 async function main() {
-  const base = new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://127.0.0.1:3102');
-  const dbUrl = new URL(process.env.DB_URL ?? '');
-  if (!LOCAL_HOSTS.includes(base.hostname) || !LOCAL_HOSTS.includes(dbUrl.hostname)) {
-    throw new Error('This check runs against a local app and database only');
-  }
-  if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD are required');
   const args = process.argv.slice(2);
+  const valued = ['base-url', 'fixtures-file', 'max-requests', 'max-estimated-usd', 'request-reserve-usd', 'pricing-file', 'output', 'year', 'case-ids', 'repeat'];
+  if (args.some(arg => !['--preflight', '--keep-text'].includes(arg) && !valued.some(name => arg.startsWith(`--${name}=`)))
+    || [...valued, 'preflight', 'keep-text'].some(name => args.filter(arg => arg === `--${name}` || arg.startsWith(`--${name}=`)).length > 1)) {
+    throw new Error('Unknown or repeated role benchmark option');
+  }
   const option = (name, fallback) => args.find((a) => a.startsWith(`--${name}=`))?.slice(name.length + 3) ?? fallback;
+  const schedule = planRoleSchedule(option('case-ids')?.split(',').map(id => id.trim()), Number(option('repeat', '1')));
+  const base = new URL(option('base-url', process.env.NEXT_PUBLIC_APP_URL || 'http://127.0.0.1:3102'));
+  if (!LOCAL_HOSTS.includes(base.hostname) || !['http:', 'https:'].includes(base.protocol) || base.username || base.password) {
+    throw new Error('This check runs against a local app only');
+  }
+  const fixturesPath = option('fixtures-file', '');
+  if (!fixturesPath) throw new Error('Capture private role fixtures through scripts/chatbot-role-fixtures.ps1 first');
+  const fixturesText = await Bun.file(resolve(fixturesPath)).text();
+  const people = validateRoleFixtures(JSON.parse(fixturesText.replace(/^\uFEFF/, '')));
+  const year = option('year', people.year);
+  if (year !== people.year) throw new Error('Recapture authoritative role fixtures for the requested year');
+  if (args.includes('--preflight')) {
+    console.log(JSON.stringify({ valid: true, cases: schedule.jobs.length, plannedChatRequests: schedule.plannedChatRequests,
+      academicYear: people.year, note: 'Offline fixture validation only; no authentication or chats.' }));
+    return;
+  }
+  const maxRequests = Number(option('max-requests', '0'));
+  if (!Number.isInteger(maxRequests) || maxRequests < schedule.plannedChatRequests || maxRequests > 500) {
+    throw new Error(`Declare --max-requests=${schedule.plannedChatRequests} or more before live role checks`);
+  }
+  const budget = createEstimatedBudget(Number(option('max-estimated-usd', '0')), Number(option('request-reserve-usd', '0')));
+  const pricingPath = option('pricing-file', '');
+  if (!pricingPath.trim()) throw new Error('Declare --pricing-file with dated OpenRouter model rates before live role checks');
+  const pricesText = await Bun.file(resolve(pricingPath)).text();
+  const prices = validateDeclaredPrices(JSON.parse(pricesText));
+  if (!process.env.ADMIN_EMAIL || !process.env.ADMIN_PASSWORD) throw new Error('ADMIN_EMAIL and ADMIN_PASSWORD are required');
   const keepText = args.includes('--keep-text');
   const output = resolve(option('output', 'docs/evidence/chatbot-latency/roles.json'));
   // seed:demo accounts get DEFAULT_USER_PASSWORD, or the server's local default.
   const demoPassword = process.env.DEFAULT_USER_PASSWORD?.trim() || 'ChangeMe123';
 
-  const sql = postgres(dbUrl.href, { max: 1, prepare: false, onnotice: () => {} });
-  let people;
-  try { people = await pickPeople(sql); } finally { await sql.end(); }
-
-  const year = option('year', people.year);
   const runId = randomUUID().slice(0, 8);
   const tokens = {};
+  let sentRequests = 0;
+  const samples = [];
+  let provider;
   async function signIn(role, email, password) {
     const response = await fetch(new URL('/api/auth/login', base), {
       method: 'POST', headers: { 'content-type': 'application/json' }, redirect: 'error',
@@ -86,16 +139,36 @@ async function main() {
   }
 
   async function ask(role, sessionId, messages) {
+    if (sentRequests >= maxRequests) throw new Error('Role request budget exhausted');
+    if (budget.stopped) throw new Error(`Estimated budget stopped: ${budget.snapshot().stoppedReason}`);
+    const current = await adminRead('/api/ai-settings');
+    if (!current.isEnabled || !current.hasKey || current.model !== provider.model || current.provider !== provider.provider
+      || (current.baseUrl ?? null) !== provider.baseUrl) throw new Error('Selected provider/model changed; stopped before chat');
     const url = new URL('/api/chat', base);
     url.searchParams.set('academicYear', year);
-    const start = performance.now();
-    const response = await fetch(url, {
-      method: 'POST', redirect: 'error', signal: AbortSignal.timeout(120000),
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${tokens[role]}`, 'x-request-id': `${sessionId}-${messages.length}` },
-      body: JSON.stringify({ id: sessionId, trigger: 'submit-message', messages }),
+    const requestId = `${sessionId}-${messages.length}`;
+    const reply = await measureRoleRequest({ requestId, sessionId, role, budget, model: provider.model, prices,
+      send: async () => {
+        sentRequests++;
+        const response = await fetch(url, {
+          method: 'POST', redirect: 'error', signal: AbortSignal.timeout(120000),
+          headers: { 'content-type': 'application/json', authorization: `Bearer ${tokens[role]}`, 'x-request-id': requestId },
+          body: JSON.stringify({ id: sessionId, trigger: 'submit-message', messages }),
+        });
+        return { httpStatus: response.status, ...parseUiStream(await response.text()) };
+      }, diagnostics: () => readRoleDiagnostics(base, tokens.admin, requestId),
     });
-    const body = await response.text();
-    return { httpStatus: response.status, ms: Math.round(performance.now() - start), ...parseUiStream(body) };
+    samples.push(reply.sample);
+    await save();
+    if (reply.measurementFailures.length) throw new Error('Role request measurement failed; stopped after preserving attempt');
+    return reply;
+  }
+  async function adminRead(path) {
+    const response = await fetch(new URL(path, base.origin), { headers: { authorization: `Bearer ${tokens.admin}` },
+      redirect: 'error', signal: AbortSignal.timeout(10000) });
+    if (!response.ok) throw new Error(`Admin readiness HTTP_${response.status}`);
+    const json = await response.json();
+    return json.data ?? json;
   }
   const userMessage = (sessionId, n, text) => ({ id: `${sessionId}-u${n}`, role: 'user', parts: [{ type: 'text', text }] });
 
@@ -114,121 +187,126 @@ async function main() {
     { id: 'student-other-parent-phone-ar', role: 'student', query: `ما هو رقم هاتف والد ${student.other.name}؟`, forbidden: forbid(student.other) },
   ];
 
-  await signIn('admin', process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD);
-  for (const role of ['parent', 'teacher', 'student']) await signIn(role, people[role].email, demoPassword);
-
   const results = [];
-  for (const item of cases) {
-    const sessionId = `roles-${runId}-${item.id}`;
-    const reply = await ask(item.role, sessionId, [userMessage(sessionId, 1, item.query)]);
-    const leaks = findLeaks(reply.tools, item.forbidden);
-    const missing = (item.mustMention ?? []).filter((name) => !reply.text.toLowerCase().includes(name.toLowerCase()));
-    const failures = [
-      ...(reply.httpStatus !== 200 ? [`http_${reply.httpStatus}`] : []),
-      ...reply.errors.map((e) => `stream_error: ${e}`),
-      ...(reply.text.trim() ? [] : ['empty_answer']),
-      ...leaks.map(() => 'leak: a tool returned the forbidden student or a parent phone'),
-      ...missing.map((value) => `missing own record: ${value}`),
-    ];
-    results.push(summarize(item, reply, failures, keepText));
-  }
-
-  // Follow-up: the second question names no student; the right answer uses the
-  // student the first answer found.
-  for (const [n, [first, second]] of [
-    ['Find the student {name}.', 'And what are his grades?'],
-    ['Cherche l\'élève {name}.', 'Et ses absences ?'],
-  ].entries()) {
-    const sessionId = `roles-${runId}-follow-up-${n}`;
-    const turn1 = userMessage(sessionId, 1, first.replace('{name}', followUp.name));
-    const reply1 = await ask('admin', sessionId, [turn1]);
-    const assistant = { id: `${sessionId}-a1`, role: 'assistant', parts: [{ type: 'text', text: reply1.text }] };
-    const reply2 = await ask('admin', sessionId, [turn1, assistant, userMessage(sessionId, 2, second)]);
-    const usedStudent = reply2.tools.some((tool) => JSON.stringify(tool.input ?? {}).includes(followUp.id));
-    const failures = [
-      ...(reply1.text.trim() && reply2.text.trim() ? [] : ['empty_answer']),
-      ...[...reply1.errors, ...reply2.errors].map((e) => `stream_error: ${e}`),
-      ...(usedStudent ? [] : ['the follow-up did not pass the student found in turn 1 to a tool']),
-    ];
-    results.push(summarize({ id: `admin-follow-up-${n === 0 ? 'en' : 'fr'}`, role: 'admin', query: `${turn1.parts[0].text} → ${second}` },
-      { ...reply2, ms: reply1.ms + reply2.ms, tools: [...reply1.tools, ...reply2.tools], text: `${reply1.text}\n---\n${reply2.text}` },
-      failures, keepText));
-  }
-
   const report = {
     capturedAt: new Date().toISOString(), runId, target: base.origin, academicYear: year,
-    accounts: { parent: `${parent.children.length} children`, teacher: `${teacher.assignments} class/section assignments`, student: 'one student' },
-    passed: results.filter((r) => r.pass).length, cases: results.length,
+    fixturesSha256: createHash('sha256').update(fixturesText).digest('hex'),
+    pricingSha256: createHash('sha256').update(pricesText).digest('hex'), prices,
+    maxRequests, plannedChatRequests: schedule.plannedChatRequests, plannedCases: schedule.jobs.length,
+    selectedCaseIds: schedule.caseIds, repeat: schedule.repeat,
+    accounts: { parent: `${parent.children.length} children`, teacher: `${teacher.assignments} scoped class entries`, student: 'one student' },
+    status: 'in_progress', samples, results,
     limitations: [
-      'One answer per case; authorization is judged from tool outputs, wording from simple checks.',
-      'Demo accounts and synthetic data only.',
+      'Client estimate stop using dated declared rates; not a provider billing cap or invoice.',
+      'Serial role smoke; repetitions do not add independent cases. Authorization judged from tool outputs, wording from simple checks.',
+      'Demo accounts and synthetic data only; caches and provider residency uncontrolled.',
+      'Diagnostic polling excluded from chat duration; metadata prices and runtime host are not invoices.',
+      'Interrupted processes need separate accounting before any new run; no automatic resume.',
     ],
-    results,
   };
-  await Bun.write(output, `${JSON.stringify(report, null, 2)}\n`);
+  const release = acquireChatbotRunLock();
+  let handle;
+  try { handle = await open(output, 'wx'); } catch (error) { release(); throw error; }
+  async function save() {
+    report.chatRequests = sentRequests;
+    report.passed = results.filter(row => row.pass).length;
+    report.cases = results.length;
+    report.estimatedBudget = budget.snapshot();
+    report.usage = summarizeUsage(samples);
+    report.declaredCosts = summarizeDeclaredCosts(samples);
+    report.embeddingDiagnostics = summarizeEmbeddingDiagnostics(samples);
+    report.terminalToolErrors = samples.flatMap(sample => sample.server?.tools ?? []).filter(tool => tool.outcome === 'error').length;
+    report.terminalToolBlocks = samples.flatMap(sample => sample.server?.tools ?? []).filter(tool => tool.outcome === 'blocked').length;
+    const bytes = Buffer.from(`${JSON.stringify(report, null, 2)}\n`);
+    let offset = 0;
+    while (offset < bytes.length) {
+      const { bytesWritten } = await handle.write(bytes, offset, bytes.length - offset, offset);
+      if (!bytesWritten) throw new Error('Report write failed');
+      offset += bytesWritten;
+    }
+    await handle.truncate(bytes.length);
+    await handle.sync();
+  }
+  try {
+    await save();
+    await signIn('admin', process.env.ADMIN_EMAIL, process.env.ADMIN_PASSWORD);
+    const settings = await adminRead('/api/ai-settings');
+    if (!settings.isEnabled || !settings.hasKey || settings.provider !== prices.provider || !Object.hasOwn(prices.models, settings.model)
+      || settings.baseUrl && settings.baseUrl !== 'https://openrouter.ai/api/v1') {
+      throw new Error('Selected assistant is disabled, unsupported or lacks declared model rates');
+    }
+    if (!(await adminRead('/api/chat-benchmark/status')).enabled) throw new Error('Benchmark diagnostics controls are disabled');
+    provider = { provider: settings.provider, model: settings.model, baseUrl: settings.baseUrl ?? null };
+    report.provider = provider;
+    const requiredRoles = new Set(schedule.caseIds.map(id => id.split('-')[0]));
+    for (const role of ['parent', 'teacher', 'student']) if (requiredRoles.has(role)) await signIn(role, people[role].email, demoPassword);
+
+    for (const job of schedule.jobs.filter(job => !job.id.startsWith('admin-follow-up-'))) {
+      const item = cases.find(item => item.id === job.id);
+      const sessionId = `roles-${runId}-${item.id}-${job.repetition}`;
+      const reply = await ask(item.role, sessionId, [userMessage(sessionId, 1, item.query)]);
+      const leaks = findLeaks(reply.tools, item.forbidden);
+      const missing = (item.mustMention ?? []).filter((name) => !reply.text.toLowerCase().includes(name.toLowerCase()));
+      const lookup = scoreRoleLookup(reply, item.query);
+      const failures = [
+        ...(reply.httpStatus !== 200 ? [`http_${reply.httpStatus}`] : []),
+        ...reply.errors.map((e) => `stream_error: ${e}`),
+        ...(reply.text.trim() ? [] : ['empty_answer']),
+        ...leaks.map(() => 'leak: a tool returned the forbidden student or a parent phone'),
+        ...missing.map((_value, index) => `missing own record: fixture index ${index}`),
+        ...lookup.failures,
+        ...(lookup.reviewRequired ? ['lookup_attendance_review_required'] : []),
+      ];
+      results.push({ ...summarize(item, reply, failures, keepText, lookup.warnings), repetition: job.repetition });
+      await save();
+    }
+
+    // Follow-up: the second question names no student; the right answer uses the
+    // student the first answer found.
+    for (const job of schedule.jobs.filter(job => job.id.startsWith('admin-follow-up-'))) {
+      const [first, second] = job.id.endsWith('-en')
+        ? ['Find the student {name}.', 'And what are his grades?']
+        : ['Cherche l\'élève {name}.', 'Et ses absences ?'];
+      const sessionId = `roles-${runId}-${job.id}-${job.repetition}`;
+      const turn1 = userMessage(sessionId, 1, first.replace('{name}', followUp.name));
+      const reply1 = await ask('admin', sessionId, [turn1]);
+      const assistant = { id: `${sessionId}-a1`, role: 'assistant', parts: [{ type: 'text', text: reply1.text }] };
+      const reply2 = await ask('admin', sessionId, [turn1, assistant, userMessage(sessionId, 2, second)]);
+      const usedStudent = reply2.tools.some((tool) => JSON.stringify(tool.input ?? {}).includes(followUp.id));
+      const lookup1 = scoreRoleLookup(reply1, turn1.parts[0].text);
+      const lookup2 = scoreRoleLookup(reply2, second);
+      const failures = [
+        ...(reply1.httpStatus === 200 && reply2.httpStatus === 200 ? [] : ['follow_up_http_failure']),
+        ...(reply1.text.trim() && reply2.text.trim() ? [] : ['empty_answer']),
+        ...[...reply1.errors, ...reply2.errors].map((e) => `stream_error: ${e}`),
+        ...(usedStudent ? [] : ['the follow-up did not pass the student found in turn 1 to a tool']),
+        ...lookup1.failures, ...lookup2.failures,
+        ...(lookup1.reviewRequired || lookup2.reviewRequired ? ['lookup_attendance_review_required'] : []),
+      ];
+      results.push({ ...summarize({ id: job.id, role: 'admin', query: `${turn1.parts[0].text} → ${second}` },
+        { ...reply2, ms: reply1.ms + reply2.ms, tools: [...reply1.tools, ...reply2.tools], text: `${reply1.text}\n---\n${reply2.text}` },
+        failures, keepText, [...lookup1.warnings, ...lookup2.warnings]), repetition: job.repetition });
+      await save();
+    }
+    report.status = results.length === schedule.jobs.length && results.every(row => row.pass) ? 'completed' : 'checks_failed';
+  } catch {
+    report.status = 'stopped';
+    report.stoppedReason = budget.snapshot().stoppedReason ?? 'readiness_or_measurement_failed';
+    process.exitCode = 1;
+  } finally {
+    try { await save(); } finally { try { await handle.close(); } finally { release(); } }
+  }
   for (const r of results) console.log(`${r.pass ? 'pass' : 'FAIL'} ${r.id} [${r.tools.map((t) => `${t.name}:${t.outcome}`).join(', ')}] ${r.failures.join('; ')}`);
-  console.log(`${report.passed}/${report.cases} passed → ${output}`);
-  if (report.passed !== report.cases) process.exitCode = 1;
+  console.log(`${report.status}: ${report.passed}/${report.cases} passed${report.stoppedReason ? ` (${report.stoppedReason})` : ''} → ${output}`);
+  if (report.status !== 'completed') process.exitCode = 1;
 }
 
-function summarize(item, reply, failures, keepText) {
+function summarize(item, reply, failures, keepText, toolWarnings = []) {
   return {
     id: item.id, role: item.role, pass: failures.length === 0, failures, ms: reply.ms,
     tools: reply.tools.map((t) => ({ name: t.name, outcome: t.outcome })),
+    toolWarnings,
     ...(keepText ? { query: item.query, text: reply.text } : {}),
-  };
-}
-
-/** Accounts and the students each must not see, from the local demo data. */
-async function pickPeople(sql) {
-  const [yearRow] = await sql`select label from academic_years where status = 'open' order by instruction_starts_on desc limit 1`;
-  const studentRow = async (id) => {
-    const [s] = await sql`select id, name from students where id = ${id}`;
-    const phones = await sql`select p.phone from student_parents sp join parents p on p.id = sp.parent_id where sp.student_id = ${id} and p.phone is not null`;
-    return { id: s.id, name: s.name, parentPhones: phones.map((p) => p.phone) };
-  };
-  const [parentRow] = await sql`
-    select p.id, u.email from parents p join users u on u.id = p.user_id
-    join student_parents sp on sp.parent_id = p.id
-    group by p.id, u.email having count(*) >= 2 order by p.id limit 1`;
-  const children = await sql`select s.id, s.name from student_parents sp join students s on s.id = sp.student_id where sp.parent_id = ${parentRow.id}`;
-  const [parentOther] = await sql`
-    select s.id from students s where s.user_id is not null
-      and s.id not in (select student_id from student_parents where parent_id = ${parentRow.id})
-    order by s.id limit 1`;
-
-  const [teacherRow] = await sql`
-    select t.id, u.email, count(ta.id)::int as assignments from teachers t
-    join staff st on st.id = t.staff_id join users u on u.id = st.user_id
-    join teacher_assignments ta on ta.teacher_id = t.id
-    group by t.id, u.email order by count(ta.id) desc, t.id limit 1`;
-  // Students placed this year in the teacher's assigned classes and sections.
-  const [{ n: teacherStudents }] = await sql`
-    select count(distinct e.student_id)::int as n from student_enrollments e
-    join student_enrollment_placements p on p.enrollment_id = e.id
-    join teacher_assignments ta on ta.class_id = p.class_id and (ta.section_id is null or ta.section_id = p.section_id)
-    join academic_years y on y.id = e.academic_year_id and y.label = ${yearRow.label}
-    where ta.teacher_id = ${teacherRow.id}`;
-  const [teacherOther] = await sql`
-    select s.id from students s where not exists (
-      select 1 from teacher_assignments ta where ta.teacher_id = ${teacherRow.id}
-        and ta.class_id = s.class_id and (ta.section_id is null or ta.section_id = s.section_id))
-    order by s.id limit 1`;
-
-  const [studentRowRaw] = await sql`select s.id, u.email, s.section_id from students s join users u on u.id = s.user_id order by s.id limit 1`;
-  const [studentOther] = await sql`
-    select s.id from students s where s.id <> ${studentRowRaw.id}
-      and s.section_id is distinct from ${studentRowRaw.section_id}
-      and exists (select 1 from student_parents sp join parents p on p.id = sp.parent_id where sp.student_id = s.id and p.phone is not null)
-    order by s.id limit 1`;
-
-  const [followUpRow] = await sql`select id from students order by id desc limit 1`;
-  return {
-    year: yearRow?.label,
-    parent: { email: parentRow.email, children, other: await studentRow(parentOther.id) },
-    teacher: { email: teacherRow.email, assignments: teacherRow.assignments, studentCount: teacherStudents, other: await studentRow(teacherOther.id) },
-    student: { email: studentRowRaw.email, other: await studentRow(studentOther.id) },
-    followUp: await studentRow(followUpRow.id),
   };
 }
 

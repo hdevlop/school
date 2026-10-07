@@ -3,8 +3,10 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
 import { CalendarCheck, SearchX } from 'lucide-react';
-import { useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import RosterHeader from './RosterHeader';
+import RosterFilters from './RosterFilters';
+import { filterRoster } from '../config/filterRoster';
 import RosterCard from './RosterCard';
 import { useStaffAttendance } from '../hooks/useAttendance';
 import { useAttendanceRoster } from '../hooks/useAttendanceRoster';
@@ -21,6 +23,9 @@ import { useSchoolToday } from '@/hooks/useSchoolFormat';
 
 function StaffAttendanceTable() {
   const { t } = useTranslation();
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState('');
+  const [role, setRole] = useState('');
   const [selectedDate, setSelectedDate] = useViewingYearDate(useSchoolToday());
   const { staff, error: staffError, isStaffLoading } = useStaff({ attendanceRoster: true, attendanceDate: selectedDate });
   const { activeStaffRoles, isStaffRolesLoading } = useStaffRoles({ activeOnly: true });
@@ -56,10 +61,35 @@ function StaffAttendanceTable() {
     { value: roster.selectedDate, onChange: roster.goToDate },
     activeStaffRoles,
   );
+  const filters = rawFilters.map((filter) => {
+    const binding = filter.name === 'name'
+      ? { label: t('attendance.roster.search'), value: search, onChange: setSearch }
+      : filter.name === 'role'
+        ? { label: t('staff.table.role'), value: role, onChange: setRole }
+        : filter.name === 'status'
+          ? { label: t('attendance.roster.status'), value: status, onChange: setStatus }
+          : { label: t('attendance.roster.date'), value: roster.selectedDate, onChange: roster.goToDate };
+    return {
+      ...filter,
+      ...binding,
+      ...(filter.name === 'role' || filter.name === 'status'
+        ? { options: [{ value: '', label: t('common.all') }, ...(filter.options ?? [])] }
+        : {}),
+    };
+  });
+  const visibleStaff = useMemo(
+    () => filterRoster(staff || [], { search, status, role }, roster.getStatus),
+    [staff, search, status, role, roster.getStatus],
+  );
+  const resetFilters = () => {
+    setSearch('');
+    setStatus('');
+    setRole('');
+  };
   const total = staffRows.length;
 
   return (
-    <div className="flex flex-col gap-2 h-full">
+    <div className="flex h-full min-h-0 flex-col gap-2">
       <NPageHeader
         icon={CalendarCheck}
         title={t('navigation.staffAttendance')}
@@ -70,20 +100,21 @@ function StaffAttendanceTable() {
         </NPageHeaderActions>
       </NPageHeader>
 
+      <RosterFilters filters={filters} onReset={resetFilters} canReset={!!search || !!status || !!role}>
+        <RosterHeader
+          hasChanges={roster.hasChanges}
+          isSubmitting={isSubmittingRoster}
+          stats={roster.stats}
+          onSubmit={roster.handleSubmit}
+          canSubmit={total > 0 && !isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading}
+        />
+      </RosterFilters>
+
       <NTable
         responsiveSkeleton
-        data={staffRows}
+        data={visibleStaff}
+        isFilteredEmpty={total > 0 && visibleStaff.length === 0}
         columns={columns}
-        filters={rawFilters}
-        headerSlot={
-          <RosterHeader
-            hasChanges={roster.hasChanges}
-            isSubmitting={isSubmittingRoster}
-            stats={roster.stats}
-            onSubmit={roster.handleSubmit}
-            canSubmit={!isStaffLoading && !isAttendanceLoading && !isStaffRolesLoading}
-          />
-        }
         loading={isStaffLoading || isAttendanceLoading || isStaffRolesLoading}
         error={hasFailedToLoad(staffError, staffRows) ? staffError : null}
         renderError={(currentError) => (

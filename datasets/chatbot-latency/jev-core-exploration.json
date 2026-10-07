@@ -1,0 +1,1052 @@
+{
+  "version": 1,
+  "purpose": "fresh-exploratory",
+  "scope": "Fresh assistant-authored synthetic exploration of core policy, not independent/native B0 acceptance. Four language variants share each question family. No app/tool/real data is used.",
+  "previousCorpora": [
+    "datasets/chatbot-latency/questions.json",
+    "datasets/chatbot-latency/jev-intents.json"
+  ],
+  "nativeReviewedCases": 0,
+  "cases": [
+    {
+      "id": "core3-fr-01",
+      "familyId": "core3-family-01",
+      "language": "fr",
+      "query": "Donne-moi uniquement l'effectif total des élèves pour l'année scolaire en cours.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-02",
+      "familyId": "core3-family-02",
+      "language": "fr",
+      "query": "Je cherche juste le total des élèves inscrits dans tout l'établissement cette année.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-03",
+      "familyId": "core3-family-03",
+      "language": "fr",
+      "query": "Tu pourrais me répondre par un chiffre : combien d'élèves compte toute l'école actuellement ?",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-04",
+      "familyId": "core3-family-04",
+      "language": "fr",
+      "query": "Dis-moi l'effectif global de l'équipe enseignante, sans détails par personne.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-05",
+      "familyId": "core3-family-05",
+      "language": "fr",
+      "query": "Le total de professeurs de l'établissement, c'est tout ce que je demande.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-06",
+      "familyId": "core3-family-06",
+      "language": "fr",
+      "query": "J'aimerais deux totaux pour cette année : celui des élèves puis celui des enseignants.",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-07",
+      "familyId": "core3-family-07",
+      "language": "fr",
+      "query": "Tu peux résumer les effectifs de toute l'école avec le nombre d'élèves et le nombre de professeurs ?",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-08",
+      "familyId": "core3-family-08",
+      "language": "fr",
+      "query": "Les noms de toutes les classes de l'établissement m'intéressent, pas leurs effectifs.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-09",
+      "familyId": "core3-family-09",
+      "language": "fr",
+      "query": "Donne-moi le catalogue des classes qui existent dans cette école.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-10",
+      "familyId": "core3-family-10",
+      "language": "fr",
+      "query": "Tu peux consulter la feuille de présence du jour pour l'ensemble des élèves ?",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-11",
+      "familyId": "core3-family-11",
+      "language": "fr",
+      "query": "J'aimerais voir les présences et absences enregistrées à la date du jour dans toute l'école.",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-12",
+      "familyId": "core3-family-12",
+      "language": "fr",
+      "query": "Bonjour à toi, merci d'être là pour m'aider !",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-13",
+      "familyId": "core3-family-13",
+      "language": "fr",
+      "query": "Coucou ! Quels genres de demandes scolaires peux-tu traiter ?",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-14",
+      "familyId": "core3-family-14",
+      "language": "fr",
+      "query": "Marque l'élève Zzbench Rrqa présent maintenant, s'il te plaît.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-15",
+      "familyId": "core3-family-15",
+      "language": "fr",
+      "query": "Envoie aux parents une nouvelle annonce disant que l'école ferme jeudi.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-16",
+      "familyId": "core3-family-16",
+      "language": "fr",
+      "query": "Modifie la date de l'examen Zzbench Rrqa pour mardi prochain.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-17",
+      "familyId": "core3-family-17",
+      "language": "fr",
+      "query": "Tu peux me présenter les examens à venir pour l'ensemble de l'école ?",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-18",
+      "familyId": "core3-family-18",
+      "language": "fr",
+      "query": "J'aimerais connaître la prochaine date d'examen de toute l'école.",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-19",
+      "familyId": "core3-family-19",
+      "language": "fr",
+      "query": "Tu peux compter les examens prévus uniquement au cours de ce mois ?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-20",
+      "familyId": "core3-family-20",
+      "language": "fr",
+      "query": "Donne-moi le nombre de filles de l'établissement, sans les garçons.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-21",
+      "familyId": "core3-family-21",
+      "language": "fr",
+      "query": "Je veux les noms des enseignants, plutôt que leur nombre.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-22",
+      "familyId": "core3-family-22",
+      "language": "fr",
+      "query": "J'aimerais le total des élèves inscrits l'année scolaire passée.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-23",
+      "familyId": "core3-family-23",
+      "language": "fr",
+      "query": "Et pour les enseignants, même chose ?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-24",
+      "familyId": "core3-family-24",
+      "language": "fr",
+      "query": "Dis-moi comment un parent peut inscrire lui-même son enfant depuis le tableau de bord.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-25",
+      "familyId": "core3-family-25",
+      "language": "fr",
+      "query": "Tu peux me donner la moyenne des notes de Zzbench Rrqa ?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-fr-26",
+      "familyId": "core3-family-26",
+      "language": "fr",
+      "query": "Les élèves absents dans la classe Zzbench B9 aujourd'hui, il y en a combien ?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-01",
+      "familyId": "core3-family-01",
+      "language": "ar",
+      "query": "أحتاج رقما واحدا فقط لعدد التلاميذ المسجلين في المؤسسة خلال السنة الدراسية الحالية.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-02",
+      "familyId": "core3-family-02",
+      "language": "ar",
+      "query": "أعطني مجموع التلاميذ في جميع أقسام المؤسسة لهذه السنة دون تفصيل حسب الأقسام.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-03",
+      "familyId": "core3-family-03",
+      "language": "ar",
+      "query": "أريد معرفة العدد الإجمالي لتلاميذ المدرسة الآن وليس قائمة أسمائهم.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-04",
+      "familyId": "core3-family-04",
+      "language": "ar",
+      "query": "أحتاج فقط إلى العدد الكلي للمدرسين في هذه المؤسسة.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-05",
+      "familyId": "core3-family-05",
+      "language": "ar",
+      "query": "أخبرني بإجمالي الأساتذة في المدرسة دون تصنيف حسب المادة.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-06",
+      "familyId": "core3-family-06",
+      "language": "ar",
+      "query": "أعطني رقمين لهذه السنة: مجموع التلاميذ ومجموع الأساتذة في المدرسة.",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-07",
+      "familyId": "core3-family-07",
+      "language": "ar",
+      "query": "أحتاج حصيلة عدد التلاميذ وعدد المدرسين على مستوى المؤسسة كلها.",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-08",
+      "familyId": "core3-family-08",
+      "language": "ar",
+      "query": "أريد أسماء الأقسام الموجودة في المدرسة فقط دون أسماء تلاميذها.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-09",
+      "familyId": "core3-family-09",
+      "language": "ar",
+      "query": "أعطني لائحة كل أقسام المؤسسة وليس عددها.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-10",
+      "familyId": "core3-family-10",
+      "language": "ar",
+      "query": "أرني سجل حضور وغياب التلاميذ المسجل لهذا اليوم على مستوى المدرسة كلها.",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-11",
+      "familyId": "core3-family-11",
+      "language": "ar",
+      "query": "أحتاج الاطلاع على حضور اليوم لكل تلاميذ المؤسسة دون تحديد قسم.",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-12",
+      "familyId": "core3-family-12",
+      "language": "ar",
+      "query": "مرحبا بك، أشكرك على مساعدتي في هذه الدردشة.",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-13",
+      "familyId": "core3-family-13",
+      "language": "ar",
+      "query": "السلام عليكم، ما نوع المساعدة التي تقدمها لي هنا؟",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-14",
+      "familyId": "core3-family-14",
+      "language": "ar",
+      "query": "سجل التلميذ Zzbench Rrqa حاضرا الآن من فضلك.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-15",
+      "familyId": "core3-family-15",
+      "language": "ar",
+      "query": "أرسل لأولياء الأمور إعلانا جديدا يخبرهم أن المدرسة ستغلق الخميس.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-16",
+      "familyId": "core3-family-16",
+      "language": "ar",
+      "query": "غير موعد اختبار Zzbench Rrqa إلى يوم الثلاثاء القادم.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-17",
+      "familyId": "core3-family-17",
+      "language": "ar",
+      "query": "أرني مواعيد الامتحانات المقبلة للمؤسسة كلها.",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-18",
+      "familyId": "core3-family-18",
+      "language": "ar",
+      "query": "أحتاج معرفة موعد أول امتحان قادم في هذه المدرسة.",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-19",
+      "familyId": "core3-family-19",
+      "language": "ar",
+      "query": "ما العدد الكلي للامتحانات المقررة في الشهر الحالي فقط؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-20",
+      "familyId": "core3-family-20",
+      "language": "ar",
+      "query": "أعطني عدد التلميذات دون التلاميذ الذكور في هذه المؤسسة.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-21",
+      "familyId": "core3-family-21",
+      "language": "ar",
+      "query": "أحتاج أسماء المدرسين في المدرسة وليس مجموعهم.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-22",
+      "familyId": "core3-family-22",
+      "language": "ar",
+      "query": "أريد مجموع المسجلين من التلاميذ في السنة الدراسية السابقة.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-23",
+      "familyId": "core3-family-23",
+      "language": "ar",
+      "query": "والمدرسون كذلك؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-24",
+      "familyId": "core3-family-24",
+      "language": "ar",
+      "query": "كيف يستطيع ولي الأمر تسجيل طفله بنفسه من خلال لوحة التحكم؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-25",
+      "familyId": "core3-family-25",
+      "language": "ar",
+      "query": "ما معدل نقط التلميذ Zzbench Rrqa؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ar-26",
+      "familyId": "core3-family-26",
+      "language": "ar",
+      "query": "احسب عدد الغائبين اليوم في قسم Zzbench B9 تحديدا.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-01",
+      "familyId": "core3-family-01",
+      "language": "ary",
+      "query": "بغيت غير العدد ديال التلاميذ المسجلين فالمؤسسة كاملة فهاد السنة الدراسية.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-02",
+      "familyId": "core3-family-02",
+      "language": "ary",
+      "query": "عطيني المجموع ديال تلاميذ المدرسة هاد العام بلا تفصيل ديال الأقسام.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-03",
+      "familyId": "core3-family-03",
+      "language": "ary",
+      "query": "شحال وصل العدد الكلي ديال التلاميذ عندنا دابا؟ بغيت عدد ماشي سميات.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-04",
+      "familyId": "core3-family-04",
+      "language": "ary",
+      "query": "بغيت غير شحال من أستاذ عندنا فهاد المؤسسة كاملة.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-05",
+      "familyId": "core3-family-05",
+      "language": "ary",
+      "query": "عطيني المجموع ديال الأساتذة بلا ما تفرقهم ليا على حساب المواد.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-06",
+      "familyId": "core3-family-06",
+      "language": "ary",
+      "query": "بغيت جوج أعداد هاد العام: مجموع التلاميذ ومجموع الأساتذة ديال المدرسة.",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-07",
+      "familyId": "core3-family-07",
+      "language": "ary",
+      "query": "جمع ليا غير الأعداد ديال التلاميذ والأساتذة، كل واحد بوحدو، فالمؤسسة كاملة.",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-08",
+      "familyId": "core3-family-08",
+      "language": "ary",
+      "query": "وريني غير سميات الأقسام اللي عندنا فالمدرسة بلا سميات التلاميذ.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-09",
+      "familyId": "core3-family-09",
+      "language": "ary",
+      "query": "عطيني اللائحة ديال الأقسام كاملين، ماشي العدد ديالهم.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-10",
+      "familyId": "core3-family-10",
+      "language": "ary",
+      "query": "وريني ورقة الحضور والغياب المسجلة اليوم ديال المدرسة كاملة.",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-11",
+      "familyId": "core3-family-11",
+      "language": "ary",
+      "query": "بغيت نشوف شكون حاضر وشكون غايب اليوم فالمؤسسة كلها بلا قسم معين.",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-12",
+      "familyId": "core3-family-12",
+      "language": "ary",
+      "query": "السلام، شكرا ليك على هاد المساعدة فالدردشة.",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-13",
+      "familyId": "core3-family-13",
+      "language": "ary",
+      "query": "واش تقدر تشرح ليا شنو نقدر نسولك عليه هنا؟",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-14",
+      "familyId": "core3-family-14",
+      "language": "ary",
+      "query": "سجل ليا التلميذ Zzbench Rrqa حاضر دابا، إلا سمحتي.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-15",
+      "familyId": "core3-family-15",
+      "language": "ary",
+      "query": "صيفط إعلان جديد للآباء وقول ليهم المدرسة غادي تسد الخميس.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-16",
+      "familyId": "core3-family-16",
+      "language": "ary",
+      "query": "بدل ليا موعد الامتحان Zzbench Rrqa وخليه نهار التلات الجاي.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-17",
+      "familyId": "core3-family-17",
+      "language": "ary",
+      "query": "بغيت نشوف الامتحانات اللي غادي يجيو للمؤسسة كلها.",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-18",
+      "familyId": "core3-family-18",
+      "language": "ary",
+      "query": "قول ليا فوقاش غادي يكون أول امتحان جاي فهاد المدرسة.",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-19",
+      "familyId": "core3-family-19",
+      "language": "ary",
+      "query": "شحال هو العدد ديال الامتحانات المبرمجين فهاد الشهر بوحدو؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-20",
+      "familyId": "core3-family-20",
+      "language": "ary",
+      "query": "بغيت العدد ديال البنات المسجلين، بلا الدراري.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-21",
+      "familyId": "core3-family-21",
+      "language": "ary",
+      "query": "وريني سميات الأساتذة ديال المدرسة، ماشي شحال عددهم.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-22",
+      "familyId": "core3-family-22",
+      "language": "ary",
+      "query": "بغيت شحال من تلميذ كان مسجل فالعام اللي فات.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-23",
+      "familyId": "core3-family-23",
+      "language": "ary",
+      "query": "والأساتذة حتى هوما؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-24",
+      "familyId": "core3-family-24",
+      "language": "ary",
+      "query": "كيفاش يقدر ولي الأمر يسجل ولدو براسو فلوحة التحكم؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-25",
+      "familyId": "core3-family-25",
+      "language": "ary",
+      "query": "شحال هو المعدل ديال النقط ديال Zzbench Rrqa؟",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-26",
+      "familyId": "core3-family-26",
+      "language": "ary",
+      "query": "حسب ليا شحال من واحد غايب اليوم غير فقسم Zzbench B9.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-01",
+      "familyId": "core3-family-01",
+      "language": "ary-latn",
+      "query": "bghit ghir total dyal tlamid li msjlin f lmdrasa kamla had sana.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-02",
+      "familyId": "core3-family-02",
+      "language": "ary-latn",
+      "query": "3tini majmou3 dyal tlamid had l3am bla tafsil dyal les classes.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-03",
+      "familyId": "core3-family-03",
+      "language": "ary-latn",
+      "query": "ch7al wsel l3adad dyal tlamid 3ndna daba? bghit ra9m machi smiyat.",
+      "split": "test",
+      "intent": "student_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-04",
+      "familyId": "core3-family-04",
+      "language": "ary-latn",
+      "query": "bghit ghir ch7al mn ostad kayn f had lmo2assassa kamla.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-05",
+      "familyId": "core3-family-05",
+      "language": "ary-latn",
+      "query": "3tini total dyal les profs bla ma tfre9hom 3la 7sab les matieres.",
+      "split": "test",
+      "intent": "teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-06",
+      "familyId": "core3-family-06",
+      "language": "ary-latn",
+      "query": "bghit jouj ar9am had l3am: total tlamid w total dyal les profs.",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-07",
+      "familyId": "core3-family-07",
+      "language": "ary-latn",
+      "query": "jm3 lia ghir l3adad dyal tlamid w dyal les profs, kol wa7d bo7do.",
+      "split": "test",
+      "intent": "student_and_teacher_count",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-08",
+      "familyId": "core3-family-08",
+      "language": "ary-latn",
+      "query": "wrini ghir smiyat les classes li 3ndna bla smiyat tlamid.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-09",
+      "familyId": "core3-family-09",
+      "language": "ary-latn",
+      "query": "3tini la liste dyal les classes kamlin, machi l3adad dyalhom.",
+      "split": "test",
+      "intent": "class_list",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-10",
+      "familyId": "core3-family-10",
+      "language": "ary-latn",
+      "query": "wrini feuille dyal l7odour w lghiyab li tsjlat lyoum f lmdrasa kamla.",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-11",
+      "familyId": "core3-family-11",
+      "language": "ary-latn",
+      "query": "bghit nchouf chkoun 7ader w chkoun ghayb lyoum f lmo2assassa kamla.",
+      "split": "test",
+      "intent": "attendance_today",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-12",
+      "familyId": "core3-family-12",
+      "language": "ary-latn",
+      "query": "salam, chokran lik 3la had lmosaa3ada f chat.",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-13",
+      "familyId": "core3-family-13",
+      "language": "ary-latn",
+      "query": "wach t9der tchre7 lia chno n9der nsowlek 3lih hna?",
+      "split": "test",
+      "intent": "small_talk",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-14",
+      "familyId": "core3-family-14",
+      "language": "ary-latn",
+      "query": "sjel lia tilmid Zzbench Rrqa 7ader daba 3afak.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-15",
+      "familyId": "core3-family-15",
+      "language": "ary-latn",
+      "query": "sift annonce jdida l les parents w gol lihom lmdrasa ghadi tsed jeudi.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-16",
+      "familyId": "core3-family-16",
+      "language": "ary-latn",
+      "query": "bdel lia date dyal examen Zzbench Rrqa w khlliha nhar tlat jay.",
+      "split": "test",
+      "intent": "write_request",
+      "isWrite": true,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-17",
+      "familyId": "core3-family-17",
+      "language": "ary-latn",
+      "query": "bghit nchouf les examens li ghadi yjiw f lmdrasa kamla.",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-18",
+      "familyId": "core3-family-18",
+      "language": "ary-latn",
+      "query": "gol lia imta ghadi ykon awal examen jay f had lmdrasa.",
+      "split": "test",
+      "intent": "upcoming_exams",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-19",
+      "familyId": "core3-family-19",
+      "language": "ary-latn",
+      "query": "ch7al howa l3adad dyal les examens li mbermjin had chher bo7do?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-20",
+      "familyId": "core3-family-20",
+      "language": "ary-latn",
+      "query": "bghit l3adad dyal lbnat li msjlin, bla drari.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-21",
+      "familyId": "core3-family-21",
+      "language": "ary-latn",
+      "query": "wrini smiyat dyal les profs f lmdrasa, machi total dyalhom.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-22",
+      "familyId": "core3-family-22",
+      "language": "ary-latn",
+      "query": "bghit ch7al mn tilmid kan msjel f l3am li fat.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-23",
+      "familyId": "core3-family-23",
+      "language": "ary-latn",
+      "query": "w les profs ta homa?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-24",
+      "familyId": "core3-family-24",
+      "language": "ary-latn",
+      "query": "kifach wali l2amr y9der ysjel weldo brasso f dashboard?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-25",
+      "familyId": "core3-family-25",
+      "language": "ary-latn",
+      "query": "ch7al moyenne dyal no9at Zzbench Rrqa?",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    },
+    {
+      "id": "core3-ary-latn-26",
+      "familyId": "core3-family-26",
+      "language": "ary-latn",
+      "query": "7seb lia ch7al mn wa7d ghayb lyoum ghir f classe Zzbench B9.",
+      "split": "test",
+      "intent": "needs_llm",
+      "isWrite": false,
+      "source": "assistant"
+    }
+  ]
+}
