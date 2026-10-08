@@ -1,9 +1,0 @@
-﻿{
-    "pid":  4612,
-    "snapshot":  "C:\\Users\\pc\\AppData\\Local\\Temp\\school-chatbot-acceptance-20261004-20b0fd6c",
-    "port":  3102,
-    "startedAt":  "2026-10-04T22:25:03.8709495Z",
-    "command":  "bun run dev",
-    "controls":  true,
-    "sourceFrozen":  true
-}

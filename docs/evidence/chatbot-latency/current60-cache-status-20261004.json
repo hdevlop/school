@@ -1,9 +1,0 @@
-﻿{
-    "enabled":  true,
-    "instanceId":  "22393708-ef03-42d7-b37a-5a0f97e802d7",
-    "resetCount":  0,
-    "caches":  [
-                   "query-embedding",
-                   "knowledge-context"
-               ]
-}

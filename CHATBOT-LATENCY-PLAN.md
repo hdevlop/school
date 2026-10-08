@@ -1,5 +1,11 @@
 # Chatbot latency and cost plan
 
+Evidence cleanup (2026-10-08): older intermediate snapshots are archived outside
+the project and recoverable from published Git history. See the
+[evidence index and recovery instructions](docs/evidence/chatbot-latency/README.md)
+for the current reports, retained test inputs and location of the verified ZIP.
+Historical links below may require restoring their archived files.
+
 Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPLETE: 700 CHATS. IMPROVED ROUTER + JEV-FIRST/20B 80/100 TOOL CHECKS, VERSUS JEV-OFF 74/100 AND OLD ROUTER/120B 71/100. JEV SUPPLIES 31 REPLIES; ALL 31 PASS INTENT, TOOL AND SCOPED-RENDERER CHECKS. TWENTY FALLBACK PLANS STILL FAIL. TIMING IS OBSERVATIONAL. FULL ANSWER ACCURACY AND GENERAL ENABLEMENT REMAIN UNQUALIFIED; NORMAL MODEL/JEV MODE UNCHANGED.**
 
 ## 0. Current status and next work — 2026-10-08
