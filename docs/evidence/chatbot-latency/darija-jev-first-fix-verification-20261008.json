@@ -1,0 +1,23 @@
+{
+  "scope": "Jev-first benchmark and offline answer audit; production runtime reused",
+  "checks": {
+    "chatAndAnalyzerTests": { "passed": 378, "failed": 0 },
+    "scriptTests": { "passed": 550, "failed": 0 },
+    "selectedScopedReplyAudit": { "passed": 31, "total": 31 },
+    "populatedRendererSamples": { "passed": 5, "total": 5 },
+    "unsupportedInjectedReadChoices": { "vetoed": 130, "total": 130 },
+    "serverTestTypecheck": "passed",
+    "lint": "passed",
+    "workspaceBoundaries": "passed"
+  },
+  "completedChats": 100,
+  "classifierAttempts": 82,
+  "selectedWrongFrozenIntent": 0,
+  "classifierCostUnknown": 1,
+  "classifierUnknownReserveUsd": 0.00015,
+  "normalModel": "openai/gpt-oss-120b",
+  "normalJevMode": "off",
+  "fixtureCleanedAndStopped": true,
+  "unrelatedDashboardAndPackageChangesExcluded": true,
+  "productionAcceptance": false
+}

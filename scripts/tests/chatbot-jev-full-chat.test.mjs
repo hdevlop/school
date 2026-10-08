@@ -4,6 +4,23 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, darijaComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
 
+test('Jev-first fix pass freezes only candidate-first and unchanged guarded fallback', () => {
+  const plan = darijaComparisonProtocol(undefined, undefined, 'jevfirstfix');
+  expect(plan.purpose).toBe('darija-jev-first-router-fix');
+  expect(plan.jobs).toHaveLength(100);
+  expect(plan.maxClassifications).toBe(100);
+  expect(plan.classificationMaxUsd).toBe(0.015);
+  expect(plan.maxCombinedEstimatedUsd).toBe(0.10);
+  expect(plan.arms).toHaveLength(1);
+  expect(plan.jobs.every(job => job.mode === 'on' && job.strategy === 'candidate-first'
+    && job.experimentArm === '20b-coreweave-first' && job.model === 'openai/gpt-oss-20b')).toBe(true);
+  expect(plan.timeoutMs).toBe(800);
+  expect(plan.averageResponseLimitSeconds).toBeNull();
+  expect(plan.captureToolNames).toBe(true);
+  expect(() => checkSource(plan)).not.toThrow();
+  expect(() => checkSource({...plan, maxClassifications: 200})).toThrow();
+});
+
 test('fixed 20B regression pass freezes tools-only policy, no Jev and routing sources', () => {
   const plan = darijaComparisonProtocol(undefined, undefined, 'fixed20b');
   expect(plan.purpose).toBe('darija-router-20b-fix');

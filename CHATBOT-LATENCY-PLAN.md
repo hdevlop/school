@@ -1,8 +1,30 @@
 # Chatbot latency and cost plan
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPLETE: 600 CHATS. OPTIMIZED ROUTER/20B 74/100 TOOL CHECKS, VERSUS OLD ROUTER/20B 58/100 AND OLD ROUTER/120B 71/100. ARABIZI IMPROVES 20/50 → 36/50. ALL FAILED READS HAVE REQUIRED TOOLS OFFERED; 26 PLANS STILL FAIL. TIMING IS OBSERVATIONAL. FULL ANSWER ACCURACY AND GENERAL ENABLEMENT REMAIN UNQUALIFIED; NORMAL MODEL/JEV MODE UNCHANGED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPLETE: 700 CHATS. IMPROVED ROUTER + JEV-FIRST/20B 80/100 TOOL CHECKS, VERSUS JEV-OFF 74/100 AND OLD ROUTER/120B 71/100. JEV SUPPLIES 31 REPLIES; ALL 31 PASS INTENT, TOOL AND SCOPED-RENDERER CHECKS. TWENTY FALLBACK PLANS STILL FAIL. TIMING IS OBSERVATIONAL. FULL ANSWER ACCURACY AND GENERAL ENABLEMENT REMAIN UNQUALIFIED; NORMAL MODEL/JEV MODE UNCHANGED.**
 
 ## 0. Current status and next work — 2026-10-08
+
+**2026-10-08 Jev-first with improved routing complete:**
+[Results, answer audit and next actions](docs/evidence/chatbot-latency/darija-jev-first-fix-results-20261008.md)
+record 100 unchanged Darija/Arabizi questions through guarded Jev-first and the
+improved router/CoreWeave 20B fallback. Tool plans pass 80/100 (42/50 Arabic,
+38/50 Arabizi), versus Jev-off 74/100. There are 11 gains and five regressions;
+separate processes and ordinary model outputs prevent a controlled causal claim.
+Jev supplies 31 replies, all correct against frozen intents/tool plans and the
+scoped renderer audit. Eighteen synchronous refusals also avoid classification;
+49 questions avoid GPT generation. Of 82 classifier attempts, 81 complete and
+71 agree with assistant labels; no incorrect choice is selected. Five populated
+renderer samples and all 130 unsupported forced-choice vetoes pass offline.
+Mean full reply 1.23 seconds is observational only. Known charges $0.010504994;
+one cancelled decision keeps null cost and its reservation. Two segments preserve
+q01–q13 and continue only q14–q100 under reduced limits; no benchmark retries.
+All failed reads have required tools offered; 20 fallback plans still fail.
+Focus next on safe Jev paraphrase coverage and parameter-aware plans, upcoming
+exam acceptance, filters/identity clarification and malformed fallback calls.
+Upcoming exams remain excluded from the current core Jev policy. The adapter is
+still fixture/admin/first-turn only; no production enablement follows from this
+test. Fixture off/disabled/key removed/stopped; primary app and concurrent edits
+untouched. 378 relevant tests, 550 script tests, typecheck, lint and boundaries pass.
 
 **2026-10-08 routing fixes and 20B regression pass complete:**
 [Results, limitations and next work](docs/evidence/chatbot-latency/darija-router-fix-results-20261008.md)

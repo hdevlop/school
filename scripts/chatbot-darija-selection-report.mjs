@@ -59,7 +59,7 @@ if (import.meta.main) {
   const run = { ...segments.at(-1), protocol: segments[0].protocol,
     rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts) };
   const [corpus, registry, fixture] = parsed.slice(runPaths.length);
-  if (!['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix'].includes(run.protocol.purpose)) throw Error('Require the frozen Darija run');
+  if (!['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix'].includes(run.protocol.purpose)) throw Error('Require the frozen Darija run');
   if (new Set(run.rows.map(row => row.caseId + '/' + row.experimentArm)).size !== run.rows.length) throw Error('Duplicate dispatch');
   const fixtureValues = Object.fromEntries(Object.entries(fixture).map(([key, content]) =>
     [key, JSON.parse(content.find(item => item.type === 'text').text)]));
