@@ -4,6 +4,17 @@ Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA THREE-PATH COMPARIS
 
 ## 0. Current status and next work — 2026-10-08
 
+**2026-10-08 fresh router/20B repeat complete:** [Comparison and next work](docs/evidence/chatbot-latency/darija-router20-repeat-results-20261008.md)
+records 100 new Darija/Arabizi chats, Jev off, zero classifier attempts, CoreWeave
+only and no benchmark retries. Tool checks pass 58/100 (38/50 Arabic script,
+20/50 Arabizi), versus the earlier router-only 57/100 and saved Jev-first 66/100.
+Mean complete response is 1.13 seconds. Forty-one cases fail both router runs;
+97/100 outcomes agree. Actual captured charges are $0.00935099, none unknown.
+Tool checks do not establish full answer accuracy. The fixture is cleaned up and
+stopped; primary app/configuration and concurrent UI work remain untouched.
+543 script tests and lint pass. Next work remains Arabizi retrieval, scope,
+ID lookup, filters, clarification and malformed tool-call investigation.
+
 **2026-10-08 Darija comparison complete:** [Results, limitations and next fixes](docs/evidence/chatbot-latency/darija-selection-results-20261008.md)
 record 300 completed streams on 100 reviewed questions, 50 paired families, the
 same CoreWeave-only 20B fallback and no French reruns. Jev-first passes 66/100 tool

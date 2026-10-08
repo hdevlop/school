@@ -9,7 +9,7 @@ if (!runPath || !usagePath || !outPath || existsSync(outPath)) throw Error('Supp
 const inputs = paths => paths.split(',').map(path => ({ path, bytes: readFileSync(path) }));
 const runInputs = inputs(runPath), usageInputs = inputs(usagePath);
 const segments = runInputs.map(input => JSON.parse(input.bytes.toString('utf8')));
-if (segments.some(run => !['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison'].includes(run.protocol.purpose))) throw Error('Require the frozen model comparison');
+if (segments.some(run => !['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison', 'darija-router-20b-repeat'].includes(run.protocol.purpose))) throw Error('Require the frozen model comparison');
 const run = { ...segments.at(-1), protocol: segments[0].protocol,
   rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts),
   chatsDispatched: segments.reduce((sum, segment) => sum + segment.chatsDispatched, 0) };
@@ -17,7 +17,7 @@ if (new Set(run.rows.map(row => `${row.caseId}/${row.experimentArm ?? `${row.mod
   throw Error('Duplicate arm/case dispatch; do not hide retries');
 const calls = usageInputs.flatMap(input => input.bytes.toString('utf8').trim().split(/\r?\n/u).filter(Boolean).map(line => JSON.parse(line)));
 const byId = new Set();
-const allowIncompleteCaptures = run.protocol.purpose === 'darija-tool-selection-comparison';
+const allowIncompleteCaptures = ['darija-tool-selection-comparison', 'darija-router-20b-repeat'].includes(run.protocol.purpose);
 if (calls.some(call => !call.generationId ? !(allowIncompleteCaptures && call.incomplete === true)
   : byId.has(call.generationId) || !byId.add(call.generationId)))
   throw Error('Missing or duplicate generation identifiers; do not double-count billing');
@@ -92,7 +92,8 @@ const report = { status: run.status, stoppedReason: run.stoppedReason ?? null, q
     'Provider response usage.cost includes started model calls, including failed answers. No missing costs counted as zero.',
     'Per-1000 figures project this observed mix; they are not a price guarantee.',
     'Different hosts and retained routing caches; these are operational configurations, not a controlled same-host model comparison.',
-    run.protocol.arms ? 'Bounded candidate-first is experimental; fallback includes classification wait. One observation per case/arm; repeat under concurrent traffic before rollout.'
+    run.protocol.purpose === 'darija-router-20b-repeat' ? 'Existing-router repeat with Jev off; comparisons with earlier runs have different processes, caches and request order. Not a controlled causal Jev comparison.'
+      : run.protocol.arms ? 'Bounded candidate-first is experimental; fallback includes classification wait. One observation per case/arm; repeat under concurrent traffic before rollout.'
       : 'Parallel Jev policy; this does not test the proposed Jev-first scheduling tradeoff.'] };
 writeFileSync(outPath, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
 console.log(JSON.stringify({ output: outPath, status: report.status, totalChats: report.totalChats,

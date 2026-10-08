@@ -160,29 +160,33 @@ export function firstComparisonProtocol(continuationPath, generationUsagePath, r
   return comparison;
 }
 export function fingerprint(hashes) { return createHash('sha256').update(JSON.stringify(hashes)).digest('hex'); }
-export function darijaComparisonProtocol(continuationPath, generationUsagePath) {
+export function darijaComparisonProtocol(continuationPath, generationUsagePath, routerOnly = false) {
   const protocol = fullChatProtocol();
   const casesPath = 'datasets/chatbot-latency/darija-tool-selection-20261008.json';
   const corpus = JSON.parse(readFileSync(casesPath, 'utf8'));
   if (!isDeepStrictEqual(corpus.cases.map(({ id, query, language, intent, familyId }) =>
     ({ id, query, language, intent, familyId })), jevDarijaCases))
     throw Error('Darija server catalog differs from the frozen reviewed wording');
-  const arms = [
+  const availableArms = [
     { experimentArm: '20b-coreweave-off', model: 'openai/gpt-oss-20b', mode: 'off', strategy: 'parallel', provider: 'coreweave-only' },
     { experimentArm: '20b-coreweave-first', model: 'openai/gpt-oss-20b', mode: 'on', strategy: 'candidate-first', provider: 'coreweave-only' },
     { experimentArm: '20b-coreweave-router-first', model: 'openai/gpt-oss-20b', mode: 'on', strategy: 'router-first', provider: 'coreweave-only' },
   ];
-  const comparison = { ...protocol, purpose: 'darija-tool-selection-comparison', cases: corpus.cases, casesPath, arms,
+  const arms = routerOnly ? availableArms.slice(0, 1) : availableArms;
+  const comparison = { ...protocol, purpose: routerOnly ? 'darija-router-20b-repeat' : 'darija-tool-selection-comparison', cases: corpus.cases, casesPath, arms,
     models: ['openai/gpt-oss-20b'], experimentEnabled: true,
-    jobs: corpus.cases.flatMap((item, index) => [...arms.slice(index % 3), ...arms.slice(0, index % 3)]
+    jobs: corpus.cases.flatMap((item, index) => [...arms.slice(index % arms.length), ...arms.slice(0, index % arms.length)]
       .map(arm => ({ caseId: item.id, ...arm }))),
-    maxChats: 300, maxClassifications: 200, classificationMaxUsd: 0.03,
+    maxChats: routerOnly ? 100 : 300, maxClassifications: routerOnly ? 0 : 200, classificationMaxUsd: routerOnly ? 0 : 0.03,
+    maxCombinedEstimatedUsd: routerOnly ? 0.10 : protocol.maxCombinedEstimatedUsd,
     startSpacingMs: 1000, generationReserveUsd: 0.0007, restoresModel: 'openai/gpt-oss-120b', retainModelToolErrors: true,
     averageResponseLimitSeconds: 2, primaryMetric: 'correct tools and arguments, by script and family',
     aggregateUsageRequired: false,
     sourceHashes: { ...sourceHashes(), [casesPath]: createHash('sha256').update(readFileSync(casesPath)).digest('hex') },
     providerPolicy: 'Same CoreWeave-only 20B fallback on all three fixed synthetic arms; no provider fallback.',
-    comparisonPolicy: '100 reused owner-reviewed Darija/Arabizi questions, 50 paired families, three rotated paths; no French. Router-first completes ordinary preparation including context before classification and reuses it on decline. No paid-call retries; accuracy before cost; average full response below two seconds is sufficient.' };
+    comparisonPolicy: routerOnly
+      ? 'Fresh repeat of existing router with CoreWeave-only GPT-OSS 20B and Jev off: 100 unchanged reviewed Darija/Arabizi questions, 50 families, no French. Compare with saved runs; separate processes and sequential case order do not establish a controlled Jev effect. No benchmark retries; accuracy first; average below two seconds sufficient.'
+      : '100 reused owner-reviewed Darija/Arabizi questions, 50 paired families, three rotated paths; no French. Router-first completes ordinary preparation including context before classification and reuses it on decline. No paid-call retries; accuracy before cost; average full response below two seconds is sufficient.' };
   if (!continuationPath) return comparison;
   if (!generationUsagePath) throw Error('Require preserved generation usage for continuation');
   const runInputs = continuationPath.split(',').map(path => ({ path, bytes: readFileSync(path) }));
@@ -196,7 +200,7 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath) 
     const unknown = segment.attempts.filter(a => a.costUsd === null);
     if (segment.protocol.purpose !== comparison.purpose
       || !isDeepStrictEqual(segment.protocol.cases, comparison.cases) || !isDeepStrictEqual(segment.protocol.arms, comparison.arms)
-      || segment.protocol.maxChats !== 300 - offset || (segment.protocol.continuation?.completedChats ?? 0) !== offset
+      || segment.protocol.maxChats !== comparison.maxChats - offset || (segment.protocol.continuation?.completedChats ?? 0) !== offset
       || !Number.isSafeInteger(count) || count <= 0 || segment.rows.length !== count
       || !isDeepStrictEqual(segment.rows.map(({ caseId, experimentArm, model, mode, strategy, provider }) =>
         ({ caseId, experimentArm, model, mode, strategy, provider })), jobs)
@@ -248,7 +252,7 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath) 
 }
 export function checkSource(protocol) {
   const { sourceFingerprint: _sourceFingerprint, ...declared } = protocol;
-  const expected = protocol.purpose === 'darija-tool-selection-comparison' ? darijaComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath)
+  const expected = ['darija-tool-selection-comparison', 'darija-router-20b-repeat'].includes(protocol.purpose) ? darijaComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.purpose === 'darija-router-20b-repeat')
     : protocol.purpose === 'coreweave-jev-first-comparison'
     ? firstComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.continuation?.retainedUnknownCosts === 1)
     : protocol.purpose === 'two-model-jev-parallel-comparison'

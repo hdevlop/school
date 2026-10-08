@@ -46,19 +46,20 @@ export function scoreSelection(row, item, schemas, knownIds, today) {
 }
 
 if (import.meta.main) {
-  const [runPath, outPath] = process.argv.slice(2);
+  const [runPath, outPath,
+    registryPath = 'docs/evidence/chatbot-latency/darija-selection-tools-20261008.json',
+    fixturePath = 'docs/evidence/chatbot-latency/darija-selection-fixture-data-20261008.json'] = process.argv.slice(2);
   if (!runPath || !outPath || existsSync(outPath)) throw Error('Supply a run and a new output path');
   const runPaths = runPath.split(',');
   const inputPaths = [...runPaths, 'datasets/chatbot-latency/darija-tool-selection-20261008.json',
-    'docs/evidence/chatbot-latency/darija-selection-tools-20261008.json',
-    'docs/evidence/chatbot-latency/darija-selection-fixture-data-20261008.json'];
+    registryPath, fixturePath];
   const inputs = inputPaths.map(path => ({ path, bytes: readFileSync(path) }));
   const parsed = inputs.map(input => JSON.parse(input.bytes.toString('utf8').replace(/^\uFEFF/u, '')));
   const segments = parsed.slice(0, runPaths.length);
   const run = { ...segments.at(-1), protocol: segments[0].protocol,
     rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts) };
   const [corpus, registry, fixture] = parsed.slice(runPaths.length);
-  if (run.protocol.purpose !== 'darija-tool-selection-comparison') throw Error('Require the frozen Darija run');
+  if (!['darija-tool-selection-comparison', 'darija-router-20b-repeat'].includes(run.protocol.purpose)) throw Error('Require the frozen Darija run');
   if (new Set(run.rows.map(row => row.caseId + '/' + row.experimentArm)).size !== run.rows.length) throw Error('Duplicate dispatch');
   const fixtureValues = Object.fromEntries(Object.entries(fixture).map(([key, content]) =>
     [key, JSON.parse(content.find(item => item.type === 'text').text)]));

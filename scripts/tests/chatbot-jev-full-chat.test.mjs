@@ -17,6 +17,18 @@ test('Darija comparison freezes three same-model paths and both scripts without 
   expect(() => checkSource({ ...protocol, averageResponseLimitSeconds: 5 })).toThrow();
 });
 
+test('router-only repeat freezes 100 existing-router 20B chats with no classifier allowance', () => {
+  const protocol = darijaComparisonProtocol(undefined, undefined, true);
+  expect(protocol.purpose).toBe('darija-router-20b-repeat');
+  expect(protocol.jobs).toHaveLength(100);
+  expect(protocol.maxClassifications).toBe(0);
+  expect(protocol.classificationMaxUsd).toBe(0);
+  expect(protocol.maxCombinedEstimatedUsd).toBe(0.10);
+  expect(protocol.jobs.every(job => job.mode === 'off' && job.experimentArm === '20b-coreweave-off')).toBe(true);
+  expect(() => checkSource(protocol)).not.toThrow();
+  expect(() => checkSource({ ...protocol, jobs: protocol.jobs.slice(1) })).toThrow();
+});
+
 test('Darija continuation does not replay the completed prefix and deducts unknown capture reserves', () => {
   const runPath = 'docs/evidence/chatbot-latency/darija-selection-run-20261008.json';
   const usagePath = 'docs/evidence/chatbot-latency/darija-selection-generation-prefix-20261008.jsonl';

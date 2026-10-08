@@ -14,7 +14,8 @@ if ([fixtureMode, execute, preflight].filter(Boolean).length > 1) throw new Erro
 const defaultPlan = 'docs/evidence/chatbot-latency/jev-billing-observer-plan-20261007.json';
 const planPath = option('plan', defaultPlan);
 if (!fixtureMode && !execute && !preflight) {
-  const plan = args.includes('--darija-comparison') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'))
+  const plan = args.includes('--darija-router-repeat') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), true)
+    : args.includes('--darija-comparison') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'))
     : args.includes('--first-comparison') ? firstComparisonProtocol(option('continue-from'), option('generation-usage'), args.includes('--retain-rejected-reservation'))
     : args.includes('--model-comparison') ? modelComparisonProtocol(option('continue-from'), option('generation-usage'))
     : fullChatProtocol(option('continue-from'));
@@ -41,7 +42,7 @@ const report = { stage: fixtureMode ? 'mock-full-chat-fixture' : preflight ? 'un
 writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
 const save = () => writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 let fixture, token;
-const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison'].includes(protocol.purpose);
+const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison', 'darija-router-20b-repeat'].includes(protocol.purpose);
 let selectedModel;
 async function request(path, body, correlation = randomUUID(), method) {
   if (fixture) return fixture.call(path, body, 'admin', option('year', '2026-2027'), correlation);

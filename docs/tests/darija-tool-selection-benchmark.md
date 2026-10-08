@@ -79,6 +79,13 @@ unqualified, especially clarification and nonempty filters. Jev-first with the
 existing router as fallback is the development recommendation; production
 defaults remain unchanged. The report names concrete quality fixes to do next.
 
+The [fresh router + 20B repeat](../evidence/chatbot-latency/darija-router20-repeat-results-20261008.md)
+adds 100 completed chats with Jev off and zero classifier allowance: 58/100 tool
+checks, 38/50 Arabic script, 20/50 Arabizi and 1.13 seconds mean. Forty-one
+questions fail both router runs; 97/100 check outcomes agree. Saved Jev-first
+remains 66/100. Processes/order differ; this is not a controlled new Jev effect.
+The quality-fix recommendation is unchanged.
+
 ## Earlier saved-call evidence
 
 The [Darija-only reanalysis](../evidence/chatbot-latency/darija-selection-reanalysis-20261008.md)

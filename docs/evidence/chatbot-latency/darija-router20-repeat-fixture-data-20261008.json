@@ -1,0 +1,38 @@
+﻿{
+    "teachers_get_teacher_count":  [
+                                       {
+                                           "type":  "text",
+                                           "text":  "{\n  \"count\": 0\n}"
+                                       }
+                                   ],
+    "students_get_student_count":  [
+                                       {
+                                           "type":  "text",
+                                           "text":  "{\n  \"count\": 8\n}"
+                                       }
+                                   ],
+    "sections_get_sections":  [
+                                  {
+                                      "type":  "text",
+                                      "text":  "[\n  {\n    \"id\": \"history-section-2026-a\",\n    \"name\": \"A\",\n    \"classId\": \"history-class-2026\",\n    \"maxStudents\": 30,\n    \"roomNumber\": null,\n    \"status\": \"active\",\n    \"createdAt\": \"2026-10-03 15:50:27.555543\",\n    \"updatedAt\": \"2026-10-03 15:50:27.555543\",\n    \"class\": {\n      \"id\": \"history-class-2026\",\n      \"name\": \"History 2026-2027\",\n      \"description\": null,\n      \"academicYear\": \"2026-2027\",\n      \"level\": null,\n      \"createdAt\": \"2026-10-03 15:50:27.555543\",\n      \"updatedAt\": \"2026-10-03 15:50:27.555543\"\n    }\n  },\n  {\n    \"id\": \"history-section-2026-b\",\n    \"name\": \"B\",\n    \"classId\": \"history-class-2026\",\n    \"maxStudents\": 30,\n    \"roomNumber\": null,\n    \"status\": \"active\",\n    \"createdAt\": \"2026-10-03 15:50:27.555543\",\n    \"updatedAt\": \"2026-10-03 15:50:27.555543\",\n    \"class\": {\n      \"id\": \"history-class-2026\",\n      \"name\": \"History 2026-2027\",\n      \"description\": null,\n      \"academicYear\": \"2026-2027\",\n      \"level\": null,\n      \"createdAt\": \"2026-10-03 15:50:27.555543\",\n      \"updatedAt\": \"2026-10-03 15:50:27.555543\"\n    }\n  }\n]"
+                                  }
+                              ],
+    "classes_get_classes":  [
+                                {
+                                    "type":  "text",
+                                    "text":  "[\n  {\n    \"id\": \"history-class-2026\",\n    \"name\": \"History 2026-2027\",\n    \"description\": null,\n    \"academicYear\": \"2026-2027\",\n    \"level\": null,\n    \"cycleId\": null,\n    \"createdAt\": \"2026-10-03 15:50:27.555543\",\n    \"updatedAt\": \"2026-10-03 15:50:27.555543\",\n    \"sections\": [\n      {\n        \"id\": \"history-section-2026-a\",\n        \"name\": \"A\"\n      },\n      {\n        \"id\": \"history-section-2026-b\",\n        \"name\": \"B\"\n      }\n    ]\n  }\n]"
+                                }
+                            ],
+    "attendance_get_today_students":  [
+                                          {
+                                              "type":  "text",
+                                              "text":  "[]"
+                                          }
+                                      ],
+    "exams_get_all":  [
+                          {
+                              "type":  "text",
+                              "text":  "[]"
+                          }
+                      ]
+}
