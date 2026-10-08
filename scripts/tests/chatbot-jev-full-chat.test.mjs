@@ -17,6 +17,17 @@ test('Darija comparison freezes three same-model paths and both scripts without 
   expect(() => checkSource({ ...protocol, averageResponseLimitSeconds: 5 })).toThrow();
 });
 
+test('120B tool check freezes zero Jev allowance and records time without a time gate', () => {
+  const p = darijaComparisonProtocol(undefined, undefined, '120b');
+  expect(p.jobs).toHaveLength(100);
+  expect(p.jobs.every(job => job.model === 'openai/gpt-oss-120b' && job.mode === 'off' && job.experimentArm === '120b-baseline')).toBe(true);
+  expect(p.maxClassifications).toBe(0); expect(p.averageResponseLimitSeconds).toBeNull();
+  expect(p.captureToolNames).toBe(true);
+  expect(p.maxChats * p.generationReserveUsd).toBeLessThan(p.maxCombinedEstimatedUsd);
+  expect(() => checkSource(p)).not.toThrow();
+  expect(() => checkSource({ ...p, averageResponseLimitSeconds: 2 })).toThrow();
+});
+
 test('router-only repeat freezes 100 existing-router 20B chats with no classifier allowance', () => {
   const protocol = darijaComparisonProtocol(undefined, undefined, true);
   expect(protocol.purpose).toBe('darija-router-20b-repeat');

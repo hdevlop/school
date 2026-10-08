@@ -1,0 +1,4252 @@
+{
+  "status": "completed",
+  "newPaidRequests": 0,
+  "qualification": false,
+  "source": [
+    {
+      "path": "docs/evidence/chatbot-latency/darija-router120-check-results-20261008.json",
+      "sha256": "8018cfab95ff3e1562564494ca97a7e1e22fccdd973a06390fa033da33c0a66f"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-router120-check-run-20261008.json",
+      "sha256": "9917cfa1cf6e444928189df3f06269a9b60c38fead1e27d745e1a7ea2b8f49a4"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-router120-check-generation-20261008.jsonl",
+      "sha256": "a92ced8b60a1a29cef355535ec3491cc0df0056e7508e305306b8fd2f18f62ed"
+    }
+  ],
+  "analyzerSha256": "563c32eb4bf41b80f948f667477a5c7dd667426bcc8a1b60ff610f2f569bff61",
+  "categories": {
+    "passed_tool_checks": 61,
+    "required_tools_missing_from_offer": 34,
+    "required_tools_offered_but_plan_failed": 5
+  },
+  "rows": [
+    {
+      "caseId": "jev-operator-q01",
+      "arm": "120b-baseline",
+      "query": "سلام عليكم، واش نقدر نسولك على شي حاجة؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "alerts_get_alerts_by_teacher"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471187-60VxifXhBHcCyB72YuU8",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "alerts_get_alerts_by_teacher"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q02",
+      "arm": "120b-baseline",
+      "query": "salam 3likom, wach n9der nsowlek 3la chi 7aja?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471189-zjxZvsiuDolU0uTCU8NT",
+          "model": "openai/gpt-oss-120b",
+          "provider": "CoreWeave",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q03",
+      "arm": "120b-baseline",
+      "query": "الله يجازيك بخير، هادشي اللي كنت محتاج.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_student",
+        "search_search_students"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471192-FPQWcs2QWWJE3OurE1tj",
+          "model": "openai/gpt-oss-120b",
+          "provider": "CoreWeave",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_student",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q04",
+      "arm": "120b-baseline",
+      "query": "lah yjazik bikhir, hadchi li kent me7taj.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_attendance_trend",
+        "search_search_global"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471195-XmuFmytwhKVj6aPtUUPv",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "search_search_global"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q05",
+      "arm": "120b-baseline",
+      "query": "وريني التواريخ ديال الفروض الجايين فالمدرسة كاملة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "exams_get_all",
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "exams_get_by_teacher",
+        "teacher-profile_get_schedule_today",
+        "exams_get_by_subject",
+        "assessments_get_today_assessments",
+        "teacher-profile_get_pending_grading"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471200-CeRX9krb7MfKFnoOdeBh",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "exams_get_all",
+            "exams_get_upcoming_exams",
+            "exams_get_today_exams",
+            "exams_get_by_teacher",
+            "teacher-profile_get_schedule_today",
+            "exams_get_by_subject",
+            "assessments_get_today_assessments",
+            "teacher-profile_get_pending_grading"
+          ]
+        },
+        {
+          "generationId": "gen-1791471202-S7SFZWbFRcfIFsVTRhFd",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "exams_get_all",
+            "exams_get_upcoming_exams",
+            "exams_get_today_exams",
+            "exams_get_by_teacher",
+            "teacher-profile_get_schedule_today",
+            "exams_get_by_subject",
+            "assessments_get_today_assessments",
+            "teacher-profile_get_pending_grading"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q06",
+      "arm": "120b-baseline",
+      "query": "werini tawarikh dyal lforod jayin f lmdrasa kamla.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "exams_get_upcoming_exams",
+          "exams_get_all"
+        ]
+      ],
+      "offeredToolNames": [
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "academic-dashboard_get_kpis",
+        "classes_get_classes",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471204-9bMqJl5NkdYTnSeOAwna",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "academic-dashboard_get_kpis",
+            "classes_get_classes",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q07",
+      "arm": "120b-baseline",
+      "query": "بغيت غير العدد ديال التلاميذ اللي عندنا كاملين، بلا لائحة ديال السميات.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-profile_get_my_students",
+        "teacher-dashboard_get_attendance_trend",
+        "sections_get_students",
+        "attendance_get_today_students",
+        "classes_get_class_students",
+        "attendance_get_by_date"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471208-nLvbHZ9fV1k822ZBimOE",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-profile_get_my_students",
+            "teacher-dashboard_get_attendance_trend",
+            "sections_get_students",
+            "attendance_get_today_students",
+            "classes_get_class_students",
+            "attendance_get_by_date"
+          ]
+        },
+        {
+          "generationId": "gen-1791471210-wl2f8VoVEn6k7D0y9pQy",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-profile_get_my_students",
+            "teacher-dashboard_get_attendance_trend",
+            "sections_get_students",
+            "attendance_get_today_students",
+            "classes_get_class_students",
+            "attendance_get_by_date"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q08",
+      "arm": "120b-baseline",
+      "query": "bghit ghir l3adad dyal tlamd li 3ndna kamlin, bla lista dyal smiyat.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_student_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teachers",
+        "academic-dashboard_get_kpis",
+        "sections_get_students",
+        "teachers_get_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471212-HGa7se3SVSELH98dTCGf",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teachers",
+            "academic-dashboard_get_kpis",
+            "sections_get_students",
+            "teachers_get_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471216-xDMv6wmfjfn7xU5GIGhx",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teachers",
+            "academic-dashboard_get_kpis",
+            "sections_get_students",
+            "teachers_get_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q09",
+      "arm": "120b-baseline",
+      "query": "شحال من أستاذ كيقري فالمدرسة ديالنا دابا؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teachers_get_teachers",
+        "classes_get_class_teachers",
+        "teacher-overview_get_overview",
+        "attendance_get_by_teacher",
+        "teacher-overview_get_attendance_trend",
+        "teacher-dashboard_get_attendance_trend"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471217-7Ydh8SgGnavHmV9XsvKE",
+          "model": "openai/gpt-oss-120b",
+          "provider": "CoreWeave",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teachers_get_teachers",
+            "classes_get_class_teachers",
+            "teacher-overview_get_overview",
+            "attendance_get_by_teacher",
+            "teacher-overview_get_attendance_trend",
+            "teacher-dashboard_get_attendance_trend"
+          ]
+        },
+        {
+          "generationId": "gen-1791471220-wqqRWpRX49y5p2ZZmGWU",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teachers_get_teachers",
+            "classes_get_class_teachers",
+            "teacher-overview_get_overview",
+            "attendance_get_by_teacher",
+            "teacher-overview_get_attendance_trend",
+            "teacher-dashboard_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q10",
+      "arm": "120b-baseline",
+      "query": "ch7al mn ostad kay9erri f lmdrasa dyalna daba?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:teachers_get_teacher_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "classes_get_class_teachers",
+        "settings_get_public_settings"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471222-2O8oLx1Um3UPpFnoAXfF",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "classes_get_class_teachers",
+            "settings_get_public_settings"
+          ]
+        },
+        {
+          "generationId": "gen-1791471225-Ru8o5Whxf6b7G65YhscC",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "classes_get_class_teachers",
+            "settings_get_public_settings"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q11",
+      "arm": "120b-baseline",
+      "query": "عطيني عدد التلاميذ بوحدو وعدد الأساتذة بوحدو، ديال المدرسة كاملة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "academic-dashboard_get_kpis",
+        "staff_get_staff_count",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "teacher-profile_get_my_students"
+      ],
+      "modelCalls": 3,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471228-Tvt2Sbbzy8cGFEPv5mrA",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "teacher-profile_get_my_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471230-ebtxqkYEf5akf0q2YyQw",
+          "model": "openai/gpt-oss-120b",
+          "provider": "CoreWeave",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "teacher-profile_get_my_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471232-Ru1NYhIJndY6sGnOFy6C",
+          "model": "openai/gpt-oss-120b",
+          "provider": "CoreWeave",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "teacher-profile_get_my_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q12",
+      "arm": "120b-baseline",
+      "query": "3tini 3adad tlamd bo7do w 3adad lasatida bo7do, dyal lmdrasa kamla.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_student_count",
+        "missing_required_tool:teachers_get_teacher_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "search_search_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471234-Q194uan0imCJ1IfcfeQf",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471234-OrDwPx6VtWCYzAV2HTEv",
+          "model": "openai/gpt-oss-120b",
+          "provider": "CoreWeave",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q13",
+      "arm": "120b-baseline",
+      "query": "شنو هما الأقسام اللي عندنا فالمدرسة؟",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes"
+        ]
+      ],
+      "offeredToolNames": [
+        "sections_get_teachers",
+        "sections_get_students",
+        "sections_get_parents",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-profile_get_my_students",
+        "settings_get_public_settings",
+        "classes_get_class_sections"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471236-Jb0uOLmouYkDZQX0vCqg",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "sections_get_teachers",
+            "sections_get_students",
+            "sections_get_parents",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-profile_get_my_students",
+            "settings_get_public_settings",
+            "classes_get_class_sections"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q14",
+      "arm": "120b-baseline",
+      "query": "chno homa l2a9sam li 3ndna f lmdrasa?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "settings_get_public_settings",
+        "academic-dashboard_get_kpis",
+        "classes_get_classes"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471243-FE7ScSLRYurbFLPhJWMf",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "classes_get_classes"
+          ]
+        },
+        {
+          "generationId": "gen-1791471245-9mPrIf6VLI2Q8S1i8MaN",
+          "model": "openai/gpt-oss-120b",
+          "provider": "CoreWeave",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "classes_get_classes"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q15",
+      "arm": "120b-baseline",
+      "query": "وريني شكون اللي حاضر وشكون اللي غايب من التلاميذ اليوم فالمدرسة كاملة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "attendance_get_today_students",
+        "attendance_get_by_student",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_teacher",
+        "attendance_get_today_staff",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_attendance_trend",
+        "attendance_get_today_all",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471247-XNaODh2cAe9eAqYAb9aP",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "attendance_get_today_students",
+            "attendance_get_by_student",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_teacher",
+            "attendance_get_today_staff",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_attendance_trend",
+            "attendance_get_today_all",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471249-aRpA3ltm39YRiyOCvdpp",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_today_students",
+            "attendance_get_by_student",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_teacher",
+            "attendance_get_today_staff",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_attendance_trend",
+            "attendance_get_today_all",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q16",
+      "arm": "120b-baseline",
+      "query": "werini chkoun li 7ader w chkoun li ghayeb mn tlamd lyoum f lmdrasa kamla.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:attendance_get_today_students|attendance_get_today_all|attendance_get_by_date"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today_all",
+          "attendance_get_by_date"
+        ]
+      ],
+      "offeredToolNames": [
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "classes_get_class_teachers",
+        "sections_get_students",
+        "teachers_get_students"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471250-1rHiI8RsUEGfEoPCQbVc",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "classes_get_class_teachers",
+            "sections_get_students",
+            "teachers_get_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q17",
+      "arm": "120b-baseline",
+      "query": "زيد ليا تلميذ جديد فالقسم، من بعد نعطيك المعلومات ديالو.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q18",
+      "arm": "120b-baseline",
+      "query": "zid liya tilmid jdid f l9ism, mn b3d n3tik lma3lomat dyalo.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q19",
+      "arm": "120b-baseline",
+      "query": "بدل نمرة التيليفون ديال هاد ولي الأمر.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q20",
+      "arm": "120b-baseline",
+      "query": "beddel nmra dyal tilifon dyal had wali l2amr.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q21",
+      "arm": "120b-baseline",
+      "query": "حيد هاد الخلاص اللي تسجل بالغلط.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q22",
+      "arm": "120b-baseline",
+      "query": "7iyed had lkhlas li tsejjel b lghalat.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q23",
+      "arm": "120b-baseline",
+      "query": "سجل هاد التلميذ غايب اليوم.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q24",
+      "arm": "120b-baseline",
+      "query": "sejjel had tilmid ghayeb lyoum.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q25",
+      "arm": "120b-baseline",
+      "query": "إلى بغيت نزيد تلميذ جديد بوحدي، شنو خاصني ندير؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_create"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471263-SQvCH3jAScDpPi3ATv4L",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_create"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q26",
+      "arm": "120b-baseline",
+      "query": "ila bghit nzid tilmid jdid b wa7di, chno khasni ndir?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471267-bwS0QpwneVJPojMYQxOl",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q27",
+      "arm": "120b-baseline",
+      "query": "شحال من تلميذ كاين غير فالسادس ابتدائي؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-profile_get_my_students",
+        "sections_get_students",
+        "classes_get_class_students",
+        "students_get_students",
+        "classes_get_classes",
+        "attendance_get_today_students",
+        "attendance_get_by_date"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471272-ENVNJSpaotxqWSZqkmCf",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-profile_get_my_students",
+            "sections_get_students",
+            "classes_get_class_students",
+            "students_get_students",
+            "classes_get_classes",
+            "attendance_get_today_students",
+            "attendance_get_by_date"
+          ]
+        },
+        {
+          "generationId": "gen-1791471275-i4XdmTW4W6oul3kRpJiX",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-profile_get_my_students",
+            "sections_get_students",
+            "classes_get_class_students",
+            "students_get_students",
+            "classes_get_classes",
+            "attendance_get_today_students",
+            "attendance_get_by_date"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q28",
+      "arm": "120b-baseline",
+      "query": "ch7al mn tilmid kayn ghir f ssadis ibtida2i?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes",
+          "sections_get_sections"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "settings_get_public_settings",
+        "classes_get_class_analytics"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471279-vopeAjzfHDx84cYARztc",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "classes_get_class_analytics"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q29",
+      "arm": "120b-baseline",
+      "query": "جمع ليا عدد التلاميذ مع عدد الأساتذة وعطيني المجموع.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "academic-dashboard_get_kpis",
+        "staff_get_staff_count",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "teacher-overview_get_overview",
+        "student-profile_get_attendance_summary"
+      ],
+      "modelCalls": 3,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471288-NDqsBjWv8U44e9jiXjD2",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "staff_get_staff_count",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "teacher-overview_get_overview",
+            "student-profile_get_attendance_summary"
+          ]
+        },
+        {
+          "generationId": "gen-1791471288-grgAxGZxDcHHh7gvj1PN",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "staff_get_staff_count",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "teacher-overview_get_overview",
+            "student-profile_get_attendance_summary"
+          ]
+        },
+        {
+          "generationId": "gen-1791471290-8iUZgg44i4V1Pq1MjBuF",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "staff_get_staff_count",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "teacher-overview_get_overview",
+            "student-profile_get_attendance_summary"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q30",
+      "arm": "120b-baseline",
+      "query": "jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_student_count",
+        "missing_required_tool:teachers_get_teacher_count"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_attendance_trend",
+        "search_search_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471293-B80isX34mHvbNkcd9x6H",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471298-DIIcmkAQaNYNOpQ9lNPS",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q31",
+      "arm": "120b-baseline",
+      "query": "عطيني السميات ديال الأساتذة اللي كيقريو الرياضيات.",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:teachers_get_teachers"
+      ],
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_students",
+        "teacher-profile_get_my_students",
+        "teachers_get_teachers",
+        "classes_get_class_teachers",
+        "teacher-overview_get_overview",
+        "teachers_get_classes",
+        "sections_get_teachers",
+        "grades_get_by_teacher"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471300-WRY6GLn3A1948CMZhhHZ",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "teachers_get_students",
+            "teacher-profile_get_my_students",
+            "teachers_get_teachers",
+            "classes_get_class_teachers",
+            "teacher-overview_get_overview",
+            "teachers_get_classes",
+            "sections_get_teachers",
+            "grades_get_by_teacher"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q32",
+      "arm": "120b-baseline",
+      "query": "3tini smiyat dyal lasatida li kay9erriw riyadiyat.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:teachers_get_teachers"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "teachers_get_teachers"
+        ]
+      ],
+      "offeredToolNames": [
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "class-routines_get_teacher_routine",
+        "teacher-overview_get_attendance_trend"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471307-3VFo74RYqn6Ear2YL96w",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "class-routines_get_teacher_routine",
+            "teacher-overview_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q33",
+      "arm": "120b-baseline",
+      "query": "شحال من فرض عند التلاميذ هاد الشهر؟",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "tool_failed_or_blocked",
+        "missing_required_tool:exams_get_all"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "exams_get_all"
+        ]
+      ],
+      "offeredToolNames": [
+        "assessments_get_today_assessments",
+        "assessments_get_by_subject",
+        "exams_get_by_teacher",
+        "assessments_get_by_teacher",
+        "assessments_get_by_class",
+        "exams_get_today_exams",
+        "teacher-profile_get_schedule_today",
+        "assessments_get_upcoming_assessments"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471315-9lke9NQiRdHCbhX6mGQm",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "assessments_get_today_assessments",
+            "assessments_get_by_subject",
+            "exams_get_by_teacher",
+            "assessments_get_by_teacher",
+            "assessments_get_by_class",
+            "exams_get_today_exams",
+            "teacher-profile_get_schedule_today",
+            "assessments_get_upcoming_assessments"
+          ]
+        },
+        {
+          "generationId": "gen-1791471319-SzDJACfmlkAQQXHc9e6q",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "assessments_get_today_assessments",
+            "assessments_get_by_subject",
+            "exams_get_by_teacher",
+            "assessments_get_by_teacher",
+            "assessments_get_by_class",
+            "exams_get_today_exams",
+            "teacher-profile_get_schedule_today",
+            "assessments_get_upcoming_assessments"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q34",
+      "arm": "120b-baseline",
+      "query": "ch7al mn fard 3nd tlamd had chher?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:exams_get_all"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "exams_get_all"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teachers_get_teacher_count",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "classes_get_classes",
+        "teacher-profile_get_my_students",
+        "classes_get_class_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471320-Ce6ajq9WvZYrp1cSesjs",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "teachers_get_teacher_count",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "classes_get_classes",
+            "teacher-profile_get_my_students",
+            "classes_get_class_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q35",
+      "arm": "120b-baseline",
+      "query": "وريني الغياب ديال التلاميذ فالشهر اللي فات.",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:attendance_get_all|attendance_get_by_date"
+      ],
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "attendance_get_by_student",
+        "attendance_get_today_students",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "finance-dashboard_get_overdue",
+        "alerts_get_alerts_by_student",
+        "attendance_get_by_date",
+        "attendance_get_by_teacher",
+        "search_search_students"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471327-rrJLp00H8ohrZo2PYcEA",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_by_student",
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "finance-dashboard_get_overdue",
+            "alerts_get_alerts_by_student",
+            "attendance_get_by_date",
+            "attendance_get_by_teacher",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q36",
+      "arm": "120b-baseline",
+      "query": "werini lghiyab dyal tlamd f chher li fat.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:attendance_get_all|attendance_get_by_date"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "attendance_get_all",
+          "attendance_get_by_date"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count",
+        "settings_get_public_settings",
+        "teacher-overview_get_attendance_trend"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471336-GVjdYR1tjchiM3HeXZG5",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count",
+            "settings_get_public_settings",
+            "teacher-overview_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q37",
+      "arm": "120b-baseline",
+      "query": "شنو هما الأقسام اللي فيهم كثر من تلاتين تلميذ؟",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes",
+        "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes"
+        ]
+      ],
+      "offeredToolNames": [
+        "sections_get_teachers",
+        "teacher-profile_get_my_students",
+        "sections_get_students",
+        "sections_get_parents",
+        "classes_get_class_teachers",
+        "teachers_get_students",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471340-SxysiYWpWQ5C5if7CZvf",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "sections_get_teachers",
+            "teacher-profile_get_my_students",
+            "sections_get_students",
+            "sections_get_parents",
+            "classes_get_class_teachers",
+            "teachers_get_students",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q38",
+      "arm": "120b-baseline",
+      "query": "chno homa l2a9sam li fihom kter mn tlatin tilmid?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes",
+        "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes"
+        ],
+        [
+          "students_get_student_count",
+          "students_get_students",
+          "classes_get_class_students",
+          "sections_get_students"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "alerts_get_alerts_by_teacher",
+        "settings_get_public_settings",
+        "attendance_get_by_teacher"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471350-Txw19EY4lIchNGbMw5aW",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "alerts_get_alerts_by_teacher",
+            "settings_get_public_settings",
+            "attendance_get_by_teacher"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q39",
+      "arm": "120b-baseline",
+      "query": "وبالنسبة لهادوك، شنو بان ليك؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "academic-dashboard_get_kpis",
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-dashboard_get_overview",
+        "teachers_get_teacher_count"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471357-B8ovzB7J0X54tRTSHjmu",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "academic-dashboard_get_kpis",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-dashboard_get_overview",
+            "teachers_get_teacher_count"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q40",
+      "arm": "120b-baseline",
+      "query": "w b nnisba lhadok, chno ban lik?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_overview",
+        "teachers_get_teacher_count",
+        "teacher-dashboard_get_attendance_trend"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471366-Y1yMVxxZMUs1qGbnW4n6",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_overview",
+            "teachers_get_teacher_count",
+            "teacher-dashboard_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q41",
+      "arm": "120b-baseline",
+      "query": "صباح الخير، شنو تقدر تعاوني فيه؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_attendance_trend"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471370-0d2oztGBRfuRn2Cylv9X",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q42",
+      "arm": "120b-baseline",
+      "query": "sba7 lkhir, chno t9der t3awenni fih?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count",
+        "academic-dashboard_get_kpis"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471372-jKQnxwnfKg1r1qUarjTY",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count",
+            "academic-dashboard_get_kpis"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q43",
+      "arm": "120b-baseline",
+      "query": "بسلامة، نتلاقاو غدا إن شاء الله.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "settings_get_public_settings",
+        "parent-profile_get_all_upcoming_events"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471376-esQ6k4I9mFI1TJC61jIv",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "settings_get_public_settings",
+            "parent-profile_get_all_upcoming_events"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q44",
+      "arm": "120b-baseline",
+      "query": "bslama, ntla9aw ghedda nchallah.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471378-bMbjkkN80fXwL187tnr4",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q45",
+      "arm": "120b-baseline",
+      "query": "مزيان بزاف، شكرا على المساعدة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471379-v6VS3vJ8GuJUsXSrOcpq",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q46",
+      "arm": "120b-baseline",
+      "query": "mzyan bzaf, chokran 3la lmousa3ada.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471380-1F8xVRNOWrdKvMl2uuuS",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q47",
+      "arm": "120b-baseline",
+      "query": "شحال من تلميذ مسجل عندنا هاد العام؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count",
+        "students_get_students",
+        "attendance_get_today_students",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-profile_get_my_students",
+        "attendance_get_by_student",
+        "teacher-overview_get_attendance_trend",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471381-FyvwPiWQujr3m5R58y5t",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "students_get_student_count",
+            "teachers_get_teacher_count",
+            "students_get_students",
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-profile_get_my_students",
+            "attendance_get_by_student",
+            "teacher-overview_get_attendance_trend",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471383-kX0nJcZ4GT7AviuXXZo8",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "students_get_student_count",
+            "teachers_get_teacher_count",
+            "students_get_students",
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-profile_get_my_students",
+            "attendance_get_by_student",
+            "teacher-overview_get_attendance_trend",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q48",
+      "arm": "120b-baseline",
+      "query": "ch7al mn tilmid msejjel 3ndna had l3am?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_arguments:students_get_student_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "classes_get_classes"
+      ],
+      "modelCalls": 3,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471385-Jekd6K2GubEAzSFur66d",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "classes_get_classes"
+          ]
+        },
+        {
+          "generationId": "gen-1791471390-HAbx30Sl9703SmBE627V",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "classes_get_classes"
+          ]
+        },
+        {
+          "generationId": "gen-1791471391-WqiIVV5S8vWHTTvopL6t",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "classes_get_classes"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q49",
+      "arm": "120b-baseline",
+      "query": "قولي غير شحال من تلميذ كاين فالمدرسة كاملة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "staff_get_staff_count",
+        "classes_get_class_students",
+        "academic-dashboard_get_kpis",
+        "attendance_get_today_students",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-profile_get_my_students",
+        "attendance_get_by_date"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471391-tW0yqjlQQF1k6RR2u0gH",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "classes_get_class_students",
+            "academic-dashboard_get_kpis",
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-profile_get_my_students",
+            "attendance_get_by_date"
+          ]
+        },
+        {
+          "generationId": "gen-1791471394-snp7JcbCv8018y3R430v",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "classes_get_class_students",
+            "academic-dashboard_get_kpis",
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-profile_get_my_students",
+            "attendance_get_by_date"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q50",
+      "arm": "120b-baseline",
+      "query": "gouli ghir ch7al mn tilmid kayn f lmdrasa kamla.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_student_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_students",
+        "classes_get_class_teachers"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471394-JCGrpCdlj9TJ30OtiZRw",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_students",
+            "classes_get_class_teachers"
+          ]
+        },
+        {
+          "generationId": "gen-1791471395-zNZBObZ0bxmJPHDukJ2K",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_students",
+            "classes_get_class_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q51",
+      "arm": "120b-baseline",
+      "query": "عافاك، بغيت نعرف شحال فينا ديال التلاميذ.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-profile_get_my_students",
+        "classes_get_class_students",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "students_get_students",
+        "teacher-dashboard_get_attendance_trend"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471396-MlGGCN3MU7yDKvatK7HA",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-profile_get_my_students",
+            "classes_get_class_students",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "students_get_students",
+            "teacher-dashboard_get_attendance_trend"
+          ]
+        },
+        {
+          "generationId": "gen-1791471396-5EV79W48SOowdPtUf71y",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DekaLLM",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-profile_get_my_students",
+            "classes_get_class_students",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "students_get_students",
+            "teacher-dashboard_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q52",
+      "arm": "120b-baseline",
+      "query": "3afak, bghit n3ref ch7al fina dyal tlamd.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_student_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "settings_get_public_settings",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_attendance_trend"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471398-M9zur3BNglg4UaH7hOaI",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend"
+          ]
+        },
+        {
+          "generationId": "gen-1791471398-PmcbvKZFAVriZcWreKEy",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q53",
+      "arm": "120b-baseline",
+      "query": "شحال عندنا ديال الأساتذة فالمدرسة؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "teachers_get_teachers",
+        "students_get_student_count",
+        "classes_get_class_teachers",
+        "sections_get_teachers",
+        "attendance_get_by_teacher",
+        "teacher-overview_get_overview",
+        "teachers_get_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471403-Hl3rKt1QVGyxjRlslvMf",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "teachers_get_teachers",
+            "students_get_student_count",
+            "classes_get_class_teachers",
+            "sections_get_teachers",
+            "attendance_get_by_teacher",
+            "teacher-overview_get_overview",
+            "teachers_get_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471403-SWanIbzCYd2k5rEDSKoP",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "teachers_get_teachers",
+            "students_get_student_count",
+            "classes_get_class_teachers",
+            "sections_get_teachers",
+            "attendance_get_by_teacher",
+            "teacher-overview_get_overview",
+            "teachers_get_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q54",
+      "arm": "120b-baseline",
+      "query": "ch7al 3ndna dyal lasatida f lmdrasa?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:teachers_get_teacher_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "settings_get_public_settings",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_attendance_trend"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471405-SXgI3Y64n3FD7ezzHRYw",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend"
+          ]
+        },
+        {
+          "generationId": "gen-1791471405-uOhIdsKfQFNJfxy7LdGI",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q55",
+      "arm": "120b-baseline",
+      "query": "عطيني غير العدد ديال الأساتذة، ماشي السميات ديالهم.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teacher-dashboard_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_overview",
+        "sections_get_students",
+        "teachers_get_teachers",
+        "teacher-profile_get_my_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471407-g9uNwL0ROznWaKpleAHW",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_overview",
+            "sections_get_students",
+            "teachers_get_teachers",
+            "teacher-profile_get_my_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471407-sjQULcafDUQ4UW78mi8O",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_overview",
+            "sections_get_students",
+            "teachers_get_teachers",
+            "teacher-profile_get_my_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q56",
+      "arm": "120b-baseline",
+      "query": "3tini ghir l3adad dyal lasatida, machi smiyat dyalhom.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:teachers_get_teacher_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_attendance_trend",
+        "settings_get_public_settings"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471408-Xv75Ktxjf3R0sTvC1S5x",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend",
+            "settings_get_public_settings"
+          ]
+        },
+        {
+          "generationId": "gen-1791471409-FBgteMqYGK33ZI8A1TTy",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_attendance_trend",
+            "settings_get_public_settings"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q57",
+      "arm": "120b-baseline",
+      "query": "الأساتذة ديالنا شحال هوما كاملين؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "staff_get_staff_count",
+        "teachers_get_teachers",
+        "sections_get_teachers",
+        "teacher-overview_get_overview",
+        "classes_get_class_teachers",
+        "attendance_get_by_teacher"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471409-9vGdZIidEcOs0iFKx9be",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "teachers_get_teachers",
+            "sections_get_teachers",
+            "teacher-overview_get_overview",
+            "classes_get_class_teachers",
+            "attendance_get_by_teacher"
+          ]
+        },
+        {
+          "generationId": "gen-1791471410-n1O6iMI9l3XAojTROlOZ",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "teachers_get_teachers",
+            "sections_get_teachers",
+            "teacher-overview_get_overview",
+            "classes_get_class_teachers",
+            "attendance_get_by_teacher"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q58",
+      "arm": "120b-baseline",
+      "query": "lasatida dyalna ch7al homa kamlin?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:teachers_get_teacher_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis",
+        "sections_get_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471412-UFLRQuPdgxJrRoq3sWag",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "sections_get_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471412-ATkiDjI1ADFBWx8gbFQm",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis",
+            "sections_get_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q59",
+      "arm": "120b-baseline",
+      "query": "شحال من تلميذ وشحال من أستاذ كاينين عندنا؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "teachers_get_teachers",
+        "staff_get_staff_count",
+        "teacher-overview_get_overview",
+        "classes_get_class_teachers",
+        "teacher-profile_get_my_students",
+        "sections_get_teachers"
+      ],
+      "modelCalls": 3,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471413-AnaQQ2BF4myquzqYydS9",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teachers_get_teachers",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "classes_get_class_teachers",
+            "teacher-profile_get_my_students",
+            "sections_get_teachers"
+          ]
+        },
+        {
+          "generationId": "gen-1791471413-4KTCYk5q2Sub7fU9FJIK",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teachers_get_teachers",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "classes_get_class_teachers",
+            "teacher-profile_get_my_students",
+            "sections_get_teachers"
+          ]
+        },
+        {
+          "generationId": "gen-1791471414-uiXvWK4tgXcHjKhvKSAt",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "teachers_get_teachers",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "classes_get_class_teachers",
+            "teacher-profile_get_my_students",
+            "sections_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q60",
+      "arm": "120b-baseline",
+      "query": "ch7al mn tilmid w ch7al mn ostad kaynin 3ndna?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_student_count",
+        "missing_required_tool:teachers_get_teacher_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_attendance_trend",
+        "classes_get_classes"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471414-AsklqFGpDD5LbcrdcOky",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "classes_get_classes"
+          ]
+        },
+        {
+          "generationId": "gen-1791471416-3ZUz8xl7XT8AgLq54QgB",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "classes_get_classes"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q61",
+      "arm": "120b-baseline",
+      "query": "بغيت العدد ديال التلاميذ والعدد ديال الأساتذة بجوج.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "staff_get_staff_count",
+        "teacher-dashboard_get_overview"
+      ],
+      "modelCalls": 3,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471416-hTorbIERRDFsDCZR1RAa",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "staff_get_staff_count",
+            "teacher-dashboard_get_overview"
+          ]
+        },
+        {
+          "generationId": "gen-1791471417-orPjf0ODTaBW4cF0mfSN",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "staff_get_staff_count",
+            "teacher-dashboard_get_overview"
+          ]
+        },
+        {
+          "generationId": "gen-1791471417-POwx0CyV8r5DmpyGRqqa",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "staff_get_staff_count",
+            "teacher-dashboard_get_overview"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q62",
+      "arm": "120b-baseline",
+      "query": "bghit l3adad dyal tlamd w l3adad dyal lasatida bjouj.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "tool_failed_or_blocked",
+        "missing_required_tool:teachers_get_teacher_count",
+        "missing_arguments:students_get_student_count",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "search_search_students"
+      ],
+      "modelCalls": 4,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471418-4WnLiHnR7lIHUWDfegCM",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471419-zZS9wuo6uJq6QVwCWgKl",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471419-OvwhlSbn7fHpdQP7296Z",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471421-jsECjyOawJZIbyKpAYVI",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q63",
+      "arm": "120b-baseline",
+      "query": "عطيني الأرقام ديال المدرسة: التلاميذ شحال والأساتذة شحال.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "staff_get_staff_count",
+        "teacher-overview_get_overview",
+        "attendance_get_by_teacher",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-profile_get_my_students",
+        "teachers_get_by_phone"
+      ],
+      "modelCalls": 3,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471422-RApuOkpPKIARCRdUhRYc",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "attendance_get_by_teacher",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-profile_get_my_students",
+            "teachers_get_by_phone"
+          ]
+        },
+        {
+          "generationId": "gen-1791471423-TrcZr5LKP8m76vRpMRuM",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "attendance_get_by_teacher",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-profile_get_my_students",
+            "teachers_get_by_phone"
+          ]
+        },
+        {
+          "generationId": "gen-1791471425-cyBg0zjqhMI3ih8X8hbm",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "teacher-overview_get_overview",
+            "attendance_get_by_teacher",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-profile_get_my_students",
+            "teachers_get_by_phone"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q64",
+      "arm": "120b-baseline",
+      "query": "3tini l2ar9am dyal lmdrasa: tlamd ch7al w lasatida ch7al.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "tool_failed_or_blocked",
+        "missing_required_tool:students_get_student_count",
+        "missing_required_tool:teachers_get_teacher_count",
+        "unresolved_id:id",
+        "unexpected_count_tool"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_student_count"
+        ],
+        [
+          "teachers_get_teacher_count"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "settings_get_public_settings",
+        "search_search_students"
+      ],
+      "modelCalls": 3,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471426-FpiFFhq439I6B2uXBgt0",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "settings_get_public_settings",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471426-PeyE3BQGNKvrsakOb8Ov",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "settings_get_public_settings",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471427-gFJG1r3SlkvD63UpocVF",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teacher-overview_get_attendance_trend",
+            "settings_get_public_settings",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q65",
+      "arm": "120b-baseline",
+      "query": "عطيني لائحة ديال الأقسام كاملين.",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "sections_get_classes",
+        "sections_get_parents",
+        "classes_get_class_sections",
+        "sections_get_students",
+        "sections_get_teachers",
+        "sections_get_sections",
+        "teacher-dashboard_get_overview",
+        "teacher-profile_get_my_students",
+        "classes_get_classes"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471428-HhVMnxuioBg2j0OHuABE",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "sections_get_classes",
+            "sections_get_parents",
+            "classes_get_class_sections",
+            "sections_get_students",
+            "sections_get_teachers",
+            "sections_get_sections",
+            "teacher-dashboard_get_overview",
+            "teacher-profile_get_my_students",
+            "classes_get_classes"
+          ]
+        },
+        {
+          "generationId": "gen-1791471428-nQ1wLHqw5uRGh6qws7MM",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "sections_get_classes",
+            "sections_get_parents",
+            "classes_get_class_sections",
+            "sections_get_students",
+            "sections_get_teachers",
+            "sections_get_sections",
+            "teacher-dashboard_get_overview",
+            "teacher-profile_get_my_students",
+            "classes_get_classes"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q66",
+      "arm": "120b-baseline",
+      "query": "3tini lista dyal l2a9sam kamlin.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes"
+        ]
+      ],
+      "offeredToolNames": [
+        "teachers_get_teachers",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "academic-dashboard_get_kpis",
+        "sections_get_students",
+        "sections_get_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471429-fbFzheCer8ahaQo3S5xI",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teachers",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "sections_get_students",
+            "sections_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q67",
+      "arm": "120b-baseline",
+      "query": "شمن أقسام كاينين فالمدرسة؟",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes"
+        ]
+      ],
+      "offeredToolNames": [
+        "sections_get_teachers",
+        "sections_get_students",
+        "sections_get_parents",
+        "sections_get_classes",
+        "classes_get_class_sections",
+        "teacher-profile_get_my_students"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471430-BxsjZr4carYSCIra9wlF",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "sections_get_teachers",
+            "sections_get_students",
+            "sections_get_parents",
+            "sections_get_classes",
+            "classes_get_class_sections",
+            "teacher-profile_get_my_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q68",
+      "arm": "120b-baseline",
+      "query": "chmen a9sam kaynin f lmdrasa?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471431-H4PT3jSKQhnjdoT7ONPF",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q69",
+      "arm": "120b-baseline",
+      "query": "وريني الأقسام ديال المدرسة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "sections_get_classes",
+        "sections_get_parents",
+        "sections_get_teachers",
+        "sections_get_students",
+        "classes_get_class_sections",
+        "teacher-profile_get_my_students",
+        "classes_get_classes",
+        "teacher-dashboard_get_overview"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471432-VDjUOqwUEYo7pYKgh0Rr",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "sections_get_classes",
+            "sections_get_parents",
+            "sections_get_teachers",
+            "sections_get_students",
+            "classes_get_class_sections",
+            "teacher-profile_get_my_students",
+            "classes_get_classes",
+            "teacher-dashboard_get_overview"
+          ]
+        },
+        {
+          "generationId": "gen-1791471433-4yYVpvcw8Fv873I60YDR",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "sections_get_classes",
+            "sections_get_parents",
+            "sections_get_teachers",
+            "sections_get_students",
+            "classes_get_class_sections",
+            "teacher-profile_get_my_students",
+            "classes_get_classes",
+            "teacher-dashboard_get_overview"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q70",
+      "arm": "120b-baseline",
+      "query": "werini l2a9sam dyal lmdrasa.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "settings_get_public_settings",
+        "classes_get_class_teachers",
+        "academic-dashboard_get_kpis",
+        "teachers_get_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471433-oOWF82lq63oGRVqvO24t",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "settings_get_public_settings",
+            "classes_get_class_teachers",
+            "academic-dashboard_get_kpis",
+            "teachers_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q71",
+      "arm": "120b-baseline",
+      "query": "شكون غايب اليوم من التلاميذ؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "attendance_get_today_students",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_teacher",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "attendance_get_by_student",
+        "teacher-profile_get_my_students",
+        "alerts_get_alerts_by_teacher",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471434-UjwRKLyYTYYcXJ7pgg11",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_teacher",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "attendance_get_by_student",
+            "teacher-profile_get_my_students",
+            "alerts_get_alerts_by_teacher",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471435-QWofVrBN4TIs434t3qpg",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_teacher",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "attendance_get_by_student",
+            "teacher-profile_get_my_students",
+            "alerts_get_alerts_by_teacher",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q72",
+      "arm": "120b-baseline",
+      "query": "chkoun ghayeb lyoum mn tlamd?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:attendance_get_today_students|attendance_get_today_all|attendance_get_by_date"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today_all",
+          "attendance_get_by_date"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "settings_get_public_settings",
+        "classes_get_classes",
+        "teachers_get_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471437-GpN6B0WTMKA9yWvSPaA2",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "classes_get_classes",
+            "teachers_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q73",
+      "arm": "120b-baseline",
+      "query": "بغيت نشوف الحضور ديال التلاميذ اليوم فالمدرسة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "attendance_get_today_students",
+        "attendance_get_today_all",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_student",
+        "attendance_get_today_staff",
+        "attendance_get_by_teacher",
+        "teacher-overview_get_attendance_trend",
+        "teacher-dashboard_get_overview",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471438-LMsHmOZiAfLJrfrdgssU",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_student",
+            "attendance_get_today_staff",
+            "attendance_get_by_teacher",
+            "teacher-overview_get_attendance_trend",
+            "teacher-dashboard_get_overview",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471439-AfZGtt76evX5cdJEcgVv",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_student",
+            "attendance_get_today_staff",
+            "attendance_get_by_teacher",
+            "teacher-overview_get_attendance_trend",
+            "teacher-dashboard_get_overview",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q74",
+      "arm": "120b-baseline",
+      "query": "bghit nchof l7oudour dyal tlamd lyoum f lmdrasa.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:attendance_get_today_students|attendance_get_today_all|attendance_get_by_date"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today_all",
+          "attendance_get_by_date"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "classes_get_class_teachers",
+        "classes_get_classes",
+        "settings_get_public_settings",
+        "teachers_get_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471439-6xXdPVvVXXARNHUlboQL",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "classes_get_class_teachers",
+            "classes_get_classes",
+            "settings_get_public_settings",
+            "teachers_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q75",
+      "arm": "120b-baseline",
+      "query": "كيفاش داير الحضور اليوم فالمدرسة؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "attendance_get_today_students",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_by_student",
+        "attendance_get_today_all",
+        "teacher-overview_get_attendance_trend",
+        "attendance_get_by_section",
+        "attendance_get_by_teacher",
+        "attendance_get_by_date",
+        "search_search_students"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471440-DCoBNy7kQzOhC1EGf4cU",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_student",
+            "attendance_get_today_all",
+            "teacher-overview_get_attendance_trend",
+            "attendance_get_by_section",
+            "attendance_get_by_teacher",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        },
+        {
+          "generationId": "gen-1791471441-ZB2evOxHwGrnxnTyrNu5",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "attendance_get_today_students",
+            "teacher-dashboard_get_attendance_trend",
+            "attendance_get_by_student",
+            "attendance_get_today_all",
+            "teacher-overview_get_attendance_trend",
+            "attendance_get_by_section",
+            "attendance_get_by_teacher",
+            "attendance_get_by_date",
+            "search_search_students"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q76",
+      "arm": "120b-baseline",
+      "query": "kifach dayer l7oudour lyoum f lmdrasa?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:attendance_get_today_students|attendance_get_today_all|attendance_get_by_date"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "attendance_get_today_students",
+          "attendance_get_today_all",
+          "attendance_get_by_date"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "classes_get_classes",
+        "teacher-dashboard_get_attendance_trend",
+        "class-routines_get_teacher_routine",
+        "settings_get_public_settings"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471442-KBXoGPhKXwut68yCmlqG",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "classes_get_classes",
+            "teacher-dashboard_get_attendance_trend",
+            "class-routines_get_teacher_routine",
+            "settings_get_public_settings"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q77",
+      "arm": "120b-baseline",
+      "query": "إمتى الفرض الجاي؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "exams_get_upcoming_exams",
+        "assessments_get_upcoming_assessments",
+        "exams_get_today_exams",
+        "exams_get_by_teacher",
+        "teacher-profile_get_schedule_today",
+        "exams_get_by_subject",
+        "assessments_get_today_assessments",
+        "exams_get_all"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471449-X6OJMcpDBKp11SXb6GkT",
+          "model": "openai/gpt-oss-120b",
+          "provider": "DeepInfra",
+          "names": [
+            "exams_get_upcoming_exams",
+            "assessments_get_upcoming_assessments",
+            "exams_get_today_exams",
+            "exams_get_by_teacher",
+            "teacher-profile_get_schedule_today",
+            "exams_get_by_subject",
+            "assessments_get_today_assessments",
+            "exams_get_all"
+          ]
+        },
+        {
+          "generationId": "gen-1791471452-gfvTbUE9SL64kiQ8zMOu",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "exams_get_upcoming_exams",
+            "assessments_get_upcoming_assessments",
+            "exams_get_today_exams",
+            "exams_get_by_teacher",
+            "teacher-profile_get_schedule_today",
+            "exams_get_by_subject",
+            "assessments_get_today_assessments",
+            "exams_get_all"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q78",
+      "arm": "120b-baseline",
+      "query": "imta lfard jay?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "exams_get_upcoming_exams",
+          "exams_get_all"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471453-mqnXyhBIQLJmyoqhIOvq",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q79",
+      "arm": "120b-baseline",
+      "query": "واش كاينين شي فروض هاد الأيام الجاية؟",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "tool_failed_or_blocked",
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "assessments_get_upcoming_assessments",
+        "assessments_get_today_assessments",
+        "teacher-profile_get_schedule_today",
+        "assessments_get_due_this_week",
+        "assessments_get_by_subject",
+        "exams_get_by_teacher"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471454-AjsC3SgNVEKZuJrYQlsE",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "exams_get_upcoming_exams",
+            "exams_get_today_exams",
+            "assessments_get_upcoming_assessments",
+            "assessments_get_today_assessments",
+            "teacher-profile_get_schedule_today",
+            "assessments_get_due_this_week",
+            "assessments_get_by_subject",
+            "exams_get_by_teacher"
+          ]
+        },
+        {
+          "generationId": "gen-1791471455-09hdNz0t3JZ2Xv8m6W6K",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "exams_get_upcoming_exams",
+            "exams_get_today_exams",
+            "assessments_get_upcoming_assessments",
+            "assessments_get_today_assessments",
+            "teacher-profile_get_schedule_today",
+            "assessments_get_due_this_week",
+            "assessments_get_by_subject",
+            "exams_get_by_teacher"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q80",
+      "arm": "120b-baseline",
+      "query": "wach kaynin chi forod had liyam jaya?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "exams_get_upcoming_exams",
+          "exams_get_all"
+        ]
+      ],
+      "offeredToolNames": [
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "settings_get_public_settings",
+        "classes_get_classes",
+        "class-routines_get_teacher_routine"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471457-JXoogSWCiCppp0SkCzHD",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "settings_get_public_settings",
+            "classes_get_classes",
+            "class-routines_get_teacher_routine"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q81",
+      "arm": "120b-baseline",
+      "query": "سجل هاد التلميذة حاضرة اليوم.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q82",
+      "arm": "120b-baseline",
+      "query": "sejjel had tilmida 7adra lyoum.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q83",
+      "arm": "120b-baseline",
+      "query": "صيفط إعلان للواليدين بلي غدا عطلة.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q84",
+      "arm": "120b-baseline",
+      "query": "sifet i3lan lwalidin bli ghedda 3otla.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q85",
+      "arm": "120b-baseline",
+      "query": "زيد أستاذ جديد ديال الفرنسية.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q86",
+      "arm": "120b-baseline",
+      "query": "zid ostad jdid dyal lfrancais.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q87",
+      "arm": "120b-baseline",
+      "query": "مسح هاد الفرض من الجدول.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q88",
+      "arm": "120b-baseline",
+      "query": "mse7 had lfard mn ljadwal.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q89",
+      "arm": "120b-baseline",
+      "query": "بدل القسم ديال هاد التلميذ للخامس.",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q90",
+      "arm": "120b-baseline",
+      "query": "beddel l9ism dyal had tilmid l lkhamis.",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": null,
+      "offeredToolNames": null,
+      "modelCalls": 0,
+      "perCallToolNames": []
+    },
+    {
+      "caseId": "jev-operator-q91",
+      "arm": "120b-baseline",
+      "query": "شحال من بنت كاينة فالمدرسة؟",
+      "language": "ary",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_students"
+      ],
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "staff_get_staff_count",
+        "sections_get_students",
+        "classes_get_class_students",
+        "teacher-profile_get_my_students",
+        "students_get_students",
+        "teachers_get_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471468-w5S82LWtFj7zBCLhPyud",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "teachers_get_teacher_count",
+            "students_get_student_count",
+            "staff_get_staff_count",
+            "sections_get_students",
+            "classes_get_class_students",
+            "teacher-profile_get_my_students",
+            "students_get_students",
+            "teachers_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q92",
+      "arm": "120b-baseline",
+      "query": "ch7al mn bent kayna f lmdrasa?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:students_get_students"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "students_get_students"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teachers"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471470-EU7hNVcBthzXICHovNye",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teachers"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q93",
+      "arm": "120b-baseline",
+      "query": "شحال خلص هاد الولي هاد الشهر؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "fees_get_outstanding",
+        "payments_get_total_revenue",
+        "parent-profile_get_all_fees_due",
+        "fees_list_overdue",
+        "payments_get_this_month",
+        "student-profile_get_financial",
+        "payments_get_monthly_revenue",
+        "expenses_get_this_month"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471471-NweKw6qSMEw1v5rzsLqJ",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "fees_get_outstanding",
+            "payments_get_total_revenue",
+            "parent-profile_get_all_fees_due",
+            "fees_list_overdue",
+            "payments_get_this_month",
+            "student-profile_get_financial",
+            "payments_get_monthly_revenue",
+            "expenses_get_this_month"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q94",
+      "arm": "120b-baseline",
+      "query": "ch7al khelles had lwali had chher?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count",
+        "sections_get_teachers",
+        "classes_get_classes"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471472-OceTpouLp6QvMDcAF90B",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count",
+            "sections_get_teachers",
+            "classes_get_classes"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q95",
+      "arm": "120b-baseline",
+      "query": "كيفاش نبدل كلمة السر ديالي؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "settings_get_public_settings"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471473-vDrMc8g18vU4cuYgv8bi",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "settings_get_public_settings"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q96",
+      "arm": "120b-baseline",
+      "query": "kifach nbeddel lmot de passe dyali?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "teacher-dashboard_get_overview",
+        "settings_get_public_settings",
+        "teacher-overview_get_overview",
+        "teacher-dashboard_get_attendance_trend",
+        "academic-dashboard_get_kpis"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471474-saZlncmEaaIskXqQasZe",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "teacher-dashboard_get_overview",
+            "settings_get_public_settings",
+            "teacher-overview_get_overview",
+            "teacher-dashboard_get_attendance_trend",
+            "academic-dashboard_get_kpis"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q97",
+      "arm": "120b-baseline",
+      "query": "شنو هوما النقط ديال القسم الرابع فالرياضيات؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "grades_get_by_section",
+        "classes_get_classes",
+        "grades_get_by_subject",
+        "academic-dashboard_get_kpis",
+        "classes_get_class_analytics",
+        "assessments_get_by_class",
+        "assessments_get_by_section",
+        "classes_get_class_sections"
+      ],
+      "modelCalls": 2,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471475-yeojeP1qbYZzQW0V7t9v",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "grades_get_by_section",
+            "classes_get_classes",
+            "grades_get_by_subject",
+            "academic-dashboard_get_kpis",
+            "classes_get_class_analytics",
+            "assessments_get_by_class",
+            "assessments_get_by_section",
+            "classes_get_class_sections"
+          ]
+        },
+        {
+          "generationId": "gen-1791471475-Xv9SqmzoOphY9N5bBN0G",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "grades_get_by_section",
+            "classes_get_classes",
+            "grades_get_by_subject",
+            "academic-dashboard_get_kpis",
+            "classes_get_class_analytics",
+            "assessments_get_by_class",
+            "assessments_get_by_section",
+            "classes_get_class_sections"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q98",
+      "arm": "120b-baseline",
+      "query": "chno homa nno9at dyal l9ism rrabi3 f riyadiyat?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": false,
+      "executionIssues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "category": "required_tools_missing_from_offer",
+      "missingRequiredGroups": [
+        [
+          "classes_get_classes",
+          "sections_get_sections"
+        ]
+      ],
+      "offeredToolNames": [
+        "settings_update",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "class-routines_get_teacher_routine",
+        "teacher-dashboard_get_overview",
+        "teachers_get_teacher_count"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471476-fC4359fejg5P5jtCRy8l",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "academic-dashboard_get_kpis",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "class-routines_get_teacher_routine",
+            "teacher-dashboard_get_overview",
+            "teachers_get_teacher_count"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q99",
+      "arm": "120b-baseline",
+      "query": "وشحال كانو العام اللي فات؟",
+      "language": "ary",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "students_get_student_count",
+        "academic-dashboard_get_kpis",
+        "teachers_get_teacher_count",
+        "fees_get_outstanding",
+        "student-profile_get_attendance_summary",
+        "parent-profile_get_all_fees_due",
+        "classes_get_classes"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471477-3kOGOXMLt2i38FsYlWLZ",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "students_get_student_count",
+            "academic-dashboard_get_kpis",
+            "teachers_get_teacher_count",
+            "fees_get_outstanding",
+            "student-profile_get_attendance_summary",
+            "parent-profile_get_all_fees_due",
+            "classes_get_classes"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "jev-operator-q100",
+      "arm": "120b-baseline",
+      "query": "w ch7al kano l3am li fat?",
+      "language": "ary-latn",
+      "toolPlanChecksPassed": true,
+      "executionIssues": [],
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "settings_update",
+        "academic-dashboard_get_kpis",
+        "teacher-dashboard_get_overview",
+        "teacher-overview_get_overview",
+        "settings_get_public_settings",
+        "teacher-dashboard_get_attendance_trend",
+        "teachers_get_teacher_count"
+      ],
+      "modelCalls": 1,
+      "perCallToolNames": [
+        {
+          "generationId": "gen-1791471478-Wt1CzmwenUI71fL7RWyw",
+          "model": "openai/gpt-oss-120b",
+          "provider": "Cerebras",
+          "names": [
+            "settings_update",
+            "academic-dashboard_get_kpis",
+            "teacher-dashboard_get_overview",
+            "teacher-overview_get_overview",
+            "settings_get_public_settings",
+            "teacher-dashboard_get_attendance_trend",
+            "teachers_get_teacher_count"
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Initial provider request names are the actual model-visible tool set, not a score of embedding retrieval alone.",
+    "Tool availability can reflect routing, dependencies and actor policy. Missing tools and model mistakes can coexist.",
+    "Passing tool checks does not establish final answer correctness. Null offers mean unobserved, not an empty shortlist."
+  ]
+}

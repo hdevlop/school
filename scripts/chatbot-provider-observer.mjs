@@ -1,5 +1,12 @@
-/** Benchmark-only Node preload. Persist billing identifiers/usage, never request bodies or generated text. */
+/** Benchmark-only Node preload. Persist usage and opt-in tool names, never request bodies or generated text. */
 import { appendFileSync } from 'node:fs';
+export function benchmarkToolNames(body) {
+  try {
+    const value = typeof body === 'string' ? JSON.parse(body) : null;
+    return Array.isArray(value?.tools) ? [...new Set(value.tools.slice(0, 512).map(tool => tool?.function?.name)
+      .filter(name => typeof name === 'string' && /^[\w-]{1,200}$/u.test(name)))] : null;
+  } catch { return null; }
+}
 const output = process.env.CHATBOT_PROVIDER_OBSERVER_FILE;
 if (output) {
   const original = globalThis.fetch;
@@ -9,6 +16,7 @@ if (output) {
     const response = await original.call(this, input, init);
     if (url.hostname === 'openrouter.ai' && url.pathname === '/api/v1/chat/completions' && response.body) {
       const record = { startedAt, status: response.status, generationId: null, model: null, provider: null, usage: null };
+      if (process.env.CHATBOT_PROVIDER_OBSERVER_TOOL_NAMES === 'true') record.requestToolNames = benchmarkToolNames(init?.body);
       void observe(response.clone(), record).catch(() => {});
     }
     return response;

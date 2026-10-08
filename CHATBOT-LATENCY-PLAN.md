@@ -1,8 +1,24 @@
 # Chatbot latency and cost plan
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA THREE-PATH COMPARISON COMPLETE: 300 CHATS. TOOL CHECKS: EXISTING ROUTER 57/100, JEV-FIRST 66/100, ROUTER-THEN-JEV 59/100; MEANS 1.28 / 1.06 / 1.68 SECONDS. JEV-FIRST IS THE QUALITY-FIX CANDIDATE; FULL ANSWER ACCURACY AND REAL-USER ENABLEMENT REMAIN UNQUALIFIED. NORMAL CHAT CONFIGURATION UNCHANGED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPLETE: 500 CHATS. EQUIVALENT-TOOL AUDIT: ROUTER/120B 71/100, JEV-FIRST/20B 66/100, ROUTER/20B REPEAT 58/100. OF 29 REMAINING 120B FAILURES, 23 LACK REQUIRED OFFERED TOOLS AND SIX FAIL WITH TOOLS OFFERED. TIMING IS OBSERVATIONAL FOR THE LATEST TOOL-ONLY TEST. FULL ANSWER ACCURACY AND GENERAL ENABLEMENT REMAIN UNQUALIFIED; NORMAL CONFIGURATION UNCHANGED.**
 
 ## 0. Current status and next work — 2026-10-08
+
+**2026-10-08 120B tool-only check complete:** [Results, scoring correction and next fixes](docs/evidence/chatbot-latency/darija-router120-check-results-20261008.md)
+record 100 new chats with the existing router, Jev off, no classifier calls,
+no retries and no two-second cutoff/average-time gate. Mean completion 2.67 seconds
+is observational only. The frozen check scores 61/100; a secondary audit accepts
+the academic KPI tool as an equivalent staff-only school-count source across all
+500 saved chats. Corrected tool-check scores are 120B 71/100, Jev-first/20B 66/100
+and router/20B repeat 58/100. Frozen evidence remains unchanged. All 130 generation
+calls have model-visible tool-name capture. Of 29 remaining failures, 23 lack a
+required offered tool/dependency and six fail with the needed tools offered.
+120B still invents counts in q64; availability and model planning both need work.
+Different provider/process/order policies prevent a model-size-only causal claim.
+Known charges $0.064905258, none unknown; 548 script tests and lint pass. Fixture
+off/disabled/key removed/model restored/app stopped; primary app untouched.
+Next: unpaid availability/dependency fixtures for the 23 cases, plan/argument
+checks for the six, populated filter data, then a fresh small 20B failure rerun.
 
 **2026-10-08 fresh router/20B repeat complete:** [Comparison and next work](docs/evidence/chatbot-latency/darija-router20-repeat-results-20261008.md)
 records 100 new Darija/Arabizi chats, Jev off, zero classifier attempts, CoreWeave

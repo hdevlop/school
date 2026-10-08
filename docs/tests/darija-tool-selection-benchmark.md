@@ -86,6 +86,20 @@ questions fail both router runs; 97/100 check outcomes agree. Saved Jev-first
 remains 66/100. Processes/order differ; this is not a controlled new Jev effect.
 The quality-fix recommendation is unchanged.
 
+## 120B tool-only follow-up, owner direction
+
+For the [100-chat 120B check](../evidence/chatbot-latency/darija-router120-check-results-20261008.md),
+timing is observational only: no two-second cutoff or average-time pass/fail gate.
+Jev is off. Actual model-visible tool names are captured, separating required tools
+absent from the offered set from failed plans when those tools are available.
+
+The original check scores 61/100. A secondary audit accepting the shared academic
+KPI count source consistently across all saved runs scores 120B 71/100, versus
+20B repeat 58/100 and saved Jev-first 66/100. Frozen scores are retained. Of 29
+remaining 120B failures, 23 lack a required offered tool and six fail with the
+needed tools offered. Improve availability/dependencies and planning before a
+fresh small 20B quality rerun. This is not a production-enablement decision.
+
 ## Earlier saved-call evidence
 
 The [Darija-only reanalysis](../evidence/chatbot-latency/darija-selection-reanalysis-20261008.md)
