@@ -1917,3 +1917,21 @@ Experiment completed: 96 chats; CoreWeave/Jev-first 718 ms mean versus 867 ms
 fallback +100 ms gate still fails (+612 ms paired p95). One 529 cost remains
 unknown and reserved; production defaults unchanged. Full results and next
 action: [CoreWeave/Jev-first report](docs/evidence/chatbot-latency/jev-coreweave-first-results-20261008.md).
+
+# Darija accuracy priority (owner direction, 2026-10-08)
+
+For the next selector comparison, correctness takes priority and average complete
+response time below two seconds is sufficient. Evaluate Darija in Arabic script
+and Arabizi; omit French reruns. The owner does not require millisecond improvements,
+the prior +100 ms fallback gate, or the classifier p95 gate for this comparison.
+Historical reports retain their original criteria and outcomes. Keep permissions,
+write protection, bounded cancellation and the $10 monthly budget requirement.
+
+Use the [Darija tool-selection protocol](docs/tests/darija-tool-selection-benchmark.md).
+Compare existing router, Jev-first and router-then-Jev on identical questions and
+the same fallback model. Router-then-Jev is still proposed; parallel Jev is not that
+path. Verify required tools, dependencies, arguments, year/actor scope and final
+results rather than treating a completed stream as a correct answer. Reuse the
+100 owner-reviewed Darija/Arabizi questions with their existing provenance; the
+owner need not write another collection. First annotate expectations for complex
+questions, then implement the third experiment arm and run a fresh bounded comparison.
