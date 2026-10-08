@@ -4,6 +4,27 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, darijaComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
 
+test('exam coverage freezes a bounded 20-case guard-6 check and rejects guard-5 readiness', () => {
+  const plan = darijaComparisonProtocol(undefined, undefined, 'jevcoverage6');
+  expect(plan.purpose).toBe('darija-jev-coverage-v6');
+  expect(plan.cases).toHaveLength(20);
+  expect(plan.jobs).toHaveLength(20);
+  expect(plan.maxCombinedEstimatedUsd).toBe(0.025);
+  expect(plan.maxClassifications).toBe(20);
+  expect(plan.guardVersion).toBe(6);
+  expect(plan.averageResponseLimitSeconds).toBeNull();
+  expect(plan.cases.filter(item => item.intent === 'upcoming_exams')).toHaveLength(6);
+  expect(() => checkSource(plan)).not.toThrow();
+  const status = { instanceId: 'fresh', markedLocalFixture: true, syntheticOnly: true, mode: 'off',
+    frameworkPreparationEnabled: false, experimentEnabled: true, threshold: plan.threshold, timeoutMs: plan.timeoutMs,
+    billingMode: plan.billingMode, billingTimeoutMs: plan.billingTimeoutMs, guardVersion: 6, intentWordingVersion: 3,
+    budget: { requests: 0, unknownCosts: 0, pendingRequests: 0, maxRequests: plan.maxClassifications,
+      maxCostUsd: plan.classificationMaxUsd, unknownReserveUsd: plan.classificationReserveUsd } };
+  expect(() => checkReady(status, plan)).not.toThrow();
+  expect(() => checkReady({ ...status, guardVersion: 5 }, plan)).toThrow();
+  expect(() => checkSource({ ...plan, cases: plan.cases.slice(1) })).toThrow();
+});
+
 test('Jev-first fix pass freezes only candidate-first and unchanged guarded fallback', () => {
   const plan = darijaComparisonProtocol(undefined, undefined, 'jevfirstfix');
   expect(plan.purpose).toBe('darija-jev-first-router-fix');
@@ -179,7 +200,7 @@ test.each(['https://example.com', 'http://user:password@localhost:3103', 'http:/
 test('requires fresh marked-fixture limits before spending', () => {
   const protocol = fullChatProtocol();
   const ready = { instanceId: 'isolated', markedLocalFixture: true, syntheticOnly: true, mode: 'off',
-    frameworkPreparationEnabled: false, threshold: 0.8, timeoutMs: 800, guardVersion: 5, intentWordingVersion: 3,
+    frameworkPreparationEnabled: false, threshold: 0.8, timeoutMs: 800, guardVersion: 6, intentWordingVersion: 3,
     billingMode: 'observe', billingTimeoutMs: 5000,
     budget: { requests: 0, pendingRequests: 0, unknownCosts: 0, maxRequests: 48, maxCostUsd: 0.0072, unknownReserveUsd: 0.00015 } };
   expect(() => checkReady(ready, protocol)).not.toThrow();

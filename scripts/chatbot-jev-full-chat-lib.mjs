@@ -4,11 +4,16 @@ import { isDeepStrictEqual } from 'node:util';
 import { jevSyntheticCases, jevDarijaCases } from '@sms/server/jev-cases';
 import { percentile } from './chatbot-stream.mjs';
 
-export function fullChatProtocol(continuationPath) {
+function protocolGuardVersion(continuationPath) {
+  const version = continuationPath ? JSON.parse(readFileSync(continuationPath.split(',')[0], 'utf8')).protocol.guardVersion ?? 5 : 6;
+  if (![5, 6].includes(version)) throw Error('Unknown benchmark guard version');
+  return version;
+}
+export function fullChatProtocol(continuationPath, guardVersion = protocolGuardVersion(continuationPath)) {
   const orders = [['off', 'on', 'shadow'], ['on', 'shadow', 'off'], ['shadow', 'off', 'on'],
     ['off', 'shadow', 'on'], ['shadow', 'on', 'off'], ['on', 'off', 'shadow']];
   const protocol = { version: 2, purpose: 'synthetic-integration-comparison-with-bounded-billing-observation', assistantAuthored: true,
-    independentQualification: false, cases: jevSyntheticCases,
+    independentQualification: false, ...(guardVersion === 6 ? { guardVersion: 6 } : {}), cases: jevSyntheticCases,
     jobs: jevSyntheticCases.flatMap((item, index) => orders[index % orders.length].map(mode => ({ caseId: item.id, mode }))),
     maxChats: 72, maxClassifications: 48, maxCombinedEstimatedUsd: 0.25,
     generationReserveUsd: 0.003, classificationReserveUsd: 0.00015, classificationMaxUsd: 0.0072,
@@ -89,7 +94,7 @@ export function sourceHashes() {
   return Object.fromEntries(files.sort().map(name => [name, createHash('sha256').update(readFileSync(name)).digest('hex')]));
 }
 export function modelComparisonProtocol(continuationPath, generationUsagePath) {
-  const protocol = fullChatProtocol();
+  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath));
   const arms = [{ model: 'openai/gpt-oss-120b', mode: 'off' }, { model: 'openai/gpt-oss-120b', mode: 'on' },
     { model: 'openai/gpt-oss-20b', mode: 'off' }, { model: 'openai/gpt-oss-20b', mode: 'on' }];
   const comparison = { ...protocol, purpose: 'two-model-jev-parallel-comparison', models: [...new Set(arms.map(arm => arm.model))],
@@ -101,7 +106,7 @@ export function modelComparisonProtocol(continuationPath, generationUsagePath) {
   return continuationPath ? continueProtocol(comparison, continuationPath, generationUsagePath) : comparison;
 }
 export function firstComparisonProtocol(continuationPath, generationUsagePath, retainRejectedReservation = false) {
-  const protocol = fullChatProtocol();
+  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath));
   const arms = [
     { experimentArm: '120b-baseline', model: 'openai/gpt-oss-120b', mode: 'off', strategy: 'parallel', provider: 'cerebras-preferred' },
     { experimentArm: '20b-coreweave-off', model: 'openai/gpt-oss-20b', mode: 'off', strategy: 'parallel', provider: 'coreweave-only' },
@@ -162,16 +167,20 @@ export function firstComparisonProtocol(continuationPath, generationUsagePath, r
 }
 export function fingerprint(hashes) { return createHash('sha256').update(JSON.stringify(hashes)).digest('hex'); }
 export function darijaComparisonProtocol(continuationPath, generationUsagePath, routerOnly = false) {
-  if (![false, true, '120b', 'fixed20b', 'jevfirstfix'].includes(routerOnly)) throw Error('Unknown Darija comparison variant');
+  if (![false, true, '120b', 'fixed20b', 'jevfirstfix', 'jevcoverage6'].includes(routerOnly)) throw Error('Unknown Darija comparison variant');
   const is120b = routerOnly === '120b';
   const isFix = routerOnly === 'fixed20b';
-  const isJevFix = routerOnly === 'jevfirstfix';
-  const protocol = fullChatProtocol();
+  const isCoverage = routerOnly === 'jevcoverage6';
+  const isJevFix = routerOnly === 'jevfirstfix' || isCoverage;
+  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath));
   const casesPath = 'datasets/chatbot-latency/darija-tool-selection-20261008.json';
   const corpus = JSON.parse(readFileSync(casesPath, 'utf8'));
   if (!isDeepStrictEqual(corpus.cases.map(({ id, query, language, intent, familyId }) =>
     ({ id, query, language, intent, familyId })), jevDarijaCases))
     throw Error('Darija server catalog differs from the frozen reviewed wording');
+  // Six exam requests, two count disagreements and twelve regression/negative controls.
+  const coverageIds = [1, 2, 5, 6, 9, 11, 12, 13, 30, 32, 35, 49, 50, 71, 77, 78, 79, 80, 91, 93];
+  const cases = isCoverage ? corpus.cases.filter(item => coverageIds.includes(Number(item.id.split('q').at(-1)))) : corpus.cases;
   const availableArms = [
     { experimentArm: '20b-coreweave-off', model: 'openai/gpt-oss-20b', mode: 'off', strategy: 'parallel', provider: 'coreweave-only' },
     { experimentArm: '20b-coreweave-first', model: 'openai/gpt-oss-20b', mode: 'on', strategy: 'candidate-first', provider: 'coreweave-only' },
@@ -179,12 +188,12 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
   ];
   const arms = is120b ? [{ experimentArm: '120b-baseline', model: 'openai/gpt-oss-120b', mode: 'off', strategy: 'parallel', provider: 'cerebras-preferred' }]
     : isJevFix ? availableArms.slice(1, 2) : routerOnly ? availableArms.slice(0, 1) : availableArms;
-  const comparison = { ...protocol, purpose: isJevFix ? 'darija-jev-first-router-fix' : isFix ? 'darija-router-20b-fix' : is120b ? 'darija-router-120b-check' : routerOnly ? 'darija-router-20b-repeat' : 'darija-tool-selection-comparison', cases: corpus.cases, casesPath, arms,
+  const comparison = { ...protocol, ...(isCoverage ? { guardVersion: 6 } : {}), purpose: isCoverage ? 'darija-jev-coverage-v6' : isJevFix ? 'darija-jev-first-router-fix' : isFix ? 'darija-router-20b-fix' : is120b ? 'darija-router-120b-check' : routerOnly ? 'darija-router-20b-repeat' : 'darija-tool-selection-comparison', cases, casesPath, arms,
     models: [...new Set(arms.map(arm => arm.model))], experimentEnabled: true,
-    jobs: corpus.cases.flatMap((item, index) => [...arms.slice(index % arms.length), ...arms.slice(0, index % arms.length)]
+    jobs: cases.flatMap((item, index) => [...arms.slice(index % arms.length), ...arms.slice(0, index % arms.length)]
       .map(arm => ({ caseId: item.id, ...arm }))),
-    maxChats: routerOnly ? 100 : 300, maxClassifications: isJevFix ? 100 : routerOnly ? 0 : 200, classificationMaxUsd: isJevFix ? 0.015 : routerOnly ? 0 : 0.03,
-    maxCombinedEstimatedUsd: is120b ? 0.50 : routerOnly ? 0.10 : protocol.maxCombinedEstimatedUsd,
+    maxChats: isCoverage ? cases.length : routerOnly ? 100 : 300, maxClassifications: isCoverage ? cases.length : isJevFix ? 100 : routerOnly ? 0 : 200, classificationMaxUsd: isCoverage ? 0.003 : isJevFix ? 0.015 : routerOnly ? 0 : 0.03,
+    maxCombinedEstimatedUsd: isCoverage ? 0.025 : is120b ? 0.50 : routerOnly ? 0.10 : protocol.maxCombinedEstimatedUsd,
     startSpacingMs: 1000, generationReserveUsd: is120b ? 0.004 : 0.0007, restoresModel: 'openai/gpt-oss-120b', retainModelToolErrors: true,
     averageResponseLimitSeconds: is120b || isFix || isJevFix ? null : 2, primaryMetric: 'correct tools and arguments, by script and family',
     ...(is120b || isFix || isJevFix ? { captureToolNames: true, chatRequestTimeoutMs: 600000 } : {}),
@@ -192,7 +201,9 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
     sourceHashes: { ...sourceHashes(), [casesPath]: createHash('sha256').update(readFileSync(casesPath)).digest('hex') },
     providerPolicy: is120b ? '120B retains normal Cerebras preference, provider fallbacks and Groq exclusion. Compare observed selection with saved CoreWeave 20B; this is not an identical-provider causal model comparison.'
       : 'Same CoreWeave-only 20B fallback on all three fixed synthetic arms; no provider fallback.',
-    comparisonPolicy: isJevFix
+    comparisonPolicy: isCoverage
+      ? 'Focused 20-question Darija/Arabizi check of guard 6: six upcoming-exam requests, two count write-bit disagreements and twelve regression/negative controls, unchanged reviewed wording. Jev candidate-first with CoreWeave-only 20B fallback. Earlier saved runs are observational comparators, not a new 100-case score or controlled causal comparison. Exam populated rendering and forced wrong-choice checks run offline. No French, retries or two-second chat cutoff; timing observational. Unknown costs stay reserved and stop dispatch.'
+      : isJevFix
       ? '100 unchanged reviewed Darija/Arabizi questions: Jev candidate-first, existing acceptance guard, improved School router and CoreWeave-only 20B fallback. Saved improved-router/20B run is the comparator; process/order differences prevent a controlled causal claim. Supported guarded replies only; upcoming exams and filtered reads remain on the fallback path. Timing observational, no average-time gate or two-second chat cutoff. Existing 800ms candidate deadline and 5s billing observer remain recorded. No French and no benchmark retries; capture offered names, classify raw versus guarded decisions and audit final answers separately.'
       : isFix
       ? 'One fresh 100-case CoreWeave-only 20B pass after School routing vocabulary, lookup dependencies and prompt fixes. Retest the 29 saved 120B failures and preserve the other 71 as regression controls. Same reviewed Darija/Arabizi wording; no French, no Jev, no benchmark retries. Timing observational only, no average-time gate or two-second cutoff. Capture offered names and score school-count equivalence separately.'
@@ -266,7 +277,7 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
 }
 export function checkSource(protocol) {
   const { sourceFingerprint: _sourceFingerprint, ...declared } = protocol;
-  const expected = ['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix'].includes(protocol.purpose) ? darijaComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.purpose === 'darija-jev-first-router-fix' ? 'jevfirstfix' : protocol.purpose === 'darija-router-20b-fix' ? 'fixed20b' : protocol.purpose === 'darija-router-120b-check' ? '120b' : protocol.purpose === 'darija-router-20b-repeat')
+  const expected = ['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix', 'darija-jev-coverage-v6'].includes(protocol.purpose) ? darijaComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.purpose === 'darija-jev-coverage-v6' ? 'jevcoverage6' : protocol.purpose === 'darija-jev-first-router-fix' ? 'jevfirstfix' : protocol.purpose === 'darija-router-20b-fix' ? 'fixed20b' : protocol.purpose === 'darija-router-120b-check' ? '120b' : protocol.purpose === 'darija-router-20b-repeat')
     : protocol.purpose === 'coreweave-jev-first-comparison'
     ? firstComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.continuation?.retainedUnknownCosts === 1)
     : protocol.purpose === 'two-model-jev-parallel-comparison'
@@ -285,7 +296,7 @@ export function checkReady(status, protocol) {
     || status.mode !== 'off' || status.frameworkPreparationEnabled !== false
     || status.threshold !== protocol.threshold || status.timeoutMs !== protocol.timeoutMs
     || status.billingMode !== protocol.billingMode || status.billingTimeoutMs !== protocol.billingTimeoutMs
-    || status.guardVersion !== 5 || status.intentWordingVersion !== 3
+    || status.guardVersion !== (protocol.guardVersion ?? 5) || status.intentWordingVersion !== 3
     || status.budget?.requests !== 0 || status.budget.unknownCosts !== 0 || status.budget.pendingRequests !== 0
     || status.budget.maxRequests !== protocol.maxClassifications
     || status.budget.maxCostUsd !== protocol.classificationMaxUsd

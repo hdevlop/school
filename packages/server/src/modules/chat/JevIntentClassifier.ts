@@ -2,7 +2,7 @@ import { AiSettingsService, type ReplyPreparationRequest, type ReplyPreparationS
 import { Service } from '../../najm';
 import { ROLES } from '../../auth';
 import { buildDecisionRequest, JEV_DECISIONS_URL, parseDecision } from './jevIntents';
-import { acceptsWithQueryGuardV5 } from './jevQueryGuard';
+import { acceptsWithQueryGuardV6 } from './jevQueryGuard';
 import { readJevControls, effectiveJevMode } from './JevControls';
 import { JevAttemptLedger } from './JevAttemptLedger';
 import { schoolJevRequestContext } from './JevSessionGrants';
@@ -115,8 +115,8 @@ export class JevIntentClassifier {
       if (typeof body?.id === 'string' && /^gen-dec-[\w-]{1,150}$/u.test(body.id)) providerGenerationId = body.id;
       if (!response.ok) throw new Error('provider_rejected');
       const decision = parseDecision(body);
-      const accepted = acceptsWithQueryGuardV5(decision, request.userText, this.controls.threshold, 'core');
-      const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear) : null;
+      const accepted = acceptsWithQueryGuardV6(decision, request.userText, this.controls.threshold);
+      const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear, request.userText) : null;
       this.ledger.settle(attempt.id, { outcome: signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined',
         costUsd, costSource: costUsd === null ? undefined : 'decisions_response', providerRequestId, providerGenerationId,
         billingMode: this.controls.billingMode, transportCompleted, httpStatus,

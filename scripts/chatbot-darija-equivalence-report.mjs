@@ -19,7 +19,7 @@ if (import.meta.main) {
   const controllerPath = 'packages/server/src/modules/dashboard/academic/AcademicDashboardController.ts';
   const source = [...runPaths.split(','), usagePath, registryPath, fixturePath, corpusPath, servicePath, controllerPath];
   const all = runPaths.split(',').flatMap(path => JSON.parse(readFileSync(path)).rows.map(row => ({ ...row,
-    runGroup: path.includes('jev-first-fix') ? 'jev-first-fix' : path.includes('router-fix') ? '20b-fix' : path.includes('router20-repeat') ? '20b-repeat' : path.includes('router120-check') ? '120b-check' : 'original-three-path' })));
+    runGroup: path.includes('jev-coverage-v6') ? 'jev-coverage-v6' : path.includes('jev-first-fix') ? 'jev-first-fix' : path.includes('router-fix') ? '20b-fix' : path.includes('router20-repeat') ? '20b-repeat' : path.includes('router120-check') ? '120b-check' : 'original-three-path' })));
   if (new Set(all.map(row => row.caseId + '/' + row.experimentArm + '/' + row.startedAt)).size !== all.length) throw Error('Duplicate inputs');
   const corpus = JSON.parse(readFileSync(corpusPath));
   const registry = JSON.parse(readFileSync(registryPath, 'utf8').replace(/^\uFEFF/u, '')).result.tools;

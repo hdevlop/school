@@ -59,7 +59,7 @@ if (import.meta.main) {
   const run = { ...segments.at(-1), protocol: segments[0].protocol,
     rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts) };
   const [corpus, registry, fixture] = parsed.slice(runPaths.length);
-  if (!['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix'].includes(run.protocol.purpose)) throw Error('Require the frozen Darija run');
+  if (!['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix', 'darija-jev-coverage-v6'].includes(run.protocol.purpose)) throw Error('Require the frozen Darija run');
   if (new Set(run.rows.map(row => row.caseId + '/' + row.experimentArm)).size !== run.rows.length) throw Error('Duplicate dispatch');
   const fixtureValues = Object.fromEntries(Object.entries(fixture).map(([key, content]) =>
     [key, JSON.parse(content.find(item => item.type === 'text').text)]));
@@ -83,15 +83,15 @@ if (import.meta.main) {
     const list = rows.filter(row => row.arm === arm.experimentArm);
     const completed = list.filter(row => row.completedStream && Number.isFinite(row.completionSeconds));
     const average = completed.length ? completed.reduce((sum, row) => sum + row.completionSeconds, 0) / completed.length : null;
-    const families = [...new Set(corpus.cases.map(item => item.familyId))];
-    return { arm: arm.experimentArm, attempted: list.length, expected: corpus.cases.length,
+    const families = [...new Set(run.protocol.cases.map(item => item.familyId))];
+    return { arm: arm.experimentArm, attempted: list.length, expected: run.protocol.cases.length,
       toolPlanChecksPassed: list.filter(row => row.toolPlanChecksPassed).length,
       failures: list.filter(row => !row.toolPlanChecksPassed).length,
       pendingFinalReview: list.filter(row => row.reviewFlags.length).length,
       completedStreams: completed.length, averageResponseSeconds: average,
       averageTimeGateApplied: run.protocol.averageResponseLimitSeconds !== null,
       averageUnderTwoSeconds: run.protocol.averageResponseLimitSeconds === null ? null
-        : completed.length === corpus.cases.length && average !== null && average < 2,
+        : completed.length === run.protocol.cases.length && average !== null && average < 2,
       scripts: Object.fromEntries(['ary', 'ary-latn'].map(language => [language, {
         attempted: list.filter(row => row.language === language).length,
         toolPlanChecksPassed: list.filter(row => row.language === language && row.toolPlanChecksPassed).length,
@@ -110,7 +110,7 @@ if (import.meta.main) {
     classifierAcceptedWrong: run.attempts.filter(attempt => attempt.selected === 'template'
       && attempt.choice !== corpus.cases.find(item => item.id === attempt.caseId)?.intent).length,
     arms, rows,
-    limitations: ['Reused owner-reviewed wording and assistant labels; 50 linked families, not independent native evidence.',
+    limitations: [`Reused owner-reviewed wording and assistant labels; ${new Set(run.protocol.cases.map(item => item.familyId)).size} selected linked families, not independent native evidence.`,
       'Empty exam/attendance/teacher data cannot establish nonempty filtering accuracy.',
       'Final wording, clarification quality and calculated/filter answers need semantic review; tool-plan checks are not full answer accuracy.',
       run.protocol.captureToolNames

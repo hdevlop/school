@@ -1,0 +1,148 @@
+{
+  "status": "post-benchmark-renderer-hardening-proof",
+  "newPaidCalls": 0,
+  "measuredFingerprint": "b6c89b017ccedaf3ed482c203a77a908bd17fa4f20ffcfa8791df4eac59a8b98",
+  "currentFingerprint": "a7d1d2dbdac342deea30f68df03422df2e72e8ebaf10dd3897eb1798253a7e88",
+  "sourceHashes": {
+    "bun.lock": "ba78f5979a948dd3db2152657be76fe93ce1c871668f8d361a9936d658967802",
+    "package.json": "1ffdc0d5796dd29b67a5685de26d712b1e109db28febaf8e01281b09071befaa",
+    "packages/server/package.json": "9474407ff8db1cec5eb3eba675f04716b544a4c43e242bbb559c433dc4ceb5a5",
+    "packages/server/src/config/chatbotConfig.ts": "36b9b9c304e6d1f5458544c60b9a200f5457cb2a6f89d4490d941719a84ccadb",
+    "packages/server/src/config/chatbotSystemPrompt.ts": "4a8e453f6d81732ef857c3d2337cb3fc78e132daf8a96c74bf960e68abbd1548",
+    "packages/server/src/config/coreConfig.ts": "7c00c81515cc18e0172b52612e3798f31e0f08b84be38ceef1a3150a3f9efe89",
+    "packages/server/src/config/ragConfig.ts": "37f01090bbe1d27c3f12ed4130ab3b14012a5ad15529b2351c23c566a8a28bdf",
+    "packages/server/src/config/yearScope.ts": "df1157c772276ad16047cf6409568eabd17eb07bff0c964b2ea758a3a2127608",
+    "packages/server/src/modules/chat/JevAttemptLedger.ts": "31727a0d1aa400f0451cb0b5ff432e4312e6d19d9d9216e734fdd4c5b056de04",
+    "packages/server/src/modules/chat/JevBenchmarkController.ts": "c52cdd8be4b4fa87b1d68f4279da17d8d7828346e5a6046a7d35ce84f8cb0cef",
+    "packages/server/src/modules/chat/JevBenchmarkDto.ts": "de53b10dde6f18bd006aec589a2a4cf3be4927f4bb19e650c10e086d9d35afa1",
+    "packages/server/src/modules/chat/JevBenchmarkRepository.ts": "2ab859698a95ebac927147aaa30499332bb4d235983a54ae9013a0974ecdea89",
+    "packages/server/src/modules/chat/JevBenchmarkService.ts": "bd7ca5aba01e7cb23dd807f6ca48155e7bc99d9f42af575840ad48c1570e8258",
+    "packages/server/src/modules/chat/JevControls.ts": "24a783242b93ce231ff2dd9f9808ba00d60cff5aad1fa7f9f8fd5f11a4fc616c",
+    "packages/server/src/modules/chat/JevIntentClassifier.ts": "5e56cf0ef493ea7ad1c1da79bf7c129b5311299e5ba5c1c3f67b0539798143cc",
+    "packages/server/src/modules/chat/JevSessionGrants.ts": "588fe5384ed9d9d666f1d6330367a82b8d765dcca3716308d7b711618300fa3c",
+    "packages/server/src/modules/chat/SchoolChatContextProvider.ts": "1d1ff66f12a9ef6698fe2657e094def35d1555f5fc0908a3f4a247a0c274a457",
+    "packages/server/src/modules/chat/chatYearContext.ts": "156c6cbf57b0c75904c4a34d3f44c9e964832dcb5b684dc3b562d1a570cb2ce1",
+    "packages/server/src/modules/chat/darijaRouting.ts": "215a72796c5e62e40b3f1b65c1230b0f1dfc3d0c25124058de9492e2477a7d7f",
+    "packages/server/src/modules/chat/jevBenchmarkCases.ts": "3f8b2945769900bb6b50ecddc35e0530f97ea225a2d7bcc895104b0d6e71d0d3",
+    "packages/server/src/modules/chat/jevDarijaCases.ts": "35a9f6c96ea0b77be92dc47e917f67d45f4009cc921538aa0d702ba77dd5bb18",
+    "packages/server/src/modules/chat/jevExperiment.ts": "e32afb0dac7a07953ab44d9cb68386fac3c7aa244739757d0facfeb50c8efdb8",
+    "packages/server/src/modules/chat/jevGuard/countV1.ts": "4218b4aa1a56d39a73d8935d5dc30b1a1bc64bc4f0a5efd1eb880e4280556933",
+    "packages/server/src/modules/chat/jevGuard/countV2.ts": "838a90d79feff7b48c369758761581398aa4d963f4d1fc409f1a055a8395a0af",
+    "packages/server/src/modules/chat/jevGuard/examsV6.ts": "d19ecc6b32930d16fbd9a05dd1b8c59b91e58982d74e32145db15e48df56975c",
+    "packages/server/src/modules/chat/jevGuard/queryV3.ts": "b599b867282b723c6d0188abbb1f6e4e79b4e74c4e7c775ee29d119547a8a483",
+    "packages/server/src/modules/chat/jevGuard/queryV4.ts": "25b712122623c814e7297a081f737ffd78404ddb959337997c333d05f2e4a981",
+    "packages/server/src/modules/chat/jevGuard/queryV5.ts": "f82c2fd3f0363718b91602b53d2baf13e5ef478e2124d87846032bad876f3900",
+    "packages/server/src/modules/chat/jevGuard/queryV6.ts": "ed519eacdabf14d1fe0ebd641b920a2f065fdf0ad65987fa4e43660294b97287",
+    "packages/server/src/modules/chat/jevIntents.ts": "555fc7cf4c6c21f98cb46d3edf00220f3912350efa6bfd74a4db1060d2878318",
+    "packages/server/src/modules/chat/jevPreparationPolicy.ts": "70bf0a2943022e436568e7d994d88704b061d7810306668cb2dbc5bcd5ed057f",
+    "packages/server/src/modules/chat/jevQueryGuard.ts": "74caa7de072480a2c76eab4faa6b60e8f870d74707373cb58531b4e357547285",
+    "packages/server/src/modules/chat/jevReplyPlan.ts": "d5e737a9091e805e35eba6aff8c401f8c61a198e6930cc052bf3ca995aec7dce",
+    "packages/server/src/modules/chat/jevSyntheticCases.ts": "1f5da5e62dea7ee8cdb1914ce10d549725dca2065f0d40d98d275692fb1eaa6a",
+    "packages/server/src/modules/chat/schoolListReplies.ts": "47657c634edc7ad41c22d8217f7fc8ebb413d60d320155d29568955e39d40045",
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "696dac4828e05fc7ff4fdb2d6b1c0518b89db49ba41fb23f5de871b18ea2a35f",
+    "packages/server/src/modules/chat/schoolReplyWrite.ts": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+    "scripts/chatbot-jev-full-chat-lib.mjs": "62a23602f5e6d5d70be405fa995b0443397a9936ac1c01e950f5b47973b51aab",
+    "scripts/chatbot-jev-full-chat.mjs": "1f69f1530abb03a7f99b2fb77f8ce5ef24b52d5061447a144bc790c617d30a76",
+    "scripts/chatbot-provider-observer.mjs": "2828e2f2270e8cbfb942066e6ea5fdd9a2dc401e2178a035a05c8fc3d61d56d1"
+  },
+  "changedSources": [
+    "packages/server/src/modules/chat/jevReplyPlan.ts",
+    "packages/server/src/modules/chat/schoolListReplies.ts"
+  ],
+  "runtimeChanges": [
+    "packages/server/src/modules/chat/jevReplyPlan.ts",
+    "packages/server/src/modules/chat/schoolListReplies.ts"
+  ],
+  "measuredRendererSha256": "5743eb5c4bc7d242cafa883883272ad5139dcbee35fab015e04f639c5ba86ad8",
+  "forcedWrongReadChoices": 644,
+  "wrongReadChoicesAccepted": 0,
+  "unchangedSavedFixtureRenderers": 12,
+  "rendererChecks": [
+    {
+      "kind": "classes",
+      "limit": 5,
+      "language": "fr",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "classes",
+      "limit": 5,
+      "language": "ar",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "classes",
+      "limit": 5,
+      "language": "ary",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "attendance",
+      "limit": 5,
+      "language": "fr",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "attendance",
+      "limit": 5,
+      "language": "ar",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "attendance",
+      "limit": 5,
+      "language": "ary",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "exams",
+      "limit": 1,
+      "language": "fr",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "exams",
+      "limit": 1,
+      "language": "ar",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "exams",
+      "limit": 1,
+      "language": "ary",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "exams",
+      "limit": 5,
+      "language": "fr",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "exams",
+      "limit": 5,
+      "language": "ar",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    },
+    {
+      "kind": "exams",
+      "limit": 5,
+      "language": "ary",
+      "callsUnchanged": true,
+      "textUnchanged": true
+    }
+  ],
+  "note": "Same-day singular exam clarification was added after the paid run. All saved fixture renderer outputs and calls are unchanged. This is an offline compatibility proof, not a populated live or new model run."
+}

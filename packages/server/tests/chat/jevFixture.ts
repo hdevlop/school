@@ -28,6 +28,7 @@ import { JevBenchmarkController } from '../../src/modules/chat/JevBenchmarkContr
 import { JevBenchmarkService } from '../../src/modules/chat/JevBenchmarkService';
 import { JevBenchmarkRepository } from '../../src/modules/chat/JevBenchmarkRepository';
 import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
+import { jevDarijaCases } from '../../src/modules/chat/jevDarijaCases';
 import { INTENT_NAMES, JEV_MODEL } from '../../src/modules/chat/jevIntents';
 import type { ChatDiagnostics } from 'najm-chatbot';
 
@@ -53,6 +54,15 @@ class AttendanceLists {
   @Get('/') @isAdministrator() @McpTool({ description: 'Fixture attendance', readOnly: true })
   get_today_students() { return []; }
 }
+@Controller('/fixture-exams') @ToolGroup('exams')
+class ExamLists {
+  @Year() private year!: ResolvedAcademicYear;
+  @Get('/') @isAdministrator() @McpTool({ description: 'Fixture upcoming exams', readOnly: true })
+  get_upcoming_exams() {
+    return [{ title: `Exam ${this.year.label}`, class: { name: 'Class A' }, section: { name: 'A' },
+      date: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10), startTime: '08:00', endTime: '09:00' }];
+  }
+}
 
 /** Fully local: fake settings/classifier/model and synthetic repositories, real guards/MCP/year scope. */
 export async function createJevFixture() {
@@ -67,7 +77,7 @@ export async function createJevFixture() {
   classifier.transport = async (_url, init) => {
     decisions++;
     const query = JSON.parse(String(init!.body)).state;
-    const item = jevSyntheticCases.find(item => item.query === query)!;
+    const item = [...jevSyntheticCases, ...jevDarijaCases].find(item => item.query === query)!;
     return Response.json({ id: `mock-${decisions}`, model: JEV_MODEL, usage: { input_tokens: 1, cost: 0 }, answers: {
       intent: { type: 'choice', choice: item.intent, confidence: 0.93, probabilities: Object.fromEntries(INTENT_NAMES.map(name =>
         [name, name === item.intent ? 0.93 : name === (item.intent === 'needs_llm' ? 'student_count' : 'needs_llm') ? 0.07 : 0])) },
@@ -77,10 +87,10 @@ export async function createJevFixture() {
   const server = new Server({ isolated: true, silent: true }).base('/api')
     .use(i18n(schoolI18n.options)).use(guards()).use(validation())
     .use(mcp({ name: 'jev-fixture', version: '1', transports: ['http'], path: '/mcp',
-      ...schoolMcpYearHooks(['students', 'teachers', 'classes', 'attendance']) }))
+      ...schoolMcpYearHooks(['students', 'teachers', 'classes', 'attendance', 'exams']) }))
     .load({ AuthGuard, ChatController, JevBenchmarkController, JevBenchmarkService,
       AcademicYearValidator, AcademicYearRepository, SchoolChatContextProvider,
-      StudentCounts, TeacherCounts, ClassLists, AttendanceLists });
+      StudentCounts, TeacherCounts, ClassLists, AttendanceLists, ExamLists });
   const roleGuard = getGuardMetadata(JevBenchmarkController, 'status').find(guard => guard.guardClass.name === 'RoleGuard')!.guardClass;
   server.load(roleGuard);
   const container = server.container;

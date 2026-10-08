@@ -2022,3 +2022,24 @@ a completed stream as correct. The 100 questions retain their reviewed wording
 and frozen expectations; the owner need not write another collection. Next work
 is targeted Darija/Arabizi quality fixes and actor/filter validation. Consumed
 benchmark jobs must not be replayed.
+
+# Jev exam coverage checkpoint (2026-10-08)
+
+Guard 6 now supports six closed, unfiltered Darija/Arabizi upcoming-exam requests
+using the existing scoped MCP executor. The focused 20-question run passed 16/20
+tool plans versus 12/20 for those same questions in the saved guard-5 run, with
+9/9 selected Jev replies passing intent, tool and fixture-answer checks. This is
+a targeted check; the earlier full 100-question result remains 80/100.
+
+Count questions q12/q50 already passed the vocabulary guard; their independent
+write answer disagreed with their read intent. Preserve that disagreement stop.
+Singular exam replies now distinguish future-date exams from same-day rows whose
+timing needs confirmation. The latter clarification was added after the paid run
+and verified offline; saved fixture outputs remain unchanged.
+
+Next: versioned classification wording for short Arabizi and write-bit mistakes,
+then populated subject/gender/parent-scope validation. Keep the router fallback
+and the normal app's Jev mode off until role-specific qualification. No additional
+billing investigation is needed for this completed, fully known-cost run.
+See the [coverage report](docs/evidence/chatbot-latency/darija-jev-coverage-v6-results-20261008.md)
+for the failures, concrete next actions and verification limits.

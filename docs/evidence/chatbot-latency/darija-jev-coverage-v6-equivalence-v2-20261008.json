@@ -1,0 +1,453 @@
+{
+  "status": "offline-equivalent-tool-audit",
+  "newPaidRequests": 0,
+  "productionAcceptance": false,
+  "source": [
+    {
+      "path": "docs/evidence/chatbot-latency/darija-jev-coverage-v6-run-20261008.json",
+      "sha256": "1208f08ccfd6ad52b7310bf1479d1e56bd73960f1dbfe0d567bcb5cdfb7f2c58"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-jev-coverage-v6-generation-usage-20261008.jsonl",
+      "sha256": "e899c29e600f985a907cb70089d4df7abc0ed1d8ef537e49b490ef041cbb6a96"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-jev-coverage-v6-tools-20261008.json",
+      "sha256": "2aedf76789efe629a412c356b7fa58c910a3c64df8c389f21c0a0e95c55ec638"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-jev-coverage-v6-fixture-data-20261008.json",
+      "sha256": "67b627982b476c36dee7815d4ebbe7c7808eb06adfeb9a6cabce7257017cf904"
+    },
+    {
+      "path": "datasets/chatbot-latency/darija-tool-selection-20261008.json",
+      "sha256": "1c94efddc353c48bfb122d3624fc69afa5180effcaecc75c983e8fb649bd831a"
+    },
+    {
+      "path": "packages/server/src/modules/dashboard/academic/AcademicDashboardService.ts",
+      "sha256": "66400e6ad8f90a213a0fa80437891f540baaaca9971ce44de3eb13f9cc1f59b8"
+    },
+    {
+      "path": "packages/server/src/modules/dashboard/academic/AcademicDashboardController.ts",
+      "sha256": "f82637ffd11b92bb56c1519ed30cdee0e052b9e8a5febb43e76f5229052fd56f"
+    }
+  ],
+  "scoringPolicy": "Post-run secondary audit, applied to all supplied runs: academic dashboard KPIs are an equivalent staff-only source for unfiltered school-wide counts. Frozen scores are retained; errors, arguments and other expectations are unchanged.",
+  "arms": [
+    {
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "arm": "20b-coreweave-first",
+      "attempts": 20,
+      "frozenPassed": 16,
+      "equivalentPassed": 16,
+      "outcomesChanged": [],
+      "scripts": {
+        "ary": {
+          "attempts": 12,
+          "passed": 10
+        },
+        "ary-latn": {
+          "attempts": 8,
+          "passed": 6
+        }
+      }
+    }
+  ],
+  "current120bCategories": {},
+  "rows": [
+    {
+      "caseId": "jev-operator-q01",
+      "query": "سلام عليكم، واش نقدر نسولك على شي حاجة؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:56:57.559Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q02",
+      "query": "salam 3likom, wach n9der nsowlek 3la chi 7aja?",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:56:58.599Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q05",
+      "query": "وريني التواريخ ديال الفروض الجايين فالمدرسة كاملة.",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:56:59.630Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false,
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "exams_get_all",
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "exams_get_by_teacher",
+        "teacher-profile_get_schedule_today",
+        "exams_get_by_subject",
+        "assessments_get_today_assessments",
+        "teacher-profile_get_pending_grading"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q06",
+      "query": "werini tawarikh dyal lforod jayin f lmdrasa kamla.",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:02.265Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false,
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "exams_get_all",
+        "assessments_get_upcoming_assessments",
+        "teacher-profile_get_schedule_today",
+        "exams_get_by_teacher",
+        "assessments_get_due_this_week",
+        "assessments_get_today_assessments"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q09",
+      "query": "شحال من أستاذ كيقري فالمدرسة ديالنا دابا؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:04.862Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q11",
+      "query": "عطيني عدد التلاميذ بوحدو وعدد الأساتذة بوحدو، ديال المدرسة كاملة.",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:05.887Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q12",
+      "query": "3tini 3adad tlamd bo7do w 3adad lasatida bo7do, dyal lmdrasa kamla.",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:06.932Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false,
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "academic-dashboard_get_kpis",
+        "teacher-overview_get_overview",
+        "staff_get_staff_count",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "teacher-dashboard_get_overview"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q13",
+      "query": "شنو هما الأقسام اللي عندنا فالمدرسة؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:10.864Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q30",
+      "query": "jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:11.941Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false,
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "academic-dashboard_get_kpis",
+        "staff_get_staff_count",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "teacher-overview_get_overview",
+        "student-profile_get_attendance_summary"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q32",
+      "query": "3tini smiyat dyal lasatida li kay9erriw riyadiyat.",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:15.919Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": false,
+      "equivalentPassed": false,
+      "issues": [
+        "missing_required_tool:teachers_get_teachers"
+      ],
+      "equivalenceChangedOutcome": false,
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teachers",
+        "teachers_get_students",
+        "classes_get_class_teachers",
+        "students_get_students",
+        "teacher-profile_get_my_students",
+        "teachers_get_by_email",
+        "sections_get_teachers",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q35",
+      "query": "وريني الغياب ديال التلاميذ فالشهر اللي فات.",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:18.666Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false,
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "attendance_get_by_student",
+        "attendance_get_today_students",
+        "teacher-dashboard_get_attendance_trend",
+        "teacher-overview_get_attendance_trend",
+        "finance-dashboard_get_overdue",
+        "alerts_get_alerts_by_student",
+        "attendance_get_by_date",
+        "attendance_get_by_teacher",
+        "search_search_students",
+        "attendance_get_all"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q49",
+      "query": "قولي غير شحال من تلميذ كاين فالمدرسة كاملة.",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:21.668Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q50",
+      "query": "gouli ghir ch7al mn tilmid kayn f lmdrasa kamla.",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:22.731Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false,
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "staff_get_staff_count",
+        "classes_get_class_students",
+        "teacher-profile_get_my_students",
+        "teacher-dashboard_get_attendance_trend",
+        "attendance_get_today_students",
+        "academic-dashboard_get_kpis",
+        "classes_get_classes",
+        "sections_get_sections",
+        "attendance_get_by_date",
+        "attendance_get_all"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q71",
+      "query": "شكون غايب اليوم من التلاميذ؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:25.317Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q77",
+      "query": "إمتى الفرض الجاي؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:26.360Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q78",
+      "query": "imta lfard jay?",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:27.399Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": false,
+      "equivalentPassed": false,
+      "issues": [
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "equivalenceChangedOutcome": false,
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "exams_get_upcoming_exams",
+        "assessments_get_upcoming_assessments",
+        "exams_get_today_exams",
+        "exams_get_by_teacher",
+        "teacher-profile_get_schedule_today",
+        "exams_get_by_subject",
+        "assessments_get_today_assessments",
+        "exams_get_all"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q79",
+      "query": "واش كاينين شي فروض هاد الأيام الجاية؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:29.969Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false
+    },
+    {
+      "caseId": "jev-operator-q80",
+      "query": "wach kaynin chi forod had liyam jaya?",
+      "language": "ary-latn",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:31.044Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": true,
+      "equivalentPassed": true,
+      "issues": [],
+      "equivalenceChangedOutcome": false,
+      "category": "passed_tool_checks",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "exams_get_upcoming_exams",
+        "exams_get_today_exams",
+        "assessments_get_upcoming_assessments",
+        "assessments_get_today_assessments",
+        "teacher-profile_get_schedule_today",
+        "assessments_get_due_this_week",
+        "exams_get_all",
+        "assessments_get_by_subject"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q91",
+      "query": "شحال من بنت كاينة فالمدرسة؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:33.844Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": false,
+      "equivalentPassed": false,
+      "issues": [
+        "missing_required_tool:students_get_students",
+        "unknown_tool"
+      ],
+      "equivalenceChangedOutcome": false,
+      "category": "required_tools_offered_but_plan_failed",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "teachers_get_teacher_count",
+        "students_get_student_count",
+        "staff_get_staff_count",
+        "sections_get_students",
+        "classes_get_class_students",
+        "teacher-profile_get_my_students",
+        "students_get_students",
+        "teachers_get_teachers",
+        "classes_get_classes",
+        "sections_get_sections"
+      ]
+    },
+    {
+      "caseId": "jev-operator-q93",
+      "query": "شحال خلص هاد الولي هاد الشهر؟",
+      "language": "ary",
+      "arm": "20b-coreweave-first",
+      "startedAt": "2026-10-08T18:57:40.749Z",
+      "group": "jev-coverage-v6/20b-coreweave-first",
+      "frozenPassed": false,
+      "equivalentPassed": false,
+      "issues": [
+        "unexpected_data_tool"
+      ],
+      "equivalenceChangedOutcome": false,
+      "category": "unexpected_call_or_execution_failure",
+      "missingRequiredGroups": [],
+      "offeredToolNames": [
+        "fees_get_outstanding",
+        "payments_get_total_revenue",
+        "parent-profile_get_all_fees_due",
+        "fees_list_overdue",
+        "payments_get_this_month",
+        "student-profile_get_financial",
+        "payments_get_monthly_revenue",
+        "expenses_get_this_month"
+      ]
+    }
+  ],
+  "limitations": [
+    "This equivalence was identified after dispatch; it is not a new frozen acceptance gate.",
+    "Dashboard reads also fetch grades/attendance and may be less efficient than dedicated counts.",
+    "Final wording/answer correctness and ownership for non-staff actors remain unqualified."
+  ]
+}

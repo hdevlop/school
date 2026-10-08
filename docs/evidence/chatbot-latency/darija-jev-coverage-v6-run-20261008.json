@@ -1,0 +1,4271 @@
+{
+  "stage": "paid-full-chat-comparison",
+  "status": "completed",
+  "protocol": {
+    "version": 2,
+    "purpose": "darija-jev-coverage-v6",
+    "assistantAuthored": true,
+    "independentQualification": false,
+    "cases": [
+      {
+        "id": "jev-operator-q01",
+        "query": "سلام عليكم، واش نقدر نسولك على شي حاجة؟",
+        "language": "ary",
+        "intent": "small_talk",
+        "familyId": "jev-operator-f01",
+        "expectation": {
+          "kind": "no-tool",
+          "requiredToolGroups": [],
+          "reason": "Greeting; no school-data lookup needed.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q02",
+        "query": "salam 3likom, wach n9der nsowlek 3la chi 7aja?",
+        "language": "ary-latn",
+        "intent": "small_talk",
+        "familyId": "jev-operator-f01",
+        "expectation": {
+          "kind": "no-tool",
+          "requiredToolGroups": [],
+          "reason": "Greeting; no school-data lookup needed.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q05",
+        "query": "وريني التواريخ ديال الفروض الجايين فالمدرسة كاملة.",
+        "language": "ary",
+        "intent": "upcoming_exams",
+        "familyId": "jev-operator-f03",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "exams_get_upcoming_exams",
+              "exams_get_all"
+            ]
+          ],
+          "reason": "Retrieve exams; core Jev must decline this intent.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q06",
+        "query": "werini tawarikh dyal lforod jayin f lmdrasa kamla.",
+        "language": "ary-latn",
+        "intent": "upcoming_exams",
+        "familyId": "jev-operator-f03",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "exams_get_upcoming_exams",
+              "exams_get_all"
+            ]
+          ],
+          "reason": "Retrieve exams; core Jev must decline this intent.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q09",
+        "query": "شحال من أستاذ كيقري فالمدرسة ديالنا دابا؟",
+        "language": "ary",
+        "intent": "teacher_count",
+        "familyId": "jev-operator-f05",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "teachers_get_teacher_count"
+            ]
+          ],
+          "answerFacts": [
+            0
+          ],
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q11",
+        "query": "عطيني عدد التلاميذ بوحدو وعدد الأساتذة بوحدو، ديال المدرسة كاملة.",
+        "language": "ary",
+        "intent": "student_and_teacher_count",
+        "familyId": "jev-operator-f06",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "students_get_student_count"
+            ],
+            [
+              "teachers_get_teacher_count"
+            ]
+          ],
+          "answerFacts": [
+            8,
+            0
+          ],
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q12",
+        "query": "3tini 3adad tlamd bo7do w 3adad lasatida bo7do, dyal lmdrasa kamla.",
+        "language": "ary-latn",
+        "intent": "student_and_teacher_count",
+        "familyId": "jev-operator-f06",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "students_get_student_count"
+            ],
+            [
+              "teachers_get_teacher_count"
+            ]
+          ],
+          "answerFacts": [
+            8,
+            0
+          ],
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q13",
+        "query": "شنو هما الأقسام اللي عندنا فالمدرسة؟",
+        "language": "ary",
+        "intent": "class_list",
+        "familyId": "jev-operator-f07",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "classes_get_classes"
+            ]
+          ],
+          "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q30",
+        "query": "jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.",
+        "language": "ary-latn",
+        "intent": "needs_llm",
+        "familyId": "jev-operator-f15",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "students_get_student_count"
+            ],
+            [
+              "teachers_get_teacher_count"
+            ]
+          ],
+          "answerFacts": [
+            8
+          ],
+          "reason": "Retrieve both counts then calculate the sum; needs_llm is not the final answer.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q32",
+        "query": "3tini smiyat dyal lasatida li kay9erriw riyadiyat.",
+        "language": "ary-latn",
+        "intent": "needs_llm",
+        "familyId": "jev-operator-f16",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "teachers_get_teachers"
+            ]
+          ],
+          "reason": "Retrieve teachers; empty teacher fixture supports no matches. Nonempty results would require maths subject filtering.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q35",
+        "query": "وريني الغياب ديال التلاميذ فالشهر اللي فات.",
+        "language": "ary",
+        "intent": "needs_llm",
+        "familyId": "jev-operator-f18",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "attendance_get_all",
+              "attendance_get_by_date"
+            ]
+          ],
+          "reason": "Retrieve student attendance, then filter absent and previous month; today-only lookup is wrong.",
+          "studentAttendance": true,
+          "resultFilteringReview": true,
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": true
+        }
+      },
+      {
+        "id": "jev-operator-q49",
+        "query": "قولي غير شحال من تلميذ كاين فالمدرسة كاملة.",
+        "language": "ary",
+        "intent": "student_count",
+        "familyId": "jev-operator-f25",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "students_get_student_count"
+            ]
+          ],
+          "answerFacts": [
+            8
+          ],
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q50",
+        "query": "gouli ghir ch7al mn tilmid kayn f lmdrasa kamla.",
+        "language": "ary-latn",
+        "intent": "student_count",
+        "familyId": "jev-operator-f25",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "students_get_student_count"
+            ]
+          ],
+          "answerFacts": [
+            8
+          ],
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q71",
+        "query": "شكون غايب اليوم من التلاميذ؟",
+        "language": "ary",
+        "intent": "attendance_today",
+        "familyId": "jev-operator-f36",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "attendance_get_today_students",
+              "attendance_get_today_all",
+              "attendance_get_by_date"
+            ]
+          ],
+          "studentAttendance": true,
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q77",
+        "query": "إمتى الفرض الجاي؟",
+        "language": "ary",
+        "intent": "upcoming_exams",
+        "familyId": "jev-operator-f39",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "exams_get_upcoming_exams",
+              "exams_get_all"
+            ]
+          ],
+          "reason": "Retrieve exams; core Jev must decline this intent.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q78",
+        "query": "imta lfard jay?",
+        "language": "ary-latn",
+        "intent": "upcoming_exams",
+        "familyId": "jev-operator-f39",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "exams_get_upcoming_exams",
+              "exams_get_all"
+            ]
+          ],
+          "reason": "Retrieve exams; core Jev must decline this intent.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q79",
+        "query": "واش كاينين شي فروض هاد الأيام الجاية؟",
+        "language": "ary",
+        "intent": "upcoming_exams",
+        "familyId": "jev-operator-f40",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "exams_get_upcoming_exams",
+              "exams_get_all"
+            ]
+          ],
+          "reason": "Retrieve exams; core Jev must decline this intent.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q80",
+        "query": "wach kaynin chi forod had liyam jaya?",
+        "language": "ary-latn",
+        "intent": "upcoming_exams",
+        "familyId": "jev-operator-f40",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "exams_get_upcoming_exams",
+              "exams_get_all"
+            ]
+          ],
+          "reason": "Retrieve exams; core Jev must decline this intent.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": false
+        }
+      },
+      {
+        "id": "jev-operator-q91",
+        "query": "شحال من بنت كاينة فالمدرسة؟",
+        "language": "ary",
+        "intent": "needs_llm",
+        "familyId": "jev-operator-f46",
+        "expectation": {
+          "kind": "read",
+          "requiredToolGroups": [
+            [
+              "students_get_students"
+            ]
+          ],
+          "reason": "Read students before counting girls; unfiltered student_count alone is wrong.",
+          "resultFilteringReview": true,
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": true
+        }
+      },
+      {
+        "id": "jev-operator-q93",
+        "query": "شحال خلص هاد الولي هاد الشهر؟",
+        "language": "ary",
+        "intent": "needs_llm",
+        "familyId": "jev-operator-f47",
+        "expectation": {
+          "kind": "clarification",
+          "requiredToolGroups": [],
+          "reason": "This parent is unidentified; ask who rather than invent an ID or read all payments.",
+          "academicYear": "2026-2027",
+          "actor": "history-admin",
+          "readOnly": true,
+          "finalAnswerReview": true
+        }
+      }
+    ],
+    "jobs": [
+      {
+        "caseId": "jev-operator-q01",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q02",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q05",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q06",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q09",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q11",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q12",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q13",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q30",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q32",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q35",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q49",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q50",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q71",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q77",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q78",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q79",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q80",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q91",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      },
+      {
+        "caseId": "jev-operator-q93",
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      }
+    ],
+    "maxChats": 20,
+    "maxClassifications": 20,
+    "maxCombinedEstimatedUsd": 0.025,
+    "generationReserveUsd": 0.0007,
+    "classificationReserveUsd": 0.00015,
+    "classificationMaxUsd": 0.003,
+    "retries": 0,
+    "concurrency": 1,
+    "startSpacingMs": 1000,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "billingMode": "observe",
+    "billingTimeoutMs": 5000,
+    "cachePolicy": "same process, balanced mode order, caches retained and recorded",
+    "costPolicy": "Opt-in synthetic billing observation lets started requests finish under a separate 5s limit without delaying fallback. SDK generation estimates and response-reported classifier costs are separate; aggregate key delta is not an isolated per-mode invoice. Await terminal billing outside reply timing; unknown costs stop dispatch.",
+    "stopOn": [
+      "unknown_cost",
+      "request_limit",
+      "combined_estimate_limit",
+      "provider_key_delta_limit",
+      "request_error",
+      "process_change",
+      "accepted_wrong"
+    ],
+    "restoresMode": "off",
+    "sourceHashes": {
+      "bun.lock": "ba78f5979a948dd3db2152657be76fe93ce1c871668f8d361a9936d658967802",
+      "package.json": "1ffdc0d5796dd29b67a5685de26d712b1e109db28febaf8e01281b09071befaa",
+      "packages/server/package.json": "9474407ff8db1cec5eb3eba675f04716b544a4c43e242bbb559c433dc4ceb5a5",
+      "packages/server/src/config/chatbotConfig.ts": "36b9b9c304e6d1f5458544c60b9a200f5457cb2a6f89d4490d941719a84ccadb",
+      "packages/server/src/config/chatbotSystemPrompt.ts": "4a8e453f6d81732ef857c3d2337cb3fc78e132daf8a96c74bf960e68abbd1548",
+      "packages/server/src/config/coreConfig.ts": "7c00c81515cc18e0172b52612e3798f31e0f08b84be38ceef1a3150a3f9efe89",
+      "packages/server/src/config/ragConfig.ts": "37f01090bbe1d27c3f12ed4130ab3b14012a5ad15529b2351c23c566a8a28bdf",
+      "packages/server/src/config/yearScope.ts": "df1157c772276ad16047cf6409568eabd17eb07bff0c964b2ea758a3a2127608",
+      "packages/server/src/modules/chat/JevAttemptLedger.ts": "31727a0d1aa400f0451cb0b5ff432e4312e6d19d9d9216e734fdd4c5b056de04",
+      "packages/server/src/modules/chat/JevBenchmarkController.ts": "c52cdd8be4b4fa87b1d68f4279da17d8d7828346e5a6046a7d35ce84f8cb0cef",
+      "packages/server/src/modules/chat/JevBenchmarkDto.ts": "de53b10dde6f18bd006aec589a2a4cf3be4927f4bb19e650c10e086d9d35afa1",
+      "packages/server/src/modules/chat/JevBenchmarkRepository.ts": "2ab859698a95ebac927147aaa30499332bb4d235983a54ae9013a0974ecdea89",
+      "packages/server/src/modules/chat/JevBenchmarkService.ts": "bd7ca5aba01e7cb23dd807f6ca48155e7bc99d9f42af575840ad48c1570e8258",
+      "packages/server/src/modules/chat/JevControls.ts": "24a783242b93ce231ff2dd9f9808ba00d60cff5aad1fa7f9f8fd5f11a4fc616c",
+      "packages/server/src/modules/chat/JevIntentClassifier.ts": "5e56cf0ef493ea7ad1c1da79bf7c129b5311299e5ba5c1c3f67b0539798143cc",
+      "packages/server/src/modules/chat/JevSessionGrants.ts": "588fe5384ed9d9d666f1d6330367a82b8d765dcca3716308d7b711618300fa3c",
+      "packages/server/src/modules/chat/SchoolChatContextProvider.ts": "1d1ff66f12a9ef6698fe2657e094def35d1555f5fc0908a3f4a247a0c274a457",
+      "packages/server/src/modules/chat/chatYearContext.ts": "156c6cbf57b0c75904c4a34d3f44c9e964832dcb5b684dc3b562d1a570cb2ce1",
+      "packages/server/src/modules/chat/darijaRouting.ts": "215a72796c5e62e40b3f1b65c1230b0f1dfc3d0c25124058de9492e2477a7d7f",
+      "packages/server/src/modules/chat/jevBenchmarkCases.ts": "3f8b2945769900bb6b50ecddc35e0530f97ea225a2d7bcc895104b0d6e71d0d3",
+      "packages/server/src/modules/chat/jevDarijaCases.ts": "35a9f6c96ea0b77be92dc47e917f67d45f4009cc921538aa0d702ba77dd5bb18",
+      "packages/server/src/modules/chat/jevExperiment.ts": "e32afb0dac7a07953ab44d9cb68386fac3c7aa244739757d0facfeb50c8efdb8",
+      "packages/server/src/modules/chat/jevGuard/countV1.ts": "4218b4aa1a56d39a73d8935d5dc30b1a1bc64bc4f0a5efd1eb880e4280556933",
+      "packages/server/src/modules/chat/jevGuard/countV2.ts": "838a90d79feff7b48c369758761581398aa4d963f4d1fc409f1a055a8395a0af",
+      "packages/server/src/modules/chat/jevGuard/examsV6.ts": "d19ecc6b32930d16fbd9a05dd1b8c59b91e58982d74e32145db15e48df56975c",
+      "packages/server/src/modules/chat/jevGuard/queryV3.ts": "b599b867282b723c6d0188abbb1f6e4e79b4e74c4e7c775ee29d119547a8a483",
+      "packages/server/src/modules/chat/jevGuard/queryV4.ts": "25b712122623c814e7297a081f737ffd78404ddb959337997c333d05f2e4a981",
+      "packages/server/src/modules/chat/jevGuard/queryV5.ts": "f82c2fd3f0363718b91602b53d2baf13e5ef478e2124d87846032bad876f3900",
+      "packages/server/src/modules/chat/jevGuard/queryV6.ts": "ed519eacdabf14d1fe0ebd641b920a2f065fdf0ad65987fa4e43660294b97287",
+      "packages/server/src/modules/chat/jevIntents.ts": "555fc7cf4c6c21f98cb46d3edf00220f3912350efa6bfd74a4db1060d2878318",
+      "packages/server/src/modules/chat/jevPreparationPolicy.ts": "70bf0a2943022e436568e7d994d88704b061d7810306668cb2dbc5bcd5ed057f",
+      "packages/server/src/modules/chat/jevQueryGuard.ts": "74caa7de072480a2c76eab4faa6b60e8f870d74707373cb58531b4e357547285",
+      "packages/server/src/modules/chat/jevReplyPlan.ts": "d601ca0ff8d4b736b23bec33e7fcf7a6a04812833ef5edea02def749b8c835dc",
+      "packages/server/src/modules/chat/jevSyntheticCases.ts": "1f5da5e62dea7ee8cdb1914ce10d549725dca2065f0d40d98d275692fb1eaa6a",
+      "packages/server/src/modules/chat/schoolListReplies.ts": "5743eb5c4bc7d242cafa883883272ad5139dcbee35fab015e04f639c5ba86ad8",
+      "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+      "packages/server/src/modules/chat/schoolReplyTemplates.ts": "696dac4828e05fc7ff4fdb2d6b1c0518b89db49ba41fb23f5de871b18ea2a35f",
+      "packages/server/src/modules/chat/schoolReplyWrite.ts": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+      "scripts/chatbot-jev-full-chat-lib.mjs": "62a23602f5e6d5d70be405fa995b0443397a9936ac1c01e950f5b47973b51aab",
+      "scripts/chatbot-jev-full-chat.mjs": "1f69f1530abb03a7f99b2fb77f8ce5ef24b52d5061447a144bc790c617d30a76",
+      "scripts/chatbot-provider-observer.mjs": "2828e2f2270e8cbfb942066e6ea5fdd9a2dc401e2178a035a05c8fc3d61d56d1",
+      "datasets/chatbot-latency/darija-tool-selection-20261008.json": "1c94efddc353c48bfb122d3624fc69afa5180effcaecc75c983e8fb649bd831a"
+    },
+    "guardVersion": 6,
+    "casesPath": "datasets/chatbot-latency/darija-tool-selection-20261008.json",
+    "arms": [
+      {
+        "experimentArm": "20b-coreweave-first",
+        "model": "openai/gpt-oss-20b",
+        "mode": "on",
+        "strategy": "candidate-first",
+        "provider": "coreweave-only"
+      }
+    ],
+    "models": [
+      "openai/gpt-oss-20b"
+    ],
+    "experimentEnabled": true,
+    "restoresModel": "openai/gpt-oss-120b",
+    "retainModelToolErrors": true,
+    "averageResponseLimitSeconds": null,
+    "primaryMetric": "correct tools and arguments, by script and family",
+    "captureToolNames": true,
+    "chatRequestTimeoutMs": 600000,
+    "aggregateUsageRequired": false,
+    "providerPolicy": "Same CoreWeave-only 20B fallback on all three fixed synthetic arms; no provider fallback.",
+    "comparisonPolicy": "Focused 20-question Darija/Arabizi check of guard 6: six upcoming-exam requests, two count write-bit disagreements and twelve regression/negative controls, unchanged reviewed wording. Jev candidate-first with CoreWeave-only 20B fallback. Earlier saved runs are observational comparators, not a new 100-case score or controlled causal comparison. Exam populated rendering and forced wrong-choice checks run offline. No French, retries or two-second chat cutoff; timing observational. Unknown costs stay reserved and stop dispatch.",
+    "sourceFingerprint": "b6c89b017ccedaf3ed482c203a77a908bd17fa4f20ffcfa8791df4eac59a8b98"
+  },
+  "actualProviderCalls": null,
+  "generationPricesAreEstimates": true,
+  "modelAndClassifierMocked": false,
+  "chatsDispatched": 20,
+  "rows": [
+    {
+      "caseId": "jev-operator-q01",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "82cdae94-dd65-44a6-b8ad-02d557931160",
+      "startedAt": "2026-10-08T18:56:57.559Z",
+      "language": "ary",
+      "expectedIntent": "small_talk",
+      "firstTextMs": 546.5532,
+      "completionMs": 547.4861999999999,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "مرحبا! نقدر نعاونك تشوف المعلومات ديال المدرسة.",
+      "tools": [],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "82cdae94-dd65-44a6-b8ad-02d557931160",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 0,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 1.9,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 515.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 518.3,
+          "finishMs": 518.3
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 505.0210999999981,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ary",
+          "label": "jev:small_talk"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:56:58.107Z",
+      "billingWaitMs": 13.249000000000024
+    },
+    {
+      "caseId": "jev-operator-q02",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "45d5e0ba-8747-48cd-a983-8f04f1912e6c",
+      "startedAt": "2026-10-08T18:56:58.599Z",
+      "language": "ary-latn",
+      "expectedIntent": "small_talk",
+      "firstTextMs": 422.38329999999974,
+      "completionMs": 422.6391000000001,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "مرحبا! نقدر نعاونك تشوف المعلومات ديال المدرسة.",
+      "tools": [],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "45d5e0ba-8747-48cd-a983-8f04f1912e6c",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 0,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 398.3,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 398.5,
+          "finishMs": 398.5
+        },
+        "steps": [],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 395.0222999999969,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ary",
+          "label": "jev:small_talk"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:56:59.022Z",
+      "billingWaitMs": 10.672099999999773
+    },
+    {
+      "caseId": "jev-operator-q05",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "18077636-cb80-49b2-b7c6-a7fc3edfe302",
+      "startedAt": "2026-10-08T18:56:59.630Z",
+      "language": "ary",
+      "expectedIntent": "upcoming_exams",
+      "firstTextMs": 2348.3774,
+      "completionMs": 2557.3801,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما كاينش أي فروض مقبليّ فهاذ العام الدراسي.",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4288,
+        "completionTokens": 88,
+        "totalTokens": 4376,
+        "inputCost": 0.00008576,
+        "outputCost": 0.00000704,
+        "totalCost": 0.0000928,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "18077636-cb80-49b2-b7c6-a7fc3edfe302",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 309.9,
+          "contextMs": 3.9,
+          "prepareMs": 614,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 2335.2,
+          "finishMs": 2543.4
+        },
+        "steps": [
+          {
+            "endMs": 1752.9,
+            "finishReason": "tool-calls",
+            "inputTokens": 2121,
+            "outputTokens": 57,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 2541.9,
+            "finishReason": "stop",
+            "inputTokens": 2167,
+            "outputTokens": 31,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "chatcmpl-tool-be03410fa1eadd17",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 1743.9,
+            "durationMs": 7.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4288,
+          "outputTokens": 88,
+          "totalTokens": 4376,
+          "cachedInputTokens": 64,
+          "reasoningTokens": 26
+        },
+        "cost": {
+          "promptTokens": 4288,
+          "completionTokens": 88,
+          "totalTokens": 4376,
+          "inputCost": 0.00008576,
+          "outputCost": 0.00000704,
+          "totalCost": 0.0000928,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "18077636-cb80-49b2-b7c6-a7fc3edfe302",
+            "startMs": 317.1,
+            "durationMs": 279,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 317.5,
+                "durationMs": 278.4,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 611.3886000000057,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:02.187Z",
+      "billingWaitMs": 12.133699999999408
+    },
+    {
+      "caseId": "jev-operator-q06",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "63729a2f-7e46-491d-b5d5-ee8d9ae67e9b",
+      "startedAt": "2026-10-08T18:57:02.265Z",
+      "language": "ary-latn",
+      "expectedIntent": "upcoming_exams",
+      "firstTextMs": 2287.6345,
+      "completionMs": 2504.2218000000003,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "المعند، ما كاين حتى فُرْضات جايّة فهاد العام الدراسي.",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4260,
+        "completionTokens": 109,
+        "totalTokens": 4369,
+        "inputCost": 0.0000852,
+        "outputCost": 0.000008720000000000001,
+        "totalCost": 0.00009392,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "63729a2f-7e46-491d-b5d5-ee8d9ae67e9b",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 199.3,
+          "contextMs": 1.3,
+          "prepareMs": 609,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 2270.7,
+          "finishMs": 2488.2
+        },
+        "steps": [
+          {
+            "endMs": 1835.5,
+            "finishReason": "tool-calls",
+            "inputTokens": 2107,
+            "outputTokens": 73,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 2487.5,
+            "finishReason": "stop",
+            "inputTokens": 2153,
+            "outputTokens": 36,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "chatcmpl-tool-b53735ebceeeb432",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 1823.2,
+            "durationMs": 11.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4260,
+          "outputTokens": 109,
+          "totalTokens": 4369,
+          "cachedInputTokens": 2112,
+          "reasoningTokens": 37
+        },
+        "cost": {
+          "promptTokens": 4260,
+          "completionTokens": 109,
+          "totalTokens": 4369,
+          "inputCost": 0.0000852,
+          "outputCost": 0.000008720000000000001,
+          "totalCost": 0.00009392,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "63729a2f-7e46-491d-b5d5-ee8d9ae67e9b",
+            "startMs": 408.5,
+            "durationMs": 193.2,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 408.8,
+                "durationMs": 192.9,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 608.6747999999934,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:04.770Z",
+      "billingWaitMs": 23.362499999999272
+    },
+    {
+      "caseId": "jev-operator-q09",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "64cf38a1-fa5c-4a8e-acb9-7378034a2d04",
+      "startedAt": "2026-10-08T18:57:04.862Z",
+      "language": "ary",
+      "expectedIntent": "teacher_count",
+      "firstTextMs": 409.20280000000093,
+      "completionMs": 409.39000000000124,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "كاينين 0 أستاذ فالمدرسة.",
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "64cf38a1-fa5c-4a8e-acb9-7378034a2d04",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 1,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 2.1,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 391.5,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 393.7,
+          "finishMs": 393.7
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "07e4ece7-b278-45ef-8056-143c533caa2d",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 388.6,
+            "durationMs": 4.8
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 384.25539999999455,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ary",
+          "label": "jev:teacher_count"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:05.271Z",
+      "billingWaitMs": 17.91400000000067
+    },
+    {
+      "caseId": "jev-operator-q11",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "8ca2be5a-d5fd-40ad-8a09-947a26c3f670",
+      "startedAt": "2026-10-08T18:57:05.887Z",
+      "language": "ary",
+      "expectedIntent": "student_and_teacher_count",
+      "firstTextMs": 586.9014999999999,
+      "completionMs": 587.1111000000001,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام وكاينين 0 أستاذ فالمدرسة.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "8ca2be5a-d5fd-40ad-8a09-947a26c3f670",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 2,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 571.3,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 571.5,
+          "finishMs": 571.5
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "ff3616ec-f8b8-4396-ac6f-0a9d2e603d3f",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 562.9,
+            "durationMs": 4.9
+          },
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "2e310cb1-3ab3-4376-8f3a-a50620c79901",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 567.8,
+            "durationMs": 3.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 562.414499999999,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ary",
+          "label": "jev:student_and_teacher_count"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:06.474Z",
+      "billingWaitMs": 11.116799999999785
+    },
+    {
+      "caseId": "jev-operator-q12",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "f8cdf560-8c62-47c1-9ff2-382ad9ea5db1",
+      "startedAt": "2026-10-08T18:57:06.932Z",
+      "language": "ary-latn",
+      "expectedIntent": "student_and_teacher_count",
+      "firstTextMs": 3449.363300000001,
+      "completionMs": 3774.632300000001,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "السلام! فهاد العام الدراسي 2026‑2027، عندنا 8 طلبة و0 أساتذة.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 6833,
+        "completionTokens": 140,
+        "totalTokens": 6973,
+        "inputCost": 0.00013666,
+        "outputCost": 0.0000112,
+        "totalCost": 0.00014786,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "f8cdf560-8c62-47c1-9ff2-382ad9ea5db1",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 397.3,
+          "contextMs": 1.9,
+          "prepareMs": 857.9,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 3434.1,
+          "finishMs": 3757.3
+        },
+        "steps": [
+          {
+            "endMs": 2011.9,
+            "finishReason": "tool-calls",
+            "inputTokens": 2229,
+            "outputTokens": 49,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 2698.4,
+            "finishReason": "tool-calls",
+            "inputTokens": 2277,
+            "outputTokens": 36,
+            "toolCalls": [
+              "teachers_get_teacher_count"
+            ]
+          },
+          {
+            "endMs": 3756.1,
+            "finishReason": "stop",
+            "inputTokens": 2327,
+            "outputTokens": 55,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "chatcmpl-tool-a2edf9d7c88a97ff",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 2004.1,
+            "durationMs": 6.3
+          },
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "chatcmpl-tool-964a21a5f53d4ca8",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 2690.4,
+            "durationMs": 6.6
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 6833,
+          "outputTokens": 140,
+          "totalTokens": 6973,
+          "cachedInputTokens": 2368,
+          "reasoningTokens": 52
+        },
+        "cost": {
+          "promptTokens": 6833,
+          "completionTokens": 140,
+          "totalTokens": 6973,
+          "inputCost": 0.00013666,
+          "outputCost": 0.0000112,
+          "totalCost": 0.00014786,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "f8cdf560-8c62-47c1-9ff2-382ad9ea5db1",
+            "startMs": 460.5,
+            "durationMs": 367.9,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 460.9,
+                "durationMs": 367.5,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 857.555400000012,
+          "timedOut": true,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:10.707Z",
+      "billingWaitMs": 23.37750000000051
+    },
+    {
+      "caseId": "jev-operator-q13",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "a64b2733-891f-40eb-9dfb-034dbee10851",
+      "startedAt": "2026-10-08T18:57:10.864Z",
+      "language": "ary",
+      "expectedIntent": "class_list",
+      "firstTextMs": 449.1990000000005,
+      "completionMs": 449.45930000000044,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "هادي لائحة الأقسام والشعب فهاد العام الدراسي 2026-2027:\n\n- History 2026-2027: A, B",
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 1
+          }
+        }
+      ],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "a64b2733-891f-40eb-9dfb-034dbee10851",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 1,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 2.7,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 418.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 421.6,
+          "finishMs": 421.6
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "classes_get_classes",
+            "toolCallId": "3162f875-fcf7-4784-a6c5-4b8fe5b3a825",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 549,
+            "startMs": 413.3,
+            "durationMs": 7.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 409.6679000000004,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ary",
+          "label": "jev:class_list"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:11.314Z",
+      "billingWaitMs": 19.446599999999307
+    },
+    {
+      "caseId": "jev-operator-q30",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "120528da-ed51-4e38-8fcf-a30315357405",
+      "startedAt": "2026-10-08T18:57:11.941Z",
+      "language": "ary-latn",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 3524.759,
+      "completionMs": 3818.942000000001,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "مرحبا! فالسنة الدراسية 2026‑2027 عندنا 8 طلاب و 0 مدربين، يعني إجمالي العدد 8.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 6833,
+        "completionTokens": 158,
+        "totalTokens": 6991,
+        "inputCost": 0.00013666,
+        "outputCost": 0.00001264,
+        "totalCost": 0.0001493,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "120528da-ed51-4e38-8fcf-a30315357405",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 477.7,
+          "contextMs": 2.9,
+          "prepareMs": 930.9,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 3485.5,
+          "finishMs": 3779.2
+        },
+        "steps": [
+          {
+            "endMs": 2051,
+            "finishReason": "tool-calls",
+            "inputTokens": 2229,
+            "outputTokens": 60,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 2826.6,
+            "finishReason": "tool-calls",
+            "inputTokens": 2277,
+            "outputTokens": 35,
+            "toolCalls": [
+              "teachers_get_teacher_count"
+            ]
+          },
+          {
+            "endMs": 3778.6,
+            "finishReason": "stop",
+            "inputTokens": 2327,
+            "outputTokens": 63,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "chatcmpl-tool-a38a67e95f1d4354",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 2038.9,
+            "durationMs": 10.4
+          },
+          {
+            "name": "teachers_get_teacher_count",
+            "toolCallId": "chatcmpl-tool-ae73600f470c7cd3",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 2814.7,
+            "durationMs": 10.3
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 6833,
+          "outputTokens": 158,
+          "totalTokens": 6991,
+          "cachedInputTokens": 128,
+          "reasoningTokens": 57
+        },
+        "cost": {
+          "promptTokens": 6833,
+          "completionTokens": 158,
+          "totalTokens": 6991,
+          "inputCost": 0.00013666,
+          "outputCost": 0.00001264,
+          "totalCost": 0.0001493,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "120528da-ed51-4e38-8fcf-a30315357405",
+            "startMs": 453,
+            "durationMs": 461.1,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 453.5,
+                "durationMs": 460.5,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 930.4082000000053,
+          "timedOut": true,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:15.760Z",
+      "billingWaitMs": 21.329799999999523
+    },
+    {
+      "caseId": "jev-operator-q32",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "3daee88e-7b42-42f1-982b-05683feac79c",
+      "startedAt": "2026-10-08T18:57:15.919Z",
+      "language": "ary-latn",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 1784.9102999999996,
+      "completionMs": 2613.6725000000006,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "معندش عندي وسيلة مباشرة لحساب هاد النوع من المعلومات (أسماء الأساتذة اللي كيقراو ف الرياضة) فهاد الداشبورد. يلزمك تدير بحث في فئة \"الاساتذة\" وتفرّج على المواد المرتبطة بها. إذا بغيت مساعدة فترتيب طلب البحث أو كاين شي أساسي آخر، مرحبا.",
+      "tools": [],
+      "generationEstimate": {
+        "promptTokens": 2195,
+        "completionTokens": 142,
+        "totalTokens": 2337,
+        "inputCost": 0.000043899999999999996,
+        "outputCost": 0.000011360000000000001,
+        "totalCost": 0.000055259999999999996,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "3daee88e-7b42-42f1-982b-05683feac79c",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 3,
+          "historyMs": null,
+          "routingMs": 335.7,
+          "contextMs": 2.9,
+          "prepareMs": 684.8,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1740.5,
+          "finishMs": 2569.3
+        },
+        "steps": [
+          {
+            "endMs": 2568.5,
+            "finishReason": "stop",
+            "inputTokens": 2195,
+            "outputTokens": 142,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 2195,
+          "outputTokens": 142,
+          "totalTokens": 2337,
+          "cachedInputTokens": 32,
+          "reasoningTokens": 56
+        },
+        "cost": {
+          "promptTokens": 2195,
+          "completionTokens": 142,
+          "totalTokens": 2337,
+          "inputCost": 0.000043899999999999996,
+          "outputCost": 0.000011360000000000001,
+          "totalCost": 0.000055259999999999996,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "3daee88e-7b42-42f1-982b-05683feac79c",
+            "startMs": 349,
+            "durationMs": 324.7,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 349.5,
+                "durationMs": 324.1,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 682.8031000000046,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:18.533Z",
+      "billingWaitMs": 26.4445999999989
+    },
+    {
+      "caseId": "jev-operator-q35",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "2b35ba3b-e159-4feb-bbcb-1ddf67f2434e",
+      "startedAt": "2026-10-08T18:57:18.666Z",
+      "language": "ary",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 2607.151399999999,
+      "completionMs": 2688.9055999999982,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما كاين حتى سجل ديال الحضور ولا الغياب فهاد العام الدراسي 2026-2027.",
+      "tools": [
+        {
+          "name": "attendance_get_all",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "type": "student",
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4900,
+        "completionTokens": 88,
+        "totalTokens": 4988,
+        "inputCost": 0.000098,
+        "outputCost": 0.00000704,
+        "totalCost": 0.00010504,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "2b35ba3b-e159-4feb-bbcb-1ddf67f2434e",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 315.7,
+          "contextMs": 2.2,
+          "prepareMs": 672,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 2572.6,
+          "finishMs": 2661
+        },
+        "steps": [
+          {
+            "endMs": 1744.9,
+            "finishReason": "tool-calls",
+            "inputTokens": 2428,
+            "outputTokens": 44,
+            "toolCalls": [
+              "attendance_get_all"
+            ]
+          },
+          {
+            "endMs": 2660.3,
+            "finishReason": "stop",
+            "inputTokens": 2472,
+            "outputTokens": 44,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "attendance_get_all",
+            "toolCallId": "chatcmpl-tool-91f7642e5ecea31e",
+            "outcome": "executed",
+            "inputChars": 45,
+            "resultChars": 2,
+            "startMs": 1728.2,
+            "durationMs": 15.3
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4900,
+          "outputTokens": 88,
+          "totalTokens": 4988,
+          "cachedInputTokens": 96,
+          "reasoningTokens": 28
+        },
+        "cost": {
+          "promptTokens": 4900,
+          "completionTokens": 88,
+          "totalTokens": 4988,
+          "inputCost": 0.000098,
+          "outputCost": 0.00000704,
+          "totalCost": 0.00010504,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "2b35ba3b-e159-4feb-bbcb-1ddf67f2434e",
+            "startMs": 356.4,
+            "durationMs": 302.9,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 357,
+                "durationMs": 302.3,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 670.4997999999905,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:21.354Z",
+      "billingWaitMs": 119.91540000000168
+    },
+    {
+      "caseId": "jev-operator-q49",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "772fe3e0-5aac-4a88-ab91-04233a30b67d",
+      "startedAt": "2026-10-08T18:57:21.668Z",
+      "language": "ary",
+      "expectedIntent": "student_count",
+      "firstTextMs": 498.1252999999997,
+      "completionMs": 499.0439000000006,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "772fe3e0-5aac-4a88-ab91-04233a30b67d",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 1,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 2.9,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 455.9,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 459,
+          "finishMs": 459
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "a83973c9-c02a-4c1b-95dd-5bf7f97f37b7",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 59,
+            "startMs": 450.9,
+            "durationMs": 7.9
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 447.2030999999988,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ary",
+          "label": "jev:student_count"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:22.167Z",
+      "billingWaitMs": 23.290200000003097
+    },
+    {
+      "caseId": "jev-operator-q50",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "e8b1efe2-f29b-42f0-92fc-0173513a62ec",
+      "startedAt": "2026-10-08T18:57:22.731Z",
+      "language": "ary-latn",
+      "expectedIntent": "student_count",
+      "firstTextMs": 2347.1265999999996,
+      "completionMs": 2452.1045000000013,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "شحال من طلاب فالسنة ديال 2026-2027 هو 8.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4826,
+        "completionTokens": 76,
+        "totalTokens": 4902,
+        "inputCost": 0.00009652,
+        "outputCost": 0.00000608,
+        "totalCost": 0.0001026,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "e8b1efe2-f29b-42f0-92fc-0173513a62ec",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 12,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 434.2,
+          "contextMs": 2.4,
+          "prepareMs": 949,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 2314.7,
+          "finishMs": 2419.7
+        },
+        "steps": [
+          {
+            "endMs": 1752.4,
+            "finishReason": "tool-calls",
+            "inputTokens": 2389,
+            "outputTokens": 41,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 2418.7,
+            "finishReason": "stop",
+            "inputTokens": 2437,
+            "outputTokens": 35,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "chatcmpl-tool-9656a3a19623741b",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 1743.1,
+            "durationMs": 8.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4826,
+          "outputTokens": 76,
+          "totalTokens": 4902,
+          "cachedInputTokens": 224,
+          "reasoningTokens": 18
+        },
+        "cost": {
+          "promptTokens": 4826,
+          "completionTokens": 76,
+          "totalTokens": 4902,
+          "inputCost": 0.00009652,
+          "outputCost": 0.00000608,
+          "totalCost": 0.0001026,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "e8b1efe2-f29b-42f0-92fc-0173513a62ec",
+            "startMs": 512.1,
+            "durationMs": 423.6,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 512.7,
+                "durationMs": 423.1,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 948.2828000000009,
+          "timedOut": true,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:25.183Z",
+      "billingWaitMs": 22.926899999998568
+    },
+    {
+      "caseId": "jev-operator-q71",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "fda418e2-8fb2-4519-befd-a3242fc30e96",
+      "startedAt": "2026-10-08T18:57:25.317Z",
+      "language": "ary",
+      "expectedIntent": "attendance_today",
+      "firstTextMs": 378.70970000000307,
+      "completionMs": 378.82980000000316,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "لا توجد سجلات حضور أو غياب مسجلة لهذا التاريخ. (2026-2027)",
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "fda418e2-8fb2-4519-befd-a3242fc30e96",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 1,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 353.2,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 353.4,
+          "finishMs": 353.4
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "attendance_get_today_students",
+            "toolCallId": "129358ef-8e33-4c47-ac77-4fc38b20546b",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 41,
+            "startMs": 338.2,
+            "durationMs": 14.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 337.25710000000254,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ar",
+          "label": "jev:attendance_today"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:25.696Z",
+      "billingWaitMs": 21.52349999999933
+    },
+    {
+      "caseId": "jev-operator-q77",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "9890249f-b4e4-4774-9e79-9740c11e7bea",
+      "startedAt": "2026-10-08T18:57:26.360Z",
+      "language": "ary",
+      "expectedIntent": "upcoming_exams",
+      "firstTextMs": 346.3647999999994,
+      "completionMs": 346.55029999999897,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "لا توجد امتحانات قادمة لهذه السنة. (2026-2027)",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "9890249f-b4e4-4774-9e79-9740c11e7bea",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 1,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 320.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 320.8,
+          "finishMs": 320.8
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "f9fde140-99c7-46e5-982c-fa5878653bba",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 41,
+            "startMs": 310.3,
+            "durationMs": 10.2
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 309.5408999999927,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ar",
+          "label": "jev:upcoming_exams"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:26.706Z",
+      "billingWaitMs": 23.19709999999759
+    },
+    {
+      "caseId": "jev-operator-q78",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "ee11cfe6-d199-49ca-b87c-2db992f31af0",
+      "startedAt": "2026-10-08T18:57:27.399Z",
+      "language": "ary-latn",
+      "expectedIntent": "upcoming_exams",
+      "firstTextMs": 1655.9536999999982,
+      "completionMs": 2337.7419999999984,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "سمح ليا، ما فهمتش شنو معناه السؤال دابا. واش كتسول على حتى امتحان أو على حضور دافران ولا شي شي؟ عطينا معطيات أكثر باش نقدر نجاوبك.",
+      "tools": [],
+      "generationEstimate": {
+        "promptTokens": 2096,
+        "completionTokens": 112,
+        "totalTokens": 2208,
+        "inputCost": 0.000041920000000000005,
+        "outputCost": 0.00000896,
+        "totalCost": 0.00005088000000000001,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "ee11cfe6-d199-49ca-b87c-2db992f31af0",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 3.1,
+          "historyMs": null,
+          "routingMs": 205.1,
+          "contextMs": 2.9,
+          "prepareMs": 606.7,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 1623.7,
+          "finishMs": 2305.3
+        },
+        "steps": [
+          {
+            "endMs": 2304.5,
+            "finishReason": "stop",
+            "inputTokens": 2096,
+            "outputTokens": 112,
+            "toolCalls": []
+          }
+        ],
+        "tools": [],
+        "usage": {
+          "source": "total",
+          "inputTokens": 2096,
+          "outputTokens": 112,
+          "totalTokens": 2208,
+          "cachedInputTokens": 96,
+          "reasoningTokens": 58
+        },
+        "cost": {
+          "promptTokens": 2096,
+          "completionTokens": 112,
+          "totalTokens": 2208,
+          "inputCost": 0.000041920000000000005,
+          "outputCost": 0.00000896,
+          "totalCost": 0.00005088000000000001,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "ee11cfe6-d199-49ca-b87c-2db992f31af0",
+            "startMs": 404.5,
+            "durationMs": 191.8,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 405.1,
+                "durationMs": 191.2,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 603.9409000000014,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:29.737Z",
+      "billingWaitMs": 27.97559999999794
+    },
+    {
+      "caseId": "jev-operator-q79",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "3d885d41-8268-4a55-abeb-3a1c985284cd",
+      "startedAt": "2026-10-08T18:57:29.969Z",
+      "language": "ary",
+      "expectedIntent": "upcoming_exams",
+      "firstTextMs": 446.7841999999946,
+      "completionMs": 446.9389999999985,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما كاين حتى امتحان جاي فهاد العام. (2026-2027)",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "promptTokens": 0,
+        "completionTokens": 0,
+        "totalTokens": 0,
+        "inputCost": 0,
+        "outputCost": 0,
+        "totalCost": 0,
+        "currency": "USD",
+        "pricingFound": true
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "3d885d41-8268-4a55-abeb-3a1c985284cd",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "disabled",
+        "routedToolCount": 1,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": null,
+          "contextMs": null,
+          "prepareMs": 396.8,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 396.9,
+          "finishMs": 396.9
+        },
+        "steps": [],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "7b864ca7-79e0-4f75-90f3-3106dc30104c",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 41,
+            "startMs": 385.1,
+            "durationMs": 11.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "totalTokens": 0,
+          "cachedInputTokens": null,
+          "reasoningTokens": null
+        },
+        "cost": {
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b",
+          "promptTokens": 0,
+          "completionTokens": 0,
+          "totalTokens": 0,
+          "inputCost": 0,
+          "outputCost": 0,
+          "totalCost": 0,
+          "currency": "USD",
+          "pricingFound": true
+        },
+        "embeddings": [],
+        "replyPreparation": {
+          "selected": "template",
+          "elapsedMs": 384.4569999999949,
+          "timedOut": false,
+          "candidateState": "candidate",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "reply": {
+          "source": "template",
+          "language": "ary",
+          "label": "jev:upcoming_exams"
+        },
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:30.416Z",
+      "billingWaitMs": 28.349999999998545
+    },
+    {
+      "caseId": "jev-operator-q80",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "6b98925c-080f-4b8a-90d5-89813b76fa2f",
+      "startedAt": "2026-10-08T18:57:31.044Z",
+      "language": "ary-latn",
+      "expectedIntent": "upcoming_exams",
+      "firstTextMs": 2229.6189000000013,
+      "completionMs": 2615.359400000001,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما فـش أموات على امشية ليمشي؟ غادي نكشف! \n\nالسعرات: لا توجد امتحانات قيد القريب.",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4244,
+        "completionTokens": 96,
+        "totalTokens": 4340,
+        "inputCost": 0.00008488000000000001,
+        "outputCost": 0.000007680000000000001,
+        "totalCost": 0.00009256000000000002,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "6b98925c-080f-4b8a-90d5-89813b76fa2f",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 0,
+          "historyMs": null,
+          "routingMs": 309.5,
+          "contextMs": 2.5,
+          "prepareMs": 654.3,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 2196.2,
+          "finishMs": 2572.1
+        },
+        "steps": [
+          {
+            "endMs": 1749,
+            "finishReason": "tool-calls",
+            "inputTokens": 2099,
+            "outputTokens": 49,
+            "toolCalls": [
+              "exams_get_upcoming_exams"
+            ]
+          },
+          {
+            "endMs": 2571.2,
+            "finishReason": "stop",
+            "inputTokens": 2145,
+            "outputTokens": 47,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "exams_get_upcoming_exams",
+            "toolCallId": "chatcmpl-tool-ac5c0e8114d3b7af",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 2,
+            "startMs": 1734.7,
+            "durationMs": 12.7
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4244,
+          "outputTokens": 96,
+          "totalTokens": 4340,
+          "cachedInputTokens": 128,
+          "reasoningTokens": 21
+        },
+        "cost": {
+          "promptTokens": 4244,
+          "completionTokens": 96,
+          "totalTokens": 4340,
+          "inputCost": 0.00008488000000000001,
+          "outputCost": 0.000007680000000000001,
+          "totalCost": 0.00009256000000000002,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "6b98925c-080f-4b8a-90d5-89813b76fa2f",
+            "startMs": 342.2,
+            "durationMs": 298.3,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 342.8,
+                "durationMs": 297.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 653.8720999999932,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:33.660Z",
+      "billingWaitMs": 40.30080000000453
+    },
+    {
+      "caseId": "jev-operator-q91",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "dae88932-ef31-44ed-96f6-63205fd158a4",
+      "startedAt": "2026-10-08T18:57:33.844Z",
+      "language": "ary",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 6032.381600000001,
+      "completionMs": 6590.781999999999,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "ما قدرناش نحددو شحال من بنت فعلاً، حيت ماكايناش عندي طلب كيبان فيه فصّيلة للـ gender فهاد الآداة. يمكن دير تصفية على قاعدة البيانات في اللوحة الرئيسية.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "students_get_students<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_students<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_students<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 12421,
+        "completionTokens": 342,
+        "totalTokens": 12763,
+        "inputCost": 0.00024842,
+        "outputCost": 0.000027360000000000002,
+        "totalCost": 0.00027578,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "dae88932-ef31-44ed-96f6-63205fd158a4",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 10,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 3.1,
+          "historyMs": null,
+          "routingMs": 536.2,
+          "contextMs": 2.5,
+          "prepareMs": 907.8,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 5992.9,
+          "finishMs": 6550.3
+        },
+        "steps": [
+          {
+            "endMs": 1750,
+            "finishReason": "tool-calls",
+            "inputTokens": 2303,
+            "outputTokens": 42,
+            "toolCalls": [
+              "students_get_student_count"
+            ]
+          },
+          {
+            "endMs": 2757.1,
+            "finishReason": "tool-calls",
+            "inputTokens": 2351,
+            "outputTokens": 73,
+            "toolCalls": [
+              "students_get_students<|channel|>commentary"
+            ]
+          },
+          {
+            "endMs": 4086.3,
+            "finishReason": "tool-calls",
+            "inputTokens": 2470,
+            "outputTokens": 76,
+            "toolCalls": [
+              "students_get_students<|channel|>commentary"
+            ]
+          },
+          {
+            "endMs": 5026.6,
+            "finishReason": "tool-calls",
+            "inputTokens": 2589,
+            "outputTokens": 60,
+            "toolCalls": [
+              "students_get_students<|channel|>commentary"
+            ]
+          },
+          {
+            "endMs": 6549.7,
+            "finishReason": "stop",
+            "inputTokens": 2708,
+            "outputTokens": 91,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "students_get_student_count",
+            "toolCallId": "chatcmpl-tool-8c0a7a56e43b9fe9",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 16,
+            "startMs": 1740.4,
+            "durationMs": 8.1
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 12421,
+          "outputTokens": 342,
+          "totalTokens": 12763,
+          "cachedInputTokens": 704,
+          "reasoningTokens": 184
+        },
+        "cost": {
+          "promptTokens": 12421,
+          "completionTokens": 342,
+          "totalTokens": 12763,
+          "inputCost": 0.00024842,
+          "outputCost": 0.000027360000000000002,
+          "totalCost": 0.00027578,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "dae88932-ef31-44ed-96f6-63205fd158a4",
+            "startMs": 374.9,
+            "durationMs": 522.2,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 375.5,
+                "durationMs": 521.6,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 904.6218999999983,
+          "timedOut": true,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:40.435Z",
+      "billingWaitMs": 21.56930000000284
+    },
+    {
+      "caseId": "jev-operator-q93",
+      "experimentArm": "20b-coreweave-first",
+      "model": "openai/gpt-oss-20b",
+      "mode": "on",
+      "strategy": "candidate-first",
+      "provider": "coreweave-only",
+      "correlationId": "27dd3472-ae8e-4d59-9f6d-3f57a3e91a54",
+      "startedAt": "2026-10-08T18:57:40.749Z",
+      "language": "ary",
+      "expectedIntent": "needs_llm",
+      "firstTextMs": 2555.279999999999,
+      "completionMs": 3201.1520999999993,
+      "done": true,
+      "errors": [],
+      "aborted": false,
+      "text": "عذرًا، ما قدرش نحصل على المعلومات على هاد الطلب حيت خصنا تعرف رقم الوالد أو الاسم ديالو باش نلقاو المدفوعات ديالو فهاد الشهر. ممكن تعطيه الرقم التعريفي أو الاسم؟",
+      "tools": [
+        {
+          "name": "payments_get_this_month",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "generationEstimate": {
+        "promptTokens": 4431,
+        "completionTokens": 157,
+        "totalTokens": 4588,
+        "inputCost": 0.00008862,
+        "outputCost": 0.00001256,
+        "totalCost": 0.00010118,
+        "currency": "USD",
+        "pricingFound": true,
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b"
+      },
+      "diagnostics": {
+        "version": 1,
+        "correlationId": "27dd3472-ae8e-4d59-9f6d-3f57a3e91a54",
+        "channel": "web",
+        "provider": "openrouter",
+        "model": "openai/gpt-oss-20b",
+        "outcome": "completed",
+        "error": null,
+        "routingStatus": "routed",
+        "routedToolCount": 8,
+        "messages": {
+          "stored": 0,
+          "prompt": 1
+        },
+        "spans": {
+          "settingsMs": 3.2,
+          "historyMs": null,
+          "routingMs": 252.8,
+          "contextMs": 2.5,
+          "prepareMs": 594.6,
+          "persistenceMs": null
+        },
+        "marks": {
+          "firstTextMs": 2510.4,
+          "finishMs": 3174.6
+        },
+        "steps": [
+          {
+            "endMs": 1613.2,
+            "finishReason": "tool-calls",
+            "inputTokens": 2181,
+            "outputTokens": 47,
+            "toolCalls": [
+              "payments_get_this_month"
+            ]
+          },
+          {
+            "endMs": 3173.5,
+            "finishReason": "stop",
+            "inputTokens": 2250,
+            "outputTokens": 110,
+            "toolCalls": []
+          }
+        ],
+        "tools": [
+          {
+            "name": "payments_get_this_month",
+            "toolCallId": "chatcmpl-tool-a3a5b688a9e57d63",
+            "outcome": "executed",
+            "inputChars": 28,
+            "resultChars": 71,
+            "startMs": 1596.4,
+            "durationMs": 15.3
+          }
+        ],
+        "usage": {
+          "source": "total",
+          "inputTokens": 4431,
+          "outputTokens": 157,
+          "totalTokens": 4588,
+          "cachedInputTokens": 64,
+          "reasoningTokens": 77
+        },
+        "cost": {
+          "promptTokens": 4431,
+          "completionTokens": 157,
+          "totalTokens": 4588,
+          "inputCost": 0.00008862,
+          "outputCost": 0.00001256,
+          "totalCost": 0.00010118,
+          "currency": "USD",
+          "pricingFound": true,
+          "provider": "openrouter",
+          "model": "openai/gpt-oss-20b"
+        },
+        "embeddings": [
+          {
+            "purpose": "query",
+            "operation": "tool-routing",
+            "inputCount": 1,
+            "cache": "miss",
+            "version": 1,
+            "correlationId": "27dd3472-ae8e-4d59-9f6d-3f57a3e91a54",
+            "startMs": 344.3,
+            "durationMs": 239,
+            "provider": "openai-compatible",
+            "model": "qwen3-embedding",
+            "timeoutMs": 5000,
+            "outcome": "completed",
+            "attempts": [
+              {
+                "startMs": 344.8,
+                "durationMs": 238.5,
+                "inputCount": 1,
+                "outcome": "completed"
+              }
+            ]
+          }
+        ],
+        "reply": {
+          "source": "model",
+          "language": "ary"
+        },
+        "replyPreparation": {
+          "selected": "ordinary",
+          "elapsedMs": 592.7526999999973,
+          "timedOut": false,
+          "candidateState": "declined",
+          "losingWorkMayContinue": true,
+          "externalCost": "unreported"
+        },
+        "embeddingsIncomplete": false,
+        "benchmark": {
+          "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+          "resetCount": 0
+        }
+      },
+      "completedAt": "2026-10-08T18:57:43.950Z",
+      "billingWaitMs": 28.355600000002596
+    }
+  ],
+  "attempts": [
+    {
+      "correlationId": "27dd3472-ae8e-4d59-9f6d-3f57a3e91a54",
+      "caseId": "jev-operator-q93",
+      "mode": "on",
+      "id": "d2ba82c9-77a5-4679-9af6-118f6e5ebb87",
+      "startedAt": "2026-10-08T18:57:40.779Z",
+      "outcome": "declined",
+      "costUsd": 0.000039186,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 335.420100000003,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485859-8i8PPlLz4Ya0We1HGX2y",
+      "providerGenerationId": "gen-dec-1791485859-8i8PPlLz4Ya0We1HGX2y",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "needs_llm",
+      "confidence": 0.91,
+      "writeProbability": 0.11,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "dae88932-ef31-44ed-96f6-63205fd158a4",
+      "caseId": "jev-operator-q91",
+      "mode": "on",
+      "id": "4e574449-5d75-4b1d-b815-b1f8dd41acf8",
+      "startedAt": "2026-10-08T18:57:33.889Z",
+      "outcome": "declined",
+      "costUsd": 0.000039186,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 363.9328000000096,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485852-fQzwKesZUcOmk3WWO0Ou",
+      "providerGenerationId": "gen-dec-1791485852-fQzwKesZUcOmk3WWO0Ou",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "needs_llm",
+      "confidence": 0.94,
+      "writeProbability": 0.04,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "6b98925c-080f-4b8a-90d5-89813b76fa2f",
+      "caseId": "jev-operator-q80",
+      "mode": "on",
+      "id": "c4b49232-42fe-48f6-81e8-e77bd178bf34",
+      "startedAt": "2026-10-08T18:57:31.077Z",
+      "outcome": "declined",
+      "costUsd": 0.000038766,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 340.01140000000305,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485850-BeU1M6qrIN0HdJsbla0Q",
+      "providerGenerationId": "gen-dec-1791485850-BeU1M6qrIN0HdJsbla0Q",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_count",
+      "confidence": 0.34,
+      "writeProbability": 0.32,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "3d885d41-8268-4a55-abeb-3a1c985284cd",
+      "caseId": "jev-operator-q79",
+      "mode": "on",
+      "id": "2a50a626-a287-4919-97af-4319d89e40cd",
+      "startedAt": "2026-10-08T18:57:30.008Z",
+      "outcome": "candidate",
+      "costUsd": 0.000039438,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 383.15929999999935,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485849-tJzl846BN7pONMhUSHh5",
+      "providerGenerationId": "gen-dec-1791485849-tJzl846BN7pONMhUSHh5",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "upcoming_exams",
+      "confidence": 0.99,
+      "writeProbability": 0.07,
+      "selected": "template"
+    },
+    {
+      "correlationId": "ee11cfe6-d199-49ca-b87c-2db992f31af0",
+      "caseId": "jev-operator-q78",
+      "mode": "on",
+      "id": "4af935e5-5793-4314-9126-ee58986963f1",
+      "startedAt": "2026-10-08T18:57:27.433Z",
+      "outcome": "declined",
+      "costUsd": 0.000038514,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 394.2421999999933,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485846-KM8pv1QZmSmrd0hJEgVm",
+      "providerGenerationId": "gen-dec-1791485846-KM8pv1QZmSmrd0hJEgVm",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_count",
+      "confidence": 0.19,
+      "writeProbability": 0.25,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "9890249f-b4e4-4774-9e79-9740c11e7bea",
+      "caseId": "jev-operator-q77",
+      "mode": "on",
+      "id": "b0c08986-acff-4b12-b426-c164f726b00d",
+      "startedAt": "2026-10-08T18:57:26.383Z",
+      "outcome": "candidate",
+      "costUsd": 0.000038892,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 308.25969999999506,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485845-ctXXen9keIAWPSKHo76l",
+      "providerGenerationId": "gen-dec-1791485845-ctXXen9keIAWPSKHo76l",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "upcoming_exams",
+      "confidence": 0.92,
+      "writeProbability": 0.05,
+      "selected": "template"
+    },
+    {
+      "correlationId": "fda418e2-8fb2-4519-befd-a3242fc30e96",
+      "caseId": "jev-operator-q71",
+      "mode": "on",
+      "id": "c8f9435c-34dc-44c9-9b17-345663c0c528",
+      "startedAt": "2026-10-08T18:57:25.340Z",
+      "outcome": "candidate",
+      "costUsd": 0.00003906,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 335.8099999999977,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485844-9XijfbrBdelczU7XBkvm",
+      "providerGenerationId": "gen-dec-1791485844-9XijfbrBdelczU7XBkvm",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "attendance_today",
+      "confidence": 0.91,
+      "writeProbability": 0.06,
+      "selected": "template"
+    },
+    {
+      "correlationId": "e8b1efe2-f29b-42f0-92fc-0173513a62ec",
+      "caseId": "jev-operator-q50",
+      "mode": "on",
+      "id": "df62cac8-387c-422f-a999-b62a1434a642",
+      "startedAt": "2026-10-08T18:57:22.762Z",
+      "outcome": "declined",
+      "costUsd": 0.000039102,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 509.73619999999937,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485841-mahilbDPNJVDdiAS67JS",
+      "providerGenerationId": "gen-dec-1791485841-mahilbDPNJVDdiAS67JS",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_count",
+      "confidence": 0.85,
+      "writeProbability": 0.52,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "772fe3e0-5aac-4a88-ab91-04233a30b67d",
+      "caseId": "jev-operator-q49",
+      "mode": "on",
+      "id": "03c0075c-8210-4eba-9b95-18ba5dc862b7",
+      "startedAt": "2026-10-08T18:57:21.706Z",
+      "outcome": "candidate",
+      "costUsd": 0.000039564,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 445.8131999999896,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485840-KmGWYtbEpq3a1LXU0J2y",
+      "providerGenerationId": "gen-dec-1791485840-KmGWYtbEpq3a1LXU0J2y",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_count",
+      "confidence": 1,
+      "writeProbability": 0.05,
+      "selected": "template"
+    },
+    {
+      "correlationId": "2b35ba3b-e159-4feb-bbcb-1ddf67f2434e",
+      "caseId": "jev-operator-q35",
+      "mode": "on",
+      "id": "20d845a8-37ee-49cc-bd00-3f269bea56ac",
+      "startedAt": "2026-10-08T18:57:18.690Z",
+      "outcome": "declined",
+      "costUsd": 0.000039648,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 350.5500000000029,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485837-4qgrKyKCNzd0j4NZ5QeZ",
+      "providerGenerationId": "gen-dec-1791485837-4qgrKyKCNzd0j4NZ5QeZ",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "needs_llm",
+      "confidence": 0.98,
+      "writeProbability": 0.17,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "3daee88e-7b42-42f1-982b-05683feac79c",
+      "caseId": "jev-operator-q32",
+      "mode": "on",
+      "id": "f9327e4a-e70a-43fc-a9b2-368074a051e4",
+      "startedAt": "2026-10-08T18:57:15.968Z",
+      "outcome": "declined",
+      "costUsd": 0.000039102,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 341.54099999999744,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485835-Z7V1pQnglgqMyqrZHc8q",
+      "providerGenerationId": "gen-dec-1791485835-Z7V1pQnglgqMyqrZHc8q",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "needs_llm",
+      "confidence": 0.74,
+      "writeProbability": 0.42,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "120528da-ed51-4e38-8fcf-a30315357405",
+      "caseId": "jev-operator-q30",
+      "mode": "on",
+      "id": "e4efceec-4335-41e7-8746-0795b7ab6c8c",
+      "startedAt": "2026-10-08T18:57:11.980Z",
+      "outcome": "declined",
+      "costUsd": 0.000039648,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 448.2982999999949,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485831-0xDPiHV8vceit219hdwb",
+      "providerGenerationId": "gen-dec-1791485831-0xDPiHV8vceit219hdwb",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_and_teacher_count",
+      "confidence": 0.97,
+      "writeProbability": 0.56,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "a64b2733-891f-40eb-9dfb-034dbee10851",
+      "caseId": "jev-operator-q13",
+      "mode": "on",
+      "id": "746a0cfc-9122-43bf-b201-49a512c08298",
+      "startedAt": "2026-10-08T18:57:10.891Z",
+      "outcome": "candidate",
+      "costUsd": 0.000039396,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 408.3377000000037,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485830-vIJmLJp1G0PfeXmiBiiF",
+      "providerGenerationId": "gen-dec-1791485830-vIJmLJp1G0PfeXmiBiiF",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "class_list",
+      "confidence": 0.95,
+      "writeProbability": 0.04,
+      "selected": "template"
+    },
+    {
+      "correlationId": "f8cdf560-8c62-47c1-9ff2-382ad9ea5db1",
+      "caseId": "jev-operator-q12",
+      "mode": "on",
+      "id": "25bad50f-1c44-458b-9711-de0b5c58a48f",
+      "startedAt": "2026-10-08T18:57:06.947Z",
+      "outcome": "declined",
+      "costUsd": 0.00003969,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 456.9389999999985,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485826-mrhIb2Ke9XlKNscivHat",
+      "providerGenerationId": "gen-dec-1791485826-mrhIb2Ke9XlKNscivHat",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_and_teacher_count",
+      "confidence": 0.99,
+      "writeProbability": 0.7,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "8ca2be5a-d5fd-40ad-8a09-947a26c3f670",
+      "caseId": "jev-operator-q11",
+      "mode": "on",
+      "id": "46e4c2a3-aa6b-4886-abf4-28827d8906f9",
+      "startedAt": "2026-10-08T18:57:05.901Z",
+      "outcome": "candidate",
+      "costUsd": 0.000040152,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 561.5384000000049,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485825-OR1w77LDY1rQpMbV4uzA",
+      "providerGenerationId": "gen-dec-1791485825-OR1w77LDY1rQpMbV4uzA",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "student_and_teacher_count",
+      "confidence": 1,
+      "writeProbability": 0.04,
+      "selected": "template"
+    },
+    {
+      "correlationId": "64cf38a1-fa5c-4a8e-acb9-7378034a2d04",
+      "caseId": "jev-operator-q09",
+      "mode": "on",
+      "id": "1dc8e128-6568-4114-b02e-779987feb09c",
+      "startedAt": "2026-10-08T18:57:04.878Z",
+      "outcome": "candidate",
+      "costUsd": 0.000039774,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 383.4957999999897,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485823-J0aKH7avzUQI8cisBQGE",
+      "providerGenerationId": "gen-dec-1791485823-J0aKH7avzUQI8cisBQGE",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "teacher_count",
+      "confidence": 0.97,
+      "writeProbability": 0.04,
+      "selected": "template"
+    },
+    {
+      "correlationId": "63729a2f-7e46-491d-b5d5-ee8d9ae67e9b",
+      "caseId": "jev-operator-q06",
+      "mode": "on",
+      "id": "a3bdd61a-8d4b-4b72-b989-d772cae8b20c",
+      "startedAt": "2026-10-08T18:57:02.280Z",
+      "outcome": "declined",
+      "costUsd": 0.000039102,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 407.14169999999285,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485821-mkrZ7lSvXzzD6uapWojb",
+      "providerGenerationId": "gen-dec-1791485821-mkrZ7lSvXzzD6uapWojb",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "upcoming_exams",
+      "confidence": 0.66,
+      "writeProbability": 0.56,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "18077636-cb80-49b2-b7c6-a7fc3edfe302",
+      "caseId": "jev-operator-q05",
+      "mode": "on",
+      "id": "5bee1488-e81c-4a52-a7c0-790d0f688327",
+      "startedAt": "2026-10-08T18:56:59.644Z",
+      "outcome": "declined",
+      "costUsd": 0.000039984,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 294.8613999999943,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485818-dnjaSwEPJzBgn71bzpxe",
+      "providerGenerationId": "gen-dec-1791485818-dnjaSwEPJzBgn71bzpxe",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "upcoming_exams",
+      "confidence": 0.78,
+      "writeProbability": 0.69,
+      "reason": "acceptance_guard",
+      "selected": "ordinary"
+    },
+    {
+      "correlationId": "45d5e0ba-8747-48cd-a983-8f04f1912e6c",
+      "caseId": "jev-operator-q02",
+      "mode": "on",
+      "id": "40664b6e-04b3-4fd4-b114-4f07459d786f",
+      "startedAt": "2026-10-08T18:56:58.620Z",
+      "outcome": "candidate",
+      "costUsd": 0.000039228,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 393.9872000000032,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485817-Mtlz8eVQuXNqltRuVECS",
+      "providerGenerationId": "gen-dec-1791485817-Mtlz8eVQuXNqltRuVECS",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "small_talk",
+      "confidence": 1,
+      "writeProbability": 0.04,
+      "selected": "template"
+    },
+    {
+      "correlationId": "82cdae94-dd65-44a6-b8ad-02d557931160",
+      "caseId": "jev-operator-q01",
+      "mode": "on",
+      "id": "b4f075aa-e797-4c33-8bdf-00d244b17047",
+      "startedAt": "2026-10-08T18:56:57.595Z",
+      "outcome": "candidate",
+      "costUsd": 0.00003906,
+      "reservedUsd": 0.00015,
+      "elapsedMs": 503.3954000000085,
+      "costSource": "decisions_response",
+      "providerRequestId": "gen-dec-1791485816-Pd0OrmeNCxiXI16dL2po",
+      "providerGenerationId": "gen-dec-1791485816-Pd0OrmeNCxiXI16dL2po",
+      "billingMode": "observe",
+      "transportCompleted": true,
+      "httpStatus": 200,
+      "choice": "small_talk",
+      "confidence": 0.98,
+      "writeProbability": 0.04,
+      "selected": "template"
+    }
+  ],
+  "qualification": false,
+  "initial": {
+    "instanceId": "2da27dba-82b9-4150-9323-371445aa2c9a",
+    "resetCount": 0,
+    "mode": "off",
+    "budget": {
+      "mode": "off",
+      "threshold": 0.8,
+      "timeoutMs": 800,
+      "maxRequests": 20,
+      "maxCostUsd": 0.003,
+      "unknownReserveUsd": 0.00015,
+      "billingMode": "observe",
+      "billingTimeoutMs": 5000,
+      "requests": 0,
+      "pendingRequests": 0,
+      "knownCostUsd": 0,
+      "reservedUsd": 0,
+      "unknownCosts": 0,
+      "stoppedReason": null
+    },
+    "syntheticOnly": true,
+    "markedLocalFixture": true,
+    "guardVersion": 6,
+    "intentWordingVersion": 3,
+    "threshold": 0.8,
+    "timeoutMs": 800,
+    "billingMode": "observe",
+    "billingTimeoutMs": 5000,
+    "experimentEnabled": true,
+    "frameworkPreparationEnabled": false
+  },
+  "scopedReadChecks": [
+    {
+      "tool": "students_get_student_count",
+      "passed": true
+    },
+    {
+      "tool": "teachers_get_teacher_count",
+      "passed": true
+    },
+    {
+      "tool": "classes_get_classes",
+      "passed": true
+    },
+    {
+      "tool": "sections_get_sections",
+      "passed": true
+    },
+    {
+      "tool": "attendance_get_today_students",
+      "passed": true
+    }
+  ],
+  "keyBefore": {
+    "capturedAt": "2026-10-08T18:56:57.473Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b",
+    "usage": 1.296457455,
+    "limit": 50,
+    "limitRemaining": 48.703542545
+  },
+  "settings": {
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-120b"
+  },
+  "generationBudget": {
+    "maxEstimatedUsd": 0.022000000000000002,
+    "requestReserveUsd": 0.0007,
+    "observedEstimatedUsd": 0.001267182,
+    "reservedUsd": 0,
+    "requestsSettled": 20,
+    "requestsWithUnknownCost": 0,
+    "inFlight": 0,
+    "stoppedReason": null,
+    "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+  },
+  "keyAfter": {
+    "capturedAt": "2026-10-08T18:57:44.330Z",
+    "source": "https://openrouter.ai/api/v1/key",
+    "credentialSource": "selected School provider key",
+    "selectedKeyVerified": true,
+    "matchesEnvironmentKey": true,
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-20b",
+    "usage": 1.296457455,
+    "limit": 50,
+    "limitRemaining": 48.703542545
+  },
+  "modelRestored": true,
+  "modeRestoredOff": true,
+  "summary": {
+    "all": {
+      "attempts": 20,
+      "valid": 20,
+      "firstTextMs": {
+        "mean": 1745.3390249999998,
+        "p50": 1655.9536999999982,
+        "p95": 3524.759
+      },
+      "completionMs": {
+        "mean": 1962.11715,
+        "p50": 2337.7419999999984,
+        "p95": 3818.942000000001
+      },
+      "jevTemplates": 9,
+      "regexTemplates": 0,
+      "modelReplies": 11
+    },
+    "modes": {
+      "off": {
+        "attempts": 0,
+        "valid": 0,
+        "firstTextMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "completionMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 0
+      },
+      "on": {
+        "attempts": 20,
+        "valid": 20,
+        "firstTextMs": {
+          "mean": 1745.3390249999998,
+          "p50": 1655.9536999999982,
+          "p95": 3524.759
+        },
+        "completionMs": {
+          "mean": 1962.11715,
+          "p50": 2337.7419999999984,
+          "p95": 3818.942000000001
+        },
+        "jevTemplates": 9,
+        "regexTemplates": 0,
+        "modelReplies": 11
+      },
+      "shadow": {
+        "attempts": 0,
+        "valid": 0,
+        "firstTextMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "completionMs": {
+          "mean": null,
+          "p50": null,
+          "p95": null
+        },
+        "jevTemplates": 0,
+        "regexTemplates": 0,
+        "modelReplies": 0
+      }
+    },
+    "pairedFallbacks": [],
+    "fallbackCompletionDeltaP95Ms": null,
+    "qualification": false,
+    "note": "Small assistant-authored integration sample; no independent native accuracy or rollout qualification."
+  },
+  "modelSummaries": {
+    "openai/gpt-oss-20b": {
+      "all": {
+        "attempts": 20,
+        "valid": 20,
+        "firstTextMs": {
+          "mean": 1745.3390249999998,
+          "p50": 1655.9536999999982,
+          "p95": 3524.759
+        },
+        "completionMs": {
+          "mean": 1962.11715,
+          "p50": 2337.7419999999984,
+          "p95": 3818.942000000001
+        },
+        "jevTemplates": 9,
+        "regexTemplates": 0,
+        "modelReplies": 11
+      },
+      "modes": {
+        "off": {
+          "attempts": 0,
+          "valid": 0,
+          "firstTextMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "completionMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 0
+        },
+        "on": {
+          "attempts": 20,
+          "valid": 20,
+          "firstTextMs": {
+            "mean": 1745.3390249999998,
+            "p50": 1655.9536999999982,
+            "p95": 3524.759
+          },
+          "completionMs": {
+            "mean": 1962.11715,
+            "p50": 2337.7419999999984,
+            "p95": 3818.942000000001
+          },
+          "jevTemplates": 9,
+          "regexTemplates": 0,
+          "modelReplies": 11
+        },
+        "shadow": {
+          "attempts": 0,
+          "valid": 0,
+          "firstTextMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "completionMs": {
+            "mean": null,
+            "p50": null,
+            "p95": null
+          },
+          "jevTemplates": 0,
+          "regexTemplates": 0,
+          "modelReplies": 0
+        }
+      },
+      "pairedFallbacks": [],
+      "fallbackCompletionDeltaP95Ms": null,
+      "qualification": false,
+      "note": "Small assistant-authored integration sample; no independent native accuracy or rollout qualification."
+    }
+  },
+  "aggregateKeyDeltaUsd": 0
+}

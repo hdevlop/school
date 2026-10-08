@@ -27,7 +27,7 @@ export class JevBenchmarkService {
   async status() {
     await this.ensureEnabled();
     return { ...chatBenchmarkSnapshot(), mode: effectiveJevMode(), budget: this.classifier.ledger.snapshot(),
-      syntheticOnly: true, markedLocalFixture: true, guardVersion: 5, intentWordingVersion: 3,
+      syntheticOnly: true, markedLocalFixture: true, guardVersion: 6, intentWordingVersion: 3,
       threshold: this.classifier.controls.threshold, timeoutMs: this.classifier.controls.timeoutMs,
       billingMode: this.classifier.controls.billingMode, billingTimeoutMs: this.classifier.controls.billingTimeoutMs,
       experimentEnabled: jevExperimentEnabled(),

@@ -14,7 +14,8 @@ if ([fixtureMode, execute, preflight].filter(Boolean).length > 1) throw new Erro
 const defaultPlan = 'docs/evidence/chatbot-latency/jev-billing-observer-plan-20261007.json';
 const planPath = option('plan', defaultPlan);
 if (!fixtureMode && !execute && !preflight) {
-  const plan = args.includes('--darija-jev-first-fix') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'jevfirstfix')
+  const plan = args.includes('--darija-jev-coverage-v6') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'jevcoverage6')
+    : args.includes('--darija-jev-first-fix') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'jevfirstfix')
     : args.includes('--darija-router-fix') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'fixed20b')
     : args.includes('--darija-router-120b') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), '120b')
     : args.includes('--darija-router-repeat') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), true)
@@ -45,7 +46,7 @@ const report = { stage: fixtureMode ? 'mock-full-chat-fixture' : preflight ? 'un
 writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
 const save = () => writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 let fixture, token;
-const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix'].includes(protocol.purpose);
+const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix', 'darija-jev-coverage-v6'].includes(protocol.purpose);
 let selectedModel;
 async function request(path, body, correlation = randomUUID(), method) {
   if (fixture) return fixture.call(path, body, 'admin', option('year', '2026-2027'), correlation);

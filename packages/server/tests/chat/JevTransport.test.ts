@@ -22,6 +22,28 @@ afterEach(async () => {
 });
 const messages = (query: string) => [{ role: 'user', parts: [{ type: 'text', text: query }] }];
 
+test('Darija upcoming-exam candidate uses real HTTP guards, MCP executor and the selected year without generation', async () => {
+  process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+  fixture = await createJevFixture();
+  for (const year of ['2025-2026', '2026-2027']) {
+    const response = await fixture.call('/chat-benchmark/jev/session', {
+      caseId: 'jev-operator-q78', experimentArm: '20b-coreweave-first',
+    }, 'admin', year);
+    expect(response.status).toBe(200);
+    const grant = await response.json();
+    const reply = await fixture.call('/chat', { sessionKey: grant.sessionKey, messages: messages(grant.query) }, 'admin', year);
+    expect(reply.status).toBe(200);
+    expect(await reply.text()).toContain(`Exam ${year}`);
+    expect(fixture.events.at(-1)?.reply?.label).toBe('jev:upcoming_exams');
+    expect(fixture.events.at(-1)?.tools.map(tool => tool.name)).toEqual(['exams_get_upcoming_exams']);
+  }
+  expect(fixture.counts()).toEqual({ decisions: 2, generations: 0 });
+  const denied = await fixture.call('/mcp', { jsonrpc: '2.0', id: 1, method: 'tools/call',
+    params: { name: 'exams_get_upcoming_exams', arguments: { academicYear: '2026-2027' } } }, 'student');
+  const body = await denied.text();
+  expect(body).not.toContain('Exam 2026-2027');
+});
+
 test('real HTTP guards deny anonymous/family control requests and production controls', async () => {
   fixture = await createJevFixture();
   expect((await fixture.call('/chat-benchmark/jev/status', undefined, null)).status).toBe(401);

@@ -58,7 +58,7 @@ function renderClasses(value: unknown, language: ReplyLanguage, year: string) {
   return `${header[language]}\n\n${lines.join('\n')}`;
 }
 
-function renderExams(value: unknown, language: ReplyLanguage, year: string) {
+function renderExams(value: unknown, language: ReplyLanguage, year: string, limit: 1 | 5, asOfDate: string) {
   const missing = { fr: 'Non renseigné', ar: 'غير مسجل', ary: 'ما مسجلش' }[language];
   const records = rows(value).map(record => ({ title: name(record.title),
     className: relationName(record.class, missing), section: relationName(record.section, missing),
@@ -66,11 +66,23 @@ function renderExams(value: unknown, language: ReplyLanguage, year: string) {
   const empty = { fr: 'Aucun examen à venir pour cette année.', ar: 'لا توجد امتحانات قادمة لهذه السنة.', ary: 'ما كاين حتى امتحان جاي فهاد العام.' };
   if (!records.length) return `${empty[language]} (${year})`;
   records.sort((a, b) => `${a.date} ${a.start}`.localeCompare(`${b.date} ${b.start}`));
+  // The repository includes every exam dated today, even ones already finished.
+  // Without a school-zone start-time boundary, do not claim that the first
+  // same-day row is still ahead. Show its dates/times with an explicit caveat.
+  if (limit === 1 && records[0].date < date(asOfDate)) throw new Error('Unexpected past upcoming exam');
+  const sameDay = limit === 1 && records[0].date === asOfDate;
+  const displayedLimit = sameDay ? 5 : limit;
   const header = { fr: `Prochains examens — année ${year} :`, ar: `الامتحانات القادمة للسنة الدراسية ${year}:`, ary: `هادو الامتحانات الجايين فهاد العام الدراسي ${year}:` };
+  const nextHeader = { fr: `Prochain examen — année ${year} :`, ar: `الامتحان القادم للسنة الدراسية ${year}:`, ary: `ها هو الفرض الجاي فهاد العام الدراسي ${year}:` };
+  const sameDayHeader = {
+    fr: `Des examens sont enregistrés pour le ${asOfDate}. Il faut vérifier les horaires pour confirmer lequel est encore à venir. Voici les dates et horaires enregistrés — année ${year} :`,
+    ar: `توجد امتحانات مسجلة بتاريخ ${asOfDate}. يجب التحقق من التوقيت لتأكيد أي امتحان لم يبدأ بعد. هذه التواريخ والمواعيد المسجلة للسنة ${year}:`,
+    ary: `كاينين فروض مسجلين بتاريخ ${asOfDate}. خاص نتأكدو من التوقيت باش نعرفو شنو هو الفرض اللي مزال ما بداش. هاهي التواريخ والتوقيت اللي مسجلين فهاد العام الدراسي ${year}:`,
+  };
   const more = { fr: 'Plus d’examens sont disponibles si vous souhaitez les voir ou les filtrer.',
     ar: 'توجد امتحانات أخرى إذا رغبت في عرضها أو تصفيتها.', ary: 'كاينين مزال امتحانات خرين، إلا بغيتي تشوفهم ولا تختار منهم.' };
-  const lines = records.slice(0, 5).map(record => `- ${record.title} — ${record.className} / ${record.section} — ${record.date} — ${record.start}–${record.end}`);
-  return `${header[language]}\n\n${lines.join('\n')}${records.length > 5 ? `\n\n${more[language]}` : ''}`;
+  const lines = records.slice(0, displayedLimit).map(record => `- ${record.title} — ${record.className} / ${record.section} — ${record.date} — ${record.start}–${record.end}`);
+  return `${(sameDay ? sameDayHeader : limit === 1 ? nextHeader : header)[language]}\n\n${lines.join('\n')}${displayedLimit === 5 && records.length > displayedLimit ? `\n\n${more[language]}` : ''}`;
 }
 
 function renderAttendance(value: unknown, language: ReplyLanguage, year: string) {
@@ -107,12 +119,13 @@ export function schoolListReply(userText: string, language: ReplyLanguage, acade
   return schoolListReplyForKind(kind, language, academicYear);
 }
 
-export function schoolListReplyForKind(kind: ListKind, language: ReplyLanguage, academicYear: string): ReplyTemplate {
+export function schoolListReplyForKind(kind: ListKind, language: ReplyLanguage, academicYear: string, examLimit: 1 | 5 = 5,
+  examAsOfDate = new Date().toISOString().slice(0, 10)): ReplyTemplate {
   const tool = { classes: 'classes_get_classes', exams: 'exams_get_upcoming_exams', attendance: 'attendance_get_today_students' }[kind];
   return { calls: [{ name: tool, input: { academicYear } }], render: results => {
     if (results.length !== 1) throw new Error('Invalid school list result count');
     return kind === 'classes' ? renderClasses(results[0], language, academicYear)
-      : kind === 'exams' ? renderExams(results[0], language, academicYear)
+      : kind === 'exams' ? renderExams(results[0], language, academicYear, examLimit, examAsOfDate)
         : renderAttendance(results[0], language, academicYear);
   } };
 }
