@@ -1,0 +1,2194 @@
+{
+  "status": "completed",
+  "productionQualification": false,
+  "paidChats": 100,
+  "repeatedChats": 0,
+  "guardVersion": 6,
+  "runtimeWordingVersion": 6,
+  "summary": {
+    "toolPlansPassed": 92,
+    "failed": 8,
+    "previousFull100Passed": 80,
+    "targetPassed": 10,
+    "targetCases": 10,
+    "averageResponseSeconds": 0.8883996469999998,
+    "timingGateApplied": false,
+    "jevReplies": 37,
+    "pairedFamiliesPassed": 45,
+    "semanticReviewFlags": 14,
+    "localReplies": 28,
+    "modelReplies": 35,
+    "classifierAttempts": 72,
+    "generationCalls": 59,
+    "knownResponseReportedCostUsd": 0.007798690000000002,
+    "unknownClassifierCosts": 2,
+    "unknownClassifierReserveUsd": 0.0003,
+    "totalBilledCostUsd": null,
+    "acceptedWrongRecordedDecisions": 0,
+    "scripts": {
+      "ary": {
+        "cases": 50,
+        "passed": 47
+      },
+      "ary-latn": {
+        "cases": 50,
+        "passed": 45
+      }
+    }
+  },
+  "primaryJevOff": {
+    "passed": 10,
+    "cases": 10,
+    "classifierCalls": 0,
+    "generationCalls": 0
+  },
+  "segments": [
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-run-20261008.json",
+      "status": "stopped",
+      "cases": 7,
+      "stoppedReason": "Reply used a different model than the frozen arm",
+      "restoredInOriginal": false
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation-run-20261008.json",
+      "status": "stopped",
+      "cases": 7,
+      "stoppedReason": "Classifier terminal cost remains unknown",
+      "restoredInOriginal": true
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation2-run-20261008.json",
+      "status": "completed",
+      "cases": 86,
+      "stoppedReason": null,
+      "restoredInOriginal": true
+    }
+  ],
+  "failures": [
+    {
+      "id": "jev-operator-q33",
+      "query": "شحال من فرض عند التلاميذ هاد الشهر؟",
+      "issues": [
+        "missing_required_tool:exams_get_all"
+      ],
+      "tools": [
+        "exams_get_upcoming_exams"
+      ],
+      "text": "ماكاينش أي امتحان مستقبلي فهاد الشهر."
+    },
+    {
+      "id": "jev-operator-q34",
+      "query": "ch7al mn fard 3nd tlamd had chher?",
+      "issues": [
+        "missing_required_tool:exams_get_all",
+        "missing_arguments:students_get_student_count"
+      ],
+      "tools": [
+        "students_get_student_count"
+      ],
+      "text": "ما قدرش نخرج ليك رقم كامل ديال التلاميذ فهاد العام الدراسي حيت ما عنديش الأدوات لي كتقدّر تعطيني العدد ديال الطلبة دابا. من فضلك دير حساب العدد فالداشبورد."
+    },
+    {
+      "id": "jev-operator-q37",
+      "query": "شنو هما الأقسام اللي فيهم كثر من تلاتين تلميذ؟",
+      "issues": [
+        "missing_required_tool:classes_get_classes",
+        "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+      ],
+      "tools": [],
+      "text": "ما يمكنش نحدّّد الأقسام اللي فيها أكثر من 30 تلميذ حيت ما عنديش أداة كتحسب عدد التلاميذ فكل قسم.  \nجهِّز معلومات أكثر أو استعمل outil تقدر تولّد تحضير قائم على فلاتر خاصّة بمجموعات التلاميذ."
+    },
+    {
+      "id": "jev-operator-q38",
+      "query": "chno homa l2a9sam li fihom kter mn tlatin tilmid?",
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "tools": [
+        "sections_get_sections",
+        "sections_get_students"
+      ],
+      "text": "ماكاينش فهاد القسم شي 2قرى فيها أكثر من 20 طالب."
+    },
+    {
+      "id": "jev-operator-q66",
+      "query": "3tini lista dyal l2a9sam kamlin.",
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "tools": [
+        "sections_get_sections"
+      ],
+      "text": "**قائمة جميع الأقسام والصفوف**  \n- History 2026‑2027: A, B 📚  \n- (القائمة فيها غير هادو القسمين فهاد السنة. إذا بغيتي أيّ قسم آخر، عافاك تاخد قائمة تكمل معلومات.)"
+    },
+    {
+      "id": "jev-operator-q97",
+      "query": "شنو هوما النقط ديال القسم الرابع فالرياضيات؟",
+      "issues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "tools": [],
+      "text": "ما أستافش ديك الـ ID ديال القسم الرابع، ماكانش بكرهّ نقدر نطلّب الدرجات. من فضلك زيد لي اسم القسم أو كوده باش نقدر نتّصل بالمنظّمة."
+    },
+    {
+      "id": "jev-operator-q98",
+      "query": "chno homa nno9at dyal l9ism rrabi3 f riyadiyat?",
+      "issues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "tools": [],
+      "text": "ما كايناش فـنظامنا أي معلومات على القوانين ديال القسم الربعي فـالرياضيات. غادي تحتاج تشوف الكتيبات أو تواصل مع المكتب المعني."
+    },
+    {
+      "id": "jev-operator-q100",
+      "query": "w ch7al kano l3am li fat?",
+      "issues": [
+        "tool_failed_or_blocked",
+        "unexpected_data_tool",
+        "wrong_year"
+      ],
+      "tools": [
+        "students_get_student_count"
+      ],
+      "text": "هادشي ما ممكنش هنا. صافي كرسوا على العام الدراسي اللي راه واختيار هو 2026-2027. حدد العام اللي بغيتي مْعاه في الداشبورد باش نقدر نعطيك الدعـاه."
+    }
+  ],
+  "targetRows": [
+    {
+      "id": "jev-operator-q29",
+      "query": "جمع ليا عدد التلاميذ مع عدد الأساتذة وعطيني المجموع.",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03486929999999847,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:combined-total"
+      },
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "فهاد العام الدراسي 2026-2027، كاينين 8 تلميذ و0 أستاذ. المجموع هو 8."
+    },
+    {
+      "id": "jev-operator-q30",
+      "query": "jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.033609699999997245,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:combined-total"
+      },
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "فهاد العام الدراسي 2026-2027، كاينين 8 تلميذ و0 أستاذ. المجموع هو 8."
+    },
+    {
+      "id": "jev-operator-q31",
+      "query": "عطيني السميات ديال الأساتذة اللي كيقريو الرياضيات.",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03492659999999887,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:maths-teachers"
+      },
+      "tools": [
+        {
+          "name": "subjects_get_subjects",
+          "input": true,
+          "outcome": "output",
+          "arguments": {},
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        },
+        {
+          "name": "teachers_get_teachers",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما لقيتش مادة الرياضيات فالمواد المسجلة، ما نقدرش نحدد الأساتذة ديالها."
+    },
+    {
+      "id": "jev-operator-q32",
+      "query": "3tini smiyat dyal lasatida li kay9erriw riyadiyat.",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03254309999999896,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:maths-teachers"
+      },
+      "tools": [
+        {
+          "name": "subjects_get_subjects",
+          "input": true,
+          "outcome": "output",
+          "arguments": {},
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        },
+        {
+          "name": "teachers_get_teachers",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما لقيتش مادة الرياضيات فالمواد المسجلة، ما نقدرش نحدد الأساتذة ديالها."
+    },
+    {
+      "id": "jev-operator-q79",
+      "query": "واش كاينين شي فروض هاد الأيام الجاية؟",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.02267140000000654,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:upcoming-exams"
+      },
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما كاين حتى امتحان جاي فهاد العام. (2026-2027)"
+    },
+    {
+      "id": "jev-operator-q80",
+      "query": "wach kaynin chi forod had liyam jaya?",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.027622400000007475,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:upcoming-exams"
+      },
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما كاين حتى امتحان جاي فهاد العام. (2026-2027)"
+    },
+    {
+      "id": "jev-operator-q91",
+      "query": "شحال من بنت كاينة فالمدرسة؟",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.027804000000003725,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:girls-count"
+      },
+      "tools": [
+        {
+          "name": "students_get_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 8
+          }
+        }
+      ],
+      "text": "كاينين 0 تلميذة حسب السجلات ديال 2026-2027. ولكن 8 سجل ما فيهش الجنس واضح، ما نقدرش نأكد العدد النهائي."
+    },
+    {
+      "id": "jev-operator-q92",
+      "query": "ch7al mn bent kayna f lmdrasa?",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.026124599999995553,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:girls-count"
+      },
+      "tools": [
+        {
+          "name": "students_get_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 8
+          }
+        }
+      ],
+      "text": "كاينين 0 تلميذة حسب السجلات ديال 2026-2027. ولكن 8 سجل ما فيهش الجنس واضح، ما نقدرش نأكد العدد النهائي."
+    },
+    {
+      "id": "jev-operator-q93",
+      "query": "شحال خلص هاد الولي هاد الشهر؟",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.023599300000001676,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:parent-identity"
+      },
+      "tools": [],
+      "text": "شكون الولي اللي كتقصد؟ عطيني السمية ديالو ولا معرف الولي باش نحدد الحساب الصحيح."
+    },
+    {
+      "id": "jev-operator-q94",
+      "query": "ch7al khelles had lwali had chher?",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03450619999998889,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:parent-identity"
+      },
+      "tools": [],
+      "text": "شكون الولي اللي كتقصد؟ عطيني السمية ديالو ولا معرف الولي باش نحدد الحساب الصحيح."
+    }
+  ],
+  "verification": {
+    "chatTestsPassed": 427,
+    "scriptTestsPassed": 557,
+    "protocolAndHistoricalGuardTestsPassed": 23,
+    "chatYearScopeTestsPassed": 13,
+    "populatedHttpChecks": 40,
+    "restrictedRoleChats": 15,
+    "directMcpDenials": 9,
+    "rootLint": "passed with 3 existing frontend hook warnings",
+    "rootTypecheck": "passed",
+    "productionBuild": "passed"
+  },
+  "limitations": [
+    "Tool-plan checks are not full semantic answer accuracy or independent native-language qualification.",
+    "Admin first-turn fixture only; two-year/admin/principal and restricted-role behavior is additionally checked with populated synthetic HTTP/MCP fixtures.",
+    "Observed improvements include guarded local replies; they are not evidence that the Jev model became more accurate.",
+    "First seven chats preceded a harness-only authentication/recovery fix; application runtime sources did not change. Recovered diagnostics are a separate hash-bound unpaid receipt. No prefix chats were repeated.",
+    "One classifier ledger entry was lost; additional timed-out classifier calls retain null billed costs and their full reservations. Known charges are not an exact total or a monthly projection.",
+    "Historical fixture has missing genders and empty teacher/subject/exam data; populated filter/render tests cover these separately."
+  ],
+  "source": [
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-run-20261008.json",
+      "sha256": "579a947e19770628ae1bf6a3a98bf2b2bcc8f758311a21ca4048c6f9e6c5cb66"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation-run-20261008.json",
+      "sha256": "1ca726bb9bfdfc790fee1463067d4f5332bf08c3fd0110235d64b0c8ba9f8f06"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation2-run-20261008.json",
+      "sha256": "409fec723df1de4e53a535a72bbc5db8faa938f7873a94e56da9954414e257a4"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-generation-usage-20261008.jsonl",
+      "sha256": "d16fefbc255327e8610233e782aecabc5f249e178d0ccc5a1fdcd8c4266573cc"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation-generation-usage-20261008.jsonl",
+      "sha256": "62250efcf2f88d67c2e32cc62cd65c7dc161becbea1ff0f455e726a3fcd4509b"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation2-generation-usage-20261008.jsonl",
+      "sha256": "31e682527a52c9e89e06f48e6c0cca6affbcf9c08df905ec1062a90baf77e7ad"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-plan-20261008.json",
+      "sha256": "67ac7fab86acf4a4f5aedee26cae47bd043af45fe32a48fbc3536a9bc4465357"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation-plan-20261008.json",
+      "sha256": "84c6defe5d45d05790b9ec5da4f744dd2b4ee8a9d9cda0c83a871e38491d9b71"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-continuation2-plan-20261008.json",
+      "sha256": "05642218314b4f7cfcb8a04e10a3e3947c30253f944ad631f55cc952fe937124"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-auth-recovery-20261008.json",
+      "sha256": "0bf037163f8f3283ac769c620be8144b1eb0c18d6769303aefb0db181adc6c6b"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-off-check-20261008.json",
+      "sha256": "cb6dc0b4f85e0a823eec3433d9df7f74e33d79b804b8996c2ab792caba2bcdc6"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-total-exams-fixture-20261008.json",
+      "sha256": "930b286e25ba3fae7f2bbda1d898299a7e8d92f890040e9ddb50a97d8040aec7"
+    },
+    {
+      "path": "datasets/chatbot-latency/darija-tool-selection-20261008.json",
+      "sha256": "1c94efddc353c48bfb122d3624fc69afa5180effcaecc75c983e8fb649bd831a"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-jev-read-wording-tools-20261008.json",
+      "sha256": "2aedf76789efe629a412c356b7fa58c910a3c64df8c389f21c0a0e95c55ec638"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-jev-read-wording-fixture-data-20261008.json",
+      "sha256": "67b627982b476c36dee7815d4ebbe7c7808eb06adfeb9a6cabce7257017cf904"
+    },
+    {
+      "path": "scripts/chatbot-darija-selection-report.mjs",
+      "sha256": "1f99f6bb5436ea45c13e8ee782fea9bb449df6ea1280b7277c18e959346487c9"
+    },
+    {
+      "path": "scripts/chatbot-darija-final-report.mjs",
+      "sha256": "762d9c61c51aeaa7746678e6814bef1e3d8b1d22615eb0850431d0836feee17f"
+    }
+  ],
+  "rows": [
+    {
+      "id": "jev-operator-q01",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.43397419999999987,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:small_talk"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q02",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.5141840000000002,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:small_talk"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q03",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.43845130000000015,
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:small_talk"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q04",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 2.2984817999999994,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q05",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 2.1211355999999997,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "exams_get_upcoming_exams"
+      ]
+    },
+    {
+      "id": "jev-operator-q06",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.38660239999999974,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:upcoming_exams"
+      },
+      "toolNames": [
+        "exams_get_upcoming_exams"
+      ]
+    },
+    {
+      "id": "jev-operator-q07",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.2548004999999993,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q08",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.5335182000000002,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q09",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.39503999999999995,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:teacher_count"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q10",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.9985982999999996,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q11",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.37685040000000025,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q12",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.7272984000000006,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q13",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3869169000000002,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:class_list"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q14",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 3.9952454,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q15",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.4132580999999998,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:attendance_today"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q16",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3444459999999999,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:attendance_today"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q17",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.028869999999999892,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q18",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.028276200000000244,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q19",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.023613099999999578,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q20",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.026379899999999908,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q21",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.05375590000000011,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q22",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.046217000000000556,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q23",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.02648359999999957,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q24",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.02812669999999889,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q25",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 2.0783647000000003,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q26",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.9025399000000016,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q27",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 2.2414536999999983,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q28",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 3.2686039999999994,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "sections_get_sections",
+        "sections_get_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q29",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03486929999999847,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:combined-total"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q30",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.033609699999997245,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:combined-total"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q31",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03492659999999887,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:maths-teachers"
+      },
+      "toolNames": [
+        "subjects_get_subjects",
+        "teachers_get_teachers"
+      ]
+    },
+    {
+      "id": "jev-operator-q32",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03254309999999896,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:maths-teachers"
+      },
+      "toolNames": [
+        "subjects_get_subjects",
+        "teachers_get_teachers"
+      ]
+    },
+    {
+      "id": "jev-operator-q33",
+      "language": "ary",
+      "issues": [
+        "missing_required_tool:exams_get_all"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.7411513000000014,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "exams_get_upcoming_exams"
+      ]
+    },
+    {
+      "id": "jev-operator-q34",
+      "language": "ary-latn",
+      "issues": [
+        "missing_required_tool:exams_get_all",
+        "missing_arguments:students_get_student_count"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 3.7659520000000013,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q35",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 2.3727647,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "attendance_get_all"
+      ]
+    },
+    {
+      "id": "jev-operator-q36",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.7590723,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "attendance_get_all"
+      ]
+    },
+    {
+      "id": "jev-operator-q37",
+      "language": "ary",
+      "issues": [
+        "missing_required_tool:classes_get_classes",
+        "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.5992204999999957,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q38",
+      "language": "ary-latn",
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 4.463318700000004,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "sections_get_sections",
+        "sections_get_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q39",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.8626792999999962,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q40",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.5519453000000067,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q41",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.4151189999999988,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:small_talk"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q42",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3536607000000004,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:small_talk"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q43",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.37504239999999844,
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:small_talk"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q44",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.4722845000000016,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q45",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3530481,
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:small_talk"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q46",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.4931875,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q47",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3761924999999974,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q48",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.6622050999999993,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q49",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.4092997999999934,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q50",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.35828020000000105,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q51",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.37521349999999803,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q52",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.9972838000000046,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q53",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.4346889999999985,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:teacher_count"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q54",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.7690063999999983,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q55",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.4063845000000001,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:teacher_count"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q56",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.711206699999995,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q57",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.41080449999999835,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:teacher_count"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q58",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.6183101000000024,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q59",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3798986000000004,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q60",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3944930000000022,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q61",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.4455633999999991,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q62",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3980240999999951,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q63",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.4344413999999961,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q64",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.36433610000000044,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "toolNames": [
+        "students_get_student_count",
+        "teachers_get_teacher_count"
+      ]
+    },
+    {
+      "id": "jev-operator-q65",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3826985999999888,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:class_list"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q66",
+      "language": "ary-latn",
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.9706844000000128,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "sections_get_sections"
+      ]
+    },
+    {
+      "id": "jev-operator-q67",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.36387330000000656,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:class_list"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q68",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 2.2588410000000003,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q69",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.36958039999999165,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:class_list"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q70",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.7120944000000018,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "classes_get_classes"
+      ]
+    },
+    {
+      "id": "jev-operator-q71",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.356424600000013,
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:attendance_today"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q72",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.9612574000000023,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q73",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3887985999999946,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:attendance_today"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q74",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.8698496000000013,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q75",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.38098839999998746,
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:attendance_today"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q76",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.53877380000001,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "attendance_get_today_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q77",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.536442200000005,
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:upcoming_exams"
+      },
+      "toolNames": [
+        "exams_get_upcoming_exams"
+      ]
+    },
+    {
+      "id": "jev-operator-q78",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.3658957000000082,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:upcoming_exams"
+      },
+      "toolNames": [
+        "exams_get_upcoming_exams"
+      ]
+    },
+    {
+      "id": "jev-operator-q79",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.02267140000000654,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:upcoming-exams"
+      },
+      "toolNames": [
+        "exams_get_upcoming_exams"
+      ]
+    },
+    {
+      "id": "jev-operator-q80",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.027622400000007475,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:upcoming-exams"
+      },
+      "toolNames": [
+        "exams_get_upcoming_exams"
+      ]
+    },
+    {
+      "id": "jev-operator-q81",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.016373200000001815,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q82",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.020368100000006963,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q83",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.016879300000000513,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q84",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.02102719999999681,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q85",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.02039400000000023,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q86",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.018612999999997555,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q87",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.02258060000000114,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q88",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.021562900000004447,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q89",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.0211987999999983,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q90",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.041677700000000185,
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q91",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.027804000000003725,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:girls-count"
+      },
+      "toolNames": [
+        "students_get_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q92",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.026124599999995553,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:girls-count"
+      },
+      "toolNames": [
+        "students_get_students"
+      ]
+    },
+    {
+      "id": "jev-operator-q93",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.023599300000001676,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:parent-identity"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q94",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 0.03450619999998889,
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:parent-identity"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q95",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.5566600999999938,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q96",
+      "language": "ary-latn",
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.4406830000000046,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q97",
+      "language": "ary",
+      "issues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.8845512000000018,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q98",
+      "language": "ary-latn",
+      "issues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.248237599999993,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q99",
+      "language": "ary",
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 1.4395979999999982,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": []
+    },
+    {
+      "id": "jev-operator-q100",
+      "language": "ary-latn",
+      "issues": [
+        "tool_failed_or_blocked",
+        "unexpected_data_tool",
+        "wrong_year"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completionSeconds": 2.399515799999994,
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "toolNames": [
+        "students_get_student_count"
+      ]
+    }
+  ]
+}

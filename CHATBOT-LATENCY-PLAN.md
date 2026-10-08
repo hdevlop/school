@@ -2080,3 +2080,22 @@ parent-identity clarification before a parent-payment read. Then qualify the rea
 parent/teacher/student actors. Keep the normal app's Jev mode off for now. See the
 [read-wording report](docs/evidence/chatbot-latency/darija-jev-read-wording-results-20261008.md)
 for the raw candidate failure, conditional profile, measured results and next steps.
+
+# Full Darija regression checkpoint (2026-10-08)
+
+Guarded combined-count arithmetic and upcoming-exam fallback wording now pass
+alongside the earlier maths-teacher, girls-count and parent-identity requests:
+10/10 live Jev-off checks with no classifier/model calls. Populated HTTP/MCP
+checks cover admin/principal and two years, with restricted-role denial checks.
+
+The full unchanged 100-question Darija/Arabizi run passed **92/100 tool plans**,
+versus the saved 80/100. Average complete response was **0.888 seconds**, measured
+without a two-second cutoff or timing gate. This includes local reply improvements;
+it is not independent Jev-model or full semantic-answer qualification. The run
+preserves three segments and two unknown classifier charges, with no repeated chats.
+
+Next: monthly exam counts (q33/q34), class-size filtering (q37/q38), Arabizi class
+listing (q66), class/subject grade lookup (q97/q98) and ambiguous last-year
+clarification (q100). Then review flagged answers and qualify personal-role flows.
+Keep production Jev off. See the [full report](docs/evidence/chatbot-latency/darija-total-exams-results-20261008.md)
+for exact failures, recovery evidence, verification and cleanup.

@@ -1,7 +1,9 @@
 import { expect, it } from 'bun:test';
 import { INTENT_NAMES, JEV_MODEL } from '../chatbot-jev.mjs';
 import { replayFixStudy } from '../chatbot-jev-fix-study.mjs';
-const item = { id: 'sum', query: 'jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.',
+// Keep a qualified sum outside today's closed local reply plans, so this still
+// exercises the historical Jev arithmetic guard on a genuine fallback candidate.
+const item = { id: 'sum', query: 'jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3 f l9ism A.',
   language: 'ary-latn', split: 'dev', source: 'assistant', intent: 'needs_llm', isWrite: false, familyId: 'sum-family' };
 const decision = { choice: 'student_and_teacher_count', confidence: 0.97, topProbability: 1,
   probabilities: Object.fromEntries(INTENT_NAMES.map(name => [name, name === 'student_and_teacher_count' ? 1 : 0])),

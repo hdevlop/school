@@ -9,10 +9,11 @@ The evidence footprint fell from 728 files / 66.29 MiB to 157 files / 21.96 MiB,
 including this index. Historical inputs loaded indirectly by regression tests
 were retained too. No benchmark result was rewritten or recomputed.
 
-Start with [the latest guarded filtered-read report](darija-school-filtered-results-20261008.md).
-It records six passing live requests without Jev/GPT calls, 18/20 broader tool
-plans, the remaining failures and the limits of that evidence. Jev remains off
-in production. The [previous Jev wording report](darija-jev-read-wording-results-20261008.md)
+Start with [the latest full Darija regression report](darija-total-exams-results-20261008.md).
+It records 92/100 tool plans, ten targeted live requests without Jev/GPT calls,
+the eight remaining failures and concrete next actions. Jev remains off in
+production. The [previous filtered-read report](darija-school-filtered-results-20261008.md)
+records the earlier 18/20 subset. The [previous Jev wording report](darija-jev-read-wording-results-20261008.md)
 records the earlier 17/20 focused result.
 
 Useful comparisons:

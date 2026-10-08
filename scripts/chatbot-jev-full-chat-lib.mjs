@@ -174,7 +174,7 @@ export function firstComparisonProtocol(continuationPath, generationUsagePath, r
   return comparison;
 }
 export function fingerprint(hashes) { return createHash('sha256').update(JSON.stringify(hashes)).digest('hex'); }
-export function darijaComparisonProtocol(continuationPath, generationUsagePath, routerOnly = false) {
+export function darijaComparisonProtocol(continuationPath, generationUsagePath, routerOnly = false, diagnosticsRecoveryPath) {
   if (![false, true, '120b', 'fixed20b', 'jevfirstfix', 'jevcoverage6'].includes(routerOnly)) throw Error('Unknown Darija comparison variant');
   const is120b = routerOnly === '120b';
   const isFix = routerOnly === 'fixed20b';
@@ -212,7 +212,7 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
     comparisonPolicy: isCoverage
       ? 'Focused 20-question Darija/Arabizi check of guard 6: six upcoming-exam requests, two count write-bit disagreements and twelve regression/negative controls, unchanged reviewed wording. Jev candidate-first with CoreWeave-only 20B fallback. Earlier saved runs are observational comparators, not a new 100-case score or controlled causal comparison. Exam populated rendering and forced wrong-choice checks run offline. No French, retries or two-second chat cutoff; timing observational. Unknown costs stay reserved and stop dispatch.'
       : isJevFix
-      ? '100 unchanged reviewed Darija/Arabizi questions: Jev candidate-first, existing acceptance guard, improved School router and CoreWeave-only 20B fallback. Saved improved-router/20B run is the comparator; process/order differences prevent a controlled causal claim. Supported guarded replies only; upcoming exams and filtered reads remain on the fallback path. Timing observational, no average-time gate or two-second chat cutoff. Existing 800ms candidate deadline and 5s billing observer remain recorded. No French and no benchmark retries; capture offered names, classify raw versus guarded decisions and audit final answers separately.'
+      ? '100 unchanged reviewed Darija/Arabizi questions: guarded School local plans, Jev candidate-first, existing acceptance guard, improved School router and CoreWeave-only 20B fallback. Local plans cover closed combined sums, upcoming-exam wording, filtered reads and parent-identity clarification independently of Jev. Saved runs are observational comparators; process/order and code differences prevent a controlled causal claim. Timing observational, no average-time gate or two-second chat cutoff. Existing 800ms candidate deadline and 5s billing observer remain recorded. No French and no benchmark retries; capture offered names, classify raw versus guarded decisions and audit final answers separately.'
       : isFix
       ? 'One fresh 100-case CoreWeave-only 20B pass after School routing vocabulary, lookup dependencies and prompt fixes. Retest the 29 saved 120B failures and preserve the other 71 as regression controls. Same reviewed Darija/Arabizi wording; no French, no Jev, no benchmark retries. Timing observational only, no average-time gate or two-second cutoff. Capture offered names and score school-count equivalence separately.'
       : is120b
@@ -226,6 +226,38 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
   const usageInputs = generationUsagePath.split(',').map(path => ({ path, bytes: readFileSync(path) }));
   if (runInputs.length !== usageInputs.length || runInputs.length > 10) throw Error('Require matching bounded run/usage segments');
   const segments = runInputs.map(input => JSON.parse(input.bytes));
+  let recoveredSegment;
+  if (diagnosticsRecoveryPath) {
+    const bytes = readFileSync(diagnosticsRecoveryPath), recovery = JSON.parse(bytes);
+    const index = runInputs.findIndex(input => input.path === recovery.originalRun?.path);
+    if (index < 0) throw Error('Recovery receipt does not match a preserved segment');
+    const prior = segments[index], input = runInputs[index], last = prior.rows.at(-1);
+    if (recovery.kind !== 'fixture-auth-diagnostics-recovery' || recovery.originalRun?.path !== input.path
+      || recovery.originalRun.sha256 !== createHash('sha256').update(input.bytes).digest('hex')
+      || prior.status !== 'stopped' || prior.stoppedReason !== 'Reply used a different model than the frozen arm'
+      || recovery.instanceId !== prior.initial?.instanceId || recovery.correlationId !== last?.correlationId
+      || last.diagnostics !== null || !last.done || last.aborted || last.errors.length
+      || recovery.diagnostics?.correlationId !== last.correlationId || recovery.diagnostics?.model !== last.model
+      || recovery.diagnostics?.outcome !== 'completed' || recovery.diagnostics?.error
+      || !Array.isArray(recovery.diagnostics?.steps) || recovery.diagnostics.steps.length
+      || !recovery.diagnostics?.reply?.label?.startsWith('jev:')
+      || recovery.diagnostics.reply.label.slice(4) !== last.expectedIntent
+      || recovery.paidRequests !== 0 || recovery.modeRestoredOff !== true || recovery.modelRestored !== true
+      || recovery.settingsKeylessDisabled !== true || !Array.isArray(recovery.attempts) || recovery.attempts.length
+      || prior.attempts.some(a => a.correlationId === last.correlationId || a.costUsd === null))
+      throw Error('Require exact unmodified stopped input and matching unpaid recovered diagnostics; lost billing stays reserved');
+    last.diagnostics = recovery.diagnostics;
+    // The lost process ledger cannot supply a decision response or billed cost.
+    // Preserve that gap explicitly; never manufacture a confidence, ID or zero cost.
+    prior.attempts.push({ id: 'lost-ledger:' + last.correlationId, correlationId: last.correlationId,
+      caseId: last.caseId, mode: last.mode, startedAt: last.startedAt, outcome: 'error', costUsd: null,
+      reservedUsd: comparison.classificationReserveUsd, selected: 'template',
+      choice: last.expectedIntent, recoveredWithoutBilling: true, reason: 'Classifier ledger lost during authentication/development interruption' });
+    prior.modeRestoredOff = true; prior.modelRestored = true;
+    recoveredSegment = prior;
+    comparison.diagnosticsRecovery = { path: diagnosticsRecoveryPath, sha256: createHash('sha256').update(bytes).digest('hex'),
+      note: 'Separate unpaid receipt recovers the completed final reply. Original stopped report is unchanged. The lost classifier charge is unknown and retains its full reserve; prefix chats are never repeated.' };
+  }
   let offset = 0;
   for (const segment of segments) {
     const count = segment.chatsDispatched;
@@ -238,11 +270,14 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
       || !isDeepStrictEqual(segment.rows.map(({ caseId, experimentArm, model, mode, strategy, provider }) =>
         ({ caseId, experimentArm, model, mode, strategy, provider })), jobs)
       || segment.status !== 'stopped' || segment.modeRestoredOff !== true || segment.modelRestored !== true
-      || !['Benchmark control /chat-benchmark/provider-usage: HTTP 502', 'Classifier terminal cost remains unknown', 'The operation timed out.'].includes(segment.stoppedReason)
-      || (segment.stoppedReason === 'Classifier terminal cost remains unknown' ? unknown.length !== 1 : unknown.length !== 0)
+      || !['Benchmark control /chat-benchmark/provider-usage: HTTP 502', 'Classifier terminal cost remains unknown', 'The operation timed out.',
+        ...(segment === recoveredSegment ? ['Reply used a different model than the frozen arm'] : [])].includes(segment.stoppedReason)
+      || (segment.stoppedReason === 'Classifier terminal cost remains unknown' || segment === recoveredSegment
+        ? unknown.length !== 1 : unknown.length !== 0)
       || segment.rows.some(row => !row.done || row.aborted || row.errors.length || !row.diagnostics)
       || segment.attempts.some(a => a.outcome === 'pending' || (a.costUsd === null
-        ? !['aborted', 'error'].includes(a.outcome) || a.selected !== 'ordinary' || a.reservedUsd !== comparison.classificationReserveUsd
+        ? !['aborted', 'error'].includes(a.outcome) || (a.selected !== 'ordinary' && !(segment === recoveredSegment
+          && a.recoveredWithoutBilling && a.correlationId === segment.rows.at(-1).correlationId)) || a.reservedUsd !== comparison.classificationReserveUsd
         : !Number.isFinite(a.costUsd) || a.costUsd < 0))
       || segment.generationBudget.requestsSettled !== count || segment.generationBudget.requestsWithUnknownCost
       || segment.generationBudget.inFlight || segment.generationBudget.stoppedReason
@@ -285,7 +320,7 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
 }
 export function checkSource(protocol) {
   const { sourceFingerprint: _sourceFingerprint, ...declared } = protocol;
-  const expected = ['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix', 'darija-jev-coverage-v6'].includes(protocol.purpose) ? darijaComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.purpose === 'darija-jev-coverage-v6' ? 'jevcoverage6' : protocol.purpose === 'darija-jev-first-router-fix' ? 'jevfirstfix' : protocol.purpose === 'darija-router-20b-fix' ? 'fixed20b' : protocol.purpose === 'darija-router-120b-check' ? '120b' : protocol.purpose === 'darija-router-20b-repeat')
+  const expected = ['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix', 'darija-jev-coverage-v6'].includes(protocol.purpose) ? darijaComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.purpose === 'darija-jev-coverage-v6' ? 'jevcoverage6' : protocol.purpose === 'darija-jev-first-router-fix' ? 'jevfirstfix' : protocol.purpose === 'darija-router-20b-fix' ? 'fixed20b' : protocol.purpose === 'darija-router-120b-check' ? '120b' : protocol.purpose === 'darija-router-20b-repeat', protocol.diagnosticsRecovery?.path)
     : protocol.purpose === 'coreweave-jev-first-comparison'
     ? firstComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.continuation?.retainedUnknownCosts === 1)
     : protocol.purpose === 'two-model-jev-parallel-comparison'

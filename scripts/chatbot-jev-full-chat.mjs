@@ -14,8 +14,8 @@ if ([fixtureMode, execute, preflight].filter(Boolean).length > 1) throw new Erro
 const defaultPlan = 'docs/evidence/chatbot-latency/jev-billing-observer-plan-20261007.json';
 const planPath = option('plan', defaultPlan);
 if (!fixtureMode && !execute && !preflight) {
-  const plan = args.includes('--darija-jev-coverage-v6') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'jevcoverage6')
-    : args.includes('--darija-jev-first-fix') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'jevfirstfix')
+  const plan = args.includes('--darija-jev-coverage-v6') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'jevcoverage6', option('diagnostics-recovery'))
+    : args.includes('--darija-jev-first-fix') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'jevfirstfix', option('diagnostics-recovery'))
     : args.includes('--darija-router-fix') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), 'fixed20b')
     : args.includes('--darija-router-120b') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), '120b')
     : args.includes('--darija-router-repeat') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'), true)
@@ -48,6 +48,16 @@ const save = () => writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 let fixture, token;
 const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix', 'darija-jev-first-router-fix', 'darija-jev-coverage-v6'].includes(protocol.purpose);
 let selectedModel;
+async function signIn() {
+  const email = option('email', process.env.SCHOOL_HISTORY_ADMIN_EMAIL ?? 'admin@history.example.test');
+  const password = process.env.SCHOOL_HISTORY_ADMIN_PASSWORD;
+  if (!password) throw new Error('Set SCHOOL_HISTORY_ADMIN_PASSWORD for the existing fixture administrator');
+  const login = await fetch(new URL('/api/auth/login', base), { method: 'POST', redirect: 'error',
+    signal: AbortSignal.timeout(10_000), headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, password }) });
+  if (!login.ok) throw new Error(`Fixture sign-in: HTTP ${login.status}`);
+  token = (await login.json()).data?.accessToken;
+  if (!token) throw new Error('Missing fixture access token');
+}
 async function request(path, body, correlation = randomUUID(), method) {
   if (fixture) return fixture.call(path, body, 'admin', option('year', '2026-2027'), correlation);
   return fetch(new URL(`/api${path}`, base), { method: method ?? (body === undefined ? 'GET' : 'POST'), redirect: 'error',
@@ -58,9 +68,15 @@ async function request(path, body, correlation = randomUUID(), method) {
 async function json(path, body, correlation, method) {
   const retries = protocol.purpose === 'darija-tool-selection-comparison' && path === '/chat-benchmark/provider-usage'
     && body === undefined ? 2 : 0;
+  let renewed = false;
   for (let attempt = 0; ; attempt++) {
     const response = await request(path, body, correlation, method);
     if (response.ok) return response.json();
+    // Only renew failed control reads/restoration, never repeat a chat or a grant.
+    if (!fixture && !renewed && response.status === 401 && (body === undefined
+      || path === '/chat-benchmark/jev/mode' || path === '/ai-settings')) {
+      await signIn(); renewed = true; continue;
+    }
     if (attempt < retries && [429, 502, 503, 504].includes(response.status)) {
       await Bun.sleep(200); continue;
     }
@@ -81,14 +97,7 @@ try {
     fixture = await createJevFixture();
     await json('/chat-benchmark/jev/mode', { mode: 'off' });
   } else {
-    const email = option('email', process.env.SCHOOL_HISTORY_ADMIN_EMAIL ?? 'admin@history.example.test');
-    const password = process.env.SCHOOL_HISTORY_ADMIN_PASSWORD;
-    if (!password) throw new Error('Set SCHOOL_HISTORY_ADMIN_PASSWORD for the existing fixture administrator');
-    const login = await fetch(new URL('/api/auth/login', base), { method: 'POST', redirect: 'error',
-      signal: AbortSignal.timeout(10_000), headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email, password }) });
-    if (!login.ok) throw new Error(`Fixture sign-in: HTTP ${login.status}`);
-    token = (await login.json()).data?.accessToken;
-    if (!token) throw new Error('Missing fixture access token');
+    await signIn();
   }
   const initial = await json('/chat-benchmark/jev/status'); checkReady(initial, protocol);
   report.initial = initial;
@@ -168,7 +177,8 @@ try {
         await Bun.sleep(100);
       }
       generationBudget.settle(correlationId, parsed.metadata);
-      if (comparison && row.diagnostics?.model !== job.model) throw new Error('Reply used a different model than the frozen arm');
+      if (!row.diagnostics) throw new Error('Reply diagnostics unavailable');
+      if (comparison && row.diagnostics.model !== job.model) throw new Error('Reply used a different model than the frozen arm');
       const billingStart = performance.now();
       while (true) {
         report.attempts = await json('/chat-benchmark/jev/attempts');

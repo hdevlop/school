@@ -76,7 +76,7 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   grades_get_all: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects'],
   // "This month" may retrieve today's exam tool; the list is needed to
   // apply a different date window without guessing teacher/class IDs.
-  exams_get_today_exams: ['exams_get_all'],
+  exams_get_today_exams: ['exams_get_all', 'exams_get_upcoming_exams'],
   fees_get_student_fees: ['search_search_students'],
   payments_get_by_student: ['search_search_students'],
   students_get_student_parents: ['search_search_students'],

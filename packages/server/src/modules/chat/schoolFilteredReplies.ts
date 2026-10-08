@@ -1,10 +1,14 @@
 import { normalizeReplyText, type ReplyLanguage, type ReplyTemplate } from 'najm-chatbot';
+import { schoolListReplyForKind } from './schoolListReplies';
 
-export const FILTERED_REPLY_VERSION = 1;
-type Kind = 'girls' | 'maths-teachers' | 'parent-identity';
+export const FILTERED_REPLY_VERSION = 2;
+type Kind = 'girls' | 'maths-teachers' | 'parent-identity' | 'combined-total' | 'upcoming-exams';
 const canonical = (value: string) => normalizeReplyText(value).replace(/[.!?؟]+$/u, '').trim();
 // A closed request set: additional names, dates, classes, operations or quotes do not match.
 const phrases: Record<Kind, string[]> = {
+  'combined-total': ['جمع ليا عدد التلاميذ مع عدد الأساتذة وعطيني المجموع.',
+    'jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.'],
+  'upcoming-exams': ['واش كاينين شي فروض هاد الأيام الجاية؟', 'wach kaynin chi forod had liyam jaya?'],
   girls: ['شحال من بنت كاينة فالمدرسة؟', 'ch7al mn bent kayna f lmdrasa?',
     'كم عدد التلميذات في المدرسة؟', "Combien de filles sont inscrites dans l'école ?"],
   'maths-teachers': ['عطيني السميات ديال الأساتذة اللي كيقريو الرياضيات.',
@@ -15,7 +19,21 @@ const phrases: Record<Kind, string[]> = {
 };
 const requests = new Map(Object.entries(phrases).flatMap(([kind, texts]) =>
   texts.map(text => [canonical(text), kind as Kind] as const)));
-export const schoolFilteredReplyKind = (query: string) => requests.get(canonical(query)) ?? null;
+export const schoolFilteredReplyKind = (query: string) => /[«»“”"`]/u.test(query) ? null : requests.get(canonical(query)) ?? null;
+
+function renderSum(language: ReplyLanguage, year: string, results: unknown[]): string {
+  if (results.length !== 2) throw Error('Invalid combined count results');
+  const counts = results.map(result => {
+    const count = (result as { count?: unknown } | null)?.count;
+    if (typeof count !== 'number' || !Number.isSafeInteger(count) || count < 0) throw Error('Invalid combined count');
+    return count;
+  });
+  const total = counts[0] + counts[1];
+  if (!Number.isSafeInteger(total)) throw Error('Invalid combined count sum');
+  return language === 'ary' ? `فهاد العام الدراسي ${year}، كاينين ${counts[0]} تلميذ و${counts[1]} أستاذ. المجموع هو ${total}.`
+    : language === 'ar' ? `في السنة الدراسية ${year}، يوجد ${counts[0]} تلميذ و${counts[1]} أستاذ. المجموع هو ${total}.`
+      : `Pour l'année ${year}, il y a ${counts[0]} élèves et ${counts[1]} enseignants. Le total est ${total}.`;
+}
 type Row = Record<string, unknown>;
 function records(value: unknown): Row[] {
   if (!Array.isArray(value)) throw Error('Invalid filtered reply result');
@@ -86,6 +104,10 @@ export function schoolFilteredReply(query: string, language: ReplyLanguage, year
     : language === 'ar' ? 'هذا الطلب على مستوى المدرسة يتطلب حساب الإدارة. يمكنك طلب المعلومات المسموح لحسابك بالاطلاع عليها.'
       : "Cette demande à l'échelle de l'école nécessite un compte de direction. Demandez les informations accessibles à votre compte." };
   if (!year) return null;
+  if (kind === 'combined-total') return { label: 'school:combined-total', calls: [
+    { name: 'students_get_student_count', input: { academicYear: year } },
+    { name: 'teachers_get_teacher_count', input: { academicYear: year } }], render: results => renderSum(language, year, results) };
+  if (kind === 'upcoming-exams') return { ...schoolListReplyForKind('exams', language, year), label: 'school:upcoming-exams' };
   return kind === 'girls' ? { label: 'school:girls-count', calls: [{ name: 'students_get_students', input: { academicYear: year } }],
     render: results => renderGirls(language, year, results) }
     : { label: 'school:maths-teachers', calls: [{ name: 'subjects_get_subjects', input: {} },

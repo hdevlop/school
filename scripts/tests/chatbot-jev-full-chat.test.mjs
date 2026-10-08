@@ -122,6 +122,34 @@ test('frozen comparison is bounded, balanced and explicitly not native qualifica
   expect(protocol.retries).toBe(0); expect(protocol.independentQualification).toBe(false);
   expect(fingerprint(protocol.sourceHashes)).toMatch(/^[a-f0-9]{64}$/u);
 });
+
+test('unpaid diagnostics recovery preserves the prefix and reserves the lost classifier cost', () => {
+  const run = 'docs/evidence/chatbot-latency/darija-total-exams-run-20261008.json';
+  const usage = 'docs/evidence/chatbot-latency/darija-total-exams-generation-usage-20261008.jsonl';
+  const receipt = 'docs/evidence/chatbot-latency/darija-total-exams-auth-recovery-20261008.json';
+  const before = readFileSync(run, 'utf8');
+  expect(() => darijaComparisonProtocol(run, usage, 'jevfirstfix')).toThrow();
+  const protocol = darijaComparisonProtocol(run, usage, 'jevfirstfix', receipt);
+  expect(protocol.jobs).toHaveLength(93);
+  expect(protocol.jobs[0].caseId).toBe('jev-operator-q08');
+  expect(protocol.continuation.completedClassifications).toBe(7);
+  expect(protocol.continuation.retainedUnknownClassifications).toBe(1);
+  expect(protocol.continuation.carriedUsd).toBeGreaterThanOrEqual(protocol.classificationReserveUsd);
+  expect(readFileSync(run, 'utf8')).toBe(before);
+  expect(() => checkSource(protocol)).not.toThrow();
+  const dir = mkdtempSync(join(tmpdir(), 'school-diagnostics-recovery-'));
+  try {
+    const altered = join(dir, 'receipt.json'), recovery = JSON.parse(readFileSync(receipt, 'utf8'));
+    recovery.diagnostics.model = 'openai/gpt-oss-120b'; writeFileSync(altered, JSON.stringify(recovery));
+    expect(() => darijaComparisonProtocol(run, usage, 'jevfirstfix', altered)).toThrow();
+    recovery.diagnostics.model = 'openai/gpt-oss-20b'; recovery.originalRun.sha256 = '0'.repeat(64);
+    writeFileSync(altered, JSON.stringify(recovery));
+    expect(() => darijaComparisonProtocol(run, usage, 'jevfirstfix', altered)).toThrow();
+    recovery.originalRun.sha256 = JSON.parse(readFileSync(receipt, 'utf8')).originalRun.sha256;
+    recovery.paidRequests = 1; writeFileSync(altered, JSON.stringify(recovery));
+    expect(() => darijaComparisonProtocol(run, usage, 'jevfirstfix', altered)).toThrow();
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 test('changing a frozen spending limit or job is rejected even with unchanged source hashes', () => {
   const protocol = fullChatProtocol();
   expect(() => checkSource(protocol)).not.toThrow();

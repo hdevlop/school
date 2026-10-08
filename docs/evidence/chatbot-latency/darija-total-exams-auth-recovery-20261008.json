@@ -1,0 +1,94 @@
+{
+  "kind": "fixture-auth-diagnostics-recovery",
+  "originalRun": {
+    "path": "docs/evidence/chatbot-latency/darija-total-exams-run-20261008.json",
+    "sha256": "579a947e19770628ae1bf6a3a98bf2b2bcc8f758311a21ca4048c6f9e6c5cb66"
+  },
+  "instanceId": "c57d37f2-53fc-4204-b2c9-70c21f56b4d7",
+  "correlationId": "5bdc3fb6-8d39-4862-95fb-43cf0df12bb3",
+  "diagnostics": {
+    "version": 1,
+    "correlationId": "5bdc3fb6-8d39-4862-95fb-43cf0df12bb3",
+    "channel": "web",
+    "provider": "openrouter",
+    "model": "openai/gpt-oss-20b",
+    "outcome": "completed",
+    "error": null,
+    "routingStatus": "disabled",
+    "routedToolCount": 1,
+    "messages": {
+      "stored": 0,
+      "prompt": 1
+    },
+    "spans": {
+      "settingsMs": 0,
+      "historyMs": null,
+      "routingMs": null,
+      "contextMs": null,
+      "prepareMs": 358.5,
+      "persistenceMs": null
+    },
+    "marks": {
+      "firstTextMs": 358.7,
+      "finishMs": 358.7
+    },
+    "steps": [],
+    "tools": [
+      {
+        "name": "students_get_student_count",
+        "toolCallId": "4bd942c4-d5bd-403c-9b88-aa8384f5e4e0",
+        "outcome": "executed",
+        "inputChars": 28,
+        "resultChars": 59,
+        "startMs": 349.8,
+        "durationMs": 8.5
+      }
+    ],
+    "usage": {
+      "source": "total",
+      "inputTokens": 0,
+      "outputTokens": 0,
+      "totalTokens": 0,
+      "cachedInputTokens": null,
+      "reasoningTokens": null
+    },
+    "cost": {
+      "provider": "openrouter",
+      "model": "openai/gpt-oss-20b",
+      "promptTokens": 0,
+      "completionTokens": 0,
+      "totalTokens": 0,
+      "inputCost": 0,
+      "outputCost": 0,
+      "totalCost": 0,
+      "currency": "USD",
+      "pricingFound": true
+    },
+    "embeddings": [],
+    "replyPreparation": {
+      "selected": "template",
+      "elapsedMs": 348.7603999999992,
+      "timedOut": false,
+      "candidateState": "candidate",
+      "losingWorkMayContinue": true,
+      "externalCost": "unreported"
+    },
+    "embeddingsIncomplete": false,
+    "reply": {
+      "source": "template",
+      "language": "ary",
+      "label": "jev:student_count"
+    },
+    "benchmark": {
+      "instanceId": "c57d37f2-53fc-4204-b2c9-70c21f56b4d7",
+      "resetCount": 0
+    }
+  },
+  "attempts": [],
+  "modeRestoredOff": true,
+  "modelRestored": true,
+  "settingsKeylessDisabled": true,
+  "recoveredAt": "2026-10-08T22:44:17.157Z",
+  "tokenLifetimeSeconds": 3600,
+  "paidRequests": 0
+}

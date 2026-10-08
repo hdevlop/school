@@ -127,7 +127,9 @@ export async function createJevFixture() {
   container.set(TOOL_PROVIDER, { findRelevantTools: async (query: string) => {
     await new Promise(resolve => setTimeout(resolve, 20));
     const kind = schoolFilteredReplyKind(query);
-    const names = kind === 'girls' ? ['students_get_students'] : kind === 'maths-teachers' ? ['teachers_get_teachers','subjects_get_subjects'] : [];
+    const names = kind === 'girls' ? ['students_get_students'] : kind === 'maths-teachers' ? ['teachers_get_teachers','subjects_get_subjects']
+      : kind === 'combined-total' ? ['students_get_student_count','teachers_get_teacher_count']
+        : kind === 'upcoming-exams' ? ['exams_get_upcoming_exams'] : [];
     const registry = container.get(MCP_REGISTRY) as { tools: Array<{ name: string }> };
     return { status: 'routed', tools: registry.tools.filter(tool => names.includes(tool.name)) };
   } } as any);
