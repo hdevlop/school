@@ -1,0 +1,579 @@
+{
+  "status": "completed",
+  "productionQualification": false,
+  "source": [
+    {
+      "path": "docs/evidence/chatbot-latency/darija-school-filtered-run-20261008.json",
+      "sha256": "5bd317149fb31b7c7a8d246275330931dbdff866e5a12b8b3784af45bf5e942a"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-school-filtered-plan-20261008.json",
+      "sha256": "ace9fd3f8a133f6795f28009b4dab7072393cc3fbe9d29ad840831927c662870"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-school-filtered-off-check-20261008.json",
+      "sha256": "2324ef2b262e17161ce9e7b62e664e96ce981424ee8a5b78665dcd2aa51ea007"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-school-filtered-fixture-20261008.json",
+      "sha256": "930b286e25ba3fae7f2bbda1d898299a7e8d92f890040e9ddb50a97d8040aec7"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-school-filtered-generation-usage-20261008.jsonl",
+      "sha256": "ff320625b114b4bf1f7f37a5eca9c7a644fbcdc53b4af8e56a97d7a49451d18f"
+    },
+    {
+      "path": "scripts/chatbot-darija-selection-report.mjs",
+      "sha256": "1f99f6bb5436ea45c13e8ee782fea9bb449df6ea1280b7277c18e959346487c9"
+    },
+    {
+      "path": "scripts/chatbot-jev-model-report.mjs",
+      "sha256": "8d101174af373a8a94b27fece9adc263292a6da2822fddea33821599f8d80587"
+    }
+  ],
+  "primaryLiveJevOff": {
+    "cases": 6,
+    "passed": 6,
+    "modelsCalled": 0,
+    "classifiersCalled": 0,
+    "completeSourceManifest": true
+  },
+  "focused20": {
+    "cases": 20,
+    "toolPlansPassed": 18,
+    "previousPassed": 17,
+    "averageResponseSeconds": 0.6458219000000002,
+    "timingGateApplied": false,
+    "jevReplies": 14,
+    "localReplies": 3,
+    "modelReplies": 3,
+    "classifierCalls": 17,
+    "generationCalls": 8,
+    "responseReportedCostUsd": 0.0014025740000000002,
+    "unknownCosts": 0,
+    "unaccountedGenerationIds": [],
+    "targetedGains": [
+      "jev-operator-q32",
+      "jev-operator-q91",
+      "jev-operator-q93"
+    ],
+    "regressions": [
+      "jev-operator-q30",
+      "jev-operator-q80"
+    ]
+  },
+  "verification": {
+    "chatTestsPassed": 416,
+    "scriptSuitePassed": 556,
+    "postManifestProtocolChecksPassed": 21,
+    "chatYearScopeChecksPassed": 13,
+    "rootLint": "passed",
+    "rootTypecheck": "passed",
+    "serverTestTypecheck": "passed",
+    "workspaceBoundaries": "passed",
+    "productionBuild": "passed",
+    "populatedHttpChecks": 24,
+    "restrictedRoleHttpChecks": 9,
+    "directRestrictedMcpChecks": 9,
+    "fixtureRestoredOffKeyless": true,
+    "fixtureProcessStopped": true,
+    "temporaryBuildsRemoved": 2,
+    "normalAppSettingsChanged": false
+  },
+  "limitations": [
+    "Closed recognition of these requests; additional names, dates/classes, operations and quotes stay on the normal path.",
+    "Live fixture has eight unknown student genders and no teachers/subjects; no exact live girls total or populated live maths filtering is claimed.",
+    "Populated filtering and admin/principal/two-year behavior are verified in a synthetic HTTP/MCP fixture, not independent native-language qualification.",
+    "The initial 20-chat run omitted the new renderer from its transitive source manifest. The manifest was corrected afterward; the subsequent primary six-chat Jev-off check froze all runtime sources. The recorded 20-chat data is unchanged and observational.",
+    "Two non-target fallback failures remain; no new 100-question score or production Jev rollout is claimed."
+  ],
+  "rows": [
+    {
+      "id": "jev-operator-q01",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:small_talk"
+      },
+      "text": "مرحبا! نقدر نعاونك تشوف المعلومات ديال المدرسة.",
+      "tools": []
+    },
+    {
+      "id": "jev-operator-q02",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:small_talk"
+      },
+      "text": "مرحبا! نقدر نعاونك تشوف المعلومات ديال المدرسة.",
+      "tools": []
+    },
+    {
+      "id": "jev-operator-q05",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:upcoming_exams"
+      },
+      "text": "ما كاين حتى امتحان جاي فهاد العام. (2026-2027)",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q06",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:upcoming_exams"
+      },
+      "text": "ما كاين حتى امتحان جاي فهاد العام. (2026-2027)",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q09",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:teacher_count"
+      },
+      "text": "كاينين 0 أستاذ فالمدرسة.",
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q11",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام وكاينين 0 أستاذ فالمدرسة.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q12",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_and_teacher_count"
+      },
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام وكاينين 0 أستاذ فالمدرسة.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q13",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:class_list"
+      },
+      "text": "هادي لائحة الأقسام والشعب فهاد العام الدراسي 2026-2027:\n\n- History 2026-2027: A, B",
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q30",
+      "passed": false,
+      "issues": [
+        "unknown_tool"
+      ],
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "text": "الياقة هي 8 طلاب، ولا يوجد معلّّم فهذ العام الدراسي، وبالتالي المجموع الكلّي هو 8.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q32",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:maths-teachers"
+      },
+      "text": "ما لقيتش مادة الرياضيات فالمواد المسجلة، ما نقدرش نحدد الأساتذة ديالها.",
+      "tools": [
+        {
+          "name": "subjects_get_subjects",
+          "input": true,
+          "outcome": "output",
+          "arguments": {},
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        },
+        {
+          "name": "teachers_get_teachers",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q35",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "text": "ما كاين حتى شي سجلات ديال الحضور ولا الغياب فالسنة الدراسية 2026-2027.",
+      "tools": [
+        {
+          "name": "attendance_get_all",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "type": "student",
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q49",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q50",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:student_count"
+      },
+      "text": "كاينين 8 تلميذ مسجلين فهاد العام.",
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q71",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:attendance_today"
+      },
+      "text": "لا توجد سجلات حضور أو غياب مسجلة لهذا التاريخ. (2026-2027)",
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q77",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ar",
+        "label": "jev:upcoming_exams"
+      },
+      "text": "لا توجد امتحانات قادمة لهذه السنة. (2026-2027)",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q78",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:upcoming_exams"
+      },
+      "text": "ما كاين حتى امتحان جاي فهاد العام. (2026-2027)",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q79",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "jev:upcoming_exams"
+      },
+      "text": "ما كاين حتى امتحان جاي فهاد العام. (2026-2027)",
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q80",
+      "passed": false,
+      "issues": [
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "text": "ماهمش أي امتحانات في هاد اليوم.",
+      "tools": [
+        {
+          "name": "exams_get_today_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q91",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:girls-count"
+      },
+      "text": "كاينين 0 تلميذة حسب السجلات ديال 2026-2027. ولكن 8 سجل ما فيهش الجنس واضح، ما نقدرش نأكد العدد النهائي.",
+      "tools": [
+        {
+          "name": "students_get_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 8
+          }
+        }
+      ]
+    },
+    {
+      "id": "jev-operator-q93",
+      "passed": true,
+      "issues": [],
+      "reply": {
+        "source": "template",
+        "language": "ary",
+        "label": "school:parent-identity"
+      },
+      "text": "شكون الولي اللي كتقصد؟ عطيني السمية ديالو ولا معرف الولي باش نحدد الحساب الصحيح.",
+      "tools": []
+    }
+  ]
+}

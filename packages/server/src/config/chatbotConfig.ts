@@ -17,7 +17,7 @@ export const chatbotConfig = () =>
     defaultSystemPrompt: chatbotSystemPrompt,
     reply: {
       detectLanguage: schoolReplyLanguage,
-      template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear),
+      template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear, schoolChatYearContext.getStore()?.role),
       preparation: jevPreparationPolicy(),
     },
     maxSteps: 10,

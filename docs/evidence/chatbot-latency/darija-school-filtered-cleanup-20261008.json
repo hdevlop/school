@@ -1,0 +1,8 @@
+{
+  "fixtureOnly": true,
+  "model": "openai/gpt-oss-120b",
+  "isEnabled": false,
+  "hasKey": false,
+  "openRouterKeyPresent": false,
+  "mode": "off"
+}

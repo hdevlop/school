@@ -16,7 +16,7 @@ import { schoolReplyContext } from './schoolReplyContext';
 
 // A snapshot of the validated year for prompt text and MCP arguments; the
 // shared year boundary remains the only resolver and authorization owner.
-export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string }>();
+export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string }>();
 
 export interface ChatActor { id?: string; role?: string }
 
@@ -47,7 +47,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
   }
 
   async snapshot(actor: ChatActor = {}) {
-    return { prompt: await this.describe(actor), academicYear: this.year.label };
+    return { prompt: await this.describe(actor), academicYear: this.year.label, role: actor.role };
   }
 
   /**

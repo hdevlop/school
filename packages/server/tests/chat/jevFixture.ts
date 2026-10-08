@@ -3,7 +3,7 @@ import { ChatAgent, ChatController, AiSettingsService, CHATBOT_CONFIG, type Chat
 import { scriptedModel } from 'najm-chatbot/testing';
 import { AuthGuard, PermissionService, RoleService } from 'najm-auth';
 import { guards, getGuardMetadata } from 'najm-guard';
-import { mcp, McpTool, ToolGroup, TOOL_PROVIDER } from 'najm-mcp';
+import { mcp, McpTool, ToolGroup, TOOL_PROVIDER, MCP_REGISTRY } from 'najm-mcp';
 import { i18n } from 'najm-i18n';
 import { validation } from 'najm-validation';
 import { schoolI18n } from '@sms/contracts/locales';
@@ -22,6 +22,7 @@ import { SchoolChatContextProvider, schoolChatYearContext } from '../../src/modu
 import { registerChatYearContext } from '../../src/modules/chat/chatYearContext';
 import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
 import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
+import { schoolFilteredReplyKind } from '../../src/modules/chat/schoolFilteredReplies';
 import { jevPreparationPolicy } from '../../src/modules/chat/jevPreparationPolicy';
 import { JevIntentClassifier } from '../../src/modules/chat/JevIntentClassifier';
 import { JevBenchmarkController } from '../../src/modules/chat/JevBenchmarkController';
@@ -37,12 +38,25 @@ class StudentCounts {
   @Year() private year!: ResolvedAcademicYear;
   @Get('/count') @isAdministrator() @McpTool({ description: 'Fixture student count', readOnly: true })
   get_student_count() { return { count: this.year.label === '2025-2026' ? 7 : 9 }; }
+  @Get('/') @isAdministrator() @McpTool({ description: 'Fixture scoped students', readOnly: true })
+  get_students() { return [{ id: 'girl-a', gender: 'female' }, { id: 'boy-a', gender: 'male' },
+    ...(this.year.label === '2026-2027' ? [{ id: 'girl-b', gender: 'female' }] : [])]; }
 }
 @Controller('/fixture-teachers') @ToolGroup('teachers')
 class TeacherCounts {
   @Year() private year!: ResolvedAcademicYear;
   @Get('/count') @isAdministrator() @McpTool({ description: 'Fixture teacher count', readOnly: true })
   get_teacher_count() { return { count: this.year.label === '2025-2026' ? 2 : 3 }; }
+  @Get('/') @isAdministrator() @McpTool({ description: 'Fixture scoped teacher assignments', readOnly: true })
+  get_teachers() { return [{ id: 'math-teacher', name: `Math Teacher ${this.year.label}`, assignments: [
+    { subjectIds: ['math-id'], classId: 'class-a', sectionIds: ['section-a'] },
+    { subjectIds: ['math-id'], classId: 'class-b', sectionIds: ['section-b'] }] },
+    { id: 'physics-teacher', name: 'Physics Teacher', specialization: 'Maths', assignments: [{ subjectIds: ['physics-id'] }] }]; }
+}
+@Controller('/fixture-subjects') @ToolGroup('subjects')
+class SubjectLists {
+  @Get('/') @isAdministrator() @McpTool({ description: 'Fixture subjects', readOnly: true })
+  get_subjects() { return [{ id: 'math-id', name: 'Mathématiques', code: 'MATH' }, { id: 'physics-id', name: 'Physique', code: 'PHYS' }]; }
 }
 @Controller('/fixture-classes') @ToolGroup('classes')
 class ClassLists {
@@ -90,7 +104,7 @@ export async function createJevFixture() {
       ...schoolMcpYearHooks(['students', 'teachers', 'classes', 'attendance', 'exams']) }))
     .load({ AuthGuard, ChatController, JevBenchmarkController, JevBenchmarkService,
       AcademicYearValidator, AcademicYearRepository, SchoolChatContextProvider,
-      StudentCounts, TeacherCounts, ClassLists, AttendanceLists, ExamLists });
+      StudentCounts, TeacherCounts, SubjectLists, ClassLists, AttendanceLists, ExamLists });
   const roleGuard = getGuardMetadata(JevBenchmarkController, 'status').find(guard => guard.guardClass.name === 'RoleGuard')!.guardClass;
   server.load(roleGuard);
   const container = server.container;
@@ -110,11 +124,15 @@ export async function createJevFixture() {
   container.set(SettingsRepository, { getPublicSettings: async () => ({ timeZone: 'UTC' }) } as any);
   for (const token of [ParentRepository, TeacherRepository, StudentRepository]) container.set(token, { getByUserId: async () => null } as any);
   container.set(ParentChildrenRepository, { getChildren: async () => [] } as any);
-  container.set(TOOL_PROVIDER, { findRelevantTools: async () => {
-    await new Promise(resolve => setTimeout(resolve, 20)); return { status: 'routed', tools: [] };
+  container.set(TOOL_PROVIDER, { findRelevantTools: async (query: string) => {
+    await new Promise(resolve => setTimeout(resolve, 20));
+    const kind = schoolFilteredReplyKind(query);
+    const names = kind === 'girls' ? ['students_get_students'] : kind === 'maths-teachers' ? ['teachers_get_teachers','subjects_get_subjects'] : [];
+    const registry = container.get(MCP_REGISTRY) as { tools: Array<{ name: string }> };
+    return { status: 'routed', tools: registry.tools.filter(tool => names.includes(tool.name)) };
   } } as any);
   const config: ChatbotConfig = {
-    reply: { detectLanguage: schoolReplyLanguage, template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear),
+    reply: { detectLanguage: schoolReplyLanguage, template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear, schoolChatYearContext.getStore()?.role),
       preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: (event: ChatDiagnostics) => { events.push(event); } },
   };
   container.set(CHATBOT_CONFIG, config);
@@ -149,7 +167,7 @@ export async function createJevFixture() {
   });
   async function call(path: string, body?: unknown, role: string | null = 'admin', year = '2026-2027', correlation = crypto.randomUUID(), actorId?: string) {
     return server.fetch(new Request(`http://fixture.local/api${path}`, { method: body === undefined ? 'GET' : 'POST',
-      headers: { 'content-type': 'application/json', 'X-Academic-Year': year, 'x-request-id': correlation,
+      headers: { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'X-Academic-Year': year, 'x-request-id': correlation,
         ...(role ? { 'x-test-role': role } : {}), ...(actorId ? { 'x-test-actor-id': actorId } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }));
   }
   return { server, classifier, events, call, counts: () => ({ decisions, generations }),

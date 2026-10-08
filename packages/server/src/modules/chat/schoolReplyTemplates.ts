@@ -1,6 +1,7 @@
 import { normalizeReplyText, type ReplyLanguage, type ReplyRequest, type ReplyTemplate } from 'najm-chatbot';
 import { schoolListReply } from './schoolListReplies';
 import { schoolWriteRefusalKind } from './schoolReplyWrite';
+import { schoolFilteredReply } from './schoolFilteredReplies';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -56,11 +57,15 @@ export function schoolCountReply(language: ReplyLanguage, entities: Array<'stude
 export function schoolChangeRefusal(language: ReplyLanguage): ReplyTemplate { return { text: refusals[language].change }; }
 
 /** The caller supplies only the already-validated selected year. No new year resolution. */
-export function schoolReplyTemplate({ userText, language }: ReplyRequest, academicYear?: string): ReplyTemplate | null {
+export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, role?: string): ReplyTemplate | null {
   if (!language) return null;
   const text = normalizeReplyText(userText);
   const writeKind = schoolWriteRefusalKind(userText);
   if (writeKind) return { text: refusals[language][writeKind] };
+  if (channel === 'web') {
+    const filtered = schoolFilteredReply(userText, language, academicYear, role);
+    if (filtered) return filtered;
+  }
   if (academicYear) {
     const list = schoolListReply(userText, language, academicYear);
     if (list) return list;

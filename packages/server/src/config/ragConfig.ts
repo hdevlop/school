@@ -56,6 +56,8 @@ const MODEL_DEFAULTS: Record<string, EmbeddingDefaults> = {
 // characters, about 50k tokens) looking for the name. Class-wide work still
 // reaches section and class student tools through routing.
 const TOOL_DEPENDENCIES: Record<string, string[]> = {
+  // Subject-filtered teacher replies join scoped assignment IDs to the catalog.
+  teachers_get_teachers: ['subjects_get_subjects'],
   attendance_mark: ['search_search_students'],
   grades_get_student_report: ['search_search_students'],
   grades_get_by_student: ['search_search_students'],

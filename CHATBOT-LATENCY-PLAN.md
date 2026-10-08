@@ -10,6 +10,17 @@ Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPL
 
 ## 0. Current status and next work — 2026-10-08
 
+**Guarded filtered reads complete (2026-10-08):**
+[Latest report and next work](docs/evidence/chatbot-latency/darija-school-filtered-results-20261008.md)
+records six passing live Darija requests with Jev off and no classifier/model
+calls: maths-teacher names from scoped subject assignments, girls-only counts
+with explicit unknown-gender handling, and identity clarification before a
+parent-payment read. Populated HTTP/MCP checks cover admin/principal in two years;
+family/teacher accounts receive no school-wide read plan. A separate observational
+20-chat run passed 18/20, fixing q32/q91/q93 while q30 arithmetic and q80 upcoming
+exams failed on fallback. No new 100-case score or general Jev enablement is
+claimed. Next: cover those two fallback cases and rerun the full Darija set.
+
 **2026-10-08 Jev-first with improved routing complete:**
 [Results, answer audit and next actions](docs/evidence/chatbot-latency/darija-jev-first-fix-results-20261008.md)
 record 100 unchanged Darija/Arabizi questions through guarded Jev-first and the

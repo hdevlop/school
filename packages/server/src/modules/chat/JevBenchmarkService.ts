@@ -12,7 +12,7 @@ import { PermissionService, RoleService } from 'najm-auth';
 import { jevExperimentEnabled, type JevExperimentArm } from './jevExperiment';
 import { JEV_RUNTIME_WORDING_VERSION } from './jevRuntimeWording';
 
-const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'sections', 'attendance', 'exams'] as const;
+const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'sections', 'attendance', 'exams', 'subjects'] as const;
 
 @Service()
 export class JevBenchmarkService {

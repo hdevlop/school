@@ -1,0 +1,290 @@
+{
+  "kind": "live-admin-jev-off-closed-filter-check",
+  "independentQualification": false,
+  "sourceHashes": {
+    "bun.lock": "ba78f5979a948dd3db2152657be76fe93ce1c871668f8d361a9936d658967802",
+    "package.json": "1ffdc0d5796dd29b67a5685de26d712b1e109db28febaf8e01281b09071befaa",
+    "packages/server/package.json": "cc0c847c3b3c02a5ccbfbf207fbd95898fc33b0ff84308f3f716ab6f2702ccb6",
+    "packages/server/src/config/chatbotConfig.ts": "50ad698ea4d7c706490b672ed3492373a9dc30f0d9d9288bee1245cd5ecb78aa",
+    "packages/server/src/config/chatbotSystemPrompt.ts": "4a8e453f6d81732ef857c3d2337cb3fc78e132daf8a96c74bf960e68abbd1548",
+    "packages/server/src/config/coreConfig.ts": "7c00c81515cc18e0172b52612e3798f31e0f08b84be38ceef1a3150a3f9efe89",
+    "packages/server/src/config/ragConfig.ts": "a41c025e5eae8147044a321c90424f69c0451e99da31be4b40a1062963397f07",
+    "packages/server/src/config/yearScope.ts": "df1157c772276ad16047cf6409568eabd17eb07bff0c964b2ea758a3a2127608",
+    "packages/server/src/modules/chat/JevAttemptLedger.ts": "31727a0d1aa400f0451cb0b5ff432e4312e6d19d9d9216e734fdd4c5b056de04",
+    "packages/server/src/modules/chat/JevBenchmarkController.ts": "c52cdd8be4b4fa87b1d68f4279da17d8d7828346e5a6046a7d35ce84f8cb0cef",
+    "packages/server/src/modules/chat/JevBenchmarkDto.ts": "de53b10dde6f18bd006aec589a2a4cf3be4927f4bb19e650c10e086d9d35afa1",
+    "packages/server/src/modules/chat/JevBenchmarkRepository.ts": "2ab859698a95ebac927147aaa30499332bb4d235983a54ae9013a0974ecdea89",
+    "packages/server/src/modules/chat/JevBenchmarkService.ts": "07f7d0bbacb1e3efd96b469a003bcfe3fb7852e56534bec0f695d351e326a2a3",
+    "packages/server/src/modules/chat/JevControls.ts": "24a783242b93ce231ff2dd9f9808ba00d60cff5aad1fa7f9f8fd5f11a4fc616c",
+    "packages/server/src/modules/chat/JevIntentClassifier.ts": "7bd66204e72c925aaecc07e4518b60b32d9156bfa3a5bdb462fbd459fc623099",
+    "packages/server/src/modules/chat/JevSessionGrants.ts": "588fe5384ed9d9d666f1d6330367a82b8d765dcca3716308d7b711618300fa3c",
+    "packages/server/src/modules/chat/SchoolChatContextProvider.ts": "d23b9bdec60afd7b82378e553748247438deed804e7bd6f5901af3e1042d3d85",
+    "packages/server/src/modules/chat/chatYearContext.ts": "156c6cbf57b0c75904c4a34d3f44c9e964832dcb5b684dc3b562d1a570cb2ce1",
+    "packages/server/src/modules/chat/darijaRouting.ts": "215a72796c5e62e40b3f1b65c1230b0f1dfc3d0c25124058de9492e2477a7d7f",
+    "packages/server/src/modules/chat/jevBenchmarkCases.ts": "3f8b2945769900bb6b50ecddc35e0530f97ea225a2d7bcc895104b0d6e71d0d3",
+    "packages/server/src/modules/chat/jevDarijaCases.ts": "35a9f6c96ea0b77be92dc47e917f67d45f4009cc921538aa0d702ba77dd5bb18",
+    "packages/server/src/modules/chat/jevExperiment.ts": "e32afb0dac7a07953ab44d9cb68386fac3c7aa244739757d0facfeb50c8efdb8",
+    "packages/server/src/modules/chat/jevGuard/countV1.ts": "4218b4aa1a56d39a73d8935d5dc30b1a1bc64bc4f0a5efd1eb880e4280556933",
+    "packages/server/src/modules/chat/jevGuard/countV2.ts": "838a90d79feff7b48c369758761581398aa4d963f4d1fc409f1a055a8395a0af",
+    "packages/server/src/modules/chat/jevGuard/examsV6.ts": "d19ecc6b32930d16fbd9a05dd1b8c59b91e58982d74e32145db15e48df56975c",
+    "packages/server/src/modules/chat/jevGuard/queryV3.ts": "b599b867282b723c6d0188abbb1f6e4e79b4e74c4e7c775ee29d119547a8a483",
+    "packages/server/src/modules/chat/jevGuard/queryV4.ts": "25b712122623c814e7297a081f737ffd78404ddb959337997c333d05f2e4a981",
+    "packages/server/src/modules/chat/jevGuard/queryV5.ts": "f82c2fd3f0363718b91602b53d2baf13e5ef478e2124d87846032bad876f3900",
+    "packages/server/src/modules/chat/jevGuard/queryV6.ts": "ed519eacdabf14d1fe0ebd641b920a2f065fdf0ad65987fa4e43660294b97287",
+    "packages/server/src/modules/chat/jevIntents.ts": "7f98858eb6026472755e319ff3e53c2de439bd0a137d19ff39d0c162cb902ed2",
+    "packages/server/src/modules/chat/jevPreparationPolicy.ts": "70bf0a2943022e436568e7d994d88704b061d7810306668cb2dbc5bcd5ed057f",
+    "packages/server/src/modules/chat/jevQueryGuard.ts": "74caa7de072480a2c76eab4faa6b60e8f870d74707373cb58531b4e357547285",
+    "packages/server/src/modules/chat/jevReplyPlan.ts": "d5e737a9091e805e35eba6aff8c401f8c61a198e6930cc052bf3ca995aec7dce",
+    "packages/server/src/modules/chat/jevRuntimeWording.ts": "76300d6cec7f88fe787de566c39aeb460df65d0fd1fd8a1f045a73307df704b3",
+    "packages/server/src/modules/chat/jevSyntheticCases.ts": "1f5da5e62dea7ee8cdb1914ce10d549725dca2065f0d40d98d275692fb1eaa6a",
+    "packages/server/src/modules/chat/schoolFilteredReplies.ts": "159236363fa8e56b8ed1e7084ac7eee474296e0afb4348ea6a08454c5f70c01c",
+    "packages/server/src/modules/chat/schoolListReplies.ts": "47657c634edc7ad41c22d8217f7fc8ebb413d60d320155d29568955e39d40045",
+    "packages/server/src/modules/chat/schoolReplyLanguage.ts": "e8ff4fd5ad3cced64acceb7e645e1c55422e1db5535154a865a967e9829e25de",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "de7c9a16e38197b8e26a5e49e78de64fc9bc765c8396c73b1628f95d8b072822",
+    "packages/server/src/modules/chat/schoolReplyWrite.ts": "a589657043fb84355a2364d3499f8f65849e402c564c1720dd43a02298a6f39c",
+    "scripts/chatbot-jev-full-chat-lib.mjs": "c3f187f2ebdb60e5d17c7fbef229489da4c3a2230e87317c335ce517eb138274",
+    "scripts/chatbot-jev-full-chat.mjs": "1f69f1530abb03a7f99b2fb77f8ce5ef24b52d5061447a144bc790c617d30a76",
+    "scripts/chatbot-provider-observer.mjs": "2828e2f2270e8cbfb942066e6ea5fdd9a2dc401e2178a035a05c8fc3d61d56d1"
+  },
+  "cases": [
+    {
+      "id": "jev-operator-q31",
+      "query": "عطيني السميات ديال الأساتذة اللي كيقريو الرياضيات.",
+      "language": "ary",
+      "intent": "needs_llm",
+      "familyId": "jev-operator-f16",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teachers"
+          ]
+        ],
+        "reason": "Retrieve teachers; empty teacher fixture supports no matches. Nonempty results would require maths subject filtering.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      }
+    },
+    {
+      "id": "jev-operator-q32",
+      "query": "3tini smiyat dyal lasatida li kay9erriw riyadiyat.",
+      "language": "ary-latn",
+      "intent": "needs_llm",
+      "familyId": "jev-operator-f16",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teachers"
+          ]
+        ],
+        "reason": "Retrieve teachers; empty teacher fixture supports no matches. Nonempty results would require maths subject filtering.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      }
+    },
+    {
+      "id": "jev-operator-q91",
+      "query": "شحال من بنت كاينة فالمدرسة؟",
+      "language": "ary",
+      "intent": "needs_llm",
+      "familyId": "jev-operator-f46",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_students"
+          ]
+        ],
+        "reason": "Read students before counting girls; unfiltered student_count alone is wrong.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      }
+    },
+    {
+      "id": "jev-operator-q92",
+      "query": "ch7al mn bent kayna f lmdrasa?",
+      "language": "ary-latn",
+      "intent": "needs_llm",
+      "familyId": "jev-operator-f46",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_students"
+          ]
+        ],
+        "reason": "Read students before counting girls; unfiltered student_count alone is wrong.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      }
+    },
+    {
+      "id": "jev-operator-q93",
+      "query": "شحال خلص هاد الولي هاد الشهر؟",
+      "language": "ary",
+      "intent": "needs_llm",
+      "familyId": "jev-operator-f47",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "This parent is unidentified; ask who rather than invent an ID or read all payments.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      }
+    },
+    {
+      "id": "jev-operator-q94",
+      "query": "ch7al khelles had lwali had chher?",
+      "language": "ary-latn",
+      "intent": "needs_llm",
+      "familyId": "jev-operator-f47",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "This parent is unidentified; ask who rather than invent an ID or read all payments.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      }
+    }
+  ],
+  "rows": [
+    {
+      "id": "jev-operator-q31",
+      "query": "عطيني السميات ديال الأساتذة اللي كيقريو الرياضيات.",
+      "tools": [
+        {
+          "name": "subjects_get_subjects",
+          "input": true,
+          "outcome": "output",
+          "arguments": {},
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        },
+        {
+          "name": "teachers_get_teachers",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما لقيتش مادة الرياضيات فالمواد المسجلة، ما نقدرش نحدد الأساتذة ديالها.",
+      "passed": true,
+      "completionMs": 373.1988
+    },
+    {
+      "id": "jev-operator-q32",
+      "query": "3tini smiyat dyal lasatida li kay9erriw riyadiyat.",
+      "tools": [
+        {
+          "name": "subjects_get_subjects",
+          "input": true,
+          "outcome": "output",
+          "arguments": {},
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        },
+        {
+          "name": "teachers_get_teachers",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما لقيتش مادة الرياضيات فالمواد المسجلة، ما نقدرش نحدد الأساتذة ديالها.",
+      "passed": true,
+      "completionMs": 253.99519999999995
+    },
+    {
+      "id": "jev-operator-q91",
+      "query": "شحال من بنت كاينة فالمدرسة؟",
+      "tools": [
+        {
+          "name": "students_get_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 8
+          }
+        }
+      ],
+      "text": "كاينين 0 تلميذة حسب السجلات ديال 2026-2027. ولكن 8 سجل ما فيهش الجنس واضح، ما نقدرش نأكد العدد النهائي.",
+      "passed": true,
+      "completionMs": 271.05680000000007
+    },
+    {
+      "id": "jev-operator-q92",
+      "query": "ch7al mn bent kayna f lmdrasa?",
+      "tools": [
+        {
+          "name": "students_get_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 8
+          }
+        }
+      ],
+      "text": "كاينين 0 تلميذة حسب السجلات ديال 2026-2027. ولكن 8 سجل ما فيهش الجنس واضح، ما نقدرش نأكد العدد النهائي.",
+      "passed": true,
+      "completionMs": 234.84089999999992
+    },
+    {
+      "id": "jev-operator-q93",
+      "query": "شحال خلص هاد الولي هاد الشهر؟",
+      "tools": [],
+      "text": "شكون الولي اللي كتقصد؟ عطيني السمية ديالو ولا معرف الولي باش نحدد الحساب الصحيح.",
+      "passed": true,
+      "completionMs": 201.38929999999982
+    },
+    {
+      "id": "jev-operator-q94",
+      "query": "ch7al khelles had lwali had chher?",
+      "tools": [],
+      "text": "شكون الولي اللي كتقصد؟ عطيني السمية ديالو ولا معرف الولي باش نحدد الحساب الصحيح.",
+      "passed": true,
+      "completionMs": 228.5737999999999
+    }
+  ],
+  "classifierRequests": 0,
+  "generationRequests": 0,
+  "passed": 6
+}
