@@ -13,13 +13,13 @@ export function countEquivalentExpectation(item) {
 }
 if (import.meta.main) {
   const [runPaths, usagePath, registryPath, fixturePath, outPath] = process.argv.slice(2);
-  if (!outPath || existsSync(outPath)) throw Error('Supply runs, 120B captures, registry, fixture and a new output');
+  if (!outPath || existsSync(outPath)) throw Error('Supply runs, captured calls, registry, fixture and a new output');
   const corpusPath = 'datasets/chatbot-latency/darija-tool-selection-20261008.json';
   const servicePath = 'packages/server/src/modules/dashboard/academic/AcademicDashboardService.ts';
   const controllerPath = 'packages/server/src/modules/dashboard/academic/AcademicDashboardController.ts';
   const source = [...runPaths.split(','), usagePath, registryPath, fixturePath, corpusPath, servicePath, controllerPath];
   const all = runPaths.split(',').flatMap(path => JSON.parse(readFileSync(path)).rows.map(row => ({ ...row,
-    runGroup: path.includes('router20-repeat') ? '20b-repeat' : path.includes('router120-check') ? '120b-check' : 'original-three-path' })));
+    runGroup: path.includes('router-fix') ? '20b-fix' : path.includes('router20-repeat') ? '20b-repeat' : path.includes('router120-check') ? '120b-check' : 'original-three-path' })));
   if (new Set(all.map(row => row.caseId + '/' + row.experimentArm + '/' + row.startedAt)).size !== all.length) throw Error('Duplicate inputs');
   const corpus = JSON.parse(readFileSync(corpusPath));
   const registry = JSON.parse(readFileSync(registryPath, 'utf8').replace(/^\uFEFF/u, '')).result.tools;
@@ -31,13 +31,13 @@ if (import.meta.main) {
     const item = corpus.cases.find(value => value.id === row.caseId), equivalent = countEquivalentExpectation(item);
     const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Casablanca' }).format(new Date(row.startedAt));
     const frozen = scoreSelection(row, item, registry, ids, today), scored = scoreSelection(row, equivalent, registry, ids, today);
-    const matched = row.experimentArm === '120b-baseline' ? calls.filter(call => Date.parse(call.startedAt) >= Date.parse(row.startedAt)
-      && Date.parse(call.startedAt) <= Date.parse(row.completedAt)).sort((a, b) => Date.parse(a.startedAt) - Date.parse(b.startedAt)) : [];
+    const matched = calls.filter(call => Date.parse(call.startedAt) >= Date.parse(row.startedAt)
+      && Date.parse(call.startedAt) <= Date.parse(row.completedAt)).sort((a, b) => Date.parse(a.startedAt) - Date.parse(b.startedAt));
     return { caseId: row.caseId, query: item.query, language: item.language, arm: row.experimentArm, startedAt: row.startedAt,
       group: row.runGroup + '/' + row.experimentArm,
       frozenPassed: frozen.toolPlanChecksPassed, equivalentPassed: scored.toolPlanChecksPassed, issues: scored.issues,
       equivalenceChangedOutcome: !frozen.toolPlanChecksPassed && scored.toolPlanChecksPassed,
-      ...(row.experimentArm === '120b-baseline' ? classifyToolOffer({ ...scored, expectation: equivalent.expectation }, matched[0]?.requestToolNames ?? null) : {}) };
+      ...(matched.length || row.experimentArm === '120b-baseline' ? classifyToolOffer({ ...scored, expectation: equivalent.expectation }, matched[0]?.requestToolNames ?? null) : {}) };
   });
   const arms = [...new Set(rows.map(row => row.group))].map(group => {
     const list = rows.filter(row => row.group === group);

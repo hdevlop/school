@@ -1,8 +1,28 @@
 # Chatbot latency and cost plan
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPLETE: 500 CHATS. EQUIVALENT-TOOL AUDIT: ROUTER/120B 71/100, JEV-FIRST/20B 66/100, ROUTER/20B REPEAT 58/100. OF 29 REMAINING 120B FAILURES, 23 LACK REQUIRED OFFERED TOOLS AND SIX FAIL WITH TOOLS OFFERED. TIMING IS OBSERVATIONAL FOR THE LATEST TOOL-ONLY TEST. FULL ANSWER ACCURACY AND GENERAL ENABLEMENT REMAIN UNQUALIFIED; NORMAL CONFIGURATION UNCHANGED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPLETE: 600 CHATS. OPTIMIZED ROUTER/20B 74/100 TOOL CHECKS, VERSUS OLD ROUTER/20B 58/100 AND OLD ROUTER/120B 71/100. ARABIZI IMPROVES 20/50 → 36/50. ALL FAILED READS HAVE REQUIRED TOOLS OFFERED; 26 PLANS STILL FAIL. TIMING IS OBSERVATIONAL. FULL ANSWER ACCURACY AND GENERAL ENABLEMENT REMAIN UNQUALIFIED; NORMAL MODEL/JEV MODE UNCHANGED.**
 
 ## 0. Current status and next work — 2026-10-08
+
+**2026-10-08 routing fixes and 20B regression pass complete:**
+[Results, limitations and next work](docs/evidence/chatbot-latency/darija-router-fix-results-20261008.md)
+record literal Arabizi routing vocabulary, class/section/subject and date-read
+dependencies, and filtered-read/ID/count prompt fixes. Unpaid previews supply all
+required groups on 62/62 read questions. One 100-question paid pass with Jev off
+scores 74/100, versus previous 20B 58/100; Arabizi rises 20/50 to 36/50, Arabic stays
+38/50. Actual offers contain required tools for all failed reads. Ten of 29 old
+120B failures now pass; 19 remain, and seven former 120B passes fail. Compared
+with previous 20B: 21 gains, five regressions. All failures remain in evidence.
+Mean complete response 1.45 seconds is observational only; known captured charges
+$0.01191781, no unknowns, zero classifiers, no benchmark retries. Correct offers
+do not guarantee correct execution: wrong filtered counts, missing reads and
+malformed channel-suffixed names remain. Keep the router fixes; do not enable 20B
+for every fallback on this evidence. Next work is populated filter/actor fixtures,
+malformed-call diagnosis and guarded templates for supported requests, then a
+validated combined fallback. No new owner-written corpus is needed. Normal model
+and Jev mode stay unchanged; the fixture is disabled/keyless/stopped. Concurrent
+dashboard and Najm Kit changes remain separate. The original frozen run is
+preserved; later type/lookup hardening leaves all 100 routing outputs unchanged.
 
 **2026-10-08 120B tool-only check complete:** [Results, scoring correction and next fixes](docs/evidence/chatbot-latency/darija-router120-check-results-20261008.md)
 record 100 new chats with the existing router, Jev off, no classifier calls,

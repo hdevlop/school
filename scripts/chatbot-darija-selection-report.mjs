@@ -59,7 +59,7 @@ if (import.meta.main) {
   const run = { ...segments.at(-1), protocol: segments[0].protocol,
     rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts) };
   const [corpus, registry, fixture] = parsed.slice(runPaths.length);
-  if (!['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check'].includes(run.protocol.purpose)) throw Error('Require the frozen Darija run');
+  if (!['darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix'].includes(run.protocol.purpose)) throw Error('Require the frozen Darija run');
   if (new Set(run.rows.map(row => row.caseId + '/' + row.experimentArm)).size !== run.rows.length) throw Error('Duplicate dispatch');
   const fixtureValues = Object.fromEntries(Object.entries(fixture).map(([key, content]) =>
     [key, JSON.parse(content.find(item => item.type === 'text').text)]));
@@ -113,7 +113,9 @@ if (import.meta.main) {
     limitations: ['Reused owner-reviewed wording and assistant labels; 50 linked families, not independent native evidence.',
       'Empty exam/attendance/teacher data cannot establish nonempty filtering accuracy.',
       'Final wording, clarification quality and calculated/filter answers need semantic review; tool-plan checks are not full answer accuracy.',
-      'Shortlist names captured only on router-first candidate requests; do not attribute other failures solely to retrieval.',
+      run.protocol.captureToolNames
+        ? 'Model-visible tool names are captured separately in the provider observer; preview alone does not prove executed plans or correct answers.'
+        : 'Shortlist names captured only on router-first candidate requests; do not attribute other failures solely to retrieval.',
       'Admin first-turn fixture only; student and other actor permissions are not qualified.'] };
   writeFileSync(outPath, JSON.stringify(report, null, 2) + '\n', { flag: 'wx' });
   console.log(JSON.stringify({ output: outPath, status: report.status, arms }));

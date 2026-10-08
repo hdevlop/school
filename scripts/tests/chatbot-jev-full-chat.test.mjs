@@ -4,6 +4,21 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, darijaComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
 
+test('fixed 20B regression pass freezes tools-only policy, no Jev and routing sources', () => {
+  const plan = darijaComparisonProtocol(undefined, undefined, 'fixed20b');
+  expect(plan.purpose).toBe('darija-router-20b-fix');
+  expect(plan.maxChats).toBe(100);
+  expect(plan.maxClassifications).toBe(0);
+  expect(plan.models).toEqual(['openai/gpt-oss-20b']);
+  expect(plan.jobs.every(job => job.mode === 'off')).toBe(true);
+  expect(plan.averageResponseLimitSeconds).toBeNull();
+  expect(plan.captureToolNames).toBe(true);
+  expect(plan.sourceHashes['packages/server/src/config/chatbotSystemPrompt.ts']).toBeString();
+  expect(plan.sourceHashes['packages/server/src/modules/chat/darijaRouting.ts']).toBeString();
+  expect(() => checkSource(plan)).not.toThrow();
+  expect(() => checkSource({...plan, averageResponseLimitSeconds: 2})).toThrow();
+});
+
 test('Darija comparison freezes three same-model paths and both scripts without French', () => {
   const protocol = darijaComparisonProtocol();
   expect(protocol.cases).toHaveLength(100);

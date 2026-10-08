@@ -1,0 +1,18 @@
+{
+  "scope": "School Darija routing, prompt, dependencies and benchmark reporting",
+  "checks": {
+    "relevantChatAndAnalyzerTests": { "passed": 377, "failed": 0 },
+    "scriptSuiteInitial": { "passed": 547, "failed": 2, "reason": "Five-second CLI test timeouts during concurrent build and benchmark" },
+    "isolatedCliRerun": { "passed": 28, "failed": 0, "timeoutMs": 30000, "includesBothInitialFailures": true },
+    "lint": "passed",
+    "rootTypecheck": "passed before final type annotation and Map hardening",
+    "finalProductionBuild": "passed, including Next TypeScript check",
+    "unpaidRoutingReadCases": { "requiredToolGroupsAvailable": 62, "total": 62 },
+    "finalCorpusRoutingCompatibility": { "cases": 100, "outputsChanged": 0 }
+  },
+  "normalModel": "openai/gpt-oss-120b",
+  "normalJevMode": "off",
+  "fixtureCleanedAndStopped": true,
+  "unrelatedDashboardAndPackageChangesExcluded": true,
+  "productionAcceptance": false
+}

@@ -9,7 +9,7 @@ if (!runPath || !usagePath || !outPath || existsSync(outPath)) throw Error('Supp
 const inputs = paths => paths.split(',').map(path => ({ path, bytes: readFileSync(path) }));
 const runInputs = inputs(runPath), usageInputs = inputs(usagePath);
 const segments = runInputs.map(input => JSON.parse(input.bytes.toString('utf8')));
-if (segments.some(run => !['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check'].includes(run.protocol.purpose))) throw Error('Require the frozen model comparison');
+if (segments.some(run => !['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison', 'darija-router-20b-repeat', 'darija-router-120b-check', 'darija-router-20b-fix'].includes(run.protocol.purpose))) throw Error('Require the frozen model comparison');
 const run = { ...segments.at(-1), protocol: segments[0].protocol,
   rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts),
   chatsDispatched: segments.reduce((sum, segment) => sum + segment.chatsDispatched, 0) };

@@ -1,0 +1,13 @@
+{
+  "path": "packages/server/src/modules/chat/darijaRouting.ts",
+  "before": {
+    "sourceSha256": "72aff2e7fc1566e69d34e09d4b8490b119529fb92926ea64529b641a0126391b",
+    "runtimeSha256": "8a0c6c6c7cad720598a7c4749765c1a4060d6182d634ec83fa498fc7c458dbee"
+  },
+  "after": {
+    "sourceSha256": "aa3bd8a3e5d1542e82bbec4e423e42346e01f07b7fb88bb01089bf8776ffb6ad",
+    "runtimeSha256": "8a0c6c6c7cad720598a7c4749765c1a4060d6182d634ec83fa498fc7c458dbee"
+  },
+  "runtimeUnchanged": true,
+  "note": "After the paid run, an explicit string[] annotation corrected Next build inference. Bun-transpiled runtime is byte-identical; original frozen plan retained."
+}

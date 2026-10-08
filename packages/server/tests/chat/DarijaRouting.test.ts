@@ -14,6 +14,24 @@ const questions = [...dataset('questions.json'), ...dataset('routing-cases.json'
 
 describe('rewriteDarijaForRouting', () => {
   it.each([
+    ['wrini ghiyab tlamid lyom 2026-10-08', 'اعرض غياب التلاميذ اليوم 2026-10-08'],
+    ['chhal mn tilmid f l9ism 6A?', 'كم عدد من تلميذ في القسم 6a?'],
+    ['3tini lista a9sam w nno9at riyadiyat', 'اعرض لائحة اقسام و النقاط الرياضيات'],
+    ['werini tlamd majach lyom', 'اعرض التلاميذ لم يحضر اليوم'],
+    ['sejjel tilmid ghayeb lyoum', 'سجل تلميذ غائب اليوم'],
+    ['bghit forod chher li fat', 'اريد اختبارات الشهر الذي الماضي'],
+  ])('routes unseen Arabizi wording without losing constraints: %s', (query, expected) => {
+    expect(rewriteDarijaForRouting(normalize(query))).toBe(expected);
+  });
+
+  it('preserves unknown names, IDs and codes rather than transliterating digits', () => {
+    expect(rewriteDarijaForRouting('werini nno9at dyal yassine ab9z 4b 2026-2027'))
+      .toBe('اعرض النقاط yassine ab9z 4b 2026-2027');
+    expect(rewriteDarijaForRouting('werini nno9at constructor')).toBe('اعرض النقاط constructor');
+    for (const query of ['list students in class 4b', 'show f and w', 'la liste des classes', 'imta'])
+      expect(rewriteDarijaForRouting(query)).toBe(query);
+  });
+  it.each([
     ['شحال من تلميذ وشحال من أستاذ كاينين هاد العام؟', 'كم عدد تلميذ وكم عدد استاذ يوجد هذا العام؟'],
     ['شحال من طوبيس عندنا؟', 'كم عدد حافله عندنا؟'],
     ['شكون اللي ما جاش البارح؟', 'من الذي لم يحضر امس؟'],

@@ -1,0 +1,4479 @@
+{
+  "version": 1,
+  "status": "completed",
+  "newPaidRequests": 0,
+  "productionAcceptance": false,
+  "source": [
+    {
+      "path": "docs/evidence/chatbot-latency/darija-router-fix-run-20261008.json",
+      "sha256": "d50cd17ee0486247cf6407d8543033e7ebf9e1e514a6834bdc38f3a3db9c5132"
+    },
+    {
+      "path": "datasets/chatbot-latency/darija-tool-selection-20261008.json",
+      "sha256": "1c94efddc353c48bfb122d3624fc69afa5180effcaecc75c983e8fb649bd831a"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-router-fix-tools-20261008.json",
+      "sha256": "2aedf76789efe629a412c356b7fa58c910a3c64df8c389f21c0a0e95c55ec638"
+    },
+    {
+      "path": "docs/evidence/chatbot-latency/darija-router-fix-fixture-data-20261008.json",
+      "sha256": "822914cdcf17d464a8c5698e4ecd2479cc51008cbcd06b4eac10b913ce115511"
+    }
+  ],
+  "analyzerSha256": "3ab28776704e79f36511a0e5c568f8338280f8af93b3606b3260fda05fe96510",
+  "primaryMetric": "frozen tool-plan and argument checks; no-error replies alone are not success",
+  "classifierAcceptedWrong": 0,
+  "arms": [
+    {
+      "arm": "20b-coreweave-off",
+      "attempted": 100,
+      "expected": 100,
+      "toolPlanChecksPassed": 74,
+      "failures": 26,
+      "pendingFinalReview": 18,
+      "completedStreams": 100,
+      "averageResponseSeconds": 1.4473815679999993,
+      "averageTimeGateApplied": false,
+      "averageUnderTwoSeconds": null,
+      "scripts": {
+        "ary": {
+          "attempted": 50,
+          "toolPlanChecksPassed": 38
+        },
+        "ary-latn": {
+          "attempted": 50,
+          "toolPlanChecksPassed": 36
+        }
+      },
+      "pairedFamiliesPassed": 33,
+      "familyCount": 50,
+      "failureCases": [
+        {
+          "caseId": "jev-operator-q10",
+          "issues": [
+            "unknown_tool",
+            "unexpected_count_tool"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q13",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q14",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q28",
+          "issues": [
+            "missing_required_tool:classes_get_classes|sections_get_sections"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q29",
+          "issues": [
+            "unknown_tool"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q33",
+          "issues": [
+            "tool_failed_or_blocked",
+            "missing_required_tool:exams_get_all"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q34",
+          "issues": [
+            "missing_required_tool:exams_get_all",
+            "missing_arguments:students_get_student_count"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q35",
+          "issues": [
+            "missing_required_tool:attendance_get_all|attendance_get_by_date"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q37",
+          "issues": [
+            "missing_required_tool:classes_get_classes",
+            "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q38",
+          "issues": [
+            "missing_required_tool:classes_get_classes",
+            "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q58",
+          "issues": [
+            "missing_required_tool:teachers_get_teacher_count",
+            "unexpected_count_tool"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q63",
+          "issues": [
+            "unknown_tool",
+            "unexpected_count_tool"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q64",
+          "issues": [
+            "unknown_tool",
+            "unexpected_count_tool"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q65",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q66",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q67",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q68",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q69",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q70",
+          "issues": [
+            "missing_required_tool:classes_get_classes"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q78",
+          "issues": [
+            "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q79",
+          "issues": [
+            "tool_failed_or_blocked",
+            "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q80",
+          "issues": [
+            "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q91",
+          "issues": [
+            "missing_required_tool:students_get_students"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q92",
+          "issues": [
+            "missing_required_tool:students_get_students"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q93",
+          "issues": [
+            "unexpected_data_tool"
+          ]
+        },
+        {
+          "caseId": "jev-operator-q98",
+          "issues": [
+            "missing_required_tool:classes_get_classes|sections_get_sections"
+          ]
+        }
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "caseId": "jev-operator-q01",
+      "familyId": "jev-operator-f01",
+      "language": "ary",
+      "query": "سلام عليكم، واش نقدر نسولك على شي حاجة؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.7560593000000002,
+      "tools": [],
+      "text": "وعليكم السلام! كيمكنك تسولني على أي حاجة تخص الدارسين، الحضور، التقييمات، الفواتير، الامتحانات، أو غيرها. شنو بغيت تعرف؟",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q02",
+      "familyId": "jev-operator-f01",
+      "language": "ary-latn",
+      "query": "salam 3likom, wach n9der nsowlek 3la chi 7aja?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3090362,
+      "tools": [],
+      "text": "وعليكم السلام! بالطبع، قول لي شنو هو الطلب ديالك، وأنا غادي نعاونك إليه.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q03",
+      "familyId": "jev-operator-f02",
+      "language": "ary",
+      "query": "الله يجازيك بخير، هادشي اللي كنت محتاج.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.1263664,
+      "tools": [],
+      "text": "أهلاً! إذا احتجت أي معلومة إضافية عن الصفوف، حضور أو درجات، أنا هنا.",
+      "reply": {
+        "source": "model",
+        "language": "ar"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q04",
+      "familyId": "jev-operator-f02",
+      "language": "ary-latn",
+      "query": "lah yjazik bikhir, hadchi li kent me7taj.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4040037999999995,
+      "tools": [],
+      "text": "بارك الله فيك، مرحبا بيك مع الخدمة ديالنا. ما كاين حتى حاجة أخرى؟",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q05",
+      "familyId": "jev-operator-f03",
+      "language": "ary",
+      "query": "وريني التواريخ ديال الفروض الجايين فالمدرسة كاملة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "upcoming_exams",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_upcoming_exams",
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve exams; core Jev must decline this intent.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.9786064000000005,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ماكاينش فحال ديال فروض جايين فالحين فالسنة الدراسية 2026‑2027. إذا بغيتي أي فلترة د أخرى، قول لي!",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q06",
+      "familyId": "jev-operator-f03",
+      "language": "ary-latn",
+      "query": "werini tawarikh dyal lforod jayin f lmdrasa kamla.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "upcoming_exams",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_upcoming_exams",
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve exams; core Jev must decline this intent.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4158498999999993,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ماكايناش أي امتحانات مقبلة فهاد العام الدراسي.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q07",
+      "familyId": "jev-operator-f04",
+      "language": "ary",
+      "query": "بغيت غير العدد ديال التلاميذ اللي عندنا كاملين، بلا لائحة ديال السميات.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3056954000000005,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "العدد ديال التلاميذ فالسنة الدراسية 2026-2027 هو 8.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q08",
+      "familyId": "jev-operator-f04",
+      "language": "ary-latn",
+      "query": "bghit ghir l3adad dyal tlamd li 3ndna kamlin, bla lista dyal smiyat.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4897487,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "مرحبا! عدد طلاب المدرسة فالسنة الدراسية 2026-2027 هو **8**.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q09",
+      "familyId": "jev-operator-f05",
+      "language": "ary",
+      "query": "شحال من أستاذ كيقري فالمدرسة ديالنا دابا؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [
+        "numeric_fact_not_visible"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.1072574000000004,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "ما كاين حتى أستاذ فهاد العام الدراسي.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q10",
+      "familyId": "jev-operator-f05",
+      "language": "ary-latn",
+      "query": "ch7al mn ostad kay9erri f lmdrasa dyalna daba?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "unknown_tool",
+        "unexpected_count_tool"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 4.760389700000002,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "students_get_student_count<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_student_count<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_student_count<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "سلام! فهذ العام الدراسي (2026-2027) ما عندنا غير 0 معلم كايمشي فالمدرسة.  اختار عمار آخر ولا شوف تقارير أخرى فالدَاشبورد.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q11",
+      "familyId": "jev-operator-f06",
+      "language": "ary",
+      "query": "عطيني عدد التلاميذ بوحدو وعدد الأساتذة بوحدو، ديال المدرسة كاملة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.3359244999999973,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "عدد التلاميذ 8، وعدد الأساتذة 0.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q12",
+      "familyId": "jev-operator-f06",
+      "language": "ary-latn",
+      "query": "3tini 3adad tlamd bo7do w 3adad lasatida bo7do, dyal lmdrasa kamla.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.3561088999999993,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "السلام! في العام الدراسي 2026‑2027، لمدرسة ديالنا كاينة 8 طلبة و0 معلمين.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q13",
+      "familyId": "jev-operator-f07",
+      "language": "ary",
+      "query": "شنو هما الأقسام اللي عندنا فالمدرسة؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5304961000000004,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "الأقسام اللي عندنا في هاد العام الدراسي هو:\n\n- History 2026-2027: A, B",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q14",
+      "familyId": "jev-operator-f07",
+      "language": "ary-latn",
+      "query": "chno homa l2a9sam li 3ndna f lmdrasa?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.6237890000000006,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "حاسبة ديال المدرسة فالسنة 2026-2027 عندنا جوج أقسام فالمادة التاريخ:\n\n- A  \n- B",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q15",
+      "familyId": "jev-operator-f08",
+      "language": "ary",
+      "query": "وريني شكون اللي حاضر وشكون اللي غايب من التلاميذ اليوم فالمدرسة كاملة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4816813000000002,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ماكاينْ حتى سجل حضور/غياب ديال تلاميذ فهاد النهار فالأداء ديال المدرسة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q16",
+      "familyId": "jev-operator-f08",
+      "language": "ary-latn",
+      "query": "werini chkoun li 7ader w chkoun li ghayeb mn tlamd lyoum f lmdrasa kamla.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.021997099999997,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ماكاين حتى واحد مرحب في المدرسة اليوم وماكاين حتى غايب، حيث القائمتين خاليتين.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q17",
+      "familyId": "jev-operator-f09",
+      "language": "ary",
+      "query": "زيد ليا تلميذ جديد فالقسم، من بعد نعطيك المعلومات ديالو.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.45396689999999945,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q18",
+      "familyId": "jev-operator-f09",
+      "language": "ary-latn",
+      "query": "zid liya tilmid jdid f l9ism, mn b3d n3tik lma3lomat dyalo.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.6407223000000013,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q19",
+      "familyId": "jev-operator-f10",
+      "language": "ary",
+      "query": "بدل نمرة التيليفون ديال هاد ولي الأمر.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.3497381000000023,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q20",
+      "familyId": "jev-operator-f10",
+      "language": "ary-latn",
+      "query": "beddel nmra dyal tilifon dyal had wali l2amr.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.5566978999999992,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q21",
+      "familyId": "jev-operator-f11",
+      "language": "ary",
+      "query": "حيد هاد الخلاص اللي تسجل بالغلط.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.3992751999999964,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q22",
+      "familyId": "jev-operator-f11",
+      "language": "ary-latn",
+      "query": "7iyed had lkhlas li tsejjel b lghalat.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.5079733999999954,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q23",
+      "familyId": "jev-operator-f12",
+      "language": "ary",
+      "query": "سجل هاد التلميذ غايب اليوم.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.42100330000000397,
+      "tools": [],
+      "text": "ما نقدرش نسجل أو نبدل الحضور والغياب هنا. خاصك تستعمل صفحة الحضور والغياب فلوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q24",
+      "familyId": "jev-operator-f12",
+      "language": "ary-latn",
+      "query": "sejjel had tilmid ghayeb lyoum.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.28956899999999586,
+      "tools": [],
+      "text": "ما نقدرش نسجل أو نبدل الحضور والغياب هنا. خاصك تستعمل صفحة الحضور والغياب فلوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q25",
+      "familyId": "jev-operator-f13",
+      "language": "ary",
+      "query": "إلى بغيت نزيد تلميذ جديد بوحدي، شنو خاصني ندير؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "How to create a student oneself; explanation, not mutation.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.293173499999997,
+      "tools": [],
+      "text": "ما يمكنش هنا توَضع تلميذء جديد بنفسك. خاصك تفعل ذلك عبر واجهة لوحة التحكم (Dashboard) في القسم ديال التلاميذ.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q26",
+      "familyId": "jev-operator-f13",
+      "language": "ary-latn",
+      "query": "ila bghit nzid tilmid jdid b wa7di, chno khasni ndir?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "How to create a student oneself; explanation, not mutation.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3591213999999963,
+      "tools": [],
+      "text": "مايمكنش هنا تدير إلحاق طلاب جدد ولا تغييرات أخرى. خصك تدخل لوحة الإدارة وتستعمل صفحة “إضافة طالب” باش تدير التسجيل الجديد.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q27",
+      "familyId": "jev-operator-f14",
+      "language": "ary",
+      "query": "شحال من تلميذ كاين غير فالسادس ابتدائي؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes",
+            "sections_get_sections"
+          ]
+        ],
+        "reason": "Resolve sixth primary class first. Fixture contains no such class; do not substitute school total.",
+        "discoveryOnly": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.8650678000000043,
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 1
+          }
+        }
+      ],
+      "text": "عذرًا، ما عنديش المعلومة مباشرة على عدد التلاميذ فالسادسة ابتدائي. واش بغيتي تعرفي العدد ديال التلاميذ فكل فرقة معينة (مثلاً 6A ولا 6B) ولا فكل الصف كامل؟ إذا عندك لاسم أو ID ديال الفرقة، نقدر نطلع العدد.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q28",
+      "familyId": "jev-operator-f14",
+      "language": "ary-latn",
+      "query": "ch7al mn tilmid kayn ghir f ssadis ibtida2i?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes",
+            "sections_get_sections"
+          ]
+        ],
+        "reason": "Resolve sixth primary class first. Fixture contains no such class; do not substitute school total.",
+        "discoveryOnly": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5228631000000024,
+      "tools": [],
+      "text": "معليش، ماقدرش نحدّد العدد ديال الطلبي فالابتدائي غير مع المعلومات اللي عندي هنا. خاصك تختار فالدشبورد العام أو تدير فلترة على الصنف/القسم المطلوب.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q29",
+      "familyId": "jev-operator-f15",
+      "language": "ary",
+      "query": "جمع ليا عدد التلاميذ مع عدد الأساتذة وعطيني المجموع.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "reason": "Retrieve both counts then calculate the sum; needs_llm is not the final answer.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "unknown_tool"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 3.0568007999999973,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "students_get_student_count<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "عدد التلاميذ هو 8 وعدد الأساتذة هو 0، المجموع هو 8.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q30",
+      "familyId": "jev-operator-f15",
+      "language": "ary-latn",
+      "query": "jme3 liya 3adad tlamd m3a 3adad lasatida w 3tini lmajmou3.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "reason": "Retrieve both counts then calculate the sum; needs_llm is not the final answer.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.415082499999997,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "سلام! فالسنة الدراسية 2026‑2027، عندنا 8 طلاب و 0 معلمين، فعالمجموع يكون 8. إذا بغيتي معلومات أخرى، قول لي.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q31",
+      "familyId": "jev-operator-f16",
+      "language": "ary",
+      "query": "عطيني السميات ديال الأساتذة اللي كيقريو الرياضيات.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teachers"
+          ]
+        ],
+        "reason": "Retrieve teachers; empty teacher fixture supports no matches. Nonempty results would require maths subject filtering.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.8753577000000006,
+      "tools": [
+        {
+          "name": "teachers_get_teachers",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما لقيتش أي معلم في هاد العام ديال 2026-2027 كيقري الرياضيات. إذا بغيتي تدير بحث آخر ولا معطيات إضافية، عافاك شوفوا ديال هذي الغي؟",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q32",
+      "familyId": "jev-operator-f16",
+      "language": "ary-latn",
+      "query": "3tini smiyat dyal lasatida li kay9erriw riyadiyat.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teachers"
+          ]
+        ],
+        "reason": "Retrieve teachers; empty teacher fixture supports no matches. Nonempty results would require maths subject filtering.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.7765005999999994,
+      "tools": [
+        {
+          "name": "teachers_get_teachers",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ماكاينوش أي معلمي رياضيات مسجّلين فهاد السنة الدراسية.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q33",
+      "familyId": "jev-operator-f17",
+      "language": "ary",
+      "query": "شحال من فرض عند التلاميذ هاد الشهر؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve all selected-year exams, then restrict to current month; future-only query would omit earlier exams this month.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "tool_failed_or_blocked",
+        "missing_required_tool:exams_get_all"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.7931716000000015,
+      "tools": [
+        {
+          "name": "assessments_get_upcoming_assessments",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "ما قدرّاش نقول ليك، ما كاينش حق قانوني نافيهميه هنا. حاول تشوف هاد العدد مباشرة في الداشبورد.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q34",
+      "familyId": "jev-operator-f17",
+      "language": "ary-latn",
+      "query": "ch7al mn fard 3nd tlamd had chher?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve all selected-year exams, then restrict to current month; future-only query would omit earlier exams this month.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "missing_required_tool:exams_get_all",
+        "missing_arguments:students_get_student_count"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4251172999999981,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": false,
+          "outcome": "error"
+        }
+      ],
+      "text": "ما عنديش أداة باش نقدر نجاوب عليك على الرقم ديال الطلبة لهذا الشهر. ياريت تستخدم لوحة التحكم للإحصائيات ديال الطلبة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q35",
+      "familyId": "jev-operator-f18",
+      "language": "ary",
+      "query": "وريني الغياب ديال التلاميذ فالشهر اللي فات.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "reason": "Retrieve student attendance, then filter absent and previous month; today-only lookup is wrong.",
+        "studentAttendance": true,
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "missing_required_tool:attendance_get_all|attendance_get_by_date"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.4872993999999964,
+      "tools": [],
+      "text": "ما يمكنش نعطيك تفاصيل الغياب ديال جميع التلاميذ فالشهر اللي فات من خلال هاد الواجهة، حيث ما كايناش دالة مباشرة لطلب جميع السجلات على أساس الشهر. الأفضل تشوف القياس ديال الحضور فالبـرداش أو تسقسي مدير القسم للتحصيل ديال تلك المعلومة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q36",
+      "familyId": "jev-operator-f18",
+      "language": "ary-latn",
+      "query": "werini lghiyab dyal tlamd f chher li fat.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "reason": "Retrieve student attendance, then filter absent and previous month; today-only lookup is wrong.",
+        "studentAttendance": true,
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5147070999999996,
+      "tools": [
+        {
+          "name": "attendance_get_all",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "type": "student",
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "مفيّتش أي سجل حاظر أو غياب لطلاب في الشهر اللي فات حسب البيانات المتاحة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q37",
+      "familyId": "jev-operator-f19",
+      "language": "ary",
+      "query": "شنو هما الأقسام اللي فيهم كثر من تلاتين تلميذ؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ],
+          [
+            "students_get_student_count",
+            "students_get_students",
+            "classes_get_class_students",
+            "sections_get_students"
+          ]
+        ],
+        "reason": "Resolve classes and student totals before comparing with 30. Missing class counts require student lookup.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes",
+        "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.9542867999999944,
+      "tools": [],
+      "text": "ما تقدرش نحدّد هاد القيم هنا. خاصك كتبتلي أقسام الوجهة اللي حابة تعرف فيها العدد ولا تعطي دقة وحدة باش نوصل لك بالبيانات الدقيقة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q38",
+      "familyId": "jev-operator-f19",
+      "language": "ary-latn",
+      "query": "chno homa l2a9sam li fihom kter mn tlatin tilmid?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ],
+          [
+            "students_get_student_count",
+            "students_get_students",
+            "classes_get_class_students",
+            "sections_get_students"
+          ]
+        ],
+        "reason": "Resolve classes and student totals before comparing with 30. Missing class counts require student lookup.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes",
+        "missing_required_tool:students_get_student_count|students_get_students|classes_get_class_students|sections_get_students"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.0674977999999973,
+      "tools": [],
+      "text": "مع الأسف ما أقدرش نحدّث أو نحصِّي الأعداد ديال الطلبة فكل كلّع على حدة دابا. المطلوب حيت ما كايناش ‎tool‎ مباشر لتنظيم الأعداد حسب الكّلّع مستعملْ. إذا بغيتي تعرف الأنشطة ولا الأحجام ديال كلّع، كيمكن ليك تسمح لينا بشي طلب خاص ولا تتعرّف على الأداة المناسبة فداك الداشبورد.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q39",
+      "familyId": "jev-operator-f20",
+      "language": "ary",
+      "query": "وبالنسبة لهادوك، شنو بان ليك؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "Those has no referent in this first-turn benchmark. Ask for clarification.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.532573199999999,
+      "tools": [],
+      "text": "ماشي واضح شنو كتعني بـ\"هادودك\". واش بغيتي نلخّص نتائج داذالي، ولا كتشوف شي جدول أو تقارير محددة؟ عطيني تفاصيل شنو باغي تعرف.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q40",
+      "familyId": "jev-operator-f20",
+      "language": "ary-latn",
+      "query": "w b nnisba lhadok, chno ban lik?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "Those has no referent in this first-turn benchmark. Ask for clarification.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3024159999999974,
+      "tools": [],
+      "text": "ما فهمتش السؤال مزيان. واش بغيتي تعرف معلومات على شي حوايج محددين (مثلاً طلاب، فصول، اختبارات...)؟ قدم تفاصيل أكثر باش نقدر نعاونك.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q41",
+      "familyId": "jev-operator-f21",
+      "language": "ary",
+      "query": "صباح الخير، شنو تقدر تعاوني فيه؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.282579500000007,
+      "tools": [],
+      "text": "صباح الخير! نقدر نعاونيك باش نطلّق لك ملخّات على المدرسة بحال عدد الطلبة، الحضور، النّتائج، الرسوم، الامتحانات القادِمة، وغيرها. مثلاً، نقدر نعطيك إحصائيات اليوم أو جدول الامتحانات الجاية. كيفاه نعاونك؟",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q42",
+      "familyId": "jev-operator-f21",
+      "language": "ary-latn",
+      "query": "sba7 lkhir, chno t9der t3awenni fih?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 3.4095943000000117,
+      "tools": [],
+      "text": "صباح الخير! كنقدر نعاونك فالملخصات ديال الطلبات، الحضور، النمرات، الفواتير، الامتحانات، وحتى الإحصائيات العامة ديال المدرسة. مثلا، يمكن نوريك عدد الطلبة، النمرات الصايبة مؤخرًا، أو جدول الامتحانات الجايّة. شنو محتاج تعرف اليوم؟",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q43",
+      "familyId": "jev-operator-f22",
+      "language": "ary",
+      "query": "بسلامة، نتلاقاو غدا إن شاء الله.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.0973983000000007,
+      "tools": [],
+      "text": "أهلاً وسهلاً! كيف يمكنني مساعدتك اليوم؟",
+      "reply": {
+        "source": "model",
+        "language": "ar"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q44",
+      "familyId": "jev-operator-f22",
+      "language": "ary-latn",
+      "query": "bslama, ntla9aw ghedda nchallah.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.2921322999999976,
+      "tools": [],
+      "text": "سلام! شنو اللي يمكن نعاونك فيه اليوم؟",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q45",
+      "familyId": "jev-operator-f23",
+      "language": "ary",
+      "query": "مزيان بزاف، شكرا على المساعدة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.2298351000000112,
+      "tools": [],
+      "text": "عفاك، مرحبا! إيلا بغيتي تعرف أي معلومات على المدرسة بحال الدرجات، الحضور، الفواتير أو أي أمر آخر، سولو وأنا نعاونك. شكراً دابا على المتابعة!",
+      "reply": {
+        "source": "model",
+        "language": "ar"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q46",
+      "familyId": "jev-operator-f23",
+      "language": "ary-latn",
+      "query": "mzyan bzaf, chokran 3la lmousa3ada.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "small_talk",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "Greeting; no school-data lookup needed.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.2256178000000073,
+      "tools": [],
+      "text": "مرحبا! كنقدملك المساعدة فحسابات الدار، الحضور، التقديرات، الرسوم، والامتحانات. كمثال، تقدر تسول على عدد الطلبة، أو ترتيبات الحضور اليوم، أو ماشي امتحانات قادمة. شكرا!",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q47",
+      "familyId": "jev-operator-f24",
+      "language": "ary",
+      "query": "شحال من تلميذ مسجل عندنا هاد العام؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3674960999999894,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "اهلا! شحال من تلميذ مسجل عندنا هاد العام؟  النتيجة هي 8 تلاميذ.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q48",
+      "familyId": "jev-operator-f24",
+      "language": "ary-latn",
+      "query": "ch7al mn tilmid msejjel 3ndna had l3am?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4464779999999882,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "Answer in Moroccan Darija.السّنة الدراسية 2026-2027 فيها 8 طلاب مسجّل.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q49",
+      "familyId": "jev-operator-f25",
+      "language": "ary",
+      "query": "قولي غير شحال من تلميذ كاين فالمدرسة كاملة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.2730228999999964,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "هناك 8 طلاب في المدرسة كاملة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q50",
+      "familyId": "jev-operator-f25",
+      "language": "ary-latn",
+      "query": "gouli ghir ch7al mn tilmid kayn f lmdrasa kamla.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4621021000000036,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "حَدَثْنَا، فـهاد العام الدراسي 2026-2027 كاين **8 تلاميذ** فالمدرسة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q51",
+      "familyId": "jev-operator-f26",
+      "language": "ary",
+      "query": "عافاك، بغيت نعرف شحال فينا ديال التلاميذ.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.6733910000000032,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "مرحباً! في العام الدراسي 2026‑2027، عدّنا 8 تلاميذ. إذا حاب تعرف أكثر على أرقام أخرى أو بيانات أخرى، قول لي.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q52",
+      "familyId": "jev-operator-f26",
+      "language": "ary-latn",
+      "query": "3afak, bghit n3ref ch7al fina dyal tlamd.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ]
+        ],
+        "answerFacts": [
+          8
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3348451999999962,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "سلام!  فالسنة الدراسية 2026-2027 عندنا **8 طلاب**.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q53",
+      "familyId": "jev-operator-f27",
+      "language": "ary",
+      "query": "شحال عندنا ديال الأساتذة فالمدرسة؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.2954685000000026,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "شحال عندنا ديال الأساتذة فالمدرسة؟  \nعدد الأساتذة في العام الدراسي 2026‑2027 هو **0**.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q54",
+      "familyId": "jev-operator-f27",
+      "language": "ary-latn",
+      "query": "ch7al 3ndna dyal lasatida f lmdrasa?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [
+        "numeric_fact_not_visible"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5934423000000097,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "ما كايناش معلمين فالسنة الدراسية 2026‑2027.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q55",
+      "familyId": "jev-operator-f28",
+      "language": "ary",
+      "query": "عطيني غير العدد ديال الأساتذة، ماشي السميات ديالهم.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.326606899999999,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "We got count 0.عدد الأساتذة هو 0.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q56",
+      "familyId": "jev-operator-f28",
+      "language": "ary-latn",
+      "query": "3tini ghir l3adad dyal lasatida, machi smiyat dyalhom.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3516005000000004,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "عدد الطاقم التدريسي هو 0.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q57",
+      "familyId": "jev-operator-f29",
+      "language": "ary",
+      "query": "الأساتذة ديالنا شحال هوما كاملين؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3974333000000043,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "الأساتذة ديالنا 0 كاملين فالسنة الدراسية 2026-2027.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q58",
+      "familyId": "jev-operator-f29",
+      "language": "ary-latn",
+      "query": "lasatida dyalna ch7al homa kamlin?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:teachers_get_teacher_count",
+        "unexpected_count_tool"
+      ],
+      "reviewFlags": [
+        "numeric_fact_not_visible"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4549254999999977,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "السّلام، عدّلتّوا ديالنا هاد العام هو 8 طلاب.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q59",
+      "familyId": "jev-operator-f30",
+      "language": "ary",
+      "query": "شحال من تلميذ وشحال من أستاذ كاينين عندنا؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.049431899999996,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "عدد التلاميذ هو 8، وعدد الأساتذة هو 0.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q60",
+      "familyId": "jev-operator-f30",
+      "language": "ary-latn",
+      "query": "ch7al mn tilmid w ch7al mn ostad kaynin 3ndna?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.290135300000009,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "مرحبا! فالسنة الدراسية 2026-2027، عندنا 8 طلاب و0 أستاذ.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q61",
+      "familyId": "jev-operator-f31",
+      "language": "ary",
+      "query": "بغيت العدد ديال التلاميذ والعدد ديال الأساتذة بجوج.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.2533293999999877,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "العدد ديال التلاميذ هو 8، والعدد ديال الأساتذة هو 0.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q62",
+      "familyId": "jev-operator-f31",
+      "language": "ary-latn",
+      "query": "bghit l3adad dyal tlamd w l3adad dyal lasatida bjouj.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.5089098999999986,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "ماشي مشكل، فهاد العام الدراسي 2026‑2027:\n\n- عدد التلاميذ: 8  \n- عدد الأساتذة: 0",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q63",
+      "familyId": "jev-operator-f32",
+      "language": "ary",
+      "query": "عطيني الأرقام ديال المدرسة: التلاميذ شحال والأساتذة شحال.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "unknown_tool",
+        "unexpected_count_tool"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.837389200000005,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "students_get_student_count<|channel|>commentary",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "المدرسة فيها 8 تلاميذ و0 أساتذة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q64",
+      "familyId": "jev-operator-f32",
+      "language": "ary-latn",
+      "query": "3tini l2ar9am dyal lmdrasa: tlamd ch7al w lasatida ch7al.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "student_and_teacher_count",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_student_count"
+          ],
+          [
+            "teachers_get_teacher_count"
+          ]
+        ],
+        "answerFacts": [
+          8,
+          0
+        ],
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "unknown_tool",
+        "unexpected_count_tool"
+      ],
+      "reviewFlags": [
+        "numeric_fact_not_visible"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 3.5754669999999895,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        },
+        {
+          "name": "students_get_student_count<|channel|>",
+          "input": false,
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "سلم، عندنا فـ 2026-2027:  \n\n- عدد الطلبة: **٨**  \n- عدد الأساتذة: **٠**.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q65",
+      "familyId": "jev-operator-f33",
+      "language": "ary",
+      "query": "عطيني لائحة ديال الأقسام كاملين.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.7225964999999996,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "الجدول ديال الأقسام فهاد العام الدراسي هو:\n\n* History 2026‑2027 : A, B",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q66",
+      "familyId": "jev-operator-f33",
+      "language": "ary-latn",
+      "query": "3tini lista dyal l2a9sam kamlin.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4999930000000021,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "هاداش هي 2 أقسام ديال القسم ديال التاريخ فالسنة الدراسية 2026‑2027:  \n\n- A  \n- B",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q67",
+      "familyId": "jev-operator-f34",
+      "language": "ary",
+      "query": "شمن أقسام كاينين فالمدرسة؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.8965027000000119,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "ديك أقسام اللي لهاد العام الدراسي 2026-2027 هي:  \n**الفصل History 2026-2027**  \n- A  \n- B",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q68",
+      "familyId": "jev-operator-f34",
+      "language": "ary-latn",
+      "query": "chmen a9sam kaynin f lmdrasa?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5896346000000048,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "دابا فـ الدرس، كاين قسمين فـ التاريخ: A و B.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q69",
+      "familyId": "jev-operator-f35",
+      "language": "ary",
+      "query": "وريني الأقسام ديال المدرسة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5982035999999935,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "الأقسام ديال المدرسة فالسنة 2026-2027 هي:\n\n- History 2026-2027 – القسم A  \n- History 2026-2027 – القسم B",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q70",
+      "familyId": "jev-operator-f35",
+      "language": "ary-latn",
+      "query": "werini l2a9sam dyal lmdrasa.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "class_list",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes"
+          ]
+        ],
+        "reason": "Existing class_list contract asks classes, not only section names; ambiguity must not silently change the target.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.0270426999999909,
+      "tools": [],
+      "text": "شنو بالضبط باغي تشوف؟ واش القواعد (الجدول الزمني ديال الحصص)، ولا الامتحانات؟ عطينا تحديد باش نقدر نرد عليك بالمعطيات اللي دازة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q71",
+      "familyId": "jev-operator-f36",
+      "language": "ary",
+      "query": "شكون غايب اليوم من التلاميذ؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.6337688000000052,
+      "tools": [
+        {
+          "name": "attendance_get_by_date",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "date": "2026-10-08",
+            "type": "student"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "عذراً، لا يوجد أي سجلات غياب مذكورة للطلاب اليوم في العام الدراسي 2026-2027.",
+      "reply": {
+        "source": "model",
+        "language": "ar"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q72",
+      "familyId": "jev-operator-f36",
+      "language": "ary-latn",
+      "query": "chkoun ghayeb lyoum mn tlamd?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4283576000000031,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ماكاش حتى طالب غايب فهاد اليوم.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q73",
+      "familyId": "jev-operator-f37",
+      "language": "ary",
+      "query": "بغيت نشوف الحضور ديال التلاميذ اليوم فالمدرسة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5480031000000016,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما كاين حتى شي سجل ديال الحضور ولا الغياب فهاد التاريخ.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q74",
+      "familyId": "jev-operator-f37",
+      "language": "ary-latn",
+      "query": "bghit nchof l7oudour dyal tlamd lyoum f lmdrasa.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.4052446999999957,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ماكاين حتى حضور ولا غياب لليوم هادكُيم.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q75",
+      "familyId": "jev-operator-f38",
+      "language": "ary",
+      "query": "كيفاش داير الحضور اليوم فالمدرسة؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3683213999999861,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "لا توجد سجلات حضور أو غياب مسجلة لهذا التاريخ.",
+      "reply": {
+        "source": "model",
+        "language": "ar"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q76",
+      "familyId": "jev-operator-f38",
+      "language": "ary-latn",
+      "query": "kifach dayer l7oudour lyoum f lmdrasa?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "attendance_today",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "attendance_get_today_students",
+            "attendance_get_today_all",
+            "attendance_get_by_date"
+          ]
+        ],
+        "studentAttendance": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5708176000000094,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما كايناش سجلات حضور للطلاب اليوم فهاد العام الدراسي.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q77",
+      "familyId": "jev-operator-f39",
+      "language": "ary",
+      "query": "إمتى الفرض الجاي؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "upcoming_exams",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_upcoming_exams",
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve exams; core Jev must decline this intent.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5276267999999982,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "لا توجد فصول امتحانات قادمة في السنة الأكاديمية 2026‑2027.",
+      "reply": {
+        "source": "model",
+        "language": "ar"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q78",
+      "familyId": "jev-operator-f39",
+      "language": "ary-latn",
+      "query": "imta lfard jay?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "upcoming_exams",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_upcoming_exams",
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve exams; core Jev must decline this intent.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.8910717000000005,
+      "tools": [],
+      "text": "عفاك عطيني اسم الطالب أو تذكرة له باش نقدر نوجّه ليك المواعيد ديالو.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q79",
+      "familyId": "jev-operator-f40",
+      "language": "ary",
+      "query": "واش كاينين شي فروض هاد الأيام الجاية؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "upcoming_exams",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_upcoming_exams",
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve exams; core Jev must decline this intent.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "tool_failed_or_blocked",
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.7057816999999922,
+      "tools": [
+        {
+          "name": "assessments_get_upcoming_assessments",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "عذراً، ما نسمحش بالوصول لهاد البيانات من هاد الأداة. للتفاصيل، ماعندكش الصلاحية باش تشوف فروض الجاية عبر الداشبورد.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q80",
+      "familyId": "jev-operator-f40",
+      "language": "ary-latn",
+      "query": "wach kaynin chi forod had liyam jaya?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "upcoming_exams",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "exams_get_upcoming_exams",
+            "exams_get_all"
+          ]
+        ],
+        "reason": "Retrieve exams; core Jev must decline this intent.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:exams_get_upcoming_exams|exams_get_all"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.8691459000000032,
+      "tools": [
+        {
+          "name": "exams_get_today_exams",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 0
+          }
+        }
+      ],
+      "text": "ما لقاتش شي امتحان فهاد النهار.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q81",
+      "familyId": "jev-operator-f41",
+      "language": "ary",
+      "query": "سجل هاد التلميذة حاضرة اليوم.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.2575493000000133,
+      "tools": [],
+      "text": "ما نقدرش نسجل أو نبدل الحضور والغياب هنا. خاصك تستعمل صفحة الحضور والغياب فلوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q82",
+      "familyId": "jev-operator-f41",
+      "language": "ary-latn",
+      "query": "sejjel had tilmida 7adra lyoum.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.22568529999998282,
+      "tools": [],
+      "text": "ما نقدرش نسجل أو نبدل الحضور والغياب هنا. خاصك تستعمل صفحة الحضور والغياب فلوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q83",
+      "familyId": "jev-operator-f42",
+      "language": "ary",
+      "query": "صيفط إعلان للواليدين بلي غدا عطلة.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.29667759999999543,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q84",
+      "familyId": "jev-operator-f42",
+      "language": "ary-latn",
+      "query": "sifet i3lan lwalidin bli ghedda 3otla.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.32940179999999236,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q85",
+      "familyId": "jev-operator-f43",
+      "language": "ary",
+      "query": "زيد أستاذ جديد ديال الفرنسية.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.20286259999999312,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q86",
+      "familyId": "jev-operator-f43",
+      "language": "ary-latn",
+      "query": "zid ostad jdid dyal lfrancais.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.28112450000000533,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q87",
+      "familyId": "jev-operator-f44",
+      "language": "ary",
+      "query": "مسح هاد الفرض من الجدول.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.23512859999999636,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q88",
+      "familyId": "jev-operator-f44",
+      "language": "ary-latn",
+      "query": "mse7 had lfard mn ljadwal.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.2840395000000135,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q89",
+      "familyId": "jev-operator-f45",
+      "language": "ary",
+      "query": "بدل القسم ديال هاد التلميذ للخامس.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.26274980000001963,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q90",
+      "familyId": "jev-operator-f45",
+      "language": "ary-latn",
+      "query": "beddel l9ism dyal had tilmid l lkhamis.",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "write_request",
+      "expectation": {
+        "kind": "refusal",
+        "requiredToolGroups": [],
+        "reason": "Current chat is read-only; refuse mutation without a tool.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.24508939999999713,
+      "tools": [],
+      "text": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+      "reply": {
+        "source": "template",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q91",
+      "familyId": "jev-operator-f46",
+      "language": "ary",
+      "query": "شحال من بنت كاينة فالمدرسة؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_students"
+          ]
+        ],
+        "reason": "Read students before counting girls; unfiltered student_count alone is wrong.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "missing_required_tool:students_get_students"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.8519218999999867,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "ما قدرناش نحددو شحال من بنت كاينة فهاد العام، حيث ما عندنا عناشي دالة كترد على النوع. إذا بغيتي عدد مجموع التلاميذ أو شي فلتر آخر، قولنا.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q92",
+      "familyId": "jev-operator-f46",
+      "language": "ary-latn",
+      "query": "ch7al mn bent kayna f lmdrasa?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "students_get_students"
+          ]
+        ],
+        "reason": "Read students before counting girls; unfiltered student_count alone is wrong.",
+        "resultFilteringReview": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "missing_required_tool:students_get_students"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5250100000000093,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "كاينة 8 بنات فالمدرّسة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q93",
+      "familyId": "jev-operator-f47",
+      "language": "ary",
+      "query": "شحال خلص هاد الولي هاد الشهر؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "This parent is unidentified; ask who rather than invent an ID or read all payments.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [
+        "unexpected_data_tool"
+      ],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 2.0602980000000097,
+      "tools": [
+        {
+          "name": "payments_get_this_month",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": null
+        }
+      ],
+      "text": "We need to reply in Moroccan Darija. User asked: \"شحال خلص هاد الولي هاد الشهر؟\" meaning \"How much did this parent pay this month?\" They didn't provide parent ID. We can't assume. Must ask for parent ID.ما غاديش نقدر نعرف المبلغ اللي كفـال هاد الشهر إلا عطاتيني رقم هوية الوالد. عطيني ID ديال المالك باش نطلب المعلومات.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q94",
+      "familyId": "jev-operator-f47",
+      "language": "ary-latn",
+      "query": "ch7al khelles had lwali had chher?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "This parent is unidentified; ask who rather than invent an ID or read all payments.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.5479236000000092,
+      "tools": [],
+      "text": "ما قدرش نْقَدَرْ لَكْ هاد السؤال حيت ماكايناش فاش كتْردّ اللُوكالة اللي كتْخْصرك دْقْنِي الدّاتا ديال الدروس الأسبوعية. حاول تدّخل فـDashboard وتِختار الفترة المطلوبة أو نعاود نْحاول مع ذاك الأمر لو سمحتي.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q95",
+      "familyId": "jev-operator-f48",
+      "language": "ary",
+      "query": "كيفاش نبدل كلمة السر ديالي؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "How-to password question; explain without changing credentials.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 0.9977502000000095,
+      "tools": [],
+      "text": "ما يمكنش نبدل كلمة السر هنا فهاد الدردشة. خصك تدخل لصفحة الإعدادات ديال الحساب فالبريد الإلكتروني أو التطبيق باش تبدل كلمة السر.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q96",
+      "familyId": "jev-operator-f48",
+      "language": "ary-latn",
+      "query": "kifach nbeddel lmot de passe dyali?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "no-tool",
+        "requiredToolGroups": [],
+        "reason": "How-to password question; explain without changing credentials.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.356655299999984,
+      "tools": [],
+      "text": "ما مستوفى هنا، ميمكنش تبدّل كلمة المرور فهاد الدردشة. غادي تقدر دير هادشي عبر صفحة تسجيل الدخول فديباغد في المنصة.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q97",
+      "familyId": "jev-operator-f49",
+      "language": "ary",
+      "query": "شنو هوما النقط ديال القسم الرابع فالرياضيات؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes",
+            "sections_get_sections"
+          ]
+        ],
+        "reason": "Resolve fourth class before grade/subject lookup. Fixture has no fourth class; do not invent class IDs.",
+        "discoveryOnly": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.9212276000000128,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "input": true,
+          "outcome": "output",
+          "arguments": {
+            "academicYear": "2026-2027"
+          },
+          "resultSummary": {
+            "kind": "array",
+            "count": 2
+          }
+        }
+      ],
+      "text": "ماكاينش قسم رابع فالحالة الحالية، فالأجزاء المتوفرة غير A و B. حيت مافيش بيانات نقدر نوصل ليها.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q98",
+      "familyId": "jev-operator-f49",
+      "language": "ary-latn",
+      "query": "chno homa nno9at dyal l9ism rrabi3 f riyadiyat?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "read",
+        "requiredToolGroups": [
+          [
+            "classes_get_classes",
+            "sections_get_sections"
+          ]
+        ],
+        "reason": "Resolve fourth class before grade/subject lookup. Fixture has no fourth class; do not invent class IDs.",
+        "discoveryOnly": true,
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": false
+      },
+      "issues": [
+        "missing_required_tool:classes_get_classes|sections_get_sections"
+      ],
+      "reviewFlags": [],
+      "toolPlanChecksPassed": false,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.3227788999999757,
+      "tools": [],
+      "text": "سمح ليا، ما كاينش عندي واحد الأداة فهاد النظام اللي تقدر ترجع ليا مواعيد الدروس الرياضية ديال القسم. ما ممكنش نرد عليك على هاد السؤال حيت ما كانش فالمجموعة ديال الأدوات المتاحة. إذا بغيتي عاود طلب معلومات أخرى (مثلاً لائحة الأقسام، المواد أو غيرها) أنا مستعد نعاونك.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q99",
+      "familyId": "jev-operator-f50",
+      "language": "ary",
+      "query": "وشحال كانو العام اللي فات؟",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "And how many last year has no count target in this first turn; ask for clarification.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.0608574999999838,
+      "tools": [],
+      "text": "عفاك، خْـاطِفَ فِي الدَاشْـبُـورد وتْـقَـدْ التَّـسْـخِيـر ديال العام الدراسي 2025‑2026، ومن بعد أرجع لينا السؤال.",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    },
+    {
+      "caseId": "jev-operator-q100",
+      "familyId": "jev-operator-f50",
+      "language": "ary-latn",
+      "query": "w ch7al kano l3am li fat?",
+      "arm": "20b-coreweave-off",
+      "expectedIntent": "needs_llm",
+      "expectation": {
+        "kind": "clarification",
+        "requiredToolGroups": [],
+        "reason": "And how many last year has no count target in this first turn; ask for clarification.",
+        "academicYear": "2026-2027",
+        "actor": "history-admin",
+        "readOnly": true,
+        "finalAnswerReview": true
+      },
+      "issues": [],
+      "reviewFlags": [
+        "clarification_or_result_filter_needs_review"
+      ],
+      "toolPlanChecksPassed": true,
+      "finalAnswerCorrectness": null,
+      "completedStream": true,
+      "completionSeconds": 1.29968789999999,
+      "tools": [],
+      "text": "عاود اختار العام الدراسي ديال 2025‑2026 فلوحة التحكم، وبّعدّ نكتشفّ ليك الدّخول ليك!",
+      "reply": {
+        "source": "model",
+        "language": "ary"
+      },
+      "shortlist": null
+    }
+  ],
+  "limitations": [
+    "Reused owner-reviewed wording and assistant labels; 50 linked families, not independent native evidence.",
+    "Empty exam/attendance/teacher data cannot establish nonempty filtering accuracy.",
+    "Final wording, clarification quality and calculated/filter answers need semantic review; tool-plan checks are not full answer accuracy.",
+    "Model-visible tool names are captured separately in the provider observer; preview alone does not prove executed plans or correct answers.",
+    "Admin first-turn fixture only; student and other actor permissions are not qualified."
+  ]
+}
