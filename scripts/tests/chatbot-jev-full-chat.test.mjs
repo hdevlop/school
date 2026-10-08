@@ -17,7 +17,7 @@ test('exam coverage freezes a bounded 20-case guard-6 check and rejects guard-5 
   expect(() => checkSource(plan)).not.toThrow();
   const status = { instanceId: 'fresh', markedLocalFixture: true, syntheticOnly: true, mode: 'off',
     frameworkPreparationEnabled: false, experimentEnabled: true, threshold: plan.threshold, timeoutMs: plan.timeoutMs,
-    billingMode: plan.billingMode, billingTimeoutMs: plan.billingTimeoutMs, guardVersion: 6, intentWordingVersion: 3,
+    billingMode: plan.billingMode, billingTimeoutMs: plan.billingTimeoutMs, guardVersion: 6, intentWordingVersion: 6,
     budget: { requests: 0, unknownCosts: 0, pendingRequests: 0, maxRequests: plan.maxClassifications,
       maxCostUsd: plan.classificationMaxUsd, unknownReserveUsd: plan.classificationReserveUsd } };
   expect(() => checkReady(status, plan)).not.toThrow();
@@ -200,7 +200,7 @@ test.each(['https://example.com', 'http://user:password@localhost:3103', 'http:/
 test('requires fresh marked-fixture limits before spending', () => {
   const protocol = fullChatProtocol();
   const ready = { instanceId: 'isolated', markedLocalFixture: true, syntheticOnly: true, mode: 'off',
-    frameworkPreparationEnabled: false, threshold: 0.8, timeoutMs: 800, guardVersion: 6, intentWordingVersion: 3,
+    frameworkPreparationEnabled: false, threshold: 0.8, timeoutMs: 800, guardVersion: 6, intentWordingVersion: 6,
     billingMode: 'observe', billingTimeoutMs: 5000,
     budget: { requests: 0, pendingRequests: 0, unknownCosts: 0, maxRequests: 48, maxCostUsd: 0.0072, unknownReserveUsd: 0.00015 } };
   expect(() => checkReady(ready, protocol)).not.toThrow();

@@ -1,8 +1,9 @@
 import { AiSettingsService, type ReplyPreparationRequest, type ReplyPreparationSelection, type ReplyTemplate } from 'najm-chatbot';
 import { Service } from '../../najm';
 import { ROLES } from '../../auth';
-import { buildDecisionRequest, JEV_DECISIONS_URL, parseDecision } from './jevIntents';
+import { JEV_DECISIONS_URL, parseDecision } from './jevIntents';
 import { acceptsWithQueryGuardV6 } from './jevQueryGuard';
+import { buildJevRuntimeDecisionRequest } from './jevRuntimeWording';
 import { readJevControls, effectiveJevMode } from './JevControls';
 import { JevAttemptLedger } from './JevAttemptLedger';
 import { schoolJevRequestContext } from './JevSessionGrants';
@@ -101,7 +102,7 @@ export class JevIntentClassifier {
       frame.attemptId = attempt.id;
       const send = () => this.transport(JEV_DECISIONS_URL, { method: 'POST', redirect: 'error', signal: networkSignal,
         headers: { authorization: `Bearer ${settings.apiKey}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ ...buildDecisionRequest(request.userText), session_id: attempt!.id, provider: { data_collection: 'deny' } }) });
+        body: JSON.stringify({ ...buildJevRuntimeDecisionRequest(request.userText), session_id: attempt!.id, provider: { data_collection: 'deny' } }) });
       const response = observe ? await abortable(send, networkSignal) : await send();
       httpStatus = response.status; failure = response.ok ? 'invalid_response' : 'provider_rejected';
       const headerId = response.headers.get('x-request-id');

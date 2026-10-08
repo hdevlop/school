@@ -10,6 +10,7 @@ import { CHATBOT_CONFIG, type ChatbotConfig } from 'najm-chatbot';
 import { Inject } from '../../najm';
 import { PermissionService, RoleService } from 'najm-auth';
 import { jevExperimentEnabled, type JevExperimentArm } from './jevExperiment';
+import { JEV_RUNTIME_WORDING_VERSION } from './jevRuntimeWording';
 
 const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'sections', 'attendance', 'exams'] as const;
 
@@ -27,7 +28,7 @@ export class JevBenchmarkService {
   async status() {
     await this.ensureEnabled();
     return { ...chatBenchmarkSnapshot(), mode: effectiveJevMode(), budget: this.classifier.ledger.snapshot(),
-      syntheticOnly: true, markedLocalFixture: true, guardVersion: 6, intentWordingVersion: 3,
+      syntheticOnly: true, markedLocalFixture: true, guardVersion: 6, intentWordingVersion: JEV_RUNTIME_WORDING_VERSION,
       threshold: this.classifier.controls.threshold, timeoutMs: this.classifier.controls.timeoutMs,
       billingMode: this.classifier.controls.billingMode, billingTimeoutMs: this.classifier.controls.billingTimeoutMs,
       experimentEnabled: jevExperimentEnabled(),

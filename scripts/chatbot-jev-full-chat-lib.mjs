@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { isDeepStrictEqual } from 'node:util';
 import { jevSyntheticCases, jevDarijaCases } from '@sms/server/jev-cases';
+import { JEV_RUNTIME_WORDING_VERSION } from '@sms/server/jev-wording';
 import { percentile } from './chatbot-stream.mjs';
 
 function protocolGuardVersion(continuationPath) {
@@ -9,11 +10,17 @@ function protocolGuardVersion(continuationPath) {
   if (![5, 6].includes(version)) throw Error('Unknown benchmark guard version');
   return version;
 }
-export function fullChatProtocol(continuationPath, guardVersion = protocolGuardVersion(continuationPath)) {
+function protocolWordingVersion(continuationPath) {
+  const version = continuationPath ? JSON.parse(readFileSync(continuationPath.split(',')[0], 'utf8')).protocol.intentWordingVersion ?? 3 : JEV_RUNTIME_WORDING_VERSION;
+  if (![3, 6].includes(version)) throw Error('Unknown benchmark wording version');
+  return version;
+}
+export function fullChatProtocol(continuationPath, guardVersion = protocolGuardVersion(continuationPath), wordingVersion = protocolWordingVersion(continuationPath)) {
   const orders = [['off', 'on', 'shadow'], ['on', 'shadow', 'off'], ['shadow', 'off', 'on'],
     ['off', 'shadow', 'on'], ['shadow', 'on', 'off'], ['on', 'off', 'shadow']];
   const protocol = { version: 2, purpose: 'synthetic-integration-comparison-with-bounded-billing-observation', assistantAuthored: true,
-    independentQualification: false, ...(guardVersion === 6 ? { guardVersion: 6 } : {}), cases: jevSyntheticCases,
+    independentQualification: false, ...(guardVersion === 6 ? { guardVersion: 6 } : {}),
+    ...(wordingVersion === 6 ? { intentWordingVersion: 6 } : {}), cases: jevSyntheticCases,
     jobs: jevSyntheticCases.flatMap((item, index) => orders[index % orders.length].map(mode => ({ caseId: item.id, mode }))),
     maxChats: 72, maxClassifications: 48, maxCombinedEstimatedUsd: 0.25,
     generationReserveUsd: 0.003, classificationReserveUsd: 0.00015, classificationMaxUsd: 0.0072,
@@ -94,7 +101,7 @@ export function sourceHashes() {
   return Object.fromEntries(files.sort().map(name => [name, createHash('sha256').update(readFileSync(name)).digest('hex')]));
 }
 export function modelComparisonProtocol(continuationPath, generationUsagePath) {
-  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath));
+  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath), protocolWordingVersion(continuationPath));
   const arms = [{ model: 'openai/gpt-oss-120b', mode: 'off' }, { model: 'openai/gpt-oss-120b', mode: 'on' },
     { model: 'openai/gpt-oss-20b', mode: 'off' }, { model: 'openai/gpt-oss-20b', mode: 'on' }];
   const comparison = { ...protocol, purpose: 'two-model-jev-parallel-comparison', models: [...new Set(arms.map(arm => arm.model))],
@@ -106,7 +113,7 @@ export function modelComparisonProtocol(continuationPath, generationUsagePath) {
   return continuationPath ? continueProtocol(comparison, continuationPath, generationUsagePath) : comparison;
 }
 export function firstComparisonProtocol(continuationPath, generationUsagePath, retainRejectedReservation = false) {
-  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath));
+  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath), protocolWordingVersion(continuationPath));
   const arms = [
     { experimentArm: '120b-baseline', model: 'openai/gpt-oss-120b', mode: 'off', strategy: 'parallel', provider: 'cerebras-preferred' },
     { experimentArm: '20b-coreweave-off', model: 'openai/gpt-oss-20b', mode: 'off', strategy: 'parallel', provider: 'coreweave-only' },
@@ -172,7 +179,7 @@ export function darijaComparisonProtocol(continuationPath, generationUsagePath, 
   const isFix = routerOnly === 'fixed20b';
   const isCoverage = routerOnly === 'jevcoverage6';
   const isJevFix = routerOnly === 'jevfirstfix' || isCoverage;
-  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath));
+  const protocol = fullChatProtocol(undefined, protocolGuardVersion(continuationPath), protocolWordingVersion(continuationPath));
   const casesPath = 'datasets/chatbot-latency/darija-tool-selection-20261008.json';
   const corpus = JSON.parse(readFileSync(casesPath, 'utf8'));
   if (!isDeepStrictEqual(corpus.cases.map(({ id, query, language, intent, familyId }) =>
@@ -296,7 +303,7 @@ export function checkReady(status, protocol) {
     || status.mode !== 'off' || status.frameworkPreparationEnabled !== false
     || status.threshold !== protocol.threshold || status.timeoutMs !== protocol.timeoutMs
     || status.billingMode !== protocol.billingMode || status.billingTimeoutMs !== protocol.billingTimeoutMs
-    || status.guardVersion !== (protocol.guardVersion ?? 5) || status.intentWordingVersion !== 3
+    || status.guardVersion !== (protocol.guardVersion ?? 5) || status.intentWordingVersion !== (protocol.intentWordingVersion ?? 3)
     || status.budget?.requests !== 0 || status.budget.unknownCosts !== 0 || status.budget.pendingRequests !== 0
     || status.budget.maxRequests !== protocol.maxClassifications
     || status.budget.maxCostUsd !== protocol.classificationMaxUsd

@@ -2043,3 +2043,23 @@ and the normal app's Jev mode off until role-specific qualification. No addition
 billing investigation is needed for this completed, fully known-cost run.
 See the [coverage report](docs/evidence/chatbot-latency/darija-jev-coverage-v6-results-20261008.md)
 for the failures, concrete next actions and verification limits.
+
+# Guarded read-wording checkpoint (2026-10-08)
+
+Runtime wording profile 6 uses candidate wording 5 only for queries already
+recognized by guard 6 as unqualified supported reads; writes, filters, arithmetic,
+ambiguity and greetings keep the original wording. The global candidate failed
+write-coverage checks and was not adopted. The confidence and write-bit agreement
+checks remain intact.
+
+The paired 96-request classification study corrected the short Arabizi exam
+question and the false write flags on the two target count queries. The subsequent
+20-chat actual profile run passed 17/20 tool plans versus 16/20 previously, selected
+15 Jev replies versus nine and passed all 15 intent/tool/fixture-answer checks.
+The complete 100-case score remains 80/100; this subset is not a new global score.
+
+Next: guarded mathematics-teacher and girls-count plans with populated data, and
+parent-identity clarification before a parent-payment read. Then qualify the real
+parent/teacher/student actors. Keep the normal app's Jev mode off for now. See the
+[read-wording report](docs/evidence/chatbot-latency/darija-jev-read-wording-results-20261008.md)
+for the raw candidate failure, conditional profile, measured results and next steps.

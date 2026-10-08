@@ -42,6 +42,10 @@
       "types": "./src/modules/chat/jevIntents.ts",
       "default": "./src/modules/chat/jevIntents.ts"
     },
+    "./jev-wording": {
+      "types": "./src/modules/chat/jevRuntimeWording.ts",
+      "default": "./src/modules/chat/jevRuntimeWording.ts"
+    },
     "./jev-cases": {
       "types": "./src/modules/chat/jevSyntheticCases.ts",
       "default": "./src/modules/chat/jevSyntheticCases.ts"

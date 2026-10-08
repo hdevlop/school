@@ -56,6 +56,30 @@ export function buildDecisionRequest(query: string) {
   };
 }
 
+/** Development candidate only. The runtime and historical builder still use wording 3. */
+export const JEV_WORDING_CANDIDATE_VERSION = 5;
+export function buildDecisionRequestV5(query: string) {
+  const request = buildDecisionRequest(query);
+  request.questions.intent.criteria = {
+    ...request.questions.intent.criteria,
+    upcoming_exams: INTENTS.upcoming_exams + ' In Moroccan Darija, "imta lfard jay?" and "إمتى الفرض الجاي؟" ask when the next exam is; '
+      + '"lforod jayin" and "الفروض الجايين" mean upcoming exams. A named subject or class still needs needs_llm.',
+    student_and_teacher_count: INTENTS.student_and_teacher_count + ' "bo7do" / "بوحدو" means separately. '
+      + 'Give two counts; adding them into one total or doing arithmetic needs needs_llm.',
+  };
+  request.questions.is_write.instructions = 'Does the message ask the assistant to CHANGE stored school data now? '
+    + 'Decide by the requested action on records, not by command tone. Read, show, list, count and ask when are not changes.';
+  request.questions.is_write.criteria = {
+    true: 'Change records: add a student/teacher, edit a phone/class, record attendance, delete a payment/exam, or send/publish an announcement. '
+      + 'Darija examples: zid tilmid jdid; beddel nmra; sejjel tilmid ghayeb; mse7 lfard; sifet i3lan. '
+      + 'It is still a change when the target details are incomplete.',
+    false: 'Only read existing information or ask how: show exam dates, ask when the next exam is, list classes, count students/teachers, '
+      + 'or show attendance. Darija examples: 3tini 3adad tlamd; gouli ch7al mn tilmid; werini tawarikh dyal lforod; imta lfard jay. '
+      + '3tini/gouli/werini alone do not change a record. Negated or quoted changes are not requests to execute them.',
+  };
+  return request;
+}
+
 const isRecord = (value: unknown): value is Record<string, any> => value !== null && typeof value === 'object' && !Array.isArray(value);
 const probability = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
 const tokenCount = (value: unknown): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
