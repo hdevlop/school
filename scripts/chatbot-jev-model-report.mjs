@@ -9,7 +9,7 @@ if (!runPath || !usagePath || !outPath || existsSync(outPath)) throw Error('Supp
 const inputs = paths => paths.split(',').map(path => ({ path, bytes: readFileSync(path) }));
 const runInputs = inputs(runPath), usageInputs = inputs(usagePath);
 const segments = runInputs.map(input => JSON.parse(input.bytes.toString('utf8')));
-if (segments.some(run => !['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison'].includes(run.protocol.purpose))) throw Error('Require the frozen model comparison');
+if (segments.some(run => !['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison'].includes(run.protocol.purpose))) throw Error('Require the frozen model comparison');
 const run = { ...segments.at(-1), protocol: segments[0].protocol,
   rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts),
   chatsDispatched: segments.reduce((sum, segment) => sum + segment.chatsDispatched, 0) };
@@ -17,7 +17,9 @@ if (new Set(run.rows.map(row => `${row.caseId}/${row.experimentArm ?? `${row.mod
   throw Error('Duplicate arm/case dispatch; do not hide retries');
 const calls = usageInputs.flatMap(input => input.bytes.toString('utf8').trim().split(/\r?\n/u).filter(Boolean).map(line => JSON.parse(line)));
 const byId = new Set();
-if (calls.some(call => !call.generationId || byId.has(call.generationId) || !byId.add(call.generationId)))
+const allowIncompleteCaptures = run.protocol.purpose === 'darija-tool-selection-comparison';
+if (calls.some(call => !call.generationId ? !(allowIncompleteCaptures && call.incomplete === true)
+  : byId.has(call.generationId) || !byId.add(call.generationId)))
   throw Error('Missing or duplicate generation identifiers; do not double-count billing');
 const rows = run.rows.map(row => {
   const start = Date.parse(row.startedAt), end = Date.parse(row.completedAt);
@@ -28,7 +30,8 @@ const rows = run.rows.map(row => {
   const callsComplete = Number.isSafeInteger(expectedCalls) && generationCalls.length === expectedCalls
     && known.length === generationCalls.length && generationCalls.every(call => call.model === row.model);
   return { ...row, generationCalls, providerCostComplete: callsComplete,
-    providerMatchesPolicy: row.provider !== 'coreweave-only' || generationCalls.every(call => call.provider === 'CoreWeave'),
+    providerMatchesPolicy: row.provider !== 'coreweave-only' || generationCalls.filter(call => call.provider).every(call => call.provider === 'CoreWeave'),
+    providerIdentityUnknown: generationCalls.some(call => !call.provider),
     generationReportedCostUsd: known.reduce((sum, call) => sum + call.usage.cost, 0),
     classifierReportedCostUsd: classifier?.costUsd ?? null, classifierAttempted: Boolean(classifier),
     classifierFailed: Boolean(classifier && (classifier.outcome === 'error' || classifier.httpStatus >= 400)),
@@ -49,6 +52,7 @@ const arms = declaredArms.map(arm => {
   return { ...arm, ...summary, completedStreams: completed.length, streamCompletionMs,
     generationCalls: list.reduce((sum, row) => sum + row.generationCalls.length, 0),
     providerPolicyViolations: list.filter(row => !row.providerMatchesPolicy).length,
+    providerIdentityUnknownChats: list.filter(row => row.providerIdentityUnknown).length,
     toolFailures: list.filter(row => row.diagnostics?.tools?.some(tool => tool.outcome === 'error' || tool.outcome === 'blocked')).length,
     classifierFailures: list.filter(row => row.classifierFailed).length,
     reportedCostComplete: allKnown, totalReportedCostUsd: total,

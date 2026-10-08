@@ -8,7 +8,11 @@ export function jevPreparationPolicy(): ReplyPreparationPolicy {
   const controls = readJevControls();
   return {
     get enabled() { return effectiveJevMode() !== 'off'; },
-    get strategy() { return jevExperimentArm() === '20b-coreweave-first' ? 'candidate-first' : 'parallel'; },
+    get strategy() {
+      const arm = jevExperimentArm();
+      return arm === '20b-coreweave-router-first' ? 'router-first'
+        : arm === '20b-coreweave-first' ? 'candidate-first' : 'parallel';
+    },
     timeoutMs: controls.timeoutMs,
     resolveContext: request => {
       const frame = schoolJevRequestContext.getStore();

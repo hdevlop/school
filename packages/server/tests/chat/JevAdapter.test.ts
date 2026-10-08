@@ -19,6 +19,31 @@ import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates
 import { schoolChatYearContext } from '../../src/modules/chat/SchoolChatContextProvider';
 import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
 import { schoolOpenRouterProvider } from '../../src/modules/chat/jevExperiment';
+import { jevDarijaCases } from '../../src/modules/chat/jevDarijaCases';
+
+test('reviewed Darija catalog grants exact text on the router-first arm', () => {
+  const grants = new JevSessionGrants();
+  expect(jevDarijaCases).toHaveLength(100);
+  const sample = jevDarijaCases.find(item => item.language === 'ary-latn')!;
+  const grant = grants.issue('actor', '2026-2027', sample.id, '20b-coreweave-router-first');
+  expect(grant.query).toBe(sample.query);
+  expect(grants.consume(grant.sessionKey, 'actor', '2026-2027',
+    [{ role: 'user', content: sample.query }])?.experimentArm).toBe('20b-coreweave-router-first');
+  expect(grants.consume(grant.sessionKey, 'actor', '2026-2027',
+    [{ role: 'user', content: sample.query }])).toBeNull();
+});
+
+test('router-first policy and CoreWeave pin require the consumed fixture frame', () => {
+  process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+  schoolJevRequestContext.run({ actorId: 'actor', role: 'admin', academicYear: '2026-2027',
+    mode: 'on', correlationId: null, caseId: 'jev-operator-q01', query: 'salam',
+    historyComplete: true, priorUserTurns: 0, experimentArm: '20b-coreweave-router-first' }, () => {
+    expect(jevPreparationPolicy().strategy).toBe('router-first');
+    expect(schoolOpenRouterProvider().only).toEqual(['coreweave']);
+    process.env.NODE_ENV = 'production';
+    expect(jevPreparationPolicy().strategy).toBe('parallel');
+  });
+});
 
 const names = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS', 'CHATBOT_JEV_MODE', 'CHATBOT_JEV_MAX_REQUESTS',
   'CHATBOT_JEV_MAX_COST_USD', 'CHATBOT_JEV_TIMEOUT_MS', 'CHATBOT_JEV_THRESHOLD', 'CHATBOT_JEV_UNKNOWN_RESERVE_USD',
@@ -246,6 +271,31 @@ describe('published readiness integration', () => {
     const scope = <T>(work: () => T) => run(instance, work, { requestSignal: lifetime.signal });
     return { instance, lifetime, scope };
   }
+  test('router-first uses matching shortlisted tool without generation or a second routing call', async () => {
+    process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+    const { instance } = classifier();
+    const router = mock(async () => ({ status: 'routed', tools: [
+      { name: 'students_get_student_count', annotations: { readOnlyHint: true } },
+    ] }));
+    const a = agent(instance, router);
+    expect(await run(instance, () => a.value.runOnce(a.input),
+      { experimentArm: '20b-coreweave-router-first' })).toContain('7 élèves');
+    expect(router).toHaveBeenCalledTimes(1);
+    expect(a.generation).not.toHaveBeenCalled();
+    expect(a.reads).toHaveBeenCalledTimes(1);
+    expect(a.events[0].replyPreparation.availableToolNames).toEqual(['students_get_student_count']);
+  });
+  test('router-first missing shortlisted tool falls back without executing Jev plan', async () => {
+    process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+    const { instance } = classifier();
+    const router = mock(async () => ({ status: 'routed', tools: [] }));
+    const a = agent(instance, router);
+    expect(await run(instance, () => a.value.runOnce(a.input),
+      { experimentArm: '20b-coreweave-router-first' })).toBe('model fallback');
+    expect(router).toHaveBeenCalledTimes(1);
+    expect(a.reads).not.toHaveBeenCalled();
+    expect(a.generation).toHaveBeenCalledTimes(1);
+  });
   async function terminal(instance: JevIntentClassifier) {
     const end = performance.now() + 500;
     while (instance.ledger.snapshot().pendingRequests && performance.now() < end)

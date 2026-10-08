@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { jevSyntheticCases } from './jevSyntheticCases';
+import { jevBenchmarkCases } from './jevBenchmarkCases';
 import type { JevMode } from './JevControls';
 import type { ReplyPreparationRequest, ReplyPreparationSelection, ReplyTemplate } from 'najm-chatbot';
 import type { JevExperimentArm } from './jevExperiment';
@@ -23,7 +23,7 @@ export const schoolJevRequestContext = new AsyncLocalStorage<JevRequestContext>(
 export class JevSessionGrants {
   private grants = new Map<string, { actorId: string; academicYear: string; caseId: string; query: string; expiresAt: number; experimentArm?: JevExperimentArm }>();
   issue(actorId: string, academicYear: string, caseId: string, experimentArm?: JevExperimentArm) {
-    const item = jevSyntheticCases.find(item => item.id === caseId);
+    const item = jevBenchmarkCases.find(item => item.id === caseId);
     if (!item || !actorId || !academicYear) throw new Error('Invalid synthetic Jev session');
     const now = Date.now();
     for (const [key, grant] of this.grants) if (grant.expiresAt <= now) this.grants.delete(key);

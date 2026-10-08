@@ -1,4 +1,5 @@
 import type { JevIntent } from './jevIntents';
+export { jevDarijaCases } from './jevDarijaCases';
 
 /** Assistant-authored integration cases, not independent native qualification. */
 export const jevSyntheticCases: Array<{ id: string; language: 'fr' | 'ar' | 'ary'; query: string; intent: JevIntent }> = [

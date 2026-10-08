@@ -1,7 +1,7 @@
 /** Plan/fixture mode is unpaid. Execute requires explicit frozen limits and marked local fixture controls. */
 import { randomUUID } from 'node:crypto';
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
-import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, fingerprint, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat } from './chatbot-jev-full-chat-lib.mjs';
+import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, darijaComparisonProtocol, fingerprint, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat } from './chatbot-jev-full-chat-lib.mjs';
 import { createUiStreamParser } from './chatbot-stream.mjs';
 import { createEstimatedBudget } from './chatbot-budget.mjs';
 
@@ -14,7 +14,8 @@ if ([fixtureMode, execute, preflight].filter(Boolean).length > 1) throw new Erro
 const defaultPlan = 'docs/evidence/chatbot-latency/jev-billing-observer-plan-20261007.json';
 const planPath = option('plan', defaultPlan);
 if (!fixtureMode && !execute && !preflight) {
-  const plan = args.includes('--first-comparison') ? firstComparisonProtocol(option('continue-from'), option('generation-usage'), args.includes('--retain-rejected-reservation'))
+  const plan = args.includes('--darija-comparison') ? darijaComparisonProtocol(option('continue-from'), option('generation-usage'))
+    : args.includes('--first-comparison') ? firstComparisonProtocol(option('continue-from'), option('generation-usage'), args.includes('--retain-rejected-reservation'))
     : args.includes('--model-comparison') ? modelComparisonProtocol(option('continue-from'), option('generation-usage'))
     : fullChatProtocol(option('continue-from'));
   plan.sourceFingerprint = fingerprint(plan.sourceHashes);
@@ -40,7 +41,7 @@ const report = { stage: fixtureMode ? 'mock-full-chat-fixture' : preflight ? 'un
 writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });
 const save = () => writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 let fixture, token;
-const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison'].includes(protocol.purpose);
+const comparison = ['two-model-jev-parallel-comparison', 'coreweave-jev-first-comparison', 'darija-tool-selection-comparison'].includes(protocol.purpose);
 let selectedModel;
 async function request(path, body, correlation = randomUUID(), method) {
   if (fixture) return fixture.call(path, body, 'admin', option('year', '2026-2027'), correlation);
@@ -50,9 +51,16 @@ async function request(path, body, correlation = randomUUID(), method) {
       'X-Academic-Year': option('year', '2026-2027') }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
 }
 async function json(path, body, correlation, method) {
-  const response = await request(path, body, correlation, method);
-  if (!response.ok) throw new Error(`Benchmark control ${path}: HTTP ${response.status}`);
-  return response.json();
+  const retries = protocol.purpose === 'darija-tool-selection-comparison' && path === '/chat-benchmark/provider-usage'
+    && body === undefined ? 2 : 0;
+  for (let attempt = 0; ; attempt++) {
+    const response = await request(path, body, correlation, method);
+    if (response.ok) return response.json();
+    if (attempt < retries && [429, 502, 503, 504].includes(response.status)) {
+      await Bun.sleep(200); continue;
+    }
+    throw new Error(`Benchmark control ${path}: HTTP ${response.status}`);
+  }
 }
 const generationBudget = createEstimatedBudget(protocol.maxCombinedEstimatedUsd - protocol.classificationMaxUsd, protocol.generationReserveUsd);
 let restored = false, started = false;
@@ -87,7 +95,9 @@ try {
       checkScopedRead(tool, result);
       report.scopedReadChecks.push({ tool, passed: true });
     }
-    report.keyBefore = await json('/chat-benchmark/provider-usage');
+    report.keyBefore = protocol.aggregateUsageRequired === false
+      ? await json('/chat-benchmark/provider-usage').catch(() => null)
+      : await json('/chat-benchmark/provider-usage');
     const settings = await json('/ai-settings');
     if (settings?.data?.provider !== 'openrouter' && settings?.provider !== 'openrouter') throw new Error('Require the selected OpenRouter settings');
     report.settings = { provider: settings.data?.provider ?? settings.provider, model: settings.data?.model ?? settings.model };
@@ -109,8 +119,10 @@ try {
         || status.budget.requests > protocol.maxClassifications)
         throw new Error('Process changed or classifier cost remains unknown');
       if (!fixtureMode) {
-        const key = await json('/chat-benchmark/provider-usage');
-        if (key.usage - report.keyBefore.usage >= protocol.maxCombinedEstimatedUsd) throw new Error('Observed key delta reached the spending stop');
+        if (protocol.aggregateUsageRequired !== false) {
+          const key = await json('/chat-benchmark/provider-usage');
+          if (key.usage - report.keyBefore.usage >= protocol.maxCombinedEstimatedUsd) throw new Error('Observed key delta reached the spending stop');
+        }
         await Bun.sleep(Math.max(0, protocol.startSpacingMs - (performance.now() - previousStart)));
         if (comparison && selectedModel !== job.model) {
           const changed = await json('/ai-settings', { model: job.model }, undefined, 'PUT');

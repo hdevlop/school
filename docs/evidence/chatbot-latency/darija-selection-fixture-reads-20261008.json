@@ -1,0 +1,17 @@
+﻿{
+    "fixtureOnly":  true,
+    "roleId":  "history-role-admin",
+    "added":  [
+                  "read:exams"
+              ],
+    "requiredPermissions":  [
+                                "read:students",
+                                "read:teachers",
+                                "read:classes",
+                                "read:sections",
+                                "read:attendance",
+                                "read:exams"
+                            ],
+    "requiresFreshLogin":  true,
+    "jevMode":  "off"
+}

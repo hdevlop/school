@@ -2,7 +2,38 @@ import { expect, test } from 'bun:test';
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
+import { fullChatProtocol, modelComparisonProtocol, firstComparisonProtocol, darijaComparisonProtocol, checkSource, checkBase, checkReady, checkScopedRead, summarizeFullChat, fingerprint } from '../chatbot-jev-full-chat-lib.mjs';
+
+test('Darija comparison freezes three same-model paths and both scripts without French', () => {
+  const protocol = darijaComparisonProtocol();
+  expect(protocol.cases).toHaveLength(100);
+  expect(protocol.jobs).toHaveLength(300);
+  expect(new Set(protocol.cases.map(item => item.language))).toEqual(new Set(['ary', 'ary-latn']));
+  expect(new Set(protocol.cases.map(item => item.familyId)).size).toBe(50);
+  expect(protocol.models).toEqual(['openai/gpt-oss-20b']);
+  expect(protocol.arms.map(arm => arm.strategy)).toEqual(['parallel', 'candidate-first', 'router-first']);
+  expect(protocol.maxChats * protocol.generationReserveUsd + protocol.classificationMaxUsd).toBeLessThanOrEqual(0.25);
+  expect(() => checkSource(protocol)).not.toThrow();
+  expect(() => checkSource({ ...protocol, averageResponseLimitSeconds: 5 })).toThrow();
+});
+
+test('Darija continuation does not replay the completed prefix and deducts unknown capture reserves', () => {
+  const runPath = 'docs/evidence/chatbot-latency/darija-selection-run-20261008.json';
+  const usagePath = 'docs/evidence/chatbot-latency/darija-selection-generation-prefix-20261008.jsonl';
+  const protocol = darijaComparisonProtocol(runPath, usagePath);
+  const prefix = JSON.parse(readFileSync(runPath, 'utf8'));
+  expect(protocol.jobs).toHaveLength(300 - prefix.chatsDispatched);
+  expect(protocol.jobs[0]).toEqual(darijaComparisonProtocol().jobs[prefix.chatsDispatched]);
+  expect(protocol.continuation.retainedUnknownReserveUsd).toBe(0.0014);
+  expect(protocol.maxCombinedEstimatedUsd + protocol.continuation.carriedUsd).toBeLessThanOrEqual(0.25);
+  const dir = mkdtempSync(join(tmpdir(), 'school-darija-continuation-'));
+  try {
+    const altered = join(dir, 'altered.json');
+    prefix.attempts[0].costUsd = null;
+    writeFileSync(altered, JSON.stringify(prefix));
+    expect(() => darijaComparisonProtocol(altered, usagePath)).toThrow();
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 
 test('frozen comparison is bounded, balanced and explicitly not native qualification', () => {
   const protocol = fullChatProtocol();

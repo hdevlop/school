@@ -1,8 +1,24 @@
 # Chatbot latency and cost plan
 
-Status: **NAJM-CHATBOT 3.4.0 PUBLISHED AND INSTALLED. LOWER-COST MODEL COMPARISON COMPLETE: 96 CHATS, THREE RETAINED 20B TOOL FAILURES. 120B OFF: 0.915 S / $1.201 PER 1,000 SIMILAR ATTEMPTS; 20B + JEV: 9.485 S / $0.103. ZERO JEV REPLIES IN THIS BATCH. NORMAL CHAT CONFIGURATION UNCHANGED; REAL-QUESTION/PRODUCTION JEV REMAINS OFF.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA THREE-PATH COMPARISON COMPLETE: 300 CHATS. TOOL CHECKS: EXISTING ROUTER 57/100, JEV-FIRST 66/100, ROUTER-THEN-JEV 59/100; MEANS 1.28 / 1.06 / 1.68 SECONDS. JEV-FIRST IS THE QUALITY-FIX CANDIDATE; FULL ANSWER ACCURACY AND REAL-USER ENABLEMENT REMAIN UNQUALIFIED. NORMAL CHAT CONFIGURATION UNCHANGED.**
 
-## 0. Current status and next work — 2026-10-07
+## 0. Current status and next work — 2026-10-08
+
+**2026-10-08 Darija comparison complete:** [Results, limitations and next fixes](docs/evidence/chatbot-latency/darija-selection-results-20261008.md)
+record 300 completed streams on 100 reviewed questions, 50 paired families, the
+same CoreWeave-only 20B fallback and no French reruns. Jev-first passes 66/100 tool
+checks (41/50 Arabic script, 25/50 Arabizi), versus 57/100 for the existing router
+and 59/100 for router-then-Jev. All meet the average-under-two-seconds criterion.
+The 57 selected Jev replies have no frozen-label disagreement and pass recorded
+tool checks; full answer accuracy is not established. Improve Arabizi coverage,
+school versus personal tools, ID discovery, filters and payment clarification.
+Five segments retain interruptions and consumed jobs; no benchmark chats repeated.
+Known charges are a $0.02764 lower bound, with unknown costs retained. Fixture
+off/disabled/key removed/model restored/app stopped. Najm 3.6.0 is published and
+pinned; 287 upstream tests, 1,912 root test executions, boundaries, lint/typecheck
+and production build pass. Real-question/production defaults remain unchanged.
+The read-only Desktop checkout is older than this pin; matching published source
+was reviewed in the isolated writable release clone.
 
 **2026-10-07 lower-cost fallback comparison:** [Measured price, speed, answer findings and next actions](docs/evidence/chatbot-latency/jev-model-comparison-results-20261007.md) records 24 questions across 120B/20B ? Jev off/on, 96 dispatches, 93 replies without tool errors, and no benchmark retries. 20B + Jev costs about 91% less than 120B alone in this mix, but averages 9.485 seconds versus 0.915 seconds. All generation/classifier costs are response-reported and known; 169 generation calls are accounted for, combined charges $0.065139273. Jev supplied zero replies. Three 20B filtered-count requests used a name as a section ID and remain failed. The first 29-request segment and reduced 67-request continuation preserve the failure, cumulative limits, changed quality-stop policy and fresh caches. This tests the existing parallel policy, not Jev-first; different hosts prevent a same-host model conclusion. All 534 script tests/boundaries and script ESLint pass. Fixture key removed, AI disabled, model restored, isolated app stopped. Primary app/configuration unchanged. Next useful choices are a faster explicitly selected 20B host or a separate Jev-first experiment; no normal-question Jev enablement follows automatically.
 
@@ -1929,9 +1945,11 @@ write protection, bounded cancellation and the $10 monthly budget requirement.
 
 Use the [Darija tool-selection protocol](docs/tests/darija-tool-selection-benchmark.md).
 Compare existing router, Jev-first and router-then-Jev on identical questions and
-the same fallback model. Router-then-Jev is still proposed; parallel Jev is not that
-path. Verify required tools, dependencies, arguments, year/actor scope and final
-results rather than treating a completed stream as a correct answer. Reuse the
-100 owner-reviewed Darija/Arabizi questions with their existing provenance; the
-owner need not write another collection. First annotate expectations for complex
-questions, then implement the third experiment arm and run a fresh bounded comparison.
+the same fallback model. Router-then-Jev is implemented in published Najm 3.6.0;
+parallel Jev is a separate path. The 300-chat comparison is now complete; see the
+[final report](docs/evidence/chatbot-latency/darija-selection-results-20261008.md).
+Verify tools, dependencies, arguments, scope and final answers rather than treating
+a completed stream as correct. The 100 questions retain their reviewed wording
+and frozen expectations; the owner need not write another collection. Next work
+is targeted Darija/Arabizi quality fixes and actor/filter validation. Consumed
+benchmark jobs must not be replayed.

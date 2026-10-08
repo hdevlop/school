@@ -3,7 +3,7 @@ import { chatBenchmarkControlsEnabled } from './ChatBenchmarkState';
 import { isLocalJevFixtureDatabase } from './JevControls';
 import { schoolJevRequestContext } from './JevSessionGrants';
 
-export const JEV_EXPERIMENT_ARMS = ['120b-baseline', '20b-coreweave-off', '20b-coreweave-parallel', '20b-coreweave-first'] as const;
+export const JEV_EXPERIMENT_ARMS = ['120b-baseline', '20b-coreweave-off', '20b-coreweave-parallel', '20b-coreweave-first', '20b-coreweave-router-first'] as const;
 export type JevExperimentArm = typeof JEV_EXPERIMENT_ARMS[number];
 
 export function jevExperimentEnabled() {

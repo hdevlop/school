@@ -95,7 +95,7 @@ test('fixture read setup is fixed, admin-only, off-only, marker-bound and idempo
   expect(response.status).toBe(200);
   const result = await response.json();
   expect(result).toMatchObject({ fixtureOnly: true, roleId: 'history-role-admin',
-    added: ['read:students', 'read:teachers', 'read:classes', 'read:sections', 'read:attendance'], requiresFreshLogin: true, jevMode: 'off' });
+    added: ['read:students', 'read:teachers', 'read:classes', 'read:sections', 'read:attendance', 'read:exams'], requiresFreshLogin: true, jevMode: 'off' });
   const again = await setup();
   expect(again.status).toBe(200);
   expect(await again.json()).toMatchObject({ added: [], requiresFreshLogin: false });

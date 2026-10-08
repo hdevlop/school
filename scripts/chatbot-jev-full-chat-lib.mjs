@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync } from 'node:fs';
 import { isDeepStrictEqual } from 'node:util';
-import { jevSyntheticCases } from '@sms/server/jev-cases';
+import { jevSyntheticCases, jevDarijaCases } from '@sms/server/jev-cases';
 import { percentile } from './chatbot-stream.mjs';
 
 export function fullChatProtocol(continuationPath) {
@@ -160,9 +160,96 @@ export function firstComparisonProtocol(continuationPath, generationUsagePath, r
   return comparison;
 }
 export function fingerprint(hashes) { return createHash('sha256').update(JSON.stringify(hashes)).digest('hex'); }
+export function darijaComparisonProtocol(continuationPath, generationUsagePath) {
+  const protocol = fullChatProtocol();
+  const casesPath = 'datasets/chatbot-latency/darija-tool-selection-20261008.json';
+  const corpus = JSON.parse(readFileSync(casesPath, 'utf8'));
+  if (!isDeepStrictEqual(corpus.cases.map(({ id, query, language, intent, familyId }) =>
+    ({ id, query, language, intent, familyId })), jevDarijaCases))
+    throw Error('Darija server catalog differs from the frozen reviewed wording');
+  const arms = [
+    { experimentArm: '20b-coreweave-off', model: 'openai/gpt-oss-20b', mode: 'off', strategy: 'parallel', provider: 'coreweave-only' },
+    { experimentArm: '20b-coreweave-first', model: 'openai/gpt-oss-20b', mode: 'on', strategy: 'candidate-first', provider: 'coreweave-only' },
+    { experimentArm: '20b-coreweave-router-first', model: 'openai/gpt-oss-20b', mode: 'on', strategy: 'router-first', provider: 'coreweave-only' },
+  ];
+  const comparison = { ...protocol, purpose: 'darija-tool-selection-comparison', cases: corpus.cases, casesPath, arms,
+    models: ['openai/gpt-oss-20b'], experimentEnabled: true,
+    jobs: corpus.cases.flatMap((item, index) => [...arms.slice(index % 3), ...arms.slice(0, index % 3)]
+      .map(arm => ({ caseId: item.id, ...arm }))),
+    maxChats: 300, maxClassifications: 200, classificationMaxUsd: 0.03,
+    startSpacingMs: 1000, generationReserveUsd: 0.0007, restoresModel: 'openai/gpt-oss-120b', retainModelToolErrors: true,
+    averageResponseLimitSeconds: 2, primaryMetric: 'correct tools and arguments, by script and family',
+    aggregateUsageRequired: false,
+    sourceHashes: { ...sourceHashes(), [casesPath]: createHash('sha256').update(readFileSync(casesPath)).digest('hex') },
+    providerPolicy: 'Same CoreWeave-only 20B fallback on all three fixed synthetic arms; no provider fallback.',
+    comparisonPolicy: '100 reused owner-reviewed Darija/Arabizi questions, 50 paired families, three rotated paths; no French. Router-first completes ordinary preparation including context before classification and reuses it on decline. No paid-call retries; accuracy before cost; average full response below two seconds is sufficient.' };
+  if (!continuationPath) return comparison;
+  if (!generationUsagePath) throw Error('Require preserved generation usage for continuation');
+  const runInputs = continuationPath.split(',').map(path => ({ path, bytes: readFileSync(path) }));
+  const usageInputs = generationUsagePath.split(',').map(path => ({ path, bytes: readFileSync(path) }));
+  if (runInputs.length !== usageInputs.length || runInputs.length > 10) throw Error('Require matching bounded run/usage segments');
+  const segments = runInputs.map(input => JSON.parse(input.bytes));
+  let offset = 0;
+  for (const segment of segments) {
+    const count = segment.chatsDispatched;
+    const jobs = comparison.jobs.slice(offset, offset + count);
+    const unknown = segment.attempts.filter(a => a.costUsd === null);
+    if (segment.protocol.purpose !== comparison.purpose
+      || !isDeepStrictEqual(segment.protocol.cases, comparison.cases) || !isDeepStrictEqual(segment.protocol.arms, comparison.arms)
+      || segment.protocol.maxChats !== 300 - offset || (segment.protocol.continuation?.completedChats ?? 0) !== offset
+      || !Number.isSafeInteger(count) || count <= 0 || segment.rows.length !== count
+      || !isDeepStrictEqual(segment.rows.map(({ caseId, experimentArm, model, mode, strategy, provider }) =>
+        ({ caseId, experimentArm, model, mode, strategy, provider })), jobs)
+      || segment.status !== 'stopped' || segment.modeRestoredOff !== true || segment.modelRestored !== true
+      || !['Benchmark control /chat-benchmark/provider-usage: HTTP 502', 'Classifier terminal cost remains unknown', 'The operation timed out.'].includes(segment.stoppedReason)
+      || (segment.stoppedReason === 'Classifier terminal cost remains unknown' ? unknown.length !== 1 : unknown.length !== 0)
+      || segment.rows.some(row => !row.done || row.aborted || row.errors.length || !row.diagnostics)
+      || segment.attempts.some(a => a.outcome === 'pending' || (a.costUsd === null
+        ? !['aborted', 'error'].includes(a.outcome) || a.selected !== 'ordinary' || a.reservedUsd !== comparison.classificationReserveUsd
+        : !Number.isFinite(a.costUsd) || a.costUsd < 0))
+      || segment.generationBudget.requestsSettled !== count || segment.generationBudget.requestsWithUnknownCost
+      || segment.generationBudget.inFlight || segment.generationBudget.stoppedReason
+      || segment.aggregateKeyDeltaUsd != null && (!Number.isFinite(segment.aggregateKeyDeltaUsd) || segment.aggregateKeyDeltaUsd < 0))
+      throw Error('Require restored complete contiguous segments; unknown classifier costs must stay reserved and unselected');
+    offset += count;
+  }
+  const prior = { rows: segments.flatMap(segment => segment.rows), attempts: segments.flatMap(segment => segment.attempts),
+    generationEstimate: segments.reduce((sum, segment) => sum + segment.generationBudget.observedEstimatedUsd, 0),
+    aggregateKeyDeltaUsd: segments.reduce((sum, segment) => sum + (segment.aggregateKeyDeltaUsd ?? 0), 0) };
+  const count = offset;
+  const calls = usageInputs.flatMap(input => input.bytes.toString('utf8').trim().split(/\r?\n/u).filter(Boolean).map(line => JSON.parse(line)));
+  const knownCalls = calls.filter(call => call.generationId && !call.incomplete && Number.isFinite(call.usage?.cost) && call.usage.cost >= 0);
+  const unknownCalls = calls.filter(call => !knownCalls.includes(call));
+  if (count >= comparison.maxChats
+    || knownCalls.length !== prior.rows.reduce((sum, row) => sum + row.diagnostics.steps.length, 0)
+    || new Set(knownCalls.map(call => call.generationId)).size !== knownCalls.length
+    || unknownCalls.length > 10 || unknownCalls.some(call => call.status !== 200 || call.incomplete !== true
+      || !prior.rows.some(row => Date.parse(call.startedAt) >= Date.parse(row.startedAt) && Date.parse(call.startedAt) <= Date.parse(row.completedAt))))
+    throw Error('Require known final-call costs and bounded attributable incomplete captures');
+  const classifierCost = prior.attempts.reduce((sum, a) => sum + (a.costUsd ?? a.reservedUsd), 0);
+  const unknownReserve = unknownCalls.length * comparison.generationReserveUsd;
+  const generationCost = Math.max(prior.generationEstimate, knownCalls.reduce((sum, call) => sum + call.usage.cost, 0)) + unknownReserve;
+  const carried = Math.max(prior.aggregateKeyDeltaUsd, classifierCost + generationCost);
+  const remaining = value => Math.floor(value * 1e9) / 1e9;
+  comparison.continuation = { reportPath: continuationPath, generationUsagePath,
+    runs: runInputs.map(({ path, bytes }) => ({ path, sha256: createHash('sha256').update(bytes).digest('hex') })),
+    usage: usageInputs.map(({ path, bytes }) => ({ path, sha256: createHash('sha256').update(bytes).digest('hex') })),
+    completedChats: count, completedClassifications: prior.attempts.length, carriedUsd: carried,
+    retainedUnknownGenerationCalls: unknownCalls.length, retainedUnknownReserveUsd: unknownReserve,
+    retainedUnknownClassifications: prior.attempts.filter(a => a.costUsd === null).length,
+    originalMaxCombinedEstimatedUsd: comparison.maxCombinedEstimatedUsd,
+    note: 'Only undispatched jobs, no HTTP benchmark retries; fresh process resets caches. Unknown started calls retain their full declared reserves and null costs in the original stopped ledgers. A new reduced allowance does not reconcile or reset those ledgers. Read-only usage GET retries transient failures twice; classifier calls never retry.' };
+  comparison.jobs = comparison.jobs.slice(count);
+  comparison.maxChats -= count;
+  comparison.maxClassifications = comparison.jobs.filter(job => job.mode === 'on').length;
+  comparison.classificationMaxUsd = remaining(comparison.classificationMaxUsd - classifierCost);
+  comparison.maxCombinedEstimatedUsd = remaining(comparison.maxCombinedEstimatedUsd - carried);
+  return comparison;
+}
 export function checkSource(protocol) {
   const { sourceFingerprint: _sourceFingerprint, ...declared } = protocol;
-  const expected = protocol.purpose === 'coreweave-jev-first-comparison'
+  const expected = protocol.purpose === 'darija-tool-selection-comparison' ? darijaComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath)
+    : protocol.purpose === 'coreweave-jev-first-comparison'
     ? firstComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath, protocol.continuation?.retainedUnknownCosts === 1)
     : protocol.purpose === 'two-model-jev-parallel-comparison'
     ? modelComparisonProtocol(protocol.continuation?.reportPath, protocol.continuation?.generationUsagePath)

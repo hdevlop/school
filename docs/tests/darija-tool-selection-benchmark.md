@@ -20,7 +20,7 @@ model/provider:
 |---|---|---|
 | Existing router | Router shortlist, then LLM tool calls | Implemented |
 | Jev first | Supported validated action, otherwise existing router and LLM | Fixture experiment implemented |
-| Router then Jev | Router shortlist, then Jev action; LLM if unsupported | Proposed; not implemented or measured |
+| Router then Jev | Router shortlist, then Jev action; LLM if unsupported | Published in Najm 3.6.0; fixture comparison complete |
 
 Parallel Jev from the previous experiment is a different path. Do not rename its
 results as router-then-Jev. Keep 120B as a separate reference; use the same 20B
@@ -64,11 +64,22 @@ reports and their original pass/fail outcomes. Other safety, permissions and evi
 requirements remain. The monthly target remains $10; keep observed costs visible
 without making fine-grained billing work the focus.
 
-Prepare a fresh bounded run after the router-then-Jev path exists, with no automatic
-retries and normal fixture cleanup. Historical request allowances are consumed and
-must not be replayed as a new three-path benchmark.
+The fresh bounded three-path run is complete: 300 chats, no repeated jobs, fixture
+cleaned up. Historical request allowances are consumed and must not be replayed.
+Any quality-fix rerun needs a fresh reduced scope and frozen allowance.
 
-## Immediate evidence
+## Completed comparison
+
+The [three-path report](../evidence/chatbot-latency/darija-selection-results-20261008.md)
+records 57/100 tool checks for the existing router, 66/100 for Jev-first and 59/100
+for router-then-Jev. Mean complete responses are 1.28, 1.06 and 1.68 seconds;
+all meet the owner's time criterion. All 57 selected Jev replies pass recorded
+tool checks with no frozen-label disagreement. Full answer accuracy remains
+unqualified, especially clarification and nonempty filters. Jev-first with the
+existing router as fallback is the development recommendation; production
+defaults remain unchanged. The report names concrete quality fixes to do next.
+
+## Earlier saved-call evidence
 
 The [Darija-only reanalysis](../evidence/chatbot-latency/darija-selection-reanalysis-20261008.md)
 uses saved calls only. It separates required-tool observations from unverified

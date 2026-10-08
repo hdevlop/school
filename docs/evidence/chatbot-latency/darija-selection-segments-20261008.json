@@ -1,0 +1,18 @@
+{
+  "runs": [
+    "docs/evidence/chatbot-latency/darija-selection-run-20261008.json",
+    "docs/evidence/chatbot-latency/darija-selection-continuation-run-20261008.json",
+    "docs/evidence/chatbot-latency/darija-selection-continuation2-run-20261008.json",
+    "docs/evidence/chatbot-latency/darija-selection-continuation3-run-20261008.json",
+    "docs/evidence/chatbot-latency/darija-selection-continuation4-run-20261008.json"
+  ],
+  "usage": [
+    "docs/evidence/chatbot-latency/darija-selection-generation-prefix-20261008.jsonl",
+    "docs/evidence/chatbot-latency/darija-selection-generation-continuation-20261008.jsonl",
+    "docs/evidence/chatbot-latency/darija-selection-generation-continuation2-20261008.jsonl",
+    "docs/evidence/chatbot-latency/darija-selection-generation-continuation3-20261008.jsonl",
+    "docs/evidence/chatbot-latency/darija-selection-generation-continuation4-20261008.jsonl"
+  ],
+  "current": "continuation4",
+  "status": "completed"
+}

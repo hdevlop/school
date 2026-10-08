@@ -11,7 +11,7 @@ import { Inject } from '../../najm';
 import { PermissionService, RoleService } from 'najm-auth';
 import { jevExperimentEnabled, type JevExperimentArm } from './jevExperiment';
 
-const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'sections', 'attendance'] as const;
+const FIXTURE_READ_RESOURCES = ['students', 'teachers', 'classes', 'sections', 'attendance', 'exams'] as const;
 
 @Service()
 export class JevBenchmarkService {
