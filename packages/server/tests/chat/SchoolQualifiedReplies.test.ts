@@ -1,0 +1,127 @@
+import { afterEach, beforeEach, expect, setSystemTime, test } from 'bun:test';
+import { schoolFilteredReply, schoolFilteredReplyKind } from '../../src/modules/chat/schoolFilteredReplies';
+import { createJevFixture } from './jevFixture';
+import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
+
+const corpus = await Bun.file('datasets/chatbot-latency/darija-tool-selection-20261008.json').json();
+const cases = corpus.cases.filter((x: { id: string }) => [9,10,13,14,33,34,35,36,37,38,53,54,65,66,69,70,97,98,99,100].includes(Number(x.id.split('q').at(-1))));
+const query = (id: number) => cases.find((x: { id: string }) => x.id.endsWith('q'+String(id)))!.query as string;
+const plan = (id: number) => {
+  const result = schoolFilteredReply(query(id), 'ary', '2026-2027', 'admin', '2026-10-09');
+  if (!result || 'text' in result) throw Error('Expected read plan'); return result;
+};
+test.each(cases)('closed reviewed request is recognized: $id', (item: { query: string }) => {
+  expect(schoolFilteredReplyKind(item.query)).not.toBeNull();
+  for (const altered of [item.query+' zid tilmid', item.query+' f chher 12', '"'+item.query+'"', item.query+' "f l9ism A"']) {
+    expect(schoolFilteredReplyKind(altered)).toBeNull();
+  }
+});
+test('month window includes past and future exams, excludes adjacent months and validates dates/identities', () => {
+  const p = plan(33);
+  expect(p.calls).toEqual([{ name: 'exams_get_all', input: { academicYear: '2026-2027' } }]);
+  const rows = ['2026-09-30','2026-10-01','2026-10-08','2026-10-31','2026-11-01'].map((date,i) => ({ id: String(i), date }));
+  expect(p.render([rows])).toContain('كاينين 3 فروض');
+  expect(p.render([[]])).toContain('0 فروض');
+  expect(() => p.render([[{ id: 'a', date: '2026-02-30' }]])).toThrow();
+  expect(() => p.render([[rows[0],rows[0]]])).toThrow();
+  expect(schoolFilteredReply(query(33), 'ary', '2026-2027', 'admin')).toBeNull();
+});
+test('class-size filter uses strictly greater than 30 and unique student identities per class', () => {
+  const p = plan(37), classes = [{ id: 'a', name: 'Class Above' }, { id: 'b', name: 'Class Thirty' }];
+  const students = [...Array.from({length:31},(_,i)=>({id:'a'+i,classId:'a'})),...Array.from({length:30},(_,i)=>({id:'b'+i,classId:'b'}))];
+  const text = p.render([classes,[...students,students[0]]]);
+  expect(text).toContain('Class Above: 31'); expect(text).not.toContain('Class Thirty');
+  expect(p.render([classes,[...students,{id:'unplaced',classId:null}]])).toContain('ما نقدرش نأكد');
+  expect(() => p.render([classes,[students[0],{...students[0],classId:'b'}]])).toThrow();
+  expect(p.render([classes,[]])).toContain('ما لقيت حتى قسم فوق 30');
+});
+test('previous-month absences use the calendar month, student scope and absent status without counting unique people', () => {
+  const p=plan(35), row={id:'a',type:'student',status:'absent',date:'2026-09-01',student:{name:'Salma'}};
+  expect(p.calls).toEqual([{name:'attendance_get_all',input:{academicYear:'2026-2027',type:'student'}}]);
+  const text=p.render([[row,{...row,id:'b',date:'2026-09-30'},{...row,id:'c',date:'2026-08-31'},
+    {...row,id:'d',date:'2026-10-01'},{...row,id:'e',status:'present',student:{name:'Present'}}]]);
+  expect(text).toContain('2 تسجيل');expect(text.match(/Salma/gu)).toHaveLength(2);expect(text).not.toContain('Present');
+  expect(()=>p.render([[{...row,type:'staff'}]])).toThrow();expect(()=>p.render([[{...row,date:'2026-09-31'}]])).toThrow();
+  expect(()=>p.render([[{...row,status:'unknown'}]])).toThrow();
+  const january=schoolFilteredReply(query(35),'ary','2026-2027','admin','2027-01-02');
+  if(!january||'text' in january)throw Error('Missing plan');
+  expect(january.render([[{...row,date:'2026-12-31'}]])).toContain('2026-12');
+  expect(schoolFilteredReply(query(35),'ary','2026-2027','admin')).toBeNull();
+});
+const classes = [{ id: 'fourth', name: 'الرابع', level: '4' }, { id: 'fifth', name: 'الخامس', level: '5' }];
+const subjects = [{ id: 'math', name: 'Mathématiques', code: 'MATH' }, { id: 'physics', name: 'Physique' }];
+const grade = { id: 'g', class: { id: 'fourth' }, subject: { id: 'math' }, student: { name: 'Salma' }, marksObtained: '16.00',
+  assessment: { id: 'a', title: 'Assessment', date: '2026-10-01', totalMarks: '20.00' }, exam: null };
+test('maths grades resolve unique class/subject IDs and never confuse missing, ambiguous or unrelated records', () => {
+  const p = plan(97);
+  const text = p.render([classes,subjects,[grade,{ ...grade,id:'physics',subject:{id:'physics'},student:{name:'Wrong Subject'} },
+    {...grade,id:'fifth',class:{id:'fifth'},student:{name:'Wrong Class'}}]]);
+  expect(text).toContain('Salma'); expect(text).toContain('16/20');
+  expect(text).not.toContain('Wrong Subject'); expect(text).not.toContain('Wrong Class');
+  expect(p.render([[],subjects,[]])).toContain('عطيني السمية أو الكود');
+  expect(p.render([[...classes,{id:'fourth-other-cycle',name:'Another',level:'4'}],subjects,[grade]])).toContain('عطيني السمية أو الكود');
+  expect(p.render([classes,[...subjects,{id:'math-2',name:'رياضيات'}],[grade]])).toContain('عطيني السمية أو الكود');
+  expect(p.render([classes,subjects,[]])).toContain('ما لقيت حتى نقطة مسجلة');
+  expect(() => p.render([classes,subjects,[{...grade,marksObtained:'NaN'}]])).toThrow();
+  expect(() => p.render([classes,subjects,[{...grade,marksObtained:21}]])).toThrow();
+  expect(() => p.render([classes,subjects,[{...grade,assessment:null}]])).toThrow();
+});
+test('grades display the first 20 with an explicit remaining count', () => {
+  const text = plan(97).render([classes,subjects,Array.from({length:21},(_,i)=>({...grade,id:'grade-'+i}))]);
+  expect(text.match(/Salma/gu)).toHaveLength(20); expect(text).toContain('1 نقطة أخرى');
+});
+
+const keys = ['DB_URL','NODE_ENV','CHATBOT_BENCHMARK_CONTROLS','CHATBOT_JEV_BILLING_MODE','APP_BUSINESS_DATE'];
+const original = Object.fromEntries(keys.map(key=>[key,process.env[key]]));
+let fixture: Awaited<ReturnType<typeof createJevFixture>> | undefined;
+beforeEach(() => {
+  process.env.DB_URL='postgres://localhost/school_history_test'; process.env.NODE_ENV='test';
+  process.env.CHATBOT_BENCHMARK_CONTROLS='true'; process.env.CHATBOT_JEV_BILLING_MODE='abort'; process.env.APP_BUSINESS_DATE='2026-10-09';
+  setBenchmarkJevMode('off');
+});
+afterEach(async () => {
+  await fixture?.server.stop(); fixture=undefined; setSystemTime(); setBenchmarkJevMode('off');
+  for(const key of keys)if(original[key]===undefined)delete process.env[key];else process.env[key]=original[key];
+});
+const messages = (text:string)=>[{role:'user',parts:[{type:'text',text}]}];
+const answer = (stream:string)=>stream.split(/\r?\n/u).filter(x=>x.startsWith('data: {')).map(x=>JSON.parse(x.slice(6)))
+  .filter(x=>x.type==='text-delta').map(x=>x.delta).join('');
+test('all twenty requests use populated year/role-scoped HTTP/MCP replies with no AI', async () => {
+  fixture=await createJevFixture({qualifiedData:true});
+  for(const role of ['admin','principal'])for(const year of ['2025-2026','2026-2027'])for(const item of cases){
+    const r=await fixture.call('/chat',{messages:messages(item.query)},role,year); expect(r.status).toBe(200);
+    const text=answer(await r.text()),event=fixture.events.at(-1)!;
+    expect(event.reply?.source).toBe('template'); expect(event.reply?.error).toBeUndefined();
+    expect(event.tools.every(t=>t.outcome==='executed')).toBe(true);
+    const kind=schoolFilteredReplyKind(item.query);
+    if(kind==='teacher-count')expect(text).toContain(`كاينين ${year==='2026-2027'?3:2} أستاذ`);
+    if(kind==='monthly-exams')expect(text).toContain(`كاينين ${year==='2026-2027'?3:0} فروض`);
+    if(kind==='previous-month-absences'){expect(text).toContain(year==='2026-2027'?'1 تسجيل':'0 تسجيل');expect(text).not.toContain('Present Student');}
+    if(kind==='large-classes')expect(text).toContain(year==='2026-2027'?'31':'ما لقيت حتى قسم فوق 30');
+    if(kind==='all-classes')expect(text).toContain(`Fourth ${year}`);
+    if(kind==='fourth-maths-grades'){expect(text).toContain(year==='2026-2027'?'16/20':'12/20');expect(text).not.toContain('Wrong Subject');}
+    if(kind==='previous-year'){expect(event.tools).toEqual([]);expect(text).toContain('شحال ديال شنو');}
+  }
+  expect(fixture.counts()).toEqual({decisions:0,generations:0});
+});
+test('school month comes from the school zone at the UTC month boundary and business-date override', async () => {
+  delete process.env.APP_BUSINESS_DATE; setSystemTime(new Date('2026-10-31T23:30:00Z'));
+  fixture=await createJevFixture({qualifiedData:true,timeZone:'Africa/Casablanca'});
+  const r=await fixture.call('/chat',{messages:messages(query(33))},'admin');
+  const text=answer(await r.text()); expect(text).toContain('2026-11'); expect(text).toContain('1 فروض');
+  process.env.APP_BUSINESS_DATE='2026-10-09';
+  const override=await fixture.call('/chat',{messages:messages(query(33))},'admin');
+  expect(answer(await override.text())).toContain('3 فروض');
+});
+test('restricted actors cannot turn these requests into school-wide reads', async () => {
+  fixture=await createJevFixture({qualifiedData:true});
+  for(const role of ['parent','student','teacher','accounting'])for(const item of cases){
+    const r=await fixture.call('/chat',{messages:messages(item.query)},role);
+    expect(r.status).toBe(200); await r.text(); expect(fixture.events.at(-1)?.tools).toEqual([]);
+  }
+  expect(fixture.counts()).toEqual({decisions:0,generations:0});
+  for(const role of ['parent','student','teacher'])for(const name of ['grades_get_all','exams_get_all','classes_get_classes','attendance_get_all']){
+    const r=await fixture.call('/mcp',{jsonrpc:'2.0',id:1,method:'tools/call',params:{name,arguments:{academicYear:'2026-2027'}}},role);
+    const body=await r.json(); expect(Boolean(body.error||body.result?.isError)).toBe(true);
+  }
+});

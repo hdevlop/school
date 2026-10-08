@@ -6,9 +6,27 @@ the project and recoverable from published Git history. See the
 for the current reports, retained test inputs and location of the verified ZIP.
 Historical links below may require restoring their archived files.
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. DARIJA SELECTOR RUNS COMPLETE: 700 CHATS. IMPROVED ROUTER + JEV-FIRST/20B 80/100 TOOL CHECKS, VERSUS JEV-OFF 74/100 AND OLD ROUTER/120B 71/100. JEV SUPPLIES 31 REPLIES; ALL 31 PASS INTENT, TOOL AND SCOPED-RENDERER CHECKS. TWENTY FALLBACK PLANS STILL FAIL. TIMING IS OBSERVATIONAL. FULL ANSWER ACCURACY AND GENERAL ENABLEMENT REMAIN UNQUALIFIED; NORMAL MODEL/JEV MODE UNCHANGED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. LATEST DARIJA/ARABIZI REGRESSION: 96/100 TOOL PLANS, UP FROM 92/100. ALL EIGHT OLD FAILURES AND 30 TARGETED LIVE JEV-OFF REQUESTS PASS. FULL ANSWER ACCURACY AND GENERAL JEV ENABLEMENT REMAIN UNQUALIFIED.**
 
-## 0. Current status and next work — 2026-10-08
+## 0. Current status and next work — 2026-10-09
+
+**2026-10-09 filtered replies and final regression complete:**
+[Latest results and next actions](docs/evidence/chatbot-latency/darija-final-filters-results-20261009.md)
+record 96/100 tool plans and 0.540 seconds average full reply, without a timing gate.
+All eight old failures pass, as do 30/30 targeted live requests with Jev off
+and zero classifier/model calls. Monthly exams, classes above 30, class lists,
+class/subject grade joins and context-free historical clarification are covered.
+Three regressions in the first 97/100 run were fixed before the final pass;
+previous-month student absences and direct teacher counts also avoid faulty fallback wording.
+Populated HTTP/MCP tests cover admin/principal across two years, restricted-role
+denials and school-zone month boundaries. 455 chat tests, 557 script tests,
+typecheck, lint, boundaries and production build pass. Fifteen replies retain
+semantic review flags; tool-plan checks do not establish complete answer accuracy.
+Fixture off/disabled/keyless/stopped; 2.36 GiB of temporary builds removed.
+Four other 20B fallback plans fail: q28, q56 and q67/q68. Next: validate malformed
+tool plans, resolve sixth-primary membership, and extend teacher-count/class-list
+wording; then test populated real-role workflows and fresh unseen Darija before
+broad Jev enablement. The existing router remains.
 
 **Guarded filtered reads complete (2026-10-08):**
 [Latest report and next work](docs/evidence/chatbot-latency/darija-school-filtered-results-20261008.md)

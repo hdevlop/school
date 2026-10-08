@@ -69,11 +69,13 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   attendance_get_by_date: ['attendance_get_all'],
   // Darija class-list queries may route to sections; the guarded list template
   // needs the class read, which includes its sections, available on that path.
-  sections_get_sections: ['classes_get_classes'],
-  sections_get_students: ['classes_get_classes', 'sections_get_sections'],
-  classes_get_class_students: ['classes_get_classes', 'sections_get_sections'],
-  grades_get_by_section: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects'],
+  sections_get_sections: ['classes_get_classes', 'students_get_students'],
+  sections_get_students: ['classes_get_classes', 'sections_get_sections', 'students_get_students'],
+  classes_get_class_students: ['classes_get_classes', 'sections_get_sections', 'students_get_students'],
+  grades_get_by_section: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects', 'grades_get_all'],
+  grades_get_by_subject: ['classes_get_classes', 'subjects_get_subjects', 'grades_get_all'],
   grades_get_all: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects'],
+  exams_get_upcoming_exams: ['exams_get_all'],
   // "This month" may retrieve today's exam tool; the list is needed to
   // apply a different date window without guessing teacher/class IDs.
   exams_get_today_exams: ['exams_get_all', 'exams_get_upcoming_exams'],

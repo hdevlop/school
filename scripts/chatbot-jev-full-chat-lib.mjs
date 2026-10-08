@@ -95,7 +95,9 @@ export function sourceHashes() {
     'packages/server/src/config/chatbotSystemPrompt.ts', 'packages/server/src/modules/chat/darijaRouting.ts',
     'packages/server/src/modules/chat/chatYearContext.ts', 'packages/server/src/modules/chat/SchoolChatContextProvider.ts',
     'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolListReplies.ts',
-    'packages/server/src/modules/chat/schoolFilteredReplies.ts',
+    'packages/server/src/modules/chat/schoolFilteredReplies.ts', 'packages/contracts/src/enums.ts',
+    'packages/contracts/src/index.ts', 'packages/contracts/package.json',
+    'packages/server/src/modules/dashboard/teacher/teacherDashboardMetrics.ts', 'packages/server/src/shared/businessDate.ts',
     'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts',
     'scripts/chatbot-jev-full-chat.mjs', 'scripts/chatbot-jev-full-chat-lib.mjs',
     'scripts/chatbot-provider-observer.mjs'];

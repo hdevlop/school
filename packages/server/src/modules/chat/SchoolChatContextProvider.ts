@@ -16,7 +16,7 @@ import { schoolReplyContext } from './schoolReplyContext';
 
 // A snapshot of the validated year for prompt text and MCP arguments; the
 // shared year boundary remains the only resolver and authorization owner.
-export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string }>();
+export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string }>();
 
 export interface ChatActor { id?: string; role?: string }
 
@@ -35,10 +35,14 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
   ) {}
 
   /** Read per request: a date fixed at startup goes stale overnight and ignores the school's zone. */
-  async describeToday(now = new Date()) {
+  private async today(now = new Date()) {
     const timeZone = (await this.settings.getPublicSettings())?.timeZone || 'UTC';
-    const today = schoolClock(timeZone, now, getBusinessDateOverride());
-    return `Today is ${today.weekday} ${today.date} (YYYY-MM-DD) in the school's time zone, ${timeZone}.`;
+    const clock = schoolClock(timeZone, now, getBusinessDateOverride());
+    return { date: clock.date, text: `Today is ${clock.weekday} ${clock.date} (YYYY-MM-DD) in the school's time zone, ${timeZone}.` };
+  }
+
+  async describeToday(now = new Date()) {
+    return (await this.today(now)).text;
   }
 
   async describe(actor: ChatActor = {}, now = new Date()) {
@@ -47,7 +51,9 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
   }
 
   async snapshot(actor: ChatActor = {}) {
-    return { prompt: await this.describe(actor), academicYear: this.year.label, role: actor.role };
+    const today = await this.today();
+    return { prompt: [today.text, this.describeYear(actor.role), await this.describeActor(actor)].filter(Boolean).join('\n'),
+      academicYear: this.year.label, role: actor.role, schoolDate: today.date };
   }
 
   /**
