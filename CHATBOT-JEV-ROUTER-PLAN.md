@@ -165,3 +165,15 @@ ownership tests**, **28 script/boundary tests**, lint, root type checks and an
 isolated production build pass. The identity tests invoke actual existing
 controllers over REST and MCP with fake repository data; no paid model or live
 database operation was needed. See the [current verification](docs/tests/jev-router-validation.md#module-owned-authorization-and-routing--2026-10-09).
+
+## Ordinary live checks — 2026-10-09
+
+Jev correctly answered the current 103-student/13-teacher count question.
+The native grade tool now accepts sectionId plus optional subjectId; all 14
+SVT scores in CP/A matched the final live answer. Response normalization runs
+once, and native “شكون” questions select Darija. OSS20B still produced malformed
+tool names and planning text before recovering, and its empty-attendance Darija
+answer made an unsupported claim that nobody was absent. These are unresolved
+answer-quality limits, not a reason to restore chat-side data/filter catalogs.
+See the [ordinary live report](docs/tests/jev-router-validation.md#ordinary-live-darija-checks--2026-10-09)
+for the results, fixes, verification and next concrete work.

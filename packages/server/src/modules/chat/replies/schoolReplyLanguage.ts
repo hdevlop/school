@@ -36,6 +36,8 @@ const arabiziWords = new RegExp(`(?<![\\p{L}\\p{N}])(?:${arabiziSignals.join('|'
 export function schoolReplyLanguage(userText: string): ReplyLanguage | null {
   const text = normalizeReplyText(userText);
   if (frenchOpening.test(text) || frenchMark.test(text) || frenchPhrases.some(pattern => pattern.test(text))) return 'fr';
+  // Native Darija question openings distinguish these from formal Arabic.
+  if (/^(?:شكون|شكونهم)(?!\p{L})/u.test(text)) return 'ary';
   const language = detectMoroccanReplyLanguage(userText);
   if (language) return language;
   // A command/question opening plus another distinct Darija signal, rather than

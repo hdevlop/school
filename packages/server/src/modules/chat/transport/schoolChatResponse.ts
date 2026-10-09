@@ -1,5 +1,7 @@
 import { schoolReplyLanguage } from '../replies/schoolReplyLanguage';
 
+const normalizedHeader = 'x-school-chat-response-normalized';
+
 /** This is a transport failure message, never a claim about school records. */
 export function schoolChatFailureText(query: string): string {
   const language = schoolReplyLanguage(query);
@@ -41,7 +43,8 @@ export function schoolChatAllowanceText(query: string): string {
  * No generation retry, tools, persistence, year resolution or usage estimation.
  */
 export function schoolChatResponse(response: Response, query: string, signal?: AbortSignal, budget?: { stopped?: string }): Response {
-  if (!response.ok || !response.body || response.headers.get('x-vercel-ai-ui-message-stream') !== 'v1'
+  if (response.headers.get(normalizedHeader) === 'v1'
+    || !response.ok || !response.body || response.headers.get('x-vercel-ai-ui-message-stream') !== 'v1'
     || !response.headers.get('content-type')?.includes('text/event-stream')
     || response.headers.has('content-encoding')) return response;
   const reader = response.body.getReader(), decoder = new TextDecoder(), encoder = new TextEncoder();
@@ -155,6 +158,8 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
     cancel(reason) { aborted = true; return reader.cancel(reason); },
   });
   const headers = new Headers(response.headers);
+  // One normalizer owns notices across middleware and hot-reload module graphs.
+  headers.set(normalizedHeader, 'v1');
   headers.delete('content-length');
   return new Response(body, { status: response.status, statusText: response.statusText, headers });
 }

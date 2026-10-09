@@ -28,7 +28,7 @@ export const chatbotConfig = () =>
     // remains available through the explicit rollback switch.
     openrouter: {
       get provider() { return schoolOpenRouterProvider(); },
-      reasoning: { effort: 'low' },
+      reasoning: { effort: 'low', exclude: true },
     },
     conversationStore: 'db',
     // The interaction log table would store questions and tool arguments, and

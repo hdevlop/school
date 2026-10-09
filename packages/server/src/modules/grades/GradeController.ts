@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { GradeService } from './GradeService';
 import { Grade, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './GradeGuards';
@@ -9,6 +9,8 @@ import {
   deleteBulkGradeDto,
   examIdParam,
   gradeIdParam,
+  gradeSectionFilterDto,
+  type GradeSectionFilterDto,
   seedGradesBulkDto,
   sectionIdParam,
   studentIdParam,
@@ -73,11 +75,11 @@ export class GradeController {
 
   @Get('/section/:sectionId')
   @CanList()
-  @Validate({ params: sectionIdParam })
-  @McpTool({ description: 'Get grades by section', readOnly: true })
+  @Validate({ params: sectionIdParam, query: gradeSectionFilterDto })
+  @McpTool({ description: 'Get grades by section, optionally limited to one subjectId. For section-and-subject grades supply both resolved IDs.', readOnly: true })
   @ResMsg('grades.success.retrieved')
-  async getBySection(@Params('sectionId') sectionId: string) {
-    return this.gradeService.getAll({ sectionId });
+  async getBySection(@Params('sectionId') sectionId: string, @Query() filters: GradeSectionFilterDto = {}) {
+    return this.gradeService.getAll({ sectionId, subjectId: filters.subjectId });
   }
 
   @Get('/subject/:subjectId')

@@ -400,3 +400,40 @@ framework, database access path or authorization layer was added.
 If a question still chooses the wrong tool, its query and returned answer identify
 the next concrete routing/tool-description correction; do not restore filtered
 answer catalogs or rerun provider comparisons.
+
+## Ordinary live Darija checks — 2026-10-09
+
+Used the existing signed-in app and read-only module MCP tools for ground truth;
+no new benchmark, account, school record or provider comparison was created.
+
+| Question | Observed result |
+| --- | --- |
+| Student and teacher counts this year | Jev returned the correct 103 students and 13 teachers, in Darija; 0.73 s including diagnostics. |
+| CP, section A, SVT grades | The first attempt read all 140 section grades (183,119 result characters) and exceeded the context bound. After exposing the existing subject filter, the tool returned 14 rows (18,855 characters). The final answer matched every returned student's score: 14/14. It still leaked English planning and made two malformed calls before recovering; 14.98 s including diagnostics. This is a partial quality result. |
+| Who is absent today? | The initial answer correctly said no attendance records were recorded, in formal Arabic (2.34 s). After fixing Darija detection, the tool again returned an empty array, but OSS20B incorrectly phrased this as nobody being absent and used awkward Darija (1.98 s). This does not establish zero absentees and does not pass answer-quality validation. |
+
+The grade controller now exposes optional subjectId through its validated
+section route and forwards both IDs to the existing service/repository. Existing
+permission, ownership and selected-year boundaries remain the owners of access.
+No chat-side grade filtering, calculation or database access was added.
+
+The stream normalizer now marks its response and runs once across nested
+middleware/module graphs. A 25-wrapper regression verifies only one failure
+notice. Native “شكون” questions select Darija. The model instructions require
+exact structured tool names and section+subject discovery. Returned reasoning
+is disabled through OpenRouter's supported exclude option, but the live result
+shows this does not eliminate planning emitted as ordinary answer text.
+See [OpenRouter reasoning controls](https://openrouter.ai/docs/guides/best-practices/reasoning-tokens).
+
+Offline verification: 969 chat/year/security/ownership tests and 28
+script/boundary tests, lint, root type checking and the isolated production build
+pass. One combined test run transiently failed
+the mocked release fallback check while related files were being edited; the
+isolated suite and the subsequent combined run passed.
+
+**What can be done next:** keep Jev for its supported reads. The section/subject
+grade tool is now usable through REST and MCP, but do not describe OSS20B's
+general Darija replies as fully validated. The remaining issues are provider
+tool-name formatting, planning text, and the distinction between empty records
+and verified absence counts. Correct those concrete behaviors without restoring
+chat filter catalogs or starting another provider benchmark.

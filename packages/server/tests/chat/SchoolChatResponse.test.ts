@@ -14,6 +14,18 @@ const reply = (body: BodyInit | ReadableStream<Uint8Array>) => new Response(body
 const events = (body: string) => body.split('\n').filter(line => line.startsWith('data: ') && !line.includes('[DONE]')).map(line => JSON.parse(line.slice(6)));
 const text = (body: string) => events(body).filter(x => x.type === 'text-delta').map(x => x.delta).join('');
 
+test('nested middleware normalizes the same response once, including provider failures', async () => {
+  const query = 'وريني النقط ديالي';
+  const response = schoolChatResponse(reply(start + frame({ type: 'error', errorText: 'private upstream error' }) + done), query);
+  let wrapped = response;
+  for (let i = 0; i < 25; i++) wrapped = schoolChatResponse(wrapped, query);
+  expect(wrapped).toBe(response);
+  const body = await wrapped.text();
+  expect(text(body)).toBe(schoolChatFailureText(query));
+  expect(events(body).filter(event => event.type === 'text-start')).toHaveLength(1);
+  expect(body).not.toContain('private upstream error');
+});
+
 test('failed tool attempts stay visible after a later successful answer without another generation', async () => {
   const inputFailure = { type: 'tool-input-error', toolCallId: 'bad', toolName: 'unknown', input: {}, errorText: 'private validation body' };
   const outputFailure = { type: 'tool-output-error', toolCallId: 'bad', errorText: 'private upstream body' };

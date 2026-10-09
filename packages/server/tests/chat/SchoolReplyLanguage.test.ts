@@ -3,6 +3,11 @@ import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyL
 import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
 describe('School language profile', () => {
+  it('recognizes the native Darija attendance question without changing formal Arabic', () => {
+    expect(schoolReplyLanguage('شكون غايب اليوم؟')).toBe('ary');
+    expect(schoolReplyLanguage('من غائب اليوم؟')).toBe('ar');
+    expect(schoolReplyLanguage('Qui est absent aujourd’hui ?')).toBe('fr');
+  });
   it.each([
     'lah yjazik bikhir, hadchi li kent me7taj.',
     'werini chkoun li 7ader w chkoun li ghayeb mn tlamd lyoum f lmdrasa kamla.',

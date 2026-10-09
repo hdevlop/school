@@ -54,6 +54,8 @@ export const assessmentIdParam = z.object({ assessmentId: z.string().min(1) });
 export const examIdParam = z.object({ examId: z.string().min(1) });
 export const studentIdParam = z.object({ studentId: z.string().min(1) });
 export const sectionIdParam = z.object({ sectionId: z.string().min(1) });
+export const gradeSectionFilterDto = z.object({ subjectId: requiredId.optional() });
+export type GradeSectionFilterDto = z.infer<typeof gradeSectionFilterDto>;
 export const subjectIdParam = z.object({ subjectId: z.string().min(1) });
 export const teacherIdParam = z.object({ teacherId: z.string().min(1) });
 
