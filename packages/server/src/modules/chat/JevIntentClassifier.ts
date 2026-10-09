@@ -2,7 +2,7 @@ import { AiSettingsService, type ReplyPreparationRequest, type ReplyPreparationS
 import { Service } from '../../najm';
 import { ROLES } from '../../auth';
 import { JEV_DECISIONS_URL, parseDecision } from './jevIntents';
-import { acceptsWithQueryGuardV6 } from './jevQueryGuard';
+import { acceptsWithQueryGuardV6, hasGuardedJevReply } from './jevQueryGuard';
 import { buildJevRuntimeDecisionRequest } from './jevRuntimeWording';
 import { readJevControls, effectiveJevMode } from './JevControls';
 import { JevAttemptLedger } from './JevAttemptLedger';
@@ -48,12 +48,22 @@ export class JevIntentClassifier {
 
   eligible(request: ReplyPreparationRequest) {
     const frame = schoolJevRequestContext.getStore();
-    return effectiveJevMode() !== 'off' && !!frame && frame.mode !== 'off'
+    const metadataEligible = effectiveJevMode() !== 'off' && !!frame && frame.mode !== 'off'
       && frame.actorId === request.userId && [ROLES.ADMIN, ROLES.PRINCIPAL].some(role => role === frame.role)
       && request.channel === 'web' && ['fr', 'ar', 'ary'].includes(request.language ?? '')
       && request.historyComplete === true && request.priorUserTurns === 0 && frame.query === request.userText
       && (this.controls.billingMode !== 'observe' || !!frame.requestSignal && !frame.requestSignal.aborted)
       && !request.signal.aborted && !this.ledger.snapshot().stoppedReason;
+    if (!metadataEligible) {
+      if (frame && !frame.diagnostics) frame.diagnostics = { eligibility: 'ineligible_metadata', classification: 'not_started' };
+      return false;
+    }
+    // Shadow measures declines as well as supported replies. On mode only pays
+    // when at least one existing guarded reply is possible; acceptance still runs later.
+    const eligibility = frame.mode === 'shadow' ? 'shadow_unfiltered'
+      : hasGuardedJevReply(request.userText) ? 'supported_query' : 'unsupported_query';
+    frame.diagnostics = { eligibility, classification: frame.diagnostics?.classification ?? 'not_started' };
+    return eligibility !== 'unsupported_query';
   }
 
   readonly onSelection = (event: ReplyPreparationSelection) => {
@@ -100,6 +110,7 @@ export class JevIntentClassifier {
       attempt = this.ledger.start({ correlationId: frame.correlationId, caseId: frame.caseId, mode: frame.mode });
       if (!attempt) return null;
       frame.attemptId = attempt.id;
+      frame.diagnostics!.classification = 'pending';
       const send = () => this.transport(JEV_DECISIONS_URL, { method: 'POST', redirect: 'error', signal: networkSignal,
         headers: { authorization: `Bearer ${settings.apiKey}`, 'content-type': 'application/json' },
         body: JSON.stringify({ ...buildJevRuntimeDecisionRequest(request.userText), session_id: attempt!.id, provider: { data_collection: 'deny' } }) });
@@ -118,6 +129,7 @@ export class JevIntentClassifier {
       const decision = parseDecision(body);
       const accepted = acceptsWithQueryGuardV6(decision, request.userText, this.controls.threshold);
       const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear, request.userText) : null;
+      frame.diagnostics!.classification = signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined';
       this.ledger.settle(attempt.id, { outcome: signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined',
         costUsd, costSource: costUsd === null ? undefined : 'decisions_response', providerRequestId, providerGenerationId,
         billingMode: this.controls.billingMode, transportCompleted, httpStatus,
@@ -127,6 +139,7 @@ export class JevIntentClassifier {
       // Shadow has the same privacy/budget requirements and never executes a plan.
       return frame.mode === 'on' && effectiveJevMode() !== 'off' ? plan : null;
     } catch {
+      frame.diagnostics!.classification = signal.aborted || networkSignal.aborted ? 'aborted' : 'error';
       if (attempt) this.ledger.settle(attempt.id, { outcome: signal.aborted || networkSignal.aborted ? 'aborted' : 'error',
         costUsd, costSource: costUsd === null ? undefined : 'decisions_response', providerRequestId, providerGenerationId,
         billingMode: this.controls.billingMode, transportCompleted, httpStatus,

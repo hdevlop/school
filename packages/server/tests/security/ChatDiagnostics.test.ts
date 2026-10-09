@@ -6,6 +6,7 @@ import type { ChatDiagnostics } from 'najm-chatbot';
 import { chatbotConfig } from '../../src/config';
 import { ChatDiagnosticsController } from '../../src/modules/chat/ChatDiagnosticsController';
 import { ChatDiagnosticsLog, chatDiagnosticsLog } from '../../src/modules/chat/ChatDiagnosticsLog';
+import { schoolJevRequestContext, type JevRequestContext } from '../../src/modules/chat/JevSessionGrants';
 
 function diagnostics(correlationId: string | null): ChatDiagnostics {
   return {
@@ -29,6 +30,24 @@ function diagnostics(correlationId: string | null): ChatDiagnostics {
 }
 
 describe('chat diagnostics', () => {
+  it('snapshots only fixed Jev codes for the matching request and never updates a sealed reply', () => {
+    const log = new ChatDiagnosticsLog();
+    const frame: JevRequestContext = { actorId: 'private-actor', role: 'admin', academicYear: '2026-2027',
+      mode: 'on', correlationId: 'request', caseId: 'fixture', query: 'private question', historyComplete: true, priorUserTurns: 0,
+      diagnostics: { eligibility: 'supported_query', classification: 'pending' } };
+    Object.assign(frame.diagnostics!, { query: 'private diagnostic field' });
+    schoolJevRequestContext.run(frame, () => {
+      log.record(diagnostics('request'));
+      log.record(diagnostics('other-request'));
+      frame.diagnostics!.classification = 'aborted';
+    });
+    expect(log.find('request')?.jev).toEqual({ eligibility: 'supported_query', classification: 'pending' });
+    expect(log.find('other-request')?.jev).toBeUndefined();
+    expect(JSON.stringify(log.recent(2))).not.toContain('private');
+    frame.correlationId = null;
+    schoolJevRequestContext.run(frame, () => log.record(diagnostics(null)));
+    expect(log.recent(1)[0].jev).toBeUndefined();
+  });
   it('are readable by administrators only', () => {
     const routes = getRoutes(ChatDiagnosticsController).map((route) => route.methodName);
     expect(routes.sort()).toEqual(['find', 'list']);

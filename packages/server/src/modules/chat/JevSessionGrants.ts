@@ -5,6 +5,12 @@ import type { JevMode } from './JevControls';
 import type { ReplyPreparationRequest, ReplyPreparationSelection, ReplyTemplate } from 'najm-chatbot';
 import type { JevExperimentArm } from './jevExperiment';
 
+/** Fixed codes only; no question, tool arguments, credentials or record identifiers. */
+export interface JevRequestDiagnostics {
+  eligibility: 'ineligible_metadata' | 'unsupported_query' | 'supported_query' | 'shadow_unfiltered';
+  classification: 'not_started' | 'pending' | 'candidate' | 'declined' | 'error' | 'aborted';
+}
+
 export interface JevRequestContext {
   actorId: string; role: string; academicYear: string; mode: JevMode;
   correlationId: string | null; caseId: string; query: string;
@@ -16,6 +22,7 @@ export interface JevRequestContext {
   eligible?: (request: ReplyPreparationRequest) => boolean;
   onSelection?: (event: ReplyPreparationSelection) => void;
   attemptId?: string;
+  diagnostics?: JevRequestDiagnostics;
 }
 export const schoolJevRequestContext = new AsyncLocalStorage<JevRequestContext>();
 

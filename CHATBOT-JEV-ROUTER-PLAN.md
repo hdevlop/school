@@ -1,10 +1,10 @@
 # Jev + router optimization plan
 
-Updated: 2026-10-09. Status: **comparison phase closed; implementation plan active**.
+Updated: 2026-10-09. Status: **comparison phase closed; P1 implemented; P2 next**.
 Target: local replies and guarded Jev for supported requests, the existing router
 for discovery and fallback, and **GPT-OSS 20B only when a model is necessary**.
-This document replaces the historical latency work orders. It defines planned
-changes; rewriting it does not enable Jev or change the production model.
+This document replaces the historical latency work orders. Implemented steps
+are marked below; general Jev/model production settings remain unchanged.
 
 ## Goals and boundaries
 
@@ -92,19 +92,26 @@ verification; routine implementation should continue without repeated “continu
 
 ### P1 — Eliminate unnecessary Jev calls
 
-- [ ] Add a conservative prefilter before transport: skip only when all supported
-      intent guards veto the request. An uncertain query must not be discarded
+- [x] Add a conservative prefilter before transport: skip only when all guarded
+      read/greeting intents veto the request. An uncertain query must not be discarded
       merely because a new keyword rule fails to recognize it.
-- [ ] Preserve role, history, language, cancellation and budget checks. Unknown
+- [x] Preserve role, history, language, cancellation and budget checks. Unknown
       language can bypass Jev safely while the ordinary Darija flow is improved.
-- [ ] Record why Jev was skipped or declined, which path answered, and whether a
+- [x] Record why Jev was skipped or declined, which path answered, and whether a
       model was invoked; keep personal text and tool payloads out of diagnostics.
-- [ ] Prove unsupported requests make zero Jev calls and previously valid guarded
+- [x] Prove unsupported requests make zero Jev calls and previously valid guarded
       candidates remain reachable. Keep shadow-study behavior explicit.
 
 Primary files: `JevIntentClassifier.ts`, `jevQueryGuard.ts`, `jevGuard/`,
 `SchoolReplyLanguage.test.ts`, `JevAdapter.test.ts` under the existing chat module/tests.
 Output: fewer paid classifier attempts without losing valid supported plans.
+
+P1 verification: 1,418 regression tests, lint, typecheck and production build pass.
+Offline replay would skip 22 of the previous 32 paid classifier attempts, preserving
+all eight direct Jev observations. No new paid calls or live accuracy score are
+claimed. Shadow remains unfiltered; writes keep their synchronous refusal. Skip and
+classification codes join existing reply/step diagnostics without private payloads.
+See the [implementation checkpoint](docs/tests/jev-router-validation.md#p1-implementation-checkpoint--2026-10-09).
 
 ### P2 — Repair tool and argument selection
 
@@ -214,4 +221,4 @@ Historical native-research protocols and old numeric latency/sample gates remain
 historical evidence; they do not add prerequisites to these engineering rechecks.
 Native qualification must still be reported honestly if pursued separately.
 
-**First action: implement P1, then repair P2's class and child-identity failures.**
+**Next action: repair P2's class/section and child-identity failures.**

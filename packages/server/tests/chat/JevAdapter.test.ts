@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, mock } from 'bun:test';
 import { ChatAgent, type ReplyPreparationRequest } from 'najm-chatbot';
 import { scriptedModel } from 'najm-chatbot/testing';
 import { McpBuilderService, McpRegistryService, TOOL_PROVIDER } from 'najm-mcp';
-import { USER, getRoutes } from '../../src/najm';
+import { CORRELATION_ID, USER, getRoutes } from '../../src/najm';
 import { getGuardMetadata } from 'najm-guard';
 import { JevIntentClassifier } from '../../src/modules/chat/JevIntentClassifier';
 import { JevAttemptLedger } from '../../src/modules/chat/JevAttemptLedger';
@@ -20,6 +20,8 @@ import { schoolChatYearContext } from '../../src/modules/chat/SchoolChatContextP
 import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
 import { schoolOpenRouterProvider } from '../../src/modules/chat/jevExperiment';
 import { jevDarijaCases } from '../../src/modules/chat/jevDarijaCases';
+import { hasGuardedJevReply, queryVetoV6 } from '../../src/modules/chat/jevQueryGuard';
+import { ChatDiagnosticsLog } from '../../src/modules/chat/ChatDiagnosticsLog';
 
 test('reviewed Darija catalog grants exact text on the router-first arm', () => {
   const grants = new JevSessionGrants();
@@ -89,6 +91,62 @@ const run = <T>(instance: JevIntentClassifier, work: () => T, changes: Partial<J
   schoolJevRequestContext.run(frame(instance, changes), work);
 
 describe('Jev eligibility and privacy boundary', () => {
+  test.each(['وريني نقط بنتي فهاد العام.', 'ch7al mn tilmid f l9ism lkhamis bo7do?',
+    'chno ndir daba m3a hadok?', 'zid tilmid jdid daba'])('unsupported query %s bypasses settings, transport and the paid ledger', async userText => {
+    const { instance, settings } = classifier();
+    await run(instance, async () => {
+      expect(instance.eligible(request({ userText, language: 'ary' }))).toBe(false);
+      expect(await instance.prepare(request({ userText, language: 'ary' }))).toBeNull();
+      expect(schoolJevRequestContext.getStore()?.diagnostics).toEqual({ eligibility: 'unsupported_query', classification: 'not_started' });
+    }, { query: userText });
+    expect(settings.getInternal).not.toHaveBeenCalled();
+    expect(instance.transport).not.toHaveBeenCalled();
+    expect(instance.ledger.snapshot().requests).toBe(0);
+    expect(instance.ledger.recent()).toEqual([]);
+  });
+  test('shadow retains unsupported-query measurement without returning a plan', async () => {
+    const userText = 'وريني نقط بنتي فهاد العام.';
+    setBenchmarkJevMode('shadow');
+    const { instance } = classifier();
+    instance.transport = mock(async () => Response.json(response('needs_llm'))) as any;
+    await run(instance, async () => {
+      expect(instance.eligible(request({ userText, language: 'ary' }))).toBe(true);
+      expect(await instance.prepare(request({ userText, language: 'ary' }))).toBeNull();
+      expect(schoolJevRequestContext.getStore()?.diagnostics).toEqual({ eligibility: 'shadow_unfiltered', classification: 'declined' });
+    }, { query: userText, mode: 'shadow' });
+    expect(instance.transport).toHaveBeenCalledTimes(1);
+    expect(instance.ledger.recent()[0]).toMatchObject({ reason: 'shadow_only', costUsd: 0.00004 });
+  });
+  test('all eight frozen direct Jev observations remain eligible and retain their guarded plan', async () => {
+    const measured = await Bun.file('docs/evidence/chatbot-latency/darija-combinations-results-20261009.json').json();
+    const selected = measured.rows.filter((row: { jevSelected: boolean }) => row.jevSelected);
+    expect(selected).toHaveLength(8);
+    for (const row of selected) {
+      const { instance } = classifier();
+      const choice = row.replyLabel.slice(4) as JevIntent;
+      instance.transport = mock(async () => Response.json(response(choice))) as any;
+      const input = request({ userText: row.query, language: schoolReplyLanguage(row.query) });
+      expect(await run(instance, () => instance.prepare(input), { query: row.query })).toMatchObject({ label: row.replyLabel });
+      expect(instance.transport).toHaveBeenCalledTimes(1);
+    }
+  });
+  test('the reviewed corpus keeps every positively guarded non-write candidate reachable', () => {
+    let supported = 0;
+    for (const item of jevDarijaCases) {
+      if (item.intent === 'write_request' || item.intent === 'needs_llm' || queryVetoV6(item.query, item.intent) !== null) continue;
+      supported++;
+      expect(hasGuardedJevReply(item.query)).toBe(true);
+    }
+    expect(supported).toBeGreaterThan(0);
+    // Eligibility remains only a negative filter: the classifier's answer still decides.
+    expect(hasGuardedJevReply('salam')).toBe(true);
+  });
+  test('a positive prefilter does not replace classifier acceptance', async () => {
+    const { instance } = classifier();
+    instance.transport = mock(async () => Response.json(response('needs_llm'))) as any;
+    expect(await run(instance, () => instance.prepare(request()))).toBeNull();
+    expect(instance.ledger.recent()[0]).toMatchObject({ outcome: 'declined', choice: 'needs_llm' });
+  });
   test('off sends nothing and preserves the legacy preparation path', async () => {
     setBenchmarkJevMode('off');
     const { instance, settings } = classifier();
@@ -303,12 +361,14 @@ describe('published readiness integration', () => {
     expect(instance.ledger.snapshot().pendingRequests).toBe(0);
   }
   function agent(instance: JevIntentClassifier, router: () => Promise<any>) {
+    const diagnostics = new ChatDiagnosticsLog();
     const events: any[] = []; const reads = mock(async () => ({ content: [{ type: 'text', text: '{"count":7}' }] }));
     const value = new ChatAgent({ getInternal: async () => ({ isEnabled: true, provider: 'openrouter', model: 'test', useMemory: false }) } as any,
       {} as any, {} as any, { reply: { detectLanguage: schoolReplyLanguage, template: input => schoolReplyTemplate(input, schoolChatYearContext.getStore()?.academicYear),
-        preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: event => { events.push(event); } } }, {} as any);
+        preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: event => { events.push(event); diagnostics.record(event); } } }, {} as any);
     (value as any).container = { get(token: any) {
       if (token === USER) return { id: 'actor', role: 'admin' };
+      if (token === CORRELATION_ID) return 'chat-request';
       if (token === TOOL_PROVIDER) return { findRelevantTools: router };
       if (token === McpRegistryService) return { tools: [{ name: 'students_get_student_count', annotations: { readOnlyHint: true } }] };
       if (token === McpBuilderService) return { invokeTool: reads };
@@ -317,13 +377,29 @@ describe('published readiness integration', () => {
     const model = scriptedModel('model fallback'); const generation = mock(model.doGenerate.bind(model)); model.doGenerate = generation;
     (value as any).buildModel = () => model;
     const input = { messages: [{ role: 'user', parts: [{ type: 'text', text: query }] }] } as any;
-    return { value, events, reads, generation, input };
+    return { value, events, reads, generation, input, diagnostics };
   }
+  test.each(['20b-coreweave-first', '20b-coreweave-router-first'] as const)('%s bypasses unsupported Jev work and invokes the existing router/model fallback once', async experimentArm => {
+    process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';
+    const userText = 'وريني نقط بنتي فهاد العام.';
+    const { instance, settings } = classifier();
+    const router = mock(async () => ({ status: 'routed', tools: [] }));
+    const a = agent(instance, router);
+    a.input.messages[0].parts[0].text = userText;
+    expect(await run(instance, () => a.value.runOnce(a.input), { query: userText, experimentArm })).toBe('model fallback');
+    expect(router).toHaveBeenCalledTimes(1); expect(a.generation).toHaveBeenCalledTimes(1);
+    expect(settings.getInternal).not.toHaveBeenCalled(); expect(instance.transport).not.toHaveBeenCalled();
+    expect(a.reads).not.toHaveBeenCalled(); expect(instance.ledger.snapshot().requests).toBe(0);
+    expect(a.diagnostics.find('chat-request')?.jev).toEqual({ eligibility: 'unsupported_query', classification: 'not_started' });
+    expect(a.diagnostics.find('chat-request')?.steps).toHaveLength(1);
+  });
   test('early candidate executes one read through the existing builder', async () => {
     const { instance } = classifier(); const a = agent(instance, () => new Promise(() => {}));
     expect(await run(instance, () => a.value.runOnce(a.input))).toContain('7 élèves');
     expect(a.reads).toHaveBeenCalledTimes(1); expect(a.generation).not.toHaveBeenCalled();
     expect(instance.ledger.recent()[0]).toMatchObject({ selected: 'template', costUsd: 0.00004 });
+    expect(a.diagnostics.find('chat-request')?.jev).toEqual({ eligibility: 'supported_query', classification: 'candidate' });
+    expect(a.diagnostics.find('chat-request')?.steps).toHaveLength(0);
   });
   test('candidate-first waits for a valid decision and uses the last budget slot without routing or generation', async () => {
     process.env.CHATBOT_JEV_EXPERIMENT = 'coreweave-first';

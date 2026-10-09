@@ -52,3 +52,36 @@ Verify normal-chat context, selective OSS20B fallback, the monthly budget guard
 and rollback. Keep one final report and one compact archive, then remove private
 captures, owned test hosts and generated builds. Reports must name the remaining
 unsupported workflows and the next concrete action.
+
+## P1 implementation checkpoint — 2026-10-09
+
+On mode now bypasses Jev before settings, transport or a spending reservation when
+none of the existing guarded read/greeting replies is possible. The prefilter
+does not choose an intent, lower thresholds or authorize a tool. Write refusals
+stay in the earlier synchronous path; `write_request` has no positive semantic
+guard and therefore cannot make every query eligible. Shadow studies deliberately
+retain their previous measurement coverage and privacy/budget restrictions.
+
+Fixed diagnostic codes record eligibility and classification outcome for a matching
+request ID. Existing reply source and generation steps show which path answered
+and whether a model ran. Recorded snapshots exclude private fields and cannot be
+changed by a late classifier completion. Both candidate-first and router-first
+integration tests preserve one ordinary router/model fallback with zero classifier
+requests for unsupported input.
+
+Offline replay of the frozen 60-chat comparison would bypass **22/32** previous
+classifier attempts and keep all eight direct Jev observations reachable. This is
+a counterfactual eligibility check, not a new live accuracy or invoice saving result.
+There were **zero new paid calls**. Broader personal-role answer failures remain open.
+
+Verification: **1,418 regression tests** passed; 75 focused adapter/diagnostic checks
+passed again after adding callback assertions. Root lint/typecheck and production
+build passed; final test typechecking passed. The isolated build was removed
+(about 992 MiB), with the prior Next type references and the user's tsconfig restored
+or preserved. Production model, provider and general Jev enablement are unchanged.
+
+[Compact replay, source and verification archive](../evidence/chatbot-latency/jev-eligibility-20261009.zip).
+The verified archive is 25,746 bytes with 12 entries; its SHA-256 is
+`44bf03d0ecb97a0b40eac5c95f81356bc493beaf5788981d078b3d4c2da2b717`.
+Next work is P2's class/section discovery and child identity, followed by their
+targeted Darija tool-and-fact checks, rather than another full provider comparison.

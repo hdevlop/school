@@ -3,6 +3,13 @@
 Active work: [Jev + router optimization plan](../../../CHATBOT-JEV-ROUTER-PLAN.md).
 Validation: [Darija tool and answer checks](../../tests/jev-router-validation.md).
 
+P1 now avoids provably unsupported classifier work. Its
+[implementation checkpoint](../../tests/jev-router-validation.md#p1-implementation-checkpoint--2026-10-09)
+records zero new paid calls and a counterfactual 22/32 classifier bypass with all
+eight frozen direct replies preserved. The compact
+[eligibility archive](jev-eligibility-20261009.zip) contains replay and verification
+details. Existing comparison and answer-quality scores below remain unchanged.
+
 Keep these reports separate; their questions, roles and scoring differ:
 
 - [Jev / router + OSS20B comparison](darija-combinations-results-20261009.md):

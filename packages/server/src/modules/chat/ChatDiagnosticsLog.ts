@@ -1,8 +1,10 @@
 import type { ChatDiagnostics } from 'najm-chatbot';
 import { chatBenchmarkControlsEnabled, chatBenchmarkSnapshot } from './ChatBenchmarkState';
+import { schoolJevRequestContext, type JevRequestDiagnostics } from './JevSessionGrants';
 
 export type SchoolChatDiagnostics = ChatDiagnostics & {
   benchmark?: ReturnType<typeof chatBenchmarkSnapshot>;
+  jev?: JevRequestDiagnostics;
 };
 
 /**
@@ -18,8 +20,11 @@ export class ChatDiagnosticsLog {
   constructor(private readonly capacity = 200) {}
 
   readonly record = (diagnostics: ChatDiagnostics): void => {
+    const frame = schoolJevRequestContext.getStore();
+    const entry: SchoolChatDiagnostics = frame?.correlationId && frame.diagnostics && frame.correlationId === diagnostics.correlationId
+      ? { ...diagnostics, jev: { eligibility: frame.diagnostics.eligibility, classification: frame.diagnostics.classification } } : diagnostics;
     this.entries.push(chatBenchmarkControlsEnabled()
-      ? { ...diagnostics, benchmark: chatBenchmarkSnapshot() } : diagnostics);
+      ? { ...entry, benchmark: chatBenchmarkSnapshot() } : entry);
     if (this.entries.length > this.capacity) this.entries.shift();
   };
 
