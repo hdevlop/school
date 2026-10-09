@@ -1,15 +1,14 @@
 import { describe, expect, test } from 'bun:test';
-import { acceptsWithQueryGuardV5, acceptsWithQueryGuardV6 } from '../../src/modules/chat/jev/jevQueryGuard';
+import { acceptsWithQueryGuardV6 } from '../../src/modules/chat/jev/jevQueryGuard';
 import { jevReplyPlan } from '../../src/modules/chat/jev/jevReplyPlan';
 import { INTENT_NAMES } from '../../src/modules/chat/jev/jevIntents';
-import { jevDarijaCases } from '../../src/modules/chat/benchmark/jevDarijaCases';
+import { jevDarijaCases } from './fixtures/jevDarijaCases';
 
 const decision = (choice: any) => ({ choice, confidence: 0.99, writeProbability: 0 });
 const examIds = ['q05', 'q06', 'q77', 'q78', 'q79', 'q80'];
 const examCases = jevDarijaCases.filter(item => examIds.some(id => item.id.endsWith(id)));
 describe('guarded upcoming exam coverage', () => {
   test.each(examCases)('accepts only the unfiltered request $id with the scoped exam tool', item => {
-    expect(acceptsWithQueryGuardV5(decision(item.intent), item.query)).toBe(false);
     expect(acceptsWithQueryGuardV6(decision(item.intent), item.query)).toBe(true);
     const plan = jevReplyPlan(item.intent, 'ary', '2026-2027', item.query)!;
     if (!('calls' in plan)) throw Error('Expected tool plan');

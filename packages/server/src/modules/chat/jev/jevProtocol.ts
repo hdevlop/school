@@ -6,8 +6,6 @@ export interface JevDecision {
 }
 export const JEV_MODEL = 'typesafe/jev-1.13';
 export const JEV_DECISIONS_URL = 'https://openrouter.ai/api/alpha/decisions';
-export const LANGUAGES = ['en', 'fr', 'es', 'ar', 'ary', 'ary-latn'];
-export const SPLITS = ['dev', 'test'];
 
 // Every intent except needs_llm names a reply School could give without the model.
 // Tuned on the dev split only (B0). Version 1 is in the Stage A report's
@@ -28,13 +26,3 @@ export const INTENTS = {
 };
 export type JevIntent = keyof typeof INTENTS;
 export const INTENT_NAMES = Object.keys(INTENTS) as JevIntent[];
-
-export const ACCEPTANCE_POLICIES = Object.freeze({
-  full: Object.freeze(INTENT_NAMES.filter(name => name !== 'needs_llm')),
-  core: Object.freeze(INTENT_NAMES.filter(name => !['needs_llm', 'upcoming_exams'].includes(name))),
-});
-
-export function validateAcceptancePolicy(policy: string) {
-  if (!Object.hasOwn(ACCEPTANCE_POLICIES, policy)) throw new Error('Use acceptance-policy=full or core');
-  return policy;
-}

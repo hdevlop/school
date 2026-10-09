@@ -1,4 +1,4 @@
-import type { JevIntent } from '../jev/jevIntents';
+import type { JevIntent } from '../../../src/modules/chat/jev/jevIntents';
 export { jevDarijaCases } from './jevDarijaCases';
 
 /** Assistant-authored integration cases, not independent native qualification. */

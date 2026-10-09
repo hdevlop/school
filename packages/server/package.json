@@ -46,17 +46,9 @@
       "types": "./src/modules/chat/jev/jevRuntimeWording.ts",
       "default": "./src/modules/chat/jev/jevRuntimeWording.ts"
     },
-    "./jev-cases": {
-      "types": "./src/modules/chat/benchmark/jevSyntheticCases.ts",
-      "default": "./src/modules/chat/benchmark/jevSyntheticCases.ts"
-    },
     "./jev-query-guard": {
       "types": "./src/modules/chat/jev/jevQueryGuard.ts",
       "default": "./src/modules/chat/jev/jevQueryGuard.ts"
-    },
-    "./testing/jev": {
-      "types": "./tests/chat/jevFixture.ts",
-      "default": "./tests/chat/jevFixture.ts"
     }
   },
   "scripts": {

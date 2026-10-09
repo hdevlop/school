@@ -1,9 +1,8 @@
 import { afterEach, beforeEach, expect, setSystemTime, test } from 'bun:test';
 import { schoolFilteredReply, schoolFilteredReplyKind } from '../../src/modules/chat/replies/schoolFilteredReplies';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
 
-const corpus = await Bun.file('datasets/chatbot-latency/darija-tool-selection-20261008.json').json();
+const corpus = await Bun.file('packages/server/tests/chat/fixtures/darija-tool-selection-20261008.json').json();
 const cases = corpus.cases.filter((x: { id: string }) => [9,10,11,12,13,14,27,28,33,34,35,36,37,38,39,40,53,54,55,56,57,58,65,66,67,68,69,70,97,98,99,100].includes(Number(x.id.split('q').at(-1))));
 const query = (id: number) => cases.find((x: { id: string }) => x.id.endsWith('q'+String(id).padStart(2,'0')))!.query as string;
 const plan = (id: number) => {
@@ -113,16 +112,16 @@ test('grades display the first 20 with an explicit remaining count', () => {
   expect(text.match(/Salma/gu)).toHaveLength(20); expect(text).toContain('1 نقطة أخرى');
 });
 
-const keys = ['DB_URL','NODE_ENV','CHATBOT_BENCHMARK_CONTROLS','CHATBOT_JEV_BILLING_MODE','APP_BUSINESS_DATE'];
+const keys = ['DB_URL','NODE_ENV','CHATBOT_JEV_MODE','APP_BUSINESS_DATE'];
 const original = Object.fromEntries(keys.map(key=>[key,process.env[key]]));
 let fixture: Awaited<ReturnType<typeof createJevFixture>> | undefined;
 beforeEach(() => {
   process.env.DB_URL='postgres://localhost/school_history_test'; process.env.NODE_ENV='test';
-  process.env.CHATBOT_BENCHMARK_CONTROLS='true'; process.env.CHATBOT_JEV_BILLING_MODE='abort'; process.env.APP_BUSINESS_DATE='2026-10-09';
-  setBenchmarkJevMode('off');
+  process.env.APP_BUSINESS_DATE='2026-10-09';
+  process.env.CHATBOT_JEV_MODE = 'off';
 });
 afterEach(async () => {
-  await fixture?.server.stop(); fixture=undefined; setSystemTime(); setBenchmarkJevMode('off');
+  await fixture?.server.stop(); fixture=undefined; setSystemTime(); process.env.CHATBOT_JEV_MODE = 'off';
   for(const key of keys)if(original[key]===undefined)delete process.env[key];else process.env[key]=original[key];
 });
 const messages = (text:string)=>[{role:'user',parts:[{type:'text',text}]}];

@@ -1,4 +1,4 @@
-import type { JevIntent } from '../jev/jevIntents';
+import type { JevIntent } from '../../../src/modules/chat/jev/jevIntents';
 /** Exact owner-reviewed wording; labels remain assistant-authored. */
 export const jevDarijaCases: Array<{ id: string; query: string; language: 'ary' | 'ary-latn'; intent: JevIntent; familyId: string }> = [
     {

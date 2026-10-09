@@ -3,8 +3,7 @@ import { schoolFilteredReply, schoolFilteredReplyKind } from '../../src/modules/
 import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
-const corpus = await Bun.file('datasets/chatbot-latency/darija-tool-selection-20261008.json').json();
+const corpus = await Bun.file('packages/server/tests/chat/fixtures/darija-tool-selection-20261008.json').json();
 const cases = corpus.cases.filter((x: { id: string }) => [29,30,31,32,79,80,91,92,93,94].includes(Number(x.id.split('q').at(-1))));
 const girls = 'شحال من بنت كاينة فالمدرسة؟';
 const maths = '3tini smiyat dyal lasatida li kay9erriw riyadiyat.';
@@ -82,17 +81,17 @@ test('year is required for privileged reads; unidentified parent never triggers 
   expect(schoolReplyTemplate({ userText: girls, language: 'ary', channel: 'whatsapp' }, '2026-2027', 'admin')).toBeNull();
 });
 
-const keys = ['DB_URL','NODE_ENV','CHATBOT_BENCHMARK_CONTROLS','CHATBOT_JEV_BILLING_MODE'];
+const keys = ['DB_URL','NODE_ENV','CHATBOT_JEV_MODE'];
 const original = Object.fromEntries(keys.map(key => [key, process.env[key]]));
 let fixture: Awaited<ReturnType<typeof createJevFixture>> | undefined;
 beforeEach(() => {
   process.env.DB_URL = 'postgres://localhost/school_history_test'; process.env.NODE_ENV = 'test';
-  process.env.CHATBOT_BENCHMARK_CONTROLS = 'true'; process.env.CHATBOT_JEV_BILLING_MODE = 'abort'; setBenchmarkJevMode('off');
+  process.env.CHATBOT_JEV_MODE = 'off';
 });
 afterEach(async () => {
   await fixture?.server.stop(); fixture = undefined;
   for (const key of keys) if (original[key] === undefined) delete process.env[key]; else process.env[key] = original[key];
-  setBenchmarkJevMode('off');
+  process.env.CHATBOT_JEV_MODE = 'off';
 });
 const messages = (query: string) => [{ role: 'user', parts: [{ type: 'text', text: query }] }];
 const answerText = (stream: string) => stream.split(/\r?\n/u).filter(line => line.startsWith('data: {'))

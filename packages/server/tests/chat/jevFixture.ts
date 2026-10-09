@@ -25,11 +25,8 @@ import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyT
 import { schoolFilteredReplyKind } from '../../src/modules/chat/replies/schoolFilteredReplies';
 import { jevPreparationPolicy } from '../../src/modules/chat/jev/jevPreparationPolicy';
 import { JevIntentClassifier } from '../../src/modules/chat/jev/JevIntentClassifier';
-import { JevBenchmarkController } from '../../src/modules/chat/benchmark/JevBenchmarkController';
-import { JevBenchmarkService } from '../../src/modules/chat/benchmark/JevBenchmarkService';
-import { JevBenchmarkRepository } from '../../src/modules/chat/benchmark/JevBenchmarkRepository';
-import { jevSyntheticCases } from '../../src/modules/chat/benchmark/jevSyntheticCases';
-import { jevDarijaCases } from '../../src/modules/chat/benchmark/jevDarijaCases';
+import { jevSyntheticCases } from './fixtures/jevSyntheticCases';
+import { jevDarijaCases } from './fixtures/jevDarijaCases';
 import { INTENT_NAMES, JEV_MODEL } from '../../src/modules/chat/jev/jevIntents';
 import type { ChatDiagnostics } from 'najm-chatbot';
 
@@ -114,9 +111,6 @@ class GradeLists {
 /** Fully local: fake settings/classifier/model and synthetic repositories, real guards/MCP/year scope. */
 export async function createJevFixture(options: { qualifiedData?: boolean; identityData?: boolean; timeZone?: string;
   extraControllers?: Record<string, new (...args: any[]) => any> } = {}) {
-  let markedFixture = true;
-  const permissions: Array<{ id: string; name: string; resource: string; action: string }> = [];
-  const grantIds = new Set<string>();
   const events: ChatDiagnostics[] = [];
   const settings = { getInternal: async () => ({ provider: 'openrouter', apiKey: 'fixture-unused-key',
     isEnabled: true, model: 'openai/gpt-oss-120b', useMemory: false }) };
@@ -136,25 +130,17 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
     .use(i18n(schoolI18n.options)).use(guards()).use(validation())
     .use(mcp({ name: 'jev-fixture', version: '1', transports: ['http'], path: '/mcp',
       ...schoolMcpYearHooks(['students', 'teachers', 'classes', 'attendance', 'exams', 'grades']) }))
-    .load({ AuthGuard, ChatController, JevBenchmarkController, JevBenchmarkService,
+    .load({ AuthGuard, ChatController,
       AcademicYearValidator, AcademicYearRepository, SchoolChatContextProvider,
       StudentCounts, TeacherCounts, SubjectLists, ClassLists, AttendanceLists, ExamLists, GradeLists, ...options.extraControllers });
-  const roleGuard = getGuardMetadata(JevBenchmarkController, 'status').find(guard => guard.guardClass.name === 'RoleGuard')!.guardClass;
+  const roleGuard = getGuardMetadata(StudentCounts, 'get_student_count').find(guard => guard.guardClass.name === 'RoleGuard')!.guardClass;
   server.load(roleGuard);
   const container = server.container;
   container.set(FixtureData, new FixtureData(options.qualifiedData, options.identityData));
   container.set(AiSettingsService, settings as any);
   container.set(JevIntentClassifier, classifier);
-  container.set(JevBenchmarkRepository, { isMarkedFixture: async () => markedFixture } as any);
   container.set(RoleService, { getByName: async () => ({ id: 'history-role-admin', name: 'admin' }) } as any);
-  container.set(PermissionService, {
-    getPermissionsByRole: async () => permissions.filter(item => grantIds.has(item.id)),
-    getByName: async (name: string) => permissions.find(item => item.name === name),
-    create: async (data: { name: string; resource: string; action: string }) => {
-      const permission = { ...data, id: `mock-${permissions.length}` }; permissions.push(permission); return permission;
-    },
-    assignPermissionToRole: async (_roleId: string, id: string) => { grantIds.add(id); },
-  } as any);
+  container.set(PermissionService, { getPermissionsByRole: async () => [] } as any);
   container.set(KnowledgeContextProvider, { getContext: async () => null } as any);
   container.set(SettingsRepository, { getPublicSettings: async () => ({ timeZone: options.timeZone ?? 'UTC' }) } as any);
   for (const token of [ParentRepository, TeacherRepository, StudentRepository]) container.set(token, { getByUserId: async () => null } as any);
@@ -189,9 +175,9 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
   (agent as any).buildModel = () => model;
   container.set(ChatAgent, agent);
   registerYearPropertyInjector(container);
-  registerYearRequestScope(container, [ChatController, JevBenchmarkController]);
+  registerYearRequestScope(container, [ChatController]);
   registerChatYearContext(container);
-  for (const target of [ChatController, JevBenchmarkController]) container.setInjection({
+  for (const target of [ChatController]) container.setInjection({
     type: INJECTION_TYPES.MIDDLEWARE, target, order: 1,
     handler: async (context: any, next: () => Promise<void>) => {
       const actor = context.req.header('x-test-role');
@@ -215,7 +201,5 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
         ...(role ? { 'x-test-role': role } : {}), ...(actorId ? { 'x-test-actor-id': actorId } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }));
   }
   return { server, classifier, events, call, counts: () => ({ decisions, generations }),
-    routingCalls: () => routingCalls,
-    setMarkedFixture: (value: boolean) => { markedFixture = value; },
-    readGrants: () => permissions.filter(item => grantIds.has(item.id)).map(item => ({ ...item })) };
+    routingCalls: () => routingCalls };
 }

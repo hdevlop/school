@@ -26,10 +26,8 @@ export const chatbotConfig = () =>
     // Ends an answer whose provider stream goes silent. It also runs while a
     // tool executes; School's tools are database reads well under this.
     streamTimeout: { chunkMs: 30_000 },
-    // Applies only while the AI settings provider is OpenRouter. Cerebras
-    // served gpt-oss-120b in 0.9 s p50 against 8.2 s on OpenRouter's cheapest
-    // hosts (docs/evidence/chatbot-latency/cerebras-tool-prefix-20261004.md).
-    // Fallbacks keep the chat up when Cerebras is not; Groq is excluded.
+    // Qualified release pins OSS20B to CoreWeave; the legacy provider policy
+    // remains available through the explicit rollback switch.
     openrouter: {
       get provider() { return schoolOpenRouterProvider(); },
       reasoning: { effort: 'low' },

@@ -1,5 +1,9 @@
 # Chatbot evidence
 
+Provider/model comparisons are closed. Benchmark source and unused datasets were
+removed on 2026-10-09; recover them from `a75cd0f` if needed. Retained reports
+describe historical runs. Current code has no benchmark endpoints or CLIs.
+
 Active work: [Jev + router optimization plan](../../../CHATBOT-JEV-ROUTER-PLAN.md).
 Validation: [Darija tool and answer checks](../../tests/jev-router-validation.md).
 

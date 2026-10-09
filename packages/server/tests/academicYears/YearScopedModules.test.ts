@@ -3,16 +3,14 @@ import { describe, expect, it } from 'bun:test';
 import { getMcpControllerTools, getMcpToolGroup } from 'najm-mcp';
 import { getValidationConfig } from 'najm-validation';
 import { ChatController } from 'najm-chatbot';
-import { JevBenchmarkController } from '../../src/modules/chat/benchmark/JevBenchmarkController';
 import { yearRequestControllers, yearScopedModules } from '../../src/config/yearScope';
 import { schoolMcpYearHooks } from '../../src/modules/academicYears/requestYear';
 
 describe('controllers registered for the request year', () => {
   it('validates chat selection at the HTTP boundary without inventing an MCP group', () => {
     expect(yearRequestControllers).toContain(ChatController);
-    expect(yearRequestControllers).toContain(JevBenchmarkController);
     expect(new Set(yearRequestControllers).size).toBe(yearRequestControllers.length);
-    expect(yearRequestControllers.filter((controller) => controller !== ChatController && controller !== JevBenchmarkController))
+    expect(yearRequestControllers.filter((controller) => controller !== ChatController))
       .toEqual(Object.values(yearScopedModules));
     expect(Object.values(yearScopedModules)).not.toContain(ChatController);
   });

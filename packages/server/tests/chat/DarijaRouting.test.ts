@@ -9,7 +9,7 @@ const normalize = (text: string) => text.trim().toLowerCase()
   .replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه');
 
 const dataset = (name: string): Array<{ id: string; language: string; query: string }> =>
-  JSON.parse(readFileSync(resolve(import.meta.dir, '../../../../datasets/chatbot-latency', name), 'utf8')).cases;
+  JSON.parse(readFileSync(resolve(import.meta.dir, 'fixtures', name), 'utf8')).cases;
 const questions = [...dataset('questions.json'), ...dataset('routing-cases.json')];
 
 describe('rewriteDarijaForRouting', () => {

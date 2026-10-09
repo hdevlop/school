@@ -1,11 +1,8 @@
-import { jevExperimentArm } from '../benchmark/jevExperiment';
 import { readSchoolChatControls } from '../transport/schoolChatControls';
 
-/** Evaluated while building the request's model, from a consumed server grant. */
+/** Qualified OSS20B release provider; legacy remains an explicit rollback. */
 export function schoolOpenRouterProvider() {
-  if (readSchoolChatControls().enabled) return { only: ['coreweave'], allow_fallbacks: false, require_parameters: true };
-  const arm = jevExperimentArm();
-  return arm && arm !== '120b-baseline'
+  return readSchoolChatControls().enabled
     ? { only: ['coreweave'], allow_fallbacks: false, require_parameters: true }
     : { order: ['cerebras'], allow_fallbacks: true, ignore: ['groq'] };
 }

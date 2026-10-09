@@ -62,7 +62,7 @@ test('only a new single-text user turn establishes ordinary first-turn context',
 test('qualified ordinary frame uses candidate-first and Jev off keeps the preparation contract', () => {
   process.env.CHATBOT_FLOW='jev-router-20b'; process.env.CHATBOT_JEV_MODE='off';
   expect(readSchoolChatControls().monthlyMicroUsd).toBe(10_000_000);
-  schoolJevRequestContext.run({actorId:'a',role:'admin',academicYear:'2026-2027',query:'x',caseId:'ordinary',mode:'off',source:'ordinary',correlationId:null,historyComplete:true,priorUserTurns:0},()=>{
+  schoolJevRequestContext.run({actorId:'a',role:'admin',academicYear:'2026-2027',query:'x',mode:'off',correlationId:null,historyComplete:true,priorUserTurns:0},()=>{
     expect(jevPreparationPolicy().strategy).toBe('candidate-first'); expect(jevPreparationPolicy().enabled).toBe(true);
   });
 });
@@ -141,14 +141,13 @@ test('ordinary local replies remain available without a reservation when allowan
   expect(await response.text()).toContain('9');expect(f.counts().decisions).toBe(0);expect(f.counts().generations).toBe(0);expect(spend.snapshot().attempts).toBe(0);
 });
 
-test('ordinary signed-in chat selects Jev without a benchmark grant and rejects forged role/history',async()=>{
+test('ordinary signed-in chat selects Jev through the production first-turn boundary and rejects forged role/history',async()=>{
  process.env.CHATBOT_FLOW='jev-router-20b';process.env.CHATBOT_JEV_MODE='on';
  const f=await createJevFixture();const spend=fixture();
  f.server.container.set(ChatSpendRepository,spend.frame.repository as any);
  let decisions=0;
  f.classifier.transport=async()=>{decisions++;return Response.json({model:JEV_MODEL,answers:{intent:{type:'choice',choice:'student_count',confidence:0.99,probabilities:Object.fromEntries(INTENT_NAMES.map(name=>[name,name==='student_count'?0.99:name==='needs_llm'?0.01:0]))},is_write:{type:'noul',noul:0.01}},usage:{input_tokens:1,cost:0}});};
  try{
-  f.setMarkedFixture(false);
   const body={messages:[{role:'user',content:'خاصني العدد كامل ديال التلاميذ فالمدرسة هاد العام بلا تفاصيل.'}],role:'admin',historyComplete:true};
   const r=await f.call('/chat',body);expect(r.status).toBe(200);expect(await r.text()).toContain('9');
   expect(decisions).toBe(1);expect(f.counts().generations).toBe(0);
@@ -162,4 +161,15 @@ test('exhausted allowance is a visible localized unavailable outcome, preserving
   const data='data: {"type":"start"}\n\ndata: {"type":"error","errorText":"private"}\n\ndata: {"type":"finish"}\n\ndata: [DONE]\n\n';
   const r=schoolChatResponse(new Response(data,{headers:{'content-type':'text/event-stream','x-vercel-ai-ui-message-stream':'v1'}}),'bghit no9ati',undefined,{stopped:'allowance'});
   const text=await r.text();expect(text).toContain('ميزانية');expect(text).toContain('monthly_allowance');expect(text).not.toContain('private');
+});
+
+test('retired benchmark endpoints are absent from the chat server', async () => {
+  const f = await createJevFixture();
+  try {
+    for (const [path, body] of [['/chat-benchmark/status', undefined],
+      ['/chat-benchmark/reset-caches', {}], ['/chat-benchmark/jev/status', undefined],
+      ['/chat-benchmark/jev/session', {caseId:'fr-student'}]] as const)
+      expect((await f.call(path, body)).status).toBe(404);
+    expect(f.counts()).toEqual({decisions:0,generations:0});
+  } finally { await f.server.stop(); }
 });

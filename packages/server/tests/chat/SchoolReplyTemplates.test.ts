@@ -3,7 +3,7 @@ import { type ReplyRequest } from 'najm-chatbot';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
-const corpus = await Bun.file('datasets/chatbot-latency/morocco.json').json() as {
+const corpus = await Bun.file('packages/server/tests/chat/fixtures/morocco.json').json() as {
   cases: Array<{ id: string; query: string; language: string; kind: string }>;
 };
 const request = (userText: string): ReplyRequest => ({ userText, language: schoolReplyLanguage(userText), channel: 'web' });

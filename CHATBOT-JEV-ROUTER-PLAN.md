@@ -110,10 +110,24 @@ The old latency plan is recoverable with `git show 846a679:CHATBOT-LATENCY-PLAN.
 
 ## Code organization
 
-The [chat module guide](packages/server/src/modules/chat/README.md) maps the eight
-runtime and benchmark folders. The module root now contains only its registration
+The [chat module guide](packages/server/src/modules/chat/README.md) maps the seven
+runtime folders. The module root now contains only its registration
 entry point and guide. Filtered replies use a small dispatcher with focused
 renderers; Jev protocol, request wording and decision validation are separate.
 Numbered guards remain active dependencies. This refactor preserves the released
 flow and public exports; all relevant tests, lint, type checking and the production
 build passed. No paid benchmark was needed.
+
+## Benchmark retirement
+
+The owner ended comparison work on 2026-10-09. Benchmark endpoints, scripts,
+experimental grants/ledgers, scheduling arms and their environment switches are
+removed. Ordinary chat retains Jev first, then the existing router with selective
+OSS20B fallback, the shared monthly allowance and runtime diagnostics. Jev accepts
+`on` or `off`; shadow mode is retired. Only offline regression inputs remain in
+`packages/server/tests/chat/fixtures/`. Retired source is recoverable from published
+commit `a75cd0f`; no additional benchmark or manual native collection is required.
+
+Cleanup verification passed: 572 chat, 365 academic-year, 48 security and 28
+script/boundary tests, lint, type checking and the production build. Retired
+benchmark routes return 404 in local HTTP tests. No paid requests were made.

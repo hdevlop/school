@@ -5,7 +5,6 @@ import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyT
 import { schoolReplyContext } from '../../src/modules/chat/replies/schoolReplyContext';
 import { rewriteDarijaForRouting } from '../../src/modules/chat/routing/darijaRouting';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
 
 const year = '2026-2027';
 const child = { id: 'S1', name: 'Salma Idrissi' };
@@ -151,10 +150,10 @@ test('runtime priority retains write/year and channel/role restrictions', () => 
 });
 
 test('existing fourth-class maths plan works before routing with paid Jev off', async () => {
-  const keys = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS'];
+  const keys = ['DB_URL', 'NODE_ENV', 'CHATBOT_JEV_MODE'];
   const previous = Object.fromEntries(keys.map(key => [key, process.env[key]]));
   process.env.DB_URL = 'postgres://localhost/school_history_test'; process.env.NODE_ENV = 'test';
-  process.env.CHATBOT_BENCHMARK_CONTROLS = 'true'; setBenchmarkJevMode('off');
+  process.env.CHATBOT_JEV_MODE = 'off';
   try {
     const fixture = await createJevFixture({ qualifiedData: true });
     try {
@@ -177,6 +176,6 @@ test('existing fourth-class maths plan works before routing with paid Jev off', 
     } finally { await fixture.server.stop(); }
   } finally {
     for (const key of keys) if (previous[key] === undefined) delete process.env[key]; else process.env[key] = previous[key];
-    setBenchmarkJevMode('off');
+    process.env.CHATBOT_JEV_MODE = 'off';
   }
 });

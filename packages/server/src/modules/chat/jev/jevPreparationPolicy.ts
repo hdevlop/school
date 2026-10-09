@@ -1,24 +1,14 @@
 import type { ReplyPreparationPolicy } from 'najm-chatbot';
-import { effectiveJevMode, readJevControls } from './JevControls';
+import { effectiveJevMode } from './JevControls';
 import { schoolJevRequestContext } from './JevRequestContext';
-import { jevExperimentArm } from '../benchmark/jevExperiment';
 import { readSchoolChatControls } from '../transport/schoolChatControls';
 
-/** No promise cast or second tool executor: this is the published async contract. */
+/** Published preparation contract: local replies, guarded Jev, then ordinary routing. */
 export function jevPreparationPolicy(): ReplyPreparationPolicy {
-  const controls = readJevControls();
   return {
-    // The published preparation contract gives synchronous local templates
-    // precedence over routing. Enabling that contract does not enable Jev:
-    // eligibility and transport remain gated by the server frame and mode.
     enabled: true,
-    get strategy() {
-      if (schoolJevRequestContext.getStore()?.source === 'ordinary') return 'candidate-first';
-      const arm = jevExperimentArm();
-      return arm === '20b-coreweave-router-first' ? 'router-first'
-        : arm === '20b-coreweave-first' ? 'candidate-first' : 'parallel';
-    },
-    get timeoutMs() { return schoolJevRequestContext.getStore()?.source === 'ordinary' ? readSchoolChatControls().timeoutMs : controls.timeoutMs; },
+    strategy: 'candidate-first',
+    get timeoutMs() { return readSchoolChatControls().timeoutMs; },
     resolveContext: request => {
       const frame = schoolJevRequestContext.getStore();
       return frame?.actorId === request.userId
@@ -27,6 +17,5 @@ export function jevPreparationPolicy(): ReplyPreparationPolicy {
     },
     eligible: request => effectiveJevMode() !== 'off' && schoolJevRequestContext.getStore()?.eligible?.(request) === true,
     prepare: request => schoolJevRequestContext.getStore()?.prepare?.(request) ?? Promise.resolve(null),
-    onSelection: event => schoolJevRequestContext.getStore()?.onSelection?.(event),
   };
 }

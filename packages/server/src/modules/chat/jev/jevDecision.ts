@@ -1,4 +1,4 @@
-import { INTENT_NAMES, JEV_MODEL, ACCEPTANCE_POLICIES, type JevDecision, type JevIntent } from './jevProtocol';
+import { INTENT_NAMES, JEV_MODEL, type JevDecision, type JevIntent } from './jevProtocol';
 
 const isRecord = (value: unknown): value is Record<string, any> => value !== null && typeof value === 'object' && !Array.isArray(value);
 const probability = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
@@ -44,10 +44,9 @@ export function parseDecision(body: any): JevDecision {
  * Accepted means a deterministic reply would run instead of the model.
  * Guarded acceptance also requires the yes/no write answer to agree with the choice.
  */
-export function accepts(decision: any, threshold: number, guarded = false, policy: string = 'full') {
+export function accepts(decision: any, threshold: number, guarded = false) {
   if (!probability(threshold) || !decision || !INTENT_NAMES.includes(decision.choice)
     || decision.choice === 'needs_llm' || !probability(decision.confidence)
-    || !probability(decision.writeProbability) || decision.confidence < threshold
-    || !Object.hasOwn(ACCEPTANCE_POLICIES, policy) || !ACCEPTANCE_POLICIES[policy as keyof typeof ACCEPTANCE_POLICIES].includes(decision.choice)) return false;
+    || !probability(decision.writeProbability) || decision.confidence < threshold) return false;
   return !guarded || (decision.choice === 'write_request') === (decision.writeProbability >= 0.5);
 }

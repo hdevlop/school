@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import { schoolReplyContext, schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyContext';
 import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
-const corpus = await Bun.file('datasets/chatbot-latency/morocco.json').json() as {
+const corpus = await Bun.file('packages/server/tests/chat/fixtures/morocco.json').json() as {
   cases: Array<{ id: string; query: string; language: string }>;
 };
 

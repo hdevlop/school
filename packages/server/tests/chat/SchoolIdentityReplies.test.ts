@@ -3,7 +3,6 @@ import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild }
 import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
 
 const year = '2026-2027';
 const lists = ['الأقسام كاملين ديال المدرسة عطيني سميتهم.', 'l2a9sam kamlin dyal lmdrasa 3tini smiythom.',
@@ -129,10 +128,10 @@ test('runtime template uses trusted child context, year/write priority and web-o
 });
 
 test('published chat and MCP execute corrected plans, clarify unresolved identities and avoid both paid models', async () => {
-  const keys = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS'];
+  const keys = ['DB_URL', 'NODE_ENV', 'CHATBOT_JEV_MODE'];
   const original = Object.fromEntries(keys.map(key => [key, process.env[key]]));
   process.env.DB_URL = 'postgres://localhost/school_history_test'; process.env.NODE_ENV = 'test';
-  process.env.CHATBOT_BENCHMARK_CONTROLS = 'true'; setBenchmarkJevMode('off');
+  process.env.CHATBOT_JEV_MODE = 'off';
   try {
     for (const populated of [false, true]) {
       const fixture = await createJevFixture({ identityData: populated });
@@ -162,6 +161,6 @@ test('published chat and MCP execute corrected plans, clarify unresolved identit
     }
   } finally {
     for (const key of keys) if (original[key] === undefined) delete process.env[key]; else process.env[key] = original[key];
-    setBenchmarkJevMode('off');
+    process.env.CHATBOT_JEV_MODE = 'off';
   }
 });
