@@ -45,7 +45,7 @@ function classifier() {
   return { instance, settings };
 }
 function frame(instance: JevIntentClassifier, changes: Partial<JevRequestContext> = {}): JevRequestContext {
-  return { actorId: 'actor', role: 'admin', academicYear: '2026-2027', mode: 'on',
+  return { actorId: 'actor',  academicYear: '2026-2027', mode: 'on',
     correlationId: 'chat-request', query, historyComplete: true, priorUserTurns: 0,
     eligible: input => instance.eligible(input), prepare: input => instance.prepare(input), ...changes };
 }
@@ -59,11 +59,6 @@ describe('production Jev boundary', () => {
     const { instance, settings } = classifier();
     expect(await run(instance, () => instance.prepare(request({ userText, language: 'ary' })), { query: userText })).toBeNull();
     expect(settings.getInternal).not.toHaveBeenCalled(); expect(instance.transport).not.toHaveBeenCalled();
-  });
-  test.each(['teacher', 'parent', 'student', 'accounting', 'custom'])('role %s cannot use Jev', async role => {
-    const { instance } = classifier();
-    expect(await run(instance, () => instance.prepare(request()), { role })).toBeNull();
-    expect(instance.transport).not.toHaveBeenCalled();
   });
   test.each([{ userId: 'someone-else' }, { historyComplete: false }, { priorUserTurns: 1 },
     { priorUserTurns: null }, { language: null }, { language: 'en' as any }, { channel: 'whatsapp' },
@@ -166,7 +161,7 @@ describe('shared intent renderers', () => {
     const diagnostics = new ChatDiagnosticsLog();
     const events: any[] = []; const reads = mock(async () => ({ content: [{ type: 'text', text: '{"count":7}' }] }));
     const value = new ChatAgent({ getInternal: async () => ({ isEnabled: true, provider: 'openrouter', model: 'test', useMemory: false }) } as any,
-      {} as any, {} as any, { reply: { detectLanguage: schoolReplyLanguage, template: input => schoolReplyTemplate(input, '2026-2027', 'admin'),
+      {} as any, {} as any, { reply: { detectLanguage: schoolReplyLanguage, template: input => schoolReplyTemplate(input, '2026-2027'),
         preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: event => { events.push(event); diagnostics.record(event); } } }, {} as any);
     (value as any).container = { get(token: any) {
       if (token === USER) return { id: 'actor', role: 'admin' };

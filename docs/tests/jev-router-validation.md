@@ -316,3 +316,36 @@ are preserved. Local environment secrets are not committed.
 owned fee/payment summaries or specific grade filters with fresh Darija questions
 and actual facts. Broad free-form queries and unsupported filters remain unqualified;
 no new manual collection, price study or repeated “continue” is needed for this release.
+
+## Module-owned authorization and routing — 2026-10-09
+
+This change supersedes the identity-dependent local rendering and role/phrase
+fallback gate described above. The historical paid results and archive are unchanged;
+they do not measure the new personal tool chaining. No paid benchmark was run.
+
+- Removed the chat `context/` folder, eager parent/children/student/teacher lookups,
+  personal identity renderers and chat-specific role decisions. Selected-year/date
+  metadata remains in `transport/`; the shared year boundary resolves it once.
+- Added `getMyIdentity` to the existing student, parent and teacher controllers.
+  REST and MCP reuse the same service and owned repository. The ID comes from
+  `@User`, never input, and existing module read permissions apply. Responses
+  contain only ID/name; null fields explicitly indicate no linked identity.
+- Router hints use the original question before Darija rewriting can remove
+  “dyali” or teaching vocabulary. Dependencies offer identity and child/profile
+  reads together. Personal replies now use router/OSS20B calls within the existing
+  $10 allowance. General fallback is no longer suppressed by a role/phrase whitelist.
+- Local/Jev replies state the accessible result scope. Failed or unauthorized reads
+  remain failures and never establish empty records or a school-wide zero.
+
+Offline verification: **1,073 chat/year/security/ownership tests** and **28
+script/boundary tests** pass. Real controller REST/MCP tests cover forged IDs,
+missing permissions, inactive/unauthenticated users, minimal identity fields,
+missing identities and repository failures. Year isolation, cancellation, write
+blocking and spending accounting retain their regression coverage. Lint, root
+type checks and an isolated production build pass. The compiled build includes
+the updated original-question routing hints. Its generated output is removed
+after verification; unrelated dashboard work and staged edits are preserved.
+
+**What can be done next:** use the existing combination. Review actual Darija
+answers and improve tool descriptions/dependencies for concrete selection failures.
+No new benchmarking framework, billing study or chat authorization layer is needed.

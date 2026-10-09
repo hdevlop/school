@@ -9,7 +9,7 @@ export interface JevRequestDiagnostics {
 }
 
 export interface JevRequestContext {
-  actorId: string; role: string; academicYear: string; mode: JevMode;
+  actorId: string; academicYear: string; mode: JevMode;
   correlationId: string | null; query: string;
   historyComplete: boolean; priorUserTurns: number | null;
   /** Actual HTTP lifetime, separate from the framework's candidate selection signal. */

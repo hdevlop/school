@@ -31,6 +31,12 @@ export class StudentService {
     private storage: StorageService,
   ) { }
 
+  /** Resolve the authenticated account through this module's owned repository. */
+  async getMyIdentity(userId: string) {
+    const record = await this.studentRepository.getByUserId(userId);
+    return { id: record?.id ?? null, name: record?.name ?? null };
+  }
+
   async getCount() {
     return this.studentRepository.getCount();
   }

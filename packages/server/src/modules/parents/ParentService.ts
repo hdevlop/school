@@ -26,6 +26,12 @@ export class ParentService {
     private parentChildrenRepository: ParentChildrenRepository,
   ) { }
 
+  /** Resolve the authenticated account through this module's owned repository. */
+  async getMyIdentity(userId: string) {
+    const record = await this.parentRepository.getByUserId(userId);
+    return { id: record?.id ?? null, name: record?.name ?? null };
+  }
+
   // ========== RETRIEVAL METHODS ==========
 
   async getAll() {

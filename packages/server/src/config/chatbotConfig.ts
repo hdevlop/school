@@ -3,7 +3,7 @@ import { chatbot, CHATBOT_CONTEXT_PROVIDER } from 'najm-chatbot';
 import { studioAssistant } from 'najm-chatbot/studio-assistant';
 
 import { chatDiagnosticsLog } from '../modules/chat/diagnostics/ChatDiagnosticsLog';
-import { SchoolChatContextProvider, schoolChatYearContext } from '../modules/chat/context/SchoolChatContextProvider';
+import { SchoolChatRequest, schoolChatRequest } from '../modules/chat/transport/SchoolChatRequest';
 import { schoolReplyTemplate } from '../modules/chat/replies/schoolReplyTemplates';
 import { schoolReplyLanguage } from '../modules/chat/replies/schoolReplyLanguage';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
@@ -17,9 +17,8 @@ export const chatbotConfig = () =>
     defaultSystemPrompt: chatbotSystemPrompt,
     reply: {
       detectLanguage: schoolReplyLanguage,
-      template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear, schoolChatYearContext.getStore()?.role,
-        schoolChatYearContext.getStore()?.schoolDate, schoolChatYearContext.getStore()?.teacherId, schoolChatYearContext.getStore()?.studentId,
-        schoolChatYearContext.getStore()?.children, schoolChatYearContext.getStore()?.studentName),
+      template: request => schoolReplyTemplate(request, schoolChatRequest.getStore()?.academicYear,
+        schoolChatRequest.getStore()?.schoolDate),
       preparation: jevPreparationPolicy(),
     },
     maxSteps: 10,
@@ -41,11 +40,11 @@ export const chatbotConfig = () =>
   });
 
 /** Gives each chat the selected academic year and today's date. */
-export const chatYearContextConfig = () =>
-  plugin('school-chat-year-context')
+export const chatRequestConfig = () =>
+  plugin('school-chat-request')
     .requires('rag', 'chatbot')
-    .services(SchoolChatContextProvider)
-    .alias(CHATBOT_CONTEXT_PROVIDER, SchoolChatContextProvider)
+    .services(SchoolChatRequest)
+    .alias(CHATBOT_CONTEXT_PROVIDER, SchoolChatRequest)
     .build();
 
 export const studioAssistantConfig = () => studioAssistant();

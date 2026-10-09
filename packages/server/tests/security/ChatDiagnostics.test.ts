@@ -32,7 +32,7 @@ function diagnostics(correlationId: string | null): ChatDiagnostics {
 describe('chat diagnostics', () => {
   it('snapshots only fixed Jev codes for the matching request and never updates a sealed reply', () => {
     const log = new ChatDiagnosticsLog();
-    const frame: JevRequestContext = { actorId: 'private-actor', role: 'admin', academicYear: '2026-2027',
+    const frame: JevRequestContext = { actorId: 'private-actor', academicYear: '2026-2027',
       mode: 'on', correlationId: 'request', query: 'private question', historyComplete: true, priorUserTurns: 0,
       diagnostics: { eligibility: 'supported_query', classification: 'pending' } };
     Object.assign(frame.diagnostics!, { query: 'private diagnostic field' });

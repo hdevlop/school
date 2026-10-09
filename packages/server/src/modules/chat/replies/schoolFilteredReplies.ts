@@ -7,7 +7,7 @@ import { renderMonth, renderFourthGrades, renderMaths } from './filtered/academi
 import { renderPreviousAbsences } from './filtered/attendance';
 export { FILTERED_REPLY_VERSION, schoolFilteredReplyKind } from './filtered/requests';
 
-export function schoolFilteredReply(query: string, language: ReplyLanguage, year?: string, role?: string, schoolDate?: string): ReplyTemplate | null {
+export function schoolFilteredReply(query: string, language: ReplyLanguage, year?: string, schoolDate?: string): ReplyTemplate | null {
   const kind = schoolFilteredReplyKind(query);
   if (!kind) return null;
   if (kind === 'reference-clarification') return { label: 'school:reference-clarification', text: language === 'ary'
@@ -22,11 +22,7 @@ export function schoolFilteredReply(query: string, language: ReplyLanguage, year
     ? 'شكون الولي اللي كتقصد؟ عطيني السمية ديالو ولا معرف الولي باش نحدد الحساب الصحيح.'
     : language === 'ar' ? 'من هو ولي الأمر المقصود؟ اذكر اسمه أو معرّفه لتحديد الحساب الصحيح.'
       : 'De quel parent parlez-vous ? Indiquez son nom ou son identifiant pour déterminer le bon compte.' };
-  // A scoped subset must never be presented as a school-wide result for a family/teacher account.
-  if (!['admin', 'principal'].includes(role ?? '')) return { label: 'school:filtered-read-denied', text: language === 'ary'
-    ? 'هاد الطلب على المدرسة كاملة خاصو حساب الإدارة. نقدر نعاونك فالمعلومات اللي مسموح ليك تشوفها.'
-    : language === 'ar' ? 'هذا الطلب على مستوى المدرسة يتطلب حساب الإدارة. يمكنك طلب المعلومات المسموح لحسابك بالاطلاع عليها.'
-      : "Cette demande à l'échelle de l'école nécessite un compte de direction. Demandez les informations accessibles à votre compte." };
+
   if (!year) return null;
   const call = (name: string) => ({ name, input: name.startsWith('subjects_') ? {} : { academicYear: year } });
   if (kind === 'separate-counts') return { label: 'school:separate-counts', calls: [

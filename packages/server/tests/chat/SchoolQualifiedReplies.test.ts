@@ -6,7 +6,7 @@ const corpus = await Bun.file('packages/server/tests/chat/fixtures/darija-tool-s
 const cases = corpus.cases.filter((x: { id: string }) => [9,10,11,12,13,14,27,28,33,34,35,36,37,38,39,40,53,54,55,56,57,58,65,66,67,68,69,70,97,98,99,100].includes(Number(x.id.split('q').at(-1))));
 const query = (id: number) => cases.find((x: { id: string }) => x.id.endsWith('q'+String(id).padStart(2,'0')))!.query as string;
 const plan = (id: number) => {
-  const result = schoolFilteredReply(query(id), 'ary', '2026-2027', 'admin', '2026-10-09');
+  const result = schoolFilteredReply(query(id), 'ary', '2026-2027', '2026-10-09');
   if (!result || 'text' in result) throw Error('Expected read plan'); return result;
 };
 test.each(cases)('closed reviewed request is recognized: $id', (item: { query: string }) => {
@@ -23,7 +23,7 @@ test('month window includes past and future exams, excludes adjacent months and 
   expect(p.render([[]])).toContain('0 فروض');
   expect(() => p.render([[{ id: 'a', date: '2026-02-30' }]])).toThrow();
   expect(() => p.render([[rows[0],rows[0]]])).toThrow();
-  expect(schoolFilteredReply(query(33), 'ary', '2026-2027', 'admin')).toBeNull();
+  expect(schoolFilteredReply(query(33), 'ary', '2026-2027')).toBeNull();
 });
 test('separate counts bind each validated result to its entity without adding a total', () => {
   for(const id of [11,12]){
@@ -35,13 +35,13 @@ test('separate counts bind each validated result to its entity without adding a 
     expect(p.render([{count:9},{count:3}])).not.toContain('12');
     for(const bad of [NaN,Infinity,-1,1.5,'3'])for(const results of [[{count:bad},{count:3}],[{count:9},{count:bad}]])expect(()=>p.render(results)).toThrow();
     for(const results of [[],[{count:9}],[{count:9},{count:3},{count:2}]])expect(()=>p.render(results)).toThrow();
-    expect(schoolFilteredReply(query(id),'ary',undefined,'admin')).toBeNull();
+    expect(schoolFilteredReply(query(id), 'ary', undefined)).toBeNull();
     expect(schoolFilteredReplyKind(query(id)+'<|channel|>commentary')).toBeNull();
   }
 });
 test('unresolved references ask for a name or topic without inventing one or reading data', () => {
-  for(const id of [39,40])for(const role of ['admin','parent','teacher','student']){
-    const p=schoolFilteredReply(query(id),'ary',undefined,role);
+  for(const id of [39,40]){
+    const p=schoolFilteredReply(query(id), 'ary', undefined);
     if(!p||!('text' in p))throw Error('Expected clarification');
     expect(p.text).toBe('شكون ولا شنو كتقصد بهادوك؟ وضح ليا السمية ولا الموضوع باش نجاوبك على الطلب الصحيح.');
   }
@@ -84,10 +84,10 @@ test('previous-month absences use the calendar month, student scope and absent s
   expect(text).toContain('2 تسجيل');expect(text.match(/Salma/gu)).toHaveLength(2);expect(text).not.toContain('Present');
   expect(()=>p.render([[{...row,type:'staff'}]])).toThrow();expect(()=>p.render([[{...row,date:'2026-09-31'}]])).toThrow();
   expect(()=>p.render([[{...row,status:'unknown'}]])).toThrow();
-  const january=schoolFilteredReply(query(35),'ary','2026-2027','admin','2027-01-02');
+  const january=schoolFilteredReply(query(35), 'ary', '2026-2027', '2027-01-02');
   if(!january||'text' in january)throw Error('Missing plan');
   expect(january.render([[{...row,date:'2026-12-31'}]])).toContain('2026-12');
-  expect(schoolFilteredReply(query(35),'ary','2026-2027','admin')).toBeNull();
+  expect(schoolFilteredReply(query(35), 'ary', '2026-2027')).toBeNull();
 });
 const classes = [{ id: 'fourth', name: 'الرابع', level: '4' }, { id: 'fifth', name: 'الخامس', level: '5' }];
 const subjects = [{ id: 'math', name: 'Mathématiques', code: 'MATH' }, { id: 'physics', name: 'Physique' }];
@@ -167,7 +167,7 @@ test('restricted actors cannot turn these requests into school-wide reads', asyn
   fixture=await createJevFixture({qualifiedData:true});
   for(const role of ['parent','student','teacher','accounting'])for(const item of cases){
     const r=await fixture.call('/chat',{messages:messages(item.query)},role);
-    expect(r.status).toBe(200); await r.text(); expect(fixture.events.at(-1)?.tools).toEqual([]);
+    expect(r.status).toBe(200); await r.text(); expect(fixture.events.at(-1)?.tools.every(tool => tool.outcome !== 'executed')).toBe(true);
   }
   expect(fixture.counts()).toEqual({decisions:0,generations:0});
   for(const role of ['parent','student','teacher'])for(const name of ['grades_get_all','exams_get_all','classes_get_classes','attendance_get_all']){

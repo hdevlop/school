@@ -1,14 +1,8 @@
 import { normalizeReplyText, type ReplyLanguage, type ReplyRequest, type ReplyTemplate } from 'najm-chatbot';
 import { schoolListReply } from './schoolListReplies';
 import { schoolWriteRefusalKind } from './schoolReplyWrite';
+import { schoolClassIdentityReply } from './schoolClassReply';
 import { schoolFilteredReply } from './schoolFilteredReplies';
-import { schoolYearReply } from './schoolYearReply';
-import { schoolTeacherCountReply } from './schoolTeacherReply';
-import { schoolStudentGradeReply } from './schoolStudentReply';
-import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild } from './schoolIdentityReplies';
-import { schoolPersonalAcademicReply, schoolTeacherAcademicReply } from './schoolAcademicReplies';
-import { schoolPersonalReply } from './schoolPersonalReplies';
-import { schoolFallbackScopeReply } from '../routing/schoolFallbackScope';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -47,13 +41,13 @@ function renderCounts(language: ReplyLanguage, entities: Array<'students' | 'tea
   if (results.length !== entities.length) throw new Error('Invalid school count result count');
   const values = results.map(countResult);
   if (entities.length === 2) return language === 'ary'
-    ? `كاينين ${values[0]} تلميذ مسجلين فهاد العام وكاينين ${values[1]} أستاذ فالمدرسة.`
+    ? `كاينين ${values[0]} تلميذ مسجلين فهاد العام وكاينين ${values[1]} أستاذ.`
     : language === 'ar' ? `عدد التلاميذ المسجلين هذه السنة هو ${values[0]}، وعدد الأساتذة هو ${values[1]}.`
-      : `Il y a ${values[0]} élèves inscrits cette année et ${values[1]} enseignants dans l'école.`;
+      : `Il y a ${values[0]} élèves inscrits cette année et ${values[1]} enseignants.`;
   const student = entities[0] === 'students';
-  return language === 'ary' ? student ? `كاينين ${values[0]} تلميذ مسجلين فهاد العام.` : `كاينين ${values[0]} أستاذ فالمدرسة.`
-    : language === 'ar' ? student ? `عدد التلاميذ المسجلين هذه السنة هو ${values[0]}.` : `عدد الأساتذة في المدرسة هو ${values[0]}.`
-      : student ? `Il y a ${values[0]} élèves inscrits cette année.` : `Il y a ${values[0]} enseignants dans l'école.`;
+  return language === 'ary' ? student ? `كاينين ${values[0]} تلميذ مسجلين فهاد العام.` : `كاينين ${values[0]} أستاذ.`
+    : language === 'ar' ? student ? `عدد التلاميذ المسجلين هذه السنة هو ${values[0]}.` : `عدد الأساتذة هو ${values[0]}.`
+      : student ? `Il y a ${values[0]} élèves inscrits cette année.` : `Il y a ${values[0]} enseignants.`;
 }
 
 /** Intent mapping reuses these validated renderers; the MCP boundary owns every read. */
@@ -64,34 +58,31 @@ export function schoolCountReply(language: ReplyLanguage, entities: Array<'stude
 export function schoolChangeRefusal(language: ReplyLanguage): ReplyTemplate { return { text: refusals[language].change }; }
 
 /** The caller supplies only the already-validated selected year. No new year resolution. */
-export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, role?: string, schoolDate?: string, teacherId?: string, studentId?: string, children?: readonly SchoolChatChild[], studentName?: string): ReplyTemplate | null {
-  if (!language) return channel === 'web' ? schoolFallbackScopeReply(userText, language, role, studentId, teacherId) : null;
-  const text = normalizeReplyText(userText);
+export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, schoolDate?: string): ReplyTemplate | null {
+  if (!language) return null;
   const writeKind = schoolWriteRefusalKind(userText);
   if (writeKind) return { text: refusals[language][writeKind] };
   if (channel === 'web') {
-    const yearReply = schoolYearReply(userText, language, academicYear, role);
-    if (yearReply) return yearReply;
-    const personalReply = schoolPersonalReply(userText, language, academicYear, role, studentId, children, studentName);
-    if (personalReply) return personalReply;
-    const academicReply = schoolTeacherAcademicReply(userText, language, academicYear, role, teacherId)
-      ?? schoolPersonalAcademicReply(userText, language, academicYear, role, studentId, children);
-    if (academicReply) return academicReply;
-    const teacherReply = schoolTeacherCountReply(userText, language, academicYear, role, teacherId);
-    if (teacherReply) return teacherReply;
-    const studentReply = schoolStudentGradeReply(userText, language, academicYear, role, studentId);
-    if (studentReply) return studentReply;
-    const identityReply = schoolClassIdentityReply(userText, language, academicYear, role)
-      ?? schoolChildGradeReply(userText, language, academicYear, role, children);
-    if (identityReply) return identityReply;
-    const filtered = schoolFilteredReply(userText, language, academicYear, role, schoolDate);
-    if (filtered) return filtered;
+    const identityReply = schoolClassIdentityReply(userText, language, academicYear);
+    if (identityReply) return schoolReadableReply(identityReply, language);
+    const filtered = schoolFilteredReply(userText, language, academicYear, schoolDate);
+    if (filtered) return schoolReadableReply(filtered, language);
   }
   if (academicYear) {
     const list = schoolListReply(userText, language, academicYear);
-    if (list) return list;
+    if (list) return schoolReadableReply(list, language);
   }
-  const entities = countEntities(text);
-  if (!entities || !academicYear) return channel === 'web' ? schoolFallbackScopeReply(userText, language, role, studentId, teacherId) : null;
-  return schoolCountReply(language, entities, academicYear);
+  const entities = countEntities(normalizeReplyText(userText));
+  return entities && academicYear ? schoolReadableReply(schoolCountReply(language, entities, academicYear), language) : null;
+}
+
+/** Describe repository-scoped results without making a second authorization decision. */
+export function schoolReadableReply(plan: ReplyTemplate, language: ReplyLanguage): ReplyTemplate {
+  if (!('calls' in plan)) return plan;
+  const scope = {
+    fr: 'Résultats limités aux données accessibles à votre compte :',
+    ar: 'النتائج تخص البيانات التي يسمح حسابك بالاطلاع عليها فقط:',
+    ary: 'هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:',
+  };
+  return { ...plan, render: results => scope[language] + '\n' + plan.render(results) };
 }

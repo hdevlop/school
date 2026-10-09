@@ -24,6 +24,14 @@ import {
 export class StudentController {
   constructor(private studentService: StudentService) { }
 
+  @Get('/my-identity')
+  @CanList()
+  @McpTool({ description: 'Get the signed-in student account identity for my/own requests. Returns only its student ID and name; no ID input. Identité de mon compte. هوية حسابي.', readOnly: true })
+  @ResMsg('students.success.retrieved')
+  async getMyIdentity(@User('id') userId: string) {
+    return this.studentService.getMyIdentity(userId);
+  }
+
   @Get()
   @CanList()
   @Validate({ query: studentListQuery })

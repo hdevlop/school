@@ -57,6 +57,18 @@ const MODEL_DEFAULTS: Record<string, EmbeddingDefaults> = {
 // characters, about 50k tokens) looking for the name. Class-wide work still
 // reaches section and class student tools through routing.
 const TOOL_DEPENDENCIES: Record<string, string[]> = {
+  'student-profile_get_academic': ['students_get_my_identity', 'parents_get_my_identity', 'parents_get_children', 'student-profile_get_overview', 'student-profile_get_attendance_summary'],
+  'student-profile_get_overview': ['students_get_my_identity', 'parents_get_my_identity', 'parents_get_children', 'student-profile_get_academic', 'student-profile_get_attendance_summary'],
+  'student-profile_get_attendance_summary': ['students_get_my_identity', 'parents_get_my_identity', 'parents_get_children', 'student-profile_get_academic'],
+  'parents_get_my_identity': ['parents_get_children'],
+  'parents_get_children': ['parents_get_my_identity', 'student-profile_get_academic'],
+  'students_get_my_identity': ['student-profile_get_overview', 'student-profile_get_academic', 'student-profile_get_attendance_summary'],
+  'teachers_get_my_identity': ['teacher-profile_get_my_classes', 'teacher-profile_get_my_students', 'teacher-profile_get_pending_grading'],
+  'teacher-profile_get_pending_grading': ['teachers_get_my_identity'],
+  'teacher-profile_get_schedule_today': ['teachers_get_my_identity', 'teacher-profile_get_pending_grading'],
+  'teacher-profile_get_my_students': ['teachers_get_my_identity', 'teacher-profile_get_my_classes', 'teacher-profile_get_pending_grading'],
+  'teacher-profile_get_my_classes': ['teachers_get_my_identity', 'teacher-profile_get_my_students', 'teacher-profile_get_pending_grading'],
+
   // Subject-filtered teacher replies join scoped assignment IDs to the catalog.
   teachers_get_teachers: ['subjects_get_subjects'],
   attendance_mark: ['search_search_students'],
@@ -88,16 +100,10 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   // Personal records share vocabulary ("my record", "this year"). A grade
   // question can retrieve the attendance profile first; keep the academic
   // read available so the model can answer the requested part of the record.
-  'student-profile_get_attendance_summary': ['student-profile_get_academic'],
-  'student-profile_get_academic': ['student-profile_get_overview', 'student-profile_get_attendance_summary'],
-  'student-profile_get_overview': ['student-profile_get_academic', 'student-profile_get_attendance_summary'],
   // Teaching assignments can retrieve a section or personal dashboard read.
   // The profile read takes the signed-in teacherId and checks ownership.
   sections_get_teachers: ['teacher-profile_get_my_classes'],
   'teacher-dashboard_get_overview': ['teacher-profile_get_my_classes', 'teacher-profile_get_pending_grading'],
-  'teacher-profile_get_schedule_today': ['teacher-profile_get_pending_grading'],
-  'teacher-profile_get_my_students': ['teacher-profile_get_my_classes', 'teacher-profile_get_pending_grading'],
-  'teacher-profile_get_my_classes': ['teacher-profile_get_my_students', 'teacher-profile_get_pending_grading'],
 };
 
 function resolveEmbeddingConfig() {
@@ -161,7 +167,7 @@ export const ragConfig = (): NajmPlugin =>
     },
     // Darija words become MSA before tool routing embeds a message; the model
     // still reads the user's own words.
-    rewriteRoutingQuery: query => schoolRoutingContext(rewriteDarijaForRouting(query)),
+    rewriteRoutingQuery: query => schoolRoutingContext(query, rewriteDarijaForRouting(query)),
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;

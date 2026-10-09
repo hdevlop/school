@@ -1,6 +1,5 @@
 import { AiSettingsService, type ReplyPreparationRequest, type ReplyTemplate } from 'najm-chatbot';
 import { Service } from '../../../najm';
-import { ROLES } from '../../../auth';
 import { JEV_DECISIONS_URL, parseDecision } from './jevIntents';
 import { acceptsWithQueryGuardV6 } from './jevQueryGuard';
 import { buildJevRuntimeDecisionRequest } from './jevRuntimeWording';
@@ -8,8 +7,8 @@ import { readJevControls, effectiveJevMode } from './JevControls';
 import { schoolJevRequestContext } from './JevRequestContext';
 import { jevReplyPlan } from './jevReplyPlan';
 import { readSchoolChatControls } from '../transport/schoolChatControls';
-import { schoolChatYearContext } from '../context/SchoolChatContextProvider';
-import { hasOrdinaryJevReply, ORDINARY_JEV_READS } from '../routing/schoolFallbackScope';
+import { schoolChatRequest } from '../transport/SchoolChatRequest';
+import { hasOrdinaryJevReply, ORDINARY_JEV_READS } from './jevReadScope';
 import { budgetedChatFetch } from '../budget/SchoolPaidChatTransport';
 
 /** Cancellation stays prompt even if a provider ignores the supplied signal. */
@@ -49,7 +48,7 @@ export class JevIntentClassifier {
   eligible(request: ReplyPreparationRequest) {
     const frame = schoolJevRequestContext.getStore();
     const metadataEligible = effectiveJevMode() === 'on' && !!frame && frame.mode === 'on'
-      && frame.actorId === request.userId && [ROLES.ADMIN, ROLES.PRINCIPAL].some(role => role === frame.role)
+      && frame.actorId === request.userId
       && request.channel === 'web' && ['fr', 'ar', 'ary'].includes(request.language ?? '')
       && request.historyComplete === true && request.priorUserTurns === 0 && frame.query === request.userText
       && !request.signal.aborted && !frame.requestSignal?.aborted;
@@ -83,7 +82,7 @@ export class JevIntentClassifier {
       const accepted = acceptsWithQueryGuardV6(decision, request.userText, this.controls.threshold)
         && ORDINARY_JEV_READS.some(choice => choice === decision.choice);
       const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear, request.userText,
-        schoolChatYearContext.getStore()?.schoolDate) : null;
+        schoolChatRequest.getStore()?.schoolDate) : null;
       frame.diagnostics!.classification = signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined';
       return effectiveJevMode() === 'on' ? plan : null;
     } catch {

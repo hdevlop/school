@@ -15,7 +15,8 @@ describe('School language profile', () => {
     expect(schoolReplyLanguage(userText)).toBe('ary');
     expect(contextLanguage(userText)).toBe('ary');
     const reply = schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' }, '2026-2027');
-    expect(reply === null || 'text' in reply).toBe(true);
+    if (userText === 'chmen a9sam kaynin f lmdrasa?') expect(reply).toHaveProperty('calls');
+    else expect(reply === null || 'text' in reply).toBe(true);
   });
   it.each(['lah Lah', 'mzyan Mzyan', 'sejjel ZzName', 'chmen Chmen',
     'Please show the students named lah and yjazik.', 'Show "werini chkoun lyoum".',

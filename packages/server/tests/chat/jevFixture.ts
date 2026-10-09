@@ -14,12 +14,8 @@ import { AcademicYearRepository } from '../../src/modules/academicYears/Academic
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../src/modules/academicYears/AcademicYearValidator';
 import { registerYearPropertyInjector, registerYearRequestScope, schoolMcpYearHooks, Year } from '../../src/modules/academicYears/requestYear';
 import { SettingsRepository } from '../../src/modules/settings/SettingsRepository';
-import { ParentRepository } from '../../src/modules/parents/ParentRepository';
-import { ParentChildrenRepository } from '../../src/modules/parents/ParentChildrenRepository';
-import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
-import { StudentRepository } from '../../src/modules/students/StudentRepository';
-import { SchoolChatContextProvider, schoolChatYearContext } from '../../src/modules/chat/context/SchoolChatContextProvider';
-import { registerChatYearContext } from '../../src/modules/chat/context/chatYearContext';
+import { SchoolChatRequest, schoolChatRequest } from '../../src/modules/chat/transport/SchoolChatRequest';
+import { registerSchoolChatRequest } from '../../src/modules/chat/transport/registerSchoolChatRequest';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 import { schoolFilteredReplyKind } from '../../src/modules/chat/replies/schoolFilteredReplies';
@@ -131,7 +127,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
     .use(mcp({ name: 'jev-fixture', version: '1', transports: ['http'], path: '/mcp',
       ...schoolMcpYearHooks(['students', 'teachers', 'classes', 'attendance', 'exams', 'grades']) }))
     .load({ AuthGuard, ChatController,
-      AcademicYearValidator, AcademicYearRepository, SchoolChatContextProvider,
+      AcademicYearValidator, AcademicYearRepository, SchoolChatRequest,
       StudentCounts, TeacherCounts, SubjectLists, ClassLists, AttendanceLists, ExamLists, GradeLists, ...options.extraControllers });
   const roleGuard = getGuardMetadata(StudentCounts, 'get_student_count').find(guard => guard.guardClass.name === 'RoleGuard')!.guardClass;
   server.load(roleGuard);
@@ -143,8 +139,6 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
   container.set(PermissionService, { getPermissionsByRole: async () => [] } as any);
   container.set(KnowledgeContextProvider, { getContext: async () => null } as any);
   container.set(SettingsRepository, { getPublicSettings: async () => ({ timeZone: options.timeZone ?? 'UTC' }) } as any);
-  for (const token of [ParentRepository, TeacherRepository, StudentRepository]) container.set(token, { getByUserId: async () => null } as any);
-  container.set(ParentChildrenRepository, { getChildren: async () => [] } as any);
   container.set(TOOL_PROVIDER, { findRelevantTools: async (query: string) => {
     routingCalls++;
     await new Promise(resolve => setTimeout(resolve, 20));
@@ -160,9 +154,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
     return { status: 'routed', tools: registry.tools.filter(tool => names.includes(tool.name)) };
   } } as any);
   const config: ChatbotConfig = {
-    reply: { detectLanguage: schoolReplyLanguage, template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear, schoolChatYearContext.getStore()?.role,
-      schoolChatYearContext.getStore()?.schoolDate, schoolChatYearContext.getStore()?.teacherId, schoolChatYearContext.getStore()?.studentId,
-      schoolChatYearContext.getStore()?.children, schoolChatYearContext.getStore()?.studentName),
+    reply: { detectLanguage: schoolReplyLanguage, template: request => schoolReplyTemplate(request, schoolChatRequest.getStore()?.academicYear, schoolChatRequest.getStore()?.schoolDate),
       preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: (event: ChatDiagnostics) => { events.push(event); } },
   };
   container.set(CHATBOT_CONFIG, config);
@@ -176,7 +168,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
   container.set(ChatAgent, agent);
   registerYearPropertyInjector(container);
   registerYearRequestScope(container, [ChatController]);
-  registerChatYearContext(container);
+  registerSchoolChatRequest(container);
   for (const target of [ChatController]) container.setInjection({
     type: INJECTION_TYPES.MIDDLEWARE, target, order: 1,
     handler: async (context: any, next: () => Promise<void>) => {

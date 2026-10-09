@@ -63,5 +63,3 @@ export function renderMaths(language: ReplyLanguage, year: string, results: unkn
     : language === 'ar' ? `الأساتذة المكلفون بالرياضيات في ${year}: `
       : `Enseignants affectés aux mathématiques en ${year} : `) + names.join('، ') + '.';
 }
-
-/** Role is supplied by the signed-in request context. MCP still authorizes each read. */

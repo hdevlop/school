@@ -7,9 +7,8 @@ import { createJevFixture } from './jevFixture';
 import { ChatSpendRepository } from '../../src/modules/chat/budget/ChatSpendRepository';
 import { schoolJevRequestContext } from '../../src/modules/chat/jev/JevRequestContext';
 import { jevPreparationPolicy } from '../../src/modules/chat/jev/jevPreparationPolicy';
-import { qualifiedSchoolFallback } from '../../src/modules/chat/routing/schoolFallbackScope';
 import { schoolRoutingContext } from '../../src/modules/chat/routing/schoolRoutingContext';
-import { schoolChatYearContext } from '../../src/modules/chat/context/SchoolChatContextProvider';
+import { rewriteDarijaForRouting } from '../../src/modules/chat/routing/darijaRouting';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { schoolWriteRefusalKind } from '../../src/modules/chat/replies/schoolReplyWrite';
 import { queryVetoV6 } from '../../src/modules/chat/jev/jevQueryGuard';
@@ -62,26 +61,14 @@ test('only a new single-text user turn establishes ordinary first-turn context',
 test('qualified ordinary frame uses candidate-first and Jev off keeps the preparation contract', () => {
   process.env.CHATBOT_FLOW='jev-router-20b'; process.env.CHATBOT_JEV_MODE='off';
   expect(readSchoolChatControls().monthlyMicroUsd).toBe(10_000_000);
-  schoolJevRequestContext.run({actorId:'a',role:'admin',academicYear:'2026-2027',query:'x',mode:'off',correlationId:null,historyComplete:true,priorUserTurns:0},()=>{
+  schoolJevRequestContext.run({actorId:'a',academicYear:'2026-2027',query:'x',mode:'off',correlationId:null,historyComplete:true,priorUserTurns:0},()=>{
     expect(jevPreparationPolicy().strategy).toBe('candidate-first'); expect(jevPreparationPolicy().enabled).toBe(true);
   });
-});
-test('fallback scope rejects unknown filters/names and routing uses latest trusted role context',()=>{
- const query='بغيت نعرف سميت القسم والمجموعة ديالي دابا.';
- expect(qualifiedSchoolFallback(query,'student')).toBe(true);
- for(const q of [query+' Salma',query+' غير البنات',query+' 2025-2026','3tini flous dyali'])expect(qualifiedSchoolFallback(q,'student')).toBe(false);
- schoolChatYearContext.run({prompt:'',academicYear:'2026-2027',role:'student',studentId:'S1',latestUserText:'t9der t3tini no9ati had l3am?'},()=>{
-  expect(schoolRoutingContext('old attendance context')).toContain('student-profile_get_academic');
- });
- expect(schoolReplyLanguage('t9der t3tini no9ati had l3am?')).toBe('ary');
- expect(schoolWriteRefusalKind('beddel lia no9ti f math daba.')).toBe('change');
- expect(schoolWriteRefusalKind('"beddel lia no9ti"')).toBeNull();
 });
 test('class-name wording retains unknown qualifiers; a teacher number without quantity remains ambiguous',()=>{
  const q='بغيت غير سميات الأقسام فالمدرسة كاملة بلا معلومات أخرى.';
  expect(queryVetoV6(q,'class_list')).toBeNull();
  expect(queryVetoV6(q+' غير البنات','class_list')).not.toBeNull();
- expect(qualifiedSchoolFallback('bghit ghir ra9m dyal lasatida f lmdrasa kamla had l3am.','admin')).toBe(false);
 });
 test('generation reserves before send, passes bytes and releases only reported cost', async () => {
   const f=fixture(); let sent:any;
@@ -148,12 +135,13 @@ test('ordinary signed-in chat selects Jev through the production first-turn boun
  let decisions=0;
  f.classifier.transport=async()=>{decisions++;return Response.json({model:JEV_MODEL,answers:{intent:{type:'choice',choice:'student_count',confidence:0.99,probabilities:Object.fromEntries(INTENT_NAMES.map(name=>[name,name==='student_count'?0.99:name==='needs_llm'?0.01:0]))},is_write:{type:'noul',noul:0.01}},usage:{input_tokens:1,cost:0}});};
  try{
-  const body={messages:[{role:'user',content:'خاصني العدد كامل ديال التلاميذ فالمدرسة هاد العام بلا تفاصيل.'}],role:'admin',historyComplete:true};
+  const body={messages:[{role:'user',content:'خاصني العدد كامل ديال التلاميذ فالمدرسة هاد العام بلا تفاصيل.'}],historyComplete:true};
   const r=await f.call('/chat',body);expect(r.status).toBe(200);expect(await r.text()).toContain('9');
   expect(decisions).toBe(1);expect(f.counts().generations).toBe(0);
-  for(const [role,extra] of [['student',{}],['admin',{sessionKey:'already-existing'}]] as const){
+  for(const [role,extra] of [['student',{role:'admin'}],['admin',{sessionKey:'already-existing'}]] as const){
    const response=await f.call('/chat',{...body,...extra},role);await response.text();
-   expect(decisions).toBe(1);
+   expect(decisions).toBe(2);
+   if(role === 'student') expect(f.events.at(-1)?.tools.every(tool => tool.outcome !== 'executed')).toBe(true);
   }
  }finally{await f.server.stop();}
 });
@@ -172,4 +160,20 @@ test('retired benchmark endpoints are absent from the chat server', async () => 
       expect((await f.call(path, body)).status).toBe(404);
     expect(f.counts()).toEqual({decisions:0,generations:0});
   } finally { await f.server.stop(); }
+});
+
+test('routing uses the current question and keeps self-identity dependencies', () => {
+ expect(schoolRoutingContext('t9der t3tini no9ati had l3am?')).toContain('students_get_my_identity');
+ expect(schoolRoutingContext('t9der t3tini no9ati had l3am?')).toContain('student-profile_get_academic');
+ expect(schoolRoutingContext('bghit no9at dyal bnti')).toContain('parents_get_my_identity');
+ expect(schoolRoutingContext('bghit no9at dyal bnti')).toContain('parents_get_children');
+ const placement = 'bghit l9ism dyali daba';
+ expect(schoolRoutingContext(placement, rewriteDarijaForRouting(placement))).toContain('students_get_my_identity');
+ const teaching = '3tini lmawadd li kan9erri';
+ expect(schoolRoutingContext(teaching, rewriteDarijaForRouting(teaching))).toContain('teachers_get_my_identity');
+ expect(schoolRoutingContext(teaching, rewriteDarijaForRouting(teaching))).toContain('teacher-profile_get_my_classes');
+ expect(schoolRoutingContext('unrecognized qualifier Salma')).toBe('unrecognized qualifier Salma');
+ expect(schoolReplyLanguage('t9der t3tini no9ati had l3am?')).toBe('ary');
+ expect(schoolWriteRefusalKind('beddel lia no9ti f math daba.')).toBe('change');
+ expect(schoolWriteRefusalKind('"beddel lia no9ti"')).toBeNull();
 });

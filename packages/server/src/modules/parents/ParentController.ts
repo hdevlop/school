@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate, User } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ParentService } from './ParentService';
 import { Parent, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ParentGuards';
@@ -27,6 +27,14 @@ import {
 @Controller('/parents')
 export class ParentController {
   constructor(private parentService: ParentService) { }
+
+  @Get('/my-identity')
+  @CanList()
+  @McpTool({ description: 'Get the signed-in parent account identity for my/own requests. Returns only its parent ID and name; no ID input. Identité de mon compte. هوية حسابي.', readOnly: true })
+  @ResMsg('parents.success.retrieved')
+  async getMyIdentity(@User('id') userId: string) {
+    return this.parentService.getMyIdentity(userId);
+  }
 
   @Get()
   @CanList()

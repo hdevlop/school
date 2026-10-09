@@ -32,6 +32,14 @@ import {
 export class TeacherController {
   constructor(private teacherService: TeacherService) { }
 
+  @Get('/my-identity')
+  @CanList()
+  @McpTool({ description: 'Get the signed-in teacher account identity for my/own requests. Returns only its teacher ID and name; no ID input. Identité de mon compte. هوية حسابي.', readOnly: true })
+  @ResMsg('teachers.success.retrieved')
+  async getMyIdentity(@User('id') userId: string) {
+    return this.teacherService.getMyIdentity(userId);
+  }
+
   @Get()
   @CanList()
   @McpTool({ description: 'List all teachers. Liste des enseignants. لائحة الأساتذة.', readOnly: true })

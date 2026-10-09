@@ -2,7 +2,7 @@ import { ChatController } from 'najm-chatbot';
 import type { Container } from 'diject';
 import type { MiddlewareHandler } from 'hono';
 import { CORRELATION_ID, INJECTION_TYPES, USER } from '../../../najm';
-import { schoolChatYearContext, SchoolChatContextProvider, type ChatActor } from './SchoolChatContextProvider';
+import { schoolChatRequest, SchoolChatRequest } from './SchoolChatRequest';
 import { JevIntentClassifier } from '../jev/JevIntentClassifier';
 import { schoolJevRequestContext } from '../jev/JevRequestContext';
 import { effectiveJevMode } from '../jev/JevControls';
@@ -12,13 +12,13 @@ import { ChatSpendRepository } from '../budget/ChatSpendRepository';
 import { installSchoolPaidChatTransport, schoolPaidChatContext, type SchoolPaidChatFrame } from '../budget/SchoolPaidChatTransport';
 
 /** Runs after the shared year boundary (50); never resolves or authorizes a second year. */
-export function registerChatYearContext(container: Container) {
+export function registerSchoolChatRequest(container: Container) {
   installSchoolPaidChatTransport();
   const handler: MiddlewareHandler = async (context, next) => {
     installSchoolPaidChatTransport();
-    const provider = await container.resolve(SchoolChatContextProvider);
-    const actor = container.get(USER) as ChatActor | undefined;
-    const snapshot = await provider.snapshot({ id: actor?.id, role: actor?.role });
+    const provider = await container.resolve(SchoolChatRequest);
+    const actor = container.get(USER) as { id?: string } | undefined;
+    const snapshot = await provider.snapshot();
     let latestUserText = '';
     let ordinary = null;
     try {
@@ -26,12 +26,12 @@ export function registerChatYearContext(container: Container) {
       latestUserText = latestChatUserText(body?.messages);
       if (readSchoolChatControls().enabled) ordinary = ordinaryJevTurn(body);
     } catch { /* The existing controller owns malformed-body responses. */ }
-    const proceed = () => schoolChatYearContext.run({ ...snapshot, latestUserText }, async () => {
-      if (!ordinary || !actor?.id || !actor.role) return next();
+    const proceed = () => schoolChatRequest.run(snapshot, async () => {
+      if (!ordinary || !actor?.id) return next();
       const classifier = await container.resolve(JevIntentClassifier);
       let correlationId: string | null = null;
       try { correlationId = container.get(CORRELATION_ID) ?? null; } catch { /* optional outside transport */ }
-      return schoolJevRequestContext.run({ ...ordinary, actorId: actor.id, role: actor.role,
+      return schoolJevRequestContext.run({ ...ordinary, actorId: actor.id,
         academicYear: snapshot.academicYear, mode: effectiveJevMode(), correlationId,
         requestSignal: context.req.raw.signal,
         eligible: request => classifier.eligible(request), prepare: request => classifier.prepare(request) }, next);

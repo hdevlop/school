@@ -7,18 +7,31 @@ than reaching into another workspace's source files.
 
 | Folder | Responsibility |
 | --- | --- |
-| `context/` | Trusted actor/year snapshot and request middleware |
 | `replies/` | Local wording, intent matching and validated result rendering |
 | `jev/` | Classifier, Decisions protocol, wording, acceptance and preparation |
-| `routing/` | Darija discovery hints, qualified fallback scope and provider policy |
+| `routing/` | Query-only Darija discovery hints and provider policy |
 | `budget/` | Durable shared allowance and paid transport accounting |
-| `transport/` | Ordinary release controls and response/failure stream handling |
+| `transport/` | Selected year/date metadata, release controls and response/failure handling |
 | `diagnostics/` | Fixed diagnostic records and guarded read endpoints |
 
 Normal flow: existing actor/year boundary → local reply → eligible guarded Jev
-candidate → qualified router/OSS20B fallback → existing authorized MCP execution.
+candidate → router/OSS20B fallback → existing authorized MCP execution.
 See [the release plan](../../../../../CHATBOT-JEV-ROUTER-PLAN.md) for enabled scope,
-allowance and rollback. This organization does not broaden that scope.
+allowance and rollback.
+
+Chat does not look up a parent's children or preload a student/teacher identity.
+For personal requests, the existing `students`, `parents` and `teachers`
+controllers expose `getMyIdentity`. It takes the user ID from `@User`, requires
+the module's read permission and calls its existing owned repository. Only the
+record ID and name are returned; null fields mean no matching identity. The router
+offers these tools with the appropriate child/profile tools. Jev and the answer
+model select reads; controllers and repositories authorize their execution.
+
+`SchoolChatRequest` keeps only the already-validated selected year and school date,
+and delegates existing knowledge/reply hints. It performs no entity lookup or
+role-based access decision. Local results explicitly describe their accessible
+scope so an owned subset does not appear to be a school-wide total. Personal
+answers now use router/20B tool chaining instead of identity-dependent renderers.
 
 `jevIntents.ts` is a small stable API. `jevProtocol.ts` owns intent definitions and
 types, `jevWording.ts` builds requests, and `jevDecision.ts` validates provider

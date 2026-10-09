@@ -5,7 +5,7 @@
  */
 export { authConfig, guardConfig } from './authConfig';
 export { cacheConfig, resolveCacheConfig } from './cacheConfig';
-export { chatbotConfig, chatYearContextConfig, studioAssistantConfig } from './chatbotConfig';
+export { chatbotConfig, chatRequestConfig, studioAssistantConfig } from './chatbotConfig';
 export { corsConfig, databaseConfig, eventsConfig, i18nConfig, validationConfig } from './coreConfig';
 export { emailConfig, resolveEmailConfig } from './emailConfig';
 export { mcpConfig } from './mcpConfig';

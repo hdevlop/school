@@ -16,7 +16,7 @@ import {
   ragConfig,
   emailConfig,
   chatbotConfig,
-  chatYearContextConfig,
+  chatRequestConfig,
   studioAssistantConfig,
   ragStudioConfig,
   themeConfig,
@@ -25,7 +25,7 @@ import {
 import * as modulesModule from './modules';
 import { registerYearPropertyInjector, registerYearRequestScope } from './modules/academicYears/requestYear';
 import { yearRequestControllers } from './config/yearScope';
-import { registerChatYearContext } from './modules/chat/context/chatYearContext';
+import { registerSchoolChatRequest } from './modules/chat/transport/registerSchoolChatRequest';
 
 export { loadActiveAcademicYearLabel, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 
@@ -65,7 +65,7 @@ export const server = new Server()
   .use(themeConfig())
   .use(ragConfig())
   .use(chatbotConfig())
-  .use(chatYearContextConfig())
+  .use(chatRequestConfig())
   .use(studioAssistantConfig())
   .use(ragStudioConfig())
   .base('/api')
@@ -73,6 +73,6 @@ export const server = new Server()
 
 registerYearPropertyInjector(server.container);
 registerYearRequestScope(server.container, yearRequestControllers);
-registerChatYearContext(server.container);
+registerSchoolChatRequest(server.container);
 
 export default server;

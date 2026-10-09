@@ -1,6 +1,6 @@
 import type { ReplyLanguage, ReplyTemplate } from 'najm-chatbot';
 import type { JevIntent } from './jevIntents';
-import { schoolCountReply, schoolChangeRefusal } from '../replies/schoolReplyTemplates';
+import { schoolCountReply, schoolChangeRefusal, schoolReadableReply } from '../replies/schoolReplyTemplates';
 import { schoolListReplyForKind } from '../replies/schoolListReplies';
 import { examReplyKindV6 } from './guards/examsV6';
 
@@ -22,5 +22,5 @@ export function jevReplyPlan(intent: JevIntent, language: ReplyLanguage, academi
     const kind = examReplyKindV6(query);
     if (kind) plan = schoolListReplyForKind('exams', language, academicYear, kind === 'next' ? 1 : 5, examAsOfDate);
   }
-  return plan ? { ...plan, label: `jev:${intent}` } : null;
+  return plan ? { ...schoolReadableReply(plan, language), label: `jev:${intent}` } : null;
 }
