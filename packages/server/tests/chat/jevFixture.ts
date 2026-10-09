@@ -160,7 +160,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; timeZ
     const kind = schoolFilteredReplyKind(query);
     const names = kind === 'girls' ? ['students_get_students'] : kind === 'maths-teachers' ? ['teachers_get_teachers','subjects_get_subjects']
       : kind === 'teacher-count' ? ['teachers_get_teacher_count']
-      : kind === 'combined-total' ? ['students_get_student_count','teachers_get_teacher_count']
+      : kind === 'combined-total' || kind === 'separate-counts' ? ['students_get_student_count','teachers_get_teacher_count']
         : kind === 'upcoming-exams' ? ['exams_get_upcoming_exams']
           : kind === 'previous-month-absences' ? ['attendance_get_all']
             : kind === 'monthly-exams' ? ['exams_get_all'] : kind === 'large-classes' || kind === 'sixth-primary-count' ? ['classes_get_classes','students_get_students']

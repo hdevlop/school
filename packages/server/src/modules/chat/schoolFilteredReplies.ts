@@ -2,15 +2,19 @@ import { normalizeReplyText, type ReplyLanguage, type ReplyTemplate } from 'najm
 import { ATTENDANCE_STATUS_VALUES } from '@sms/contracts';
 import { schoolListReplyForKind } from './schoolListReplies';
 
-export const FILTERED_REPLY_VERSION = 5;
+export const FILTERED_REPLY_VERSION = 6;
 type Kind = 'girls' | 'maths-teachers' | 'parent-identity' | 'combined-total' | 'upcoming-exams'
-  | 'monthly-exams' | 'large-classes' | 'all-classes' | 'fourth-maths-grades' | 'previous-year' | 'previous-month-absences' | 'teacher-count' | 'sixth-primary-count';
+  | 'monthly-exams' | 'large-classes' | 'all-classes' | 'fourth-maths-grades' | 'previous-year' | 'previous-month-absences' | 'teacher-count' | 'sixth-primary-count' | 'separate-counts' | 'reference-clarification';
 const canonical = (value: string) => normalizeReplyText(value).replace(/[.!?؟]+$/u, '').trim();
 // A closed request set: additional names, dates, classes, operations or quotes do not match.
 const phrases: Record<Kind, string[]> = {
   'teacher-count': ['شحال من أستاذ كيقري فالمدرسة ديالنا دابا؟', 'ch7al mn ostad kay9erri f lmdrasa dyalna daba?',
     'شحال عندنا ديال الأساتذة فالمدرسة؟', 'ch7al 3ndna dyal lasatida f lmdrasa?',
-    'عطيني غير العدد ديال الأساتذة، ماشي السميات ديالهم.', '3tini ghir l3adad dyal lasatida, machi smiyat dyalhom.'],
+    'عطيني غير العدد ديال الأساتذة، ماشي السميات ديالهم.', '3tini ghir l3adad dyal lasatida, machi smiyat dyalhom.',
+    'الأساتذة ديالنا شحال هوما كاملين؟', 'lasatida dyalna ch7al homa kamlin?'],
+  'separate-counts': ['عطيني عدد التلاميذ بوحدو وعدد الأساتذة بوحدو، ديال المدرسة كاملة.',
+    '3tini 3adad tlamd bo7do w 3adad lasatida bo7do, dyal lmdrasa kamla.'],
+  'reference-clarification': ['وبالنسبة لهادوك، شنو بان ليك؟', 'w b nnisba lhadok, chno ban lik?'],
   'sixth-primary-count': ['شحال من تلميذ كاين غير فالسادس ابتدائي؟', 'ch7al mn tilmid kayn ghir f ssadis ibtida2i?'],
   'monthly-exams': ['شحال من فرض عند التلاميذ هاد الشهر؟', 'ch7al mn fard 3nd tlamd had chher?'],
   'large-classes': ['شنو هما الأقسام اللي فيهم كثر من تلاتين تلميذ؟', 'chno homa l2a9sam li fihom kter mn tlatin tilmid?'],
@@ -36,13 +40,22 @@ const requests = new Map(Object.entries(phrases).flatMap(([kind, texts]) =>
   texts.map(text => [canonical(text), kind as Kind] as const)));
 export const schoolFilteredReplyKind = (query: string) => /[«»“”"`]/u.test(query) ? null : requests.get(canonical(query)) ?? null;
 
-function renderSum(language: ReplyLanguage, year: string, results: unknown[]): string {
+function combinedCounts(results: unknown[]): number[] {
   if (results.length !== 2) throw Error('Invalid combined count results');
-  const counts = results.map(result => {
+  return results.map(result => {
     const count = (result as { count?: unknown } | null)?.count;
     if (typeof count !== 'number' || !Number.isSafeInteger(count) || count < 0) throw Error('Invalid combined count');
     return count;
   });
+}
+function renderSeparateCounts(language: ReplyLanguage, year: string, results: unknown[]): string {
+  const [students, teachers] = combinedCounts(results);
+  return language === 'ary' ? `حسب سجلات العام الدراسي ${year}: عدد التلاميذ هو ${students}، وعدد الأساتذة هو ${teachers}.`
+    : language === 'ar' ? `حسب سجلات السنة ${year}: عدد التلاميذ هو ${students}، وعدد الأساتذة هو ${teachers}.`
+      : `Selon les dossiers de ${year} : ${students} élèves et ${teachers} enseignants.`;
+}
+function renderSum(language: ReplyLanguage, year: string, results: unknown[]): string {
+  const counts = combinedCounts(results);
   const total = counts[0] + counts[1];
   if (!Number.isSafeInteger(total)) throw Error('Invalid combined count sum');
   return language === 'ary' ? `فهاد العام الدراسي ${year}، كاينين ${counts[0]} تلميذ و${counts[1]} أستاذ. المجموع هو ${total}.`
@@ -220,6 +233,10 @@ function renderMaths(language: ReplyLanguage, year: string, results: unknown[]):
 export function schoolFilteredReply(query: string, language: ReplyLanguage, year?: string, role?: string, schoolDate?: string): ReplyTemplate | null {
   const kind = schoolFilteredReplyKind(query);
   if (!kind) return null;
+  if (kind === 'reference-clarification') return { label: 'school:reference-clarification', text: language === 'ary'
+    ? 'شكون ولا شنو كتقصد بهادوك؟ وضح ليا السمية ولا الموضوع باش نجاوبك على الطلب الصحيح.'
+    : language === 'ar' ? 'من أو ما المقصود؟ حدد الاسم أو الموضوع حتى أجيب عن الطلب الصحيح.'
+      : 'De qui ou de quoi parlez-vous ? Précisez le nom ou le sujet pour que je réponde à votre demande.' };
   if (kind === 'previous-year') return { label: 'school:previous-year-clarification', text: language === 'ary'
     ? 'شحال ديال شنو كتقصد: التلاميذ، الأساتذة ولا شي حاجة أخرى؟ وضح ليا الطلب، وللمعلومات ديال العام اللي فات اختار داك العام فالداشبورد إلا كان مسموح لحسابك.'
     : language === 'ar' ? 'عدد ماذا تقصد: التلاميذ أم الأساتذة أم شيئاً آخر؟ وضح الطلب، واختر السنة السابقة في لوحة التحكم إن كانت متاحة لحسابك.'
@@ -235,6 +252,8 @@ export function schoolFilteredReply(query: string, language: ReplyLanguage, year
       : "Cette demande à l'échelle de l'école nécessite un compte de direction. Demandez les informations accessibles à votre compte." };
   if (!year) return null;
   const call = (name: string) => ({ name, input: name.startsWith('subjects_') ? {} : { academicYear: year } });
+  if (kind === 'separate-counts') return { label: 'school:separate-counts', calls: [
+    call('students_get_student_count'), call('teachers_get_teacher_count')], render: results => renderSeparateCounts(language, year, results) };
   if (kind === 'sixth-primary-count') return { label: 'school:sixth-primary-count',
     calls: [call('classes_get_classes'), call('students_get_students')], render: results => renderSixthCount(language, year, results) };
   if (kind === 'teacher-count') return { label: 'school:teacher-count', calls: [call('teachers_get_teacher_count')], render: results => {

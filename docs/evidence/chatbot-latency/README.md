@@ -9,9 +9,9 @@ The evidence footprint fell from 728 files / 66.29 MiB to 157 files / 21.96 MiB,
 including this index. Historical inputs loaded indirectly by regression tests
 were retained too. No benchmark result was rewritten or recomputed.
 
-Start with [the latest Darija routing report](darija-remaining-filters-results-20261009.md). It records 99/100 tool plans, 4/4 previous failures fixed, 36 passing live requests with Jev off and zero model calls, plus concrete next actions. General Jev enablement remains unqualified. [The previous report](darija-final-filters-results-20261009.md) preserves the 96/100 result.
+Start with [the final routing and answer review report](darija-answer-closeout-results-20261009.md). It records 100/100 tool plans, 42 passing live Jev-off checks with zero provider calls, and the assistant's evidence review of 15 previously flagged answers (two defects fixed). General Jev enablement and independent native acceptance remain unqualified.
 
-New raw observations are in [one verified compressed archive](darija-remaining-regression-20261009.zip). The preceding two runs remain in [their verified archive](darija-filtered-regressions-20261009.zip). Reports contain entry hashes and offline replay commands.
+[The previous 99/100 report](darija-remaining-filters-results-20261009.md) and earlier reports preserve their original observations. New raw evidence is in [one verified archive](darija-answer-closeout-20261009.zip); earlier snapshots remain in [the previous archive](darija-remaining-regression-20261009.zip) and [the preceding archive](darija-filtered-regressions-20261009.zip). Reports include entry hashes and offline replay commands.
 
 Useful comparisons:
 
