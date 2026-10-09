@@ -4,6 +4,12 @@ This folder keeps current Darija/Jev evidence, the useful comparison reports and
 historical inputs required by executable scripts or regression tests. Test-question
 datasets remain in `datasets/chatbot-latency/`.
 
+The comparison phase is closed. The active
+[Jev + router optimization plan](../../../CHATBOT-LATENCY-PLAN.md) covers conservative
+Jev eligibility, class/child resolution, faithful answers and ordinary-chat integration,
+with OSS20B used only when a model is necessary. Production enablement remains a
+planned step; historical checkpoints below are preserved observations.
+
 On 2026-10-08, 572 historical/intermediate files were archived out of this folder.
 The evidence footprint fell from 728 files / 66.29 MiB to 157 files / 21.96 MiB,
 including this index. Historical inputs loaded indirectly by regression tests

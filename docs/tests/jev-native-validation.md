@@ -1,5 +1,12 @@
 # Jev native-language acceptance collection
 
+The active engineering work follows the
+[Jev + router optimization plan](../../CHATBOT-LATENCY-PLAN.md#work-order).
+It prioritizes Darija tool and answer correctness, with a two-second average goal.
+The older research latency/sample targets below do not block these targeted
+engineering rechecks. The native-evidence protocol remains available separately;
+assistant-authored development results must not be presented as native qualification.
+
 ## Active owner-selected workflow
 
 The owner explicitly changed the collection requirement: “i dont have to write
@@ -58,13 +65,14 @@ for future native evidence and its strict exporter is unchanged. Native counts
 remain zero; operator wording feedback does not independently verify assistant
 labels or establish a native precision bound. Historical failures stay recorded.
 
-The classifier still needs zero accepted wrong labels, no write accepted as a
+The historical research qualification targets were zero accepted wrong labels, no write accepted as a
 read, at least 150 accepted unique cases and 150 declared question families, and
 warm p95 at most 500 ms. Paired variants count once by family. Generated family
 IDs do not prove independent real-user sampling. The 100-question/50-family review
 batch establishes wording preferences and cannot clear that numerical gate alone.
-Framework publication, readiness-race, tool authorization and end-to-end gates
-remain before runtime enablement. Results use `operator-reviewed-synthetic`;
+At that checkpoint, framework publication, readiness-race, tool authorization and
+end-to-end gates remained before runtime enablement. Use the active optimization
+plan for current release work. Results use `operator-reviewed-synthetic`;
 `productionAcceptance` stays false for the classification report.
 
 ```powershell
@@ -76,7 +84,7 @@ bun scripts/chatbot-jev-probe.mjs --cases=datasets/chatbot-latency/jev-operator-
 This is the collection protocol for a future accuracy study. It contains no
 native-authored or reviewed cases and grants no new paid request allowance.
 The completed assistant-authored core exploration failed accuracy. See
-[work order B0](../../CHATBOT-LATENCY-PLAN.md#94-work-order).
+[the completed phase and historical recovery](../../CHATBOT-LATENCY-PLAN.md#completed-phase).
 
 ## Collect and label before testing
 
