@@ -6,7 +6,7 @@ export function schoolYearReply(query: string, language: ReplyLanguage, selected
   if (!selectedYear || !role) return null;
   const text = normalizeReplyText(query).replace(/[‐‑–—]/gu, '-');
   // A date, code or arbitrary range alone is not an academic-year request.
-  if (!/(?<![\p{L}\p{N}])(?:academic|year|annee|année|scolaire|السنة|السنه|سنة|سنه|العام|عام|l3am)(?![\p{L}\p{N}])/u.test(text)) return null;
+  if (!/(?<![\p{L}\p{N}])(?:academic|year|annee|année|scolaire|[وفب]{0,2}(?:السنة|السنه|العام)|سنة|سنه|عام|l3am)(?![\p{L}\p{N}])/u.test(text)) return null;
   const years = [...text.matchAll(/(?<![\p{L}\p{N}])(20\d{2})\s*[-/]\s*(20\d{2})(?![\p{L}\p{N}])/gu)]
     .filter(match => Number(match[2]) === Number(match[1]) + 1)
     .map(match => `${match[1]}-${match[2]}`);

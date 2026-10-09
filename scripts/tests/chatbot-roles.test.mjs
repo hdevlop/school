@@ -1,7 +1,18 @@
 import { describe, expect, it } from 'bun:test';
 import { findLeaks, parseUiStream, planRoleSchedule } from '../chatbot-roles.mjs';
+import { scoreRoleLookup } from '../chatbot-role-scoring.mjs';
 
 const sse = (...events) => `${events.map((event) => `data: ${JSON.stringify(event)}`).join('\n\n')}\n\ndata: [DONE]\n`;
+
+it('counts a visible unavailable notice as a failed answer, including follow-ups', () => {
+  const reply = parseUiStream(sse(
+    { type: 'text-delta', id: 'notice', delta: 'ما قدرتش نكمل الجواب دابا.' },
+    { type: 'finish', messageMetadata: { schoolReplyOutcome: 'unavailable' } },
+  ));
+  expect(scoreRoleLookup(reply, 'وريني النقط ديالي').failures).toEqual(['answer_unavailable']);
+  expect(scoreRoleLookup(reply, 'Et ses absences ?').failures).toEqual(['answer_unavailable']);
+  expect(scoreRoleLookup({ ...reply, metadata: null }, 'وريني النقط ديالي').failures).toEqual([]);
+});
 
 describe('bounded role schedule', () => {
   it('keeps the original ten scenarios/twelve turns and counts repeated follow-ups twice', () => {

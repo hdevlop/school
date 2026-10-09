@@ -11,7 +11,7 @@
     "usage": "original reported metadata retained; missing usage remains unknown"
   },
   "live": {
-    "queryTemplate": "Ø¹Ø·ÙŠÙ†ÙŠ Ø§Ù„Ù†Ù‚Ø· Ø¯ÙŠØ§Ù„ <student> Ø§Ù„Ù„ÙŠ Ù…Ø§ ÙƒÙŠÙ‚Ø±Ø§Ø´ Ø¹Ù†Ø¯ÙŠ.",
+    "queryTemplate": "عطيني النقط ديال <student> اللي ما كيقراش عندي.",
     "role": "teacher",
     "academicYear": "2026-2027",
     "assignedStudents": 44,

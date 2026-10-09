@@ -6,9 +6,28 @@ the project and recoverable from published Git history. See the
 for the current reports, retained test inputs and location of the verified ZIP.
 Historical links below may require restoring their archived files.
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. EMPTY CHAT COMPLETION NOW HAS A VISIBLE UNAVAILABLE NOTICE, WITHOUT A RETRY. THREE LIVE TARGETED 20B REPEATS AND ONE CONTROLLED EMPTY COMPLETION PASS TRANSPORT CHECKS. FRESH JEV REMAINS 21/24 CLASSIFICATIONS, FIVE CORRECT GUARDED PLANS, 19 FALLBACKS; PRIOR POPULATED ROLE SCORE REMAINS 11/12. OWNERSHIP/YEAR DENIALS HOLD. GENERAL JEV ENABLEMENT AND INDEPENDENT NATIVE ACCEPTANCE REMAIN UNQUALIFIED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. BROADER POPULATED 20B DARIJA REVIEW: 12/24 FACTUAL/TASK CHECKS, 1.573 SECONDS AVERAGE; GENERAL MODEL SWITCH NOT QUALIFIED. UNAVAILABLE ANSWERS FAIL BENCHMARK SCORING. ATTACHED ARABIC YEAR MARKERS FIXED; THREE TARGETED HISTORICAL REFUSALS PASS WITHOUT MODEL CALLS. OWNERSHIP/YEAR DENIALS HOLD; SAVED MODEL REMAINS 120B. GENERAL JEV ENABLEMENT AND INDEPENDENT NATIVE ACCEPTANCE REMAIN UNQUALIFIED.**
 
 ## 0. Current status and next work — 2026-10-09
+
+**2026-10-09 broader 20B factual answer review complete:**
+[Results, failures and next action](docs/evidence/chatbot-latency/darija-20b-quality-results-20261009.md)
+record 12/24 correct factual/task answers across populated parent/teacher/student
+Darija workflows, including 9/18 accessible-data answers, at 1.573 seconds average
+without a timing gate. The original responses remain frozen; one draft review
+flag was corrected against the previous calendar week's dates. Missing subject
+marks/pending counts, omitted subjects, class/section inversion, incorrect grade
+wording and a malformed tool name remain failures. One unavailable notice is a
+failed answer. No protected data leaked; 12 own MCP reads and six direct
+outsider/history denials passed. Benchmark scoring now rejects unavailable
+notices; attached Arabic year markers select the existing restriction reply.
+Three targeted post-fix history checks pass without tools or external generation.
+1,403 chat/year/script tests, lint, typecheck, boundaries and build pass; the owned
+host, private captures and temporary build are removed. One verified 44 KiB
+archive retains anonymized observations and frozen sources. Saved 120B settings
+and production Jev mode are unchanged. Next: improve subject/assessment offers
+and fact rendering, then verify failed cases and different role questions.
+Keep the router/local replies; a general 20B or Jev replacement is not qualified.
 
 **2026-10-09 empty-reply safeguard complete:**
 [Fix, evidence and next action](docs/evidence/chatbot-latency/darija-empty-reply-fix-results-20261009.md)
