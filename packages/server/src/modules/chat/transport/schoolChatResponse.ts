@@ -30,10 +30,10 @@ export function latestChatUserText(messages: unknown): string {
 
 export function schoolChatAllowanceText(query: string): string {
   const language = schoolReplyLanguage(query);
-  return language === 'ary' ? 'وصلنا للميزانية الشهرية ديال المساعد. الأجوبة المحلية باقي خدامة؛ شوف باقي المعطيات فلوحة التحكم.'
-    : language === 'ar' ? 'بلغ المساعد الحد الشهري للميزانية. تبقى الإجابات المحلية متاحة؛ راجع باقي البيانات في لوحة التحكم.'
-      : language === 'fr' ? 'Le budget mensuel de l’assistant est atteint. Les réponses locales restent disponibles ; consultez les autres données dans le tableau de bord.'
-        : 'The assistant monthly allowance is reached. Local replies remain available; check other data in the dashboard.';
+  return language === 'ary' ? 'وصلنا للميزانية الشهرية ديال المساعد. شوف المعطيات فلوحة التحكم.'
+    : language === 'ar' ? 'بلغ المساعد الحد الشهري للميزانية. يرجى الاطلاع على البيانات في لوحة التحكم.'
+      : language === 'fr' ? 'Le budget mensuel de l’assistant est atteint. Consultez les données dans le tableau de bord.'
+        : 'The assistant monthly allowance is reached. Check the data in the dashboard.';
 }
 
 /**

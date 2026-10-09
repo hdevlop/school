@@ -7,7 +7,6 @@ import { readJevControls, effectiveJevMode } from './JevControls';
 import { schoolJevRequestContext } from './JevRequestContext';
 import { jevReplyPlan } from './jevReplyPlan';
 import { readSchoolChatControls } from '../transport/schoolChatControls';
-import { schoolChatRequest } from '../transport/SchoolChatRequest';
 import { hasOrdinaryJevReply, ORDINARY_JEV_READS } from './jevReadScope';
 import { budgetedChatFetch } from '../budget/SchoolPaidChatTransport';
 
@@ -81,8 +80,7 @@ export class JevIntentClassifier {
       const decision = parseDecision(JSON.parse(text));
       const accepted = acceptsWithQueryGuardV6(decision, request.userText, this.controls.threshold)
         && ORDINARY_JEV_READS.some(choice => choice === decision.choice);
-      const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear, request.userText,
-        schoolChatRequest.getStore()?.schoolDate) : null;
+      const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear) : null;
       frame.diagnostics!.classification = signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined';
       return effectiveJevMode() === 'on' ? plan : null;
     } catch {

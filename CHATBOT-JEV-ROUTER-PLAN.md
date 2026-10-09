@@ -2,7 +2,7 @@
 
 Updated: 2026-10-09. **Jev + router + OSS20B enabled locally; authorization belongs to the existing modules.**
 
-The chatbot uses validated local replies, guarded Jev selection, the existing
+The chatbot uses write refusals, guarded Jev selection, the existing
 router, and selective **GPT-OSS 20B** fallback. Saved OpenRouter settings now select
 20B. Jev and the shared monthly application allowance are enabled in the local
 environment and verified on the running dashboard at port 3102. Remote production
@@ -13,9 +13,9 @@ deployment is not claimed.
 - Jev: supported student count, teacher count, separate
   counts of both, and class lists. Only a new, single user text with no session key
   can establish complete first-turn history. Other turns retain routing.
-- Existing validated local reads: recognized count, class and filtered read plans.
-  They use the module's authorized results and explicitly state the accessible scope.
-- Router/OSS20B: handles requests without a local/Jev plan, including personal
+- Minimal local replies: write refusals and result formatting for the four Jev
+  reads above. No local matcher selects count/class/filtered read questions.
+- Router/OSS20B: handles requests without an accepted Jev plan, including personal
   grades, placement, children and teaching assignments. Query-only discovery
   includes the required identity/child/profile tools. Personal IDs come from
   `students_get_my_identity`, `parents_get_my_identity` or `teachers_get_my_identity`,
@@ -34,22 +34,21 @@ not independent native-language acceptance.
 ## Request flow
 
 1. Resolve actor and selected year through the existing shared boundaries.
-2. Add only selected-year/date metadata; apply read-only refusals and recognized
-   local replies or clarifications. Do not preload private identities or children.
+2. Add only selected-year/date metadata; apply read-only write refusals. Do not preload private identities or children.
 3. For eligible supported first turns, try Jev before routing.
    Require valid probabilities/confidence, read intent, positive query vocabulary
    and complete arguments. Execute accepted plans through the existing MCP path.
 4. On decline/error, use the existing router for discovery. Model fallback runs
    with sufficient remaining allowance. Resolve personal IDs through module tools
    before profile reads. Controller permissions, repository ownership and the
-   shared year boundary apply equally to local, Jev and model-selected calls.
+   shared year boundary apply equally to Jev and model-selected calls.
 5. Preserve failed tool calls and unavailable outcomes. Never invent zero results,
    silently retry a failed generation, or launch Jev and the answer model together.
 
 ## Completed work
 
 These are the earlier release milestones. Identity-dependent local rendering
-and the role/phrase fallback gate are superseded by the current implementation above.
+filtered reply renderers and the role/phrase fallback gate are superseded by the current implementation above.
 
 - [x] P1: bypass provably unsupported classification while preserving supported plans.
 - [x] P2: correct class/child identity, academic tool selection, malformed-call handling
@@ -73,7 +72,8 @@ averaging **0.83 seconds**, including router fallback with Jev off. Two dashboar
 checks pass with actual allowance accounting for Jev and multi-turn router/20B.
 These checks describe the earlier bounded release, which used identity-dependent
 local renderers. They are historical evidence, not measurements of the new
-context-free personal tool chaining. No new paid benchmark is requested.
+context-free personal tool chaining. No new paid benchmark is requested. These earlier results also do not qualify
+the newly simplified general read/model path.
 
 The full results, original failures, limitations and verification totals are in
 [the release report](docs/tests/jev-router-validation.md#qualified-ordinary-release--2026-10-09).
@@ -93,7 +93,7 @@ The $10/month application allowance includes ordinary paid classification,
 generation and routing embeddings for all roles using the School database.
 Reservations are atomic and survive restarts. Unknown costs and cancellations
 keep their debit; reported charges settle once. Exhaustion blocks new paid sends
-and returns a localized notice; free local replies remain available. Provider
+and returns a localized notice; recognized local write refusals remain available. Provider
 price ceilings bound 20B requests. This is not a promise of unlimited messages or
 an exact provider invoice cap when costs are unknown or unexpectedly overrun.
 
@@ -118,12 +118,19 @@ study is required. Do not restore a second authorization flow inside chat.
 Historical comparisons remain in [the evidence index](docs/evidence/chatbot-latency/README.md).
 The old latency plan is recoverable with `git show 846a679:CHATBOT-LATENCY-PLAN.md`.
 
+The current reply cleanup passes 946 chat/year/security/ownership tests and 28
+script/boundary tests, lint, root type checking and an isolated production build.
+No paid requests were made. [Current details](docs/tests/jev-router-validation.md#minimal-replies-and-routeross20b-answers--2026-10-09)
+distinguish offline pipeline checks from the earlier live benchmark results.
+
 ## Code organization
 
 The [chat module guide](packages/server/src/modules/chat/README.md) maps the six
 runtime folders. The module root now contains only its registration
-entry point and guide. Filtered replies use a small dispatcher with focused
-renderers; Jev protocol, request wording and decision validation are separate.
+entry point and guide. `replies/` now contains only three files: language, write
+refusals and formatting for supported Jev results. General read answers are written
+by OSS20B from authorized tool results. Jev protocol, request wording and decision
+validation are separate.
 Numbered guards remain active dependencies. The `context/` folder and its eager
 identity lookups are removed. Identity/role-dependent reply helpers and
 the role-based fallback gate are retired. Date/year request metadata stays in

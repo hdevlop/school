@@ -141,7 +141,7 @@ describe('shared intent renderers', () => {
   test.each(['fr', 'ar', 'ary'] as const)('maps only guarded core intents in %s', language => {
     for (const intent of INTENT_NAMES) {
       const plan = jevReplyPlan(intent, language, '2025-2026');
-      if (['upcoming_exams', 'needs_llm'].includes(intent)) expect(plan).toBeNull();
+      if (!['student_count', 'teacher_count', 'student_and_teacher_count', 'class_list'].includes(intent)) expect(plan).toBeNull();
       else { expect(plan?.label).toBe(`jev:${intent}`); if (plan && 'calls' in plan) {
         expect(plan.calls.every(call => call.input.academicYear === '2025-2026')).toBe(true);
         expect(plan.calls.some(call => /create|update|delete|record|mark/u.test(call.name))).toBe(false);
@@ -161,7 +161,7 @@ describe('shared intent renderers', () => {
     const diagnostics = new ChatDiagnosticsLog();
     const events: any[] = []; const reads = mock(async () => ({ content: [{ type: 'text', text: '{"count":7}' }] }));
     const value = new ChatAgent({ getInternal: async () => ({ isEnabled: true, provider: 'openrouter', model: 'test', useMemory: false }) } as any,
-      {} as any, {} as any, { reply: { detectLanguage: schoolReplyLanguage, template: input => schoolReplyTemplate(input, '2026-2027'),
+      {} as any, {} as any, { reply: { detectLanguage: schoolReplyLanguage, template: input => schoolReplyTemplate(input),
         preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: event => { events.push(event); diagnostics.record(event); } } }, {} as any);
     (value as any).container = { get(token: any) {
       if (token === USER) return { id: 'actor', role: 'admin' };

@@ -80,9 +80,8 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   attendance_get_today_students: ['attendance_get_by_date'],
   attendance_get_today_all: ['attendance_get_by_date'],
   attendance_get_by_date: ['attendance_get_all'],
-  // Darija class-list queries may route to sections; the guarded list template
-  // needs the class read, which includes its sections, available on that path.
-  sections_get_sections: ['classes_get_classes', 'students_get_students'],
+  // Class lists include section names; section discovery must offer that read.
+  sections_get_sections: ['classes_get_classes'],
   sections_get_students: ['classes_get_classes', 'sections_get_sections', 'students_get_students'],
   classes_get_class_students: ['classes_get_classes', 'sections_get_sections', 'students_get_students'],
   grades_get_by_section: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects', 'grades_get_all'],

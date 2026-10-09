@@ -1,8 +1,5 @@
-import { normalizeReplyText, type ReplyLanguage, type ReplyRequest, type ReplyTemplate } from 'najm-chatbot';
-import { schoolListReply } from './schoolListReplies';
+import type { ReplyLanguage, ReplyRequest, ReplyTemplate } from 'najm-chatbot';
 import { schoolWriteRefusalKind } from './schoolReplyWrite';
-import { schoolClassIdentityReply } from './schoolClassReply';
-import { schoolFilteredReply } from './schoolFilteredReplies';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -25,18 +22,6 @@ function countResult(result: unknown): number {
   return count;
 }
 
-/** Recognize general totals only. Any unrecognized qualifier stays on the model/tool path. */
-function countEntities(text: string): Array<'students' | 'teachers'> | null {
-  if (!/^(?:combien|كم|شحال)(?!\p{L})/u.test(text)) return null;
-  const students = /(?<!\p{L})(?:élèves?|eleves?|و?(?:تلميذ|التلميذ|تلاميذ|التلاميذ))(?!\p{L})/u.test(text);
-  const teachers = /(?<!\p{L})(?:enseignants?|professeurs?|و?(?:استاذ|الاستاذ|اساتذة|الاساتذة))(?!\p{L})/u.test(text);
-  if (!students && !teachers) return null;
-  const remainder = text
-    .replace(/(?<!\p{L})(?:combien|y|a|t|il|d|de|et|élèves?|eleves?|enseignants?|professeurs?|sont|inscrits?|inscrites?|compte|l|école|ecole|cette|année|annee|كم|عدد|من|التلاميذ|تلاميذ|التلميذ|تلميذ|المسجلين|مسجل|مسجلين|هذه|السنة|سنة|العام|عام|وكم|وعدد|والاساتذة|واساتذة|والتلاميذ|الاساتذة|اساتذة|الاستاذ|استاذ|في|المدرسة|شحال|وشحال|كاين|كاينين|فالمدرسة|هاد)(?!\p{L})/gu, '')
-    .replace(/[\s?!؟.,’'\-]/gu, '');
-  return remainder ? null : [...(students ? ['students' as const] : []), ...(teachers ? ['teachers' as const] : [])];
-}
-
 function renderCounts(language: ReplyLanguage, entities: Array<'students' | 'teachers'>, results: unknown[]): string {
   if (results.length !== entities.length) throw new Error('Invalid school count result count');
   const values = results.map(countResult);
@@ -50,33 +35,11 @@ function renderCounts(language: ReplyLanguage, entities: Array<'students' | 'tea
       : student ? `Il y a ${values[0]} élèves inscrits cette année.` : `Il y a ${values[0]} enseignants.`;
 }
 
-/** Intent mapping reuses these validated renderers; the MCP boundary owns every read. */
 export function schoolCountReply(language: ReplyLanguage, entities: Array<'students' | 'teachers'>, academicYear: string): ReplyTemplate {
   return { calls: entities.map(entity => ({ name: entity === 'students' ? 'students_get_student_count' : 'teachers_get_teacher_count', input: { academicYear } })),
     render: results => renderCounts(language, entities, results) };
 }
-export function schoolChangeRefusal(language: ReplyLanguage): ReplyTemplate { return { text: refusals[language].change }; }
 
-/** The caller supplies only the already-validated selected year. No new year resolution. */
-export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, schoolDate?: string): ReplyTemplate | null {
-  if (!language) return null;
-  const writeKind = schoolWriteRefusalKind(userText);
-  if (writeKind) return { text: refusals[language][writeKind] };
-  if (channel === 'web') {
-    const identityReply = schoolClassIdentityReply(userText, language, academicYear);
-    if (identityReply) return schoolReadableReply(identityReply, language);
-    const filtered = schoolFilteredReply(userText, language, academicYear, schoolDate);
-    if (filtered) return schoolReadableReply(filtered, language);
-  }
-  if (academicYear) {
-    const list = schoolListReply(userText, language, academicYear);
-    if (list) return schoolReadableReply(list, language);
-  }
-  const entities = countEntities(normalizeReplyText(userText));
-  return entities && academicYear ? schoolReadableReply(schoolCountReply(language, entities, academicYear), language) : null;
-}
-
-/** Describe repository-scoped results without making a second authorization decision. */
 export function schoolReadableReply(plan: ReplyTemplate, language: ReplyLanguage): ReplyTemplate {
   if (!('calls' in plan)) return plan;
   const scope = {
@@ -85,4 +48,50 @@ export function schoolReadableReply(plan: ReplyTemplate, language: ReplyLanguage
     ary: 'هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:',
   };
   return { ...plan, render: results => scope[language] + '\n' + plan.render(results) };
+}
+
+type Row = Record<string, unknown>;
+
+function row(value: unknown): Row {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('Invalid school list row');
+  return value as Row;
+}
+
+function rows(value: unknown): Row[] {
+  if (!Array.isArray(value)) throw new Error('Invalid school list result');
+  return value.map(row);
+}
+
+function name(value: unknown): string {
+  if (typeof value !== 'string' || !value.trim() || /[\r\n]/u.test(value)) throw new Error('Invalid school list name');
+  return value;
+}
+
+function renderClasses(value: unknown, language: ReplyLanguage, year: string) {
+  const records = rows(value);
+  const empty = { fr: 'Aucune classe enregistrée pour cette année.', ar: 'لا توجد أقسام مسجلة لهذه السنة.', ary: 'ما كاين حتى قسم مسجل فهاد العام.' };
+  if (!records.length) return `${empty[language]} (${year})`;
+  const lines = records.map(record => {
+    const sections = rows(record.sections).filter(section => !(section.id === null && section.name === null))
+      .map(section => name(section.name));
+    const noSections = { fr: 'Aucune section enregistrée', ar: 'لا توجد شعب مسجلة', ary: 'ما كاين حتى شعبة مسجلة' };
+    return `- ${name(record.name)}: ${sections.length ? sections.join(', ') : noSections[language]}`;
+  });
+  const header = { fr: `Classes et sections — année ${year} :`, ar: `الأقسام والشعب للسنة الدراسية ${year}:`, ary: `هادي لائحة الأقسام والشعب فهاد العام الدراسي ${year}:` };
+  return `${header[language]}\n\n${lines.join('\n')}`;
+}
+
+/** General read questions go to Jev/router; only writes have a local refusal. */
+export function schoolReplyTemplate({ userText, language }: ReplyRequest): ReplyTemplate | null {
+  if (!language) return null;
+  const kind = schoolWriteRefusalKind(userText);
+  return kind ? { text: refusals[language][kind] } : null;
+}
+
+/** Formats a class list already selected by Jev and authorized by MCP. */
+export function schoolClassListReply(language: ReplyLanguage, academicYear: string): ReplyTemplate {
+  return { calls: [{ name: 'classes_get_classes', input: { academicYear } }], render: results => {
+    if (results.length !== 1) throw new Error('Invalid school class result count');
+    return renderClasses(results[0], language, academicYear);
+  } };
 }

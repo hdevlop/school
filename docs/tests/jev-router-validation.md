@@ -349,3 +349,32 @@ after verification; unrelated dashboard work and staged edits are preserved.
 **What can be done next:** use the existing combination. Review actual Darija
 answers and improve tool descriptions/dependencies for concrete selection failures.
 No new benchmarking framework, billing study or chat authorization layer is needed.
+
+## Minimal replies and router/OSS20B answers — 2026-10-09
+
+General read questions now use the existing router and OSS20B. Removed ten
+runtime files: the filtered phrase catalog, class-specific matching, local
+grade/attendance/count calculations, broad list renderers and per-question
+prompt hints. Retired algorithm tests and unused synthetic fixture branches are
+removed with them. The shared prompt keeps basic facts, input and scope rules.
+
+`replies/` contains only language detection, recognized write refusals and
+validated formatting for Jev's four supported reads: student count, teacher count,
+both counts and class lists. No local read matcher bypasses Jev/router. Module
+controllers and repositories still own authorization, ownership and execution.
+The selected academic year/date, tool failure reporting and $10 monthly allowance
+remain active. General model answers require remaining allowance; exhaustion
+directs the user to the dashboard without promising free read answers.
+
+Offline verification passes **946 chat/year/ownership/security tests** and
+**28 script/boundary tests**, lint and root type checking. Three routed Darija
+fixtures prove actual MCP results reach the model's next step; invalid, unoffered
+and unauthorized calls retain their failure notices. These scripted checks verify
+the pipeline, not live OSS20B language accuracy. No paid benchmark was run.
+The isolated production build also passes; its generated output is removed after
+verification. Unrelated dashboard edits and staged changes are preserved.
+
+**What can be done next:** use Jev for its supported reads and router/OSS20B for
+general answers. Improve tool descriptions/dependencies when an actual question
+selects the wrong tool. This cleanup makes no new claim about live Darija accuracy
+or response time; the earlier benchmark numbers remain historical.

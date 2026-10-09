@@ -1,5 +1,7 @@
 import 'reflect-metadata';
 import { afterEach, expect, test } from 'bun:test';
+import { ChatAgent } from 'najm-chatbot';
+import { scriptedModel } from 'najm-chatbot/testing';
 import { ordinaryJevTurn, readSchoolChatControls } from '../../src/modules/chat/transport/schoolChatControls';
 import { budgetedChatFetch, installSchoolPaidChatTransport, schoolPaidChatContext, type SchoolPaidChatFrame } from '../../src/modules/chat/budget/SchoolPaidChatTransport';
 import { schoolChatResponse } from '../../src/modules/chat/transport/schoolChatResponse';
@@ -120,13 +122,6 @@ test('only the configured free local embedding endpoint bypasses accounting, not
   await expect(f.fetcher(Response.json({}))('http://127.0.0.1:18080/v1/chat/completions',generation)).rejects.toThrow('qualified');
  });expect(f.snapshot().attempts).toBe(0);expect(f.snapshot().sends).toBe(1);
 });
-test('ordinary local replies remain available without a reservation when allowance is exhausted',async()=>{
-  process.env.CHATBOT_FLOW='jev-router-20b'; process.env.CHATBOT_JEV_MODE='off';
-  const f=await createJevFixture();const spend=fixture(1);
-  f.server.container.set(ChatSpendRepository,spend.frame.repository as any);
-  const response=await f.call('/chat',{messages:[{role:'user',content:'شحال من تلميذ كاين فالمدرسة؟'}]});
-  expect(await response.text()).toContain('9');expect(f.counts().decisions).toBe(0);expect(f.counts().generations).toBe(0);expect(spend.snapshot().attempts).toBe(0);
-});
 
 test('ordinary signed-in chat selects Jev through the production first-turn boundary and rejects forged role/history',async()=>{
  process.env.CHATBOT_FLOW='jev-router-20b';process.env.CHATBOT_JEV_MODE='on';
@@ -176,4 +171,23 @@ test('routing uses the current question and keeps self-identity dependencies', (
  expect(schoolReplyLanguage('t9der t3tini no9ati had l3am?')).toBe('ary');
  expect(schoolWriteRefusalKind('beddel lia no9ti f math daba.')).toBe('change');
  expect(schoolWriteRefusalKind('"beddel lia no9ti"')).toBeNull();
+});
+
+test('write refusal is free and general reads cannot bypass an exhausted allowance', async () => {
+ process.env.CHATBOT_FLOW='jev-router-20b'; process.env.CHATBOT_JEV_MODE='off';
+ const f=await createJevFixture(); const spend=fixture(1);
+ f.server.container.set(ChatSpendRepository,spend.frame.repository as any);
+ let sends=0;
+ const paid=budgetedChatFetch((async()=>{sends++;return Response.json({});}) as typeof fetch);
+ const model=scriptedModel('Unexpected answer');
+ model.doStream=async()=>{await paid(endpoint,generation);throw Error('Unexpected paid send');};
+ (f.server.container.get(ChatAgent) as any).buildModel=()=>model;
+ try {
+  const write=await f.call('/chat',{messages:[{role:'user',content:"Enregistre 15 sur 20 pour l'élève Zzbench Qqtest au dernier contrôle."}]});
+  expect(await write.text()).toContain('Je ne peux pas effectuer cette modification');
+  expect(spend.snapshot().attempts).toBe(0);
+  const read=await f.call('/chat',{messages:[{role:'user',content:'Combien de filles dans CP ?'}]});
+  expect(await read.text()).toContain('Le budget mensuel de l’assistant est atteint');
+  expect(sends).toBe(0);
+ } finally { await f.server.stop(); }
 });

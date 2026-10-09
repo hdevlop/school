@@ -120,7 +120,7 @@ describe('published chat controller year boundary', () => {
     expect(body.context).toMatch(/today is \d{4}-\d{2}-\d{2} in the school's time zone/);
   });
 
-  it('preserves knowledge and uses the latest message for School policy hints', async () => {
+  it('preserves knowledge without question-specific School hints', async () => {
     const provider = await (await boot()).container.resolve(SchoolChatRequest);
     const [french, arabic, darija] = await Promise.all([
       provider.getContext('Combien d’élèves cette année ?'),
@@ -129,8 +129,7 @@ describe('published chat controller year boundary', () => {
     ]);
     for (const context of [french, arabic, darija]) expect(context).toContain('Existing knowledge context');
     for (const context of [french, arabic, darija]) expect(context).toBe('Existing knowledge context');
-    const latest = await provider.getContext('Quels examens sont prévus prochainement ?\n---\nشحال من تلميذ؟',
-      { latestUserText: 'شحال من تلميذ؟', channel: 'web' });
+    const latest = await provider.getContext('Quels examens sont prévus prochainement ?\n---\nشحال من تلميذ؟');
     expect(latest).not.toContain('at most five');
     expect(await provider.getContextTrace('شحال من تلميذ؟')).toEqual({ used: false, chunks: [] });
   });

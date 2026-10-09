@@ -14,7 +14,6 @@ import { TeacherController } from '../../src/modules/teachers/TeacherController'
 import { TeacherService } from '../../src/modules/teachers/TeacherService';
 import { AcademicYearValidator } from '../../src/modules/academicYears/AcademicYearValidator';
 import { registerYearRequestScope, schoolMcpYearHooks } from '../../src/modules/academicYears/requestYear';
-import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 import { jevReplyPlan } from '../../src/modules/chat/jev/jevReplyPlan';
 
 const modules = [
@@ -99,10 +98,8 @@ test.each(modules)('$group missing identity is distinct from a failed identity r
   expect((await f.invoke(f.actor)).isError).toBe(true);
 });
 
-test('local and Jev counts state the accessible scope instead of implying a school-wide total', () => {
-  const plans = [
-    schoolReplyTemplate({ userText: 'Combien d’élèves cette année ?', language: 'fr', channel: 'web' }, '2026-2027'),
-    jevReplyPlan('student_count', 'fr', '2026-2027'),
+test('Jev counts state the accessible scope instead of implying a school-wide total', () => {
+  const plans = [    jevReplyPlan('student_count', 'fr', '2026-2027'),
   ];
   for (const plan of plans) {
     if (!plan || !('calls' in plan)) throw new Error('Expected a count read');

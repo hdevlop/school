@@ -7,14 +7,14 @@ than reaching into another workspace's source files.
 
 | Folder | Responsibility |
 | --- | --- |
-| `replies/` | Local wording, intent matching and validated result rendering |
+| `replies/` | Language, write refusals and four Jev result formatters |
 | `jev/` | Classifier, Decisions protocol, wording, acceptance and preparation |
 | `routing/` | Query-only Darija discovery hints and provider policy |
 | `budget/` | Durable shared allowance and paid transport accounting |
 | `transport/` | Selected year/date metadata, release controls and response/failure handling |
 | `diagnostics/` | Fixed diagnostic records and guarded read endpoints |
 
-Normal flow: existing actor/year boundary → local reply → eligible guarded Jev
+Normal flow: existing actor/year boundary → write refusal → eligible guarded Jev
 candidate → router/OSS20B fallback → existing authorized MCP execution.
 See [the release plan](../../../../../CHATBOT-JEV-ROUTER-PLAN.md) for enabled scope,
 allowance and rollback.
@@ -28,8 +28,8 @@ offers these tools with the appropriate child/profile tools. Jev and the answer
 model select reads; controllers and repositories authorize their execution.
 
 `SchoolChatRequest` keeps only the already-validated selected year and school date,
-and delegates existing knowledge/reply hints. It performs no entity lookup or
-role-based access decision. Local results explicitly describe their accessible
+and delegates existing knowledge. It performs no entity lookup or
+role-based access decision. Jev results explicitly describe their accessible
 scope so an owned subset does not appear to be a school-wide total. Personal
 answers now use router/20B tool chaining instead of identity-dependent renderers.
 
@@ -37,10 +37,11 @@ answers now use router/20B tool chaining instead of identity-dependent renderers
 types, `jevWording.ts` builds requests, and `jevDecision.ts` validates provider
 decisions. `JevRequestContext.ts` owns the one ordinary request context.
 
-`replies/schoolFilteredReplies.ts` dispatches a recognized request. Its `filtered/`
-helpers separately own the closed phrase catalog, record validation, counts,
-class placement, academic results and attendance. They use the same matching,
-validation and wording as before; successful empty reads stay distinct from errors.
+The `replies/` folder has three files: language detection, write-request refusals
+and formatting for the four supported Jev reads. General and filtered read
+questions use router/OSS20B. There is no local filtered phrase catalog, record
+join/calculation layer or question-specific prompt-hint provider. Successful empty
+reads remain distinct from failures.
 
 The numbered files under `jev/guards/` are active layers, not unused copies:
 Query V6 builds on V5/V4/V3, and count V2 uses V1's checks.

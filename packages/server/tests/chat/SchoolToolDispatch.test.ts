@@ -60,3 +60,37 @@ test.each(cases)('published SDK/MCP dispatch $id with validated arguments and pr
     }
   } finally { await fixture.server.stop(); }
 });
+
+test.each([
+  { query: 'ch7al mn bent kayna f lmdrasa?', name: 'students_get_students', fact: 'girl-a' },
+  { query: 'werini lghiyab dyal tlamid', name: 'attendance_get_all', fact: 'Salma' },
+  { query: 'werini forod had chher', name: 'exams_get_all', fact: '2025-10-31' },
+])('former filtered request uses routed MCP results: $name', async item => {
+  const fixture = await createJevFixture();
+  try {
+    const registry = fixture.server.container.get(MCP_REGISTRY) as { tools: Array<{ name: string }> };
+    let routingCalls = 0;
+    fixture.server.container.set(TOOL_PROVIDER, { findRelevantTools: async () => {
+      routingCalls++;
+      return { status: 'routed', tools: registry.tools.filter(tool => tool.name === item.name) };
+    } } as any);
+    const answer = 'جواب من المعطيات اللي رجعات الأداة.';
+    const model = scriptedModel({ cannedText: answer, toolCalls: [{ toolName: item.name, args: { academicYear: '2025-2026' } }] });
+    let generations = 0;
+    const generate = model.doStream.bind(model);
+    model.doStream = async options => {
+      generations++;
+      // Verify the second step receives actual MCP data, not local calculations.
+      if (generations === 2) expect(JSON.stringify(options.prompt)).toContain(item.fact);
+      return generate(options);
+    };
+    (fixture.server.container.get(ChatAgent) as any).buildModel = () => model;
+    const response = await fixture.call('/chat', { messages: [{ role: 'user', content: item.query }] }, 'admin', '2025-2026');
+    const stream = await response.text();
+    expect(response.status).toBe(200);
+    expect(routingCalls).toBe(1);
+    expect(generations).toBe(2);
+    expect(stream).toContain(answer);
+    expect(fixture.events.at(-1)?.tools).toMatchObject([{ name: item.name, outcome: 'executed' }]);
+  } finally { await fixture.server.stop(); }
+});

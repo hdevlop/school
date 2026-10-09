@@ -3,7 +3,7 @@ import { chatbot, CHATBOT_CONTEXT_PROVIDER } from 'najm-chatbot';
 import { studioAssistant } from 'najm-chatbot/studio-assistant';
 
 import { chatDiagnosticsLog } from '../modules/chat/diagnostics/ChatDiagnosticsLog';
-import { SchoolChatRequest, schoolChatRequest } from '../modules/chat/transport/SchoolChatRequest';
+import { SchoolChatRequest } from '../modules/chat/transport/SchoolChatRequest';
 import { schoolReplyTemplate } from '../modules/chat/replies/schoolReplyTemplates';
 import { schoolReplyLanguage } from '../modules/chat/replies/schoolReplyLanguage';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
@@ -17,8 +17,7 @@ export const chatbotConfig = () =>
     defaultSystemPrompt: chatbotSystemPrompt,
     reply: {
       detectLanguage: schoolReplyLanguage,
-      template: request => schoolReplyTemplate(request, schoolChatRequest.getStore()?.academicYear,
-        schoolChatRequest.getStore()?.schoolDate),
+      template: schoolReplyTemplate,
       preparation: jevPreparationPolicy(),
     },
     maxSteps: 10,
