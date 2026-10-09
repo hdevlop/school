@@ -147,10 +147,11 @@ describe('Jev eligibility and privacy boundary', () => {
     expect(await run(instance, () => instance.prepare(request()))).toBeNull();
     expect(instance.ledger.recent()[0]).toMatchObject({ outcome: 'declined', choice: 'needs_llm' });
   });
-  test('off sends nothing and preserves the legacy preparation path', async () => {
+  test('off sends nothing while the published contract still admits synchronous local replies', async () => {
     setBenchmarkJevMode('off');
     const { instance, settings } = classifier();
-    expect(jevPreparationPolicy().enabled).toBe(false);
+    expect(jevPreparationPolicy().enabled).toBe(true);
+    expect(jevPreparationPolicy().eligible(request())).toBe(false);
     expect(await run(instance, () => instance.prepare(request()))).toBeNull();
     expect(settings.getInternal).not.toHaveBeenCalled();
     expect(instance.transport).not.toHaveBeenCalled();

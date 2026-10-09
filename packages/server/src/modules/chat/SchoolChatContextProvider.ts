@@ -13,10 +13,11 @@ import { ParentChildrenRepository } from '../parents/ParentChildrenRepository';
 import { TeacherRepository } from '../teachers/TeacherRepository';
 import { StudentRepository } from '../students/StudentRepository';
 import { schoolReplyContext } from './schoolReplyContext';
+import type { SchoolChatChild } from './schoolIdentityReplies';
 
 // A snapshot of the validated year for prompt text and MCP arguments; the
 // shared year boundary remains the only resolver and authorization owner.
-export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string; teacherId?: string; studentId?: string }>();
+export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string; teacherId?: string; studentId?: string; children?: readonly SchoolChatChild[] }>();
 
 export interface ChatActor { id?: string; role?: string }
 
@@ -54,7 +55,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
     const today = await this.today();
     const context = await this.actorContext(actor);
     return { prompt: [today.text, this.describeYear(actor.role), context?.prompt].filter(Boolean).join('\n'),
-      academicYear: this.year.label, role: actor.role, schoolDate: today.date, teacherId: context?.teacherId, studentId: context?.studentId };
+      academicYear: this.year.label, role: actor.role, schoolDate: today.date, teacherId: context?.teacherId, studentId: context?.studentId, children: context?.children };
   }
 
   /**
@@ -68,7 +69,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
     return (await this.actorContext({ id, role }))?.prompt ?? null;
   }
 
-  private async actorContext({ id, role }: ChatActor): Promise<{ prompt: string; teacherId?: string; studentId?: string } | null> {
+  private async actorContext({ id, role }: ChatActor): Promise<{ prompt: string; teacherId?: string; studentId?: string; children?: readonly SchoolChatChild[] } | null> {
     if (!id) return null;
     try {
       if (role === 'parent') {
@@ -79,7 +80,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
           const place = [child.class?.name, child.section?.name].filter(Boolean).join(' ');
           return `${child.name} (studentId ${child.id}${place ? `, ${place}` : ''})`;
         });
-        return { prompt: [
+        return { children: children.map(child => ({ id: child.id, name: child.name, gender: child.gender })), prompt: [
           `The signed-in user is a parent, parentId ${parent.id}.`,
           listed.length ? `Their children this year: ${listed.join('; ')}.` : 'No child is linked to them this year.',
           'For their children\'s names, answer from this authorized list; parent-profile_get_children is a finance profile and is not needed for names.',

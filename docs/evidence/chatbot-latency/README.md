@@ -10,6 +10,13 @@ eight frozen direct replies preserved. The compact
 [eligibility archive](jev-eligibility-20261009.zip) contains replay and verification
 details. Existing comparison and answer-quality scores below remain unchanged.
 
+P2's [class/child checkpoint](../../tests/jev-router-validation.md#p2-class-and-child-identity-checkpoint--2026-10-09)
+records 14/14 actual internal API checks, ten faithfully rendered child grades,
+ownership/year denials and zero classifier/generation/routing calls. Its
+[compact identity archive](jev-identity-20261009.zip) preserves redacted results
+and implementation evidence. These bounded local replies do not qualify broad
+Jev/OSS20B production use; subject-grade and pending-grading fixes remain next.
+
 Keep these reports separate; their questions, roles and scoring differ:
 
 - [Jev / router + OSS20B comparison](darija-combinations-results-20261009.md):

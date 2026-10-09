@@ -18,7 +18,8 @@ export const chatbotConfig = () =>
     reply: {
       detectLanguage: schoolReplyLanguage,
       template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear, schoolChatYearContext.getStore()?.role,
-        schoolChatYearContext.getStore()?.schoolDate, schoolChatYearContext.getStore()?.teacherId, schoolChatYearContext.getStore()?.studentId),
+        schoolChatYearContext.getStore()?.schoolDate, schoolChatYearContext.getStore()?.teacherId, schoolChatYearContext.getStore()?.studentId,
+        schoolChatYearContext.getStore()?.children),
       preparation: jevPreparationPolicy(),
     },
     maxSteps: 10,

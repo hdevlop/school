@@ -7,7 +7,10 @@ import { jevExperimentArm } from './jevExperiment';
 export function jevPreparationPolicy(): ReplyPreparationPolicy {
   const controls = readJevControls();
   return {
-    get enabled() { return effectiveJevMode() !== 'off'; },
+    // The published preparation contract gives synchronous local templates
+    // precedence over routing. Enabling that contract does not enable Jev:
+    // eligibility and transport remain gated by the server frame and mode.
+    enabled: true,
     get strategy() {
       const arm = jevExperimentArm();
       return arm === '20b-coreweave-router-first' ? 'router-first'
@@ -20,7 +23,7 @@ export function jevPreparationPolicy(): ReplyPreparationPolicy {
         ? { historyComplete: frame.historyComplete, priorUserTurns: frame.priorUserTurns }
         : { historyComplete: false, priorUserTurns: null };
     },
-    eligible: request => schoolJevRequestContext.getStore()?.eligible?.(request) === true,
+    eligible: request => effectiveJevMode() !== 'off' && schoolJevRequestContext.getStore()?.eligible?.(request) === true,
     prepare: request => schoolJevRequestContext.getStore()?.prepare?.(request) ?? Promise.resolve(null),
     onSelection: event => schoolJevRequestContext.getStore()?.onSelection?.(event),
   };

@@ -5,6 +5,7 @@ import { schoolFilteredReply } from './schoolFilteredReplies';
 import { schoolYearReply } from './schoolYearReply';
 import { schoolTeacherCountReply } from './schoolTeacherReply';
 import { schoolStudentGradeReply } from './schoolStudentReply';
+import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild } from './schoolIdentityReplies';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -60,7 +61,7 @@ export function schoolCountReply(language: ReplyLanguage, entities: Array<'stude
 export function schoolChangeRefusal(language: ReplyLanguage): ReplyTemplate { return { text: refusals[language].change }; }
 
 /** The caller supplies only the already-validated selected year. No new year resolution. */
-export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, role?: string, schoolDate?: string, teacherId?: string, studentId?: string): ReplyTemplate | null {
+export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, role?: string, schoolDate?: string, teacherId?: string, studentId?: string, children?: readonly SchoolChatChild[]): ReplyTemplate | null {
   if (!language) return null;
   const text = normalizeReplyText(userText);
   const writeKind = schoolWriteRefusalKind(userText);
@@ -72,6 +73,9 @@ export function schoolReplyTemplate({ userText, language, channel }: ReplyReques
     if (teacherReply) return teacherReply;
     const studentReply = schoolStudentGradeReply(userText, language, academicYear, role, studentId);
     if (studentReply) return studentReply;
+    const identityReply = schoolClassIdentityReply(userText, language, academicYear, role)
+      ?? schoolChildGradeReply(userText, language, academicYear, role, children);
+    if (identityReply) return identityReply;
     const filtered = schoolFilteredReply(userText, language, academicYear, role, schoolDate);
     if (filtered) return filtered;
   }

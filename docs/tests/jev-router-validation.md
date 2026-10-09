@@ -83,5 +83,47 @@ or preserved. Production model, provider and general Jev enablement are unchange
 [Compact replay, source and verification archive](../evidence/chatbot-latency/jev-eligibility-20261009.zip).
 The verified archive is 25,746 bytes with 12 entries; its SHA-256 is
 `44bf03d0ecb97a0b40eac5c95f81356bc493beaf5788981d078b3d4c2da2b717`.
-Next work is P2's class/section discovery and child identity, followed by their
-targeted Darija tool-and-fact checks, rather than another full provider comparison.
+The subsequent class/child implementation is recorded below. Historical comparison
+scores above remain unchanged.
+
+## P2 class and child identity checkpoint — 2026-10-09
+
+Class lists preserve the class name with its nested section labels. Fifth-class
+counts match a discovered class ID to selected-year student placements, including
+both genders and all its sections. Missing or ambiguous classes clarify rather
+than become zero counts. Duplicate identities, conflicting placements and invalid
+read results fail closed; incomplete placements are explicitly qualified.
+
+Parent child identity comes from the existing owned repository snapshot. A unique
+daughter/son or an exact linked child's full name supplies the academic-profile
+ID; missing or ambiguous relation identities clarify. Unrecognized names retain
+routing. Grades preserve subjects, assessments
+and score denominators. No literal `bnti` student search or guessed ID is dispatched.
+Additional subject/date/attendance filters remain on the existing routed path.
+
+The published preparation contract now runs synchronous local templates before
+routing, including when paid Jev is off. Its independent server-frame/mode gate
+still prevents paid classification; no second tool executor or ownership resolver
+was added. A failed read returns unavailable without paid generation or retry.
+
+Final actual authenticated internal API checks: **14/14 tool-and-fact passes**.
+Six use the marked history fixture (the six original failure questions); eight
+use existing populated demo records. The parent's named-child replies reproduce
+all **10 grades**; two linked children require clarification for a generic child.
+School-wide parent requests refuse; outsider and historical academic reads deny.
+Transport is blocked for external hosts and model construction is forbidden:
+**zero classification, generation and routing calls**. Only local API/template
+timing is measured: about **0.02 seconds average** for these replies. This is not
+a new Jev/OSS20B or browser latency benchmark.
+
+Verification: **1,067 backend + 561 script/boundary tests** pass, along with root
+lint, typecheck and production build. The isolated build (about 992 MiB) is removed;
+Next type references and the user's tsconfig are preserved. Temporary hosts stop,
+private data/credentials are not retained, and saved AI settings are not modified.
+The compact [identity archive](../evidence/chatbot-latency/jev-identity-20261009.zip)
+contains redacted results, source, checks and the live harness.
+
+This verifies bounded class/child local replies. Subject/class grades, pending
+grading, other-role broad workflows, general Jev integration, qualified 20B fallback
+and the durable monthly allowance remain open. The next concrete work is fixing
+subject-grade and pending-grading offers on the existing populated failures.

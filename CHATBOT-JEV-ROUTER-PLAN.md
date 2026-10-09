@@ -1,6 +1,6 @@
 # Jev + router optimization plan
 
-Updated: 2026-10-09. Status: **comparison phase closed; P1 implemented; P2 next**.
+Updated: 2026-10-09. Status: **comparison phase closed; P1 implemented; P2 class/child fixes verified**.
 Target: local replies and guarded Jev for supported requests, the existing router
 for discovery and fallback, and **GPT-OSS 20B only when a model is necessary**.
 This document replaces the historical latency work orders. Implemented steps
@@ -115,11 +115,11 @@ See the [implementation checkpoint](docs/tests/jev-router-validation.md#p1-imple
 
 ### P2 — Repair tool and argument selection
 
-- [ ] Distinguish class identities from section labels for Arabic and Arabizi;
+- [x] Distinguish class identities from section labels for Arabic and Arabizi;
       use actual discovery results before choosing class/section IDs.
-- [ ] Resolve fifth-class requests without choosing an arbitrary section or adding
+- [x] Resolve fifth-class requests without choosing an arbitrary section or adding
       a gender filter. An unresolved class requires clarification, not zero students.
-- [ ] Resolve child identity using the signed-in role and owned records. Ask which
+- [x] Resolve child identity using the signed-in role and owned records. Ask which
       child when needed; do not fabricate an ID, search for “bnti”, or claim an
       input error means the grades tool or permission is absent.
 - [ ] Repair subject/class grade queries and pending-grading tool offers from the
@@ -133,6 +133,18 @@ See the [implementation checkpoint](docs/tests/jev-router-validation.md#p1-imple
 Primary files: `ragConfig.ts`, `jevRuntimeWording.ts`, `jevReplyPlan.ts`,
 `schoolReplyTemplates.ts`, `schoolReplyContext.ts` and existing role reply helpers.
 Output: corrected failures, with the same authorized executor and year ownership.
+
+Class/child checkpoint: all six original failure questions now pass on the actual
+history fixture. Eight further checks on existing populated demo records pass,
+including a parent's ten child grades, ambiguity and a school-wide read refusal;
+outsider and historical reads are denied. Fixed local replies now run before
+routing even with paid Jev off, using the published MCP executor and guards.
+There were zero classifier, generation or routing calls in these targeted checks.
+An exact linked child's full name resolves the clarification; ambiguous owned
+matches clarify, while unrecognized names and unsupported filters retain the
+existing fallback. These local results
+do not rescore the old comparisons or qualify general Jev/OSS20B production use.
+See the [class/child checkpoint](docs/tests/jev-router-validation.md#p2-class-and-child-identity-checkpoint--2026-10-09).
 
 ### P3 — Make answers faithful and fallback selective
 
@@ -221,4 +233,5 @@ Historical native-research protocols and old numeric latency/sample gates remain
 historical evidence; they do not add prerequisites to these engineering rechecks.
 Native qualification must still be reported honestly if pursued separately.
 
-**Next action: repair P2's class/section and child-identity failures.**
+**Next action: repair P2's subject/class grade and pending-grading offers, then
+validate selective OSS20B fallback and ordinary Jev integration in P3/P4.**

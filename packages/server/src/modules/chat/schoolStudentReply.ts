@@ -9,12 +9,21 @@ export function schoolStudentGradeReply(query: string, language: ReplyLanguage, 
   const allowed = new Set(['بغيت', 'نشوف', 'وريني', 'عطيني', 'النقط', 'النقاط', 'نقط', 'نقاط', 'نقطي', 'ديالي', 'أنا', 'انا', 'فهاد', 'هاد', 'العام',
     'bghit', 'nchof', 'werini', 'wrini', '3tini', 'no9at', 'nno9at', 'dyali', 'ana', 'f', 'had', 'l3am', 'mes', 'notes', 'affiche']);
   if (tokens.some(x => !allowed.has(x))) return null;
-  return { label: 'school:student-own-grades', calls: [{ name: 'student-profile_get_academic', input: { studentId, academicYear } }],
+  return schoolAcademicGradeReply(language, academicYear, studentId);
+}
+
+/** Shared renderer after identity resolution; MCP still authorizes the supplied ID. */
+export function schoolAcademicGradeReply(language: ReplyLanguage, academicYear: string, studentId: string, childName?: string): ReplyTemplate {
+  const clean = (value: string) => value.replace(/[\r\n\t]/gu, ' ').trim();
+  const child = childName === undefined ? undefined : clean(childName);
+  if (!studentId.trim() || child === '') throw Error('Invalid academic reply identity');
+  return { label: child === undefined ? 'school:student-own-grades' : 'school:child-grades', calls: [{ name: 'student-profile_get_academic', input: { studentId, academicYear } }],
     render: results => {
       const grades = (results[0] as { grades?: unknown } | null)?.grades;
       if (results.length !== 1 || !Array.isArray(grades)) throw Error('Invalid student academic result');
-      if (!grades.length) return language === 'ary' ? `ما لقيت حتى نقطة مسجلة ليك فهاد العام الدراسي ${academicYear}.`
-        : language === 'ar' ? `لا توجد نقاط مسجلة لك في السنة الدراسية ${academicYear}.` : `Aucune note enregistrée pour vous en ${academicYear}.`;
+      if (!grades.length) return language === 'ary' ? `ما لقيت حتى نقطة مسجلة ${child === undefined ? 'ليك' : `لـ ${child}`} فهاد العام الدراسي ${academicYear}.`
+        : language === 'ar' ? `لا توجد نقاط مسجلة ${child === undefined ? 'لك' : `لـ ${child}`} في السنة الدراسية ${academicYear}.`
+          : `Aucune note enregistrée pour ${child ?? 'vous'} en ${academicYear}.`;
       const lines = grades.map(grade => {
         const mark = typeof grade?.marksObtained === 'number' ? grade.marksObtained
           : typeof grade?.marksObtained === 'string' && /^\d+(?:\.\d+)?$/u.test(grade.marksObtained) ? Number(grade.marksObtained) : NaN;
@@ -24,11 +33,11 @@ export function schoolStudentGradeReply(query: string, language: ReplyLanguage, 
         const subject = grade?.subject?.name, title = assessment?.title;
         if (grade?.studentId !== studentId || !Number.isFinite(mark) || mark < 0 || !Number.isFinite(total) || total <= 0 || mark > total
           || typeof subject !== 'string' || !subject.trim() || typeof title !== 'string' || !title.trim()) throw Error('Invalid own grade row');
-        const clean = (value: string) => value.replace(/[\r\n\t]/gu, ' ').trim();
         return `${clean(subject)} — ${clean(title)}: ${mark} / ${total}`;
       });
-      const header = language === 'ary' ? `ها النقط ديالك المسجلة فهاد العام الدراسي ${academicYear}:`
-        : language === 'ar' ? `نقاطك المسجلة في السنة الدراسية ${academicYear}:` : `Vos notes enregistrées pour ${academicYear} :`;
+      const header = language === 'ary' ? `ها ${child === undefined ? 'النقط ديالك' : `النقط ديال ${child}`} المسجلة فهاد العام الدراسي ${academicYear}:`
+        : language === 'ar' ? `${child === undefined ? 'نقاطك' : `نقاط ${child}`} المسجلة في السنة الدراسية ${academicYear}:`
+          : `${child === undefined ? 'Vos notes' : `Notes de ${child}`} enregistrées pour ${academicYear} :`;
       return header + '\n' + lines.join('\n');
     } };
 }

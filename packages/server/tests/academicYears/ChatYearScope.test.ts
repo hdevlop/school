@@ -47,8 +47,8 @@ async function boot() {
   instance.container.set(ParentRepository, { getByUserId: async (userId: string) => (userId === 'u-parent' ? { id: 'P1' } : undefined) });
   instance.container.set(ParentChildrenRepository, {
     getChildren: async () => [
-      { id: 'S1', name: 'Salma Idrissi', class: { name: 'CE2' }, section: { name: 'A' } },
-      { id: 'S2', name: 'Omar Idrissi', class: null, section: null },
+      { id: 'S1', name: 'Salma Idrissi', gender: 'female', class: { name: 'CE2' }, section: { name: 'A' } },
+      { id: 'S2', name: 'Omar Idrissi', gender: 'male', class: null, section: null },
     ],
   });
   instance.container.set(TeacherRepository, {
@@ -163,6 +163,11 @@ describe('published chat controller year boundary', () => {
       expect((await provider.snapshot({ id: 'u-teacher', role: 'teacher' })).teacherId).toBe('T1');
       expect((await provider.snapshot({ id: 'u-student', role: 'student' })).studentId).toBe('S1');
       expect((await provider.snapshot({ id: 'u-parent', role: 'parent' })).studentId).toBeUndefined();
+      expect((await provider.snapshot({ id: 'u-parent', role: 'parent' })).children).toEqual([
+        { id: 'S1', name: 'Salma Idrissi', gender: 'female' }, { id: 'S2', name: 'Omar Idrissi', gender: 'male' },
+      ]);
+      expect((await provider.snapshot({ id: 'u-admin', role: 'admin' })).children).toBeUndefined();
+      expect((await provider.snapshot({ id: 'u-nobody', role: 'parent' })).children).toBeUndefined();
     });
     // Administrators, unknown accounts, a missing id and a failed lookup add nothing.
     for (const actor of [{ id: 'u-admin', role: 'admin' }, { id: 'u-nobody', role: 'parent' }, { role: 'teacher' }, { id: 'u-broken', role: 'teacher' }]) {

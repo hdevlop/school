@@ -33,7 +33,7 @@ import { jevDarijaCases } from '../../src/modules/chat/jevDarijaCases';
 import { INTENT_NAMES, JEV_MODEL } from '../../src/modules/chat/jevIntents';
 import type { ChatDiagnostics } from 'najm-chatbot';
 
-class FixtureData { constructor(readonly qualified = false) {} }
+class FixtureData { constructor(readonly qualified = false, readonly identities = false) {} }
 
 @Controller('/fixture-students') @ToolGroup('students')
 class StudentCounts {
@@ -43,6 +43,8 @@ class StudentCounts {
   get_student_count() { return { count: this.year.label === '2025-2026' ? 7 : 9 }; }
   @Get('/') @isAdministrator() @McpTool({ description: 'Fixture scoped students', readOnly: true })
   get_students() {
+    if (this.data.identities) return [{ id: 'girl-a', classId: 'fifth', sectionId: 'A', gender: 'female' },
+      { id: 'boy-a', classId: 'fifth', sectionId: 'B', gender: 'male' }, { id: 'other', classId: 'other', gender: 'female' }];
     if (this.data.qualified) return [...Array.from({ length: this.year.label === '2025-2026' ? 30 : 31 }, (_, i) => ({ id: `student-${i}`, classId: 'fourth', gender: 'female' })),
       ...Array.from({length:this.year.label === '2025-2026' ? 2 : 3},(_,i)=>({id:`sixth-${i}`,classId:'sixth',gender:'male'}))];
     return [{ id: 'girl-a', gender: 'female' }, { id: 'boy-a', gender: 'male' },
@@ -69,7 +71,8 @@ class ClassLists {
   constructor(private data: FixtureData) {}
   @Year() private year!: ResolvedAcademicYear;
   @Get('/') @isAdministrator() @McpTool({ description: 'Fixture classes', readOnly: true })
-  get_classes() { return this.data.qualified ? [{ id: 'fourth', name: `Fourth ${this.year.label}`, level: '4', sections: [{ id: 'a', name: 'A' }] },
+  get_classes() { return this.data.identities ? [{ id: 'fifth', name: `CM2 ${this.year.label}`, level: '5', sections: [{ id: 'a', name: 'A' }, { id: 'b', name: 'B' }] },
+    { id: 'other', name: 'CE2', level: '3', sections: [] }] : this.data.qualified ? [{ id: 'fourth', name: `Fourth ${this.year.label}`, level: '4', sections: [{ id: 'a', name: 'A' }] },
     {id:'sixth',name:`Sixth ${this.year.label}`,level:'6 AEP',sections:[{id:'sixth-a',name:'A'}]}] : []; }
 }
 @Controller('/fixture-attendance') @ToolGroup('attendance')
@@ -109,7 +112,7 @@ class GradeLists {
 }
 
 /** Fully local: fake settings/classifier/model and synthetic repositories, real guards/MCP/year scope. */
-export async function createJevFixture(options: { qualifiedData?: boolean; timeZone?: string } = {}) {
+export async function createJevFixture(options: { qualifiedData?: boolean; identityData?: boolean; timeZone?: string } = {}) {
   let markedFixture = true;
   const permissions: Array<{ id: string; name: string; resource: string; action: string }> = [];
   const grantIds = new Set<string>();
@@ -117,7 +120,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; timeZ
   const settings = { getInternal: async () => ({ provider: 'openrouter', apiKey: 'fixture-unused-key',
     isEnabled: true, model: 'openai/gpt-oss-120b', useMemory: false }) };
   const classifier = new JevIntentClassifier(settings as any);
-  let decisions = 0, generations = 0;
+  let decisions = 0, generations = 0, routingCalls = 0;
   classifier.transport = async (_url, init) => {
     decisions++;
     const query = JSON.parse(String(init!.body)).state;
@@ -138,7 +141,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; timeZ
   const roleGuard = getGuardMetadata(JevBenchmarkController, 'status').find(guard => guard.guardClass.name === 'RoleGuard')!.guardClass;
   server.load(roleGuard);
   const container = server.container;
-  container.set(FixtureData, new FixtureData(options.qualifiedData));
+  container.set(FixtureData, new FixtureData(options.qualifiedData, options.identityData));
   container.set(AiSettingsService, settings as any);
   container.set(JevIntentClassifier, classifier);
   container.set(JevBenchmarkRepository, { isMarkedFixture: async () => markedFixture } as any);
@@ -156,6 +159,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; timeZ
   for (const token of [ParentRepository, TeacherRepository, StudentRepository]) container.set(token, { getByUserId: async () => null } as any);
   container.set(ParentChildrenRepository, { getChildren: async () => [] } as any);
   container.set(TOOL_PROVIDER, { findRelevantTools: async (query: string) => {
+    routingCalls++;
     await new Promise(resolve => setTimeout(resolve, 20));
     const kind = schoolFilteredReplyKind(query);
     const names = kind === 'girls' ? ['students_get_students'] : kind === 'maths-teachers' ? ['teachers_get_teachers','subjects_get_subjects']
@@ -170,7 +174,8 @@ export async function createJevFixture(options: { qualifiedData?: boolean; timeZ
   } } as any);
   const config: ChatbotConfig = {
     reply: { detectLanguage: schoolReplyLanguage, template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear, schoolChatYearContext.getStore()?.role,
-      schoolChatYearContext.getStore()?.schoolDate),
+      schoolChatYearContext.getStore()?.schoolDate, schoolChatYearContext.getStore()?.teacherId, schoolChatYearContext.getStore()?.studentId,
+      schoolChatYearContext.getStore()?.children),
       preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: (event: ChatDiagnostics) => { events.push(event); } },
   };
   container.set(CHATBOT_CONFIG, config);
@@ -209,6 +214,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; timeZ
         ...(role ? { 'x-test-role': role } : {}), ...(actorId ? { 'x-test-actor-id': actorId } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }));
   }
   return { server, classifier, events, call, counts: () => ({ decisions, generations }),
+    routingCalls: () => routingCalls,
     setMarkedFixture: (value: boolean) => { markedFixture = value; },
     readGrants: () => permissions.filter(item => grantIds.has(item.id)).map(item => ({ ...item })) };
 }
