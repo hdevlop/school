@@ -6,9 +6,12 @@ the project and recoverable from published Git history. See the
 for the current reports, retained test inputs and location of the verified ZIP.
 Historical links below may require restoring their archived files.
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. LATEST DARIJA/ARABIZI REGRESSION: 96/100 TOOL PLANS, UP FROM 92/100. ALL EIGHT OLD FAILURES AND 30 TARGETED LIVE JEV-OFF REQUESTS PASS. FULL ANSWER ACCURACY AND GENERAL JEV ENABLEMENT REMAIN UNQUALIFIED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. LATEST DARIJA/ARABIZI REGRESSION: 99/100 TOOL PLANS. 4/4 PREVIOUS FAILURES AND 36 LIVE JEV-OFF CHECKS PASS. FULL ANSWER ACCURACY AND GENERAL JEV ENABLEMENT REMAIN UNQUALIFIED.**
 
 ## 0. Current status and next work — 2026-10-09
+
+**2026-10-09 remaining routing fixes complete:**
+[Latest results and next actions](docs/evidence/chatbot-latency/darija-remaining-filters-results-20261009.md) record 99/100 tool plans, 0.451 seconds average full reply, and 4/4 previous failures fixed. Sixth-primary counts require explicit unique class metadata or clarify; teacher-count and class-list variants use their validated local tools. 36/36 live Jev-off requests made zero provider calls. Populated two-year admin/principal HTTP/MCP: 104 checks; restricted-role chats: 104; direct MCP denials: 12. 463 chat and 557 script tests, lint, typecheck, boundaries and production build pass. 15 answers retain semantic review flags. Next: review flagged answers and test populated real-role workflows with fresh unseen Darija before broad Jev enablement. Fixture restored off/disabled/keyless/stopped; 1.442 GiB reclaimed; raw observations compressed with verified hashes. Existing router retained.
 
 **2026-10-09 filtered replies and final regression complete:**
 [Latest results and next actions](docs/evidence/chatbot-latency/darija-final-filters-results-20261009.md)

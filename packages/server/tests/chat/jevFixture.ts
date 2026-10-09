@@ -43,7 +43,8 @@ class StudentCounts {
   get_student_count() { return { count: this.year.label === '2025-2026' ? 7 : 9 }; }
   @Get('/') @isAdministrator() @McpTool({ description: 'Fixture scoped students', readOnly: true })
   get_students() {
-    if (this.data.qualified) return Array.from({ length: this.year.label === '2025-2026' ? 30 : 31 }, (_, i) => ({ id: `student-${i}`, classId: 'fourth', gender: 'female' }));
+    if (this.data.qualified) return [...Array.from({ length: this.year.label === '2025-2026' ? 30 : 31 }, (_, i) => ({ id: `student-${i}`, classId: 'fourth', gender: 'female' })),
+      ...Array.from({length:this.year.label === '2025-2026' ? 2 : 3},(_,i)=>({id:`sixth-${i}`,classId:'sixth',gender:'male'}))];
     return [{ id: 'girl-a', gender: 'female' }, { id: 'boy-a', gender: 'male' },
     ...(this.year.label === '2026-2027' ? [{ id: 'girl-b', gender: 'female' }] : [])]; }
 }
@@ -68,7 +69,8 @@ class ClassLists {
   constructor(private data: FixtureData) {}
   @Year() private year!: ResolvedAcademicYear;
   @Get('/') @isAdministrator() @McpTool({ description: 'Fixture classes', readOnly: true })
-  get_classes() { return this.data.qualified ? [{ id: 'fourth', name: `Fourth ${this.year.label}`, level: '4', sections: [{ id: 'a', name: 'A' }] }] : []; }
+  get_classes() { return this.data.qualified ? [{ id: 'fourth', name: `Fourth ${this.year.label}`, level: '4', sections: [{ id: 'a', name: 'A' }] },
+    {id:'sixth',name:`Sixth ${this.year.label}`,level:'6 AEP',sections:[{id:'sixth-a',name:'A'}]}] : []; }
 }
 @Controller('/fixture-attendance') @ToolGroup('attendance')
 class AttendanceLists {
@@ -161,7 +163,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; timeZ
       : kind === 'combined-total' ? ['students_get_student_count','teachers_get_teacher_count']
         : kind === 'upcoming-exams' ? ['exams_get_upcoming_exams']
           : kind === 'previous-month-absences' ? ['attendance_get_all']
-            : kind === 'monthly-exams' ? ['exams_get_all'] : kind === 'large-classes' ? ['classes_get_classes','students_get_students']
+            : kind === 'monthly-exams' ? ['exams_get_all'] : kind === 'large-classes' || kind === 'sixth-primary-count' ? ['classes_get_classes','students_get_students']
             : kind === 'all-classes' ? ['classes_get_classes'] : kind === 'fourth-maths-grades' ? ['classes_get_classes','subjects_get_subjects','grades_get_all'] : [];
     const registry = container.get(MCP_REGISTRY) as { tools: Array<{ name: string }> };
     return { status: 'routed', tools: registry.tools.filter(tool => names.includes(tool.name)) };

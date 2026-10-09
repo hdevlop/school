@@ -92,9 +92,9 @@ describe('offline positive-evidence guard v4 candidate', () => {
     const proof = await Bun.file('docs/evidence/chatbot-latency/jev-fixes-regression100-analysis-20261007.json').json();
     const samples = (await Promise.all(proof.reports.map(async row => (await Bun.file(row.path).json()).samples))).flat();
     expect(compareSavedGuardCoverage(corpus.cases, samples)).toMatchObject({
-      // Five saved class/count requests now have local plans and are no longer
+      // Seven saved class/count requests now have local plans and are no longer
       // current classifier candidates. The preserved provider decisions are unchanged.
-      before: { acceptedAttempts: 28, wrongAttempts: 0 }, after: { acceptedAttempts: 28, wrongAttempts: 0 },
+      before: { acceptedAttempts: 26, wrongAttempts: 0 }, after: { acceptedAttempts: 26, wrongAttempts: 0 },
       lostCorrectAttempts: 0, lostCorrectCases: [] });
   });
 });

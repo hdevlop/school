@@ -2,19 +2,22 @@ import { normalizeReplyText, type ReplyLanguage, type ReplyTemplate } from 'najm
 import { ATTENDANCE_STATUS_VALUES } from '@sms/contracts';
 import { schoolListReplyForKind } from './schoolListReplies';
 
-export const FILTERED_REPLY_VERSION = 4;
+export const FILTERED_REPLY_VERSION = 5;
 type Kind = 'girls' | 'maths-teachers' | 'parent-identity' | 'combined-total' | 'upcoming-exams'
-  | 'monthly-exams' | 'large-classes' | 'all-classes' | 'fourth-maths-grades' | 'previous-year' | 'previous-month-absences' | 'teacher-count';
+  | 'monthly-exams' | 'large-classes' | 'all-classes' | 'fourth-maths-grades' | 'previous-year' | 'previous-month-absences' | 'teacher-count' | 'sixth-primary-count';
 const canonical = (value: string) => normalizeReplyText(value).replace(/[.!?؟]+$/u, '').trim();
 // A closed request set: additional names, dates, classes, operations or quotes do not match.
 const phrases: Record<Kind, string[]> = {
   'teacher-count': ['شحال من أستاذ كيقري فالمدرسة ديالنا دابا؟', 'ch7al mn ostad kay9erri f lmdrasa dyalna daba?',
-    'شحال عندنا ديال الأساتذة فالمدرسة؟', 'ch7al 3ndna dyal lasatida f lmdrasa?'],
+    'شحال عندنا ديال الأساتذة فالمدرسة؟', 'ch7al 3ndna dyal lasatida f lmdrasa?',
+    'عطيني غير العدد ديال الأساتذة، ماشي السميات ديالهم.', '3tini ghir l3adad dyal lasatida, machi smiyat dyalhom.'],
+  'sixth-primary-count': ['شحال من تلميذ كاين غير فالسادس ابتدائي؟', 'ch7al mn tilmid kayn ghir f ssadis ibtida2i?'],
   'monthly-exams': ['شحال من فرض عند التلاميذ هاد الشهر؟', 'ch7al mn fard 3nd tlamd had chher?'],
   'large-classes': ['شنو هما الأقسام اللي فيهم كثر من تلاتين تلميذ؟', 'chno homa l2a9sam li fihom kter mn tlatin tilmid?'],
   'all-classes': ['عطيني لائحة ديال الأقسام كاملين.', '3tini lista dyal l2a9sam kamlin.',
     'شنو هما الأقسام اللي عندنا فالمدرسة؟', 'chno homa l2a9sam li 3ndna f lmdrasa?',
-    'وريني الأقسام ديال المدرسة.', 'werini l2a9sam dyal lmdrasa.'],
+    'وريني الأقسام ديال المدرسة.', 'werini l2a9sam dyal lmdrasa.',
+    'شمن أقسام كاينين فالمدرسة؟', 'chmen a9sam kaynin f lmdrasa?'],
   'previous-month-absences': ['وريني الغياب ديال التلاميذ فالشهر اللي فات.', 'werini lghiyab dyal tlamd f chher li fat.'],
   'fourth-maths-grades': ['شنو هوما النقط ديال القسم الرابع فالرياضيات؟', 'chno homa nno9at dyal l9ism rrabi3 f riyadiyat?'],
   'previous-year': ['وشحال كانو العام اللي فات؟', 'w ch7al kano l3am li fat?'],
@@ -73,13 +76,12 @@ function renderMonth(language: ReplyLanguage, year: string, schoolDate: string, 
     : language === 'ar' ? `يوجد ${count} امتحان مسجل في شهر ${month} للسنة ${year}، بما في ذلك الماضي والقادم.`
       : `${count} examens sont enregistrés pour ${month}, année ${year}, passés et à venir compris.`;
 }
-function renderLargeClasses(language: ReplyLanguage, year: string, results: unknown[]): string {
-  if (results.length !== 2 || !Array.isArray(results[1])) throw Error('Invalid class size results');
-  const classes = records(results[0]);
+function classPlacements(classes: Row[], students: unknown) {
+  if (!Array.isArray(students)) throw Error('Invalid class size results');
   const counts = new Map(classes.map(c => [c.id, 0]));
   const identities = new Map<string, string | null>();
   let unknown = 0;
-  for (const student of results[1]) {
+  for (const student of students) {
     if (!student || typeof student !== 'object' || typeof student.id !== 'string' || !student.id.trim()
       || (student.classId != null && (typeof student.classId !== 'string' || !student.classId.trim()))) throw Error('Invalid scoped student placement');
     const classId = student.classId ?? null;
@@ -91,6 +93,11 @@ function renderLargeClasses(language: ReplyLanguage, year: string, results: unkn
     if (classId === null || !counts.has(classId)) unknown++;
     else counts.set(classId, counts.get(classId)! + 1);
   }
+  return { counts, unknown };
+}
+function renderLargeClasses(language: ReplyLanguage, year: string, results: unknown[]): string {
+  if (results.length !== 2) throw Error('Invalid class size results');
+  const classes = records(results[0]), { counts, unknown } = classPlacements(classes, results[1]);
   const lines = classes.filter(c => counts.get(c.id)! > 30).map(c => `- ${safeName(c.name)}: ${counts.get(c.id)}`);
   const header = language === 'ary' ? `الأقسام اللي فيهم كثر من 30 تلميذ فـ ${year} حسب السجلات: `
     : language === 'ar' ? `الأقسام التي يزيد عدد تلاميذها عن 30 في ${year} حسب السجلات: `
@@ -135,6 +142,26 @@ function renderGirls(language: ReplyLanguage, year: string, results: unknown[]):
 const subjectName = (value: string) => canonical(value).normalize('NFD').replace(/\p{M}/gu, '');
 const maths = new Set(['math', 'maths', 'mat', 'mathematics', 'mathematiques', 'رياضيات', 'الرياضيات'].map(subjectName));
 const fourth = new Set(['4', '4e', '4eme', '4aep', 'quatrieme', 'الرابع', 'السنة الرابعة', 'الرابع ابتدائي', 'القسم الرابع'].map(subjectName));
+// A numeric level alone does not establish the primary cycle.
+const sixthPrimary = new Set(['6aep', '6 aep', '6ap', '6 ap', '6eme primaire', '6e primaire', 'sixieme primaire',
+  'السادس ابتدائي', 'السادس الابتدائي', 'السنة السادسة ابتدائي', 'السنة السادسة الابتدائية', 'السنة السادسة من التعليم الابتدائي'].map(subjectName));
+function renderSixthCount(language: ReplyLanguage, year: string, results: unknown[]): string {
+  if (results.length !== 2) throw Error('Invalid sixth-primary results');
+  const classes = records(results[0]), { counts, unknown } = classPlacements(classes, results[1]);
+  const matches = classes.filter(c => sixthPrimary.has(subjectName(safeName(c.name)))
+    || typeof c.level === 'string' && sixthPrimary.has(subjectName(c.level)));
+  if (matches.length !== 1) return language === 'ary'
+    ? `ما قدرتش نحدد قسم السادس ابتدائي بشكل واضح فـ ${year}. عطيني السمية أو الكود ديال القسم والسلك باش نحدد العدد الصحيح.`
+    : language === 'ar' ? `لم أتمكن من تحديد قسم السادس ابتدائي دون التباس في ${year}. حدد اسم أو رمز القسم والسلك لحساب العدد الصحيح.`
+      : `Classe de sixième primaire absente ou ambiguë en ${year}. Précisez son nom/code et son cycle pour déterminer l'effectif.`;
+  const count = counts.get(matches[0].id)!;
+  const text = language === 'ary' ? `كاينين ${count} تلميذ فالسادس ابتدائي، القسم ${safeName(matches[0].name)}، حسب سجلات العام الدراسي ${year}.`
+    : language === 'ar' ? `عدد تلاميذ السادس ابتدائي، القسم ${safeName(matches[0].name)}، حسب سجلات السنة ${year} هو ${count}.`
+      : `Les dossiers de ${year} indiquent ${count} élèves en sixième primaire, classe ${safeName(matches[0].name)}.`;
+  return !unknown ? text : text + (language === 'ary' ? ` ولكن ${unknown} تلميذ ما عندوش قسم معروف فهاد اللائحة؛ ما نقدرش نأكد العدد النهائي.`
+    : language === 'ar' ? ` لكن ${unknown} تلميذ بلا قسم معروف في هذه القائمة؛ لا يمكن تأكيد العدد النهائي.`
+      : ` Mais ${unknown} élèves n'ont pas de classe identifiée dans cette liste ; le total exact ne peut pas être confirmé.`);
+}
 function renderFourthGrades(language: ReplyLanguage, year: string, results: unknown[]): string {
   if (results.length !== 3) throw Error('Invalid class grade results');
   const classes = records(results[0]), subjects = records(results[1]), grades = records(results[2]);
@@ -208,6 +235,8 @@ export function schoolFilteredReply(query: string, language: ReplyLanguage, year
       : "Cette demande à l'échelle de l'école nécessite un compte de direction. Demandez les informations accessibles à votre compte." };
   if (!year) return null;
   const call = (name: string) => ({ name, input: name.startsWith('subjects_') ? {} : { academicYear: year } });
+  if (kind === 'sixth-primary-count') return { label: 'school:sixth-primary-count',
+    calls: [call('classes_get_classes'), call('students_get_students')], render: results => renderSixthCount(language, year, results) };
   if (kind === 'teacher-count') return { label: 'school:teacher-count', calls: [call('teachers_get_teacher_count')], render: results => {
     const count = (results[0] as { count?: unknown } | null)?.count;
     if (results.length !== 1 || typeof count !== 'number' || !Number.isSafeInteger(count) || count < 0) throw Error('Invalid teacher count');

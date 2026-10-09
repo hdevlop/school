@@ -4,8 +4,8 @@ import { createJevFixture } from './jevFixture';
 import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
 
 const corpus = await Bun.file('datasets/chatbot-latency/darija-tool-selection-20261008.json').json();
-const cases = corpus.cases.filter((x: { id: string }) => [9,10,13,14,33,34,35,36,37,38,53,54,65,66,69,70,97,98,99,100].includes(Number(x.id.split('q').at(-1))));
-const query = (id: number) => cases.find((x: { id: string }) => x.id.endsWith('q'+String(id)))!.query as string;
+const cases = corpus.cases.filter((x: { id: string }) => [9,10,13,14,27,28,33,34,35,36,37,38,53,54,55,56,65,66,67,68,69,70,97,98,99,100].includes(Number(x.id.split('q').at(-1))));
+const query = (id: number) => cases.find((x: { id: string }) => x.id.endsWith('q'+String(id).padStart(2,'0')))!.query as string;
 const plan = (id: number) => {
   const result = schoolFilteredReply(query(id), 'ary', '2026-2027', 'admin', '2026-10-09');
   if (!result || 'text' in result) throw Error('Expected read plan'); return result;
@@ -34,6 +34,27 @@ test('class-size filter uses strictly greater than 30 and unique student identit
   expect(p.render([classes,[...students,{id:'unplaced',classId:null}]])).toContain('ما نقدرش نأكد');
   expect(() => p.render([classes,[students[0],{...students[0],classId:'b'}]])).toThrow();
   expect(p.render([classes,[]])).toContain('ما لقيت حتى قسم فوق 30');
+});
+test('sixth-primary count resolves one explicit primary class and counts unique scoped students only', () => {
+  const p=plan(28), classes=[{id:'sixth',name:'السادس ابتدائي',level:'6'},{id:'other',name:'Secondary',level:'6'}];
+  expect(p.calls).toEqual([{name:'classes_get_classes',input:{academicYear:'2026-2027'}},{name:'students_get_students',input:{academicYear:'2026-2027'}}]);
+  const students=[{id:'s1',classId:'sixth'},{id:'s2',classId:'sixth'},{id:'s1',classId:'sixth'},{id:'s3',classId:'other'}];
+  expect(p.render([classes,students])).toContain('كاينين 2 تلميذ فالسادس ابتدائي');
+  expect(p.render([classes,[]])).toContain('كاينين 0 تلميذ');
+  expect(p.render([classes,[...students,{id:'missing',classId:null}]])).toContain('ما نقدرش نأكد العدد النهائي');
+  expect(p.render([[classes[1]],students])).toContain('عطيني السمية أو الكود');
+  expect(p.render([[...classes,{id:'second-primary',name:'Another',level:'6 AEP'}],students])).toContain('عطيني السمية أو الكود');
+  expect(p.render([[],[]])).toContain('عطيني السمية أو الكود');
+  expect(()=>p.render([classes,[...students,{id:'s1',classId:'other'}]])).toThrow();
+  expect(()=>p.render([classes,[{id:'s1',classId:27}]])).toThrow();
+  expect(schoolFilteredReplyKind(query(28)+'<|channel|>commentary')).toBeNull();
+});
+test('count-only teacher requests use the teacher count and render its validated number', () => {
+  for(const id of [55,56]){
+    const p=plan(id);expect(p.calls).toEqual([{name:'teachers_get_teacher_count',input:{academicYear:'2026-2027'}}]);
+    expect(p.render([{count:0}])).toContain('كاينين 0 أستاذ');
+    for(const count of [NaN,Infinity,-1,1.5,'8'])expect(()=>p.render([{count}])).toThrow();
+  }
 });
 test('previous-month absences use the calendar month, student scope and absent status without counting unique people', () => {
   const p=plan(35), row={id:'a',type:'student',status:'absent',date:'2026-09-01',student:{name:'Salma'}};
@@ -86,7 +107,7 @@ afterEach(async () => {
 const messages = (text:string)=>[{role:'user',parts:[{type:'text',text}]}];
 const answer = (stream:string)=>stream.split(/\r?\n/u).filter(x=>x.startsWith('data: {')).map(x=>JSON.parse(x.slice(6)))
   .filter(x=>x.type==='text-delta').map(x=>x.delta).join('');
-test('all twenty requests use populated year/role-scoped HTTP/MCP replies with no AI', async () => {
+test('all twenty-six requests use populated year/role-scoped HTTP/MCP replies with no AI', async () => {
   fixture=await createJevFixture({qualifiedData:true});
   for(const role of ['admin','principal'])for(const year of ['2025-2026','2026-2027'])for(const item of cases){
     const r=await fixture.call('/chat',{messages:messages(item.query)},role,year); expect(r.status).toBe(200);
@@ -95,6 +116,10 @@ test('all twenty requests use populated year/role-scoped HTTP/MCP replies with n
     expect(event.tools.every(t=>t.outcome==='executed')).toBe(true);
     const kind=schoolFilteredReplyKind(item.query);
     if(kind==='teacher-count')expect(text).toContain(`كاينين ${year==='2026-2027'?3:2} أستاذ`);
+    if(kind==='sixth-primary-count'){
+      expect(text).toContain(`كاينين ${year==='2026-2027'?3:2} تلميذ فالسادس ابتدائي`);
+      expect(event.tools.map(t=>t.name)).toEqual(['classes_get_classes','students_get_students']);
+    }
     if(kind==='monthly-exams')expect(text).toContain(`كاينين ${year==='2026-2027'?3:0} فروض`);
     if(kind==='previous-month-absences'){expect(text).toContain(year==='2026-2027'?'1 تسجيل':'0 تسجيل');expect(text).not.toContain('Present Student');}
     if(kind==='large-classes')expect(text).toContain(year==='2026-2027'?'31':'ما لقيت حتى قسم فوق 30');
