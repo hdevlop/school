@@ -1,4 +1,10 @@
-# Proposed Najm async reply preparation contract
+# Najm async reply preparation contract — historical checkpoint
+
+This records the earlier publication/adoption sequence, including its parallel
+strategy and measurements. Current strategy, release work and validation are in
+the [Jev + router plan](../../CHATBOT-JEV-ROUTER-PLAN.md) and
+[validation guide](../tests/jev-router-validation.md). Older linked reports are
+recoverable through the [evidence index](../evidence/chatbot-latency/README.md#historical-recovery).
 
 Status: the framework API is published as `najm-chatbot` 3.4.0 and installed in School through exact published pins. School's default-off adapter is implemented with server-issued synthetic sessions on the marked local history fixture. Production/real-question enablement remains off. A 72-chat mock integration passed; the live experiment stopped after two access-denied replies and one cancelled, unknown-cost classification. See [adapter/results](../evidence/chatbot-latency/jev-school-adapter-results-20261007.md) and [publication/adoption](../evidence/chatbot-latency/najm-chatbot-3.4.0-published-20261007.md).
 

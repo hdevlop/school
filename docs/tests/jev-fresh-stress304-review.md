@@ -1,10 +1,14 @@
 # New Jev wording review — 304 synthetic questions
 
+Historical wording worksheet retained for its authoring script. Current work uses
+the [Jev/router validation guide](jev-router-validation.md); this pending sheet
+does not block targeted engineering checks.
+
 Status: pending. These are my drafts, using fictional names. Your previous “done” approved the old 100 questions only.
 
 Read the Darija/Arabizi pairs below. You can approve all the wording or give the row numbers and your corrections. You do not need to write labels, JSON or reviewer details.
 
-The same corpus also contains French and standard Arabic versions. Translations and close read paraphrases are linked; this is a safety stress batch, not proof of 150 independent accepted families. The [authorized development benchmark](../evidence/chatbot-latency/jev-stress304-guard4-results-20261007.md) completed 304 valid responses; this wording review remains pending.
+The same corpus also contains French and standard Arabic versions. Translations and close read paraphrases are linked; this is a safety stress batch, not proof of 150 independent accepted families. The authorized development benchmark completed 304 valid responses; its report, `jev-stress304-guard4-results-20261007.md`, is available through [historical recovery](../evidence/chatbot-latency/README.md#historical-recovery). This wording review remains pending.
 
 Corpus: [jev-fresh-stress304-20261007.json](../../datasets/chatbot-latency/jev-fresh-stress304-20261007.json).
 

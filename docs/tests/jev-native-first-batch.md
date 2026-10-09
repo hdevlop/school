@@ -1,5 +1,9 @@
 # First batch: questions from actual speakers
 
+Historical worksheet retained because its dataset references this path. Current
+engineering work uses the [Jev/router validation guide](jev-router-validation.md);
+this sheet adds no new collection prerequisite.
+
 Status: filled by an AI assistant at the operator's request, not by speakers.
 All ten slots hold assistant-written questions under the pseudonym
 `assistant-ai`, declared non-native. They are synthetic development data and do

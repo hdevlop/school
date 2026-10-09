@@ -43,6 +43,7 @@ cannot qualify populated personal workflows or estimate real-user accuracy.
 References: [three-path comparison](docs/evidence/chatbot-latency/darija-combinations-results-20261009.md),
 [populated answer-quality review](docs/evidence/chatbot-latency/darija-20b-quality-results-20261009.md),
 [retained evidence and recovery](docs/evidence/chatbot-latency/README.md).
+Use the [current validation guide](docs/tests/jev-router-validation.md) for execution.
 
 **Current runtime:** saved model remains 120B and general Jev is off. Jev requires
 server-issued synthetic benchmark context and currently admits admin/principal,

@@ -1,64 +1,61 @@
-# Chatbot benchmark evidence
+# Chatbot evidence
 
-This folder keeps current Darija/Jev evidence, the useful comparison reports and
-historical inputs required by executable scripts or regression tests. Test-question
-datasets remain in `datasets/chatbot-latency/`.
+Active work: [Jev + router optimization plan](../../../CHATBOT-JEV-ROUTER-PLAN.md).
+Validation: [Darija tool and answer checks](../../tests/jev-router-validation.md).
 
-The comparison phase is closed. The active
-[Jev + router optimization plan](../../../CHATBOT-LATENCY-PLAN.md) covers conservative
-Jev eligibility, class/child resolution, faithful answers and ordinary-chat integration,
-with OSS20B used only when a model is necessary. Production enablement remains a
-planned step; historical checkpoints below are preserved observations.
+Keep these reports separate; their questions, roles and scoring differ:
 
-On 2026-10-08, 572 historical/intermediate files were archived out of this folder.
-The evidence footprint fell from 728 files / 66.29 MiB to 157 files / 21.96 MiB,
-including this index. Historical inputs loaded indirectly by regression tests
-were retained too. No benchmark result was rewritten or recomputed.
+- [Jev / router + OSS20B comparison](darija-combinations-results-20261009.md):
+  60 chats on 20 reused Darija/Arabizi questions; tool plans 14/20, 17/20 and 17/20.
+  All eight direct Jev replies are grounded; fallback answer defects remain.
+- [Populated OSS20B answer quality](darija-20b-quality-results-20261009.md):
+  12/24 factual/task passes across parent, teacher and student workflows.
+- [Empty-reply safeguard](darija-empty-reply-fix-results-20261009.md):
+  failed/empty output becomes a visible unavailable result, without retries.
 
-Start with [the new three-path Darija comparison](darija-combinations-results-20261009.md): 60 actual chats on 20 reused questions. Router + 20B passes 14/20 tool plans; Jev-first and router-first Jev both pass 17/20, at 1.242/1.247/1.174 seconds average. All eight direct Jev replies match fixture facts, but fallback scope and identity failures remain. The conditional next candidate is guarded Jev-first with router/20B fallback, skipping known unsupported classifier calls. Production settings remain unchanged; the report separates tool plans from answer correctness and preserves one compact verified archive.
+The first two reports have a JSON summary and compact verified archive. The
+safeguard has its JSON summary. Other retained JSON/JSONL files are historical
+inputs referenced by executable studies or regression tests, including indirect
+inputs resolved from their analyses. They remain unchanged to keep tooling working.
+The Cerebras note is retained because the current provider config references it.
 
-[The broader 20B answer-quality report](darija-20b-quality-results-20261009.md): 12/24 factual/task checks pass across populated parent, teacher and student Darija workflows (9/18 accessible-data answers), at 1.573 seconds average. No protected data leaked, but missing answers and incorrect wording rule out a general 20B switch. Unavailable notices now fail benchmark scoring. Attached Arabic year markers are fixed; three targeted historical refusals pass with zero model calls. 1,403 chat/year/script tests, lint, typecheck, boundaries and build pass; private captures and the temporary build are removed. Anonymized observations and frozen sources occupy one verified 44 KiB archive.
+## Cleanup — 2026-10-09
 
-[The empty-reply fix report](darija-empty-reply-fix-results-20261009.md) records the transport safeguard: School makes empty/failed streams visible and marks their outcome unavailable, with no automatic retry or invented school facts. Three live 20B/CoreWeave repeats of the failed teacher scenario returned visible replies without leaks; a separate controlled empty completion exercised the repair through the authenticated School endpoint with zero external generation calls. 503 chat/year checks, lint, typecheck, boundaries and build passed at that checkpoint.
+The evidence directory fell from **208 files / 24.82 MiB to 54 files / 7.51 MiB**
+before this index rewrite. Eleven obsolete chatbot test/review documents were
+also archived. Current architecture, deployment, production-browser, local
+embedding and other product documentation remains in place. Use the active
+validation guide instead of the retired latency/native-collection work orders.
 
-[The fresh Darija and populated role report](darija-fresh-populated-results-20261009.md) preserves the prior observations: fresh Jev classification 21/24, five correct guarded plans and 19 fallbacks; populated development verification 11/12 at 1.123 seconds, including the empty reply that motivated this fix. No protected data leaked; direct ownership/year denials held. One verified 68 KiB archive preserves those observations and frozen sources, excluding private captures and credentials. The targeted fix is not a new 12/12 accuracy score.
+## Historical recovery
 
-[The previous routing and answer review report](darija-answer-closeout-results-20261009.md) records 100/100 tool plans on the reused development corpus, 42 passing live Jev-off checks with zero provider calls, and the assistant's evidence review of 15 previously flagged answers (two defects fixed). This remains separate from fresh accuracy. General Jev enablement and independent native acceptance remain unqualified.
+All 208 evidence files, 13 chatbot test documents and the old plan name were
+backed up before removal. The verified ZIP has 223 entries, including a manifest
+of paths, sizes, SHA-256 hashes and retention reasons:
 
-[The previous 99/100 report](darija-remaining-filters-results-20261009.md) and earlier reports preserve their original observations. New raw evidence is in [one verified archive](darija-answer-closeout-20261009.zip); earlier snapshots remain in [the previous archive](darija-remaining-regression-20261009.zip) and [the preceding archive](darija-filtered-regressions-20261009.zip). Reports include entry hashes and offline replay commands.
+`C:\Users\pc\Documents\SchoolBenchmarkArchives\chatbot-docs-20261009-132207.zip`
 
-Useful comparisons:
-
-- [Previous Jev coverage](darija-jev-coverage-v6-results-20261008.md)
-- [Jev-first router fixes](darija-jev-first-fix-results-20261008.md)
-- [GPT-OSS 120B router check](darija-router120-check-results-20261008.md)
-- [GPT-OSS 20B router check](darija-router20-repeat-results-20261008.md)
-- [Original Darija selection comparison](darija-selection-results-20261008.md)
-
-## Recovering historical evidence
-
-All 728 original files were saved in a ZIP outside the project and verified
-against their SHA-256 hashes before any removal:
-
-`C:\Users\pc\Documents\SchoolBenchmarkArchives\chatbot-latency-20261008-210143.zip`
-
-ZIP SHA-256: `B7518DB516B3211B22CBF79A883A33589730B49DE0315E7E0ABA50CECFE27041`.
-The ZIP is 4.79 MiB. This local backup is not required to build or test the project.
-
-The same original files are available in published Git commit
-`e49f51ff9751bfb9eae9bb6429b68388976baa56`. Restore an individual historical
-input before rerunning an older study that needs it:
+ZIP SHA-256: `f6e55ddfeebfc39a5011aa81557141aec128b35f5e08b5379f7257c2d0c1177c`.
+This backup is outside the repository and is not needed for ordinary tests.
+The same pre-cleanup documents are recoverable from published commit `601b779`:
 
 ```powershell
-git restore --source=e49f51ff9751bfb9eae9bb6429b68388976baa56 -- docs/evidence/chatbot-latency/<filename>
+git restore --source=601b779 -- docs/evidence/chatbot-latency/<filename>
 ```
 
-Older planning documents may link to archived files; use the ZIP or that commit
-to recover them. New benchmark runs should keep their final report and necessary
-raw evidence, and archive intermediate snapshots after verification. Temporary
-Next builds are removed after validation.
+Use the corresponding `docs/tests/<filename>` path for an old guide. Restoring an
+old study is optional; it does not create a new paid benchmark allowance.
 
-Verification: the 556-test script suite initially identified two missing
-historical dependencies. Those files and the other indirect study dependencies
-were restored; both affected test files subsequently passed (45 tests). All
-other 554 checks passed in the full run. No application code or dataset changed.
+The earlier 2026-10-08 cleanup archive remains available for files already absent
+before this cleanup:
+`C:\Users\pc\Documents\SchoolBenchmarkArchives\chatbot-latency-20261008-210143.zip`.
+Its SHA-256 is `B7518DB516B3211B22CBF79A883A33589730B49DE0315E7E0ABA50CECFE27041`;
+those original files also exist at commit `e49f51ff9751bfb9eae9bb6429b68388976baa56`.
+Historical reports and retained worksheets may refer to those archived inputs.
+
+New milestones should keep one final report and a compact archive. Remove
+intermediates, private captures, owned hosts and generated builds after verification.
+
+Cleanup verification: 561 script tests passed with zero failures; all 20 links
+in the active plan, docs index and current validation/evidence guides resolve.
+No application behavior, test corpus labels or retained JSON/JSONL inputs changed.

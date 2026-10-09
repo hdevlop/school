@@ -1,8 +1,0 @@
-﻿{
-    "version":  "3.6.0",
-    "sha256":  "e6aaf60196ad59bbd2e6fac669dcc15949cf8fedda91d70e0ad5f6263bc515f1",
-    "integrity":  "sha512-/RlD7OcGd7kREtpf+jAe4j+IQCONBQzjAfCv4v5SrnEmSJnj0341pu9vJqEvY1bwhEaQnTEiA7pGgNKqJQlGLA==",
-    "tarball":  "https://registry.npmjs.org/najm-chatbot/-/najm-chatbot-3.6.0.tgz",
-    "upstreamCommit":  "9a5aa96e95c9fe935f4fe8e2a9622117f8e83ba5",
-    "packageTests":  287
-}

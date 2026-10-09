@@ -1,8 +1,0 @@
-{
-  "cases": 100,
-  "routingOutputsChanged": 0,
-  "path": "datasets/chatbot-latency/darija-tool-selection-20261008.json",
-  "corpusSha256": "1c94efddc353c48bfb122d3624fc69afa5180effcaecc75c983e8fb649bd831a",
-  "finalRewriterSha256": "215a72796c5e62e40b3f1b65c1230b0f1dfc3d0c25124058de9492e2477a7d7f",
-  "note": "Post-run type annotation and Map lookup hardening preserve all 100 benchmark routing outputs. Map avoids inheriting constructor or other Object prototype names; no paid request replayed."
-}
