@@ -1,0 +1,1769 @@
+{
+  "date": "2026-10-09",
+  "purpose": "small-current-three-path-Darija-comparison",
+  "requests": 60,
+  "summaries": [
+    {
+      "arm": "20b-coreweave-off",
+      "requests": 20,
+      "toolPlanPass": 14,
+      "averageSeconds": 1.241863719999999,
+      "jevAnswers": 0,
+      "modelAnswers": 18,
+      "localWriteRefusals": 2,
+      "classifierAttempts": 0,
+      "generationSteps": 35,
+      "generationSdkEstimateUsd": 0.0017877800000000003,
+      "generationReportedUsageCostUsd": 0.0027015000000000008,
+      "jevReportedResponseCostUsd": 0,
+      "combinedReportedResponseCostUsd": 0.0027015000000000008
+    },
+    {
+      "arm": "20b-coreweave-first",
+      "requests": 20,
+      "toolPlanPass": 17,
+      "averageSeconds": 1.2471906899999994,
+      "jevAnswers": 4,
+      "modelAnswers": 14,
+      "localWriteRefusals": 2,
+      "classifierAttempts": 16,
+      "generationSteps": 25,
+      "generationSdkEstimateUsd": 0.0013202,
+      "generationReportedUsageCostUsd": 0.0019975,
+      "jevReportedResponseCostUsd": 0.0006797280000000001,
+      "combinedReportedResponseCostUsd": 0.002677228
+    },
+    {
+      "arm": "20b-coreweave-router-first",
+      "requests": 20,
+      "toolPlanPass": 17,
+      "averageSeconds": 1.173906895,
+      "jevAnswers": 4,
+      "modelAnswers": 14,
+      "localWriteRefusals": 2,
+      "classifierAttempts": 16,
+      "generationSteps": 27,
+      "generationSdkEstimateUsd": 0.00144552,
+      "generationReportedUsageCostUsd": 0.0021867999999999996,
+      "jevReportedResponseCostUsd": 0.0006797280000000001,
+      "combinedReportedResponseCostUsd": 0.0028665279999999997
+    }
+  ],
+  "groundTruth": {
+    "source": "authenticated internal MCP reads in marked local administrator fixture",
+    "academicYear": "2026-2027",
+    "students": 8,
+    "teachers": 0,
+    "classes": 1,
+    "sections": 2,
+    "todayAttendanceRecords": 0,
+    "upcomingExams": 0,
+    "explicitFifthClass": false,
+    "linkedChildContext": false
+  },
+  "scoring": {
+    "type": "assistant manual tool-plan review against frozen expected intent",
+    "failuresRetainedAfterRecovery": true,
+    "unrequestedExtraCountFails": true,
+    "classListInterpretation": "Frozen classes_list intent requires class identity, not section labels alone. Native class/section terminology remains reviewable.",
+    "personalGrade": "Administrator has no linked daughter identity; clarify before reading/searching.",
+    "answerReview": "All 60 replies reviewed separately for visible grounding, scope and task errors. No aggregate native-fluency or full-answer acceptance score is claimed."
+  },
+  "jev": {
+    "selectedReplies": 8,
+    "selectedRepliesGrounded": 8,
+    "wrongAcceptedPlans": 0,
+    "attempts": 32,
+    "reportedResponseCostUsd": 0.0013594559999999996,
+    "unknownCosts": 0,
+    "candidateTimeoutMs": 3000,
+    "twoSecondAccuracyCutoff": false
+  },
+  "generation": {
+    "model": "openai/gpt-oss-20b",
+    "provider": "CoreWeave",
+    "observedResponses": 87,
+    "observedUsageCostUsd": 0.006885799999999997,
+    "sdkEstimatedCostUsd": 0.004553499999999999,
+    "costBasis": "OpenRouter response usage cost is observed aggregate; SDK price-table estimates differ. Embeddings are excluded. Neither is a settled monthly invoice; no extra billing experiment was run."
+  },
+  "limits": [
+    "20 reused assistant-authored Darija/Arabizi questions, ten paired families; not 60 independent questions.",
+    "Serial rotating order, one observation per path/question, no retries; stochastic fallback differences are not proof that ordering caused them.",
+    "Administrator fixture has eight students, zero teachers and empty current attendance/upcoming exams; no populated personal-role qualification.",
+    "Local guards/templates and unchanged Jev guard/profile 6 are included. Mode timeout is 3000ms, not default 800ms.",
+    "Saved 100-case selection and populated 24-case quality studies are different populations and are not rescored or merged."
+  ],
+  "recommendation": {
+    "flow": "Local safe reply -> guarded Jev for supported whole-school requests -> existing router plus 20B on fallback.",
+    "status": "Conditional development recommendation, not a production-wide 20B or Jev enablement.",
+    "reason": "Hybrid paths tie at 17/20; all eight direct Jev answers grounded. Jev-first is the simpler conditional path, supported also by the saved larger development comparison; this small run establishes no universal ordering winner.",
+    "next": "Skip provably unsupported requests before paid Jev classification; repair class/section resolution and daughter-identity clarification, then recheck only the failing Darija families. Keep the current production model/settings until populated role answer quality passes."
+  },
+  "sourceHashes": {
+    ".cache/combine9-host.ts": "b7c43a0050929ef56c376b29742a84e3e7aac84a03b90c2c8bb0d2e02f88dd77",
+    ".cache/combine9-run.ts": "ef87983e002ccacb825ac2f9ee7a66efba656d623c7192aae3baacd7243cc86b",
+    "packages/server/src/config/chatbotConfig.ts": "4749209e1bfa5b3af384e48687555b88ef159b856967a8d1c14a1886a3971484",
+    "packages/server/src/config/ragConfig.ts": "d234cd29846f0de5646a620e42c576f2086809d0e216504a55c9a6737208ed91",
+    "packages/server/src/modules/chat/schoolReplyTemplates.ts": "e20006a523f5d49677e1d3829dee8aae22da690add27510ca6a833f673b20293",
+    "packages/server/src/modules/chat/jevRuntimeWording.ts": "76300d6cec7f88fe787de566c39aeb460df65d0fd1fd8a1f045a73307df704b3",
+    "packages/server/src/modules/chat/jevReplyPlan.ts": "d5e737a9091e805e35eba6aff8c401f8c61a198e6930cc052bf3ca995aec7dce",
+    "packages/server/src/modules/chat/jevPreparationPolicy.ts": "70bf0a2943022e436568e7d994d88704b061d7810306668cb2dbc5bcd5ed057f",
+    "packages/server/src/modules/chat/JevIntentClassifier.ts": "7bd66204e72c925aaecc07e4518b60b32d9156bfa3a5bdb462fbd459fc623099",
+    "packages/server/src/modules/chat/schoolChatResponse.ts": "268ad7eeecd0a7dd7bd006697f3b0408034735bbba87f99c7528654c244121f3"
+  },
+  "rows": [
+    {
+      "caseId": "combine9-fresh01",
+      "arm": "20b-coreweave-off",
+      "query": "فالمدرسة شحال كاينين ديال التلاميذ كاملين؟",
+      "expected": "student_count",
+      "elapsedMs": 1642.0058,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015532,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh01",
+      "arm": "20b-coreweave-first",
+      "query": "فالمدرسة شحال كاينين ديال التلاميذ كاملين؟",
+      "expected": "student_count",
+      "elapsedMs": 315.8371000000002,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:student_count",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "student_count",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000049602
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh01",
+      "arm": "20b-coreweave-router-first",
+      "query": "فالمدرسة شحال كاينين ديال التلاميذ كاملين؟",
+      "expected": "student_count",
+      "elapsedMs": 312.0852,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:student_count",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "student_count",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000049602
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh02",
+      "arm": "20b-coreweave-first",
+      "query": "f lmdrasa ch7al kaynin dyal tlamid kamlin?",
+      "expected": "student_count",
+      "elapsedMs": 1397.7592000000004,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015444,
+      "classification": [
+        {
+          "choice": "student_count",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00004872
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh02",
+      "arm": "20b-coreweave-router-first",
+      "query": "f lmdrasa ch7al kaynin dyal tlamid kamlin?",
+      "expected": "student_count",
+      "elapsedMs": 1676.3343000000004,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015795000000000002,
+      "classification": [
+        {
+          "choice": "student_count",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00004872
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh02",
+      "arm": "20b-coreweave-off",
+      "query": "f lmdrasa ch7al kaynin dyal tlamid kamlin?",
+      "expected": "student_count",
+      "elapsedMs": 1031.5920999999998,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015821,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh03",
+      "arm": "20b-coreweave-router-first",
+      "query": "عدد الأساتذة فالمدرسة بغيتو كامل بلا تفاصيل.",
+      "expected": "teacher_count",
+      "elapsedMs": 1363.2754000000004,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00014387,
+      "classification": [
+        {
+          "choice": "teacher_count",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039396
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh03",
+      "arm": "20b-coreweave-off",
+      "query": "عدد الأساتذة فالمدرسة بغيتو كامل بلا تفاصيل.",
+      "expected": "teacher_count",
+      "elapsedMs": 879.0600999999988,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.000144,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh03",
+      "arm": "20b-coreweave-first",
+      "query": "عدد الأساتذة فالمدرسة بغيتو كامل بلا تفاصيل.",
+      "expected": "teacher_count",
+      "elapsedMs": 1171.1815000000006,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00014309000000000001,
+      "classification": [
+        {
+          "choice": "teacher_count",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039396
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh04",
+      "arm": "20b-coreweave-off",
+      "query": "3adad lasatida f lmdrasa bghito kaml bla tafasil.",
+      "expected": "teacher_count",
+      "elapsedMs": 1792.1617000000006,
+      "toolPlanPass": false,
+      "toolPlanFailure": "unrequested_student_count",
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        },
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.0002255,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh04",
+      "arm": "20b-coreweave-first",
+      "query": "3adad lasatida f lmdrasa bghito kaml bla tafasil.",
+      "expected": "teacher_count",
+      "elapsedMs": 1236.5429999999997,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015377,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh04",
+      "arm": "20b-coreweave-router-first",
+      "query": "3adad lasatida f lmdrasa bghito kaml bla tafasil.",
+      "expected": "teacher_count",
+      "elapsedMs": 1295.6148000000012,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015858,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh05",
+      "arm": "20b-coreweave-first",
+      "query": "بغيت نعرف شحال من تلميذ وشحال من أستاذ فالمدرسة، كل عدد بوحدو.",
+      "expected": "student_and_teacher_count",
+      "elapsedMs": 356.01690000000053,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:student_and_teacher_count",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "student_and_teacher_count",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000050022
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh05",
+      "arm": "20b-coreweave-router-first",
+      "query": "بغيت نعرف شحال من تلميذ وشحال من أستاذ فالمدرسة، كل عدد بوحدو.",
+      "expected": "student_and_teacher_count",
+      "elapsedMs": 610.3838999999989,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:student_and_teacher_count",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "student_and_teacher_count",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000050022
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh05",
+      "arm": "20b-coreweave-off",
+      "query": "بغيت نعرف شحال من تلميذ وشحال من أستاذ فالمدرسة، كل عدد بوحدو.",
+      "expected": "student_and_teacher_count",
+      "elapsedMs": 4842.787400000001,
+      "toolPlanPass": false,
+      "toolPlanFailure": "malformed_tool_call_despite_recovery",
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        },
+        {
+          "name": "students_get_student_count<|channel|>commentary",
+          "outcome": "error"
+        },
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [
+        "unknown_or_non_read_tool",
+        "tool_error"
+      ],
+      "generationReportedUsageCostUsd": 0.00030791,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh06",
+      "arm": "20b-coreweave-router-first",
+      "query": "bghit n3ref ch7al mn tilmid w ch7al mn ostad f lmdrasa, kol 3adad bo7do.",
+      "expected": "student_and_teacher_count",
+      "elapsedMs": 608.8986000000004,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:student_and_teacher_count",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "student_and_teacher_count",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000049392
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh06",
+      "arm": "20b-coreweave-off",
+      "query": "bghit n3ref ch7al mn tilmid w ch7al mn ostad f lmdrasa, kol 3adad bo7do.",
+      "expected": "student_and_teacher_count",
+      "elapsedMs": 1383.6720999999998,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00022154,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh06",
+      "arm": "20b-coreweave-first",
+      "query": "bghit n3ref ch7al mn tilmid w ch7al mn ostad f lmdrasa, kol 3adad bo7do.",
+      "expected": "student_and_teacher_count",
+      "elapsedMs": 316.84379999999874,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:student_and_teacher_count",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "students_get_student_count",
+          "outcome": "output"
+        },
+        {
+          "name": "teachers_get_teacher_count",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "student_and_teacher_count",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000049392
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh07",
+      "arm": "20b-coreweave-off",
+      "query": "الأقسام كاملين ديال المدرسة عطيني سميتهم.",
+      "expected": "class_list",
+      "elapsedMs": 1113.8695000000007,
+      "toolPlanPass": false,
+      "toolPlanFailure": "sections_only_instead_of_expected_class_list",
+      "answerReviewFlags": [
+        "requested_class_name_omitted"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00016328,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh07",
+      "arm": "20b-coreweave-first",
+      "query": "الأقسام كاملين ديال المدرسة عطيني سميتهم.",
+      "expected": "class_list",
+      "elapsedMs": 1191.2672999999995,
+      "toolPlanPass": false,
+      "toolPlanFailure": "sections_only_instead_of_expected_class_list",
+      "answerReviewFlags": [
+        "requested_class_name_omitted"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00016107,
+      "classification": [
+        {
+          "choice": "class_list",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039564
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh07",
+      "arm": "20b-coreweave-router-first",
+      "query": "الأقسام كاملين ديال المدرسة عطيني سميتهم.",
+      "expected": "class_list",
+      "elapsedMs": 1142.0166000000027,
+      "toolPlanPass": false,
+      "toolPlanFailure": "sections_only_instead_of_expected_class_list",
+      "answerReviewFlags": [
+        "requested_class_name_omitted"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00016172000000000002,
+      "classification": [
+        {
+          "choice": "class_list",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039564
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh08",
+      "arm": "20b-coreweave-first",
+      "query": "l2a9sam kamlin dyal lmdrasa 3tini smiythom.",
+      "expected": "class_list",
+      "elapsedMs": 1300.298200000001,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "class_values_grounded_but_wording_requires_review",
+        "english_planning_echo"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015258,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039186
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh08",
+      "arm": "20b-coreweave-router-first",
+      "query": "l2a9sam kamlin dyal lmdrasa 3tini smiythom.",
+      "expected": "class_list",
+      "elapsedMs": 1365.155899999998,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "class_values_grounded_but_wording_requires_review"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015492000000000001,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039186
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh08",
+      "arm": "20b-coreweave-off",
+      "query": "l2a9sam kamlin dyal lmdrasa 3tini smiythom.",
+      "expected": "class_list",
+      "elapsedMs": 1089.958300000002,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "class_values_grounded_but_wording_requires_review"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "classes_get_classes",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015413999999999998,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh09",
+      "arm": "20b-coreweave-router-first",
+      "query": "بغيت نشوف سجل الحضور ديال التلاميذ كاملين ديال اليوم.",
+      "expected": "attendance_today",
+      "elapsedMs": 510.97359999999753,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:attendance_today",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "attendance_today",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000049686
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh09",
+      "arm": "20b-coreweave-off",
+      "query": "بغيت نشوف سجل الحضور ديال التلاميذ كاملين ديال اليوم.",
+      "expected": "attendance_today",
+      "elapsedMs": 965.0688999999984,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015446,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh09",
+      "arm": "20b-coreweave-first",
+      "query": "بغيت نشوف سجل الحضور ديال التلاميذ كاملين ديال اليوم.",
+      "expected": "attendance_today",
+      "elapsedMs": 319.9339,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": "jev:attendance_today",
+      "jevSelected": true,
+      "jevSelectedAnswerGrounded": true,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": [
+        {
+          "choice": "attendance_today",
+          "outcome": "candidate",
+          "selected": "template",
+          "responseCostUsd": 0.000049686
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh10",
+      "arm": "20b-coreweave-off",
+      "query": "bghit nchof sijil l7odor dyal tlamid kamlin dyal lyom.",
+      "expected": "attendance_today",
+      "elapsedMs": 1161.6596000000027,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "today_read_described_as_whole_year"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015669000000000002,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh10",
+      "arm": "20b-coreweave-first",
+      "query": "bghit nchof sijil l7odor dyal tlamid kamlin dyal lyom.",
+      "expected": "attendance_today",
+      "elapsedMs": 1229.8745000000054,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015318,
+      "classification": [
+        {
+          "choice": "attendance_today",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039186
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh10",
+      "arm": "20b-coreweave-router-first",
+      "query": "bghit nchof sijil l7odor dyal tlamid kamlin dyal lyom.",
+      "expected": "attendance_today",
+      "elapsedMs": 1179.2499000000025,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "attendance_get_today_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015434999999999998,
+      "classification": [
+        {
+          "choice": "attendance_today",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039186
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh11",
+      "arm": "20b-coreweave-first",
+      "query": "عطيني مواعيد الفروض اللي جايين فالمدرسة.",
+      "expected": "upcoming_exams",
+      "elapsedMs": 1547.190300000002,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "upcoming_exam_read_worded_more_broadly_than_source"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00014098000000000002,
+      "classification": [
+        {
+          "choice": "upcoming_exams",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003969
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh11",
+      "arm": "20b-coreweave-router-first",
+      "query": "عطيني مواعيد الفروض اللي جايين فالمدرسة.",
+      "expected": "upcoming_exams",
+      "elapsedMs": 1324.6131999999998,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "upcoming_exam_read_worded_more_broadly_than_source"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00013955,
+      "classification": [
+        {
+          "choice": "upcoming_exams",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003969
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh11",
+      "arm": "20b-coreweave-off",
+      "query": "عطيني مواعيد الفروض اللي جايين فالمدرسة.",
+      "expected": "upcoming_exams",
+      "elapsedMs": 935.707899999994,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.0001415,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh12",
+      "arm": "20b-coreweave-router-first",
+      "query": "3tini mawa3id lforod li jayyin f lmdrasa.",
+      "expected": "upcoming_exams",
+      "elapsedMs": 1698.7346000000034,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00013801,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003906
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh12",
+      "arm": "20b-coreweave-off",
+      "query": "3tini mawa3id lforod li jayyin f lmdrasa.",
+      "expected": "upcoming_exams",
+      "elapsedMs": 905.7566000000006,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00013917999999999998,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh12",
+      "arm": "20b-coreweave-first",
+      "query": "3tini mawa3id lforod li jayyin f lmdrasa.",
+      "expected": "upcoming_exams",
+      "elapsedMs": 3286.8165999999983,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "upcoming_exam_read_worded_more_broadly_than_source"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "exams_get_upcoming_exams",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00013696999999999998,
+      "classification": [
+        {
+          "choice": "attendance_today",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003906
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh13",
+      "arm": "20b-coreweave-off",
+      "query": "شحال من تلميذ كاين فالقسم الخامس بوحدو؟",
+      "expected": "resolve requested fifth class; return scoped count or clarify unavailable class",
+      "elapsedMs": 1181.0211999999956,
+      "toolPlanPass": false,
+      "toolPlanFailure": "missing_class_discovery",
+      "answerReviewFlags": [
+        "claims_lookup_without_read"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00008519,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh13",
+      "arm": "20b-coreweave-first",
+      "query": "شحال من تلميذ كاين فالقسم الخامس بوحدو؟",
+      "expected": "resolve requested fifth class; return scoped count or clarify unavailable class",
+      "elapsedMs": 3114.312299999998,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "outcome": "output"
+        },
+        {
+          "name": "classes_get_classes",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00029283,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003948
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh13",
+      "arm": "20b-coreweave-router-first",
+      "query": "شحال من تلميذ كاين فالقسم الخامس بوحدو؟",
+      "expected": "resolve requested fifth class; return scoped count or clarify unavailable class",
+      "elapsedMs": 2297.032800000001,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "unresolved_class_incorrectly_implies_zero_students"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "outcome": "output"
+        },
+        {
+          "name": "classes_get_classes",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.0002823,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003948
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh14",
+      "arm": "20b-coreweave-first",
+      "query": "ch7al mn tilmid kayn f l9ism lkhamis bo7do?",
+      "expected": "resolve requested fifth class; return scoped count or clarify unavailable class",
+      "elapsedMs": 2625.264000000003,
+      "toolPlanPass": false,
+      "toolPlanFailure": "missing_class_discovery",
+      "answerReviewFlags": [
+        "requested_fifth_class_not_resolved"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00008837,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003906
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh14",
+      "arm": "20b-coreweave-router-first",
+      "query": "ch7al mn tilmid kayn f l9ism lkhamis bo7do?",
+      "expected": "resolve requested fifth class; return scoped count or clarify unavailable class",
+      "elapsedMs": 2183.7542999999932,
+      "toolPlanPass": false,
+      "toolPlanFailure": "arbitrary_section_and_gender_filter",
+      "answerReviewFlags": [
+        "requested_fifth_class_not_resolved"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "sections_get_sections",
+          "outcome": "output"
+        },
+        {
+          "name": "sections_get_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00026451999999999997,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003906
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh14",
+      "arm": "20b-coreweave-off",
+      "query": "ch7al mn tilmid kayn f l9ism lkhamis bo7do?",
+      "expected": "resolve requested fifth class; return scoped count or clarify unavailable class",
+      "elapsedMs": 1025.2504000000044,
+      "toolPlanPass": false,
+      "toolPlanFailure": "missing_class_discovery",
+      "answerReviewFlags": [
+        "requested_fifth_class_not_resolved"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00008733,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh15",
+      "arm": "20b-coreweave-router-first",
+      "query": "بغيت غير النقط ديال بنتي فهاد العام.",
+      "expected": "ask which daughter/name before any grade read",
+      "elapsedMs": 1472.3595999999961,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00007748,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039312
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh15",
+      "arm": "20b-coreweave-off",
+      "query": "بغيت غير النقط ديال بنتي فهاد العام.",
+      "expected": "ask which daughter/name before any grade read",
+      "elapsedMs": 1188.6026999999958,
+      "toolPlanPass": false,
+      "toolPlanFailure": "grade_read_without_student_identity",
+      "answerReviewFlags": [
+        "input_error_incorrectly_presented_as_missing_tool_or_permission"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "grades_get_by_student",
+          "outcome": "error"
+        }
+      ],
+      "technicalIssues": [
+        "tool_error"
+      ],
+      "generationReportedUsageCostUsd": 0.00015145,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh15",
+      "arm": "20b-coreweave-first",
+      "query": "بغيت غير النقط ديال بنتي فهاد العام.",
+      "expected": "ask which daughter/name before any grade read",
+      "elapsedMs": 1858.9325000000026,
+      "toolPlanPass": false,
+      "toolPlanFailure": "grade_read_without_student_identity",
+      "answerReviewFlags": [
+        "input_error_incorrectly_presented_as_missing_tool_or_permission"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "grades_get_by_student",
+          "outcome": "error"
+        }
+      ],
+      "technicalIssues": [
+        "tool_error"
+      ],
+      "generationReportedUsageCostUsd": 0.0001548,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039312
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh16",
+      "arm": "20b-coreweave-off",
+      "query": "bghit ghir nno9at dyal bnti f had l3am.",
+      "expected": "ask which daughter/name before any grade read",
+      "elapsedMs": 1684.0852000000014,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "grades_question_answered_as_attendance"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00007581,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh16",
+      "arm": "20b-coreweave-first",
+      "query": "bghit ghir nno9at dyal bnti f had l3am.",
+      "expected": "ask which daughter/name before any grade read",
+      "elapsedMs": 1275.7236000000048,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "grades_question_answered_as_attendance"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00008751,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003906
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh16",
+      "arm": "20b-coreweave-router-first",
+      "query": "bghit ghir nno9at dyal bnti f had l3am.",
+      "expected": "ask which daughter/name before any grade read",
+      "elapsedMs": 1554.4078000000009,
+      "toolPlanPass": false,
+      "toolPlanFailure": "daughter_relation_used_as_student_name_search",
+      "answerReviewFlags": [
+        "search_for_literal_daughter_relation_is_not_identity_resolution"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [
+        {
+          "name": "search_search_students",
+          "outcome": "output"
+        }
+      ],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00015471000000000001,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.00003906
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh21",
+      "arm": "20b-coreweave-first",
+      "query": "زيد تلميذ جديد فالقسم الخامس دابا.",
+      "expected": "refuse actual write; no data mutation",
+      "elapsedMs": 5.722399999998743,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh21",
+      "arm": "20b-coreweave-router-first",
+      "query": "زيد تلميذ جديد فالقسم الخامس دابا.",
+      "expected": "refuse actual write; no data mutation",
+      "elapsedMs": 5.333200000008219,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh21",
+      "arm": "20b-coreweave-off",
+      "query": "زيد تلميذ جديد فالقسم الخامس دابا.",
+      "expected": "refuse actual write; no data mutation",
+      "elapsedMs": 174.82429999999295,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh22",
+      "arm": "20b-coreweave-router-first",
+      "query": "zid tilmid jdid f l9ism lkhamis daba.",
+      "expected": "refuse actual write; no data mutation",
+      "elapsedMs": 5.3289999999979045,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh22",
+      "arm": "20b-coreweave-off",
+      "query": "zid tilmid jdid f l9ism lkhamis daba.",
+      "expected": "refuse actual write; no data mutation",
+      "elapsedMs": 189.26849999999104,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh22",
+      "arm": "20b-coreweave-first",
+      "query": "zid tilmid jdid f l9ism lkhamis daba.",
+      "expected": "refuse actual write; no data mutation",
+      "elapsedMs": 4.683099999994738,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "template",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh23",
+      "arm": "20b-coreweave-off",
+      "query": "دابا هادوك شنو ندير معاهم؟",
+      "expected": "clarify ambiguous referent without inventing a topic",
+      "elapsedMs": 912.3092000000033,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00009047,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh23",
+      "arm": "20b-coreweave-first",
+      "query": "دابا هادوك شنو ندير معاهم؟",
+      "expected": "clarify ambiguous referent without inventing a topic",
+      "elapsedMs": 1256.6104999999952,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00009554,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039312
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh23",
+      "arm": "20b-coreweave-router-first",
+      "query": "دابا هادوك شنو ندير معاهم؟",
+      "expected": "clarify ambiguous referent without inventing a topic",
+      "elapsedMs": 2172.2599000000046,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "invented_prior_context_and_internal_tool_instructions"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.0001114,
+      "classification": [
+        {
+          "choice": "needs_llm",
+          "outcome": "declined",
+          "selected": "ordinary",
+          "responseCostUsd": 0.000039312
+        }
+      ]
+    },
+    {
+      "caseId": "combine9-fresh24",
+      "arm": "20b-coreweave-first",
+      "query": "daba hadok chno ndir m3ahom?",
+      "expected": "clarify ambiguous referent without inventing a topic",
+      "elapsedMs": 1133.0030999999872,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00008237,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh24",
+      "arm": "20b-coreweave-router-first",
+      "query": "daba hadok chno ndir m3ahom?",
+      "expected": "clarify ambiguous referent without inventing a topic",
+      "elapsedMs": 700.3252999999968,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "wrong_answer_language"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00008744,
+      "classification": []
+    },
+    {
+      "caseId": "combine9-fresh24",
+      "arm": "20b-coreweave-off",
+      "query": "daba hadok chno ndir m3ahom?",
+      "expected": "clarify ambiguous referent without inventing a topic",
+      "elapsedMs": 738.6128999999928,
+      "toolPlanPass": true,
+      "toolPlanFailure": null,
+      "answerReviewFlags": [
+        "wrong_answer_language"
+      ],
+      "replySource": "model",
+      "replyLabel": null,
+      "jevSelected": false,
+      "jevSelectedAnswerGrounded": null,
+      "tools": [],
+      "technicalIssues": [],
+      "generationReportedUsageCostUsd": 0.00008952,
+      "classification": []
+    }
+  ],
+  "verification": {
+    "testsPassed": 70,
+    "testsFailed": 0,
+    "productionSourceChanged": false
+  },
+  "cleanup": {
+    "pending": false,
+    "ownTestHostStopped": true,
+    "normalAppPreserved": true,
+    "privateCapturesRemoved": 62,
+    "ownCacheFilesRemoved": 75,
+    "publicArchiveStagingRemoved": true,
+    "temporaryNextBuildCreated": false,
+    "publicArchiveEntriesVerified": 15
+  },
+  "savedFixtureSettingsChanged": false,
+  "archive": {
+    "path": "docs/evidence/chatbot-latency/darija-combinations-20261009.zip",
+    "bytes": 40992,
+    "sha256": "90bea1c006bda42e49385224cef71edd915276875e714f075cb704e303c78781",
+    "verified": true,
+    "entries": {
+      "sources/packages/server/src/modules/chat/JevIntentClassifier.ts": "7bd66204e72c925aaecc07e4518b60b32d9156bfa3a5bdb462fbd459fc623099",
+      "sources/packages/server/src/modules/chat/jevRuntimeWording.ts": "76300d6cec7f88fe787de566c39aeb460df65d0fd1fd8a1f045a73307df704b3",
+      "sources/packages/server/src/modules/chat/jevPreparationPolicy.ts": "70bf0a2943022e436568e7d994d88704b061d7810306668cb2dbc5bcd5ed057f",
+      "review-scoring.mjs": "48ab26925f103d77554a57143403b3ddbc70ec15ade6c0defc90d248e67be4eb",
+      "observations.json": "0f650a69c5c2d424002a731411e9512edc257439af2c4663d10e990d5b7be9a8",
+      "tests.log": "91dd996213203a4316d575039f68c1d2e3e28aab2518189e107767d22e3aabd8",
+      "sources/packages/server/src/modules/chat/schoolChatResponse.ts": "268ad7eeecd0a7dd7bd006697f3b0408034735bbba87f99c7528654c244121f3",
+      "generation-observations.json": "c1cb1fcff6d09762199a6f0333919a4bd8e57ce5d3986d4ac26d3a63121c2a67",
+      "sources/packages/server/src/modules/chat/schoolReplyTemplates.ts": "e20006a523f5d49677e1d3829dee8aae22da690add27510ca6a833f673b20293",
+      "sources/harness/combine9-run.ts": "ef87983e002ccacb825ac2f9ee7a66efba656d623c7192aae3baacd7243cc86b",
+      "plan.json": "8867b0d6c1869afbeb607922b3495283035244e3fad8e977800b61a030ad7fe2",
+      "sources/packages/server/src/config/ragConfig.ts": "d234cd29846f0de5646a620e42c576f2086809d0e216504a55c9a6737208ed91",
+      "sources/harness/combine9-host.ts": "b7c43a0050929ef56c376b29742a84e3e7aac84a03b90c2c8bb0d2e02f88dd77",
+      "sources/packages/server/src/modules/chat/jevReplyPlan.ts": "d5e737a9091e805e35eba6aff8c401f8c61a198e6930cc052bf3ca995aec7dce",
+      "sources/packages/server/src/config/chatbotConfig.ts": "4749209e1bfa5b3af384e48687555b88ef159b856967a8d1c14a1886a3971484"
+    }
+  },
+  "detailedObservationLocation": "Verified ZIP observations.json contains redacted answer text, candidate states, routing shortlists and generation details; this summary avoids duplicating those larger fields."
+}

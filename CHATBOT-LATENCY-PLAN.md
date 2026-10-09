@@ -2176,3 +2176,20 @@ listing (q66), class/subject grade lookup (q97/q98) and ambiguous last-year
 clarification (q100). Then review flagged answers and qualify personal-role flows.
 Keep production Jev off. See the [full report](docs/evidence/chatbot-latency/darija-total-exams-results-20261008.md)
 for exact failures, recovery evidence, verification and cleanup.
+
+# Jev / router + 20B comparison checkpoint (2026-10-09)
+
+The bounded new 60-chat Darija/Arabizi comparison on 20 reused questions passed
+14/20 tool plans for router + 20B, 17/20 for Jev-first and 17/20 for router-first
+Jev. Average complete replies were 1.242 / 1.247 / 1.174 seconds, with no two-second
+cutoff. All eight selected Jev replies matched actual tool/fixture facts; each
+hybrid still needed 14 model replies and two local write refusals.
+
+Next candidate: validated local reply, then guarded Jev for supported whole-school
+requests, then the existing router + LLM fallback. Skipping provably unsupported
+queries before paid classification remains a next implementation, not part of this
+measurement. Fix class/section resolution and personal child identity, then recheck
+only those Darija failures with populated data. The hybrids tie here, and fallback
+answer errors remain; keep production model/Jev settings unchanged. See the
+[comparison report](docs/evidence/chatbot-latency/darija-combinations-results-20261009.md)
+for the exact scoring, administrative-fixture limits, cost and compact evidence.
