@@ -112,7 +112,8 @@ class GradeLists {
 }
 
 /** Fully local: fake settings/classifier/model and synthetic repositories, real guards/MCP/year scope. */
-export async function createJevFixture(options: { qualifiedData?: boolean; identityData?: boolean; timeZone?: string } = {}) {
+export async function createJevFixture(options: { qualifiedData?: boolean; identityData?: boolean; timeZone?: string;
+  extraControllers?: Record<string, new (...args: any[]) => any> } = {}) {
   let markedFixture = true;
   const permissions: Array<{ id: string; name: string; resource: string; action: string }> = [];
   const grantIds = new Set<string>();
@@ -137,7 +138,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
       ...schoolMcpYearHooks(['students', 'teachers', 'classes', 'attendance', 'exams', 'grades']) }))
     .load({ AuthGuard, ChatController, JevBenchmarkController, JevBenchmarkService,
       AcademicYearValidator, AcademicYearRepository, SchoolChatContextProvider,
-      StudentCounts, TeacherCounts, SubjectLists, ClassLists, AttendanceLists, ExamLists, GradeLists });
+      StudentCounts, TeacherCounts, SubjectLists, ClassLists, AttendanceLists, ExamLists, GradeLists, ...options.extraControllers });
   const roleGuard = getGuardMetadata(JevBenchmarkController, 'status').find(guard => guard.guardClass.name === 'RoleGuard')!.guardClass;
   server.load(roleGuard);
   const container = server.container;
@@ -175,7 +176,7 @@ export async function createJevFixture(options: { qualifiedData?: boolean; ident
   const config: ChatbotConfig = {
     reply: { detectLanguage: schoolReplyLanguage, template: request => schoolReplyTemplate(request, schoolChatYearContext.getStore()?.academicYear, schoolChatYearContext.getStore()?.role,
       schoolChatYearContext.getStore()?.schoolDate, schoolChatYearContext.getStore()?.teacherId, schoolChatYearContext.getStore()?.studentId,
-      schoolChatYearContext.getStore()?.children),
+      schoolChatYearContext.getStore()?.children, schoolChatYearContext.getStore()?.studentName),
       preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: (event: ChatDiagnostics) => { events.push(event); } },
   };
   container.set(CHATBOT_CONFIG, config);

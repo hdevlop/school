@@ -15,6 +15,8 @@ const terminalFor = (tool, server) => typeof tool.toolCallId === 'string'
 export function scoreRoleLookup(reply, query) {
   const failures = [];
   if (reply.metadata?.schoolReplyOutcome === 'unavailable') failures.push('answer_unavailable');
+  if (reply.metadata?.schoolReplyOutcome === 'tool_failure' || reply.failedToolCalls > 0
+    || reply.sample?.server?.toolFailures?.length) failures.push('tool_attempt_failed');
   const warnings = (reply.sample?.server?.tools ?? []).filter(tool => tool.outcome !== 'executed')
     .map(tool => ({ code: 'terminal_tool_not_executed', name: tool.name, outcome: tool.outcome }));
   if (!attendanceQuery.test(normalize(query))) return { failures, warnings, reviewRequired: false };

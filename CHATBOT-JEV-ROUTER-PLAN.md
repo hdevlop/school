@@ -1,6 +1,6 @@
 # Jev + router optimization plan
 
-Updated: 2026-10-09. Status: **comparison phase closed; P1 implemented; bounded P2 academic fixes verified**.
+Updated: 2026-10-09. Status: **comparison closed; bounded P2 selection and P3 personal replies verified**.
 Target: local replies and guarded Jev for supported requests, the existing router
 for discovery and fallback, and **GPT-OSS 20B only when a model is necessary**.
 This document replaces the historical latency work orders. Implemented steps
@@ -124,7 +124,7 @@ See the [implementation checkpoint](docs/tests/jev-router-validation.md#p1-imple
       input error means the grades tool or permission is absent.
 - [x] Repair subject/class grade queries and pending-grading tool offers from the
       populated review. Keep grades separate from attendance.
-- [ ] Reject malformed/unknown tool names and incomplete arguments before dispatch.
+- [x] Reject malformed/unknown tool names and incomplete arguments before dispatch.
       Report the original failure even if a later model step recovers.
 - [ ] Tune Jev wording only on development cases, preserving finite values in
       [0,1], confidence thresholds and independent write-intent agreement. Extend
@@ -158,6 +158,17 @@ The existing fourth-class maths plan also passes eight synthetic MCP/chat checks
 with Jev off, both administrative roles and both years. These are bounded repairs,
 not general subject/date selection or a rescoring of the old 24-question benchmark.
 See the [academic checkpoint](docs/tests/jev-router-validation.md#p2-academic-selection-checkpoint--2026-10-09).
+
+Call/personal checkpoint: published SDK/MCP validation rejects unknown/unoffered
+names, malformed JSON, missing/wrong-type/blank IDs and unauthorized reads before
+controller execution. Tests verify rejected attempts stay in diagnostics and the
+benchmark score after a later scripted answer. School adds a short failure notice
+to recovered streamed answers without another model call. Attendance summaries,
+own class/section and explicit outsider clarifications also use bounded local replies.
+**23/23 actual internal API checks** pass across the three personal roles, including
+eleven reused failure questions and all seven previous academic repairs. This does
+not qualify arbitrary filters, general follow-ups or the fallback model. See the
+[call/personal checkpoint](docs/tests/jev-router-validation.md#tool-failure-and-personal-reply-checkpoint--2026-10-09).
 
 ### P3 — Make answers faithful and fallback selective
 
@@ -246,6 +257,6 @@ Historical native-research protocols and old numeric latency/sample gates remain
 historical evidence; they do not add prerequisites to these engineering rechecks.
 Native qualification must still be reported honestly if pursued separately.
 
-**Next action: finish P2's malformed-tool/argument and original-error handling,
-then qualify the remaining personal answer cases and selective OSS20B fallback
-before ordinary Jev integration in P3/P4.**
+**Next action: qualify selective OSS20B fallback and supported Jev plans on a small
+unseen Darija holdout, then ordinary-chat integration and the durable monthly guard.
+Keep unsupported requests on the existing qualified fallback until those checks pass.**

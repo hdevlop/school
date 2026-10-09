@@ -26,6 +26,7 @@ function snapshot(diagnostics) {
   return { ...pick(diagnostics, ['correlationId', 'model', 'provider', 'outcome', 'embeddingsIncomplete']),
     spans: Object.fromEntries(Object.entries(diagnostics.spans ?? {}).filter(([, value]) => Number.isFinite(value))),
     tools: diagnostics.tools.map(tool => pick(tool, ['toolCallId', 'name', 'outcome', 'durationMs'])),
+    ...(diagnostics.toolFailures?.length ? { toolFailures: diagnostics.toolFailures.map(failure => pick(failure, ['step', 'code', 'count'])) } : {}),
     embeddings: diagnostics.embeddings.map(event => ({ ...pick(event, ['correlationId', 'operation', 'cache', 'outcome', 'durationMs']),
       attempts: event.attempts.map(attempt => pick(attempt, ['outcome', 'durationMs'])) })) };
 }
@@ -41,7 +42,9 @@ export async function measureRoleRequest({ requestId, sessionId, role, budget, m
   let capture;
   try { capture = await diagnostics(); } catch { capture = { error: 'diagnostic_request_failed' }; }
   const record = capture?.diagnostics;
-  const shapeValid = record && Array.isArray(record.embeddings)
+  const shapeValid = record && (record.toolFailures === undefined || Array.isArray(record.toolFailures)
+    && record.toolFailures.every(failure => failure && ['not_dispatched', 'tool_error', 'write_blocked'].includes(failure.code)
+      && (failure.step === null || Number.isSafeInteger(failure.step) && failure.step >= 0) && Number.isSafeInteger(failure.count) && failure.count > 0)) && Array.isArray(record.embeddings)
     && record.embeddings.every(event => event && Array.isArray(event.attempts))
     && Array.isArray(record.tools) && record.tools.every(tool => tool && (tool.toolCallId === null || typeof tool.toolCallId === 'string')
       && typeof tool.name === 'string' && ['executed', 'blocked', 'error'].includes(tool.outcome));

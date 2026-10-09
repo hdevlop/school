@@ -1,10 +1,12 @@
 import type { ChatDiagnostics } from 'najm-chatbot';
 import { chatBenchmarkControlsEnabled, chatBenchmarkSnapshot } from './ChatBenchmarkState';
 import { schoolJevRequestContext, type JevRequestDiagnostics } from './JevSessionGrants';
+import { schoolToolFailures, type SchoolToolFailure } from './schoolToolFailures';
 
 export type SchoolChatDiagnostics = ChatDiagnostics & {
   benchmark?: ReturnType<typeof chatBenchmarkSnapshot>;
   jev?: JevRequestDiagnostics;
+  toolFailures?: SchoolToolFailure[];
 };
 
 /**
@@ -23,8 +25,15 @@ export class ChatDiagnosticsLog {
     const frame = schoolJevRequestContext.getStore();
     const entry: SchoolChatDiagnostics = frame?.correlationId && frame.diagnostics && frame.correlationId === diagnostics.correlationId
       ? { ...diagnostics, jev: { eligibility: frame.diagnostics.eligibility, classification: frame.diagnostics.classification } } : diagnostics;
+    const failures = schoolToolFailures(diagnostics);
+    // Only names from the actual MCP adapter are trusted metadata. A model
+    // can invent a "tool name" containing private question text.
+    const observedNames = new Set((diagnostics.tools ?? []).map(tool => tool.name));
+    const steps = diagnostics.steps?.map(step => ({ ...step,
+      toolCalls: step.toolCalls.map(name => observedNames.has(name) ? name : '[not-dispatched]') }));
+    const audited = { ...entry, ...(steps ? { steps } : {}), ...(failures.length ? { toolFailures: failures } : {}) };
     this.entries.push(chatBenchmarkControlsEnabled()
-      ? { ...entry, benchmark: chatBenchmarkSnapshot() } : entry);
+      ? { ...audited, benchmark: chatBenchmarkSnapshot() } : audited);
     if (this.entries.length > this.capacity) this.entries.shift();
   };
 

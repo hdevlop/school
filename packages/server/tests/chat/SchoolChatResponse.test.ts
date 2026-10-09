@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { expect, test } from 'bun:test';
 import { ChatAgent } from 'najm-chatbot';
 import { scriptedModel } from 'najm-chatbot/testing';
-import { schoolChatResponse, schoolChatFailureText, latestChatUserText } from '../../src/modules/chat/schoolChatResponse';
+import { schoolChatResponse, schoolChatFailureText, schoolChatToolFailureText, latestChatUserText } from '../../src/modules/chat/schoolChatResponse';
 import { createJevFixture } from './jevFixture';
 
 const frame = (value: unknown) => 'data: ' + JSON.stringify(value) + '\n\n';
@@ -13,6 +13,53 @@ const headers = { 'content-type': 'text/event-stream', 'x-vercel-ai-ui-message-s
 const reply = (body: BodyInit | ReadableStream<Uint8Array>) => new Response(body, { headers });
 const events = (body: string) => body.split('\n').filter(line => line.startsWith('data: ') && !line.includes('[DONE]')).map(line => JSON.parse(line.slice(6)));
 const text = (body: string) => events(body).filter(x => x.type === 'text-delta').map(x => x.delta).join('');
+
+test('failed tool attempts stay visible after a later successful answer without another generation', async () => {
+  const inputFailure = { type: 'tool-input-error', toolCallId: 'bad', toolName: 'unknown', input: {}, errorText: 'private validation body' };
+  const outputFailure = { type: 'tool-output-error', toolCallId: 'bad', errorText: 'private upstream body' };
+  const success = frame({ type: 'tool-output-available', toolCallId: 'good', output: { count: 44 } });
+  const original = start + frame(inputFailure) + frame(outputFailure) + success
+    + frame({ type: 'text-start', id: 'answer' }) + frame({ type: 'text-delta', id: 'answer', delta: 'عندك 44 تلميذ.' })
+    + frame({ type: 'text-end', id: 'answer' }) + frame({ type: 'finish', finishReason: 'stop', messageMetadata: { totalCost: 0.001 } }) + done;
+  const body = await schoolChatResponse(reply(original), 'شحال من تلميذ عندي؟').text();
+  expect(text(body)).toBe('عندك 44 تلميذ.\n\n' + schoolChatToolFailureText('شحال من تلميذ عندي؟'));
+  expect(body).not.toContain('private');
+  expect(events(body).find(x => x.type === 'tool-input-error').input).toEqual({});
+  expect(events(body).find(x => x.type === 'finish').messageMetadata).toEqual({ totalCost: 0.001, schoolReplyOutcome: 'tool_failure', schoolFailedToolCalls: 1 });
+  expect(events(body).filter(x => x.type === 'text-end').at(-1)).toBeDefined();
+  expect(events(body).findIndex(x => x.id?.startsWith('school-unavailable-'))).toBeLessThan(events(body).findIndex(x => x.type === 'finish'));
+});
+test('MCP error results are failures, while empty reads and ordinary Error-like record fields are not', async () => {
+  const answer = frame({ type: 'text-delta', id: 'a', delta: 'جواب' });
+  for (const output of ['Error (FORBIDDEN): Access denied', 'Tool execution failed']) {
+    const body = await schoolChatResponse(reply(start + frame({ type: 'tool-output-available', toolCallId: 'bad', output }) + answer + finish + done), 'بغيت النقط').text();
+    expect(events(body).find(x => x.type === 'finish').messageMetadata.schoolReplyOutcome).toBe('tool_failure');
+    expect(events(body).find(x => x.type === 'tool-output-available').output).toBe(output);
+  }
+  for (const output of [[], { name: 'Error (FORBIDDEN): a real record name' }, '[]']) {
+    const original = start + frame({ type: 'tool-output-available', toolCallId: 'good', output }) + answer + finish + done;
+    expect(await schoolChatResponse(reply(original), 'بغيت النقط').text()).toBe(original);
+  }
+});
+test('failed reads without a visible answer remain unavailable; cancellation adds no warning', async () => {
+  const failure = frame({ type: 'tool-output-error', toolCallId: 'bad', errorText: 'private error' });
+  const body = await schoolChatResponse(reply(start + failure + finish + done), 'بغيت النقط').text();
+  expect(text(body)).toBe(schoolChatFailureText('بغيت النقط'));
+  expect(events(body).find(x => x.type === 'finish').messageMetadata).toEqual({ schoolReplyOutcome: 'unavailable', schoolFailedToolCalls: 1 });
+  const abort = new AbortController(); abort.abort();
+  const original = start + failure + finish + done;
+  expect(await schoolChatResponse(reply(original), 'بغيت النقط', abort.signal).text()).toBe(original);
+});
+test('an oversized SDK tool error remains observable without buffering its full payload', async () => {
+  const failure = { type: 'tool-input-error', toolCallId: 'large-bad', toolName: 'unknown', input: 'x'.repeat(600000), errorText: 'invalid input' };
+  const original = start + frame(failure) + frame({ type: 'text-delta', id: 'answer', delta: 'جواب' }) + finish + done;
+  const bytes = new TextEncoder().encode(original); let i = 0;
+  const stream = new ReadableStream<Uint8Array>({ pull(controller) { if (i < bytes.length) { controller.enqueue(bytes.slice(i, i + 65536)); i += 65536; } else controller.close(); } });
+  const body = await schoolChatResponse(reply(stream), 'بغيت النقط').text();
+  expect(events(body).find(x => x.type === 'tool-input-error')).toEqual(failure);
+  expect(events(body).find(x => x.type === 'finish').messageMetadata.schoolFailedToolCalls).toBe(1);
+  expect(text(body)).toContain(schoolChatToolFailureText('بغيت النقط'));
+});
 
 test('empty completed stream becomes a visible unavailable reply before finish, with honest usage', async () => {
   const usage = { totalCost: 0.001, pricingFound: true, model: 'openai/gpt-oss-20b' };

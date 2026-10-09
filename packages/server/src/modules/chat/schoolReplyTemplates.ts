@@ -7,6 +7,7 @@ import { schoolTeacherCountReply } from './schoolTeacherReply';
 import { schoolStudentGradeReply } from './schoolStudentReply';
 import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild } from './schoolIdentityReplies';
 import { schoolPersonalAcademicReply, schoolTeacherAcademicReply } from './schoolAcademicReplies';
+import { schoolPersonalReply } from './schoolPersonalReplies';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -62,7 +63,7 @@ export function schoolCountReply(language: ReplyLanguage, entities: Array<'stude
 export function schoolChangeRefusal(language: ReplyLanguage): ReplyTemplate { return { text: refusals[language].change }; }
 
 /** The caller supplies only the already-validated selected year. No new year resolution. */
-export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, role?: string, schoolDate?: string, teacherId?: string, studentId?: string, children?: readonly SchoolChatChild[]): ReplyTemplate | null {
+export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, role?: string, schoolDate?: string, teacherId?: string, studentId?: string, children?: readonly SchoolChatChild[], studentName?: string): ReplyTemplate | null {
   if (!language) return null;
   const text = normalizeReplyText(userText);
   const writeKind = schoolWriteRefusalKind(userText);
@@ -70,6 +71,8 @@ export function schoolReplyTemplate({ userText, language, channel }: ReplyReques
   if (channel === 'web') {
     const yearReply = schoolYearReply(userText, language, academicYear, role);
     if (yearReply) return yearReply;
+    const personalReply = schoolPersonalReply(userText, language, academicYear, role, studentId, children, studentName);
+    if (personalReply) return personalReply;
     const academicReply = schoolTeacherAcademicReply(userText, language, academicYear, role, teacherId)
       ?? schoolPersonalAcademicReply(userText, language, academicYear, role, studentId, children);
     if (academicReply) return academicReply;

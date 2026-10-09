@@ -17,7 +17,7 @@ import type { SchoolChatChild } from './schoolIdentityReplies';
 
 // A snapshot of the validated year for prompt text and MCP arguments; the
 // shared year boundary remains the only resolver and authorization owner.
-export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string; teacherId?: string; studentId?: string; children?: readonly SchoolChatChild[] }>();
+export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string; teacherId?: string; studentId?: string; studentName?: string; children?: readonly SchoolChatChild[] }>();
 
 export interface ChatActor { id?: string; role?: string }
 
@@ -55,7 +55,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
     const today = await this.today();
     const context = await this.actorContext(actor);
     return { prompt: [today.text, this.describeYear(actor.role), context?.prompt].filter(Boolean).join('\n'),
-      academicYear: this.year.label, role: actor.role, schoolDate: today.date, teacherId: context?.teacherId, studentId: context?.studentId, children: context?.children };
+      academicYear: this.year.label, role: actor.role, schoolDate: today.date, teacherId: context?.teacherId, studentId: context?.studentId, studentName: context?.studentName, children: context?.children };
   }
 
   /**
@@ -69,7 +69,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
     return (await this.actorContext({ id, role }))?.prompt ?? null;
   }
 
-  private async actorContext({ id, role }: ChatActor): Promise<{ prompt: string; teacherId?: string; studentId?: string; children?: readonly SchoolChatChild[] } | null> {
+  private async actorContext({ id, role }: ChatActor): Promise<{ prompt: string; teacherId?: string; studentId?: string; studentName?: string; children?: readonly SchoolChatChild[] } | null> {
     if (!id) return null;
     try {
       if (role === 'parent') {
@@ -93,7 +93,7 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
       }
       if (role === 'student') {
         const student = await this.students.getByUserId(id);
-        return student ? { studentId: student.id, prompt: `The signed-in user is the student ${student.name}, studentId ${student.id}. "My" grades, attendance or overview mean this student: use the student-profile tools with this studentId.` } : null;
+        return student ? { studentId: student.id, studentName: student.name, prompt: `The signed-in user is the student ${student.name}, studentId ${student.id}. "My" grades, attendance or overview mean this student: use the student-profile tools with this studentId.` } : null;
       }
     } catch {
       return null;

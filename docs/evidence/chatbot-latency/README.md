@@ -23,6 +23,13 @@ six ownership/year denials and zero paid calls. Its [compact academic archive](j
 also records eight synthetic class-maths checks. Malformed-call handling and broader
 personal-answer/fallback qualification remain next; the old comparison scores stay fixed.
 
+The [call/personal checkpoint](../../tests/jev-router-validation.md#tool-failure-and-personal-reply-checkpoint--2026-10-09)
+now records 23/23 populated role checks, including eleven reused failures, and
+eight rejected SDK/MCP scenarios with zero controller reads. Failure notices,
+diagnostics and benchmark scores retain original failed attempts after recovery.
+The [compact call/personal archive](jev-personal-20261009.zip) includes sources and
+redacted evidence. Selective OSS20B and ordinary Jev integration remain next.
+
 Keep these reports separate; their questions, roles and scoring differ:
 
 - [Jev / router + OSS20B comparison](darija-combinations-results-20261009.md):

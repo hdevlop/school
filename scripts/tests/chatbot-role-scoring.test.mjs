@@ -81,12 +81,15 @@ describe('role not-found scoring', () => {
       send: async () => ({ ...parsed, httpStatus: 200 }), diagnostics: async () => ({ diagnostics: {
         correlationId: 'request', provider: 'openrouter', model: 'mock/model', embeddings: [],
         tools: [{ toolCallId: 'denied', name, outcome: 'error', durationMs: 3, input: 'private-id', error: 'private-denial-text' }],
+        toolFailures: [{ step: 0, code: 'tool_error', count: 1, private: 'private-denial-text' }],
       } }),
     });
     expect(measured.tools[0].outcome).toBe('output');
     expect(scoreRoleLookup(measured, 'What are my children\'s names?').warnings)
       .toEqual([{ code: 'terminal_tool_not_executed', name, outcome: 'error' }]);
     expect(measured.sample.server.tools).toEqual([{ toolCallId: 'denied', name, outcome: 'error', durationMs: 3 }]);
+    expect(measured.sample.server.toolFailures).toEqual([{ step: 0, code: 'tool_error', count: 1 }]);
+    expect(scoreRoleLookup(measured, 'What are my children\'s names?').failures).toContain('tool_attempt_failed');
     expect(JSON.stringify(measured.sample)).not.toContain('private-');
   });
 });

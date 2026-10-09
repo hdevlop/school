@@ -11,6 +11,15 @@ export function schoolChatFailureText(query: string): string {
           : 'I could not complete the reply. Try again or check the data in the dashboard.';
 }
 
+/** An actual failed read is visible even if a later model step recovers. */
+export function schoolChatToolFailureText(query: string): string {
+  const language = schoolReplyLanguage(query);
+  return language === 'ary' ? 'شي محاولة لجلب المعطيات ما نجحاتش فهاد الجواب. ما نقدرش نأكد المعلومات اللي ما رجعاتش من قراءة ناجحة.'
+    : language === 'ar' ? 'فشلت محاولة لجلب البيانات أثناء هذه الإجابة. لا يمكن تأكيد المعلومات التي لم تُرجعها قراءة ناجحة.'
+      : language === 'fr' ? 'Une tentative de lecture a échoué pendant cette réponse. Les informations sans lecture réussie ne peuvent pas être confirmées.'
+        : 'A data retrieval attempt failed during this reply. Information without a successful read cannot be confirmed.';
+}
+
 export function latestChatUserText(messages: unknown): string {
   if (!Array.isArray(messages)) return '';
   const message = [...messages].reverse().find(value => value?.role === 'user');
@@ -31,17 +40,18 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
   const failure = schoolChatFailureText(query), partId = 'school-unavailable-' + crypto.randomUUID();
   const encodeEvent = (value: unknown) => `data: ${JSON.stringify(value)}\n\n`;
   let buffer = '', oversized = false, hasText = false, hasStart = false, terminal = false, aborted = false, repaired = false;
+  const failedCalls = new Set<string>();
   const maxFrameChars = 262144;
   const body = new ReadableStream<Uint8Array>({
     async pull(controller) {
       let emitted = false;
       const emit = (value: string) => { if (value) { controller.enqueue(encoder.encode(value)); emitted = true; } };
-      const notice = () => {
+      const notice = (message = failure) => {
         if (aborted || signal?.aborted || repaired) return;
         repaired = true;
         if (!hasStart) { emit(encodeEvent({ type: 'start', messageId: 'school-unavailable-' + crypto.randomUUID() })); hasStart = true; }
         emit(encodeEvent({ type: 'text-start', id: partId }));
-        emit(encodeEvent({ type: 'text-delta', id: partId, delta: hasText ? '\n\n' + failure : failure }));
+        emit(encodeEvent({ type: 'text-delta', id: partId, delta: hasText ? '\n\n' + message : message }));
         emit(encodeEvent({ type: 'text-end', id: partId }));
       };
       const processFrame = (frame: string, separator: string) => {
@@ -58,14 +68,26 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
         if (event.type === 'start') hasStart = true;
         if (event.type === 'text-delta' && typeof event.delta === 'string' && event.delta.trim()) hasText = true;
         if (event.type === 'abort') aborted = true;
+        if (!aborted && !signal?.aborted && (event.type === 'tool-input-error' || event.type === 'tool-output-error'
+          || event.type === 'tool-output-available' && typeof event.output === 'string'
+            && (/^Error \([A-Z_]+\):/u.test(event.output) || event.output === 'Tool execution failed'))) {
+          // SDK errors may contain validation inputs or upstream bodies. Keep
+          // the original stream shape but replace only its error description.
+          failedCalls.add(typeof event.toolCallId === 'string' ? event.toolCallId : 'unknown');
+          if (event.type !== 'tool-output-available') {
+            emit(encodeEvent({ ...event, errorText: schoolChatToolFailureText(query) })); return;
+          }
+        }
         if (event.type === 'error' && !aborted && !signal?.aborted) {
           notice(); emit(encodeEvent({ ...event, errorText: failure })); return;
         }
         if (event.type === 'finish') {
-          if ((repaired || !hasText || event.finishReason === 'error') && !aborted && !signal?.aborted) {
-            notice();
+          const unavailable = repaired || !hasText || event.finishReason === 'error';
+          if ((unavailable || failedCalls.size) && !aborted && !signal?.aborted) {
+            notice(unavailable ? failure : schoolChatToolFailureText(query));
             const metadata = event.messageMetadata && typeof event.messageMetadata === 'object' ? event.messageMetadata : {};
-            emit(encodeEvent({ ...event, messageMetadata: { ...metadata, schoolReplyOutcome: 'unavailable' } }));
+            emit(encodeEvent({ ...event, messageMetadata: { ...metadata, schoolReplyOutcome: unavailable ? 'unavailable' : 'tool_failure',
+              ...(failedCalls.size ? { schoolFailedToolCalls: failedCalls.size } : {}) } }));
           } else emit(frame + separator);
           terminal = true; return;
         }
@@ -81,6 +103,11 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
           if (oversized) { emit(frame + separator); oversized = false; } else processFrame(frame, separator);
         }
         if (buffer.length > maxFrameChars) {
+          if (!oversized && /^data:\s*\{\s*"type"\s*:\s*"tool-(?:input|output)-error"/u.test(buffer)) {
+            // The SDK puts the event type first. Observe an oversized error
+            // without accumulating its input/error body or reparsing it.
+            failedCalls.add('oversized-error-' + failedCalls.size);
+          }
           // Large tool payloads pass through without accumulating or parsing.
           // Unknown/large text frames conservatively count as visible output.
           if (!oversized && !/^data:\s*\{\s*"type"\s*:\s*"(?:tool-|data-)/u.test(buffer)) hasText = true;

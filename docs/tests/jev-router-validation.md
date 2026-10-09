@@ -175,3 +175,53 @@ Next: malformed tool/argument rejection with original-error reporting, then rema
 personal answers (attendance, student class/section and outsider wording), selective
 20B fallback and ordinary Jev integration. General Jev/model settings and the durable
 $10 monthly guard remain open; these fixes alone are not the final production release.
+
+## Tool failure and personal reply checkpoint — 2026-10-09
+
+Najm chatbot/MCP 3.6.0/2.2.5 already reject invalid tool calls before controller
+execution. Nine scripted SDK/MCP scenarios exercise unknown/malformed/unoffered
+names, missing/wrong-type/blank IDs, invalid JSON, a denied read and a valid read.
+All eight rejected scenarios produce **zero controller reads**; the valid one
+produces exactly one. Each scenario uses one scripted tool step and one scripted
+answer, with no provider HTTP. These are synthetic contract tests, not live model
+tool-selection accuracy. The Desktop Najm checkout remains unchanged.
+
+Original failures now survive model recovery. Diagnostics retain fixed step/code/count
+summaries for missing execution records, MCP errors and blocked writes. Unexecuted
+model-invented names are replaced in stored step metadata; no tool input/error body
+is added to diagnostics. The response stream keeps successful text and tool results,
+adds one localized failure notice before finish, and records a failed-call count.
+SDK error descriptions in bounded parsed frames are localized; oversized frames pass
+through without accumulating their payload and an SDK error header still triggers
+the notice. Cancellation adds no notice. Clean replies remain byte-for-byte intact.
+Benchmark parsing, measurement and scoring retain failed attempts even after later
+success; a completed stream does not establish a correct tool plan.
+
+The remaining bounded personal cases now render actual child attendance counts and
+rate, distinguish no attendance records from 0% attendance, preserve student class
+and section labels, and clarify explicitly outside-scope grade/contact requests
+without a fabricated lookup. Student identity/name and children come from the existing
+owned snapshot. Missing identities and extra filters retain routing; own-name contact
+requests retain the authorized routed path. No second year/auth resolver is added.
+
+**23/23 actual authenticated internal API tool-and-fact checks pass** on populated
+demo records. They include the previous 18 academic checks plus child attendance,
+student placement, teacher/student outsider clarifications and a parent outsider
+control: eleven reused failure questions, five drafted variants and seven controls.
+Three outsider and three historical direct MCP reads deny. Average complete local
+API reply is **0.021 seconds**; zero paid classification, generation or routing
+calls. Saved AI settings and domain records are unchanged. This is local/template
+timing, not a browser/provider benchmark or a new score for the old 24-case report.
+
+Verification: **1,131 backend regressions**, **562 script/boundary tests**, final
+focused dispatch/response/personal/security checks, root lint/typecheck and production
+build pass. One initial cancellation assertion caught a response guard issue; wider
+tests also caught a minimal diagnostic fixture without tools/steps. Both are fixed
+and rechecked. Private captures, owned hosts and the isolated build are removed;
+original Next references, tsconfig, running app and unrelated edits are preserved.
+[Compact call/personal archive](../evidence/chatbot-latency/jev-personal-20261009.zip).
+
+Next: an unseen Darija development holdout for supported Jev plans and selective
+OSS20B fallback, then ordinary-chat enablement and the durable $10 monthly allowance.
+General Jev is still off and the saved fallback model remains unchanged. The targeted
+repairs are ready; broad production qualification remains open.

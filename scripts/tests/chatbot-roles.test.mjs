@@ -4,6 +4,23 @@ import { scoreRoleLookup } from '../chatbot-role-scoring.mjs';
 
 const sse = (...events) => `${events.map((event) => `data: ${JSON.stringify(event)}`).join('\n\n')}\n\ndata: [DONE]\n`;
 
+it('keeps original failed attempts in the benchmark score despite a completed later answer', () => {
+  const parsed = parseUiStream(sse(
+    { type: 'tool-input-error', toolCallId: 'a', toolName: 'unknown', errorText: 'invalid' },
+    { type: 'tool-output-error', toolCallId: 'a', errorText: 'invalid' },
+    { type: 'tool-output-available', toolCallId: 'a', output: { count: 44 } },
+    { type: 'text-delta', delta: 'A recovered answer.' },
+    { type: 'finish' },
+  ));
+  expect(parsed.complete).toBe(true);
+  expect(parsed.failedToolCalls).toBe(1);
+  expect(scoreRoleLookup(parsed, 'وريني النقط').failures).toEqual(['tool_attempt_failed']);
+  const reported = parseUiStream(sse({ type: 'finish', messageMetadata: { schoolReplyOutcome: 'tool_failure', schoolFailedToolCalls: 2 } }));
+  expect(reported.failedToolCalls).toBe(2);
+  expect(scoreRoleLookup(reported, 'Show grades').failures).toEqual(['tool_attempt_failed']);
+  expect(scoreRoleLookup({ text: 'Answer', tools: [], sample: { server: { toolFailures: [{ step: 0, code: 'not_dispatched', count: 1 }] } } }, 'Show grades').failures).toEqual(['tool_attempt_failed']);
+});
+
 it('counts a visible unavailable notice as a failed answer, including follow-ups', () => {
   const reply = parseUiStream(sse(
     { type: 'text-delta', id: 'notice', delta: 'ما قدرتش نكمل الجواب دابا.' },

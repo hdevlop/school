@@ -49,6 +49,7 @@ export function planRoleSchedule(caseIds = ROLE_CASE_IDS, repeat = 1) {
 /** Reads a UI message stream (SSE `data:` lines) into text and tool calls. */
 export function parseUiStream(body) {
   const calls = new Map();
+  const failedCalls = new Set();
   let text = '';
   let metadata = null;
   let finished = false;
@@ -65,7 +66,9 @@ export function parseUiStream(body) {
     } else if (event.type === 'tool-output-available') {
       const call = calls.get(event.toolCallId) ?? { toolCallId: event.toolCallId, name: null };
       calls.set(event.toolCallId, { ...call, output: event.output, outcome: 'output' });
+      if (typeof event.output === 'string' && (/^Error \([A-Z_]+\):/u.test(event.output) || event.output === 'Tool execution failed')) failedCalls.add(event.toolCallId);
     } else if (event.type === 'tool-output-error' || event.type === 'tool-input-error') {
+      failedCalls.add(event.toolCallId);
       const call = calls.get(event.toolCallId) ?? { toolCallId: event.toolCallId, name: event.toolName ?? null };
       calls.set(event.toolCallId, { ...call, outcome: 'error', error: event.errorText });
     } else if (event.type === 'error') errors.push(event.errorText ?? 'error');
@@ -73,7 +76,8 @@ export function parseUiStream(body) {
     else if (event.type === 'finish') { finished = true; if (event.messageMetadata !== undefined) metadata = event.messageMetadata; }
     else if (event.type === 'abort') errors.push('aborted');
   }
-  return { text, tools: [...calls.values()], errors, metadata, complete: finished && done && errors.length === 0 };
+  const reportedFailures = Number.isSafeInteger(metadata?.schoolFailedToolCalls) && metadata.schoolFailedToolCalls >= 0 ? metadata.schoolFailedToolCalls : 0;
+  return { text, tools: [...calls.values()], errors, metadata, failedToolCalls: Math.max(failedCalls.size, reportedFailures), complete: finished && done && errors.length === 0 };
 }
 
 /** The forbidden values found in any tool output. Matching ignores case. */
