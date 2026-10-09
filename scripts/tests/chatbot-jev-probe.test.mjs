@@ -123,7 +123,7 @@ describe('Jev probe budget CLI', () => {
     expect(result.exitCode).toBe(0);
     expect(result.report.queryGuardVersion).toBe(version);
     expect(result.report.sourceSha256['scripts/chatbot-jev-query-guard-v3.mjs']).toMatch(/^[a-f0-9]{64}$/);
-    expect(result.report.sourceSha256['packages/server/src/modules/chat/schoolReplyWrite.ts']).toMatch(/^[a-f0-9]{64}$/);
+    expect(result.report.sourceSha256['packages/server/src/modules/chat/replies/schoolReplyWrite.ts']).toMatch(/^[a-f0-9]{64}$/);
     if (version === 4) expect(result.report.sourceSha256['scripts/chatbot-jev-query-guard-v4.mjs']).toMatch(/^[a-f0-9]{64}$/);
     expect(result.report.summary.semanticQueryGuard.version).toBe(version);
     expect(result.report.samples[0].decision.choice).toBe('small_talk');

@@ -1,7 +1,7 @@
 import { expect, test } from 'bun:test';
 import type { ChatDiagnostics, ChatToolSpan } from 'najm-chatbot';
-import { ChatDiagnosticsLog } from '../../src/modules/chat/ChatDiagnosticsLog';
-import { schoolToolFailures } from '../../src/modules/chat/schoolToolFailures';
+import { ChatDiagnosticsLog } from '../../src/modules/chat/diagnostics/ChatDiagnosticsLog';
+import { schoolToolFailures } from '../../src/modules/chat/diagnostics/schoolToolFailures';
 
 const span = (name: string, outcome: ChatToolSpan['outcome'], startMs = 1): ChatToolSpan => ({ name, outcome, startMs, durationMs: 2, toolCallId: 'private-call-id', inputChars: 40, resultChars: 10 });
 const diag = (steps: string[][], tools: ChatToolSpan[]): ChatDiagnostics => ({

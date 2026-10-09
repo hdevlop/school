@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { validateFreshDarija, runFreshProbe } from '../chatbot-jev-fresh-probe';
-import { INTENT_NAMES } from '../../packages/server/src/modules/chat/jevIntents';
+import { INTENT_NAMES } from '../../packages/server/src/modules/chat/jev/jevIntents';
 const corpus = await Bun.file('datasets/chatbot-latency/jev-fresh-darija-20261009.json').json();
 test('fresh paired exploration refuses reused text, other languages and fabricated native acceptance', () => {
   expect(validateFreshDarija(corpus, [])).toHaveLength(24);

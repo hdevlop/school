@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
-import { schoolPersonalReply } from '../../src/modules/chat/schoolPersonalReplies';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
+import { schoolPersonalReply } from '../../src/modules/chat/replies/schoolPersonalReplies';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 const year='2026-2027', child={id:'S1',name:'Salma Idrissi'};
 const attendanceQuery='بغيت ملخص الحضور والغياب والتأخير ديال Salma Idrissi هاد العام.';
 const attendance=()=>schoolPersonalReply(attendanceQuery,'ary',year,'parent',undefined,[child]);

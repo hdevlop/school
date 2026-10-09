@@ -4,10 +4,13 @@ import { isDeepStrictEqual } from 'node:util';
 // must stay frozen. Historical reports keep the hashes of every source they used.
 export const CONTINUATION_SOURCES = Object.freeze([
   'scripts/chatbot-budget.mjs', 'scripts/chatbot-jev.mjs', 'scripts/chatbot-jev-accuracy.mjs',
-  'packages/server/src/modules/chat/schoolReplyTemplates.ts',
-  'packages/server/src/modules/chat/schoolListReplies.ts',
-  'packages/server/src/modules/chat/schoolReplyLanguage.ts',
-  'packages/server/src/modules/chat/schoolReplyWrite.ts',
+  'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts',
+  'packages/server/src/modules/chat/replies/schoolListReplies.ts',
+  'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts',
+  'packages/server/src/modules/chat/replies/schoolReplyWrite.ts',
+  'packages/server/src/modules/chat/jev/jevProtocol.ts',
+  'packages/server/src/modules/chat/jev/jevWording.ts',
+  'packages/server/src/modules/chat/jev/jevDecision.ts',
 ]);
 
 const units = (usd) => Math.ceil(usd * 1e9);

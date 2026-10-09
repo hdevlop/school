@@ -2,8 +2,8 @@
 import { createHash } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
 import { isDeepStrictEqual } from 'node:util';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage.ts';
-import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts';
+import { schoolReplyTemplate } from '../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts';
 import { JEV_MODEL, accepts, buildDecisionRequest, parseDecision, summarize, latency, validateCases } from './chatbot-jev.mjs';
 import { compareCountGuard } from './chatbot-jev-count-guard.mjs';
 import { buildDecisionRequestV4 } from './chatbot-jev-wording-v4.mjs';

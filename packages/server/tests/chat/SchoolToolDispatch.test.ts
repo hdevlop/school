@@ -6,8 +6,8 @@ import { scriptedModel } from 'najm-chatbot/testing';
 import { McpTool, ToolGroup, TOOL_PROVIDER, MCP_REGISTRY } from 'najm-mcp';
 import { Controller, Get, Params, Validate } from '../../src/najm';
 import { isAdministrator } from '../../src/auth';
-import { ChatDiagnosticsLog } from '../../src/modules/chat/ChatDiagnosticsLog';
-import { schoolChatToolFailureText } from '../../src/modules/chat/schoolChatResponse';
+import { ChatDiagnosticsLog } from '../../src/modules/chat/diagnostics/ChatDiagnosticsLog';
+import { schoolChatToolFailureText } from '../../src/modules/chat/transport/schoolChatResponse';
 import { createJevFixture } from './jevFixture';
 
 @Controller('/fixture-input-audit') @ToolGroup('input-audit')

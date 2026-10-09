@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { schoolTeacherCountReply } from '../../src/modules/chat/schoolTeacherReply';
+import { schoolTeacherCountReply } from '../../src/modules/chat/replies/schoolTeacherReply';
 
 test('personal teacher totals use the authenticated identity and the tool total, including zero', () => {
   for (const query of ['chhal mn tlamid 3ndi?', 'شحال من تلميذ عندي أنا؟']) {

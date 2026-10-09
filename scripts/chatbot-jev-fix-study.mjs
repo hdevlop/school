@@ -5,8 +5,8 @@ import { isDeepStrictEqual } from 'node:util';
 import { parseDecision, validateCases, summarize, templateIntent } from './chatbot-jev.mjs';
 import { compareQueryGuardV3, acceptsWithQueryGuardV3 } from './chatbot-jev-query-guard-v3.mjs';
 import { compareCountGuardV2 } from './chatbot-jev-count-guard-v2.mjs';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage.ts';
-import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts';
+import { schoolReplyTemplate } from '../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts';
 
 export function replayFixStudy(corpus, reports) {
   validateCases(corpus.cases);
@@ -75,8 +75,8 @@ async function main() {
   const sourceSha256 = {};
   for (const path of ['scripts/chatbot-jev-fix-study.mjs', 'scripts/chatbot-jev-query-guard-v3.mjs',
     'scripts/chatbot-jev-count-guard-v2.mjs', 'scripts/chatbot-jev-count-guard.mjs', 'scripts/chatbot-jev.mjs',
-    'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/schoolReplyTemplates.ts',
-    'packages/server/src/modules/chat/schoolReplyWrite.ts']) sourceSha256[path] = createHash('sha256').update(await Bun.file(path).text()).digest('hex');
+    'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts',
+    'packages/server/src/modules/chat/replies/schoolReplyWrite.ts']) sourceSha256[path] = createHash('sha256').update(await Bun.file(path).text()).digest('hex');
   const output = { mode: 'offline-post-result-fixes', providerCalls: 0, schoolToolCalls: 0, inputSha256, sourceSha256, studies,
     validDecisionsReparsed: Object.values(studies).reduce((sum, study) => sum + study.valid, 0),
     frozenReportsAndLabelsChanged: false, productionAcceptance: false, jevEnabled: false };

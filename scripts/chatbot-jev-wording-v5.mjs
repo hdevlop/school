@@ -7,10 +7,12 @@ import { acceptsWithQueryGuardV6 } from '@sms/server/jev-query-guard';
 import { createEstimatedBudget } from './chatbot-budget.mjs';
 
 const corpusPath = 'datasets/chatbot-latency/darija-tool-selection-20261008.json';
-const sourcePaths = [corpusPath, 'packages/server/src/modules/chat/jevIntents.ts',
-  'packages/server/src/modules/chat/jevQueryGuard.ts', ...[3,4,5,6].map(v=>`packages/server/src/modules/chat/jevGuard/queryV${v}.ts`),
-  'packages/server/src/modules/chat/jevGuard/examsV6.ts', 'packages/server/src/modules/chat/jevGuard/countV2.ts',
-  'packages/server/src/modules/chat/jevGuard/countV1.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts',
+const sourcePaths = [corpusPath, 'packages/server/src/modules/chat/jev/jevIntents.ts',
+  'packages/server/src/modules/chat/jev/jevProtocol.ts', 'packages/server/src/modules/chat/jev/jevWording.ts',
+  'packages/server/src/modules/chat/jev/jevDecision.ts',
+  'packages/server/src/modules/chat/jev/jevQueryGuard.ts', ...[3,4,5,6].map(v=>`packages/server/src/modules/chat/jev/guards/queryV${v}.ts`),
+  'packages/server/src/modules/chat/jev/guards/examsV6.ts', 'packages/server/src/modules/chat/jev/guards/countV2.ts',
+  'packages/server/src/modules/chat/jev/guards/countV1.ts', 'packages/server/src/modules/chat/replies/schoolReplyWrite.ts',
   'scripts/chatbot-budget.mjs', 'scripts/chatbot-jev-wording-v5.mjs'];
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 export function wordingV5Protocol() {

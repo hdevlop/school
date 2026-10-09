@@ -1,9 +1,9 @@
 import { afterEach, beforeEach, expect, test } from 'bun:test';
-import { schoolFilteredReply, schoolFilteredReplyKind } from '../../src/modules/chat/schoolFilteredReplies';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
+import { schoolFilteredReply, schoolFilteredReplyKind } from '../../src/modules/chat/replies/schoolFilteredReplies';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
+import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
 const corpus = await Bun.file('datasets/chatbot-latency/darija-tool-selection-20261008.json').json();
 const cases = corpus.cases.filter((x: { id: string }) => [29,30,31,32,79,80,91,92,93,94].includes(Number(x.id.split('q').at(-1))));
 const girls = 'شحال من بنت كاينة فالمدرسة؟';

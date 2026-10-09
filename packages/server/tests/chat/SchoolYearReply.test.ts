@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
-import { schoolYearReply } from '../../src/modules/chat/schoolYearReply';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
+import { schoolYearReply } from '../../src/modules/chat/replies/schoolYearReply';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
 test('an explicit other academic year returns a restriction before any read for personal roles', () => {
   for (const role of ['parent', 'teacher', 'student']) {

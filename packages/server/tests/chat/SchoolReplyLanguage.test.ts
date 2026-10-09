@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
-import { schoolReplyLanguage as contextLanguage } from '../../src/modules/chat/schoolReplyContext';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
+import { schoolReplyLanguage as contextLanguage } from '../../src/modules/chat/replies/schoolReplyContext';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
 describe('School language profile', () => {
   it.each([

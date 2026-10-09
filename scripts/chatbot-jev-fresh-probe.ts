@@ -2,11 +2,11 @@
 import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash, randomUUID } from 'node:crypto';
 import { createEstimatedBudget } from './chatbot-budget.mjs';
-import { buildJevRuntimeDecisionRequest } from '../packages/server/src/modules/chat/jevRuntimeWording';
-import { acceptsWithQueryGuardV6 } from '../packages/server/src/modules/chat/jevQueryGuard';
-import { INTENT_NAMES, JEV_DECISIONS_URL, parseDecision } from '../packages/server/src/modules/chat/jevIntents';
-import { jevReplyPlan } from '../packages/server/src/modules/chat/jevReplyPlan';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage';
+import { buildJevRuntimeDecisionRequest } from '../packages/server/src/modules/chat/jev/jevRuntimeWording';
+import { acceptsWithQueryGuardV6 } from '../packages/server/src/modules/chat/jev/jevQueryGuard';
+import { INTENT_NAMES, JEV_DECISIONS_URL, parseDecision } from '../packages/server/src/modules/chat/jev/jevIntents';
+import { jevReplyPlan } from '../packages/server/src/modules/chat/jev/jevReplyPlan';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage';
 
 const sha = (path: string) => createHash('sha256').update(readFileSync(path)).digest('hex');
 const normalized = (query: string) => query.normalize('NFKC').toLowerCase().replace(/[.!?؟،,]/gu, '').replace(/\s+/gu, ' ').trim();
@@ -60,10 +60,10 @@ if (import.meta.main) {
   const priorPaths = readdirSync('datasets/chatbot-latency').filter(x => x.endsWith('.json') && x !== path.split('/').at(-1)).map(x => 'datasets/chatbot-latency/' + x);
   const prior = priorPaths.flatMap(p => (JSON.parse(readFileSync(p, 'utf8').replace(/^\uFEFF/u, '')).cases ?? []).filter((x: any) => typeof x?.query === 'string'));
   const cases = validateFreshDarija(corpus, prior), sources = [path, import.meta.path,
-    'scripts/chatbot-budget.mjs', 'packages/server/src/modules/chat/jevRuntimeWording.ts', 'packages/server/src/modules/chat/jevIntents.ts',
-    'packages/server/src/modules/chat/jevQueryGuard.ts', 'packages/server/src/modules/chat/jevGuard/queryV6.ts',
-    'packages/server/src/modules/chat/jevGuard/examsV6.ts', 'packages/server/src/modules/chat/schoolFilteredReplies.ts',
-    'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/jevReplyPlan.ts'];
+    'scripts/chatbot-budget.mjs', 'packages/server/src/modules/chat/jev/jevRuntimeWording.ts', 'packages/server/src/modules/chat/jev/jevIntents.ts',
+    'packages/server/src/modules/chat/jev/jevQueryGuard.ts', 'packages/server/src/modules/chat/jev/guards/queryV6.ts',
+    'packages/server/src/modules/chat/jev/guards/examsV6.ts', 'packages/server/src/modules/chat/replies/schoolFilteredReplies.ts',
+    'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/jev/jevReplyPlan.ts'];
   const sourceHashes = Object.fromEntries(sources.map(p => [p, sha(p)])), fingerprint = createHash('sha256').update(JSON.stringify(sourceHashes)).digest('hex');
   const output = option('output'); if (!output || existsSync(output)) throw Error('Supply new output path');
   if (args.includes('--plan') === args.includes('--execute')) throw Error('Select plan or execute');

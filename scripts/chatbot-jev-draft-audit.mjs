@@ -1,8 +1,8 @@
 /** Offline coverage audit. No classifier, tool execution, authentication or network calls. */
 import { createHash } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage.ts';
-import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts';
+import { schoolReplyTemplate } from '../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts';
 import { DEVELOPMENT_PATH } from './chatbot-jev-draft.mjs';
 import { ACCEPTANCE_POLICIES, templateIntent, validateCases } from './chatbot-jev.mjs';
 import { countQueryVeto } from './chatbot-jev-count-guard.mjs';
@@ -77,8 +77,8 @@ async function main() {
   report.sourceSha256 = {};
   for (const path of [casesPath, 'scripts/chatbot-jev-draft-audit.mjs', 'scripts/chatbot-jev.mjs',
     'scripts/chatbot-reply-readiness.mjs', 'scripts/chatbot-jev-count-guard.mjs',
-    'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/schoolReplyTemplates.ts',
-    'packages/server/src/modules/chat/schoolListReplies.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts', 'package.json', 'bun.lock']) {
+    'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts',
+    'packages/server/src/modules/chat/replies/schoolListReplies.ts', 'packages/server/src/modules/chat/replies/schoolReplyWrite.ts', 'package.json', 'bun.lock']) {
     report.sourceSha256[path] = createHash('sha256').update(new Uint8Array(await Bun.file(path).arrayBuffer())).digest('hex');
   }
   if (value('out')) await writeFile(value('out'), `${JSON.stringify(report, null, 2)}\n`, { flag: 'wx' });

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, setSystemTime, test } from 'bun:test';
-import { schoolFilteredReply, schoolFilteredReplyKind } from '../../src/modules/chat/schoolFilteredReplies';
+import { schoolFilteredReply, schoolFilteredReplyKind } from '../../src/modules/chat/replies/schoolFilteredReplies';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
+import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
 
 const corpus = await Bun.file('datasets/chatbot-latency/darija-tool-selection-20261008.json').json();
 const cases = corpus.cases.filter((x: { id: string }) => [9,10,11,12,13,14,27,28,33,34,35,36,37,38,39,40,53,54,55,56,57,58,65,66,67,68,69,70,97,98,99,100].includes(Number(x.id.split('q').at(-1))));

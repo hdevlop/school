@@ -10,13 +10,13 @@ import { INJECTION_TYPES, Server, Service, USER } from '../../src/najm';
 import { AcademicYearRepository } from '../../src/modules/academicYears/AcademicYearRepository';
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../src/modules/academicYears/AcademicYearValidator';
 import { registerYearPropertyInjector, registerYearRequestScope, runWithResolvedYear, Year } from '../../src/modules/academicYears/requestYear';
-import { SchoolChatContextProvider } from '../../src/modules/chat/SchoolChatContextProvider';
+import { SchoolChatContextProvider } from '../../src/modules/chat/context/SchoolChatContextProvider';
 import { SettingsRepository } from '../../src/modules/settings/SettingsRepository';
 import { ParentRepository } from '../../src/modules/parents/ParentRepository';
 import { ParentChildrenRepository } from '../../src/modules/parents/ParentChildrenRepository';
 import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
 import { StudentRepository } from '../../src/modules/students/StudentRepository';
-import { registerChatYearContext } from '../../src/modules/chat/chatYearContext';
+import { registerChatYearContext } from '../../src/modules/chat/context/chatYearContext';
 
 @Service()
 class ChatYearProbe {

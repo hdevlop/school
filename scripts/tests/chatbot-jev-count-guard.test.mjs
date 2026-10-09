@@ -100,9 +100,9 @@ process.on('exit', () => writeFileSync(${JSON.stringify(audit)}, JSON.stringify(
       expect(result).toMatchObject({ parsedDecisionsReplayed: 310, originalEligibilityAndAcceptanceReproduced: false,
         languageProfile: 'current-post-result', replyProfile: 'current-post-result',
         protocolProfile: 'current-shared-owner-request-and-310-decisions-equivalence-checked',
-        changedMeasuredSources: ['scripts/chatbot-jev.mjs', 'packages/server/src/modules/chat/schoolReplyLanguage.ts',
-          'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolListReplies.ts',
-          'packages/server/src/modules/chat/schoolReplyWrite.ts'],
+        changedMeasuredSources: ['scripts/chatbot-jev.mjs', 'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts',
+          'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/replies/schoolListReplies.ts',
+          'packages/server/src/modules/chat/replies/schoolReplyWrite.ts'],
         originalMeasuredAcceptance: { questions: 50, wrongQuestions: 1 }, historicalRawReportsChanged: false,
         liveProviderRequests: 0, productionAcceptance: false, runtimeGuardEnabled: false });
       expect(result.comparison.before.questions).toBeGreaterThanOrEqual(50);

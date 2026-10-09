@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 import { afterEach, expect, test } from 'bun:test';
-import { ordinaryJevTurn, readSchoolChatControls } from '../../src/modules/chat/schoolChatControls';
-import { budgetedChatFetch, installSchoolPaidChatTransport, schoolPaidChatContext, type SchoolPaidChatFrame } from '../../src/modules/chat/SchoolPaidChatTransport';
-import { schoolChatResponse } from '../../src/modules/chat/schoolChatResponse';
+import { ordinaryJevTurn, readSchoolChatControls } from '../../src/modules/chat/transport/schoolChatControls';
+import { budgetedChatFetch, installSchoolPaidChatTransport, schoolPaidChatContext, type SchoolPaidChatFrame } from '../../src/modules/chat/budget/SchoolPaidChatTransport';
+import { schoolChatResponse } from '../../src/modules/chat/transport/schoolChatResponse';
 import { createJevFixture } from './jevFixture';
-import { ChatSpendRepository } from '../../src/modules/chat/ChatSpendRepository';
-import { schoolJevRequestContext } from '../../src/modules/chat/JevSessionGrants';
-import { jevPreparationPolicy } from '../../src/modules/chat/jevPreparationPolicy';
-import { qualifiedSchoolFallback } from '../../src/modules/chat/schoolFallbackScope';
-import { schoolRoutingContext } from '../../src/modules/chat/schoolRoutingContext';
-import { schoolChatYearContext } from '../../src/modules/chat/SchoolChatContextProvider';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
-import { schoolWriteRefusalKind } from '../../src/modules/chat/schoolReplyWrite';
-import { queryVetoV6 } from '../../src/modules/chat/jevQueryGuard';
-import { INTENT_NAMES, JEV_MODEL } from '../../src/modules/chat/jevIntents';
+import { ChatSpendRepository } from '../../src/modules/chat/budget/ChatSpendRepository';
+import { schoolJevRequestContext } from '../../src/modules/chat/jev/JevRequestContext';
+import { jevPreparationPolicy } from '../../src/modules/chat/jev/jevPreparationPolicy';
+import { qualifiedSchoolFallback } from '../../src/modules/chat/routing/schoolFallbackScope';
+import { schoolRoutingContext } from '../../src/modules/chat/routing/schoolRoutingContext';
+import { schoolChatYearContext } from '../../src/modules/chat/context/SchoolChatContextProvider';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
+import { schoolWriteRefusalKind } from '../../src/modules/chat/replies/schoolReplyWrite';
+import { queryVetoV6 } from '../../src/modules/chat/jev/jevQueryGuard';
+import { INTENT_NAMES, JEV_MODEL } from '../../src/modules/chat/jev/jevIntents';
 
 const original = { flow: process.env.CHATBOT_FLOW, mode: process.env.CHATBOT_JEV_MODE };
 afterEach(() => {

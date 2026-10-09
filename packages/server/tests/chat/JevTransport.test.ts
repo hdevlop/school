@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, expect, test } from 'bun:test';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
-import { jevSyntheticCases } from '../../src/modules/chat/jevSyntheticCases';
+import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
+import { jevSyntheticCases } from '../../src/modules/chat/benchmark/jevSyntheticCases';
 
 const vars = ['DB_URL', 'NODE_ENV', 'CHATBOT_BENCHMARK_CONTROLS', 'CHATBOT_JEV_MAX_REQUESTS', 'CHATBOT_JEV_MAX_COST_USD',
   'CHATBOT_JEV_BILLING_MODE', 'CHATBOT_JEV_BILLING_TIMEOUT_MS', 'CHATBOT_JEV_EXPERIMENT'];

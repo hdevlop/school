@@ -1,7 +1,7 @@
 /** Offline semantic veto candidate. Preserves measured scores and the v1/v2 guards. */
 import { accepts } from './chatbot-jev.mjs';
 import { countQueryVetoV2 } from './chatbot-jev-count-guard-v2.mjs';
-import { schoolWriteRefusalKind } from '../packages/server/src/modules/chat/schoolReplyWrite.ts';
+import { schoolWriteRefusalKind } from '../packages/server/src/modules/chat/replies/schoolReplyWrite.ts';
 
 export const QUERY_GUARD_VERSION = 3;
 const countChoices = new Set(['student_count', 'teacher_count', 'student_and_teacher_count']);

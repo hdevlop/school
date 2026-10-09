@@ -135,7 +135,7 @@ report.configSourceSha256 = {};
 report.scoringSourceSha256 = {};
 report.budgetSourceSha256 = createHash('sha256').update(await Bun.file('scripts/chatbot-budget.mjs').text()).digest('hex');
 report.chatContextSourceSha256 = {};
-for (const name of ['SchoolChatContextProvider.ts', 'schoolReplyContext.ts', 'schoolReplyTemplates.ts', 'schoolListReplies.ts']) {
+for (const name of ['context/SchoolChatContextProvider.ts', 'replies/schoolReplyContext.ts', 'replies/schoolReplyTemplates.ts', 'replies/schoolListReplies.ts']) {
   const file = Bun.file(`packages/server/src/modules/chat/${name}`);
   report.chatContextSourceSha256[name] = await file.exists() ? createHash('sha256').update(await file.text()).digest('hex') : null;
 }

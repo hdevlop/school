@@ -2,7 +2,7 @@ import { describe, expect, it } from 'bun:test';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { createDarijaQueryRewriter } from 'najm-rag/query-rewrites';
-import { rewriteDarijaForRouting } from '../../src/modules/chat/darijaRouting';
+import { rewriteDarijaForRouting } from '../../src/modules/chat/routing/darijaRouting';
 
 // najm-rag's normalizeQuery, which runs before the rewrite.
 const normalize = (text: string) => text.trim().toLowerCase()

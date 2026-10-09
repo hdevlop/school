@@ -4,9 +4,9 @@ import { getRoutes } from 'najm-core';
 import { getGuardMetadata } from 'najm-guard';
 import type { ChatDiagnostics } from 'najm-chatbot';
 import { chatbotConfig } from '../../src/config';
-import { ChatDiagnosticsController } from '../../src/modules/chat/ChatDiagnosticsController';
-import { ChatDiagnosticsLog, chatDiagnosticsLog } from '../../src/modules/chat/ChatDiagnosticsLog';
-import { schoolJevRequestContext, type JevRequestContext } from '../../src/modules/chat/JevSessionGrants';
+import { ChatDiagnosticsController } from '../../src/modules/chat/diagnostics/ChatDiagnosticsController';
+import { ChatDiagnosticsLog, chatDiagnosticsLog } from '../../src/modules/chat/diagnostics/ChatDiagnosticsLog';
+import { schoolJevRequestContext, type JevRequestContext } from '../../src/modules/chat/jev/JevRequestContext';
 
 function diagnostics(correlationId: string | null): ChatDiagnostics {
   return {

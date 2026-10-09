@@ -1,11 +1,11 @@
 import { expect, test } from 'bun:test';
-import { schoolPersonalAcademicReply, schoolTeacherAcademicReply } from '../../src/modules/chat/schoolAcademicReplies';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
-import { schoolReplyContext } from '../../src/modules/chat/schoolReplyContext';
-import { rewriteDarijaForRouting } from '../../src/modules/chat/darijaRouting';
+import { schoolPersonalAcademicReply, schoolTeacherAcademicReply } from '../../src/modules/chat/replies/schoolAcademicReplies';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
+import { schoolReplyContext } from '../../src/modules/chat/replies/schoolReplyContext';
+import { rewriteDarijaForRouting } from '../../src/modules/chat/routing/darijaRouting';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
+import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
 
 const year = '2026-2027';
 const child = { id: 'S1', name: 'Salma Idrissi' };

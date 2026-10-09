@@ -1,10 +1,10 @@
 /** Offline audit of selected Jev replies; never classifies or executes data tools. */
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { createHash } from 'node:crypto';
-import { jevReplyPlan } from '../../src/modules/chat/jevReplyPlan';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
-import { queryVetoV5, queryVetoV6 } from '../../src/modules/chat/jevQueryGuard';
-import type { JevIntent } from '../../src/modules/chat/jevIntents';
+import { jevReplyPlan } from '../../src/modules/chat/jev/jevReplyPlan';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
+import { queryVetoV5, queryVetoV6 } from '../../src/modules/chat/jev/jevQueryGuard';
+import type { JevIntent } from '../../src/modules/chat/jev/jevIntents';
 
 if (import.meta.main) {
   const [runs, fixturePath, output, version = '5'] = process.argv.slice(2);
@@ -68,12 +68,12 @@ if (import.meta.main) {
   });
   const declined = corpus.cases.filter((item: { intent: string }) => item.intent === 'needs_llm').flatMap((item: { id: string; query: string }) =>
     intents.map(choice => ({ caseId: item.id, injectedChoice: choice, veto: queryVeto(item.query, choice) })));
-  const sources = [...runs.split(','), fixturePath, corpusPath, 'packages/server/src/modules/chat/jevReplyPlan.ts',
-    'packages/server/src/modules/chat/schoolListReplies.ts', 'packages/server/src/modules/chat/schoolReplyTemplates.ts',
-    'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/jevQueryGuard.ts',
-    'packages/server/src/modules/chat/jevGuard/queryV3.ts', 'packages/server/src/modules/chat/jevGuard/queryV4.ts',
-    'packages/server/src/modules/chat/jevGuard/queryV5.ts', import.meta.path];
-  if (version === '6') sources.push('packages/server/src/modules/chat/jevGuard/queryV6.ts', 'packages/server/src/modules/chat/jevGuard/examsV6.ts');
+  const sources = [...runs.split(','), fixturePath, corpusPath, 'packages/server/src/modules/chat/jev/jevReplyPlan.ts',
+    'packages/server/src/modules/chat/replies/schoolListReplies.ts', 'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts',
+    'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/jev/jevQueryGuard.ts',
+    'packages/server/src/modules/chat/jev/guards/queryV3.ts', 'packages/server/src/modules/chat/jev/guards/queryV4.ts',
+    'packages/server/src/modules/chat/jev/guards/queryV5.ts', import.meta.path];
+  if (version === '6') sources.push('packages/server/src/modules/chat/jev/guards/queryV6.ts', 'packages/server/src/modules/chat/jev/guards/examsV6.ts');
   const report = { status: 'offline-scoped-and-populated-renderer-audit', paidRequests: 0,
     source: sources.map(path => ({ path, sha256: createHash('sha256').update(readFileSync(path)).digest('hex') })),
     guardVersion: Number(version), selectedReplies: selected.length, selectedRepliesPassed: selected.filter(row => row.queryGuardPassed

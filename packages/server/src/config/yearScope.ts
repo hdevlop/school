@@ -1,5 +1,5 @@
 import { ChatController } from 'najm-chatbot';
-import { JevBenchmarkController } from '../modules/chat/JevBenchmarkController';
+import { JevBenchmarkController } from '../modules/chat/benchmark/JevBenchmarkController';
 import { AlertController } from '../modules/alerts/AlertController';
 import { AnnouncementController } from '../modules/announcements/AnnouncementController';
 import { BehaviorRewardController } from '../modules/behaviorRewards/BehaviorRewardController';

@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { expect, test } from 'bun:test';
 import { ChatAgent } from 'najm-chatbot';
 import { scriptedModel } from 'najm-chatbot/testing';
-import { schoolChatResponse, schoolChatFailureText, schoolChatToolFailureText, latestChatUserText } from '../../src/modules/chat/schoolChatResponse';
+import { schoolChatResponse, schoolChatFailureText, schoolChatToolFailureText, latestChatUserText } from '../../src/modules/chat/transport/schoolChatResponse';
 import { createJevFixture } from './jevFixture';
 
 const frame = (value: unknown) => 'data: ' + JSON.stringify(value) + '\n\n';

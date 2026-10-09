@@ -2,8 +2,8 @@
 import { createHash } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
 import { isDeepStrictEqual } from 'node:util';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage.ts';
-import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts';
+import { schoolReplyTemplate } from '../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts';
 import { buildDecisionRequest, parseDecision, validateCases } from './chatbot-jev.mjs';
 import { compareCountGuardV2 } from './chatbot-jev-count-guard-v2.mjs';
 import { acceptsWithCountGuard } from './chatbot-jev-count-guard.mjs';
@@ -71,7 +71,7 @@ async function main() {
   const sourceSha256 = {};
   for (const path of ['scripts/chatbot-jev-candidate-study.mjs', 'scripts/chatbot-jev-count-guard-v2.mjs',
     'scripts/chatbot-jev-count-guard.mjs', 'scripts/chatbot-jev-wording-v4.mjs', 'scripts/chatbot-jev.mjs',
-    'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/schoolReplyTemplates.ts']) {
+    'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts']) {
     sourceSha256[path] = hash(await Bun.file(path).text());
   }
   const output = { stage: 'post-result offline development candidates', threshold: 0.8, acceptancePolicy: 'core',

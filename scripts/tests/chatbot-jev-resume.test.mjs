@@ -35,7 +35,7 @@ describe('verified Jev continuation', () => {
     const first = leg([sample('a', 1, 0.001)]);
     first.report = { ...first.report, queryGuardVersion: version, sourceSha256: structuredClone(guardedExpected.sourceSha256) };
     expect(prepare([first], { expected: guardedExpected }).readyToDispatch).toBe(true);
-    for (const source of [...guardSources, 'packages/server/src/modules/chat/schoolReplyWrite.ts']) {
+    for (const source of [...guardSources, 'packages/server/src/modules/chat/replies/schoolReplyWrite.ts']) {
       const changed = structuredClone(first);
       changed.report.sourceSha256[source] = 'b'.repeat(64);
       expect(() => prepare([changed], { expected: guardedExpected })).toThrow('frozen source changed');

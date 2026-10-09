@@ -87,18 +87,21 @@ function continueProtocol(protocol, continuationPath, generationUsagePath) {
 }
 export function sourceHashes() {
   const dir = 'packages/server/src/modules/chat';
-  const names = readdirSync(dir, { withFileTypes: true }).filter(entry => /^jev/i.test(entry.name)).flatMap(entry =>
-    entry.isDirectory() ? readdirSync(`${dir}/${entry.name}`).map(name => `${dir}/${entry.name}/${name}`) : [`${dir}/${entry.name}`]);
+  const walk = directory => readdirSync(directory, { withFileTypes: true }).flatMap(entry => {
+    const path = `${directory}/${entry.name}`;
+    return entry.isDirectory() ? walk(path) : entry.name.endsWith('.ts') ? [path] : [];
+  });
+  const names = walk(dir);
   const files = [...names, 'package.json', 'bun.lock', 'packages/server/package.json',
     'packages/server/src/config/chatbotConfig.ts', 'packages/server/src/config/yearScope.ts',
     'packages/server/src/config/ragConfig.ts', 'packages/server/src/config/coreConfig.ts',
-    'packages/server/src/config/chatbotSystemPrompt.ts', 'packages/server/src/modules/chat/darijaRouting.ts',
-    'packages/server/src/modules/chat/chatYearContext.ts', 'packages/server/src/modules/chat/SchoolChatContextProvider.ts',
-    'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolListReplies.ts',
-    'packages/server/src/modules/chat/schoolFilteredReplies.ts', 'packages/contracts/src/enums.ts',
+    'packages/server/src/config/chatbotSystemPrompt.ts', 'packages/server/src/modules/chat/routing/darijaRouting.ts',
+    'packages/server/src/modules/chat/context/chatYearContext.ts', 'packages/server/src/modules/chat/context/SchoolChatContextProvider.ts',
+    'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/replies/schoolListReplies.ts',
+    'packages/server/src/modules/chat/replies/schoolFilteredReplies.ts', 'packages/contracts/src/enums.ts',
     'packages/contracts/src/index.ts', 'packages/contracts/package.json',
     'packages/server/src/modules/dashboard/teacher/teacherDashboardMetrics.ts', 'packages/server/src/shared/businessDate.ts',
-    'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts',
+    'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/replies/schoolReplyWrite.ts',
     'scripts/chatbot-jev-full-chat.mjs', 'scripts/chatbot-jev-full-chat-lib.mjs',
     'scripts/chatbot-provider-observer.mjs'];
   return Object.fromEntries(files.sort().map(name => [name, createHash('sha256').update(readFileSync(name)).digest('hex')]));

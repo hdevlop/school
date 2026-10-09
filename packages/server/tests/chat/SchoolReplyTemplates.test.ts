@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { type ReplyRequest } from 'najm-chatbot';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
 const corpus = await Bun.file('datasets/chatbot-latency/morocco.json').json() as {
   cases: Array<{ id: string; query: string; language: string; kind: string }>;

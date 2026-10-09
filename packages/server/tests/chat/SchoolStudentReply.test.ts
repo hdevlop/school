@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { schoolStudentGradeReply } from '../../src/modules/chat/schoolStudentReply';
+import { schoolStudentGradeReply } from '../../src/modules/chat/replies/schoolStudentReply';
 
 test('own grades preserve fractional marks and assessment identity without generating facts', () => {
   const reply = schoolStudentGradeReply('وريني النقط ديالي', 'ary', '2026-2027', 'student', 'S1');

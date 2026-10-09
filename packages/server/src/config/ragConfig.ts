@@ -1,9 +1,9 @@
 import type { NajmPlugin } from 'najm-core';
 import { rag, ragStudio } from 'najm-rag';
 
-import { rewriteDarijaForRouting } from '../modules/chat/darijaRouting';
+import { rewriteDarijaForRouting } from '../modules/chat/routing/darijaRouting';
 import { envChoice, envFlag, envInt, envString } from './env';
-import { schoolRoutingContext } from '../modules/chat/schoolRoutingContext';
+import { schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
 
 /**
  * Embeddings for chat tool routing and the knowledge base.

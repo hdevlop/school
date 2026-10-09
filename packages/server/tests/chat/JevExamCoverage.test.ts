@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'bun:test';
-import { acceptsWithQueryGuardV5, acceptsWithQueryGuardV6 } from '../../src/modules/chat/jevQueryGuard';
-import { jevReplyPlan } from '../../src/modules/chat/jevReplyPlan';
-import { INTENT_NAMES } from '../../src/modules/chat/jevIntents';
-import { jevDarijaCases } from '../../src/modules/chat/jevDarijaCases';
+import { acceptsWithQueryGuardV5, acceptsWithQueryGuardV6 } from '../../src/modules/chat/jev/jevQueryGuard';
+import { jevReplyPlan } from '../../src/modules/chat/jev/jevReplyPlan';
+import { INTENT_NAMES } from '../../src/modules/chat/jev/jevIntents';
+import { jevDarijaCases } from '../../src/modules/chat/benchmark/jevDarijaCases';
 
 const decision = (choice: any) => ({ choice, confidence: 0.99, writeProbability: 0 });
 const examIds = ['q05', 'q06', 'q77', 'q78', 'q79', 'q80'];

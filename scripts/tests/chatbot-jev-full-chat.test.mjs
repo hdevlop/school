@@ -12,7 +12,7 @@ test('exam coverage freezes a bounded 20-case guard-6 check and rejects guard-5 
   expect(plan.maxCombinedEstimatedUsd).toBe(0.025);
   expect(plan.maxClassifications).toBe(20);
   expect(plan.guardVersion).toBe(6);
-  expect(plan.sourceHashes['packages/server/src/modules/chat/schoolFilteredReplies.ts']).toMatch(/^[a-f0-9]{64}$/u);
+  expect(plan.sourceHashes['packages/server/src/modules/chat/replies/schoolFilteredReplies.ts']).toMatch(/^[a-f0-9]{64}$/u);
   expect(plan.averageResponseLimitSeconds).toBeNull();
   expect(plan.cases.filter(item => item.intent === 'upcoming_exams')).toHaveLength(6);
   expect(() => checkSource(plan)).not.toThrow();
@@ -53,7 +53,7 @@ test('fixed 20B regression pass freezes tools-only policy, no Jev and routing so
   expect(plan.averageResponseLimitSeconds).toBeNull();
   expect(plan.captureToolNames).toBe(true);
   expect(plan.sourceHashes['packages/server/src/config/chatbotSystemPrompt.ts']).toBeString();
-  expect(plan.sourceHashes['packages/server/src/modules/chat/darijaRouting.ts']).toBeString();
+  expect(plan.sourceHashes['packages/server/src/modules/chat/routing/darijaRouting.ts']).toBeString();
   expect(() => checkSource(plan)).not.toThrow();
   expect(() => checkSource({...plan, averageResponseLimitSeconds: 2})).toThrow();
 });

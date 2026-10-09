@@ -107,3 +107,13 @@ No further provider/French benchmark or billing study is required to use this re
 
 Historical comparisons remain in [the evidence index](docs/evidence/chatbot-latency/README.md).
 The old latency plan is recoverable with `git show 846a679:CHATBOT-LATENCY-PLAN.md`.
+
+## Code organization
+
+The [chat module guide](packages/server/src/modules/chat/README.md) maps the eight
+runtime and benchmark folders. The module root now contains only its registration
+entry point and guide. Filtered replies use a small dispatcher with focused
+renderers; Jev protocol, request wording and decision validation are separate.
+Numbered guards remain active dependencies. This refactor preserves the released
+flow and public exports; all relevant tests, lint, type checking and the production
+build passed. No paid benchmark was needed.

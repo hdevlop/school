@@ -83,8 +83,8 @@ async function main() {
   if ([v3, v4].some(report => report.corpusSha256 !== hash(texts.cases))) throw new Error('Paired corpus hash mismatch');
   // Old runner metadata may differ. Actual classifier/parser/language/template
   // inputs must still be shared and match their measured hashes.
-  for (const path of ['scripts/chatbot-jev.mjs', 'packages/server/src/modules/chat/schoolReplyLanguage.ts',
-    'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolListReplies.ts']) {
+  for (const path of ['scripts/chatbot-jev.mjs', 'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts',
+    'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/replies/schoolListReplies.ts']) {
     if (v3.sourceSha256[path] !== v4.sourceSha256[path] || hash(await Bun.file(path).text()) !== v4.sourceSha256[path]) {
       throw new Error(`Classification input changed: ${path}`);
     }

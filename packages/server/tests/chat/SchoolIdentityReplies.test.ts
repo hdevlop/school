@@ -1,9 +1,9 @@
 import { expect, test } from 'bun:test';
-import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild } from '../../src/modules/chat/schoolIdentityReplies';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
+import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild } from '../../src/modules/chat/replies/schoolIdentityReplies';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { createJevFixture } from './jevFixture';
-import { setBenchmarkJevMode } from '../../src/modules/chat/JevControls';
+import { setBenchmarkJevMode } from '../../src/modules/chat/jev/JevControls';
 
 const year = '2026-2027';
 const lists = ['الأقسام كاملين ديال المدرسة عطيني سميتهم.', 'l2a9sam kamlin dyal lmdrasa 3tini smiythom.',

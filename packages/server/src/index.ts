@@ -25,7 +25,7 @@ import {
 import * as modulesModule from './modules';
 import { registerYearPropertyInjector, registerYearRequestScope } from './modules/academicYears/requestYear';
 import { yearRequestControllers } from './config/yearScope';
-import { registerChatYearContext } from './modules/chat/chatYearContext';
+import { registerChatYearContext } from './modules/chat/context/chatYearContext';
 
 export { loadActiveAcademicYearLabel, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
 

@@ -7,8 +7,8 @@ import { acceptsWithQueryGuardV4, queryVetoV4 } from './chatbot-jev-query-guard-
 import { acceptsWithQueryGuardV5, queryVetoV5 } from './chatbot-jev-query-guard-v5.mjs';
 import { jevTurnEligibility, selectJevReplyPreparation } from './chatbot-reply-readiness.mjs';
 import { replayFixStudy } from './chatbot-jev-fix-study.mjs';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage.ts';
-import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts';
+import { schoolReplyTemplate } from '../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts';
 
 const profile = item => {
   const language = schoolReplyLanguage(item.query);
@@ -189,8 +189,8 @@ async function main() {
   const sourceSha256 = {};
   for (const path of ['scripts/chatbot-jev-offline-safety-study.mjs', 'scripts/chatbot-reply-readiness.mjs',
     'scripts/chatbot-jev-query-guard-v3.mjs', 'scripts/chatbot-jev-query-guard-v4.mjs', 'scripts/chatbot-jev-fix-study.mjs',
-    'packages/server/src/modules/chat/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/schoolReplyTemplates.ts',
-    'packages/server/src/modules/chat/schoolReplyWrite.ts']) sourceSha256[path] = createHash('sha256').update(await Bun.file(path).text()).digest('hex');
+    'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts', 'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts',
+    'packages/server/src/modules/chat/replies/schoolReplyWrite.ts']) sourceSha256[path] = createHash('sha256').update(await Bun.file(path).text()).digest('hex');
   const report = { mode: 'offline-counterfactual-and-readiness-study', providerCalls: 0, schoolToolCalls: 0,
     jevEnabled: false, productionAcceptance: false, inputSha256, sourceSha256,
     guardStress: counterfactualGuardStudy(stress.cases, 3), guardStressV4: counterfactualGuardStudy(stress.cases, 4),

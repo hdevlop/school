@@ -2,13 +2,13 @@ import { plugin } from 'najm-core';
 import { chatbot, CHATBOT_CONTEXT_PROVIDER } from 'najm-chatbot';
 import { studioAssistant } from 'najm-chatbot/studio-assistant';
 
-import { chatDiagnosticsLog } from '../modules/chat/ChatDiagnosticsLog';
-import { SchoolChatContextProvider, schoolChatYearContext } from '../modules/chat/SchoolChatContextProvider';
-import { schoolReplyTemplate } from '../modules/chat/schoolReplyTemplates';
-import { schoolReplyLanguage } from '../modules/chat/schoolReplyLanguage';
+import { chatDiagnosticsLog } from '../modules/chat/diagnostics/ChatDiagnosticsLog';
+import { SchoolChatContextProvider, schoolChatYearContext } from '../modules/chat/context/SchoolChatContextProvider';
+import { schoolReplyTemplate } from '../modules/chat/replies/schoolReplyTemplates';
+import { schoolReplyLanguage } from '../modules/chat/replies/schoolReplyLanguage';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
-import { jevPreparationPolicy } from '../modules/chat/jevPreparationPolicy';
-import { schoolOpenRouterProvider } from '../modules/chat/jevExperiment';
+import { jevPreparationPolicy } from '../modules/chat/jev/jevPreparationPolicy';
+import { schoolOpenRouterProvider } from '../modules/chat/routing/schoolOpenRouterProvider';
 
 /** The dashboard's read-only chat. Tool routing and embeddings are in ragConfig. */
 export const chatbotConfig = () =>

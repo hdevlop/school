@@ -5,8 +5,8 @@ import { resolve } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
 import { buildDecisionRequest, parseDecision, validateCases } from './chatbot-jev.mjs';
 import { compareCountGuard, countQueryVeto, COUNT_GUARD_VERSION } from './chatbot-jev-count-guard.mjs';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage.ts';
-import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts';
+import { schoolReplyTemplate } from '../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts';
 
 const args = process.argv.slice(2);
 if (args.length < 1 || args.length > 3 || !args[0].startsWith('--output=') || !args[0].slice('--output='.length).trim()
@@ -23,17 +23,17 @@ const hash = async path => createHash('sha256').update(await Bun.file(path).text
 const original = await read('docs/evidence/chatbot-latency/jev-core-final-analysis-20261005.json');
 const measuredPlan = await read('docs/evidence/chatbot-latency/jev-core-finish-plan-20261005.json');
 const sourcePaths = ['scripts/chatbot-jev-count-guard.mjs', 'scripts/chatbot-jev-count-guard-study.mjs',
-  'scripts/chatbot-jev.mjs', 'packages/server/src/modules/chat/schoolReplyLanguage.ts',
-  'packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolListReplies.ts',
-  'packages/server/src/modules/chat/schoolReplyWrite.ts',
+  'scripts/chatbot-jev.mjs', 'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts',
+  'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/replies/schoolListReplies.ts',
+  'packages/server/src/modules/chat/replies/schoolReplyWrite.ts',
   'datasets/chatbot-latency/jev-count-guard-dev.json'];
 const sourceSha256 = Object.fromEntries(await Promise.all(sourcePaths.map(async path => [path, await hash(path)])));
-if (currentProtocolProfile) sourceSha256['packages/server/src/modules/chat/jevIntents.ts'] = await hash('packages/server/src/modules/chat/jevIntents.ts');
+if (currentProtocolProfile) sourceSha256['packages/server/src/modules/chat/jev/jevIntents.ts'] = await hash('packages/server/src/modules/chat/jev/jevIntents.ts');
 const changedMeasuredSources = sourcePaths.slice(2, -1).filter(path => sourceSha256[path] !== measuredPlan.sourceSha256[path]);
 for (const path of changedMeasuredSources) {
-  const allowed = path === 'packages/server/src/modules/chat/schoolReplyLanguage.ts'
+  const allowed = path === 'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts'
     || currentProtocolProfile && path === 'scripts/chatbot-jev.mjs'
-    || currentReplyProfile && ['packages/server/src/modules/chat/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/schoolReplyWrite.ts', 'packages/server/src/modules/chat/schoolListReplies.ts'].includes(path);
+    || currentReplyProfile && ['packages/server/src/modules/chat/replies/schoolReplyTemplates.ts', 'packages/server/src/modules/chat/replies/schoolReplyWrite.ts', 'packages/server/src/modules/chat/replies/schoolListReplies.ts'].includes(path);
   if (!currentLanguageProfile || !allowed) {
     throw new Error(`Measured classification source changed: ${path}`);
   }

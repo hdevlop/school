@@ -3,7 +3,7 @@ import { describe, expect, it } from 'bun:test';
 import { getMcpControllerTools, getMcpToolGroup } from 'najm-mcp';
 import { getValidationConfig } from 'najm-validation';
 import { ChatController } from 'najm-chatbot';
-import { JevBenchmarkController } from '../../src/modules/chat/JevBenchmarkController';
+import { JevBenchmarkController } from '../../src/modules/chat/benchmark/JevBenchmarkController';
 import { yearRequestControllers, yearScopedModules } from '../../src/config/yearScope';
 import { schoolMcpYearHooks } from '../../src/modules/academicYears/requestYear';
 

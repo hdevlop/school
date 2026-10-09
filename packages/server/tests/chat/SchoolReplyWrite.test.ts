@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
-import { schoolWriteRefusalKind } from '../../src/modules/chat/schoolReplyWrite';
-import { schoolReplyLanguage } from '../../src/modules/chat/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/schoolReplyTemplates';
+import { schoolWriteRefusalKind } from '../../src/modules/chat/replies/schoolReplyWrite';
+import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
+import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
 describe('School deterministic write refusals', () => {
   it.each([

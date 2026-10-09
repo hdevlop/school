@@ -7,10 +7,10 @@ import { getRoutes } from 'najm-core';
 import { getGuardMetadata } from 'najm-guard';
 import { getI18nInjections, translate } from 'najm-i18n';
 import { translations } from '@sms/contracts/locales';
-import { ChatBenchmarkController } from '../../src/modules/chat/ChatBenchmarkController';
-import { ChatBenchmarkService } from '../../src/modules/chat/ChatBenchmarkService';
-import { chatBenchmarkState } from '../../src/modules/chat/ChatBenchmarkState';
-import { ChatDiagnosticsLog } from '../../src/modules/chat/ChatDiagnosticsLog';
+import { ChatBenchmarkController } from '../../src/modules/chat/benchmark/ChatBenchmarkController';
+import { ChatBenchmarkService } from '../../src/modules/chat/benchmark/ChatBenchmarkService';
+import { chatBenchmarkState } from '../../src/modules/chat/benchmark/ChatBenchmarkState';
+import { ChatDiagnosticsLog } from '../../src/modules/chat/diagnostics/ChatDiagnosticsLog';
 import { withEnglishMessages } from '../support/englishMessages';
 
 const initialFlag = process.env.CHATBOT_BENCHMARK_CONTROLS;

@@ -11,7 +11,7 @@ import { createEstimatedBudget } from './chatbot-budget.mjs';
 import { assessFreshExploration, validateFreshCorpus, validateRegressionCorpus } from './chatbot-jev-accuracy.mjs';
 import { compareQueryGuardV3 } from './chatbot-jev-query-guard-v3.mjs';
 import { compareQueryGuardV4 } from './chatbot-jev-query-guard-v4.mjs';
-import { cumulativeAccounting, prepareContinuation } from './chatbot-jev-resume.mjs';
+import { CONTINUATION_SOURCES, cumulativeAccounting, prepareContinuation } from './chatbot-jev-resume.mjs';
 import { NATIVE_PREVIOUS_CORPORA, assessNativeStudy, validateNativeHeldout } from './chatbot-jev-native.mjs';
 import { buildDecisionRequestV4 } from './chatbot-jev-wording-v4.mjs';
 import {
@@ -88,9 +88,9 @@ const gateThreshold = Number(option('gate-threshold', '0.8'));
 if (!(gateThreshold > 0 && gateThreshold <= 1)) throw new Error('Use gate-threshold in (0, 1]');
 const sourceSha256 = {};
 for (const path of ['scripts/chatbot-jev-probe.mjs', 'scripts/chatbot-budget.mjs',
-  'scripts/chatbot-jev.mjs', 'scripts/chatbot-jev-accuracy.mjs', 'scripts/chatbot-jev-resume.mjs', 'scripts/chatbot-jev-native.mjs', 'packages/server/src/modules/chat/schoolReplyTemplates.ts',
-  'packages/server/src/modules/chat/schoolListReplies.ts', 'packages/server/src/modules/chat/schoolReplyLanguage.ts',
-  'packages/server/src/modules/chat/schoolReplyWrite.ts']) {
+  'scripts/chatbot-jev.mjs', 'scripts/chatbot-jev-accuracy.mjs', 'scripts/chatbot-jev-resume.mjs', 'scripts/chatbot-jev-native.mjs', 'packages/server/src/modules/chat/replies/schoolReplyTemplates.ts',
+  'packages/server/src/modules/chat/replies/schoolListReplies.ts', 'packages/server/src/modules/chat/replies/schoolReplyLanguage.ts',
+  'packages/server/src/modules/chat/replies/schoolReplyWrite.ts', ...CONTINUATION_SOURCES]) {
   sourceSha256[path] = createHash('sha256').update(await Bun.file(resolve(path)).text()).digest('hex');
 }
 if ([3, 4].includes(queryGuardVersion)) for (const path of ['scripts/chatbot-jev-query-guard-v3.mjs',
@@ -103,8 +103,8 @@ if (writeWordingVersion === 4) sourceSha256['scripts/chatbot-jev-wording-v4.mjs'
   .update(await Bun.file(resolve('scripts/chatbot-jev-wording-v4.mjs')).text()).digest('hex');
 
 // Today's deterministic matcher, read from source, is the baseline Jev has to beat.
-const { schoolReplyTemplate } = await import('../packages/server/src/modules/chat/schoolReplyTemplates.ts');
-const { schoolReplyLanguage } = await import('../packages/server/src/modules/chat/schoolReplyLanguage.ts');
+const { schoolReplyTemplate } = await import('../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts');
+const { schoolReplyLanguage } = await import('../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts');
 const baseline = cases.map((item) => {
   const detectedLanguage = schoolReplyLanguage(item.query);
   const intent = templateIntent(schoolReplyTemplate({ userText: item.query, language: detectedLanguage, channel: 'web' }, '2026-2027'));

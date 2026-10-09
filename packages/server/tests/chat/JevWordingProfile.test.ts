@@ -1,7 +1,7 @@
 import {expect,test} from 'bun:test';
-import {buildDecisionRequest,buildDecisionRequestV5} from '../../src/modules/chat/jevIntents';
-import {buildJevRuntimeDecisionRequest,jevRequestWordingProfile} from '../../src/modules/chat/jevRuntimeWording';
-import {jevDarijaCases} from '../../src/modules/chat/jevDarijaCases';
+import {buildDecisionRequest,buildDecisionRequestV5} from '../../src/modules/chat/jev/jevIntents';
+import {buildJevRuntimeDecisionRequest,jevRequestWordingProfile} from '../../src/modules/chat/jev/jevRuntimeWording';
+import {jevDarijaCases} from '../../src/modules/chat/benchmark/jevDarijaCases';
 
 test('profile keeps baseline requests byte-identical for all reviewed writes and filtered/ambiguous requests',()=>{
   for(const item of jevDarijaCases.filter(x=>['write_request','needs_llm'].includes(x.intent))) {

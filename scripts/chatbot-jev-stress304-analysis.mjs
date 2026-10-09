@@ -5,8 +5,8 @@ import { replayFixStudy } from './chatbot-jev-fix-study.mjs';
 import { summarize, latency, templateIntent, ACCEPTANCE_POLICIES } from './chatbot-jev.mjs';
 import { compareQueryGuardV3 } from './chatbot-jev-query-guard-v3.mjs';
 import { compareQueryGuardV4, acceptsWithQueryGuardV4 } from './chatbot-jev-query-guard-v4.mjs';
-import { schoolReplyLanguage } from '../packages/server/src/modules/chat/schoolReplyLanguage.ts';
-import { schoolReplyTemplate } from '../packages/server/src/modules/chat/schoolReplyTemplates.ts';
+import { schoolReplyLanguage } from '../packages/server/src/modules/chat/replies/schoolReplyLanguage.ts';
+import { schoolReplyTemplate } from '../packages/server/src/modules/chat/replies/schoolReplyTemplates.ts';
 
 const timing = rows => {
   const valid = rows.filter(row => row.decision);
