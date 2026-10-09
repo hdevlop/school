@@ -92,7 +92,7 @@ function renderFifth(language: ReplyLanguage, year: string, results: unknown[]):
 const childWords = ['بغيت', 'غير', 'نشوف', 'وريني', 'عطيني', 'النقط', 'النقاط', 'نقط', 'نقاط', 'ديال', 'بنتي', 'ولدي', 'طفلي', 'فهاد', 'هاد', 'العام',
   'bghit', 'ghir', 'nchof', 'werini', 'wrini', '3tini', 'nno9at', 'no9at', 'dyal', 'bnti', 'wldi', 'f', 'had', 'l3am'];
 
-function namedChildren(tokens: string[], children: readonly SchoolChatChild[]) {
+export function schoolNamedChildMatches(tokens: string[], children: readonly SchoolChatChild[]) {
   return children.flatMap(child => {
     const name = tokensOf(child.name);
     if (!name?.length) return [];
@@ -106,7 +106,7 @@ export function schoolChildGradeReply(query: string, language: ReplyLanguage, ye
   children?: readonly SchoolChatChild[]): ReplyTemplate | null {
   const tokens = tokensOf(query);
   if (!tokens || !year) return null;
-  const named = role === 'parent' && children ? namedChildren(tokens, children) : [];
+  const named = role === 'parent' && children ? schoolNamedChildMatches(tokens, children) : [];
   const requestWords = named.length ? named[0].remainder : tokens;
   if (!only(requestWords, childWords) || !includes(requestWords, ['النقط', 'النقاط', 'نقط', 'نقاط', 'nno9at', 'no9at'])) return null;
   // More than one relation (e.g. my daughter AND my son) is not a single-child request.

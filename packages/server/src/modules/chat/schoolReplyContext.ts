@@ -10,9 +10,13 @@ export function schoolReplyContext(userText: string): string | null {
   if (!language) return null;
   const text = normalizeReplyText(userText);
   const hints: string[] = [];
-  if (/(?<![\p{L}\p{N}])(?:nno9at|no9at|notes?|grades?|marks|النقط|نقط|النقاط|نقاط)(?![\p{L}\p{N}])/u.test(text)) {
+  if (/(?<![\p{L}\p{N}])(?:nno9at|no9at|no9ta|notes?|grades?|marks|النقط|نقط|النقاط|نقاط|نقطة)(?![\p{L}\p{N}])/u.test(text)
+    || /(?<![\p{L}\p{N}])(?:jab|jebt|جاب|جبت)(?![\p{L}\p{N}])/u.test(text) && /math|رياضيات|diagnostic quiz/u.test(text)) {
     hints.push('This asks for academic grades/marks, not attendance statistics. For the signed-in student or an authorized child, student-profile_get_academic with the studentId from the signed-in context returns grades. grades_get_by_student is also a valid grade read. Summarize only actual returned marks and their assessment/subject; never substitute attendance percentages for grades. If no grade read is offered or succeeds, explain that grades could not be retrieved.');
+    if (/ghyab|ghiyab|غياب/u.test(text)) hints.push('This mixed request also asks for absences. Read the authorized student attendance summary separately and answer both parts; never infer absences from grade data or replace the requested marks with attendance.');
   }
+  if (/lmawadd|المواد/u.test(text) && /kan9erri|كنقري/u.test(text)) hints.push('For the signed-in teacher’s subjects, teacher-profile_get_my_classes returns each assignment’s subject. List those actual subject names, deduplicated by subject ID, rather than class/section names or rooms.');
+  if (/نصححو|ns7ho|بلا نقط/u.test(text)) hints.push('teacher-profile_get_pending_grading with the authenticated teacherId returns pendingCount and pendingAssessments. It counts assessments with no grades recorded, excluding cancelled assessments, not remaining student papers in partially graded assessments.');
   if (language === 'fr' && /(?<!\p{L})(?:notes?|identifiants?)(?!\p{L})/u.test(text)) {
     hints.push('In French student lookup replies, use "identifiant de l’élève" or "code de l’élève", never the English label "student ID". Preserve actual stored names and codes unchanged.');
   }

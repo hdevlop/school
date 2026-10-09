@@ -101,6 +101,9 @@ routing. Grades preserve subjects, assessments
 and score denominators. No literal `bnti` student search or guessed ID is dispatched.
 Additional subject/date/attendance filters remain on the existing routed path.
 
+This describes the identity checkpoint's scope; the bounded academic filters added
+subsequently are recorded below.
+
 The published preparation contract now runs synchronous local templates before
 routing, including when paid Jev is off. Its independent server-frame/mode gate
 still prevents paid classification; no second tool executor or ownership resolver
@@ -127,3 +130,48 @@ This verifies bounded class/child local replies. Subject/class grades, pending
 grading, other-role broad workflows, general Jev integration, qualified 20B fallback
 and the durable monthly allowance remain open. The next concrete work is fixing
 subject-grade and pending-grading offers on the existing populated failures.
+
+## P2 academic selection checkpoint — 2026-10-09
+
+Seven reused failures from the populated review now have local, scoped replies:
+parent math/diagnostic grades and combined math/absence; student math/diagnostic,
+diagnostic-grade count and all-grade formatting; teacher subject list and pending
+grading. Exact owned child names or authenticated student/teacher IDs supply the
+existing MCP arguments. Stored subject names, assessment titles and mark denominators
+are preserved. Unknown names, subjects and extra qualifiers retain routing;
+ambiguous math subjects or multiple singular diagnostic quizzes ask for clarification.
+Invalid identities, duplicate grade IDs, nonfinite marks, inconsistent attendance
+totals and malformed/denied reads fail rather than produce a zero or empty success.
+
+**18/18 actual authenticated chat tool-and-fact checks pass** on existing populated
+demo data: three parent, five student, four teacher reads, plus six year/write
+refusals. Independent role-authenticated MCP reads establish the facts first.
+There is one linked child with ten grades, a student with ten grades, and the
+teacher has 44 students/four assignments: Français and **20 assessments with no
+grades recorded**. The last number does not count remaining papers in partly
+graded assessments. Three outsider and three historical academic reads deny.
+
+The seven are reused development questions with an actual linked child's name
+substituted, not native holdout samples. This does not rescore the historical
+12/24 report. The existing fourth-class maths template also passes eight synthetic
+MCP/chat checks across admin/principal and both years with paid Jev off. Subject
+aliases resolve to returned IDs; no broad student search or arbitrary ID is added.
+
+External transport and model construction were forbidden during the live checks:
+**zero paid classification, generation or routing calls**, saved AI settings unchanged.
+Average complete local API reply: **0.020 seconds**. This is a template/API measurement,
+not an end-to-end browser or provider/model benchmark. Fallback context and router
+vocabulary/dependencies were improved for academic and mixed attendance requests;
+their general model answer quality has not been requalified by these local checks.
+
+Chat/year/ownership regressions (1,093), diagnostic/read-only checks (9), and
+script/boundary checks (561) pass. The final focused suite covers 32 academic tests,
+including the eight synthetic chats. Root lint, typecheck and isolated production
+build pass. Private captures and the owned host/build are removed; the original app
+and unrelated work remain intact. The [compact academic archive](../evidence/chatbot-latency/jev-academic-20261009.zip)
+contains redacted results, source snapshots and reproducible harnesses.
+
+Next: malformed tool/argument rejection with original-error reporting, then remaining
+personal answers (attendance, student class/section and outsider wording), selective
+20B fallback and ordinary Jev integration. General Jev/model settings and the durable
+$10 monthly guard remain open; these fixes alone are not the final production release.

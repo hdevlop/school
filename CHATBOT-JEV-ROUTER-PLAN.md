@@ -1,6 +1,6 @@
 # Jev + router optimization plan
 
-Updated: 2026-10-09. Status: **comparison phase closed; P1 implemented; P2 class/child fixes verified**.
+Updated: 2026-10-09. Status: **comparison phase closed; P1 implemented; bounded P2 academic fixes verified**.
 Target: local replies and guarded Jev for supported requests, the existing router
 for discovery and fallback, and **GPT-OSS 20B only when a model is necessary**.
 This document replaces the historical latency work orders. Implemented steps
@@ -122,7 +122,7 @@ See the [implementation checkpoint](docs/tests/jev-router-validation.md#p1-imple
 - [x] Resolve child identity using the signed-in role and owned records. Ask which
       child when needed; do not fabricate an ID, search for “bnti”, or claim an
       input error means the grades tool or permission is absent.
-- [ ] Repair subject/class grade queries and pending-grading tool offers from the
+- [x] Repair subject/class grade queries and pending-grading tool offers from the
       populated review. Keep grades separate from attendance.
 - [ ] Reject malformed/unknown tool names and incomplete arguments before dispatch.
       Report the original failure even if a later model step recovers.
@@ -145,6 +145,19 @@ matches clarify, while unrecognized names and unsupported filters retain the
 existing fallback. These local results
 do not rescore the old comparisons or qualify general Jev/OSS20B production use.
 See the [class/child checkpoint](docs/tests/jev-router-validation.md#p2-class-and-child-identity-checkpoint--2026-10-09).
+
+Academic checkpoint: seven reused populated-review failures now use guarded local
+replies: parent math/diagnostic and math/absence; student math, diagnostic-grade
+count and faithful all-grade wording; teacher subjects and pending grading.
+All **18/18 actual internal API checks** pass, plus outsider/year denials for
+each role. The teacher's four assignments yield Français and 20 assessments with
+no grades recorded; this is not a count of unfinished student papers. Exact owned
+child names and the signed-in student/teacher IDs supply arguments. Ambiguous
+subjects or singular quizzes clarify; unknown names/qualifiers retain routing.
+The existing fourth-class maths plan also passes eight synthetic MCP/chat checks
+with Jev off, both administrative roles and both years. These are bounded repairs,
+not general subject/date selection or a rescoring of the old 24-question benchmark.
+See the [academic checkpoint](docs/tests/jev-router-validation.md#p2-academic-selection-checkpoint--2026-10-09).
 
 ### P3 — Make answers faithful and fallback selective
 
@@ -233,5 +246,6 @@ Historical native-research protocols and old numeric latency/sample gates remain
 historical evidence; they do not add prerequisites to these engineering rechecks.
 Native qualification must still be reported honestly if pursued separately.
 
-**Next action: repair P2's subject/class grade and pending-grading offers, then
-validate selective OSS20B fallback and ordinary Jev integration in P3/P4.**
+**Next action: finish P2's malformed-tool/argument and original-error handling,
+then qualify the remaining personal answer cases and selective OSS20B fallback
+before ordinary Jev integration in P3/P4.**

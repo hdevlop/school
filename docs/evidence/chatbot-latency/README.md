@@ -15,7 +15,13 @@ records 14/14 actual internal API checks, ten faithfully rendered child grades,
 ownership/year denials and zero classifier/generation/routing calls. Its
 [compact identity archive](jev-identity-20261009.zip) preserves redacted results
 and implementation evidence. These bounded local replies do not qualify broad
-Jev/OSS20B production use; subject-grade and pending-grading fixes remain next.
+Jev/OSS20B production use.
+
+P2's [academic checkpoint](../../tests/jev-router-validation.md#p2-academic-selection-checkpoint--2026-10-09)
+records 18/18 populated role checks for seven reused grade/subject/pending failures,
+six ownership/year denials and zero paid calls. Its [compact academic archive](jev-academic-20261009.zip)
+also records eight synthetic class-maths checks. Malformed-call handling and broader
+personal-answer/fallback qualification remain next; the old comparison scores stay fixed.
 
 Keep these reports separate; their questions, roles and scoring differ:
 

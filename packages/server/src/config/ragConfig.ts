@@ -60,7 +60,7 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   teachers_get_teachers: ['subjects_get_subjects'],
   attendance_mark: ['search_search_students'],
   grades_get_student_report: ['search_search_students'],
-  grades_get_by_student: ['search_search_students', 'student-profile_get_academic'],
+  grades_get_by_student: ['search_search_students', 'student-profile_get_academic', 'student-profile_get_attendance_summary'],
   grades_create: ['search_search_students', 'assessments_get_all'],
   attendance_get_by_student: ['search_search_students'],
   // "Yesterday" or "last Monday" routes like "today"; the date tool answers it.
@@ -91,7 +91,8 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   // Teaching assignments can retrieve a section or personal dashboard read.
   // The profile read takes the signed-in teacherId and checks ownership.
   sections_get_teachers: ['teacher-profile_get_my_classes'],
-  'teacher-dashboard_get_overview': ['teacher-profile_get_my_classes'],
+  'teacher-dashboard_get_overview': ['teacher-profile_get_my_classes', 'teacher-profile_get_pending_grading'],
+  'teacher-profile_get_schedule_today': ['teacher-profile_get_pending_grading'],
 };
 
 function resolveEmbeddingConfig() {

@@ -6,6 +6,7 @@ import { schoolYearReply } from './schoolYearReply';
 import { schoolTeacherCountReply } from './schoolTeacherReply';
 import { schoolStudentGradeReply } from './schoolStudentReply';
 import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild } from './schoolIdentityReplies';
+import { schoolPersonalAcademicReply, schoolTeacherAcademicReply } from './schoolAcademicReplies';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -69,6 +70,9 @@ export function schoolReplyTemplate({ userText, language, channel }: ReplyReques
   if (channel === 'web') {
     const yearReply = schoolYearReply(userText, language, academicYear, role);
     if (yearReply) return yearReply;
+    const academicReply = schoolTeacherAcademicReply(userText, language, academicYear, role, teacherId)
+      ?? schoolPersonalAcademicReply(userText, language, academicYear, role, studentId, children);
+    if (academicReply) return academicReply;
     const teacherReply = schoolTeacherCountReply(userText, language, academicYear, role, teacherId);
     if (teacherReply) return teacherReply;
     const studentReply = schoolStudentGradeReply(userText, language, academicYear, role, studentId);
