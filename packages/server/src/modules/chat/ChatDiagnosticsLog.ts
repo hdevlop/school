@@ -2,11 +2,13 @@ import type { ChatDiagnostics } from 'najm-chatbot';
 import { chatBenchmarkControlsEnabled, chatBenchmarkSnapshot } from './ChatBenchmarkState';
 import { schoolJevRequestContext, type JevRequestDiagnostics } from './JevSessionGrants';
 import { schoolToolFailures, type SchoolToolFailure } from './schoolToolFailures';
+import { schoolPaidChatContext } from './SchoolPaidChatTransport';
 
 export type SchoolChatDiagnostics = ChatDiagnostics & {
   benchmark?: ReturnType<typeof chatBenchmarkSnapshot>;
   jev?: JevRequestDiagnostics;
   toolFailures?: SchoolToolFailure[];
+  paid?: { calls: number; unknownCosts: number; stopped?: string };
 };
 
 /**
@@ -31,7 +33,10 @@ export class ChatDiagnosticsLog {
     const observedNames = new Set((diagnostics.tools ?? []).map(tool => tool.name));
     const steps = diagnostics.steps?.map(step => ({ ...step,
       toolCalls: step.toolCalls.map(name => observedNames.has(name) ? name : '[not-dispatched]') }));
-    const audited = { ...entry, ...(steps ? { steps } : {}), ...(failures.length ? { toolFailures: failures } : {}) };
+    const paid = schoolPaidChatContext.getStore();
+    const audited = { ...entry, ...(steps ? { steps } : {}), ...(failures.length ? { toolFailures: failures } : {}),
+      ...(paid ? { paid: { calls: paid.calls, unknownCosts: paid.calls - paid.costs.filter(item => item.costUsd !== null).length,
+        ...(paid.stopped ? { stopped: paid.stopped } : {}) } } : {}) };
     this.entries.push(chatBenchmarkControlsEnabled()
       ? { ...audited, benchmark: chatBenchmarkSnapshot() } : audited);
     if (this.entries.length > this.capacity) this.entries.shift();

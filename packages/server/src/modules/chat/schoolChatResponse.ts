@@ -28,16 +28,25 @@ export function latestChatUserText(messages: unknown): string {
     ? content.filter(part => part?.type === 'text' && typeof part.text === 'string').map(part => part.text).join(' ') : '';
 }
 
+export function schoolChatAllowanceText(query: string): string {
+  const language = schoolReplyLanguage(query);
+  return language === 'ary' ? 'وصلنا للميزانية الشهرية ديال المساعد. الأجوبة المحلية باقي خدامة؛ شوف باقي المعطيات فلوحة التحكم.'
+    : language === 'ar' ? 'بلغ المساعد الحد الشهري للميزانية. تبقى الإجابات المحلية متاحة؛ راجع باقي البيانات في لوحة التحكم.'
+      : language === 'fr' ? 'Le budget mensuel de l’assistant est atteint. Les réponses locales restent disponibles ; consultez les autres données dans le tableau de bord.'
+        : 'The assistant monthly allowance is reached. Local replies remain available; check other data in the dashboard.';
+}
+
 /**
  * Preserve the SDK stream; make empty completion and broken streams visible.
  * No generation retry, tools, persistence, year resolution or usage estimation.
  */
-export function schoolChatResponse(response: Response, query: string, signal?: AbortSignal): Response {
+export function schoolChatResponse(response: Response, query: string, signal?: AbortSignal, budget?: { stopped?: string }): Response {
   if (!response.ok || !response.body || response.headers.get('x-vercel-ai-ui-message-stream') !== 'v1'
     || !response.headers.get('content-type')?.includes('text/event-stream')
     || response.headers.has('content-encoding')) return response;
   const reader = response.body.getReader(), decoder = new TextDecoder(), encoder = new TextEncoder();
-  const failure = schoolChatFailureText(query), partId = 'school-unavailable-' + crypto.randomUUID();
+  const failureText = () => budget?.stopped === 'allowance' ? schoolChatAllowanceText(query) : schoolChatFailureText(query);
+  const partId = 'school-unavailable-' + crypto.randomUUID();
   const encodeEvent = (value: unknown) => `data: ${JSON.stringify(value)}\n\n`;
   let buffer = '', oversized = false, hasText = false, hasStart = false, terminal = false, aborted = false, repaired = false;
   const failedCalls = new Set<string>();
@@ -46,7 +55,7 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
     async pull(controller) {
       let emitted = false;
       const emit = (value: string) => { if (value) { controller.enqueue(encoder.encode(value)); emitted = true; } };
-      const notice = (message = failure) => {
+      const notice = (message = failureText()) => {
         if (aborted || signal?.aborted || repaired) return;
         repaired = true;
         if (!hasStart) { emit(encodeEvent({ type: 'start', messageId: 'school-unavailable-' + crypto.randomUUID() })); hasStart = true; }
@@ -58,7 +67,7 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
         const data = frame.split(/\r?\n/u).filter(line => line.startsWith('data:')).map(line => line.slice(5).trimStart()).join('\n');
         if (data === '[DONE]') {
           if (!terminal && !aborted && !signal?.aborted) {
-            notice(); emit(encodeEvent({ type: 'error', errorText: failure }));
+            notice(); emit(encodeEvent({ type: 'error', errorText: failureText() }));
           }
           terminal = true; emit(frame + separator); return;
         }
@@ -79,14 +88,15 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
           }
         }
         if (event.type === 'error' && !aborted && !signal?.aborted) {
-          notice(); emit(encodeEvent({ ...event, errorText: failure })); return;
+          notice(); emit(encodeEvent({ ...event, errorText: failureText() })); return;
         }
         if (event.type === 'finish') {
           const unavailable = repaired || !hasText || event.finishReason === 'error';
           if ((unavailable || failedCalls.size) && !aborted && !signal?.aborted) {
-            notice(unavailable ? failure : schoolChatToolFailureText(query));
+            notice(unavailable ? failureText() : schoolChatToolFailureText(query));
             const metadata = event.messageMetadata && typeof event.messageMetadata === 'object' ? event.messageMetadata : {};
             emit(encodeEvent({ ...event, messageMetadata: { ...metadata, schoolReplyOutcome: unavailable ? 'unavailable' : 'tool_failure',
+              ...(budget?.stopped === 'allowance' ? { schoolUnavailableReason: 'monthly_allowance' } : {}),
               ...(failedCalls.size ? { schoolFailedToolCalls: failedCalls.size } : {}) } }));
           } else emit(frame + separator);
           terminal = true; return;
@@ -133,12 +143,12 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
           buffer = '';
         }
         if (!terminal && !aborted && !signal?.aborted) {
-          notice(); emit(encodeEvent({ type: 'error', errorText: failure })); emit('data: [DONE]\n\n');
+          notice(); emit(encodeEvent({ type: 'error', errorText: failureText() })); emit('data: [DONE]\n\n');
         }
         reader.releaseLock(); controller.close();
       } catch (error) {
         if (aborted || signal?.aborted) { controller.error(error); return; }
-        notice(); emit(encodeEvent({ type: 'error', errorText: failure })); emit('data: [DONE]\n\n');
+        notice(); emit(encodeEvent({ type: 'error', errorText: failureText() })); emit('data: [DONE]\n\n');
         void reader.cancel().catch(() => {}); controller.close();
       }
     },

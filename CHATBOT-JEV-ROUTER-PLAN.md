@@ -1,262 +1,109 @@
-# Jev + router optimization plan
+# Jev + router release plan
 
-Updated: 2026-10-09. Status: **comparison closed; bounded P2 selection and P3 personal replies verified**.
-Target: local replies and guarded Jev for supported requests, the existing router
-for discovery and fallback, and **GPT-OSS 20B only when a model is necessary**.
-This document replaces the historical latency work orders. Implemented steps
-are marked below; general Jev/model production settings remain unchanged.
+Updated: 2026-10-09. **Qualified local release enabled; P1–P4 complete within the scope below.**
 
-## Goals and boundaries
+The chatbot uses validated local replies, guarded Jev selection, the existing
+router, and selective **GPT-OSS 20B** fallback. Saved OpenRouter settings now select
+20B. Jev and the shared monthly application allowance are enabled in the local
+environment and verified on the running dashboard at port 3102. Remote production
+deployment is not claimed.
 
-- Correct tools, arguments and answers for Moroccan Darija and Arabizi come first.
-- Retain the existing router and one authorized MCP execution path.
-- Avoid paid classification for requests that cannot produce a supported Jev plan.
-- Avoid a generation call when a verified tool result can use a local reply.
-- Target an average complete reply under two seconds. Record timing; do not reject
-  an otherwise correct answer at two seconds or tune for millisecond differences.
-- Work within the owner's **$10/month school-wide budget**, including students
-  and staff. Parents' usage also belongs to that total. Low per-request prices
-  alone do not establish a monthly usage allowance.
-- Concentrate new evaluation on Darija/Arabizi. Keep existing French regressions;
-  do not launch another paid French or provider-comparison campaign.
+## Supported scope
 
-## Completed phase
+- Admin/principal Jev: unfiltered school student count, teacher count, separate
+  counts of both, and class lists. Only a new, single user text with no session key
+  can establish complete first-turn history. Other turns retain routing.
+- Existing validated local reads: class identity/count variants, owned child and
+  student grades, personal placement, attendance, and qualified teacher academic
+  requests. Subject names, marks and denominators come directly from tool results.
+- Selective OSS20B: qualified global count/class requests when Jev declines, and
+  teacher-owned student counts or assessments with no recorded grades. Discovery
+  uses the existing router; existing MCP guards authorize every execution.
+- Unsupported names, filters, workflows and ambiguous requests ask for clarification.
+  Writes, outsider data and disallowed years retain their existing restrictions.
+  There is no automatic 120B escalation or general model replacement qualification.
 
-The latency/provider comparison and framework publication work is closed.
-Published Najm integration, local replies, guards, diagnostics and the existing
-router are the starting point. Historical failures remain in their reports.
+Admin, parent, student and teacher checks used populated demo accounts. Principal
+authorization has regression coverage; no populated principal account was available
+for this release check. Drafted Darija/Arabizi questions are assistant evidence,
+not independent native-language acceptance.
 
-| Current evidence | Result | Meaning |
-| --- | --- | --- |
-| Router + OSS20B, 20 reused Darija cases | 14/20 tool plans; 1.242 s average | Baseline for targeted fixes |
-| Jev first + router/20B fallback, same cases | 17/20; 1.247 s | Preferred candidate flow |
-| Router first + Jev/20B, same cases | 17/20; 1.174 s | Tied accuracy; no demonstrated advantage from routing first |
-| Direct Jev replies across both hybrids | 8/8 grounded answers | Narrow supported coverage, not global reliability |
-| Populated parent/teacher/student 20B review | 12/24 factual/task passes | General 20B replacement remains unqualified |
+## Request flow
 
-The latest run made 60 actual chats on 20 questions, with four direct Jev replies,
-14 model replies and two local write refusals per hybrid. All 60 responses were
-reviewed, but the tool-plan scores are not full-answer or native-fluency scores.
-No wrong Jev plan was accepted in that run. Empty fixtures and reused questions
-cannot qualify populated personal workflows or estimate real-user accuracy.
+1. Resolve actor and selected year through the existing shared boundaries.
+2. Apply write/year restrictions and recognized local replies or clarifications.
+3. For eligible supported admin/principal first turns, try Jev before routing.
+   Require valid probabilities/confidence, read intent, positive query vocabulary
+   and complete arguments. Execute accepted plans through the existing MCP path.
+4. On decline/error, use the existing router for discovery. Model fallback runs
+   only inside its qualified scope and with sufficient remaining allowance.
+5. Preserve failed tool calls and unavailable outcomes. Never invent zero results,
+   silently retry a failed generation, or launch Jev and the answer model together.
 
-References: [three-path comparison](docs/evidence/chatbot-latency/darija-combinations-results-20261009.md),
-[populated answer-quality review](docs/evidence/chatbot-latency/darija-20b-quality-results-20261009.md),
-[retained evidence and recovery](docs/evidence/chatbot-latency/README.md).
-Use the [current validation guide](docs/tests/jev-router-validation.md) for execution.
+## Completed work
 
-**Current runtime:** saved model remains 120B and general Jev is off. Jev requires
-server-issued synthetic benchmark context and currently admits admin/principal,
-web, complete-history first-turn requests. Existing experimental 20B/CoreWeave
-routing is also fixture-bound. Normal-chat integration and other-role eligibility
-must be implemented explicitly; changing an environment flag alone is insufficient.
+- [x] P1: bypass provably unsupported classification while preserving supported plans.
+- [x] P2: correct class/child identity, academic tool selection, malformed-call handling
+      and personal ownership/year scope. Persisted M/F genders now resolve correctly.
+- [x] P3: render qualified grades/attendance/placement locally; preserve facts,
+      short Arabizi detection and selective fallback. Unknown filters remain explicit.
+- [x] P4: ordinary-chat trusted context, candidate-first Jev, saved 20B/CoreWeave policy,
+      durable shared allowance, cancellation, rollback and dashboard verification.
 
-## Target request flow
+## Current verification
 
-1. Resolve the signed-in actor, permissions, selected academic year and trusted
-   conversation context on the server. Apply existing write/year restrictions.
-2. Return an existing validated local reply or ask for a missing identity/filter
-   when the request is already understood. A clarification does not need an LLM.
-3. Check whether any supported Jev plan could be valid for this query and role.
-   If provably unsupported, bypass Jev. Otherwise classify with Jev and apply the
-   existing confidence, probability, write-intent and query guards.
-4. For an accepted plan with complete, authorized arguments, execute through the
-   existing MCP path and render only its actual result using a short local reply.
-5. On a decline, unsupported request, provider failure or unavailable plan, use
-   the existing router's tool shortlist. A shortlist is candidate discovery, not
-   an executed tool decision. Reuse an existing validated resolver/reply when possible.
-6. If interpretation or tool selection still requires a model, use OSS20B with
-   the routed tools and minimal necessary context. Validate tool names/arguments,
-   keep execution under existing guards, and render the resulting facts accurately.
-7. If information, access or provider response is unavailable, return the specific
-   clarification/refusal/unavailable result. Do not invent facts or silently retry.
+The first 20-question development run exposed real answer defects; it was not a
+release pass. Targeted repairs corrected grade names/denominators, attendance wording,
+comma-separated placement requests, class-name synonyms and stored child genders.
+The separate eight-question wording holdout originally scored 3/8 under a strict
+tool-order scorer and 5/8 after auditing two valid read plans. Its two ambiguous
+requests clarified safely; its placement failure was corrected and rechecked.
 
-Jev selects a closed intent; School maps it to tools and renders the answer.
-It is not treated as a general prose model. The target flow does not start a GPT
-answer in parallel with every Jev request and has no automatic 120B escalation.
-A failed tool execution must not cause the same reads to be repeated blindly on fallback.
+Final targeted repairs pass **5/5**. Saved-configuration ordinary chats pass **6/6**,
+averaging **0.83 seconds**, including router fallback with Jev off. Two dashboard
+checks pass with actual allowance accounting for Jev and multi-turn router/20B.
+These reused checks establish the bounded release, not broad user accuracy.
 
-Examples:
+The full results, original failures, limitations and verification totals are in
+[the release report](docs/tests/jev-router-validation.md#qualified-ordinary-release--2026-10-09).
+[One compact release archive](docs/evidence/chatbot-latency/jev-router-release-20261009.zip)
+preserves redacted evidence and reproducible harnesses.
 
-| Request | Intended handling |
-| --- | --- |
-| “فالمدرسة شحال كاينين ديال التلاميذ كاملين؟” | Local reply if already recognized, otherwise Jev → authorized count → template |
-| “ch7al mn tilmid f l9ism lkhamis bo7do?” | Resolve the actual class; clarify if missing; scoped read, then template or 20B as needed |
-| “وريني نقط بنتي” | Resolve linked child from authenticated context, or ask which child; never search for the literal word “daughter” |
-| “zid tilmid jdid daba” | Existing read-only write refusal; no classification or generation required |
+## Allowance and rollback
 
-## Work order
+```dotenv
+CHATBOT_FLOW=jev-router-20b
+CHATBOT_JEV_MODE=on
+CHATBOT_MONTHLY_MICRO_USD=10000000
+CHATBOT_JEV_OPERATING_TIMEOUT_MS=3000
+```
 
-Complete these phases in order. Each phase has one concrete output and targeted
-verification; routine implementation should continue without repeated “continue”.
+The $10/month application allowance includes ordinary paid classification,
+generation and routing embeddings for all roles using the School database.
+Reservations are atomic and survive restarts. Unknown costs and cancellations
+keep their debit; reported charges settle once. Exhaustion blocks new paid sends
+and returns a localized notice; free local replies remain available. Provider
+price ceilings bound 20B requests. This is not a promise of unlimited messages or
+an exact provider invoice cap when costs are unknown or unexpectedly overrun.
 
-### P1 — Eliminate unnecessary Jev calls
+The ledger lazily creates two operational tables, `school_chat_spend_month` and
+`school_chat_spend_attempt`; the deployment DB account needs permission to create
+them on first use. UTC month boundaries are deliberate. No question, actor ID or
+credential is stored in those tables. Verified local embeddings are free in this
+configuration; an arbitrary local model proxy cannot bypass the guard.
 
-- [x] Add a conservative prefilter before transport: skip only when all guarded
-      read/greeting intents veto the request. An uncertain query must not be discarded
-      merely because a new keyword rule fails to recognize it.
-- [x] Preserve role, history, language, cancellation and budget checks. Unknown
-      language can bypass Jev safely while the ordinary Darija flow is improved.
-- [x] Record why Jev was skipped or declined, which path answered, and whether a
-      model was invoked; keep personal text and tool payloads out of diagnostics.
-- [x] Prove unsupported requests make zero Jev calls and previously valid guarded
-      candidates remain reachable. Keep shadow-study behavior explicit.
+Set `CHATBOT_JEV_MODE=off` to keep the qualified router/20B path and allowance.
+Full rollback is `CHATBOT_FLOW=legacy`, which also removes the ordinary allowance;
+restore a historical model deliberately if wanted. Keep experimental fixture
+controls separate. Reload the app after environment changes.
 
-Primary files: `JevIntentClassifier.ts`, `jevQueryGuard.ts`, `jevGuard/`,
-`SchoolReplyLanguage.test.ts`, `JevAdapter.test.ts` under the existing chat module/tests.
-Output: fewer paid classifier attempts without losing valid supported plans.
+## Follow-up
 
-P1 verification: 1,418 regression tests, lint, typecheck and production build pass.
-Offline replay would skip 22 of the previous 32 paid classifier attempts, preserving
-all eight direct Jev observations. No new paid calls or live accuracy score are
-claimed. Shadow remains unfiltered; writes keep their synchronous refusal. Skip and
-classification codes join existing reply/step diagnostics without private payloads.
-See the [implementation checkpoint](docs/tests/jev-router-validation.md#p1-implementation-checkpoint--2026-10-09).
+The authorized release work is complete. Further expansion should qualify one
+new workflow at a time with fresh Darija questions, expected authorized arguments
+and actual facts. Useful next candidates are owned fee/payment summaries and
+filtered grades. They remain outside the new selective model scope today.
+No further provider/French benchmark or billing study is required to use this release.
 
-### P2 — Repair tool and argument selection
-
-- [x] Distinguish class identities from section labels for Arabic and Arabizi;
-      use actual discovery results before choosing class/section IDs.
-- [x] Resolve fifth-class requests without choosing an arbitrary section or adding
-      a gender filter. An unresolved class requires clarification, not zero students.
-- [x] Resolve child identity using the signed-in role and owned records. Ask which
-      child when needed; do not fabricate an ID, search for “bnti”, or claim an
-      input error means the grades tool or permission is absent.
-- [x] Repair subject/class grade queries and pending-grading tool offers from the
-      populated review. Keep grades separate from attendance.
-- [x] Reject malformed/unknown tool names and incomplete arguments before dispatch.
-      Report the original failure even if a later model step recovers.
-- [ ] Tune Jev wording only on development cases, preserving finite values in
-      [0,1], confidence thresholds and independent write-intent agreement. Extend
-      the supported menu only with a scoped tool plan, renderer and passing cases.
-
-Primary files: `ragConfig.ts`, `jevRuntimeWording.ts`, `jevReplyPlan.ts`,
-`schoolReplyTemplates.ts`, `schoolReplyContext.ts` and existing role reply helpers.
-Output: corrected failures, with the same authorized executor and year ownership.
-
-Class/child checkpoint: all six original failure questions now pass on the actual
-history fixture. Eight further checks on existing populated demo records pass,
-including a parent's ten child grades, ambiguity and a school-wide read refusal;
-outsider and historical reads are denied. Fixed local replies now run before
-routing even with paid Jev off, using the published MCP executor and guards.
-There were zero classifier, generation or routing calls in these targeted checks.
-An exact linked child's full name resolves the clarification; ambiguous owned
-matches clarify, while unrecognized names and unsupported filters retain the
-existing fallback. These local results
-do not rescore the old comparisons or qualify general Jev/OSS20B production use.
-See the [class/child checkpoint](docs/tests/jev-router-validation.md#p2-class-and-child-identity-checkpoint--2026-10-09).
-
-Academic checkpoint: seven reused populated-review failures now use guarded local
-replies: parent math/diagnostic and math/absence; student math, diagnostic-grade
-count and faithful all-grade wording; teacher subjects and pending grading.
-All **18/18 actual internal API checks** pass, plus outsider/year denials for
-each role. The teacher's four assignments yield Français and 20 assessments with
-no grades recorded; this is not a count of unfinished student papers. Exact owned
-child names and the signed-in student/teacher IDs supply arguments. Ambiguous
-subjects or singular quizzes clarify; unknown names/qualifiers retain routing.
-The existing fourth-class maths plan also passes eight synthetic MCP/chat checks
-with Jev off, both administrative roles and both years. These are bounded repairs,
-not general subject/date selection or a rescoring of the old 24-question benchmark.
-See the [academic checkpoint](docs/tests/jev-router-validation.md#p2-academic-selection-checkpoint--2026-10-09).
-
-Call/personal checkpoint: published SDK/MCP validation rejects unknown/unoffered
-names, malformed JSON, missing/wrong-type/blank IDs and unauthorized reads before
-controller execution. Tests verify rejected attempts stay in diagnostics and the
-benchmark score after a later scripted answer. School adds a short failure notice
-to recovered streamed answers without another model call. Attendance summaries,
-own class/section and explicit outsider clarifications also use bounded local replies.
-**23/23 actual internal API checks** pass across the three personal roles, including
-eleven reused failure questions and all seven previous academic repairs. This does
-not qualify arbitrary filters, general follow-ups or the fallback model. See the
-[call/personal checkpoint](docs/tests/jev-router-validation.md#tool-failure-and-personal-reply-checkpoint--2026-10-09).
-
-### P3 — Make answers faithful and fallback selective
-
-- [ ] Prefer a local renderer after validated reads; preserve subject names, grade
-      denominators, class/section identity and requested filters.
-- [ ] Distinguish no records from a failed read, and today's/upcoming results from
-      whole-year results. Never infer a zero count from an unresolved identity.
-- [ ] Improve short Arabizi language handling; avoid French/English fallthrough,
-      echoed planning text and internal tool instructions in ordinary answers.
-- [ ] Use OSS20B only where the verified local/Jev path cannot answer. Maintain
-      explicit unavailable outcomes and cancellation; do not count a visible failure
-      notice as a correct answer or introduce automatic retries.
-
-Output: facts and task fulfillment pass independently of the tool-plan score.
-
-### P4 — Integrate and enable the qualified flow
-
-- [ ] Build trusted request context for ordinary signed-in chats using the existing
-      framework preparation contract. Keep benchmark grants restricted to tests;
-      never trust client-supplied role, year or claims that history is complete.
-- [ ] Enable only validated roles/intents. Parent, teacher and student tools require
-      their own populated ownership tests; broad admin tools do not become personal tools.
-- [ ] Configure the normal fallback model as `openai/gpt-oss-20b` and its compatible
-      provider policy together. Do not reuse fixture-only experiment flags in production.
-- [ ] Keep bounded cancellation/provider timeouts without a two-second accuracy
-      cutoff. The 3,000 ms experimental Jev setting is evidence, not a selected
-      production timeout; choose the operating timeout from corrected targeted checks.
-- [ ] Apply a school-wide monthly spend guard to paid classification, generation
-      and routing embeddings. Reserve uncertain/in-flight charges conservatively;
-      exhausted allowance returns a clear local result. Existing fixture ledgers
-      are not a durable monthly budget. Verify this offline, without another billing study.
-- [ ] Record the release scope and rollback controls; deploy the qualified paths
-      together. Turning Jev off alone must not remove the existing router fallback.
-
-Output: an explicitly scoped release using Jev/router/20B, with the $10 budget
-and rollback behavior enforceable. Historical 120B settings remain until this phase;
-a deliberate rollback can restore them, but it is not a per-request paid escalation.
-
-## Validation and finish criteria
-
-Use existing Darija/Arabizi failures first. Freeze expected tools, argument scope
-and factual outcomes before live dispatch. Validate with actual authenticated MCP
-reads on populated fixtures; parent, teacher and student cases stay separate.
-
-- Every previously failed case in the enabled scope passes both tool/argument and
-  factual/task checks. Correct tools with wrong wording/facts remain failed answers.
-- Zero accepted writes, outsider reads, wrong-year reads, guessed identities or
-  malformed executed calls. Role/year refusal tests remain required.
-- Every accepted Jev plan in the release check matches its intended authorized
-  operation and facts. Report coverage and decline rate as well as accepted precision.
-- Add a small unseen Darija/Arabizi holdout after development fixes. Keep families
-  and authorship clear; do not describe assistant drafts as independent native evidence.
-  Remaining failures keep that intent/role on the ordinary qualified fallback.
-- Record complete-response average against the two-second goal, without ranking
-  millisecond differences. An average over two seconds is an optimization finding,
-  not permission to interrupt otherwise correct test answers.
-- Verify paid-call avoidance, fallback reasons, monthly allowance and cancellation.
-  No guarantee that $10 covers unlimited messages; report the configured allowance.
-- Run the smallest relevant Bun tests first. Meaningful TypeScript changes require
-  lint/typecheck; runtime changes require build and affected ownership/year/boundary
-  checks. Read academic-year plan section 0 before changing scope or ownership.
-
-Recheck affected families and roles; run wider regressions once the fixes pass.
-Do not repeat a full provider/model/French benchmark without a concrete new question.
-The assistant can draft new questions and continue the work; owner wording feedback
-may improve them, but no new manual collection or “continue” loop is required.
-
-**Finished means:** the enabled scope is explicit, its failures are corrected,
-ordinary-chat integration works, OSS20B fallback is qualified for that scope,
-budget/rollback checks pass, and one final report names any remaining unsupported
-workflows. A rewritten plan or a classification score alone is not completion.
-
-## Evidence and reporting rules
-
-Keep one concise report and one compact verified archive per meaningful milestone.
-Store test questions in the existing dataset directory. Delete private captures,
-owned temporary hosts and generated builds after verification; leave other work intact.
-Each report states: what changed, tool and fact results by role, remaining failures,
-actual paid-call counts, average reply time, release status and the next concrete step.
-Use response cost metadata for a brief cost line; keep unknown cost unknown. No
-additional pricing research, invoice reconciliation or provider shopping is planned.
-
-The former 167 KB plan remains in Git at commit `846a679`:
-`git show 846a679:CHATBOT-LATENCY-PLAN.md`.
-Historical native-research protocols and old numeric latency/sample gates remain
-historical evidence; they do not add prerequisites to these engineering rechecks.
-Native qualification must still be reported honestly if pursued separately.
-
-**Next action: qualify selective OSS20B fallback and supported Jev plans on a small
-unseen Darija holdout, then ordinary-chat integration and the durable monthly guard.
-Keep unsupported requests on the existing qualified fallback until those checks pass.**
+Historical comparisons remain in [the evidence index](docs/evidence/chatbot-latency/README.md).
+The old latency plan is recoverable with `git show 846a679:CHATBOT-LATENCY-PLAN.md`.

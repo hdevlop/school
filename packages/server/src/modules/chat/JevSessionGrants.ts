@@ -14,7 +14,8 @@ export interface JevRequestDiagnostics {
 export interface JevRequestContext {
   actorId: string; role: string; academicYear: string; mode: JevMode;
   correlationId: string | null; caseId: string; query: string;
-  historyComplete: true; priorUserTurns: 0;
+  historyComplete: boolean; priorUserTurns: number | null;
+  source?: 'ordinary';
   experimentArm?: JevExperimentArm;
   /** Actual HTTP lifetime, separate from the framework's candidate selection signal. */
   requestSignal?: AbortSignal;

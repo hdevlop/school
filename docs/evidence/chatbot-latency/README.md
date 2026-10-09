@@ -3,6 +3,12 @@
 Active work: [Jev + router optimization plan](../../../CHATBOT-JEV-ROUTER-PLAN.md).
 Validation: [Darija tool and answer checks](../../tests/jev-router-validation.md).
 
+**Qualified ordinary release is enabled locally:** Jev + the existing router +
+selective OSS20B, with a shared $10/month allowance. The [release report](../../tests/jev-router-validation.md#qualified-ordinary-release--2026-10-09)
+retains initial failures, the audited wording holdout and final 5/5 repair, 6/6
+saved-configuration and two dashboard checks. One [compact release archive](jev-router-release-20261009.zip)
+contains redacted evidence and source snapshots. General/native accuracy is not claimed.
+
 P1 now avoids provably unsupported classifier work. Its
 [implementation checkpoint](../../tests/jev-router-validation.md#p1-implementation-checkpoint--2026-10-09)
 records zero new paid calls and a counterfactual 22/32 classifier bypass with all

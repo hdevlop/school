@@ -6,3 +6,4 @@ export * from './JevBenchmarkController';
 export * from './JevBenchmarkService';
 export * from './JevBenchmarkRepository';
 export * from './JevIntentClassifier';
+export * from './ChatSpendRepository';

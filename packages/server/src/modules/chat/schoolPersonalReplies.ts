@@ -1,5 +1,6 @@
 import { normalizeReplyText, type ReplyLanguage, type ReplyTemplate } from 'najm-chatbot';
 import { schoolNamedChildMatches, type SchoolChatChild } from './schoolIdentityReplies';
+import { qualifiedSchoolFallback } from './schoolFallbackScope';
 
 const clean = (value: unknown): string => {
   if (typeof value !== 'string' || !value.trim() || /[\r\n\t]/u.test(value)) throw Error('Invalid personal reply identity');
@@ -11,7 +12,7 @@ const record = (value: unknown): Record<string, unknown> => {
 };
 const onlyText = (query: string): string | null => {
   if (/[«»“”"`]/u.test(query)) return null;
-  const text = normalizeReplyText(query).replace(/[.!?؟]+$/u, '').trim();
+  const text = normalizeReplyText(query).replace(/[,،]/gu, ' ').replace(/[.!?؟]+$/u, '').replace(/\s+/gu, ' ').trim();
   return /^[\p{L}\p{N}\s]+$/u.test(text) ? text : null;
 };
 function scopedMessage(language: ReplyLanguage): ReplyTemplate {
@@ -32,7 +33,8 @@ export function schoolPersonalReply(query: string, language: ReplyLanguage, year
     const phone = /^عطيني نمرة الولي ديال ([\p{L}\p{N}\s]+)$/u.exec(text);
     if (phone && phone[1] !== normalizeReplyText(studentName)) return scopedMessage(language);
   }
-  const classRequest = /^(?:فاشمن قسم وفاشمن مجموعة مسجل انا دابا|fachmn 9ism w fachmn majmou3a msjjel ana daba)$/u.test(text);
+  const classRequest = /^(?:فاشمن قسم وفاشمن مجموعة مسجل انا دابا|fachmn 9ism w fachmn majmou3a msjjel ana daba)$/u.test(text)
+    || qualifiedSchoolFallback(query, 'student');
   if (role === 'student' && studentId && classRequest) return {
     label: 'school:student-own-placement', calls: [{ name: 'student-profile_get_overview', input: { studentId: clean(studentId), academicYear: year } }],
     render: results => {
@@ -52,7 +54,7 @@ export function schoolPersonalReply(query: string, language: ReplyLanguage, year
     },
   };
   const matches = role === 'parent' && children ? schoolNamedChildMatches(text.split(/\s+/u), children) : [];
-  const attendance = matches.length && /^بغيت ملخص الحضور والغياب والتاخير ديال هاد العام$/u.test(matches[0].remainder.join(' '));
+  const attendance = matches.length && /^(?:بغيت ملخص الحضور والغياب والتاخير ديال هاد العام|قول ليا شحال حضر وشحال غاب وشحال تاخر هاد العام)$/u.test(matches[0].remainder.join(' '));
   if (!attendance) return null;
   if (matches.length !== 1) return scopedMessage(language);
   const child = matches[0].child;

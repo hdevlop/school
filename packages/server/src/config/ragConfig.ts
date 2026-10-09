@@ -3,6 +3,7 @@ import { rag, ragStudio } from 'najm-rag';
 
 import { rewriteDarijaForRouting } from '../modules/chat/darijaRouting';
 import { envChoice, envFlag, envInt, envString } from './env';
+import { schoolRoutingContext } from '../modules/chat/schoolRoutingContext';
 
 /**
  * Embeddings for chat tool routing and the knowledge base.
@@ -88,11 +89,15 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   // question can retrieve the attendance profile first; keep the academic
   // read available so the model can answer the requested part of the record.
   'student-profile_get_attendance_summary': ['student-profile_get_academic'],
+  'student-profile_get_academic': ['student-profile_get_overview', 'student-profile_get_attendance_summary'],
+  'student-profile_get_overview': ['student-profile_get_academic', 'student-profile_get_attendance_summary'],
   // Teaching assignments can retrieve a section or personal dashboard read.
   // The profile read takes the signed-in teacherId and checks ownership.
   sections_get_teachers: ['teacher-profile_get_my_classes'],
   'teacher-dashboard_get_overview': ['teacher-profile_get_my_classes', 'teacher-profile_get_pending_grading'],
   'teacher-profile_get_schedule_today': ['teacher-profile_get_pending_grading'],
+  'teacher-profile_get_my_students': ['teacher-profile_get_my_classes', 'teacher-profile_get_pending_grading'],
+  'teacher-profile_get_my_classes': ['teacher-profile_get_my_students', 'teacher-profile_get_pending_grading'],
 };
 
 function resolveEmbeddingConfig() {
@@ -156,7 +161,7 @@ export const ragConfig = (): NajmPlugin =>
     },
     // Darija words become MSA before tool routing embeds a message; the model
     // still reads the user's own words.
-    rewriteRoutingQuery: rewriteDarijaForRouting,
+    rewriteRoutingQuery: query => schoolRoutingContext(rewriteDarijaForRouting(query)),
     knowledge: true,
     allowedLangs: ['en', 'fr', 'ar', 'es'],
   }) as unknown as NajmPlugin;

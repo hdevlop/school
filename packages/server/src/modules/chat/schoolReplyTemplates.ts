@@ -8,6 +8,7 @@ import { schoolStudentGradeReply } from './schoolStudentReply';
 import { schoolChildGradeReply, schoolClassIdentityReply, type SchoolChatChild } from './schoolIdentityReplies';
 import { schoolPersonalAcademicReply, schoolTeacherAcademicReply } from './schoolAcademicReplies';
 import { schoolPersonalReply } from './schoolPersonalReplies';
+import { schoolFallbackScopeReply } from './schoolFallbackScope';
 
 const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
   ary: {
@@ -64,7 +65,7 @@ export function schoolChangeRefusal(language: ReplyLanguage): ReplyTemplate { re
 
 /** The caller supplies only the already-validated selected year. No new year resolution. */
 export function schoolReplyTemplate({ userText, language, channel }: ReplyRequest, academicYear?: string, role?: string, schoolDate?: string, teacherId?: string, studentId?: string, children?: readonly SchoolChatChild[], studentName?: string): ReplyTemplate | null {
-  if (!language) return null;
+  if (!language) return channel === 'web' ? schoolFallbackScopeReply(userText, language, role, studentId, teacherId) : null;
   const text = normalizeReplyText(userText);
   const writeKind = schoolWriteRefusalKind(userText);
   if (writeKind) return { text: refusals[language][writeKind] };
@@ -91,6 +92,6 @@ export function schoolReplyTemplate({ userText, language, channel }: ReplyReques
     if (list) return list;
   }
   const entities = countEntities(text);
-  if (!entities || !academicYear) return null;
+  if (!entities || !academicYear) return channel === 'web' ? schoolFallbackScopeReply(userText, language, role, studentId, teacherId) : null;
   return schoolCountReply(language, entities, academicYear);
 }

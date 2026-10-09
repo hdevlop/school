@@ -18,6 +18,16 @@ const own = (query: string) => schoolPersonalAcademicReply(query, 'ary', year, '
 const parent = (query: string) => schoolPersonalAcademicReply(query, 'ary', year, 'parent', undefined, [child]);
 const teacher = (query: string) => schoolTeacherAcademicReply(query, 'ary', year, 'teacher', 'T1');
 
+test('unfiltered personal grade paraphrases preserve every subject and denominator locally', () => {
+  const p=parent('wach t9der twerrini no9at Salma Idrissi f had l3am, b smit lmada w no9ta 3la ch7al?');
+  expect(p?.calls).toEqual([{name:'student-profile_get_academic',input:{studentId:'S1',academicYear:year}}]);
+  expect(p?.render?.([result])).toContain('6.75 / 10');
+  expect(own('t9der t3tini no9ati b smit lmada w l3alama 3la ch7al f had l3am?')?.render?.([result])).toContain('Géographie');
+  expect(parent('ch7al no9at Salma Idrissi')).toBeNull();
+  expect(parent('wach t9der twerrini no9at Salma Idrissi f math')).toBeNull();
+  expect(own('t9der t3tini no9ati b smit lmada f semester 2')).toBeNull();
+});
+
 test('unsupported personal queries still give the router and model the right academic meaning', () => {
   expect(schoolReplyContext('ch7al jebt ana f math f diagnostic quiz section B')).toContain('never substitute attendance percentages');
   expect(schoolReplyContext('3tini no9ta dyal Salma f math w ch7al mn ghyab 3ndo had l3am')).toContain('answer both parts');

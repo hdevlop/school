@@ -122,10 +122,13 @@ export function schoolChildGradeReply(query: string, language: ReplyLanguage, ye
       : "Aucun enfant lié à votre compte n'a été trouvé dans les données accessibles. Demandez à la direction de vérifier ce lien avant de consulter les notes." };
   const daughter = ['بنتي', 'bnti'].includes(relation[0]), son = ['ولدي', 'wldi'].includes(relation[0]);
   const wanted = daughter ? 'female' : son ? 'male' : null;
+  // School's persisted enum is M/F; synthetic/legacy contexts may use words.
+  const gender = (child: SchoolChatChild) => child.gender === 'F' || child.gender === 'female' ? 'female'
+    : child.gender === 'M' || child.gender === 'male' ? 'male' : null;
   const candidates = named.length ? named.map(match => match.child)
-    : children.filter(child => wanted === null || child.gender === wanted || !['male', 'female'].includes(child.gender ?? ''));
+    : children.filter(child => wanted === null || gender(child) === wanted || gender(child) === null);
   // Unknown gender must not silently turn "my daughter" into an arbitrary child.
-  if (candidates.length === 1 && (wanted === null || candidates[0].gender === wanted)) {
+  if (candidates.length === 1 && (wanted === null || gender(candidates[0]) === wanted)) {
     const child = candidates[0];
     if (!child.id.trim() || !child.name.trim()) throw Error('Invalid owned child identity');
     return schoolAcademicGradeReply(language, year, child.id, child.name);

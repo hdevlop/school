@@ -2,7 +2,7 @@ import { normalizeReplyText } from 'najm-chatbot';
 
 type WriteRefusalKind = 'attendance' | 'change';
 const boundary = '(?![\\p{L}\\p{N}])';
-const domainObject = /(?<![\p{L}\p{N}])(?:tilmid|tilmida|tlamid|tlamd|ostad|asatida|lasatida|9ism|l9ism|classe|classes|section|parent|parents|wali|lwali|lwalidin|tilifon|nmra|no9ta|nno9ta|note|notes|fard|lfard|forod|lforod|imti7an|i3lan|li3lan|risala|message|sms|khlas|lkhlas|frais|paiement|ghiyab|lghiyab|7odour|l7oudour|7ader|7adra|ghayb|ghayeb)(?![\p{L}\p{N}])/u;
+const domainObject = /(?<![\p{L}\p{N}])(?:tilmid|tilmida|tlamid|tlamd|ostad|asatida|lasatida|9ism|l9ism|classe|classes|section|parent|parents|wali|lwali|lwalidin|tilifon|nmra|no9ta|no9ti|nno9ta|nno9ati|note|notes|fard|lfard|forod|lforod|imti7an|i3lan|li3lan|risala|message|sms|khlas|lkhlas|frais|paiement|ghiyab|lghiyab|7odour|l7oudour|7ader|7adra|ghayb|ghayeb)(?![\p{L}\p{N}])/u;
 const latinChange = new RegExp(`^(?:zid|bdel|beddel|sjel|sjjl|sjjel|sejjl|sejjel|9eyyed|mse7|ms7|7iyed|7yed|lghi|rje3)${boundary}`, 'u');
 const latinSend = new RegExp(`^(?:sifet|sift)${boundary}`, 'u');
 const messageObject = /(?<![\p{L}\p{N}])(?:i3lan|li3lan|risala|message|sms|email)(?![\p{L}\p{N}])/u;

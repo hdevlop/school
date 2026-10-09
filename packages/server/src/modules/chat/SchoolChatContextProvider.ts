@@ -17,7 +17,7 @@ import type { SchoolChatChild } from './schoolIdentityReplies';
 
 // A snapshot of the validated year for prompt text and MCP arguments; the
 // shared year boundary remains the only resolver and authorization owner.
-export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string; teacherId?: string; studentId?: string; studentName?: string; children?: readonly SchoolChatChild[] }>();
+export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string; teacherId?: string; studentId?: string; studentName?: string; children?: readonly SchoolChatChild[]; latestUserText?: string }>();
 
 export interface ChatActor { id?: string; role?: string }
 

@@ -5,7 +5,7 @@ import { schoolAcademicGradeReply } from './schoolStudentReply';
 const key = (text: string) => normalizeReplyText(text).normalize('NFD').replace(/\p{M}/gu, '').trim();
 function requestText(query: string): string | null {
   if (/[«»“”"`]/u.test(query)) return null;
-  const text = normalizeReplyText(query).replace(/[.!?؟]+$/u, '').trim();
+  const text = normalizeReplyText(query).replace(/[.!?؟]+$/u, '').replace(/[،,]/gu, ' ').replace(/\s+/gu, ' ').trim();
   return /^[\p{L}\p{N}\s]+$/u.test(text) ? text : null;
 }
 function record(value: unknown): Record<string, unknown> {
@@ -20,6 +20,14 @@ function clarification(language: ReplyLanguage): string {
   return language === 'ary' ? 'المادة ولا الفرض ما تحددش بوحدو. عطيني السمية كاملة والتاريخ باش نجيب غير النقط اللي كتقصد.'
     : language === 'ar' ? 'المادة أو التقييم غير محدد دون التباس. حدد الاسم الكامل والتاريخ لعرض النقاط المطلوبة.'
       : 'La matière ou l’évaluation est ambiguë. Précisez son nom complet et sa date.';
+}
+
+function unfilteredGradeWords(request: string) {
+  const words = request.match(/[\p{L}\p{N}]+/gu) ?? [];
+  const allowed = new Set('wach t9der twerrini t3tini 3tini werini wrini no9at nno9at no9ati dyali ana f had l3am b smit lmada w no9ta l3alama 3la ch7al kamlin النقط النقاط نقط ديالي وريني عطيني بغيت بالمادة وبالنقطة على شحال هاد العام'.split(' '));
+  return words.some(word => ['no9at','nno9at','no9ati','النقط','النقاط','نقط'].includes(word))
+    && /^(?:wach t9der twerrini|t9der t3tini|3tini|werini|wrini|وريني|عطيني|بغيت|النقط ديالي)(?![\p{L}\p{N}])/u.test(request)
+    && words.every(word => allowed.has(word));
 }
 
 /** Closed personal requests. Unknown names/filters remain on the existing router. */
@@ -37,7 +45,9 @@ export function schoolPersonalAcademicReply(query: string, language: ReplyLangua
 
   const math = '(?:f (?:math|maths|riyadiyat)|فالرياضيات|في الرياضيات)';
   const diagnostic = '(?:f diagnostic quiz|ف diagnostic quiz|في diagnostic quiz)';
-  const all = own && /^(?:وريني النقط ديالي بالمادة وبالنقطة على شحال|werini nno9at dyali kamlin)$/u.test(request);
+  const all = own && (unfilteredGradeWords(request) && /no9ati|dyali|ديالي/u.test(request)
+    || /^(?:وريني النقط ديالي بالمادة وبالنقطة على شحال|werini nno9at dyali kamlin)$/u.test(request))
+    || parent && unfilteredGradeWords(request);
   const mathsOnly = new RegExp(`^(?:${own ? 'وريني النقط ديالي|werini nno9at dyali' : 'وريني النقط ديال|werini nno9at dyal'}) ${math}$`, 'u').test(request);
   const one = new RegExp(`^(?:${own ? 'ch7al jebt ana|شحال جبت انا' : 'ch7al jab|شحال جاب'}) ${math} ${diagnostic}$`, 'u').test(request);
   const count = own && new RegExp(`^(?:ch7al mn no9ta tsjlat liya ana|شحال من نقطة تسجلات ليا انا) ${diagnostic}$`, 'u').test(request);

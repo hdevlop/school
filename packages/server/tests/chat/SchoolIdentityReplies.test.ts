@@ -73,6 +73,15 @@ test.each(daughters)('child grades use the owned daughter ID and actual grades: 
   expect(() => plan?.render?.(['Error (FORBIDDEN)'])).toThrow();
 });
 
+test('persisted M/F genders resolve owned siblings without guessing unknown or mismatched genders', () => {
+  const persisted = [{ id: 'daughter', name: 'Salma', gender: 'F' }, { id: 'son', name: 'Omar', gender: 'M' }];
+  expect(schoolChildGradeReply(daughters[0], 'ary', year, 'parent', persisted)?.calls?.[0].input.studentId).toBe('daughter');
+  expect(schoolChildGradeReply('وريني نقط ولدي', 'ary', year, 'parent', persisted)?.calls?.[0].input.studentId).toBe('son');
+  for (const candidates of [[persisted[1]], [{ ...persisted[0], gender: 'unknown' }], [...persisted, { id: 'unknown', name: 'Aya', gender: null }]]) {
+    expect(schoolChildGradeReply(daughters[0], 'ary', year, 'parent', candidates)).not.toHaveProperty('calls');
+  }
+});
+
 test('son and generic child resolve independently; uncertain identity never dispatches', () => {
   expect(schoolChildGradeReply('وريني نقط ولدي', 'ary', year, 'parent', children)?.calls?.[0].input.studentId).toBe('son');
   expect(schoolChildGradeReply('وريني نقط طفلي', 'ary', year, 'parent', [children[0]])?.calls?.[0].input.studentId).toBe('daughter');

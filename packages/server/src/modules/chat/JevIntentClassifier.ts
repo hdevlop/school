@@ -8,6 +8,10 @@ import { readJevControls, effectiveJevMode } from './JevControls';
 import { JevAttemptLedger } from './JevAttemptLedger';
 import { schoolJevRequestContext } from './JevSessionGrants';
 import { jevReplyPlan } from './jevReplyPlan';
+import { readSchoolChatControls } from './schoolChatControls';
+import { schoolChatYearContext } from './SchoolChatContextProvider';
+import { hasOrdinaryJevReply, ORDINARY_JEV_READS } from './schoolFallbackScope';
+import { budgetedChatFetch } from './SchoolPaidChatTransport';
 
 /** Observe late rejections even when a test/provider ignores its supplied signal. */
 function abortable<T>(start: () => Promise<T>, signal: AbortSignal): Promise<T> {
@@ -42,7 +46,7 @@ export class JevIntentClassifier {
   readonly controls = readJevControls();
   readonly ledger = new JevAttemptLedger(this.controls);
   private inFlight = new Set<AbortController>();
-  transport: (...args: Parameters<typeof fetch>) => ReturnType<typeof fetch> = (...args) => fetch(...args);
+  transport: (...args: Parameters<typeof fetch>) => ReturnType<typeof fetch> = budgetedChatFetch(((input, init) => fetch(input, init)) as typeof fetch);
   constructor(private settings: AiSettingsService) {}
   cancelInFlight() { for (const controller of this.inFlight) controller.abort(); }
 
@@ -53,7 +57,7 @@ export class JevIntentClassifier {
       && request.channel === 'web' && ['fr', 'ar', 'ary'].includes(request.language ?? '')
       && request.historyComplete === true && request.priorUserTurns === 0 && frame.query === request.userText
       && (this.controls.billingMode !== 'observe' || !!frame.requestSignal && !frame.requestSignal.aborted)
-      && !request.signal.aborted && !this.ledger.snapshot().stoppedReason;
+      && !request.signal.aborted && (frame.source === 'ordinary' || !this.ledger.snapshot().stoppedReason);
     if (!metadataEligible) {
       if (frame && !frame.diagnostics) frame.diagnostics = { eligibility: 'ineligible_metadata', classification: 'not_started' };
       return false;
@@ -61,7 +65,8 @@ export class JevIntentClassifier {
     // Shadow measures declines as well as supported replies. On mode only pays
     // when at least one existing guarded reply is possible; acceptance still runs later.
     const eligibility = frame.mode === 'shadow' ? 'shadow_unfiltered'
-      : hasGuardedJevReply(request.userText) ? 'supported_query' : 'unsupported_query';
+      : (frame.source === 'ordinary' ? hasOrdinaryJevReply(request.userText) : hasGuardedJevReply(request.userText))
+        ? 'supported_query' : 'unsupported_query';
     frame.diagnostics = { eligibility, classification: frame.diagnostics?.classification ?? 'not_started' };
     return eligibility !== 'unsupported_query';
   }
@@ -76,11 +81,11 @@ export class JevIntentClassifier {
     const frame = schoolJevRequestContext.getStore()!;
     const deadline = new AbortController();
     const transport = new AbortController();
-    const observe = this.controls.billingMode === 'observe';
+    const observe = frame.source !== 'ordinary' && this.controls.billingMode === 'observe';
     const signal = AbortSignal.any([request.signal, deadline.signal]);
     const networkSignal = observe ? AbortSignal.any([transport.signal, frame.requestSignal!])
       : AbortSignal.any([transport.signal, signal]);
-    const candidateTimer = setTimeout(() => deadline.abort(), this.controls.timeoutMs);
+    const candidateTimer = setTimeout(() => deadline.abort(), frame.source === 'ordinary' ? readSchoolChatControls().timeoutMs : this.controls.timeoutMs);
     const billingTimer = observe ? setTimeout(() => transport.abort(), this.controls.billingTimeoutMs) : undefined;
     let attempt: ReturnType<JevAttemptLedger['start']> = null;
     let costUsd: number | null = null;
@@ -107,7 +112,10 @@ export class JevIntentClassifier {
       signal.throwIfAborted();
       if (effectiveJevMode() === 'off' || settings?.provider !== 'openrouter' || !settings.apiKey
         || settings.baseUrl && settings.baseUrl !== 'https://openrouter.ai/api/v1') return null;
-      attempt = this.ledger.start({ correlationId: frame.correlationId, caseId: frame.caseId, mode: frame.mode });
+      // Ordinary billing belongs to the durable school-wide transport guard,
+      // not the experimental process ledger/request limits.
+      attempt = frame.source === 'ordinary' ? { id: crypto.randomUUID() } as NonNullable<typeof attempt>
+        : this.ledger.start({ correlationId: frame.correlationId, caseId: frame.caseId, mode: frame.mode });
       if (!attempt) return null;
       frame.attemptId = attempt.id;
       frame.diagnostics!.classification = 'pending';
@@ -127,8 +135,10 @@ export class JevIntentClassifier {
       if (typeof body?.id === 'string' && /^gen-dec-[\w-]{1,150}$/u.test(body.id)) providerGenerationId = body.id;
       if (!response.ok) throw new Error('provider_rejected');
       const decision = parseDecision(body);
-      const accepted = acceptsWithQueryGuardV6(decision, request.userText, this.controls.threshold);
-      const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear, request.userText) : null;
+      const accepted = acceptsWithQueryGuardV6(decision, request.userText, this.controls.threshold)
+        && (frame.source !== 'ordinary' || ORDINARY_JEV_READS.some(choice => choice === decision.choice));
+      const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear, request.userText,
+        schoolChatYearContext.getStore()?.schoolDate) : null;
       frame.diagnostics!.classification = signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined';
       this.ledger.settle(attempt.id, { outcome: signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined',
         costUsd, costSource: costUsd === null ? undefined : 'decisions_response', providerRequestId, providerGenerationId,

@@ -10,6 +10,12 @@ test('parent attendance faithfully renders successful records, zero absence and 
  expect(attendance()?.render?.([{total:13,present:12,absent:0,late:1,percentage:92}])).toContain('حضر 12، غاب 0، تأخر 1، من 13 سجل. نسبة الحضور 92%');
  expect(attendance()?.render?.([{total:0,present:0,absent:0,late:0,percentage:null}])).toContain('نسبة الحضور ما تحسباتش');
 });
+test('attendance paraphrase keeps late counts distinct and does not swallow extra filters',()=>{
+ const query='قول ليا شحال حضر Salma Idrissi وشحال غاب وشحال تأخر هاد العام.';
+ const p=schoolPersonalReply(query,'ary',year,'parent',undefined,[child]);
+ expect(p?.render?.([{total:13,present:12,absent:0,late:1,percentage:92}])).toContain('تأخر 1');
+ expect(schoolPersonalReply(query+' ف math','ary',year,'parent',undefined,[child])).toBeNull();
+});
 test.each([null,'Error (FORBIDDEN)',{total:13,present:12,absent:0,late:1,percentage:100},
  {total:13,present:12,absent:0,late:0,percentage:92},{total:NaN,present:0,absent:0,late:0,percentage:null}])('invalid attendance never becomes a successful empty read: %j',result=>{
  expect(()=>attendance()?.render?.([result])).toThrow();
@@ -22,6 +28,8 @@ test('owned names and additional filters remain explicit',()=>{
  expect(schoolPersonalReply(attendanceQuery,'ary',year,'teacher',undefined,[child])).toBeNull();
 });
 test('own placement preserves class and section labels independently',()=>{
+ expect(schoolPersonalReply('فين مسجل أنا دابا، فاشمن قسم وفاشمن مجموعة؟','ary',year,'student','S1')?.calls).toEqual(placement()?.calls);
+ for(const suffix of [' Salma',' غير البنات',' 2025-2026']) expect(schoolPersonalReply('فين مسجل أنا دابا، فاشمن قسم وفاشمن مجموعة؟'+suffix,'ary',year,'student','S1')).toBeNull();
  expect(placement()?.calls).toEqual([{name:'student-profile_get_overview',input:{studentId:'S1',academicYear:year}}]);
  const student={id:'S1',class:{id:'C',name:'CM2'},section:{id:'A',name:'A',classId:'C'}};
  expect(placement()?.render?.([{student}])).toBe('مسجل فالقسم CM2، المجموعة A، فـ 2026-2027.');

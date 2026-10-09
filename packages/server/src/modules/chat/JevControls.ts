@@ -1,5 +1,6 @@
 import { envChoice, envInt, envString } from '../../config/env';
 import { chatBenchmarkControlsEnabled } from './ChatBenchmarkState';
+import { readSchoolChatControls } from './schoolChatControls';
 
 export type JevMode = 'off' | 'shadow' | 'on';
 function finiteEnv(name: string, raw: string | undefined, fallback: number, min: number, max: number) {
@@ -33,8 +34,10 @@ export function isLocalJevFixtureDatabase(): boolean {
       && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname) && url.pathname === '/school_history_test';
   } catch { return false; }
 }
-/** Real questions remain disabled pending the separate data/qualification decision. */
+/** Benchmark overrides never enable ordinary chats; the qualified release has
+ * its own explicit switch and retains CHATBOT_JEV_MODE=off as a rollback. */
 export function effectiveJevMode(): JevMode {
-  return chatBenchmarkControlsEnabled() && isLocalJevFixtureDatabase() ? benchmarkMode ?? readJevControls().mode : 'off';
+  if (chatBenchmarkControlsEnabled() && isLocalJevFixtureDatabase()) return benchmarkMode ?? readJevControls().mode;
+  return readSchoolChatControls().enabled ? readJevControls().mode : 'off';
 }
 export function setBenchmarkJevMode(mode: JevMode) { benchmarkMode = mode; }

@@ -26,7 +26,7 @@ const arabiziOpenings = ['chkoun', 'chkon', 'kifach', 'imta', 'zid', 'bdel', 'be
 const arabiziSignals = [...arabiziOpenings, 'ghayb', 'ghaybin', 'ghayba', 'lyoum', 'lyom', 'llyoum', 'daba', 'wa7d',
   'tilmid', 'tlamid', 'jdid', 'jay', 'jayyin', 'dyal', 'dyalk', 'dyalhom', 'had', 'l3am', 'asatida', 'ostad',
   'lmdrasa', 'mjmo3', 'smiyat', 'a9sam', '7odour', 'imti7anat', 'ghadi', 'no9ta', '9ism', 'smit',
-  'tarik', 'b7al', 'baghi', 'bikhir', 'labas', 'bzzaf', 'ntla9aw', 'nfe3ni', 'lmousa3id', 'kolchi', 'mabrouk',
+  'no9ati', 'tarik', 'b7al', 'baghi', 'bikhir', 'labas', 'bzzaf', 'ntla9aw', 'nfe3ni', 'lmousa3id', 'kolchi', 'mabrouk',
   'l9a3a', 'lbare7', 'lghdda', 'l7issab', 'flous', 'aba2', 'i3lan', 'bnisba', 'jaya', 'nbeddel', 'nzid',
   'lkhir', 'atfal', 'nsjjel', 'jawb', 'yjazik', 'me7taj', 'ghayeb', 'ghedda', 'lmousa3ada', 'nnisba', 'lhadok', 'tilmida', '7adra'];
 const arabiziOpening = new RegExp(`^(?:${arabiziOpenings.join('|')}|w\\s+b(?:nisba|\\s+nnisba))(?![\\p{L}\\p{N}])`, 'u');

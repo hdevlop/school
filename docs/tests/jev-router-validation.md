@@ -225,3 +225,120 @@ Next: an unseen Darija development holdout for supported Jev plans and selective
 OSS20B fallback, then ordinary-chat enablement and the durable $10 monthly allowance.
 General Jev is still off and the saved fallback model remains unchanged. The targeted
 repairs are ready; broad production qualification remains open.
+
+
+## Qualified ordinary release — 2026-10-09
+
+**Enabled locally:** guarded Jev + the existing router + selective OSS20B. The saved
+model is `openai/gpt-oss-20b`; unrelated AI settings and credentials were preserved.
+The local environment enables ordinary Jev and a shared $10/month allowance.
+The actual dashboard at port 3102 executes and accounts for both Jev and routed
+20B calls. This is local enablement, not a remote production deployment claim.
+
+The release supports four unfiltered global Jev read intents for admin/principal,
+existing verified local personal/academic replies, and selective 20B fallback for
+qualified global reads and teacher-owned counts/pending grading. Student placement,
+own/owned-child grades and named-child attendance use validated local renderers.
+Unknown filters/names/workflows clarify instead of consuming an unqualified model.
+Principal guards are regression-tested; this live fixture has no principal account.
+
+| Check | Tool + fact/task result | Mean complete API reply | Paid classifier / generation calls |
+| --- | --- | --- | --- |
+| Initial development, 20 drafted questions | 12/20 original strict score; failures retained | rounded timing only retained | 7 / 15 |
+| Targeted first repair, 8 reused failures | 5/8; grade/attendance answer defects remained | 2.79 s | 1 / 15 |
+| Local repair, 4 questions | 3/4; comma-separated child grades still needed correction | 0.042 s | 0 / 0 |
+| New wording holdout, 8 questions | original 3/8; audited 5/8 | 1.18 s | 1 / 10 |
+| Final affected-family recheck, 5 questions | 5/5 | 0.148 s | 1 / 0 |
+| Saved-configuration ordinary smoke, 6 questions | 6/6 | 0.83 s | 1 / 5 |
+| Running dashboard: fresh Jev and multi-turn router/20B | 2/2, allowance accounting verified | 1.34 s | 1 / 3 |
+
+These are assistant-authored development/recheck samples, with repeats and different
+roles; do not combine them into a native acceptance rate or a general model ranking.
+Timing covers complete local API streams, not browser rendering. No two-second cutoff
+was applied; the slower correct fallback reply completed normally.
+
+The first harness completed all 20 chats but failed while constructing its summary;
+only emitted per-case scores/timings and call counts were retained, not full answers.
+Later captures were persisted incrementally. The eight-case holdout originally
+rejected two valid plans: the same two independent count tools in reverse order,
+and `students_get_student_count` under teacher ownership instead of the preferred
+profile tool. Authenticated MCP confirmed 44 teacher-owned students versus 103
+school-wide. Their scorer correction added **zero provider calls**; original scores
+remain in the archive. Holdout class-name wording and an ambiguous teacher “number”
+query initially clarified; class-name wording was repaired, while the ambiguous
+number stays outside the qualified count scope. Placement was the remaining real
+holdout answer failure and now renders the actual class and section locally.
+
+Captured ordinary classification runs accepted three of four candidates; all three
+accepted plans were correct. One declined to routing. The dashboard adds another
+correct, metered acceptance. Initial emitted successes are retained separately
+because their complete capture is absent. This narrow evidence cannot establish
+native fluency, confidence calibration or broad Jev reliability.
+
+Corrections preserve stored subject names and denominators, distinguish lateness
+from absence, resolve the persisted M/F gender values, accept harmless commas,
+and retain unknown qualifiers for clarification. Routing hints use the trusted role
+and latest message. Execution still uses published Najm's SDK/MCP guards, ownership
+and selected-year boundaries. No new framework fork or duplicate resolver exists.
+
+The running dashboard exposed a Next hot-reload fetch replacement that initially
+bypassed the ledger. The transport now reinstalls at each request boundary; nested
+wrappers charge once, and Jev's transport is explicitly guarded. A regression and
+actual dashboard checks verify one Jev debit and three separate generation debits.
+The earlier dashboard answer is excluded from the metered two-case row above.
+
+### Shared allowance, controls and operational limits
+
+`CHATBOT_FLOW=jev-router-20b`, `CHATBOT_JEV_MODE=on`,
+`CHATBOT_MONTHLY_MICRO_USD=10000000` and
+`CHATBOT_JEV_OPERATING_TIMEOUT_MS=3000` are the enabled local controls.
+The candidate timeout is operational, not a two-second answer deadline.
+Jev off retains the qualified router/20B fallback and allowance. Full legacy rollback
+also removes this ordinary allowance and requires an intentional saved-model rollback
+if the historical model is wanted. No request automatically escalates to 120B.
+
+Two shared operational PostgreSQL tables hold UTC monthly integer micro-dollar
+debits and attempt settlements. They contain no questions, actor IDs or secrets.
+First use requires CREATE TABLE permission. Atomic reservations prevent concurrent
+overspending of the application allowance; unknown/canceled/crashed attempts retain
+their reservation and reported costs settle once. Unexpected known overruns charge
+fully and block subsequent sends. Exhaustion returns a localized unavailable notice
+while validated local reads remain usable. It does not prove an exact invoice cap
+for unknown prices or unlimited message capacity.
+
+20B is limited to CoreWeave, no provider fallbacks, 4,096 output tokens and configured
+input/output price ceilings of $0.25/$0.50 per million tokens, with no per-request fee.
+OpenRouter documents these ceiling units in its
+[provider-selection contract](https://openrouter.ai/docs/guides/routing/provider-selection).
+Generation failure cannot trigger another paid retry. Exact configured free local
+embeddings bypass accounting; arbitrary local model endpoints cannot.
+
+Offline transport tests cover missing cost, cancellations, exhausted allowance,
+repeated/nested fetch wrappers, failed-provider retries, unauthorized destinations,
+and 120B rejection. A zero-paid-call PostgreSQL fixture validates the numeric cap,
+12 concurrent attempts with only five allowed reservations, restart persistence,
+shared classifier/generation/embedding debits, idempotent settlement, known overrun
+and UTC monthly rollover. No billing observer or invoice reconciliation was added.
+Earlier local embedding requests conservatively retained 24,000 micro-dollars due
+to incorrect endpoint accounting; the configured free endpoint is now fixed. These
+retained debits are not claimed as provider spend and were not refunded speculatively.
+
+### Verification and finish
+
+Final verification: 614 chat tests, 365 academic-year tests, 173 ownership tests,
+48 security tests and 562 script tests pass, plus workspace-boundary checks, root
+lint/typecheck and the production build. The initial script check caught an unwanted
+backend import from a pure fallback helper; trusted identities are now explicit
+arguments, and the 20 native-intake checks plus the full scripts passed afterward.
+The final production build includes the hot-reload transport correction.
+
+One [compact release archive](../evidence/chatbot-latency/jev-router-release-20261009.zip)
+contains redacted results, original failures, frozen plans, guard checks, source
+snapshots and reproducible harnesses. Private captures, owned temporary hosts and
+isolated generated builds are removed. Other dashboard/config work and staged edits
+are preserved. Local environment secrets are not committed.
+
+**What can be done next:** use the enabled scoped release. Future work can qualify
+owned fee/payment summaries or specific grade filters with fresh Darija questions
+and actual facts. Broad free-form queries and unsupported filters remain unqualified;
+no new manual collection, price study or repeated “continue” is needed for this release.

@@ -2,6 +2,7 @@ import type { ReplyPreparationPolicy } from 'najm-chatbot';
 import { effectiveJevMode, readJevControls } from './JevControls';
 import { schoolJevRequestContext } from './JevSessionGrants';
 import { jevExperimentArm } from './jevExperiment';
+import { readSchoolChatControls } from './schoolChatControls';
 
 /** No promise cast or second tool executor: this is the published async contract. */
 export function jevPreparationPolicy(): ReplyPreparationPolicy {
@@ -12,11 +13,12 @@ export function jevPreparationPolicy(): ReplyPreparationPolicy {
     // eligibility and transport remain gated by the server frame and mode.
     enabled: true,
     get strategy() {
+      if (schoolJevRequestContext.getStore()?.source === 'ordinary') return 'candidate-first';
       const arm = jevExperimentArm();
       return arm === '20b-coreweave-router-first' ? 'router-first'
         : arm === '20b-coreweave-first' ? 'candidate-first' : 'parallel';
     },
-    timeoutMs: controls.timeoutMs,
+    get timeoutMs() { return schoolJevRequestContext.getStore()?.source === 'ordinary' ? readSchoolChatControls().timeoutMs : controls.timeoutMs; },
     resolveContext: request => {
       const frame = schoolJevRequestContext.getStore();
       return frame?.actorId === request.userId
