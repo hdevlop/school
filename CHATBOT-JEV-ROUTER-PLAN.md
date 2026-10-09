@@ -47,8 +47,9 @@ not independent native-language acceptance.
 
 ## Completed work
 
-These are the earlier release milestones. Identity-dependent local rendering
-filtered reply renderers and the role/phrase fallback gate are superseded by the current implementation above.
+These are the earlier release milestones. Identity-dependent local rendering,
+filtered reply renderers and the role/phrase fallback gate are superseded by the
+current implementation above.
 
 - [x] P1: bypass provably unsupported classification while preserving supported plans.
 - [x] P2: correct class/child identity, academic tool selection, malformed-call handling
@@ -122,6 +123,15 @@ The current reply cleanup passes 946 chat/year/security/ownership tests and 28
 script/boundary tests, lint, root type checking and an isolated production build.
 No paid requests were made. [Current details](docs/tests/jev-router-validation.md#minimal-replies-and-routeross20b-answers--2026-10-09)
 distinguish offline pipeline checks from the earlier live benchmark results.
+
+Darija discovery hints now distinguish general class/attendance questions from
+personal profiles and require possessive wording for a parent's own children.
+Teaching and pending-grading requests retain teacher identity tools. Exact word
+matching avoids names, quoted text and Darija negation creating unrelated hints.
+These are discovery fixes; the router still selects tools and modules authorize
+each call. No new paid model or embedding benchmark was run.
+Verification now passes 967 chat/year/security/ownership tests, 28 script/boundary
+tests, lint, root type checking and an isolated production build.
 
 ## Code organization
 

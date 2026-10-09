@@ -378,3 +378,25 @@ verification. Unrelated dashboard edits and staged changes are preserved.
 general answers. Improve tool descriptions/dependencies when an actual question
 selects the wrong tool. This cleanup makes no new claim about live Darija accuracy
 or response time; the earlier benchmark numbers remain historical.
+
+## Darija discovery hint corrections — 2026-10-09
+
+Fixed concrete issues in `schoolRoutingContext`: bare girls/children wording no
+longer implies the current parent's children, general class grades prefer section
+and subject reads, and general attendance uses attendance records rather than a
+personal summary. Self grades, attendance, placement and linked children keep
+their identity dependencies. Explicit teaching/correction requests retain the
+teacher identity chain. Bare assessment wording does not mean pending grading.
+Whole-word matching ignores identifier substrings and quoted content; Darija
+negation `ma` does not imply “my”. The routing copy retains names, IDs and dates.
+
+All **967 chat/year/security/ownership tests** and **28 script/boundary tests**,
+lint, root type checking and the isolated production build pass. The new 21
+routing regressions test discovery hints and constraints, not
+embedding rankings or OSS20B inference accuracy. No paid request, new benchmark
+framework, database access path or authorization layer was added.
+
+**What can be done next:** use ordinary Darija chat with the selected combination.
+If a question still chooses the wrong tool, its query and returned answer identify
+the next concrete routing/tool-description correction; do not restore filtered
+answer catalogs or rerun provider comparisons.
