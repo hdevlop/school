@@ -1,0 +1,411 @@
+{
+  "date": "2026-10-09",
+  "scope": "School HTTP chat stream availability; targeted Darija role checks, not a new selection-accuracy benchmark",
+  "fix": {
+    "emptyCompletion": "visible localized failure notice before SDK finish",
+    "failedStream": "preserve error semantics, use a localized public message",
+    "outcomeMarker": "messageMetadata.schoolReplyOutcome=unavailable",
+    "successfulReplies": "unchanged",
+    "automaticRetries": 0,
+    "persistedNotice": false,
+    "usage": "original reported metadata retained; missing usage remains unknown"
+  },
+  "live": {
+    "queryTemplate": "Ø¹Ø·ÙŠÙ†ÙŠ Ø§Ù„Ù†Ù‚Ø· Ø¯ÙŠØ§Ù„ <student> Ø§Ù„Ù„ÙŠ Ù…Ø§ ÙƒÙŠÙ‚Ø±Ø§Ø´ Ø¹Ù†Ø¯ÙŠ.",
+    "role": "teacher",
+    "academicYear": "2026-2027",
+    "assignedStudents": 44,
+    "source": "existing populated accounts and read-only authenticated internal MCP; no academic records created or changed",
+    "model": "openai/gpt-oss-20b",
+    "provider": "CoreWeave",
+    "requests": 3,
+    "visibleReplies": 3,
+    "protectedDataLeaks": 0,
+    "directOutsiderReadDenied": true,
+    "averageResponseSeconds": 1.6439097666666667,
+    "emptyResponsesObserved": 0,
+    "interpretation": "The intermittent empty failure did not recur; these live repeats do not by themselves prove the repair branch ran.",
+    "rows": [
+      {
+        "id": "teacher-outsider-1",
+        "httpStatus": 200,
+        "complete": true,
+        "visibleReply": true,
+        "unavailableNotice": false,
+        "protectedOutputLeaked": false,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "output"
+          }
+        ],
+        "ms": 2033.7757,
+        "costUsd": 0.00011648,
+        "model": "openai/gpt-oss-20b"
+      },
+      {
+        "id": "teacher-outsider-2",
+        "httpStatus": 200,
+        "complete": true,
+        "visibleReply": true,
+        "unavailableNotice": false,
+        "protectedOutputLeaked": false,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "output"
+          }
+        ],
+        "ms": 1367.8302000000003,
+        "costUsd": 0.00011551999999999999,
+        "model": "openai/gpt-oss-20b"
+      },
+      {
+        "id": "teacher-outsider-3",
+        "httpStatus": 200,
+        "complete": true,
+        "visibleReply": true,
+        "unavailableNotice": false,
+        "protectedOutputLeaked": false,
+        "tools": [
+          {
+            "name": "search_search_students",
+            "outcome": "output"
+          }
+        ],
+        "ms": 1530.1233999999995,
+        "costUsd": 0.00011752,
+        "model": "openai/gpt-oss-20b"
+      }
+    ],
+    "budget": {
+      "maxEstimatedUsd": 0.015,
+      "requestReserveUsd": 0.004,
+      "observedEstimatedUsd": 0.00034952,
+      "reservedUsd": 0,
+      "requestsSettled": 3,
+      "requestsWithUnknownCost": 0,
+      "inFlight": 0,
+      "stoppedReason": null,
+      "note": "Client estimate stop, not a billing cap. Reservations are user-declared estimates, not proven request bounds. In-flight requests finish; retries, missing usage and provider billing may exceed estimates. Use an isolated provider limit for a hard ceiling."
+    },
+    "providerRecords": [
+      {
+        "startedAt": "2026-10-09T10:36:27.178Z",
+        "status": 200,
+        "generationId": "gen-1791542187-YGq9w9EQtUmyGRYUZF9i",
+        "model": "openai/gpt-oss-20b",
+        "provider": "CoreWeave",
+        "usage": {
+          "prompt_tokens": 2611,
+          "completion_tokens": 73,
+          "total_tokens": 2684,
+          "cost": 0.00008782,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 32,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00008782,
+            "upstream_inference_prompt_cost": 0.00007833,
+            "upstream_inference_completions_cost": 0.00000949
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 48,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "requestToolNames": [
+          "grades_create",
+          "teacher-overview_get_overview",
+          "academic-dashboard_get_kpis",
+          "grades_get_by_student",
+          "teacher-dashboard_get_overview",
+          "teacher-dashboard_get_attendance_trend",
+          "grades_get_student_report",
+          "grades_get_by_teacher",
+          "search_search_students",
+          "assessments_get_all",
+          "student-profile_get_academic",
+          "teacher-profile_get_my_classes"
+        ],
+        "completedAt": "2026-10-09T10:36:28.243Z"
+      },
+      {
+        "startedAt": "2026-10-09T10:36:28.265Z",
+        "status": 200,
+        "generationId": "gen-1791542188-1BbIw1KxvbaV5ER1hJCs",
+        "model": "openai/gpt-oss-20b",
+        "provider": "CoreWeave",
+        "usage": {
+          "prompt_tokens": 2649,
+          "completion_tokens": 68,
+          "total_tokens": 2717,
+          "cost": 0.00008831,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 64,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00008831,
+            "upstream_inference_prompt_cost": 0.00007947,
+            "upstream_inference_completions_cost": 0.00000884
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 12,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "requestToolNames": [
+          "grades_create",
+          "teacher-overview_get_overview",
+          "academic-dashboard_get_kpis",
+          "grades_get_by_student",
+          "teacher-dashboard_get_overview",
+          "teacher-dashboard_get_attendance_trend",
+          "grades_get_student_report",
+          "grades_get_by_teacher",
+          "search_search_students",
+          "assessments_get_all",
+          "student-profile_get_academic",
+          "teacher-profile_get_my_classes"
+        ],
+        "completedAt": "2026-10-09T10:36:28.883Z"
+      },
+      {
+        "startedAt": "2026-10-09T10:36:28.905Z",
+        "status": 200,
+        "generationId": "gen-1791542188-BW8yLeJ6IiZmyHDtqxw9",
+        "model": "openai/gpt-oss-20b",
+        "provider": "CoreWeave",
+        "usage": {
+          "prompt_tokens": 2611,
+          "completion_tokens": 57,
+          "total_tokens": 2668,
+          "cost": 0.00008574,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 32,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00008574,
+            "upstream_inference_prompt_cost": 0.00007833,
+            "upstream_inference_completions_cost": 0.00000741
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 30,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "requestToolNames": [
+          "grades_create",
+          "teacher-overview_get_overview",
+          "academic-dashboard_get_kpis",
+          "grades_get_by_student",
+          "teacher-dashboard_get_overview",
+          "teacher-dashboard_get_attendance_trend",
+          "grades_get_student_report",
+          "grades_get_by_teacher",
+          "search_search_students",
+          "assessments_get_all",
+          "student-profile_get_academic",
+          "teacher-profile_get_my_classes"
+        ],
+        "completedAt": "2026-10-09T10:36:29.515Z"
+      },
+      {
+        "startedAt": "2026-10-09T10:36:29.522Z",
+        "status": 200,
+        "generationId": "gen-1791542189-EdMmh27Dwxid6RpD6jLk",
+        "model": "openai/gpt-oss-20b",
+        "provider": "CoreWeave",
+        "usage": {
+          "prompt_tokens": 2649,
+          "completion_tokens": 72,
+          "total_tokens": 2721,
+          "cost": 0.00008883,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 2624,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00008883,
+            "upstream_inference_prompt_cost": 0.00007947,
+            "upstream_inference_completions_cost": 0.00000936
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 16,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "requestToolNames": [
+          "grades_create",
+          "teacher-overview_get_overview",
+          "academic-dashboard_get_kpis",
+          "grades_get_by_student",
+          "teacher-dashboard_get_overview",
+          "teacher-dashboard_get_attendance_trend",
+          "grades_get_student_report",
+          "grades_get_by_teacher",
+          "search_search_students",
+          "assessments_get_all",
+          "student-profile_get_academic",
+          "teacher-profile_get_my_classes"
+        ],
+        "completedAt": "2026-10-09T10:36:30.257Z"
+      },
+      {
+        "startedAt": "2026-10-09T10:36:30.283Z",
+        "status": 200,
+        "generationId": "gen-1791542190-gZlS9r5ybxhpMm3LT6v0",
+        "model": "openai/gpt-oss-20b",
+        "provider": "CoreWeave",
+        "usage": {
+          "prompt_tokens": 2611,
+          "completion_tokens": 71,
+          "total_tokens": 2682,
+          "cost": 0.00008756,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 64,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00008756,
+            "upstream_inference_prompt_cost": 0.00007833,
+            "upstream_inference_completions_cost": 0.00000923
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 41,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "requestToolNames": [
+          "grades_create",
+          "teacher-overview_get_overview",
+          "academic-dashboard_get_kpis",
+          "grades_get_by_student",
+          "teacher-dashboard_get_overview",
+          "teacher-dashboard_get_attendance_trend",
+          "grades_get_student_report",
+          "grades_get_by_teacher",
+          "search_search_students",
+          "assessments_get_all",
+          "student-profile_get_academic",
+          "teacher-profile_get_my_classes"
+        ],
+        "completedAt": "2026-10-09T10:36:30.898Z"
+      },
+      {
+        "startedAt": "2026-10-09T10:36:30.904Z",
+        "status": 200,
+        "generationId": "gen-1791542190-JLp4QDAxjIlYkdlSQHIj",
+        "model": "openai/gpt-oss-20b",
+        "provider": "CoreWeave",
+        "usage": {
+          "prompt_tokens": 2649,
+          "completion_tokens": 83,
+          "total_tokens": 2732,
+          "cost": 0.00009026,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 2592,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00009026,
+            "upstream_inference_prompt_cost": 0.00007947,
+            "upstream_inference_completions_cost": 0.00001079
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 9,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "requestToolNames": [
+          "grades_create",
+          "teacher-overview_get_overview",
+          "academic-dashboard_get_kpis",
+          "grades_get_by_student",
+          "teacher-dashboard_get_overview",
+          "teacher-dashboard_get_attendance_trend",
+          "grades_get_student_report",
+          "grades_get_by_teacher",
+          "search_search_students",
+          "assessments_get_all",
+          "student-profile_get_academic",
+          "teacher-profile_get_my_classes"
+        ],
+        "completedAt": "2026-10-09T10:36:31.792Z"
+      }
+    ]
+  },
+  "controlledFault": {
+    "transport": "actual localhost School HTTP server, real authentication/year/ownership boundaries, published ChatAgent and SDK, scripted empty model",
+    "requests": 1,
+    "externalGenerationCalls": 0,
+    "visibleUnavailableNotice": true,
+    "protectedDataLeaks": 0,
+    "directOutsiderReadDenied": true,
+    "metadataUsageSynthetic": true,
+    "notAnswerAccuracySuccess": true
+  },
+  "offline": {
+    "focusedTests": 11,
+    "chatAndYearTests": 503,
+    "coverage": [
+      "empty and tool-only completion",
+      "published SDK empty model",
+      "provider errors and partial replies",
+      "truncated stream and thrown body",
+      "fragmented UTF-8",
+      "large tool results",
+      "cancellation and user stop",
+      "early streaming",
+      "auth/year denial preservation",
+      "usage metadata preservation"
+    ],
+    "lint": "passed",
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "workspaceBoundaries": "passed, 1331 files"
+  },
+  "sourceHashes": {
+    "packages/server/src/modules/chat/schoolChatResponse.ts": "268ad7eeecd0a7dd7bd006697f3b0408034735bbba87f99c7528654c244121f3",
+    "packages/server/src/modules/chat/chatYearContext.ts": "64a60c645915228a40262ee293d2557c8d25749110fe1ca649f932cb131dea52",
+    "packages/server/tests/chat/SchoolChatResponse.test.ts": "ec479404d6e6d1a2fdfef3c8b25ddc5fff5ead340a53940a5ecb3efef47a93c9"
+  },
+  "savedSchoolSettingsChanged": false,
+  "productionJevEnabled": false,
+  "frameworkSourceChanged": false,
+  "cleanup": {
+    "ownTestHostStopped": true,
+    "port": 3103,
+    "temporaryBuildRemoved": true,
+    "privateCapturesRemoved": 4,
+    "reclaimedBytes": 1059357657
+  },
+  "recommendation": "Keep the existing router and local replies. The silent blank-response defect is repaired, but an unavailable notice is a failed answer, not a correct tool answer. Evaluate broader 20B answer quality before production switching; the earlier Jev 5/24 fresh coverage remains unchanged."
+}

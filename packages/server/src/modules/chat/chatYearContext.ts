@@ -6,6 +6,7 @@ import { schoolChatYearContext, SchoolChatContextProvider, type ChatActor } from
 import { JevIntentClassifier } from './JevIntentClassifier';
 import { jevSessionGrants, schoolJevRequestContext } from './JevSessionGrants';
 import { effectiveJevMode } from './JevControls';
+import { latestChatUserText, schoolChatResponse } from './schoolChatResponse';
 
 /** Runs after the shared year boundary (50); never resolves or authorizes a second year. */
 export function registerChatYearContext(container: Container) {
@@ -14,11 +15,13 @@ export function registerChatYearContext(container: Container) {
     const actor = container.get(USER) as ChatActor | undefined;
     const snapshot = await provider.snapshot({ id: actor?.id, role: actor?.role });
     let grant = null;
+    let latestUserText = '';
     try {
       const body = await context.req.json();
+      latestUserText = latestChatUserText(body?.messages);
       grant = jevSessionGrants.consume(body?.sessionKey, actor?.id, snapshot.academicYear, body?.messages);
     } catch { /* The existing controller owns malformed-body responses. */ }
-    return schoolChatYearContext.run(snapshot, async () => {
+    await schoolChatYearContext.run(snapshot, async () => {
       if (!grant || !actor?.id || !actor.role) return next();
       const classifier = await container.resolve(JevIntentClassifier);
       let correlationId: string | null = null;
@@ -29,6 +32,7 @@ export function registerChatYearContext(container: Container) {
         eligible: request => classifier.eligible(request), prepare: request => classifier.prepare(request),
         onSelection: classifier.onSelection }, next);
     });
+    context.res = schoolChatResponse(context.res, latestUserText, context.req.raw.signal);
   };
   container.setInjection({ type: INJECTION_TYPES.MIDDLEWARE, target: ChatController, order: 55, handler });
 }

@@ -1,0 +1,123 @@
+import { schoolReplyLanguage } from './schoolReplyLanguage';
+
+/** This is a transport failure message, never a claim about school records. */
+export function schoolChatFailureText(query: string): string {
+  const language = schoolReplyLanguage(query);
+  return language === 'ary' ? 'ما قدرتش نكمل الجواب دابا. عاود سولني، أو شوف المعطيات فلوحة التحكم.'
+    : language === 'ar' ? 'تعذر إكمال الإجابة الآن. أعد المحاولة أو راجع البيانات في لوحة التحكم.'
+      : language === 'fr' ? 'Je ne peux pas terminer la réponse pour le moment. Réessayez ou consultez les données dans le tableau de bord.'
+        : /^(?:muestra|mu[eé]strame|cu[aá]ntos?|cu[aá]les?|dame|mis|quiero|hola)(?!\p{L})/iu.test(query.trim())
+          ? 'No pude completar la respuesta. Inténtalo de nuevo o consulta los datos en el panel.'
+          : 'I could not complete the reply. Try again or check the data in the dashboard.';
+}
+
+export function latestChatUserText(messages: unknown): string {
+  if (!Array.isArray(messages)) return '';
+  const message = [...messages].reverse().find(value => value?.role === 'user');
+  const content = message?.parts ?? message?.content;
+  return typeof content === 'string' ? content : Array.isArray(content)
+    ? content.filter(part => part?.type === 'text' && typeof part.text === 'string').map(part => part.text).join(' ') : '';
+}
+
+/**
+ * Preserve the SDK stream; make empty completion and broken streams visible.
+ * No generation retry, tools, persistence, year resolution or usage estimation.
+ */
+export function schoolChatResponse(response: Response, query: string, signal?: AbortSignal): Response {
+  if (!response.ok || !response.body || response.headers.get('x-vercel-ai-ui-message-stream') !== 'v1'
+    || !response.headers.get('content-type')?.includes('text/event-stream')
+    || response.headers.has('content-encoding')) return response;
+  const reader = response.body.getReader(), decoder = new TextDecoder(), encoder = new TextEncoder();
+  const failure = schoolChatFailureText(query), partId = 'school-unavailable-' + crypto.randomUUID();
+  const encodeEvent = (value: unknown) => `data: ${JSON.stringify(value)}\n\n`;
+  let buffer = '', oversized = false, hasText = false, hasStart = false, terminal = false, aborted = false, repaired = false;
+  const maxFrameChars = 262144;
+  const body = new ReadableStream<Uint8Array>({
+    async pull(controller) {
+      let emitted = false;
+      const emit = (value: string) => { if (value) { controller.enqueue(encoder.encode(value)); emitted = true; } };
+      const notice = () => {
+        if (aborted || signal?.aborted || repaired) return;
+        repaired = true;
+        if (!hasStart) { emit(encodeEvent({ type: 'start', messageId: 'school-unavailable-' + crypto.randomUUID() })); hasStart = true; }
+        emit(encodeEvent({ type: 'text-start', id: partId }));
+        emit(encodeEvent({ type: 'text-delta', id: partId, delta: hasText ? '\n\n' + failure : failure }));
+        emit(encodeEvent({ type: 'text-end', id: partId }));
+      };
+      const processFrame = (frame: string, separator: string) => {
+        const data = frame.split(/\r?\n/u).filter(line => line.startsWith('data:')).map(line => line.slice(5).trimStart()).join('\n');
+        if (data === '[DONE]') {
+          if (!terminal && !aborted && !signal?.aborted) {
+            notice(); emit(encodeEvent({ type: 'error', errorText: failure }));
+          }
+          terminal = true; emit(frame + separator); return;
+        }
+        let event: Record<string, unknown>;
+        try { event = JSON.parse(data); } catch { emit(frame + separator); return; }
+        if (!event || typeof event !== 'object') { emit(frame + separator); return; }
+        if (event.type === 'start') hasStart = true;
+        if (event.type === 'text-delta' && typeof event.delta === 'string' && event.delta.trim()) hasText = true;
+        if (event.type === 'abort') aborted = true;
+        if (event.type === 'error' && !aborted && !signal?.aborted) {
+          notice(); emit(encodeEvent({ ...event, errorText: failure })); return;
+        }
+        if (event.type === 'finish') {
+          if ((repaired || !hasText || event.finishReason === 'error') && !aborted && !signal?.aborted) {
+            notice();
+            const metadata = event.messageMetadata && typeof event.messageMetadata === 'object' ? event.messageMetadata : {};
+            emit(encodeEvent({ ...event, messageMetadata: { ...metadata, schoolReplyOutcome: 'unavailable' } }));
+          } else emit(frame + separator);
+          terminal = true; return;
+        }
+        emit(frame + separator);
+      };
+      const consume = (text: string) => {
+        buffer += text;
+        for (;;) {
+          const delimiter = /\r?\n\r?\n/u.exec(buffer);
+          if (!delimiter) break;
+          const frame = buffer.slice(0, delimiter.index), separator = delimiter[0];
+          buffer = buffer.slice(delimiter.index + separator.length);
+          if (oversized) { emit(frame + separator); oversized = false; } else processFrame(frame, separator);
+        }
+        if (buffer.length > maxFrameChars) {
+          // Large tool payloads pass through without accumulating or parsing.
+          // Unknown/large text frames conservatively count as visible output.
+          if (!oversized && !/^data:\s*\{\s*"type"\s*:\s*"(?:tool-|data-)/u.test(buffer)) hasText = true;
+          emit(buffer.slice(0, -3)); buffer = buffer.slice(-3); oversized = true;
+        }
+      };
+      try {
+        let part: Awaited<ReturnType<typeof reader.read>>;
+        do {
+          part = await reader.read();
+          if (!part.done) consume(decoder.decode(part.value, { stream: true }));
+        } while (!part.done && !emitted);
+        if (!part.done) return;
+        consume(decoder.decode());
+        if (buffer) {
+          if (oversized) emit(buffer);
+          else {
+            // A truncated final JSON event must not prevent the SDK from
+            // reading the failure notice that follows it.
+            const data = buffer.split(/\r?\n/u).filter(line => line.startsWith('data:')).map(line => line.slice(5).trimStart()).join('\n');
+            try { JSON.parse(data); processFrame(buffer, '\n\n'); } catch { if (data === '[DONE]') processFrame(buffer, '\n\n'); }
+          }
+          buffer = '';
+        }
+        if (!terminal && !aborted && !signal?.aborted) {
+          notice(); emit(encodeEvent({ type: 'error', errorText: failure })); emit('data: [DONE]\n\n');
+        }
+        reader.releaseLock(); controller.close();
+      } catch (error) {
+        if (aborted || signal?.aborted) { controller.error(error); return; }
+        notice(); emit(encodeEvent({ type: 'error', errorText: failure })); emit('data: [DONE]\n\n');
+        void reader.cancel().catch(() => {}); controller.close();
+      }
+    },
+    cancel(reason) { aborted = true; return reader.cancel(reason); },
+  });
+  const headers = new Headers(response.headers);
+  headers.delete('content-length');
+  return new Response(body, { status: response.status, statusText: response.statusText, headers });
+}

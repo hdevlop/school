@@ -6,9 +6,25 @@ the project and recoverable from published Git history. See the
 for the current reports, retained test inputs and location of the verified ZIP.
 Historical links below may require restoring their archived files.
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. FRESH JEV: 21/24 CLASSIFICATIONS, FIVE CORRECT GUARDED PLANS, 19 FALLBACKS. POPULATED ROLE VERIFICATION: 11/12 AFTER FIXES, 1.123 SECONDS AVERAGE; ONE EMPTY FALLBACK REMAINS. OWNERSHIP/YEAR DENIALS HOLD. EARLIER 100/100 IS A REUSED DEVELOPMENT CORPUS. GENERAL JEV ENABLEMENT AND INDEPENDENT NATIVE ACCEPTANCE REMAIN UNQUALIFIED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. EMPTY CHAT COMPLETION NOW HAS A VISIBLE UNAVAILABLE NOTICE, WITHOUT A RETRY. THREE LIVE TARGETED 20B REPEATS AND ONE CONTROLLED EMPTY COMPLETION PASS TRANSPORT CHECKS. FRESH JEV REMAINS 21/24 CLASSIFICATIONS, FIVE CORRECT GUARDED PLANS, 19 FALLBACKS; PRIOR POPULATED ROLE SCORE REMAINS 11/12. OWNERSHIP/YEAR DENIALS HOLD. GENERAL JEV ENABLEMENT AND INDEPENDENT NATIVE ACCEPTANCE REMAIN UNQUALIFIED.**
 
 ## 0. Current status and next work — 2026-10-09
+
+**2026-10-09 empty-reply safeguard complete:**
+[Fix, evidence and next action](docs/evidence/chatbot-latency/darija-empty-reply-fix-results-20261009.md)
+record three visible live 20B/CoreWeave replies for the previously failed
+teacher-outsider scenario, averaging 1.644 seconds with zero protected-data leaks.
+The intermittent empty response did not recur; a separate controlled empty
+model completion through the actual authenticated School endpoint verifies the
+visible Darija failure notice and unavailable marker, with zero external
+generation calls. Empty/error/truncated streams cannot silently appear as a
+successful answer. Successful frames and usage pass through; user stop stays
+a stop; no automatic retry, auth/year owner or saved AI setting changes.
+503 chat/year checks, root lint/typecheck/build and boundaries pass. Host
+stopped; four private captures and the temporary build removed; about 1,010 MiB
+reclaimed. Prior accuracy observations remain unchanged. Next: broader 20B
+answer-quality checks must count unavailable notices as failures, verify facts
+and tool parameters, and retain the router/local replies; Jev remains narrow.
 
 **2026-10-09 fresh Darija and populated role work complete:**
 [Results, limitations and next action](docs/evidence/chatbot-latency/darija-fresh-populated-results-20261009.md)
