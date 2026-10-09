@@ -6,9 +6,27 @@ the project and recoverable from published Git history. See the
 for the current reports, retained test inputs and location of the verified ZIP.
 Historical links below may require restoring their archived files.
 
-Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. LATEST DARIJA/ARABIZI: 100/100 TOOL PLANS; 42 LIVE JEV-OFF CHECKS PASS. FIFTEEN PRIOR FLAGGED ANSWERS REVIEWED AGAINST FIXTURE EVIDENCE, TWO DEFECTS FIXED. GENERAL JEV ENABLEMENT AND INDEPENDENT NATIVE ACCEPTANCE REMAIN UNQUALIFIED.**
+Status: **NAJM-CHATBOT 3.6.0 PUBLISHED AND INSTALLED. FRESH JEV: 21/24 CLASSIFICATIONS, FIVE CORRECT GUARDED PLANS, 19 FALLBACKS. POPULATED ROLE VERIFICATION: 11/12 AFTER FIXES, 1.123 SECONDS AVERAGE; ONE EMPTY FALLBACK REMAINS. OWNERSHIP/YEAR DENIALS HOLD. EARLIER 100/100 IS A REUSED DEVELOPMENT CORPUS. GENERAL JEV ENABLEMENT AND INDEPENDENT NATIVE ACCEPTANCE REMAIN UNQUALIFIED.**
 
 ## 0. Current status and next work — 2026-10-09
+
+**2026-10-09 fresh Darija and populated role work complete:**
+[Results, limitations and next action](docs/evidence/chatbot-latency/darija-fresh-populated-results-20261009.md)
+record 21/24 new synthetic Jev classifications, five correct guarded plans and
+19 fallbacks; these are counterfactual plans without School reads. Populated
+parent/teacher/student checks use the ordinary router with an isolated
+20B/CoreWeave process, leaving saved School 120B settings unchanged. Final
+development verification passes 11/12 at 1.123 seconds average; a teacher
+outsider request has an empty reply and is retained as a failure. Direct MCP
+checks allow six own reads and deny three outsider plus three historical reads;
+no protected data leaked. Grade/profile offers, teacher identity hints, explicit
+other-year replies, own teacher totals and own student grade rendering are fixed.
+492 chat/year and 560 script checks, lint, typecheck, boundaries and production
+build pass. Host stopped; 51 private files removed; about 1,012 MiB reclaimed;
+36 public observations/source snapshots kept in one verified 68 KiB archive.
+Next: address empty provider/fallback replies before a general 20B rollout.
+Keep the router and local replies; Jev remains a narrow experimental helper.
+No new independent native acceptance or broad production Jev enablement is claimed.
 
 **2026-10-09 routing and answer closeout complete:**
 [Latest report and next actions](docs/evidence/chatbot-latency/darija-answer-closeout-results-20261009.md) record 100/100 tool plans and 0.364 seconds average full reply, without a timing gate. Combined counts (q11/q12), explicit teacher numbers (q57/q58) and neutral reference clarification (q39/q40) use guarded local replies. 42/42 live Jev-off requests make zero provider calls. The assistant reviewed all 15 previously flagged answers: 13 were supported by the fixture or clarification, and q40/q58 defects are fixed. This is separate from independent native review. 471 chat and 557 script tests, 128 populated two-year admin/principal checks, 128 restricted-role chats, 12 MCP denials, lint, typecheck, boundaries and production build pass. Fixture off/disabled/keyless/stopped; 1.18 GiB reclaimed; raw evidence compressed with verified hashes. Next useful acceptance work: populated real-role workflows and fresh unseen Darija. Existing router retained; no production AI settings change.

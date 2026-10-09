@@ -16,7 +16,7 @@ import { schoolReplyContext } from './schoolReplyContext';
 
 // A snapshot of the validated year for prompt text and MCP arguments; the
 // shared year boundary remains the only resolver and authorization owner.
-export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string }>();
+export const schoolChatYearContext = new AsyncLocalStorage<{ prompt: string; academicYear: string; role?: string; schoolDate?: string; teacherId?: string; studentId?: string }>();
 
 export interface ChatActor { id?: string; role?: string }
 
@@ -52,8 +52,9 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
 
   async snapshot(actor: ChatActor = {}) {
     const today = await this.today();
-    return { prompt: [today.text, this.describeYear(actor.role), await this.describeActor(actor)].filter(Boolean).join('\n'),
-      academicYear: this.year.label, role: actor.role, schoolDate: today.date };
+    const context = await this.actorContext(actor);
+    return { prompt: [today.text, this.describeYear(actor.role), context?.prompt].filter(Boolean).join('\n'),
+      academicYear: this.year.label, role: actor.role, schoolDate: today.date, teacherId: context?.teacherId, studentId: context?.studentId };
   }
 
   /**
@@ -64,6 +65,10 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
    * A failed lookup leaves the line out rather than failing the chat.
    */
   async describeActor({ id, role }: ChatActor): Promise<string | null> {
+    return (await this.actorContext({ id, role }))?.prompt ?? null;
+  }
+
+  private async actorContext({ id, role }: ChatActor): Promise<{ prompt: string; teacherId?: string; studentId?: string } | null> {
     if (!id) return null;
     try {
       if (role === 'parent') {
@@ -74,20 +79,20 @@ export class SchoolChatContextProvider implements ChatbotContextProvider {
           const place = [child.class?.name, child.section?.name].filter(Boolean).join(' ');
           return `${child.name} (studentId ${child.id}${place ? `, ${place}` : ''})`;
         });
-        return [
+        return { prompt: [
           `The signed-in user is a parent, parentId ${parent.id}.`,
           listed.length ? `Their children this year: ${listed.join('; ')}.` : 'No child is linked to them this year.',
           'For their children\'s names, answer from this authorized list; parent-profile_get_children is a finance profile and is not needed for names.',
           '"My child" means one of these children; for their grades, attendance or overview use the student-profile tools with that studentId.',
-        ].join(' ');
+        ].join(' ') };
       }
       if (role === 'teacher') {
         const teacher = await this.teachers.getByUserId(id);
-        return teacher ? `The signed-in user is a teacher, teacherId ${teacher.id}. For their own classes, students, schedule or pending grading use the teacher-profile tools with this teacherId.` : null;
+        return teacher ? { teacherId: teacher.id, prompt: `The signed-in user is a teacher, teacherId ${teacher.id}. For their own classes use teacher-profile_get_my_classes; for their students use teacher-profile_get_my_students. These tools take this teacherId. Use teacher-profile tools for their own schedule or pending grading too; never pass a teacherId as a section id.` } : null;
       }
       if (role === 'student') {
         const student = await this.students.getByUserId(id);
-        return student ? `The signed-in user is the student ${student.name}, studentId ${student.id}. "My" grades, attendance or overview mean this student: use the student-profile tools with this studentId.` : null;
+        return student ? { studentId: student.id, prompt: `The signed-in user is the student ${student.name}, studentId ${student.id}. "My" grades, attendance or overview mean this student: use the student-profile tools with this studentId.` } : null;
       }
     } catch {
       return null;

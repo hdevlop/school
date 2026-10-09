@@ -7,6 +7,10 @@ const corpus = await Bun.file('datasets/chatbot-latency/morocco.json').json() as
 };
 
 describe('Moroccan request reply context', () => {
+  it('keeps academic marks distinct from attendance for Arabic and Arabizi', () => {
+    for (const query of ['bghit nchof no9at dyali', 'بغيت النقاط ديالي']) expect(schoolReplyContext(query)).toContain('never substitute attendance percentages for grades');
+    expect(schoolReplyContext('وريني الغياب ديالي') ?? '').not.toContain('academic grades/marks');
+  });
   it.each(corpus.cases)('keeps the actual request language for $id', ({ query, language }) => {
     expect(schoolReplyLanguage(query)).toBe(language);
   });

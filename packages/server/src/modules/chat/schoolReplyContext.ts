@@ -10,6 +10,9 @@ export function schoolReplyContext(userText: string): string | null {
   if (!language) return null;
   const text = normalizeReplyText(userText);
   const hints: string[] = [];
+  if (/(?<![\p{L}\p{N}])(?:nno9at|no9at|notes?|grades?|marks|النقط|نقط|النقاط|نقاط)(?![\p{L}\p{N}])/u.test(text)) {
+    hints.push('This asks for academic grades/marks, not attendance statistics. For the signed-in student or an authorized child, student-profile_get_academic with the studentId from the signed-in context returns grades. grades_get_by_student is also a valid grade read. Summarize only actual returned marks and their assessment/subject; never substitute attendance percentages for grades. If no grade read is offered or succeeds, explain that grades could not be retrieved.');
+  }
   if (language === 'fr' && /(?<!\p{L})(?:notes?|identifiants?)(?!\p{L})/u.test(text)) {
     hints.push('In French student lookup replies, use "identifiant de l’élève" or "code de l’élève", never the English label "student ID". Preserve actual stored names and codes unchanged.');
   }

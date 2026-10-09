@@ -9,7 +9,7 @@ import { schoolI18n } from '@sms/contracts/locales';
 import { INJECTION_TYPES, Server, Service, USER } from '../../src/najm';
 import { AcademicYearRepository } from '../../src/modules/academicYears/AcademicYearRepository';
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../src/modules/academicYears/AcademicYearValidator';
-import { registerYearPropertyInjector, registerYearRequestScope, Year } from '../../src/modules/academicYears/requestYear';
+import { registerYearPropertyInjector, registerYearRequestScope, runWithResolvedYear, Year } from '../../src/modules/academicYears/requestYear';
 import { SchoolChatContextProvider } from '../../src/modules/chat/SchoolChatContextProvider';
 import { SettingsRepository } from '../../src/modules/settings/SettingsRepository';
 import { ParentRepository } from '../../src/modules/parents/ParentRepository';
@@ -147,7 +147,8 @@ describe('published chat controller year boundary', () => {
   });
 
   it("names the signed-in parent, teacher or student so profile tools get the person's own id", async () => {
-    const provider = await (await boot()).container.resolve(SchoolChatContextProvider);
+    const instance = await boot();
+    const provider = await instance.container.resolve(SchoolChatContextProvider);
     expect(await provider.describeActor({ id: 'u-parent', role: 'parent' })).toBe(
       'The signed-in user is a parent, parentId P1. Their children this year: Salma Idrissi (studentId S1, CE2 A); '
       + 'Omar Idrissi (studentId S2). '
@@ -158,6 +159,11 @@ describe('published chat controller year boundary', () => {
     expect(await provider.describeActor({ id: 'u-teacher', role: 'teacher' })).toContain('teacherId T1');
     expect(await provider.describeActor({ id: 'u-student', role: 'student' }))
       .toContain('the student Salma Idrissi, studentId S1');
+    await runWithResolvedYear(instance.container, { id: 'active', label: '2026-2027', status: 'active' } as ResolvedAcademicYear, async () => {
+      expect((await provider.snapshot({ id: 'u-teacher', role: 'teacher' })).teacherId).toBe('T1');
+      expect((await provider.snapshot({ id: 'u-student', role: 'student' })).studentId).toBe('S1');
+      expect((await provider.snapshot({ id: 'u-parent', role: 'parent' })).studentId).toBeUndefined();
+    });
     // Administrators, unknown accounts, a missing id and a failed lookup add nothing.
     for (const actor of [{ id: 'u-admin', role: 'admin' }, { id: 'u-nobody', role: 'parent' }, { role: 'teacher' }, { id: 'u-broken', role: 'teacher' }]) {
       expect(await provider.describeActor(actor)).toBeNull();

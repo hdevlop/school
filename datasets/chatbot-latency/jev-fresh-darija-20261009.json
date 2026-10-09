@@ -1,0 +1,31 @@
+{
+  "purpose": "fresh-assistant-darija-exploration",
+  "source": "assistant",
+  "independentNativeAcceptance": false,
+  "cases": [
+    {"id":"fresh01","family":"students","language":"ary","intent":"student_count","query":"فالمدرسة شحال كاينين ديال التلاميذ كاملين؟"},
+    {"id":"fresh02","family":"students","language":"ary-latn","intent":"student_count","query":"f lmdrasa ch7al kaynin dyal tlamid kamlin?"},
+    {"id":"fresh03","family":"teachers","language":"ary","intent":"teacher_count","query":"عدد الأساتذة فالمدرسة بغيتو كامل بلا تفاصيل."},
+    {"id":"fresh04","family":"teachers","language":"ary-latn","intent":"teacher_count","query":"3adad lasatida f lmdrasa bghito kaml bla tafasil."},
+    {"id":"fresh05","family":"two-counts","language":"ary","intent":"student_and_teacher_count","query":"بغيت نعرف شحال من تلميذ وشحال من أستاذ فالمدرسة، كل عدد بوحدو."},
+    {"id":"fresh06","family":"two-counts","language":"ary-latn","intent":"student_and_teacher_count","query":"bghit n3ref ch7al mn tilmid w ch7al mn ostad f lmdrasa, kol 3adad bo7do."},
+    {"id":"fresh07","family":"classes","language":"ary","intent":"class_list","query":"الأقسام كاملين ديال المدرسة عطيني سميتهم."},
+    {"id":"fresh08","family":"classes","language":"ary-latn","intent":"class_list","query":"l2a9sam kamlin dyal lmdrasa 3tini smiythom."},
+    {"id":"fresh09","family":"attendance","language":"ary","intent":"attendance_today","query":"بغيت نشوف سجل الحضور ديال التلاميذ كاملين ديال اليوم."},
+    {"id":"fresh10","family":"attendance","language":"ary-latn","intent":"attendance_today","query":"bghit nchof sijil l7odor dyal tlamid kamlin dyal lyom."},
+    {"id":"fresh11","family":"exams","language":"ary","intent":"upcoming_exams","query":"عطيني مواعيد الفروض اللي جايين فالمدرسة."},
+    {"id":"fresh12","family":"exams","language":"ary-latn","intent":"upcoming_exams","query":"3tini mawa3id lforod li jayyin f lmdrasa."},
+    {"id":"fresh13","family":"filtered","language":"ary","intent":"needs_llm","query":"شحال من تلميذ كاين فالقسم الخامس بوحدو؟"},
+    {"id":"fresh14","family":"filtered","language":"ary-latn","intent":"needs_llm","query":"ch7al mn tilmid kayn f l9ism lkhamis bo7do?"},
+    {"id":"fresh15","family":"parent-own","language":"ary","intent":"needs_llm","query":"بغيت غير النقط ديال بنتي فهاد العام."},
+    {"id":"fresh16","family":"parent-own","language":"ary-latn","intent":"needs_llm","query":"bghit ghir nno9at dyal bnti f had l3am."},
+    {"id":"fresh17","family":"student-own","language":"ary","intent":"needs_llm","query":"وريني الغياب ديالي أنا فهاد الشهر."},
+    {"id":"fresh18","family":"student-own","language":"ary-latn","intent":"needs_llm","query":"werini lghiyab dyali ana f had chher."},
+    {"id":"fresh19","family":"teacher-own","language":"ary","intent":"needs_llm","query":"أنا أستاذ وبغيت سميات التلاميذ اللي كنقريهم."},
+    {"id":"fresh20","family":"teacher-own","language":"ary-latn","intent":"needs_llm","query":"ana ostad w bghit smiyat tlamid li kan9errihom."},
+    {"id":"fresh21","family":"write","language":"ary","intent":"write_request","query":"زيد تلميذ جديد فالقسم الخامس دابا."},
+    {"id":"fresh22","family":"write","language":"ary-latn","intent":"write_request","query":"zid tilmid jdid f l9ism lkhamis daba."},
+    {"id":"fresh23","family":"ambiguous","language":"ary","intent":"needs_llm","query":"دابا هادوك شنو ندير معاهم؟"},
+    {"id":"fresh24","family":"ambiguous","language":"ary-latn","intent":"needs_llm","query":"daba hadok chno ndir m3ahom?"}
+  ]
+}
