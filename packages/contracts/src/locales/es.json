@@ -252,7 +252,10 @@
       "savingPending": "Guardando...",
       "cancel": "Cancelar",
       "invalidLink": "Este enlace no es válido o le falta el token.",
-      "rightsReserved": "© {{year}} {{app}}. Todos los derechos reservados."
+      "rightsReserved": "© {{year}} {{app}}. Todos los derechos reservados.",
+      "activateTitle": "Activa tu cuenta",
+      "activateSubtitle": "Elige una contraseña para activar tu cuenta",
+      "activateSubmit": "Activar cuenta"
     },
     "form": {
       "fullName": "Nombre completo",
@@ -280,7 +283,8 @@
       "tokenRefreshed": "Token de acceso actualizado exitosamente",
       "refreshTokenGenerated": "Token de actualización generado exitosamente",
       "refreshTokenRefreshed": "Token de actualización renovado exitosamente",
-      "authInitialized": "Autenticación inicializada exitosamente"
+      "authInitialized": "Autenticación inicializada exitosamente",
+      "accountActivated": "Tu cuenta está activa. Inicia sesión con tu nueva contraseña."
     },
     "errors": {
       "resetEmailFailed": "No se pudo enviar el correo de restablecimiento",
@@ -3086,6 +3090,10 @@
       "divorced": "Divorciado/a",
       "widowed": "Viudo/a",
       "separated": "Separado/a"
+    },
+    "invitation": {
+      "sent": "Correo de invitación enviado a {{email}}. El padre o la madre activa la cuenta desde el enlace.",
+      "notSent": "Se creó a {{name}}, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
     }
   },
   "payments": {
@@ -3473,6 +3481,10 @@
     "subtitle": {
       "count": "{{count}} miembros en total",
       "members": "miembros"
+    },
+    "invitation": {
+      "sent": "Correo de invitación enviado a {{email}}. El miembro del personal activa la cuenta desde el enlace.",
+      "notSent": "El miembro del personal se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
     }
   },
   "staffRoles": {
@@ -3997,7 +4009,11 @@
         "lastPayment": "Último pago"
       }
     },
-    "title": "Título"
+    "title": "Título",
+    "invitation": {
+      "sent": "Correo de invitación enviado a {{email}}. El estudiante activa la cuenta desde el enlace.",
+      "notSent": "El estudiante se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
+    }
   },
   "cycles": {
     "errors": {
@@ -4239,6 +4255,10 @@
       "seeded": "Profesor inicializado correctamente",
       "unassigned": "Profesor desasignado correctamente",
       "updated": "Profesor actualizado correctamente"
+    },
+    "invitation": {
+      "sent": "Correo de invitación enviado a {{email}}. El profesor activa la cuenta desde el enlace.",
+      "notSent": "El profesor se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
     }
   },
   "vehicleAssignments": {

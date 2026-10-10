@@ -126,16 +126,22 @@ export class StudentService {
       fallback: `/images/student_${genderSuffix}.png`,
     });
 
-    // Seeding passes a password (account created silently, log-in-able);
-    // the dashboard passes none, so the student is emailed a set-password invite.
-    const user = await this.authService.provisionUser({
+    // Seeding passes a password: the account is created active and silently.
+    // The dashboard passes none: the account stays pending and the student is
+    // emailed an activation link to /reset-password. Choosing a password there
+    // verifies the email and activates the account, and while it is pending
+    // Reset access re-sends the same invitation instead of a reset mail.
+    const password = (isSeeding() ? resolveUserPassword(data.password) : data.password)?.trim();
+    const account = {
       id: data.userId,
       name: data.name,
       email: data.email,
       image,
       role: 'student',
-      password: isSeeding() ? resolveUserPassword(data.password) : data.password,
-    });
+    };
+    const user = password
+      ? await this.authService.provisionUser({ ...account, password })
+      : await this.authService.inviteUser({ ...account, status: 'pending' });
 
     const student = await this.studentRepository.create({
       id: studentId,
@@ -166,7 +172,7 @@ export class StudentService {
       enrolledOn: data.yearEnrolledOn,
     }, actorId || user.id);
 
-    await this.parentService.processParents(student, parentsToProcess);
+    const linkedParents = await this.parentService.processParents(student, parentsToProcess);
     await this.feeService.processFees(student, validatedData.fees, actor ?? { id: user.id }, data.yearEnrolledOn, year.label);
 
     if (data.transportAssignment) {
@@ -177,7 +183,14 @@ export class StudentService {
       });
     }
 
-    return student;
+    // Only invited accounts carry `emailSent`: the student's own, and one per
+    // parent created alongside. The dashboard says which activation mails left.
+    if (!('emailSent' in user)) return student;
+    return {
+      ...student,
+      emailSent: user.emailSent,
+      parentInvitations: linkedParents?.invitations ?? [],
+    };
   }
 
   @Transaction()

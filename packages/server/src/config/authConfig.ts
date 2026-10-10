@@ -1,11 +1,15 @@
+import { readFileSync } from 'node:fs';
 import { guards } from 'najm-guard';
 
+import { schoolTheme } from '@sms/server/theme';
 import { auth, isAuth } from '../auth';
 
 /**
  * Sign-in and route guards.
  *
  *   NAJM_ENCRYPTION_KEY   najm-auth's encryption key
+ *   FRONTEND_URL          origin of the set-password link in invitation and
+ *                         reset mails (default http://localhost:3000)
  *
  * auth uses the cache, email and rate-limit plugins `src/index.ts` registers
  * before it, so their variables are read in those files. Passing their config
@@ -19,8 +23,30 @@ import { auth, isAuth } from '../auth';
  */
 export const guardConfig = () => guards({ default: [isAuth()] });
 
+// The name the dashboard shows (`najm.config.ts`); mail subjects carry it.
+const APP_NAME = 'MyScolAI';
+
+/**
+ * The logo embedded in the account invitation mail. It is the same file the
+ * sign-in page shows, so an invited teacher recognises the school the link
+ * comes from.
+ */
+function accountInviteLogo() {
+  const logo = schoolTheme.asset('authLogo');
+  if (!logo) return undefined;
+  return {
+    alt: APP_NAME,
+    contentBase64: readFileSync(logo.sourcePath).toString('base64'),
+    contentType: logo.mimeType,
+    filename: logo.fileName,
+  };
+}
+
 export const authConfig = () =>
   auth({
+    appName: APP_NAME,
+    accountInviteLogo: accountInviteLogo(),
+    frontendUrl: process.env.FRONTEND_URL,
     dialect: 'pg',
     encryptionKey: process.env.NAJM_ENCRYPTION_KEY,
     // A self-registered account waits for an administrator, who activates it

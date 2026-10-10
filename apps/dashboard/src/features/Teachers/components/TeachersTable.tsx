@@ -5,6 +5,7 @@ import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenStat
 import { Users, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { announceInvitation } from '@/shared/invitationNotice';
 import TeacherForm from './TeacherForm';
 import { useTeachers } from '../hooks/useTeachers';
 import { useTranslation } from 'najm-i18n/react';
@@ -41,6 +42,15 @@ function TeachersTable() {
 
   const { openDialog, confirmDelete } = useDialog();
 
+  const createAndInviteTeacher = async (data) => {
+    const response = await createTeacher(data);
+    announceInvitation(response?.data?.emailSent, {
+      sent: t('teachers.invitation.sent', { email: data.email }),
+      notSent: t('teachers.invitation.notSent'),
+    });
+    return response;
+  };
+
   const handleAddClick = () => {
     openDialog({
       title: t('teachers.dialogs.createTitle'),
@@ -48,7 +58,7 @@ function TeachersTable() {
         <TeacherForm
           classes={classes}
           subjects={subjects}
-          onSubmitTeacher={createTeacher}
+          onSubmitTeacher={createAndInviteTeacher}
         />
       ),
       width:'4xl',

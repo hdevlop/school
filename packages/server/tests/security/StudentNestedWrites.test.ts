@@ -19,29 +19,40 @@ const validator = withEnglishMessages(new StudentValidator({} as never, {} as ne
 function studentHarness() {
   const effects: string[] = [];
   const actors: unknown[] = [];
+  const invitations: unknown[] = [];
   const checks = Object.assign(Object.create(validator), Object.fromEntries([
     'ensureCodeUnique', 'ensureEmailUnique', 'ensurePhoneUnique', 'ensureClassAndSectionValid',
   ].map((name) => [name, async () => {}])));
   const service = new StudentService(
     { create: async (data: object) => { effects.push('student'); return { id: 'student', ...data }; } } as never,
     checks, {} as never,
-    { provisionUser: async () => { effects.push('account'); return { id: 'student-user' }; } } as never,
+    {
+      provisionUser: async () => { effects.push('account'); return { id: 'student-user' }; },
+      inviteUser: async (body: { status?: string }) => {
+        effects.push('account');
+        invitations.push(body.status);
+        return { id: 'student-user', emailSent: true };
+      },
+    } as never,
     { processParents: async () => {} } as never,
     { processFees: async (_s: unknown, _f: unknown, actor: unknown) => actors.push(actor) } as never,
     { assign: async () => effects.push('transport') } as never,
     { resolveNewStudentPlacement: async () => ({ id: 'year', label: '2026-2027' }), create: async () => {} } as never,
     { processFile: async () => { effects.push('file'); return null; } } as never,
   );
-  return { service, effects, actors };
+  return { service, effects, actors, invitations };
 }
 
 describe('SEC-001 nested student creation boundary', () => {
   it('allows student-only secretary enrollment, preserving the full actor', async () => {
-    const { service, effects, actors } = studentHarness();
+    const { service, effects, actors, invitations } = studentHarness();
     const actor = { id: 'secretary', role: 'secretary' };
-    await service.create(input, actor);
+    const created = await service.create(input, actor);
     expect(effects).toEqual(['file', 'account', 'student']);
     expect(actors).toEqual([actor]);
+    // No password from the dashboard: a pending account and an activation mail.
+    expect(invitations).toEqual(['pending']);
+    expect(created).toMatchObject({ emailSent: true, parentInvitations: [] });
   });
   it('rejects unauthorized child operations before any file/account/database side effect', async () => {
     for (const child of [{ fees: [fee] }, { transportAssignment: transport }]) {

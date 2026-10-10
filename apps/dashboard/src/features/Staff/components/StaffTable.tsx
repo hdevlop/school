@@ -5,6 +5,7 @@ import React, { useMemo } from 'react';
 import { Banknote, Briefcase, Calendar, Hash, IdCard, MapPinned, Phone, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
 import { useDialog, Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { announceInvitation } from '@/shared/invitationNotice';
 import { useStaff } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -60,10 +61,20 @@ const StaffTable = () => {
     (row) => row?.status === 'active' && !STAFF_LIST_EXCLUDED_ROLES.has(row?.role)
   ).length;
 
+  // Only a role with app access gets a login, and so an invitation.
+  const createAndInviteStaff = async (data) => {
+    const response = await createStaff(data);
+    announceInvitation(response?.data?.emailSent, {
+      sent: t('staff.invitation.sent', { email: data.email }),
+      notSent: t('staff.invitation.notSent'),
+    });
+    return response;
+  };
+
   const handleAdd = () => {
     openDialog({
       title: t('staff.dialogs.createTitle'),
-      children: <StaffForm onSubmitStaff={createStaff} />,
+      children: <StaffForm onSubmitStaff={createAndInviteStaff} />,
       width: '4xl',
       height: 'xxl',
       showButtons: false,

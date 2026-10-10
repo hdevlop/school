@@ -252,7 +252,10 @@
       "savingPending": "Saving...",
       "cancel": "Cancel",
       "invalidLink": "This link is invalid or missing its token.",
-      "rightsReserved": "© {{year}} {{app}}. All rights reserved."
+      "rightsReserved": "© {{year}} {{app}}. All rights reserved.",
+      "activateTitle": "Activate your account",
+      "activateSubtitle": "Choose a password to activate your account",
+      "activateSubmit": "Activate account"
     },
     "form": {
       "fullName": "Full name",
@@ -280,7 +283,8 @@
       "tokenRefreshed": "Access token refreshed successfully",
       "refreshTokenGenerated": "Refresh token successfully generated",
       "refreshTokenRefreshed": "Refresh token successfully refreshed",
-      "authInitialized": "Authentication initialized successfully"
+      "authInitialized": "Authentication initialized successfully",
+      "accountActivated": "Your account is active. Sign in with your new password."
     },
     "errors": {
       "resetEmailFailed": "Failed to send reset email",
@@ -2105,6 +2109,10 @@
     "title": "Title",
     "subtitle": {
       "count": "{{count}} students total"
+    },
+    "invitation": {
+      "sent": "Invitation email sent to {{email}}. The student activates the account from the link.",
+      "notSent": "The student was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     }
   },
   "parents": {
@@ -2320,6 +2328,10 @@
           "no": "No"
         }
       }
+    },
+    "invitation": {
+      "sent": "Invitation email sent to {{email}}. The parent activates the account from the link.",
+      "notSent": "The parent {{name}} was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     }
   },
   "staff": {
@@ -2480,6 +2492,10 @@
     "subtitle": {
       "count": "{{count}} members total",
       "members": "members"
+    },
+    "invitation": {
+      "sent": "Invitation email sent to {{email}}. The staff member activates the account from the link.",
+      "notSent": "The staff member was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     }
   },
   "staffRoles": {
@@ -2817,6 +2833,10 @@
       "estimatedRate": "Estimated rate",
       "noPayments": "No teacher payments recorded",
       "payments": "Payments"
+    },
+    "invitation": {
+      "sent": "Invitation email sent to {{email}}. The teacher activates the account from the link.",
+      "notSent": "The teacher was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
     }
   },
   "drivers": {

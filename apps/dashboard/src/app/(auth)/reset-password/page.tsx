@@ -29,18 +29,34 @@ const getErrorMessage = (error: unknown) => {
   return 'Could not set your password. The link may have expired.'
 }
 
+// Whether the link came from an account invitation rather than a password
+// reset. Only the wording depends on it: the payload is read, not trusted, and
+// the server verifies and consumes the token either way.
+const isInvitationToken = (token: string) => {
+  try {
+    const payload = token.split('.')[1]
+    if (!payload) return false
+    const json = atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
+    return JSON.parse(json)?.type === 'invite'
+  } catch {
+    return false
+  }
+}
+
 // Used for both password reset and account invites — both arrive here with a
-// one-time ?token= and set a new password via the same endpoint.
+// one-time ?token= and set a new password via the same endpoint. Accepting an
+// invitation also verifies the email and activates the pending account.
 const ResetPasswordForm = () => {
   const { t } = useTranslation();
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get('token') ?? ''
+  const isInvitation = isInvitationToken(token)
 
   const mutation = useMutation({
     mutationFn: (data: { token: string; newPassword: string }) => auth.client.resetPassword(data),
     onSuccess: () => {
-      toast.success(t('auth.success.passwordSet'))
+      toast.success(isInvitation ? t('auth.success.accountActivated') : t('auth.success.passwordSet'))
       router.replace('/login')
     },
     onError: (error) => {
@@ -55,8 +71,8 @@ const ResetPasswordForm = () => {
   return (
     <div className='flex w-full flex-col'>
       <AuthHeading
-        title={t('auth.page.resetTitle')}
-        subtitle={t('auth.page.resetSubtitle')}
+        title={isInvitation ? t('auth.page.activateTitle') : t('auth.page.resetTitle')}
+        subtitle={isInvitation ? t('auth.page.activateSubtitle') : t('auth.page.resetSubtitle')}
       />
 
       {!token ? (
@@ -103,7 +119,7 @@ const ResetPasswordForm = () => {
                 {t('auth.page.savingPending')}
               </>
             ) : (
-              t('auth.page.resetSubmit')
+              isInvitation ? t('auth.page.activateSubmit') : t('auth.page.resetSubmit')
             )}
           </NButton>
         </div>

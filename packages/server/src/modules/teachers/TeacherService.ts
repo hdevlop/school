@@ -196,16 +196,22 @@ export class TeacherService {
       fallback: `/images/teacher_${genderSuffix}.png`,
     });
 
-    // Seeding passes a password (account created silently, log-in-able);
-    // the dashboard passes none, so the teacher is emailed a set-password invite.
-    const user = await this.authService.provisionUser({
+    // Seeding passes a password: the account is created active and silently.
+    // The dashboard passes none: the account stays pending and the teacher is
+    // emailed an activation link to /reset-password. Choosing a password there
+    // verifies the email and activates the account, and while it is pending
+    // Reset access re-sends the same invitation instead of a reset mail.
+    const password = (isSeeding() ? resolveUserPassword(data.password) : data.password)?.trim();
+    const account = {
       id: data.userId,
       name: data.name,
       email: data.email,
       image,
       role: 'teacher',
-      password: isSeeding() ? resolveUserPassword(data.password) : data.password,
-    });
+    };
+    const user = password
+      ? await this.authService.provisionUser({ ...account, password })
+      : await this.authService.inviteUser({ ...account, status: 'pending' });
 
     const staffMember = await this.staffService.create({
       userId: user.id,
@@ -238,7 +244,10 @@ export class TeacherService {
 
     await this.processTeacherAssignments(teacher.id, data.assignments);
 
-    return await this.teacherRepository.getById(teacher.id);
+    const created = await this.teacherRepository.getById(teacher.id);
+    // Only an invited account carries `emailSent`; the dashboard uses it to
+    // say whether the activation mail left or must be re-sent.
+    return 'emailSent' in user ? { ...created, emailSent: user.emailSent } : created;
   }
 
   async update(id: string, data: UpdateTeacherDto) {

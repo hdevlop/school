@@ -252,7 +252,10 @@
       "savingPending": "Enregistrement...",
       "cancel": "Annuler",
       "invalidLink": "Ce lien est invalide ou son jeton est manquant.",
-      "rightsReserved": "© {{year}} {{app}}. Tous droits réservés."
+      "rightsReserved": "© {{year}} {{app}}. Tous droits réservés.",
+      "activateTitle": "Activez votre compte",
+      "activateSubtitle": "Choisissez un mot de passe pour activer votre compte",
+      "activateSubmit": "Activer le compte"
     },
     "form": {
       "fullName": "Nom complet",
@@ -280,7 +283,8 @@
       "tokenRefreshed": "Jeton d'accès actualisé avec succès",
       "refreshTokenGenerated": "Jeton de rafraîchissement généré avec succès",
       "refreshTokenRefreshed": "Jeton de rafraîchissement actualisé avec succès",
-      "authInitialized": "Authentification initialisée avec succès"
+      "authInitialized": "Authentification initialisée avec succès",
+      "accountActivated": "Votre compte est actif. Connectez-vous avec votre nouveau mot de passe."
     },
     "errors": {
       "resetEmailFailed": "Échec de l'envoi de l'e-mail de réinitialisation",
@@ -805,6 +809,10 @@
     "subtitle": {
       "count": "{{count}} membres au total",
       "members": "membres"
+    },
+    "invitation": {
+      "sent": "E-mail d'invitation envoyé à {{email}}. Le membre du personnel active son compte depuis le lien.",
+      "notSent": "Le membre du personnel a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
     }
   },
   "staffRoles": {
@@ -3675,6 +3683,10 @@
       "divorced": "Divorcé(e)",
       "widowed": "Veuf/Veuve",
       "separated": "Séparé(e)"
+    },
+    "invitation": {
+      "sent": "E-mail d'invitation envoyé à {{email}}. Le parent active son compte depuis le lien.",
+      "notSent": "Le parent {{name}} a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
     }
   },
   "payments": {
@@ -4147,7 +4159,11 @@
         "lastPayment": "Dernier paiement"
       }
     },
-    "title": "Titre"
+    "title": "Titre",
+    "invitation": {
+      "sent": "E-mail d'invitation envoyé à {{email}}. L'élève active son compte depuis le lien.",
+      "notSent": "L'élève a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
+    }
   },
   "subjects": {
     "errors": {
@@ -4352,6 +4368,10 @@
       "seeded": "Enseignant initialisé avec succès",
       "unassigned": "Enseignant désaffecté avec succès",
       "updated": "Enseignant mis à jour avec succès"
+    },
+    "invitation": {
+      "sent": "E-mail d'invitation envoyé à {{email}}. L'enseignant active son compte depuis le lien.",
+      "notSent": "L'enseignant a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
     }
   },
   "vehicleAssignments": {

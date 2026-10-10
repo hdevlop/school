@@ -106,16 +106,22 @@ export class ParentService {
       fallback: `/images/parent_${genderSuffix}.png`,
     });
 
-    // Seeding passes a password (account created silently, log-in-able);
-    // the dashboard passes none, so the parent is emailed a set-password invite.
-    const user = await this.authService.provisionUser({
+    // Seeding passes a password: the account is created active and silently.
+    // The dashboard passes none: the account stays pending and the parent is
+    // emailed an activation link to /reset-password. Choosing a password there
+    // verifies the email and activates the account, and while it is pending
+    // Reset access re-sends the same invitation instead of the CIN credential.
+    const password = (isSeeding() ? resolveUserPassword(data.password) : data.password)?.trim();
+    const account = {
       id: data.userId,
       name: data.name,
       email: data.email,
       image,
       role: 'parent',
-      password: isSeeding() ? resolveUserPassword(data.password) : data.password,
-    });
+    };
+    const user = password
+      ? await this.authService.provisionUser({ ...account, password })
+      : await this.authService.inviteUser({ ...account, status: 'pending' });
 
     const parent = await this.parentRepository.create({
       id: parentId,
@@ -134,7 +140,9 @@ export class ParentService {
       isEmergencyContact: data.isEmergencyContact,
       financialResponsibility: data.financialResponsibility,
     });
-    return parent;
+    // Only an invited account carries `emailSent`; the dashboard uses it to
+    // say whether the activation mail left or must be re-sent.
+    return 'emailSent' in user ? { ...parent, emailSent: user.emailSent } : parent;
   }
 
   // ========== UPDATE-METHOD ==========
@@ -255,11 +263,24 @@ export class ParentService {
 
   // ========== UTILITY METHODS ==========
 
+  /**
+   * Link the given parents to a student, creating the ones that do not exist
+   * yet. Each parent created here is invited like one added from the parents
+   * page, so the result reports whether each activation mail left.
+   */
   async processParents(student?, parents?) {
     if (isEmpty(parents)) return;
 
     const studentId = student?.id;
     const linkedParentIds = [];
+    const invitations: { name: string; email?: string; emailSent: boolean }[] = [];
+    const createNew = async (parentData) => {
+      const created = await this.create(parentData);
+      if ('emailSent' in created) {
+        invitations.push({ name: created.name, email: parentData.email, emailSent: Boolean(created.emailSent) });
+      }
+      return created;
+    };
 
     for (const parentData of parents) {
       let parentId;
@@ -279,7 +300,7 @@ export class ParentService {
             parentId = existingParent.id;
             linkedParentIds.push(parentId);
           } catch {
-            const newParent = await this.create(parentData);
+            const newParent = await createNew(parentData);
             parentId = newParent.id;
             linkedParentIds.push(parentId);
           }
@@ -289,12 +310,12 @@ export class ParentService {
             parentId = existingParent.id;
             linkedParentIds.push(parentId);
           } catch {
-            const newParent = await this.create(parentData);
+            const newParent = await createNew(parentData);
             parentId = newParent.id;
             linkedParentIds.push(parentId);
           }
         } else {
-          const newParent = await this.create(parentData);
+          const newParent = await createNew(parentData);
           parentId = newParent.id;
           linkedParentIds.push(parentId);
         }
@@ -302,6 +323,6 @@ export class ParentService {
       await this.linkStudent(parentId, studentId);
     }
 
-    return linkedParentIds;
+    return { linkedParentIds, invitations };
   }
 }

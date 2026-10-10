@@ -16,6 +16,7 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { usePermissions } from 'najm-auth/client/react';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import { announceInvitation } from '@/shared/invitationNotice';
 
 const getParentRowClassName = (parent) => {
   const isOrphaned = parent?.isOrphaned === true || Number(parent?.totalChildren) === 0;
@@ -69,7 +70,11 @@ function ParentsTable() {
         text: t('parents.dialogs.createButton'),
         loading: isCreating,
         onClick: async (parentData) => {
-          await createParent(parentData);
+          const response = await createParent(parentData);
+          announceInvitation(response?.data?.emailSent, {
+            sent: t('parents.invitation.sent', { email: parentData.email }),
+            notSent: t('parents.invitation.notSent', { name: parentData.name }),
+          });
         }
       }
     });

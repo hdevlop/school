@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { useState } from 'react';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import { announceInvitation } from '@/shared/invitationNotice';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { usePermissions } from 'najm-auth/client/react';
@@ -64,6 +65,22 @@ function StudentsTable() {
 
   const { openDialog, confirmDelete, pop } = useDialog();
 
+  // Parents created in the same form are invited too, one notice each.
+  const createAndInviteStudent = async (data) => {
+    const response = await createStudent(data);
+    announceInvitation(response?.data?.emailSent, {
+      sent: t('students.invitation.sent', { email: data.email }),
+      notSent: t('students.invitation.notSent'),
+    });
+    for (const parent of response?.data?.parentInvitations ?? []) {
+      announceInvitation(parent.emailSent, {
+        sent: t('parents.invitation.sent', { email: parent.email }),
+        notSent: t('parents.invitation.notSent', { name: parent.name }),
+      });
+    }
+    return response;
+  };
+
   const handleAddClick = async () => {
     const resolvedBusinessDate = isBusinessDateLoading
       ? await refetchBusinessDate()
@@ -78,7 +95,7 @@ function StudentsTable() {
           classes={newStudentClasses}
           feeTypes={feeTypes || []}
           businessDate={resolvedBusinessDate}
-          onSubmitStudent={(data) => withAcademicYear(activeYear, () => createStudent(data))}
+          onSubmitStudent={(data) => withAcademicYear(activeYear, () => createAndInviteStudent(data))}
         />
       ),
       width: '4xl',

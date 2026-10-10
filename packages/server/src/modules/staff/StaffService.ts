@@ -75,18 +75,26 @@ export class StaffService {
     });
     const role = await this.staffValidator.ensureRoleExists(data.role);
     this.staffValidator.ensureAppAccessRole(role.accessRoleId);
-    // Seeding passes a password (account created silently, log-in-able);
-    // the dashboard passes none, so the staff member is emailed a set-password
-    // invite. The RBAC role comes from the staff role's mapped accessRoleId.
-    const user = await this.authService.provisionUser({
+    // Seeding passes a password: the account is created active and silently.
+    // The dashboard passes none: the account stays pending and the staff
+    // member is emailed an activation link to /reset-password. Choosing a
+    // password there verifies the email and activates the account, and while it
+    // is pending Reset access re-sends the same invitation. The RBAC role comes
+    // from the staff role's mapped accessRoleId.
+    const password = (isSeeding() ? resolveUserPassword(data.password) : data.password)?.trim();
+    const account = {
       id: data.userId || undefined,
       email: data.email,
       name: data.name,
       image,
       roleId: role.accessRoleId!,
-      password: isSeeding() ? resolveUserPassword(data.password) : data.password,
-    });
-    return user.id as string;
+    };
+    if (password) {
+      const user = await this.authService.provisionUser({ ...account, password });
+      return { userId: user.id as string, emailSent: undefined };
+    }
+    const user = await this.authService.inviteUser({ ...account, status: 'pending' });
+    return { userId: user.id as string, emailSent: user.emailSent };
   }
 
   // Driver assignments live in the transport vehicle_assignments table, keyed by the
@@ -181,12 +189,13 @@ export class StaffService {
     // to invite. Roles without an accessRoleId (e.g. cleaner) stay login-less.
     // A supplied userId (e.g. teachers, which create their user first) is used as-is.
     let userId: string | null = null;
+    let emailSent: boolean | undefined;
     if (data.userId) {
       userId = data.userId;
     } else if (data.email) {
       const accessRole = await this.staffValidator.ensureRoleExists(data.role);
       if (accessRole.accessRoleId) {
-        userId = await this.provisionUser(data, staffId);
+        ({ userId, emailSent } = await this.provisionUser(data, staffId));
       }
     }
 
@@ -228,7 +237,9 @@ export class StaffService {
       await this.staffAssignmentRepository.createForRole(data.role, staffRow.id, data.assignments);
     }
 
-    return staffRow;
+    // Only an invited account carries `emailSent`; the dashboard uses it to
+    // say whether the activation mail left or must be re-sent.
+    return emailSent === undefined ? staffRow : { ...staffRow, emailSent };
   }
 
   @Transaction()
