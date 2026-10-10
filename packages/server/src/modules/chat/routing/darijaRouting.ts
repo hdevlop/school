@@ -75,7 +75,7 @@ const rewriteArabic = createDarijaQueryRewriter({
 // codes, IDs and unknown names must survive. This is only the routing copy;
 // the chat model still receives the original message.
 const arabiziWords: Readonly<Record<string, string>> = {
-  ch7al: 'كم عدد', chhal: 'كم عدد', chno: 'ما', chnou: 'ما', chmen: 'اي',
+  ch7al: 'كم عدد', chhal: 'كم عدد', chno: 'ما', chnou: 'ما', chmen: 'اي', achmen: 'اي',
   chkoun: 'من', chkon: 'من', wach: 'هل', imta: 'متى',
   werini: 'اعرض', wrini: 'اعرض', '3tini': 'اعرض', atini: 'اعرض',
   bghit: 'اريد', ghir: 'فقط', bla: 'بدون', machi: 'ليس',
@@ -88,7 +88,8 @@ const arabiziWords: Readonly<Record<string, string>> = {
   tilmid: 'تلميذ', tilmida: 'تلميذة', bent: 'بنت', lbnat: 'البنات',
   ostad: 'استاذ', ostada: 'استاذة', lasatida: 'الاساتذة', asatida: 'اساتذة',
   kay9erri: 'يدرس', kay9erriw: 'يدرسون', riyadiyat: 'الرياضيات',
-  lmdrasa: 'المدرسة', madrasa: 'مدرسة', l2a9sam: 'الاقسام', a9sam: 'اقسام',
+  lmdrasa: 'المدرسة', madrasa: 'مدرسة', mdrasa: 'مدرسة', l2a9sam: 'الاقسام', a9sam: 'اقسام',
+  wldi: 'ابني', weldi: 'ابني', bnti: 'ابنتي', wladi: 'اولادي', kay9ra: 'يدرس',
   l9ism: 'القسم', '9ism': 'قسم', ssadis: 'السادس', rrabi3: 'الرابع', lkhamis: 'الخامس',
   ibtida2i: 'ابتدائي', nno9at: 'النقاط', no9at: 'نقاط', no9ta: 'نقطة', tsjlat: 'مسجلة',
   lmawadd: 'المواد', kan9erri: 'ادرس', ghyab: 'غياب',

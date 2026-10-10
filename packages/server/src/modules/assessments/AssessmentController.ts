@@ -35,7 +35,7 @@ export class AssessmentController {
 
   @Get('/today')
   @CanList()
-  @McpTool({ description: "List today's assessments", readOnly: true })
+  @McpTool({ description: "List today's assessments: quizzes, assignments and class tests (فروض اليوم / forod lyom). These are assessment records, distinct from exams. An empty result means no assessments in this account's selected-year scope today.", readOnly: true })
   @ResMsg('assessments.success.retrieved')
   async getTodayAssessments() {
     return this.assessmentService.getTodayAssessments();

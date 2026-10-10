@@ -30,7 +30,7 @@ export class ParentController {
 
   @Get('/my-identity')
   @CanList()
-  @McpTool({ description: 'Get the signed-in parent account identity for my/own requests. Returns only its parent ID and name; no ID input. Identité de mon compte. هوية حسابي.', readOnly: true })
+  @McpTool({ description: 'Get the signed-in parent account identity for my/own requests. Returns only its parent ID and name; no ID input. If id is null, no parent profile is linked to this account: stop, do not call parents_get_children or ask for an ID. Identité de mon compte. هوية حسابي.', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getMyIdentity(@User('id') userId: string) {
     return this.parentService.getMyIdentity(userId);
@@ -85,7 +85,7 @@ export class ParentController {
   @Get('/:id/children')
   @CanRead()
   @Validate({ params: parentIdParam })
-  @McpTool({ description: 'Get children linked to a parent, with their class in the academic year', readOnly: true })
+  @McpTool({ description: 'Get this parent’s linked children and each child’s actual class and section in the selected academic year. Resolve the signed-in parent with parents_get_my_identity first. For my child’s class/section, answer directly from that child’s returned class.name and section.name; a class catalog does not establish their placement. Preserve exact stored child names.', readOnly: true })
   @ResMsg('parents.success.retrieved')
   async getChildren(@Params('id') id: string) {
     return this.parentService.getChildren(id);

@@ -56,6 +56,8 @@ export function schoolChatFetch(fetchImpl: typeof fetch): typeof fetch {
       if (data.model !== 'openai/gpt-oss-20b') throw Error('School fallback must be OSS20B');
       for (const tool of data.tools ?? []) if (typeof tool.function?.name === 'string') offered.add(tool.function.name);
       data.max_tokens = 4096;
+      // School facts and stored labels need stable decoding, not varied wording.
+      data.temperature = 0;
       data.provider = schoolOss20bProvider();
       body = JSON.stringify(data);
     }

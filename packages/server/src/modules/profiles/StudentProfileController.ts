@@ -27,7 +27,7 @@ export class StudentProfileController {
   @Get('/:studentId/academic')
   @Can('read:grades')
   @Validate({ params: studentIdParam })
-  @McpTool({ description: 'Get student academic profile in the academic year — grades, assessments, upcoming exams', readOnly: true })
+  @McpTool({ description: 'Get student academic profile in the academic year — grades, assessments, upcoming exams. Copy subject.name verbatim, even in Arabic replies, and show each marksObtained/assessment.totalMarks or exam.totalMarks. Never translate a subject name or change its denominator.', readOnly: true })
   @ResMsg('students.success.retrieved')
   async getAcademic(@Params('studentId') studentId: string) {
     return this.studentProfileService.getAcademic(studentId);

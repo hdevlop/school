@@ -13,6 +13,15 @@ export class ClassController {
 
   // ========== GET ENDPOINTS ==========//
 
+  @Get('/:id/students/count')
+  @CanRead()
+  @Validate({ params: classIdParam })
+  @McpTool({ description: 'Get the exact student count for one class in the selected academic year. Resolve the class ID with classes_get_classes first. Use this for how many students are in a named class, rather than counting a list in the answer. Nombre de élèves dans une classe. عدد التلاميذ في قسم أو مستوى معين.', readOnly: true })
+  @ResMsg('classes.success.retrieved')
+  async getClassStudentCount(@Params('id') id: string) {
+    return this.classService.getStudentCount(id);
+  }
+
   @Get()
   @CanList()
   @McpTool({ description: "List the selected year's classes. Liste des classes et niveaux de l’école. لائحة المستويات والأقسام في المدرسة.", readOnly: true })

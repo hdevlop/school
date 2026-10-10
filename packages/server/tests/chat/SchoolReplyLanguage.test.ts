@@ -3,6 +3,14 @@ import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyL
 import { schoolWriteReply } from '../../src/modules/chat/replies/schoolReplyWrite';
 
 describe('School language profile', () => {
+  it('recognizes child-placement Arabizi and Darija mutations without changing formal Arabic', () => {
+    expect(schoolReplyLanguage('f achmen classe w section kay9ra weldi?')).toBe('ary');
+    expect(schoolReplyLanguage('achmen classe kay9ra wldi?')).toBe('ary');
+    expect(schoolReplyLanguage('زيد تلميذ جديد سميتو أمين العلوي.')).toBe('ary');
+    expect(schoolReplyLanguage('أنشئ تلميذا جديدا باسم أمين العلوي.')).toBe('ar');
+    expect(schoolReplyLanguage('achmen Achmen')).toBeNull();
+    expect(schoolReplyLanguage('f achmenX weldi')).toBeNull();
+  });
   it('recognizes the native Darija attendance question without changing formal Arabic', () => {
     expect(schoolReplyLanguage('شكون غايب اليوم؟')).toBe('ary');
     expect(schoolReplyLanguage('من غائب اليوم؟')).toBe('ar');

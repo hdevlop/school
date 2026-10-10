@@ -6,11 +6,27 @@ test.each([
   ['bghit no9at dyal bnti', 'student-profile_get_academic'],
   ['وريني الغياب ديال ولدي', 'student-profile_get_attendance_summary'],
   ['bghit l9ism dyal wladi', 'student-profile_get_overview'],
+  ['f achmen classe w section kay9ra weldi?', 'student-profile_get_overview'],
 ])('keeps parent-child lookup before personal records: %s', (query, detail) => {
   const result = schoolRoutingContext(query);
   expect(result).toContain('parents_get_my_identity');
   expect(result).toContain('parents_get_children');
   expect(result).toContain(detail);
+});
+
+test('class-count discovery preserves the class code and offers an explicit count read', () => {
+  const query = 'شحال من تلميذ كاين ف CM2 هاد العام؟';
+  const result = schoolRoutingContext(query);
+  expect(result).toContain('classes_get_class_student_count');
+  expect(result).toContain('classes_get_classes');
+  expect(result).toEndWith(query);
+});
+
+test('assessments discover assessment records separately from exams and pending grading', () => {
+  const result = schoolRoutingContext('شنو هما الفروض اللي عندنا اليوم؟');
+  expect(result).toContain('assessments_get_today_assessments');
+  expect(result).not.toContain('exams_get_today_exams');
+  expect(result).not.toContain('teacher-profile_get_pending_grading');
 });
 
 test.each(['ch7al mn bent kayna f lmdrasa?', 'شحال من بنت فالأقسام؟',

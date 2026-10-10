@@ -63,7 +63,8 @@ test('provider policy passes the response through without reading or wrapping it
   const fetcher = schoolChatFetch((async (_url, init) => { sent = JSON.parse(String(init?.body)); return response; }) as typeof fetch);
   const result = await schoolChatTransportContext.run(f.frame, () => fetcher(endpoint, generation));
   expect(result).toBe(response); expect(response.bodyUsed).toBe(false);
-  expect(sent.max_tokens).toBe(4096); expect(sent.provider.only).toEqual(['coreweave']);
+  expect(sent.max_tokens).toBe(4096); expect(sent.temperature).toBe(0);
+  expect(sent.provider.only).toEqual(['coreweave']);
   expect(sent.provider.allow_fallbacks).toBe(false); expect(sent.provider.max_price).toBeUndefined();
 });
 

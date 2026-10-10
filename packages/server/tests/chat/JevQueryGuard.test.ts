@@ -13,6 +13,17 @@ test('a plain count can exclude names without becoming a list request', () => {
 });
 
 test.each([
+  ['chhal mn ostad kayn f madrasa?', 'teacher_count'],
+  ['chhal mn ostad kayn f mdrasa?', 'teacher_count'],
+  ['3tini lista dyal les classes li kaynin f madrasa.', 'class_list'],
+])('accepts school spelling variants while preserving qualifiers: %s', (query, choice) => {
+  expect(queryVeto(query, choice)).toBeNull();
+  expect(queryVeto(query + ' CM2', choice)).not.toBeNull();
+  expect(queryVeto(query + ' 2025-2026', choice)).not.toBeNull();
+  expect(queryVeto(query + ' ZzUnknown', choice)).not.toBeNull();
+});
+
+test.each([
   ['Combien de filles dans la classe CP ?', 'student_count'],
   ["Combien d'élèves en 2025-2026 ?", 'student_count'],
   ["Combien d'élèves pour le programme ZzUnknown ?", 'student_count'],

@@ -3,6 +3,11 @@ import { schoolWriteRefusalKind, schoolWriteReply } from '../../src/modules/chat
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 
 describe('School deterministic write refusals', () => {
+  it('refuses a Darija create request in Darija without requesting an ID or confirmation', () => {
+    const userText = 'زيد تلميذ جديد سميتو أمين العلوي.';
+    expect(schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' }))
+      .toEqual({ text: 'ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.' });
+  });
   it.each([
     'mse7 had lfard mn ljadwal.', '7iyed had lkhlas li tsejjel b lghalat.',
     'beddel nmra dyal tilifon dyal had wali l2amr.', 'zid ostad jdid dyal lfrancais.',

@@ -101,7 +101,7 @@ const common = `
   بغيت خاصني عطيني وريني قول قولي ليا لنا لي اللي هو هما هوما شنو شمن عافاك نعرف نشوف كاين كاينة كاينين كيقري ديال ديالنا ديالهم عندكم
   had hna daba li liya lina 3ndna 3ndi 3ndkom dyal dyalna dyalhom f fi mn w wa ghir bla machi
   ana bghit baghi khasni 3tini t3tini 3afak werini wrini werrini goul gouli chno chnou chmen chmn chkon chkoun
-  t9der n3ref nchouf kayn kayna kaynin kaynnin kay9ri kol kamel kamla kamlin lmdrasa lmo2assasa fiha homa
+  t9der n3ref nchouf kayn kayna kaynin kaynnin kay9ri kol kamel kamla kamlin lmdrasa madrasa mdrasa lmo2assasa fiha homa
 `;
 const counts = vocabulary(common, `
   number numbers count counts many how enrollment enrolled pupils pupil students student teachers teacher

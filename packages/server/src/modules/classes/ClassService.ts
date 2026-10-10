@@ -38,6 +38,11 @@ export class ClassService {
     return await this.classRepository.getClassStudents(classId);
   }
 
+  async getStudentCount(classId: string) {
+    const students = await this.getStudents(classId);
+    return { count: students.length };
+  }
+
   async getTeachers(classId: string) {
     await this.classValidator.ensureInSelectedYear(classId);
     return await this.classRepository.getTeachers(classId);

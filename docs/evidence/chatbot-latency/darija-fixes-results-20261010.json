@@ -1,0 +1,1531 @@
+{
+  "date": "2026-10-10",
+  "scope": "Local ordinary API chats; not production or browser acceptance",
+  "truth": {
+    "year": "2026-2027",
+    "students": 104,
+    "teachers": 13,
+    "cm2Count": 12,
+    "classes": [
+      {
+        "name": "CP",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "CE1",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "CE2",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "CM1",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "CM2",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "CE6",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "1AC",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "2AC",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      },
+      {
+        "name": "3AC",
+        "sections": [
+          "A",
+          "B",
+          "C"
+        ]
+      }
+    ],
+    "linkedChild": {
+      "class": "CE1",
+      "section": "A"
+    },
+    "gradeSubjects": [
+      {
+        "subject": "Mathématiques",
+        "score": "8.00",
+        "total": "10.00"
+      },
+      {
+        "subject": "Sciences de la Vie et de la Terre",
+        "score": "7.50",
+        "total": "10.00"
+      },
+      {
+        "subject": "Géographie",
+        "score": "9.50",
+        "total": "10.00"
+      },
+      {
+        "subject": "العربية",
+        "score": "8.25",
+        "total": "10.00"
+      },
+      {
+        "subject": "Histoire",
+        "score": "7.25",
+        "total": "10.00"
+      },
+      {
+        "subject": "Français",
+        "score": "6.75",
+        "total": "10.00"
+      },
+      {
+        "subject": "Informatique",
+        "score": "7.50",
+        "total": "10.00"
+      },
+      {
+        "subject": "English",
+        "score": "9.25",
+        "total": "10.00"
+      },
+      {
+        "subject": "Physique",
+        "score": "6.75",
+        "total": "10.00"
+      },
+      {
+        "subject": "Éducation Physique",
+        "score": "9.25",
+        "total": "10.00"
+      }
+    ]
+  },
+  "confirmed": {
+    "cases": 15,
+    "taskFactPasses": 15,
+    "jevTemplates": 5,
+    "modelReplies": 9,
+    "writeRefusals": 1,
+    "medianMs": 1206,
+    "maxMs": 4662
+  },
+  "runs": [
+    {
+      "label": "first",
+      "base": "http://localhost:5312/api",
+      "completed": 15,
+      "results": [
+        {
+          "id": "student-count-ar",
+          "status": 200,
+          "ms": 560,
+          "tools": [
+            "students_get_student_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "both-count-latn",
+          "status": 200,
+          "ms": 303,
+          "tools": [
+            "students_get_student_count",
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_and_teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-ar",
+          "status": 200,
+          "ms": 278,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-latn",
+          "status": 200,
+          "ms": 321,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "filtered-count",
+          "status": 200,
+          "ms": 2520,
+          "tools": [
+            "classes_get_classes",
+            "classes_get_class_student_count"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "assessments-today",
+          "status": 200,
+          "ms": 1376,
+          "tools": [
+            "exams_get_today_exams"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "missing-child",
+          "status": 200,
+          "ms": 3037,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "ambiguous-latn",
+          "status": 200,
+          "ms": 1582,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "write-refusal",
+          "status": 200,
+          "ms": 35,
+          "tools": [],
+          "replySource": {
+            "source": "template",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "historical-count",
+          "status": 200,
+          "ms": 3852,
+          "tools": [
+            "students_get_student_count"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-children",
+          "status": 200,
+          "ms": 3655,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-grades",
+          "status": 200,
+          "ms": 4612,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children",
+            "grades_get_student_report"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-placement",
+          "status": 200,
+          "ms": 2759,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "teacher-count-ar",
+          "status": 200,
+          "ms": 300,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "teacher-count-latn",
+          "status": 200,
+          "ms": 1868,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "declined"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        }
+      ]
+    },
+    {
+      "label": "second",
+      "base": "http://localhost:5312/api",
+      "completed": 14,
+      "results": [
+        {
+          "id": "student-count-ar",
+          "status": 200,
+          "ms": 598,
+          "tools": [
+            "students_get_student_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "both-count-latn",
+          "status": 200,
+          "ms": 287,
+          "tools": [
+            "students_get_student_count",
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_and_teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-ar",
+          "status": 200,
+          "ms": 378,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-latn",
+          "status": 200,
+          "ms": 321,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "filtered-count",
+          "ms": 8637,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "assessments-today",
+          "ms": 12027,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "missing-child",
+          "ms": 12001,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "ambiguous-latn",
+          "ms": 12012,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "write-refusal",
+          "status": 200,
+          "ms": 13,
+          "tools": [],
+          "replySource": {
+            "source": "template",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "historical-count",
+          "ms": 11996,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "parent-children",
+          "ms": 12024,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "parent-grades",
+          "ms": 12005,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "parent-placement",
+          "ms": 12013,
+          "error": "Error: The socket connection was closed unexpectedly. For more information, pass `verbose: true` in the second argument to fetch()",
+          "tools": []
+        },
+        {
+          "id": "teacher-count-ar",
+          "status": 200,
+          "ms": 399,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        }
+      ]
+    },
+    {
+      "label": "third",
+      "base": "http://localhost:5312/api",
+      "completed": 15,
+      "results": [
+        {
+          "id": "student-count-ar",
+          "status": 200,
+          "ms": 506,
+          "tools": [
+            "students_get_student_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "both-count-latn",
+          "status": 200,
+          "ms": 384,
+          "tools": [
+            "students_get_student_count",
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_and_teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-ar",
+          "status": 200,
+          "ms": 343,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-latn",
+          "status": 200,
+          "ms": 293,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "filtered-count",
+          "status": 200,
+          "ms": 74777,
+          "tools": [
+            "classes_get_classes",
+            "classes_get_class_student_count"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "assessments-today",
+          "status": 200,
+          "ms": 3941,
+          "tools": [
+            "assessments_get_today_assessments"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "missing-child",
+          "status": 200,
+          "ms": 3028,
+          "tools": [
+            "parents_get_my_identity"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "ambiguous-latn",
+          "status": 200,
+          "ms": 993,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "write-refusal",
+          "status": 200,
+          "ms": 25,
+          "tools": [],
+          "replySource": {
+            "source": "template",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "historical-count",
+          "status": 200,
+          "ms": 1772,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-children",
+          "status": 200,
+          "ms": 3130,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-grades",
+          "status": 200,
+          "ms": 7357,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children",
+            "grades_get_student_report"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-placement",
+          "status": 200,
+          "ms": 2536,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "teacher-count-ar",
+          "status": 200,
+          "ms": 316,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "teacher-count-latn",
+          "status": 200,
+          "ms": 2572,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "declined"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        }
+      ]
+    },
+    {
+      "label": "final",
+      "base": "http://localhost:5312/api",
+      "completed": 15,
+      "results": [
+        {
+          "id": "student-count-ar",
+          "status": 200,
+          "ms": 543,
+          "tools": [
+            "students_get_student_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "both-count-latn",
+          "status": 200,
+          "ms": 316,
+          "tools": [
+            "students_get_student_count",
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_and_teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-ar",
+          "status": 200,
+          "ms": 313,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "classes-latn",
+          "status": 200,
+          "ms": 337,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "filtered-count",
+          "status": 200,
+          "ms": 4201,
+          "tools": [
+            "classes_get_classes",
+            "classes_get_class_student_count"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "assessments-today",
+          "status": 200,
+          "ms": 1731,
+          "tools": [
+            "assessments_get_today_assessments"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "missing-child",
+          "status": 200,
+          "ms": 2486,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "ambiguous-latn",
+          "status": 200,
+          "ms": 1104,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "write-refusal",
+          "status": 200,
+          "ms": 12,
+          "tools": [],
+          "replySource": {
+            "source": "template",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "historical-count",
+          "status": 200,
+          "ms": 1435,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-children",
+          "status": 200,
+          "ms": 3210,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-grades",
+          "status": 200,
+          "ms": 3728,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children",
+            "grades_get_student_report"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "parent-placement",
+          "status": 200,
+          "ms": 2157,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "teacher-count-ar",
+          "status": 200,
+          "ms": 320,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:teacher_count"
+          },
+          "model": "openai/gpt-oss-20b"
+        },
+        {
+          "id": "teacher-count-latn",
+          "status": 200,
+          "ms": 1432,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "declined"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b"
+        }
+      ]
+    },
+    {
+      "label": "confirmed",
+      "base": "http://localhost:5312/api",
+      "completed": 15,
+      "results": [
+        {
+          "id": "student-count-ar",
+          "status": 200,
+          "ms": 580,
+          "tools": [
+            "students_get_student_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_count"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:\nكاينين 104 تلميذ مسجلين فهاد العام.",
+          "errors": []
+        },
+        {
+          "id": "both-count-latn",
+          "status": 200,
+          "ms": 319,
+          "tools": [
+            "students_get_student_count",
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_and_teacher_count"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:\nكاينين 104 تلميذ مسجلين فهاد العام وكاينين 13 أستاذ.",
+          "errors": []
+        },
+        {
+          "id": "classes-ar",
+          "status": 200,
+          "ms": 358,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:\nهادي لائحة الأقسام والشعب فهاد العام الدراسي 2026-2027:\n\n- CP: A, B, C\n- CE1: A, B, C\n- CE2: A, B, C\n- CM1: A, B, C\n- CM2: A, B, C\n- CE6: A, B, C\n- 1AC: A, B, C\n- 2AC: A, B, C\n- 3AC: A, B, C",
+          "errors": []
+        },
+        {
+          "id": "classes-latn",
+          "status": 200,
+          "ms": 308,
+          "tools": [
+            "classes_get_classes"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:class_list"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:\nهادي لائحة الأقسام والشعب فهاد العام الدراسي 2026-2027:\n\n- CP: A, B, C\n- CE1: A, B, C\n- CE2: A, B, C\n- CM1: A, B, C\n- CM2: A, B, C\n- CE6: A, B, C\n- 1AC: A, B, C\n- 2AC: A, B, C\n- 3AC: A, B, C",
+          "errors": []
+        },
+        {
+          "id": "filtered-count",
+          "status": 200,
+          "ms": 2613,
+          "tools": [
+            "classes_get_classes",
+            "classes_get_class_student_count"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "شحال من تلميذ كاين ف CM2 هاد العام؟  \n12 تلميذ.",
+          "errors": []
+        },
+        {
+          "id": "assessments-today",
+          "status": 200,
+          "ms": 1206,
+          "tools": [
+            "assessments_get_today_assessments"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "ما كايناش فروض اليوم.",
+          "errors": []
+        },
+        {
+          "id": "missing-child",
+          "status": 200,
+          "ms": 1768,
+          "tools": [
+            "parents_get_my_identity"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "ما كاينش حساب ديال ولي الأمر مربوط بحسابك، ما نقدرش نجيب معلومات ولادك.",
+          "errors": []
+        },
+        {
+          "id": "ambiguous-latn",
+          "status": 200,
+          "ms": 778,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "شنو بالضبط بغيتي نشوف ليك؟ الدرجات، الحضور، أو وضعك الدراسي؟",
+          "errors": []
+        },
+        {
+          "id": "write-refusal",
+          "status": 200,
+          "ms": 7,
+          "tools": [],
+          "replySource": {
+            "source": "template",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+          "errors": []
+        },
+        {
+          "id": "historical-count",
+          "status": 200,
+          "ms": 1498,
+          "tools": [],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "عذرًا، ماشي معنديش حقّ باش نجيب لينا عدد التلاميذ ديال العام 2025-2026 حيتاش العام الدراسي اللي مختار فهاد اللحظة هو 2026-2027. خاصك تبدّل العام فلوحة التحكم (dashboard) قبل ما نقدر نجيب ليك هاد المعلومة.",
+          "errors": []
+        },
+        {
+          "id": "parent-children",
+          "status": 200,
+          "ms": 2639,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "سلام! ولادك المسجلين فهاد العام الدراسي 2026-2027 هما:\n\n- **[linked child]** – كاين فـ **CE1**، القسم **A**.",
+          "errors": []
+        },
+        {
+          "id": "parent-grades",
+          "status": 200,
+          "ms": 4662,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children",
+            "grades_get_by_student"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "**نقاط ولدك ([linked child]) – CE1 A – 2026/2027**\n\n- Mathématiques · Diagnostic quiz : 8.00/10.00  \n- Sciences de la Vie et de la Terre · Diagnostic quiz : 7.50/10.00  \n- Géographie · Diagnostic quiz : 9.50/10.00  \n- العربية · Diagnostic quiz : 8.25/10.00  \n- Histoire · Diagnostic quiz : 7.25/10.00  \n- Français · Diagnostic quiz : 6.75/10.00  \n- Informatique · Diagnostic quiz : 7.50/10.00  \n- English · Diagnostic quiz : 9.25/10.00  \n- Physique · Diagnostic quiz : 6.75/10.00  \n- Éducation Physique · Diagnostic quiz : 9.25/10.00  \n\nكل النتيجة معتمدة على التقييمات التي تم تسجيلها حتى تاريخ 10/10/2026.",
+          "errors": []
+        },
+        {
+          "id": "parent-placement",
+          "status": 200,
+          "ms": 1802,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "سلام! ولدك **[linked child]** كيقرا فـ **CE1**، القسم **A**.",
+          "errors": []
+        },
+        {
+          "id": "teacher-count-ar",
+          "status": 200,
+          "ms": 872,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:teacher_count"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:\nكاينين 13 أستاذ.",
+          "errors": []
+        },
+        {
+          "id": "teacher-count-latn",
+          "status": 200,
+          "ms": 2477,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "declined"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "كاين 13 أستاذ فالمدرسة فالسنة الدراسية 2026-2027.",
+          "errors": []
+        }
+      ]
+    },
+    {
+      "label": "main",
+      "base": "http://localhost:3102/api",
+      "completed": 7,
+      "results": [
+        {
+          "id": "both-count-latn",
+          "status": 200,
+          "ms": 570,
+          "tools": [
+            "students_get_student_count",
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "candidate"
+          },
+          "replySource": {
+            "source": "template",
+            "language": "ary",
+            "label": "jev:student_and_teacher_count"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "هاد النتائج غير من المعطيات اللي حسابك عندو الحق يشوفها:\nكاينين 104 تلميذ مسجلين فهاد العام وكاينين 13 أستاذ.",
+          "errors": []
+        },
+        {
+          "id": "filtered-count",
+          "status": 200,
+          "ms": 2636,
+          "tools": [
+            "classes_get_classes",
+            "classes_get_class_student_count"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "شحال من تلميذ كاين ف CM2 هاد العام؟  \nالعدد هو **12** تلميذ.",
+          "errors": []
+        },
+        {
+          "id": "missing-child",
+          "status": 200,
+          "ms": 1413,
+          "tools": [
+            "parents_get_my_identity"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "ما كاينش حساب ديال ولي الأمر مربوط بحسابك، ما نقدرش نجيب معلومات ولادك.",
+          "errors": []
+        },
+        {
+          "id": "write-refusal",
+          "status": 200,
+          "ms": 48,
+          "tools": [],
+          "replySource": {
+            "source": "template",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.",
+          "errors": []
+        },
+        {
+          "id": "parent-grades",
+          "status": 200,
+          "ms": 4391,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children",
+            "grades_get_by_student"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "**نقاط ولدك ([linked child]) – CE1 A – 2026/2027**\n\n- Mathématiques · Diagnostic quiz : 8.00/10.00  \n- Sciences de la Vie et de la Terre · Diagnostic quiz : 7.50/10.00  \n- Géographie · Diagnostic quiz : 9.50/10.00  \n- العربية · Diagnostic quiz : 8.25/10.00  \n- Histoire · Diagnostic quiz : 7.25/10.00  \n- Français · Diagnostic quiz : 6.75/10.00  \n- Informatique · Diagnostic quiz : 7.50/10.00  \n- English · Diagnostic quiz : 9.25/10.00  \n- Physique · Diagnostic quiz : 6.75/10.00  \n- Éducation Physique · Diagnostic quiz : 9.25/10.00  \n\nكل النقط تم تسجيلها في اختبارات التشخيص (Diagnostic quiz) حسب التاريخ المذكور. إذا بغيتي تفاصيل أكثر على كل اختبار أو على التقييمات الأخرى، قول لي.",
+          "errors": []
+        },
+        {
+          "id": "parent-placement",
+          "status": 200,
+          "ms": 1827,
+          "tools": [
+            "parents_get_my_identity",
+            "parents_get_children"
+          ],
+          "jev": {
+            "eligibility": "unsupported_query",
+            "classification": "not_started"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "سلام! ولدك **[linked child]** كيقرا فـ **CE1**، القسم **A**.",
+          "errors": []
+        },
+        {
+          "id": "teacher-count-latn",
+          "status": 200,
+          "ms": 1555,
+          "tools": [
+            "teachers_get_teacher_count"
+          ],
+          "jev": {
+            "eligibility": "supported_query",
+            "classification": "declined"
+          },
+          "replySource": {
+            "source": "model",
+            "language": "ary"
+          },
+          "model": "openai/gpt-oss-20b",
+          "reply": "كاين 13 أستاذ فالمدرسة فالسنة الدراسية 2026-2027.",
+          "errors": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { detectMoroccanReplyLanguage, normalizeReplyText, type ReplyLanguage } from 'najm-chatbot';
+import { schoolWriteRefusalKind } from './schoolReplyWrite';
 
 // Clear French openings take precedence over foreign names, like the published
 // profile's existing command prefixes. Shared words alone prove no language.
@@ -22,14 +23,15 @@ const arabiziOpenings = ['chkoun', 'chkon', 'kifach', 'imta', 'zid', 'bdel', 'be
   'kteb', 'chno', 'achno', 'chnou', 'fin', 't9der', 'kan9elleb', 'werrini', 'goul', 'fhad', 'flmdrasa',
   '7alat', 'lhad', 'fou9ach', '9eyyed', 'dir', 'lghi', 'sifet', 'mse7', 'rje3', '3eyyen', '7awwel',
   '7bes', '9elleb', 'chre7', 'tjahel', 'salam', 'sba7', 'chokran', 'safi', 'ana', 'msa', 'wakha',
-  'kanchokrek', 'nharek', 'lli', 'lah', 'werini', '7iyed', 'sejjl', 'sejjel', 'bslama', 'mzyan', 'chmen'];
+  'kanchokrek', 'nharek', 'lli', 'lah', 'werini', '7iyed', 'sejjl', 'sejjel', 'bslama', 'mzyan', 'chmen', 'achmen'];
 const arabiziSignals = [...arabiziOpenings, 'ghayb', 'ghaybin', 'ghayba', 'lyoum', 'lyom', 'llyoum', 'daba', 'wa7d',
   'tilmid', 'tlamid', 'jdid', 'jay', 'jayyin', 'dyal', 'dyalk', 'dyalhom', 'had', 'l3am', 'asatida', 'ostad',
   'lmdrasa', 'mjmo3', 'smiyat', 'a9sam', '7odour', 'imti7anat', 'ghadi', 'no9ta', '9ism', 'smit',
   'no9ati', 'tarik', 'b7al', 'baghi', 'bikhir', 'labas', 'bzzaf', 'ntla9aw', 'nfe3ni', 'lmousa3id', 'kolchi', 'mabrouk',
   'l9a3a', 'lbare7', 'lghdda', 'l7issab', 'flous', 'aba2', 'i3lan', 'bnisba', 'jaya', 'nbeddel', 'nzid',
-  'lkhir', 'atfal', 'nsjjel', 'jawb', 'yjazik', 'me7taj', 'ghayeb', 'ghedda', 'lmousa3ada', 'nnisba', 'lhadok', 'tilmida', '7adra'];
-const arabiziOpening = new RegExp(`^(?:${arabiziOpenings.join('|')}|w\\s+b(?:nisba|\\s+nnisba))(?![\\p{L}\\p{N}])`, 'u');
+  'lkhir', 'atfal', 'nsjjel', 'jawb', 'yjazik', 'me7taj', 'ghayeb', 'ghedda', 'lmousa3ada', 'nnisba', 'lhadok', 'tilmida', '7adra',
+  'wldi', 'weldi', 'bnti', 'wladi', 'kay9ra'];
+const arabiziOpening = new RegExp(`^(?:${arabiziOpenings.join('|')}|f\\s+achmen|w\\s+b(?:nisba|\\s+nnisba))(?![\\p{L}\\p{N}])`, 'u');
 const arabiziWords = new RegExp(`(?<![\\p{L}\\p{N}])(?:${arabiziSignals.join('|')})(?![\\p{L}\\p{N}])`, 'gu');
 
 /** The single School profile used for reply selection and domain context hints. */
@@ -38,6 +40,7 @@ export function schoolReplyLanguage(userText: string): ReplyLanguage | null {
   if (frenchOpening.test(text) || frenchMark.test(text) || frenchPhrases.some(pattern => pattern.test(text))) return 'fr';
   // Native Darija question openings distinguish these from formal Arabic.
   if (/^(?:شكون|شكونهم)(?!\p{L})/u.test(text)) return 'ary';
+  if (/^(?:زيد|حيد|بدل|صيفط|مسح|دير)(?!\p{L})/u.test(text) && schoolWriteRefusalKind(userText)) return 'ary';
   const language = detectMoroccanReplyLanguage(userText);
   if (language) return language;
   // A command/question opening plus another distinct Darija signal, rather than

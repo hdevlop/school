@@ -84,6 +84,7 @@ const TOOL_DEPENDENCIES: Record<string, string[]> = {
   sections_get_sections: ['classes_get_classes'],
   sections_get_students: ['classes_get_classes', 'sections_get_sections', 'students_get_students'],
   classes_get_class_students: ['classes_get_classes', 'sections_get_sections', 'students_get_students'],
+  classes_get_class_student_count: ['classes_get_classes'],
   grades_get_by_section: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects', 'grades_get_all'],
   grades_get_by_subject: ['classes_get_classes', 'subjects_get_subjects', 'grades_get_all'],
   grades_get_all: ['classes_get_classes', 'sections_get_sections', 'subjects_get_subjects'],
