@@ -4,7 +4,7 @@ Start with the document that matches the work:
 
 | Topic | Entry point |
 | --- | --- |
-| Jev, tool routing and OSS20B fallback | [Active optimization plan](../CHATBOT-JEV-ROUTER-PLAN.md) |
+| Jev, tool routing and OSS20B fallback | [Active optimization plan](plans/CHATBOT-JEV-ROUTER-PLAN.md) |
 | Darija tool and answer verification | [Current validation guide](tests/jev-router-validation.md) |
 | Chatbot results and historical recovery | [Evidence index](evidence/chatbot-latency/README.md) |
 | Workspace structure and boundaries | [Workspace architecture](architecture/workspace.md) |

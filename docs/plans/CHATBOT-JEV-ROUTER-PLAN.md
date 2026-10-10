@@ -77,8 +77,8 @@ context-free personal tool chaining. No new paid benchmark is requested. These e
 the newly simplified general read/model path.
 
 The full results, original failures, limitations and verification totals are in
-[the release report](docs/tests/jev-router-validation.md#qualified-ordinary-release--2026-10-09).
-[One compact release archive](docs/evidence/chatbot-latency/jev-router-release-20261009.zip)
+[the release report](../tests/jev-router-validation.md#qualified-ordinary-release--2026-10-09).
+[One compact release archive](../evidence/chatbot-latency/jev-router-release-20261009.zip)
 preserves redacted evidence and reproducible harnesses.
 
 ## Controls and rollback
@@ -109,12 +109,12 @@ tool-selection mistakes through router descriptions/dependencies. Personal reads
 now require router/20B tool steps instead of the retired local renderers. No further provider/French benchmark or billing
 study is required. Do not restore a second authorization flow inside chat.
 
-Historical comparisons remain in [the evidence index](docs/evidence/chatbot-latency/README.md).
+Historical comparisons remain in [the evidence index](../evidence/chatbot-latency/README.md).
 The old latency plan is recoverable with `git show 846a679:CHATBOT-LATENCY-PLAN.md`.
 
 The current reply cleanup passes 946 chat/year/security/ownership tests and 28
 script/boundary tests, lint, root type checking and an isolated production build.
-No paid requests were made. [Current details](docs/tests/jev-router-validation.md#minimal-replies-and-routeross20b-answers--2026-10-09)
+No paid requests were made. [Current details](../tests/jev-router-validation.md#minimal-replies-and-routeross20b-answers--2026-10-09)
 distinguish offline pipeline checks from the earlier live benchmark results.
 
 Darija discovery hints now distinguish general class/attendance questions from
@@ -128,7 +128,7 @@ tests, lint, root type checking and an isolated production build.
 
 ## Code organization
 
-The [chat module guide](packages/server/src/modules/chat/README.md) maps the five
+The [chat module guide](../../packages/server/src/modules/chat/README.md) maps the five
 runtime folders. The module root now contains only its registration
 entry point and guide. `replies/` now contains two files: language detection and
 localized write refusals. Jev result formatters live with `jevReplyPlan.ts`, chat
@@ -166,7 +166,7 @@ After removing chat identity/authorization context, **1,073 chat/year/security/
 ownership tests**, **28 script/boundary tests**, lint, root type checks and an
 isolated production build pass. The identity tests invoke actual existing
 controllers over REST and MCP with fake repository data; no paid model or live
-database operation was needed. See the [current verification](docs/tests/jev-router-validation.md#module-owned-authorization-and-routing--2026-10-09).
+database operation was needed. See the [current verification](../tests/jev-router-validation.md#module-owned-authorization-and-routing--2026-10-09).
 
 ## Ordinary live checks — 2026-10-09
 
@@ -177,7 +177,7 @@ once, and native “شكون” questions select Darija. OSS20B still produced m
 tool names and planning text before recovering, and its empty-attendance Darija
 answer made an unsupported claim that nobody was absent. These are unresolved
 answer-quality limits, not a reason to restore chat-side data/filter catalogs.
-See the [ordinary live report](docs/tests/jev-router-validation.md#ordinary-live-darija-checks--2026-10-09)
+See the [ordinary live report](../tests/jev-router-validation.md#ordinary-live-darija-checks--2026-10-09)
 for the results, fixes, verification and next concrete work.
 
 ## Provider formatting and attendance evidence — 2026-10-10
@@ -191,5 +191,5 @@ Darija unknown-attendance answer. A subsequent authenticated check verified all
 14 scores and all 14 denominators, with no tool errors or planning text. The
 adapter also handles up to four repeated observed suffixes and formats OSS20B
 responses even when the request-local policy frame is absent. See the
-[current report](docs/tests/jev-router-validation.md#provider-tool-formatting-and-attendance-evidence--2026-10-10)
+[current report](../tests/jev-router-validation.md#provider-tool-formatting-and-attendance-evidence--2026-10-10)
 for the verification, buffering tradeoff and next concrete checks.

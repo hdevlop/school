@@ -9,7 +9,7 @@ routing. Since `najm-rag` 2.2.0 / `najm-chatbot` 2.1.1 that failure is fast and
 honest (the assistant says the data cannot be reached); before, it ended the chat
 as `setup_error` (the historical latency plan, Phase 2 items 1–3; recoverable from
 Git). Current chatbot work follows the
-[Jev + router plan](../../CHATBOT-JEV-ROUTER-PLAN.md).
+[Jev + router plan](CHATBOT-JEV-ROUTER-PLAN.md).
 
 Pushing to `main` deploys production (`.github/workflows/deploy-production.yml`),
 so this plan is applied by an operator, in the order below.

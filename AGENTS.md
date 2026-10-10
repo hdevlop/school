@@ -13,7 +13,7 @@ Use this file as the default entry point. Read the deeper files only when a task
 
 1. Read this file first.
 2. For live data operations, or for backend modules, MCP exposure, storage, validation, or Najm package internals, load the `najm` skill.
-3. Before changing a backend module's academic-year handling or ownership, read section 0 of `SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md`. It has the step-by-step recipe, the next module in the queue, and the traps already found.
+3. Before changing a backend module's academic-year handling or ownership, read section 0 of `docs/plans/SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md`. It has the step-by-step recipe, the next module in the queue, and the traps already found.
 
 ## Working Modes
 

@@ -15,7 +15,7 @@ than reaching into another workspace's source files.
 
 Normal flow: existing actor/year boundary → write refusal → eligible guarded Jev
 candidate → router/OSS20B fallback → existing authorized MCP execution.
-See [the release plan](../../../../../CHATBOT-JEV-ROUTER-PLAN.md) for enabled scope
+See [the release plan](../../../../../docs/plans/CHATBOT-JEV-ROUTER-PLAN.md) for enabled scope
 and rollback.
 
 Chat does not look up a parent's children or preload a student/teacher identity.

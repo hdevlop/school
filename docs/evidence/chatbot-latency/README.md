@@ -4,8 +4,13 @@ Provider/model comparisons are closed. Benchmark source and unused datasets were
 removed on 2026-10-09; recover them from `a75cd0f` if needed. Retained reports
 describe historical runs. Current code has no benchmark endpoints or CLIs.
 
-Active work: [Jev + router optimization plan](../../../CHATBOT-JEV-ROUTER-PLAN.md).
+Active work: [Jev + router optimization plan](../../plans/CHATBOT-JEV-ROUTER-PLAN.md).
 Validation: [Darija tool and answer checks](../../tests/jev-router-validation.md).
+
+The [2026-10-10 Darija repair and activation report](darija-fixes-results-20261010.md)
+records 15/15 local task/fact checks, 7/7 checks on the running dashboard,
+the earlier failed attempts, and the remaining unrelated security-suite failure.
+The local saved model and env controls were verified after activation.
 
 **Qualified ordinary release is enabled locally:** Jev + the existing router +
 selective OSS20B, with a shared $10/month allowance. The [release report](../../tests/jev-router-validation.md#qualified-ordinary-release--2026-10-09)

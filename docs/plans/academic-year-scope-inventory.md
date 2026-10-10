@@ -1,6 +1,6 @@
 # Academic-year scope inventory (Phase 0)
 
-Prepared: **2026-09-27** · Plan: [SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md](../../SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md) §6 and §9
+Prepared: **2026-09-27** · Plan: [SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md](SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md) §6 and §9
 
 **Forward-plan update (2026-09-27):** the root plan now targets a dynamic
 `@Year()` repository property backed by the existing ALS store, with separate

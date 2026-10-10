@@ -135,7 +135,7 @@ states that drift — so do not add one without changing the plan first.
   `academicYear` in its own params, query or body, or najm-mcp refuses to
   start. `tests/academicYears/YearScopedModules.test.ts` checks the keys and
   the duplicate input, not whether every consumer is registered. The
-  per-module recipe is section 0 of `SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md`.
+  per-module recipe is section 0 of `docs/plans/SCHOOL-ACADEMIC-YEAR-HISTORY-PLAN.md`.
 
 - **One declaration of every shared value.** Database enum members, API payload
   values, and the values a select may submit are declared once in

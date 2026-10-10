@@ -78,17 +78,17 @@ The original source review was on 2026-10-04; the pre-consolidation version base
 
 Consequences:
 
-- **School** `.use()`s `cacheConfig()`, `rateLimitConfig()`, `emailConfig()` and `guardConfig()` before `authConfig()` (`packages/server/src/index.ts:55-62`). So the `cache`, `rateLimit` and `email` that [authConfig.ts:27-32](packages/server/src/config/authConfig.ts#L27-L32) passes to `auth()` are **never used**. They are the same values today only because the same resolver functions produce both.
+- **School** `.use()`s `cacheConfig()`, `rateLimitConfig()`, `emailConfig()` and `guardConfig()` before `authConfig()` (`packages/server/src/index.ts:55-62`). So the `cache`, `rateLimit` and `email` that [authConfig.ts:27-32](../../packages/server/src/config/authConfig.ts#L27-L32) passes to `auth()` are **never used**. They are the same values today only because the same resolver functions produce both.
 - **Kafil** registers `emailConfig()` before `authConfig()` but registers no cache or rate-limit plugin (`../kafil/packages/server/src/server.ts:45-58`). Its current `authConfig()` forwards cache and rate-limit config and **does not forward email config**. Confirm which config wins after the W0 upgrade before changing this wiring.
 - The types comment on `AuthPluginConfig.cache` ("a consumer cannot configure the store by registering its own plugin first") is wrong for current najm-core: registering first is exactly what decides it.
 
 ### 1.2 Why School forwards email config anyway
 
-`email()` validates in `mergeConfig` at call time and throws when no provider is set (`najm-email/src/EmailPlugin.ts:86-88`). `auth()` calls `email(config?.email)` while building its `.depends()` list, **before** the registry decides to skip it. Without forwarding, an app whose provider comes from its own config (not the `EMAIL_PROVIDER` variable) crashes at startup even though auth's email plugin would be discarded. School's comment at [authConfig.ts:29-31](packages/server/src/config/authConfig.ts#L29-L31) describes this effect.
+`email()` validates in `mergeConfig` at call time and throws when no provider is set (`najm-email/src/EmailPlugin.ts:86-88`). `auth()` calls `email(config?.email)` while building its `.depends()` list, **before** the registry decides to skip it. Without forwarding, an app whose provider comes from its own config (not the `EMAIL_PROVIDER` variable) crashes at startup even though auth's email plugin would be discarded. School's comment at [authConfig.ts:29-31](../../packages/server/src/config/authConfig.ts#L29-L31) describes this effect.
 
 ### 1.3 najm-email's built-in env loader is unusable as written
 
-`loadProviderFromEnv` exists but runs at module load (`DEFAULT_CONFIG`, `EmailPlugin.ts:58-71`), which is the Next build problem School's [emailConfig.ts:66-70](packages/server/src/config/emailConfig.ts#L66-L70) describes. It also validates nothing: a missing API key becomes `''`, SMTP credentials become `{ user: '', pass: '' }`, a bad `SMTP_PORT` becomes `NaN`, and an unknown provider becomes `undefined`.
+`loadProviderFromEnv` exists but runs at module load (`DEFAULT_CONFIG`, `EmailPlugin.ts:58-71`), which is the Next build problem School's [emailConfig.ts:66-70](../../packages/server/src/config/emailConfig.ts#L66-L70) describes. It also validates nothing: a missing API key becomes `''`, SMTP credentials become `{ user: '', pass: '' }`, a bad `SMTP_PORT` becomes `NaN`, and an unknown provider becomes `undefined`.
 
 ### 1.4 A failed email send leaves no trace in School
 
@@ -109,20 +109,20 @@ With `trustedProxyHops: 0`, `resolveClientAddress` uses only the socket peer; if
 | `najm-theme` | `diagnostics` | a built-in reporter (`server/config.ts:343`) printing `[najm-theme] code: detail` | own copy, adds `scopeId` and `error` | identical copy |
 | `najm-i18n` | `order` / `caches` | `['cookie','querystring','header']` / `['cookie']` (`I18nService.ts:450-455`) | `['header','cookie','querystring']` / `[]`, header `X-Language` | no app override; verify older defaults in W0 |
 
-School overrides i18n because the cookie cache pinned a page to the first language guessed, so a French page received English refusals ([coreConfig.ts:36-47](packages/server/src/config/coreConfig.ts#L36-L47)). Kafil sends no language header and keeps the defaults, so **Kafil probably has the same bug** (W7 step 3 confirms).
+School overrides i18n because the cookie cache pinned a page to the first language guessed, so a French page received English refusals ([coreConfig.ts:36-47](../../packages/server/src/config/coreConfig.ts#L36-L47)). Kafil sends no language header and keeps the defaults, so **Kafil probably has the same bug** (W7 step 3 confirms).
 
 ## 2. Inventory
 
 | Concern | School | Kafil | Najm today |
 | --- | --- | --- | --- |
-| Env readers | [env.ts](packages/server/src/config/env.ts): `envString`, `requireEnv`, `envFlag`, `envInt`, `envChoice`, `isProduction`, `isNextBuildPhase` | Inline `required`, `enabled`, `redisUrl`, `trustedProxyHops`; `Number(...)` with silent fallbacks | Nothing |
-| Email provider from env | [emailConfig.ts](packages/server/src/config/emailConfig.ts), defaults to `console` | `emailConfig.ts`, requires `EMAIL_PROVIDER` | Unvalidated, import-time loader (1.3) |
+| Env readers | [env.ts](../../packages/server/src/config/env.ts): `envString`, `requireEnv`, `envFlag`, `envInt`, `envChoice`, `isProduction`, `isNextBuildPhase` | Inline `required`, `enabled`, `redisUrl`, `trustedProxyHops`; `Number(...)` with silent fallbacks | Nothing |
+| Email provider from env | [emailConfig.ts](../../packages/server/src/config/emailConfig.ts), defaults to `console` | `emailConfig.ts`, requires `EMAIL_PROVIDER` | Unvalidated, import-time loader (1.3) |
 | Email failure logging | None (1.4) | `EmailDeliveryLogger` plugin | Event only |
-| Redis client | [cacheConfig.ts:39-48](packages/server/src/config/cacheConfig.ts#L39-L48) | `authConfig.ts:56-68`: identical options | Builds its own client from `url` with a dynamic `require('ioredis')` |
-| Redis URL validation | [cacheConfig.ts:17-37](packages/server/src/config/cacheConfig.ts#L17-L37) | `envConfig.ts:5-22`: identical rule | None |
-| Trusted proxy hops | [rateLimitConfig.ts](packages/server/src/config/rateLimitConfig.ts), `SCHOOL_TRUSTED_PROXY_HOPS` | `envConfig.ts:24-40`, `KAFIL_TRUSTED_PROXY_HOPS` | Validates the number only |
+| Redis client | [cacheConfig.ts:39-48](../../packages/server/src/config/cacheConfig.ts#L39-L48) | `authConfig.ts:56-68`: identical options | Builds its own client from `url` with a dynamic `require('ioredis')` |
+| Redis URL validation | [cacheConfig.ts:17-37](../../packages/server/src/config/cacheConfig.ts#L17-L37) | `envConfig.ts:5-22`: identical rule | None |
+| Trusted proxy hops | [rateLimitConfig.ts](../../packages/server/src/config/rateLimitConfig.ts), `SCHOOL_TRUSTED_PROXY_HOPS` | `envConfig.ts:24-40`, `KAFIL_TRUSTED_PROXY_HOPS` | Validates the number only |
 | Config passed twice to `auth()` | cache, rate limit, email (all ignored, 1.1) | cache and rate limit forwarded only to auth; email registered separately | `.depends()` builds eagerly in School's version |
-| Ownership extensions | `SchoolOwnershipToken` + `when()` + `ownedIds` ([auth.ts](packages/server/src/auth.ts)) | `definePolicy` names the token | `OwnershipToken`, no row conditions |
+| Ownership extensions | `SchoolOwnershipToken` + `when()` + `ownedIds` ([auth.ts](../../packages/server/src/auth.ts)) | `definePolicy` names the token | `OwnershipToken`, no row conditions |
 | Role guards | `defineRoles` + `createGroupGuard` | 12 hand-written guard classes | `defineRoles` exists |
 | Theme diagnostics | Copy | Identical copy | Built-in default |
 | MCP options | Restates defaults | Restates defaults | Defaults exist |
@@ -155,7 +155,7 @@ The Najm playground (`../najm/apps/playground/src/server/config/plugins.ts`) als
 2. `najm-auth`: declare `cache`, `rateLimit` and `email` as lazy dependencies. `email()` is then never called when the app registers email itself, so the startup crash goes away.
 3. `najm-auth`: when a dependency is already registered **and** `auth()` received config for it, warn once at startup naming the ignored option (decision D1). Fix the `AuthPluginConfig.cache` doc comment.
 
-**School migration.** [authConfig.ts](packages/server/src/config/authConfig.ts) drops `cache`, `rateLimit` and `email` and their imports. It keeps `dialect`, `encryptionKey` and `registrationMode`. The `resolveCacheConfig`, `resolveEmailConfig` and `resolveTrustedProxyHops` exports from [config/index.ts](packages/server/src/config/index.ts) are no longer needed outside their files.
+**School migration.** [authConfig.ts](../../packages/server/src/config/authConfig.ts) drops `cache`, `rateLimit` and `email` and their imports. It keeps `dialect`, `encryptionKey` and `registrationMode`. The `resolveCacheConfig`, `resolveEmailConfig` and `resolveTrustedProxyHops` exports from [config/index.ts](../../packages/server/src/config/index.ts) are no longer needed outside their files.
 
 **Kafil migration.** After W0, choose one owner per plugin: either `.use(cache(...))` and `.use(rateLimit(...))` explicitly before `authConfig()` (recommended; matches School and makes the order visible), or keep forwarding to `auth()`. `authInfrastructureConfig()` then serves one caller. Keep email registered explicitly. Kafil currently forwards no email config; if W0 introduces forwarding to accommodate the eager dependency, remove it when W1 makes that dependency lazy.
 
@@ -167,11 +167,11 @@ The Najm playground (`../najm/apps/playground/src/server/config/plugins.ts`) als
 
 **Problem.** School has a careful 67-line reader module; Kafil re-implements parts of it inline with weaker rules. In Kafil, `EMAIL_RETRY_ATTEMPTS=abc` quietly becomes 1 and `SMTP_PORT=abc` throws; in School both stop startup with a message naming the variable.
 
-**Najm change.** New subpath `najm-core/env` with no runtime imports, exporting School's readers unchanged in behavior: `envString`, `requireEnv`, `envFlag`, `envInt`, `envChoice`, `isProduction`. Keep School's design rule from the top of [env.ts](packages/server/src/config/env.ts): **the caller passes the name and the literal `process.env.NAME` value; a reader never looks a name up**, so every variable stays a greppable read the bundler can see.
+**Najm change.** New subpath `najm-core/env` with no runtime imports, exporting School's readers unchanged in behavior: `envString`, `requireEnv`, `envFlag`, `envInt`, `envChoice`, `isProduction`. Keep School's design rule from the top of [env.ts](../../packages/server/src/config/env.ts): **the caller passes the name and the literal `process.env.NAME` value; a reader never looks a name up**, so every variable stays a greppable read the bundler can see.
 
 Export `isNextBuildPhase` from a separate `najm-next/env` subpath, preserving `process.env.NEXT_PHASE === 'phase-production-build'`. This entrypoint must have no Next/React imports or configuration side effects, so the server and seed can import it. Add explicit built `dist` exports and build entries for both new subpaths; source-tree imports alone do not prove the published packages contain them. Include a `najm-next` minor release in phase 1.
 
-**School migration.** Inventory all source and test imports of [env.ts](packages/server/src/config/env.ts) before deleting it. Its current importers (`cacheConfig`, `coreConfig`, `emailConfig`, `ragConfig`, `rateLimitConfig`, and [schoolChatControls.ts](packages/server/src/modules/chat/transport/schoolChatControls.ts)) take the general readers from `najm-core/env`; `cacheConfig.ts` separately imports `isNextBuildPhase` from `najm-next/env`. Migrate every importer, including those outside `config`, then delete the local module and verify no import still targets it. Add `najm-next` as an exact dependency in `packages/server/package.json`, matching the root pin and override, and bump every existing workspace declaration in the same phase. Port School's existing behavior as Najm's tests, so nothing changes for School.
+**School migration.** Inventory all source and test imports of [env.ts](../../packages/server/src/config/env.ts) before deleting it. Its current importers (`cacheConfig`, `coreConfig`, `emailConfig`, `ragConfig`, `rateLimitConfig`, and [schoolChatControls.ts](../../packages/server/src/modules/chat/transport/schoolChatControls.ts)) take the general readers from `najm-core/env`; `cacheConfig.ts` separately imports `isNextBuildPhase` from `najm-next/env`. Migrate every importer, including those outside `config`, then delete the local module and verify no import still targets it. Add `najm-next` as an exact dependency in `packages/server/package.json`, matching the root pin and override, and bump every existing workspace declaration in the same phase. Port School's existing behavior as Najm's tests, so nothing changes for School.
 
 **Kafil migration.** Replace the inline readers in `envConfig.ts` and `emailConfig.ts`. Before switching, run the new readers over Kafil's deployed env values (decision D4); a value that used to fall back silently will now stop startup.
 
@@ -183,7 +183,7 @@ Export `isNextBuildPhase` from a separate `najm-next/env` subpath, preserving `p
 
 **Najm change in `najm-email`.**
 
-1. Export `emailConfigFromEnv(env, { defaultProvider?: ProviderName, defaultFrom?: string })`, built on W2. It contains School's switch ([emailConfig.ts:28-82](packages/server/src/config/emailConfig.ts#L28-L82)): `requireEnv` for API keys and `SMTP_HOST`, SMTP user/pass both or neither, port 1–65535, `EMAIL_RETRY_*` validated. With no `defaultProvider`, an unset `EMAIL_PROVIDER` throws (Kafil's behavior); School passes `'console'`. Resolve the sender as `envString(env.EMAIL_DEFAULT_FROM) ?? options.defaultFrom`: the option is a fallback, and an explicitly configured sender always wins.
+1. Export `emailConfigFromEnv(env, { defaultProvider?: ProviderName, defaultFrom?: string })`, built on W2. It contains School's switch ([emailConfig.ts:28-82](../../packages/server/src/config/emailConfig.ts#L28-L82)): `requireEnv` for API keys and `SMTP_HOST`, SMTP user/pass both or neither, port 1–65535, `EMAIL_RETRY_*` validated. With no `defaultProvider`, an unset `EMAIL_PROVIDER` throws (Kafil's behavior); School passes `'console'`. Resolve the sender as `envString(env.EMAIL_DEFAULT_FROM) ?? options.defaultFrom`: the option is a fallback, and an explicitly configured sender always wins.
 2. Move the module-level `DEFAULT_CONFIG` env reads into `mergeConfig`, so importing `najm-email` reads nothing. The fallback to env when no config is passed stays, so this is a minor release.
 3. Log single-send failures through `LoggerService` by default, once after retries complete. Use a fixed failure message, the known provider name and operation (`send` or `sendBulk`); bulk logs also include the failed count. Do not copy Kafil's raw-error logger: provider error messages, stacks, arbitrary error properties, provider responses and subjects can contain recipient addresses. Exclude those fields, recipient details and message content from the default log. Any additional failure classification must map to a fixed set of safe codes. Keep the existing public error results and event payloads; these restrictions apply to the built-in failure log. Option `logFailures: false` disables that log for both single and bulk sends.
 4. Cover `sendBulk()` at the service boundary, including native batch providers and the inherited `BaseProvider.sendBulk` implementation that currently bypass `email:failed`. A partially failed result, wholly failed result or thrown batch error produces one aggregate failure log per bulk invocation; successful and empty batches produce none. The sequential fallback follows the same rule and suppresses duplicate built-in logs from its internal single sends. Preserve provider batching, retry behavior and the public result shape; an event listener alone does not implement this requirement.
@@ -236,7 +236,7 @@ In each app, build and then start with a different injected sender value and ins
 
 The **app passes the ioredis constructor** (`Redis`). Both apps build the client themselves instead of passing `url` to `najm-cache`, whose driver uses a dynamic `require('ioredis')`. **Confirm the reason first** (git history of School's `cacheConfig.ts`; most likely the Next bundle not tracing the dynamic require). If it is the bundle, the constructor parameter keeps the static import in the app. If it isn't, `najm-cache` can construct the client from `url` and the parameter goes away.
 
-**School migration.** [cacheConfig.ts](packages/server/src/config/cacheConfig.ts) becomes the `REDIS_URL` documentation, `KEY_PREFIX = 'school:'`, and one call.
+**School migration.** [cacheConfig.ts](../../packages/server/src/config/cacheConfig.ts) becomes the `REDIS_URL` documentation, `KEY_PREFIX = 'school:'`, and one call.
 
 **Kafil migration.** Delete `redisClient` and `redisUrl`; `envConfig.auth.cache` reduces to the call.
 
@@ -254,7 +254,7 @@ The **app passes the ioredis constructor** (`Redis`). Both apps build the client
 
 ### W6. Ownership row conditions upstream
 
-**Problem.** School's `SchoolOwnershipToken` overrides `OwnershipToken.for()` and writes into the table `getRules()` returns. It throws at startup if najm-auth ever returns a copy (`throw new Error('najm-auth no longer returns its live rule table; …')` in [auth.ts](packages/server/src/auth.ts)). Any najm-auth refactor of that internal breaks School's ownership. Kafil separately wraps `own()` to give tokens a name.
+**Problem.** School's `SchoolOwnershipToken` overrides `OwnershipToken.for()` and writes into the table `getRules()` returns. It throws at startup if najm-auth ever returns a copy (`throw new Error('najm-auth no longer returns its live rule table; …')` in [auth.ts](../../packages/server/src/auth.ts)). Any najm-auth refactor of that internal breaks School's ownership. Kafil separately wraps `own()` to give tokens a name.
 
 **Najm change in `najm-auth`.**
 
@@ -262,7 +262,7 @@ The **app passes the ioredis constructor** (`Redis`). Both apps build the client
 2. Export `ownedIds(token, role, userId)` (School's subquery helper).
 3. `own(table, { name })` sets the token's name (Kafil's `definePolicy`).
 
-**School migration.** Delete `RowCondition`, `when`, `SchoolOwnershipToken` and `ownedIds` from [auth.ts](packages/server/src/auth.ts) and re-export najm-auth's. Keep School's own `own()` wrapper: it injects `SCHOOL_WIDE_ROLES`, which is School policy. CLAUDE.md's rule that owned repositories import `own`/`Owned` from `packages/server/src/auth.ts` still holds.
+**School migration.** Delete `RowCondition`, `when`, `SchoolOwnershipToken` and `ownedIds` from [auth.ts](../../packages/server/src/auth.ts) and re-export najm-auth's. Keep School's own `own()` wrapper: it injects `SCHOOL_WIDE_ROLES`, which is School policy. CLAUDE.md's rule that owned repositories import `own`/`Owned` from `packages/server/src/auth.ts` still holds.
 
 **Kafil migration.** Replace `definePolicy` with `own(table, { name, ...options })`.
 
@@ -279,7 +279,7 @@ The **app passes the ioredis constructor** (`Redis`). Both apps build the client
 
 1. **Theme diagnostics.** Add `scopeId` and the error to `najm-theme`'s built-in reporter (patch), then delete `reportThemeDiagnostic` and the `diagnostics` option from both apps' `themeConfig.ts`. Both apps also pass `basePath: ''`, `features: { mcp: true }` and `storage: { namespace: 'theme-branding' }`. Check each against `najm-theme`'s current defaults; make one a default only if a third consumer would want it too, otherwise leave it explicit.
 2. **MCP.** Delete `path: '/mcp'` and `exposeErrorDetails: false` from both apps; they are the defaults (1.6). Keep `cors: false` and `auth: { type: 'najm-auth' }`, which are not defaults and are security choices each app states.
-3. **i18n.** First confirm Kafil's symptom: on a non-English Kafil page, trigger a server refusal and check its language. Then, per D3, add an opt-in server preset to `najm-i18n` (for example `i18n({ ...options, server: { languageHeader: 'X-Language' } })`) that produces School's `order: ['header','cookie','querystring']`, `lookupFromHeaderKey` and `caches: []`. School's [coreConfig.ts:36-47](packages/server/src/config/coreConfig.ts#L36-L47) uses it. Kafil adopts it together with sending its interface language as a header from its web app.
+3. **i18n.** First confirm Kafil's symptom: on a non-English Kafil page, trigger a server refusal and check its language. Then, per D3, add an opt-in server preset to `najm-i18n` (for example `i18n({ ...options, server: { languageHeader: 'X-Language' } })`) that produces School's `order: ['header','cookie','querystring']`, `lookupFromHeaderKey` and `caches: []`. School's [coreConfig.ts:36-47](../../packages/server/src/config/coreConfig.ts#L36-L47) uses it. Kafil adopts it together with sending its interface language as a header from its web app.
 
 **Tests.** Extend School's `bun run test:server-i18n` with an isolated request-level suite under `packages/server/tests/i18n`, using the actual `i18nConfig()` and a translated refusal route. The current `ServerMessages.test.ts` only checks catalog keys and placeholders; retain it, but do not use it as evidence of language resolution.
 
@@ -290,18 +290,18 @@ The **app passes the ioredis constructor** (`Redis`). Both apps build the client
 
 ### W8. Kafil-only cleanup (no Najm release)
 
-- Replace the 12 hand-written guard classes in Kafil's `authConfig.ts` with `defineRoles(...)` + `createGroupGuard([...])`, as School's [auth.ts](packages/server/src/auth.ts) does.
+- Replace the 12 hand-written guard classes in Kafil's `authConfig.ts` with `defineRoles(...)` + `createGroupGuard([...])`, as School's [auth.ts](../../packages/server/src/auth.ts) does.
 - Investigate the comment on `KafilRoleGuard`: it resolves the bearer token itself "when Najm's auth middleware has not yet published its request context". If guards can run before auth's context exists, that is a najm-auth ordering bug and gets its own fix and test in Najm, not a workaround in each app.
 
 ## 4. Not moving, and why
 
 | Stays | Reason |
 | --- | --- |
-| [yearScope.ts](packages/server/src/config/yearScope.ts), the year hooks in [mcpConfig.ts](packages/server/src/config/mcpConfig.ts) | School's academic-year domain |
-| [chatbotConfig.ts](packages/server/src/config/chatbotConfig.ts), the system prompt, `TOOL_DEPENDENCIES`, the Darija rewrite | School's tools and language |
-| [ragConfig.ts](packages/server/src/config/ragConfig.ts) embedding env parsing | Generic, but only School has it (rule 0.1) |
+| [yearScope.ts](../../packages/server/src/config/yearScope.ts), the year hooks in [mcpConfig.ts](../../packages/server/src/config/mcpConfig.ts) | School's academic-year domain |
+| [chatbotConfig.ts](../../packages/server/src/config/chatbotConfig.ts), the system prompt, `TOOL_DEPENDENCIES`, the Darija rewrite | School's tools and language |
+| [ragConfig.ts](../../packages/server/src/config/ragConfig.ts) embedding env parsing | Generic, but only School has it (rule 0.1) |
 | `SCHOOL_WIDE_ROLES`, `isAdministrator`, `isFinancial`, `isStaff`, `registrationMode` | Policy |
-| [storageConfig.ts](packages/server/src/config/storageConfig.ts) limits and guards, CORS origins | Policy |
+| [storageConfig.ts](../../packages/server/src/config/storageConfig.ts) limits and guards, CORS origins | Policy |
 | Theme audit sink | Each app writes its own audit table |
 
 ## 5. What each School config file becomes
@@ -339,11 +339,11 @@ School's `scripts/tests/najm-pins.test.mjs` (in `bun run test:boundaries`) check
 School, after each pin bump:
 
 - `bun run check` (lint, typecheck, i18n, safe tests, build, `db:check`);
-- `bun run test:security:transport` for W1, W4 and W5. The script loads `apps/dashboard/.env.local`; set `SCHOOL_HISTORY_TEST_DB_URL` and `SCHOOL_HISTORY_ADMIN_PASSWORD` for the existing local `school_history_test` fixture (see [fixture verification](docs/tests/finance-review-2026-10-03.md)). The tracked template documents blank placeholders; verified local values are stored only in the ignored env file;
+- `bun run test:security:transport` for W1, W4 and W5. The script loads `apps/dashboard/.env.local`; set `SCHOOL_HISTORY_TEST_DB_URL` and `SCHOOL_HISTORY_ADMIN_PASSWORD` for the existing local `school_history_test` fixture (see [fixture verification](../tests/finance-review-2026-10-03.md)). The tracked template documents blank placeholders; verified local values are stored only in the ignored env file;
 - `bun run test:ownership` for W6, **after adding and committing** the complete SQL/ordered-parameter baseline described in W6;
 - `bun run test:server-i18n` for W7, **after adding** the request-level language tests described in W7;
 - a startup with `EMAIL_PROVIDER` absent from the effective environment for W1 and W3, keeping the other required app values supplied; do not count a shell unset if Next loads the value from `.env.local`;
-- `bun run test:config:production` with `SCHOOL_HISTORY_TEST_DB_URL` supplied for the marked local fixture and local `REDIS_URL` set. [The checker](scripts/check-config-production.mjs) builds an isolated Next app importing School's actual server under the Najm preset, then starts that build with a changed, blank and unset sender. It verifies the memory provider's prepared message and production Redis use. Generated fixtures are under `apps/dashboard/.cache`; logs and summary are under `.cache/najm-config-verification`;
+- `bun run test:config:production` with `SCHOOL_HISTORY_TEST_DB_URL` supplied for the marked local fixture and local `REDIS_URL` set. [The checker](../../scripts/check-config-production.mjs) builds an isolated Next app importing School's actual server under the Najm preset, then starts that build with a changed, blank and unset sender. It verifies the memory provider's prepared message and production Redis use. Generated fixtures are under `apps/dashboard/.cache`; logs and summary are under `.cache/najm-config-verification`;
 - the W2 production-build/runtime cache checks.
 
 Kafil: W0's compatibility gates before phase 1; its own full check and test suite after each bump, including the per-repo pin check, plus the W3 sender and W7 request/page language checks. Record the cross-repo version comparison after both migrations.

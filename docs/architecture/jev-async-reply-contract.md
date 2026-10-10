@@ -2,7 +2,7 @@
 
 This records the earlier publication/adoption sequence, including its parallel
 strategy and measurements. Current strategy, release work and validation are in
-the [Jev + router plan](../../CHATBOT-JEV-ROUTER-PLAN.md) and
+the [Jev + router plan](../plans/CHATBOT-JEV-ROUTER-PLAN.md) and
 [validation guide](../tests/jev-router-validation.md). Older linked reports are
 recoverable through the [evidence index](../evidence/chatbot-latency/README.md#historical-recovery).
 
