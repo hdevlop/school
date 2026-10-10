@@ -1,4 +1,4 @@
-import { normalizeReplyText } from 'najm-chatbot';
+import { normalizeReplyText, type ReplyLanguage, type ReplyRequest, type ReplyTemplate } from 'najm-chatbot';
 
 type WriteRefusalKind = 'attendance' | 'change';
 const boundary = '(?![\\p{L}\\p{N}])';
@@ -24,4 +24,26 @@ export function schoolWriteRefusalKind(userText: string): WriteRefusalKind | nul
     || /^dir(?![\p{L}\p{N}])/u.test(text) && domainObject.test(text) && latinAttendance.test(text);
   if (!(originalWrite && originalObject || localChange.test(text) && localObject.test(text) || latinWrite)) return null;
   return /presence|présence|absence|absent|حضور|غياب|غايب|غائب|حاضر/u.test(text) || latinAttendance.test(text) ? 'attendance' : 'change';
+}
+
+const refusals: Record<ReplyLanguage, { attendance: string; change: string }> = {
+  ary: {
+    attendance: 'ما نقدرش نسجل أو نبدل الحضور والغياب هنا. خاصك تستعمل صفحة الحضور والغياب فلوحة التحكم.',
+    change: 'ما نقدرش ندير هاد التغيير فهاد الدردشة. خاصك تستعمل لوحة التحكم.',
+  },
+  ar: {
+    attendance: 'لا يمكنني تسجيل أو تعديل الحضور والغياب في هذه الدردشة. يرجى استخدام صفحة الحضور والغياب في لوحة التحكم.',
+    change: 'لا يمكنني إجراء هذا التغيير في هذه الدردشة. يرجى استخدام لوحة التحكم.',
+  },
+  fr: {
+    attendance: 'Je ne peux pas enregistrer ou modifier les présences et les absences dans cette conversation. Utilisez la page des présences du tableau de bord.',
+    change: 'Je ne peux pas effectuer cette modification dans cette conversation. Utilisez le tableau de bord.',
+  },
+};
+
+/** General read questions go to Jev/router; only writes have a local refusal. */
+export function schoolWriteReply({ userText, language }: ReplyRequest): ReplyTemplate | null {
+  if (!language) return null;
+  const kind = schoolWriteRefusalKind(userText);
+  return kind ? { text: refusals[language][kind] } : null;
 }

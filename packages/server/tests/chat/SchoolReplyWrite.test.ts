@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'bun:test';
-import { schoolWriteRefusalKind } from '../../src/modules/chat/replies/schoolReplyWrite';
+import { schoolWriteRefusalKind, schoolWriteReply } from '../../src/modules/chat/replies/schoolReplyWrite';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
 
 describe('School deterministic write refusals', () => {
   it.each([
@@ -14,7 +13,7 @@ describe('School deterministic write refusals', () => {
     'صيفط إعلان للواليدين بلي غدا عطلة.', 'Efface la note du parent.',
   ])('refuses a clear mutation with no tool plan: %s', userText => {
     expect(schoolWriteRefusalKind(userText)).not.toBeNull();
-    const reply = schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
+    const reply = schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
     expect(reply).toEqual({ text: expect.any(String) });
   });
 
@@ -30,7 +29,7 @@ describe('School deterministic write refusals', () => {
     'mse7ment had lfard', 'mse7', 'Créé un poème.',
   ])('preserves how-to, negation, quoting, reads and arithmetic: %s', userText => {
     expect(schoolWriteRefusalKind(userText)).toBeNull();
-    expect(schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' })).toBeNull();
+    expect(schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' })).toBeNull();
   });
 
   it('selects the attendance refusal only for attendance mutations', () => {

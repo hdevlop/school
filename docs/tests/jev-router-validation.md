@@ -1,5 +1,11 @@
 # Jev + router release validation
 
+> Current chat cleanup (2026-10-09): the owner removed the runtime budget folder,
+> monthly spending guard and cost accounting. Chat replies and administrator
+> diagnostics omit token and price metadata. Provider dispatch constraints remain.
+> Allowance and usage measurements below describe historical validation only.
+
+
 The owner closed provider/model comparisons on 2026-10-09. Keep the selected
 Jev + existing router + selective OSS20B flow; no new benchmark is required.
 
@@ -437,3 +443,82 @@ general Darija replies as fully validated. The remaining issues are provider
 tool-name formatting, planning text, and the distinction between empty records
 and verified absence counts. Correct those concrete behaviors without restoring
 chat filter catalogs or starting another provider benchmark.
+
+## Provider tool formatting and attendance evidence — 2026-10-10
+
+Implemented a bounded provider adapter for the existing OSS20B transport. It
+recognizes only exact offered names and the observed terminal Harmony suffixes
+(empty, commentary, json), including names split across SSE chunks. Arguments,
+call IDs and outputs stay unchanged. Unknown names and unsupported suffixes are
+left to SDK validation. It suppresses ordinary planning text in tool-call steps;
+answer-only steps retain their text. Module guards and validators still execute.
+Hot reload now replaces a stale adapter even when global fetch has not changed.
+
+One provider completion is buffered, with a 1 MiB bound, before its events reach
+the SDK. This delays answer text until that model step finishes; it does not
+buffer tool results or the whole multi-step chat. Cancellation reaches the
+provider reader, incomplete/oversized streams fail visibly, and no generation
+retry or model/provider change was introduced. The framing follows
+[OpenRouter's streaming contract](https://openrouter.ai/docs/api/reference/streaming).
+
+Attendance's five MCP-only list/date/today routes now return records,
+recordState and interpretation from the module service. No recorded rows means
+attendance is unknown, not that nobody is absent. Dashboard GET list/date/today
+routes retain their array contract. Ownership and selected-year boundaries are
+unchanged; no chat-side record filtering or authorization layer was added.
+
+Read-only checks against the existing app:
+
+| Request | Final observed result |
+| --- | --- |
+| CP/A SVT grade list | Exact sectionId and subjectId were supplied to grades_get_by_section. All 14 names/scores matched the authorized read; no SDK tool errors or planning-text leak. 8.36 s end to end. |
+| Who is absent today? | attendance_get_today_students returned no_records. The answer correctly said in Darija that no attendance records were recorded and absence cannot be confirmed. No tool errors; 2.09 s. |
+
+The grade answer omitted its returned /10 scale. The final prompt now explicitly
+requires a denominator on every score. That last wording change could not be
+rechecked live because the existing login limiter returned HTTP 429. Do not claim
+that denominator presentation or all possible Darija wording is validated.
+No auth limiter was bypassed, school record changed or new benchmark created.
+
+Verification: 981 chat/year/security/ownership tests and 28 script/boundary tests
+pass. Real published provider-SDK/MCP regressions verify that adapted calls still
+reject invalid arguments, unoffered tools and unauthorized actors, while allowed
+calls execute exactly once. Stream fragmentation, terminal usage frames, bounds,
+cancellation and hot-reload replacement are covered. Lint, root type checking
+and the isolated production build pass. Generated build output is removed.
+
+**What can be done next:** use normal chat with Jev plus the existing router and
+OSS20B. Known provider-format failures are handled; unfamiliar malformed calls
+remain visible failures. Verify grade denominator wording through normal chat
+when the existing login limit clears, and use specific failed questions to guide
+further fixes rather than restoring filtered-answer catalogs or provider benches.
+
+## Grade denominator verification — 2026-10-10
+
+Login is available again. Initial rechecks exposed intermittent unnormalized
+provider calls and a duplicated commentary suffix. The adapter now formats
+OSS20B responses even without a request-local policy frame; policy enforcement
+remains unchanged whenever the frame exists. Other models, unrelated/relative
+fetches and invalid unrelated bodies retain their behavior. Only offered names
+with one to four observed terminal suffixes are recognized; arguments remain
+unchanged and native module validation/authorization still apply.
+
+The final ordinary CP/A SVT request supplied the actual section and subject IDs.
+Against the authorized grade-tool baseline, the answer matched **14/14 names and
+scores** and **14/14 returned denominators** (all /10). It contained no English
+planning text and no SDK tool errors. End-to-end time was **5.28 seconds**; this
+is one functional verification, not an average or an under-two-second claim.
+The denominator verification pending in the preceding report is now complete.
+Darija wording remains a model output and may still be awkward; this check
+validates tool selection, returned values and score scales, not every phrasing.
+
+Offline verification passes **982 chat/year/security/ownership tests**, lint,
+root type checking and an isolated production build. The new
+regression covers adapter use without a policy frame, repeated suffixes, and
+unchanged behavior for other models/requests. No school records, auth limits,
+provider selection or benchmark infrastructure were changed.
+
+**What can be done next:** use ordinary chat with the selected Jev/router/OSS20B
+combination. Review real Darija wording as it is used; a concrete bad question
+and answer are sufficient for the next correction. The tested grade scale and
+empty-attendance issues no longer need another benchmark or manual collection.

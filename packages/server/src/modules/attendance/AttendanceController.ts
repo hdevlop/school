@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { AttendanceService } from './AttendanceService';
+import { AttendanceService, attendanceReadEvidence } from './AttendanceService';
 import { Attendance, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AttendanceGuards';
 import { isAdmin } from '../../auth';
 import {
@@ -43,10 +43,10 @@ export class AttendanceController {
   @Post('/mcp/all')
   @CanList()
   @Validate({ body: typeQueryParam })
-  @McpTool({ description: 'List all attendance records', readOnly: true })
+  @McpTool({ description: 'List attendance evidence: records and recordState. no_records means attendance is unknown, not zero absentees.', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getAll(@Body() body: AttendanceTypeQueryDto) {
-    return this.attendanceService.getAll({ type: body?.type });
+    return attendanceReadEvidence(await this.attendanceService.getAll({ type: body?.type }));
   }
 
   @Get('/today')
@@ -60,10 +60,10 @@ export class AttendanceController {
   @Post('/mcp/today')
   @CanList()
   @Validate({ body: typeQueryParam })
-  @McpTool({ description: "List today's attendance records", readOnly: true })
+  @McpTool({ description: "List today's attendance evidence: records and recordState. no_records means attendance is unknown, not zero absentees.", readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getTodayAll(@Body() body: AttendanceTypeQueryDto) {
-    return this.attendanceService.getToday(body?.type);
+    return attendanceReadEvidence(await this.attendanceService.getToday(body?.type));
   }
 
   @Post('/mcp/today/students')
@@ -71,7 +71,7 @@ export class AttendanceController {
   @McpTool({ description: "List today's student attendance records. Présences et absences des élèves aujourd'hui. حضور وغياب التلاميذ اليوم.", readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getTodayStudents() {
-    return this.attendanceService.getToday('student');
+    return attendanceReadEvidence(await this.attendanceService.getToday('student'));
   }
 
   @Post('/mcp/today/staff')
@@ -79,7 +79,7 @@ export class AttendanceController {
   @McpTool({ description: "List today's staff attendance records", readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getTodayStaff() {
-    return this.attendanceService.getToday('staff');
+    return attendanceReadEvidence(await this.attendanceService.getToday('staff'));
   }
 
   @Get('/date/:date')
@@ -96,7 +96,7 @@ export class AttendanceController {
   @McpTool({ description: 'Get attendance records for a specific date. Présences et absences à une date donnée, par exemple hier. الحضور والغياب في تاريخ معين، مثل أمس.', readOnly: true })
   @ResMsg('attendance.success.retrieved')
   async getByDate(@Body() body: AttendanceDateFilterDto) {
-    return this.attendanceService.getByDate(body.date, body.type);
+    return attendanceReadEvidence(await this.attendanceService.getByDate(body.date, body.type));
   }
 
   @Get('/section/:sectionId')

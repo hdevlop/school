@@ -1,14 +1,13 @@
 import { AiSettingsService, type ReplyPreparationRequest, type ReplyTemplate } from 'najm-chatbot';
 import { Service } from '../../../najm';
-import { JEV_DECISIONS_URL, parseDecision } from './jevIntents';
-import { acceptsWithQueryGuardV6 } from './jevQueryGuard';
-import { buildJevRuntimeDecisionRequest } from './jevRuntimeWording';
-import { readJevControls, effectiveJevMode } from './JevControls';
+import { JEV_DECISIONS_URL } from './jevIntents';
+import { parseDecision } from './jevDecision';
+import { acceptsWithQueryGuard } from './guards/queryGuard';
+import { buildJevDecisionRequest } from './jevWording';
+import { readJevControls, effectiveJevMode, readSchoolChatControls } from '../transport/schoolChatControls';
 import { schoolJevRequestContext } from './JevRequestContext';
-import { jevReplyPlan } from './jevReplyPlan';
-import { readSchoolChatControls } from '../transport/schoolChatControls';
-import { hasOrdinaryJevReply, ORDINARY_JEV_READS } from './jevReadScope';
-import { budgetedChatFetch } from '../budget/SchoolPaidChatTransport';
+import { jevReplyPlan, hasOrdinaryJevReply, ORDINARY_JEV_READS } from './jevReplyPlan';
+import { schoolChatFetch } from '../transport/SchoolChatTransport';
 
 /** Cancellation stays prompt even if a provider ignores the supplied signal. */
 function abortable<T>(start: () => Promise<T>, signal: AbortSignal): Promise<T> {
@@ -41,7 +40,7 @@ async function responseText(response: Response, signal: AbortSignal) {
 @Service()
 export class JevIntentClassifier {
   readonly controls = readJevControls();
-  transport: (...args: Parameters<typeof fetch>) => ReturnType<typeof fetch> = budgetedChatFetch(((input, init) => fetch(input, init)) as typeof fetch);
+  transport: (...args: Parameters<typeof fetch>) => ReturnType<typeof fetch> = schoolChatFetch(((input, init) => fetch(input, init)) as typeof fetch);
   constructor(private settings: AiSettingsService) {}
 
   eligible(request: ReplyPreparationRequest) {
@@ -74,11 +73,11 @@ export class JevIntentClassifier {
       frame.diagnostics!.classification = 'pending';
       const response = await abortable(() => this.transport(JEV_DECISIONS_URL, { method: 'POST', redirect: 'error', signal,
         headers: { authorization: `Bearer ${settings.apiKey}`, 'content-type': 'application/json' },
-        body: JSON.stringify({ ...buildJevRuntimeDecisionRequest(request.userText), session_id: crypto.randomUUID(), provider: { data_collection: 'deny' } }) }), signal);
+        body: JSON.stringify({ ...buildJevDecisionRequest(request.userText), session_id: crypto.randomUUID(), provider: { data_collection: 'deny' } }) }), signal);
       const text = await responseText(response, signal);
       if (!response.ok) throw new Error('provider_rejected');
       const decision = parseDecision(JSON.parse(text));
-      const accepted = acceptsWithQueryGuardV6(decision, request.userText, this.controls.threshold)
+      const accepted = acceptsWithQueryGuard(decision, request.userText, this.controls.threshold)
         && ORDINARY_JEV_READS.some(choice => choice === decision.choice);
       const plan = !signal.aborted && accepted ? jevReplyPlan(decision.choice, request.language!, frame.academicYear) : null;
       frame.diagnostics!.classification = signal.aborted ? 'aborted' : plan ? 'candidate' : 'declined';

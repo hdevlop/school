@@ -30,6 +30,22 @@ function diagnostics(correlationId: string | null): ChatDiagnostics {
 }
 
 describe('chat diagnostics', () => {
+  it('omit token counts and pricing while retaining timings and reply outcomes', () => {
+    const log = new ChatDiagnosticsLog();
+    const event = diagnostics('request');
+    event.usage = { source: 'total', inputTokens: 10, outputTokens: 5, totalTokens: 15,
+      cachedInputTokens: 0, reasoningTokens: 0 };
+    event.cost = { provider: 'openrouter', model: 'openai/gpt-oss-20b', promptTokens: 10, completionTokens: 5,
+      totalTokens: 15, inputCost: 0.001, outputCost: 0.001, totalCost: 0.002, currency: 'USD', pricingFound: true };
+    event.steps = [{ endMs: 100, finishReason: 'stop', inputTokens: 10, outputTokens: 5, toolCalls: [] }];
+    log.record(event);
+    const record = log.find('request')!;
+    expect(record.steps).toEqual([{ endMs: 100, finishReason: 'stop', toolCalls: [] }]);
+    expect(record.marks.finishMs).toBe(1200); expect(record.outcome).toBe('completed');
+    for (const field of ['usage', 'cost', 'inputTokens', 'outputTokens', 'totalTokens', 'totalCost'])
+      expect(JSON.stringify(record)).not.toContain(`"${field}"`);
+  });
+
   it('snapshots only fixed Jev codes for the matching request and never updates a sealed reply', () => {
     const log = new ChatDiagnosticsLog();
     const frame: JevRequestContext = { actorId: 'private-actor', academicYear: '2026-2027',

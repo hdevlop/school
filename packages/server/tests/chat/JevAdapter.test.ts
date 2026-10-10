@@ -4,18 +4,17 @@ import { ChatAgent, type ReplyPreparationRequest } from 'najm-chatbot';
 import { scriptedModel } from 'najm-chatbot/testing';
 import { McpBuilderService, McpRegistryService, TOOL_PROVIDER } from 'najm-mcp';
 import { JevIntentClassifier } from '../../src/modules/chat/jev/JevIntentClassifier';
-import { schoolJevRequestContext, type JevRequestContext } from '../../src/modules/chat/jev/JevRequestContext';
-import { jevPreparationPolicy } from '../../src/modules/chat/jev/jevPreparationPolicy';
+import { schoolJevRequestContext, jevPreparationPolicy, type JevRequestContext } from '../../src/modules/chat/jev/JevRequestContext';
 import { jevReplyPlan } from '../../src/modules/chat/jev/jevReplyPlan';
 import { INTENT_NAMES, JEV_MODEL, type JevIntent } from '../../src/modules/chat/jev/jevIntents';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
+import { schoolWriteReply } from '../../src/modules/chat/replies/schoolReplyWrite';
 import { schoolOpenRouterProvider } from '../../src/modules/chat/routing/schoolOpenRouterProvider';
 import { ChatDiagnosticsLog } from '../../src/modules/chat/diagnostics/ChatDiagnosticsLog';
 
 import { CORRELATION_ID, USER } from '../../src/najm';
-import { effectiveJevMode, readJevControls } from '../../src/modules/chat/jev/JevControls';
-import { parseDecision, accepts } from '../../src/modules/chat/jev/jevIntents';
+import { effectiveJevMode, readJevControls } from '../../src/modules/chat/transport/schoolChatControls';
+import { parseDecision, accepts } from '../../src/modules/chat/jev/jevDecision';
 
 const names = ['CHATBOT_FLOW', 'CHATBOT_JEV_MODE', 'CHATBOT_JEV_THRESHOLD', 'CHATBOT_JEV_OPERATING_TIMEOUT_MS'];
 const original = Object.fromEntries(names.map(name => [name, process.env[name]]));
@@ -104,6 +103,13 @@ describe('production Jev boundary', () => {
       expect(accepts({...parseDecision(response()),[field]:value},0.8,true)).toBe(false);
     }
   });
+  test('decision validation ignores provider usage and pricing metadata', () => {
+    const { usage: _usage, ...body } = response();
+    const decision = parseDecision(body);
+    expect(decision.choice).toBe('student_count');
+    expect(parseDecision({ ...body, usage: { input_tokens: 'unused', cost: 'unused' } })).toEqual(decision);
+    expect(decision).not.toHaveProperty('inputTokens'); expect(decision).not.toHaveProperty('costUsd');
+  });
   test.each(['NaN','Infinity','-1','1.5'])('invalid threshold %s fails configuration', value => {
     process.env.CHATBOT_JEV_THRESHOLD = value; expect(readJevControls).toThrow();
   });
@@ -161,7 +167,7 @@ describe('shared intent renderers', () => {
     const diagnostics = new ChatDiagnosticsLog();
     const events: any[] = []; const reads = mock(async () => ({ content: [{ type: 'text', text: '{"count":7}' }] }));
     const value = new ChatAgent({ getInternal: async () => ({ isEnabled: true, provider: 'openrouter', model: 'test', useMemory: false }) } as any,
-      {} as any, {} as any, { reply: { detectLanguage: schoolReplyLanguage, template: input => schoolReplyTemplate(input),
+      {} as any, {} as any, { reply: { detectLanguage: schoolReplyLanguage, template: input => schoolWriteReply(input),
         preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: event => { events.push(event); diagnostics.record(event); } } }, {} as any);
     (value as any).container = { get(token: any) {
       if (token === USER) return { id: 'actor', role: 'admin' };

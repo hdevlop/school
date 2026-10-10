@@ -37,7 +37,7 @@ test('failed tool attempts stay visible after a later successful answer without 
   expect(text(body)).toBe('عندك 44 تلميذ.\n\n' + schoolChatToolFailureText('شحال من تلميذ عندي؟'));
   expect(body).not.toContain('private');
   expect(events(body).find(x => x.type === 'tool-input-error').input).toEqual({});
-  expect(events(body).find(x => x.type === 'finish').messageMetadata).toEqual({ totalCost: 0.001, schoolReplyOutcome: 'tool_failure', schoolFailedToolCalls: 1 });
+  expect(events(body).find(x => x.type === 'finish').messageMetadata).toEqual({ schoolReplyOutcome: 'tool_failure', schoolFailedToolCalls: 1 });
   expect(events(body).filter(x => x.type === 'text-end').at(-1)).toBeDefined();
   expect(events(body).findIndex(x => x.id?.startsWith('school-unavailable-'))).toBeLessThan(events(body).findIndex(x => x.type === 'finish'));
 });
@@ -73,14 +73,14 @@ test('an oversized SDK tool error remains observable without buffering its full 
   expect(text(body)).toContain(schoolChatToolFailureText('بغيت النقط'));
 });
 
-test('empty completed stream becomes a visible unavailable reply before finish, with honest usage', async () => {
+test('empty completed stream becomes a visible unavailable reply before finish without billing metadata', async () => {
   const usage = { totalCost: 0.001, pricingFound: true, model: 'openai/gpt-oss-20b' };
   const original = start + frame({ type: 'finish', finishReason: 'stop', messageMetadata: usage }) + done;
   const response = schoolChatResponse(reply(original), 'وريني النقط ديالي');
   const body = await response.text(), parsed = events(body);
   expect(text(body)).toBe(schoolChatFailureText('وريني النقط ديالي'));
   expect(parsed.find(x => x.type === 'start').messageId).toBe('original-id');
-  expect(parsed.find(x => x.type === 'finish').messageMetadata).toEqual({ ...usage, schoolReplyOutcome: 'unavailable' });
+  expect(parsed.find(x => x.type === 'finish').messageMetadata).toEqual({ schoolReplyOutcome: 'unavailable' });
   expect(parsed.findIndex(x => x.type === 'text-end')).toBeLessThan(parsed.findIndex(x => x.type === 'finish'));
   expect(response.headers.get('cache-control')).toBe('no-cache');
   const unknown = events(await schoolChatResponse(reply(start + finish + done), 'hello').text()).find(x => x.type === 'finish').messageMetadata;
@@ -94,6 +94,21 @@ test('successful multilingual replies and tool results pass through byte-for-byt
   const bytes = new TextEncoder().encode(original); let i = 0;
   const fragmented = new ReadableStream<Uint8Array>({ pull(controller) { if (i < bytes.length) controller.enqueue(bytes.slice(i, ++i)); else controller.close(); } });
   expect(await schoolChatResponse(reply(fragmented), 'شحال من تلميذ عندي؟').text()).toBe(original);
+});
+
+test('successful replies omit SDK token and price metadata on every event', async () => {
+  const metadata = { promptTokens: 10, completionTokens: 5, totalTokens: 15, totalCost: 0.001,
+    inputCost: 0.0005, outputCost: 0.0005, currency: 'USD', pricingFound: true, model: 'openai/gpt-oss-20b' };
+  const original = frame({ type: 'start', messageId: 'original-id', messageMetadata: metadata })
+    + frame({ type: 'message-metadata', messageMetadata: metadata })
+    + frame({ type: 'text-delta', id: 'answer', delta: 'A successful answer.' })
+    + frame({ type: 'finish', finishReason: 'stop', messageMetadata: metadata }) + done;
+  const body = await schoolChatResponse(reply(original), 'hello').text();
+  expect(text(body)).toBe('A successful answer.');
+  expect(events(body).find(x => x.type === 'start').messageId).toBe('original-id');
+  expect(events(body).some(event => event.type === 'message-metadata')).toBe(false);
+  expect(events(body).every(event => event.messageMetadata === undefined)).toBe(true);
+  for (const key of Object.keys(metadata)) expect(body).not.toContain(key);
 });
 
 test('tool-only completion shows failure without inventing facts or altering outputs', async () => {

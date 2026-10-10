@@ -4,10 +4,10 @@ import { studioAssistant } from 'najm-chatbot/studio-assistant';
 
 import { chatDiagnosticsLog } from '../modules/chat/diagnostics/ChatDiagnosticsLog';
 import { SchoolChatRequest } from '../modules/chat/transport/SchoolChatRequest';
-import { schoolReplyTemplate } from '../modules/chat/replies/schoolReplyTemplates';
+import { schoolWriteReply } from '../modules/chat/replies/schoolReplyWrite';
 import { schoolReplyLanguage } from '../modules/chat/replies/schoolReplyLanguage';
 import { chatbotSystemPrompt } from './chatbotSystemPrompt';
-import { jevPreparationPolicy } from '../modules/chat/jev/jevPreparationPolicy';
+import { jevPreparationPolicy } from '../modules/chat/jev/JevRequestContext';
 import { schoolOpenRouterProvider } from '../modules/chat/routing/schoolOpenRouterProvider';
 
 /** The dashboard's read-only chat. Tool routing and embeddings are in ragConfig. */
@@ -17,7 +17,7 @@ export const chatbotConfig = () =>
     defaultSystemPrompt: chatbotSystemPrompt,
     reply: {
       detectLanguage: schoolReplyLanguage,
-      template: schoolReplyTemplate,
+      template: schoolWriteReply,
       preparation: jevPreparationPolicy(),
     },
     maxSteps: 10,

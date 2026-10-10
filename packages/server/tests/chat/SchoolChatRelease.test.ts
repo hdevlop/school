@@ -3,17 +3,14 @@ import { afterEach, expect, test } from 'bun:test';
 import { ChatAgent } from 'najm-chatbot';
 import { scriptedModel } from 'najm-chatbot/testing';
 import { ordinaryJevTurn, readSchoolChatControls } from '../../src/modules/chat/transport/schoolChatControls';
-import { budgetedChatFetch, installSchoolPaidChatTransport, schoolPaidChatContext, type SchoolPaidChatFrame } from '../../src/modules/chat/budget/SchoolPaidChatTransport';
-import { schoolChatResponse } from '../../src/modules/chat/transport/schoolChatResponse';
+import { schoolChatFetch, installSchoolChatTransport, schoolChatTransportContext, type SchoolChatTransportFrame } from '../../src/modules/chat/transport/SchoolChatTransport';
 import { createJevFixture } from './jevFixture';
-import { ChatSpendRepository } from '../../src/modules/chat/budget/ChatSpendRepository';
-import { schoolJevRequestContext } from '../../src/modules/chat/jev/JevRequestContext';
-import { jevPreparationPolicy } from '../../src/modules/chat/jev/jevPreparationPolicy';
+import { schoolJevRequestContext, jevPreparationPolicy } from '../../src/modules/chat/jev/JevRequestContext';
 import { schoolRoutingContext } from '../../src/modules/chat/routing/schoolRoutingContext';
 import { rewriteDarijaForRouting } from '../../src/modules/chat/routing/darijaRouting';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
 import { schoolWriteRefusalKind } from '../../src/modules/chat/replies/schoolReplyWrite';
-import { queryVetoV6 } from '../../src/modules/chat/jev/jevQueryGuard';
+import { queryVeto } from '../../src/modules/chat/jev/guards/queryGuard';
 import { INTENT_NAMES, JEV_MODEL } from '../../src/modules/chat/jev/jevIntents';
 
 const original = { flow: process.env.CHATBOT_FLOW, mode: process.env.CHATBOT_JEV_MODE };
@@ -22,39 +19,27 @@ afterEach(() => {
     if (value === undefined) delete process.env[key!]; else process.env[key!] = value;
   }
 });
-function fixture(limit = 100_000) {
-  let used = 0, attempts = 0, sends = 0;
-  const reservations = new Set<string>();
-  const frame: SchoolPaidChatFrame = { limit, calls: 0, costs: [], repository: {
-    reserve: async (_kind, microUsd) => {
-      if (used + microUsd > limit) return null;
-      used += microUsd; attempts++;
-      const id = crypto.randomUUID(); reservations.add(id);
-      return { id, month: '2026-10', microUsd };
-    },
-    settle: async (r, cost) => {
-      if (cost === null || !reservations.delete(r.id)) return;
-      used += Math.ceil(cost * 1_000_000) - r.microUsd;
-    },
-  } };
-  const fetcher = (value: Response | (() => Response)) => budgetedChatFetch((async () => {
-    sends++; return typeof value === 'function' ? value() : value;
-  }) as typeof fetch);
-  return { frame, fetcher, snapshot: () => ({used,attempts,sends}) };
+function fixture() {
+  const frame: SchoolChatTransportFrame = { embeddingUrl: 'http://127.0.0.1:18080/v1/embeddings', calls: 0 };
+  let sends = 0;
+  const fetcher = (response: Response) => schoolChatFetch((async () => { sends++; return response; }) as typeof fetch);
+  return { frame, fetcher, sends: () => sends };
 }
-const generation = { method:'POST', body: JSON.stringify({model:'openai/gpt-oss-20b',messages:[{role:'user',content:'salam'}]}) };
+const generation = { method: 'POST', body: JSON.stringify({model:'openai/gpt-oss-20b',messages:[{role:'user',content:'salam'}]}) };
 const endpoint = 'https://openrouter.ai/api/v1/chat/completions';
 
-test('reinstall after a framework fetch replacement charges nested wrappers once',async()=>{
- const originalFetch=globalThis.fetch, f=fixture();let sends=0;
- try{
-  globalThis.fetch=budgetedChatFetch((async()=>{sends++;return Response.json({usage:{cost:0.00001}});}) as typeof fetch);
-  const previous=globalThis.fetch;globalThis.fetch=((...args)=>previous(...args)) as typeof fetch;
-  installSchoolPaidChatTransport();
-  await schoolPaidChatContext.run(f.frame,async()=>{await(await fetch(endpoint,generation)).text();});
-  expect(sends).toBe(1);expect(f.snapshot().attempts).toBe(1);expect(f.snapshot().used).toBe(10);
- }finally{globalThis.fetch=originalFetch;installSchoolPaidChatTransport();}
+test('reinstall after a framework fetch replacement dispatches nested wrappers once', async () => {
+  const originalFetch = globalThis.fetch, f = fixture();
+  try {
+    globalThis.fetch = f.fetcher(Response.json({text:'ok'}));
+    const previous = globalThis.fetch;
+    globalThis.fetch = ((...args) => previous(...args)) as typeof fetch;
+    installSchoolChatTransport();
+    await schoolChatTransportContext.run(f.frame, async () => { await (await fetch(endpoint, generation)).text(); });
+    expect(f.sends()).toBe(1); expect(f.frame.calls).toBe(1);
+  } finally { globalThis.fetch = originalFetch; }
 });
+
 test('only a new single-text user turn establishes ordinary first-turn context', () => {
   expect(ordinaryJevTurn({messages:[{role:'user',content:'bghit total tlamid'}],historyComplete:true,role:'admin'})).toEqual({query:'bghit total tlamid',historyComplete:true,priorUserTurns:0});
   for (const body of [{sessionKey:'forged',messages:[{role:'user',content:'x'}]}, {messages:[{role:'assistant',content:'x'}]},
@@ -62,71 +47,55 @@ test('only a new single-text user turn establishes ordinary first-turn context',
 });
 test('qualified ordinary frame uses candidate-first and Jev off keeps the preparation contract', () => {
   process.env.CHATBOT_FLOW='jev-router-20b'; process.env.CHATBOT_JEV_MODE='off';
-  expect(readSchoolChatControls().monthlyMicroUsd).toBe(10_000_000);
+  expect(readSchoolChatControls().enabled).toBe(true);
   schoolJevRequestContext.run({actorId:'a',academicYear:'2026-2027',query:'x',mode:'off',correlationId:null,historyComplete:true,priorUserTurns:0},()=>{
     expect(jevPreparationPolicy().strategy).toBe('candidate-first'); expect(jevPreparationPolicy().enabled).toBe(true);
   });
 });
 test('class-name wording retains unknown qualifiers; a teacher number without quantity remains ambiguous',()=>{
  const q='بغيت غير سميات الأقسام فالمدرسة كاملة بلا معلومات أخرى.';
- expect(queryVetoV6(q,'class_list')).toBeNull();
- expect(queryVetoV6(q+' غير البنات','class_list')).not.toBeNull();
+ expect(queryVeto(q,'class_list')).toBeNull();
+ expect(queryVeto(q+' غير البنات','class_list')).not.toBeNull();
 });
-test('generation reserves before send, passes bytes and releases only reported cost', async () => {
-  const f=fixture(); let sent:any;
-  const fetcher=budgetedChatFetch((async (_url,init)=>{sent=JSON.parse(String(init?.body)); return Response.json({usage:{cost:0.000012},text:'ok'});}) as typeof fetch);
-  await schoolPaidChatContext.run(f.frame,async()=>{const response=await fetcher(endpoint,generation);expect(await response.json()).toEqual({usage:{cost:0.000012},text:'ok'});});
-  expect(sent.max_tokens).toBe(4096);expect(sent.provider.only).toEqual(['coreweave']);expect(sent.provider.allow_fallbacks).toBe(false);
-  expect(f.snapshot().used).toBe(12);expect(f.frame.calls).toBe(1);
+test('provider policy passes the response through without reading or wrapping it', async () => {
+  const f = fixture(); let sent: any;
+  const response = new Response('provider bytes');
+  const fetcher = schoolChatFetch((async (_url, init) => { sent = JSON.parse(String(init?.body)); return response; }) as typeof fetch);
+  const result = await schoolChatTransportContext.run(f.frame, () => fetcher(endpoint, generation));
+  expect(result).toBe(response); expect(response.bodyUsed).toBe(false);
+  expect(sent.max_tokens).toBe(4096); expect(sent.provider.only).toEqual(['coreweave']);
+  expect(sent.provider.allow_fallbacks).toBe(false); expect(sent.provider.max_price).toBeUndefined();
 });
-test('missing cost, cancellation and stream errors keep debits; no spent allowance dispatch', async () => {
-  const f=fixture(6000);
-  await schoolPaidChatContext.run(f.frame,async()=>{
-    const response=await f.fetcher(Response.json({text:'ok'}))(endpoint,generation);await response.text();
-    expect(f.snapshot().used).toBeGreaterThan(0);
-    await expect(f.fetcher(Response.json({}))(endpoint,generation)).rejects.toThrow('allowance');
+
+test('provider failure cannot trigger a generation retry or 120B escalation', async () => {
+  const f = fixture();
+  await schoolChatTransportContext.run(f.frame, async () => {
+    expect((await f.fetcher(new Response('failure', {status:503}))(endpoint, generation)).status).toBe(503);
+    await expect(f.fetcher(Response.json({}))(endpoint, generation)).rejects.toThrow('retry');
   });
-  expect(f.snapshot().sends).toBe(1);expect(f.frame.stopped).toBe('allowance');
-  const c=fixture();await schoolPaidChatContext.run(c.frame,async()=>{
-    const response=await c.fetcher(new Response(new ReadableStream({pull(controller){controller.enqueue(new TextEncoder().encode('data: x\n\n'));}}),{headers:{'content-type':'text/event-stream'}}))(endpoint,generation);
-    await response.body!.cancel();
-  });expect(c.snapshot().used).toBeGreaterThan(0);expect(c.frame.costs).toHaveLength(0);
+  expect(f.sends()).toBe(1);
+  const other = fixture();
+  await schoolChatTransportContext.run(other.frame, async () => {
+    await expect(other.fetcher(Response.json({}))(endpoint, {...generation, body:'{"model":"openai/gpt-oss-120b"}'})).rejects.toThrow('OSS20B');
+  });
+  expect(other.sends()).toBe(0);
 });
-test('streamed usage settles independently per generation step without buffering output', async () => {
-  const f=fixture();const data='data: {"choices":[{"delta":{"content":"ok"}}]}\n\ndata: {"usage":{"cost":0.00001}}\n\ndata: [DONE]\n\n';
-  await schoolPaidChatContext.run(f.frame,async()=>{
-    for(let i=0;i<2;i++){const r=await f.fetcher(()=>new Response(data,{headers:{'content-type':'text/event-stream'}}))(endpoint,generation);expect(await r.text()).toBe(data);}
-  });expect(f.snapshot().used).toBe(20);expect(f.frame.calls).toBe(2);
-});
-test('provider failures cannot trigger another paid generation retry or 120B escalation',async()=>{
-  const f=fixture();await schoolPaidChatContext.run(f.frame,async()=>{
-    const r=await f.fetcher(new Response('failure',{status:503}))(endpoint,generation);await r.text();
-    await expect(f.fetcher(Response.json({}))(endpoint,generation)).rejects.toThrow('retry');
-    await expect(f.fetcher(Response.json({}))(endpoint,{...generation,body:'{"model":"openai/gpt-oss-120b"}'})).rejects.toThrow();
-  });expect(f.snapshot().sends).toBe(1);
-});
-test('classification and remote embeddings share the generation allowance; unrelated fetch is unchanged',async()=>{
-  const f=fixture();f.frame.embeddingUrl='https://embedding.example/v1/embeddings';
-  await schoolPaidChatContext.run(f.frame,async()=>{
-    for(const url of ['https://openrouter.ai/api/alpha/decisions',f.frame.embeddingUrl]){
-      const r=await f.fetcher(Response.json({usage:{cost:0.00001}}))(url,{method:'POST',body:'{}'});await r.text();
-    }
-    await expect(f.fetcher(Response.json({}))('https://other-provider.example/api',generation)).rejects.toThrow('qualified');
-  });expect(f.snapshot().used).toBe(20);expect(f.frame.costs.map(c=>c.kind)).toEqual(['classification','embedding']);
-  const f2=fixture();await f2.fetcher(Response.json({ok:true}))('https://other-provider.example/api');expect(f2.snapshot().attempts).toBe(0);
-});
-test('only the configured free local embedding endpoint bypasses accounting, not a local model proxy',async()=>{
- const f=fixture();f.frame.freeEmbeddingUrl='http://127.0.0.1:18080/v1/embeddings';
- await schoolPaidChatContext.run(f.frame,async()=>{
-  await f.fetcher(Response.json({data:[]}))(f.frame.freeEmbeddingUrl!);
-  await expect(f.fetcher(Response.json({}))('http://127.0.0.1:18080/v1/chat/completions',generation)).rejects.toThrow('qualified');
- });expect(f.snapshot().attempts).toBe(0);expect(f.snapshot().sends).toBe(1);
+
+test('classification and configured embeddings dispatch without accounting; other destinations remain blocked', async () => {
+  const f = fixture();
+  await schoolChatTransportContext.run(f.frame, async () => {
+    for (const url of ['https://openrouter.ai/api/alpha/decisions', f.frame.embeddingUrl])
+      await f.fetcher(Response.json({}))(url, {method:'POST', body:'{}'});
+    await expect(f.fetcher(Response.json({}))('http://127.0.0.1:18080/v1/chat/completions', generation)).rejects.toThrow('qualified');
+  });
+  expect(f.sends()).toBe(2);
+  await f.fetcher(Response.json({}))('https://other-provider.example/api');
+  expect(f.sends()).toBe(3); expect(f.frame.calls).toBe(2);
 });
 
 test('ordinary signed-in chat selects Jev through the production first-turn boundary and rejects forged role/history',async()=>{
  process.env.CHATBOT_FLOW='jev-router-20b';process.env.CHATBOT_JEV_MODE='on';
- const f=await createJevFixture();const spend=fixture();
- f.server.container.set(ChatSpendRepository,spend.frame.repository as any);
+ const f=await createJevFixture();
  let decisions=0;
  f.classifier.transport=async()=>{decisions++;return Response.json({model:JEV_MODEL,answers:{intent:{type:'choice',choice:'student_count',confidence:0.99,probabilities:Object.fromEntries(INTENT_NAMES.map(name=>[name,name==='student_count'?0.99:name==='needs_llm'?0.01:0]))},is_write:{type:'noul',noul:0.01}},usage:{input_tokens:1,cost:0}});};
  try{
@@ -140,12 +109,6 @@ test('ordinary signed-in chat selects Jev through the production first-turn boun
   }
  }finally{await f.server.stop();}
 });
-test('exhausted allowance is a visible localized unavailable outcome, preserving tool results',async()=>{
-  const data='data: {"type":"start"}\n\ndata: {"type":"error","errorText":"private"}\n\ndata: {"type":"finish"}\n\ndata: [DONE]\n\n';
-  const r=schoolChatResponse(new Response(data,{headers:{'content-type':'text/event-stream','x-vercel-ai-ui-message-stream':'v1'}}),'bghit no9ati',undefined,{stopped:'allowance'});
-  const text=await r.text();expect(text).toContain('ميزانية');expect(text).toContain('monthly_allowance');expect(text).not.toContain('private');
-});
-
 test('retired benchmark endpoints are absent from the chat server', async () => {
   const f = await createJevFixture();
   try {
@@ -173,21 +136,20 @@ test('routing uses the current question and keeps self-identity dependencies', (
  expect(schoolWriteRefusalKind('"beddel lia no9ti"')).toBeNull();
 });
 
-test('write refusal is free and general reads cannot bypass an exhausted allowance', async () => {
- process.env.CHATBOT_FLOW='jev-router-20b'; process.env.CHATBOT_JEV_MODE='off';
- const f=await createJevFixture(); const spend=fixture(1);
- f.server.container.set(ChatSpendRepository,spend.frame.repository as any);
- let sends=0;
- const paid=budgetedChatFetch((async()=>{sends++;return Response.json({});}) as typeof fetch);
- const model=scriptedModel('Unexpected answer');
- model.doStream=async()=>{await paid(endpoint,generation);throw Error('Unexpected paid send');};
- (f.server.container.get(ChatAgent) as any).buildModel=()=>model;
- try {
-  const write=await f.call('/chat',{messages:[{role:'user',content:"Enregistre 15 sur 20 pour l'élève Zzbench Qqtest au dernier contrôle."}]});
-  expect(await write.text()).toContain('Je ne peux pas effectuer cette modification');
-  expect(spend.snapshot().attempts).toBe(0);
-  const read=await f.call('/chat',{messages:[{role:'user',content:'Combien de filles dans CP ?'}]});
-  expect(await read.text()).toContain('Le budget mensuel de l’assistant est atteint');
-  expect(sends).toBe(0);
- } finally { await f.server.stop(); }
+test('write refusals skip generation and general reads use model fallback without a spend repository', async () => {
+  process.env.CHATBOT_FLOW = 'jev-router-20b'; process.env.CHATBOT_JEV_MODE = 'off';
+  const f = await createJevFixture();
+  const model = scriptedModel('Authorized model answer'); let generations = 0;
+  const stream = model.doStream.bind(model);
+  model.doStream = async options => { generations++; return stream(options); };
+  (f.server.container.get(ChatAgent) as any).buildModel = () => model;
+  try {
+    const write = await f.call('/chat', {messages:[{role:'user',content:"Enregistre 15 sur 20 pour l'élève Zzbench Qqtest au dernier contrôle."}]});
+    expect(await write.text()).toContain('Je ne peux pas effectuer cette modification');
+    expect(generations).toBe(0);
+    const read = await f.call('/chat', {messages:[{role:'user',content:'Combien de filles dans CP ?'}]});
+    const body = await read.text();
+    expect(body).toContain('Authorized model answer'); expect(generations).toBe(1);
+    for (const field of ['totalTokens', 'totalCost', 'pricingFound', 'monthly_allowance']) expect(body).not.toContain(field);
+  } finally { await f.server.stop(); }
 });

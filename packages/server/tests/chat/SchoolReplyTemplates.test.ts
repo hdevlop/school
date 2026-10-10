@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'bun:test';
 import { type ReplyRequest } from 'najm-chatbot';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
+import { schoolWriteReply } from '../../src/modules/chat/replies/schoolReplyWrite';
 import { jevReplyPlan } from '../../src/modules/chat/jev/jevReplyPlan';
 const corpus = await Bun.file('packages/server/tests/chat/fixtures/morocco.json').json() as {
  cases: Array<{ id: string; query: string; language: string; kind: string }>;
@@ -10,10 +10,10 @@ const corpus = await Bun.file('packages/server/tests/chat/fixtures/morocco.json'
 const request = (userText: string): ReplyRequest => ({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
 describe('minimal School reply formatting', () => {
  it.each(corpus.cases.filter(item => item.kind === 'blocked-write'))('refuses $id without a tool plan', ({ query }) => {
-  expect(schoolReplyTemplate(request(query))).toEqual({ text: expect.any(String) });
+  expect(schoolWriteReply(request(query))).toEqual({ text: expect.any(String) });
  });
  it.each(corpus.cases.filter(item => item.kind !== 'blocked-write'))('leaves read/conversation $id to Jev/router/model', ({ query }) => {
-  expect(schoolReplyTemplate(request(query))).toBeNull();
+  expect(schoolWriteReply(request(query))).toBeNull();
  });
  it.each(['ary', 'ar', 'fr'] as const)('formats only authorized Jev counts in %s', language => {
   for (const [intent, tools] of [
@@ -52,6 +52,6 @@ describe('minimal School reply formatting', () => {
  });
  it.each(['Combien de filles dans CP ?', 'ch7al mn tilmid f l9ism rab3?', 'werini forod had chher',
   'bghit no9at riyadiyat', 'bghit wladi'])('has no local filtered shortcut: %s', query => {
-  expect(schoolReplyTemplate(request(query))).toBeNull();
+  expect(schoolWriteReply(request(query))).toBeNull();
  });
 });

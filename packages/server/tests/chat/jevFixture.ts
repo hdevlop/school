@@ -17,8 +17,8 @@ import { SettingsRepository } from '../../src/modules/settings/SettingsRepositor
 import { SchoolChatRequest } from '../../src/modules/chat/transport/SchoolChatRequest';
 import { registerSchoolChatRequest } from '../../src/modules/chat/transport/registerSchoolChatRequest';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
-import { jevPreparationPolicy } from '../../src/modules/chat/jev/jevPreparationPolicy';
+import { schoolWriteReply } from '../../src/modules/chat/replies/schoolReplyWrite';
+import { jevPreparationPolicy } from '../../src/modules/chat/jev/JevRequestContext';
 import { JevIntentClassifier } from '../../src/modules/chat/jev/JevIntentClassifier';
 import { jevSyntheticCases } from './fixtures/jevSyntheticCases';
 import { jevDarijaCases } from './fixtures/jevDarijaCases';
@@ -119,7 +119,7 @@ export async function createJevFixture(options: { timeZone?: string;
     return { status: 'routed', tools: registry.tools.filter(tool => names.includes(tool.name)) };
   } } as any);
   const config: ChatbotConfig = {
-    reply: { detectLanguage: schoolReplyLanguage, template: schoolReplyTemplate,
+    reply: { detectLanguage: schoolReplyLanguage, template: schoolWriteReply,
       preparation: jevPreparationPolicy() }, chatLogging: { enabled: false, onDiagnostics: (event: ChatDiagnostics) => { events.push(event); } },
   };
   container.set(CHATBOT_CONFIG, config);

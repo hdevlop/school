@@ -1,7 +1,15 @@
-import { countQueryVeto } from './countV1';
-/** Offline candidate only. V1 and all measured decisions remain unchanged. */
+/** Count wording checks; only an explicit names/list exclusion may qualify a plain count. */
 
+const COUNT_CHOICES = new Set(['student_count', 'teacher_count', 'student_and_teacher_count']);
 const normalize = (text: string) => text.normalize('NFKD').toLowerCase().replace(/[\p{M}\u0640]/gu, '');
+const NAME_LIST_SIGNALS = new Set([
+  'name', 'names', 'named', 'surname', 'surnames', 'list', 'lists',
+  'nom', 'noms', 'liste', 'listes', 'nominatif', 'nominative',
+  'اسم', 'الاسم', 'أسماء', 'الأسماء', 'اسامي', 'الاسامي', 'سميات', 'السميات', 'سمياتهم', 'أساميهم', 'أسماؤهم',
+  'لائحة', 'اللائحة', 'لوائح', 'اللوائح', 'قائمة', 'القائمة', 'قوائم', 'القوائم',
+  'smiya', 'smia', 'smiyat', 'smiyate', 'smiyyat', 'smyat', 'smit', 'smiyathom', 'smyathom',
+].map(normalize));
+
 const vocabulary = (text: string) => new Set(normalize(text).split(/\s+/u));
 const nouns = vocabulary(`name names list lists nom noms liste listes
   اسم الاسم أسماء الأسماء أسمائهم أسماؤهم اسامي الاسامي سميات السميات سمياتهم
@@ -28,12 +36,12 @@ const countWords = new Set([...students, ...teachers, ...cues, ...vocabulary(`
   bghit khasni dyal les l kamel kamlin lmdrasa fiha mn f ch7al 3ndna daba wsel
   jouj a3dad w kan9elleb 3la mjmo3 l3am had hna`)]);
 
-function isExclusion(words: any) {
+function isExclusion(words: string[]) {
   return words.length >= 2 && markers.has(words[0]) && words.slice(1).every(word => exclusionWords.has(word))
     && words.slice(1).some(word => nouns.has(word));
 }
 
-function isPlainCount(words: any, choice: any) {
+function isPlainCount(words: string[], choice: string) {
   if (!words.length || !words.every(word => countWords.has(word)) || !words.some(word => cues.has(word))) return false;
   const hasStudents = words.some(word => students.has(word));
   const hasTeachers = words.some(word => teachers.has(word));
@@ -44,14 +52,17 @@ function isPlainCount(words: any, choice: any) {
 }
 
 /** Exempt only one terminal/prefix exclusion plus a closed positive count request. */
-export function countQueryVetoV2(query: any, choice: any) {
-  const original = countQueryVeto(query, choice);
-  if (original !== 'name_or_list_signal') return original;
+export function countQueryVeto(query: any, choice: string) {
+  if (!COUNT_CHOICES.has(choice)) return null;
+  if (typeof query !== 'string' || !query.trim()) return 'missing_query';
+  const normalized = normalize(query);
+  const words = normalized.match(/[\p{L}\p{N}]+/gu) ?? [];
+  if (!words.some(word => NAME_LIST_SIGNALS.has(word))) return null;
+  const original = 'name_or_list_signal';
   // Quoted command/name text and nested punctuation remain conservative. French
   // word elisions (l'école, d'élèves, j'ai) are allowed as grammar, not quotations.
   if (/["«»“”‘`()[\]{}+*/%=><|]|(?:^|\s)['’]/u.test(query)
-    || /-/u.test(normalize(query).replace(/compte-t-elle|a-t-il/gu, ''))) return original;
-  const words = normalize(query).match(/[\p{L}\p{N}]+/gu) ?? [];
+    || /-/u.test(normalized.replace(/compte-t-elle|a-t-il/gu, ''))) return original;
   for (let cut = 1; cut < words.length; cut++) {
     if (isExclusion(words.slice(cut)) && isPlainCount(words.slice(0, cut), choice)
       || isExclusion(words.slice(0, cut)) && isPlainCount(words.slice(cut), choice)) return null;

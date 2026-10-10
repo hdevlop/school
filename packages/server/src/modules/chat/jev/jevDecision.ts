@@ -1,8 +1,7 @@
-import { INTENT_NAMES, JEV_MODEL, type JevDecision, type JevIntent } from './jevProtocol';
+import { INTENT_NAMES, JEV_MODEL, type JevDecision, type JevIntent } from './jevIntents';
 
 const isRecord = (value: unknown): value is Record<string, any> => value !== null && typeof value === 'object' && !Array.isArray(value);
 const probability = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
-const tokenCount = (value: unknown): value is number => typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
 // API probabilities are rounded to two decimals in the retained probe. Nine
 // individually rounded values can differ from one by at most 9 * 0.005.
 const probabilitySumTolerance = INTENT_NAMES.length * 0.005 + 1e-12;
@@ -14,14 +13,11 @@ export function parseDecision(body: any): JevDecision {
   const intent = body?.answers?.intent;
   const write = body?.answers?.is_write;
   const probabilities = intent?.probabilities;
-  const usage = body?.usage;
   if (!isRecord(intent) || intent.type !== 'choice' || !INTENT_NAMES.includes(intent.choice)
     || !probability(intent.confidence) || !isRecord(write) || write.type !== 'noul' || !probability(write.noul)
     || !isRecord(probabilities) || Object.keys(probabilities).length !== INTENT_NAMES.length
     || !INTENT_NAMES.every(name => Object.hasOwn(probabilities, name) && probability(probabilities[name]))
-    || !modelMatches(body?.model) || !isRecord(usage) || !tokenCount(usage.input_tokens)
-    || !Number.isFinite(usage.cost) || usage.cost < 0
-    || (Object.hasOwn(usage, 'output_tokens') && !tokenCount(usage.output_tokens))) {
+    || !modelMatches(body?.model)) {
     throw new Error('Malformed Jev decision');
   }
   const values = Object.values(probabilities) as number[];
@@ -35,8 +31,6 @@ export function parseDecision(body: any): JevDecision {
     probabilities: { ...probabilities } as Record<JevIntent, number>,
     writeProbability: write.noul,
     model: body.model,
-    inputTokens: usage.input_tokens,
-    costUsd: usage.cost,
   };
 }
 

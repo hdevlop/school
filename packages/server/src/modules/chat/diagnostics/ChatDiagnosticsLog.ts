@@ -1,12 +1,12 @@
 import type { ChatDiagnostics } from 'najm-chatbot';
 import { schoolJevRequestContext, type JevRequestDiagnostics } from '../jev/JevRequestContext';
 import { schoolToolFailures, type SchoolToolFailure } from './schoolToolFailures';
-import { schoolPaidChatContext } from '../budget/SchoolPaidChatTransport';
 
-export type SchoolChatDiagnostics = ChatDiagnostics & {
+export type SchoolChatDiagnostics = Omit<ChatDiagnostics, 'usage' | 'cost' | 'steps' | 'replyPreparation'> & {
+  steps: Omit<ChatDiagnostics['steps'][number], 'inputTokens' | 'outputTokens'>[];
+  replyPreparation?: Omit<NonNullable<ChatDiagnostics['replyPreparation']>, 'externalCost'>;
   jev?: JevRequestDiagnostics;
   toolFailures?: SchoolToolFailure[];
-  paid?: { calls: number; unknownCosts: number; stopped?: string };
 };
 
 /**
@@ -21,19 +21,24 @@ export class ChatDiagnosticsLog {
   constructor(private readonly capacity = 200) {}
 
   readonly record = (diagnostics: ChatDiagnostics): void => {
+    const { usage: _usage, cost: _cost, steps: rawSteps, replyPreparation, ...summary } = diagnostics;
     const frame = schoolJevRequestContext.getStore();
-    const entry: SchoolChatDiagnostics = frame?.correlationId && frame.diagnostics && frame.correlationId === diagnostics.correlationId
-      ? { ...diagnostics, jev: { eligibility: frame.diagnostics.eligibility, classification: frame.diagnostics.classification } } : diagnostics;
     const failures = schoolToolFailures(diagnostics);
     // Only names from the actual MCP adapter are trusted metadata. A model
     // can invent a "tool name" containing private question text.
     const observedNames = new Set((diagnostics.tools ?? []).map(tool => tool.name));
-    const steps = diagnostics.steps?.map(step => ({ ...step,
+    const steps = rawSteps.map(({ inputTokens: _input, outputTokens: _output, ...step }) => ({ ...step,
       toolCalls: step.toolCalls.map(name => observedNames.has(name) ? name : '[not-dispatched]') }));
-    const paid = schoolPaidChatContext.getStore();
-    const audited = { ...entry, ...(steps ? { steps } : {}), ...(failures.length ? { toolFailures: failures } : {}),
-      ...(paid ? { paid: { calls: paid.calls, unknownCosts: paid.calls - paid.costs.filter(item => item.costUsd !== null).length,
-        ...(paid.stopped ? { stopped: paid.stopped } : {}) } } : {}) };
+    let preparation: SchoolChatDiagnostics['replyPreparation'];
+    if (replyPreparation) {
+      const { externalCost: _externalCost, ...selection } = replyPreparation;
+      preparation = selection;
+    }
+    const audited: SchoolChatDiagnostics = { ...summary, steps,
+      ...(preparation ? { replyPreparation: preparation } : {}),
+      ...(frame?.correlationId && frame.diagnostics && frame.correlationId === diagnostics.correlationId
+        ? { jev: { eligibility: frame.diagnostics.eligibility, classification: frame.diagnostics.classification } } : {}),
+      ...(failures.length ? { toolFailures: failures } : {}) };
     this.entries.push(audited);
     if (this.entries.length > this.capacity) this.entries.shift();
   };

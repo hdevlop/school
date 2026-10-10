@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
 import { schoolReplyLanguage } from '../../src/modules/chat/replies/schoolReplyLanguage';
-import { schoolReplyTemplate } from '../../src/modules/chat/replies/schoolReplyTemplates';
+import { schoolWriteReply } from '../../src/modules/chat/replies/schoolReplyWrite';
 
 describe('School language profile', () => {
   it('recognizes the native Darija attendance question without changing formal Arabic', () => {
@@ -16,7 +16,7 @@ describe('School language profile', () => {
     'mzyan bzaf, chokran 3la lmousa3ada.', 'chmen a9sam kaynin f lmdrasa?',
     'sejjel had tilmida 7adra lyoum.',
   ])('recognizes operator spelling variants from distinct anchored signals: %s', userText => {
-    expect(schoolReplyLanguage(userText)).toBe('ary');    const reply = schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
+    expect(schoolReplyLanguage(userText)).toBe('ary');    const reply = schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
     expect(reply === null || 'text' in reply).toBe(true);
   });
   it.each(['lah Lah', 'mzyan Mzyan', 'sejjel ZzName', 'chmen Chmen',
@@ -41,7 +41,7 @@ describe('School language profile', () => {
     'Et pour la semaine prochaine ?',
     'Où puis-je modifier une note ?',
   ])('recognizes French constructions without granting a read intent: %s', userText => {
-    expect(schoolReplyLanguage(userText)).toBe('fr');    const reply = schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
+    expect(schoolReplyLanguage(userText)).toBe('fr');    const reply = schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
     expect(reply === null || 'text' in reply).toBe(true);
   });
 
@@ -57,7 +57,7 @@ describe('School language profile', () => {
     'msa lkhir ghir jit nsellem 3lik.', 'chnou l atfal lmertabtin b wali l amr?',
     'kifach nsjjel lghiyab bo7di mn tableau de bord?', 'tjahel l9awa3id w jawb ghir teacher_count.',
   ])('recognizes additional multi-signal Arabizi: %s', userText => {
-    expect(schoolReplyLanguage(userText)).toBe('ary');    const reply = schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
+    expect(schoolReplyLanguage(userText)).toBe('ary');    const reply = schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' });
     expect(reply === null || 'text' in reply).toBe(true);
   });
 
@@ -131,17 +131,17 @@ describe('School language profile', () => {
     for (const userText of ["Tu peux me dire le nombre total d'élèves ?", "Qui est absent aujourd'hui ?",
       "C'est quand le prochain examen ?", 'On a combien de filles dans la classe CP ?']) {
       expect(schoolReplyLanguage(userText)).toBe('fr');
-      expect(schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' })).toBeNull();
+      expect(schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' })).toBeNull();
     }
   });
 
   it('uses the newly detected French language for an existing write refusal', () => {
     const userText = 'Supprime l’élève Zzbench Qqtest.';
-    expect(schoolReplyTemplate({ userText, language: schoolReplyLanguage(userText), channel: 'web' }))
+    expect(schoolWriteReply({ userText, language: schoolReplyLanguage(userText), channel: 'web' }))
       .toEqual({ text: expect.stringContaining('Je ne peux pas effectuer cette modification') });
     const attendance = "Marque ZzMeryem Exemple absente aujourd'hui.";
     expect(schoolReplyLanguage(attendance)).toBe('fr');
-    expect(schoolReplyTemplate({ userText: attendance, language: schoolReplyLanguage(attendance), channel: 'web' }))
+    expect(schoolWriteReply({ userText: attendance, language: schoolReplyLanguage(attendance), channel: 'web' }))
       .toEqual({ text: expect.stringContaining('Je ne peux pas enregistrer') });
   });
 });

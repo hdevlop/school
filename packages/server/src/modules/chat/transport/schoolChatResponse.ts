@@ -30,25 +30,17 @@ export function latestChatUserText(messages: unknown): string {
     ? content.filter(part => part?.type === 'text' && typeof part.text === 'string').map(part => part.text).join(' ') : '';
 }
 
-export function schoolChatAllowanceText(query: string): string {
-  const language = schoolReplyLanguage(query);
-  return language === 'ary' ? 'وصلنا للميزانية الشهرية ديال المساعد. شوف المعطيات فلوحة التحكم.'
-    : language === 'ar' ? 'بلغ المساعد الحد الشهري للميزانية. يرجى الاطلاع على البيانات في لوحة التحكم.'
-      : language === 'fr' ? 'Le budget mensuel de l’assistant est atteint. Consultez les données dans le tableau de bord.'
-        : 'The assistant monthly allowance is reached. Check the data in the dashboard.';
-}
-
 /**
- * Preserve the SDK stream; make empty completion and broken streams visible.
+ * Preserve reply/tool events, remove SDK billing metadata, and make failures visible.
  * No generation retry, tools, persistence, year resolution or usage estimation.
  */
-export function schoolChatResponse(response: Response, query: string, signal?: AbortSignal, budget?: { stopped?: string }): Response {
+export function schoolChatResponse(response: Response, query: string, signal?: AbortSignal): Response {
   if (response.headers.get(normalizedHeader) === 'v1'
     || !response.ok || !response.body || response.headers.get('x-vercel-ai-ui-message-stream') !== 'v1'
     || !response.headers.get('content-type')?.includes('text/event-stream')
     || response.headers.has('content-encoding')) return response;
   const reader = response.body.getReader(), decoder = new TextDecoder(), encoder = new TextEncoder();
-  const failureText = () => budget?.stopped === 'allowance' ? schoolChatAllowanceText(query) : schoolChatFailureText(query);
+  const failureText = () => schoolChatFailureText(query);
   const partId = 'school-unavailable-' + crypto.randomUUID();
   const encodeEvent = (value: unknown) => `data: ${JSON.stringify(value)}\n\n`;
   let buffer = '', oversized = false, hasText = false, hasStart = false, terminal = false, aborted = false, repaired = false;
@@ -77,6 +69,18 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
         let event: Record<string, unknown>;
         try { event = JSON.parse(data); } catch { emit(frame + separator); return; }
         if (!event || typeof event !== 'object') { emit(frame + separator); return; }
+        // The SDK sends usage/pricing as messageMetadata. School exposes only
+        // its reply outcome fields, so the widget cannot render a billing badge.
+        const hadMetadata = Object.hasOwn(event, 'messageMetadata');
+        if (hadMetadata) {
+          const { messageMetadata, ...replyEvent } = event;
+          const metadata = messageMetadata && typeof messageMetadata === 'object'
+            ? messageMetadata as Record<string, unknown> : {};
+          const outcome = Object.fromEntries(Object.entries(metadata)
+            .filter(([key]) => key === 'schoolReplyOutcome' || key === 'schoolFailedToolCalls'));
+          if (event.type === 'message-metadata' && !Object.keys(outcome).length) return;
+          event = { ...replyEvent, ...(Object.keys(outcome).length ? { messageMetadata: outcome } : {}) };
+        }
         if (event.type === 'start') hasStart = true;
         if (event.type === 'text-delta' && typeof event.delta === 'string' && event.delta.trim()) hasText = true;
         if (event.type === 'abort') aborted = true;
@@ -99,12 +103,11 @@ export function schoolChatResponse(response: Response, query: string, signal?: A
             notice(unavailable ? failureText() : schoolChatToolFailureText(query));
             const metadata = event.messageMetadata && typeof event.messageMetadata === 'object' ? event.messageMetadata : {};
             emit(encodeEvent({ ...event, messageMetadata: { ...metadata, schoolReplyOutcome: unavailable ? 'unavailable' : 'tool_failure',
-              ...(budget?.stopped === 'allowance' ? { schoolUnavailableReason: 'monthly_allowance' } : {}),
               ...(failedCalls.size ? { schoolFailedToolCalls: failedCalls.size } : {}) } }));
-          } else emit(frame + separator);
+          } else emit(hadMetadata ? encodeEvent(event) : frame + separator);
           terminal = true; return;
         }
-        emit(frame + separator);
+        emit(hadMetadata ? encodeEvent(event) : frame + separator);
       };
       const consume = (text: string) => {
         buffer += text;

@@ -12,6 +12,17 @@ import type {
   UpsertStaffAttendanceRosterDto,
 } from './AttendanceDto';
 
+/** An attendance read establishes recorded rows, never unrecorded presence. */
+export function attendanceReadEvidence<T>(records: T[]) {
+  return {
+    records,
+    recordState: records.length ? 'records_found' : 'no_records',
+    interpretation: records.length
+      ? 'These are recorded attendance rows within the requested scope. Unrecorded people have unknown attendance.'
+      : 'No attendance records were found within the requested scope. Who is absent or present is unknown; do not conclude nobody is absent.',
+  };
+}
+
 @Service()
 export class AttendanceService {
   constructor(
