@@ -1,135 +1,60 @@
-'use client'
+'use client';
 
-import React from 'react';
-import { Bell, Mail, MessageSquare, GraduationCap, CalendarCheck, Users, Calendar, BookOpen, CreditCard, AlertCircle } from 'lucide-react';
+import { Mail, MessageSquare, GraduationCap, CalendarCheck, Users, Calendar, BookOpen, CreditCard, AlertCircle } from 'lucide-react';
 import { FormInput } from 'najm-kit';
-
 import { useTranslation } from 'najm-i18n/react';
-import { Label } from 'najm-kit';
 import { PushOptIn } from '@/features/Notifications';
-const NotificationSection: React.FC = () => {
+import { SettingsGroup } from '../SettingsGroup';
+
+const channels = [
+  { name: 'emailNotifications', icon: Mail },
+  { name: 'smsNotifications', icon: MessageSquare },
+  { name: 'parentNotifications', icon: Users },
+] as const;
+
+const academicAlerts = [
+  { name: 'academicAlerts', icon: GraduationCap },
+  { name: 'attendanceAlerts', icon: CalendarCheck },
+  { name: 'eventAlerts', icon: Calendar },
+  { name: 'homeworkAlerts', icon: BookOpen },
+  { name: 'lowGradeAlerts', icon: AlertCircle },
+  { name: 'examResultsAlerts', icon: GraduationCap },
+  { name: 'disciplinaryAlerts', icon: AlertCircle },
+] as const;
+
+const financialAlerts = [
+  { name: 'feesReminder', icon: CreditCard },
+  { name: 'feesOverdueAlerts', icon: CreditCard },
+] as const;
+
+const groups = [
+  { title: 'settings.editor.channels', fields: channels },
+  { title: 'settings.editor.academicAlerts', fields: academicAlerts },
+  { title: 'settings.editor.financialAlerts', fields: financialAlerts },
+] as const;
+
+export default function NotificationSection() {
   const { t } = useTranslation();
-
   return (
-    <div className="flex flex-col gap-3">
-
-      <div className="flex items-center gap-2 font-semibold text-sm">
-        <Bell className="h-5 w-5" />
-        <Label className='text-lg'> {t('settings.notifications.title')} </Label>
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-2 min-[1500px]:grid-cols-3">
+    <>
+      {groups.map(({ title, fields }) => (
+        <SettingsGroup key={title} title={t(title)} className="gap-0 divide-y divide-border/60 sm:grid-cols-1">
+          {fields.map(({ name, icon }) => (
+            <FormInput
+              key={name}
+              type="switch"
+              name={name}
+              label={t(`settings.notifications.${name}`)}
+              icon={icon}
+              variant="ghost"
+              className="min-h-13 py-2"
+            />
+          ))}
+        </SettingsGroup>
+      ))}
+      <SettingsGroup title={t('settings.editor.groups.push.title')} description={t('settings.editor.pushHint')} className="sm:grid-cols-1">
         <PushOptIn />
-        <FormInput
-          type="switch"
-          name="academicAlerts"
-          label={t('settings.notifications.academicAlerts') }
-          icon={GraduationCap}
-          iconColor="#3b82f6"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="attendanceAlerts"
-          label={t('settings.notifications.attendanceAlerts') }
-          icon={CalendarCheck}
-          iconColor="#f97316"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="eventAlerts"
-          label={t('settings.notifications.eventAlerts') }
-          icon={Calendar}
-          iconColor="#06b6d4"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="homeworkAlerts"
-          label={t('settings.notifications.homeworkAlerts') }
-          icon={BookOpen}
-          iconColor="#d946ef"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="feesReminder"
-          label={t('settings.notifications.feesReminder') }
-          icon={CreditCard}
-          iconColor="#16a34a"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="parentNotifications"
-          label={t('settings.notifications.parentNotifications') }
-          icon={Users}
-          iconColor="#10b981"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="emailNotifications"
-          label={t('settings.notifications.emailNotifications') }
-          icon={Mail}
-          iconColor="#8b5cf6"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="smsNotifications"
-          label={t('settings.notifications.smsNotifications') }
-          icon={MessageSquare}
-          iconColor="#ec4899"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="lowGradeAlerts"
-          label={t('settings.notifications.lowGradeAlerts')}
-          icon={AlertCircle}
-          iconColor="#ef4444"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="feesOverdueAlerts"
-          label={t('settings.notifications.feesOverdueAlerts')}
-          icon={CreditCard}
-          iconColor="#dc2626"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="examResultsAlerts"
-          label={t('settings.notifications.examResultsAlerts')}
-          icon={GraduationCap}
-          iconColor="#059669"
-          variant="ghost"
-        />
-
-        <FormInput
-          type="switch"
-          name="disciplinaryAlerts"
-          label={t('settings.notifications.disciplinaryAlerts')}
-          icon={AlertCircle}
-          iconColor="#f59e0b"
-          variant="ghost"
-        />
-      </div>
-    </div>
+      </SettingsGroup>
+    </>
   );
-};
-
-export default NotificationSection;
+}

@@ -862,6 +862,82 @@
     }
   },
   "settings": {
+    "editor": {
+      "schoolTab": "Établissement",
+      "academicTab": "Scolarité",
+      "systemTab": "Préférences",
+      "securityTab": "Sécurité",
+      "notificationsTab": "Notifications",
+      "saveFailed": "Impossible d’enregistrer les paramètres. Vos modifications sont conservées ; réessayez.",
+      "notificationsDescription": "Choisissez comment les familles et le personnel reçoivent les informations du centre.",
+      "description": "Gérez les informations de votre établissement, les règles scolaires et les préférences.",
+      "sections": "Rubriques des paramètres",
+      "saveHint": "Les modifications de toutes les rubriques sont enregistrées ensemble.",
+      "unsaved": "Modifications non enregistrées",
+      "upToDate": "Aucune modification en attente",
+      "discard": "Annuler les modifications",
+      "validationErrors": "Vérifiez les champs signalés avant d’enregistrer.",
+      "loadFailed": "Impossible de charger les paramètres. Veuillez réessayer.",
+      "schoolDescription": "Coordonnées de l’établissement et horaires de la journée.",
+      "academicDescription": "Présence, capacité des classes et paramètres des évaluations.",
+      "systemDescription": "Langue, apparence et formats régionaux par défaut.",
+      "securityDescription": "Sécurité des comptes et accès aux portails de l’établissement.",
+      "addressPlaceholder": "Rue, quartier et ville",
+      "activeYearHint": "L’année active se gère dans les opérations d’année scolaire.",
+      "passwordRequireSymbols": "Exiger des symboles dans les mots de passe",
+      "channels": "Canaux de diffusion",
+      "academicAlerts": "Alertes scolaires et de présence",
+      "financialAlerts": "Rappels de frais et alertes de retard",
+      "pushHint": "Les préférences de notifications push s’appliquent immédiatement sur cet appareil.",
+      "groups": {
+        "identity": {
+          "title": "Identité de l’établissement",
+          "description": "Nom, adresse et moyens de contact pour les familles."
+        },
+        "schoolDay": {
+          "title": "Journée scolaire",
+          "description": "Horaires d’ouverture et pause déjeuner."
+        },
+        "academicYear": {
+          "title": "Année scolaire",
+          "description": "L’année à laquelle sont rattachés les nouveaux dossiers, frais et présences."
+        },
+        "grading": {
+          "title": "Notation",
+          "description": "Note de passage, périodes d’évaluation et calendrier suivi."
+        },
+        "attendance": {
+          "title": "Présence",
+          "description": "Mode de saisie des présences et taux exigé des élèves."
+        },
+        "classesExams": {
+          "title": "Classes et examens",
+          "description": "Capacité des classes et durée des examens par défaut."
+        },
+        "languageRegion": {
+          "title": "Langue et région",
+          "description": "Langue de l’interface, fuseau horaire et devise."
+        },
+        "display": {
+          "title": "Affichage et formats",
+          "description": "Thème et format des dates et heures."
+        },
+        "signIn": {
+          "title": "Sécurité de connexion",
+          "description": "Protégez les comptes et suivez leur utilisation."
+        },
+        "portalAccess": {
+          "title": "Accès aux portails",
+          "description": "Choisissez qui peut se connecter à son portail."
+        },
+        "push": {
+          "title": "Cet appareil"
+        }
+      },
+      "generalTab": "Système",
+      "discardTitle": "Abandonner les modifications ?",
+      "discardDescription": "Les modifications non enregistrées des paramètres seront perdues."
+    },
     "setup": {
       "title": "Configurez votre école",
       "description": "Votre école n'a pas encore de paramètres. Indiquez son nom et l'année scolaire de départ ; vous pourrez compléter le reste dans Paramètres.",

@@ -3530,6 +3530,82 @@
     }
   },
   "settings": {
+    "editor": {
+      "schoolTab": "Centro",
+      "academicTab": "Académico",
+      "systemTab": "Preferencias",
+      "securityTab": "Seguridad",
+      "notificationsTab": "Notificaciones",
+      "saveFailed": "No se pudieron guardar los ajustes. Se conservan tus cambios; inténtalo de nuevo.",
+      "notificationsDescription": "Elige cómo reciben las novedades del centro las familias y el personal.",
+      "description": "Gestiona la información del centro, las normas académicas y las preferencias.",
+      "sections": "Secciones de ajustes",
+      "saveHint": "Los cambios de todas las secciones se guardan juntos.",
+      "unsaved": "Tienes cambios sin guardar",
+      "upToDate": "No hay cambios sin guardar",
+      "discard": "Descartar cambios",
+      "validationErrors": "Revisa los campos señalados antes de guardar.",
+      "loadFailed": "No se pudieron cargar los ajustes. Inténtalo de nuevo.",
+      "schoolDescription": "Datos de contacto y horario diario del centro.",
+      "academicDescription": "Asistencia, capacidad de las clases y valores de evaluación.",
+      "systemDescription": "Idioma, apariencia y formatos regionales predeterminados.",
+      "securityDescription": "Seguridad de las cuentas y acceso a los portales del centro.",
+      "addressPlaceholder": "Calle, barrio y ciudad",
+      "activeYearHint": "El año activo se gestiona en las operaciones del año académico.",
+      "passwordRequireSymbols": "Exigir símbolos en las contraseñas",
+      "channels": "Canales de envío",
+      "academicAlerts": "Alertas académicas y de asistencia",
+      "financialAlerts": "Recordatorios de cuotas y alertas de retraso",
+      "pushHint": "Las preferencias de notificaciones del navegador se aplican inmediatamente en este dispositivo.",
+      "groups": {
+        "identity": {
+          "title": "Identidad del centro",
+          "description": "Nombre, dirección y cómo contactan las familias con el centro."
+        },
+        "schoolDay": {
+          "title": "Jornada escolar",
+          "description": "Horario lectivo y pausa para el almuerzo."
+        },
+        "academicYear": {
+          "title": "Año académico",
+          "description": "El año al que pertenecen los nuevos registros, cuotas y asistencias."
+        },
+        "grading": {
+          "title": "Calificación",
+          "description": "Nota mínima, periodos de evaluación y calendario que siguen."
+        },
+        "attendance": {
+          "title": "Asistencia",
+          "description": "Cómo se registra la asistencia y el porcentaje exigido."
+        },
+        "classesExams": {
+          "title": "Clases y exámenes",
+          "description": "Capacidad de clase y duración de examen predeterminadas."
+        },
+        "languageRegion": {
+          "title": "Idioma y región",
+          "description": "Idioma de la interfaz, zona horaria y moneda."
+        },
+        "display": {
+          "title": "Visualización y formatos",
+          "description": "Tema y formato de fechas y horas."
+        },
+        "signIn": {
+          "title": "Seguridad de acceso",
+          "description": "Protege las cuentas y sabe cuándo se usan."
+        },
+        "portalAccess": {
+          "title": "Acceso a portales",
+          "description": "Elige quién puede iniciar sesión en su portal."
+        },
+        "push": {
+          "title": "Este dispositivo"
+        }
+      },
+      "generalTab": "Sistema",
+      "discardTitle": "¿Descartar los cambios sin guardar?",
+      "discardDescription": "Se perderán los cambios en la configuración del centro."
+    },
     "setup": {
       "title": "Configure su escuela",
       "description": "Su escuela aún no tiene ajustes. Indique su nombre y el año académico con el que empieza; podrá completar el resto en Configuración.",

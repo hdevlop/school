@@ -954,6 +954,82 @@
     "class": "Class"
   },
   "settings": {
+    "editor": {
+      "schoolTab": "School",
+      "academicTab": "Academic",
+      "systemTab": "Preferences",
+      "securityTab": "Security",
+      "notificationsTab": "Notifications",
+      "saveFailed": "Settings could not be saved. Your changes are kept; please try again.",
+      "notificationsDescription": "Choose how school updates reach families and staff.",
+      "description": "Manage your school's information, academic rules and preferences.",
+      "sections": "Settings sections",
+      "saveHint": "Changes across all sections are saved together.",
+      "unsaved": "You have unsaved changes",
+      "upToDate": "No unsaved changes",
+      "discard": "Discard changes",
+      "validationErrors": "Check the highlighted fields before saving.",
+      "loadFailed": "School settings could not be loaded. Please try again.",
+      "schoolDescription": "Contact details and the daily school schedule.",
+      "academicDescription": "Attendance, class capacity and assessment defaults.",
+      "systemDescription": "Default language, appearance and regional formats.",
+      "securityDescription": "Account security and access to school portals.",
+      "addressPlaceholder": "Street, neighbourhood and city",
+      "activeYearHint": "The active year is managed through academic-year operations.",
+      "passwordRequireSymbols": "Require symbols in passwords",
+      "channels": "Delivery channels",
+      "academicAlerts": "Academic and attendance alerts",
+      "financialAlerts": "Fee reminders and overdue alerts",
+      "pushHint": "Browser push preferences take effect immediately on this device.",
+      "groups": {
+        "identity": {
+          "title": "School identity",
+          "description": "Name, address and how families reach the school."
+        },
+        "schoolDay": {
+          "title": "School day",
+          "description": "Opening hours and the daily lunch break."
+        },
+        "academicYear": {
+          "title": "Academic year",
+          "description": "The year that new records, fees and attendance belong to."
+        },
+        "grading": {
+          "title": "Grading",
+          "description": "Pass mark, grading periods and the calendar they follow."
+        },
+        "attendance": {
+          "title": "Attendance",
+          "description": "How attendance is taken and the rate students must reach."
+        },
+        "classesExams": {
+          "title": "Classes and exams",
+          "description": "Default class capacity and exam length."
+        },
+        "languageRegion": {
+          "title": "Language and region",
+          "description": "Interface language, time zone and currency."
+        },
+        "display": {
+          "title": "Display and formats",
+          "description": "Theme and how dates and times are written."
+        },
+        "signIn": {
+          "title": "Sign-in security",
+          "description": "Protect accounts and know when they are used."
+        },
+        "portalAccess": {
+          "title": "Portal access",
+          "description": "Choose who can sign in to their portal."
+        },
+        "push": {
+          "title": "This device"
+        }
+      },
+      "generalTab": "System",
+      "discardTitle": "Discard unsaved settings?",
+      "discardDescription": "Your changes to the school settings will be lost."
+    },
     "setup": {
       "title": "Set up your school",
       "description": "Your school has no settings yet. Enter its name and the academic year you are starting with; you can complete the rest in Settings.",

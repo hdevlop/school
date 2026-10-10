@@ -14,6 +14,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { PAGE_ACCESS, type PageAccess, type PageViewer } from '@/shared/pageAccess';
 import { schoolApp } from '@/najm.config';
 import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
+import { SchoolSettingsSheet } from '@/features/Settings/components/SchoolSettingsSheet';
 import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYearBanner';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 
@@ -172,7 +173,7 @@ function sidebarActivePath(pathname: string, navItems: NavItem[]) {
   return STUDENT_FEES_PATH.test(pathname) && hasNavHref(navItems, '/fees') ? '/fees' : pathname;
 }
 
-function SidebarFooterContent({ collapsed }: Readonly<{ collapsed: boolean }>) {
+function SidebarFooterContent({ collapsed, onOpenSettings }: Readonly<{ collapsed: boolean; onOpenSettings: () => void }>) {
   const router = useRouter();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -184,7 +185,7 @@ function SidebarFooterContent({ collapsed }: Readonly<{ collapsed: boolean }>) {
 
   return (
     <div className="flex flex-col gap-1">
-      <button type="button" onClick={() => router.push(canManageSettings ? '/settings' : '/preferences')} className={itemClassName}>
+      <button type="button" onClick={() => (canManageSettings ? onOpenSettings() : router.push('/preferences'))} className={itemClassName}>
           <Settings className="h-4 w-4 shrink-0" />
           {isExpanded && <span>{t('navigation.settings')}</span>}
       </button>
@@ -233,6 +234,8 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const navItems: NavItem[] = useMemo(() => createSidebarItems(t, { role: (user as any)?.role, can }), [user, permissions, t]);
   const [activeThemeSheet, setActiveThemeSheet] = useState<ThemeSettingsSheet | null>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const canManageSettings = PAGE_ACCESS.settings({ role: (user as any)?.role, can });
 
   return (
     <>
@@ -275,7 +278,12 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
             setActiveThemeSheet(target === THEME_SETTINGS_NAV_ID ? 'theme' : 'branding');
           }
         }}
-        footer={({ collapsed }) => <SidebarFooterContent collapsed={collapsed} />}
+        footer={({ collapsed }) => (
+          <SidebarFooterContent
+            collapsed={collapsed}
+            onOpenSettings={() => { sidebar?.closeMobile(); setSettingsOpen(true); }}
+          />
+        )}
         mobileBreakpoint="lg"
         closeOnNavigate
       />
@@ -304,6 +312,9 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
       onActiveSheetChange={setActiveThemeSheet}
       role={role}
     />
+    {canManageSettings && (
+      <SchoolSettingsSheet open={settingsOpen} onOpenChange={setSettingsOpen} onLeave={() => setSettingsOpen(false)} />
+    )}
     </>
   );
 }

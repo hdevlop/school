@@ -6,8 +6,8 @@ import { FormInput } from 'najm-kit';
 import { FormLocationInput } from 'najm-kit/location';
 
 import { useTranslation } from 'najm-i18n/react';
-import { Label } from 'najm-kit';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { SettingsGroup } from '../SettingsGroup';
 
 const SchoolSection: React.FC = () => {
   const { t } = useTranslation();
@@ -15,87 +15,82 @@ const SchoolSection: React.FC = () => {
   const schoolLocation = useWatch({ name: 'schoolLocation' });
   const schoolPlaceId = useWatch({ name: 'schoolAddressPlaceId' });
 
-
   return (
-    <div className='flex flex-col gap-3'>
-      <div className="flex items-center gap-2 font-semibold text-sm">
-        <Building2 className="h-5 w-5" />
-        <Label className='text-lg'> {t('settings.school.title')} </Label>
-      </div>
+    <>
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <SettingsGroup title={t('settings.editor.groups.identity.title')} description={t('settings.editor.groups.identity.description')}>
+        <div className="sm:col-span-2">
+          <FormInput
+            name="schoolName"
+            type="text"
+            formLabel={t('settings.school.schoolName')}
+            icon={Building2}
+            placeholder={t('settings.school.namePlaceholder')}
+            required={true}
+          />
+        </div>
+
         <FormInput
-          name="schoolName"
+          name="schoolEmail"
           type="text"
-          formLabel={t('settings.school.schoolName') }
-          icon={Building2}
-          iconColor="#3b82f6"
-          placeholder={t('settings.school.namePlaceholder')}
+          formLabel={t('settings.school.schoolEmail')}
+          icon={Mail}
+          placeholder="contact@school.ma"
+          inputMode="email"
           required={true}
-        />
-
-        <FormLocationInput
-          name="schoolLocation"
-          formLabel={t('settings.school.schoolAddress')}
-          placeholder="123 Education Street, City, State 12345"
-          required
-          classNames={{ status: 'hidden' }}
-          providerMeta={schoolLocation && schoolPlaceId
-            ? { provider: 'google', placeId: schoolPlaceId, ...schoolLocation }
-            : null}
-          onProviderMetaChange={(meta) => setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
         />
 
         <FormInput
           name="schoolPhone"
           type="text"
-          formLabel={t('settings.school.schoolPhone') }
+          formLabel={t('settings.school.schoolPhone')}
           icon={Phone}
-          iconColor="#f59e0b"
-          placeholder="+1234567890"
+          placeholder="+212600000000"
+          inputMode="tel"
           required={true}
         />
 
-        <FormInput
-          name="schoolEmail"
-          type="text"
-          formLabel={t('settings.school.schoolEmail') }
-          icon={Mail}
-          iconColor="#8b5cf6"
-          placeholder="info@myschool.edu"
-          required={true}
-        />
+        <div className="sm:col-span-2">
+          <FormLocationInput
+            name="schoolLocation"
+            formLabel={t('settings.school.schoolAddress')}
+            placeholder={t('settings.editor.addressPlaceholder')}
+            required
+            classNames={{ status: 'hidden' }}
+            providerMeta={schoolLocation && schoolPlaceId
+              ? { provider: 'google', placeId: schoolPlaceId, ...schoolLocation }
+              : null}
+            onProviderMetaChange={(meta) => setValue('schoolAddressPlaceId', meta?.placeId ?? null, { shouldDirty: true })}
+          />
+        </div>
+      </SettingsGroup>
 
-
-
+      <SettingsGroup title={t('settings.editor.groups.schoolDay.title')} description={t('settings.editor.groups.schoolDay.description')}>
         <FormInput
           name="schoolStartTime"
           type="time"
-          formLabel={t('settings.school.schoolStartTime') }
+          formLabel={t('settings.school.schoolStartTime')}
           icon={Clock}
-          iconColor="#3b82f6"
           required={true}
         />
 
         <FormInput
           name="schoolEndTime"
           type="time"
-          formLabel={t('settings.school.schoolEndTime') }
+          formLabel={t('settings.school.schoolEndTime')}
           icon={Clock}
-          iconColor="#f59e0b"
           required={true}
         />
 
         <FormInput
           name="lunchBreakDuration"
           type="number"
-          formLabel={t('settings.school.lunchBreakDuration') }
+          formLabel={t('settings.school.lunchBreakDuration')}
           icon={Hamburger}
-          iconColor="#10b981"
           required={true}
         />
-      </div>
-    </div>
+      </SettingsGroup>
+    </>
   );
 };
 

@@ -1,16 +1,17 @@
 'use client'
 
 import React from 'react';
-import { BookOpen, Users, BarChart3, Clock, Award, Calendar, ClipboardCheck } from 'lucide-react';
-import { FormInput } from 'najm-kit';
+import Link from 'next/link';
+import { BookOpen, Users, BarChart3, Clock, Award, Calendar, CalendarCheck2, ClipboardCheck, ArrowUpRight } from 'lucide-react';
+import { FormInput, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
-import { Label } from 'najm-kit';
 import {
   buildAttendanceModeOptions,
   buildCalendarSystemOptions,
 } from '../../config/settingsOptions';
+import { SettingsGroup } from '../SettingsGroup';
 
-const AcademicSection: React.FC<{ activeYear?: string | null }> = ({ activeYear }) => {
+const AcademicSection: React.FC<{ activeYear?: string | null; onLeave?: () => void }> = ({ activeYear, onLeave }) => {
   const { t } = useTranslation();
 
   const calendarSystemOptions = buildCalendarSystemOptions(t);
@@ -18,39 +19,40 @@ const AcademicSection: React.FC<{ activeYear?: string | null }> = ({ activeYear 
   const attendanceModeOptions = buildAttendanceModeOptions(t);
 
   return (
-    <div className='flex flex-col gap-3'>
-      <div className="flex items-center gap-2 font-semibold text-sm">
-        <BookOpen className="h-5 w-5" />
-        <Label className='text-lg'> {t('settings.academic.title')} </Label>
-      </div>
+    <>
 
-      <div className="grid gap-2 sm:grid-cols-2">
+      <SettingsGroup
+        title={t('settings.editor.groups.academicYear.title')}
+        description={t('settings.editor.groups.academicYear.description')}
+        className="gap-3 sm:grid-cols-1"
+        action={(
+          <NButton asChild variant="outline" size="sm">
+            <Link href="/academic-year-migration" onClick={onLeave}>{t('academicYearMigration.title')}<ArrowUpRight className="h-4 w-4" aria-hidden /></Link>
+          </NButton>
+        )}
+      >
         {/* Shown, never chosen here: the active year moves only when a
             registered year is activated, and the server refuses any other. */}
-        <div className="flex flex-col gap-1.5">
-          <Label>{t('settings.school.currentAcademicYear')}</Label>
-          <div className="flex h-9 items-center gap-2 rounded-md border bg-muted px-3 text-sm">
-            <Calendar className="h-4 w-4 shrink-0" style={{ color: '#ec4899' }} aria-hidden />
-            {activeYear || '—'}
+        <div className="flex items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <CalendarCheck2 className="h-5 w-5" aria-hidden />
+          </span>
+          <div className="min-w-0">
+            <p className="text-xs text-muted-foreground">{t('settings.school.currentAcademicYear')}</p>
+            <p className="text-lg font-semibold tabular-nums leading-tight">{activeYear || '—'}</p>
           </div>
         </div>
+        <p className="text-xs leading-relaxed text-muted-foreground">{t('settings.editor.activeYearHint')}</p>
+      </SettingsGroup>
 
+      <SettingsGroup title={t('settings.editor.groups.grading.title')} description={t('settings.editor.groups.grading.description')}>
         <FormInput
-          name="attendanceRequirement"
-          type="text"
-          formLabel={t('settings.academic.attendanceRequirement')}
-          icon={BarChart3}
-          iconColor="#3b82f6"
-          placeholder="75"
-          required={true}
-        />
-
-        <FormInput
-          name="maxClassSize"
+          name="minimumPassingGrade"
           type="number"
-          formLabel={t('settings.academic.maxClassSize')}
-          icon={Users}
-          iconColor="#10b981"
+          step={0.01}
+          formLabel={t('settings.academic.minimumPassingGrade')}
+          icon={Award}
+          placeholder="60"
           required={true}
         />
 
@@ -59,27 +61,6 @@ const AcademicSection: React.FC<{ activeYear?: string | null }> = ({ activeYear 
           type="number"
           formLabel={t('settings.academic.gradingPeriods')}
           icon={BookOpen}
-          iconColor="#f59e0b"
-          required={true}
-        />
-
-        <FormInput
-          name="minimumPassingGrade"
-          type="text"
-          formLabel={t('settings.academic.minimumPassingGrade')}
-          icon={Award}
-          iconColor="#ef4444"
-          placeholder="60"
-          required={true}
-        />
-
-        <FormInput
-          name="defaultExamDuration"
-          type="number"
-          formLabel={t('settings.academic.defaultExamDuration')}
-          icon={Clock}
-          iconColor="#8b5cf6"
-          placeholder="120"
           required={true}
         />
 
@@ -90,7 +71,18 @@ const AcademicSection: React.FC<{ activeYear?: string | null }> = ({ activeYear 
           placeholder={t('settings.academic.semesterPlaceholder')}
           icon={Calendar}
           items={calendarSystemOptions}
-          iconColor="#3b82f6"
+          required={true}
+        />
+      </SettingsGroup>
+
+      <SettingsGroup title={t('settings.editor.groups.attendance.title')} description={t('settings.editor.groups.attendance.description')}>
+        <FormInput
+          name="attendanceRequirement"
+          type="number"
+          step={0.01}
+          formLabel={t('settings.academic.attendanceRequirement')}
+          icon={BarChart3}
+          placeholder="75"
           required={true}
         />
 
@@ -98,13 +90,31 @@ const AcademicSection: React.FC<{ activeYear?: string | null }> = ({ activeYear 
           name="attendanceMode"
           type="select"
           items={attendanceModeOptions}
-          formLabel={t('settings.academic.attendanceMode') || 'Attendance Mode'}
+          formLabel={t('settings.academic.attendanceMode')}
           icon={ClipboardCheck}
-          iconColor="#8b5cf6"
           required={true}
         />
-      </div>
-    </div>
+      </SettingsGroup>
+
+      <SettingsGroup title={t('settings.editor.groups.classesExams.title')} description={t('settings.editor.groups.classesExams.description')}>
+        <FormInput
+          name="maxClassSize"
+          type="number"
+          formLabel={t('settings.academic.maxClassSize')}
+          icon={Users}
+          required={true}
+        />
+
+        <FormInput
+          name="defaultExamDuration"
+          type="number"
+          formLabel={t('settings.academic.defaultExamDuration')}
+          icon={Clock}
+          placeholder="120"
+          required={true}
+        />
+      </SettingsGroup>
+    </>
   );
 };
 
