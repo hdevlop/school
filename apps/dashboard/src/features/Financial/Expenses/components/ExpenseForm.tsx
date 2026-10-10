@@ -10,7 +10,6 @@ import { useTranslation } from 'najm-i18n/react'
 import { expenseSchema } from '../config/expenseSchemas'
 import { buildExpenseCategoryOptions, buildExpenseStatusOptions } from '../config/expenseOptions'
 import { buildPaymentMethodOptions } from '@/features/Financial/Payment/config/paymentOptions'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useWatch } from 'react-hook-form'
 
 // Payment dates are recorded in the payment workflow; this form uses one date and receipt reference.
@@ -49,7 +48,7 @@ const ExpenseForm = ({ expense = null }) => {
    }
 
    return (
-      <NForm id='expense-form' schema={expenseFormSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(expenseFormSchema) }} >
+      <NForm id='expense-form' schema={expenseFormSchema} defaultValues={defaultValues} onSubmit={handleSubmit} >
          <ExpenseFormContent isEdit={isEdit} />
       </NForm>
    )

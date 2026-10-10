@@ -28,7 +28,7 @@ export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: P
   if (shouldFetchStudentFees && isStudentFeesLoading) {
     return (
       <div className="flex min-h-64 flex-col gap-4">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
           {Array.from({ length: 5 }).map((_, index) => (
             <NStatCardSkeleton key={index} />
           ))}
@@ -43,7 +43,7 @@ export const PaymentHistory = ({ studentId, studentFees: initialStudentFees }: P
   return (
     <div className="flex flex-col gap-4 h-full">
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         <NStatCard
           icon={DollarSign}
           label={t('fees.studentView.totalPaid')}

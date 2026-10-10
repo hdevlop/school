@@ -1,17 +1,17 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { FileText, Plus, SearchX } from 'lucide-react';
 import React, { useMemo } from 'react';
 import ExamForm from './ExamForm';
 import ExamCard from './ExamCard';
 import { useExams } from '../hooks/useExams';
 import { useTranslation } from 'najm-i18n/react';
-import { useViewerRole } from '@/shared/useViewerRole';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useExamsTableColumns } from '../hooks/useExamsTableColumns';
 import { useExamsTableFilters } from '../hooks/useExamsTableFilters';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 

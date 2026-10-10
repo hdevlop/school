@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'najm-i18n/react';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 
 export const useStudentsTableFilters = (students = []) => {
   const { t } = useTranslation();

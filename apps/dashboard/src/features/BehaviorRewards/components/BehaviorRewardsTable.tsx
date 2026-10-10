@@ -2,10 +2,10 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useMemo } from 'react';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { Award, Plus, SearchX } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import BehaviorRewardCard from './BehaviorRewardCard';

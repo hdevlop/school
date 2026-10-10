@@ -11,7 +11,7 @@ export type InfoWidgetProps = {
 
 const InfoWidget: React.FC<InfoWidgetProps> = ({ title, image, value = 0 }) => {
    return (
-      <Card className='flex flex-row p-4 gap-4 w-full items-center justify-between border-foreground'>
+      <Card className='flex flex-col sm:flex-row p-4 gap-4 min-w-0 w-full items-center justify-between border-foreground'>
          <Image
             src={image}
             alt={title}
@@ -19,9 +19,9 @@ const InfoWidget: React.FC<InfoWidgetProps> = ({ title, image, value = 0 }) => {
             className='w-12 h-12 object-contain'
          />
 
-         <div className='flex flex-col items-center  gap-1'>
+         <div className='flex min-w-0 flex-col items-center gap-1'>
             <Label className='text-sm items-center font-semibold text-center text-muted-foreground'>{title}</Label>
-            <Label className=' text-xl font-semibold'>{value}</Label>
+            <Label className='text-xl font-semibold max-sm:wrap-anywhere max-sm:text-center'>{value}</Label>
          </div>
       </Card>
    )

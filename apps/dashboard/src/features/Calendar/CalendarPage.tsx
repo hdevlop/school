@@ -18,6 +18,7 @@ import {
   CalendarDays,
   Clock,
   Megaphone,
+  Pencil,
   Plus,
   Trash2,
 } from 'lucide-react';
@@ -30,7 +31,7 @@ import { useEvents } from '@/features/Events/hooks/useEvents';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat, useSchoolToday } from '@/hooks/useSchoolFormat';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { useViewerRole } from '@/shared/useViewerRole';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useViewingYearCalendar, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { dateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 
@@ -284,6 +285,8 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
     ? displayDate(currentDate, { month: 'long', year: 'numeric' })
     : t('calendar.weekOf', { date: displayDate(startOfWeek(currentDate, { weekStartsOn: 1 }), { month: 'short', day: 'numeric', year: 'numeric' }) });
   const selectedDisplayDate = selectedDate || currentDate;
+  const selectedDayLabel = displayDate(selectedDisplayDate, { weekday: 'long', day: 'numeric', month: 'long' });
+  const selectedItems = getItemsForDay(selectedDisplayDate);
   const maxItems = viewMode === 'week' ? 7 : 4;
 
   return (
@@ -316,15 +319,18 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
             </span>
           </div>
 
-          <div className="ml-auto flex shrink-0 flex-wrap items-center justify-end gap-2">
+          {/* Icons only at phone width, where the labels did not fit one row. */}
+          <div className="ml-auto flex min-w-0 max-w-full flex-wrap items-center justify-end gap-2">
             <NButton
               size="sm"
               variant="plain"
               onClick={goToToday}
+              aria-label={t('calendar.today')}
+              title={t('calendar.today')}
               className="h-8 border border-dashed border-primary bg-background px-3 text-primary hover:bg-primary/10"
             >
-              <CalendarDays className="size-3.5" />
-              {t('calendar.today')}
+              <CalendarDays className="size-3.5" aria-hidden />
+              <span className="max-sm:hidden">{t('calendar.today')}</span>
             </NButton>
             <NTabs
               value={viewMode}
@@ -341,19 +347,32 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                 },
               }}
               items={[
-                { value: 'month', label: t('calendar.monthView'), icon: CalendarDays, content: null },
-                { value: 'week', label: t('calendar.weekView'), icon: Clock, content: null },
+                { value: 'month', label: <span className="max-sm:sr-only">{t('calendar.monthView')}</span>, icon: CalendarDays, content: null },
+                { value: 'week', label: <span className="max-sm:sr-only">{t('calendar.weekView')}</span>, icon: Clock, content: null },
               ]}
             />
             {canManage && (
               <>
-                <NButton size="sm" onClick={() => openEventDialog()} className="h-8 px-3">
-                  <Plus className="size-3.5" />
-                  {t('calendar.addEvent')}
+                <NButton
+                  size="sm"
+                  onClick={() => openEventDialog()}
+                  aria-label={t('calendar.addEvent')}
+                  title={t('calendar.addEvent')}
+                  className="h-8 px-3"
+                >
+                  <Plus className="size-3.5" aria-hidden />
+                  <span className="max-sm:hidden">{t('calendar.addEvent')}</span>
                 </NButton>
-                <NButton size="sm" variant="tertiary" onClick={() => openAnnouncementDialog()} className="h-8 px-3">
-                  <Bell className="size-3.5" />
-                  {t('calendar.addAnnouncement')}
+                <NButton
+                  size="sm"
+                  variant="tertiary"
+                  onClick={() => openAnnouncementDialog()}
+                  aria-label={t('calendar.addAnnouncement')}
+                  title={t('calendar.addAnnouncement')}
+                  className="h-8 px-3"
+                >
+                  <Bell className="size-3.5" aria-hidden />
+                  <span className="max-sm:hidden">{t('calendar.addAnnouncement')}</span>
                 </NButton>
               </>
             )}
@@ -363,19 +382,22 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
         {isLoading ? (
           <NLoadingState surface="panel" label={t('calendar.loading')} className="min-h-0 flex-1" />
         ) : (
-          <div className="flex min-h-0 flex-1 overflow-auto">
-            <div className="flex min-w-[780px] flex-1 flex-col">
+          // At phone width the seven days fit the screen as a compact grid of
+          // dots, and the selected day's items are listed under it instead of
+          // inside cells too narrow to read.
+          <div className="flex min-h-0 flex-1 flex-col overflow-auto">
+            <div className="flex flex-col max-sm:shrink-0 sm:min-w-[780px] sm:flex-1">
               <div className="grid shrink-0 grid-cols-7 border-b bg-secondary text-secondary-foreground">
                 {weekdays.map((day) => (
-                  <div key={day} className="flex h-9 items-center justify-center border-r border-secondary-foreground/20 px-3 text-[11px] font-semibold text-secondary-foreground last:border-r-0">
+                  <div key={day} className="flex h-9 items-center justify-center border-r border-secondary-foreground/20 px-0.5 text-[11px] font-semibold text-secondary-foreground last:border-r-0 sm:px-3">
                     {day}
                   </div>
                 ))}
               </div>
 
               <div
-                className="grid min-h-0 flex-1 grid-cols-7"
-                style={{ gridTemplateRows: `repeat(${Math.ceil(daysInView.length / 7)}, minmax(0, 1fr))` }}
+                className="grid min-h-0 grid-cols-7 sm:flex-1 sm:[grid-template-rows:repeat(var(--calendar-rows),minmax(0,1fr))]"
+                style={{ '--calendar-rows': Math.ceil(daysInView.length / 7) } as React.CSSProperties}
               >
                 {daysInView.map((day, index) => {
                   const dayItems = getItemsForDay(day);
@@ -393,7 +415,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                         if (event.key === 'Enter' || event.key === ' ') handleSelectDate(day);
                       }}
                       className={cn(
-                        'group relative flex min-h-0 min-w-0 flex-col gap-1.5 border-r border-b bg-muted/60 p-2 text-left outline-none transition-colors last:border-r-0',
+                        'group relative flex min-h-0 min-w-0 flex-col gap-1.5 border-r border-b bg-muted/60 p-2 text-left outline-none transition-colors last:border-r-0 max-sm:h-14 max-sm:items-center max-sm:gap-1 max-sm:p-1',
                         index % 7 === 6 && 'border-r-0',
                         'hover:bg-muted/80 focus:z-10 focus:ring-2 focus:ring-primary/35 focus:ring-inset',
                         !inMonth && 'bg-muted/80 text-muted-foreground/55',
@@ -412,11 +434,19 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                           {format(day, 'd')}
                         </span>
                         {dayItems.length > 0 && (
-                          <span className="text-[10px] font-medium text-muted-foreground">{dayItems.length}</span>
+                          <span className="text-[10px] font-medium text-muted-foreground max-sm:hidden">{dayItems.length}</span>
                         )}
                       </div>
 
-                      <div className="flex min-h-0 min-w-0 flex-col gap-1 overflow-hidden">
+                      {dayItems.length > 0 && (
+                        <div className="flex items-center justify-center gap-0.5 sm:hidden" aria-hidden>
+                          {dayItems.slice(0, 3).map((item) => (
+                            <span key={item.id} className={cn('size-1.5 rounded-full', itemStyle[item.source].dot)} />
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="flex min-h-0 min-w-0 flex-col gap-1 overflow-hidden max-sm:hidden">
                         {dayItems.slice(0, maxItems).map((item) => {
                           const style = itemStyle[item.source];
                           const Icon = item.source === 'event' ? CalendarDays : Megaphone;
@@ -476,6 +506,40 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                 })}
               </div>
             </div>
+
+            <section className="flex flex-col gap-2 p-3 sm:hidden" aria-label={selectedDayLabel}>
+              <h3 className="text-sm font-semibold text-foreground">{selectedDayLabel}</h3>
+              {selectedItems.length === 0 ? (
+                <p className="text-sm text-muted-foreground">{t('calendar.noItemsOnDay')}</p>
+              ) : selectedItems.map((item) => {
+                const style = itemStyle[item.source];
+                const Icon = item.source === 'event' ? CalendarDays : Megaphone;
+
+                return (
+                  <div key={item.id} className={cn('flex min-w-0 items-center gap-2 rounded-md border px-3 py-2', style.border, style.bg)}>
+                    <Icon className={cn('size-4 shrink-0', style.text)} aria-hidden />
+                    <div className="min-w-0 flex-1">
+                      <p className={cn('truncate text-sm font-medium', style.text)}>{item.title}</p>
+                      {(item.time || item.location) && (
+                        <p className="truncate text-xs text-muted-foreground">
+                          {[item.time, item.location].filter(Boolean).join(' · ')}
+                        </p>
+                      )}
+                    </div>
+                    {canManage && (
+                      <>
+                        <NButton size="icon" variant="ghost" className="size-8 shrink-0" onClick={() => handleEditItem(item)} aria-label={`${t('common.edit')} ${item.title}`}>
+                          <Pencil className="size-4" aria-hidden />
+                        </NButton>
+                        <NButton size="icon" variant="ghost" className="size-8 shrink-0 hover:text-destructive" onClick={() => handleDeleteItem(item)} aria-label={`${t('common.delete')} ${item.title}`}>
+                          <Trash2 className="size-4" aria-hidden />
+                        </NButton>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+            </section>
           </div>
         )}
       </Card>

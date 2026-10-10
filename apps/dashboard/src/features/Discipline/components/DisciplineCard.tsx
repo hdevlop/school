@@ -14,8 +14,12 @@ import {
 export default function DisciplineCard({ data }: { data: DisciplineIncident }) {
   const { t } = useTranslation();
   const { displayDateTime } = useSchoolFormat();
+  // A narrow card puts the student above the details, as BehaviorRewardCard does.
+  // The rows wrap instead of cutting values at NSectionInfo's 12-character
+  // default, which dropped the incident's time.
   return (
-    <div className="flex items-start gap-3 p-3">
+    <div className="@container">
+    <div className="flex flex-col gap-3 p-3 pe-10 @md:flex-row @md:items-start @md:pe-3">
       <NAvatar src={data.student?.image} title={data.student?.name || '—'} subtitle={data.student?.studentCode} size="md" />
       <div className="min-w-0 flex-1 space-y-2">
         <div className="flex flex-wrap items-center gap-2">
@@ -28,20 +32,27 @@ export default function DisciplineCard({ data }: { data: DisciplineIncident }) {
           label={t('discipline.table.classSection')}
           value={`${data.class?.name || '—'} · ${data.section?.name || '—'}`}
           valueColor="text-foreground font-medium"
+          maxChars={64}
+          className="flex-wrap"
         />
         <NSectionInfo
           icon={CalendarClock}
           label={t('discipline.table.incidentAt')}
           value={displayDateTime(data.incidentAt)}
           valueColor="text-foreground font-medium"
+          maxChars={64}
+          className="flex-wrap"
         />
         <NSectionInfo
           icon={ShieldAlert}
           label={t('discipline.table.student')}
           value={`${data.student?.name || '—'} · ${data.student?.studentCode || '—'}`}
           valueColor="text-foreground font-medium"
+          maxChars={64}
+          className="flex-wrap"
         />
       </div>
+    </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import Link from 'next/link';
 import { AlertTriangle, CalendarClock, CheckCircle2, CircleDollarSign, Clock, CreditCard, FileText, SearchX } from 'lucide-react';
 import { useCallback, useMemo } from 'react';
-import { NBadge, NCard, NStatCard, NTable, NEmptyState } from 'najm-kit';
+import { NBadge, NCard, NStatCard, NEmptyState, NTable } from 'najm-kit';
 import { useFees } from '@/features/Financial/Fees/hooks/useFees';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useTranslation } from 'najm-i18n/react';
@@ -70,7 +70,7 @@ const StatusBadge = ({ status }: { status?: string | null }) => {
 
 const LoadingSkeleton = () => (
   <div className="space-y-4">
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
       {Array.from({ length: 4 }).map((_, index) => (
         <div key={index} className="h-28 animate-pulse rounded-lg border border-slate-200 bg-white" />
       ))}
@@ -311,7 +311,7 @@ export default function FeesTab({ studentId, onOpenFeeRecord }: FeesTabProps) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {feeStats.map((stat) => (
           <NStatCard
             key={stat.label}

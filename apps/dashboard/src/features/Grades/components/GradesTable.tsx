@@ -4,7 +4,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
-import { NPageHeader, NPageHeaderActions, NTable, NTabs, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NTabs, NErrorState, NForbiddenState, NEmptyState, NTable, useMediaQuery } from 'najm-kit';
 import GradesHeader from './GradesHeader';
 import GradeRosterCard from './GradeRosterCard';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
@@ -387,7 +387,12 @@ function GradesTableForYear() {
   // switch to cards.
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
-  const rawFilters = useGradesTableFilters({
+  // Below `md` NTable shows only its first filter and folds the rest behind a
+  // button. On a phone that one visible picker is the assessment or exam:
+  // class and section are already chosen for the teacher, and nothing can be
+  // graded until a source is picked.
+  const isPhone = useMediaQuery('(max-width: 767px)');
+  const gradeFilters = useGradesTableFilters({
     classId, sectionId, subjectId, teacherId,
     // The filter row is the deliberate half: every change made here drops the
     // chosen assessment or exam with it.
@@ -401,6 +406,22 @@ function GradesTableForYear() {
     isSourceLoading: sourceType === 'assessment' ? isAssessmentsLoading : isExamsLoading,
     isAdminOrPrincipal,
   });
+  const rawFilters = useMemo(
+    () => (isPhone
+      ? [...gradeFilters.filter((f) => f.name === 'source'), ...gradeFilters.filter((f) => f.name !== 'source')]
+      : gradeFilters),
+    [gradeFilters, isPhone]
+  );
+  // The class, section and subject pickers sit behind the filter button on a
+  // phone, so say which roster is on screen: "Quiz 1" names an assessment in
+  // several sections.
+  const phoneContext = isPhone
+    ? [
+      classOptions.find((o) => o.value === classId)?.label,
+      sectionOptions.find((o) => o.value === sectionId)?.label,
+      subjectOptions.find((o) => o.value === subjectId)?.label,
+    ].filter(Boolean).join(' · ')
+    : '';
   const noDataText = !classId
     ? t('grades.toolbar.selectClass')
     : !sectionId
@@ -430,9 +451,11 @@ function GradesTableForYear() {
                   color: 'var(--primary-foreground)',
                 },
               }}
+              // Icons only at phone width, where the labels left no room for the
+              // title; the labels stay readable to screen readers.
               items={[
-                { value: 'assessment', label: t('grades.form.assessment'), icon: ClipboardList, content: null },
-                { value: 'exam', label: t('grades.toolbar.exam'), icon: FileText, content: null },
+                { value: 'assessment', label: <span className="max-sm:sr-only">{t('grades.form.assessment')}</span>, icon: ClipboardList, content: null },
+                { value: 'exam', label: <span className="max-sm:sr-only">{t('grades.toolbar.exam')}</span>, icon: FileText, content: null },
               ]}
             />
           </div>
@@ -445,16 +468,26 @@ function GradesTableForYear() {
         data={roster}
         columns={columns}
         filters={rawFilters}
-        headerSlot={(
-          <GradesHeader
-            stats={stats}
-            hasChanges={hasChanges}
-            isSubmitting={isSubmittingBatch}
-            onSubmit={handleSubmit}
-            canSubmit={canSubmit}
-            submitTitle={canSubmit ? t('grades.toolbar.save') : t('grades.toolbar.selectSource')}
-          />
-        )}
+        // On a phone the stats and Save take their own full-width row under
+        // the picker instead of hugging the right edge.
+        classNames={{ header: 'max-md:gap-y-2 max-md:[&>div:has(>.grades-stats)]:w-full' }}
+        // Highest, lowest and pass rate describe one assessment or exam; with
+        // none chosen they would only read as dashes and 0%.
+        headerSlot={(phoneContext || sourceId) ? (
+          <div className="grades-stats flex w-full flex-col gap-2">
+            {phoneContext ? <p className="truncate px-1 text-xs text-muted-foreground">{phoneContext}</p> : null}
+            {sourceId ? (
+              <GradesHeader
+                stats={stats}
+                hasChanges={hasChanges}
+                isSubmitting={isSubmittingBatch}
+                onSubmit={handleSubmit}
+                canSubmit={canSubmit}
+                submitTitle={canSubmit ? t('grades.toolbar.save') : t('grades.toolbar.selectSource')}
+              />
+            ) : null}
+          </div>
+        ) : undefined}
         onCellEdit={handleCellEdit}
         loading={isGradesLoading || isStudentsLoading}
         error={hasFailedToLoad(gradesError ?? studentsError, roster) ? gradesError ?? studentsError : null}

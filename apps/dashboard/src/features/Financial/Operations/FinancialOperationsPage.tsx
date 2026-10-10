@@ -10,8 +10,8 @@ import {
   NForbiddenState,
   NPageHeader,
   NPageHeaderActions,
-  NTable,
   useDialog,
+  NTable,
 } from 'najm-kit';
 import { toast } from 'sonner';
 import { Ban, CheckCircle2, Landmark, RotateCw, SearchX, Undo2 } from 'lucide-react';
@@ -162,9 +162,15 @@ export default function FinancialOperationsPage() {
         subtitle={failed || isLoading ? undefined : t('financialOperations.subtitle', { count: rows.length })}
       >
         <NPageHeaderActions>
-          <NButton variant="outline" onClick={openRollover}>
-            <RotateCw className="me-2 h-4 w-4" />
-            {t('financialOperations.rolloverButton')}
+          {/* Icon only at phone width, where the label left no room for the title. */}
+          <NButton
+            variant="outline"
+            onClick={openRollover}
+            aria-label={t('financialOperations.rolloverButton')}
+            title={t('financialOperations.rolloverButton')}
+          >
+            <RotateCw className="h-4 w-4 sm:me-2" aria-hidden />
+            <span className="max-sm:hidden">{t('financialOperations.rolloverButton')}</span>
           </NButton>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>

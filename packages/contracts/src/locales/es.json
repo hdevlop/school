@@ -761,6 +761,7 @@
       "welcomeBack": "Bienvenido de nuevo, {{name}}",
       "subtitle": "Este es tu día de clases de un vistazo.",
       "backToTeachers": "Volver a docentes",
+      "profileSubtitle": "Su día de clases de un vistazo.",
       "tabs": {
         "overview": "Resumen",
         "details": "Detalles",
@@ -824,12 +825,12 @@
       "agingBalance": "Saldo por antigüedad",
       "agingCurrent": "Actual",
       "collectionRateYTD": "Tasa de cobro del año",
-      "studentsYear": "Estudiantes ({{year}})",
+      "studentsYear": "Estudiantes",
       "teachersCurrent": "Profesores (actuales)",
-      "incomeYear": "Ingresos ({{year}})",
-      "expensesYear": "Gastos ({{year}})",
-      "netBalanceYear": "Saldo neto ({{year}})",
-      "collectionRateYear": "Tasa de cobro ({{year}})",
+      "incomeYear": "Ingresos",
+      "expensesYear": "Gastos",
+      "netBalanceYear": "Saldo neto",
+      "collectionRateYear": "Tasa de cobro",
       "daysOverdue": "Días de retraso",
       "expenseCount": "Cantidad de gastos",
       "expenses": "Expenses",
@@ -1732,7 +1733,12 @@
       "saveDiscount": "Guardar descuento",
       "addDiscount": "Añadir descuento",
       "discountCount": "{{count}} de {{total}} cuotas tienen descuento",
-      "totalSaved": "Descuento total: {{amount}}"
+      "totalSaved": "Descuento total: {{amount}}",
+      "paidOfTotal": "{{paid}}/{{total}} pagadas",
+      "overdueShort": "{{count}} vencidas",
+      "paidGroup": "Pagados ({{count}})",
+      "remaining": "Pendiente",
+      "overdueAmount": "Vencido"
     }
   },
   "behaviorRewards": {
@@ -2999,8 +3005,7 @@
       "viewAllDocuments": "Ver todos los documentos",
       "viewAllFees": "Ver todas las cuotas",
       "dashboard": {
-        "welcomeBack": "Bienvenido de nuevo, {{name}}",
-        "subtitle": "Esto es lo que ocurre hoy con tus hijos.",
+        "subtitle": "Sus hijos de un vistazo.",
         "backToParents": "Volver a padres",
         "averageGrade": "Nota media",
         "overallAttendance": "Asistencia general",
@@ -3038,7 +3043,24 @@
         "schoolCampus": "Campus escolar",
         "loadingOverview": "Cargando resumen familiar...",
         "loadError": "No se pudo cargar este perfil.",
-        "tryAgain": "Intentar de nuevo"
+        "tryAgain": "Intentar de nuevo",
+        "attention": {
+          "overduePayments": "Pagos vencidos",
+          "absences": "Ausencias",
+          "lateArrivals": "Retrasos",
+          "upcomingAssessments": "Evaluaciones próximas",
+          "lowGrades": "Notas por debajo del 50 %",
+          "openIncidents": "Incidentes abiertos"
+        },
+        "tabs": {
+          "overview": "Resumen",
+          "details": "Detalles"
+        },
+        "details": {
+          "familyRole": "Rol familiar",
+          "yes": "Sí",
+          "no": "No"
+        }
       }
     },
     "relationships": {
@@ -3770,7 +3792,6 @@
     "profile": {
       "detailsTitle": "Detalles del estudiante",
       "detailsSubtitle": "Perfil y expediente académico",
-      "downloadReport": "Descargar informe",
       "closeDetails": "Cerrar detalles del estudiante",
       "unknown": "Desconocido",
       "age": "Edad",
@@ -4891,6 +4912,7 @@
     "addAnnouncement": "Añadir anuncio",
     "loading": "Cargando calendario…",
     "more": "{{count}} más…",
-    "events": "Eventos"
+    "events": "Eventos",
+    "noItemsOnDay": "Nada programado para este día"
   }
 }

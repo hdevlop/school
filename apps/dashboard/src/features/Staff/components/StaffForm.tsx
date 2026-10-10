@@ -12,7 +12,6 @@ import { useStaffRoles } from '../hooks/useStaffRoles';
 import { useCycles } from '@/features/Cycles/hooks/useCycles';
 import { useZones } from '../hooks/useZones';
 import { useVehicles } from '../hooks/useVehicles';
-import { buildFill, isDevFill, pick } from '@/lib/devFill';
 
 type StaffWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
   submitLabel?: ReactNode;
@@ -22,14 +21,12 @@ const StaffWizardForm = WizardForm as ComponentType<StaffWizardFormProps>;
 
 const STAFF_FORM_EXCLUDED_ROLES = new Set(['teacher']);
 const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
-const STAFF_NON_ASSIGNMENT_ROLE_PREFERENCE = ['secretary', 'receptionist', 'principal', 'librarian', 'itSupport', 'other'];
 const STAFF_STATUS_VALUES = ['active', 'inactive', 'onLeave', 'suspended', 'terminated'] as const;
 const EMPLOYMENT_TYPE_VALUES = ['fullTime', 'partTime', 'contract', 'temporary'] as const;
 const COMPENSATION_MODE_VALUES = ['monthly', 'hourly'] as const;
 const SHIFT_VALUES = ['morning', 'afternoon', 'evening', 'fullDay'] as const;
 
 const staffRoleHasAssignments = (role?: string) => !role || STAFF_ASSIGNMENT_ROLES.has(role);
-const dateInput = (date = new Date()) => date.toISOString().split('T')[0];
 const optionalNumber = <T extends z.ZodNumber | z.ZodCoercedNumber>(schema: T) => z.preprocess(
   (value) => (value === '' || value === null ? undefined : value),
   schema.optional()
@@ -250,136 +247,11 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null);
   const showAssignmentsStep = staffRoleHasAssignments(selectedRole);
-  const { activeStaffRoles } = useStaffRoles({ activeOnly: true });
-  const { classes } = useClasses({ enabled: isDevFill && !staff?.id });
-  const { cycles } = useCycles({ activeOnly: true, enabled: isDevFill && !staff?.id });
-  const { zones } = useZones({ enabled: isDevFill && !staff?.id });
-  const { vehicles } = useVehicles({ enabled: isDevFill && !staff?.id });
 
   useEffect(() => {
     setSelectedRole(defaultValues.role);
     setCurrentStep(1);
   }, [defaultValues.role, staff?.id]);
-
-  const pickFillRole = useCallback(() => {
-    if (staff?.id && defaultValues.role) return defaultValues.role;
-
-    const roleCodes = (activeStaffRoles || [])
-      .map((role) => role.code)
-      .filter((code) => code && !STAFF_FORM_EXCLUDED_ROLES.has(code));
-    const hasRole = (role: string) => roleCodes.length === 0 || roleCodes.includes(role);
-
-    const assignmentRoleWithData = [
-      { role: 'assistant', hasData: Boolean(classes?.length) },
-      { role: 'cleaner', hasData: Boolean(zones?.length) },
-      { role: 'security', hasData: Boolean(zones?.length) },
-      { role: 'driver', hasData: Boolean(vehicles?.length) },
-      { role: 'busAssistant', hasData: Boolean(vehicles?.length) },
-      { role: 'accountant', hasData: Boolean(cycles?.length) },
-    ].find(({ role, hasData }) => hasData && hasRole(role));
-
-    if (assignmentRoleWithData) return assignmentRoleWithData.role;
-
-    const nonAssignmentRole = STAFF_NON_ASSIGNMENT_ROLE_PREFERENCE.find(hasRole)
-      || pick(roleCodes.filter((role) => !STAFF_ASSIGNMENT_ROLES.has(role)));
-
-    return nonAssignmentRole || 'secretary';
-  }, [activeStaffRoles, classes, cycles, defaultValues.role, staff?.id, vehicles, zones]);
-
-  const buildAssignmentsForRole = useCallback((role: string) => {
-    const startDate = dateInput();
-    if (role === 'assistant') {
-      const selectedClass: any = pick(classes || []);
-      return {
-        classIds: selectedClass?.id ? [selectedClass.id] : [],
-        assignments: [{}],
-      };
-    }
-    if (role === 'cleaner' || role === 'security') {
-      const zone: any = pick(zones || []);
-      return {
-        classIds: [],
-        assignments: [{ zoneId: zone?.id ?? '', startDate, endDate: '', notes: '' }],
-      };
-    }
-    if (role === 'accountant') {
-      const cycle: any = pick(cycles || []);
-      return {
-        classIds: [],
-        assignments: [{ cycleId: cycle?.id ?? '', startDate, endDate: '', notes: '' }],
-      };
-    }
-    if (role === 'driver') {
-      const vehicle: any = pick(vehicles || []);
-      return {
-        classIds: [],
-        assignments: [{ vehicleId: vehicle?.id ?? '', notes: '' }],
-      };
-    }
-    if (role === 'busAssistant') {
-      const vehicle: any = pick(vehicles || []);
-      return {
-        classIds: [],
-        assignments: [{ vehicleId: vehicle?.id ?? '', startDate, endDate: '', notes: '' }],
-      };
-    }
-    return { classIds: [], assignments: [{}] };
-  }, [classes, cycles, vehicles, zones]);
-
-  const fillAll = useCallback(() => {
-    const role = pickFillRole();
-    const assignments = buildAssignmentsForRole(role);
-    const generated = buildFill(staffFullSchema, {
-      id: staff?.id ?? '',
-      role,
-      status: 'active',
-      employmentType: 'fullTime',
-      compensationMode: 'monthly',
-      shift: pick(SHIFT_VALUES) ?? 'fullDay',
-      hireDate: dateInput(),
-      endDate: '',
-      hourlyRate: '',
-      workloadHours: '',
-      image: null,
-    });
-
-    const values = {
-      ...defaultValues,
-      ...generated,
-      ...assignments,
-      role,
-      employeeCode: generated.employeeCode || `EMP${Date.now().toString().slice(-6)}`,
-      image: staff?.image || null,
-    };
-
-    if (staff?.id) values.id = staff.id;
-    else delete values.id;
-
-    if (role !== 'driver') {
-      values.licenseNumber = '';
-      values.licenseType = '';
-      values.licenseExpiry = '';
-      values.yearsOfExperience = '';
-      values.notes = '';
-    }
-
-    return values;
-  }, [buildAssignmentsForRole, defaultValues, pickFillRole, staff?.id, staff?.image]);
-
-  // The wizard's own dev tools own the F8 shortcut and the step reset. The
-  // role is School's to apply: it decides which steps exist at all, and the
-  // package cannot know that a filled field drives the step list.
-  const devTools = useMemo(
-    () => ({
-      enabled: isDevFill,
-      fill: () => {
-        const values = fillAll();
-        setSelectedRole(values.role);
-        return values;
-      },
-    }),
-    [fillAll],
-  );
 
   const steps: StepConfig[] = useMemo(() => {
     const visibleSteps: StepConfig[] = [
@@ -445,7 +317,6 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
         steps={steps}
         schema={staffFullSchema}
         defaultValues={defaultValues}
-        devTools={devTools}
         onSubmit={handleSubmit}
         currentStep={currentStep}
         onCurrentStepChange={setCurrentStep}

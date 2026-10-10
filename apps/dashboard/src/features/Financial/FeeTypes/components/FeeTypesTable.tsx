@@ -1,7 +1,7 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NEmptyState, NButton, NTable } from 'najm-kit';
 import { Tag, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import FeeTypeForm from './FeeTypeForm';

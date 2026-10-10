@@ -52,6 +52,27 @@ it('places a school week without double-booking a section or a teacher', () => {
   }
 });
 
+it('teaches Monday to Thursday all day, Friday and Saturday mornings only', () => {
+  const lessonsOn = (day: string) => TIMETABLE_SLOTS.filter((slot) => slot.day === day).map((slot) => slot.lesson);
+  for (const day of ['monday', 'tuesday', 'wednesday', 'thursday']) expect(lessonsOn(day)).toEqual([0, 1, 2, 3, 4, 5]);
+  for (const day of ['friday', 'saturday']) expect(lessonsOn(day)).toEqual([0, 1, 2]);
+  expect(lessonsOn('sunday')).toEqual([]);
+});
+
+it('fits a full collège week in those mornings and afternoons', () => {
+  const sections = ['CE6-A', '1AC-A', '2AC-A', '3AC-A'];
+  const subjects = ['MATH', 'FR', 'AR', 'ENG', 'PHY', 'SVT', 'PE', 'HIST', 'GEO', 'INFO'];
+  const units = subjects.flatMap((subjectId) => sections.map((sectionId) => ({
+    sectionId, subjectId, lessons: weeklyLessons('Collège', subjectId),
+  })));
+  const planned = shareUnits(units).flatMap((share, index) => share.map((unit) => ({ ...unit, teacherId: `T${index}` })));
+
+  const { placed, unplaced } = placeLessons(planned);
+
+  expect(unplaced).toBe(0);
+  expect(placed.filter((lesson) => lesson.sectionId === '1AC-A')).toHaveLength(28);
+});
+
 it('keeps a subject with full-time teachers and no token contract', () => {
   const units = ['CE6', '1AC', '2AC', '3AC', 'CP', 'CE1', 'CE2', 'CM1', 'CM2'].map((sectionId, index) =>
     ({ sectionId, subjectId: 'MATH', lessons: weeklyLessons(index < 4 ? 'Collège' : 'Primaire', 'MATH') }));

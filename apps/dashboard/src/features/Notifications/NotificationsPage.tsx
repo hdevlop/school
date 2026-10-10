@@ -49,16 +49,19 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="flex min-h-0 w-full flex-col gap-3 p-2">
+    <div className="flex min-h-0 w-full flex-col gap-2">
       <NPageHeader icon={Bell} title={t('notifications.inbox')}>
         <NPageHeaderActions>
+          {/* Icon only at phone width, where the label left no room for the title. */}
           <NButton
             size="sm"
             variant="outline"
             onClick={() => markAll.mutateAsync().catch(report)}
+            aria-label={t('notifications.markAll')}
+            title={t('notifications.markAll')}
           >
-            <CheckCheck size={16} />
-            {t('notifications.markAll')}
+            <CheckCheck size={16} aria-hidden />
+            <span className="max-sm:hidden">{t('notifications.markAll')}</span>
           </NButton>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>

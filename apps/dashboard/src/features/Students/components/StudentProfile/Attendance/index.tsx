@@ -105,7 +105,7 @@ export default function AttendanceTab({ studentId, student }: { studentId?: stri
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         <NStatCard
           icon={CalendarCheck}
           label={t('students.profile.tabs.attendance')}

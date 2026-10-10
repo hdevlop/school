@@ -4,7 +4,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NTable } from 'najm-kit';
 import { CalendarCheck, SearchX } from 'lucide-react';
 import RosterHeader from './RosterHeader';
 import RosterFilters from './RosterFilters';

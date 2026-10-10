@@ -340,7 +340,7 @@ runSeedTask(`history year ${targetLabel}`, async (server) => {
     const { payments } = await seedPhase('Payments', async () => ({
       payments: await seedPayments(feeService, paymentService, studentIds, targetLabel),
     }));
-    console.log(`✅ Payments seeded (${payments.paymentCount} records, ${payments.skippedCount} students left unpaid)`);
+    console.log(`✅ Payments seeded (${payments.paymentCount} records, ${payments.clearedChequeCount} cheques cleared, ${payments.skippedCount} students left unpaid)`);
 
     const createdExpenses = await seedPhase('Expenses', async () =>
       expenseService.seedDemoExpenses((await expensesPack()).expenses, actorId));

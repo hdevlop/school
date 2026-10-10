@@ -32,7 +32,7 @@ const toMinutes = (value: string) => {
 const toTime = (minutes: number) => `${String(Math.floor(minutes / 60) % 24).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
 const duration = (item: TimelineItem) => Math.max(5, toMinutes(item.endTime) - toMinutes(item.startTime));
 const reflow = (items: TimelineItem[]) => {
-  let cursor = toMinutes(items[0]?.startTime || '08:00');
+  let cursor = toMinutes(items[0]?.startTime || '08:30');
   return items.map((item) => {
     const next = { ...item, startTime: toTime(cursor), endTime: toTime(cursor + duration(item)) };
     cursor += duration(item);
@@ -160,7 +160,7 @@ export default function RoutineScheduleForm({
 
   const addRow = (type: 'lesson' | 'break') => {
     const current = form.getValues('periods');
-    const lastEnd = current.at(-1)?.endTime || '08:00';
+    const lastEnd = current.at(-1)?.endTime || '08:30';
     const lessonNumber = current.filter((item) => item.type === 'lesson').length + 1;
     const breakNumber = current.filter((item) => item.type === 'break').length;
     const breakNames = [

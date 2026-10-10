@@ -6,7 +6,6 @@ import React from 'react'
 import { Mail, User, Shield } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { usersValidationSchema, updateUsersValidationSchema } from '../config/usersValidateSchema'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useRoles } from '@/features/Roles/hooks/useRoles'
 import { useTranslation } from 'najm-i18n/react'
 
@@ -45,7 +44,6 @@ const UserForm = ({ user = null, mode = 'create' }) => {
                schema={schema}
                defaultValues={defaultValues}
                onSubmit={handleSubmit}
-               devTools={{ enabled: isDevFill, fill: () => buildFill(schema, { roleId: roleOptions }) }}
             >
                <FormInput
                   name='name'

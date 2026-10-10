@@ -30,7 +30,7 @@ export const AutoAllocationTools = ({ studentFees }) => {
 
     return (
         <div className="rounded-lg border border-border bg-muted/30 p-3">
-            <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
                 {/* Left Section - Icon + Text */}
                 <div className="flex items-center gap-3">
                     {/* Icon Container */}
@@ -50,7 +50,7 @@ export const AutoAllocationTools = ({ studentFees }) => {
                 </div>
 
                 {/* Right Section - Action Buttons */}
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex flex-wrap items-center gap-2 lg:shrink-0">
                     {/* Pay All Overdue Button */}
                     <button
                         onClick={handlePayAllOverdue}

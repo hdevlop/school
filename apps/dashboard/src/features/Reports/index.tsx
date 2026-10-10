@@ -10,7 +10,7 @@ import FinancialAuditCard from './components/FinancialAuditCard';
 import { useDashboardYear } from '@/features/Dashboard/hooks/useDashboardHooks';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { useViewerRole } from '@/shared/useViewerRole';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 
 const ReportsPage: React.FC = () => {
   const { t } = useTranslation();

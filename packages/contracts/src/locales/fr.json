@@ -1285,6 +1285,7 @@
       "welcomeBack": "Bon retour, {{name}}",
       "subtitle": "Voici votre journée d'enseignement en un coup d'œil.",
       "backToTeachers": "Retour aux enseignants",
+      "profileSubtitle": "Sa journée d'enseignement en un coup d'œil.",
       "tabs": {
         "overview": "Vue d'ensemble",
         "details": "Détails",
@@ -1338,12 +1339,12 @@
       "expensesMonth": "Dépenses (mois)",
       "netBalance": "Solde Net",
       "collectionRateYTD": "Taux de Recouvrement YTD",
-      "studentsYear": "Élèves ({{year}})",
+      "studentsYear": "Élèves",
       "teachersCurrent": "Enseignants (actuels)",
-      "incomeYear": "Revenus ({{year}})",
-      "expensesYear": "Dépenses ({{year}})",
-      "netBalanceYear": "Solde Net ({{year}})",
-      "collectionRateYear": "Taux de Recouvrement ({{year}})",
+      "incomeYear": "Revenus",
+      "expensesYear": "Dépenses",
+      "netBalanceYear": "Solde Net",
+      "collectionRateYear": "Taux de Recouvrement",
       "studentsByGender": "Élèves par Sexe",
       "incomeVsExpenses": "Revenus vs Dépenses",
       "income": "Revenus",
@@ -1808,7 +1809,7 @@
       "overdueAmount": "impayé(s)",
       "remindAll": "Relancer tout ({{count}})",
       "daysOverdue": "{{count}} jour{{plural}} de retard",
-      "oldestDueDate": "Échéance la + ancienne :",
+      "oldestDueDate": "Échéance la + ancienne",
       "reminded": "Relancé",
       "remind": "Relancer",
       "noResults": "Aucun résultat pour « {{search}} »",
@@ -2313,7 +2314,12 @@
       "saveDiscount": "Enregistrer la réduction",
       "addDiscount": "Ajouter une réduction",
       "discountCount": "{{count}} frais sur {{total}} bénéficient d’une réduction",
-      "totalSaved": "Total des réductions : {{amount}}"
+      "totalSaved": "Total des réductions : {{amount}}",
+      "paidOfTotal": "{{paid}}/{{total}} payées",
+      "overdueShort": "{{count}} en retard",
+      "paidGroup": "Payés ({{count}})",
+      "remaining": "Reste à payer",
+      "overdueAmount": "En retard"
     }
   },
   "behaviorRewards": {
@@ -3512,8 +3518,7 @@
       "viewAllDocuments": "Voir tous les documents",
       "viewAllFees": "Voir tous les frais",
       "dashboard": {
-        "welcomeBack": "Bon retour, {{name}}",
-        "subtitle": "Voici ce qui se passe avec vos enfants aujourd'hui.",
+        "subtitle": "Ses enfants en un coup d'œil.",
         "backToParents": "Retour aux parents",
         "averageGrade": "Moyenne générale",
         "overallAttendance": "Assiduité globale",
@@ -3551,7 +3556,24 @@
         "schoolCampus": "Établissement scolaire",
         "loadingOverview": "Chargement de l'aperçu familial...",
         "loadError": "Impossible de charger ce profil parent.",
-        "tryAgain": "Réessayer"
+        "tryAgain": "Réessayer",
+        "attention": {
+          "overduePayments": "Paiements en retard",
+          "absences": "Absences",
+          "lateArrivals": "Retards",
+          "upcomingAssessments": "Évaluations à venir",
+          "lowGrades": "Notes sous 50 %",
+          "openIncidents": "Incidents ouverts"
+        },
+        "tabs": {
+          "overview": "Aperçu",
+          "details": "Détails"
+        },
+        "details": {
+          "familyRole": "Rôle familial",
+          "yes": "Oui",
+          "no": "Non"
+        }
       }
     },
     "relationships": {
@@ -3920,7 +3942,6 @@
     "profile": {
       "detailsTitle": "Détails de l’élève",
       "detailsSubtitle": "Profil et dossier scolaire",
-      "downloadReport": "Télécharger le rapport",
       "closeDetails": "Fermer les détails de l’élève",
       "unknown": "Inconnu",
       "age": "Âge",
@@ -5004,6 +5025,7 @@
     "addAnnouncement": "Ajouter une annonce",
     "loading": "Chargement du calendrier…",
     "more": "{{count}} de plus…",
-    "events": "Événements"
+    "events": "Événements",
+    "noItemsOnDay": "Rien de prévu ce jour-là"
   }
 }

@@ -13,18 +13,8 @@ import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { IdCard, BookOpen, Hash, User, UserRound, Calendar, CalendarCheck, GraduationCap, DoorOpen, School, Mail, Phone, HeartPulse, Bus } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import { useFormContext, useWatch } from 'react-hook-form'
-import { PLACEMENT_FIELDS, studentProfileEditSchema, studentSchema } from '../config/studentSchemas'
-import { buildFill, isDevFill, pick } from '@/lib/devFill'
+import { PLACEMENT_FIELDS, studentProfileEditSchema } from '../config/studentSchemas'
 import { buildGenderOptions } from '../config/studentOptions'
-
-const getAcademicYearStartDate = (academicYear?: string | null, referenceDate?: string | null) => {
-  const startYear = academicYear?.match(/^\d{4}/)?.[0]
-  if (startYear) return `${startYear}-09-01`
-
-  const today = referenceDate ? new Date(`${referenceDate}T00:00:00`) : new Date()
-  const year = today.getMonth() >= 8 ? today.getFullYear() : today.getFullYear() - 1
-  return `${year}-09-01`
-}
 
 const sectionHeaderClassName = 'student-form-section-header'
 
@@ -91,16 +81,6 @@ const SimpleStudentForm = ({ student = null, classes = [], canCorrect = false })
     })
   }
 
-  const fill = () => {
-    const cls: any = pick(classes || []);
-    const sec: any = pick(cls?.sections || []);
-    return buildFill(studentSchema, {
-      classId: cls?.id ?? '',
-      sectionId: sec?.id ?? '',
-      enrollmentDate: getAcademicYearStartDate(cls?.academicYear),
-    });
-  };
-
   return (
     <NForm
       id='student-form'
@@ -122,7 +102,6 @@ const SimpleStudentForm = ({ student = null, classes = [], canCorrect = false })
         placementValidFrom: latest.validFrom, placementValidTo: latest.validTo ?? '', correctionReason: '',
       } : {}) }}
       onSubmit={handleSubmit}
-      devTools={{ enabled: isDevFill, fill }}
     >
       <StudentFormContent classes={classes} student={student} placementReadOnly={!editable} />
       {editable && <CorrectionFields enrollment={enrollment} />}

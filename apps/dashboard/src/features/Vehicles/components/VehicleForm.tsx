@@ -9,7 +9,6 @@ import { Car, Hash, Calendar, DollarSign, Gauge, Tag, Truck, Users, Activity, Us
 import { useDialog } from 'najm-kit'
 import { vehicleSchema } from '../config/vehicleSchemas'
 import { buildVehicleStatusOptions, buildVehicleTypeOptions } from '../config/vehicleOptions'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 
 const VehicleForm = ({ vehicle = null, drivers = [] }) => {
@@ -38,7 +37,7 @@ const VehicleForm = ({ vehicle = null, drivers = [] }) => {
    }
 
    return (
-      <NForm id='vehicle-form' schema={vehicleSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(vehicleSchema, { driverId: drivers?.map((d: any) => ({ value: d.id })) }) }}>
+      <NForm id='vehicle-form' schema={vehicleSchema} defaultValues={defaultValues} onSubmit={handleSubmit}>
          <VehicleFormContent drivers={drivers} />
       </NForm>
    )

@@ -21,6 +21,13 @@ body {
   flex-shrink: 0;
 }
 
+/* Let mobile cards fill the viewport; chat clearance scrolls with the list. */
+@media (max-width: 1023px) {
+  .dashboard-content [data-ntable-cards-grid] {
+    padding-bottom: 5rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .dashboard-content [data-slot="page-header-identity"] {
     flex: 1 1 0%;

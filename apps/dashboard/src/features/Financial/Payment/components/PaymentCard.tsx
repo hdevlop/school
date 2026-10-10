@@ -16,7 +16,8 @@ const PaymentCard = ({ data, feeYear }: { data: any; feeYear?: string }) => {
   return (
     <div className="flex flex-col gap-4 p-4">
       {/* Header Section */}
-      <div className="flex items-start justify-between">
+      {/* `pe-8` keeps the badge clear of NTable's row-menu button in the corner. */}
+      <div className="flex items-start justify-between gap-2 pe-8">
         <div className="flex flex-col">
           <Label className="text-lg font-bold text-green-600">
             {majorMoney(feeYear ? payment.yearAllocatedAmount ?? 0 : payment.amount || 0)}

@@ -1,10 +1,10 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { Layers, Plus, SearchX } from 'lucide-react';
 import React, { useMemo } from 'react';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import SectionForm from './SectionForm';
 import { useSections } from '../hooks/useSections';
 import { useTranslation } from 'najm-i18n/react';

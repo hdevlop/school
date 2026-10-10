@@ -665,6 +665,7 @@
       "welcomeBack": "Welcome back, {{name}}",
       "subtitle": "Here's your teaching day at a glance.",
       "backToTeachers": "Back to teachers",
+      "profileSubtitle": "Their teaching day at a glance.",
       "tabs": {
         "overview": "Overview",
         "details": "Details",
@@ -710,12 +711,12 @@
       "expensesMonth": "Expenses (month)",
       "netBalance": "Net Balance",
       "collectionRateYTD": "Collection Rate YTD",
-      "studentsYear": "Students ({{year}})",
+      "studentsYear": "Students",
       "teachersCurrent": "Teachers (current)",
-      "incomeYear": "Income ({{year}})",
-      "expensesYear": "Expenses ({{year}})",
-      "netBalanceYear": "Net Balance ({{year}})",
-      "collectionRateYear": "Collection Rate ({{year}})",
+      "incomeYear": "Income",
+      "expensesYear": "Expenses",
+      "netBalanceYear": "Net Balance",
+      "collectionRateYear": "Collection Rate",
       "studentsByGender": "Students by Gender",
       "incomeVsExpenses": "Income vs Expenses",
       "income": "Income",
@@ -1589,7 +1590,12 @@
       "saveDiscount": "Save discount",
       "addDiscount": "Add discount",
       "discountCount": "{{count}} of {{total}} fees have a discount",
-      "totalSaved": "Total saved: {{amount}}"
+      "totalSaved": "Total saved: {{amount}}",
+      "paidOfTotal": "{{paid}}/{{total}} paid",
+      "overdueShort": "{{count}} overdue",
+      "paidGroup": "Paid ({{count}})",
+      "remaining": "Remaining",
+      "overdueAmount": "Overdue"
     }
   },
   "students": {
@@ -1894,7 +1900,6 @@
       "fees": "Fees",
       "detailsTitle": "Student Details",
       "detailsSubtitle": "Profile & Academic Records",
-      "downloadReport": "Download Report",
       "closeDetails": "Close student details",
       "unknown": "Unknown",
       "age": "Age",
@@ -2182,8 +2187,7 @@
       "children": "Children",
       "financial": "Financial",
       "dashboard": {
-        "welcomeBack": "Welcome back, {{name}}",
-        "subtitle": "Here's what's happening with your children today.",
+        "subtitle": "Their children at a glance.",
         "backToParents": "Back to parents",
         "averageGrade": "Average grade",
         "overallAttendance": "Overall attendance",
@@ -2221,7 +2225,24 @@
         "schoolCampus": "School campus",
         "loadingOverview": "Loading family overview...",
         "loadError": "This parent profile could not be loaded.",
-        "tryAgain": "Try again"
+        "tryAgain": "Try again",
+        "attention": {
+          "overduePayments": "Overdue payments",
+          "absences": "Absences",
+          "lateArrivals": "Late arrivals",
+          "upcomingAssessments": "Upcoming assessments",
+          "lowGrades": "Grades below 50%",
+          "openIncidents": "Open incidents"
+        },
+        "tabs": {
+          "overview": "Overview",
+          "details": "Details"
+        },
+        "details": {
+          "familyRole": "Family role",
+          "yes": "Yes",
+          "no": "No"
+        }
       }
     }
   },
@@ -4648,7 +4669,7 @@
       "overdueAmount": "overdue",
       "remindAll": "Remind all ({{count}})",
       "daysOverdue": "{{count}} day{{plural}} overdue",
-      "oldestDueDate": "Oldest due date:",
+      "oldestDueDate": "Oldest due date",
       "reminded": "Reminded",
       "remind": "Remind",
       "noResults": "No results for \"{{search}}\"",
@@ -5667,6 +5688,7 @@
     "addAnnouncement": "Add announcement",
     "loading": "Loading calendar…",
     "more": "{{count}} more…",
-    "events": "Events"
+    "events": "Events",
+    "noItemsOnDay": "Nothing scheduled on this day"
   }
 }

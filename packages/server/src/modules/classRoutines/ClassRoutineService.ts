@@ -14,15 +14,14 @@ import type {
   RoutineLayoutDto,
 } from './ClassRoutineDto';
 
+// School runs 8:30–15:30: three morning lessons, the 11:30 pause, three afternoon ones.
 const defaultLayout: RoutineLayoutDto = { periods: [
-  { type: 'lesson', name: 'Period 1', startTime: '08:00', endTime: '09:00' },
-  { type: 'lesson', name: 'Period 2', startTime: '09:00', endTime: '10:00' },
-  { type: 'break', name: 'Morning break', startTime: '10:00', endTime: '10:15' },
-  { type: 'lesson', name: 'Period 3', startTime: '10:15', endTime: '11:15' },
-  { type: 'lesson', name: 'Period 4', startTime: '11:15', endTime: '12:15' },
-  { type: 'break', name: 'Lunch break', startTime: '12:15', endTime: '13:15' },
-  { type: 'lesson', name: 'Period 5', startTime: '13:15', endTime: '14:15' },
-  { type: 'break', name: 'Afternoon break', startTime: '14:15', endTime: '14:30' },
+  { type: 'lesson', name: 'Period 1', startTime: '08:30', endTime: '09:30' },
+  { type: 'lesson', name: 'Period 2', startTime: '09:30', endTime: '10:30' },
+  { type: 'lesson', name: 'Period 3', startTime: '10:30', endTime: '11:30' },
+  { type: 'break', name: 'Lunch break', startTime: '11:30', endTime: '12:30' },
+  { type: 'lesson', name: 'Period 4', startTime: '12:30', endTime: '13:30' },
+  { type: 'lesson', name: 'Period 5', startTime: '13:30', endTime: '14:30' },
   { type: 'lesson', name: 'Period 6', startTime: '14:30', endTime: '15:30' },
 ] };
 

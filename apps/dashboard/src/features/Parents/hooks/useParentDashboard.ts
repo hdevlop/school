@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUpcomingAssessmentsApi } from '@/services/assessmentApi';
 import { getAttendanceByStudentApi } from '@/services/attendanceApi';
+import { getDisciplineApi } from '@/services/disciplineApi';
 import { getEventsApi } from '@/services/eventApi';
 import { getFeesByStudentApi } from '@/services/feeApi';
 import { getGradesByStudentApi } from '@/services/gradeApi';
@@ -37,6 +38,8 @@ export interface ParentChildDashboardData {
   fees: any[];
   // The year's overdue installments, from the same fees read.
   overdueAmount: number;
+  // Open discipline incidents, or null when the viewer may not read them.
+  openIncidents: number | null;
 }
 
 export function useParentDashboard(parentId: string) {
@@ -71,8 +74,13 @@ export function useParentDashboard(parentId: string) {
 
   const childDataQuery = useQuery({
     queryKey: ['parents', parentId, 'dashboard-children', childIds, viewingYear ?? null],
-    queryFn: () => withAcademicYear(viewingYear, () =>
-      Promise.all(
+    queryFn: () => withAcademicYear(viewingYear, async () => {
+      // One read for the family: the incidents the viewer may see, counted per
+      // child. A refused read is "unknown", not "none".
+      const incidents = await getDisciplineApi()
+        .then((response) => (Array.isArray(response?.data) ? response.data : []))
+        .catch(() => null);
+      return Promise.all(
         children.map(async (child: any): Promise<ParentChildDashboardData> => {
           const [attendance, grades, feeAccount] = await Promise.all([
             safelyCollection(getAttendanceByStudentApi(child.id)),
@@ -82,9 +90,14 @@ export function useParentDashboard(parentId: string) {
           const fees = Array.isArray(feeAccount?.fees) ? feeAccount.fees : [];
           const overdueAmount = Number(feeAccount?.summary?.totalOverdueAmount) || 0;
 
-          return { child, attendance, grades, fees, overdueAmount };
+          const openIncidents = incidents === null
+            ? null
+            : incidents.filter((row: any) => (row.studentId ?? row.student?.id) === child.id && row.status === 'open').length;
+
+          return { child, attendance, grades, fees, overdueAmount, openIncidents };
         }),
-      )),
+      );
+    }),
     enabled: familyQuery.isSuccess && children.length > 0,
     staleTime: 30_000,
   });

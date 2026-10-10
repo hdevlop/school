@@ -2,7 +2,7 @@
 
 import { SearchX } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NTable, NEmptyState } from 'najm-kit';
+import { NEmptyState, NTable } from 'najm-kit';
 import InstallmentCard from './InstallmentCard';
 import InstallmentDetails from './InstallmentDetails';
 import { useDialog } from 'najm-kit';
@@ -10,7 +10,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { useInstallmentsTableColumns } from '../hooks/useInstallmentsTableColumns';
 import { useInstallmentsTableFilters } from '../hooks/useInstallmentsTableFilters';
 
-function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment }) {
+function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment, dynamicHeight = true }) {
   const { t } = useTranslation();
 
   const rawFilters = useInstallmentsTableFilters();
@@ -63,7 +63,7 @@ function InstallmentsTable({ fee, feeName = '', className = '', onPayInstallment
       pageSizeOptions={[10, 20, 30, 40, 50]}
       showColumnVisibility={false}
       showCheckbox
-      dynamicHeight
+      dynamicHeight={dynamicHeight}
     />
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   NAvatar,
@@ -11,11 +11,17 @@ import {
   NCardFooter,
   NEmptyState,
   NErrorState,
+  NajmScroll,
   NLoadingState,
   NPageHeader,
   NPageHeaderActions,
   NProgress,
   NStatCard,
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  useDialog,
 } from 'najm-kit';
 import {
   AlertTriangle,
@@ -28,16 +34,19 @@ import {
   Clock3,
   CreditCard,
   GraduationCap,
+  LayoutDashboard,
   MapPin,
+  Pencil,
   ReceiptText,
   Star,
+  UserRound,
   UsersRound,
   Wallet,
 } from 'lucide-react';
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -48,6 +57,19 @@ import type { TranslationParams } from 'najm-i18n';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useParentDashboard } from '../../hooks/useParentDashboard';
+import { usePermissions } from 'najm-auth/client/react';
+import { useParents } from '../../hooks/useParents';
+import ParentForm from '../SimpleParentForm';
+import ParentAttentionCard from './ParentAttentionCard';
+import ParentDetailsTab from './ParentDetailsTab';
+
+const TABS = ['overview', 'details'] as const;
+type ParentTab = (typeof TABS)[number];
+
+const TAB_ICONS: Record<ParentTab, typeof UserRound> = {
+  overview: LayoutDashboard,
+  details: UserRound,
+};
 
 interface ParentProfileProps {
   parentId: string;
@@ -97,6 +119,10 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
   const { t, language } = useTranslation();
   const { majorMoney } = useSchoolFormat();
   const { viewingYear } = useViewingAcademicYear();
+  const { openDialog } = useDialog();
+  const { can } = usePermissions();
+  const { updateParent, isUpdating } = useParents({ enabled: false });
+  const [tab, setTab] = useState<ParentTab>('overview');
   const locale = language === 'fr' ? 'fr-FR' : language === 'ar' ? 'ar-MA' : 'en-US';
   const text = (key: string, params?: TranslationParams) =>
     t(`parents.profile.dashboard.${key}`, params);
@@ -202,7 +228,34 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
         ...counts,
       }));
 
+    const absences = attendanceRows.filter((row) => row.status === 'absent').length;
+    const lateArrivals = attendanceRows.filter((row) => row.status === 'late').length;
+    // Below half marks. A grade without a total says nothing either way.
+    const lowGrades = gradeRows.filter((grade) => {
+      const total = toNumber(grade?.assessment?.totalMarks ?? grade?.exam?.totalMarks);
+      return total > 0 && toNumber(grade?.marksObtained) / total < 0.5;
+    }).length;
+    const incidentCounts = childData.map((item) => item.openIncidents).filter((count): count is number => count !== null);
+    const openIncidents = incidentCounts.length ? incidentCounts.reduce((sum, count) => sum + count, 0) : null;
+
+    // With one child each row opens that child's own page; with several, the
+    // list of children, since there is no family-wide view to send it to.
+    const onlyChild = children.length === 1 ? children[0] : null;
+    const overdueChild = childData.find((item) => item.overdueAmount > 0)?.child;
+    const attentionLinks = {
+      fees: overdueChild?.id ? `/students/${overdueChild.id}/fees` : onlyChild ? `/students/${onlyChild.id}/fees` : '/students',
+      attendance: onlyChild ? `/students/${onlyChild.id}` : '/students',
+      assessments: '/assessments',
+      grades: onlyChild ? `/students/${onlyChild.id}` : '/grades',
+      discipline: '/discipline',
+    };
+
     return {
+      absences,
+      lateArrivals,
+      lowGrades,
+      openIncidents,
+      attentionLinks,
       averageGrade,
       overallAttendance,
       pendingAssessments,
@@ -216,7 +269,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
       nextFee,
       attendanceChart,
     };
-  }, [assessments, childData, currentChildren, events, locale]);
+  }, [assessments, childData, children, currentChildren, events, locale]);
 
   if (isLoading) {
     return (
@@ -240,13 +293,28 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
     );
   }
 
-  const firstName = parent.name?.split(' ')[0] || parent.name;
+  const handleEdit = () => {
+    openDialog({
+      title: `${t('parents.dialogs.editTitle')} - ${parent.name}`,
+      children: <ParentForm parent={parent} />,
+      width: '4xl',
+      primaryButton: {
+        form: 'parent-form',
+        text: t('parents.dialogs.updateButton'),
+        loading: isUpdating,
+        onClick: async (parentData) => {
+          await updateParent(parentData);
+          void refetch();
+        },
+      },
+    });
+  };
 
   return (
     <div className="flex h-full min-h-0 w-full flex-col gap-2">
       <NPageHeader
         icon={UsersRound}
-        title={text('welcomeBack', { name: firstName })}
+        title={parent.name}
         subtitle={text('subtitle')}
       >
         <NPageHeaderActions>
@@ -255,12 +323,20 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             variant="outline"
             size="sm"
             onClick={() => router.push('/parents')}
+            aria-label={text('backToParents')}
             className="gap-2"
           >
             <ArrowLeft className="size-4 rtl:rotate-180" />
-            {text('backToParents')}
+            <span className="max-sm:hidden">{text('backToParents')}</span>
           </NButton>
-          <NButton type="button" variant="outline" size="sm" className="gap-2">
+          {can('update:parents') ? (
+            <NButton type="button" variant="outline" size="sm" onClick={handleEdit} className="gap-2">
+              <Pencil className="size-4" />
+              {t('common.edit')}
+            </NButton>
+          ) : null}
+          {/* Same as the teacher overview: the date gives way to the title on phones. */}
+          <NButton type="button" variant="outline" size="sm" className="gap-2 max-md:hidden">
             <CalendarDays className="size-4" />
             {formatDate(new Date(), locale, {
               weekday: 'long',
@@ -272,9 +348,35 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
         </NPageHeaderActions>
       </NPageHeader>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(value as ParentTab)}
+        className="flex min-h-0 min-w-0 flex-1 flex-col gap-3"
+      >
+        <TabsList variant="underline" className="shrink-0 flex-wrap justify-start">
+          {TABS.map((value) => {
+            const Icon = TAB_ICONS[value];
+            return (
+              <TabsTrigger
+                key={value}
+                value={value}
+                variant="underline"
+                className="gap-2 data-[state=active]:border-primary data-[state=active]:text-primary"
+              >
+                <Icon className="size-4" aria-hidden="true" />
+                {text(`tabs.${value}`)}
+              </TabsTrigger>
+            );
+          })}
+        </TabsList>
+
+      <NajmScroll axis="y" className="min-h-0 flex-1">
+        <TabsContent value="details" className="mt-0 h-full">
+          <ParentDetailsTab parent={parent} linkedChildren={children} />
+        </TabsContent>
+        <TabsContent value="overview" className="mt-0 h-full">
         <div className="flex min-h-full flex-col gap-3 pb-1">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
             <NStatCard
               icon={UsersRound}
               label={t('parents.profile.totalChildren')}
@@ -314,11 +416,13 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             />
           </div>
 
-          <div className="grid min-h-[320px] flex-1 grid-cols-1 gap-3 xl:grid-cols-12 [&>*]:min-h-0 [&>*]:min-w-0">
+          {/* Three equal columns, as on the teacher overview, so the chart is not
+              stretched across two thirds of the page. */}
+          <div className="grid min-h-[320px] flex-1 grid-cols-1 gap-3 xl:grid-cols-3 [&>*]:min-h-0 [&>*]:min-w-0">
             <NCard
               title={text('myChildren')}
               icon={UsersRound}
-              className="flex h-full w-full xl:col-span-4"
+              className="flex h-full w-full"
             >
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/students')}>
@@ -383,7 +487,10 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             <NCard
               title={text('childrenAttendance')}
               icon={CalendarRange}
-              className="flex h-full w-full xl:col-span-8"
+              className="flex h-full w-full"
+              // The card stretches to its row; the content must too, or the
+              // chart's flex-1 stops at its 220px minimum and leaves a gap.
+              classNames={{ content: 'min-h-0 flex-1' }}
             >
               <NCardAction>
                 <NButton
@@ -417,7 +524,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   </div>
                   <div className="min-h-[220px] flex-1">
                     <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={dashboard.attendanceChart} margin={{ top: 8, right: 14, left: -14, bottom: 0 }}>
+                      <BarChart data={dashboard.attendanceChart} margin={{ top: 8, right: 14, left: -14, bottom: 0 }} barGap={4} barCategoryGap="30%">
                         <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
                         <XAxis
                           dataKey="month"
@@ -432,6 +539,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                           tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
                         />
                         <Tooltip
+                          cursor={{ fill: 'hsl(var(--muted))', opacity: 0.4 }}
                           formatter={(value, name) => [value ?? 0, name]}
                           contentStyle={{
                             borderRadius: 'var(--radius)',
@@ -439,29 +547,36 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                             fontSize: 12,
                           }}
                         />
-                        <Line
-                          type="monotone"
+                        <Bar
                           dataKey="absent"
                           name={t('dashboard.attendance.absent')}
-                          stroke={ABSENT_COLOR}
-                          strokeWidth={3}
-                          dot={false}
+                          fill={ABSENT_COLOR}
+                          radius={[4, 4, 0, 0]}
+                          maxBarSize={32}
                         />
-                        <Line
-                          type="monotone"
+                        <Bar
                           dataKey="late"
                           name={t('dashboard.attendance.late')}
-                          stroke={LATE_COLOR}
-                          strokeWidth={3}
-                          strokeDasharray="5 5"
-                          dot={false}
+                          fill={LATE_COLOR}
+                          radius={[4, 4, 0, 0]}
+                          maxBarSize={32}
                         />
-                      </LineChart>
+                      </BarChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
               )}
             </NCard>
+
+            <ParentAttentionCard
+              overdueAmount={dashboard.overdueFees}
+              absences={dashboard.absences}
+              lateArrivals={dashboard.lateArrivals}
+              upcomingAssessments={dashboard.pendingAssessments.length}
+              lowGrades={dashboard.lowGrades}
+              openIncidents={dashboard.openIncidents}
+              links={dashboard.attentionLinks}
+            />
           </div>
 
           <div className="grid min-h-[320px] flex-1 grid-cols-1 gap-3 xl:grid-cols-3 [&>*]:min-h-0 [&>*]:min-w-0">
@@ -635,7 +750,9 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             </NCard>
           </div>
         </div>
-      </div>
+        </TabsContent>
+      </NajmScroll>
+      </Tabs>
     </div>
   );
 };

@@ -2,18 +2,18 @@
 
 import { CheckCheck, CircleCheck, CircleSlash, SearchX, Trash2 } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, NTable, useDialog } from 'najm-kit';
+import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, useDialog, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import type { AlertStatus } from '@sms/contracts';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
-import { useViewerRole } from '@/shared/useViewerRole';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { hasFailedToLoad, isAuthorizationError } from '@/services/apiError';
 import { useAlerts } from '../hooks/useAlerts';
 import { useAlertsTableColumns } from '../hooks/useAlertsTableColumns';
 import { isAboutSomeone, type AlertRecord } from '../alertConstants';
 import AlertCard from './AlertCard';
 import { useMemo } from 'react';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 
 const STATUS_ACTIONS: Array<{ status: AlertStatus; action: 'acknowledge' | 'resolve' | 'dismiss'; icon: typeof CheckCheck }> = [
   { status: 'acknowledged', action: 'acknowledge', icon: CheckCheck },

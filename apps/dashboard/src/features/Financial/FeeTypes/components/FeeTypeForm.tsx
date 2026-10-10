@@ -10,7 +10,6 @@ import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { feeTypeSchema } from '../config/feeTypeSchemas'
 import { buildFeeCategoryOptionsFor, buildPaymentTypeOptions } from '../config/feeTypeOptions'
-import { buildFill, isDevFill } from '@/lib/devFill'
 
 const FeeTypeForm = ({ feeType = null }) => {
 
@@ -31,7 +30,6 @@ const FeeTypeForm = ({ feeType = null }) => {
    const categoryOptions = buildFeeCategoryOptionsFor(t, feeType?.category)
    const paymentTypeOptions = buildPaymentTypeOptions(t)
 
-
    const handleSubmit = async (feeTypeData) => {
       pop(feeTypeData);
    }
@@ -43,7 +41,6 @@ const FeeTypeForm = ({ feeType = null }) => {
             schema={feeTypeSchema}
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
-            devTools={{ enabled: isDevFill, fill: () => buildFill(feeTypeSchema, { category: categoryOptions }) }}
          >
             <div className='flex flex-col gap-4'>
                <FormSectionHeader

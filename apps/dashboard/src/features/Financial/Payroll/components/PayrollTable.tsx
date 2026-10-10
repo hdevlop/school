@@ -2,9 +2,8 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { Banknote, BriefcaseBusiness, CalendarDays, CheckCircle2, Clock, HandCoins, ReceiptText, Timer, Undo2, Wallet, SearchX } from 'lucide-react';
-import { Badge, NAvatar, NTable, NButton, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { Banknote, CalendarDays, Clock, HandCoins, ReceiptText, Undo2, Wallet, SearchX } from 'lucide-react';
+import { NButton, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NEmptyState, NErrorState, NForbiddenState, NTable } from 'najm-kit';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
 import { useTranslation } from 'najm-i18n/react';
@@ -14,7 +13,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
 import { payrollPeriods, shownPayrollPeriod } from '@/features/Financial/Payroll/config/payrollPeriods';
-import { getStaffAvatar } from '@/features/Staff/utils/staffAvatar';
+import PayrollCard, { PayrollStaff, PayrollStatusBadge, PayrollTypeBadge, type PayrollRow } from './PayrollCard';
 
 const calculateStaffPay = (member) => {
   if (member?.compensationMode === 'hourly') {
@@ -167,68 +166,12 @@ const PayrollTable = () => {
     });
   }, [payStaffBulk, effectivePeriod, tableRows]);
 
-  const typeBadge = useCallback((type: string) => {
-    const isVacataire = type === 'vacataire';
-    const Icon = isVacataire ? Timer : BriefcaseBusiness;
-    return (
-      <Badge className={isVacataire ? 'gap-1 border-transparent bg-sky-600 text-white shadow-sm' : 'gap-1 border-transparent bg-emerald-600 text-white shadow-sm'}>
-        <Icon className="h-3 w-3" />
-        {isVacataire ? t('payroll.types.vacataire') : t('payroll.types.permanent')}
-      </Badge>
-    );
-  }, [t]);
-
-  const statusBadge = useCallback((status: string) => {
-    if (status === 'paid') {
-      return (
-        <Badge className="gap-1 border-transparent bg-emerald-600 text-white shadow-sm">
-          <CheckCircle2 className="h-3 w-3" />
-          {t('payroll.status.paid')}
-        </Badge>
-      );
-    }
-
-    if (status === 'pending') {
-      return (
-        <Badge className="gap-1 border-transparent bg-amber-500 text-amber-950 shadow-sm">
-          <Clock className="h-3 w-3" />
-          {t('payroll.status.pending')}
-        </Badge>
-      );
-    }
-
-    return (
-      <Badge className="border-transparent bg-slate-600 text-white shadow-sm">
-        {t('payroll.status.notSet')}
-      </Badge>
-    );
-  }, [t]);
-
   const columns = useMemo(() => [
     {
       accessorKey: 'name',
       header: t('payroll.table.staff'),
       enableSorting: true,
-      cell: ({ row }) => {
-        const avatar = (
-          <NAvatar
-            src={row.original.image || getStaffAvatar(row.original.role, row.original.gender)}
-            title={row.original.name || '-'}
-            size="sm"
-            version={row.original.updatedAt}
-          />
-        );
-        // Only teachers have a profile page to open.
-        if (!row.original.teacherId) return avatar;
-        return (
-          <Link
-            href={`/teachers/${row.original.teacherId}`}
-            className="inline-flex rounded-md hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {avatar}
-          </Link>
-        );
-      },
+      cell: ({ row }) => <PayrollStaff row={row.original} />,
     },
     {
       accessorKey: 'payrollPeriod',
@@ -239,7 +182,7 @@ const PayrollTable = () => {
       accessorKey: 'contractType',
       header: t('payroll.table.type'),
       enableSorting: true,
-      cell: ({ getValue }) => typeBadge(getValue() as string),
+      cell: ({ getValue }) => <PayrollTypeBadge type={getValue() as string} />,
     },
     {
       accessorKey: 'paymentAmount',
@@ -251,7 +194,7 @@ const PayrollTable = () => {
       accessorKey: 'paymentStatus',
       header: t('payroll.table.status'),
       enableSorting: true,
-      cell: ({ getValue }) => statusBadge(getValue() as string),
+      cell: ({ getValue }) => <PayrollStatusBadge status={getValue() as string} />,
     },
     {
       id: 'pay',
@@ -273,7 +216,7 @@ const PayrollTable = () => {
         );
       },
     },
-  ], [t, handlePayOne, handleUnpayOne, statusBadge, typeBadge, isPaying, majorMoney]);
+  ], [t, handlePayOne, handleUnpayOne, isPaying, majorMoney]);
 
   const filters = useMemo(() => [
     {
@@ -332,11 +275,14 @@ const PayrollTable = () => {
       </NPageHeader>
 
       {/* Figures from a payroll that failed or was refused are unknown, not zero;
-          the table below shows why. */}
+          the table below shows why. Two per row on phones, where four stacked
+          boxes left room for one staff card. */}
       {isLoading ? (
-        <NSkeletonWidgets />
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => <NStatCardSkeleton key={index} />)}
+        </div>
       ) : hasFailedToLoad(loadError, tableRows) ? null : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
           <NStatCard
             icon={CalendarDays}
             label={t('payroll.stats.period')}
@@ -361,7 +307,10 @@ const PayrollTable = () => {
       )}
 
       <NTable
-        classNames={{ content: '[&_table]:min-w-[900px]' }}
+        classNames={{
+          content: '[&_table]:min-w-[900px]',
+          header: 'max-md:flex-nowrap max-md:gap-2 max-md:[&>[data-ntable-mobile-toolbar]]:w-auto max-md:[&>[data-ntable-mobile-toolbar]]:flex-1',
+        }}
         data={tableRows}
         columns={columns}
         getRowId={(row) => row.id}
@@ -373,14 +322,17 @@ const PayrollTable = () => {
             // No selection → pay everyone unpaid; with selection → pay just those.
             const allUnpaidIds = tableRows.filter((r) => r.paymentStatus !== 'paid').map((r) => r.staffId);
             const payTargets = selectedUnpaidStaffIds.length > 0 ? selectedUnpaidStaffIds : allUnpaidIds;
+            const payLabel = `${t('payroll.actions.pay')} (${payTargets.length})`;
             return (
               <NButton
                 disabled={payTargets.length === 0 || isPaying}
                 onClick={() => handlePaySelected(payTargets)}
-                className="gap-2"
+                aria-label={payLabel}
+                title={payLabel}
+                className="h-10 w-10 shrink-0 gap-2 p-0 lg:w-auto lg:px-4"
               >
-                <HandCoins className="h-4 w-4" />
-                {t('payroll.actions.pay')} ({payTargets.length})
+                <HandCoins className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden lg:inline">{payLabel}</span>
               </NButton>
             );
           })()
@@ -395,6 +347,9 @@ const PayrollTable = () => {
         showAddButton={false}
         showViewToggle={false}
         defaultMode='table'
+        renderCard={({ data }: { data: PayrollRow }) => (
+          <PayrollCard data={data} isPaying={isPaying} onPay={handlePayOne} onUnpay={handleUnpayOne} />
+        )}
         showColumnVisibility={true}
         loadingText={t('payroll.loading')}
         renderEmpty={() => (

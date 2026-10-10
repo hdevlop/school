@@ -1,10 +1,11 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NTable, NEmptyState } from 'najm-kit';
+import { useDialog, useMediaQuery, NEmptyState, NTable } from 'najm-kit';
 import { Label } from 'najm-kit';
 import { useCallback, useMemo } from 'react';
 import FeeCard from './FeeCard';
+import { MobileFeesList } from './MobileFeesList';
 import { useTranslation } from 'najm-i18n/react';
 import { useFees } from '../../../hooks/useFees';
 import EditFeeForm from '../../EditFeeForm';
@@ -26,6 +27,9 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
   const { t } = useTranslation();
   const { openDialog, confirmDelete } = useDialog();
   const { feeTypes } = useFeeTypes();
+  // Below lg the fees are a list that opens onto each fee's installments
+  // (MobileFeesList), and the overview scrolls as a whole.
+  const isStacked = useMediaQuery('(max-width: 1023px)');
 
   const {
     deleteFee,
@@ -100,8 +104,19 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
     return items;
   }, [t, handleDelete, handleEdit, onPayFee]);
 
+  if (isStacked && fees.length > 0) {
+    return (
+      <MobileFeesList
+        fees={fees}
+        initialOpenFeeId={selectedFee?.id ?? null}
+        feeMenu={feeMenu}
+        onPayInstallment={onPayInstallment}
+      />
+    );
+  }
+
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden">
+    <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-hidden max-lg:flex-none max-lg:overflow-visible">
       <NTable
         data={fees}
         columns={[]}
@@ -140,7 +155,7 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
       />
 
       {selectedFee && (
-        <div className='flex min-h-0 flex-1 flex-col gap-2'>
+        <div className='flex min-h-0 flex-1 flex-col gap-2 max-lg:flex-none'>
           <Label className="flex shrink-0 items-center gap-2 text-lg text-gray-800">
             <span>📅</span>
             {t('fees.studentView.installments')}
@@ -149,7 +164,8 @@ export const FeesOverview = ({ fees, selectedFee, onFeeClick, onPayFee, onPayIns
             key={selectedFee.id}
             fee={selectedFee.installments}
             feeName={selectedFee.name}
-            className="min-h-0 flex-1"
+            className={isStacked ? 'h-fit flex-none' : 'min-h-0 flex-1'}
+            dynamicHeight={!isStacked}
             onPayInstallment={onPayInstallment}
           />
         </div>

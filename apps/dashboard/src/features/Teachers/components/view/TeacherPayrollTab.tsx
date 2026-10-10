@@ -78,9 +78,32 @@ const TeacherPayrollTab: React.FC<TeacherPayrollTabProps> = ({ teacher, today })
     },
   ], [t, locale, majorMoney, modeLabel]);
 
+  // One payslip per line at phone width. The contract type is the stat card
+  // above, and the base only says something when it differs from what was paid.
+  const renderSlipCard = ({ data: slip }: { data: any }) => {
+    const net = Number(slip.netAmount ?? 0);
+    const base = Number(slip.baseSalary ?? 0);
+    return (
+      <div className="flex items-center justify-between gap-3 px-3 py-2.5">
+        <div className="min-w-0">
+          <div className="truncate font-medium text-foreground">{formatPeriod(slip.period, locale, 'short')}</div>
+          {base !== net && (
+            <div className="truncate text-xs text-muted-foreground">
+              {t('teachers.profile.table.base')} {majorMoney(base)}
+            </div>
+          )}
+        </div>
+        <div className="flex shrink-0 items-center gap-2">
+          <span className="font-semibold tabular-nums text-foreground">{majorMoney(net)}</span>
+          <NBadge status={slip.status} />
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="flex min-h-full flex-col gap-3 pb-1">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+    <div className="flex min-h-full flex-col gap-3 pb-20 lg:pb-1">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
         <NStatCard icon={FileText} label={t('teachers.profile.contractType')} value={modeLabel} />
         <NStatCard
           icon={Banknote}
@@ -88,6 +111,7 @@ const TeacherPayrollTab: React.FC<TeacherPayrollTabProps> = ({ teacher, today })
           value={majorMoney(Number((mode === 'hourly' ? teacher?.hourlyRate : teacher?.salary) ?? 0))}
         />
         <NStatCard
+          className="col-span-2 md:col-span-1"
           icon={CalendarDays}
           loading={isLoading}
           label={currentPeriod ? formatPeriod(currentPeriod, locale) : t('teachers.profile.currentMonth')}
@@ -102,6 +126,11 @@ const TeacherPayrollTab: React.FC<TeacherPayrollTabProps> = ({ teacher, today })
         <NTable
           data={payslips}
           columns={columns}
+          renderCard={renderSlipCard}
+          defaultMode="table"
+          // A list inside a panel: the chat-button clearance that full-page card
+          // grids carry belongs below the tab, not inside this card.
+          classNames={{ cards: 'grid grid-cols-1 gap-2 pb-0!' }}
           loading={isLoading}
           error={hasFailedToLoad(error, payslips) ? error : null}
           renderError={(currentError) => (

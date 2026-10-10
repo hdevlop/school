@@ -8,7 +8,6 @@ import { useWatch } from 'react-hook-form'
 import { Megaphone, FileText, Users, Building, Calendar } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { announcementSchema } from '../config/announcementSchemas'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
 
@@ -109,7 +108,6 @@ const AnnouncementForm = ({ announcement = null, defaultPublishDate = null }) =>
           schema={announcementSchema}
           defaultValues={defaultValues}
           onSubmit={handleSubmit}
-          devTools={{ enabled: isDevFill, fill: () => buildFill(announcementSchema, { targetAudience: 'all', classId: '', classIds: [] }) }}
         >
           <div className='flex flex-col gap-4'>
 

@@ -7,7 +7,6 @@ import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart
 import { useDialog } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { parentSchema } from '../config/parentSchemas'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { usePrefix } from 'najm-kit';
 import { useWatch } from 'react-hook-form'
 import {
@@ -214,7 +213,6 @@ const SimpleParentForm = ({ parent = null }) => {
          schema={parentSchema}
          defaultValues={defaultValues}
          onSubmit={handleSubmit}
-         devTools={{ enabled: isDevFill, fill: () => buildFill(parentSchema) }}
       >
          <ParentFormContent />
       </NForm>

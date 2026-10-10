@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'najm-i18n/react';
+import { useRoles } from '@/features/Roles/hooks/useRoles';
 
 export const useUsersTableFilters = () => {
   const { t } = useTranslation();
+  const { roles } = useRoles();
 
   return useMemo(() => [
     {
@@ -16,15 +18,13 @@ export const useUsersTableFilters = () => {
       placeholder: t('users.filters.searchByEmail'),
     },
     {
+      // Each row's `role` column holds the role's name, so the options are the
+      // school's own roles rather than a fixed list.
       type: "select",
       showIcon: false,
-      name: "roleName",
+      name: "role",
       placeholder: t('users.filters.filterByRole'),
-      options: [
-        { value: "admin", label: t('users.roles.admin') },
-        { value: "user", label: t('users.roles.user') },
-        { value: "moderator", label: t('users.roles.moderator') },
-      ],
+      options: (roles ?? []).map((role) => ({ value: role.name, label: role.name })),
     },
-  ], [t]);
+  ], [t, roles]);
 };

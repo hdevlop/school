@@ -1,11 +1,11 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { HeartHandshake, Plus, SearchX } from 'lucide-react';
 import React, { useMemo } from 'react';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
-import { matchesAnyChild } from '@/shared/classSectionScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
+import { matchesAnyChild } from '@/features/Classes/hooks/classSectionScope';
 import ParentForm from './SimpleParentForm';
 import { useParents } from '../hooks/useParents';
 import { useTranslation } from 'najm-i18n/react';

@@ -320,11 +320,11 @@ runSeedTask(`demo seed for ${seedAcademicYear}`, async (server) => {
       console.log(`✅ Fees + installments seeded (${createdFees.length} records)`);
 
       console.log('💳 Recording payments...');
-      const { paymentCount, skippedCount, latePaymentCount, latePaymentTotal } = await seedPhase(
+      const { paymentCount, clearedChequeCount, skippedCount, latePaymentCount, latePaymentTotal } = await seedPhase(
         'Payments', () => seedPayments(feeService, paymentService, seededStudentIds, seedAcademicYear),
       );
       console.log(
-        `✅ Payments seeded (${paymentCount} records, ${skippedCount} students left unpaid, ${latePaymentCount} late summer payments totaling ${latePaymentTotal} MAD)`,
+        `✅ Payments seeded (${paymentCount} records, ${clearedChequeCount} cheques cleared, ${skippedCount} students left unpaid, ${latePaymentCount} late summer payments totaling ${latePaymentTotal} MAD)`,
       );
 
       console.log('💸 Seeding expenses...');

@@ -9,7 +9,7 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 import { isAuthorizationError } from '@/services/apiError';
 import { cn } from 'najm-kit';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 
 type AgingRow = {
   studentId: string;
@@ -136,9 +136,13 @@ const AgingDetailTable: React.FC<Props> = ({ className = '' }) => {
     >
       <div className="flex flex-col gap-3 h-full">
         {/* Summary buckets */}
-        <div className="grid grid-cols-5 gap-2">
-          {buckets.map(({ label, value, color }) => (
-            <div key={label} className={cn('rounded-lg p-2 text-center', color)}>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+          {buckets.map(({ label, value, color }, index) => (
+            <div
+              key={label}
+              // Five amounts do not fit one phone row; the total takes a row of its own.
+              className={cn('rounded-lg p-2 text-center', index === buckets.length - 1 && 'col-span-2 sm:col-span-1', color)}
+            >
               <p className="text-xs font-medium mb-0.5">{label}</p>
               <p className="text-sm font-bold tabular-nums">{majorMoney(value)}</p>
             </div>

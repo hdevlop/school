@@ -38,11 +38,15 @@ function StatItem({
     : tone === 'blue' ? 'text-blue-600'
     : 'text-foreground';
 
+  // A phone stacks the label under the value so the three stats share one row;
+  // wider screens keep the inline "Label: value" strip.
   return (
-    <div className="flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap text-sm">
-      <Icon className={cn('h-3.5 w-3.5 shrink-0', toneClass)} />
-      <span className="text-muted-foreground">{label}:</span>
-      <span className={cn('font-semibold font-mono', toneClass)}>{value}</span>
+    <div className="flex min-w-0 flex-col-reverse items-center justify-center gap-0.5 whitespace-nowrap px-2 sm:flex-row sm:gap-1.5 sm:px-4">
+      <span className="flex min-w-0 items-center gap-1 text-[11px] text-muted-foreground sm:gap-1.5 sm:text-sm">
+        <Icon className={cn('h-3.5 w-3.5 shrink-0', toneClass)} />
+        <span className="truncate">{label}<span className="max-sm:hidden">:</span></span>
+      </span>
+      <span className={cn('text-sm font-semibold font-mono', toneClass)}>{value}</span>
     </div>
   );
 }
@@ -59,12 +63,10 @@ export default function GradesHeader({
   const title = submitTitle ?? t('grades.toolbar.save');
   const fmt = (v: number | null) => (v == null ? '—' : `${v}%`);
   return (
-    <div className="flex w-full flex-wrap items-stretch justify-end gap-2">
-      <div className="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2 rounded-md border bg-card px-3 py-2">
+    <div className="flex w-full items-stretch justify-end gap-2">
+      <div className="grid min-w-0 flex-1 grid-cols-3 items-center divide-x divide-border rounded-md border bg-card py-1.5 sm:flex sm:h-10 sm:flex-none sm:py-0">
         <StatItem icon={TrendingUp} label={t('grades.toolbar.highest')} value={fmt(stats.highest)} tone="blue" />
-        <span className="h-4 w-px bg-border shrink-0" />
         <StatItem icon={TrendingDown} label={t('grades.toolbar.lowest')} value={fmt(stats.lowest)} tone="red" />
-        <span className="h-4 w-px bg-border shrink-0" />
         <StatItem icon={Target} label={t('grades.toolbar.passRate')} value={`${stats.passRate}%`} tone="amber" />
       </div>
       <NButton
@@ -72,7 +74,7 @@ export default function GradesHeader({
         disabled={isSubmitting || !hasChanges || !canSubmit}
         aria-label={title}
         title={title}
-        className="h-10 w-10 cursor-pointer p-0 disabled:cursor-not-allowed"
+        className="h-auto min-h-10 w-10 shrink-0 cursor-pointer p-0 disabled:cursor-not-allowed"
       >
         {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
       </NButton>

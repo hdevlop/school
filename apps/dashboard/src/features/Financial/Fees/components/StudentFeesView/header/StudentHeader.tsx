@@ -58,9 +58,11 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
             </div>
          </div>
 
+         {/* Below lg the summary strip and the Pay bar under the fees carry the
+             alert and the button, so the header keeps to the student. */}
          {/* Center: Alert Box (Option 3 Style) */}
          {alerts?.hasOverdueFees && (
-            <div className="flex min-w-0 gap-2 items-center bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
+            <div className="max-lg:hidden flex min-w-0 gap-2 items-center bg-destructive/10 border border-destructive/20 rounded-lg px-3 py-2">
                <span className='text-sm'>⛔</span>
                <p className="text-sm font-bold text-destructive">
                   {alerts.message}
@@ -68,7 +70,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
             </div>
          )}
 
-         <div className="ms-auto flex shrink-0 items-center gap-1">
+         <div className="ms-auto flex shrink-0 items-center gap-1 max-lg:hidden">
             <NButton
                onClick={onPayClick}
                disabled={payDisabled}

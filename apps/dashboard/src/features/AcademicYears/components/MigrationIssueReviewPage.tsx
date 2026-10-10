@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Link from 'next/link';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AlertTriangle } from 'lucide-react';
-import { Card, NButton, NDialog, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { Card, NButton, NDialog, NPageHeader, NPageHeaderActions, useCardViewport, NScrollContinuation } from 'najm-kit';
 import { ViewingYearSelector } from './ViewingYearSelector';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
@@ -20,6 +20,7 @@ const statuses: MigrationIssueStatus[] = ['open', 'resolved', 'dismissed'];
 export default function MigrationIssueReviewPage() {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+  const mobile = useCardViewport();
   const [status, setStatus] = useState<MigrationIssueStatus>('open');
   const [cursor, setCursor] = useState<string | undefined>();
   const [previousCursors, setPreviousCursors] = useState<Array<string | undefined>>([]);
@@ -30,7 +31,22 @@ export default function MigrationIssueReviewPage() {
   const issues = useQuery({
     queryKey: ['academic-year-migration-issues', status, cursor],
     queryFn: () => listAcademicYearMigrationIssues(status, cursor),
+    enabled: !mobile,
   });
+  const mobileIssues = useInfiniteQuery({
+    queryKey: ['academic-year-migration-issues', status, 'mobile'],
+    initialPageParam: undefined as string | undefined,
+    queryFn: ({ pageParam }) => listAcademicYearMigrationIssues(status, pageParam),
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    enabled: mobile,
+  });
+  const list = mobile ? mobileIssues : issues;
+  const items = mobile ? mobileIssues.data?.pages.flatMap((page) => page.items) ?? [] : issues.data?.items ?? [];
+  const openCount = mobile ? mobileIssues.data?.pages[0]?.openCount : issues.data?.openCount;
+  const { hasNextPage, isFetching, fetchNextPage } = mobileIssues;
+  const loadMore = useCallback(() => {
+    if (hasNextPage && !isFetching) void fetchNextPage();
+  }, [hasNextPage, isFetching, fetchNextPage]);
   const review = useMutation({
     mutationFn: (input: { id: string; status: 'resolved' | 'dismissed'; note: string }) =>
       reviewAcademicYearMigrationIssue(input.id, input.status, input.note),
@@ -78,24 +94,24 @@ export default function MigrationIssueReviewPage() {
           </NButton>
         ))}
         <span className="text-sm text-muted-foreground">
-          {t('academicYearMigration.openCount')}: {issues.data?.openCount ?? '—'}
+          {t('academicYearMigration.openCount')}: {openCount ?? '—'}
         </span>
       </div>
 
-      {issues.isPending ? <p role="status">{t('academicYearMigration.loading')}</p> : null}
-      {issues.isError ? (
+      {list.isPending ? <p role="status">{t('academicYearMigration.loading')}</p> : null}
+      {list.isError && items.length === 0 ? (
         <Card className="space-y-3 p-4" role="alert">
           <p>{t('academicYearMigration.loadFailed')}</p>
-          <NButton type="button" variant="outline" onClick={() => issues.refetch()}>
+          <NButton type="button" variant="outline" onClick={() => list.refetch()}>
             {t('academicYearMigration.retry')}
           </NButton>
         </Card>
       ) : null}
-      {issues.isSuccess && issues.data.items.length === 0 ? (
+      {list.isSuccess && items.length === 0 ? (
         <Card className="p-4 text-sm text-muted-foreground">{t('academicYearMigration.empty')}</Card>
       ) : null}
 
-      {issues.isSuccess ? issues.data.items.map((issue) => (
+      {items.map((issue) => (
         <Card key={issue.id} className="space-y-3 p-4">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
@@ -130,9 +146,22 @@ export default function MigrationIssueReviewPage() {
             </NButton>
           ) : <p className="text-sm text-muted-foreground">{issue.resolutionNote}</p>}
         </Card>
-      )) : null}
+      ))}
 
-      {issues.isSuccess && (previousCursors.length > 0 || issues.data.nextCursor) ? (
+      {mobile && mobileIssues.isFetchingNextPage ? <p role="status">{t('academicYearMigration.loading')}</p> : null}
+      {mobile && mobileIssues.isFetchNextPageError ? (
+        <Card className="space-y-3 p-4" role="alert">
+          <p>{t('academicYearMigration.loadFailed')}</p>
+          <NButton type="button" variant="outline" disabled={mobileIssues.isFetching} onClick={loadMore}>
+            {t('academicYearMigration.retry')}
+          </NButton>
+        </Card>
+      ) : null}
+      {mobile && mobileIssues.hasNextPage && !mobileIssues.isFetching && !mobileIssues.isFetchNextPageError ? (
+        <NScrollContinuation loadMore={loadMore} rowCount={items.length} />
+      ) : null}
+
+      {!mobile && issues.isSuccess && (previousCursors.length > 0 || issues.data.nextCursor) ? (
         <nav className="flex gap-2" aria-label={t('academicYearMigration.pagination')}>
           <NButton type="button" variant="outline" disabled={!previousCursors.length || issues.isFetching} onClick={previousPage}>
             {t('academicYearMigration.previous')}

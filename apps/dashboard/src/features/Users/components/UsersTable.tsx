@@ -1,7 +1,7 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { Eye, KeyRound, Pencil, Trash2, UserCog, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import UserForm from './UserForm';

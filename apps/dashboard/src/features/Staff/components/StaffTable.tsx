@@ -1,9 +1,9 @@
 "use client";
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Banknote, Briefcase, Calendar, Hash, IdCard, MapPinned, Phone, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
-import { useDialog, Badge, NAvatar, NTable, NPageHeader, NPageHeaderActions, NStatCard, NSkeletonWidgets, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaff } from '../hooks/useStaff';
 import { useStaffRoles } from '../hooks/useStaffRoles';
@@ -33,7 +33,6 @@ const resolveRoleLabel = (row, language, t) => {
 
 // Teacher keeps its own academic workflow; every other staff role is managed here.
 const STAFF_LIST_EXCLUDED_ROLES = new Set(['teacher']);
-const STAFF_SCROLL_BATCH_SIZE = 12;
 
 const StaffTable = () => {
   const { t, language } = useTranslation();
@@ -53,21 +52,6 @@ const StaffTable = () => {
   const { activeStaffRoles } = useStaffRoles({ activeOnly: true });
   const { openDialog, confirmDelete } = useDialog();
   const rows = useMemo(() => Array.isArray(staff) ? staff : [], [staff]);
-  const [visibleCount, setVisibleCount] = useState(STAFF_SCROLL_BATCH_SIZE);
-  const [viewMode, setViewMode] = useState('cards');
-  const [hasActiveRefinement, setHasActiveRefinement] = useState(false);
-  const showAllRows = viewMode !== 'cards' || hasActiveRefinement;
-  const visibleRows = useMemo(
-    () => showAllRows ? rows : rows.slice(0, visibleCount),
-    [rows, showAllRows, visibleCount]
-  );
-  const loadMoreStaff = useCallback(() => {
-    setVisibleCount((count) => Math.min(count + STAFF_SCROLL_BATCH_SIZE, rows.length));
-  }, [rows.length]);
-  const handleTableStateChange = useCallback((state) => {
-    const hasFilters = state.columnFilters.some(({ value }) => value != null && String(value).trim() !== '');
-    setHasActiveRefinement(hasFilters || Boolean(state.globalFilter?.trim()) || state.sorting.length > 0);
-  }, []);
 
   const totalPayroll = rows.reduce((sum, row) => sum + calculateStaffPay(row), 0);
   const activeCount = rows.filter((row) => row?.status === 'active').length;
@@ -305,9 +289,11 @@ const StaffTable = () => {
       {/* Figures from a list that failed or was refused are unknown, not zero;
           the table below shows why. */}
       {isStaffLoading ? (
-        <NSkeletonWidgets />
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, index) => <NStatCardSkeleton key={index} />)}
+        </div>
       ) : hasFailedToLoad(isError ? error : null, rows) ? null : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
           <NStatCard
             icon={UserRound}
             label={t('staff.stats.total')}
@@ -337,16 +323,9 @@ const StaffTable = () => {
       )}
 
       <NTable
-        data={visibleRows}
+        data={rows}
         columns={columns}
         filters={filters}
-        onStateChange={handleTableStateChange}
-        onModeChange={setViewMode}
-        cardPagination={{
-          mode: 'infinite',
-          hasNextPage: !showAllRows && visibleCount < rows.length,
-          onLoadMore: loadMoreStaff,
-        }}
         onCreate={handleAdd}
         onView={handleView}
         onEdit={handleEdit}

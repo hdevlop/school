@@ -11,7 +11,6 @@ import {
 } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { examSchema } from '../config/examSchemas'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { buildExamStatusOptions, buildExamTypeOptions } from '../config/examOptions'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
@@ -60,30 +59,6 @@ const SectionsMultiselect = ({ initialClassId }) => {
       disabled={isSectionsLoading || !classId}
     />
   );
-};
-
-const pickTeacherAssignment = (teachers, sectionId = '', subjectId = '') => {
-  const assignments = (teachers || []).flatMap((teacher) =>
-    (teacher.assignments || []).flatMap((assignment) =>
-      (assignment.sectionIds || []).flatMap((assignmentSectionId) =>
-        (assignment.subjectIds || []).map((assignmentSubjectId) => ({
-          teacherId: teacher.id,
-          classId: assignment.classId,
-          sectionId: assignmentSectionId,
-          subjectId: assignmentSubjectId,
-        }))
-      )
-    )
-  );
-
-  const matchingAssignments = assignments.filter((assignment) => {
-    const sectionMatches = !sectionId || assignment.sectionId === sectionId;
-    const subjectMatches = !subjectId || assignment.subjectId === subjectId;
-    return sectionMatches && subjectMatches;
-  });
-
-  const pool = matchingAssignments.length ? matchingAssignments : assignments;
-  return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
 };
 
 const mergeDescriptionAndInstructions = (description?: string, instructions?: string) =>
@@ -160,17 +135,6 @@ const ExamForm = ({ exam = null }) => {
     });
   };
 
-  const fill = () => {
-    const a = pickTeacherAssignment(teachers);
-    return buildFill(examSchema, {
-      classId: a?.classId ?? classOptions,
-      sectionId: a?.sectionId ?? '',
-      sectionIds: a?.sectionId ? [a.sectionId] : [],
-      subjectId: a?.subjectId ?? subjectOptions,
-      teacherId: a?.teacherId ?? teacherOptions,
-    });
-  };
-
   if (isResolving || isYearsPending) {
     return <NLoadingState surface="panel" label={t('common.loading')} className="min-h-64" />;
   }
@@ -187,7 +151,6 @@ const ExamForm = ({ exam = null }) => {
           schema={examSchema}
           defaultValues={defaultValues}
           onSubmit={handleSubmit}
-          devTools={{ enabled: isDevFill, fill }}
         >
           <div className='flex flex-col gap-4'>
 

@@ -1,57 +1,34 @@
 'use client';
 
 import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ImageIcon, LogOut, Palette, Settings } from 'lucide-react';
 import { YearScopedChatbot } from '@/features/Chat/components/YearScopedChatbot';
-import { SignOutButton, useAuth, usePermissions } from 'najm-auth/client/react';
-import { NSidebar, NSidebarProvider, useNSidebar, type NavItem } from 'najm-kit';
+import { SignOutButton, useAuth, usePermissions, useRedirectOnSessionExpired } from 'najm-auth/client/react';
+import { filterNavItems, isNavItemActiveOrNested, NSidebar, NSidebarProvider, useNSidebar, type GatedNavItem as KitGatedNavItem, type NavItem } from 'najm-kit';
+import { NSidebarNextLink } from 'najm-kit/next';
 import { clearNajmUiPreferences } from 'najm-kit/server';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { visibleNavItems, type GatedNavItem, type NavViewer } from './navigationAccess';
-import { PAGE_ACCESS } from '@/shared/pageAccess';
+import { PAGE_ACCESS, type PageAccess, type PageViewer } from '@/shared/pageAccess';
+import { schoolApp } from '@/najm.config';
 import { ThemeSettingsSheets, type ThemeSettingsSheet } from '@/features/Settings/components/ThemeSettingsSheets';
 import { ViewingYearBanner } from '@/features/AcademicYears/components/ViewingYearBanner';
 import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
-import { useSessionExpiryRedirect } from '@/shared/useSessionExpiryRedirect';
 
 const THEME_SETTINGS_NAV_ID = 'settings:theme';
 const BRANDING_SETTINGS_NAV_ID = 'settings:branding';
 
-const LinkAdapter = ({
-  href,
-  className,
-  children,
-  onClick,
-}: {
-  href: string;
-  className?: string;
-  children: React.ReactNode;
-  onClick?: React.MouseEventHandler;
-}) => {
-  const pathname = usePathname();
+// Who sees each sidebar page: the guard on the page's main list route, as
+// PAGE_ACCESS states it. The server stays the authority: a hidden page is
+// still refused by its route, and a shown one can still refuse a record.
+type GatedNavItem = KitGatedNavItem<{ access?: PageAccess }>;
 
-  const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
-    const target = new URL(href, window.location.href);
-    if (pathname === target.pathname && window.location.search === target.search &&
-      window.location.hash === target.hash) {
-      event.preventDefault();
-    }
+const visibleNavItems = (items: GatedNavItem[], viewer: PageViewer): NavItem[] =>
+  filterNavItems(items, (item) => !item.access || PAGE_ACCESS[item.access](viewer), ['access']);
 
-    onClick?.(event);
-  };
-
-  return (
-    <Link href={href} prefetch={false} className={className} onClick={handleClick}>
-      {children}
-    </Link>
-  );
-};
-
-const createSidebarItems = (t: (key: string) => string, viewer: NavViewer): NavItem[] => {
+const createSidebarItems = (t: (key: string) => string, viewer: PageViewer): NavItem[] => {
   // Parents and students read their own or their children's records; the
   // server shows each of them only those. Grades and attendance are in the
   // child's profile, reached from "My children" or "My profile".
@@ -195,12 +172,6 @@ function sidebarActivePath(pathname: string, navItems: NavItem[]) {
   return STUDENT_FEES_PATH.test(pathname) && hasNavHref(navItems, '/fees') ? '/fees' : pathname;
 }
 
-function isSidebarItemActive(item: NavItem, activePath: string) {
-  if (!item.href) return false;
-  if (item.href === '/') return activePath === '/';
-  return activePath === item.href || activePath.startsWith(`${item.href}/`);
-}
-
 function SidebarFooterContent({ collapsed }: Readonly<{ collapsed: boolean }>) {
   const router = useRouter();
   const { user } = useAuth();
@@ -255,7 +226,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role ?? 'teacher';
-  useSessionExpiryRedirect();
+  useRedirectOnSessionExpired(schoolApp.auth.loginRoute);
 
   const { can, permissions } = usePermissions();
   // `permissions` is the dependency: `can` reads the same session state.
@@ -265,7 +236,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-    <div className="flex h-screen w-full overflow-hidden  gap-2 bg-background font-sans">
+    <div className="flex h-screen w-full overflow-hidden   bg-background font-sans">
       <NSidebar
         // The render prop, rather than a second reading of the sidebar state:
         // the sidebar already knows whether it is collapsed and whether it is
@@ -296,8 +267,8 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         classNames={{ sidebarHeader: 'max-sm:h-auto max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:pt-1 max-sm:pb-3' }}
         navItems={navItems}
         activePath={sidebarActivePath(pathname, navItems)}
-        isActive={isSidebarItemActive}
-        linkComponent={LinkAdapter}
+        isActive={isNavItemActiveOrNested}
+        linkComponent={NSidebarNextLink}
         onNavigate={(target) => {
           if (target === THEME_SETTINGS_NAV_ID || target === BRANDING_SETTINGS_NAV_ID) {
             sidebar?.closeMobile();
@@ -309,10 +280,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         closeOnNavigate
       />
 
-      {/* Below lg the page's last row (a list's pagination) reaches the right
-          edge, under the chat button fixed in the bottom-right corner (56px,
-          20px from each edge); pb-20 keeps it clear. */}
-      <div className='dashboard-content flex min-w-0 flex-1 flex-col h-full min-h-0 gap-2 px-3 pt-2 pb-20 lg:px-2 lg:pb-2'>
+      <div className='dashboard-content flex min-w-0 flex-1 flex-col h-full min-h-0 gap-2 px-3 pt-2 pb-2 lg:px-2'>
         <ViewingYearBanner />
         {children}
       </div>

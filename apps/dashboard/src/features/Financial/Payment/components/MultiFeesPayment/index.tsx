@@ -38,7 +38,7 @@ const MultiFeesPayment = ({ studentId, studentFees: initialStudentFees, compact 
 
    const contentClassName = compact
       ? 'flex flex-col gap-3 p-4'
-      : 'grid min-h-0 grid-cols-[1fr_2fr] grid-rows-[minmax(0,1fr)] gap-4 flex-1 overflow-hidden p-4';
+      : 'grid min-h-0 grid-cols-[1fr_2fr] grid-rows-[minmax(0,1fr)] gap-4 flex-1 overflow-hidden p-4 max-lg:flex max-lg:flex-col max-lg:overflow-y-auto';
 
    return (
       <div className={`flex flex-col bg-white rounded-xl overflow-hidden ${compact ? '' : 'h-full'}`}>
@@ -46,7 +46,7 @@ const MultiFeesPayment = ({ studentId, studentFees: initialStudentFees, compact 
 
          <div className={contentClassName}>
 
-            <div className={`flex flex-col gap-3 ${compact ? '' : 'min-h-0 overflow-hidden'}`}>
+            <div className={`flex flex-col gap-3 ${compact ? '' : 'min-h-0 overflow-hidden max-lg:shrink-0 max-lg:overflow-visible'}`}>
                <div className="font-semibold text-gray-900 flex items-center gap-2">
                   <Label className="text-sm font-semibold">💳 {t('payments.form.paymentDetails')}</Label>
                </div>
@@ -55,7 +55,8 @@ const MultiFeesPayment = ({ studentId, studentFees: initialStudentFees, compact 
             </div>
 
             {!compact && (
-               <div className='flex min-h-0 flex-col gap-3 overflow-hidden border-l-2 border-gray-300 pl-4'>
+               // Below lg the columns stack: what to pay first, then how.
+               <div className='flex min-h-0 flex-col gap-3 overflow-hidden border-l-2 border-gray-300 pl-4 max-lg:order-first max-lg:shrink-0 max-lg:overflow-visible max-lg:border-l-0 max-lg:pl-0'>
                   <div className="flex shrink-0 items-center gap-2 font-semibold text-gray-900">
                      <Label className="text-sm font-semibold">📋 {t('payments.dialogs.selectInstallments')}</Label>
                   </div>

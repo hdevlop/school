@@ -6,7 +6,6 @@ import React from 'react'
 import { Tag, FileText, Boxes, Zap } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { permissionValidationSchema } from '../config/permissionsValidateSchema'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 
 const PermissionForm = ({ permission = null, mode = 'create' }) => {
@@ -43,7 +42,6 @@ const PermissionForm = ({ permission = null, mode = 'create' }) => {
                     schema={schema}
                     defaultValues={defaultValues}
                     onSubmit={handleSubmit}
-                    devTools={{ enabled: isDevFill, fill: () => buildFill(schema) }}
                 >
                     <FormInput
                         name='name'

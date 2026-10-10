@@ -8,7 +8,6 @@ import React from 'react'
 import { GraduationCap, FileText, Layers } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { classSchema } from '../config/classSchemas'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 
 const ClassForm = ({ classData = null}) => {
@@ -35,7 +34,6 @@ const ClassForm = ({ classData = null}) => {
                schema={classSchema}
                defaultValues={defaultValues}
                onSubmit={handleSubmit}
-               devTools={{ enabled: isDevFill, fill: () => buildFill(classSchema) }}
             >
                <div className='flex flex-col gap-4'>
 

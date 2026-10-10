@@ -8,7 +8,6 @@ import React from 'react'
 import { BookOpen, Hash, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { subjectSchema } from '../config/subjectSchemas'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 
 const SubjectForm = ({ subject = null }) => {
@@ -35,7 +34,6 @@ const SubjectForm = ({ subject = null }) => {
                schema={subjectSchema}
                defaultValues={defaultValues}
                onSubmit={handleSubmit}
-               devTools={{ enabled: isDevFill, fill: () => buildFill(subjectSchema) }}
             >
                <div className='flex flex-col gap-4'>
 

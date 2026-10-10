@@ -14,7 +14,8 @@ export default function CheckCard({ data: payment }: { data: any }) {
 
   return (
     <div className="flex flex-col gap-2 rounded-lg border bg-card p-3">
-      <div className="flex items-start justify-between gap-2">
+      {/* `pe-8` keeps the badge clear of NTable's row-menu button in the corner. */}
+      <div className="flex items-start justify-between gap-2 pe-8">
         <div className="flex min-w-0 items-center gap-2">
           <NAvatar src={payment.student?.image} fallback={payment.student?.name} size="sm" />
           <div className="min-w-0">

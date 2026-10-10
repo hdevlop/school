@@ -17,7 +17,6 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useDialog } from 'najm-kit';
 import { eventSchema } from '../config/eventSchemas';
-import { buildFill, isDevFill } from '@/lib/devFill';
 import {
   buildEventStatusOptions,
   buildEventTypeOptions,
@@ -74,11 +73,6 @@ const EventForm = ({ event = null, initialDate = null }) => {
     value: cls.id,
     label: cls.name,
   }));
-  const devFillValues = {
-    classIds: classOptions.slice(0, 2).map((item) => item.value),
-    classId: classOptions[0]?.value || '',
-    sectionId: '',
-  };
 
   const handleSubmit = async (formData) => {
     const classIds = [...new Set((formData.classIds || []).filter(Boolean))];
@@ -100,7 +94,7 @@ const EventForm = ({ event = null, initialDate = null }) => {
   };
 
   return (
-    <NForm id="event-form" schema={eventSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(eventSchema, devFillValues) }}>
+    <NForm id="event-form" schema={eventSchema} defaultValues={defaultValues} onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4">
         <FormSectionHeader icon={Calendar} title={t('events.sections.eventDetails')} />
 

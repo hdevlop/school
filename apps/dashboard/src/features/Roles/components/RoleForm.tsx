@@ -6,7 +6,6 @@ import React from 'react'
 import { Tag, FileText } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { roleValidationSchema } from '../config/rolesValidateSchema'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 
 const RoleForm = ({ role = null, mode = 'create' }) => {
@@ -42,7 +41,6 @@ const RoleForm = ({ role = null, mode = 'create' }) => {
                     schema={schema}
                     defaultValues={defaultValues}
                     onSubmit={handleSubmit}
-                    devTools={{ enabled: isDevFill, fill: () => buildFill(schema) }}
                 >
                     <FormInput
                         name='name'

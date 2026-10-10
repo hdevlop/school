@@ -32,11 +32,15 @@ export const PART_TIME_BELOW = 20;
 /** Students a section takes before the next one of its class opens. */
 export const SECTION_SIZE = 28;
 
-/** Monday to Friday six lessons a day, Saturday the four morning ones. */
+/**
+ * Monday to Thursday six lessons a day; Friday and Saturday the three morning
+ * ones, before the 11:30 pause. Thirty slots hold a section's 27–28 lessons.
+ */
 export const TIMETABLE_SLOTS = [
-  ...['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+  ...['monday', 'tuesday', 'wednesday', 'thursday']
     .flatMap((day) => Array.from({ length: 6 }, (_, lesson) => ({ day, lesson }))),
-  ...Array.from({ length: 4 }, (_, lesson) => ({ day: 'saturday', lesson })),
+  ...['friday', 'saturday']
+    .flatMap((day) => Array.from({ length: 3 }, (_, lesson) => ({ day, lesson }))),
 ];
 
 /** Students of one class, filling a section before the next one opens. */

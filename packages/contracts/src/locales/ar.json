@@ -772,6 +772,7 @@
       "welcomeBack": "مرحباً بعودتك، {{name}}",
       "subtitle": "إليك يومك الدراسي في لمحة.",
       "backToTeachers": "العودة إلى الأساتذة",
+      "profileSubtitle": "نظرة سريعة على اليوم الدراسي.",
       "tabs": {
         "overview": "نظرة عامة",
         "details": "التفاصيل",
@@ -825,12 +826,12 @@
       "expensesMonth": "المصروفات (الشهر)",
       "netBalance": "الرصيد الصافي",
       "collectionRateYTD": "معدل التحصيل منذ بداية السنة",
-      "studentsYear": "التلاميذ ({{year}})",
+      "studentsYear": "التلاميذ",
       "teachersCurrent": "المعلمون (حاليًا)",
-      "incomeYear": "الإيرادات ({{year}})",
-      "expensesYear": "المصروفات ({{year}})",
-      "netBalanceYear": "الرصيد الصافي ({{year}})",
-      "collectionRateYear": "معدل التحصيل ({{year}})",
+      "incomeYear": "الإيرادات",
+      "expensesYear": "المصروفات",
+      "netBalanceYear": "الرصيد الصافي",
+      "collectionRateYear": "معدل التحصيل",
       "studentsByGender": "الطلاب حسب الجنس",
       "incomeVsExpenses": "الإيرادات مقابل المصروفات",
       "income": "الإيرادات",
@@ -1746,7 +1747,12 @@
       "saveDiscount": "حفظ التخفيض",
       "addDiscount": "إضافة تخفيض",
       "discountCount": "{{count}} من {{total}} رسوم لها تخفيض",
-      "totalSaved": "مجموع التخفيضات: {{amount}}"
+      "totalSaved": "مجموع التخفيضات: {{amount}}",
+      "paidOfTotal": "{{paid}}/{{total}} مدفوعة",
+      "overdueShort": "{{count}} متأخرة",
+      "paidGroup": "مدفوعة ({{count}})",
+      "remaining": "المتبقي",
+      "overdueAmount": "متأخر"
     }
   },
   "behaviorRewards": {
@@ -3013,8 +3019,7 @@
       "viewAllDocuments": "عرض جميع الوثائق",
       "viewAllFees": "عرض جميع الرسوم",
       "dashboard": {
-        "welcomeBack": "مرحباً بعودتك، {{name}}",
-        "subtitle": "إليك ما يحدث مع أطفالك اليوم.",
+        "subtitle": "نظرة سريعة على الأبناء.",
         "backToParents": "العودة إلى أولياء الأمور",
         "averageGrade": "متوسط الدرجات",
         "overallAttendance": "الحضور العام",
@@ -3052,7 +3057,24 @@
         "schoolCampus": "المؤسسة التعليمية",
         "loadingOverview": "جارٍ تحميل نظرة عامة على الأسرة...",
         "loadError": "تعذر تحميل ملف ولي الأمر.",
-        "tryAgain": "إعادة المحاولة"
+        "tryAgain": "إعادة المحاولة",
+        "attention": {
+          "overduePayments": "مدفوعات متأخرة",
+          "absences": "الغيابات",
+          "lateArrivals": "التأخرات",
+          "upcomingAssessments": "التقييمات القادمة",
+          "lowGrades": "نقط أقل من 50%",
+          "openIncidents": "حوادث مفتوحة"
+        },
+        "tabs": {
+          "overview": "نظرة عامة",
+          "details": "التفاصيل"
+        },
+        "details": {
+          "familyRole": "الدور العائلي",
+          "yes": "نعم",
+          "no": "لا"
+        }
       }
     },
     "relationships": {
@@ -3784,7 +3806,6 @@
     "profile": {
       "detailsTitle": "تفاصيل التلميذ",
       "detailsSubtitle": "الملف والسجل الدراسي",
-      "downloadReport": "تحميل التقرير",
       "closeDetails": "إغلاق تفاصيل التلميذ",
       "unknown": "غير معروف",
       "age": "العمر",
@@ -4905,6 +4926,7 @@
     "addAnnouncement": "إضافة إعلان",
     "loading": "جارٍ تحميل التقويم…",
     "more": "{{count}} إضافية…",
-    "events": "الأحداث"
+    "events": "الأحداث",
+    "noItemsOnDay": "لا شيء مجدول في هذا اليوم"
   }
 }

@@ -7,8 +7,19 @@ import { describeRoutineContent } from '@sms/contracts/routines';
 import type { RoutineGridProps } from '../types';
 import { routineDayLabel, routinePeriodLabel } from '../utils/labels';
 import RoutineCell from './RoutineCell';
+import RoutineDayList from './RoutineDayList';
 
-export default function RoutineGrid({ days, periods, entries, duties = [], defaultRoom, editable, onCellClick, onDutyClick }: RoutineGridProps) {
+export default function RoutineGrid(props: RoutineGridProps) {
+  return (
+    <>
+      {/* Wide screens: the week as one sheet, days down and periods across. */}
+      <div className="hidden md:block"><RoutineWeekTable {...props} /></div>
+      <div className="md:hidden"><RoutineDayList {...props} /></div>
+    </>
+  );
+}
+
+function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, editable, onCellClick, onDutyClick }: RoutineGridProps) {
   const { t } = useTranslation();
   const entryMap = new Map(entries.map((entry) => [`${entry.dayOfWeek}:${entry.periodId}`, entry]));
   const dutyMap = new Map(duties.map((duty) => [`${duty.dayOfWeek}:${duty.periodId}`, duty]));

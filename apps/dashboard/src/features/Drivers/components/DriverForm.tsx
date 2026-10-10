@@ -13,7 +13,6 @@ import {
    buildDriverStatusOptions,
    buildGenderOptions,
 } from '../config/driverOptions'
-import { buildFill, isDevFill } from '@/lib/devFill'
 
 const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
 
@@ -45,7 +44,7 @@ const DriverForm = ({ driver = null, defaultGender = 'M' }) => {
    }
 
    return (
-      <NForm id='driver-form' schema={driverSchema} defaultValues={defaultValues} onSubmit={handleSubmit} devTools={{ enabled: isDevFill, fill: () => buildFill(driverSchema) }} >
+      <NForm id='driver-form' schema={driverSchema} defaultValues={defaultValues} onSubmit={handleSubmit} >
          <DriverFormContent />
       </NForm>
    )
@@ -132,7 +131,6 @@ const DriverFormContent = () => {
                   required={true}
                />
 
-
                <FormInput
                   name='emergencyPhone'
                   type='phone'
@@ -216,7 +214,6 @@ const DriverFormContent = () => {
                placeholder={t('drivers.form.salaryPlaceholder')}
                icon={DollarSign}
             />
-
 
             <div className='md:col-span-3'>
                <FormInput

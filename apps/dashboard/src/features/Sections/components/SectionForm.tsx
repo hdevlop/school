@@ -8,7 +8,6 @@ import React from 'react'
 import { Building, Hash, Users, DoorOpen } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { sectionSchema } from '../config/sectionSchemas'
-import { buildFill, isDevFill } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
 
@@ -32,7 +31,6 @@ const SectionForm = ({ section = null }) => {
       label: `${cls.name} (${cls.academicYear})`,
    })) || [];
 
-
    const handleSubmit = async (sectionData) => {
       pop(sectionData);
    }
@@ -45,7 +43,6 @@ const SectionForm = ({ section = null }) => {
                schema={sectionSchema}
                defaultValues={defaultValues}
                onSubmit={handleSubmit}
-               devTools={{ enabled: isDevFill, fill: () => buildFill(sectionSchema, { classId: classOptions }) }}
             >
                <div className='flex flex-col gap-4'>
 

@@ -172,7 +172,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({ parent, analytics }) =>
 
       {/* Analytics Widgets */}
       {analytics && (
-        <div className="space-y-3">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-1">
           {analytics.totalChildren !== undefined && (
             <InfoWidget
               title={t('parents.profile.totalChildren')}

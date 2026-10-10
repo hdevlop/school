@@ -8,23 +8,16 @@ import { Loader2 } from 'lucide-react'
 import { getStudentDefaultValues, StudentFormContent } from './SimpleStudentForm'
 import { BulkParentFormContent } from '@/features/Parents/components/BulkParentForm'
 import { fullStudentSchema, studentWithoutFeesSchema, studentWithTransportSchema } from '../config/fullStudentSchemas'
-import { studentSchema } from '../config/studentSchemas'
-import { academicYearStartDate, firstYearEnrolledOn } from '../config/newStudentEnrollment'
-import { parentSchema, parentsSchema } from '@/features/Parents/config/parentSchemas'
+import { firstYearEnrolledOn } from '../config/newStudentEnrollment'
+import { parentsSchema } from '@/features/Parents/config/parentSchemas'
 import { feesSchema } from '@/features/Financial/Fees/config/feeSchemas'
 import { transportSchema } from '@/features/Transport/config/transportSchemas'
 import { BulkFeeFormContent } from '@/features/Financial/Fees/components/BulkFeeForm'
 import { FeeFactory } from '@/features/Financial/Fees/utils/feeUtils'
 import { useTranslation } from 'najm-i18n/react'
-import { buildFill, isDevFill, pick } from '@/lib/devFill'
-import { chance } from '@sms/contracts/fixtures'
 import { StudentTransportFormContent } from '@/features/Transport/components/StudentTransportFormContent'
 import { normalizeLocationValue } from 'najm-kit/location'
-import { useViewerRole } from '@/shared/useViewerRole'
-
-const ALWAYS_FEE_CATEGORIES = ['registration', 'tuition']
-const OPTIONAL_FEE_PROBABILITY = 0.8
-const SECOND_PARENT_PROBABILITY = 0.8
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole'
 
 type StudentWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
   submitLabel?: ReactNode
@@ -55,66 +48,6 @@ const FullStudentForm = ({
     const candidates = tuition.length > 0 ? tuition : feeTypes.filter((ft: any) => ft.paymentType === 'recurring' && ft.status === 'active')
     return candidates.map((ft: any) => FeeFactory.createFromFeeType(ft))
   }, [canCreateFees, feeTypes])
-
-  const fillStudent = useCallback(() => {
-    const selectedClass: any = pick(classes)
-    const selectedSection: any = pick(selectedClass?.sections ?? [])
-
-    return buildFill(studentSchema, {
-      classId: selectedClass?.id ?? '',
-      sectionId: selectedSection?.id ?? '',
-      enrollmentDate: academicYearStartDate(selectedClass?.academicYear, businessDate),
-    })
-  }, [businessDate, classes])
-
-  const fillFees = useCallback(() => {
-    if (!canCreateFees) return { fees: [] }
-    const active = (feeTypes ?? []).filter((ft: any) => ft.status === 'active')
-    const selected = active.filter((ft: any) =>
-      ALWAYS_FEE_CATEGORIES.includes(ft.category) || chance(OPTIONAL_FEE_PROBABILITY),
-    )
-    return { fees: selected.map((ft: any) => FeeFactory.createFromFeeType(ft)) }
-  }, [canCreateFees, feeTypes])
-
-  const fillAll = useCallback(() => {
-    const student = fillStudent()
-    const [, ...studentLastNameParts] = String(student.name ?? '').split(' ')
-    const studentLastName = studentLastNameParts.join(' ')
-
-    const makeParent = (gender: 'M' | 'F', relationshipType: 'father' | 'mother') => {
-      const generated = buildFill(parentSchema, {
-        gender,
-        relationshipType,
-        address: student.addressLocation?.address,
-      })
-      const [firstName = '', ...lastNameParts] = String(generated.name ?? '').split(' ')
-      const lastName = studentLastName || lastNameParts.join(' ')
-      return { ...generated, name: `${firstName} ${lastName}`.trim() }
-    }
-
-    const parents = [makeParent('M', 'father')]
-    if (chance(SECOND_PARENT_PROBABILITY)) parents.push(makeParent('F', 'mother'))
-
-    return {
-      ...student,
-      parents,
-      ...fillFees(),
-    }
-  }, [fillFees, fillStudent])
-
-  // The wizard's own dev tools own the F8 shortcut, the step reset, and the
-  // seeding. Only the transport step is School's to reset: it is derived from a
-  // field the fill rewrites, and nothing in the package knows that.
-  const devTools = useMemo(
-    () => ({
-      enabled: isDevFill,
-      fill: () => {
-        setTransportSelected(false)
-        return fillAll()
-      },
-    }),
-    [fillAll],
-  )
 
   const studentStepTitle = t('students.form.studentInformation')
   const parentsStepTitle = t('students.form.parentsInformation')
@@ -252,7 +185,6 @@ const FullStudentForm = ({
         steps={steps}
         schema={formSchema}
         defaultValues={defaultValues}
-        devTools={devTools}
         onStepComplete={(stepIndex, data) => {
           if (stepIndex === 0) setTransportSelected(canAssignTransport && Boolean(data.transportEnabled))
         }}

@@ -3,7 +3,7 @@
 import { NButton } from 'najm-kit';
 
 import React from 'react';
-import { NAvatar, NCard } from 'najm-kit';
+import { NAvatar, NCard, NajmScroll } from 'najm-kit';
 import { Clock, Bell } from 'lucide-react';
 import { cn } from 'najm-kit';
 import { NSkeletonEventList } from 'najm-kit';
@@ -49,38 +49,41 @@ const OverdueFees: React.FC<OverdueFeesProps> = ({ className = '' }) => {
       {rows.length === 0 ? (
         <DashboardEmptyState icon={Clock} title={t('dashboard.finance.noOverdue')} />
       ) : (
-        <div className="flex flex-col gap-2 flex-1 min-h-0 overflow-auto">
-          {rows.map((row) => (
-            <div
-              key={row.studentId}
-              className="flex items-center justify-between gap-2 p-2 rounded-lg border border-border/50 hover:bg-muted/30"
-            >
-              <div className="flex items-center gap-2 min-w-0">
-                <NAvatar
-                  src={row.studentImage}
-                  fallbackSrc={row.gender === 'F' ? '/images/student_female.png' : '/images/student_male.png'}
-                  fallback={row.studentName}
-                  alt={row.studentName}
-                  size="sm"
-                />
-                <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-semibold truncate">{row.studentName}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {row.daysOverdue} {t('dashboard.finance.daysOverdue')}
+        <NajmScroll axis="y" className="flex-1 min-h-0">
+          {/* Room on the end for the overlay scrollbar, clear of the bell buttons. */}
+          <div className="flex flex-col gap-2 pe-3">
+            {rows.map((row) => (
+              <div
+                key={row.studentId}
+                className="flex items-center justify-between gap-2 p-2 rounded-lg border border-border/50 hover:bg-muted/30"
+              >
+                <div className="flex items-center gap-2 min-w-0">
+                  <NAvatar
+                    src={row.studentImage}
+                    fallbackSrc={row.gender === 'F' ? '/images/student_female.png' : '/images/student_male.png'}
+                    fallback={row.studentName}
+                    alt={row.studentName}
+                    size="sm"
+                  />
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-semibold truncate">{row.studentName}</span>
+                    <span className="text-xs text-muted-foreground">
+                      {row.daysOverdue} {t('dashboard.finance.daysOverdue')}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-sm font-semibold text-red-600">
+                    {majorMoney(Number(row.totalOverdue ?? 0))}
                   </span>
+                  <NButton size="sm" variant="outline" className="h-7 px-2">
+                    <Bell className="w-3.5 h-3.5" />
+                  </NButton>
                 </div>
               </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <span className="text-sm font-semibold text-red-600">
-                  {majorMoney(Number(row.totalOverdue ?? 0))}
-                </span>
-                <NButton size="sm" variant="outline" className="h-7 px-2">
-                  <Bell className="w-3.5 h-3.5" />
-                </NButton>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </NajmScroll>
       )}
     </NCard>
   );

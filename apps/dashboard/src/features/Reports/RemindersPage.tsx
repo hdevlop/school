@@ -10,36 +10,11 @@ import { cn } from 'najm-kit';
 import { toast } from 'sonner';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
-
-type OverdueRow = {
-  studentId: string;
-  studentName: string;
-  studentCode: string;
-  studentImage: string | null;
-  classId: string | null;
-  className: string;
-  sectionId: string | null;
-  sectionName: string | null;
-  totalOverdue: number;
-  daysOverdue: number;
-  oldestDueDate: string | null;
-};
+import ReminderCard, { urgencyBadge, urgencyRowColor, type OverdueRow } from './components/ReminderCard';
 
 const matchesStudent = (row: OverdueRow, query: string) =>
   row.studentName.toLowerCase().includes(query)
   || (row.studentCode ?? '').toLowerCase().includes(query);
-
-const urgencyRowColor = (days: number) => {
-  if (days > 60) return 'border-l-red-500 bg-red-50/40';
-  if (days > 30) return 'border-l-orange-400 bg-orange-50/40';
-  return 'border-l-yellow-400 bg-yellow-50/40';
-};
-
-const urgencyBadge = (days: number) => {
-  if (days > 60) return 'bg-red-100 text-red-700';
-  if (days > 30) return 'bg-orange-100 text-orange-700';
-  return 'bg-yellow-100 text-yellow-700';
-};
 
 const RemindersPage: React.FC = () => {
   const { t } = useTranslation();
@@ -254,7 +229,14 @@ const RemindersPage: React.FC = () => {
         )}
         defaultSorting={[{ id: 'daysOverdue', desc: true }]}
         defaultMode="table"
-        availableModes={['table']}
+        availableModes={['table', 'cards']}
+        renderCard={({ data: row }: { data: OverdueRow }) => (
+          <ReminderCard
+            data={row}
+            reminded={reminded.has(`${yearKey}:${row.studentId}`)}
+            onRemind={handleRemind}
+          />
+        )}
         showViewToggle={false}
         showColumnVisibility={false}
         showCheckbox

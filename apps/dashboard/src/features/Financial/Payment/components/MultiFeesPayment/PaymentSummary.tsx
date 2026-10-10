@@ -43,32 +43,32 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
             <div className={`flex flex-col gap-2.5 ${compact ? '' : 'min-h-0 flex-1'}`}>
                {/* Cashier Register Display */}
                <div className="shrink-0 bg-linear-to-br from-green-900/30 to-emerald-900/30 border border-green-500/30 rounded-lg p-3">
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-3 sm:gap-3">
 
-                     <div className="flex flex-col text-center">
+                     <div className="flex items-center justify-between gap-2 text-center sm:flex-col sm:justify-start">
                         <Label className="text-gray-400 text-[10px] uppercase ">
                            {t('payments.register.totalSelected')}
                         </Label>
-                        <Label className="text-xl font-bold text-white">
+                        <Label className="text-base sm:text-xl font-bold text-white">
                            {majorMoney(debtSelected)}
                         </Label>
                      </div>
 
-                     <div className="flex flex-col text-center">
+                     <div className="flex items-center justify-between gap-2 text-center sm:flex-col sm:justify-start">
                         <Label className="text-gray-400 text-[10px] uppercase ">
                            {t('payments.register.cashReceived')}
                         </Label>
-                        <Label className="text-xl font-bold text-blue-400 ">
+                        <Label className="text-base sm:text-xl font-bold text-blue-400 ">
                            {majorMoney(cashReceived)}
                         </Label>
                      </div>
 
-                     <div className="flex flex-col text-center">
+                     <div className="flex items-center justify-between gap-2 text-center sm:flex-col sm:justify-start">
                         {/* Less cash than selected is money still owed, not change. */}
                         <Label className="text-gray-400 text-[10px] uppercase  ">
                            {change < 0 ? t('payments.register.missing') : `💸 ${t('payments.register.giveCustomer')}`}
                         </Label>
-                        <Label className={`text-xl font-bold  ${change < 0 ? 'text-red-400' :
+                        <Label className={`text-base sm:text-xl font-bold  ${change < 0 ? 'text-red-400' :
                            change === 0 ? 'text-green-400' :
                               'text-green-300'
                            }`}>
@@ -94,7 +94,7 @@ export const PaymentSummary = ({ compact = false }: { compact?: boolean }) => {
                         className={compact ? '' : 'min-h-0 flex-1'}
                         options={{ scrollbars: { theme: 'os-theme-light', autoHide: 'never', clickScroll: true } }}
                      >
-                        <div className={`grid content-start gap-2 ${compact ? 'grid-cols-1' : 'grid-cols-2 pr-3'}`}>
+                        <div className={`grid content-start gap-2 ${compact ? 'grid-cols-1' : 'grid-cols-1 pr-3 sm:grid-cols-2'}`}>
                            {Object.values(selectedInstallments).map((inst: any) => (
                               <div key={inst.id} className="bg-gray-800/50 rounded-lg p-2 border border-gray-700 flex items-center justify-between gap-2">
                                  <div className="flex min-w-0 items-center gap-2">

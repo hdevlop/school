@@ -98,6 +98,10 @@ export function normalizeDemoFees(fees: any[]) {
 // Tuned so collected tuition (~87% of billed) comfortably clears monthly
 // payroll — a realistic school economy, not the old 55%-collection demo where
 // paid payroll always outran collected income on the Income-vs-Expenses chart.
+// A cheque counts as income only once cleared, so every cheque is deposited
+// and cleared a few days after it is received, as long as that day has come.
+// Left pending, the roughly one in six cheque payments dropped a past year's
+// collection to ~70% and its expenses above its income.
 // ─────────────────────────────────────────────
 
 const PAYMENT_METHODS = ['cash', 'bankTransfer', 'check', 'creditCard', 'debitCard', 'online'];
@@ -117,6 +121,15 @@ function addDays(dateStr: string, days: number) {
   const date = new Date(`${dateStr}T00:00:00`);
   date.setDate(date.getDate() + days);
   return date.toISOString().split('T')[0];
+}
+
+// The bank clears a cheque 2–6 days after it is received, well before its due date.
+async function clearCheque(paymentService: PaymentService, payment: { id: string; paymentDate: string }, today: string) {
+  const clearedOn = addDays(payment.paymentDate, 2 + Math.floor(Math.random() * 5));
+  if (clearedOn > today) return false;
+  await paymentService.updateCheckStatus(payment.id, { status: 'deposited' });
+  await paymentService.updateCheckStatus(payment.id, { status: 'completed', settledDate: clearedOn });
+  return true;
 }
 
 function getLateSummerPaymentDate(today: string) {
@@ -213,6 +226,7 @@ export async function seedPayments(
   const lateSummerPaymentLimit = Math.max(1, Math.ceil(studentRows.length * LATE_SUMMER_PAYMENT_RATE));
 
   let paymentCount = 0;
+  let clearedChequeCount = 0;
   let skippedCount = 0;
   let latePaymentCount = 0;
   let latePaymentTotal = 0;
@@ -281,7 +295,7 @@ export async function seedPayments(
         const paymentDate = monthInstallments.map(i => i.dueDate).sort().at(-1) ?? today;
 
         try {
-          await paymentService.record({
+          const payment = await paymentService.record({
             studentId,
             amount: totalAmount,
             paymentDate,
@@ -297,6 +311,13 @@ export async function seedPayments(
             keepRemainderAsCredit: false,
           });
           paymentCount++;
+          if (method === 'check') {
+            try {
+              if (await clearCheque(paymentService, payment, today)) clearedChequeCount++;
+            } catch (e: any) {
+              console.warn(`  ⚠️  Cheque ${payment.id} left pending: ${e?.message}`);
+            }
+          }
         } catch (e: any) {
           console.warn(`  ⚠️  Payment skipped for student ${studentId}: ${e?.message}`);
           if (e?.stack) console.warn(e.stack);
@@ -354,7 +375,7 @@ export async function seedPayments(
     }
   }
 
-  return { paymentCount, skippedCount, latePaymentCount, latePaymentTotal };
+  return { paymentCount, clearedChequeCount, skippedCount, latePaymentCount, latePaymentTotal };
 }
 
 export async function createSequential<T>(label: string, items: T[], create: (item: T) => Promise<any>) {

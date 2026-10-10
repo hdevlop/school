@@ -1,7 +1,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, AlertTriangle, CalendarClock, Clock, CheckCircle2, LockKeyhole, SearchX } from 'lucide-react';
-import { NBadge, Label, NajmScroll, NTable, NEmptyState } from 'najm-kit';
+import { NBadge, Label, NajmScroll, NEmptyState, NTable } from 'najm-kit';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -322,17 +322,20 @@ export const InstallmentList = ({ studentFees }) => {
                               className="h-4 w-4 shrink-0 cursor-pointer rounded text-blue-600 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed"
                            />
                            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-muted text-lg">{fee.icon}</span>
-                           <Label className="truncate text-sm font-semibold text-gray-900">{fee.name}</Label>
-                           <div className="flex min-w-0 items-center gap-2 text-xs text-gray-500">
-                              <span className="whitespace-nowrap">{t('installments.summary.installments', { count: stats.total })}</span>
-                              <span>•</span>
-                              <span className="whitespace-nowrap">{t('installments.summary.payments', { count: stats.paid })}</span>
-                              {stats.overdue > 0 && (
-                                 <>
-                                    <span>•</span>
-                                    <span className="whitespace-nowrap text-red-600 font-medium">{t('installments.summary.overdue', { count: stats.overdue })}</span>
-                                 </>
-                              )}
+                           {/* On phones the counts go under the name, which they squeezed to a few letters. */}
+                           <div className="flex min-w-0 flex-col sm:flex-row sm:items-center sm:gap-2">
+                              <Label className="truncate text-sm font-semibold text-gray-900">{fee.name}</Label>
+                              <div className="flex min-w-0 flex-wrap items-center gap-x-2 text-xs text-gray-500">
+                                 <span className="whitespace-nowrap">{t('installments.summary.installments', { count: stats.total })}</span>
+                                 <span>•</span>
+                                 <span className="whitespace-nowrap">{t('installments.summary.payments', { count: stats.paid })}</span>
+                                 {stats.overdue > 0 && (
+                                    <>
+                                       <span>•</span>
+                                       <span className="whitespace-nowrap text-red-600 font-medium">{t('installments.summary.overdue', { count: stats.overdue })}</span>
+                                    </>
+                                 )}
+                              </div>
                            </div>
                         </div>
                         <div className="ml-3 flex shrink-0 items-center gap-2">

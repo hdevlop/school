@@ -20,7 +20,6 @@ import {
   buildTeacherStatusOptionsFor,
 } from '../config/teacherOptions'
 import { AssignmentFormContent } from './BulkAssignmentForm'
-import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { useWatch } from 'react-hook-form'
 
 type TeacherWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
@@ -66,42 +65,6 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
    const { t } = useTranslation()
    const [isSubmitting, setIsSubmitting] = useState(false)
    const submissionPromiseRef = useRef<Promise<unknown> | null>(null)
-
-   const fillPersonal = useCallback(() => buildFill(teacherPersonalSchema), [])
-   const fillProfessional = useCallback(() => buildFill(teacherProfessionalSchema, {
-      employmentType: 'fullTime',
-   }), [])
-   const fillAssignments = useCallback(() => {
-      const selectedClass: any = pick(classes)
-      const selectedSection: any = pick(selectedClass?.sections ?? [])
-      const selectedSubject: any = pick(subjects)
-
-      return {
-         assignments: [{
-            classId: selectedClass?.id ?? '',
-            sectionIds: selectedSection?.id ? [selectedSection.id] : [],
-            subjectIds: selectedSubject?.id ? [selectedSubject.id] : [],
-         }],
-      }
-   }, [classes, subjects])
-
-   const fillAll = useCallback(() => ({
-      ...getTeacherPersonalDefaultValues(teacher),
-      ...getTeacherProfessionalDefaultValues(teacher),
-      ...getTeacherAssignmentsDefaultValues(teacher),
-      ...fillPersonal(),
-      ...fillProfessional(),
-      ...fillAssignments(),
-      ...(teacher?.id && { id: teacher.id }),
-      image: teacher?.image ?? null,
-   }), [fillAssignments, fillPersonal, fillProfessional, teacher])
-
-   // The wizard's own dev tools own the F8 shortcut, the step reset, and the
-   // seeding; School only supplies the values.
-   const devTools = useMemo(
-      () => ({ enabled: isDevFill, fill: fillAll }),
-      [fillAll],
-   )
 
    const steps: StepConfig[] = useMemo(() => [
       {
@@ -171,7 +134,6 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
             steps={steps}
             schema={teacherFullSchema}
             defaultValues={defaultValues}
-            devTools={devTools}
             onSubmit={handleSubmit}
             className={isSubmitting ? 'pointer-events-none select-none' : undefined}
             nextLabel={t('common.next')}

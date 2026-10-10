@@ -3,7 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { Eye, Pencil, ShieldAlert, Trash2, Plus, SearchX } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
-import { useDialog, NPageHeader, NPageHeaderActions, NTable, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import DisciplineCard from './DisciplineCard';
@@ -13,7 +13,7 @@ import ResolveDisciplineForm from './ResolveDisciplineForm';
 import { useDiscipline } from '../hooks/useDiscipline';
 import { useDisciplineTableColumns } from '../hooks/useDisciplineTableColumns';
 import { useDisciplineTableFilters } from '../hooks/useDisciplineTableFilters';
-import { useClassSectionTableScope } from '@/shared/useClassSectionTableScope';
+import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { useMemo } from 'react';
 import type { DisciplineIncident } from '../disciplineConstants';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';

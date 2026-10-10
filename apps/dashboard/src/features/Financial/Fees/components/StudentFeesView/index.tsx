@@ -17,6 +17,7 @@ import { DiscountsTab } from "./discounts";
 import { usePayments } from "@/features/Financial/Payment/hooks/usePayments";
 import { useFeeTypes } from "@/features/Financial/FeeTypes/hooks/useFeeTypes";
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from "@/features/Financial/Payment/store/paymentStore";
+import { useSchoolFormat } from "@/hooks/useSchoolFormat";
 import { FeeTypeDialogContent } from "@/features/Financial/FeeTypes/components/FeeTypeDialog";
 import { feesSchema } from "@/features/Financial/Fees/config/feeSchemas";
 import { sortFeesByCategory } from "@/features/Financial/Fees/config/feeOrder";
@@ -25,7 +26,9 @@ import { useActiveAcademicYear } from "@/features/Settings/hooks/useSettings";
 import { useSetViewingYear, useViewingAcademicYear } from "@/features/AcademicYears/hooks/useViewingAcademicYear";
 import { hasFailedToLoad, isAuthorizationError } from "@/services/apiError";
 
-const TAB_STYLES = "border-0 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:!border-b-2 data-[state=active]:!border-primary rounded-none px-6 py-3 data-[state=active]:!text-primary text-muted-foreground hover:text-primary transition-colors";
+// Below `sm` an inactive tab shows its icon only: the four labels ran past the
+// screen, and the last two tabs could not be found.
+const TAB_STYLES = "group gap-2 px-3 sm:px-6 border-0 cursor-pointer data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:!border-b-2 data-[state=active]:!border-primary rounded-none py-3 data-[state=active]:!text-primary text-muted-foreground hover:text-primary transition-colors";
 
 const getFeeBalance = (fee: any) => {
   const explicitBalance = Number(fee?.balance ?? fee?.totalDue ?? fee?.dueAmount);
@@ -139,6 +142,7 @@ const StudentFeesViewSkeleton = ({ className, hideHeader = false }: { className:
 
 export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = null }) => {
   const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const { viewingYear } = useViewingAcademicYear();
   const setViewingYear = useSetViewingYear();
   // The viewed year's fees, with the totals and payment metrics the server
@@ -194,6 +198,12 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
   const hasPayableBalance = Boolean(
     visibleFees.some((fee: any) => getFeeBalance(fee) > 0)
   );
+  // The phone's summary strip. Overdue counts only what can still be paid: an
+  // installment a pending check already covers is not asked for again.
+  const remainingAmount = visibleFees.reduce((sum: number, fee: any) => sum + getFeeBalance(fee), 0);
+  const overdueAmount = visibleFees.reduce((sum: number, fee: any) => sum + (fee.installments || [])
+    .filter((installment: any) => installment.status === 'overdue')
+    .reduce((total: number, installment: any) => total + getInstallmentAvailableAmount(installment), 0), 0);
   // New fees are charged to the viewed year, so a type is addable once per that year.
   const feeYear = viewingYear;
   const addableFeeTypes = useMemo(() => {
@@ -413,6 +423,21 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
         />
       )}
 
+      {!hideHeader && (
+        <div className="flex shrink-0 gap-2 lg:hidden">
+          <div className="flex min-w-0 flex-1 flex-col rounded-lg border border-border bg-card px-3 py-2">
+            <span className="text-xs text-muted-foreground">{t('fees.studentView.remaining')}</span>
+            <span className="truncate font-bold tabular-nums text-foreground">{majorMoney(remainingAmount)}</span>
+          </div>
+          {overdueAmount > 0 && (
+            <div className="flex min-w-0 flex-1 flex-col rounded-lg border border-red-200 bg-red-50 px-3 py-2">
+              <span className="text-xs text-red-700">{t('fees.studentView.overdueAmount')}</span>
+              <span className="truncate font-bold tabular-nums text-red-600">{majorMoney(overdueAmount)}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {otherYearDebts.length > 0 && (
         <div
           role="status"
@@ -437,8 +462,8 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
           <TabsList className="max-w-full overflow-x-auto bg-transparent rounded-none justify-start h-auto p-0 border-0">
             {tabConfig.map(({ value, label, icon: Icon }) => (
               <TabsTrigger key={value} value={value} className={TAB_STYLES}>
-                <Icon className="w-4 h-4 mr-2" />
-                {label}
+                <Icon className="w-4 h-4" />
+                <span className="max-sm:sr-only max-sm:group-data-[state=active]:not-sr-only">{label}</span>
               </TabsTrigger>
             ))}
           </TabsList>
@@ -489,13 +514,28 @@ export const StudentFeesView = ({ studentId, hideHeader = false, initialFeeId = 
             key={value}
             value={value}
             className={value === 'overview'
-              ? 'flex min-h-0 flex-1 flex-col overflow-hidden'
+              // Below lg the cards stack, so the tab scrolls instead of
+              // squeezing the installments to nothing.
+              ? 'flex min-h-0 flex-1 flex-col overflow-hidden max-lg:overflow-y-auto'
               : 'min-h-0 flex-1 overflow-y-auto'}
           >
             {content}
           </TabsContent>
         ))}
       </Tabs>
+
+      {/* The phone's Pay button sits under the content, within thumb reach. */}
+      {!hideHeader && (
+        <NButton
+          onClick={() => handlePayClick()}
+          disabled={!hasPayableBalance}
+          size="lg"
+          className="w-full shrink-0 font-semibold lg:hidden"
+        >
+          <CreditCard className="h-4 w-4" />
+          {hasPayableBalance ? t('fees.studentView.pay') : t('fees.studentView.nothingToPay')}
+        </NButton>
+      )}
     </div>
   );
 };

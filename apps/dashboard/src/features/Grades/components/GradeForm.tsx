@@ -11,7 +11,6 @@ import {
 } from 'lucide-react'
 import { useDialog } from 'najm-kit'
 import { gradeSchema } from '../config/gradeSchemas'
-import { buildFill, isDevFill, pick } from '@/lib/devFill'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/features/Classes/hooks/useClasses'
 import { useSections } from '@/features/Sections/hooks/useSections'
@@ -165,20 +164,6 @@ const GradeForm = ({ grade = null }) => {
     label: `${a.title}${a.totalMarks ? ` — /${a.totalMarks}` : ''}`,
   })) || [];
 
-  const fill = () => {
-    const a: any = pick(assessments || []);
-    const s: any = pick(students || []);
-    return buildFill(gradeSchema, {
-      assessmentId: a?.id ?? assessmentOptions,
-      classId: a?.classId ?? classOptions,
-      sectionId: a?.sectionId ?? '',
-      subjectId: a?.subjectId ?? subjectOptions,
-      teacherId: a?.teacherId ?? teacherOptions,
-      studentId: s?.id ?? studentOptions,
-      marksObtained: a?.totalMarks ? Math.min(10, Number(a.totalMarks)) : 10,
-    });
-  };
-
   const handleSubmit = async (formData) => {
     const selectedAssessment = (assessments || []).find((a) => a.id === formData.assessmentId);
     if (selectedAssessment && Number(formData.marksObtained) > Number(selectedAssessment.totalMarks)) {
@@ -198,7 +183,6 @@ const GradeForm = ({ grade = null }) => {
           schema={gradeSchema}
           defaultValues={defaultValues}
           onSubmit={handleSubmit}
-          devTools={{ enabled: isDevFill, fill }}
         >
           <AssessmentContextSync assessments={assessments} isEdit={isEdit} />
 

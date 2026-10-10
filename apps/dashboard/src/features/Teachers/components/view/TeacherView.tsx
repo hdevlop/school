@@ -67,7 +67,6 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
   const { subjects } = useSubjects();
 
   const name = overviewQuery.data?.teacher.name ?? teacher?.name;
-  const firstName = name?.split(' ')[0] || name;
 
   const handleEdit = () => {
     if (!teacher) return;
@@ -108,8 +107,8 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
     <div className="flex h-full min-h-0 min-w-0 w-full flex-col gap-2">
       <NPageHeader
         icon={FEATURE_ICONS.teachers}
-        title={firstName ? t('dashboard.teacher.welcomeBack', { name: firstName }) : t('dashboard.teacher.title')}
-        subtitle={t('dashboard.teacher.subtitle')}
+        title={name ?? t('dashboard.teacher.title')}
+        subtitle={t('dashboard.teacher.profileSubtitle')}
       >
         <NPageHeaderActions>
           <NButton

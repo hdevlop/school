@@ -127,7 +127,7 @@ function ClassRoutinePageForYear() {
     const response: any = await mutations.createSchedule.mutateAsync({
       sectionId,
       name: `${selectedClass.name} · ${selectedSection?.name || t('classRoutines.ui.title')}`,
-      activeDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+      activeDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
     });
     const created = response?.data;
     if (created?.id) setScheduleId(created.id);

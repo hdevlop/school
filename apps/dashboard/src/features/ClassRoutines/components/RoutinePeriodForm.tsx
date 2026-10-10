@@ -24,7 +24,7 @@ export default function RoutinePeriodForm({ period }: RoutinePeriodFormProps) {
       schema={schema}
       defaultValues={{
         name: period?.name || '',
-        startTime: period?.startTime?.slice(0, 5) || '08:00',
+        startTime: period?.startTime?.slice(0, 5) || '08:30',
         endTime: period?.endTime?.slice(0, 5) || '09:00',
         sortOrder: period?.sortOrder ?? 0,
         isBreak: period?.isBreak ?? false,

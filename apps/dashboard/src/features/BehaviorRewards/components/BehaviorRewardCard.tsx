@@ -15,8 +15,11 @@ const BehaviorRewardCard = ({ data }: { data: any }) => {
   const { displayDateTime } = useSchoolFormat();
   const reward = data;
 
+  // A narrow card (a phone, or one column of several) puts the student above
+  // the details: side by side, the name squeezed the badges past the edge.
   return (
-    <div className="flex gap-3 p-4">
+    <div className="@container">
+    <div className="flex flex-col gap-3 p-4 pe-10 @md:flex-row @md:pe-4">
       <NAvatar
         src={reward.student?.image}
         title={reward.student?.name}
@@ -54,6 +57,7 @@ const BehaviorRewardCard = ({ data }: { data: any }) => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

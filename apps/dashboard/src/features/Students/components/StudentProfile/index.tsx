@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
-import { AlertTriangle, Bus, CalendarCheck, CalendarRange, DollarSign, Download, GraduationCap, User, X } from 'lucide-react';
+import { AlertTriangle, Bus, CalendarCheck, CalendarRange, DollarSign, GraduationCap, User, X } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { StudentProfileTabsProps } from './types';
 import OverviewTab from './Overview';
@@ -15,7 +15,6 @@ import { useStudentProfile } from '@/features/Students/hooks/useStudentProfile';
 import { useTranslation } from 'najm-i18n/react';
 import TransportTab from './Transport';
 import EnrollmentTab from './Enrollment';
-import { ViewingYearSelector } from '@/features/AcademicYears/components/ViewingYearSelector';
 import { isAuthorizationError, isNotFoundError } from '@/services/apiError';
 
 export { default as LeftSidebar } from './LeftSidebar';
@@ -70,11 +69,6 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
         className="shrink-0 border-x-0 border-t-0 border-b border-slate-200 bg-white"
       >
         <NPageHeaderActions>
-          <ViewingYearSelector />
-          <NButton type="button" variant="outline" size="sm" className="gap-2">
-            <Download className="h-4 w-4" />
-            {t('students.profile.downloadReport')}
-          </NButton>
           {onClose && (
             <NButton
               type="button"

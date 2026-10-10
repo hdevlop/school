@@ -7,7 +7,7 @@ import { useGrades, useStudentReport } from '@/features/Grades/hooks/useGrades';
 import { Award, BookOpenCheck, GraduationCap, Save, TrendingUp } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
-import { useViewerRole } from '@/shared/useViewerRole';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 
 const pctColor = (pct?: number | null) => {
   if (pct == null) return 'text-slate-400';
@@ -179,7 +179,7 @@ export default function GradesTab({ studentId }: { studentId?: string }) {
 
   return (
     <div className="flex min-h-full flex-col gap-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <NStatCard
           icon={GraduationCap}
           label={t('students.profile.gpa')}
