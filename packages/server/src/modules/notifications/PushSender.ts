@@ -1,16 +1,56 @@
 import { Service } from '../../najm';
 import { vapidConfig } from './notificationConfig';
 import { createSafePushAgent, InvalidPushEndpoint } from './pushEndpoint';
-import type { Agent } from 'node:https';
+import { request, type Agent } from 'node:https';
 
 export const PUSH_DEADLINE_MS = 10_000;
 
 export type PushOutcome = { result: 'sent' | 'gone' | 'transient' | 'failed'; code?: string };
 
+/** What `web-push` builds for one notification: the encrypted, signed request. */
+export type PushRequestDetails = {
+  endpoint: string;
+  method: string;
+  headers: Record<string, string | number>;
+  body: Buffer | string | null;
+};
+
 @Service()
 export class PushSender {
   protected agentFor(endpoint: string) {
     return createSafePushAgent(endpoint);
+  }
+
+  /**
+   * Sends the request `web-push` built and resolves with the provider's status.
+   *
+   * FIX: SEC-004 — the checked addresses are pinned by the agent's `lookup`,
+   * and it is passed on the request as well. Bun ignores an Agent's `lookup`
+   * but honours one on the request; Node honours both. Without it the worker
+   * would resolve the provider again and connect wherever that answer points.
+   */
+  protected dispatch(details: PushRequestDetails, agent: Agent): Promise<number> {
+    return new Promise((resolve, reject) => {
+      const url = new URL(details.endpoint);
+      const req = request({
+        hostname: url.hostname,
+        port: url.port || 443,
+        path: url.pathname + url.search,
+        method: details.method,
+        headers: details.headers,
+        agent,
+        lookup: agent.options.lookup,
+        timeout: PUSH_DEADLINE_MS,
+      }, (res) => {
+        res.on('error', reject);
+        res.on('end', () => resolve(res.statusCode ?? 0));
+        res.resume();
+      });
+      req.on('timeout', () => req.destroy(new Error('Socket timeout')));
+      req.on('error', reject);
+      if (details.body) req.write(details.body);
+      req.end();
+    });
   }
 
   async send(target: { endpoint: string; p256dh: string; auth: string }, payload: { notificationId: string; title: string; body: string }): Promise<PushOutcome> {
@@ -26,12 +66,16 @@ export class PushSender {
         const mod = await import('web-push');
         if (expired) throw new Error('Push deadline exceeded');
         const webpush = (mod.default ?? mod) as typeof import('web-push');
-        webpush.setVapidDetails(vapidConfig.subject!, vapidConfig.publicKey!, vapidConfig.privateKey!);
-        await webpush.sendNotification({ endpoint: target.endpoint, keys: { p256dh: target.p256dh, auth: target.auth } }, JSON.stringify({
+        const details = webpush.generateRequestDetails({ endpoint: target.endpoint, keys: { p256dh: target.p256dh, auth: target.auth } }, JSON.stringify({
           notificationId: payload.notificationId.slice(0, 100),
           title: payload.title.slice(0, 120),
           body: payload.body.slice(0, 300),
-        }), { TTL: 86_400, timeout: PUSH_DEADLINE_MS, agent });
+        }), {
+          TTL: 86_400,
+          vapidDetails: { subject: vapidConfig.subject!, publicKey: vapidConfig.publicKey!, privateKey: vapidConfig.privateKey! },
+        }) as PushRequestDetails;
+        const statusCode = await this.dispatch(details, agent);
+        if (statusCode < 200 || statusCode > 299) throw Object.assign(new Error('Unexpected push response'), { statusCode });
       };
       await Promise.race([
         delivery(),

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { afterEach, expect, it, mock } from 'bun:test';
-import { Agent, request } from 'node:https';
+import { Agent } from 'node:https';
 import { createSafePushAgent, isPublicPushAddress } from '../../src/modules/notifications/pushEndpoint';
 import { pushSubscriptionDto, pushUnsubscribeDto } from '../../src/modules/notifications/notificationDto';
 import { vapidConfig } from '../../src/modules/notifications/notificationConfig';
@@ -46,20 +46,25 @@ it('SEC-004 pins the validated addresses into the TLS agent lookup, without anot
   agent.destroy();
 });
 
-it('SEC-004 requires the actual worker runtime to honor the HTTPS agent lookup', async () => {
+it('SEC-004 requires the actual worker runtime to honor the pinned lookup on the push request', async () => {
   let lookups = 0;
   const agent = new Agent({ lookup(_host, _options, callback) {
     lookups++;
     callback(Object.assign(new Error('AUDIT_PIN_USED'), { code: 'AUDIT_PIN_USED' }), '', 0);
   } });
-  // Lookup aborts before a connection. The reserved .invalid name also prevents
-  // provider traffic if a future runtime silently ignores the custom agent.
-  const code = await new Promise((resolve) => {
-    const req = request({ hostname: 'audit-pinning.invalid', agent }, () => resolve('unexpected_response'));
-    const timer = setTimeout(() => { req.destroy(); resolve('deadline'); }, 1000);
-    req.on('error', (error) => { clearTimeout(timer); resolve((error as NodeJS.ErrnoException).code); });
-    req.end();
-  });
+  // The real dispatch path the worker uses, not a hand-built request: Bun
+  // ignores an Agent's own lookup, so this fails if the sender stops passing
+  // the pin on the request. Lookup aborts before a connection, and the
+  // reserved .invalid name keeps provider traffic away if a runtime ignores it.
+  class ProbeSender extends PushSender {
+    probe() {
+      return this.dispatch({ endpoint: 'https://audit-pinning.invalid/canary', method: 'POST', headers: {}, body: null }, agent);
+    }
+  }
+  const code = await Promise.race([
+    new ProbeSender().probe().then(() => 'unexpected_response', (error: NodeJS.ErrnoException) => error.code),
+    new Promise((resolve) => setTimeout(() => resolve('deadline'), 1000)),
+  ]);
   agent.destroy();
   expect(code).toBe('AUDIT_PIN_USED');
   expect(lookups).toBe(1);
@@ -67,25 +72,30 @@ it('SEC-004 requires the actual worker runtime to honor the HTTPS agent lookup',
 
 it('SEC-004 refuses unsafe stored endpoints before dispatch and bounds a stalled send', async () => {
   Object.defineProperty(vapidConfig, 'configured', { configurable: true, value: true });
-  const requests: Array<Record<string, unknown>> = [];
+  const built: Array<Record<string, unknown>> = [];
   const fake = {
-    setVapidDetails() {},
-    sendNotification(_subscription: unknown, _payload: unknown, options: Record<string, unknown>) {
-      requests.push(options);
-      return requests.length === 1 ? new Promise(() => {}) : Promise.resolve({ statusCode: 201 });
+    generateRequestDetails(subscription: { endpoint: string }, _payload: unknown, options: Record<string, unknown>) {
+      built.push(options);
+      return { endpoint: subscription.endpoint, method: 'POST', headers: {}, body: null };
     },
   };
   mock.module('web-push', () => ({ default: fake, ...fake }));
   const payload = { notificationId: 'canary', title: 'local test', body: 'local test' };
   expect(await new PushSender().send({ ...target, endpoint: 'https://127.0.0.1/canary' }, payload))
     .toEqual({ result: 'failed', code: 'push_invalid_endpoint' });
-  expect(requests).toEqual([]);
+  expect(built).toEqual([]);
   let destroyed = 0;
+  const dispatched: Agent[] = [];
+  const responses: Array<Promise<number>> = [new Promise(() => {}), Promise.resolve(201), Promise.resolve(410)];
   class LocalSender extends PushSender {
     protected async agentFor() {
       const agent = new Agent();
       agent.destroy = () => { destroyed++; };
       return agent;
+    }
+    protected dispatch(_details: unknown, agent: Agent) {
+      dispatched.push(agent);
+      return responses[dispatched.length - 1];
     }
   }
   const sender = new LocalSender();
@@ -96,9 +106,10 @@ it('SEC-004 refuses unsafe stored endpoints before dispatch and bounds a stalled
   try {
     expect(await sender.send(target, payload)).toEqual({ result: 'transient', code: 'push_network_error' });
     expect(await sender.send(target, payload)).toEqual({ result: 'sent' });
-    expect(requests[0].timeout).toBe(PUSH_DEADLINE_MS);
-    expect(requests[0].agent).toBeInstanceOf(Agent);
-    expect(destroyed).toBeGreaterThanOrEqual(2);
+    expect(await sender.send(target, payload)).toEqual({ result: 'gone', code: 'push_410' });
+    expect(dispatched[0]).toBeInstanceOf(Agent);
+    expect(built[0]).toMatchObject({ TTL: 86_400, vapidDetails: expect.any(Object) });
+    expect(destroyed).toBeGreaterThanOrEqual(3);
   } finally {
     globalThis.setTimeout = realSetTimeout;
   }
