@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
 import { count, eq, like } from 'drizzle-orm';
 import type { RouteEntry } from 'najm-core';
 import type { GuardPluginConfig } from 'najm-guard';
+import { CacheService } from 'najm-cache';
 import { rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -13,6 +14,9 @@ const target = new URL(rawUrl);
 if (!['localhost', '127.0.0.1', '[::1]'].includes(target.hostname)
   || target.pathname !== '/school_history_test') throw new Error('Expected local school_history_test');
 process.env.DB_URL = rawUrl;
+// server.fetch() has no socket peer. Model one trusted proxy so this suite
+// exercises rate limits even when development skips unresolved addresses.
+process.env.SCHOOL_TRUSTED_PROXY_HOPS = '1';
 
 const { INJECTION_TYPES } = await import('najm-core');
 const { GUARD_CONFIG, getEffectiveGuards, getGuardMetadata } = await import('najm-guard');
@@ -109,7 +113,7 @@ type Init = { method?: string; token?: string | null; json?: unknown; body?: Uin
 
 async function send(path: string, init: Init = {}) {
   const token = init.token === undefined ? adminToken : init.token;
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = { 'x-forwarded-for': '198.18.0.21' };
   if (token) headers.Authorization = `Bearer ${token}`;
   if (init.json !== undefined) headers['content-type'] = 'application/json';
   if (init.type) headers['content-type'] = init.type;
@@ -150,6 +154,7 @@ beforeAll(async () => {
       status: 'active', emailVerified: true },
   ]);
   await server.listen(port);
+  if (process.env.REDIS_URL?.trim()) expect(server.container.get(CacheService).type).toBe('redis');
   adminToken = await login('admin@history.example.test', adminPassword);
   rolelessToken = await login(roleless.email, password);
   readerToken = await login(reader.email, password);

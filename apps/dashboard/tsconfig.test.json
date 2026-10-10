@@ -4,8 +4,8 @@
     "types": ["bun", "node"]
   },
   "include": [
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
     "src/**/*.d.ts"
   ],
   "exclude": ["node_modules"]

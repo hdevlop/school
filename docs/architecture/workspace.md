@@ -83,10 +83,7 @@ consumer without a build. `bun run i18n:check` scans the dashboard for keys
 missing from the catalog.
 
 `@sms/contracts/fixtures` holds the fake-record generators and static
-reference data (classes, sections, subjects, fee types). Two consumers use
-them: demo seeding, and the dashboard's development form fill
-(`apps/dashboard/src/lib/formFill.ts`, enabled by
-`NEXT_PUBLIC_FORM_FILL_ENABLED` and off in production builds by default).
+reference data (classes, sections, subjects, fee types) used by demo seeding.
 Seed-generated demo datasets stay in the seed package.
 
 ## Root command contract

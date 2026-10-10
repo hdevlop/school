@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
+import { CacheService } from 'najm-cache';
 
 /**
  * Tabs share one cookie jar. Two or three of them (or a tab and a server
@@ -19,6 +20,9 @@ const target = new URL(rawUrl);
 if (!['localhost', '127.0.0.1', '[::1]'].includes(target.hostname)
   || target.pathname !== '/school_history_test') throw new Error('Expected local school_history_test');
 process.env.DB_URL = rawUrl;
+// Match the explicit proxy topology in the route-security suite; requests
+// must exercise the limiter rather than development's unresolved-IP skip.
+process.env.SCHOOL_TRUSTED_PROXY_HOPS = '1';
 
 const { server } = await import('../../src/index');
 const base = 'http://school.local/api';
@@ -56,6 +60,7 @@ async function post(path: string, jar: Jar, data?: unknown) {
     method: 'POST',
     headers: {
       origin: 'http://school.local',
+      'x-forwarded-for': '198.18.0.22',
       ...(jar.size ? { cookie: cookieHeader(jar) } : {}),
       ...(data ? { 'content-type': 'application/json' } : {}),
     },
@@ -72,7 +77,10 @@ async function signIn(): Promise<Jar> {
   return jar;
 }
 
-beforeAll(async () => { await server.listen(port); });
+beforeAll(async () => {
+  await server.listen(port);
+  if (process.env.REDIS_URL?.trim()) expect(server.container.get(CacheService).type).toBe('redis');
+});
 afterAll(async () => { await server.stop(); });
 
 describe('refreshes that share one refresh cookie', () => {

@@ -40,7 +40,7 @@ const SERVER_ONLY_PACKAGES = [
 
 const policy = {
   packages: {
-    "@sms/dashboard": { dir: "apps/dashboard", role: "app", sources: ["src"] },
+    "@sms/dashboard": { dir: "apps/dashboard", role: "app", sources: ["src", "tests"] },
     "@sms/contracts": { dir: "packages/contracts", role: "contracts", sources: ["src", "tests"] },
     "@sms/server": { dir: "packages/server", role: "server", sources: ["src", "tests"] },
     "@sms/seed": { dir: "packages/seed", role: "seed", sources: ["src"] },

@@ -49,7 +49,6 @@ RUN DB_URL=postgresql://build:build@127.0.0.1:5432/build \
     NAJM_ENCRYPTION_KEY=1111111111111111111111111111111111111111111111111111111111111111 \
     ADMIN_EMAIL=admin@example.invalid \
     ADMIN_PASSWORD=build-only-admin-password-not-used-000000 \
-    NEXT_PUBLIC_FORM_FILL_ENABLED=false \
     bun run build
 
 FROM oven/bun:1.3.14 AS runtime

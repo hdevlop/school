@@ -34,7 +34,7 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
   (`tsconfig.json`, which excludes tests) and the tests (`tsconfig.test.json`,
   which adds `bun` types). Neither hides the other.
 - `bun run test:config` - The focused contract, feature-config and form-fill
-  tests, the API error helpers and the sidebar's page access
+  tests and the API error helpers
 - `bun run test:server-i18n` - Every server refusal names a catalog key, never
   an English literal, and every key the server uses exists in all four
   languages with the same placeholders. The dashboard sends its interface
