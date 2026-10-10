@@ -172,7 +172,7 @@ export class AccessResetService {
    * end in any environment without real mail credentials.
    *
    * The provider name is read straight from the environment, matching how the
-   * email config resolves it. Going through `resolveEmailConfig()` would
+   * email config resolves it. Going through `emailConfigFromEnv()` would
    * re-run its credential validation and could throw here — after the mail has
    * already left — turning a completed send into an error and skipping the
    * audit row for it.

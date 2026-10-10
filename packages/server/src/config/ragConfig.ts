@@ -1,8 +1,8 @@
 import type { NajmPlugin } from 'najm-core';
+import { envChoice, envFlag, envInt, envString } from 'najm-core/env';
 import { rag, ragStudio } from 'najm-rag';
 
 import { rewriteDarijaForRouting } from '../modules/chat/routing/darijaRouting';
-import { envChoice, envFlag, envInt, envString } from './env';
 import { schoolRoutingContext } from '../modules/chat/routing/schoolRoutingContext';
 
 /**

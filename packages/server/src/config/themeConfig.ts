@@ -1,8 +1,4 @@
-import {
-  theme,
-  type ThemeAuditSink,
-  type ThemeDiagnostic,
-} from 'najm-theme/server';
+import { theme, type ThemeAuditSink } from 'najm-theme/server';
 
 import {
   schoolTheme,
@@ -33,15 +29,6 @@ const themeAudit: ThemeAuditSink = {
   },
 };
 
-function reportThemeDiagnostic(diagnostic: ThemeDiagnostic): void {
-  console.warn(
-    `[theme] ${diagnostic.code}${
-      diagnostic.scopeId ? ` (scope ${diagnostic.scopeId})` : ''
-    }${diagnostic.detail ? `: ${diagnostic.detail}` : ''}`,
-    diagnostic.error ?? '',
-  );
-}
-
 export const themeConfig = () =>
   theme(schoolTheme, {
     basePath: '',
@@ -51,7 +38,5 @@ export const themeConfig = () =>
       logoBytes: SCHOOL_LOGO_MAX_BYTES,
       heroBytes: SCHOOL_HERO_MAX_BYTES,
     },
-    storage: { namespace: 'theme-branding' },
     audit: themeAudit,
-    diagnostics: reportThemeDiagnostic,
   });

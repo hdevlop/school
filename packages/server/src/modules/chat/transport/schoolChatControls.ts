@@ -1,4 +1,4 @@
-import { envChoice, envInt } from '../../../config/env';
+import { envChoice, envInt } from 'najm-core/env';
 
 /** One release switch; Jev off retains the router/20B flow and its budget. */
 export function readSchoolChatControls() {

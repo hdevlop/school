@@ -4,12 +4,12 @@
  * `src/index.ts` registers them in order.
  */
 export { authConfig, guardConfig } from './authConfig';
-export { cacheConfig, resolveCacheConfig } from './cacheConfig';
+export { cacheConfig } from './cacheConfig';
 export { chatbotConfig, chatRequestConfig, studioAssistantConfig } from './chatbotConfig';
 export { corsConfig, databaseConfig, eventsConfig, i18nConfig, validationConfig } from './coreConfig';
-export { emailConfig, resolveEmailConfig } from './emailConfig';
+export { emailConfig } from './emailConfig';
 export { mcpConfig } from './mcpConfig';
 export { ragConfig, ragStudioConfig } from './ragConfig';
-export { rateLimitConfig, resolveTrustedProxyHops } from './rateLimitConfig';
+export { rateLimitConfig } from './rateLimitConfig';
 export { storageConfig } from './storageConfig';
 export { themeConfig } from './themeConfig';

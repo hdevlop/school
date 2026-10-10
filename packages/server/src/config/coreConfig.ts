@@ -1,4 +1,5 @@
 import { cors } from 'najm-cors';
+import { envString } from 'najm-core/env';
 import { database } from 'najm-database';
 import { events } from 'najm-event';
 import { i18n } from 'najm-i18n';
@@ -6,7 +7,6 @@ import { validation } from 'najm-validation';
 
 import { LANGUAGE_HEADER, schoolI18n } from '@sms/contracts/locales';
 import { db } from '../database/db';
-import { envString } from './env';
 
 /**
  * Plugins with no School policy beyond what is written here.
@@ -33,15 +33,13 @@ export const corsConfig = () =>
     credentials: true,
   });
 
-// The dashboard names its interface language in LANGUAGE_HEADER; that comes
-// first. najm-i18n's default order read its own `language` cookie first, and
-// its cookie cache pinned that cookie to the first language it guessed, so a
-// French page got English refusals. Without the header (MCP, scripts) the
-// cookie and `?lang=` still apply, and nothing is written back.
+// The dashboard names its interface language in LANGUAGE_HEADER, and the
+// server preset reads it first: header, then cookie, then `?lang=`, with no
+// cookie written back. najm-i18n's default order read its own `language`
+// cookie first and cached the first language it guessed, so a French page got
+// English refusals.
 export const i18nConfig = () =>
   i18n({
     ...schoolI18n.options,
-    order: ['header', 'cookie', 'querystring'],
-    lookupFromHeaderKey: LANGUAGE_HEADER,
-    caches: [],
+    server: { languageHeader: LANGUAGE_HEADER },
   });

@@ -1,4 +1,4 @@
-import { envChoice, envString } from '../../../config/env';
+import { envChoice, envString } from 'najm-core/env';
 import { readSchoolChatControls } from '../transport/schoolChatControls';
 
 export type JevMode = 'off' | 'on';
