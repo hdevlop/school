@@ -20,6 +20,7 @@ export const getEnumValues = (enumKey: EnumKey) => enumValues[enumKey] as unknow
 const createZodEnum = (enumKey: EnumKey) => z.enum(getEnumValues(enumKey));
 
 export const userTypeEnum = createZodEnum('userType');
+export const visitRequestStatusEnum = createZodEnum('visitRequestStatus');
 export const userStatusEnum = createZodEnum('userStatus');
 export const tokenStatusEnum = createZodEnum('tokenStatus');
 export const tokenTypeEnum = createZodEnum('tokenType');

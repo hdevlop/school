@@ -28,6 +28,7 @@ import { yearRequestControllers } from './config/yearScope';
 import { registerSchoolChatRequest } from './modules/chat/transport/registerSchoolChatRequest';
 
 export { loadActiveAcademicYearLabel, loadSchoolUiSettings, type SchoolUiSettings } from './uiSettings';
+export { loadSchoolLandingProfile, loadLandingCycles, loadSchoolLandingContent } from './landing';
 
 export {
   databaseConfig,

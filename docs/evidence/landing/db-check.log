@@ -1,0 +1,4 @@
+$ bun --env-file=apps/dashboard/.env.local drizzle-kit check
+No config path provided, using default 'drizzle.config.ts'
+Reading config file 'C:\Users\hdevlop\Desktop\school\drizzle.config.ts'
+Everything's fine 🐶🔥

@@ -7,3 +7,4 @@
  * `@sms/contracts/lookup`.
  */
 export * from './enums';
+export * from './landing';

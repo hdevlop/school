@@ -13,6 +13,7 @@ import { enumValues, type EnumKey } from '../src/lookup';
  * a migration that moves the existing rows.
  */
 const PERSISTED_ENUMS: Partial<Record<EnumKey, readonly string[]>> = {
+  visitRequestStatus: ['new', 'contacted', 'scheduled', 'closed'],
   alertPriority: ['low', 'medium', 'high', 'critical'],
   alertStatus: ['active', 'acknowledged', 'resolved', 'dismissed'],
   alertType: [
@@ -140,9 +141,9 @@ describe('shared enum contract', () => {
 
   it('covers every enum that backs a database column', () => {
     // A new `pgEnum(...)` without an entry above would ship unpinned, so the
-    // count is asserted rather than left to whoever adds the next one: fifty
+    // count is asserted rather than left to whoever adds the next one: fifty-one
     // pgEnums plus the yearly enrollment status CHECK constraint.
-    expect(Object.keys(PERSISTED_ENUMS)).toHaveLength(51);
+    expect(Object.keys(PERSISTED_ENUMS)).toHaveLength(52);
   });
 
   it('gives every enum at least one member', () => {

@@ -104,13 +104,14 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
   ) : null;
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 w-full flex-col gap-2">
+    <NajmScroll axis="y" className="h-full min-h-0 w-full flex-1">
+    <div className="flex min-h-full min-w-0 flex-col gap-2 fit:h-full">
       <NPageHeader
         icon={FEATURE_ICONS.teachers}
         title={name ?? t('dashboard.teacher.title')}
         subtitle={t('dashboard.teacher.profileSubtitle')}
       >
-        <NPageHeaderActions>
+        <NPageHeaderActions className="gap-2">
           <NButton
             type="button"
             variant="outline"
@@ -122,9 +123,8 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
             <ArrowLeft className="size-4 rtl:rotate-180" />
             <span className="max-sm:hidden">{t('dashboard.teacher.backToTeachers')}</span>
           </NButton>
-          <NButton type="button" variant="outline" size="sm" onClick={handleEdit} disabled={!teacher} className="gap-2">
+          <NButton type="button" variant="outline" size="sm" onClick={handleEdit} disabled={!teacher} aria-label={t('common.edit')}>
             <Pencil className="size-4" />
-            {t('common.edit')}
           </NButton>
           <TeacherOverviewDate teacherId={teacherId} />
         </NPageHeaderActions>
@@ -143,20 +143,19 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
                 key={value}
                 value={value}
                 variant="underline"
-                className="gap-2 data-[state=active]:border-primary data-[state=active]:text-primary"
+                className="group min-w-0 gap-2 max-sm:shrink-0 max-sm:data-[state=active]:shrink data-[state=active]:border-primary data-[state=active]:text-primary"
               >
                 <Icon className="size-4" aria-hidden="true" />
-                {t(`dashboard.teacher.tabs.${value}`)}
+                <span className="truncate max-sm:group-data-[state=inactive]:sr-only">{t(`dashboard.teacher.tabs.${value}`)}</span>
               </TabsTrigger>
             );
           })}
         </TabsList>
 
-        <NajmScroll axis="y" className="min-h-0 flex-1">
-          <TabsContent value="overview" className="mt-0 h-full">
+          <TabsContent value="overview" className="mt-0 fit:min-h-0">
             <TeacherOverview teacherId={teacherId} onViewDetails={() => setTab('details')} />
           </TabsContent>
-          <TabsContent value="details" className="mt-0 h-full">
+          <TabsContent value="details" className="mt-0">
             {recordState ?? (
               <TeacherDetailsTab
                 teacher={teacher}
@@ -166,15 +165,15 @@ const TeacherView: React.FC<TeacherViewProps> = ({ teacherId }) => {
               />
             )}
           </TabsContent>
-          <TabsContent value="timetable" className="mt-0 h-full">
+          <TabsContent value="timetable" className="mt-0">
             <TeacherTimetableTab teacherId={teacherId} />
           </TabsContent>
-          <TabsContent value="payroll" className="mt-0 h-full">
+          <TabsContent value="payroll" className="mt-0">
             {recordState ?? <TeacherPayrollTab teacher={teacher} today={overviewQuery.data?.date} />}
           </TabsContent>
-        </NajmScroll>
       </Tabs>
     </div>
+    </NajmScroll>
   );
 };
 

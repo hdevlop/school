@@ -955,7 +955,11 @@
     "students": "Students",
     "teachers": "Teachers",
     "parents": "Parents",
-    "class": "Class"
+    "class": "Class",
+    "new": "New",
+    "contacted": "Contacted",
+    "scheduled": "Scheduled",
+    "closed": "Closed"
   },
   "settings": {
     "editor": {
@@ -5786,5 +5790,200 @@
     "more": "{{count}} more…",
     "events": "Events",
     "noItemsOnDay": "Nothing scheduled on this day"
+  },
+  "landing": {
+    "meta": {
+      "tagline": "Where every student shines",
+      "description": "Discover our school, our programs and a connected school life. Contact us to arrange a visit."
+    },
+    "nav": {
+      "about": "About",
+      "programs": "Programs",
+      "parents": "Parents",
+      "contact": "Contact",
+      "portal": "Parent portal",
+      "dashboard": "Open dashboard",
+      "website": "School website",
+      "label": "School navigation",
+      "language": "Change language",
+      "menu": "Open menu",
+      "news": "News"
+    },
+    "hero": {
+      "titleStart": "Where every student",
+      "titleAccent": "shines",
+      "subtitle": "A place to learn, grow and belong, at every stage of school. Follow your child’s attendance, grades, timetables and school news from one app, and stay close to every step of the year.",
+      "visit": "Request a visit",
+      "programs": "Our programs",
+      "alt": "A student raising her hand in a sunlit classroom"
+    },
+    "features": {
+      "description": "Follow your child’s day in the same app the school uses: attendance, grades, timetables, fees, transport and announcements, all in one place.",
+      "title": "Your child’s school life, in your pocket",
+      "items": {
+        "attendance": {
+          "title": "Attendance records",
+          "body": "Follow your child’s attendance and absences."
+        },
+        "grades": {
+          "title": "Grades & report cards",
+          "body": "Follow progress and view report cards."
+        },
+        "classRoutines": {
+          "title": "Timetables & exams",
+          "body": "Find schedules, exam dates and more."
+        },
+        "fees": {
+          "title": "Fees & payment records",
+          "body": "Keep track of school fees and recorded payments."
+        },
+        "transport": {
+          "title": "School transport",
+          "body": "View your child’s assigned route and transport details."
+        },
+        "announcements": {
+          "title": "Announcements & events",
+          "body": "Stay informed about school news and events."
+        }
+      }
+    },
+    "platform": {
+      "title": "One platform for the whole school",
+      "dashboardAlt": "Illustrative School staff dashboard using demo records",
+      "parentAlt": "Illustrative parent portal using demo records"
+    },
+    "assistant": {
+      "eyebrow": "AI assistant",
+      "title": "Ask anything, in your language",
+      "subtitle": "Ask the school assistant about your child’s grades, attendance or timetable in Arabic, Darija, French, English or Spanish. It replies in the language you write in, using only the records your account is allowed to see. It reads information only: any change is still made by the school’s staff.",
+      "alt": "A parent asks the school assistant in Darija about her son’s math average and sees his progress chart; beside the phone, she smiles at it at home"
+    },
+    "programs": {
+      "description": "Every stage of school has its own pace and goals. Explore our levels below, then request a visit to meet the teachers and see the classrooms.",
+      "title": "A place to grow, at every stage",
+      "subtitle": "Learning, curiosity and confidence, every day.",
+      "alt": "Illustrative learning environment",
+      "cta": "Request a visit for {program}"
+    },
+    "testimonials": {
+      "description": "Parents share what school life looks like for their children, and how they stay close to it every day.",
+      "title": "Words from our families"
+    },
+    "admissions": {
+      "title": "Come and meet our school",
+      "subtitle": "Request a visit. Our team will get in touch.",
+      "open": "Admissions are open"
+    },
+    "contact": {
+      "map": "School location",
+      "website": "Visit our website"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "skip": "Skip to content",
+    "powered": "Powered by",
+    "stats": "School at a glance",
+    "photoDisclosure": "Illustrative photography",
+    "demoDisclosure": "Illustrative demo — sample data",
+    "news": {
+      "title": "Latest news & events",
+      "description": "Celebrations, outings, competitions and everyday moments of school life, shared by our team so families can follow what happens on campus."
+    }
+  },
+  "visitRequests": {
+    "title": "Visit requests",
+    "form": {
+      "name": "Name",
+      "phone": "Phone",
+      "email": "Email (optional)",
+      "level": "Child’s level",
+      "chooseLevel": "Choose a level",
+      "message": "Message (optional)",
+      "website": "Website",
+      "send": "Send request",
+      "sending": "Sending…",
+      "thanks": "Thank you. Our team will contact you to arrange your visit.",
+      "rateLimited": "Too many requests. Please try again later or call us.",
+      "failed": "We could not send your request. Check your details and try again."
+    },
+    "errors": {
+      "notFound": "Request not found.",
+      "cycle": "Please choose an active program."
+    },
+    "notification": {
+      "title": "New school visit request",
+      "body": "A family has requested a visit. Open the visit inbox to follow up."
+    },
+    "success": {
+      "received": "Request received.",
+      "loaded": "Requests loaded.",
+      "updated": "Request updated."
+    },
+    "status": "Status",
+    "staffNote": "Staff note",
+    "save": "Save",
+    "loading": "Loading…",
+    "loadFailed": "Unable to load requests.",
+    "empty": "No visit requests yet."
+  },
+  "publicPage": {
+    "title": "Public school page",
+    "content": "Content",
+    "programs": "Programs",
+    "photos": "Photos",
+    "publish": "Publish",
+    "stats": "School statistics",
+    "testimonials": "Family testimonials",
+    "value": "Value",
+    "label": "Label",
+    "author": "Author",
+    "quote": "Quote",
+    "rating": "Rating",
+    "admissionsOpen": "Admissions open",
+    "year": "Admissions year label",
+    "socialLinks": "Social links",
+    "blurb": "Program description",
+    "photo": "Program photo",
+    "defaultPhoto": "Neutral default photo",
+    "published": "Page published",
+    "view": "View page",
+    "save": "Save content",
+    "saved": "Content saved.",
+    "failed": "Unable to save. Check the fields and try again.",
+    "loadFailed": "Unable to load content.",
+    "photoHint": "Choose the photo for each program in the Programs tab.",
+    "errors": {
+      "cycle": "Unknown program.",
+      "socialUrl": "Use an HTTPS link on the matching social platform."
+    },
+    "success": {
+      "loaded": "Content saved.",
+      "saved": "Content saved."
+    },
+    "addStat": "Add statistic",
+    "addTestimonial": "Add testimonial",
+    "remove": "Remove",
+    "news": "News & events",
+    "addNews": "Add news item",
+    "newsDate": "Date",
+    "newsTag": "Label",
+    "newsTitle": "Title",
+    "newsBody": "Short text",
+    "newsHint": "Card {{n}} uses “News photo {{n}}” from the Photos tab."
+  },
+  "theme": {
+    "branding": {
+      "slots": {
+        "landingHero": "Hero photo",
+        "landingAssistant": "Parent photo",
+        "landingProgram1": "Program photo 1",
+        "landingProgram2": "Program photo 2",
+        "landingProgram3": "Program photo 3",
+        "landingNews1": "News photo 1",
+        "landingNews2": "News photo 2",
+        "landingNews3": "News photo 3"
+      }
+    }
   }
 }

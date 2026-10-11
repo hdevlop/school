@@ -1,0 +1,16 @@
+import { chromium } from 'playwright';
+import { mkdir, writeFile } from 'node:fs/promises';
+const output = 'docs/evidence/landing';
+await mkdir(output,{recursive:true});
+const browser = await chromium.launch({channel:'chrome',headless:true});
+const context = await browser.newContext({ viewport:{width:1440,height:1000},deviceScaleFactor:1 });
+await context.addCookies([{ name:'school-ui-language', value:'en', url:'http://localhost:3102' }]);
+const page=await context.newPage();const failures=[];
+page.on('pageerror',e=>failures.push(e.message));
+page.on('response',r=>{if(r.status()>=400 && !r.url().includes('google'))failures.push(`${r.status()} ${r.url()}`)});
+await page.goto('http://localhost:3102/welcome',{waitUntil:'networkidle'});
+await page.locator('.landing').evaluate(el=>{el.style.height=`${el.scrollHeight}px`;el.style.overflow='visible'});
+await page.screenshot({path:`${output}/initial-desktop.png`,fullPage:true});
+console.log(JSON.stringify({ title:await page.title(),failures, horizontal:await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth) }));
+await writeFile(`${output}/initial-browser.json`,JSON.stringify(failures,null,2));
+await browser.close();

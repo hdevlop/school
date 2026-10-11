@@ -42,6 +42,35 @@ const FieldList = ({ fields, empty }: { fields: Field[]; empty: string }) => (
   </dl>
 );
 
+const AssignmentCard = ({ data }: { data: TeacherDashboardClass }) => {
+  const { t } = useTranslation();
+  const { number } = useSchoolFormat();
+
+  return (
+    <div className="flex min-w-0 items-center gap-3 px-3 py-2.5">
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-sm">
+          <span className="font-semibold text-foreground">
+            <span className="sr-only">{t('teachers.profile.table.class')}: </span>
+            {data.className}
+          </span>
+          <span className="text-xs text-muted-foreground">
+            {t('teachers.profile.table.section')} {data.sectionName}
+          </span>
+        </div>
+        <p className="mt-0.5 break-words text-sm leading-snug text-muted-foreground">
+          <span className="sr-only">{t('teachers.profile.table.subject')}: </span>
+          {data.subjectName}
+        </p>
+      </div>
+      <dl className="flex shrink-0 flex-col items-end border-s border-border/60 ps-3">
+        <dt className="text-xs text-muted-foreground">{t('teachers.profile.table.students')}</dt>
+        <dd className="text-sm font-semibold tabular-nums text-foreground">{number(data.studentCount ?? 0)}</dd>
+      </dl>
+    </div>
+  );
+};
+
 const TeacherDetailsTab: React.FC<TeacherDetailsTabProps> = ({ teacher, classes, classesLoading, classesError }) => {
   const { t } = useTranslation();
   const { displayDateOnly, majorMoney, number } = useSchoolFormat();
@@ -127,6 +156,7 @@ const TeacherDetailsTab: React.FC<TeacherDetailsTabProps> = ({ teacher, classes,
         <NTable
           data={rows}
           columns={columns}
+          renderCard={AssignmentCard}
           loading={classesLoading}
           error={hasFailedToLoad(classesError, classes) ? classesError : null}
           renderError={() => <NErrorState surface="panel" />}

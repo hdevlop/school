@@ -311,13 +311,14 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
   };
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-2">
+    <NajmScroll axis="y" className="h-full min-h-0 w-full flex-1">
+    <div className="flex min-h-full min-w-0 flex-col gap-2 fit:h-full">
       <NPageHeader
         icon={UsersRound}
         title={parent.name}
         subtitle={text('subtitle')}
       >
-        <NPageHeaderActions>
+        <NPageHeaderActions className="gap-2">
           <NButton
             type="button"
             variant="outline"
@@ -330,9 +331,16 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             <span className="max-sm:hidden">{text('backToParents')}</span>
           </NButton>
           {can('update:parents') ? (
-            <NButton type="button" variant="outline" size="sm" onClick={handleEdit} className="gap-2">
+            <NButton
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleEdit}
+              aria-label={t('common.edit')}
+              className="gap-2"
+            >
               <Pencil className="size-4" />
-              {t('common.edit')}
+              <span className="max-sm:hidden">{t('common.edit')}</span>
             </NButton>
           ) : null}
           {/* Same as the teacher overview: the date gives way to the title on phones. */}
@@ -361,22 +369,21 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                 key={value}
                 value={value}
                 variant="underline"
-                className="gap-2 data-[state=active]:border-primary data-[state=active]:text-primary"
+                className="group min-w-0 gap-2 max-sm:shrink-0 max-sm:data-[state=active]:shrink data-[state=active]:border-primary data-[state=active]:text-primary"
               >
                 <Icon className="size-4" aria-hidden="true" />
-                {text(`tabs.${value}`)}
+                <span className="truncate max-sm:group-data-[state=inactive]:sr-only">{text(`tabs.${value}`)}</span>
               </TabsTrigger>
             );
           })}
         </TabsList>
 
-      <NajmScroll axis="y" className="min-h-0 flex-1">
-        <TabsContent value="details" className="mt-0 h-full">
+        <TabsContent value="details" className="mt-0">
           <ParentDetailsTab parent={parent} linkedChildren={children} />
         </TabsContent>
-        <TabsContent value="overview" className="mt-0 h-full">
-        <div className="flex min-h-full flex-col gap-3 pb-1">
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+        <TabsContent value="overview" className="mt-0 fit:min-h-0">
+        <div className="flex min-h-full flex-col gap-3 pb-1 fit:h-full">
+          <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
             <NStatCard
               icon={UsersRound}
               label={t('parents.profile.totalChildren')}
@@ -418,11 +425,12 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
 
           {/* Three equal columns, as on the teacher overview, so the chart is not
               stretched across two thirds of the page. */}
-          <div className="grid min-h-[320px] flex-1 grid-cols-1 gap-3 xl:grid-cols-3 [&>*]:min-h-0 [&>*]:min-w-0">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 fit:min-h-[17rem] fit:flex-1 fit:basis-0 [&>*]:min-w-0 fit:[&>*]:min-h-0">
             <NCard
               title={text('myChildren')}
               icon={UsersRound}
               className="flex h-full w-full"
+              classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}
             >
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/students')}>
@@ -438,7 +446,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   className="min-h-56"
                 />
               ) : (
-                <div className="flex flex-col gap-2 overflow-y-auto">
+                <div className="flex flex-col gap-2">
                   {children.map((child) => {
                     const childRecords = childData.find((item) => item.child.id === child.id);
                     const attendance = getAttendanceScore(asArray<any>(childRecords?.attendance));
@@ -490,7 +498,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
               className="flex h-full w-full"
               // The card stretches to its row; the content must too, or the
               // chart's flex-1 stops at its 220px minimum and leaves a gap.
-              classNames={{ content: 'min-h-0 flex-1' }}
+              classNames={{ content: 'min-h-0 flex-1 fit:overflow-y-auto' }}
             >
               <NCardAction>
                 <NButton
@@ -579,8 +587,8 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             />
           </div>
 
-          <div className="grid min-h-[320px] flex-1 grid-cols-1 gap-3 xl:grid-cols-3 [&>*]:min-h-0 [&>*]:min-w-0">
-            <NCard title={text('recentGrades')} icon={Award} className="flex h-full w-full">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 fit:min-h-[17rem] fit:flex-1 fit:basis-0 [&>*]:min-w-0 fit:[&>*]:min-h-0">
+            <NCard title={text('recentGrades')} icon={Award} className="flex h-full w-full" classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}>
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/grades')}>
                   {text('viewAllGrades')}
@@ -595,7 +603,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   className="min-h-56"
                 />
               ) : (
-                <div className="flex flex-col gap-2 overflow-y-auto">
+                <div className="flex flex-col gap-2">
                   {dashboard.recentGrades.map((grade) => {
                     const percentage = Math.round(getGradePercent(grade));
                     return (
@@ -629,7 +637,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
               )}
             </NCard>
 
-            <NCard title={text('feesPayments')} icon={CreditCard} className="flex h-full w-full">
+            <NCard title={text('feesPayments')} icon={CreditCard} className="flex h-full w-full" classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}>
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/fees')}>
                   {t('parents.profile.viewAllFees')}
@@ -698,7 +706,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
               )}
             </NCard>
 
-            <NCard title={text('upcomingEvents')} icon={CalendarDays} className="flex h-full w-full">
+            <NCard title={text('upcomingEvents')} icon={CalendarDays} className="flex h-full w-full" classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}>
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/calendar')}>
                   {text('viewAllEvents')}
@@ -713,7 +721,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   className="min-h-56"
                 />
               ) : (
-                <div className="flex flex-col gap-2 overflow-y-auto">
+                <div className="flex flex-col gap-2">
                   {dashboard.upcomingEvents.map((event) => (
                     <button
                       type="button"
@@ -751,9 +759,9 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
           </div>
         </div>
         </TabsContent>
-      </NajmScroll>
       </Tabs>
     </div>
+    </NajmScroll>
   );
 };
 

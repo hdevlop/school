@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
+import Link from 'next/link';
 import { HeartHandshake, Phone, UserRound, UsersRound } from 'lucide-react';
-import { NAvatar, NBadge, NCard, NEmptyState, NTable } from 'najm-kit';
+import { NAvatar, NBadge, NCard, NEmptyState } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import {
@@ -38,7 +38,6 @@ const FieldList = ({ fields, empty }: { fields: Field[]; empty: string }) => (
 
 /** Who the parent is and how to reach them, with the children linked to them. */
 const ParentDetailsTab: React.FC<ParentDetailsTabProps> = ({ parent, linkedChildren }) => {
-  const router = useRouter();
   const { t } = useTranslation();
   const { displayDateOnly } = useSchoolFormat();
   const empty = t('common.notSpecified');
@@ -73,38 +72,6 @@ const ParentDetailsTab: React.FC<ParentDetailsTabProps> = ({ parent, linkedChild
     { label: t('parents.form.isEmergencyContact'), value: yesNo(parent?.isEmergencyContact) },
   ];
 
-  const columns = useMemo(() => [
-    {
-      accessorKey: 'name',
-      header: t('students.table.name'),
-      enableSorting: true,
-      cell: ({ row }) => (
-        <span className="flex min-w-0 items-center gap-2">
-          <NAvatar src={row.original.image} fallback={row.original.name} size="sm" version={row.original.updatedAt} />
-          <span className="truncate font-medium text-foreground">{row.original.name}</span>
-        </span>
-      ),
-    },
-    { accessorKey: 'studentCode', header: t('students.table.studentCode'), enableSorting: true },
-    {
-      id: 'class',
-      accessorFn: (row) => row.class?.name ?? '',
-      header: t('students.table.class'),
-      enableSorting: true,
-    },
-    {
-      id: 'section',
-      accessorFn: (row) => row.section?.name ?? '',
-      header: t('students.table.section'),
-      enableSorting: true,
-    },
-    {
-      accessorKey: 'status',
-      header: t('students.table.status'),
-      cell: ({ getValue }) => (getValue() ? <NBadge status={getValue() as string} /> : null),
-    },
-  ], [t]);
-
   return (
     <div className="flex min-h-full flex-col gap-3 pb-1">
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
@@ -119,21 +86,41 @@ const ParentDetailsTab: React.FC<ParentDetailsTabProps> = ({ parent, linkedChild
         </NCard>
       </div>
 
-      <NCard title={t('parents.profile.linkedChildren')} icon={UsersRound} className="lg:flex-1">
+      <NCard title={t('parents.profile.linkedChildren')} icon={UsersRound}>
         {linkedChildren.length === 0 ? (
           <NEmptyState surface="panel" icon={UsersRound} title={t('parents.profile.noChildrenLinked')} />
         ) : (
-          <NTable
-            data={linkedChildren}
-            columns={columns}
-            getRowId={(row) => row.id}
-            onRowClick={(row) => router.push(`/students/${row.id}`)}
-            showCheckbox={false}
-            showViewToggle={false}
-            dynamicHeight={false}
-            showPagination={false}
-            availableModes={['table']}
-          />
+          <ul className="divide-y divide-border/60">
+            {linkedChildren.map((child) => (
+              <li key={child.id}>
+                <Link
+                  href={`/students/${child.id}`}
+                  className="flex min-w-0 items-center gap-3 rounded-md px-2 py-2.5 transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <NAvatar
+                    src={child.image}
+                    fallback={child.name}
+                    size="sm"
+                    version={child.updatedAt}
+                    className="shrink-0"
+                  />
+                  <div className="min-w-0 flex-1 text-start">
+                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                      <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+                        {child.name || empty}
+                      </span>
+                      {child.status ? <NBadge status={child.status} /> : null}
+                    </div>
+                    <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted-foreground">
+                      {child.studentCode ? <span className="break-all" dir="auto">{child.studentCode}</span> : null}
+                      {child.class?.name ? <span>{t('students.table.class')}: {child.class.name}</span> : null}
+                      {child.section?.name ? <span>{t('students.table.section')}: {child.section.name}</span> : null}
+                    </div>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         )}
       </NCard>
     </div>

@@ -1,0 +1,16 @@
+$ bun --env-file=apps/dashboard/.env.local packages/seed/src/scripts/admin/seed-visit-request-permissions.ts
+[najm-chatbot deprecation] Importing RAG tables from "najm-chatbot/pg" is deprecated. Import from "najm-rag/pg" instead and spread ragSchema.
+🚀 Starting visit request permissions...
+
+ℹ INFO  ⚙️ Initializing server...
+⚠ WARN  Decorated controllers were imported but not declared; their routes are not mounted
+  Context: {
+  "controllers": [
+    "StorageStudioController",
+    "SectionController",
+    "ClassController",
+    "SubjectController"
+  ]
+}
+[Email:Console] Provider initialized
+ℹ INFO  ✅ Server initialized in 151ms

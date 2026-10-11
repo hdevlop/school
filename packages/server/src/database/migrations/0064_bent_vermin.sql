@@ -1,0 +1,1 @@
+ALTER TABLE "school_landing" ADD COLUMN "news" jsonb DEFAULT '[]'::jsonb NOT NULL;

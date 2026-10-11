@@ -255,7 +255,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
                 className="h-12 w-12 min-w-12 object-contain"
               />
               {showExpandedMark && (
-                <span className="truncate text-xl font-semibold leading-none text-sidebar-foreground">
+                <span className="truncate text-xl font-semibold leading-none tracking-tight text-sidebar-foreground">
                   MyScolAI
                 </span>
               )}

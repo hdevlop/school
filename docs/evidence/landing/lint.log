@@ -1,0 +1,1 @@
+$ eslint apps/dashboard/src apps/dashboard/tests packages/contracts/src packages/contracts/tests packages/server/src packages/server/tests packages/seed/src scripts

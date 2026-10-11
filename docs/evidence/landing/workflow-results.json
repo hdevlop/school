@@ -1,0 +1,21 @@
+{
+  "submission": 201,
+  "persisted": {
+    "id": "A-1SV",
+    "language": "en",
+    "status": "new"
+  },
+  "notifications": 1,
+  "programEditor": 3,
+  "photoInputs": 5,
+  "heroUpload": 200,
+  "brandingSave": 200,
+  "managedHero": "http://localhost:3103/_next/image?url=%2Fapi%2Fbranding%2Fassets%2Fe0512892-049f-4329-a0fb-8c8776fb28ef.webp&w=3840&q=75",
+  "brandingRestore": 200,
+  "editorSave": 200,
+  "inboxSave": 200,
+  "staffNote": "Called family; visit arranged.",
+  "handledBy": true,
+  "updatedStatus": "scheduled",
+  "signedInPortal": 1
+}

@@ -1059,7 +1059,11 @@
     "reviewed": "Revisado",
     "students": "Estudiantes",
     "teachers": "Profesores",
-    "transferred": "Transferido"
+    "transferred": "Transferido",
+    "new": "Nuevo",
+    "contacted": "Contactado",
+    "scheduled": "Programado",
+    "closed": "Cerrado"
   },
   "themeSheets": {
     "discardTitle": "¿Descartar los cambios del tema?",
@@ -5010,5 +5014,200 @@
     "more": "{{count}} más…",
     "events": "Eventos",
     "noItemsOnDay": "Nada programado para este día"
+  },
+  "landing": {
+    "meta": {
+      "tagline": "Donde cada estudiante brilla",
+      "description": "Descubra nuestro colegio, nuestros programas y una vida escolar conectada. Contáctenos para concertar una visita."
+    },
+    "nav": {
+      "about": "Nosotros",
+      "programs": "Programas",
+      "parents": "Familias",
+      "contact": "Contacto",
+      "portal": "Portal de familias",
+      "dashboard": "Abrir el panel",
+      "website": "Sitio del colegio",
+      "label": "Navegación del colegio",
+      "language": "Cambiar idioma",
+      "menu": "Abrir menú",
+      "news": "Noticias"
+    },
+    "hero": {
+      "titleStart": "Donde cada estudiante",
+      "titleAccent": "brilla",
+      "subtitle": "Un lugar para aprender, crecer y sentirse parte, en cada etapa escolar. Sigue la asistencia, las notas, el horario y las noticias de la escuela de tu hijo desde una sola aplicación, y acompaña cada paso del curso.",
+      "visit": "Solicitar una visita",
+      "programs": "Nuestros programas",
+      "alt": "Una estudiante levantando la mano en una clase soleada"
+    },
+    "features": {
+      "description": "Sigue el día de tu hijo en la misma aplicación que usa la escuela: asistencia, notas, horarios, cuotas, transporte y avisos, todo en un solo lugar.",
+      "title": "La vida escolar de su hijo, en su bolsillo",
+      "items": {
+        "attendance": {
+          "title": "Registros de asistencia",
+          "body": "Consulte la asistencia y las ausencias de su hijo."
+        },
+        "grades": {
+          "title": "Notas e informes",
+          "body": "Siga el progreso y consulte los informes."
+        },
+        "classRoutines": {
+          "title": "Horarios y exámenes",
+          "body": "Consulte horarios y fechas de exámenes."
+        },
+        "fees": {
+          "title": "Cuotas y pagos registrados",
+          "body": "Consulte las cuotas escolares y los pagos registrados."
+        },
+        "transport": {
+          "title": "Transporte escolar",
+          "body": "Consulte la ruta asignada y los detalles del transporte."
+        },
+        "announcements": {
+          "title": "Anuncios y eventos",
+          "body": "Siga las noticias y los eventos del colegio."
+        }
+      }
+    },
+    "platform": {
+      "title": "Una plataforma para todo el colegio",
+      "dashboardAlt": "Panel del personal con datos de demostración",
+      "parentAlt": "Portal de familias con datos de demostración"
+    },
+    "assistant": {
+      "eyebrow": "Asistente IA",
+      "title": "Pregunte lo que quiera, en su idioma",
+      "subtitle": "Pregunta al asistente de la escuela por las notas, la asistencia o el horario de tu hijo en árabe, dariya, francés, inglés o español. Responde en el idioma en que escribes, usando solo los datos a los que tu cuenta tiene acceso. Solo consulta información: cualquier cambio lo sigue haciendo el personal de la escuela.",
+      "alt": "Una madre pregunta en dariya al asistente de la escuela por la media de matemáticas de su hijo y ve su gráfico de progreso; al lado, sonríe a su teléfono en casa"
+    },
+    "programs": {
+      "description": "Cada etapa escolar tiene su ritmo y sus objetivos. Descubre nuestros niveles a continuación y solicita una visita para conocer a los docentes y ver las aulas.",
+      "title": "Un lugar para crecer, en cada etapa",
+      "subtitle": "Aprendizaje, curiosidad y confianza, cada día.",
+      "alt": "Entorno de aprendizaje ilustrativo",
+      "cta": "Solicitar una visita para {program}"
+    },
+    "testimonials": {
+      "description": "Las familias cuentan cómo es la vida escolar de sus hijos y cómo la siguen cada día.",
+      "title": "Palabras de nuestras familias"
+    },
+    "admissions": {
+      "title": "Venga a conocer nuestro colegio",
+      "subtitle": "Solicite una visita. Nuestro equipo le contactará.",
+      "open": "Las admisiones están abiertas"
+    },
+    "contact": {
+      "map": "Ubicación del colegio",
+      "website": "Visitar nuestro sitio"
+    },
+    "footer": {
+      "rights": "Todos los derechos reservados."
+    },
+    "skip": "Ir al contenido",
+    "powered": "Con tecnología de",
+    "stats": "El colegio en cifras",
+    "photoDisclosure": "Fotografía ilustrativa",
+    "demoDisclosure": "Demostración ilustrativa — datos de ejemplo",
+    "news": {
+      "title": "Últimas noticias y eventos",
+      "description": "Celebraciones, salidas, concursos y momentos de la vida escolar, compartidos por nuestro equipo para que las familias sigan lo que pasa en el colegio."
+    }
+  },
+  "visitRequests": {
+    "title": "Solicitudes de visita",
+    "form": {
+      "name": "Nombre",
+      "phone": "Teléfono",
+      "email": "Correo (opcional)",
+      "level": "Nivel del niño",
+      "chooseLevel": "Elegir un nivel",
+      "message": "Mensaje (opcional)",
+      "website": "Sitio web",
+      "send": "Enviar solicitud",
+      "sending": "Enviando…",
+      "thanks": "Gracias. Nuestro equipo le contactará para concertar su visita.",
+      "rateLimited": "Demasiadas solicitudes. Inténtelo más tarde o llámenos.",
+      "failed": "No se pudo enviar la solicitud. Revise los datos e inténtelo de nuevo."
+    },
+    "errors": {
+      "notFound": "Solicitud no encontrada.",
+      "cycle": "Elija un programa activo."
+    },
+    "notification": {
+      "title": "Nueva solicitud de visita",
+      "body": "Una familia ha solicitado una visita. Abra la bandeja para responder."
+    },
+    "success": {
+      "received": "Solicitud recibida.",
+      "loaded": "Solicitudes cargadas.",
+      "updated": "Solicitud actualizada."
+    },
+    "status": "Estado",
+    "staffNote": "Nota interna",
+    "save": "Guardar",
+    "loading": "Cargando…",
+    "loadFailed": "No se pudieron cargar las solicitudes.",
+    "empty": "Aún no hay solicitudes."
+  },
+  "publicPage": {
+    "title": "Página pública del colegio",
+    "content": "Contenido",
+    "programs": "Programas",
+    "photos": "Fotos",
+    "publish": "Publicación",
+    "stats": "Estadísticas del colegio",
+    "testimonials": "Testimonios de familias",
+    "value": "Valor",
+    "label": "Etiqueta",
+    "author": "Autor",
+    "quote": "Cita",
+    "rating": "Valoración",
+    "admissionsOpen": "Admisiones abiertas",
+    "year": "Año de admisiones",
+    "socialLinks": "Redes sociales",
+    "blurb": "Descripción del programa",
+    "photo": "Foto del programa",
+    "defaultPhoto": "Foto neutra predeterminada",
+    "published": "Página publicada",
+    "view": "Ver página",
+    "save": "Guardar contenido",
+    "saved": "Contenido guardado.",
+    "failed": "No se pudo guardar. Revise los campos e inténtelo de nuevo.",
+    "loadFailed": "No se pudo cargar el contenido.",
+    "photoHint": "Asigne la foto de cada programa en la pestaña Programas.",
+    "errors": {
+      "cycle": "Programa desconocido.",
+      "socialUrl": "Use un enlace HTTPS de la plataforma correspondiente."
+    },
+    "success": {
+      "loaded": "Contenido guardado.",
+      "saved": "Contenido guardado."
+    },
+    "addStat": "Añadir estadística",
+    "addTestimonial": "Añadir testimonio",
+    "remove": "Eliminar",
+    "news": "Noticias y eventos",
+    "addNews": "Añadir noticia",
+    "newsDate": "Fecha",
+    "newsTag": "Etiqueta",
+    "newsTitle": "Título",
+    "newsBody": "Texto breve",
+    "newsHint": "La tarjeta {{n}} usa «Foto de noticia {{n}}» de la pestaña Fotos."
+  },
+  "theme": {
+    "branding": {
+      "slots": {
+        "landingHero": "Foto principal",
+        "landingAssistant": "Foto de madre",
+        "landingProgram1": "Foto de programa 1",
+        "landingProgram2": "Foto de programa 2",
+        "landingProgram3": "Foto de programa 3",
+        "landingNews1": "Foto de noticia 1",
+        "landingNews2": "Foto de noticia 2",
+        "landingNews3": "Foto de noticia 3"
+      }
+    }
   }
 }

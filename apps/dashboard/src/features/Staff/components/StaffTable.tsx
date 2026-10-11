@@ -57,9 +57,6 @@ const StaffTable = () => {
   const totalPayroll = rows.reduce((sum, row) => sum + calculateStaffPay(row), 0);
   const activeCount = rows.filter((row) => row?.status === 'active').length;
   const uniqueRoles = new Set(rows.map((row) => row?.role).filter(Boolean));
-  const nonTeachingActiveCount = rows.filter(
-    (row) => row?.status === 'active' && !STAFF_LIST_EXCLUDED_ROLES.has(row?.role)
-  ).length;
 
   // Only a role with app access gets a login, and so an invitation.
   const createAndInviteStaff = async (data) => {
@@ -300,11 +297,11 @@ const StaffTable = () => {
       {/* Figures from a list that failed or was refused are unknown, not zero;
           the table below shows why. */}
       {isStaffLoading ? (
-        <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
-          {Array.from({ length: 5 }).map((_, index) => <NStatCardSkeleton key={index} />)}
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, index) => <NStatCardSkeleton key={index} />)}
         </div>
       ) : hasFailedToLoad(isError ? error : null, rows) ? null : (
-        <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
           <NStatCard
             icon={UserRound}
             label={t('staff.stats.total')}
@@ -324,11 +321,6 @@ const StaffTable = () => {
             icon={Wallet}
             label={t('staff.stats.uniqueRoles')}
             value={uniqueRoles.size}
-          />
-          <NStatCard
-            icon={UserRound}
-            label={t('staff.stats.nonTeaching')}
-            value={nonTeachingActiveCount}
           />
         </div>
       )}

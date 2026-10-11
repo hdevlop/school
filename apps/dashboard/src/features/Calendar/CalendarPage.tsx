@@ -319,7 +319,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
             </span>
           </div>
 
-          {/* Icons only at phone width, where the labels did not fit one row. */}
+          {/* Compact phone actions; only the selected tab's label expands. */}
           <div className="ml-auto flex min-w-0 max-w-full flex-wrap items-center justify-end gap-2">
             <NButton
               size="sm"
@@ -338,7 +338,7 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
               color="primary"
               classNames={{
                 list: 'h-8 rounded-md bg-primary/10 p-0.5',
-                trigger: 'h-7 rounded px-3 text-xs font-medium data-[state=active]:text-primary-foreground',
+                trigger: 'group h-7 rounded px-3 text-xs font-medium data-[state=active]:text-primary-foreground',
               }}
               styles={{
                 activeTrigger: {
@@ -347,8 +347,8 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
                 },
               }}
               items={[
-                { value: 'month', label: <span className="max-sm:sr-only">{t('calendar.monthView')}</span>, icon: CalendarDays, content: null },
-                { value: 'week', label: <span className="max-sm:sr-only">{t('calendar.weekView')}</span>, icon: Clock, content: null },
+                { value: 'month', label: <span className="max-sm:group-data-[state=inactive]:sr-only">{t('calendar.monthView')}</span>, icon: CalendarDays, content: null },
+                { value: 'week', label: <span className="max-sm:group-data-[state=inactive]:sr-only">{t('calendar.weekView')}</span>, icon: Clock, content: null },
               ]}
             />
             {canManage && (

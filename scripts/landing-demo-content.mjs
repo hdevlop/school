@@ -1,0 +1,15 @@
+import postgres from 'postgres';
+const target=new URL(process.env.DB_URL);target.pathname='/school_landing_demo';
+if(!['localhost','127.0.0.1'].includes(target.hostname))throw new Error('Local demo only');
+const sql=postgres(target.toString());
+const labels=(en,fr,ar,es)=>({en,fr,ar,es});
+const cycles=[['ld-primary','Primary School',labels('Primary School','École primaire','التعليم الابتدائي','Primaria')],['ld-middle','Middle School',labels('Middle School','Collège','التعليم الإعدادي','Secundaria')],['ld-high','High School',labels('High School','Lycée','التعليم الثانوي','Bachillerato')]];
+for(const [id,name,translation] of cycles)await sql`insert into cycles(id,name,labels,sort_order) values(${id},${name},${sql.json(translation)},${cycles.findIndex(c=>c[0]===id)}) on conflict(id) do nothing`;
+await sql`update settings set school_name='Al Nour · Demonstration School',school_address='Casablanca, Morocco',school_address_latitude=33.5731,school_address_longitude=-7.5898,school_phone='+212522000000',school_email='contact@school.example.test',school_website=null,language='en'`;
+const stats=[{value:'1,200',label:labels('students · demo','élèves · démo','تلاميذ · تجريبي','alumnos · demo')},{value:'85',label:labels('teachers · demo','enseignants · démo','أساتذة · تجريبي','profesores · demo')},{value:'25',label:labels('years · demo','années · démo','سنوات · تجريبي','años · demo')},{value:'98%',label:labels('success · demo','réussite · démo','نجاح · تجريبي','éxito · demo')}];
+const testimonials=[{author:'Salma B. · Demo',rating:5,quote:labels('I feel connected to my child’s school day, wherever I am.','Je me sens proche de la vie scolaire de mon enfant, où que je sois.','أتابع الحياة المدرسية لطفلي أينما كنت.','Me siento conectada a la vida escolar de mi hijo, esté donde esté.')},{author:'Omar A. · Demo',rating:5,quote:labels('Caring teachers, clear communication and a school our children love.','Des enseignants attentifs et une communication claire.','أساتذة مهتمون وتواصل واضح ومدرسة يحبها أطفالنا.','Profesores atentos, comunicación clara y un colegio que nuestros hijos adoran.')}];
+const slots={'ld-primary':'landingProgram1','ld-middle':'landingProgram2','ld-high':'landingProgram3'};
+await sql`insert into school_landing(id,stats,testimonials,program_photo_slots,admissions_open,admissions_year_label) values('school',${sql.json(stats)},${sql.json(testimonials)},${sql.json(slots)},true,'2026–2027 · Demo') on conflict(id) do update set stats=excluded.stats,testimonials=excluded.testimonials,program_photo_slots=excluded.program_photo_slots,admissions_open=true,admissions_year_label=excluded.admissions_year_label`;
+console.log('Configured synthetic landing content in school_landing_demo only.');
+console.log(await sql`select u.id,u.email from users u join roles r on u.role_id=r.id where r.name='parent' limit 1`);
+await sql.end();

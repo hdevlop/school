@@ -236,11 +236,11 @@ export function SchoolSettingsSheet({ open, onOpenChange, onLeave }: {
         <NForm id={SETTINGS_FORM_ID} schema={settingsSchema} form={form} onSubmit={handleSubmit} className="gap-0">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SettingsTab)} className="gap-0">
             <div className="sticky top-0 z-10 -mx-4 bg-background px-4 pb-2 pt-3">
-              <TabsList aria-label={t('settings.editor.sections')} className="grid h-auto w-full grid-cols-3">
+              <TabsList aria-label={t('settings.editor.sections')} className="grid h-auto w-full grid-cols-3 max-sm:flex max-sm:flex-nowrap">
                 {tabs.map(({ id, label, icon: Icon }) => (
-                  <TabsTrigger key={id} value={id} className="min-h-9 min-w-0 gap-2">
+                  <TabsTrigger key={id} value={id} className="group min-h-9 min-w-0 gap-2 max-sm:shrink-0 max-sm:data-[state=active]:flex-1">
                     <Icon className="h-4 w-4 shrink-0" aria-hidden />
-                    <span className="truncate">{t(label)}</span>
+                    <span className="truncate max-sm:group-data-[state=inactive]:sr-only">{t(label)}</span>
                   </TabsTrigger>
                 ))}
               </TabsList>

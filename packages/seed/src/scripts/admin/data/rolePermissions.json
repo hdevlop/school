@@ -2,7 +2,9 @@
   {
     "roleName": "admin",
     "permissions": [
-      "*:*"
+      "*:*",
+      "read:visit-requests",
+      "update:visit-requests"
     ]
   },
   {
@@ -97,7 +99,9 @@
       "create:settings",
       "read:settings",
       "update:settings",
-      "delete:settings"
+      "delete:settings",
+      "read:visit-requests",
+      "update:visit-requests"
     ]
   },
   {
@@ -207,7 +211,9 @@
       "create:parents",
       "update:parents",
       "read:classes",
-      "read:teachers"
+      "read:teachers",
+      "read:visit-requests",
+      "update:visit-requests"
     ]
   },
   {

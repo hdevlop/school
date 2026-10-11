@@ -82,6 +82,7 @@ export const enumValues = {
   maintenanceStatus: values.MAINTENANCE_STATUS_VALUES,
   maritalStatus: values.MARITAL_STATUS_VALUES,
   llmProvider: values.LLM_PROVIDER_VALUES,
+  visitRequestStatus: values.VISIT_REQUEST_STATUS_VALUES,
 } as const;
 
 export type EnumKey = keyof typeof enumValues;

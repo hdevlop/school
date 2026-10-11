@@ -205,6 +205,8 @@ export {
   rolloverRunItems,
   rolloverRunStatusEnum,
 } from '../../modules/financial/rollover/rolloverSchema';
+export { schoolLanding } from '../../modules/landing/LandingSchema';
+export { visitRequests, visitRequestStatusEnum } from '../../modules/visitRequests/VisitRequestSchema';
 // NOTE: aiSettings + chatSessions are chatbot-only tables and live in
 // najm-chatbot/pg (NOT in najm-rag/pg). As of najm-chatbot 2.0.3 that module
 // prints its "import RAG tables from najm-rag/pg" deprecation on every import,

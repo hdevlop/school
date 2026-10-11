@@ -17,7 +17,7 @@
     "test:config:production": "bun --env-file=apps/dashboard/.env.local scripts/check-config-production.mjs",
     "test:server-i18n": "bun test packages/server/tests/i18n",
     "test:boundaries": "bun test scripts/tests && node scripts/check-workspace-boundaries.mjs",
-    "test": "bun run test:config && bun run test:server-i18n && bun run test:access-reset && bun run test:routines && bun run test:academic-years && bun run test:teacher-dashboard && bun run test:ownership && bun run test:security && bun run test:chat && bun run test:boundaries",
+    "test": "bun run test:config && bun run test:server-i18n && bun run test:access-reset && bun run test:routines && bun run test:academic-years && bun run test:teacher-dashboard && bun run test:ownership && bun run test:security && bun run test:chat && bun run test:boundaries && bun run test:landing && bun run test:visit-requests",
     "check": "bun run lint && bun run typecheck && bun run i18n:check && bun run test && bun run build && bun run db:check",
     "lint": "eslint apps/dashboard/src apps/dashboard/tests packages/contracts/src packages/contracts/tests packages/server/src packages/server/tests packages/seed/src scripts",
     "test:access-reset": "bun test packages/server/tests/accessReset/AccessResetService.test.ts packages/server/tests/accessReset/AccessResetValidator.test.ts apps/dashboard/tests/features/Users/config/accessResetModes.test.ts",
@@ -79,6 +79,7 @@
     "notifications:worker": "bun --cwd packages/server --env-file=../../apps/dashboard/.env.local src/workers/notificationsWorker.ts",
     "notifications:dispatch": "bun --cwd packages/server --env-file=../../apps/dashboard/.env.local src/workers/notificationsDispatch.ts",
     "seed:admin": "bun run --cwd packages/seed seed:admin",
+    "seed:visit-request-permissions": "bun --env-file=apps/dashboard/.env.local packages/seed/src/scripts/admin/seed-visit-request-permissions.ts",
     "seed:roles": "bun run --cwd packages/seed seed:roles",
     "seed:staff": "bun run --cwd packages/seed seed:staff",
     "seed:school": "bun run --cwd packages/seed seed:school",
@@ -102,7 +103,9 @@
     "gen": "bun datasets/gen-dataset.ts",
     "gen:all": "bun datasets/gen-dataset.ts --all",
     "gen:list": "bun datasets/gen-dataset.ts --list",
-    "gen:prompts": "bun datasets/gen-dataset.ts --all"
+    "gen:prompts": "bun datasets/gen-dataset.ts --all",
+    "test:landing": "bun test packages/server/tests/landing",
+    "test:visit-requests": "bun test packages/server/tests/visitRequests"
   },
   "devDependencies": {
     "@types/bun": "^1.3.12",

@@ -72,4 +72,8 @@ export class PersonalNotificationService {
     if (!notificationFlags.dispatchEnabled) return [];
     return this.repository.createForStudentParents({ ...input, href: '/reminders' });
   }
+
+  async createVisitRequestNotification(input: { id: string; title: string; body: string }) {
+    return this.repository.createForVisitRequest(input);
+  }
 }

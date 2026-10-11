@@ -1539,7 +1539,11 @@
     "reviewed": "Examiné",
     "students": "Étudiants",
     "teachers": "Enseignants",
-    "transferred": "Transféré"
+    "transferred": "Transféré",
+    "new": "Nouveau",
+    "contacted": "Contacté",
+    "scheduled": "Planifié",
+    "closed": "Clôturé"
   },
   "seed": {
     "success": {
@@ -5123,5 +5127,200 @@
     "more": "{{count}} de plus…",
     "events": "Événements",
     "noItemsOnDay": "Rien de prévu ce jour-là"
+  },
+  "landing": {
+    "meta": {
+      "tagline": "Chaque élève peut briller",
+      "description": "Découvrez notre école, nos programmes et une vie scolaire connectée. Contactez-nous pour organiser une visite."
+    },
+    "nav": {
+      "about": "À propos",
+      "programs": "Programmes",
+      "parents": "Parents",
+      "contact": "Contact",
+      "portal": "Espace parents",
+      "dashboard": "Ouvrir le tableau de bord",
+      "website": "Site de l’école",
+      "label": "Navigation de l’école",
+      "language": "Changer de langue",
+      "menu": "Ouvrir le menu",
+      "news": "Actualités"
+    },
+    "hero": {
+      "titleStart": "Là où chaque élève",
+      "titleAccent": "s’épanouit",
+      "subtitle": "Un lieu pour apprendre, grandir et trouver sa place, à chaque étape de la scolarité. Suivez les présences, les notes, l’emploi du temps et les actualités de l’école depuis une seule application, et restez proches de chaque étape de l’année.",
+      "visit": "Demander une visite",
+      "programs": "Nos programmes",
+      "alt": "Une élève levant la main dans une classe ensoleillée"
+    },
+    "features": {
+      "description": "Suivez la journée de votre enfant dans l’application qu’utilise l’école : présences, notes, emplois du temps, frais, transport et annonces, au même endroit.",
+      "title": "La vie scolaire de votre enfant, dans votre poche",
+      "items": {
+        "attendance": {
+          "title": "Suivi des présences",
+          "body": "Suivez les présences et les absences de votre enfant."
+        },
+        "grades": {
+          "title": "Notes et bulletins",
+          "body": "Suivez les progrès et consultez les bulletins."
+        },
+        "classRoutines": {
+          "title": "Emplois du temps et examens",
+          "body": "Retrouvez les horaires et les dates d’examen."
+        },
+        "fees": {
+          "title": "Frais et paiements enregistrés",
+          "body": "Consultez les frais scolaires et les paiements enregistrés."
+        },
+        "transport": {
+          "title": "Transport scolaire",
+          "body": "Consultez le trajet attribué et les détails du transport."
+        },
+        "announcements": {
+          "title": "Annonces et événements",
+          "body": "Restez informés des actualités de l’école."
+        }
+      }
+    },
+    "platform": {
+      "title": "Une plateforme pour toute l’école",
+      "dashboardAlt": "Tableau de bord du personnel avec des données de démonstration",
+      "parentAlt": "Espace parents avec des données de démonstration"
+    },
+    "assistant": {
+      "eyebrow": "Assistant IA",
+      "title": "Posez vos questions, dans votre langue",
+      "subtitle": "Interrogez l’assistant de l’école sur les notes, les présences ou l’emploi du temps de votre enfant, en arabe, en darija, en français, en anglais ou en espagnol. Il répond dans la langue de votre question, à partir des seules données auxquelles votre compte a accès. Il consulte sans rien modifier : toute modification reste faite par l’équipe de l’école.",
+      "alt": "Une mère demande en darija à l’assistant de l’école la moyenne de maths de son fils et voit sa courbe de progression ; à côté, elle sourit à son téléphone chez elle"
+    },
+    "programs": {
+      "description": "Chaque étape de la scolarité a son rythme et ses objectifs. Découvrez nos niveaux ci-dessous, puis demandez une visite pour rencontrer les enseignants et voir les classes.",
+      "title": "Grandir, à chaque étape",
+      "subtitle": "Apprendre avec curiosité et confiance, chaque jour.",
+      "alt": "Cadre d’apprentissage illustratif",
+      "cta": "Demander une visite pour {program}"
+    },
+    "testimonials": {
+      "description": "Des parents racontent la vie scolaire de leurs enfants et comment ils la suivent au quotidien.",
+      "title": "La parole aux familles"
+    },
+    "admissions": {
+      "title": "Venez découvrir notre école",
+      "subtitle": "Demandez une visite. Notre équipe vous contactera.",
+      "open": "Les admissions sont ouvertes"
+    },
+    "contact": {
+      "map": "Emplacement de l’école",
+      "website": "Consulter notre site"
+    },
+    "footer": {
+      "rights": "Tous droits réservés."
+    },
+    "skip": "Aller au contenu",
+    "powered": "Propulsé par",
+    "stats": "L’école en quelques chiffres",
+    "photoDisclosure": "Photographie illustrative",
+    "demoDisclosure": "Démonstration illustrative — données fictives",
+    "news": {
+      "title": "Actualités et événements",
+      "description": "Fêtes, sorties, concours et moments de la vie scolaire, partagés par notre équipe pour que les familles suivent ce qui se passe à l’école."
+    }
+  },
+  "visitRequests": {
+    "title": "Demandes de visite",
+    "form": {
+      "name": "Nom",
+      "phone": "Téléphone",
+      "email": "E-mail (facultatif)",
+      "level": "Niveau de l’enfant",
+      "chooseLevel": "Choisir un niveau",
+      "message": "Message (facultatif)",
+      "website": "Site web",
+      "send": "Envoyer la demande",
+      "sending": "Envoi…",
+      "thanks": "Merci. Notre équipe vous contactera pour organiser votre visite.",
+      "rateLimited": "Trop de demandes. Réessayez plus tard ou appelez-nous.",
+      "failed": "Impossible d’envoyer la demande. Vérifiez les informations et réessayez."
+    },
+    "errors": {
+      "notFound": "Demande introuvable.",
+      "cycle": "Choisissez un programme actif."
+    },
+    "notification": {
+      "title": "Nouvelle demande de visite",
+      "body": "Une famille souhaite visiter l’école. Consultez les demandes pour répondre."
+    },
+    "success": {
+      "received": "Demande reçue.",
+      "loaded": "Demandes chargées.",
+      "updated": "Demande mise à jour."
+    },
+    "status": "Statut",
+    "staffNote": "Note interne",
+    "save": "Enregistrer",
+    "loading": "Chargement…",
+    "loadFailed": "Impossible de charger les demandes.",
+    "empty": "Aucune demande de visite."
+  },
+  "publicPage": {
+    "title": "Page publique de l’école",
+    "content": "Contenu",
+    "programs": "Programmes",
+    "photos": "Photos",
+    "publish": "Publication",
+    "stats": "Chiffres de l’école",
+    "testimonials": "Témoignages des familles",
+    "value": "Valeur",
+    "label": "Libellé",
+    "author": "Auteur",
+    "quote": "Citation",
+    "rating": "Note",
+    "admissionsOpen": "Admissions ouvertes",
+    "year": "Année des admissions",
+    "socialLinks": "Réseaux sociaux",
+    "blurb": "Description du programme",
+    "photo": "Photo du programme",
+    "defaultPhoto": "Photo neutre par défaut",
+    "published": "Page publiée",
+    "view": "Voir la page",
+    "save": "Enregistrer",
+    "saved": "Contenu enregistré.",
+    "failed": "Impossible d’enregistrer. Vérifiez les champs et réessayez.",
+    "loadFailed": "Impossible de charger le contenu.",
+    "photoHint": "Attribuez la photo à chaque programme dans l’onglet Programmes.",
+    "errors": {
+      "cycle": "Programme inconnu.",
+      "socialUrl": "Utilisez un lien HTTPS vers le réseau correspondant."
+    },
+    "success": {
+      "loaded": "Contenu enregistré.",
+      "saved": "Contenu enregistré."
+    },
+    "addStat": "Ajouter un chiffre",
+    "addTestimonial": "Ajouter un témoignage",
+    "remove": "Supprimer",
+    "news": "Actualités et événements",
+    "addNews": "Ajouter une actualité",
+    "newsDate": "Date",
+    "newsTag": "Étiquette",
+    "newsTitle": "Titre",
+    "newsBody": "Texte court",
+    "newsHint": "La carte {{n}} utilise « Photo actualité {{n}} » de l’onglet Photos."
+  },
+  "theme": {
+    "branding": {
+      "slots": {
+        "landingHero": "Photo principale",
+        "landingAssistant": "Photo parent",
+        "landingProgram1": "Photo programme 1",
+        "landingProgram2": "Photo programme 2",
+        "landingProgram3": "Photo programme 3",
+        "landingNews1": "Photo actualité 1",
+        "landingNews2": "Photo actualité 2",
+        "landingNews3": "Photo actualité 3"
+      }
+    }
   }
 }

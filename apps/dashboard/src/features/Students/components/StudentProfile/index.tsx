@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
+import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
 import { AlertTriangle, Bus, CalendarCheck, CalendarRange, DollarSign, GraduationCap, User, X } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
 import { StudentProfileTabsProps } from './types';
@@ -61,7 +61,8 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
   const resolvedActiveTab = tabItems.some((item) => item.value === activeTab) ? activeTab : 'overview';
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <NajmScroll axis="y" className="h-full min-h-0 w-full flex-1 rounded-xl border border-slate-200 bg-white">
+    <div className="flex min-h-full min-w-0 flex-col">
       <NPageHeader
         icon={GraduationCap}
         title={t('students.profile.detailsTitle')}
@@ -105,16 +106,19 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
 
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <NTabs
-            items={tabItems}
+            items={tabItems.map((item) => ({
+              ...item,
+              label: <span className="max-sm:min-w-0 max-sm:truncate max-sm:group-data-[state=inactive]:sr-only">{item.label}</span>,
+            }))}
             value={resolvedActiveTab}
             onValueChange={setActiveTab}
             variant="underline"
             classNames={{
               root: 'min-h-0 w-full flex-1 gap-0',
-              list: 'sticky top-0 z-10 h-auto max-w-full shrink-0 justify-start gap-4 overflow-x-auto !border-0 !border-b-0 !border-transparent bg-white px-5 py-0 !shadow-none',
+              list: 'h-auto max-w-full shrink-0 flex-wrap justify-start gap-4 !border-0 !border-b-0 !border-transparent bg-white px-5 py-0 !shadow-none max-sm:gap-0 max-sm:px-1',
               trigger:
-                'relative cursor-pointer gap-2 px-2 pb-3 pt-3 text-slate-500 hover:text-slate-700 data-[state=active]:border-b-primary! data-[state=active]:text-primary!',
-              content: 'min-h-0 flex-1 overflow-y-auto px-5 py-3 scrollbar-hide',
+                'group relative cursor-pointer gap-2 px-2 pb-3 pt-3 text-slate-500 hover:text-slate-700 data-[state=active]:border-b-primary! data-[state=active]:text-primary! max-sm:min-w-0 max-sm:shrink-0 max-sm:data-[state=active]:shrink',
+              content: 'min-h-0 flex-1 px-5 py-3',
             }}
             styles={{
               list: {
@@ -129,5 +133,6 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
       </div>
       )}
     </div>
+    </NajmScroll>
   );
 }

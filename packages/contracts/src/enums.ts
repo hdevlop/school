@@ -409,3 +409,6 @@ export type MaritalStatus = (typeof MARITAL_STATUS_VALUES)[number];
 
 export const LLM_PROVIDER_VALUES = ['anthropic', 'openai', 'google', 'zai', 'ollama', 'custom'] as const;
 export type LlmProvider = (typeof LLM_PROVIDER_VALUES)[number];
+
+export const VISIT_REQUEST_STATUS_VALUES = ['new', 'contacted', 'scheduled', 'closed'] as const;
+export type VisitRequestStatus = (typeof VISIT_REQUEST_STATUS_VALUES)[number];

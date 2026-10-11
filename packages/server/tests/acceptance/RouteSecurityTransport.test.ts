@@ -1,9 +1,10 @@
 import 'reflect-metadata';
 import { afterAll, beforeAll, describe, expect, it } from 'bun:test';
-import { count, eq, like } from 'drizzle-orm';
+import { and, count, eq, like } from 'drizzle-orm';
 import type { RouteEntry } from 'najm-core';
 import type { GuardPluginConfig } from 'najm-guard';
 import { CacheService } from 'najm-cache';
+import { PermissionService } from 'najm-auth';
 import { rm } from 'node:fs/promises';
 import { join } from 'node:path';
 
@@ -21,15 +22,16 @@ process.env.SCHOOL_TRUSTED_PROXY_HOPS = '1';
 const { INJECTION_TYPES } = await import('najm-core');
 const { GUARD_CONFIG, getEffectiveGuards, getGuardMetadata } = await import('najm-guard');
 const { db } = await import('../../src/database/db');
-const { permissions, rolePermissions, roles, users } = await import('../../src/database/schema');
+const { permissions, rolePermissions, roles, users, visitRequests, notifications } = await import('../../src/database/schema');
 const { server } = await import('../../src/index');
 
 // Reviewed routes that run no guard, each marked @Public(): sign-in,
 // registration and password recovery; OAuth, which najm-auth answers with 404
 // for a provider School has not configured; the sign-in page's appearance and
 // branding; health probes; and cron triggers that check FINANCIAL_CRON_SECRET
-// themselves.
+// themselves. Public school visit enquiries: POST /api/visit-requests.
 const PUBLIC_ROUTES = [
+  'POST /api/visit-requests',
   'GET /api/appearance',
   'GET /api/auth/credential-setup/setup',
   'GET /api/auth/me',
@@ -96,6 +98,7 @@ const mailbox = (name: string) => `${name}-${suffix}@security.example.test`;
 // one whose role grants read:classes and nothing else.
 const roleless = { id: `security-roleless-${suffix}`, email: mailbox('roleless') };
 const reader = { id: `security-reader-${suffix}`, email: mailbox('reader'), roleId: `security-reader-${suffix}` };
+const notifier = { id: `security-notifier-${suffix}`, email: mailbox('notifier'), roleId: `security-notifier-${suffix}` };
 const namespace = `security-probe-${suffix}`;
 // A one-pixel PNG, which the storage plugin accepts.
 const png = Uint8Array.from(
@@ -107,6 +110,7 @@ let adminToken: string;
 let rolelessToken: string;
 let readerToken: string;
 let addedPermission: string | undefined;
+let addedVisitPermission: string | undefined;
 let usersBefore: number;
 
 type Init = { method?: string; token?: string | null; json?: unknown; body?: Uint8Array<ArrayBuffer>; type?: string };
@@ -147,8 +151,16 @@ beforeAll(async () => {
   }
   await db.insert(roles).values({ id: reader.roleId, name: `security-reader-${suffix}` });
   await db.insert(rolePermissions).values({ roleId: reader.roleId, permissionId: existing?.id ?? addedPermission! });
+  let [visitPermission] = await db.select().from(permissions).where(eq(permissions.name, 'read:visit-requests'));
+  if (!visitPermission) {
+    addedVisitPermission = `security-visit-read-${suffix}`;
+    [visitPermission] = await db.insert(permissions).values({ id: addedVisitPermission, name: 'read:visit-requests', resource: 'visit-requests', action: 'read' }).returning();
+  }
+  await db.insert(roles).values({ id: notifier.roleId, name: `security-notifier-${suffix}` });
+  await db.insert(rolePermissions).values({ roleId: notifier.roleId, permissionId: visitPermission.id });
   const hash = await Bun.password.hash(password, { algorithm: 'bcrypt', cost: 10 });
   await db.insert(users).values([
+    { id: notifier.id, name: 'Security notification recipient', email: notifier.email, password: hash, roleId: notifier.roleId, status: 'active', emailVerified: true },
     { id: roleless.id, name: 'Security role-less', email: roleless.email, password: hash, status: 'active', emailVerified: true },
     { id: reader.id, name: 'Security reader', email: reader.email, password: hash, roleId: reader.roleId,
       status: 'active', emailVerified: true },
@@ -164,13 +176,53 @@ afterAll(async () => {
   await server.stop();
   await rm(join(process.cwd(), 'storage', namespace), { recursive: true, force: true });
   await db.delete(users).where(like(users.email, `%-${suffix}@security.example.test`));
+  const visits = await db.select({ id: visitRequests.id }).from(visitRequests).where(eq(visitRequests.parentName, `Security visit ${suffix}`));
+  for (const visit of visits) await db.delete(notifications).where(eq(notifications.sourceKey, `visit-request:${visit.id}`));
+  await db.delete(visitRequests).where(eq(visitRequests.parentName, `Security visit ${suffix}`));
   await db.delete(roles).where(eq(roles.id, reader.roleId));
+  await db.delete(roles).where(eq(roles.id, notifier.roleId));
   if (addedPermission) await db.delete(permissions).where(eq(permissions.id, addedPermission));
+  if (addedVisitPermission) await db.delete(permissions).where(eq(permissions.id, addedVisitPermission));
   const [after] = await db.select({ count: count() }).from(users);
   expect(after.count).toBe(usersBefore);
 });
 
 describe('route security over the history fixture', () => {
+  it('accepts public visits, silently drops honeypots, notifies staff and limits the sixth submission', async () => {
+    const input = { parentName: `Security visit ${suffix}`, phone: '+212612345678' };
+    const before = await db.select({ count: count() }).from(visitRequests);
+    const honey = await send('/visit-requests', { method: 'POST', token: null, json: { ...input, website: 'robot', cycleId: 'invalid' } });
+    expect(honey.status, await honey.clone().text()).toBe(201);
+    expect(await honey.json()).toMatchObject({ data: { received: true } });
+    expect(await db.select({ count: count() }).from(visitRequests)).toEqual(before);
+    const valid = await send('/visit-requests', { method: 'POST', token: null, json: input });
+    expect(valid.status, await valid.clone().text()).toBe(201);
+    expect(await valid.json()).toMatchObject({ data: { received: true } });
+    const [created] = await db.select().from(visitRequests).where(eq(visitRequests.parentName, input.parentName));
+    expect(created).toBeDefined();
+    const delivered = await db.select().from(notifications).where(eq(notifications.sourceKey, `visit-request:${created.id}`));
+    expect(delivered.length).toBeGreaterThan(0);
+    expect(delivered.some(row => row.recipientUserId === notifier.id)).toBe(true);
+    expect(new Set(delivered.map(row => row.recipientUserId)).size).toBe(delivered.length);
+    for (let attempt = 3; attempt <= 5; attempt++) expect(await status('/visit-requests', { method: 'POST', token: null, json: { ...input, website: 'robot' } })).toBe(201);
+    expect(await status('/visit-requests', { method: 'POST', token: null, json: input })).toBe(429);
+    expect(await status('/visit-requests', { token: null })).toBe(401);
+    expect(await status('/visit-requests', { token: readerToken })).toBe(403);
+    expect(await status(`/visit-requests/${created.id}`, { method: 'PUT', token: null, json: { status: 'contacted' } })).toBe(401);
+    let [permission] = await db.select().from(permissions).where(eq(permissions.name, 'read:visit-requests'));
+    if (!permission) {
+      addedVisitPermission = `security-visit-read-${suffix}`;
+      [permission] = await db.insert(permissions).values({ id: addedVisitPermission, name: 'read:visit-requests', resource: 'visit-requests', action: 'read' }).returning();
+    }
+    await server.container.get(PermissionService).assignPermissionToRole(reader.roleId, permission.id);
+    // Re-login after the grant, so the signed session carries the new rights.
+    const visitReader = await login(reader.email, password);
+    readerToken = visitReader;
+    expect(await status('/visit-requests', { token: visitReader })).toBe(200);
+    expect(await status(`/visit-requests/${created.id}`, { method: 'PUT', token: visitReader, json: { status: 'contacted' } })).toBe(403);
+    expect(await status(`/visit-requests/${created.id}`, { method: 'PUT', json: { status: 'contacted', staffNote: 'Called family' } })).toBe(200);
+    await db.delete(rolePermissions).where(and(eq(rolePermissions.permissionId, permission.id), eq(rolePermissions.roleId, reader.roleId)));
+  });
   // Routes are sorted by the guards that run: their own, none for @Public(),
   // or School's default sign-in guard. A route added without a guard, a route
   // behind sign-in alone, or a public route that lost @Public() fails here

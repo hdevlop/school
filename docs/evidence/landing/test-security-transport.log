@@ -1,0 +1,80 @@
+$ bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/RouteSecurityTransport.test.ts && bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/ConcurrentRefreshTransport.test.ts
+bun test v1.3.14 (0d9b296a)
+
+packages\server\tests\acceptance\RouteSecurityTransport.test.ts:
+[najm-chatbot deprecation] Importing RAG tables from "najm-chatbot/pg" is deprecated. Import from "najm-rag/pg" instead and spread ragSchema.
+ℹ INFO  ⚙️ Initializing server...
+⚠ WARN  Decorated controllers were imported but not declared; their routes are not mounted
+  Context: {
+  "controllers": [
+    "StorageStudioController"
+  ]
+}
+[Email:Console] Provider initialized
+ℹ INFO  ✅ Server initialized in 861ms
+ℹ INFO  🚀 Server started successfully
+  Context: {
+  "port": 5530,
+  "basePath": "/api",
+  "env": "test",
+  "runtime": "bun 1.3.14",
+  "pid": 17444,
+  "version": "0.1.0"
+}
+ℹ INFO  🎨 Development mode active at http://localhost:5530
+ℹ INFO  📚 API base: http://localhost:5530/api
+⚠ WARN  [chatbot-rag] Embedding provider unreachable (openai-compatible @ http://127.0.0.1:18081/v1): Embedding request could not reach openai-compatible at http://127.0.0.1:18081/v1 (ConnectionRefused) — check the endpoint, redirects and authentication. Skipping tool indexing on boot — it will retry on next boot or manual reindex.
+(pass) route security over the history fixture > accepts public visits, silently drops honeypots, notifies staff and limits the sixth submission [157.35ms]
+(pass) route security over the history fixture > leaves no route open, or behind sign-in alone, that was not reviewed [3.71ms]
+(pass) route security over the history fixture > answers the deliberate public routes without sign-in [26.13ms]
+(pass) route security over the history fixture > does not mount the disabled storage studio [8.44ms]
+(pass) route security over the history fixture > leaves stored files to administrators, and serves them to any signed-in account [27.47ms]
+✖ ERROR dgk-1v MCP tool failed: class-routines_get_periods
+  McpException: Access denied for tool: ClassRoutineController.getPeriods
+      at executeClassGuards (C:\Users\hdevlop\Desktop\school\node_modules\najm-mcp\dist\index.mjs:545:17)
+      at processTicksAndRejections (native:7:39)
+(pass) route security over the history fixture > offers no storage or auth helpers over MCP, and runs timetable tools for read:classes alone [501.87ms]
+(pass) route security over the history fixture > reads timetables with read:classes, and refuses an account with no role [44.55ms]
+(pass) route security over the history fixture > keeps built-in registration pending, strips privileged fields and rate-limits attempts [143.63ms]
+(pass) route security over the history fixture > does not mount duplicate auth or account-management REST routes [5.50ms]
+(pass) route security over the history fixture > keeps built-in account-management routes available to the dashboard [295.67ms]
+ℹ INFO  🛑 Server stopped gracefully
+
+ 10 pass
+ 0 fail
+ 806 expect() calls
+Ran 10 tests across 1 file. [5.29s]
+bun test v1.3.14 (0d9b296a)
+
+packages\server\tests\acceptance\ConcurrentRefreshTransport.test.ts:
+[najm-chatbot deprecation] Importing RAG tables from "najm-chatbot/pg" is deprecated. Import from "najm-rag/pg" instead and spread ragSchema.
+ℹ INFO  ⚙️ Initializing server...
+⚠ WARN  Decorated controllers were imported but not declared; their routes are not mounted
+  Context: {
+  "controllers": [
+    "StorageStudioController"
+  ]
+}
+[Email:Console] Provider initialized
+ℹ INFO  ✅ Server initialized in 789ms
+ℹ INFO  🚀 Server started successfully
+  Context: {
+  "port": 5533,
+  "basePath": "/api",
+  "env": "test",
+  "runtime": "bun 1.3.14",
+  "pid": 4784,
+  "version": "0.1.0"
+}
+ℹ INFO  🎨 Development mode active at http://localhost:5533
+ℹ INFO  📚 API base: http://localhost:5533/api
+⚠ WARN  [chatbot-rag] Embedding provider unreachable (openai-compatible @ http://127.0.0.1:18081/v1): Embedding request could not reach openai-compatible at http://127.0.0.1:18081/v1 (ConnectionRefused) — check the endpoint, redirects and authentication. Skipping tool indexing on boot — it will retry on next boot or manual reindex.
+(pass) refreshes that share one refresh cookie > all succeed when three are sent together, and the session keeps working [570.63ms]
+(pass) refreshes that share one refresh cookie > keeps the session when the replaced cookie arrives again inside the grace window [393.23ms]
+(pass) refreshes that share one refresh cookie > recovers a refresh whose response never reached the browser [132.62ms]
+ℹ INFO  🛑 Server stopped gracefully
+
+ 3 pass
+ 0 fail
+ 18 expect() calls
+Ran 3 tests across 1 file. [3.82s]

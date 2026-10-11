@@ -1,0 +1,92 @@
+$ bun run --cwd apps/dashboard build
+$ node ./scripts/next-build.mjs
+▲ Next.js 16.3.6 (webpack)
+- Environments: .env.local
+✓ Running next.config.ts took 137ms
+- Experiments (use with caution):
+  ✓ externalDir
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 68s
+  Running TypeScript ...
+  Finished TypeScript in 20.0s ...
+  Collecting page data using 7 workers ...
+[najm-chatbot deprecation] Importing RAG tables from "najm-chatbot/pg" is deprecated. Import from "najm-rag/pg" instead and spread ragSchema.
+  Generating static pages using 7 workers (0/14) ...
+[najm-chatbot deprecation] Importing RAG tables from "najm-chatbot/pg" is deprecated. Import from "najm-rag/pg" instead and spread ragSchema.
+  Generating static pages using 7 workers (3/14) 
+  Generating static pages using 7 workers (6/14) 
+  Generating static pages using 7 workers (10/14) 
+✓ Generating static pages using 7 workers (14/14) in 10.4s
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ƒ /
+├ ƒ /_not-found
+├ ƒ /academic-year-migration
+├ ƒ /aging
+├ ƒ /alerts
+├ ƒ /announcements
+├ ƒ /api/[[...route]]
+├ ƒ /api/csp-report
+├ ƒ /api/ui-language
+├ ƒ /api/ui-theme
+├ ƒ /api/ui-timezone
+├ ƒ /assessments
+├ ƒ /attendance/staff
+├ ƒ /attendance/students
+├ ƒ /attendance/teachers
+├ ƒ /behavior-rewards
+├ ƒ /calendar
+├ ƒ /change-password
+├ ƒ /class-routines
+├ ƒ /classes
+├ ƒ /cycles
+├ ƒ /discipline
+├ ƒ /drivers
+├ ƒ /exams
+├ ƒ /expenses
+├ ƒ /fee-types
+├ ƒ /fees
+├ ƒ /financial-operations
+├ ƒ /forgot-password
+├ ƒ /grades
+├ ƒ /login
+├ ○ /manifest.webmanifest
+├ ƒ /notifications
+├ ƒ /parents
+├ ƒ /parents/[id]
+├ ƒ /payroll
+├ ƒ /permissions
+├ ƒ /preferences
+├ ƒ /public-page
+├ ƒ /register
+├ ƒ /reminders
+├ ƒ /reports
+├ ƒ /reset-password
+├ ○ /robots.txt
+├ ƒ /roles
+├ ƒ /sections
+├ ƒ /settings
+├ ƒ /sitemap.xml
+├ ƒ /staff
+├ ƒ /students
+├ ƒ /students/[id]
+├ ƒ /students/[id]/fees
+├ ƒ /subjects
+├ ƒ /sw.js
+├ ƒ /teachers
+├ ƒ /teachers/[id]
+├ ƒ /transport
+├ ƒ /users
+├ ƒ /vehicles
+├ ƒ /visit-requests
+└ ƒ /welcome
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

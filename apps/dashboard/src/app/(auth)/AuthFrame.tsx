@@ -1,9 +1,10 @@
 'use client';
 
 import type { ReactNode } from 'react';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import { NThemeImage } from 'najm-theme/react';
 import { useTranslation } from 'najm-i18n/react';
-import { schoolApp } from '@/najm.config';
 import { ReliableThemeImage } from './ReliableThemeImage';
 
 /**
@@ -50,24 +51,20 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
       <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-[1600px] flex-col text-foreground lg:flex-row">
         <section className="flex w-full flex-col items-center justify-center px-6 py-10 sm:px-10 lg:w-[47%] lg:shrink-0 lg:px-14 xl:px-20">
           <div className="flex w-full max-w-[380px] flex-col">
-            <div className="mb-8 flex flex-col items-center gap-2 text-center">
+            <div className="mb-8 flex justify-center">
               <NThemeImage
                 slot="authLogo"
-                className="h-16 w-16 shrink-0 object-contain sm:h-20 sm:w-20"
-                alt={schoolApp.appName}
+                className="h-32 w-32 shrink-0 object-contain sm:h-40 sm:w-40"
+                alt={t('landing.nav.website')}
               />
-              <span className="text-2xl font-semibold tracking-tight sm:text-[1.75rem]">
-                {schoolApp.appName}
-              </span>
             </div>
 
             {children}
 
+            <Link href="/welcome" className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"><ArrowLeft size={16} className="rtl:-scale-x-100" />{t('landing.nav.website')}</Link>
+
             <p className="mt-8 text-center text-xs text-muted-foreground">
-              {t('auth.page.rightsReserved', {
-                year: new Date().getFullYear(),
-                app: schoolApp.appName,
-              })}
+              © {new Date().getFullYear()}. {t('landing.footer.rights')}
             </p>
           </div>
         </section>

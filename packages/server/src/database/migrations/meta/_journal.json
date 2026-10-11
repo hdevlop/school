@@ -442,6 +442,20 @@
       "when": 1790894284110,
       "tag": "0062_ai_settings_provider_text",
       "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1791719015428,
+      "tag": "0063_secret_machine_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1791733957831,
+      "tag": "0064_bent_vermin",
+      "breakpoints": true
     }
   ]
 }

@@ -443,7 +443,7 @@ function GradesTableForYear() {
               color="primary"
               classNames={{
                 list: 'h-9 rounded-md bg-primary/10 p-0.5',
-                trigger: 'h-8 rounded px-3 text-xs font-medium data-[state=active]:text-primary-foreground',
+                trigger: 'group h-8 rounded px-3 text-xs font-medium data-[state=active]:text-primary-foreground',
               }}
               styles={{
                 activeTrigger: {
@@ -451,11 +451,11 @@ function GradesTableForYear() {
                   color: 'var(--primary-foreground)',
                 },
               }}
-              // Icons only at phone width, where the labels left no room for the
-              // title; the labels stay readable to screen readers.
+              // On phones only the selected label expands; every tab keeps its
+              // accessible name when collapsed to an icon.
               items={[
-                { value: 'assessment', label: <span className="max-sm:sr-only">{t('grades.form.assessment')}</span>, icon: ClipboardList, content: null },
-                { value: 'exam', label: <span className="max-sm:sr-only">{t('grades.toolbar.exam')}</span>, icon: FileText, content: null },
+                { value: 'assessment', label: <span className="max-sm:group-data-[state=inactive]:sr-only">{t('grades.form.assessment')}</span>, icon: ClipboardList, content: null },
+                { value: 'exam', label: <span className="max-sm:group-data-[state=inactive]:sr-only">{t('grades.toolbar.exam')}</span>, icon: FileText, content: null },
               ]}
             />
           </div>

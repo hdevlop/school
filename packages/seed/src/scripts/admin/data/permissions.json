@@ -299,7 +299,7 @@
     "resource": "payments",
     "action": "delete"
   },
-    {
+  {
     "name": "create:vehicles",
     "description": "Permission to create new vehicles",
     "resource": "vehicles",
@@ -419,7 +419,7 @@
     "resource": "expenses",
     "action": "delete"
   },
-    {
+  {
     "name": "create:exams",
     "description": "Permission to create new exams",
     "resource": "exams",
@@ -652,5 +652,17 @@
     "description": "God mode - unlimited access to all resources and actions",
     "resource": "*",
     "action": "*"
+  },
+  {
+    "name": "read:visit-requests",
+    "description": "read school visit requests",
+    "resource": "visit-requests",
+    "action": "read"
+  },
+  {
+    "name": "update:visit-requests",
+    "description": "update school visit requests",
+    "resource": "visit-requests",
+    "action": "update"
   }
 ]

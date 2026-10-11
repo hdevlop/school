@@ -5,10 +5,24 @@ import { DB } from '../../database/db';
 import { parents, studentParents } from '../../database/schema';
 import { NOTIFICATION_BATCH_SIZE, NOTIFICATION_MAX_ATTEMPTS } from './notificationConfig';
 import { notificationDeliveries, notifications, pushSubscriptions } from './notificationSchema';
+import { usersTable, rolePermissionsTable, permissionsTable } from '../../auth';
+import { matchPermission } from 'najm-auth/client';
 
 @Repository()
 export class PersonalNotificationRepository {
   declare db: DB;
+
+  async createForVisitRequest(input: { id: string; title: string; body: string }) {
+    const grants = await this.db.select({ userId: usersTable.id, permission: permissionsTable.name })
+      .from(usersTable).innerJoin(rolePermissionsTable, eq(usersTable.roleId, rolePermissionsTable.roleId))
+      .innerJoin(permissionsTable, eq(rolePermissionsTable.permissionId, permissionsTable.id))
+      .where(eq(usersTable.status, 'active'));
+    const recipients = [...new Set(grants.filter(row => matchPermission([row.permission], 'read:visit-requests')).map(row => row.userId))];
+    if (!recipients.length) return [];
+    return this.db.insert(notifications).values(recipients.map(recipientUserId => ({ recipientUserId,
+      sourceKey: `visit-request:${input.id}`, topic: 'visitRequest.created', title: input.title, body: input.body, href: '/visit-requests',
+    }))).onConflictDoNothing().returning();
+  }
 
   async listMine(userId: string, input: { limit: number; unread?: boolean }) {
     const conditions = [eq(notifications.recipientUserId, userId)];

@@ -9,6 +9,7 @@ export const schoolApp = defineNajmApp({
     apiBaseURL: '/api',
     authPrefix: '/auth',
     publicRoutes: [
+      '/welcome',
       '/login',
       '/register',
       '/forgot-password',

@@ -110,6 +110,7 @@ const ParentAttentionCard = ({
       title={t('dashboard.teacher.attention.title')}
       icon={AlertCircle}
       className={cn('flex h-full w-full', className)}
+      classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}
     >
       <ul className="flex flex-col divide-y divide-border/70">
         {rows.map(({ key, label: rowLabel, icon: Icon, dot, href, count, value }) => {

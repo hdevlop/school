@@ -95,6 +95,8 @@ export const FEATURE_ICONS = {
   roles: ShieldCheck,
   permissions: KeyRound,
   users: UserCog,
+  visitRequests: CalendarCheck,
+  publicPage: School,
 } as const satisfies Record<string, LucideIcon>;
 
 export type FeatureIconKey = keyof typeof FEATURE_ICONS;

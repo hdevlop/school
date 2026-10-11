@@ -48,6 +48,8 @@ export const PAGE_ACCESS = {
   accessControl: inRoles(ADMIN),
   appearance: inRoles(ADMIN),
   settings: inRoles(ADMINISTRATORS),
+  visitRequests: can('read:visit-requests'),
+  publicPage: inRoles(ADMINISTRATORS),
 } satisfies Record<string, PageRule>;
 
 export type PageAccess = keyof typeof PAGE_ACCESS;
