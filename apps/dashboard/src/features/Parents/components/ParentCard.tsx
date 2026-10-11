@@ -57,7 +57,13 @@ const ParentCard = ({ data }) => {
     >
 
       <div className="shrink-0">
-        <NAvatar src={data?.image} fallback={parent.name} size="lg" version={data?.updatedAt} />
+        <NAvatar
+          src={data?.image}
+          alt={parent.name}
+          fallback={parent.name?.trim().split(/\s+/).map((part) => part.charAt(0)).join('').slice(0, 2).toUpperCase()}
+          size="lg"
+          version={data?.updatedAt}
+        />
       </div>
 
       <div className="min-w-0 flex-1 flex flex-col gap-2">
