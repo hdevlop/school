@@ -1,0 +1,26 @@
+[
+  {
+    "key": "news-science-workshop",
+    "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:10 editorial photograph for a Moroccan school website news gallery. Style: authentic candid school photography, warm natural daylight, cream Moroccan school architecture, navy school sweaters and white collars, realistic diverse Moroccan faces and anatomically natural hands. Composition: one wide horizontal photograph, subjects and activity centered with crop-safe margins for a 16:10 thumbnail; clear distinct visual activity, no portrait of a single child at a desk. Constraints: no readable writing, text overlays, logos, watermarks, UI, dates or collages. Fictional illustrative school scene. Primary request: Four Moroccan pupils aged eleven to fourteen, girls and boys, excitedly doing a hands-on science experiment with their female science teacher in a bright school laboratory. A small transparent beaker bubbles with colorful foam on a lab bench beside test tubes, simple microscope, safety goggles and plants. Children wear safety goggles and navy school sweaters, leaning in together with focused curiosity. Realistic safe classroom experiment, balanced natural skin textures, candid interaction. The experiment and students are fully visible.",
+    "output": "apps/dashboard/public/images/landing/news-science-workshop.webp",
+    "generationMode": "built-in image_gen",
+    "generatedOn": "2026-10-11",
+    "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12c69-d3ec-74f0-b09e-a1e6663e5208\\exec-2fec491b-dfbc-4bf9-b7bf-de820f1b035e.png"
+  },
+  {
+    "key": "news-library-reading",
+    "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:10 editorial photograph for a Moroccan school website news gallery. Style: authentic candid school photography, warm natural daylight, cream Moroccan school architecture, navy school sweaters and white collars, realistic diverse Moroccan faces and anatomically natural hands. Composition: one wide horizontal photograph, subjects and activity centered with crop-safe margins for a 16:10 thumbnail; clear distinct visual activity, no portrait of a single child at a desk. Constraints: no readable writing, text overlays, logos, watermarks, UI, dates or collages. Fictional illustrative school scene. Primary request: A small group of Moroccan primary school children aged eight to ten, girls and boys, enjoying a shared picture-book reading session with their male teacher in a cozy sunlit school library. Children sit on colorful cushions around a low wooden table, teacher holds an open illustrated book with no legible lettering, other children browse books. Warm wooden bookshelves, green plants and soft sunlight through tall windows. Show several distinct children interacting naturally, crop-safe wide scene with hands and books clearly visible. Warm joyful learning atmosphere.",
+    "output": "apps/dashboard/public/images/landing/news-library-reading.webp",
+    "generationMode": "built-in image_gen",
+    "generatedOn": "2026-10-11",
+    "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12c69-d3ec-74f0-b09e-a1e6663e5208\\exec-8551ede7-ae45-41d5-8dc2-47e1b95e9da9.png"
+  },
+  {
+    "key": "news-school-garden",
+    "prompt": "Use case: photorealistic-natural. Asset type: landscape 16:10 editorial photograph for a Moroccan school website news gallery. Style: authentic candid school photography, warm natural daylight, cream Moroccan school architecture, navy school sweaters and white collars, realistic diverse Moroccan faces and anatomically natural hands. Composition: one wide horizontal photograph, subjects and activity centered with crop-safe margins for a 16:10 thumbnail; clear distinct visual activity, no portrait of a single child at a desk. Constraints: no readable writing, text overlays, logos, watermarks, UI, dates or collages. Fictional illustrative school scene. Primary request: Moroccan schoolchildren aged ten to thirteen, girls and boys, working together with their female teacher in a sunny outdoor school garden, planting young seedlings into a raised wooden garden bed. Children kneel or stand around the bed with gardening gloves, small trowels, terracotta pots and a cheerful orange watering can, school cream courtyard walls and leafy trees softly in background. Realistic soil and lush greens, happy candid collaboration, hands clearly holding plants and tools correctly. Wide scene showing the full gardening activity.",
+    "output": "apps/dashboard/public/images/landing/news-school-garden.webp",
+    "generationMode": "built-in image_gen",
+    "generatedOn": "2026-10-11",
+    "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12c69-d3ec-74f0-b09e-a1e6663e5208\\exec-02263e5b-32ba-4f24-a18e-250c9bf8b76a.png"
+  }
+]

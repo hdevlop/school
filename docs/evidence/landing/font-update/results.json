@@ -1,0 +1,389 @@
+[
+  {
+    "name": "desktop-en",
+    "width": 1440,
+    "language": "en",
+    "direction": "ltr",
+    "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif",
+    "fontLoaded": true,
+    "horizontalOverflow": false,
+    "elements": [
+      {
+        "selector": ".landing-desktop-nav a",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#landing-hero-title",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-hero-summary",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-stat-card dd",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#parents h2",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-feature-card p",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#programs h3",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-news-date",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-testimonials blockquote",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-contact-subtitle",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact label",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact input",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact textarea",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact button[type=\"submit\"]",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-footer small",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      }
+    ],
+    "portals": [
+      {
+        "name": "language menu",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "name": "program dropdown",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "name": "country dropdown",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "name": "tablet-fr",
+    "width": 820,
+    "language": "fr",
+    "direction": "ltr",
+    "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif",
+    "fontLoaded": true,
+    "horizontalOverflow": false,
+    "elements": [
+      {
+        "selector": ".landing-desktop-nav a",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#landing-hero-title",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-hero-summary",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-stat-card dd",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#parents h2",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-feature-card p",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#programs h3",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-news-date",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-testimonials blockquote",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-contact-subtitle",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact label",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact input",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact textarea",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact button[type=\"submit\"]",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-footer small",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      }
+    ],
+    "portals": [],
+    "errors": []
+  },
+  {
+    "name": "mobile-en",
+    "width": 390,
+    "language": "en",
+    "direction": "ltr",
+    "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif",
+    "fontLoaded": true,
+    "horizontalOverflow": false,
+    "elements": [
+      {
+        "selector": ".landing-desktop-nav a",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#landing-hero-title",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-hero-summary",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-stat-card dd",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#parents h2",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-feature-card p",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#programs h3",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-news-date",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-testimonials blockquote",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-contact-subtitle",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact label",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact input",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact textarea",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact button[type=\"submit\"]",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-footer small",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      }
+    ],
+    "portals": [
+      {
+        "name": "mobile menu",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "name": "mobile menu title",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      }
+    ],
+    "errors": []
+  },
+  {
+    "name": "mobile-ar",
+    "width": 390,
+    "language": "ar",
+    "direction": "rtl",
+    "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif",
+    "fontLoaded": true,
+    "horizontalOverflow": false,
+    "elements": [
+      {
+        "selector": ".landing-desktop-nav a",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#landing-hero-title",
+        "family": "Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-hero-summary",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-stat-card dd",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#parents h2",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-feature-card p",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#programs h3",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-news-date",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-testimonials blockquote",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-contact-subtitle",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact label",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact input",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact textarea",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact button[type=\"submit\"]",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-footer small",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      }
+    ],
+    "portals": [],
+    "errors": []
+  },
+  {
+    "name": "narrow-es",
+    "width": 320,
+    "language": "es",
+    "direction": "ltr",
+    "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif",
+    "fontLoaded": true,
+    "horizontalOverflow": false,
+    "elements": [
+      {
+        "selector": ".landing-desktop-nav a",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#landing-hero-title",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-hero-summary",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-stat-card dd",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#parents h2",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-feature-card p",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#programs h3",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-news-date",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-testimonials blockquote",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-contact-subtitle",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact label",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact input",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact textarea",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": "#contact button[type=\"submit\"]",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      },
+      {
+        "selector": ".landing-footer small",
+        "family": "landingFont, \"landingFont Fallback\", Tahoma, Arial, sans-serif"
+      }
+    ],
+    "portals": [],
+    "errors": []
+  }
+]

@@ -5147,12 +5147,16 @@
       "news": "Actualités"
     },
     "hero": {
-      "titleStart": "Là où chaque élève",
-      "titleAccent": "s’épanouit",
+      "eyebrow": "Un monde de découvertes",
+      "titleStart": "Là où",
+      "titleWonder": "l’émerveillement",
+      "titleEnd": "s’éveille",
+      "titleAccent": "La curiosité",
+      "titleEveryday": "chaque jour",
       "subtitle": "Un lieu pour apprendre, grandir et trouver sa place, à chaque étape de la scolarité. Suivez les présences, les notes, l’emploi du temps et les actualités de l’école depuis une seule application, et restez proches de chaque étape de l’année.",
       "visit": "Demander une visite",
       "programs": "Nos programmes",
-      "alt": "Une élève levant la main dans une classe ensoleillée"
+      "alt": "Un élève souriant avec un sac à dos jaune, prêt pour l’école"
     },
     "features": {
       "description": "Suivez la journée de votre enfant dans l’application qu’utilise l’école : présences, notes, emplois du temps, frais, transport et annonces, au même endroit.",
@@ -5319,7 +5323,10 @@
         "landingProgram3": "Photo programme 3",
         "landingNews1": "Photo actualité 1",
         "landingNews2": "Photo actualité 2",
-        "landingNews3": "Photo actualité 3"
+        "landingNews3": "Photo actualité 3",
+        "landingNews4": "Photo actualité 4",
+        "landingNews5": "Photo actualité 5",
+        "landingNews6": "Photo actualité 6"
       }
     }
   }

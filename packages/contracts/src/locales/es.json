@@ -5034,12 +5034,16 @@
       "news": "Noticias"
     },
     "hero": {
-      "titleStart": "Donde cada estudiante",
-      "titleAccent": "brilla",
+      "eyebrow": "Un mundo de descubrimientos",
+      "titleStart": "Donde",
+      "titleWonder": "la ilusión",
+      "titleEnd": "despierta",
+      "titleAccent": "Curiosidad",
+      "titleEveryday": "cada día",
       "subtitle": "Un lugar para aprender, crecer y sentirse parte, en cada etapa escolar. Sigue la asistencia, las notas, el horario y las noticias de la escuela de tu hijo desde una sola aplicación, y acompaña cada paso del curso.",
       "visit": "Solicitar una visita",
       "programs": "Nuestros programas",
-      "alt": "Una estudiante levantando la mano en una clase soleada"
+      "alt": "Un estudiante sonriente con una mochila amarilla, listo para ir al colegio"
     },
     "features": {
       "description": "Sigue el día de tu hijo en la misma aplicación que usa la escuela: asistencia, notas, horarios, cuotas, transporte y avisos, todo en un solo lugar.",
@@ -5206,7 +5210,10 @@
         "landingProgram3": "Foto de programa 3",
         "landingNews1": "Foto de noticia 1",
         "landingNews2": "Foto de noticia 2",
-        "landingNews3": "Foto de noticia 3"
+        "landingNews3": "Foto de noticia 3",
+        "landingNews4": "Foto de noticia 4",
+        "landingNews5": "Foto de noticia 5",
+        "landingNews6": "Foto de noticia 6"
       }
     }
   }

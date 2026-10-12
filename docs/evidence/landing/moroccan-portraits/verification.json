@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-11",
+  "url": "http://localhost:3102/welcome",
+  "heroDesktop": {
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "disclosure": "Illustrative photography",
+        "file": "hero-moroccan-boy.webp",
+        "loaded": true
+      },
+      {
+        "file": "hero-moroccan-girl.webp",
+        "loaded": true
+      }
+    ],
+    "url": "http://localhost:3102/welcome",
+    "viewport": {
+      "height": 953,
+      "width": 1920
+    }
+  },
+  "heroMobile": {
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "images": [
+      "hero-moroccan-boy.webp",
+      "hero-moroccan-girl.webp"
+    ],
+    "imagesLoaded": true,
+    "horizontalOverflow": false,
+    "scope": "DOM and image-loading smoke; no mobile visual capture is used as evidence."
+  },
+  "eventGallery": {
+    "count": 6,
+    "images": [
+      "news-winter-celebration.webp",
+      "news-sports-day.webp",
+      "news-heritage-celebration.webp",
+      "news-cooking-workshop.webp",
+      "news-school-outing.webp",
+      "news-winter-crafts.webp"
+    ],
+    "imagesLoaded": true,
+    "desktopScreenshot": "../event-redraw/desktop-gallery.png"
+  },
+  "checks": {
+    "lint": "PASS",
+    "landingTests": "7 PASS / 0 FAIL",
+    "build": "PASS using NAJM_NEXT_DIST_DIR=.next-landing-moroccan-final"
+  },
+  "generationMode": "built-in image_gen"
+}

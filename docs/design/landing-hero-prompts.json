@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-11",
+  "tool": "built-in ImageGen",
+  "reference": "User-approved school hero mockup",
+  "conversion": "800px wide WebP, quality 88, alphaQuality 100; transparency preserved",
+  "assets": [
+    {
+      "asset": "apps/dashboard/public/images/landing/hero.webp",
+      "prompt": "Use case: background-extraction / identity-preserve. Asset type: transparent cutout portrait for a coded school website hero. The reference is a complete hero mockup; extract and reproduce ONLY the smiling primary-school BOY at the upper right of the reference. Preserve his friendly face, short brown hair, grey shirt and charcoal-grey jacket, and vivid yellow backpack. Looking toward the camera, body from the top of his hair to just below his waist, both shoulders, arms and backpack completely visible. One child only, centered in a vertical portrait canvas, with a small transparent margin around the silhouette, including all hair and backpack. Photorealistic, warm soft daylight, natural skin and clothing details, crisp clean edges. Remove ALL surrounding layout: genuine transparent alpha background, no off-white canvas, no colored panels, no shadows outside the figure, no text, no statistics, no logos, no doodles, no other people. Keep the child's reference identity, clothing, pose and happy expression. Output one isolated child on transparency, ready to place over a colored panel using CSS.",
+      "generatedSource": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12c8f-ce6e-7662-830d-4be41b096cfa\\exec-e09a77ea-f18b-4d45-be8d-522234ef4d27.png"
+    },
+    {
+      "asset": "apps/dashboard/public/images/landing/hero-girl.webp",
+      "prompt": "Use case: background-extraction / identity-preserve. Asset type: transparent cutout portrait for a coded school website hero. The reference is a complete hero mockup; extract and reproduce ONLY the smiling primary-school GIRL at the lower left of the reference. Preserve her friendly face, brown hair in two little buns and braids with yellow ribbons, white school shirt, colorful pleated skirt, and bright yellow/orange backpack. Three-quarter pose looking toward the camera, body from the top of her hair to just below her hips, both arms and backpack completely visible. One child only, centered in a vertical portrait canvas, with a small transparent margin around the silhouette, including all hair and backpack. Photorealistic, warm soft daylight, natural skin and clothing details, crisp clean edges. Remove ALL surrounding layout: genuine transparent alpha background, no off-white canvas, no colored panels, no shadows outside the figure, no text, no statistics, no logos, no doodles, no other people. Keep the child's reference identity, clothing, pose and happy expression. Output one isolated child on transparency, ready to place over a colored panel using CSS.",
+      "generatedSource": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12c8f-ce6e-7662-830d-4be41b096cfa\\exec-0aa93f4f-1491-4154-bcb7-94caf839e142.png"
+    }
+  ]
+}

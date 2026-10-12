@@ -5810,12 +5810,16 @@
       "news": "News"
     },
     "hero": {
-      "titleStart": "Where every student",
-      "titleAccent": "shines",
+      "eyebrow": "A world of discovery",
+      "titleStart": "Where",
+      "titleWonder": "wonder",
+      "titleEnd": "awakens",
+      "titleAccent": "Curiosity",
+      "titleEveryday": "every day",
       "subtitle": "A place to learn, grow and belong, at every stage of school. Follow your child’s attendance, grades, timetables and school news from one app, and stay close to every step of the year.",
       "visit": "Request a visit",
       "programs": "Our programs",
-      "alt": "A student raising her hand in a sunlit classroom"
+      "alt": "A smiling student with a yellow backpack, ready for school"
     },
     "features": {
       "description": "Follow your child’s day in the same app the school uses: attendance, grades, timetables, fees, transport and announcements, all in one place.",
@@ -5982,7 +5986,10 @@
         "landingProgram3": "Program photo 3",
         "landingNews1": "News photo 1",
         "landingNews2": "News photo 2",
-        "landingNews3": "News photo 3"
+        "landingNews3": "News photo 3",
+        "landingNews4": "News photo 4",
+        "landingNews5": "News photo 5",
+        "landingNews6": "News photo 6"
       }
     }
   }

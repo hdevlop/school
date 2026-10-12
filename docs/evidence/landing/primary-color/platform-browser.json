@@ -1,0 +1,108 @@
+[
+  {
+    "name": "platform-light",
+    "width": 1440,
+    "theme": "light",
+    "path": "/students",
+    "tokens": {
+      "primary": "#d64e57",
+      "primary-foreground": "#ffffff",
+      "sidebar-primary": "#d64e57",
+      "sidebar-primary-foreground": "#ffffff",
+      "ring": "#d64e57",
+      "sidebar-ring": "#d64e57",
+      "chart-1": "#d64e57"
+    },
+    "buttons": [
+      {
+        "label": "1",
+        "color": "rgb(255, 255, 255)",
+        "iconColors": []
+      }
+    ],
+    "tableHeader": {
+      "backgrounds": [
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)"
+      ],
+      "colors": [
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)"
+      ]
+    },
+    "errors": []
+  },
+  {
+    "name": "platform-dark",
+    "width": 1440,
+    "theme": "dark",
+    "path": "/students",
+    "tokens": {
+      "primary": "#d64e57",
+      "primary-foreground": "#ffffff",
+      "sidebar-primary": "#d64e57",
+      "sidebar-primary-foreground": "#ffffff",
+      "ring": "#d64e57",
+      "sidebar-ring": "#d64e57",
+      "chart-1": "#d64e57"
+    },
+    "buttons": [
+      {
+        "label": "1",
+        "color": "rgb(255, 255, 255)",
+        "iconColors": []
+      }
+    ],
+    "tableHeader": {
+      "backgrounds": [
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)",
+        "rgb(214, 78, 87)"
+      ],
+      "colors": [
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)",
+        "rgb(255, 255, 255)"
+      ]
+    },
+    "errors": []
+  },
+  {
+    "name": "platform-mobile",
+    "width": 390,
+    "theme": "light",
+    "path": "/students",
+    "tokens": {
+      "primary": "#d64e57",
+      "primary-foreground": "#ffffff",
+      "sidebar-primary": "#d64e57",
+      "sidebar-primary-foreground": "#ffffff",
+      "ring": "#d64e57",
+      "sidebar-ring": "#d64e57",
+      "chart-1": "#d64e57"
+    },
+    "buttons": [
+      {
+        "label": "1",
+        "color": "rgb(255, 255, 255)",
+        "iconColors": []
+      }
+    ],
+    "tableHeader": null,
+    "errors": []
+  }
+]

@@ -5,6 +5,7 @@ import { useTranslation } from 'najm-i18n/react';
 import type { LandingCycle } from '@sms/contracts';
 import type { SchoolLocale } from '@sms/contracts/locales';
 import { visitRequestSchema } from '../config/landingSchemas';
+import { landingFont } from '../config/landingFont';
 
 export function VisitRequestForm({ cycles, language }: { cycles: LandingCycle[]; language: SchoolLocale }) {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export function VisitRequestForm({ cycles, language }: { cycles: LandingCycle[];
       <FormInput name="phone" type="phone" formLabel={t('visitRequests.form.phone')} required defaultCountry="ma" />
     </div>
     <div className={cycles.length > 0 ? 'landing-form-grid' : undefined}>
-      {cycles.length > 0 && <FormInput name="cycleId" type="select" formLabel={t('visitRequests.form.level')} placeholder={t('visitRequests.form.chooseLevel')} items={cycles.map(cycle => ({ value: cycle.id, label: cycle.labels?.[language] || cycle.name }))} />}
+      {cycles.length > 0 && <FormInput name="cycleId" type="select" formLabel={t('visitRequests.form.level')} placeholder={t('visitRequests.form.chooseLevel')} dropdownClassName={`landing-font-surface ${landingFont.variable}`} items={cycles.map(cycle => ({ value: cycle.id, label: cycle.labels?.[language] || cycle.name }))} />}
       <FormInput name="email" type="text" formLabel={t('visitRequests.form.email')} maxLength={254} />
     </div>
     <FormInput name="message" type="textarea" formLabel={t('visitRequests.form.message')} maxLength={1000} />

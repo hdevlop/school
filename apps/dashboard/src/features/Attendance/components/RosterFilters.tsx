@@ -15,6 +15,7 @@ export interface RosterFilter {
   onChange: (value: string) => void;
   options?: { value: string; label: string }[];
   disabled?: boolean;
+  className?: string;
 }
 
 export default function RosterFilters({ filters, onReset, canReset, children }: {
@@ -26,29 +27,25 @@ export default function RosterFilters({ filters, onReset, canReset, children }: 
   const { t } = useTranslation();
 
   return (
-    <section aria-label={t('common.table.filterRegion')} className="shrink-0 rounded-lg border bg-card p-3">
-      <div className="grid grid-cols-2 gap-3 xl:grid-cols-3">
-        {filters.map((filter) => (
-          <div key={filter.name} className={`min-w-0 space-y-1.5 ${filter.type === 'text' ? 'order-first col-span-2 sm:order-none sm:col-span-1' : ''}`}>
-            <div className="text-xs font-medium text-muted-foreground">{filter.label}</div>
-            {filter.type === 'text' ? (
-              <TextInput value={filter.value} onChange={filter.onChange} placeholder={filter.placeholder} aria-label={filter.label} icon={Search} className="w-full" />
-            ) : filter.type === 'date' ? (
-              <DateInput value={filter.value ? parseISO(filter.value) : undefined} onChange={(value) => { if (value) filter.onChange(value); }} placeholder={filter.placeholder} ariaLabel={filter.label} className="w-full" />
-            ) : filter.type === 'combobox' ? (
-              <ComboboxInput value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} ariaLabel={filter.label} disabled={filter.disabled} showIcon={false} className="w-full" />
-            ) : (
-              <SelectInput value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} ariaLabel={filter.label} disabled={filter.disabled} showIcon={false} className="w-full" />
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 flex min-w-0 flex-wrap items-center justify-between gap-3 border-t pt-3">
-        <NButton variant="ghost" onClick={onReset} disabled={!canReset}>
+    <section aria-label={t('common.table.filterRegion')} className="flex shrink-0 flex-wrap items-center gap-2">
+      {filters.map((filter) => (
+        <div key={filter.name} className={`min-w-0 shrink-0 ${filter.className ?? 'w-full lg:w-56'} ${filter.type === 'text' ? 'order-first' : ''}`}>
+          {filter.type === 'text' ? (
+            <TextInput value={filter.value} onChange={filter.onChange} placeholder={filter.placeholder} aria-label={filter.label} icon={Search} className="w-full" />
+          ) : filter.type === 'date' ? (
+            <DateInput value={filter.value ? parseISO(filter.value) : undefined} onChange={(value) => { if (value) filter.onChange(value); }} placeholder={filter.placeholder} ariaLabel={filter.label} className="w-full" />
+          ) : filter.type === 'combobox' ? (
+            <ComboboxInput value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} ariaLabel={filter.label} disabled={filter.disabled} showIcon={false} className="w-full" />
+          ) : (
+            <SelectInput value={filter.value} onChange={filter.onChange} items={filter.options ?? []} placeholder={filter.placeholder} ariaLabel={filter.label} disabled={filter.disabled} showIcon={false} className="w-full" />
+          )}
+        </div>
+      ))}
+      <div className="flex w-full min-w-0 items-center gap-2 lg:ms-auto lg:w-auto">
+        <NButton variant="outline" onClick={onReset} disabled={!canReset} aria-label={t('attendance.roster.resetFilters')} title={t('attendance.roster.resetFilters')} className="h-10 w-10 shrink-0 p-0">
           <RotateCcw className="h-4 w-4" />
-          {t('attendance.roster.resetFilters')}
         </NButton>
-        <div className="w-full min-w-0 sm:w-auto">{children}</div>
+        <div className="min-w-0 flex-1 lg:flex-none">{children}</div>
       </div>
     </section>
   );

@@ -1,0 +1,10 @@
+{
+  "route": "/api/appearance",
+  "beforeRevision": 1,
+  "afterRevision": 2,
+  "originalFactory": true,
+  "primary": "#d64e57",
+  "primaryForeground": "#ffffff",
+  "bothModesMatch": true,
+  "typographyComponentsLayoutPreserved": true
+}

@@ -8,7 +8,7 @@ import {
 import { isAdministrator } from '../auth';
 import { db } from '../database/db';
 import { auditLogs } from '../database/schema/coreSchema';
-import { LANDING_NEWS_FALLBACKS, LANDING_NEWS_SLOTS } from '@sms/contracts';
+import { LANDING_HERO_FALLBACK, LANDING_NEWS_FALLBACKS, LANDING_NEWS_SLOTS } from '@sms/contracts';
 import { STANDARD_BRANDING_SLOTS, BRANDING_RASTER_MIME_TYPES, type BrandingSlotDefinition } from 'najm-theme/contracts';
 
 export const schoolBrandingSlots: readonly BrandingSlotDefinition[] = [
@@ -17,7 +17,7 @@ export const schoolBrandingSlots: readonly BrandingSlotDefinition[] = [
     key, kind: key === 'landingHero' ? 'hero' as const : 'image' as const,
     labelKey: `theme.branding.slots.${key}`, maxBytes: key === 'landingHero' ? SCHOOL_HERO_MAX_BYTES : SCHOOL_LOGO_MAX_BYTES,
     acceptedMimeTypes: [...BRANDING_RASTER_MIME_TYPES], previewAspect: 'wide' as const,
-    fallback: `/images/landing/${key === 'landingHero' ? 'hero' : key === 'landingAssistant' ? 'assistant' : `program-${key.slice(-1)}`}.webp`,
+    fallback: key === 'landingHero' ? LANDING_HERO_FALLBACK : `/images/landing/${key === 'landingAssistant' ? 'assistant' : `program-${key.slice(-1)}`}.webp`,
   })),
   ...LANDING_NEWS_SLOTS.map((key, index) => ({
     key, kind: 'image' as const, labelKey: `theme.branding.slots.${key}`, maxBytes: SCHOOL_LOGO_MAX_BYTES,

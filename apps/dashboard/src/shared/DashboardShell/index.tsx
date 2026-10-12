@@ -248,17 +248,12 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         logo={({ collapsed, isMobile }) => {
           const showExpandedMark = isMobile || !collapsed;
           const mark = (
-            <div className="flex min-w-0 items-center gap-2">
+            <div className="flex w-full min-w-0 items-center justify-center">
               <NThemeImage
                 slot={showExpandedMark ? 'sidebarLogoExpanded' : 'sidebarLogoCollapsed'}
                 alt="MyScolAI"
-                className="h-12 w-12 min-w-12 object-contain"
+                className={showExpandedMark ? 'h-20 w-20 min-w-20 object-contain' : 'h-12 w-12 min-w-12 object-contain'}
               />
-              {showExpandedMark && (
-                <span className="truncate text-xl font-semibold leading-none tracking-tight text-sidebar-foreground">
-                  MyScolAI
-                </span>
-              )}
             </div>
           );
           // At phone width the page header has no room for the year, so the
@@ -267,7 +262,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         }}
         // The drawer's header stacks the logo and the year at phone width.
         // Only the drawer renders below lg, so this never reaches the rail.
-        classNames={{ sidebarHeader: 'max-sm:h-auto max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:pt-1 max-sm:pb-3' }}
+        classNames={{ sidebarHeader: 'h-24 min-h-24 border-b-0 max-sm:h-auto max-sm:flex-col max-sm:items-stretch max-sm:gap-2 max-sm:pt-1 max-sm:pb-3' }}
         navItems={navItems}
         activePath={sidebarActivePath(pathname, navItems)}
         isActive={isNavItemActiveOrNested}

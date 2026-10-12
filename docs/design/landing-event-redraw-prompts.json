@@ -1,0 +1,115 @@
+{
+  "description": "AI recreations of user-supplied event themes with newly generated fictional Moroccan faces. These are illustrative images, not original school photographs or verified records of the displayed dates.",
+  "sourcePage": "https://www.facebook.com/academiejeanhenrilambert/photos",
+  "assets": [
+    {
+      "key": "news-winter-celebration",
+      "slot": "landingNews1",
+      "output": "apps/dashboard/public/images/landing/news-winter-celebration.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "User attachment 1: winter celebration group, white clothing and snowman/penguin decorations.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one standalone wide landscape 16:10 photograph for a Moroccan school website event gallery. Input reference: among the four attached event photos, use ONLY the FIRST attachment, showing younger children in white clothing seated/standing before handmade winter snowmen and penguin decorations. The other attached photos are not references for this image. Primary request: redraw the entire winter school celebration as a fresh, believable photographic scene with a completely fictional group of Moroccan children aged five to eight. Retain the theme, two-row group arrangement, off-white/white festive clothes, classroom wall with large handmade black-and-white penguin with red winter hat, smiling snowman with red scarf, smaller paper winter crafts, and a few colorful wrapped gifts to the left. Recreate the event setting rather than copy any person. EVERY face must be a newly invented, distinct Moroccan face, with changed facial geometry, hair, expressions and small pose differences; never retain or approximate any real child's identity. Include varied light-brown, olive and deeper-brown Moroccan skin tones, natural black/brown hair, one or two children with spectacles. All people, including any background people, are fictional. Style: candid ordinary school event photography, realistic unretouched texture, modest classroom, warm indoor lighting, joyful gentle expressions, natural children's proportions and correct hands. Composition: horizontal 16:10, around twelve children in a balanced central group, seated first row and standing second row; show decorative wall and winter activity clearly; generous crop-safe margins. Remove ALL source graphic overlays: no school logo, no social icons, no bottom blue wave/banner, no border triangles, no watermarks, no visible text, no dates, no collage. Do not introduce luxury campus styling or navy uniforms; keep the white winter-celebration clothing and handmade decorations. Create only the photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-f315c164-08c8-4599-8b03-9fc668562ff4.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84
+    },
+    {
+      "key": "news-sports-day",
+      "slot": "landingNews2",
+      "output": "apps/dashboard/public/images/landing/news-sports-day.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "User attachment 5: twelve Moroccan boys at a school sports event on an artificial-turf pitch; keep the group arrangement, mixed sportswear, goal, fencing and spectator seats.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one wide landscape 16:10 school sports event photograph for a Moroccan school website news gallery. Input image: the ONE most recently attached photo of twelve boys posing together on a sunny outdoor artificial-grass football pitch is the reference. Primary request: redraw this same school sports event as a complete fresh photograph with NEW, entirely fictional Moroccan faces for every boy. Preserve the real reference's event, casual two-row group-photo arrangement, seven boys standing at the back with arms around teammates and five boys sitting/kneeling in the front, natural school-age range around ten to fourteen, ordinary artificial-turf pitch, small white goal behind left-center, wire/net fencing, red and yellow fence poles, yellow brick wall and alternating red/blue plastic spectator seats behind. Keep the varied casual sports outfits rather than replacing them with one matching team uniform: green polo/navy sport trousers, black sleeveless basketball top with red piping, green-and-white striped T-shirt and pale shorts, red-and-blue striped football top, plain black T-shirt with blue shorts, sky-blue football kit, another dark sports shirt, front row pale neutral top/grey shorts, cream T-shirt/red shorts, white football shirt/dark shorts, red sports kit and bright yellow shirt/navy shorts with blue sunglasses. Preserve the sporty relaxed team friendship, poses and natural sunlit setting; subtle pose and hairstyle changes are welcome. ALL faces must be newly invented and DIFFERENT from every real person in the input: distinct facial structure, eyes, noses, mouths and expressions, naturally varied Moroccan olive, light-brown and deeper-brown skin tones, a believable mix of dark straight, wavy and curly hair. Do not trace, retain or approximate any original child's likeness. Recreate theme and event only, no source photo pixels. Style: believable ordinary school sports-day group photography, direct warm outdoor sunlight, realistic skin and cloth texture, proper child proportions and correct arms, hands and legs. Composition: horizontal 16:10 with the entire twelve-person group contained, heads and footwear inside frame, crop-safe room around the group; pitch and goal visible. Keep modest everyday setting, no luxury school architecture, no lion mascot, no trophies, no championship claims, no invented football action. Omit readable brand/sponsor lettering and club logos on clothes; keep shirt colors and patterns. No blue social footer, no school-logo overlay, no geometric border, no watermark, no text, no dates, no UI and no collage. Generate only one complete photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-d6505c84-9961-4d70-8717-72a067c03ced.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84
+    },
+    {
+      "key": "news-heritage-celebration",
+      "slot": "landingNews3",
+      "output": "apps/dashboard/public/images/landing/news-heritage-celebration.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "User attachment 3: Moroccan traditional clothing, henna and burgundy/gold textile backdrop.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one standalone wide landscape 16:10 photograph for a Moroccan school website event gallery. Input reference: use the ORIGINAL attached Moroccan HERITAGE group photograph, with girls in pink, royal blue and ivory traditional clothes and boys in embroidered kaftans/djellabas in front of a dark burgundy backdrop with dense gold floral patterns. Ignore the other attached and generated images. Primary request: redraw that school heritage celebration as an original photographic scene with ten entirely fictional Moroccan children aged nine to twelve, girls and boys arranged loosely in three rows, front row seated. Preserve the event's traditional Moroccan clothing, pink and royal-blue kaftans, ivory and sage outfits, a striped black-and-white djellaba, embroidered trims, a few tasteful henna patterns on raised palms and the burgundy-and-gold textile background. EVERY person must have a completely newly invented Moroccan face unlike any child in the source. Change individual facial geometry, hairstyles, expressions, relative positions and gestures; varied olive, light-brown and deeper-brown Moroccan skin tones, dark hair, two or three children with spectacles. Do not preserve anyone's likeness. Photographic redraw of theme and setting only. Style: ordinary believable school cultural-day group photograph, realistic cloth embroidery, natural skin texture, modest indoor lighting, relaxed gentle smiles, age-appropriate children's proportions and correct hands. Composition: one wide landscape 16:10 photo, all heads and clothing clearly visible, group contained within frame and crop-safe margins, make the textile and traditional clothes immediately legible at thumbnail size. Remove every original graphic overlay: no school logo, no blue bottom footer/banner/wave, no social media icons or names, no geometric side triangles, no watermark, no readable writing, no dates, no UI, no collage. Do not replace the event with a mosaic craft workshop or navy school uniforms. Create only the photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-15a8746a-e488-4e13-b19f-192ad66bee59.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84
+    },
+    {
+      "key": "news-cooking-workshop",
+      "slot": "landingNews4",
+      "output": "apps/dashboard/public/images/landing/news-cooking-workshop.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "User attachment 4: chef hats, vegetable basket and yellow backdrop.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one standalone wide landscape 16:10 photograph for a Moroccan school website event gallery. Input reference: use ONLY the ORIGINAL attached small square COOKING photograph showing two young children in tall white chef hats, holding a basket of vegetables against a bright YELLOW classroom backdrop. Ignore other attached/generated images. Primary request: freshly redraw the cooking workshop theme with TWO entirely fictional Moroccan children aged five to seven, a girl and a boy smiling proudly while holding one big shallow wicker basket together. The basket contains whole carrots, potatoes, onions, red tomatoes and leafy greens, clearly visible. Retain the strong yellow backdrop, simple school activity setting, tall white paper chef hats, a red apron and a dark navy apron. Reconstruct the scene as a believable high-resolution photograph rather than enlarging or reusing source pixels. EVERY face must be newly invented and unlike either child in the reference: the girl has a soft oval face and dark wavy hair tied in two low braids, the boy has deeper-brown skin, short textured black hair and a different broad cheerful smile. No real person's likeness is preserved. Natural Moroccan features, realistic child proportions, natural hands correctly supporting the basket together. Style: authentic school-event photography, cheerful warm classroom lighting, natural fabric and vegetable textures. Composition: wide horizontal 16:10 waist-up scene with the two children centered and generous side room; tall hats completely in frame, basket entirely visible, clear thumbnail readability. Remove all source graphic overlays: no school logo, no bottom blue banner/wave, no social media symbols or handles, no border triangles, no watermark, no lettering on hats or background, no text, no dates, no collage, no UI. Create only the photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-e3c8406f-c860-474a-a025-461e42e66583.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84
+    },
+    {
+      "key": "news-school-outing",
+      "slot": "landingNews5",
+      "output": "apps/dashboard/public/images/landing/news-school-outing.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "User attachment 2: school trip, yellow vests and giant golden lion mascot.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one standalone wide landscape 16:10 photograph for a Moroccan school website event gallery. Input reference: use the ORIGINAL attached SCHOOL OUTING photograph with a giant smiling golden LION statue and children wearing bright YELLOW safety vests inside a leisure park. Ignore the other reference images including the recently generated winter celebration. Primary request: freshly redraw that school trip scene with an entirely fictional group of Moroccan children aged eight to eleven, seven girls standing and six boys sitting/kneeling in a loose two-row group in front of a friendly oversized golden lion statue wearing green. Preserve the yellow school outing vests worn over varied everyday clothes, stone-textured indoor entrance, tiled floor, steps at the left, overhead indoor lights and cheerful excursion mood. Make ALL children's faces completely new and unmistakably different from the source people: different facial geometry, hair, expressions and poses, diverse Moroccan olive, light-brown and deeper-brown skin tones, natural dark hair, two pupils with spectacles. Any small background adult figures must also be fictional with new faces. Use the original only for event/theme and setting, never preserve any real identity. Style: believable everyday candid school excursion photograph, natural skin texture, modest ordinary venue lighting, realistic child proportions, correct hands and individual distinct faces. Composition: wide horizontal 16:10 group photo with all heads and lion statue clearly visible, subjects safely inside frame with crop margins; cheerful relaxed group, no stiff glamorous advertising look. Remove source overlays completely: no school badge, no blue bottom wave or footer, no social-media icons or handles, no side triangle border, no logos, no readable lettering on the venue sign, no watermark, no dates, no UI, no collage. Do not turn the outing into football or add sports uniforms. Create only the photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-b84155db-97c4-4d55-875c-3c6b68139e59.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84
+    },
+    {
+      "key": "news-trampoline-game",
+      "output": "apps/dashboard/public/images/landing/news-trampoline-game.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "Attached trampoline-park photo: yellow outing vests, soft padded batons, balance beam and foam pit.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one wide landscape 16:10 school outing activity photograph. Input reference: among the TWO most recently attached photos, use ONLY the FIRST photo showing a boy and girl in yellow school outing vests holding big foam jousting batons on a padded beam above a foam pit inside a purple-lit trampoline park. Primary request: redraw that SAME activity and setting as a complete fresh photographic scene with NEW entirely fictional Moroccan children. Two primary-school children aged around nine to twelve: a boy at left in a bright yellow sleeveless outing vest over dark long-sleeved clothes and dark socks, and a girl at right wearing a yellow outing vest over a pale long-sleeved shirt, light grey jeans and dark grip socks. They balance casually at opposite ends of the thick padded beam, holding very large soft padded cylindrical play batons, yellow for the boy and pale lavender for the girl, held by their original handle style. Show relaxed smiles, a friendly school excursion activity rather than active fighting. Keep the blue/black foam cubes in the pit below, deep navy/black padded walls with purple highlights, tall dark-framed windows and the original violet/blue recreational venue lighting. Make faces clear and realistically lit within that atmosphere. EVERY face must be newly invented and unlike the original children: distinct Moroccan features, warm olive and medium-brown skin tones, dark brown eyes, a different short dark hairstyle on the boy and different long dark hair on the girl. Any partially visible background child also must be fictional or omitted, never preserve any real face. Recreate theme and event only; do not copy source image pixels or a real person's likeness. Style: believable candid school outing photography, authentic indoor trampoline venue, realistic cloth and soft foam materials, anatomically correct arms/hands and child proportions. Composition: landscape 16:10, both children completely visible with their heads, batons and feet contained in the frame, padded beam across the scene and foam pit visible below; crop-safe margins for school news cards. No trophies, stadium, ice rink, luxury campus or added event decorations. Remove the source venue lettering, school crest and all visible logos or identifying writing; no watermarks, graphic footer, borders, social media symbols, dates, UI, or collage. Generate only one complete photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-3fd3df62-8892-423f-b1e0-0e6861cfcdfb.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84,
+      "slot": "landingNews6",
+      "selectedOn": "2026-10-12"
+    }
+  ],
+  "previousGalleryAssets": [
+    {
+      "key": "news-heritage-henna",
+      "slot": null,
+      "output": "apps/dashboard/public/images/landing/news-heritage-henna.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "Activity interpretation of attachment 3; reference is the generated fictional heritage celebration.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one standalone wide landscape 16:10 event photograph for a Moroccan school website gallery. Input image: the supplied local photo is an AI-generated fictional heritage-day group. Use it only for the Moroccan traditional clothing, dark burgundy-and-gold textile backdrop and modest school celebration atmosphere. Primary request: make a different candid moment at that same type of Moroccan heritage school celebration, with four entirely fictional Moroccan pupils aged nine to eleven, three girls and one boy, seated together on a low burgundy patterned bench. Two girls in rose-pink and royal-blue embroidered kaftans smile while showing the delicate henna floral patterns on their open palms; a girl in ivory looks at their hands and a boy in a sage embroidered djellaba sits with them smiling. Keep the dark burgundy textile decorated with gold flowers behind them, warm realistic indoor school-event light and vivid traditional embroidery. The scene is casual interaction rather than another formal group portrait, hands raised naturally at chest level with correct anatomy and visible henna. New individually distinct Moroccan faces, varied olive and brown skin tones, natural dark wavy/straight hair, one child with spectacles. No real child's likeness from the user's original source photographs. Style: authentic school cultural-event photograph, natural skin and fabric texture, correct children proportions, relaxed joy, no advertising polish. Wide horizontal crop-safe composition showing four heads, palms and traditional clothes clearly. No logos, school badge, writing, banners, source footer, blue waves, geometric borders, social media icons, watermark, dates, collage or UI. Generate one complete original photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-490160ca-7d0e-4f6f-ad49-22b4f4186465.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84,
+      "note": "Additional generated heritage view retained as an unused alternative; the user requested the outing image to reduce repeated event imagery."
+    },
+    {
+      "key": "news-winter-crafts",
+      "slot": null,
+      "output": "apps/dashboard/public/images/landing/news-winter-crafts.webp",
+      "generationMode": "built-in image_gen",
+      "generatedOn": "2026-10-11",
+      "reference": "Activity interpretation of attachment 1; reference is the generated fictional winter celebration.",
+      "prompt": "Use case: photorealistic-natural. Asset type: one standalone wide landscape 16:10 event photograph for a Moroccan school website gallery. Input image: the provided local image is a GENERATED winter celebration containing fictional children. Use it only as a reference for the white clothing, handmade snowman/penguin decorations and ordinary classroom setting. Primary request: show a different candid activity during the same type of winter school celebration: four entirely fictional Moroccan children aged six to eight happily making simple paper snowmen and snowflakes at a low craft table. They wear cream/white celebration clothes, one boy with a white sweater, a girl with white hair ribbons, another boy with a white button-down shirt, a girl in an ivory cardigan. Bright handmade penguin with red hat and smiling snowman with red scarf on a white classroom wall behind; a few gold and green wrapped gift boxes at the left. On table: white paper circles, orange paper carrot noses, glue sticks, blue paper snowflakes, no scissors or sharp objects. New distinct Moroccan faces with varied olive and brown skin tones, dark straight or curly hair, natural smiling concentration; no identity from any original real photograph. They interact naturally rather than pose for a second group portrait. Authentic modest school event photography, warm indoor light, realistic materials, correct small hands arranging paper, ordinary classroom tables. Wide horizontal composition with all faces and craft activity clearly visible and crop-safe margins. No copied source pixels, logos, school badges, readable words, watermarks, social-media graphics, blue footer, triangle border, UI, dates, collage or overlays. Generate a complete original photograph.",
+      "sourceImage": "C:\\Users\\hdevlop\\.codex\\generated_images\\01a12cfb-741d-76a3-b833-4bd7899fc668\\exec-fb6ed061-c7b9-4eb2-93b9-87bd7cdff0fc.png",
+      "width": 1000,
+      "height": 625,
+      "webpQuality": 84,
+      "note": "Replaced in landingNews6 by the user-selected trampoline activity on 2026-10-12."
+    }
+  ]
+}

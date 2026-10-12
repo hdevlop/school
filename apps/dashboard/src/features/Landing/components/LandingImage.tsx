@@ -4,8 +4,8 @@ import { useNThemeBranding } from 'najm-theme/react';
 import { useState } from 'react';
 import { useTranslation } from 'najm-i18n/react';
 
-export function LandingImage({ slot, fallback, alt, sizes, hero = false, width = 1440, height = 1080 }:
-  { slot?: string; fallback: string; alt: string; sizes: string; hero?: boolean; width?: number; height?: number }) {
+export function LandingImage({ slot, fallback, alt, sizes, hero = false, width = 1440, height = 1080, showDisclosure = true }:
+  { slot?: string; fallback: string; alt: string; sizes: string; hero?: boolean; width?: number; height?: number; showDisclosure?: boolean }) {
   const { slots } = useNThemeBranding();
   const { t } = useTranslation();
   const candidate = slot ? slots[slot] ?? fallback : fallback;
@@ -16,6 +16,6 @@ export function LandingImage({ slot, fallback, alt, sizes, hero = false, width =
       <Image src={source} alt={alt} width={width} height={height} sizes={sizes}
         loading={hero ? 'eager' : 'lazy'} fetchPriority={hero ? 'high' : 'auto'}
         onError={() => setFailed(previous => [...previous, source])} />}
-    {source === fallback && <figcaption>{t('landing.photoDisclosure')}</figcaption>}
+    {showDisclosure && source === fallback && <figcaption>{t('landing.photoDisclosure')}</figcaption>}
   </figure>;
 }

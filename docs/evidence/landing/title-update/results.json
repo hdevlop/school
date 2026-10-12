@@ -1,0 +1,783 @@
+[
+  {
+    "name": "desktop-en",
+    "width": 1440,
+    "dark": false,
+    "language": "en",
+    "direction": "ltr",
+    "palette": {
+      "ink": "rgb(40, 41, 37)",
+      "lilac": "rgb(175, 98, 173)",
+      "coral": "rgb(214, 78, 87)"
+    },
+    "horizontalOverflow": false,
+    "headings": [
+      {
+        "title": "Your child’s school life, in your pocket",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "child’s",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "pocket",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Latest news & events",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "news",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "events",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "One platform for the whole school",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "platform",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "school",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Ask anything, in your language",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "anything,",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "language",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "A place to grow, at every stage",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "place",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "stage",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Words from our families",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "from",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "families",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Admissions are open · 2026–2027",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "are",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "open",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      }
+    ],
+    "cardHeadingsMatch": true,
+    "titlesPreserved": true,
+    "admissionsPreserved": true,
+    "errors": []
+  },
+  {
+    "name": "tablet-fr",
+    "width": 820,
+    "dark": false,
+    "language": "fr",
+    "direction": "ltr",
+    "palette": {
+      "ink": "rgb(40, 41, 37)",
+      "lilac": "rgb(175, 98, 173)",
+      "coral": "rgb(214, 78, 87)"
+    },
+    "horizontalOverflow": false,
+    "headings": [
+      {
+        "title": "La vie scolaire de votre enfant, dans votre poche",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "vie",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "poche",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Actualités et événements",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "et",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "événements",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Une plateforme pour toute l’école",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "plateforme",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "l’école",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Posez vos questions, dans votre langue",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "vos",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "langue",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Grandir, à chaque étape",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "à",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "étape",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "La parole aux familles",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "parole",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "familles",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Les admissions sont ouvertes · 2026–2027",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "admissions",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "ouvertes",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      }
+    ],
+    "cardHeadingsMatch": true,
+    "titlesPreserved": true,
+    "admissionsPreserved": true,
+    "errors": []
+  },
+  {
+    "name": "mobile-en",
+    "width": 390,
+    "dark": false,
+    "language": "en",
+    "direction": "ltr",
+    "palette": {
+      "ink": "rgb(40, 41, 37)",
+      "lilac": "rgb(175, 98, 173)",
+      "coral": "rgb(214, 78, 87)"
+    },
+    "horizontalOverflow": false,
+    "headings": [
+      {
+        "title": "Your child’s school life, in your pocket",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "child’s",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "pocket",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Latest news & events",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "news",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "events",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "One platform for the whole school",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "platform",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "school",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Ask anything, in your language",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "anything,",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "language",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "A place to grow, at every stage",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "place",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "stage",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Words from our families",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "from",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "families",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Admissions are open · 2026–2027",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "are",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "open",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      }
+    ],
+    "cardHeadingsMatch": true,
+    "titlesPreserved": true,
+    "admissionsPreserved": true,
+    "errors": []
+  },
+  {
+    "name": "mobile-ar",
+    "width": 390,
+    "dark": false,
+    "language": "ar",
+    "direction": "rtl",
+    "palette": {
+      "ink": "rgb(40, 41, 37)",
+      "lilac": "rgb(175, 98, 173)",
+      "coral": "rgb(214, 78, 87)"
+    },
+    "horizontalOverflow": false,
+    "headings": [
+      {
+        "title": "الحياة المدرسية لطفلك، بين يديك",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "المدرسية",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "يديك",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "آخر الأخبار والفعاليات",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "الأخبار",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "والفعاليات",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "منصة واحدة للمدرسة بأكملها",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "واحدة",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "بأكملها",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "اسألوا ما تريدون، بلغتكم",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "ما",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "بلغتكم",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "مكان للنمو، في كل مرحلة",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "للنمو،",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "مرحلة",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "كلمات من أسرنا",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "من",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "أسرنا",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "التسجيلات مفتوحة · 2026–2027",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "مفتوحة",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      }
+    ],
+    "cardHeadingsMatch": true,
+    "titlesPreserved": true,
+    "admissionsPreserved": true,
+    "errors": []
+  },
+  {
+    "name": "narrow-es",
+    "width": 320,
+    "dark": false,
+    "language": "es",
+    "direction": "ltr",
+    "palette": {
+      "ink": "rgb(40, 41, 37)",
+      "lilac": "rgb(175, 98, 173)",
+      "coral": "rgb(214, 78, 87)"
+    },
+    "horizontalOverflow": false,
+    "headings": [
+      {
+        "title": "La vida escolar de su hijo, en su bolsillo",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "vida",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "bolsillo",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Últimas noticias y eventos",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "noticias",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "eventos",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Una plataforma para todo el colegio",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "plataforma",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "colegio",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Pregunte lo que quiera, en su idioma",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "lo",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "idioma",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Un lugar para crecer, en cada etapa",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "lugar",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "etapa",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Palabras de nuestras familias",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "de",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "familias",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Las admisiones están abiertas · 2026–2027",
+        "ink": "rgb(40, 41, 37)",
+        "accents": [
+          {
+            "text": "admisiones",
+            "color": "rgb(175, 98, 173)",
+            "type": "lilac"
+          },
+          {
+            "text": "abiertas",
+            "color": "rgb(214, 78, 87)",
+            "type": "coral"
+          }
+        ]
+      }
+    ],
+    "cardHeadingsMatch": true,
+    "titlesPreserved": true,
+    "admissionsPreserved": true,
+    "errors": []
+  },
+  {
+    "name": "dark-en",
+    "width": 1440,
+    "dark": true,
+    "language": "en",
+    "direction": "ltr",
+    "palette": {
+      "ink": "rgb(245, 241, 234)",
+      "lilac": "rgb(214, 153, 211)",
+      "coral": "rgb(255, 147, 153)"
+    },
+    "horizontalOverflow": false,
+    "headings": [
+      {
+        "title": "Your child’s school life, in your pocket",
+        "ink": "rgb(245, 241, 234)",
+        "accents": [
+          {
+            "text": "child’s",
+            "color": "rgb(214, 153, 211)",
+            "type": "lilac"
+          },
+          {
+            "text": "pocket",
+            "color": "rgb(255, 147, 153)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Latest news & events",
+        "ink": "rgb(245, 241, 234)",
+        "accents": [
+          {
+            "text": "news",
+            "color": "rgb(214, 153, 211)",
+            "type": "lilac"
+          },
+          {
+            "text": "events",
+            "color": "rgb(255, 147, 153)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "One platform for the whole school",
+        "ink": "rgb(245, 241, 234)",
+        "accents": [
+          {
+            "text": "platform",
+            "color": "rgb(214, 153, 211)",
+            "type": "lilac"
+          },
+          {
+            "text": "school",
+            "color": "rgb(255, 147, 153)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Ask anything, in your language",
+        "ink": "rgb(245, 241, 234)",
+        "accents": [
+          {
+            "text": "anything,",
+            "color": "rgb(214, 153, 211)",
+            "type": "lilac"
+          },
+          {
+            "text": "language",
+            "color": "rgb(255, 147, 153)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "A place to grow, at every stage",
+        "ink": "rgb(245, 241, 234)",
+        "accents": [
+          {
+            "text": "place",
+            "color": "rgb(214, 153, 211)",
+            "type": "lilac"
+          },
+          {
+            "text": "stage",
+            "color": "rgb(255, 147, 153)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Words from our families",
+        "ink": "rgb(245, 241, 234)",
+        "accents": [
+          {
+            "text": "from",
+            "color": "rgb(214, 153, 211)",
+            "type": "lilac"
+          },
+          {
+            "text": "families",
+            "color": "rgb(255, 147, 153)",
+            "type": "coral"
+          }
+        ]
+      },
+      {
+        "title": "Admissions are open · 2026–2027",
+        "ink": "rgb(245, 241, 234)",
+        "accents": [
+          {
+            "text": "are",
+            "color": "rgb(214, 153, 211)",
+            "type": "lilac"
+          },
+          {
+            "text": "open",
+            "color": "rgb(255, 147, 153)",
+            "type": "coral"
+          }
+        ]
+      }
+    ],
+    "cardHeadingsMatch": true,
+    "titlesPreserved": true,
+    "admissionsPreserved": true,
+    "errors": []
+  }
+]

@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { describe, expect, it } from 'bun:test';
-import { DEFAULT_LANDING_CONTENT, LANGUAGE_VALUES } from '@sms/contracts';
+import { DEFAULT_LANDING_CONTENT, LANGUAGE_VALUES, LANDING_NEWS_FALLBACKS, LANDING_NEWS_SLOTS } from '@sms/contracts';
 import { landingContentDto } from '../../src/modules/landing/LandingDto';
 import { LandingService } from '../../src/modules/landing/LandingService';
 import { schoolBrandingSlots } from '../../src/config/themeConfig';
@@ -15,8 +15,10 @@ describe('school-owned landing content', () => {
   });
   it('rejects unbounded lists, ratings and unsafe social URLs', () => {
     const news={date:'2026-10-11',tag:text,title:text,body:text};
-    expect(landingContentDto.safeParse({...DEFAULT_LANDING_CONTENT,news:[news,news,news]}).success).toBe(true);
-    for(const invalid of [{news:Array(4).fill(news)},{news:[{...news,date:'11/10/2026'}]},{news:[{...news,date:'2026-13-45'}]},{news:[{...news,body:{...text,en:'x'.repeat(301)}}]},{stats:Array(5).fill({value:'12',label:text})},{testimonials:[{author:'Salma',quote:text,rating:6}]},
+    expect(landingContentDto.safeParse({...DEFAULT_LANDING_CONTENT,news:Array(6).fill(news)}).success).toBe(true);
+    const emptyText=Object.fromEntries(LANGUAGE_VALUES.map(lang=>[lang,'']));
+    expect(landingContentDto.safeParse({...DEFAULT_LANDING_CONTENT,news:Array(6).fill({date:news.date,tag:emptyText,title:emptyText,body:emptyText})}).success).toBe(true);
+    for(const invalid of [{news:Array(7).fill(news)},{news:[{...news,date:'11/10/2026'}]},{news:[{...news,date:'2026-13-45'}]},{news:[{...news,body:{...text,en:'x'.repeat(301)}}]},{stats:Array(5).fill({value:'12',label:text})},{testimonials:[{author:'Salma',quote:text,rating:6}]},
       {socialLinks:{instagram:'http://instagram.com/school'}},{socialLinks:{facebook:'https://facebook.com.evil.test'}},
       {socialLinks:{youtube:'https://attacker@youtube.com/channel'}},{programPhotoSlots:{cycle:'anything'}},{admissionsOpen:'yes'}])
       expect(landingContentDto.safeParse({...DEFAULT_LANDING_CONTENT,...invalid}).success).toBe(false);
@@ -30,8 +32,10 @@ describe('school-owned landing content', () => {
     await expect(invalid.save(input)).rejects.toThrow('Unknown program.');
   });
   it('retains all standard slots and applies the configured upload ceilings', () => {
-    expect(schoolBrandingSlots).toHaveLength(12);
+    expect(schoolBrandingSlots).toHaveLength(15);
+    expect(LANDING_NEWS_SLOTS).toHaveLength(6);
+    expect(LANDING_NEWS_FALLBACKS).toHaveLength(6);
     expect(schoolBrandingSlots.find(slot=>slot.key==='landingHero')?.maxBytes).toBe(5_000_000);
-    for(const key of ['landingAssistant','landingProgram1','landingProgram2','landingProgram3','landingNews1','landingNews2','landingNews3'])expect(schoolBrandingSlots.find(slot=>slot.key===key)?.maxBytes).toBe(2_000_000);
+    for(const key of ['landingAssistant','landingProgram1','landingProgram2','landingProgram3',...LANDING_NEWS_SLOTS])expect(schoolBrandingSlots.find(slot=>slot.key===key)?.maxBytes).toBe(2_000_000);
   });
 });

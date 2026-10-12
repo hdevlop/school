@@ -1,0 +1,275 @@
+[
+  {
+    "name": "desktop-en",
+    "width": 1440,
+    "theme": "light",
+    "language": "en",
+    "direction": "ltr",
+    "heading": "Where wonder awakens Curiosity every day",
+    "stats": [
+      {
+        "value": "1,200",
+        "label": "students"
+      },
+      {
+        "value": "85",
+        "label": "teachers"
+      },
+      {
+        "value": "25",
+        "label": "years of excellence"
+      },
+      {
+        "value": "98%",
+        "label": "bac success"
+      }
+    ],
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero.webp&w=384&q=75"
+      },
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero-girl.webp&w=384&q=75"
+      }
+    ],
+    "visitLinkReachesContact": true,
+    "errors": []
+  },
+  {
+    "name": "tablet-fr",
+    "width": 820,
+    "theme": "light",
+    "language": "fr",
+    "direction": "ltr",
+    "heading": "Là où l’émerveillement s’éveille La curiosité chaque jour",
+    "stats": [
+      {
+        "value": "1,200",
+        "label": "élèves"
+      },
+      {
+        "value": "85",
+        "label": "enseignants"
+      },
+      {
+        "value": "25",
+        "label": "ans d'excellence"
+      },
+      {
+        "value": "98%",
+        "label": "réussite au bac"
+      }
+    ],
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero.webp&w=384&q=75"
+      },
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero-girl.webp&w=384&q=75"
+      }
+    ],
+    "visitLinkReachesContact": true,
+    "errors": []
+  },
+  {
+    "name": "mobile-en",
+    "width": 390,
+    "theme": "light",
+    "language": "en",
+    "direction": "ltr",
+    "heading": "Where wonder awakens Curiosity every day",
+    "stats": [
+      {
+        "value": "1,200",
+        "label": "students"
+      },
+      {
+        "value": "85",
+        "label": "teachers"
+      },
+      {
+        "value": "25",
+        "label": "years of excellence"
+      },
+      {
+        "value": "98%",
+        "label": "bac success"
+      }
+    ],
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero.webp&w=256&q=75"
+      },
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero-girl.webp&w=256&q=75"
+      }
+    ],
+    "visitLinkReachesContact": true,
+    "errors": []
+  },
+  {
+    "name": "mobile-ar",
+    "width": 390,
+    "theme": "light",
+    "language": "ar",
+    "direction": "rtl",
+    "heading": "هنا تستيقظ الدهشة فضول كل يوم",
+    "stats": [
+      {
+        "value": "1,200",
+        "label": "تل�يذ"
+      },
+      {
+        "value": "85",
+        "label": "أستاذ"
+      },
+      {
+        "value": "25",
+        "label": "سنة �ن الت�يز"
+      },
+      {
+        "value": "98%",
+        "label": "نجاح في الباكالوريا"
+      }
+    ],
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero.webp&w=256&q=75"
+      },
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero-girl.webp&w=256&q=75"
+      }
+    ],
+    "visitLinkReachesContact": true,
+    "errors": []
+  },
+  {
+    "name": "desktop-ar",
+    "width": 1440,
+    "theme": "light",
+    "language": "ar",
+    "direction": "rtl",
+    "heading": "هنا تستيقظ الدهشة فضول كل يوم",
+    "stats": [
+      {
+        "value": "1,200",
+        "label": "تل�يذ"
+      },
+      {
+        "value": "85",
+        "label": "أستاذ"
+      },
+      {
+        "value": "25",
+        "label": "سنة �ن الت�يز"
+      },
+      {
+        "value": "98%",
+        "label": "نجاح في الباكالوريا"
+      }
+    ],
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero.webp&w=384&q=75"
+      },
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero-girl.webp&w=384&q=75"
+      }
+    ],
+    "visitLinkReachesContact": true,
+    "errors": []
+  },
+  {
+    "name": "narrow-es",
+    "width": 320,
+    "theme": "light",
+    "language": "es",
+    "direction": "ltr",
+    "heading": "Donde la ilusión despierta Curiosidad cada día",
+    "stats": [
+      {
+        "value": "1,200",
+        "label": "estudiantes"
+      },
+      {
+        "value": "85",
+        "label": "docentes"
+      },
+      {
+        "value": "25",
+        "label": "años de excelencia"
+      },
+      {
+        "value": "98%",
+        "label": "éxito en el bachillerato"
+      }
+    ],
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero.webp&w=256&q=75"
+      },
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero-girl.webp&w=256&q=75"
+      }
+    ],
+    "visitLinkReachesContact": true,
+    "errors": []
+  },
+  {
+    "name": "desktop-dark",
+    "width": 1440,
+    "theme": "dark",
+    "language": "en",
+    "direction": "ltr",
+    "heading": "Where wonder awakens Curiosity every day",
+    "stats": [
+      {
+        "value": "1,200",
+        "label": "students"
+      },
+      {
+        "value": "85",
+        "label": "teachers"
+      },
+      {
+        "value": "25",
+        "label": "years of excellence"
+      },
+      {
+        "value": "98%",
+        "label": "bac success"
+      }
+    ],
+    "horizontalOverflow": false,
+    "images": [
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero.webp&w=384&q=75"
+      },
+      {
+        "loaded": true,
+        "source": "http://localhost:3102/_next/image?url=%2Fimages%2Flanding%2Fhero-girl.webp&w=384&q=75"
+      }
+    ],
+    "visitLinkReachesContact": true,
+    "errors": []
+  }
+]

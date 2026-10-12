@@ -25,7 +25,7 @@ function ContentEditor({ initial, cycles }: { initial: LandingContent; cycles: L
   const setNews = (index: number, patch: Partial<LandingNewsItem>) => set('news', content.news.map((item, i) => i === index ? { ...item, ...patch } : item));
   const textInput = (label: string, value: string, change: (value: string) => void, maxLength = 200) => <label className="flex flex-col gap-2 text-sm">{label}<input className={inputClass} value={value} onChange={event => change(event.target.value)} maxLength={maxLength} dir={fieldLanguage === 'ar' ? 'rtl' : undefined} /></label>;
   return <div className="flex flex-col gap-5"><div role="tablist" aria-label={t('publicPage.title')} className="flex flex-wrap gap-2">{['content','programs','news','photos','publish'].map(key => <NButton key={key} role="tab" aria-selected={tab === key} variant={tab === key ? 'default' : 'outline'} onClick={() => setTab(key)}>{t(`publicPage.${key}`)}</NButton>)}</div>
-    {(tab === 'content' || tab === 'programs' || tab === 'news') && <div role="group" aria-label={t('landing.nav.language')} className="flex gap-2">{LANGUAGE_VALUES.map(lang => <NButton key={lang} size="sm" variant={fieldLanguage === lang ? 'default':'outline'} onClick={() => setFieldLanguage(lang)}>{lang.toUpperCase()}</NButton>)}</div>}
+    {(tab === 'content' || tab === 'programs') && <div role="group" aria-label={t('landing.nav.language')} className="flex gap-2">{LANGUAGE_VALUES.map(lang => <NButton key={lang} size="sm" variant={fieldLanguage === lang ? 'default':'outline'} onClick={() => setFieldLanguage(lang)}>{lang.toUpperCase()}</NButton>)}</div>}
     <div role="tabpanel" className="flex flex-col gap-5">
       {tab === 'content' && <>
         <h2 className="text-lg font-semibold">{t('publicPage.stats')}</h2>
@@ -57,14 +57,11 @@ function ContentEditor({ initial, cycles }: { initial: LandingContent; cycles: L
       {tab === 'news' && <>
         {content.news.map((item,index)=><article key={index} className="grid gap-4 rounded-xl border border-border p-4 md:grid-cols-[1fr_240px]"><div className="grid gap-3 md:grid-cols-2">
           <label className="flex flex-col gap-2 text-sm">{t('publicPage.newsDate')}<input type="date" className={inputClass} value={item.date} onChange={event=>setNews(index,{date:event.target.value})} /></label>
-          {textInput(t('publicPage.newsTag'),item.tag[fieldLanguage],value=>setNews(index,{tag:{...item.tag,[fieldLanguage]:value}}),30)}
-          <div className="md:col-span-2">{textInput(t('publicPage.newsTitle'),item.title[fieldLanguage],value=>setNews(index,{title:{...item.title,[fieldLanguage]:value}}),120)}</div>
-          <label className="flex flex-col gap-2 text-sm md:col-span-2">{t('publicPage.newsBody')}<textarea className={inputClass} rows={3} value={item.body[fieldLanguage]} onChange={event=>setNews(index,{body:{...item.body,[fieldLanguage]:event.target.value}})} maxLength={300} dir={fieldLanguage === 'ar' ? 'rtl' : undefined} /></label>
           <NButton variant="outline" className="md:col-span-2 md:justify-self-start" onClick={()=>set('news',content.news.filter((_,i)=>i!==index))}>{t('publicPage.remove')}</NButton></div>
-          <div className="flex flex-col gap-2"><div className="aspect-video overflow-hidden rounded-lg"><LandingImage slot={LANDING_NEWS_SLOTS[index]} fallback={LANDING_NEWS_FALLBACKS[index]} width={480} height={270} alt={item.title[fieldLanguage] || t('publicPage.newsTitle')} sizes="240px" /></div>
+          <div className="flex flex-col gap-2"><div className="aspect-video overflow-hidden rounded-lg"><LandingImage slot={LANDING_NEWS_SLOTS[index]} fallback={LANDING_NEWS_FALLBACKS[index]} width={480} height={270} alt={item.title[fieldLanguage] || t('publicPage.newsTitle')} sizes="240px" showDisclosure={false} /></div>
             <p className="text-xs text-muted-foreground">{t('publicPage.newsHint',{n:index+1})}</p></div>
         </article>)}
-        <NButton variant="outline" disabled={content.news.length>=3} onClick={()=>set('news',[...content.news,{date:new Date().toISOString().slice(0,10),tag:emptyText(),title:emptyText(),body:emptyText()}])}>{t('publicPage.addNews')}</NButton>
+        <NButton variant="outline" disabled={content.news.length>=LANDING_NEWS_SLOTS.length} onClick={()=>set('news',[...content.news,{date:new Date().toISOString().slice(0,10),tag:emptyText(),title:emptyText(),body:emptyText()}])}>{t('publicPage.addNews')}</NButton>
       </>}
       {tab === 'photos' && <NThemeSettingsProvider client={{baseUrl:'/api'}} language={language} t={t} onPersisted={()=>router.refresh()}><p className="text-sm text-muted-foreground">{t('publicPage.photoHint')}</p><NThemeBrandingSettings slotKeys={['landingHero','landingAssistant',...LANDING_PROGRAM_SLOTS,...LANDING_NEWS_SLOTS]} /><NThemeSettingsActions resources={['branding']} /></NThemeSettingsProvider>}
       {tab === 'publish' && <><label className="flex gap-3"><input type="checkbox" checked={content.published} onChange={event=>set('published',event.target.checked)} />{t('publicPage.published')}</label><Link href="/welcome" target="_blank" className="text-primary underline">{t('publicPage.view')}</Link></>}

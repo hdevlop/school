@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-12",
+  "url": "http://localhost:3102/welcome",
+  "count": 6,
+  "loaded": true,
+  "sixth": "news-trampoline-game.webp",
+  "width": 400,
+  "lint": "PASS",
+  "visualInspection": "PASS: trampoline image in the sixth, bottom-right card."
+}

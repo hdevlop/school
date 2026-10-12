@@ -30,3 +30,7 @@ metadata; it does not prove production schema application or live acceptance.
 The other logs, screenshots and JSON results in this directory are retained
 from earlier landing implementation work. They include the previously enabled
 staff pages and do not establish acceptance of the current disabled-page state.
+
+The subsequent landing, branding, image and attendance-filter publication checks
+are recorded in [the 2026-10-12 report](publication-2026-10-12.md). That report covers
+the later pending changes; this file retains the earlier 2026-10-11 evidence.
