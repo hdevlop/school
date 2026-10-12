@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { ChevronRight, LockKeyhole, Menu, Search, SearchX } from 'lucide-react';
+import { ChevronRight, LockKeyhole, Menu } from 'lucide-react';
 import { NAvatar, NButton, cn, useNajmFormat, useNSidebar } from 'najm-kit';
 import { useAuth, usePermissions } from 'najm-auth/client/react';
 import { useTranslation } from 'najm-i18n/react';
@@ -14,11 +14,11 @@ import { HOME_SECTIONS, createHomeCards, type HomeCard } from '../config/homeFea
 import { HOME_ICON_ATLAS, HOME_ICON_INDEX } from '../config/homeIllustrations';
 import styles from './MobileHome.module.css';
 
-function FeatureIllustration({ card, compact = false }: { card: HomeCard; compact?: boolean }) {
+function FeatureIllustration({ card }: { card: HomeCard }) {
   const index = HOME_ICON_INDEX[card.id];
   const Icon = card.icon;
   return index === undefined ? <Icon className={styles.fallbackIcon} /> : (
-    <span className={cn(styles.illustration, compact && styles.dashboardIcon)} style={{
+    <span className={styles.illustration} style={{
       backgroundImage: 'url("' + HOME_ICON_ATLAS + '")',
       backgroundPosition: (index % 6) * 20 + '% ' + Math.floor(index / 6) * 20 + '%',
     }} />
@@ -54,14 +54,9 @@ export default function MobileHome() {
   const { t } = useTranslation();
   const { timeZone } = useNajmFormat();
   const sidebar = useNSidebar();
-  const [search, setSearch] = useState('');
   const [greeting, setGreeting] = useState('mobileHome.welcome');
   const viewer = { role: user?.role, can };
-  const cards = createHomeCards(t, viewer, permissions);
-  const dashboard = cards.find((card) => card.section === 'overview' && card.accessible && card.href);
-  const query = search.trim().toLocaleLowerCase();
-  const filteredCards = cards
-    .filter((card) => (card.section !== 'overview' || query.length > 0) && (!query || card.label.toLocaleLowerCase().includes(query)))
+  const cards = createHomeCards(t, viewer, permissions)
     .sort((a, b) => HOME_SECTIONS.indexOf(a.section) - HOME_SECTIONS.indexOf(b.section)
       || (HOME_ICON_INDEX[a.id] ?? 99) - (HOME_ICON_INDEX[b.id] ?? 99));
   const name = user?.name || user?.email || '';
@@ -93,7 +88,7 @@ export default function MobileHome() {
         </header>
 
         <Link href={(role === 'parent' || role === 'student') && PAGE_ACCESS.students(viewer) ? '/students' : '/preferences'} prefetch={false} className={styles.profile}>
-          <NAvatar src={typeof user?.image === 'string' ? user.image : undefined} fallback={initials} alt={name} size="lg" classNames={{ avatar: styles.profileAvatar, fallback: styles.avatarFallback }} />
+          <NAvatar src={typeof user?.image === 'string' ? user.image : undefined} fallbackSrc={role === 'admin' ? '/images/admin.png' : undefined} fallback={initials} alt={name} size="lg" classNames={{ avatar: styles.profileAvatar, fallback: styles.avatarFallback }} />
           <div className={styles.profileText}>
             <p className={styles.name}>{name}</p>
             <p className={styles.email}>{user?.email}</p>
@@ -101,29 +96,9 @@ export default function MobileHome() {
           <ChevronRight className={styles.chevron} aria-hidden />
         </Link>
 
-        <div className={styles.searchRow}>
-          <label className={styles.search}>
-            <Search className={styles.searchIcon} aria-hidden />
-            <input type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={t('mobileHome.search')} aria-label={t('mobileHome.search')} />
-          </label>
-          {dashboard?.href && (
-            <Link href={dashboard.href} prefetch={false} aria-label={dashboard.label} title={dashboard.label} className={styles.dashboardShortcut}>
-              <span aria-hidden><FeatureIllustration card={dashboard} compact /></span>
-            </Link>
-          )}
+        <div className={styles.grid}>
+          {cards.map((card) => <FeatureCard key={card.id} card={card} />)}
         </div>
-
-        {filteredCards.length > 0 && (
-          <div className={styles.grid}>
-            {filteredCards.map((card) => <FeatureCard key={card.id} card={card} />)}
-          </div>
-        )}
-        {filteredCards.length === 0 && (
-          <div role="status" className={styles.empty}>
-            <SearchX className="size-8" aria-hidden />
-            <p>{t('mobileHome.noResults')}</p>
-          </div>
-        )}
       </div>
     </main>
   );

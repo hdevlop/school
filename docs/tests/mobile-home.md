@@ -1,17 +1,17 @@
 # Mobile Home
 
 At widths below 1024px, the authenticated root route shows a Home screen with
-three columns of illustrated feature cards, search, a user card, notifications, and the
+three columns of illustrated feature cards, a user card, notifications, and the
 existing language switcher. Desktop keeps the existing role-dependent
 landing behaviour. The full dashboard is available at `/dashboard`, with its
 existing server page guard. `/home` and the mobile drawer's Home entry return to the grid.
 Direct links to other modules keep their destinations.
 
 Home has no footer bar. Its font and card styles are scoped to the feature.
-Avatar fallbacks contain two initials rather than the full name. Dashboard
-uses a compact shortcut beside search, with no empty Overview row in the
-default grid. Feature cards form one continuous three-column grid without
-section headings, preserving their previous order.
+Admin accounts without an uploaded photo use `/images/admin.png`; other avatar
+fallbacks contain two initials rather than the full name. Dashboard
+is a regular card at the start of the grid. Home has no search field.
+Feature cards form one continuous three-column grid without section headings.
 
 The generated 36-icon transparent PNG atlas lives at
 `apps/dashboard/public/images/home/feature-icons-v1.png`. Its exact generation
@@ -86,12 +86,16 @@ login returned HTTP 401. No records or credentials were changed for this check.
 - At 320px, 390px, and 768px, normal login and opening `/` show Home.
 - Desktop `/` retains the dashboard or existing family/non-staff destination.
 - Cards fit three columns, scroll vertically, and do not overflow.
-- Search filters translated labels and shows an empty-search state.
+- Confirm no search field is rendered and Dashboard uses the same card layout
+  as the other modules.
 - Cards with no feature permission are absent; guarded cards remain locked.
-- Menu, notification bell, language switcher, dashboard shortcut, and the
+- Menu, notification bell, language switcher, dashboard card, and the
   drawer's Home entry work using their existing state and services.
 - Confirm no Home footer is rendered, the account initials fit their circle,
   the phone uses sans-serif text, and every illustrated icon matches its label.
+- Confirm an admin with no photo or the default `noavatar.png` sees the generated
+  administrator portrait. An uploaded photo takes precedence; a broken photo
+  falls back to the portrait.
 - Parents see “My children”; students see “My profile”.
 - Confirm the actual sessions for every supported role, including Supervisor
   after its separate implementation is complete.
