@@ -1,7 +1,7 @@
-import { isAdmin } from '../../../auth';
+import { Can } from '../../../auth';
 
-export const canAccessVehicle     = isAdmin;
-export const canUpdateVehicle     = isAdmin;
-export const canCreateVehicle     = isAdmin;
-export const canDeleteVehicle     = isAdmin;
-export const canAccessAllVehicles = isAdmin;
+export const canAccessVehicle     = () => Can('read:vehicles');
+export const canUpdateVehicle     = () => Can('update:vehicles');
+export const canCreateVehicle     = () => Can('create:vehicles');
+export const canDeleteVehicle     = () => Can('delete:vehicles');
+export const canAccessAllVehicles = () => Can('read:vehicles');

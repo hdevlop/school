@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { Can, isAdministrator } from '../../auth';
+import { Can } from '../../auth';
 import { ClassRoutineService } from './ClassRoutineService';
 import {
   createRoutineEntryDto,
@@ -47,13 +47,13 @@ export class ClassRoutineController {
   async getPeriods() { return this.service.getPeriods(); }
 
   @Post('/periods')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate(createRoutinePeriodDto)
   @ResMsg('classRoutines.success.created')
   async createPeriod(@Body() body: CreateRoutinePeriodDto) { return this.service.createPeriod(body); }
 
   @Put('/periods/:id')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam, body: updateRoutinePeriodDto })
   @ResMsg('classRoutines.success.updated')
   async updatePeriod(@Params('id') id: string, @Body() body: UpdateRoutinePeriodDto) {
@@ -69,7 +69,7 @@ export class ClassRoutineController {
   }
 
   @Get('/duty-candidates')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @ResMsg('classRoutines.success.retrieved')
   async getDutyCandidates() { return this.service.getDutyCandidates(); }
 
@@ -102,14 +102,14 @@ export class ClassRoutineController {
   }
 
   @Post()
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate(createRoutineScheduleDto)
   @McpTool({ description: "Create or return a section's current routine in the selected year", confirm: { level: 'warning', message: 'confirm.classRoutines.create' } })
   @ResMsg('classRoutines.success.created')
   async create(@Body() body: CreateRoutineScheduleDto) { return this.service.create(body); }
 
   @Post('/:id/entries')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam, body: createRoutineEntryDto })
   @ResMsg('classRoutines.success.entryCreated')
   async addEntry(@Params('id') id: string, @Body() body: CreateRoutineEntryDto) {
@@ -117,7 +117,7 @@ export class ClassRoutineController {
   }
 
   @Put('/:id/entries/:entryId')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineEntryParams, body: updateRoutineEntryDto })
   @ResMsg('classRoutines.success.entryUpdated')
   async updateEntry(
@@ -127,7 +127,7 @@ export class ClassRoutineController {
   ) { return this.service.updateEntry(id, entryId, body); }
 
   @Delete('/:id/entries/:entryId')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineEntryParams, query: routineEntryDeleteQuery })
   @ResMsg('classRoutines.success.entryDeleted')
   async deleteEntry(@Params('id') id: string, @Params('entryId') entryId: string, @Query() query: RoutineEntryDeleteQuery) {
@@ -135,7 +135,7 @@ export class ClassRoutineController {
   }
 
   @Post('/:id/duties')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam, body: createRoutineDutyDto })
   @ResMsg('classRoutines.success.entryCreated')
   async addDuty(@Params('id') id: string, @Body() body: CreateRoutineDutyDto) {
@@ -143,7 +143,7 @@ export class ClassRoutineController {
   }
 
   @Put('/:id/duties/:dutyId')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineDutyParams, body: updateRoutineDutyDto })
   @ResMsg('classRoutines.success.entryUpdated')
   async updateDuty(
@@ -153,7 +153,7 @@ export class ClassRoutineController {
   ) { return this.service.updateDuty(id, dutyId, body); }
 
   @Delete('/:id/duties/:dutyId')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineDutyParams })
   @ResMsg('classRoutines.success.entryDeleted')
   async deleteDuty(@Params('id') id: string, @Params('dutyId') dutyId: string) {
@@ -161,19 +161,19 @@ export class ClassRoutineController {
   }
 
   @Post('/:id/publish')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.published')
   async publish(@Params('id') id: string, @User('id') userId: string) { return this.service.publish(id, userId); }
 
   @Post('/:id/archive')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.archived')
   async archive(@Params('id') id: string) { return this.service.archive(id); }
 
   @Put('/:id')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam, body: updateRoutineScheduleDto })
   @ResMsg('classRoutines.success.updated')
   async update(@Params('id') id: string, @Body() body: UpdateRoutineScheduleDto) {
@@ -181,7 +181,7 @@ export class ClassRoutineController {
   }
 
   @Put('/:id/layout')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam, body: routineLayoutDto })
   @ResMsg('classRoutines.success.updated')
   async updateLayout(@Params('id') id: string, @Body() body: RoutineLayoutDto) {
@@ -197,7 +197,7 @@ export class ClassRoutineController {
   }
 
   @Delete('/:id')
-  @isAdministrator()
+  @Can('manage:class-routines')
   @Validate({ params: routineIdParam })
   @ResMsg('classRoutines.success.deleted')
   async delete(@Params('id') id: string) { return this.service.delete(id); }

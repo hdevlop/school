@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "seed:landing": "bun run --cwd packages/seed seed:landing",
     "dev": "bun run --cwd apps/dashboard dev",
     "dev:https": "bun run --cwd apps/dashboard https",
     "start": "bun run --cwd apps/dashboard start",
@@ -81,6 +82,7 @@
     "seed:admin": "bun run --cwd packages/seed seed:admin",
     "seed:visit-request-permissions": "bun --env-file=apps/dashboard/.env.local packages/seed/src/scripts/admin/seed-visit-request-permissions.ts",
     "seed:roles": "bun run --cwd packages/seed seed:roles",
+    "seed:role-permissions": "bun run --cwd packages/seed seed:role-permissions",
     "seed:staff": "bun run --cwd packages/seed seed:staff",
     "seed:school": "bun run --cwd packages/seed seed:school",
     "seed:history:base": "bun packages/server/tests/academicYears/fixtures/seedAlertsHistory.ts",

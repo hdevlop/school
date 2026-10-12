@@ -1,6 +1,11 @@
+import { PermissionService } from 'najm-auth';
+import { matchPermission } from 'najm-auth/client';
 import { Err, I18n, Service } from '../../najm';
 import { StaffRepository } from './StaffRepository';
 import { StaffRoleRepository } from './roles/StaffRoleRepository';
+
+/** The signed-in user behind a staff request. In-process callers pass none. */
+export type StaffActor = { permissions: string[] };
 
 @Service()
 export class StaffValidator {
@@ -10,6 +15,7 @@ export class StaffValidator {
   constructor(
     private staffRepository: StaffRepository,
     private staffRoleRepository: StaffRoleRepository,
+    private permissionService: PermissionService,
   ) { }
 
   ensureLoginEmail(email?: string) {
@@ -18,6 +24,19 @@ export class StaffValidator {
 
   ensureAppAccessRole(accessRoleId: string | null) {
     if (!accessRoleId) Err(400, this.t('roleHasNoAppAccess'));
+  }
+
+  /**
+   * A staff record can create, re-address or remove a login. Its user may do
+   * that only for a login role whose every permission they hold themselves,
+   * so `create:staff` is never a way to mint an account stronger than its own.
+   */
+  async ensureCanManageLogin(actor: StaffActor | undefined, roleId: string | null | undefined) {
+    if (!actor || !roleId) return;
+    const granted = await this.permissionService.getPermissionsByRole(roleId);
+    if (granted.some(({ name }) => !matchPermission(actor.permissions, name))) {
+      Err(403, this.t('loginBeyondActor'));
+    }
   }
 
   ensureDriverProfile(profile?: Record<string, any>, partial = false) {

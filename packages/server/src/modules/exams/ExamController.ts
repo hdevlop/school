@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } fr
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ExamService } from './ExamService';
 import { Exam, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './ExamGuards';
-import { isAdmin } from '../../auth';
+import { isAdmin, CanSchoolWide } from '../../auth';
 import {
   createExamDto,
   deleteBulkExamDto,
@@ -112,7 +112,7 @@ export class ExamController {
   }
 
   @Delete('/bulk')
-  @isAdmin()
+  @CanSchoolWide('delete:exams')
   @Validate(deleteBulkExamDto)
   @McpTool({ description: 'Delete multiple exams by IDs', confirm: { level: 'danger', message: 'confirm.exams.bulkDelete' } })
   @ResMsg('exams.success.bulkDeleted')

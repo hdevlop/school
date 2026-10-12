@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 
 import { PayrollService } from './PayrollService';
 import {
@@ -28,7 +28,7 @@ export class PayrollController {
   constructor(private payrollService: PayrollService) { }
 
   @Get()
-  @isAdmin()
+  @CanSchoolWide('read:payroll')
   @McpTool({ description: 'List all payslips', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getAll() {
@@ -36,7 +36,7 @@ export class PayrollController {
   }
 
   @Get('/roster')
-  @isAdmin()
+  @CanSchoolWide('read:payroll')
   @McpTool({ description: 'List the staff a payroll run pays: active, with a salary, teachers included', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getRoster() {
@@ -44,7 +44,7 @@ export class PayrollController {
   }
 
   @Get('/period/:period')
-  @isAdmin()
+  @CanSchoolWide('read:payroll')
   @Validate({ params: payslipPeriodParam })
   @McpTool({ description: 'List payslips for a payroll period (YYYY-MM) with summary', readOnly: true })
   @ResMsg('payroll.success.retrieved')
@@ -53,7 +53,7 @@ export class PayrollController {
   }
 
   @Get('/staff/:staffId')
-  @isAdmin()
+  @CanSchoolWide('read:payroll')
   @McpTool({ description: 'List payslips for a staff member', readOnly: true })
   @ResMsg('payroll.success.retrieved')
   async getByStaff(@Params('staffId') staffId: string) {
@@ -61,7 +61,7 @@ export class PayrollController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:payroll')
   @Validate({ params: payslipIdParam })
   @McpTool({ description: 'Get a payslip by ID', readOnly: true })
   @ResMsg('payroll.success.retrieved')
@@ -70,7 +70,7 @@ export class PayrollController {
   }
 
   @Post('/run')
-  @isAdmin()
+  @CanSchoolWide('create:payroll')
   @Validate({ body: runPayrollDto })
   @McpTool({ description: 'Run payroll for a period — create pending payslips for active staff', confirm: { level: 'warning', message: 'confirm.payroll.run' } })
   @ResMsg('payroll.success.run')
@@ -79,7 +79,7 @@ export class PayrollController {
   }
 
   @Post('/pay-staff')
-  @isAdmin()
+  @CanSchoolWide('update:payroll')
   @Validate({ body: payStaffDto })
   @McpTool({ description: 'Create and pay a payslip for a staff member in one step', confirm: { level: 'warning', message: 'confirm.payroll.pay' } })
   @ResMsg('payroll.success.paid')
@@ -88,7 +88,7 @@ export class PayrollController {
   }
 
   @Post('/pay-staff-bulk')
-  @isAdmin()
+  @CanSchoolWide('update:payroll')
   @Validate({ body: payStaffBulkDto })
   @McpTool({ description: 'Create and pay payslips for multiple staff members in one step', confirm: { level: 'warning', message: 'confirm.payroll.pay' } })
   @ResMsg('payroll.success.paid')
@@ -97,7 +97,7 @@ export class PayrollController {
   }
 
   @Post('/unpay-staff')
-  @isAdmin()
+  @CanSchoolWide('update:payroll')
   @Validate({ body: unpayStaffDto })
   @McpTool({ description: 'Undo a payment — return a staff member payslip to pending for a period', confirm: { level: 'warning', message: 'confirm.payroll.unpay' } })
   @ResMsg('payroll.success.unpaid')
@@ -106,7 +106,7 @@ export class PayrollController {
   }
 
   @Post('/:id/pay')
-  @isAdmin()
+  @CanSchoolWide('update:payroll')
   @Validate({ params: payslipIdParam, body: payPayslipDto })
   @McpTool({ description: 'Mark a payslip as paid', confirm: { level: 'warning', message: 'confirm.payroll.pay' } })
   @ResMsg('payroll.success.paid')
@@ -115,7 +115,7 @@ export class PayrollController {
   }
 
   @Put('/:id')
-  @isAdmin()
+  @CanSchoolWide('update:payroll')
   @Validate({ params: payslipIdParam, body: updatePayslipDto })
   @McpTool({ description: 'Update a payslip by ID', confirm: { level: 'warning', message: 'confirm.payroll.update' } })
   @ResMsg('payroll.success.updated')
@@ -124,7 +124,7 @@ export class PayrollController {
   }
 
   @Delete('/bulk')
-  @isAdmin()
+  @CanSchoolWide('delete:payroll')
   @Validate({ body: deleteBulkPayslipsDto })
   @McpTool({ description: 'Delete multiple payslips by IDs', confirm: { level: 'danger', message: 'confirm.payroll.bulkDelete' } })
   @ResMsg('payroll.success.bulkDeleted')
@@ -133,7 +133,7 @@ export class PayrollController {
   }
 
   @Delete('/:id')
-  @isAdmin()
+  @CanSchoolWide('delete:payroll')
   @Validate({ params: payslipIdParam })
   @McpTool({ description: 'Delete a payslip by ID', confirm: { level: 'danger', message: 'confirm.payroll.delete' } })
   @ResMsg('payroll.success.deleted')

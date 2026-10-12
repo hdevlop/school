@@ -7,6 +7,7 @@ import { NButton, NConfirmDialog, NForm, NSheet, NSkeleton as Skeleton, Tabs, Ta
 import { useTranslation } from 'najm-i18n/react';
 import { normalizeLocationValue } from 'najm-kit/location';
 import { schoolI18n } from '@sms/contracts/locales';
+import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import SchoolSection from './sections/SchoolSection';
@@ -47,6 +48,7 @@ function settingsFormDefaults(settings: AdminSettings) {
     minimumPassingGrade: Number(settings?.minimumPassingGrade ?? 60),
     defaultExamDuration: Number(settings?.defaultExamDuration ?? 120),
     calendarSystem: settings?.calendarSystem || 'SEMESTER' as const,
+    teachingDays: [...(settings?.teachingDays ?? DEFAULT_TEACHING_DAYS)],
     gradingPeriods: Number(settings?.gradingPeriods ?? 4),
     schoolStartTime: settings?.schoolStartTime || '08:00',
     schoolEndTime: settings?.schoolEndTime || '15:00',

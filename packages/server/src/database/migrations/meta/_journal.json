@@ -456,6 +456,20 @@
       "when": 1791733957831,
       "tag": "0064_bent_vermin",
       "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1791820676724,
+      "tag": "0065_lush_the_stranger",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1791836098725,
+      "tag": "0066_role_permission_defaults",
+      "breakpoints": true
     }
   ]
 }

@@ -134,7 +134,7 @@ export class RefuelController {
   }
 
   @Delete()
-  @canDeleteRefuel()
+  @isAdmin()
   @McpTool('Delete all refuel records')
   @ResMsg('refuels.success.allDeleted')
   async deleteAll() {

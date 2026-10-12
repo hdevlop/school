@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { PaymentService } from './PaymentService';
-import { isFinancial } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import {
   checkStatusDto,
   createPaymentDto,
@@ -33,7 +33,7 @@ export class PaymentController {
   ) { }
 
   @Get()
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @McpTool({ description: 'List all payments', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getAll() {
@@ -41,7 +41,7 @@ export class PaymentController {
   }
 
   @Get('/today')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @McpTool({ description: "List today's payments with summary. Paiements reçus aujourd’hui. المدفوعات اليوم.", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getToday() {
@@ -49,7 +49,7 @@ export class PaymentController {
   }
 
   @Get('/this-month')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @McpTool({ description: "List this month's payments with summary. Paiements et recettes de ce mois. المدفوعات والمداخيل هذا الشهر.", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getThisMonth() {
@@ -57,7 +57,7 @@ export class PaymentController {
   }
 
   @Get('/this-week')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @McpTool({ description: "List this week's payments with summary", readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getThisWeek() {
@@ -65,7 +65,7 @@ export class PaymentController {
   }
 
   @Get('/pending-checks')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @McpTool({ description: 'List pending and deposited checks', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getPendingChecks() {
@@ -73,7 +73,7 @@ export class PaymentController {
   }
 
   @Get('/overdue-checks')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @McpTool({ description: 'List checks whose due date has passed', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
   async getOverdueChecks() {
@@ -81,7 +81,7 @@ export class PaymentController {
   }
 
   @Post('/stats/revenue')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate(revenueQueryDto)
   @McpTool({ description: 'Get total revenue allocated to fees of the academic year', readOnly: true })
   @ResMsg('fees.success.revenueRetrieved')
@@ -91,7 +91,7 @@ export class PaymentController {
   }
 
   @Post('/stats/revenue-by-payment-method')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate(revenueQueryDto)
   @McpTool({ description: 'Get revenue breakdown by payment method', readOnly: true })
   @ResMsg('fees.success.revenueRetrieved')
@@ -100,7 +100,7 @@ export class PaymentController {
   }
 
   @Post('/stats/monthly-revenue')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate(monthlyRevenueQueryDto)
   @McpTool({ description: 'Get monthly revenue for a given year', readOnly: true })
   @ResMsg('fees.success.revenueRetrieved')
@@ -109,7 +109,7 @@ export class PaymentController {
   }
 
   @Post('/stats/revenue-stats')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate(revenueQueryDto)
   @McpTool({ description: 'Get full revenue statistics', readOnly: true })
   @ResMsg('fees.success.statsRetrieved')
@@ -118,7 +118,7 @@ export class PaymentController {
   }
 
   @Post('/stats/top-paying-students')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate(topPayingStudentsQueryDto)
   @McpTool({ description: 'Get top paying students', readOnly: true })
   @ResMsg('fees.success.dataRetrieved')
@@ -127,7 +127,7 @@ export class PaymentController {
   }
 
   @Get('/:id')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: paymentIdParam })
   @McpTool({ description: 'Get a payment by ID', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
@@ -136,7 +136,7 @@ export class PaymentController {
   }
 
   @Get('/student/:studentId')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get payments for a student by student ID. Paiements d’un élève. مدفوعات تلميذ.', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
@@ -145,7 +145,7 @@ export class PaymentController {
   }
 
   @Get('/fee/:feeId')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: feeIdParam })
   @McpTool({ description: 'Get receipts allocated to a fee in the selected year', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
@@ -154,7 +154,7 @@ export class PaymentController {
   }
 
   @Get('/receipt/:receiptNumber')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: receiptNumberParam })
   @McpTool({ description: 'Get a payment by receipt number', readOnly: true })
   @ResMsg('fees.success.paymentsRetrieved')
@@ -163,7 +163,7 @@ export class PaymentController {
   }
 
   @Post()
-  @isFinancial()
+  @CanSchoolWide('create:payments')
   @Validate(createPaymentDto)
   @McpTool({ description: 'Record a new payment', confirm: { level: 'warning', message: 'confirm.payments.record' } })
   @ResMsg('fees.success.paymentRecorded')
@@ -172,7 +172,7 @@ export class PaymentController {
   }
 
   @Put('/:id')
-  @isFinancial()
+  @CanSchoolWide('update:payments')
   @Validate({ params: paymentIdParam, body: updatePaymentDto })
   @McpTool({ description: 'Update a payment by ID', confirm: { level: 'warning', message: 'confirm.payments.update' } })
   @ResMsg('fees.success.paymentUpdated')
@@ -181,7 +181,7 @@ export class PaymentController {
   }
 
   @Post('/:id/refund')
-  @isFinancial()
+  @CanSchoolWide('update:payments')
   @Validate({ params: paymentIdParam, body: refundPaymentDto })
   @McpTool('Refund a payment by ID')
   @ResMsg('fees.success.paymentRefunded')
@@ -191,7 +191,7 @@ export class PaymentController {
   }
 
   @Post('/:id/void')
-  @isFinancial()
+  @CanSchoolWide('update:payments')
   @Validate({ params: paymentIdParam, body: voidPaymentDto })
   @McpTool({ description: 'Void a payment (replaces hard delete)', confirm: { level: 'danger', message: 'confirm.payments.void' } })
   @ResMsg('fees.success.paymentVoided')
@@ -200,7 +200,7 @@ export class PaymentController {
   }
 
   @Post('/:id/check-status')
-  @isFinancial()
+  @CanSchoolWide('update:payments')
   @Validate({ params: paymentIdParam, body: checkStatusDto })
   @McpTool({ description: 'Update a check status (deposit, complete, bounce, void)', confirm: { level: 'warning', message: 'confirm.payments.checkStatus' } })
   @ResMsg('fees.success.paymentUpdated')

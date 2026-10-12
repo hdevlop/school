@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isFinancial } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import { CreditService } from './CreditService';
 import { applyCreditDto, creditStudentIdParam, type ApplyCreditDto } from './CreditDto';
 
@@ -10,7 +10,7 @@ export class CreditController {
   constructor(private creditService: CreditService) {}
 
   @Post('/apply')
-  @isFinancial()
+  @CanSchoolWide('create:payments')
   @Validate(applyCreditDto)
   @McpTool({ description: 'Apply available student credit to installments', confirm: { level: 'warning', message: 'confirm.credits.apply' } })
   @ResMsg('credits.applied')
@@ -19,7 +19,7 @@ export class CreditController {
   }
 
   @Get('/student/:studentId')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: creditStudentIdParam })
   @McpTool({ description: 'List student credit lots', readOnly: true })
   @ResMsg('credits.retrieved')

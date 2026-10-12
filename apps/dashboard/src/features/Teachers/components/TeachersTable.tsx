@@ -1,8 +1,10 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
+import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
 import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
-import { Users, Plus, SearchX } from 'lucide-react';
+import { Eye, Pencil, Trash2, Users, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { announceInvitation } from '@/shared/invitationNotice';
@@ -20,6 +22,11 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 function TeachersTable() {
 
   const { t } = useTranslation();
+  const { can } = useViewerRole();
+  const canCreate = can('create:teachers');
+  const canUpdate = can('update:teachers');
+  const canDelete = can('delete:teachers');
+  const { canReset, resetItems } = useResetLogin();
   const router = useRouter();
   const columns = useTeachersTableColumns();
   const rawFilters = useTeachersTableFilters();
@@ -102,6 +109,15 @@ function TeachersTable() {
     });
   };
 
+  // NTable's built-in View/Edit/Delete exist only while no `menu.row` is
+  // supplied, so they are restated when the access reset joins them.
+  const rowMenu = (teacher) => [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(teacher) },
+    ...(canUpdate ? [{ label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(teacher) }] : []),
+    ...resetItems(teacher.userId),
+    ...(canDelete ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(teacher) }] : []),
+  ];
+
   const handleBulkDelete = (ids) => {
     confirmDelete({
       title: t('common.delete'),
@@ -134,11 +150,12 @@ function TeachersTable() {
         data={teachers}
         columns={columns}
         filters={rawFilters}
-        onCreate={handleAddClick}
+        onCreate={canCreate ? handleAddClick : undefined}
         onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onBulkDelete={handleBulkDelete}
+        onEdit={canUpdate ? handleEdit : undefined}
+        onDelete={canDelete ? handleDelete : undefined}
+        onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        menu={canReset ? { row: rowMenu } : undefined}
         loading={isTeachersLoading}
         error={hasFailedToLoad(error, teachers) ? error : null}
         renderError={(currentError) => (
@@ -155,12 +172,12 @@ function TeachersTable() {
             icon={FEATURE_ICONS.teachers}
             title={t('emptyStates.teachers.title')}
             description={t('emptyStates.teachers.description')}
-            action={(
+            action={canCreate ? (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('teachers.dialogs.createButton')}
               </NButton>
-            )}
+            ) : undefined}
           />
         )}
         renderFilteredEmpty={() => (

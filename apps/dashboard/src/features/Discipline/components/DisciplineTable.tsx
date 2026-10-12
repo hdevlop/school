@@ -3,6 +3,7 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { Eye, Pencil, ShieldAlert, Trash2, Plus, SearchX } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -21,11 +22,12 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 export default function DisciplineTable() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const role = (user as any)?.role;
   const userId = (user as any)?.id;
-  const isAdmin = role === 'admin';
   // Parents and students read their own or their children's records only.
-  const isFamily = role === 'parent' || role === 'student';
+  const { role, isFamily, isSchoolWide, can } = useViewerRole();
+  // Reopening and deleting are never a teacher's, whatever they are granted (as on the server).
+  const canResolve = can('resolve:discipline');
+  const canDelete = isSchoolWide && can('delete:discipline');
   const columns = useDisciplineTableColumns();
   const scope = useClassSectionTableScope();
   const disciplineFilters = useDisciplineTableFilters();
@@ -38,7 +40,8 @@ export default function DisciplineTable() {
   const filteredIncidents = useMemo(() => (incidents || []).filter(scope.matches), [incidents, scope.matches]);
 
   const canEdit = (incident: DisciplineIncident) => incident.status === 'open'
-    && (isAdmin || (role === 'teacher' && incident.reportedBy === userId));
+    && can('update:discipline')
+    && (role !== 'teacher' || incident.reportedBy === userId);
 
   const handleCreate = () => openDialog({
     title: t('discipline.dialogs.createTitle'),
@@ -88,7 +91,7 @@ export default function DisciplineTable() {
     children: (
       <DisciplineDetails
         incident={incident}
-        canResolve={isAdmin}
+        canResolve={canResolve}
         resolving={isResolving || isReopening}
         onResolve={() => handleResolve(incident)}
         onReopen={() => handleReopen(incident)}
@@ -136,7 +139,7 @@ export default function DisciplineTable() {
           row: (incident: DisciplineIncident) => [
             { label: t('common.view'), icon: Eye, onSelect: () => handleView(incident) },
             ...(canEdit(incident) ? [{ label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(incident) }] : []),
-            ...(isAdmin ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(incident) }] : []),
+            ...(canDelete ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(incident) }] : []),
           ],
         }}
         renderCard={DisciplineCard as any}

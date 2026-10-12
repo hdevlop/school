@@ -145,6 +145,12 @@ function guards(controller: any, method: string) {
   return getGuardMetadata(controller, method).map((guard: any) => [guard.guardClass?.name, guard.params ?? null]);
 }
 
+const schoolWide = (permission: string) => [
+  ['AuthGuard', null],
+  ['RoleGuard', ['admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'supervisor']],
+  ['PermissionGuard', permission],
+];
+
 describe('alert and announcement routes', () => {
   it('lets anyone with read:alerts list and read alerts, narrowed by ownership', () => {
     for (const route of ['listAlerts', 'getAlertsCount', 'getDashboardSummary', 'getAlertsByStudent', 'getAlertById']) {
@@ -162,10 +168,9 @@ describe('alert and announcement routes', () => {
     expect(guards(AlertController, 'create')).toEqual([['AuthGuard', null], ['PermissionGuard', 'create:alerts']]);
   });
 
-  it('keeps bulk alert deletion admin-only', () => {
-    for (const route of ['deleteAll', 'deleteResolved']) {
-      expect(guards(AlertController, route)).toEqual([['AuthGuard', null], ['RoleGuard', 'admin']]);
-    }
+  it('keeps deleting every alert admin-only, and clearing resolved ones to school-wide delete:alerts', () => {
+    expect(guards(AlertController, 'deleteAll')).toEqual([['AuthGuard', null], ['RoleGuard', 'admin']]);
+    expect(guards(AlertController, 'deleteResolved')).toEqual(schoolWide('delete:alerts'));
   });
 
   it('requires sign-in and read:announcements for the published and active lists', () => {
@@ -175,9 +180,18 @@ describe('alert and announcement routes', () => {
     }
   });
 
-  it('keeps announcement statistics and bulk management admin-only', () => {
-    for (const route of ['getStats', 'getUpcoming', 'getExpired', 'getByAuthor', 'createBulk', 'deleteBulk', 'deleteAll']) {
+  it('keeps seeding and deleting every announcement admin-only', () => {
+    for (const route of ['createBulk', 'deleteAll']) {
       expect(guards(AnnouncementController, route)).toEqual([['AuthGuard', null], ['RoleGuard', 'admin']]);
     }
+  });
+
+  // These read or delete past ownership, so a teacher, parent or student
+  // granted the permission still cannot reach them.
+  it('gives unfiltered announcement views and bulk deletion to school-wide roles with the permission', () => {
+    for (const route of ['getStats', 'getUpcoming', 'getExpired', 'getByAuthor']) {
+      expect(guards(AnnouncementController, route)).toEqual(schoolWide('read:announcements'));
+    }
+    expect(guards(AnnouncementController, 'deleteBulk')).toEqual(schoolWide('delete:announcements'));
   });
 });

@@ -103,9 +103,9 @@ function CalendarPageForYear({ openingDay }: Readonly<{ openingDay: Date }>) {
   const today = useSchoolToday();
   const todayDate = useMemo(() => toLocalDate(today), [today]);
   const weekdays = Array.from({ length: 7 }, (_, index) => new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' }).format(new Date(Date.UTC(2024, 0, 1 + index))));
-  // Everyone reads the calendar; only administrators add, change or delete on it.
-  const { role } = useViewerRole();
-  const canManage = role === 'admin' || role === 'principal';
+  // Everyone reads the calendar; those who manage events add, change or delete on it.
+  const { can } = useViewerRole();
+  const canManage = can('create:events') && can('update:events') && can('delete:events');
   const [currentDate, setCurrentDate] = useState(openingDay);
   const [selectedDate, setSelectedDate] = useState<Date | null>(openingDay);
   const [viewMode, setViewMode] = useState<ViewMode>('month');

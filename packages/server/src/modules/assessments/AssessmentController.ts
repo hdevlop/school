@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } fr
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { AssessmentService } from './AssessmentService';
 import { Assessment, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AssessmentGuards';
-import { isAdmin } from '../../auth';
+import { isAdmin, CanSchoolWide } from '../../auth';
 import {
   assessmentIdParam,
   classIdParam,
@@ -137,7 +137,7 @@ export class AssessmentController {
   }
 
   @Delete('/bulk')
-  @isAdmin()
+  @CanSchoolWide('delete:assessments')
   @Validate(deleteBulkAssessmentDto)
   @McpTool('Delete multiple assessments by IDs')
   @ResMsg('assessments.success.bulkDeleted')

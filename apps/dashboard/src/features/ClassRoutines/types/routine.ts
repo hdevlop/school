@@ -1,14 +1,5 @@
-export const ROUTINE_DAYS = [
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
-  'sunday',
-] as const;
-
-export type RoutineDay = (typeof ROUTINE_DAYS)[number];
+export { ROUTINE_DAYS, type RoutineDay } from '@sms/contracts/routines';
+import type { RoutineDay } from '@sms/contracts/routines';
 
 export interface RoutinePeriod {
   id: string;

@@ -4,6 +4,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from 'najm-auth/client/react';
+import { isSchoolWideRole } from '@/shared/pageAccess';
 import { NPageHeader, NPageHeaderActions, NTabs, NErrorState, NForbiddenState, NEmptyState, NTable, useMediaQuery } from 'najm-kit';
 import GradesHeader from './GradesHeader';
 import GradeRosterCard from './GradeRosterCard';
@@ -63,7 +64,8 @@ function GradesTableForYear() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const role = (user as any)?.role;
-  const isAdminOrPrincipal = role === 'admin' || role === 'principal';
+  // A school-wide role grades for the teacher it picks; a teacher for themselves.
+  const isAdminOrPrincipal = isSchoolWideRole(role);
   const isTeacher = role === 'teacher';
 
   const { grades, error: gradesError, submitGrades, isSubmittingBatch, isGradesLoading } = useGrades();

@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, 
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { AttendanceService, attendanceReadEvidence } from './AttendanceService';
 import { Attendance, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AttendanceGuards';
-import { isAdmin } from '../../auth';
+import { isAdmin, CanSchoolWide } from '../../auth';
 import {
   attendanceDateFilterDto,
   typeQueryParam,
@@ -149,12 +149,12 @@ export class AttendanceController {
   @Validate(createAttendanceDto)
   @McpTool({ description: 'Mark attendance for a student or staff member', confirm: { level: 'warning', message: 'confirm.attendance.mark' } })
   @ResMsg('attendance.success.marked')
-  async mark(@Body() body: CreateAttendanceDto, @User() user: { id: string; role?: string; teacherId?: string }) {
+  async mark(@Body() body: CreateAttendanceDto, @User() user: { id: string; role?: string; teacherId?: string; permissions?: string[] }) {
     return this.attendanceService.mark(body, user);
   }
 
   @Post('/staff/bulk')
-  @isAdmin()
+  @CanSchoolWide('manage:staff-attendance')
   @Validate({ body: upsertStaffAttendanceRosterDto })
   @ResMsg('attendance.success.marked')
   async upsertStaffRoster(

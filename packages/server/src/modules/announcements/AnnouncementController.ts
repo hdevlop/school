@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../auth';
+import { isAdmin, CanSchoolWide } from '../../auth';
 import { AnnouncementService } from './AnnouncementService';
 import { Announcement, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AnnouncementGuards';
 import type { AnnouncementActor } from './AnnouncementValidator';
@@ -45,7 +45,7 @@ export class AnnouncementController {
   }
 
   @Get('/upcoming')
-  @isAdmin()
+  @CanSchoolWide('read:announcements')
   @McpTool({ description: 'List upcoming announcements', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getUpcoming() {
@@ -53,7 +53,7 @@ export class AnnouncementController {
   }
 
   @Get('/expired')
-  @isAdmin()
+  @CanSchoolWide('read:announcements')
   @McpTool({ description: 'List expired announcements', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getExpired() {
@@ -61,7 +61,7 @@ export class AnnouncementController {
   }
 
   @Get('/stats')
-  @isAdmin()
+  @CanSchoolWide('read:announcements')
   @McpTool({ description: 'Get announcement statistics', readOnly: true })
   @ResMsg('announcements.success.retrieved')
   async getStats() {
@@ -77,7 +77,7 @@ export class AnnouncementController {
   }
 
   @Get('/author/:authorId')
-  @isAdmin()
+  @CanSchoolWide('read:announcements')
   @Validate({ params: announcementAuthorIdParam })
   @McpTool({ description: 'Get announcements by author', readOnly: true })
   @ResMsg('announcements.success.retrieved')
@@ -175,7 +175,7 @@ export class AnnouncementController {
   }
 
   @Delete('/bulk')
-  @isAdmin()
+  @CanSchoolWide('delete:announcements')
   @Validate(deleteBulkAnnouncementDto)
   @McpTool('Delete multiple announcements by IDs')
   @ResMsg('announcements.success.bulkDeleted')

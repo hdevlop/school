@@ -38,7 +38,12 @@ export async function seedTimetables(classRoutineService: ClassRoutineService, s
     }
   }
 
-  const { placed, unplaced } = placeLessons(planned, busy);
+  const teachingDays = await classRoutineService.getTeachingDays();
+  const slots = teachingDays.flatMap((day) => Array.from(
+    { length: day === 'friday' || day === 'saturday' ? 3 : 6 },
+    (_, lesson) => ({ day, lesson }),
+  ));
+  const { placed, unplaced } = placeLessons(planned, busy, 30, slots);
   const sectionIds = [...new Set(planned.map((lesson) => lesson.sectionId))];
   const logProgress = createProgressLogger('Timetables', sectionIds.length, 5);
   logProgress(0, 'created 0 lessons');
@@ -50,7 +55,6 @@ export async function seedTimetables(classRoutineService: ClassRoutineService, s
     const schedule = await classRoutineService.create({
       sectionId,
       name: `${section.class?.name ?? ''} ${section.name}`.trim(),
-      activeDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
     });
     const lessons = schedule.periods
       .filter((period) => !period.isBreak)

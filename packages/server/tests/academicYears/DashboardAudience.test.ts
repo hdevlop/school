@@ -14,8 +14,7 @@ function allowedRoles(controller: any, method?: string): string[][] {
 
 const FINANCE_ROLES = ['accounting', 'admin', 'principal'];
 const STAFF_ROLES = [
-  'accounting', 'admin', 'assistant', 'counselor', 'librarian',
-  'nurse', 'principal', 'secretary', 'teacher',
+  'accounting', 'admin', 'assistant', 'principal', 'secretary', 'supervisor', 'teacher',
 ];
 
 describe('dashboard audience', () => {

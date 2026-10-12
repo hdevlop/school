@@ -54,7 +54,8 @@
   },
   "accessReset": {
     "success": {
-      "reset": "Restablecimiento de acceso completado"
+      "reset": "Restablecimiento de acceso completado",
+      "loaded": "Cuenta cargada"
     },
     "errors": {
       "notFound": "No se encontró ningún usuario con la información proporcionada",
@@ -1069,6 +1070,33 @@
     "discardTitle": "¿Descartar los cambios del tema?",
     "discardDescription": "Se perderán los cambios no guardados del tema o la identidad visual.",
     "discard": "Descartar cambios"
+  },
+  "mobileHome": {
+    "title": "Inicio",
+    "navigation": "Navegación móvil",
+    "welcome": "Te damos la bienvenida",
+    "goodMorning": "Buenos días",
+    "goodAfternoon": "Buenas tardes",
+    "goodEvening": "Buenas noches",
+    "openMenu": "Abrir menú",
+    "subtitle": "Tu escuela de un vistazo",
+    "search": "Buscar funciones",
+    "noResults": "Ninguna función coincide con tu búsqueda.",
+    "viewUnavailable": "La consulta de esta función no está habilitada para tu cuenta.",
+    "visitRequests": "Solicitudes de visita",
+    "publicPage": "Sitio web escolar",
+    "studentAttendance": "Asistencia",
+    "staffAttendance": "Asistencia del personal",
+    "timetable": "Horario",
+    "financialOperations": "Operaciones financieras",
+    "sections": {
+      "overview": "Resumen",
+      "academic": "Estudios",
+      "people": "Personas",
+      "finance": "Finanzas",
+      "communication": "Comunicación",
+      "administration": "Administración"
+    }
   },
   "navigation": {
     "dashboard": "Panel",
@@ -3353,6 +3381,7 @@
       "cinExists": "Ya existe un miembro del personal con este CIN",
       "emailRequiredForLogin": "Se requiere un correo electrónico para crear un acceso",
       "roleHasNoAppAccess": "Este rol no da acceso a la aplicación",
+      "loginBeyondActor": "Solo puede otorgar, cambiar o eliminar un acceso cuyos permisos usted mismo tiene",
       "driverLicenseRequired": "Se requiere el perfil del permiso de conducir",
       "driverFieldRequired": "El campo {{field}} del conductor es obligatorio",
       "cleanerZoneRequired": "La asignación de un limpiador requiere una zona",
@@ -3400,6 +3429,7 @@
       "secretary": "Secretario(a)",
       "receptionist": "Recepcionista",
       "accountant": "Contador",
+      "supervisor": "Supervisor general",
       "librarian": "Bibliotecario",
       "itSupport": "Soporte IT",
       "assistant": "Asistente",
@@ -3616,6 +3646,10 @@
         },
         "push": {
           "title": "Este dispositivo"
+        },
+        "teachingDays": {
+          "title": "Días lectivos",
+          "description": "Elija los días lectivos de todas las secciones del año académico activo. Mueva las clases y las supervisiones antes de quitar un día. Los horarios históricos conservan sus días."
         }
       },
       "generalTab": "Sistema",
@@ -3637,7 +3671,8 @@
       "invalidCalendar": "Calendario escolar no válido",
       "missing": "Falta la configuración de la escuela",
       "registeredCalendarLocked": "El calendario de un año registrado solo se modifica con una corrección revisada",
-      "activateThroughYears": "Active el año registrado desde la gestión de años escolares"
+      "activateThroughYears": "Active el año registrado desde la gestión de años escolares",
+      "teachingDaysInUse": "Mueva o elimine las clases y las supervisiones de este día antes de cambiar los días lectivos."
     },
     "academic": {
       "semesterPlaceholder": "Semestre",

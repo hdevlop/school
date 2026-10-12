@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Err, Get, Params, Post, Put, ResMsg, Validate, t } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DriverService } from './DriverService';
-import { isAdmin } from '../../../auth';
+import { isAdmin, CanSchoolWide } from '../../../auth';
 import {
   cinParam,
   createDriverDto,
@@ -30,7 +30,7 @@ export class DriverController {
   ) { }
 
   @Get()
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @McpTool({ description: 'List all drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async listDrivers() {
@@ -38,7 +38,7 @@ export class DriverController {
   }
 
   @Get('/count')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @McpTool({ description: 'Get driver count', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getDriversCount() {
@@ -46,7 +46,7 @@ export class DriverController {
   }
 
   @Get('/active')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @McpTool({ description: 'List active drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getActiveDrivers() {
@@ -54,7 +54,7 @@ export class DriverController {
   }
 
   @Get('/inactive')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @McpTool({ description: 'List inactive drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getInactiveDrivers() {
@@ -62,7 +62,7 @@ export class DriverController {
   }
 
   @Get('/suspended')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @McpTool({ description: 'List suspended drivers', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getSuspendedDrivers() {
@@ -70,7 +70,7 @@ export class DriverController {
   }
 
   @Get('/license-expiring')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @McpTool({ description: 'List drivers with expiring licenses', readOnly: true })
   @ResMsg('drivers.success.retrieved')
   async getLicenseExpiringDrivers() {
@@ -78,7 +78,7 @@ export class DriverController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @Validate({ params: driverIdParam })
   @McpTool({ description: 'Get a driver by ID', readOnly: true })
   @ResMsg('drivers.success.retrieved')
@@ -87,7 +87,7 @@ export class DriverController {
   }
 
   @Get('/cin/:cin')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @Validate({ params: cinParam })
   @McpTool({ description: 'Get a driver by CIN', readOnly: true })
   @ResMsg('drivers.success.retrieved')
@@ -96,7 +96,7 @@ export class DriverController {
   }
 
   @Get('/license/:licenseNumber')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @Validate({ params: licenseNumberParam })
   @McpTool({ description: 'Get a driver by license number', readOnly: true })
   @ResMsg('drivers.success.retrieved')
@@ -105,7 +105,7 @@ export class DriverController {
   }
 
   @Get('/email/:email')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @Validate({ params: emailParam })
   @McpTool({ description: 'Get a driver by email', readOnly: true })
   @ResMsg('drivers.success.retrieved')
@@ -114,7 +114,7 @@ export class DriverController {
   }
 
   @Get('/phone/:phone')
-  @isAdmin()
+  @CanSchoolWide('read:drivers')
   @Validate({ params: phoneParam })
   @McpTool({ description: 'Get a driver by phone', readOnly: true })
   @ResMsg('drivers.success.retrieved')
@@ -123,7 +123,7 @@ export class DriverController {
   }
 
   @Post()
-  @isAdmin()
+  @CanSchoolWide('create:drivers')
   @Validate(createDriverDto)
   @McpTool({ description: 'Create a new driver', confirm: { level: 'warning', message: 'confirm.drivers.create' } })
   @ResMsg('drivers.success.created')
@@ -140,7 +140,7 @@ export class DriverController {
   }
 
   @Post('/update')
-  @isAdmin()
+  @CanSchoolWide('update:drivers')
   @Validate(updateDriverMcpDto)
   @McpTool({ description: 'Update a driver by ID', confirm: { level: 'warning', message: 'confirm.drivers.update' } })
   @ResMsg('drivers.success.updated')
@@ -149,7 +149,7 @@ export class DriverController {
   }
 
   @Put('/:id')
-  @isAdmin()
+  @CanSchoolWide('update:drivers')
   @Validate({ params: driverIdParam, body: updateDriverDto })
   @ResMsg('drivers.success.updated')
   async updateDriverRest(@Params('id') _id: string, @Body() _body: UpdateDriverDto) {
@@ -157,7 +157,7 @@ export class DriverController {
   }
 
   @Put('/:id/status')
-  @isAdmin()
+  @CanSchoolWide('update:drivers')
   @Validate({ params: driverIdParam, body: updateDriverStatusDto })
   @McpTool({ description: 'Update driver status', confirm: { level: 'warning', message: 'confirm.drivers.updateStatus' } })
   @ResMsg('drivers.success.statusUpdated')
@@ -166,7 +166,7 @@ export class DriverController {
   }
 
   @Delete('/bulk')
-  @isAdmin()
+  @CanSchoolWide('delete:drivers')
   @Validate({ body: deleteDriversBulkDto })
   @ResMsg('drivers.success.bulkDeleted')
   async deleteBulk(@Body() _body: DeleteDriversBulkDto) {
@@ -174,7 +174,7 @@ export class DriverController {
   }
 
   @Delete('/:id')
-  @isAdmin()
+  @CanSchoolWide('delete:drivers')
   @Validate({ params: driverIdParam })
   @McpTool('Delete a driver by ID')
   @ResMsg('drivers.success.deleted')

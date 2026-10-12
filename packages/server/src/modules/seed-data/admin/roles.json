@@ -24,20 +24,8 @@
     "description": "Parent role with access to their children's academic progress, attendance records, grades, teacher communications, and school announcements"
   },
   {
-    "name": "counselor",
-    "description": "Guidance role with access to student behavioral records, academic intervention, parent consultations, and student support services"
-  },
-  {
-    "name": "nurse",
-    "description": "Health services role with access to student medical records, health alerts, medication management, and emergency contact information"
-  },
-  {
     "name": "secretary",
     "description": "Administrative support role with access to student enrollment, parent communications, document management, and general office operations"
-  },
-  {
-    "name": "librarian",
-    "description": "Library management role with access to student library records, book tracking, educational resources, and reading program coordination"
   },
   {
     "name": "driver",
@@ -46,5 +34,9 @@
   {
     "name": "assistant",
     "description": "General helper staff role with flexible access to assist with various school operations, administrative tasks, classroom support, and other duties as assigned by school administration"
+  },
+  {
+    "name": "supervisor",
+    "description": "Surveillant général: school-wide student attendance, discipline and behavior follow-up, parent contact and visit requests, with read access to classes, grades and the timetable"
   }
 ]

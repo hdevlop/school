@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { VehicleAssignmentService } from './VehicleAssignmentService';
-import { isAdmin } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import {
   assignDriverDto,
   assignmentIdParam,
@@ -26,7 +26,7 @@ export class VehicleAssignmentController {
   ) { }
 
   @Get('/')
-  @isAdmin()
+  @CanSchoolWide('read:vehicles')
   @McpTool({ description: 'List all vehicle assignments', readOnly: true })
   @ResMsg('vehicleAssignments.success.allRetrieved')
   async getAll() {
@@ -34,7 +34,7 @@ export class VehicleAssignmentController {
   }
 
   @Get('/vehicle/:vehicleId')
-  @isAdmin()
+  @CanSchoolWide('read:vehicles')
   @Validate({ params: vehicleIdParam })
   @McpTool({ description: 'Get assignments by vehicle', readOnly: true })
   @ResMsg('vehicleAssignments.success.retrieved')
@@ -43,7 +43,7 @@ export class VehicleAssignmentController {
   }
 
   @Get('/driver/:driverId')
-  @isAdmin()
+  @CanSchoolWide('read:vehicles')
   @Validate({ params: driverIdParam })
   @McpTool({ description: 'Get assignments by driver', readOnly: true })
   @ResMsg('vehicleAssignments.success.retrieved')
@@ -54,7 +54,7 @@ export class VehicleAssignmentController {
 
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:vehicles')
   @Validate({ params: assignmentIdParam })
   @McpTool({ description: 'Get a vehicle assignment by ID', readOnly: true })
   @ResMsg('vehicleAssignments.success.retrieved')
@@ -63,7 +63,7 @@ export class VehicleAssignmentController {
   }
 
   @Post('/')
-  @isAdmin()
+  @CanSchoolWide('update:vehicles')
   @Validate(createVehicleAssignmentDto)
   @McpTool({ description: 'Create a vehicle assignment', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.create' } })
   @ResMsg('vehicleAssignments.success.created')
@@ -76,7 +76,7 @@ export class VehicleAssignmentController {
   }
 
   @Post('/assign')
-  @isAdmin()
+  @CanSchoolWide('update:vehicles')
   @Validate(assignDriverDto)
   @McpTool({ description: 'Assign a driver to a vehicle', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.assignDriver' } })
   @ResMsg('vehicleAssignments.success.assigned')
@@ -91,7 +91,7 @@ export class VehicleAssignmentController {
   }
 
   @Put('/:id')
-  @isAdmin()
+  @CanSchoolWide('update:vehicles')
   @Validate({ params: assignmentIdParam, body: updateVehicleAssignmentDto })
   @McpTool({ description: 'Update a vehicle assignment', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.update' } })
   @ResMsg('vehicleAssignments.success.updated')
@@ -100,7 +100,7 @@ export class VehicleAssignmentController {
   }
 
   @Put('/:id/unassign')
-  @isAdmin()
+  @CanSchoolWide('update:vehicles')
   @Validate({ params: assignmentIdParam, body: unassignVehicleAssignmentDto })
   @McpTool({ description: 'Unassign a vehicle assignment', confirm: { level: 'warning', message: 'confirm.vehicleAssignments.unassign' } })
   @ResMsg('vehicleAssignments.success.unassigned')
@@ -110,7 +110,7 @@ export class VehicleAssignmentController {
   }
 
   @Put('/vehicle/:vehicleId/unassign')
-  @isAdmin()
+  @CanSchoolWide('update:vehicles')
   @Validate({ params: vehicleIdParam, body: unassignVehicleAssignmentDto })
   @ResMsg('vehicleAssignments.success.unassigned')
   async unassignByVehicle(@Params('vehicleId') vehicleId: string, @Body() body: UnassignVehicleAssignmentDto) {
@@ -119,7 +119,7 @@ export class VehicleAssignmentController {
   }
 
   @Delete('/:id')
-  @isAdmin()
+  @CanSchoolWide('update:vehicles')
   @Validate({ params: assignmentIdParam })
   @McpTool('Delete a vehicle assignment')
   @ResMsg('vehicleAssignments.success.deleted')

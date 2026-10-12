@@ -69,8 +69,7 @@ describe('school-wide ownership roles', () => {
     // Changing this list changes who can read every student, grade and
     // attendance row. Teacher, parent and student stay ownership-scoped.
     expect([...SCHOOL_WIDE_ROLES].sort()).toEqual([
-      'accounting', 'admin', 'assistant', 'counselor', 'driver',
-      'librarian', 'nurse', 'principal', 'secretary',
+      'accounting', 'admin', 'assistant', 'driver', 'principal', 'secretary', 'supervisor',
     ]);
     expect(SCHOOL_WIDE_ROLES).not.toContain('teacher');
     expect(SCHOOL_WIDE_ROLES).not.toContain('parent');

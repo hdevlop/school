@@ -2,7 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
-import { useAuth } from 'najm-auth/client/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { Megaphone, Plus, SearchX } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import AnnouncementForm from './AnnouncementForm';
@@ -17,10 +17,11 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 
 function AnnouncementsTable() {
   const { t } = useTranslation();
-  const { user } = useAuth();
-  const role = (user as any)?.role;
+  const { can } = useViewerRole();
   // Everyone else reads the announcements addressed to them.
-  const canManage = role === 'admin' || role === 'principal';
+  const canCreate = can('create:announcements');
+  const canUpdate = can('update:announcements');
+  const canDelete = can('delete:announcements');
   const columns = useAnnouncementsTableColumns();
   const { classes } = useClasses();
   const [classFilter, setClassFilter] = useState('');
@@ -119,10 +120,10 @@ function AnnouncementsTable() {
         data={filteredAnnouncements}
         columns={columns}
         filters={rawFilters}
-        onCreate={canManage ? handleAddClick : undefined}
+        onCreate={canCreate ? handleAddClick : undefined}
         onView={handleView}
-        onEdit={canManage ? handleEdit : undefined}
-        onDelete={canManage ? handleDelete : undefined}
+        onEdit={canUpdate ? handleEdit : undefined}
+        onDelete={canDelete ? handleDelete : undefined}
         loading={isAnnouncementsLoading}
         error={hasFailedToLoad(error, announcements) ? error : null}
         renderError={(currentError) => (
@@ -137,10 +138,10 @@ function AnnouncementsTable() {
             surface="panel"
             icon={classFilter ? SearchX : FEATURE_ICONS.announcements}
             title={classFilter ? t('emptyStates.filtered.title') : t('emptyStates.announcements.title')}
-            description={classFilter ? t('emptyStates.filtered.description') : canManage
+            description={classFilter ? t('emptyStates.filtered.description') : canCreate
               ? t('emptyStates.announcements.description')
               : t('emptyStates.announcements.readerDescription')}
-            action={!classFilter && canManage ? (
+            action={!classFilter && canCreate ? (
               <NButton size="sm" onClick={handleAddClick}>
                 <Plus className="h-4 w-4" />
                 {t('announcements.dialogs.createButton')}

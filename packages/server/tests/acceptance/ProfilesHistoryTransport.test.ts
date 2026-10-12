@@ -101,7 +101,8 @@ beforeAll(async () => {
   }
   const granted = await db.select({ id: permissions.id }).from(permissions).where(inArray(permissions.name, LIBRARIAN_GRANTS));
   expect(granted).toHaveLength(LIBRARIAN_GRANTS.length);
-  await db.insert(roles).values({ id: librarian.roleId, name: 'librarian' });
+  // A school-wide staff role with narrow grants (the school has no librarian login).
+  await db.insert(roles).values({ id: librarian.roleId, name: 'assistant' });
   await db.insert(rolePermissions).values(granted.map((permission) => ({ roleId: librarian.roleId, permissionId: permission.id })));
   await db.insert(users).values({
     id: librarian.userId, name: 'History profiles librarian', email: librarian.email,

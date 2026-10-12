@@ -11,7 +11,8 @@ import { TeacherProfileService } from '../../src/modules/profiles/TeacherProfile
 const OLD = { id: 'year-2025', label: '2025-2026', reportingStartsOn: '2025-09-01', reportingEndsOn: '2026-08-31' };
 const CURRENT = { id: 'year-2026', label: '2026-2027', reportingStartsOn: '2026-09-01', reportingEndsOn: '2027-08-31' };
 const CONTROLLERS = [StudentProfileController, ParentProfileController, TeacherProfileController];
-const FINANCE_ROLES = 'roles:accounting,admin,principal';
+// `CanSchoolWide`: the permission, and a role whose reads are school-wide.
+const SCHOOL_WIDE = 'roles:accounting,admin,assistant,driver,principal,secretary,supervisor';
 
 // The year the request resolved; the DI injector installs it in the server.
 function inYear<T extends object>(service: T, year: object): T {
@@ -52,13 +53,13 @@ describe('profile routes', () => {
       getOverview: ['read:students'],
       getAcademic: ['read:grades'],
       getAttendanceSummary: ['read:attendance'],
-      getFinancial: [FINANCE_ROLES],
-      getTransport: ['roles:admin'],
+      getFinancial: ['read:fees', SCHOOL_WIDE],
+      getTransport: ['read:student-routes', SCHOOL_WIDE],
     });
     expect(of(ParentProfileController)).toEqual({
       getUnreadAlerts: ['read:alerts'],
-      getChildren: [FINANCE_ROLES],
-      getAllFeesDue: [FINANCE_ROLES],
+      getChildren: ['read:fees', SCHOOL_WIDE],
+      getAllFeesDue: ['read:fees', SCHOOL_WIDE],
       getAllUpcomingEvents: ['read:events'],
     });
     expect(of(TeacherProfileController)).toEqual({

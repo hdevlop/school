@@ -1,7 +1,7 @@
 import { Controller, Get, Params, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ParentProfileService } from './ParentProfileService';
-import { Can, isAuth, isFinancial } from '../../auth';
+import { Can, isAuth, CanSchoolWide } from '../../auth';
 import { z } from 'zod';
 
 const parentIdParam = z.object({ parentId: z.string().min(1) });
@@ -26,7 +26,7 @@ export class ParentProfileController {
 
   // The year hook declares `academicYear` for every tool of this controller.
   @Get('/:parentId/children')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: parentIdParam })
   @McpTool({ description: 'Get children for a parent with their class and fees in the academic year', readOnly: true })
   @ResMsg('parents.success.retrieved')
@@ -35,7 +35,7 @@ export class ParentProfileController {
   }
 
   @Get('/:parentId/fees-due')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: parentIdParam })
   @McpTool({ description: "Get every academic year's fees of all children for a parent", readOnly: true })
   @ResMsg('parents.success.retrieved')

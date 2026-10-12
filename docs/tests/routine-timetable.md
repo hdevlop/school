@@ -1,5 +1,17 @@
 # Routine timetable implementation evidence
 
+## School-wide teaching days, 2026-10-12
+
+Teaching days are edited in Settings → Academic using seven visible checkboxes. The per-section Days action and dialog are removed. Settings owns `teachingDays`; routine create/update DTOs cannot override it. A new routine snapshots the school selection, and the demo timetable planner uses the configured days.
+
+A settings save updates draft/published routines in the active academic year, independently of the caller's historical selection. Historical and archived routines retain their day snapshots. Removing a day with lessons or supervision returns 409 before writes; assignments must be moved or removed through their normal editor first. Settings and routine updates share the service transaction.
+
+Migration `0065_lush_the_stranger.sql` adds `settings.teaching_days`. On adoption it takes the ordered union of active-year routine days and assigned lesson/supervision days, then synchronizes live active-year routines. Existing assignments cannot disappear during adoption. The migration was applied to local `school` and the guarded `school_history_test` fixture, both reaching 66 journal entries. Before/after comparisons preserved all lesson/duty rows and historical/archived day snapshots. No production migration or deployment is claimed.
+
+Validation passed: workspace lint/typechecks, dashboard Settings schema tests (13), focused Settings/Routine/partial-update tests (35), seed timetable tests (8), workspace boundary checks (28), i18n scan, migration check, and production build with isolated output `.next-teaching-days-check`. The guarded PostgreSQL suites `SettingsHistoryDatabase.test.ts` and `TeachingDaysDatabase.test.ts` pass alongside the four class/routine year-input tests. The new database case exercises lesson and duty removal refusals, an allowed save from historical context, active-year propagation, and history/archive/assignment preservation inside a rolled-back transaction.
+
+Browser and connected REST/MCP acceptance for this settings control remain unrun; no browser connection was available. The mobile layout changes preceding this move passed lint, dashboard typechecks and a separate production build, with visual acceptance likewise unconfirmed.
+
 Date: 2026-09-24
 
 ## Implemented

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { NajmScroll, NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, NTabs } from 'najm-kit';
 import { AlertTriangle, Bus, CalendarCheck, CalendarRange, DollarSign, GraduationCap, User, X } from 'lucide-react';
 import { useAuth } from 'najm-auth/client/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { StudentProfileTabsProps } from './types';
 import OverviewTab from './Overview';
 import FeesTab from './Fees';
@@ -28,6 +29,10 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
   // The enrollment history and its commands are administrator/principal routes.
   const role = (user as { role?: string } | null)?.role;
   const canManageEnrollment = role === 'admin' || role === 'principal';
+  // The fees and transport tabs read finance and transport routes.
+  const { isSchoolWide, can } = useViewerRole();
+  const canReadFees = isSchoolWide && can('read:fees');
+  const canReadTransport = isSchoolWide && can('read:student-routes');
 
   const sharedTabProps = {
     studentId,
@@ -44,8 +49,12 @@ export default function StudentProfileTabs({ studentId, onClose, onOpenFeeRecord
       : []),
     { value: 'attendance', icon: CalendarCheck, label: t('students.profile.tabs.attendance'), content: <AttendanceTab {...sharedTabProps} /> },
     { value: 'grades', icon: GraduationCap, label: t('students.profile.tabs.grades'), content: <GradesTab {...sharedTabProps} /> },
-    { value: 'fees', icon: DollarSign, label: t('students.profile.tabs.fees'), content: <FeesTab {...sharedTabProps} onOpenFeeRecord={onOpenFeeRecord} /> },
-    { value: 'transport', icon: Bus, label: t('students.profile.tabs.transport'), content: <TransportTab {...sharedTabProps} /> },
+    ...(canReadFees
+      ? [{ value: 'fees', icon: DollarSign, label: t('students.profile.tabs.fees'), content: <FeesTab {...sharedTabProps} onOpenFeeRecord={onOpenFeeRecord} /> }]
+      : []),
+    ...(canReadTransport
+      ? [{ value: 'transport', icon: Bus, label: t('students.profile.tabs.transport'), content: <TransportTab {...sharedTabProps} /> }]
+      : []),
     {
       value: 'alerts',
       icon: AlertTriangle,

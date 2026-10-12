@@ -54,7 +54,8 @@
   },
   "accessReset": {
     "success": {
-      "reset": "تمت إعادة تعيين الوصول"
+      "reset": "تمت إعادة تعيين الوصول",
+      "loaded": "تم تحميل الحساب"
     },
     "errors": {
       "notFound": "لا يوجد مستخدم بالمعلومات المقدمة",
@@ -1083,6 +1084,33 @@
     "discardTitle": "تجاهل تغييرات المظهر؟",
     "discardDescription": "ستفقد التغييرات غير المحفوظة على المظهر أو الهوية البصرية.",
     "discard": "تجاهل التغييرات"
+  },
+  "mobileHome": {
+    "title": "الرئيسية",
+    "navigation": "التنقل على الهاتف",
+    "welcome": "مرحباً بعودتك",
+    "goodMorning": "صباح الخير",
+    "goodAfternoon": "مساء الخير",
+    "goodEvening": "مساء الخير",
+    "openMenu": "فتح القائمة",
+    "subtitle": "مدرستك في لمحة",
+    "search": "البحث عن خدمة",
+    "noResults": "لا توجد خدمات تطابق بحثك.",
+    "viewUnavailable": "عرض هذه الخدمة غير مفعّل لحسابك.",
+    "visitRequests": "طلبات الزيارة",
+    "publicPage": "موقع المدرسة",
+    "studentAttendance": "الحضور",
+    "staffAttendance": "حضور الموظفين",
+    "timetable": "جدول الحصص",
+    "financialOperations": "العمليات المالية",
+    "sections": {
+      "overview": "نظرة عامة",
+      "academic": "الدراسة",
+      "people": "الأشخاص",
+      "finance": "المالية",
+      "communication": "التواصل",
+      "administration": "الإدارة"
+    }
   },
   "navigation": {
     "dashboard": "لوحة التحكم",
@@ -3367,6 +3395,7 @@
       "cinExists": "يوجد موظف برقم التعريف الوطني هذا بالفعل",
       "emailRequiredForLogin": "البريد الإلكتروني مطلوب لإنشاء حساب دخول",
       "roleHasNoAppAccess": "هذا الدور لا يمنح الوصول إلى التطبيق",
+      "loginBeyondActor": "لا يمكنك منح حساب دخول أو تعديله أو حذفه إلا إذا كنت تملك صلاحياته بنفسك",
       "driverLicenseRequired": "بيانات رخصة السياقة مطلوبة",
       "driverFieldRequired": "الحقل {{field}} للسائق مطلوب",
       "cleanerZoneRequired": "يتطلب إسناد عامل النظافة منطقة",
@@ -3414,6 +3443,7 @@
       "secretary": "السكرتير(ة)",
       "receptionist": "موظف الاستقبال",
       "accountant": "المحاسب",
+      "supervisor": "الحارس العام",
       "librarian": "أمين المكتبة",
       "itSupport": "دعم تقني",
       "assistant": "مساعد",
@@ -3630,6 +3660,10 @@
         },
         "push": {
           "title": "هذا الجهاز"
+        },
+        "teachingDays": {
+          "title": "أيام التدريس",
+          "description": "اختر أيام التدريس لجميع الأقسام في السنة الدراسية النشطة. انقل الحصص والمراقبة قبل إزالة أي يوم. تحتفظ الجداول السابقة بأيامها."
         }
       },
       "generalTab": "النظام",
@@ -3651,7 +3685,8 @@
       "invalidCalendar": "التقويم الدراسي غير صالح",
       "missing": "إعدادات المدرسة غير موجودة",
       "registeredCalendarLocked": "تقويم السنة المسجلة لا يُعدَّل إلا عبر تصحيح مُراجَع",
-      "activateThroughYears": "فعّل السنة المسجلة من خلال إدارة السنوات الدراسية"
+      "activateThroughYears": "فعّل السنة المسجلة من خلال إدارة السنوات الدراسية",
+      "teachingDaysInUse": "انقل أو احذف الحصص والمراقبة المخصصة لهذا اليوم قبل تغيير أيام التدريس."
     },
     "academic": {
       "semesterPlaceholder": "الفصل الدراسي",

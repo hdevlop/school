@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { BookOpen, Users, BarChart3, Clock, Award, Calendar, CalendarCheck2, ClipboardCheck, ArrowUpRight } from 'lucide-react';
 import { FormInput, NButton } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { ROUTINE_DAYS } from '@sms/contracts/routines';
 import {
   buildAttendanceModeOptions,
   buildCalendarSystemOptions,
@@ -43,6 +44,18 @@ const AcademicSection: React.FC<{ activeYear?: string | null; onLeave?: () => vo
           </div>
         </div>
         <p className="text-xs leading-relaxed text-muted-foreground">{t('settings.editor.activeYearHint')}</p>
+      </SettingsGroup>
+
+      <SettingsGroup title={t('settings.editor.groups.teachingDays.title')} description={t('settings.editor.groups.teachingDays.description')} className="sm:grid-cols-1">
+        <FormInput
+          name="teachingDays"
+          type="checkboxGroup"
+          formLabel={t('classRoutines.ui.fields.teachingDays')}
+          icon={Calendar}
+          items={ROUTINE_DAYS.map((day) => ({ value: day, label: t(`classRoutines.ui.days.${day}`) }))}
+          classNames={{ input: 'h-auto [&>div]:grid [&>div]:w-full [&>div]:grid-cols-2 [&>div]:gap-2 [&_label]:min-h-11 [&_label]:rounded-md [&_label]:px-2' }}
+          required
+        />
       </SettingsGroup>
 
       <SettingsGroup title={t('settings.editor.groups.grading.title')} description={t('settings.editor.groups.grading.description')}>

@@ -57,7 +57,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    command: ["bun", "x", "drizzle-kit", "migrate"]
+    # Initialize landing content once against the mounted production database.
+    # Both web and worker wait for migrations and this seed to succeed.
+    command: ["sh", "-ec", "bun x drizzle-kit migrate && bun run seed:landing"]
 
   notifications-worker:
     <<: *app

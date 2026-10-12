@@ -1,7 +1,8 @@
 import { DB } from '../../database/db';
-import { settings } from '../../database/schema';
+import { routineDuties, routineEntries, routineSchedules, settings } from '../../database/schema';
 import { Repository } from '../../najm';
-import { eq, desc, sql } from 'drizzle-orm';
+import { and, eq, desc, inArray, notInArray, sql } from 'drizzle-orm';
+import type { RoutineDay } from '@sms/contracts/routines';
 
 const publicSettings = {
   // School Information
@@ -26,6 +27,7 @@ const publicSettings = {
   minimumPassingGrade: settings.minimumPassingGrade,
   defaultExamDuration: settings.defaultExamDuration,
   calendarSystem: settings.calendarSystem,
+  teachingDays: settings.teachingDays,
   startMonth: settings.startMonth,
   endMonth: settings.endMonth,
 
@@ -131,6 +133,29 @@ export class SettingsRepository {
       .where(eq(settings.id, id))
       .returning();
     return updatedSettings;
+  }
+
+  // School settings target the active year explicitly, regardless of the
+  // historical year selected by the caller. Past and archived routines keep
+  // their own snapshot of the days that applied to them.
+  private activeRoutines(academicYear: string) {
+    return and(eq(routineSchedules.academicYear, academicYear), inArray(routineSchedules.status, ['draft', 'published']));
+  }
+
+  async teachingDayConflict(academicYear: string, days: RoutineDay[]) {
+    const [lesson] = await this.db.select({ id: routineEntries.id }).from(routineEntries)
+      .innerJoin(routineSchedules, eq(routineEntries.scheduleId, routineSchedules.id))
+      .where(and(this.activeRoutines(academicYear), notInArray(routineEntries.dayOfWeek, days))).limit(1);
+    if (lesson) return true;
+    const [duty] = await this.db.select({ id: routineDuties.id }).from(routineDuties)
+      .innerJoin(routineSchedules, eq(routineDuties.scheduleId, routineSchedules.id))
+      .where(and(this.activeRoutines(academicYear), notInArray(routineDuties.dayOfWeek, days))).limit(1);
+    return Boolean(duty);
+  }
+
+  async updateActiveRoutineDays(academicYear: string, days: RoutineDay[]) {
+    await this.db.update(routineSchedules).set({ activeDays: days, updatedAt: sql`CURRENT_TIMESTAMP` })
+      .where(this.activeRoutines(academicYear));
   }
 
   async deleteAll() {

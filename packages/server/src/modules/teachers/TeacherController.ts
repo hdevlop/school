@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, 
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { TeacherService } from './TeacherService';
 import { Teacher, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './TeacherGuards';
-import { isAdmin } from '../../auth';
+import { isAdmin, CanSchoolWide } from '../../auth';
 import {
   assignClassDto,
   assignSubjectDto,
@@ -66,7 +66,7 @@ export class TeacherController {
   }
 
   @Get('/cin/:cin')
-  @isAdmin()
+  @CanSchoolWide('read:teachers')
   @Validate({ params: teacherCinParam })
   @McpTool({ description: 'Get a teacher by CIN', readOnly: true })
   @ResMsg('teachers.success.retrieved')
@@ -75,7 +75,7 @@ export class TeacherController {
   }
 
   @Get('/email/:email')
-  @isAdmin()
+  @CanSchoolWide('read:teachers')
   @Validate({ params: teacherEmailParam })
   @McpTool({ description: 'Get a teacher by email', readOnly: true })
   @ResMsg('teachers.success.retrieved')
@@ -84,7 +84,7 @@ export class TeacherController {
   }
 
   @Get('/phone/:phone')
-  @isAdmin()
+  @CanSchoolWide('read:teachers')
   @Validate({ params: teacherPhoneParam })
   @McpTool({ description: 'Get a teacher by phone number', readOnly: true })
   @ResMsg('teachers.success.retrieved')

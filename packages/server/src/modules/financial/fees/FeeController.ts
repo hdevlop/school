@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validat
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { FeeService } from './FeeService';
 import { buildFeeRecalculationResponse } from './buildFeeRecalculationResponse';
-import { isFinancial } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import {
   createFeeDto,
   createFeesBulkDto,
@@ -29,7 +29,7 @@ export class FeeController {
   ) { }
 
   @Get()
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'List all fees', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getFees() {
@@ -37,7 +37,7 @@ export class FeeController {
   }
 
   @Get('/outstanding')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'List students owing fees of any school year, with every year summed. Élèves qui doivent encore payer. التلاميذ الذين لم يدفعوا الرسوم بعد.', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOutstanding() {
@@ -45,7 +45,7 @@ export class FeeController {
   }
 
   @Get('/overdue')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'List all overdue fees with student info. Frais impayés en retard. الرسوم المتأخرة غير المدفوعة.', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async listOverdue() {
@@ -53,7 +53,7 @@ export class FeeController {
   }
 
   @Get('/overdue/summary')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'Get overdue fees summary for dashboard', readOnly: true })
   @ResMsg('fees.success.retrieved')
   async getOverdueSummary() {
@@ -61,7 +61,7 @@ export class FeeController {
   }
 
   @Post('/mcp/overdue/student')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ body: overdueStudentBody })
   @McpTool({ description: 'Get overdue fees for a specific student', readOnly: true })
   @ResMsg('fees.success.retrieved')
@@ -72,7 +72,7 @@ export class FeeController {
   // Every year's fees of one student: the explicit all-year read behind
   // other years' unpaid fees, whatever year is viewed.
   @Get('/student/:studentId/all-years')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: studentIdParam })
   @McpTool({ description: "Get a student's fees of every school year, to find unpaid fees of other years", readOnly: true })
   @ResMsg('fees.success.retrieved')
@@ -81,7 +81,7 @@ export class FeeController {
   }
 
   @Get('/student/:studentId')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get fees for a student by student ID. Frais d’un élève. رسوم تلميذ.', readOnly: true })
   @ResMsg('fees.success.retrieved')
@@ -90,7 +90,7 @@ export class FeeController {
   }
 
   @Get('/:id')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: feeIdParam })
   @McpTool({ description: 'Get a fee by ID', readOnly: true })
   @ResMsg('fees.success.retrieved')
@@ -99,7 +99,7 @@ export class FeeController {
   }
 
   @Post()
-  @isFinancial()
+  @CanSchoolWide('create:fees')
   @Validate(createFeeDto)
   @McpTool({ description: 'Create a new fee', confirm: { level: 'warning', message: 'confirm.fees.create' } })
   @ResMsg('fees.success.created')
@@ -108,7 +108,7 @@ export class FeeController {
   }
 
   @Post('/bulk')
-  @isFinancial()
+  @CanSchoolWide('create:fees')
   @Validate(createFeesBulkDto)
   @McpTool({ description: 'Create multiple fees in bulk', confirm: { level: 'warning', message: 'confirm.fees.bulkCreate' } })
   @ResMsg('fees.success.bulkCreated')
@@ -117,7 +117,7 @@ export class FeeController {
   }
 
   @Post('/bulk-class')
-  @isFinancial()
+  @CanSchoolWide('create:fees')
   @Validate(classBulkFeeDto)
   @McpTool({ description: 'Assign a fee to all students in a class', confirm: { level: 'warning', message: 'confirm.fees.bulkClass' } })
   @ResMsg('fees.success.bulkCreated')
@@ -126,7 +126,7 @@ export class FeeController {
   }
 
   @Put('/:id')
-  @isFinancial()
+  @CanSchoolWide('update:fees')
   @Validate({ params: feeIdParam, body: updateFeeDto })
   @McpTool({ description: 'Update a fee by ID', confirm: { level: 'warning', message: 'confirm.fees.update' } })
   @ResMsg('fees.success.updated')
@@ -135,7 +135,7 @@ export class FeeController {
   }
 
   @Delete('/bulk')
-  @isFinancial()
+  @CanSchoolWide('delete:fees')
   @Validate(deleteFeesBulkDto)
   @ResMsg('fees.success.bulkDeleted')
   async deleteBulkHttp(@Body() body: DeleteFeesBulkDto, @User() user: { id: string; role?: string }) {
@@ -143,7 +143,7 @@ export class FeeController {
   }
 
   @Post('/bulk/delete')
-  @isFinancial()
+  @CanSchoolWide('delete:fees')
   @Validate(deleteFeesBulkInputDto)
   @McpTool({ description: 'Delete multiple fees by IDs', confirm: { level: 'danger', message: 'confirm.fees.bulkDelete' } })
   @ResMsg('fees.success.bulkDeleted')
@@ -152,7 +152,7 @@ export class FeeController {
   }
 
   @Delete('/:id')
-  @isFinancial()
+  @CanSchoolWide('delete:fees')
   @Validate({ params: feeIdParam })
   @McpTool({ description: 'Delete a fee by ID', confirm: { level: 'danger', message: 'confirm.fees.delete' } })
   @ResMsg('fees.success.deleted')
@@ -161,7 +161,7 @@ export class FeeController {
   }
 
   @Post('/recalculate/:id')
-  @isFinancial()
+  @CanSchoolWide('update:fees')
   @Validate({ params: feeIdParam })
   @McpTool({ description: 'Recalculate total allocated amount for a fee', confirm: { level: 'notice', message: 'confirm.fees.recalculate' } })
   @ResMsg('fees.success.updated')

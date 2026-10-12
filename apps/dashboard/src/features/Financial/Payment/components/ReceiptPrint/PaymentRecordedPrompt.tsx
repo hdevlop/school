@@ -21,8 +21,8 @@ export const PaymentRecordedPrompt = ({ payment, student }: PaymentRecordedPromp
   const { t } = useTranslation();
   const { pop } = useDialog();
   const { currency, majorMoney } = useSchoolFormat();
-  // The record response is the bare row; the read joins the student and the
-  // processor the receipt names, as on a reprint from the payments table.
+  // The record response is the bare row; read the student's name and code
+  // as on a reprint from the payments table.
   const { payment: recorded, isPaymentLoading } = usePayments({ paymentId: payment.id, enabled: false });
   const receiptNumber = payment.receiptNumber ?? payment.id;
   const canPrint = payment.status === 'completed';
@@ -39,7 +39,6 @@ export const PaymentRecordedPrompt = ({ payment, student }: PaymentRecordedPromp
       transactionRef: payment.transactionRef ?? undefined,
       checkNumber: payment.checkNumber ?? undefined,
       notes: payment.notes ?? undefined,
-      processedBy: recorded?.processor?.email ?? undefined,
     });
   };
 

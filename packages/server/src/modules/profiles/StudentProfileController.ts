@@ -1,7 +1,7 @@
 import { Controller, Get, Params, ResMsg, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { StudentProfileService } from './StudentProfileService';
-import { Can, isAdmin, isAuth, isFinancial } from '../../auth';
+import { Can, isAuth, CanSchoolWide } from '../../auth';
 import { z } from 'zod';
 
 const studentIdParam = z.object({ studentId: z.string().min(1) });
@@ -43,7 +43,7 @@ export class StudentProfileController {
   }
 
   @Get('/:studentId/financial')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get student financial profile in the academic year — fees, payments, balance', readOnly: true })
   @ResMsg('students.success.retrieved')
@@ -52,7 +52,7 @@ export class StudentProfileController {
   }
 
   @Get('/:studentId/transport')
-  @isAdmin()
+  @CanSchoolWide('read:student-routes')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get student transport in the academic year — route, vehicle, driver', readOnly: true })
   @ResMsg('students.success.retrieved')

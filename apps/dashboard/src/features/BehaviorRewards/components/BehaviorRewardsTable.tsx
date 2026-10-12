@@ -4,7 +4,7 @@ import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useMemo } from 'react';
 import { useClassSectionTableScope } from '@/features/Classes/hooks/useClassSectionTableScope';
 import { Award, Plus, SearchX } from 'lucide-react';
-import { useAuth } from 'najm-auth/client/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
@@ -18,11 +18,10 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 
 const BehaviorRewardsTable = () => {
   const { t } = useTranslation();
-  const { user } = useAuth();
-  const role = (user as any)?.role;
-  const canDelete = role === 'admin';
   // Parents and students read their own or their children's records only.
-  const isFamily = role === 'parent' || role === 'student';
+  // Deleting is never a teacher's, whatever they are granted (as on the server).
+  const { isFamily, isSchoolWide, can } = useViewerRole();
+  const canDelete = isSchoolWide && can('delete:behavior-rewards');
   const columns = useBehaviorRewardsTableColumns();
   const scope = useClassSectionTableScope();
   const rewardFilters = useBehaviorRewardsTableFilters();

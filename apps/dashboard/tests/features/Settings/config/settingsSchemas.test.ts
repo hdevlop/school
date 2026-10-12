@@ -32,6 +32,7 @@ describe('settingsSchema defaults', () => {
   });
 
   it('fills the school day', () => {
+    expect(parsed.teachingDays).toEqual(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']);
     expect(parsed.schoolStartTime).toBe('08:00');
     expect(parsed.schoolEndTime).toBe('15:00');
     expect(parsed.lunchBreakDuration).toBe(30);
@@ -68,6 +69,11 @@ describe('settingsSchema defaults', () => {
 });
 
 describe('settingsSchema validation', () => {
+  it('requires at least one unique teaching day and puts selected days in week order', () => {
+    expect(settingsSchema.safeParse({ ...minimal, teachingDays: [] }).success).toBe(false);
+    expect(settingsSchema.safeParse({ ...minimal, teachingDays: ['monday', 'monday'] }).success).toBe(false);
+    expect(settingsSchema.parse({ ...minimal, teachingDays: ['sunday', 'monday'] }).teachingDays).toEqual(['monday', 'sunday']);
+  });
   it('accepts every calendar system the API accepts', () => {
     for (const calendarSystem of CALENDAR_SYSTEM_VALUES) {
       expect(settingsSchema.safeParse({ ...minimal, calendarSystem }).success).toBe(true);

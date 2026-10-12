@@ -25,7 +25,12 @@ function service(calls: Calls, options: { role?: string; history?: Partial<Recor
     getAttendanceRoster: async (date: string) => { calls.push(`roster ${date}`); return []; },
     countRecordedHistory: async () => ({ payslips: 0, attendance: 0, duties: 0, vehicleAssignments: 0, ...options.history }),
   };
-  const validator = withEnglishMessages(new StaffValidator(staffRepository as any, { getByCode: async (code: string) => ({ code, active: true }) } as any));
+  const permissionService = { getPermissionsByRole: async () => [] };
+  const validator = withEnglishMessages(new StaffValidator(
+    staffRepository as any,
+    { getByCode: async (code: string) => ({ code, active: true }) } as any,
+    permissionService as any,
+  ));
   return new StaffService(
     staffRepository as any,
     validator,

@@ -3,6 +3,7 @@ import { NAJM_CURRENCIES, NAJM_TIME_ZONES } from 'najm-kit/server';
 import { CALENDAR_SYSTEM_VALUES } from '@sms/contracts';
 import { parseSchoolYearLabel } from '@sms/contracts/academic-years';
 import { schoolI18n } from '@sms/contracts/locales';
+import { DEFAULT_TEACHING_DAYS, ROUTINE_DAYS } from '@sms/contracts/routines';
 
 import { schoolApp, SCHOOL_DEFAULT_CURRENCY } from '@/najm.config';
 import { SETTINGS_DATE_FORMAT_VALUES, SETTINGS_TIME_FORMAT_VALUES } from './dateTimeFormats';
@@ -66,6 +67,9 @@ export const settingsSchema = z.object({
   minimumPassingGrade: numberField(z.number({ error: 'Must be a valid number' }).min(0, 'Minimum passing grade must be non-negative').max(100, 'Minimum passing grade cannot exceed 100')).default(60.00),
   defaultExamDuration: numberField(z.number({ error: 'Must be a valid number' }).int('Default exam duration must be in minutes').min(15, 'Exam duration must be at least 15 minutes').max(480, 'Exam duration cannot exceed 480 minutes')).default(120),
   calendarSystem: z.enum(CALENDAR_SYSTEM_VALUES).default('SEMESTER'),
+  teachingDays: z.array(z.enum(ROUTINE_DAYS)).min(1).max(7)
+    .refine((days) => new Set(days).size === days.length, 'Teaching days must be unique')
+    .transform((days) => ROUTINE_DAYS.filter((day) => days.includes(day))).default(DEFAULT_TEACHING_DAYS),
 
   // Notification Settings
   academicAlerts: z.boolean().default(true),

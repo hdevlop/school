@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, 
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { GradeService } from './GradeService';
 import { Grade, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './GradeGuards';
-import { isAdmin, isAdministrator } from '../../auth';
+import { isAdmin, isAdministrator, CanSchoolWide } from '../../auth';
 import {
   assessmentIdParam,
   createGradeDto,
@@ -145,7 +145,7 @@ export class GradeController {
   }
 
   @Delete('/bulk')
-  @isAdmin()
+  @CanSchoolWide('delete:grades')
   @Validate(deleteBulkGradeDto)
   @McpTool({ description: 'Delete multiple grades by IDs', confirm: { level: 'danger', message: 'confirm.grades.bulkDelete' } })
   @ResMsg('grades.success.bulkDeleted')

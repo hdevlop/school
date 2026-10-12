@@ -87,10 +87,15 @@ const ensureCompensationFields = (data, ctx) => {
   }
 };
 
-export const createStaffDto = staffBaseSchema.superRefine(ensureCompensationFields);
+// A request body never names an existing account: linking one would let a
+// staff edit change that account's email, or a staff delete remove it.
+// TeacherService passes `userId` in process, for the account it just created.
+const staffBodySchema = staffBaseSchema.omit({ userId: true });
+
+export const createStaffDto = staffBodySchema.superRefine(ensureCompensationFields);
 // `.partial()` keeps defaults: an update naming only a phone number set the
 // compensation mode back to monthly and a departed staff member back to active.
-export const updateStaffDto = staffBaseSchema.extend({
+export const updateStaffDto = staffBodySchema.extend({
   compensationMode: compensationModeEnum.optional(),
   status: staffStatusEnum.optional(),
 }).partial().superRefine(ensureCompensationFields);
@@ -104,7 +109,8 @@ export const staffAttendanceRosterQueryDto = z.object({
 
 export const deleteBulkStaffDto = z.array(z.string().min(1));
 
-export type CreateStaffDto = z.infer<typeof createStaffDto>;
-export type UpdateStaffDto = z.infer<typeof updateStaffDto>;
+type LinkedAccount = { userId?: string | null };
+export type CreateStaffDto = z.infer<typeof createStaffDto> & LinkedAccount;
+export type UpdateStaffDto = z.infer<typeof updateStaffDto> & LinkedAccount;
 export type DeleteBulkStaffDto = z.infer<typeof deleteBulkStaffDto>;
 export type StaffAttendanceRosterQueryDto = z.infer<typeof staffAttendanceRosterQueryDto>;

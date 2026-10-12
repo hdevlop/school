@@ -72,7 +72,7 @@ export class BehaviorRewardService {
   }
 
   async delete(id: string, actor: BehaviorRewardActor) {
-    this.behaviorRewardValidator.ensureAdmin(actor);
+    this.behaviorRewardValidator.ensureSchoolWide(actor);
     await this.behaviorRewardValidator.ensureExists(id);
     return this.behaviorRewardRepository.delete(id);
   }

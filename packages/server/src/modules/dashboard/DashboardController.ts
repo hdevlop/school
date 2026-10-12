@@ -1,7 +1,7 @@
 import { Controller, Get, t, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { DashboardService } from './DashboardService';
-import { isAuth, isAdmin, isFinancial, isStaff } from '../../auth';
+import { isAuth, isFinancial, isStaff, isAdministrator } from '../../auth';
 
 @ToolGroup('dashboard')
 @Controller('/dashboard')
@@ -10,7 +10,7 @@ export class DashboardController {
   constructor(private dashboardService: DashboardService) { }
 
   @Get('/today')
-  @isAdmin()
+  @isAdministrator()
   @McpTool({ description: 'Get today snapshot — attendance, income, expenses, overdue fees, events', readOnly: true })
   @ResMsg('dashboards.success.retrieved')
   async getTodaySnapshot() {

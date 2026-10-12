@@ -10,7 +10,7 @@ import { VehicleAssignmentService } from '../transport/vehicleAssignments/Vehicl
 import { getBusinessDateOnly } from '../../shared/businessDate';
 import { StaffAssignmentRepository } from './StaffAssignmentRepository';
 import { StaffRepository } from './StaffRepository';
-import { StaffValidator } from './StaffValidator';
+import { StaffValidator, type StaffActor } from './StaffValidator';
 import type { CreateStaffDto, DeleteBulkStaffDto, UpdateStaffDto } from './StaffDto';
 
 // role -> support sub-resource handler (plan §7). Driver is the only structured
@@ -170,8 +170,14 @@ export class StaffService {
     return `EMP-${nanoid(6).toUpperCase()}`;
   }
 
+  /** The login role of an account a staff row points at, if it still exists. */
+  private async loginRoleId(userId: string | null | undefined) {
+    if (!userId) return null;
+    return (await this.userService.getAuthRecordById(userId))?.roleId ?? null;
+  }
+
   @Transaction()
-  async create(data: CreateStaffDto) {
+  async create(data: CreateStaffDto, actor?: StaffActor) {
     await this.staffValidator.ensureCinUnique(data.cin);
     await this.staffValidator.ensureEmployeeCodeUnique(data.employeeCode);
     await this.staffValidator.ensureEmailUnique(data.email);
@@ -195,6 +201,7 @@ export class StaffService {
     } else if (data.email) {
       const accessRole = await this.staffValidator.ensureRoleExists(data.role);
       if (accessRole.accessRoleId) {
+        await this.staffValidator.ensureCanManageLogin(actor, accessRole.accessRoleId);
         ({ userId, emailSent } = await this.provisionUser(data, staffId));
       }
     }
@@ -243,7 +250,7 @@ export class StaffService {
   }
 
   @Transaction()
-  async update(id: string, data: UpdateStaffDto) {
+  async update(id: string, data: UpdateStaffDto, actor?: StaffActor) {
     const existing = await this.staffValidator.ensureExists(id);
     if (data.employeeCode) {
       await this.staffValidator.ensureEmployeeCodeUnique(data.employeeCode, id);
@@ -300,6 +307,8 @@ export class StaffService {
     }
 
     if (existing.userId && data.email && data.email !== existing.email) {
+      // A new email is where that account's password reset is sent.
+      await this.staffValidator.ensureCanManageLogin(actor, await this.loginRoleId(existing.userId));
       await this.userService.update(existing.userId, { email: data.email });
     }
 
@@ -328,8 +337,10 @@ export class StaffService {
   }
 
   @Transaction()
-  async delete(id: string, options: { allowLinked?: boolean } = {}) {
+  async delete(id: string, options: { allowLinked?: boolean } = {}, actor?: StaffActor) {
     const staffMember = await this.staffValidator.ensureExists(id);
+    // Deleting the staff row deletes its login too.
+    await this.staffValidator.ensureCanManageLogin(actor, await this.loginRoleId(staffMember.userId));
 
     // Repository access resolves to the active Najm transaction. This matters when
     // TeacherService/DriverService has just removed the linked profile in that same
@@ -354,8 +365,8 @@ export class StaffService {
     return deleted;
   }
 
-  async deleteBulk(ids: DeleteBulkStaffDto) {
-    const results = await Promise.all(ids.map((id) => this.delete(id)));
+  async deleteBulk(ids: DeleteBulkStaffDto, actor?: StaffActor) {
+    const results = await Promise.all(ids.map((id) => this.delete(id, {}, actor)));
     return { deletedCount: results.length };
   }
 

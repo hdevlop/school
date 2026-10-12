@@ -1,17 +1,9 @@
 import { z } from 'zod';
-import { MAX_ROUTINE_CONTENT_GROUPS, MAX_ROUTINE_CONTENT_LABEL_LENGTH } from '@sms/contracts/routines';
+import { MAX_ROUTINE_CONTENT_GROUPS, MAX_ROUTINE_CONTENT_LABEL_LENGTH, ROUTINE_DAYS } from '@sms/contracts/routines';
 import type { RoutineContentGroup } from '@sms/contracts/routines';
 
 const id = z.string().min(1);
-export const routineDayDto = z.enum([
-  'monday',
-  'tuesday',
-  'wednesday',
-  'thursday',
-  'friday',
-  'saturday',
-  'sunday',
-]);
+export const routineDayDto = z.enum(ROUTINE_DAYS);
 export const routineStatusDto = z.enum(['draft', 'published', 'archived']);
 const timeField = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/, 'Time must use HH:mm');
 
@@ -44,14 +36,10 @@ export const updateRoutinePeriodDto = createRoutinePeriodDto.partial().extend({
 export const createRoutineScheduleDto = z.object({
   sectionId: id,
   name: z.string().trim().min(1).max(120),
-  activeDays: z.array(routineDayDto).min(1).max(7).default([
-    'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday',
-  ]),
 });
 export const updateRoutineScheduleDto = createRoutineScheduleDto
-  .pick({ name: true, activeDays: true })
-  .partial()
-  .extend({ activeDays: z.array(routineDayDto).min(1).max(7).optional() });
+  .pick({ name: true })
+  .partial();
 
 export const routineTimelineItemDto = z.object({
   type: z.enum(['lesson', 'break']),

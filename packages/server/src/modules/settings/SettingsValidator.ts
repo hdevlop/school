@@ -35,6 +35,10 @@ export class SettingsValidator {
     return settings;
   }
 
+  ensureTeachingDaysKeepAssignments(hasConflict: boolean) {
+    if (hasConflict) Err(409, this.t('teachingDaysInUse'));
+  }
+
   ensureYearSettingsUnchanged(data: UpdateSettingsDto, current: { startMonth: string; endMonth: string; currentAcademicYear: string }) {
     if ((data.startMonth !== undefined && data.startMonth !== current.startMonth) ||
       (data.endMonth !== undefined && data.endMonth !== current.endMonth)) {

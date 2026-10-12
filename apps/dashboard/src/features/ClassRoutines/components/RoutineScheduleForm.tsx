@@ -67,21 +67,20 @@ function SortableTimelineRow({
     <div
       ref={setNodeRef}
       style={{
-        gridTemplateColumns: '1.75rem 11rem minmax(10rem, 14rem) 8rem 8rem 2rem',
         transform: CSS.Transform.toString(transform),
         transition,
       }}
-      className={`relative grid min-w-[46rem] items-end justify-between gap-2 rounded-lg border p-2 shadow-xs transition-[box-shadow,background-color,border-color] ${isBreak ? 'border-amber-300 bg-amber-50/60 dark:border-amber-800 dark:bg-amber-950/15' : index % 2 === 0 ? 'bg-card' : 'bg-muted/35 dark:bg-muted/20'} ${isDragging ? 'z-10 shadow-lg ring-2 ring-primary/25' : ''}`}
+      className={`relative grid min-w-0 grid-cols-2 items-end gap-3 rounded-xl border p-3 shadow-xs transition-[box-shadow,background-color,border-color] lg:grid-cols-[2rem_9rem_minmax(0,1fr)_7rem_7rem_2.5rem] lg:gap-2 ${isBreak ? 'border-amber-300 bg-amber-50/60 dark:border-amber-800 dark:bg-amber-950/15' : index % 2 === 0 ? 'bg-card' : 'bg-muted/35 dark:bg-muted/20'} ${isDragging ? 'z-10 shadow-lg ring-2 ring-primary/25' : ''}`}
     >
       <button
         type="button"
         aria-label={t('classRoutines.ui.periodForm.dragRow', { number: index + 1 })}
-        className="mb-1 flex touch-none cursor-grab flex-col items-center gap-0.5 text-muted-foreground active:cursor-grabbing"
+        className="flex min-h-11 touch-none cursor-grab items-center justify-start gap-1 rounded-md text-muted-foreground focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing lg:col-start-1 lg:row-start-1 lg:flex-col lg:justify-center"
         {...attributes}
         {...listeners}
       >
         <GripVertical className="h-4 w-4" />
-        <span className="text-[9px] tabular-nums">{index + 1}</span>
+        <span className="text-xs tabular-nums">{index + 1}</span>
       </button>
       <FormInput
         name={`periods.${index}.type`}
@@ -91,20 +90,21 @@ function SortableTimelineRow({
           { value: 'lesson', label: t('classRoutines.ui.periodForm.teachingPeriod') },
           { value: 'break', label: t('classRoutines.ui.periodForm.breakRecess') },
         ]}
+        ariaLabel={t('classRoutines.ui.fields.type')}
         icon={isBreak ? Coffee : BookOpen}
-        className="h-8 [&>div:first-child]:h-8"
+        classNames={{ item: 'col-span-2 min-w-0 sm:col-span-1 lg:col-start-2 lg:row-start-1', input: 'h-11 min-w-0 [&>div:first-child]:h-11 lg:h-9 lg:[&>div:first-child]:h-9' }}
         required
       />
-      <FormInput name={`periods.${index}.name`} type="text" formLabel={t('classRoutines.ui.fields.nameLabel')} required />
-      <FormInput name={`periods.${index}.startTime`} type="time" formLabel={t('classRoutines.ui.fields.startTime')} required />
-      <FormInput name={`periods.${index}.endTime`} type="time" formLabel={t('classRoutines.ui.fields.endTime')} required />
+      <FormInput name={`periods.${index}.name`} type="text" formLabel={t('classRoutines.ui.fields.nameLabel')} classNames={{ item: 'col-span-2 min-w-0 sm:col-span-1 lg:col-start-3 lg:row-start-1', input: 'h-11 min-w-0 lg:h-9' }} required />
+      <FormInput name={`periods.${index}.startTime`} type="time" formLabel={t('classRoutines.ui.fields.startTime')} classNames={{ item: 'min-w-0 lg:col-start-4 lg:row-start-1', input: 'h-11 min-w-0 lg:h-9' }} dir="ltr" inputMode="numeric" required />
+      <FormInput name={`periods.${index}.endTime`} type="time" formLabel={t('classRoutines.ui.fields.endTime')} classNames={{ item: 'min-w-0 lg:col-start-5 lg:row-start-1', input: 'h-11 min-w-0 lg:h-9' }} dir="ltr" inputMode="numeric" required />
       <NButton
         type="button"
         variant="ghost"
         size="sm"
         aria-label={t('classRoutines.ui.periodForm.removeRow', { name: name || String(index + 1) })}
         onClick={onRemove}
-        className="mb-0.5 text-destructive hover:bg-destructive/10 hover:text-destructive"
+        className="col-start-2 row-start-1 min-h-11 w-11 justify-self-end text-destructive hover:bg-destructive/10 hover:text-destructive lg:col-start-6 lg:w-10"
       >
         <Trash2 className="h-4 w-4" />
       </NButton>
@@ -199,7 +199,7 @@ export default function RoutineScheduleForm({
       form={form}
       variant="compact"
       onSubmit={(data) => pop(data)}
-      className="min-h-0 gap-3"
+      className="h-auto min-h-0 min-w-0 gap-3"
     >
       <div className="space-y-2">
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
@@ -220,11 +220,11 @@ export default function RoutineScheduleForm({
         </DndContext>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2 pt-3">
-        <NButton type="button" variant="outline" size="sm" onClick={() => addRow('lesson')}>
+      <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:flex-wrap sm:justify-center">
+        <NButton type="button" variant="outline" className="min-h-11" onClick={() => addRow('lesson')}>
           <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addTeachingPeriod')}
         </NButton>
-        <NButton type="button" variant="outline" size="sm" onClick={() => addRow('break')} className="border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-300">
+        <NButton type="button" variant="outline" onClick={() => addRow('break')} className="min-h-11 border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-300">
           <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.addBreak')}
         </NButton>
       </div>

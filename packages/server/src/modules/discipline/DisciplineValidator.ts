@@ -1,4 +1,5 @@
 import { Err, I18n, Service } from '../../najm';
+import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { DisciplineRepository } from './DisciplineRepository';
 
 export type DisciplineUser = { id: string; role?: string };
@@ -48,8 +49,9 @@ export class DisciplineValidator {
     if (user.role === 'teacher' && record.reportedBy !== user.id) Err(403, this.t('recordForbidden'));
   }
 
+  // Reopening and deleting are never a teacher's, whatever they are granted.
   ensureAdministrator(user: DisciplineUser) {
-    if (user.role !== 'admin') Err(403, this.t('adminRequired'));
+    if (!SCHOOL_WIDE_ROLES.includes(user.role ?? '')) Err(403, this.t('adminRequired'));
   }
 
   ensureIncidentDate(value: string) {

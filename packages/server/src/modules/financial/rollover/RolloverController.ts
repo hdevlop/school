@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import { RolloverService } from './RolloverService';
 import { commitRolloverDto, rolloverDto, type CommitRolloverDto, type RolloverDto } from './RolloverDto';
 
@@ -10,7 +10,7 @@ export class RolloverController {
   constructor(private rolloverService: RolloverService) {}
 
   @Post('/preview')
-  @isAdmin()
+  @CanSchoolWide('read:financial-operations')
   @Validate(rolloverDto)
   @McpTool({ description: 'Preview academic-year rollover (dry run)', confirm: { level: 'warning', message: 'confirm.rollover.preview' } })
   @ResMsg('rollover.previewed')
@@ -19,7 +19,7 @@ export class RolloverController {
   }
 
   @Post('/commit')
-  @isAdmin()
+  @CanSchoolWide('manage:financial-operations')
   @Validate(commitRolloverDto)
   @McpTool({ description: 'Commit academic-year rollover from a prior preview', confirm: { level: 'danger', message: 'confirm.rollover.commit' } })
   @ResMsg('rollover.committed')
@@ -28,7 +28,7 @@ export class RolloverController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:financial-operations')
   @ResMsg('rollover.retrieved')
   async getRun(@Params('id') id: string) {
     return this.rolloverService.getRun(id);

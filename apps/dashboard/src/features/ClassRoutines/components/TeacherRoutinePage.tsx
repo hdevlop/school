@@ -1,7 +1,7 @@
 'use client';
 
 import { CalendarClock, Clock, Layers3 } from 'lucide-react';
-import { NEmptyState, NErrorState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { NajmScroll, NEmptyState, NErrorState, NPageHeader, NPageHeaderActions } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useTeacherOverview } from '@/features/Dashboard/hooks/useTeacherDashboard';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -41,11 +41,12 @@ export default function TeacherRoutinePage() {
   const failed = overview.isError || routine.isError;
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-3">
+    <div className="flex h-full min-h-0 min-w-0 w-full flex-1 flex-col gap-3 overflow-hidden">
       <NPageHeader
         icon={CalendarClock}
         title={t('classRoutines.ui.teacher.myWeekTitle')}
         subtitle={t('classRoutines.ui.teacher.myWeekSubtitle')}
+        className="shrink-0"
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
@@ -53,28 +54,34 @@ export default function TeacherRoutinePage() {
       </NPageHeader>
 
       {loading ? (
-        <ClassRoutineSkeleton />
+        <NajmScroll axis="y" autoHide="scroll" className="flex-1">
+          <ClassRoutineSkeleton />
+        </NajmScroll>
       ) : failed ? (
-        <NErrorState
-          surface="panel"
-          message={t('classRoutines.ui.errors.loadFailed')}
-          onRetry={() => void (overview.isError ? overview.refetch() : routine.refetch())}
-        />
+        <NajmScroll axis="y" autoHide="scroll" className="flex-1">
+          <NErrorState
+            surface="panel"
+            message={t('classRoutines.ui.errors.loadFailed')}
+            onRetry={() => void (overview.isError ? overview.refetch() : routine.refetch())}
+          />
+        </NajmScroll>
       ) : schedules.length ? (
         <>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex shrink-0 flex-wrap gap-2">
             <Chip icon={Clock} label={t('classRoutines.ui.teacher.weeklyLessons')} value={number(lessonCount)} />
             <Chip icon={Layers3} label={t('classRoutines.ui.teacher.sections')} value={number(schedules.length)} />
           </div>
           <TeacherWeek schedules={schedules} today={weekdayOf(overview.data?.date)} />
         </>
       ) : (
-        <NEmptyState
-          icon={CalendarClock}
-          title={t('classRoutines.ui.teacher.noRoutine')}
-          description={t('classRoutines.ui.teacher.noRoutineDescription')}
-          className="rounded-2xl border border-dashed bg-card/50 py-10"
-        />
+        <NajmScroll axis="y" autoHide="scroll" className="flex-1">
+          <NEmptyState
+            icon={CalendarClock}
+            title={t('classRoutines.ui.teacher.noRoutine')}
+            description={t('classRoutines.ui.teacher.noRoutineDescription')}
+            className="rounded-2xl border border-dashed bg-card/50 py-10"
+          />
+        </NajmScroll>
       )}
     </div>
   );

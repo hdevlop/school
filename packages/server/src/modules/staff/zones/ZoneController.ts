@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
-import { isAdmin } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { createZoneDto, updateZoneDto, zoneIdParam, type CreateZoneDto, type UpdateZoneDto } from './ZoneDto';
 import { ZoneService } from './ZoneService';
@@ -10,7 +10,7 @@ export class ZoneController {
   constructor(private zoneService: ZoneService) {}
 
   @Get()
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @McpTool({ description: 'List zones', readOnly: true })
   @ResMsg('zones.success.retrieved')
   async getZones() {
@@ -18,7 +18,7 @@ export class ZoneController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @Validate({ params: zoneIdParam })
   @McpTool({ description: 'Get a zone by ID', readOnly: true })
   @ResMsg('zones.success.retrieved')
@@ -27,7 +27,7 @@ export class ZoneController {
   }
 
   @Post()
-  @isAdmin()
+  @CanSchoolWide('create:staff')
   @Validate(createZoneDto)
   @McpTool({ description: 'Create a zone', confirm: { level: 'warning', message: 'confirm.zones.create' } })
   @ResMsg('zones.success.created')
@@ -36,7 +36,7 @@ export class ZoneController {
   }
 
   @Put('/:id')
-  @isAdmin()
+  @CanSchoolWide('update:staff')
   @Validate({ params: zoneIdParam, body: updateZoneDto })
   @McpTool({ description: 'Update a zone', confirm: { level: 'warning', message: 'confirm.zones.update' } })
   @ResMsg('zones.success.updated')
@@ -45,7 +45,7 @@ export class ZoneController {
   }
 
   @Delete('/:id')
-  @isAdmin()
+  @CanSchoolWide('delete:staff')
   @Validate({ params: zoneIdParam })
   @McpTool({ description: 'Delete a zone', confirm: { level: 'danger', message: 'confirm.zones.delete' } })
   @ResMsg('zones.success.deleted')

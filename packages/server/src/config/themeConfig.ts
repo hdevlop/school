@@ -5,7 +5,7 @@ import {
   SCHOOL_HERO_MAX_BYTES,
   SCHOOL_LOGO_MAX_BYTES,
 } from '@sms/server/theme';
-import { isAdministrator } from '../auth';
+import { isAdmin } from '../auth';
 import { db } from '../database/db';
 import { auditLogs } from '../database/schema/coreSchema';
 import { LANDING_HERO_FALLBACK, LANDING_NEWS_FALLBACKS, LANDING_NEWS_SLOTS } from '@sms/contracts';
@@ -49,7 +49,8 @@ export const themeConfig = () =>
   theme(schoolTheme, {
     brandingSlots: schoolBrandingSlots,
     basePath: '',
-    manage: [isAdministrator()],
+    // Appearance is the developer's: the principal manages everything else.
+    manage: [isAdmin()],
     features: { mcp: true },
     limits: {
       logoBytes: SCHOOL_LOGO_MAX_BYTES,

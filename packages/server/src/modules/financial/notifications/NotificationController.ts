@@ -2,7 +2,7 @@ import { Body, Controller, Get, Headers, Post, ResMsg, Validate } from '../../..
 import { NotificationService } from './NotificationService';
 import { assertCronSecret } from './NotificationValidator';
 import { listRecentNotificationsDto, runNotificationsDto, type RunNotificationsDto } from './NotificationDto';
-import { isAdmin } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import { Public } from 'najm-guard';
 
 @Controller('/financial-notifications')
@@ -43,7 +43,7 @@ export class NotificationController {
   }
 
   @Get('/recent')
-  @isAdmin()
+  @CanSchoolWide('read:fees')
   @ResMsg('notifications.list')
   async listRecentForAdmin() {
     return this.notificationService.listRecent(100);

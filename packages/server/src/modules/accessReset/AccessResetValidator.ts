@@ -17,12 +17,10 @@ export type AccessResetActor = {
 const STAFF_ACCESS_ROLES = new Set([
   'principal',
   'accounting',
-  'counselor',
-  'nurse',
   'secretary',
-  'librarian',
   'driver',
   'assistant',
+  'supervisor',
 ]);
 
 /** A staff member on leave still holds a working login; a terminated one does not. */
@@ -40,6 +38,11 @@ export class AccessResetValidator {
   @I18n('accessReset.errors') private at!: (key: string) => string;
 
   constructor(private accessResetRepository: AccessResetRepository) {}
+
+  ensureAccountFound<T>(account: T | null) {
+    if (!account) Err(404, this.at('notFound'));
+    return account!;
+  }
 
   ensureTemporaryCredential(credential: string | undefined) {
     if (!credential) Err(409, this.at('parentCinMissing'));
@@ -144,9 +147,9 @@ export class AccessResetValidator {
     if (staffRow.userId !== account.id) Err(409, this.at('profileMismatch'));
     if (!staffRow.accessRoleId) Err(409, this.at('staffNoLogin'));
     if (!CURRENT_STAFF_STATUSES.has(staffRow.status)) Err(409, this.at('profileNotCurrent'));
-    if (staffRow.role !== account.roleName || staffRow.accessRoleId !== account.roleId) {
-      Err(409, this.at('profileMismatch'));
-    }
+    // The job title's link is what ties it to a login role; their names may
+    // differ (the `accountant` job title grants the `accounting` role).
+    if (staffRow.accessRoleId !== account.roleId) Err(409, this.at('profileMismatch'));
     return staffRow;
   }
 

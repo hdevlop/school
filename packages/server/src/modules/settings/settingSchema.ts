@@ -3,6 +3,7 @@ import { boolean, doublePrecision, integer, jsonb, numeric, pgEnum, pgTable, tex
 import { idField, timestamps } from '../../database/shared';
 import { getEnumValues } from '../../shared/enums';
 import { academicYears } from '../academicYears/AcademicYearSchema';
+import { DEFAULT_TEACHING_DAYS, type RoutineDay } from '@sms/contracts/routines';
 
 export const calendarSystemEnum = pgEnum('calendarSystem', getEnumValues('calendarSystem'));
 export const languageEnum = pgEnum('language', getEnumValues('language'));
@@ -29,6 +30,7 @@ export const settings = pgTable('settings', {
   minimumPassingGrade: numeric('minimum_passing_grade', { precision: 5, scale: 2 }).default('60.00'),
   defaultExamDuration: integer('default_exam_duration').default(120),
   calendarSystem: calendarSystemEnum('calendar_system').default('SEMESTER'),
+  teachingDays: jsonb('teaching_days').$type<RoutineDay[]>().notNull().default(DEFAULT_TEACHING_DAYS),
   startMonth: text('start_month').default('september'),
   endMonth: text('end_month').default('june'),
   academicAlerts: boolean('academic_alerts').default(true),

@@ -54,7 +54,8 @@
   },
   "accessReset": {
     "success": {
-      "reset": "Access reset completed"
+      "reset": "Access reset completed",
+      "loaded": "Account loaded"
     },
     "errors": {
       "notFound": "No user found with the provided information",
@@ -1032,6 +1033,10 @@
         },
         "push": {
           "title": "This device"
+        },
+        "teachingDays": {
+          "title": "Teaching days",
+          "description": "Choose the teaching days for all sections in the active academic year. Existing lessons and supervision must be moved before removing a day. Historical timetables keep their days."
         }
       },
       "generalTab": "System",
@@ -1082,7 +1087,8 @@
       "invalidCalendar": "Invalid academic calendar",
       "missing": "School settings are missing",
       "registeredCalendarLocked": "Registered year calendars require a reviewed correction",
-      "activateThroughYears": "Activate the registered year through academic-year operations"
+      "activateThroughYears": "Activate the registered year through academic-year operations",
+      "teachingDaysInUse": "Move or remove the lessons and supervision assigned to this day before changing teaching days."
     },
     "system": {
       "title": "System Settings",
@@ -2352,6 +2358,7 @@
       "cinExists": "A staff member with this CIN already exists",
       "emailRequiredForLogin": "Email is required to create a staff login",
       "roleHasNoAppAccess": "This staff role does not grant app access",
+      "loginBeyondActor": "You can only give, change or remove a login whose access you hold yourself",
       "driverLicenseRequired": "Driver license profile is required",
       "driverFieldRequired": "Driver {{field}} is required",
       "cleanerZoneRequired": "Cleaner assignment requires a zone",
@@ -2400,6 +2407,7 @@
       "secretary": "Secretary",
       "receptionist": "Receptionist",
       "accountant": "Accountant",
+      "supervisor": "General Supervisor",
       "librarian": "Librarian",
       "itSupport": "IT Support",
       "assistant": "Assistant",
@@ -4431,6 +4439,33 @@
     "discardTitle": "Discard theme changes?",
     "discardDescription": "Unsaved theme or branding changes will be lost.",
     "discard": "Discard changes"
+  },
+  "mobileHome": {
+    "title": "Home",
+    "navigation": "Mobile navigation",
+    "welcome": "Welcome back",
+    "goodMorning": "Good morning",
+    "goodAfternoon": "Good afternoon",
+    "goodEvening": "Good evening",
+    "openMenu": "Open menu",
+    "subtitle": "Your school, at a glance",
+    "search": "Search features",
+    "noResults": "No features match your search.",
+    "viewUnavailable": "Viewing this feature is not enabled for your account.",
+    "visitRequests": "Visit requests",
+    "publicPage": "School website",
+    "studentAttendance": "Attendance",
+    "staffAttendance": "Staff attendance",
+    "timetable": "Timetable",
+    "financialOperations": "Financial operations",
+    "sections": {
+      "overview": "Overview",
+      "academic": "Academics",
+      "people": "People",
+      "finance": "Finance",
+      "communication": "Communication",
+      "administration": "Administration"
+    }
   },
   "navigation": {
     "dashboard": "Dashboard",

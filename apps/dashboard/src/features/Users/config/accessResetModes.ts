@@ -18,12 +18,10 @@ export const MAIL_RECOVERABLE_ROLES = new Set([
   'teacher',
   'principal',
   'accounting',
-  'counselor',
-  'nurse',
   'secretary',
-  'librarian',
   'driver',
   'assistant',
+  'supervisor',
 ]);
 
 /**

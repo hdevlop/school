@@ -41,6 +41,10 @@ export class ClassRoutineService {
     return this.repository.getPeriods(includeInactive);
   }
 
+  async getTeachingDays() {
+    return this.repository.getSchoolTeachingDays();
+  }
+
   async createPeriod(data: CreateRoutinePeriodDto) {
     await this.validator.ensurePeriodTimes(data.startTime, data.endTime);
     return this.repository.createPeriod(data);
@@ -93,6 +97,7 @@ export class ClassRoutineService {
     if (existing) return this.getById(existing.id);
     const schedule = await this.repository.createSchedule({
       ...data,
+      activeDays: await this.repository.getSchoolTeachingDays(),
       status: 'published',
       publishedAt: new Date().toISOString(),
     });

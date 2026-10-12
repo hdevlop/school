@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { BookOpen, CalendarClock, CalendarDays, Clock3, Plus } from 'lucide-react';
-import { NativeSelect, NButton, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, useDialog } from 'najm-kit';
+import { BookOpen, CalendarClock, Clock3, Plus } from 'lucide-react';
+import { ComboboxInput, NajmScroll, NButton, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput, useDialog } from 'najm-kit';
 import { useAuth } from 'najm-auth/client/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
@@ -13,7 +14,6 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import ClassRoutineSkeleton from './ClassRoutineSkeleton';
 import RoutineEntryForm from './RoutineEntryForm';
 import RoutineDutyForm from './RoutineDutyForm';
-import RoutineDaysForm from './RoutineDaysForm';
 import RoutineGrid from './RoutineGrid';
 import RoutineScheduleForm from './RoutineScheduleForm';
 import TeacherRoutinePage from './TeacherRoutinePage';
@@ -28,10 +28,9 @@ import type { RoutineEntryFormValues } from '../types/forms';
 import { routinePeriodLabel } from '../utils/labels';
 
 function ClassRoutinePageForYear() {
-  const { user } = useAuth();
   const { t } = useTranslation();
-  const role = (user as any)?.role;
-  const canEdit = role === 'admin' || role === 'principal';
+  const { can } = useViewerRole();
+  const canEdit = can('manage:class-routines');
   const { openDialog } = useDialog();
   const { classes, isClassesLoading } = useClasses();
   const { academicYear, isAcademicYearLoading } = useActiveAcademicYear();
@@ -89,21 +88,6 @@ function ClassRoutinePageForYear() {
     setScheduleId((current) => schedules.some((item) => item.id === current) ? current : (preferred?.id || ''));
   }, [schedules]);
 
-  const openDaysForm = () => {
-    if (!routine) return;
-    openDialog({
-      title: t('classRoutines.ui.dialogs.daysTitle'),
-      description: t('classRoutines.ui.dialogs.daysDescription'),
-      children: <RoutineDaysForm activeDays={routine.activeDays} />,
-      primaryButton: {
-        form: 'routine-days-form',
-        text: t('classRoutines.ui.actions.saveDays'),
-        onClick: ({ activeDays }) => mutations.updateSchedule.mutateAsync({ id: routine.id, activeDays }),
-      },
-      secondaryButton: { text: t('common.cancel') },
-    });
-  };
-
   const openPeriodsForm = () => {
     if (!routine) return;
     openDialog({
@@ -127,7 +111,6 @@ function ClassRoutinePageForYear() {
     const response: any = await mutations.createSchedule.mutateAsync({
       sectionId,
       name: `${selectedClass.name} · ${selectedSection?.name || t('classRoutines.ui.title')}`,
-      activeDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'],
     });
     const created = response?.data;
     if (created?.id) setScheduleId(created.id);
@@ -200,62 +183,69 @@ function ClassRoutinePageForYear() {
   const busy = isClassesLoading || isSectionsLoading || isAcademicYearLoading;
 
   return (
-    <div className="flex h-full min-h-0 w-full flex-col gap-3">
+    <div className="flex h-full min-h-0 min-w-0 w-full flex-1 flex-col gap-3 overflow-hidden">
       <NPageHeader
         icon={CalendarClock}
         title={t('classRoutines.ui.title')}
         subtitle={t('classRoutines.ui.subtitle')}
+        className="shrink-0"
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>
 
-      <div className="flex flex-wrap items-end gap-3">
+      <NFilterBar className="min-w-0 shrink-0">
         {busy ? (
           <>
-            <NSkeleton className="h-10 w-44 rounded-md" />
-            <NSkeleton className="h-10 w-44 rounded-md" />
+            <NSkeleton className="h-10 min-w-0 flex-1 rounded-md lg:w-48 lg:flex-initial" />
+            <NSkeleton className="h-10 min-w-0 flex-1 rounded-md lg:w-48 lg:flex-initial" />
           </>
         ) : (
           <>
-            <NativeSelect
-              aria-label={t('classRoutines.ui.fields.class')}
-              placeholder={t('classRoutines.ui.fields.class')}
-              value={classId}
-              onChange={(event) => setClassId(event.target.value)}
-              options={activeClasses.map((item) => ({ value: item.id, label: item.name }))}
-              className="min-w-44 font-medium"
-            />
-            <NativeSelect
-              aria-label={t('classRoutines.ui.fields.section')}
-              placeholder={t('classRoutines.ui.fields.section')}
-              value={sectionId}
-              onChange={(event) => setSectionId(event.target.value)}
-              options={classSections.map((item) => ({ value: item.id, label: item.name }))}
-              disabled={!classId}
-              className="min-w-44 font-medium"
-            />
+            <div className="min-w-0 flex-1 lg:w-48 lg:flex-initial">
+              <ComboboxInput
+                ariaLabel={t('classRoutines.ui.fields.class')}
+                placeholder={t('students.filters.filterByClass')}
+                value={classId}
+                onChange={setClassId}
+                items={activeClasses.map((item) => ({ value: item.id, label: item.name }))}
+                showIcon={false}
+                className="w-full min-w-0"
+              />
+            </div>
+            <div className="min-w-0 flex-1 lg:w-48 lg:flex-initial">
+              <SelectInput
+                ariaLabel={t('classRoutines.ui.fields.section')}
+                placeholder={t('students.filters.filterBySection')}
+                value={sectionId}
+                onChange={setSectionId}
+                items={classSections.map((item) => ({ value: item.id, label: item.name }))}
+                disabled={!classId}
+                showIcon={false}
+                className="w-full min-w-0"
+              />
+            </div>
           </>
         )}
-        <div className="ml-auto flex flex-wrap gap-2">
+        <div className="flex shrink-0 justify-end gap-2 empty:hidden md:ms-auto">
           {canEdit && routine ? (
             <>
-              <NButton variant="outline" onClick={openDaysForm}>
-                <CalendarDays className="h-4 w-4" /> {t('classRoutines.ui.actions.days')}
-              </NButton>
-              <NButton variant="outline" onClick={openPeriodsForm}>
+              <NButton variant="outline" className="h-10 px-3 md:px-4" onClick={openPeriodsForm}>
                 <Clock3 className="h-4 w-4" /> {t('classRoutines.ui.actions.periods')}
               </NButton>
             </>
           ) : null}
         </div>
-      </div>
+      </NFilterBar>
 
       {busy || schedulesLoading || routineLoading ? (
-        <ClassRoutineSkeleton />
+        <NajmScroll axis="y" autoHide="scroll" className="flex-1">
+          <ClassRoutineSkeleton />
+        </NajmScroll>
       ) : routine ? (
         <RoutineGrid
+          key={routine.id}
           days={routine.activeDays}
           periods={routine.periods}
           entries={routine.entries}
@@ -266,20 +256,22 @@ function ClassRoutinePageForYear() {
           onDutyClick={openDuty}
         />
       ) : (
-        <div className="grid flex-1 place-items-center rounded-2xl border border-dashed bg-card/50 p-10 text-center">
-          <div>
-            <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 text-primary">
-              <CalendarClock className="h-7 w-7" />
+        <NajmScroll axis="y" autoHide="scroll" className="flex-1 rounded-2xl border border-dashed bg-card/50">
+          <div className="grid min-h-full place-items-center p-6 text-center sm:p-10">
+            <div>
+              <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-primary/10 text-primary">
+                <CalendarClock className="h-7 w-7" />
+              </div>
+              <h2 className="mt-4 text-lg font-semibold">{t('classRoutines.ui.empty.title')}</h2>
+              <p className="mt-1 max-w-md text-sm text-muted-foreground">{t('classRoutines.ui.empty.description')}</p>
+              {canEdit && sectionId ? (
+                <NButton className="mt-5" onClick={createRoutine} disabled={mutations.createSchedule.isPending}>
+                  <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.createRoutine')}
+                </NButton>
+              ) : null}
             </div>
-            <h2 className="mt-4 text-lg font-semibold">{t('classRoutines.ui.empty.title')}</h2>
-            <p className="mt-1 max-w-md text-sm text-muted-foreground">{t('classRoutines.ui.empty.description')}</p>
-            {canEdit && sectionId ? (
-              <NButton className="mt-5" onClick={createRoutine} disabled={mutations.createSchedule.isPending}>
-                <Plus className="h-4 w-4" /> {t('classRoutines.ui.actions.createRoutine')}
-              </NButton>
-            ) : null}
           </div>
-        </div>
+        </NajmScroll>
       )}
       <NSheet
         open={Boolean(selectedLesson)}

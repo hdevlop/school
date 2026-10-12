@@ -17,7 +17,7 @@ const ReportsPage: React.FC = () => {
   // The viewed year, or the active one with history off.
   const { year } = useDashboardYear();
   // The financial audit API is admin-only.
-  const { role } = useViewerRole();
+  const { can } = useViewerRole();
 
   return (
     <div className="flex flex-col gap-2 h-full overflow-auto pb-4">
@@ -47,7 +47,7 @@ const ReportsPage: React.FC = () => {
       </div>
 
       {/* Row 3: Financial audit history (admins) */}
-      {role === 'admin' && <FinancialAuditCard />}
+      {can('read:financial-operations') && <FinancialAuditCard />}
     </div>
   );
 };

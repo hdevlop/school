@@ -37,6 +37,16 @@ export class AccessResetService {
   ) {}
 
   /**
+   * The account a reset would act on, as its confirmation describes it. A
+   * staff or teacher row opens the reset from its own `userId`, so the dialog
+   * learns the login's role and status here rather than from the users list.
+   */
+  async getTarget(userId: string) {
+    const account = this.accessResetValidator.ensureAccountFound(await this.accessResetRepository.getAccount(userId));
+    return { id: account.id, name: account.name, email: account.email, role: account.roleName, status: account.status };
+  }
+
+  /**
    * One administrative action whose consequence the server chooses.
    *
    * This first resolution only picks the path. Each path then re-decides

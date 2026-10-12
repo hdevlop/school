@@ -16,7 +16,6 @@ export interface ReceiptData {
   schoolName?: string;
   schoolAddress?: string;
   schoolPhone?: string;
-  processedBy?: string;
 }
 
 const METHOD_FR: Record<string, string> = {
@@ -43,7 +42,7 @@ function formatDateFR(dateStr: string): string {
   if (!dateStr) return '';
   const d = new Date(dateStr);
   if (isNaN(d.getTime())) return dateStr;
-  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+  return d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function formatAmountFR(amount: number, currency: string): string {
@@ -66,6 +65,15 @@ export function buildReceiptHtml(data: ReceiptData) {
   const amountWords = data.currency === 'MAD' ? amountInWordsFR(data.amount) : '';
   const dateFR = formatDateFR(data.paymentDate);
   const amountFormatted = formatAmountFR(data.amount, data.currency);
+  const details = [
+    data.feeYear && data.yearAllocatedAmount !== undefined
+      ? `<tr><td>Année scolaire / السنة الدراسية</td><td>${escapeHtml(data.feeYear)}</td></tr>
+         <tr><td>Affecté à cette année / المخصص لهذه السنة</td><td>${escapeHtml(formatAmountFR(data.yearAllocatedAmount, data.currency))}</td></tr>`
+      : '',
+    data.transactionRef ? `<tr><td>Référence / المرجع</td><td>${escapeHtml(data.transactionRef)}</td></tr>` : '',
+    data.checkNumber ? `<tr><td>N° Chèque / رقم الشيك</td><td>${escapeHtml(data.checkNumber)}</td></tr>` : '',
+    data.notes ? `<tr><td>Notes / ملاحظات</td><td>${escapeHtml(data.notes)}</td></tr>` : '',
+  ].join('');
 
   const html = `<!DOCTYPE html>
 <html lang="fr">
@@ -75,244 +83,88 @@ export function buildReceiptHtml(data: ReceiptData) {
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      font-size: 13px;
-      color: #1a1a1a;
+      font-family: 'Courier New', Arial, monospace;
+      font-size: 12px;
+      line-height: 1.35;
+      color: #000;
       background: #fff;
     }
     .page {
-      width: 148mm;
-      min-height: 210mm;
-      margin: auto;
-      padding: 12mm 14mm;
-      display: flex;
-      flex-direction: column;
-      gap: 6mm;
+      width: 80mm;
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 4mm;
+      overflow-wrap: anywhere;
     }
-    /* ---- Header ---- */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      border-bottom: 2.5px solid #1a56db;
-      padding-bottom: 5mm;
-    }
-    .school-info h1 {
-      font-size: 17px;
-      font-weight: 700;
-      color: #1a56db;
-      letter-spacing: 0.3px;
-    }
-    .school-info p { font-size: 11px; color: #555; margin-top: 2px; }
-    .receipt-label {
-      text-align: right;
-    }
-    .receipt-label .title-fr {
-      font-size: 20px;
-      font-weight: 800;
-      color: #1a56db;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .receipt-label .title-ar {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1a56db;
-      direction: rtl;
-      margin-top: 2px;
-    }
-    .receipt-label .number {
-      font-size: 12px;
-      color: #374151;
-      margin-top: 3px;
-      font-weight: 600;
-    }
-    /* ---- Meta row ---- */
-    .meta {
-      display: flex;
-      justify-content: space-between;
-      background: #f0f4ff;
-      border-radius: 6px;
-      padding: 4mm 5mm;
-    }
-    .meta-item label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
-    .meta-item value, .meta-item p { font-weight: 600; font-size: 13px; margin-top: 1px; }
-    /* ---- Student block ---- */
-    .section-title {
-      font-size: 10px;
-      text-transform: uppercase;
-      color: #6b7280;
-      letter-spacing: 0.6px;
-      font-weight: 600;
-      margin-bottom: 2mm;
-    }
-    .student-block {
-      border: 1px solid #e5e7eb;
-      border-radius: 6px;
-      padding: 4mm 5mm;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .student-name { font-size: 16px; font-weight: 700; }
-    .student-code { font-size: 11px; color: #6b7280; margin-top: 2px; font-family: monospace; }
-    /* ---- Amount block ---- */
-    .amount-block {
-      border: 2px solid #1a56db;
-      border-radius: 8px;
-      padding: 5mm 6mm;
-      background: #f8faff;
-    }
-    .amount-row { display: flex; justify-content: space-between; align-items: center; }
-    .amount-figure {
-      font-size: 26px;
-      font-weight: 800;
-      color: #1a56db;
-    }
-    .amount-ar {
-      font-size: 14px;
-      direction: rtl;
-      color: #374151;
-      font-weight: 600;
-    }
-    .amount-words {
-      margin-top: 3mm;
-      font-size: 11px;
-      color: #374151;
-      font-style: italic;
-      border-top: 1px dashed #c7d2fe;
-      padding-top: 2mm;
-    }
-    /* ---- Details table ---- */
-    .details-table { width: 100%; border-collapse: collapse; }
-    .details-table tr td {
-      white-space: pre-wrap;
-      padding: 2mm 0;
-      font-size: 12px;
-      border-bottom: 1px solid #f3f4f6;
-    }
-    .details-table td:first-child { color: #6b7280; width: 40%; }
-    .details-table td:last-child { font-weight: 600; text-align: right; }
-    /* ---- Bilingual footer ---- */
-    .bilingual-footer {
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid #e5e7eb;
-      padding-top: 4mm;
-      margin-top: auto;
-    }
-    .sig-block { text-align: center; }
-    .sig-block .sig-label { font-size: 10px; color: #6b7280; }
-    .sig-block .sig-label-ar { font-size: 10px; color: #6b7280; direction: rtl; }
-    .sig-line {
-      width: 35mm;
-      border-bottom: 1px solid #374151;
-      margin: 8mm auto 1mm;
-    }
-    .stamp-area {
-      width: 28mm;
-      height: 28mm;
-      border: 2px dashed #c7d2fe;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #c7d2fe;
-      font-size: 10px;
-      text-align: center;
-      margin: 2mm auto;
-    }
-    .watermark {
-      text-align: center;
-      font-size: 9px;
-      color: #9ca3af;
-      margin-top: 3mm;
-    }
+    .header { text-align: center; padding-bottom: 2mm; }
+    .header h1 { font-size: 15px; font-weight: 700; }
+    .header p { margin-top: 1mm; }
+    .receipt-title { font-size: 13px; font-weight: 700; margin-top: 2mm; }
+    .receipt-number { font-size: 11px; }
+    .section { border-top: 1px dashed #000; padding: 2mm 0; }
+    .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr); gap: 2mm; }
+    .row + .row { margin-top: 1mm; }
+    .row .value { text-align: right; }
+    .label { font-size: 11px; }
+    .student-name { font-weight: 700; margin: 1mm 0; }
+    .student-code { font-size: 11px; }
+    .total-row { display: flex; justify-content: space-between; align-items: center; gap: 2mm; }
+    .total-label { font-size: 11px; font-weight: 700; }
+    .amount-figure { font-size: 17px; font-weight: 700; text-align: right; }
+    .amount-words { font-size: 11px; margin-top: 1mm; }
+    .details-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .details-table td { white-space: pre-wrap; overflow-wrap: anywhere; vertical-align: top; padding: 0.5mm 0; font-size: 11px; }
+    .details-table td:first-child { width: 48%; padding-right: 2mm; }
+    .details-table td:last-child { text-align: right; }
+    .footer { border-top: 1px dashed #000; padding-top: 2mm; text-align: center; font-size: 11px; }
     @media print {
-      body { background: #fff; }
-      .page { margin: 0; padding: 10mm 12mm; }
-      @page { size: A5 portrait; margin: 0; }
+      .page { margin: 0; }
+      .header, .row, .total-row, .details-table tr, .footer { break-inside: avoid; }
+      /* The printer driver owns the roll length and 80 mm paper size. */
+      @page { size: auto; margin: 0; }
     }
   </style>
 </head>
 <body>
 <div class="page">
-  <!-- Header -->
-  <div class="header">
-    <div class="school-info">
-      <h1>${escapeHtml(school)}</h1>
-      ${address ? `<p>${escapeHtml(address)}</p>` : ''}
-      ${phone ? `<p>Tél : ${escapeHtml(phone)}</p>` : ''}
+  <header class="header">
+    <h1>${escapeHtml(school)}</h1>
+    ${address ? `<p>${escapeHtml(address)}</p>` : ''}
+    ${phone ? `<p>Tél : ${escapeHtml(phone)}</p>` : ''}
+    <div class="receipt-title">REÇU / <span lang="ar" dir="rtl">وصل استلام</span></div>
+    <p class="receipt-number">N° ${escapeHtml(data.receiptNumber)}</p>
+  </header>
+
+  <div class="section">
+    <div class="row">
+      <span class="label">Date / التاريخ</span>
+      <span class="value">${escapeHtml(dateFR)}</span>
     </div>
-    <div class="receipt-label">
-      <div class="title-fr">Reçu</div>
-      <div class="title-ar">وصل استلام</div>
-      <div class="number">N° ${escapeHtml(data.receiptNumber)}</div>
+    <div class="row">
+      <span class="label">Mode / الطريقة</span>
+      <span class="value">${escapeHtml(methodFR)} / <span lang="ar" dir="rtl">${escapeHtml(methodAR)}</span></span>
     </div>
   </div>
 
-  <!-- Meta -->
-  <div class="meta">
-    <div class="meta-item">
-      <label>Date / التاريخ</label>
-      <p>${escapeHtml(dateFR)}</p>
-    </div>
-    <div class="meta-item" style="text-align:right">
-      <label>Méthode / الطريقة</label>
-      <p>${escapeHtml(methodFR)} &nbsp;/&nbsp; ${escapeHtml(methodAR)}</p>
-    </div>
+  <div class="section">
+    <div class="label">Élève / الطالب</div>
+    <div class="student-name">${escapeHtml(data.studentName)}</div>
+    <div class="student-code">${escapeHtml(data.studentCode)}</div>
   </div>
 
-  <!-- Student -->
-  <div>
-    <div class="section-title">Élève / الطالب</div>
-    <div class="student-block">
-      <div>
-        <div class="student-name">${escapeHtml(data.studentName)}</div>
-        <div class="student-code">${escapeHtml(data.studentCode)}</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Amount -->
-  <div class="amount-block">
-    <div class="amount-row">
+  <div class="section">
+    <div class="total-row">
+      <div class="total-label">TOTAL PAYÉ<br/><span lang="ar" dir="rtl">المبلغ المدفوع</span></div>
       <div class="amount-figure">${escapeHtml(amountFormatted)}</div>
-      <div class="amount-ar">المبلغ المدفوع</div>
     </div>
     ${amountWords ? `<div class="amount-words">${escapeHtml(amountWords)}</div>` : ''}
   </div>
 
-  <!-- Details -->
-  <div>
-    <div class="section-title">Détails / التفاصيل</div>
-    <table class="details-table">
-      ${data.feeYear && data.yearAllocatedAmount !== undefined
-        ? `<tr><td>Année scolaire / السنة الدراسية</td><td>${escapeHtml(data.feeYear)}</td></tr>
-           <tr><td>Affecté à cette année / المخصص لهذه السنة</td><td>${escapeHtml(formatAmountFR(data.yearAllocatedAmount, data.currency))}</td></tr>`
-        : ''}
-      ${data.transactionRef ? `<tr><td>Référence / المرجع</td><td>${escapeHtml(data.transactionRef)}</td></tr>` : ''}
-      ${data.checkNumber ? `<tr><td>N° Chèque / رقم الشيك</td><td>${escapeHtml(data.checkNumber)}</td></tr>` : ''}
-      ${data.notes ? `<tr><td>Notes / ملاحظات</td><td>${escapeHtml(data.notes)}</td></tr>` : ''}
-      ${data.processedBy ? `<tr><td>Encaissé par / قبضه</td><td>${escapeHtml(data.processedBy)}</td></tr>` : ''}
-    </table>
-  </div>
+  ${details ? `<div class="section">
+    <table class="details-table">${details}</table>
+  </div>` : ''}
 
-  <!-- Footer -->
-  <div class="bilingual-footer">
-    <div class="sig-block">
-      <div class="stamp-area">Cachet<br/>ختم</div>
-      <div class="sig-label">Cachet de l'école</div>
-      <div class="sig-label-ar">ختم المدرسة</div>
-    </div>
-    <div class="sig-block">
-      <div class="sig-line"></div>
-      <div class="sig-label">Signature autorisée</div>
-      <div class="sig-label-ar">التوقيع المخوّل</div>
-    </div>
-  </div>
-
-  <div class="watermark">Document généré le ${escapeHtml(new Date().toLocaleDateString('fr-FR'))} · ${escapeHtml(school)}</div>
+  <footer class="footer">Merci / <span lang="ar" dir="rtl">شكراً</span></footer>
 </div>
 <script>window.onload = function(){ window.print(); };</script>
 </body>
@@ -322,7 +174,7 @@ export function buildReceiptHtml(data: ReceiptData) {
 }
 
 export function printReceipt(data: ReceiptData) {
-  const win = window.open('', '_blank', 'width=700,height=900');
+  const win = window.open('', '_blank', 'width=380,height=600');
   if (!win) return;
   win.document.write(buildReceiptHtml(data));
   win.document.close();

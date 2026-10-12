@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../../auth';
+import { isAdmin, CanSchoolWide } from '../../../auth';
 import { StaffRoleService } from './StaffRoleService';
 import {
   createStaffRoleDto,
@@ -16,7 +16,7 @@ export class StaffRoleController {
   constructor(private staffRoleService: StaffRoleService) { }
 
   @Get()
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @McpTool({ description: 'List all staff roles', readOnly: true })
   @ResMsg('staffRoles.success.retrieved')
   async listAll() {
@@ -24,7 +24,7 @@ export class StaffRoleController {
   }
 
   @Get('/active')
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @McpTool({ description: 'List active staff roles', readOnly: true })
   @ResMsg('staffRoles.success.retrieved')
   async listActive() {

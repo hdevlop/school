@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Params, Post, ResMsg, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import { FinancialAuditService } from './FinancialAuditService';
 import { auditLogIdParam, auditLogQueryDto, type AuditLogQueryDto } from './AuditLogDto';
 
@@ -12,7 +12,7 @@ export class FinancialAuditController {
   constructor(private service: FinancialAuditService) {}
 
   @Post('/list')
-  @isAdmin()
+  @CanSchoolWide('read:financial-operations')
   @Validate({ body: auditLogQueryDto })
   @McpTool({ description: 'List financial audit log entries (admin only)', readOnly: true })
   @ResMsg('auditLog.list')
@@ -21,7 +21,7 @@ export class FinancialAuditController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:financial-operations')
   @Validate({ params: auditLogIdParam })
   @McpTool({ description: 'Get a financial audit log entry by ID (admin only)', readOnly: true })
   @ResMsg('auditLog.retrieved')

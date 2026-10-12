@@ -1,0 +1,251 @@
+{
+  "content": {
+    "published": true,
+    "stats": [
+      {
+        "label": {
+          "ar": "تل?يذ",
+          "en": "students",
+          "es": "estudiantes",
+          "fr": "élèves"
+        },
+        "value": "1,200"
+      },
+      {
+        "label": {
+          "ar": "أستاذ",
+          "en": "teachers",
+          "es": "docentes",
+          "fr": "enseignants"
+        },
+        "value": "85"
+      },
+      {
+        "label": {
+          "ar": "سنة ?ن الت?يز",
+          "en": "years of excellence",
+          "es": "años de excelencia",
+          "fr": "ans d'excellence"
+        },
+        "value": "25"
+      },
+      {
+        "label": {
+          "ar": "نجاح في الباكالوريا",
+          "en": "bac success",
+          "es": "éxito en el bachillerato",
+          "fr": "réussite au bac"
+        },
+        "value": "98%"
+      }
+    ],
+    "testimonials": [
+      {
+        "quote": {
+          "ar": "أشعر بالقرب ?ن يو? طفلي الدراسي أين?ا كنت.",
+          "en": "I feel connected to my child's school day, wherever I am.",
+          "es": "Me siento conectada con el día escolar de mi hijo, esté donde esté.",
+          "fr": "Je me sens proche de la journée de mon enfant, où que je sois."
+        },
+        "author": "Salma B.",
+        "rating": 5
+      },
+      {
+        "quote": {
+          "ar": "أساتذة يهت?ون، تواصل واضح، و?درسة يحبها أطفالنا.",
+          "en": "Caring teachers, clear communication and a school our children love.",
+          "es": "Docentes atentos, comunicación clara y una escuela que nuestros hijos adoran.",
+          "fr": "Des enseignants attentionnés, une communication claire et une école que nos enfants adorent."
+        },
+        "author": "Omar A.",
+        "rating": 5
+      }
+    ],
+    "news": [
+      {
+        "tag": {
+          "ar": "الدخول ال?درسي",
+          "en": "Back to school",
+          "es": "Vuelta al cole",
+          "fr": "Rentrée"
+        },
+        "body": {
+          "ar": "اجت?ع التلا?يذ والأساتذة في ساحة ال?درسة لحفل الافتتاح، تلاه فطور ترحيبي بالأسر الجديدة.",
+          "en": "Students and teachers gathered in the courtyard for the opening assembly, followed by a welcome breakfast for new families.",
+          "es": "Alumnos y profesores se reunieron en el patio para la asamblea de apertura, seguida de un desayuno de bienvenida para las nuevas familias.",
+          "fr": "Élèves et enseignants se sont réunis dans la cour pour l’assemblée d’ouverture, suivie d’un petit-déjeuner d’accueil pour les nouvelles familles."
+        },
+        "date": "2026-09-14",
+        "title": {
+          "ar": "?رحبًا بك? في ال?وس? الدراسي 2026–2027",
+          "en": "Welcome back for the 2026–2027 school year",
+          "es": "Bienvenidos al curso escolar 2026–2027",
+          "fr": "Bienvenue pour l’année scolaire 2026–2027"
+        }
+      },
+      {
+        "tag": {
+          "ar": "رياضة",
+          "en": "Sport",
+          "es": "Deporte",
+          "fr": "Sport"
+        },
+        "body": {
+          "ar": "حقق فريق أقل ?ن 14 سنة ثلاثة انتصارات ?تتالية ليبلغ نهائي دوري ال?دارس بالدار البيضاء.",
+          "en": "Our under-14 team won three matches in a row to reach the final of the Casablanca inter-school tournament.",
+          "es": "Nuestro equipo sub-14 ganó tres partidos seguidos para llegar a la final del torneo intercolegial de Casablanca.",
+          "fr": "Nos moins de 14 ans ont enchaîné trois victoires pour atteindre la finale du tournoi inter-écoles de Casablanca."
+        },
+        "date": "2026-10-02",
+        "title": {
+          "ar": "فريقنا يبلغ نهائي دوري كرة القد? بين ال?دارس",
+          "en": "Our team reaches the inter-school football final",
+          "es": "Nuestro equipo llega a la final del torneo intercolegial",
+          "fr": "Notre équipe en finale du tournoi inter-écoles"
+        }
+      },
+      {
+        "tag": {
+          "ar": "ثقافة",
+          "en": "Culture",
+          "es": "Cultura",
+          "fr": "Culture"
+        },
+        "body": {
+          "ar": "ورشات في الزليج والخط العربي وال?وسيقى الأندلسية، ?ع ?عرض ?فتوح للآباء يو? الج?عة بعد الزوال.",
+          "en": "Workshops on zellige, calligraphy and Andalusian music, with an exhibition open to parents on Friday afternoon.",
+          "es": "Talleres de zellige, caligrafía y música andalusí, con una exposición abierta a las familias el viernes por la tarde.",
+          "fr": "Ateliers de zellige, de calligraphie et de musique andalouse, avec une exposition ouverte aux parents vendredi après-midi."
+        },
+        "date": "2026-10-20",
+        "title": {
+          "ar": "أسبوع التراث ال?غربي",
+          "en": "Moroccan heritage week",
+          "es": "Semana del patrimonio marroquí",
+          "fr": "Semaine du patrimoine marocain"
+        }
+      },
+      {
+        "tag": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        },
+        "body": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        },
+        "date": "2026-09-14",
+        "title": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        }
+      },
+      {
+        "tag": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        },
+        "body": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        },
+        "date": "2026-10-02",
+        "title": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        }
+      },
+      {
+        "tag": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        },
+        "body": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        },
+        "date": "2026-10-20",
+        "title": {
+          "ar": "",
+          "en": "",
+          "es": "",
+          "fr": ""
+        }
+      }
+    ],
+    "admissionsOpen": true,
+    "admissionsYearLabel": "2026–2027",
+    "socialLinks": {
+      "youtube": "https://www.youtube.com/",
+      "facebook": "https://www.facebook.com/",
+      "linkedin": "https://www.linkedin.com/",
+      "instagram": "https://www.instagram.com/"
+    }
+  },
+  "programs": [
+    {
+      "name": "Primaire",
+      "labels": {
+        "ar": "الابتدائي",
+        "en": "Primary School",
+        "es": "Primaria",
+        "fr": "Primaire"
+      },
+      "sortOrder": 1,
+      "blurb": {
+        "ar": "هنا يبدأ الفضول.",
+        "en": "Curiosity starts here.",
+        "es": "Aquí empieza la curiosidad.",
+        "fr": "La curiosité commence ici."
+      }
+    },
+    {
+      "name": "Collège",
+      "labels": {
+        "ar": "الإعدادي",
+        "en": "Middle School",
+        "es": "Secundaria",
+        "fr": "Collège"
+      },
+      "sortOrder": 2,
+      "blurb": {
+        "ar": "ثقة ل?ا هو قاد?.",
+        "en": "Confidence for what comes next.",
+        "es": "Confianza para lo que viene.",
+        "fr": "La confiance pour la suite."
+      }
+    },
+    {
+      "name": "Lycée",
+      "labels": {
+        "ar": "الثانوي",
+        "en": "High School",
+        "es": "Bachillerato",
+        "fr": "Lycée"
+      },
+      "sortOrder": 3,
+      "blurb": {
+        "ar": "?ستعدون ل?ستقبل أفضل.",
+        "en": "Ready for a brighter future.",
+        "es": "Listos para un futuro brillante.",
+        "fr": "Prêts pour un avenir brillant."
+      }
+    }
+  ]
+}

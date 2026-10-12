@@ -34,7 +34,7 @@ describe('normal attendance year writes', () => {
     await service.mark({ type: 'student', studentId: 'student-1', sectionId: 'section-1',
       date: '2025-10-01', status: 'present' }, { id: 'admin-1', role: 'admin' });
     await service.mark({ type: 'staff', staffId: 'staff-1',
-      date: '2025-10-01', status: 'present' }, { id: 'admin-1', role: 'admin' });
+      date: '2025-10-01', status: 'present' }, { id: 'admin-1', role: 'admin', permissions: ['*:*'] });
 
     expect(created).toHaveLength(2);
     expect(created.map((row) => row.academicYearId)).toEqual(['year-1', 'year-1']);

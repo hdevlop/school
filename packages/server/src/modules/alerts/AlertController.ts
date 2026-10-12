@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Query, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../auth';
+import { isAdmin, CanSchoolWide } from '../../auth';
 import { AlertService } from './AlertService';
 import { Alert, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './AlertGuards';
 import type { AlertActor } from './AlertValidator';
@@ -213,7 +213,7 @@ export class AlertController {
   }
 
   @Delete('/resolved')
-  @isAdmin()
+  @CanSchoolWide('delete:alerts')
   @McpTool('Delete all resolved alerts')
   @ResMsg('alerts.success.resolvedDeleted')
   async deleteResolved() {

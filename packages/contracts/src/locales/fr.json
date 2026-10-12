@@ -54,7 +54,8 @@
   },
   "accessReset": {
     "success": {
-      "reset": "Réinitialisation de l'accès effectuée"
+      "reset": "Réinitialisation de l'accès effectuée",
+      "loaded": "Compte chargé"
     },
     "errors": {
       "notFound": "Aucun utilisateur trouvé avec les informations fournies",
@@ -677,6 +678,7 @@
       "cinExists": "Un membre du personnel avec ce CIN existe déjà",
       "emailRequiredForLogin": "Un e-mail est requis pour créer un accès",
       "roleHasNoAppAccess": "Ce rôle ne donne pas accès à l'application",
+      "loginBeyondActor": "Vous ne pouvez attribuer, modifier ou supprimer qu'un compte dont vous détenez vous-même les accès",
       "driverLicenseRequired": "Le profil de permis de conduire est requis",
       "driverFieldRequired": "Le champ {{field}} du chauffeur est requis",
       "cleanerZoneRequired": "L'affectation d'un agent d'entretien exige une zone",
@@ -724,6 +726,7 @@
       "secretary": "Secrétaire",
       "receptionist": "Réceptionniste",
       "accountant": "Comptable",
+      "supervisor": "Surveillant général",
       "librarian": "Bibliothécaire",
       "itSupport": "Support IT",
       "assistant": "Assistant",
@@ -940,6 +943,10 @@
         },
         "push": {
           "title": "Cet appareil"
+        },
+        "teachingDays": {
+          "title": "Jours de cours",
+          "description": "Choisissez les jours de cours de toutes les sections de l’année scolaire active. Déplacez les cours et les surveillances avant de retirer un jour. Les emplois du temps historiques conservent leurs jours."
         }
       },
       "generalTab": "Système",
@@ -1061,7 +1068,8 @@
       "invalidCalendar": "Calendrier scolaire invalide",
       "missing": "Les paramètres de l'école sont manquants",
       "registeredCalendarLocked": "Le calendrier d'une année enregistrée ne peut être modifié que par une correction vérifiée",
-      "activateThroughYears": "Activez l'année enregistrée depuis la gestion des années scolaires"
+      "activateThroughYears": "Activez l'année enregistrée depuis la gestion des années scolaires",
+      "teachingDaysInUse": "Déplacez ou supprimez les cours et les surveillances de ce jour avant de modifier les jours de cours."
     },
     "notifications": {
       "title": "Paramètres de Notification",
@@ -1554,6 +1562,33 @@
     "discardTitle": "Ignorer les modifications du thème ?",
     "discardDescription": "Les modifications du thème ou de l'identité visuelle non enregistrées seront perdues.",
     "discard": "Ignorer les modifications"
+  },
+  "mobileHome": {
+    "title": "Accueil",
+    "navigation": "Navigation mobile",
+    "welcome": "Bienvenue",
+    "goodMorning": "Bonjour",
+    "goodAfternoon": "Bon après-midi",
+    "goodEvening": "Bonsoir",
+    "openMenu": "Ouvrir le menu",
+    "subtitle": "Votre école en un coup d’œil",
+    "search": "Rechercher une fonctionnalité",
+    "noResults": "Aucune fonctionnalité ne correspond à votre recherche.",
+    "viewUnavailable": "La consultation de cette fonctionnalité n’est pas activée pour votre compte.",
+    "visitRequests": "Demandes de visite",
+    "publicPage": "Site de l’école",
+    "studentAttendance": "Présences",
+    "staffAttendance": "Présences du personnel",
+    "timetable": "Emploi du temps",
+    "financialOperations": "Opérations financières",
+    "sections": {
+      "overview": "Vue d’ensemble",
+      "academic": "Scolarité",
+      "people": "Personnes",
+      "finance": "Finances",
+      "communication": "Communication",
+      "administration": "Administration"
+    }
   },
   "navigation": {
     "dashboard": "Dashboard",

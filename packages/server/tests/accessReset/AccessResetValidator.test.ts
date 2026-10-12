@@ -128,8 +128,8 @@ describe('AccessResetValidator — supported account classes', () => {
 
   it('treats staff on leave as still holding a working login', async () => {
     const validator = validatorWith({
-      account: account({ roleName: 'nurse', status: 'active' }),
-      staff: { id: 'st1', userId: 'user-1', status: 'onLeave', role: 'nurse', accessRoleId: 'role-1' },
+      account: account({ roleName: 'assistant', status: 'active' }),
+      staff: { id: 'st1', userId: 'user-1', status: 'onLeave', role: 'assistant', accessRoleId: 'role-1' },
     });
     expect((await validator.resolveTarget('user-1', ACTOR)).mode).toBe('reset_email_sent');
   });
@@ -236,14 +236,12 @@ describe('AccessResetValidator — refusals', () => {
     );
   });
 
-  it('refuses a staff role code that differs from the account role', async () => {
-    await expectRefusal(
-      validatorWith({
-        account: account({ roleName: 'teacher' }),
-        staff: { id: 'st1', userId: 'user-1', status: 'active', role: 'secretary', accessRoleId: 'role-1' },
-      }),
-      'profileMismatch',
-    );
+  it('follows the job title link, not its name, to the login role', async () => {
+    const validator = validatorWith({
+      account: account({ roleName: 'accounting', status: 'active' }),
+      staff: { id: 'st1', userId: 'user-1', status: 'active', role: 'accountant', accessRoleId: 'role-1' },
+    });
+    expect((await validator.resolveTarget('user-1', ACTOR)).mode).toBe('reset_email_sent');
   });
 
   it('refuses an HR row whose staff role grants no app access', async () => {

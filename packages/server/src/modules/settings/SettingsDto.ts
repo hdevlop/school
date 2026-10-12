@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { academicYearField, emailField, num, phoneField } from '../../shared/fields';
 import { calendarSystemEnum, languageEnum } from '../../shared/enums';
 import { latitudeDto, longitudeDto, placeIdDto } from '../../shared/locationDto';
+import { ROUTINE_DAYS } from '@sms/contracts/routines';
 
 // No field has a Zod default: `.partial()` keeps defaults, so an update naming
 // one field would reset every other one, time zone and currency included.
@@ -25,6 +26,9 @@ const settingsSchema = z.object({
   minimumPassingGrade: num().min(0, 'Minimum passing grade must be non-negative').max(100, 'Minimum passing grade cannot exceed 100').optional(),
   defaultExamDuration: num().int('Default exam duration must be in minutes').min(15, 'Exam duration must be at least 15 minutes').max(480, 'Exam duration cannot exceed 480 minutes').optional(),
   calendarSystem: calendarSystemEnum.optional(),
+  teachingDays: z.array(z.enum(ROUTINE_DAYS)).min(1).max(7)
+    .refine((days) => new Set(days).size === days.length, 'Teaching days must be unique')
+    .transform((days) => ROUTINE_DAYS.filter((day) => days.includes(day))).optional(),
   startMonth: z.string().optional(),
   endMonth: z.string().optional(),
 

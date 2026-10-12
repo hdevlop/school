@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } fr
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { VehicleService } from './VehicleService';
 import { canAccessVehicle, canUpdateVehicle, canCreateVehicle, canDeleteVehicle, canAccessAllVehicles } from './VehicleGuards';
-import { isAdmin } from '../../../auth';
+import { isAdmin, Can } from '../../../auth';
 import {
   createVehicleDto,
   createVehiclesBulkDto,
@@ -29,7 +29,7 @@ export class VehicleController {
   }
 
   @Get('/count')
-  @isAdmin()
+  @Can('read:vehicles')
   @McpTool({ description: 'Get vehicle count. Number of school buses and other vehicles. Nombre de véhicules et bus scolaires. عدد المركبات والحافلات المدرسية.', readOnly: true })
   @ResMsg('vehicles.success.retrieved')
   async getVehiclesCount() {
@@ -81,7 +81,7 @@ export class VehicleController {
   }
 
   @Delete()
-  @canDeleteVehicle()
+  @isAdmin()
   @McpTool('Delete all vehicles')
   @ResMsg('vehicles.success.allDeleted')
   async deleteAll() {

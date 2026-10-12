@@ -19,8 +19,9 @@ import {
   credentialSetupRequirementsTable,
   Owned, ownershipCondition, join, where, when, ownedIds, own as najmOwn,
   ScopeContext, OwnershipToken,
-  Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete,
+  Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete, PermissionGuard,
 } from 'najm-auth';
+import { composeGuards, createGuard } from 'najm-guard';
 
 // ============================================================================
 // Re-exports
@@ -59,12 +60,10 @@ export const {
   isTeacher,
   isStudent,
   isParent,
-  isCounselor,
-  isNurse,
   isSecretary,
-  isLibrarian,
   isDriver,
   isAssistant,
+  isSupervisor,
   isAdmin: _isAppAdmin, // renamed — built-in isAdmin from najm-auth is used instead
 } = defineRoles({
   ADMIN: 'admin',       // built-in najm-auth admin role — lets createGroupGuard include it
@@ -73,12 +72,10 @@ export const {
   TEACHER: 'teacher',
   STUDENT: 'student',
   PARENT: 'parent',
-  COUNSELOR: 'counselor',
-  NURSE: 'nurse',
   SECRETARY: 'secretary',
-  LIBRARIAN: 'librarian',
   DRIVER: 'driver',
   ASSISTANT: 'assistant',
+  SUPERVISOR: 'supervisor', // surveillant général
 });
 
 // ============================================================================
@@ -89,12 +86,16 @@ export const isAdministrator = createGroupGuard(['PRINCIPAL', 'ADMIN']);
 export const isFinancial = createGroupGuard(['ACCOUNTING', 'PRINCIPAL', 'ADMIN']);
 export const isStaff = createGroupGuard([
   'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'TEACHER',
-  'COUNSELOR', 'NURSE', 'SECRETARY', 'LIBRARIAN', 'ASSISTANT',
+  'SECRETARY', 'ASSISTANT', 'SUPERVISOR',
 ]);
 
 // ============================================================================
 // Ownership (repository reads)
 // ============================================================================
+
+const SCHOOL_WIDE_ROLE_KEYS = [
+  'ADMIN', 'PRINCIPAL', 'ACCOUNTING', 'SECRETARY', 'DRIVER', 'ASSISTANT', 'SUPERVISOR',
+] as const;
 
 /**
  * Roles whose reads of an owned resource are school-wide. Their route
@@ -103,10 +104,18 @@ export const isStaff = createGroupGuard([
  * rules, and any other role — including one created later in the roles
  * screen — sees no owned rows until it is listed here or given a rule.
  */
-export const SCHOOL_WIDE_ROLES: readonly string[] = [
-  ROLES.ADMIN, ROLES.PRINCIPAL, ROLES.ACCOUNTING, ROLES.COUNSELOR,
-  ROLES.NURSE, ROLES.SECRETARY, ROLES.LIBRARIAN, ROLES.DRIVER, ROLES.ASSISTANT,
-];
+export const SCHOOL_WIDE_ROLES: readonly string[] = SCHOOL_WIDE_ROLE_KEYS.map((key) => ROLES[key]);
+
+export const isSchoolWide = createGroupGuard([...SCHOOL_WIDE_ROLE_KEYS]);
+
+/**
+ * `Can(permission)` for a route that reads or writes owned rows without
+ * ownership scoping — a bulk delete, a lookup by CIN, an unfiltered view. The
+ * permission decides who may use it; the school-wide role keeps a teacher,
+ * parent or student who is later granted it from reaching every row.
+ */
+const Permission = createGuard<string>(PermissionGuard);
+export const CanSchoolWide = (permission: string) => composeGuards(isSchoolWide(), Permission(permission))();
 
 /**
  * najm-auth's `own` with School's school-wide roles. Rules are join chains

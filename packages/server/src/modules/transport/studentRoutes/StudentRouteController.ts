@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import { StudentRouteService } from './StudentRouteService';
 import {
   createStudentRouteDto,
@@ -22,7 +22,7 @@ export class StudentRouteController {
   constructor(private studentRouteService: StudentRouteService) {}
 
   @Get()
-  @isAdmin()
+  @CanSchoolWide('read:student-routes')
   @McpTool({ description: 'List all student routes', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
   async getAll() {
@@ -30,7 +30,7 @@ export class StudentRouteController {
   }
 
   @Get('/vehicle/:vehicleId')
-  @isAdmin()
+  @CanSchoolWide('read:student-routes')
   @Validate({ params: vehicleIdParam })
   @McpTool({ description: 'Get student routes by vehicle', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
@@ -39,7 +39,7 @@ export class StudentRouteController {
   }
 
   @Get('/student/:studentId')
-  @isAdmin()
+  @CanSchoolWide('read:student-routes')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get student route by student. The bus and transport route of one student. Bus et trajet d’un élève. حافلة ومسار نقل التلميذ.', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
@@ -48,7 +48,7 @@ export class StudentRouteController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:student-routes')
   @Validate({ params: studentRouteIdParam })
   @McpTool({ description: 'Get a student route by ID', readOnly: true })
   @ResMsg('studentRoutes.success.retrieved')
@@ -57,7 +57,7 @@ export class StudentRouteController {
   }
 
   @Post()
-  @isAdmin()
+  @CanSchoolWide('create:student-routes')
   @Validate(createStudentRouteDto)
   @McpTool({ description: 'Assign a student to a route', confirm: { level: 'warning', message: 'confirm.studentRoutes.assign' } })
   @ResMsg('studentRoutes.success.assigned')
@@ -66,7 +66,7 @@ export class StudentRouteController {
   }
 
   @Put('/:id')
-  @isAdmin()
+  @CanSchoolWide('update:student-routes')
   @Validate({ params: studentRouteIdParam, body: updateStudentRouteDto })
   @McpTool({ description: 'Update a student route', confirm: { level: 'warning', message: 'confirm.studentRoutes.update' } })
   @ResMsg('studentRoutes.success.updated')
@@ -75,7 +75,7 @@ export class StudentRouteController {
   }
 
   @Post('/:id/reassign')
-  @isAdmin()
+  @CanSchoolWide('update:student-routes')
   @Validate({ params: studentRouteIdParam, body: reassignStudentRouteDto })
   @McpTool({ description: 'Move a student transport assignment to another vehicle', confirm: { level: 'warning', message: 'confirm.studentRoutes.reassign' } })
   @ResMsg('studentRoutes.success.updated')
@@ -88,7 +88,7 @@ export class StudentRouteController {
   }
 
   @Delete('/:id/unassign')
-  @isAdmin()
+  @CanSchoolWide('update:student-routes')
   @Validate({ params: studentRouteIdParam })
   @McpTool({ description: 'Unassign a student from a route', confirm: { level: 'warning', message: 'confirm.studentRoutes.unassign' } })
   @ResMsg('studentRoutes.success.unassigned')
@@ -97,7 +97,7 @@ export class StudentRouteController {
   }
 
   @Post('/:id/unassign')
-  @isAdmin()
+  @CanSchoolWide('update:student-routes')
   @Validate({ params: studentRouteIdParam, body: unassignStudentRouteDto })
   @McpTool({ description: 'Unassign a student from a route on a selected-year date', confirm: { level: 'warning', message: 'confirm.studentRoutes.unassignAt' } })
   @ResMsg('studentRoutes.success.unassigned')
@@ -106,7 +106,7 @@ export class StudentRouteController {
   }
 
   @Delete('/:id')
-  @isAdmin()
+  @CanSchoolWide('delete:student-routes')
   @Validate({ params: studentRouteIdParam })
   @McpTool('Delete a student route')
   @ResMsg('studentRoutes.success.deleted')

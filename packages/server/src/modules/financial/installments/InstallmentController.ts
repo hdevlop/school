@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { InstallmentService } from './InstallmentService';
-import { isFinancial } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import {
   createInstallmentDto,
   feeIdParam,
@@ -19,7 +19,7 @@ export class InstallmentController {
   ) { }
 
   @Get()
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'List all installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getAll() {
@@ -27,7 +27,7 @@ export class InstallmentController {
   }
 
   @Get('/overdue')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'List overdue installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getOverdue() {
@@ -35,7 +35,7 @@ export class InstallmentController {
   }
 
   @Get('/pending')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'List pending installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getPending() {
@@ -43,7 +43,7 @@ export class InstallmentController {
   }
 
   @Get('/paid')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'List paid installments', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
   async getPaid() {
@@ -51,7 +51,7 @@ export class InstallmentController {
   }
 
   @Get('/fee/:feeId')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: feeIdParam })
   @McpTool({ description: 'Get installments for a fee by fee ID', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
@@ -60,7 +60,7 @@ export class InstallmentController {
   }
 
   @Get('/stats')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @McpTool({ description: 'Get installment statistics', readOnly: true })
   @ResMsg('fees.success.statsRetrieved')
   async getStats() {
@@ -68,7 +68,7 @@ export class InstallmentController {
   }
 
   @Get('/:id')
-  @isFinancial()
+  @CanSchoolWide('read:fees')
   @Validate({ params: installmentIdParam })
   @McpTool({ description: 'Get an installment by ID', readOnly: true })
   @ResMsg('fees.success.installmentsRetrieved')
@@ -77,7 +77,7 @@ export class InstallmentController {
   }
 
   @Post()
-  @isFinancial()
+  @CanSchoolWide('create:fees')
   @Validate(createInstallmentDto)
   @McpTool({ description: 'Create a new installment', confirm: { level: 'warning', message: 'confirm.installments.create' } })
   @ResMsg('fees.success.installmentCreated')
@@ -86,7 +86,7 @@ export class InstallmentController {
   }
 
   @Put('/:id')
-  @isFinancial()
+  @CanSchoolWide('update:fees')
   @Validate({ params: installmentIdParam, body: updateInstallmentDto })
   @McpTool({ description: 'Update an installment by ID', confirm: { level: 'warning', message: 'confirm.installments.update' } })
   @ResMsg('fees.success.installmentUpdated')
@@ -95,7 +95,7 @@ export class InstallmentController {
   }
 
   @Delete('/:id')
-  @isFinancial()
+  @CanSchoolWide('delete:fees')
   @Validate({ params: installmentIdParam })
   @McpTool('Delete an installment by ID')
   @ResMsg('fees.success.installmentDeleted')

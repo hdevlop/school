@@ -28,7 +28,8 @@ it('requires sign-in on forgotten routes while preserving deliberate public endp
     expect(getEffectiveGuards(NotificationController, method, config), method).toEqual([]);
   }
   expect(getEffectiveGuards(NotificationController, 'listRecentForAdmin', config)
-    .map(({ guardClass }) => guardClass.name)).toEqual(['AuthGuard', 'RoleGuard']);
+    .map(({ guardClass }) => guardClass.name)).toEqual(['AuthGuard', 'RoleGuard', 'PermissionGuard']);
+  expect(guards(NotificationController, 'listRecentForAdmin').at(-1)).toEqual(['PermissionGuard', 'read:fees']);
 });
 
 describe('storage routes', () => {

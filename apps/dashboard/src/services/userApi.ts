@@ -33,6 +33,13 @@ export const deleteUserApi = async (id) => {
   return res.data;
 };
 
+// The account a reset would act on: its role and status choose what the
+// confirmation explains. Lets a staff or teacher row open the reset by user id.
+export const getResetTargetApi = async (userId: string) => {
+  const res = await api.get(`/admin/access/users/${userId}`);
+  return res.data;
+};
+
 // Admin resets one account's access. The server picks the consequence from the
 // account as it stands now; `expectedMode` only states which consequence the
 // confirmation explained, so a stale dialog is refused rather than acted on.

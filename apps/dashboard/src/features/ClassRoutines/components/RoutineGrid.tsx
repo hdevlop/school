@@ -1,7 +1,7 @@
 'use client';
 
 import { Plus, UserRound } from 'lucide-react';
-import { NBadge } from 'najm-kit';
+import { NajmScroll, NBadge } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { describeRoutineContent } from '@sms/contracts/routines';
 import type { RoutineGridProps } from '../types';
@@ -13,8 +13,8 @@ export default function RoutineGrid(props: RoutineGridProps) {
   return (
     <>
       {/* Wide screens: the week as one sheet, days down and periods across. */}
-      <div className="hidden md:block"><RoutineWeekTable {...props} /></div>
-      <div className="md:hidden"><RoutineDayList {...props} /></div>
+      <div className="hidden min-h-0 min-w-0 flex-1 md:flex"><RoutineWeekTable {...props} /></div>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col md:hidden"><RoutineDayList {...props} /></div>
     </>
   );
 }
@@ -25,7 +25,7 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
   const dutyMap = new Map(duties.map((duty) => [`${duty.dayOfWeek}:${duty.periodId}`, duty]));
 
   return (
-    <div className="overflow-auto rounded-xl border border-slate-300 bg-card shadow-sm dark:border-border">
+    <NajmScroll axis="both" autoHide="scroll" className="flex-1 rounded-xl border border-slate-300 bg-card shadow-sm dark:border-border">
       <table className="w-max min-w-full table-fixed border-collapse text-sm">
         <caption className="sr-only">{t('classRoutines.ui.title')}</caption>
         <thead className="sticky top-0 z-20">
@@ -99,6 +99,6 @@ function RoutineWeekTable({ days, periods, entries, duties = [], defaultRoom, ed
           ))}
         </tbody>
       </table>
-    </div>
+    </NajmScroll>
   );
 }

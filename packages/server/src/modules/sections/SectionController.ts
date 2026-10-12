@@ -2,7 +2,7 @@ import { Controller, Get, Post, Put, Delete, Params, Body, Validate, ResMsg } fr
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SectionService } from './SectionService';
 import { Section, Policy, CanList, CanRead, CanCreate, CanUpdate, CanDelete } from './SectionGuards';
-import { isAdmin } from '../../auth';
+import { isAdmin, CanSchoolWide } from '../../auth';
 import { sectionIdParam, createSectionDto, createSectionsBulkDto, updateSectionDto, type CreateSectionDto, type UpdateSectionDto } from './SectionDto';
 
 @ToolGroup('sections')
@@ -22,7 +22,7 @@ export class SectionController {
   }
 
   @Get('/:id/classes')
-  @isAdmin()
+  @CanSchoolWide('read:sections')
   @Validate({ params: sectionIdParam })
   @McpTool({ description: 'Get classes associated with a section', readOnly: true })
   @ResMsg('sections.success.retrieved')
@@ -31,7 +31,7 @@ export class SectionController {
   }
 
   @Get('/:id/teachers')
-  @isAdmin()
+  @CanSchoolWide('read:sections')
   @Validate({ params: sectionIdParam })
   @McpTool({ description: 'Get teachers assigned to a section. Enseignants d’une section. أساتذة قسم معين.', readOnly: true })
   @ResMsg('sections.success.retrieved')
@@ -40,7 +40,7 @@ export class SectionController {
   }
 
   @Get('/:id/parents')
-  @isAdmin()
+  @CanSchoolWide('read:sections')
   @Validate({ params: sectionIdParam })
   @McpTool({ description: 'Get parents of students in a section', readOnly: true })
   @ResMsg('sections.success.retrieved')

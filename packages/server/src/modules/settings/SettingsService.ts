@@ -4,6 +4,7 @@ import { SettingsValidator } from './SettingsValidator';
 import type { CreateSettingsDto, UpdateSettingsDto } from './SettingsDto';
 import { getBusinessClockInfo } from '../../shared';
 import { AcademicYearRepository } from '../academicYears/AcademicYearRepository';
+import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
 
 @Service()
 export class SettingsService {
@@ -67,6 +68,7 @@ export class SettingsService {
       minimumPassingGrade: data.minimumPassingGrade || '60.00',
       defaultExamDuration: data.defaultExamDuration || 120,
       calendarSystem: data.calendarSystem || 'SEMESTER',
+      teachingDays: data.teachingDays ?? [...DEFAULT_TEACHING_DAYS],
       startMonth: data.startMonth || 'september',
       endMonth: data.endMonth || 'june',
 
@@ -124,6 +126,12 @@ export class SettingsService {
     // Registered years own their calendars and the active year moves only
     // through activation, so an ordinary Settings edit can change neither.
     this.settingsValidator.ensureYearSettingsUnchanged(data, current);
+    if (data.teachingDays !== undefined) {
+      this.settingsValidator.ensureTeachingDaysKeepAssignments(
+        await this.settingsRepository.teachingDayConflict(current.currentAcademicYear, data.teachingDays),
+      );
+      await this.settingsRepository.updateActiveRoutineDays(current.currentAcademicYear, data.teachingDays);
+    }
     return await this.settingsRepository.update(current.id, data);
   }
 

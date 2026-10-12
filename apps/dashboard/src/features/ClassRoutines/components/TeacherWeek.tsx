@@ -106,13 +106,13 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
     <>
       {/* Wide screens: one sheet for the week, days down and times across,
           each lesson named by the class it is taught to. */}
-      <div className="hidden overflow-hidden rounded-xl border bg-card shadow-sm md:block">
-        <NajmScroll axis="x">
+      <div className="hidden min-h-0 min-w-0 flex-1 overflow-hidden rounded-xl border bg-card shadow-sm md:flex">
+        <NajmScroll axis="both" autoHide="scroll" className="flex-1">
           <table className="w-full min-w-[56rem] table-fixed border-collapse text-sm">
             <caption className="sr-only">{t('classRoutines.ui.teacher.myWeekTitle')}</caption>
-            <thead>
+            <thead className="sticky top-0 z-20">
               <tr className="bg-slate-800 text-white dark:bg-slate-900">
-                <th scope="col" className="w-24 border-e border-white/20 px-2 py-2.5 text-start text-xs font-semibold">
+                <th scope="col" className="sticky start-0 z-20 w-24 border-e border-white/20 bg-slate-800 px-2 py-2.5 text-start text-xs font-semibold dark:bg-slate-900">
                   {t('classRoutines.ui.fields.teachingDays')}
                 </th>
                 {slots.map((slot) => (
@@ -132,7 +132,7 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
                 <tr key={day} className="border-t">
                   <th
                     scope="row"
-                    className={`border-e px-2 text-start text-sm font-semibold ${day === today ? 'bg-primary/10 text-primary' : 'bg-muted/40 text-foreground'}`}
+                    className={`sticky start-0 z-10 border-e px-2 text-start text-sm font-semibold ${day === today ? 'bg-accent text-primary' : 'bg-card text-foreground'}`}
                   >
                     {routineDayLabel(day, t)}
                     {day === today ? <span className="block text-[0.7rem] font-medium">{t('classRoutines.ui.teacher.today')}</span> : null}
@@ -163,8 +163,8 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
       </div>
 
       {/* Phones: one day at a time, today first. */}
-      <div className="flex flex-col gap-3 md:hidden">
-        <div className="grid gap-1 rounded-xl border bg-card p-1" style={{ gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))` }} role="tablist" aria-label={t('classRoutines.ui.fields.teachingDays')}>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col gap-3 md:hidden">
+        <div className="grid shrink-0 gap-1 rounded-xl border bg-card p-1" style={{ gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))` }} role="tablist" aria-label={t('classRoutines.ui.fields.teachingDays')}>
           {days.map((day) => (
             <button
               key={day}
@@ -179,23 +179,25 @@ export default function TeacherWeek({ schedules, today }: { schedules: RoutineSc
             </button>
           ))}
         </div>
-        {dayLessons.length ? (
-          <ol className="flex flex-col gap-2">
-            {dayLessons.map(({ slot, lesson }) => (
-              <li key={slot.key} className="flex items-stretch gap-3 rounded-xl border bg-card p-2">
-                <div className="flex w-12 shrink-0 flex-col justify-center text-xs font-medium tabular-nums text-muted-foreground" dir="ltr">
-                  <span>{slot.startTime}</span>
-                  <span className="opacity-70">{slot.endTime}</span>
-                </div>
-                <div className="min-w-0 flex-1"><LessonCard lesson={lesson} showSubject={showSubject} /></div>
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="rounded-xl border border-dashed bg-card/60 p-6 text-center text-sm text-muted-foreground">
-            {t('classRoutines.ui.teacher.noLessonsOnDay')}
-          </p>
-        )}
+        <NajmScroll key={shownDay} axis="y" autoHide="scroll" className="flex-1">
+          {dayLessons.length ? (
+            <ol className="flex flex-col gap-2 pe-2 pb-20">
+              {dayLessons.map(({ slot, lesson }) => (
+                <li key={slot.key} className="flex items-stretch gap-3 rounded-xl border bg-card p-2">
+                  <div className="flex w-12 shrink-0 flex-col justify-center text-xs font-medium tabular-nums text-muted-foreground" dir="ltr">
+                    <span>{slot.startTime}</span>
+                    <span className="opacity-70">{slot.endTime}</span>
+                  </div>
+                  <div className="min-w-0 flex-1"><LessonCard lesson={lesson} showSubject={showSubject} /></div>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p className="rounded-xl border border-dashed bg-card/60 p-6 text-center text-sm text-muted-foreground">
+              {t('classRoutines.ui.teacher.noLessonsOnDay')}
+            </p>
+          )}
+        </NajmScroll>
       </div>
     </>
   );

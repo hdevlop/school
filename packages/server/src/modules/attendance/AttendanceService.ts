@@ -83,7 +83,7 @@ export class AttendanceService {
     return this.attendanceRepository.getToday(type);
   }
 
-  async mark(data: CreateAttendanceDto, user: { id: string; role?: string; teacherId?: string }) {
+  async mark(data: CreateAttendanceDto, user: { id: string; role?: string; teacherId?: string; permissions?: string[] }) {
     if (data.type === 'staff') {
       return this.markStaffAttendance(data, user);
     }
@@ -179,8 +179,11 @@ export class AttendanceService {
     return await this.attendanceRepository.getHistory(id);
   }
 
-  private async markStaffAttendance(data: Extract<CreateAttendanceDto, { type: 'staff' }>, user: { id: string; role?: string }) {
-    this.attendanceValidator.ensureStaffAttendanceAuthorized(user.role);
+  private async markStaffAttendance(
+    data: Extract<CreateAttendanceDto, { type: 'staff' }>,
+    user: { id: string; role?: string; permissions?: string[] },
+  ) {
+    this.attendanceValidator.ensureStaffAttendanceAuthorized(user);
     const academicYearId = await this.yearForStaffMark(data.date);
     this.attendanceValidator.ensureSelectedYear(academicYearId);
     await this.years.resolveRecord(academicYearId, data.date, user.role);

@@ -56,7 +56,3 @@ export interface RoutinePeriodFormProps {
 export interface RoutineScheduleFormProps {
   periods: RoutinePeriod[];
 }
-
-export interface RoutineDaysFormProps {
-  activeDays: readonly RoutineDay[];
-}

@@ -664,5 +664,143 @@
     "description": "update school visit requests",
     "resource": "visit-requests",
     "action": "update"
+  },
+  {
+    "name": "create:staff",
+    "description": "Permission to create staff members",
+    "resource": "staff",
+    "action": "create"
+  },
+  {
+    "name": "read:staff",
+    "description": "Permission to view staff members, job titles and zones",
+    "resource": "staff",
+    "action": "read"
+  },
+  {
+    "name": "update:staff",
+    "description": "Permission to update staff members and zones",
+    "resource": "staff",
+    "action": "update"
+  },
+  {
+    "name": "delete:staff",
+    "description": "Permission to delete staff members and zones",
+    "resource": "staff",
+    "action": "delete"
+  },
+  {
+    "name": "read:staff-attendance",
+    "description": "Permission to view the staff attendance roster",
+    "resource": "staff-attendance",
+    "action": "read"
+  },
+  {
+    "name": "manage:staff-attendance",
+    "description": "Permission to record and correct staff attendance",
+    "resource": "staff-attendance",
+    "action": "manage"
+  },
+  {
+    "name": "create:payroll",
+    "description": "Permission to run payroll",
+    "resource": "payroll",
+    "action": "create"
+  },
+  {
+    "name": "read:payroll",
+    "description": "Permission to view payroll and payslips",
+    "resource": "payroll",
+    "action": "read"
+  },
+  {
+    "name": "update:payroll",
+    "description": "Permission to pay and edit payslips",
+    "resource": "payroll",
+    "action": "update"
+  },
+  {
+    "name": "delete:payroll",
+    "description": "Permission to delete payslips",
+    "resource": "payroll",
+    "action": "delete"
+  },
+  {
+    "name": "read:financial-operations",
+    "description": "Permission to view the financial audit log and preview a rollover",
+    "resource": "financial-operations",
+    "action": "read"
+  },
+  {
+    "name": "manage:financial-operations",
+    "description": "Permission to commit a year-end rollover",
+    "resource": "financial-operations",
+    "action": "manage"
+  },
+  {
+    "name": "create:cycles",
+    "description": "Permission to create cycles",
+    "resource": "cycles",
+    "action": "create"
+  },
+  {
+    "name": "read:cycles",
+    "description": "Permission to view cycles",
+    "resource": "cycles",
+    "action": "read"
+  },
+  {
+    "name": "update:cycles",
+    "description": "Permission to update cycles",
+    "resource": "cycles",
+    "action": "update"
+  },
+  {
+    "name": "delete:cycles",
+    "description": "Permission to delete cycles",
+    "resource": "cycles",
+    "action": "delete"
+  },
+  {
+    "name": "create:student-routes",
+    "description": "Permission to assign students to transport routes",
+    "resource": "student-routes",
+    "action": "create"
+  },
+  {
+    "name": "read:student-routes",
+    "description": "Permission to view student transport routes",
+    "resource": "student-routes",
+    "action": "read"
+  },
+  {
+    "name": "update:student-routes",
+    "description": "Permission to change student transport routes",
+    "resource": "student-routes",
+    "action": "update"
+  },
+  {
+    "name": "delete:student-routes",
+    "description": "Permission to delete student transport routes",
+    "resource": "student-routes",
+    "action": "delete"
+  },
+  {
+    "name": "manage:class-routines",
+    "description": "Permission to build and publish class timetables",
+    "resource": "class-routines",
+    "action": "manage"
+  },
+  {
+    "name": "reset:users",
+    "description": "Permission to reset another user's login",
+    "resource": "users",
+    "action": "reset"
+  },
+  {
+    "name": "manage:participants",
+    "description": "Permission to manage event participants and their attendance",
+    "resource": "participants",
+    "action": "manage"
   }
 ]

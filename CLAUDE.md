@@ -26,6 +26,10 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 - `bun run db:push` - Push schema changes to database
 - `bun run db:drop` - Drop database tables (destructive)
 - `bun run db:check` - Validate database schema consistency
+- `bun run seed:role-permissions` - Add the default roles, permissions and
+  grants from `packages/seed/src/scripts/admin/data` that a database lacks.
+  Additive, touches no account; run it once when adopting new defaults, never
+  on every deploy (it would restore grants removed in the dashboard)
 
 ### Testing & Quality
 - Always run `bun run lint` after making code changes
@@ -43,8 +47,10 @@ All read `apps/dashboard/.env.local`, the monorepo's only env file.
 - `bun run test:ownership` - Repository ownership: the school-wide role list,
   per-role rules, and the generated SQL of every owned read
 - `bun run test:security` - Route guards: the default sign-in guard and the
-  deliberately public routes, the storage routes School restricts, and the
-  timetable permissions.
+  deliberately public routes, the storage routes School restricts, the
+  timetable permissions, the permission each former role-guarded route asks
+  for, the seeded role defaults, and the deploy migration that keeps existing
+  access.
   `bun --env-file=apps/dashboard/.env.local run test:security:transport` checks
   the running server over the local `school_history_test` fixture, including
   the reviewed lists of routes left open or behind sign-in alone, by the guards
@@ -119,12 +125,39 @@ states that drift — so do not add one without changing the plan first.
   registers `guards({ default: [isAuth()] })` before `auth()`, so a route that
   declares no guard asks for sign-in instead of being public. The default is a
   safety net, not a policy: sign-in alone lets any account in, so give each
-  route the guard its data needs (`@Can(...)`, `@isAdministrator()`, ...) and
+  route the guard its data needs (`@Can(...)`, `@CanSchoolWide(...)`, ...) and
   mark a deliberately public one `@Public()` from `najm-guard`. Najm mounts only
   the controllers that `.load()` or a plugin declares; storage management takes
   `manageGuards`. `test:security:transport` fails on a route that relies on the
   default, and on any route left open or behind sign-in alone that is not on its
   reviewed lists.
+
+- **A route asks for a permission, not a role.** Access is decided in the roles
+  screen, so a guard names a permission: `@Can('read:x')`, the policy
+  decorators (`@CanList()`, ...), or `@CanSchoolWide('read:x')` from
+  `packages/server/src/auth.ts` when the route reads or deletes owned rows past
+  ownership — a bulk delete, a lookup by CIN, an unfiltered finance, staff or
+  transport list — so a teacher, parent or student granted the permission
+  still cannot reach every row. Role guards remain only for developer tools
+  (seed and delete-all routes), access control, appearance and job titles
+  (`@isAdmin()`), academic years and enrollments (`@isAdministrator()`), and
+  which dashboard a role sees. A validator that tells roles apart separates a
+  teacher's own classes from `SCHOOL_WIDE_ROLES`; it never names `admin` or
+  `principal`. The dashboard asks the same question: `PAGE_ACCESS` in
+  `apps/dashboard/src/shared/pageAccess.ts` for pages, `useViewerRole().can()`
+  and `.isSchoolWide` for actions. Declare a new permission in
+  `packages/seed/src/scripts/admin/data/permissions.json`;
+  `tests/security/RolePermissions.test.ts` fails on a guard naming one that is
+  not. A login made, re-addressed or removed through a staff record is limited
+  to a role whose every permission its user holds
+  (`StaffValidator.ensureCanManageLogin`), and staff bodies never carry a
+  `userId`.
+
+  Moving a guard from a role to a permission is two steps. A migration grants
+  each existing role what it reached through the role guard, so no one loses
+  access on deploy (see `0066_role_permission_defaults.sql`). New defaults go in
+  `rolePermissions.json`, which seeds a new database; an existing one adopts
+  them once with `bun run seed:role-permissions`.
 
 - **One year scope per operation.** A converted repository reads the selected
   year from its `@Year()` property; services and controllers do not pass it.

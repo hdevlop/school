@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Put, Params, Body, Validate, ResMsg } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { SettingsService } from './SettingsService';
-import { isAuth, isAdministrator } from '../../auth';
+import { isAuth, Can } from '../../auth';
 import {
   createSettingsDto,
   updateSettingsDto,
@@ -26,7 +26,7 @@ export class SettingsController {
   }
 
   @Get('/admin')
-  @isAdministrator()
+  @Can('read:settings')
   @McpTool({ description: 'Get admin settings', readOnly: true })
   @ResMsg('settings.success.retrieved')
   async getAdminSettings() {
@@ -34,7 +34,7 @@ export class SettingsController {
   }
 
   @Put()
-  @isAdministrator()
+  @Can('update:settings')
   @Validate(updateSettingsDto)
   @McpTool({ description: 'Update school settings; only the fields sent change. The active academic year and its calendar months change through academic-year operations, not here', confirm: { level: 'warning', message: 'confirm.settings.update' } })
   @ResMsg('settings.success.updated')
@@ -43,7 +43,7 @@ export class SettingsController {
   }
 
   @Post()
-  @isAdministrator()
+  @Can('create:settings')
   @Validate(createSettingsDto)
   @McpTool({ description: 'Create the school settings of a new installation; refused once they exist (use update)', confirm: { level: 'warning', message: 'confirm.settings.create' } })
   @ResMsg('settings.success.created')
@@ -52,7 +52,7 @@ export class SettingsController {
   }
 
   @Get('/:id')
-  @isAdministrator()
+  @Can('read:settings')
   @Validate({ params: settingsIdParam })
   @McpTool({ description: 'Get settings by ID', readOnly: true })
   @ResMsg('settings.success.retrieved')

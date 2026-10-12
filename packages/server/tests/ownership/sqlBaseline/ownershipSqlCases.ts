@@ -56,8 +56,7 @@ const YEAR = { id: 'year-old', label: '2025-2026', reportingStartsOn: '2025-09-0
 
 /** Pinned here, not read from the code under test. */
 const SCHOOL_WIDE = [
-  'admin', 'principal', 'accounting', 'counselor', 'nurse',
-  'secretary', 'librarian', 'driver', 'assistant',
+  'admin', 'principal', 'accounting', 'secretary', 'driver', 'assistant', 'supervisor',
 ] as const;
 const ROLES = ['teacher', 'parent', 'student', ...SCHOOL_WIDE, 'custom-role'] as const;
 

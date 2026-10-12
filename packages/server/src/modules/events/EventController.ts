@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Query, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin, isAuth } from '../../auth';
+import { isAdmin, isAuth, CanSchoolWide } from '../../auth';
 import { EventService } from './EventService';
 import {
   canAccessEvent,
@@ -155,7 +155,7 @@ export class EventController {
   }
 
   @Get('/analytics')
-  @isAdmin()
+  @CanSchoolWide('read:events')
   @McpTool({ description: 'Get event analytics', readOnly: true })
   @ResMsg('events.success.retrieved')
   async getAnalytics() {
@@ -163,7 +163,7 @@ export class EventController {
   }
 
   @Get('/analytics/type-count')
-  @isAdmin()
+  @CanSchoolWide('read:events')
   @ResMsg('events.success.retrieved')
   async getTypeCount() {
     return this.eventService.getEventsByTypeCount();

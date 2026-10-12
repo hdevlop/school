@@ -87,3 +87,10 @@ it('gives a teacher one subject, history and geography taught together', () => {
   expect(new Set(families).size).toBe(families.length);
   expect(subjectFamily('GEO')).toBe(subjectFamily('HIST'));
 });
+// A school-wide day selection also limits the slots used by the demo seed.
+it('places lessons only in the configured teaching-day slots', () => {
+  const result = placeLessons([{ sectionId: 's1', subjectId: 'AR', teacherId: 't1', lessons: 2 }], new Set(), 1,
+    [{ day: 'sunday', lesson: 0 }, { day: 'sunday', lesson: 1 }]);
+  expect(result.unplaced).toBe(0);
+  expect(result.placed.map((lesson) => lesson.day)).toEqual(['sunday', 'sunday']);
+});

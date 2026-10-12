@@ -1,5 +1,5 @@
-import { Body, Controller, Params, Post, ResMsg, User, Validate } from '../../najm';
-import { isAdmin } from '../../auth';
+import { Body, Controller, Get, Params, Post, ResMsg, User, Validate } from '../../najm';
+import { Can } from '../../auth';
 
 import { accessResetUserParam, resetAccessDto, type ResetAccessDto } from './AccessResetDto';
 import { AccessResetService } from './AccessResetService';
@@ -13,9 +13,16 @@ import type { AccessResetActor } from './AccessResetValidator';
  * inheriting this one.
  */
 @Controller('/admin/access/users')
-@isAdmin()
+@Can('reset:users')
 export class AccessResetController {
   constructor(private accessResetService: AccessResetService) {}
+
+  @Get('/:userId')
+  @Validate({ params: accessResetUserParam })
+  @ResMsg('accessReset.success.loaded')
+  async getTarget(@Params('userId') userId: string) {
+    return this.accessResetService.getTarget(userId);
+  }
 
   @Post('/:userId/reset-access')
   @Validate({ params: accessResetUserParam, body: resetAccessDto })

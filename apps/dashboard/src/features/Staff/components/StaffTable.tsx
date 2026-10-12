@@ -2,11 +2,13 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
-import { Banknote, Briefcase, Calendar, Hash, IdCard, MapPinned, Phone, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
+import { Banknote, Briefcase, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
 import { useDialog, Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useStaff } from '../hooks/useStaff';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
+import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
@@ -37,6 +39,11 @@ const STAFF_LIST_EXCLUDED_ROLES = new Set(['teacher']);
 
 const StaffTable = () => {
   const { t, language } = useTranslation();
+  const { can } = useViewerRole();
+  const canCreate = can('create:staff');
+  const canUpdate = can('update:staff');
+  const canDelete = can('delete:staff');
+  const { canReset, resetItems } = useResetLogin();
   const { majorMoney } = useSchoolFormat();
   const {
     staff,
@@ -107,6 +114,15 @@ const StaffTable = () => {
       onConfirm: async () => { await deleteStaff(staffMember.id); },
     });
   };
+
+  // NTable's built-in View/Edit/Delete exist only while no `menu.row` is
+  // supplied, so they are restated when the access reset joins them.
+  const rowMenu = (staffMember) => [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(staffMember) },
+    ...(canUpdate ? [{ label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(staffMember) }] : []),
+    ...resetItems(staffMember.userId),
+    ...(canDelete ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(staffMember) }] : []),
+  ];
 
   const handleBulkDelete = (ids) => {
     confirmDelete({
@@ -329,11 +345,12 @@ const StaffTable = () => {
         data={rows}
         columns={columns}
         filters={filters}
-        onCreate={handleAdd}
+        onCreate={canCreate ? handleAdd : undefined}
         onView={handleView}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onBulkDelete={handleBulkDelete}
+        onEdit={canUpdate ? handleEdit : undefined}
+        onDelete={canDelete ? handleDelete : undefined}
+        onBulkDelete={canDelete ? handleBulkDelete : undefined}
+        menu={canReset ? { row: rowMenu } : undefined}
         loading={isStaffLoading}
         error={hasFailedToLoad(isError ? error : null, rows) ? isError ? error : null : null}
         renderError={(currentError) => (
@@ -350,12 +367,12 @@ const StaffTable = () => {
             icon={FEATURE_ICONS.staff}
             title={t('emptyStates.staff.title')}
             description={t('emptyStates.staff.description')}
-            action={(
+            action={canCreate ? (
               <NButton size="sm" onClick={handleAdd}>
                 <Plus className="h-4 w-4" />
                 {t('staff.dialogs.createButton')}
               </NButton>
-            )}
+            ) : undefined}
           />
         )}
         renderFilteredEmpty={() => (

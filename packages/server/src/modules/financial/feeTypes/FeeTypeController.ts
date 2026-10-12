@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { FeeTypeService } from './FeeTypeService';
-import { isFinancial } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import {
   createFeeTypeDto,
   feeTypeIdParam,
@@ -18,7 +18,7 @@ export class FeeTypeController {
   ) { }
 
   @Get()
-  @isFinancial()
+  @CanSchoolWide('read:feeTypes')
   @McpTool({ description: 'List all fee types', readOnly: true })
   @ResMsg('feeTypes.success.retrieved')
   async getAll() {
@@ -26,7 +26,7 @@ export class FeeTypeController {
   }
 
   @Get('/:id')
-  @isFinancial()
+  @CanSchoolWide('read:feeTypes')
   @Validate({ params: feeTypeIdParam })
   @McpTool({ description: 'Get a fee type by ID', readOnly: true })
   @ResMsg('feeTypes.success.retrieved')
@@ -35,7 +35,7 @@ export class FeeTypeController {
   }
 
   @Post()
-  @isFinancial()
+  @CanSchoolWide('create:feeTypes')
   @Validate(createFeeTypeDto)
   @McpTool({ description: 'Create a new fee type', confirm: { level: 'warning', message: 'confirm.feeTypes.create' } })
   @ResMsg('feeTypes.success.created')
@@ -44,7 +44,7 @@ export class FeeTypeController {
   }
 
   @Put('/:id')
-  @isFinancial()
+  @CanSchoolWide('update:feeTypes')
   @Validate({ params: feeTypeIdParam, body: updateFeeTypeDto })
   @McpTool({ description: 'Update a fee type by ID', confirm: { level: 'warning', message: 'confirm.feeTypes.update' } })
   @ResMsg('feeTypes.success.updated')
@@ -53,7 +53,7 @@ export class FeeTypeController {
   }
 
   @Delete('/:id')
-  @isFinancial()
+  @CanSchoolWide('delete:feeTypes')
   @Validate({ params: feeTypeIdParam })
   @McpTool('Delete a fee type by ID')
   @ResMsg('feeTypes.success.deleted')

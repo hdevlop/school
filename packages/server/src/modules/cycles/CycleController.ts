@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, Validate } from '../../najm';
-import { isAdmin } from '../../auth';
+import { Can } from '../../auth';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { createCycleDto, cycleIdParam, updateCycleDto, type CreateCycleDto, type UpdateCycleDto } from './CycleDto';
 import { CycleService } from './CycleService';
@@ -10,7 +10,7 @@ export class CycleController {
   constructor(private cycleService: CycleService) {}
 
   @Get()
-  @isAdmin()
+  @Can('read:cycles')
   @McpTool({ description: 'List school cycles', readOnly: true })
   @ResMsg('cycles.success.retrieved')
   async getCycles() {
@@ -18,7 +18,7 @@ export class CycleController {
   }
 
   @Get('/active')
-  @isAdmin()
+  @Can('read:cycles')
   @McpTool({ description: 'List active school cycles', readOnly: true })
   @ResMsg('cycles.success.retrieved')
   async getActiveCycles() {
@@ -26,7 +26,7 @@ export class CycleController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @Can('read:cycles')
   @Validate({ params: cycleIdParam })
   @McpTool({ description: 'Get a school cycle by ID', readOnly: true })
   @ResMsg('cycles.success.retrieved')
@@ -35,7 +35,7 @@ export class CycleController {
   }
 
   @Post()
-  @isAdmin()
+  @Can('create:cycles')
   @Validate(createCycleDto)
   @McpTool({ description: 'Create a school cycle', confirm: { level: 'warning', message: 'confirm.cycles.create' } })
   @ResMsg('cycles.success.created')
@@ -44,7 +44,7 @@ export class CycleController {
   }
 
   @Put('/:id')
-  @isAdmin()
+  @Can('update:cycles')
   @Validate({ params: cycleIdParam, body: updateCycleDto })
   @McpTool({ description: 'Update a school cycle', confirm: { level: 'warning', message: 'confirm.cycles.update' } })
   @ResMsg('cycles.success.updated')
@@ -53,7 +53,7 @@ export class CycleController {
   }
 
   @Delete('/:id')
-  @isAdmin()
+  @Can('delete:cycles')
   @Validate({ params: cycleIdParam })
   @McpTool({ description: 'Delete a school cycle', confirm: { level: 'danger', message: 'confirm.cycles.delete' } })
   @ResMsg('cycles.success.deleted')

@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, Validate } from '../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isAdmin } from '../../auth';
+import { CanSchoolWide } from '../../auth';
 
 import { StaffService } from './StaffService';
 import {
@@ -23,7 +23,7 @@ export class StaffController {
   constructor(private staffService: StaffService) { }
 
   @Get()
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @McpTool({ description: 'List all staff', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async listStaff() {
@@ -31,7 +31,7 @@ export class StaffController {
   }
 
   @Get('/count')
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @McpTool({ description: 'Get staff count. Nombre total du personnel. العدد الإجمالي للموظفين.', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getStaffCount() {
@@ -39,7 +39,7 @@ export class StaffController {
   }
 
   @Get('/attendance-roster')
-  @isAdmin()
+  @CanSchoolWide('read:staff-attendance')
   @Validate({ query: staffAttendanceRosterQueryDto })
   @McpTool({ description: 'List staff for attendance roster', readOnly: true })
   @ResMsg('staff.success.retrieved')
@@ -48,7 +48,7 @@ export class StaffController {
   }
 
   @Get('/role/:role')
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @Validate({ params: staffRoleParam })
   @McpTool({ description: 'List staff by role', readOnly: true })
   @ResMsg('staff.success.retrieved')
@@ -57,7 +57,7 @@ export class StaffController {
   }
 
   @Get('/employee-code/:employeeCode')
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @Validate({ params: staffEmployeeCodeParam })
   @McpTool({ description: 'Get a staff member by employee code', readOnly: true })
   @ResMsg('staff.success.retrieved')
@@ -66,7 +66,7 @@ export class StaffController {
   }
 
   @Get('/cin/:cin')
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @McpTool({ description: 'Get a staff member by CIN', readOnly: true })
   @ResMsg('staff.success.retrieved')
   async getByCin(@Params('cin') cin: string) {
@@ -74,7 +74,7 @@ export class StaffController {
   }
 
   @Get('/:id')
-  @isAdmin()
+  @CanSchoolWide('read:staff')
   @Validate({ params: staffIdParam })
   @McpTool({ description: 'Get a staff member by ID', readOnly: true })
   @ResMsg('staff.success.retrieved')
@@ -83,38 +83,38 @@ export class StaffController {
   }
 
   @Post()
-  @isAdmin()
+  @CanSchoolWide('create:staff')
   @Validate(createStaffDto)
   @McpTool({ description: 'Create a new staff member', confirm: { level: 'warning', message: 'confirm.staff.create' } })
   @ResMsg('staff.success.created')
-  async create(@Body() body: CreateStaffDto) {
-    return this.staffService.create(body);
+  async create(@Body() body: CreateStaffDto, @User('permissions') permissions?: string[]) {
+    return this.staffService.create(body, { permissions: permissions ?? [] });
   }
 
   @Put('/:id')
-  @isAdmin()
+  @CanSchoolWide('update:staff')
   @Validate({ params: staffIdParam, body: updateStaffDto })
   @McpTool({ description: 'Update a staff member by ID', confirm: { level: 'warning', message: 'confirm.staff.update' } })
   @ResMsg('staff.success.updated')
-  async update(@Params('id') id: string, @Body() body: UpdateStaffDto) {
-    return this.staffService.update(id, body);
+  async update(@Params('id') id: string, @Body() body: UpdateStaffDto, @User('permissions') permissions?: string[]) {
+    return this.staffService.update(id, body, { permissions: permissions ?? [] });
   }
 
   @Delete('/bulk')
-  @isAdmin()
+  @CanSchoolWide('delete:staff')
   @Validate({ body: deleteBulkStaffDto })
   @McpTool({ description: 'Delete multiple staff members by IDs', confirm: { level: 'danger', message: 'confirm.staff.bulkDelete' } })
   @ResMsg('staff.success.bulkDeleted')
-  async deleteBulk(@Body() body: DeleteBulkStaffDto) {
-    return this.staffService.deleteBulk(body);
+  async deleteBulk(@Body() body: DeleteBulkStaffDto, @User('permissions') permissions?: string[]) {
+    return this.staffService.deleteBulk(body, { permissions: permissions ?? [] });
   }
 
   @Delete('/:id')
-  @isAdmin()
+  @CanSchoolWide('delete:staff')
   @Validate({ params: staffIdParam })
   @McpTool({ description: 'Delete a staff member by ID', confirm: { level: 'danger', message: 'confirm.staff.delete' } })
   @ResMsg('staff.success.deleted')
-  async deleteById(@Params('id') id: string) {
-    return this.staffService.delete(id);
+  async deleteById(@Params('id') id: string, @User('permissions') permissions?: string[]) {
+    return this.staffService.delete(id, {}, { permissions: permissions ?? [] });
   }
 }

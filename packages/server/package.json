@@ -6,6 +6,10 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
+    "./landing-seed": {
+      "types": "./src/landingSeed.ts",
+      "default": "./src/landingSeed.ts"
+    },
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"

@@ -1,6 +1,6 @@
 import { Controller, Get, Delete, Params, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
-import { isFinancial } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import { AllocationService } from './AllocationService';
 import { allocationIdParam, paymentIdParam, studentIdParam } from './AllocationDto';
 
@@ -14,7 +14,7 @@ export class AllocationController {
 
 
   @Get()
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @McpTool({ description: 'List all payment allocations', readOnly: true })
   @ResMsg('fees.success.allocationsRetrieved')
   async getAll() {
@@ -22,7 +22,7 @@ export class AllocationController {
   }
 
   @Get('/:id')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: allocationIdParam })
   @McpTool({ description: 'Get a payment allocation by ID', readOnly: true })
   @ResMsg('fees.success.allocationRetrieved')
@@ -31,7 +31,7 @@ export class AllocationController {
   }
 
   @Get('/payment/:paymentId')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: paymentIdParam })
   @McpTool({ description: 'Get allocations for a payment by payment ID', readOnly: true })
   @ResMsg('fees.success.allocationsRetrieved')
@@ -40,7 +40,7 @@ export class AllocationController {
   }
 
   @Get('/student/:studentId')
-  @isFinancial()
+  @CanSchoolWide('read:payments')
   @Validate({ params: studentIdParam })
   @McpTool({ description: 'Get allocations for a student by student ID', readOnly: true })
   @ResMsg('fees.success.allocationsRetrieved')
@@ -49,7 +49,7 @@ export class AllocationController {
   }
 
   @Delete('/:id')
-  @isFinancial()
+  @CanSchoolWide('delete:payments')
   @Validate({ params: allocationIdParam })
   @McpTool('Delete a payment allocation by ID')
   @ResMsg('fees.success.allocationDeleted')

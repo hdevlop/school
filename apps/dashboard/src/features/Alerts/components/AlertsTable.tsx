@@ -28,7 +28,7 @@ const STATUS_ACTIONS: Array<{ status: AlertStatus; action: 'acknowledge' | 'reso
  */
 export default function AlertsTable() {
   const { t } = useTranslation();
-  const { role, isFamily } = useViewerRole();
+  const { role, isFamily, can } = useViewerRole();
   const columns = useAlertsTableColumns();
   const scope = useClassSectionTableScope();
   const { confirmDelete } = useDialog();
@@ -96,7 +96,7 @@ export default function AlertsTable() {
         menu={{
           row: (alert: AlertRecord) => [
             ...statusActions(alert),
-            ...(role === 'admin'
+            ...(can('delete:alerts')
               ? [{ label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(alert) }]
               : []),
           ],

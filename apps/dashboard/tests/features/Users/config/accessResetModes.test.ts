@@ -24,13 +24,13 @@ describe('resolveExpectedMode', () => {
   });
 
   it('explains active students, teachers and staff as a reset email', () => {
-    for (const role of ['student', 'teacher', 'secretary', 'nurse', 'driver', 'accounting']) {
+    for (const role of ['student', 'teacher', 'secretary', 'supervisor', 'driver', 'accounting']) {
       expect(resolveExpectedMode({ id: 'u', role, status: 'active' })).toBe('reset_email_sent');
     }
   });
 
   it('explains any pending profiled account as an invitation resend', () => {
-    for (const role of ['student', 'teacher', 'librarian']) {
+    for (const role of ['student', 'teacher', 'assistant']) {
       expect(resolveExpectedMode({ id: 'u', role, status: 'pending' })).toBe('invitation_resent');
     }
   });

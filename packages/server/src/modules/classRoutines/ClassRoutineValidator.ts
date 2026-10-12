@@ -1,4 +1,5 @@
 import { Err, Service, t } from '../../najm';
+import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { ClassRoutineRepository } from './ClassRoutineRepository';
@@ -30,7 +31,7 @@ export class ClassRoutineValidator {
   }
 
   ensureTeacherScheduleAccess(teacherId: string, user?: { role?: string; teacherId?: string }) {
-    if (user && !['admin', 'principal'].includes(user.role ?? '') && user.teacherId !== teacherId) {
+    if (user && !SCHOOL_WIDE_ROLES.includes(user.role ?? '') && user.teacherId !== teacherId) {
       Err(403, t('classRoutines.errors.forbidden'));
     }
   }

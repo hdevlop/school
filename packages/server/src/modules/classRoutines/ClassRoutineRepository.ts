@@ -7,6 +7,7 @@ import {
   routineEntries,
   routinePeriods,
   routineSchedules,
+  settings,
   sections,
   staff,
   subjects,
@@ -17,6 +18,7 @@ import { Repository } from '../../najm';
 import { Year } from '../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import type { RoutineListQuery } from './ClassRoutineDto';
+import { DEFAULT_TEACHING_DAYS } from '@sms/contracts/routines';
 
 @Repository()
 export class ClassRoutineRepository {
@@ -33,6 +35,12 @@ export class ClassRoutineRepository {
     await this.db.delete(routineDuties);
     await this.db.delete(routinePeriods);
     await this.db.delete(routineSchedules);
+  }
+
+  async getSchoolTeachingDays() {
+    const [school] = await this.db.select({ teachingDays: settings.teachingDays }).from(settings)
+      .orderBy(desc(settings.createdAt)).limit(1);
+    return school?.teachingDays ?? [...DEFAULT_TEACHING_DAYS];
   }
 
   async getPeriods(includeInactive = false, scheduleId?: string) {

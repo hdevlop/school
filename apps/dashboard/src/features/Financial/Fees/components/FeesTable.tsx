@@ -26,8 +26,6 @@ import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 
-type FeeScope = 'year' | 'outstanding';
-
 function FeesTableForYear() {
 
   const { t } = useTranslation();
@@ -46,11 +44,6 @@ function FeesTableForYear() {
   const [selectedSectionId, setSelectedSectionId] = useState('');
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('__all__');
-  const [feeScope, setFeeScope] = useState<FeeScope>('year');
-  // The list holds only the viewed year's fees. The outstanding scope keeps
-  // other years' debts discoverable without adding them to that year's rows
-  // and totals.
-  const showOutstanding = feeScope === 'outstanding';
 
   const {
     fees,
@@ -60,54 +53,33 @@ function FeesTableForYear() {
     deleteFee,
     isUpdating,
     isDeleting,
-  } = useFees({ allYears: showOutstanding });
-
-  // All-year rows carry each student's current class, so that scope filters
-  // on the classes its rows name rather than on the viewed year's classes.
-  const filterClasses = useMemo(() => {
-    if (!showOutstanding) return classes;
-    const byId = new Map<string, { id: string; name: string }>();
-    for (const row of fees || []) {
-      if (row.class?.id) byId.set(row.class.id, { id: row.class.id, name: row.class.name });
-    }
-    return [...byId.values()];
-  }, [showOutstanding, classes, fees]);
-
-  const filterSections = useMemo(() => {
-    if (!showOutstanding) return sections;
-    const byId = new Map<string, { id: string; name: string; classId: string }>();
-    for (const row of fees || []) {
-      if (row.section?.id) byId.set(row.section.id, { id: row.section.id, name: row.section.name, classId: row.class?.id });
-    }
-    return [...byId.values()];
-  }, [showOutstanding, sections, fees]);
+  } = useFees();
 
   const isAllClasses = selectedClassId === 'all';
 
   useEffect(() => {
-    if (selectedClassId !== 'all' && !filterClasses?.some((schoolClass) => schoolClass.id === selectedClassId)) {
-      setSelectedClassId(filterClasses?.[0]?.id || '');
+    if (selectedClassId !== 'all' && !classes?.some((schoolClass) => schoolClass.id === selectedClassId)) {
+      setSelectedClassId(classes?.[0]?.id || '');
     }
-  }, [filterClasses, selectedClassId]);
+  }, [classes, selectedClassId]);
 
   useEffect(() => {
     if (isAllClasses) {
       setSelectedSectionId('');
       return;
     }
-    if (selectedClassId && filterSections?.length > 0) {
-      const classSections = filterSections.filter((s: any) => s.classId === selectedClassId);
+    if (selectedClassId && sections?.length > 0) {
+      const classSections = sections.filter((s: any) => s.classId === selectedClassId);
       const sectionA = classSections.find((s: any) => s.name?.toUpperCase() === 'A');
       setSelectedSectionId(sectionA?.id || classSections[0]?.id || '');
     }
-  }, [selectedClassId, filterSections, isAllClasses]);
+  }, [selectedClassId, sections, isAllClasses]);
 
   const filteredFees = useMemo(() => {
     if (!fees) return [];
 
     return fees.filter((row: any) => {
       // The server already limits the year scope to the viewed year.
-      if (showOutstanding && Number(row.totalDue ?? 0) <= 0) return false;
       if (!isAllClasses && selectedClassId && row.class?.id !== selectedClassId) return false;
 
       if (!isAllClasses && selectedSectionId && row.section?.id !== selectedSectionId) return false;
@@ -130,44 +102,28 @@ function FeesTableForYear() {
 
       return true;
     });
-  }, [fees, showOutstanding, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
+  }, [fees, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
 
   const classOptions = useMemo(
     () => [
       { value: 'all', label: t('common.all') || 'All' },
-      ...(filterClasses || []).map((c: any) => ({ value: c.id, label: c.name })),
+      ...(classes || []).map((c: any) => ({ value: c.id, label: c.name })),
     ],
-    [filterClasses, t],
+    [classes, t],
   );
 
   const sectionOptions = useMemo(
     () => isAllClasses
       ? []
-      : (filterSections || [])
+      : (sections || [])
           .filter((s: any) => s.classId === selectedClassId)
           .map((s: any) => ({ value: s.id, label: s.name })),
-    [filterSections, selectedClassId, isAllClasses],
+    [sections, selectedClassId, isAllClasses],
   );
 
   const columns = useFeesTableColumns();
 
   const filters = useMemo(() => [
-    {
-      name: 'scope',
-      type: 'select',
-      showIcon: false,
-      placeholder: t('fees.historyView.scope'),
-      value: feeScope,
-      onChange: (scope: FeeScope) => {
-        setFeeScope(scope);
-        setSelectedClassId('all');
-      },
-      options: [
-        { value: 'year', label: t('fees.historyView.scopeYear', { year: viewingYear ?? '' }) },
-        { value: 'outstanding', label: t('fees.historyView.scopeOutstanding') },
-      ],
-      className: 'w-full lg:w-56',
-    },
     {
       name: 'class',
       type: 'combobox',
@@ -216,7 +172,7 @@ function FeesTableForYear() {
       ],
       className: 'w-full lg:w-36',
     },
-  ], [t, feeScope, viewingYear, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions, isAllClasses]);
+  ], [t, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions, isAllClasses]);
 
   const handleAddClick = () => {
     if (!viewingYear) return;
@@ -294,9 +250,7 @@ function FeesTableForYear() {
     });
   };
 
-  const noDataText = showOutstanding
-    ? t('fees.historyView.noOutstanding')
-    : !selectedClassId
+  const noDataText = !selectedClassId
       ? (t('fees.noData.selectClass') || 'Select a class to view fees')
       : filteredFees.length === 0 && fees?.length > 0
         ? (t('fees.noData.noResults') || 'No students match the current filters')
@@ -312,11 +266,11 @@ function FeesTableForYear() {
         title={t('navigation.fees')}
         subtitle={isCountUnknown(error, fees, isFeesLoading || isAcademicYearLoading)
           ? undefined
-          : t(showOutstanding ? 'fees.historyView.outstandingCount' : 'fees.subtitle.count', { count: total })}
+          : t('fees.subtitle.count', { count: total })}
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
-          {!showOutstanding && viewingYear && (
+          {viewingYear && (
             // Icon only at phone width, where the label left no room for the title.
             <NButton
               size="sm"
@@ -341,8 +295,8 @@ function FeesTableForYear() {
         onCreate={handleAddClick}
         onView={handleView}
         onRowClick={handleView}
-        onEdit={showOutstanding ? undefined : handleEdit}
-        onDelete={showOutstanding ? undefined : handleDelete}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
         loading={isFeesLoading || isAcademicYearLoading}
         error={failedToLoad ? error : null}
         renderError={(currentError) => (

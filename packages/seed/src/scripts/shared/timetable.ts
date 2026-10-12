@@ -126,7 +126,7 @@ function random(seed: number) {
  * `busy` holds teacher slots already taken (`teacherId|day|lesson`). Retries
  * in other orders and keeps the attempt that leaves the fewest lessons out.
  */
-export function placeLessons(planned: PlannedLesson[], busy = new Set<string>(), attempts = 30) {
+export function placeLessons(planned: PlannedLesson[], busy = new Set<string>(), attempts = 30, slots = TIMETABLE_SLOTS) {
   let best: { placed: PlacedLesson[]; unplaced: number } | null = null;
   const teacherLoad = new Map<string, number>();
   for (const item of planned) teacherLoad.set(item.teacherId, (teacherLoad.get(item.teacherId) ?? 0) + item.lessons);
@@ -146,7 +146,7 @@ export function placeLessons(planned: PlannedLesson[], busy = new Set<string>(),
       for (let count = 0; count < item.lessons; count++) {
         const perDay = (day: string) => placed.filter((lesson) =>
           lesson.sectionId === item.sectionId && lesson.subjectId === item.subjectId && lesson.day === day).length;
-        const free = TIMETABLE_SLOTS
+        const free = slots
           .filter(({ day, lesson }) => !taken.has(`${item.sectionId}|${day}|${lesson}`)
             && !taken.has(`${item.teacherId}|${day}|${lesson}`)
             && perDay(day) < 2)

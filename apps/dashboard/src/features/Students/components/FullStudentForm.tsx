@@ -33,9 +33,9 @@ const FullStudentForm = ({
 }) => {
   const { pop } = useDialog()
   const { t } = useTranslation()
-  const { role } = useViewerRole()
-  const canCreateFees = ['admin', 'principal', 'accounting'].includes(role ?? '')
-  const canAssignTransport = role === 'admin'
+  const { isSchoolWide, can } = useViewerRole()
+  const canCreateFees = isSchoolWide && can('create:fees')
+  const canAssignTransport = isSchoolWide && can('create:student-routes')
   const formSchema = canCreateFees ? fullStudentSchema : studentWithoutFeesSchema
   const [transportSelected, setTransportSelected] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)

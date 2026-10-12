@@ -16,6 +16,7 @@ import {
   FileText,
   GraduationCap,
   HandCoins,
+  House,
   KeyRound,
   LayoutDashboard,
   LayoutGrid,
@@ -23,6 +24,7 @@ import {
   Megaphone,
   Receipt,
   School,
+  Settings,
   ShieldAlert,
   ShieldCheck,
   Tag,
@@ -46,6 +48,8 @@ import {
  * declared here: they own a list view, and a list view needs a mark.
  */
 export const FEATURE_ICONS = {
+  home: House,
+  settings: Settings,
   dashboard: LayoutDashboard,
   notifications: BellRing,
   alerts: AlertTriangle,

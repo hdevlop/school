@@ -1,9 +1,8 @@
-import { composeGuards } from 'najm-guard';
-import { Can } from 'najm-auth';
-import { isAdministrator } from '../../auth';
+import { Can, CanSchoolWide } from '../../auth';
 
-export const canAccessSubject = composeGuards(Can('read:subjects'));
-export const canUpdateSubject = composeGuards(Can('update:subjects'), isAdministrator());
-export const canCreateSubject = composeGuards(Can('create:subjects'), isAdministrator());
-export const canDeleteSubject = composeGuards(Can('delete:subjects'), isAdministrator());
-export const canAccessAllSubjects = composeGuards(Can('read:subjects'), isAdministrator());
+export const canAccessSubject = () => Can('read:subjects');
+export const canUpdateSubject = () => Can('update:subjects');
+export const canCreateSubject = () => Can('create:subjects');
+export const canDeleteSubject = () => Can('delete:subjects');
+// The unfiltered catalog; a teacher reads the subjects of their own classes.
+export const canAccessAllSubjects = () => CanSchoolWide('read:subjects');

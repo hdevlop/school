@@ -55,7 +55,6 @@ function PaymentsTable({studentId}) {
       transactionRef: payment.transactionRef ?? undefined,
       checkNumber: payment.checkNumber ?? undefined,
       notes: payment.notes ?? undefined,
-      processedBy: payment.processor?.email ?? undefined,
     });
   };
 

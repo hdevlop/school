@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { ExpenseService } from './ExpenseService';
-import { isFinancial } from '../../../auth';
+import { CanSchoolWide } from '../../../auth';
 import {
   createExpenseDto,
   expenseApprovalDto,
@@ -23,7 +23,7 @@ export class ExpenseController {
   ) { }
 
   @Get()
-  @isFinancial()
+  @CanSchoolWide('read:expenses')
   @McpTool({ description: 'List all expenses', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getExpenses() {
@@ -31,7 +31,7 @@ export class ExpenseController {
   }
 
   @Get('/today')
-  @isFinancial()
+  @CanSchoolWide('read:expenses')
   @McpTool({ description: "List today's paid expenses with summary", readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getToday() {
@@ -39,7 +39,7 @@ export class ExpenseController {
   }
 
   @Get('/this-month')
-  @isFinancial()
+  @CanSchoolWide('read:expenses')
   @McpTool({ description: "List this month's paid expenses with summary. Dépenses de ce mois. مصاريف هذا الشهر.", readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getThisMonth() {
@@ -47,7 +47,7 @@ export class ExpenseController {
   }
 
   @Get('/summary')
-  @isFinancial()
+  @CanSchoolWide('read:expenses')
   @McpTool({ description: 'Get expense summary for dashboard', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getSummary() {
@@ -55,7 +55,7 @@ export class ExpenseController {
   }
 
   @Get('/pending')
-  @isFinancial()
+  @CanSchoolWide('read:expenses')
   @McpTool({ description: 'List expenses pending approval', readOnly: true })
   @ResMsg('expenses.success.retrieved')
   async getPendingApprovals() {
@@ -63,7 +63,7 @@ export class ExpenseController {
   }
 
   @Get('/date-range/:startDate/:endDate')
-  @isFinancial()
+  @CanSchoolWide('read:expenses')
   @Validate({ params: expenseDateRangeParam })
   @McpTool({ description: 'Get expenses within a date range', readOnly: true })
   @ResMsg('expenses.success.retrieved')
@@ -72,7 +72,7 @@ export class ExpenseController {
   }
 
   @Get('/:id')
-  @isFinancial()
+  @CanSchoolWide('read:expenses')
   @Validate({ params: expenseIdParam })
   @McpTool({ description: 'Get an expense by ID', readOnly: true })
   @ResMsg('expenses.success.retrieved')
@@ -81,7 +81,7 @@ export class ExpenseController {
   }
 
   @Post()
-  @isFinancial()
+  @CanSchoolWide('create:expenses')
   @Validate(createExpenseDto)
   @McpTool({ description: 'Create a new expense', confirm: { level: 'warning', message: 'confirm.expenses.create' } })
   @ResMsg('expenses.success.created')
@@ -90,7 +90,7 @@ export class ExpenseController {
   }
 
   @Post('/:id/approve')
-  @isFinancial()
+  @CanSchoolWide('update:expenses')
   @Validate({ params: expenseIdParam, body: expenseApprovalDto })
   @McpTool({ description: 'Approve or reject an expense', confirm: { level: 'warning', message: 'confirm.expenses.handleApproval' } })
   @ResMsg('expenses.success.updated')
@@ -99,7 +99,7 @@ export class ExpenseController {
   }
 
   @Post('/:id/payment')
-  @isFinancial()
+  @CanSchoolWide('update:expenses')
   @Validate({ params: expenseIdParam, body: expensePaymentDto })
   @McpTool({ description: 'Record a payment for an expense', confirm: { level: 'warning', message: 'confirm.expenses.recordPayment' } })
   @ResMsg('expenses.success.paymentRecorded')
@@ -108,7 +108,7 @@ export class ExpenseController {
   }
 
   @Put('/:id')
-  @isFinancial()
+  @CanSchoolWide('update:expenses')
   @Validate({ params: expenseIdParam, body: updateExpenseDto })
   @McpTool({ description: 'Update an expense by ID', confirm: { level: 'warning', message: 'confirm.expenses.update' } })
   @ResMsg('expenses.success.updated')
@@ -117,7 +117,7 @@ export class ExpenseController {
   }
 
   @Delete('/:id')
-  @isFinancial()
+  @CanSchoolWide('delete:expenses')
   @Validate({ params: expenseIdParam })
   @McpTool('Delete an expense by ID')
   @ResMsg('expenses.success.deleted')

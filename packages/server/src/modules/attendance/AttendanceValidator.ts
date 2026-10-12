@@ -1,4 +1,6 @@
+import { matchPermission } from 'najm-auth/client';
 import { Service, Err, I18n } from '../../najm';
+import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { AttendanceRepository } from './AttendanceRepository';
 import { StudentValidator } from '../students/StudentValidator';
 import { StaffValidator } from '../staff/StaffValidator';
@@ -122,20 +124,26 @@ export class AttendanceValidator {
     status: string,
     user: { role?: string; teacherId?: string | null },
   ) {
-    const isAdmin = user.role === 'admin' || user.role === 'principal';
+    // The route's update:attendance decides who corrects; a teacher corrects
+    // their own sections, a school-wide role any section and any transition.
+    const isSchoolWide = SCHOOL_WIDE_ROLES.includes(user.role ?? '');
     const isTeacherOfSection = await this.attendanceRepository.isTeacherInSection(user.teacherId ?? '', sectionId);
-    if (!isTeacherOfSection && !isAdmin) Err(403, this.at('notAuthorizedForSection'));
+    if (!isTeacherOfSection && !isSchoolWide) Err(403, this.at('notAuthorizedForSection'));
 
     const allowed: Record<string, string[]> = {
       absent: ['late', 'present'],
       late: ['present'],
       present: [],
     };
-    if (!allowed[oldStatus]?.includes(status) && !isAdmin) Err(400, this.at('invalidTransition'));
+    if (!allowed[oldStatus]?.includes(status) && !isSchoolWide) Err(400, this.at('invalidTransition'));
   }
 
-  ensureStaffAttendanceAuthorized(role?: string) {
-    if (role !== 'admin' && role !== 'principal') Err(403, this.at('staffRequiresAdmin'));
+  // Marking staff through the general attendance route asks for what the
+  // staff roster route asks for: manage:staff-attendance, school-wide.
+  ensureStaffAttendanceAuthorized(user: { role?: string; permissions?: string[] }) {
+    const allowed = SCHOOL_WIDE_ROLES.includes(user.role ?? '')
+      && matchPermission(user.permissions ?? [], 'manage:staff-attendance');
+    if (!allowed) Err(403, this.at('staffRequiresAdmin'));
   }
 
   ensureStaffRosterConsistent(items: StaffAttendanceRosterItemDto[]) {

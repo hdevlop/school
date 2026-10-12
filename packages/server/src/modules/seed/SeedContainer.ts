@@ -345,7 +345,7 @@ export function configureSeedContainer(seedContainer: Container) {
 
   registerSeedDeps(seedContainer, StaffRoleValidator, [StaffRoleRepository]);
   registerSeedDeps(seedContainer, StaffRoleService, [StaffRoleRepository, RoleService, PermissionService, StaffRoleValidator]);
-  registerSeedDeps(seedContainer, StaffValidator, [StaffRepository, StaffRoleRepository]);
+  registerSeedDeps(seedContainer, StaffValidator, [StaffRepository, StaffRoleRepository, PermissionService]);
   registerSeedDeps(seedContainer, StaffAssignmentRepository, []);
   registerSeedDeps(seedContainer, StaffService, [StaffRepository, StaffValidator, UserService, AuthService, StorageService, DriverRepository, StaffAssignmentRepository, VehicleAssignmentRepository, VehicleAssignmentService]);
 

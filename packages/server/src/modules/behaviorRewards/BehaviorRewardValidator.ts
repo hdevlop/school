@@ -1,4 +1,5 @@
 import { Err, I18n, Service } from '../../najm';
+import { SCHOOL_WIDE_ROLES } from '../../auth';
 import { BehaviorRewardRepository } from './BehaviorRewardRepository';
 
 export type BehaviorRewardActor = {
@@ -23,8 +24,10 @@ export class BehaviorRewardValidator {
     return record;
   }
 
+  // The route's permission decides who records; a teacher records for their
+  // own sections, a school-wide role for any student.
   ensureSupportedActor(actor: BehaviorRewardActor) {
-    if (actor.role !== 'admin' && actor.role !== 'teacher') {
+    if (actor.role !== 'teacher' && !SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) {
       Err(403, this.bt('forbidden'));
     }
   }
@@ -57,8 +60,8 @@ export class BehaviorRewardValidator {
     }
   }
 
-  ensureAdmin(actor: BehaviorRewardActor) {
-    if (actor.role !== 'admin') Err(403, this.bt('deleteAdminOnly'));
+  ensureSchoolWide(actor: BehaviorRewardActor) {
+    if (!SCHOOL_WIDE_ROLES.includes(actor.role ?? '')) Err(403, this.bt('deleteAdminOnly'));
   }
 
   ensureBehaviorDate(value: string) {
