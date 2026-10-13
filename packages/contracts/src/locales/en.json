@@ -897,7 +897,22 @@
       "rowView": "View",
       "rowEdit": "Edit",
       "rowDelete": "Delete",
-      "actionsColumn": "Actions"
+      "actionsColumn": "Actions",
+      "tableActions": "Table actions",
+      "export": "Export",
+      "import": "Import",
+      "print": "Print",
+      "importDescription": "Choose an XLSX, CSV or JSON file. Excel uses the first worksheet, with headers in its first row.",
+      "importFile": "XLSX, CSV or JSON file",
+      "importReading": "Reading file…",
+      "importPreview": "{{count}} row(s) ready to import. Preview of the first 5 rows:",
+      "importConfirm": "Import",
+      "importCancel": "Cancel",
+      "importFailed": "Import failed.",
+      "importDrop": "Drop a file here, or click to browse",
+      "importRemove": "Remove file",
+      "importColumns": "Expected columns",
+      "importRowCount": "{{count}} row(s)"
     },
     "pagination": {
       "rowsPerPage": "Rows/page",
@@ -2123,6 +2138,21 @@
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The student activates the account from the link.",
       "notSent": "The student was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
+    },
+    "import": {
+      "description": "Each row creates a student in the active school year. Class and section are matched by name, and an exported file imports back as is.",
+      "problem": "Row {{row}}: {{reason}}",
+      "created": "{{count}} student(s) imported",
+      "failed": "{{count}} row(s) could not be imported",
+      "reasons": {
+        "missingName": "the name is missing",
+        "invalidGender": "gender must be M or F, not \"{{value}}\"",
+        "invalidStatus": "unknown status \"{{value}}\"",
+        "unknownClass": "no class named \"{{value}}\"",
+        "unknownSection": "the class has no section named \"{{value}}\"",
+        "invalidDate": "\"{{value}}\" is not a YYYY-MM-DD date",
+        "duplicateCode": "student code \"{{value}}\" appears twice in the file"
+      }
     }
   },
   "parents": {

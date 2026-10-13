@@ -1001,7 +1001,22 @@
       "rowView": "Ver",
       "rowEdit": "Editar",
       "rowDelete": "Eliminar",
-      "actionsColumn": "Acciones"
+      "actionsColumn": "Acciones",
+      "tableActions": "Acciones de la tabla",
+      "export": "Exportar",
+      "import": "Importar",
+      "print": "Imprimir",
+      "importDescription": "Elija un archivo XLSX, CSV o JSON. Excel usa la primera hoja, con los encabezados en la primera fila.",
+      "importFile": "Archivo XLSX, CSV o JSON",
+      "importReading": "Leyendo el archivo…",
+      "importPreview": "{{count}} fila(s) lista(s) para importar. Vista previa de las 5 primeras filas:",
+      "importConfirm": "Importar",
+      "importCancel": "Cancelar",
+      "importFailed": "La importación falló.",
+      "importDrop": "Suelte un archivo aquí o haga clic para buscarlo",
+      "importRemove": "Quitar el archivo",
+      "importColumns": "Columnas esperadas",
+      "importRowCount": "{{count}} fila(s)"
     },
     "pagination": {
       "rowsPerPage": "Filas/página",
@@ -4052,6 +4067,21 @@
     "invitation": {
       "sent": "Correo de invitación enviado a {{email}}. El estudiante activa la cuenta desde el enlace.",
       "notSent": "El estudiante se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
+    },
+    "import": {
+      "description": "Cada fila crea un estudiante en el año escolar activo. La clase y la sección se reconocen por su nombre, y un archivo exportado se vuelve a importar tal cual.",
+      "problem": "Fila {{row}}: {{reason}}",
+      "created": "{{count}} estudiante(s) importado(s)",
+      "failed": "{{count}} fila(s) no se pudieron importar",
+      "reasons": {
+        "missingName": "falta el nombre",
+        "invalidGender": "el género debe ser M o F, no \"{{value}}\"",
+        "invalidStatus": "estado desconocido \"{{value}}\"",
+        "unknownClass": "no hay ninguna clase llamada \"{{value}}\"",
+        "unknownSection": "la clase no tiene ninguna sección llamada \"{{value}}\"",
+        "invalidDate": "\"{{value}}\" no es una fecha AAAA-MM-DD",
+        "duplicateCode": "el código de estudiante \"{{value}}\" aparece dos veces en el archivo"
+      }
     }
   },
   "cycles": {

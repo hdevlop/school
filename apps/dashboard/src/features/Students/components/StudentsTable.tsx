@@ -17,8 +17,12 @@ import { useStudentsTableFilters } from '../hooks/useStudentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
+import { createStudentApi } from '@/services/studentApi';
+import { buildStudentImport, STUDENT_IMPORT_COLUMNS } from '../config/studentImport';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
@@ -171,6 +175,38 @@ function StudentsTable() {
     });
   };
 
+  const queryClient = useQueryClient();
+  const toolbarLabels = useMemo(() => ({ importDescription: t('students.import.description') }), [t]);
+
+  // Rows are checked first and a file with any mistake creates nobody; the
+  // NTable dialog stays open and shows why. Students are then created one at
+  // a time, in the active year like the create form, each through the same
+  // validated route. A row the server refuses does not stop the others.
+  const handleImport = async (rows: Record<string, unknown>[]) => {
+    const { students: payloads, problems } = buildStudentImport(rows, newStudentClasses ?? [], await refetchBusinessDate());
+    if (problems.length) {
+      throw new Error(problems.slice(0, 5).map(({ row, reason, value }) =>
+        t('students.import.problem', { row, reason: t(`students.import.reasons.${reason}`, { value: value ?? '' }) })).join(' · '));
+    }
+
+    const failed: string[] = [];
+    for (const [index, payload] of payloads.entries()) {
+      try {
+        // The year header binds only to a request started inside the scope.
+        await withAcademicYear(activeYear, () => createStudentApi(payload));
+      } catch (cause) {
+        failed.push(t('students.import.problem', { row: index + 2, reason: cause instanceof Error ? cause.message : '' }));
+      }
+    }
+    await queryClient.invalidateQueries({ queryKey: ['students'] });
+
+    const created = payloads.length - failed.length;
+    if (created) toast.success(t('students.import.created', { count: created }));
+    if (failed.length) {
+      toast.error(t('students.import.failed', { count: failed.length }), { description: failed.slice(0, 5).join('\n') });
+    }
+  };
+
   const total = students?.length ?? 0;
 
   return (
@@ -200,6 +236,12 @@ function StudentsTable() {
         onBulkDelete={canDelete ? handleBulkDelete : undefined}
         rowSelection={canDelete ? rowSelection : undefined}
         onRowSelectionChange={canDelete ? setRowSelection : undefined}
+        dataActions={true}
+        toolbarActionDisplay='settings'
+        showImportButton={canCreate}
+        onDataChange={canCreate ? handleImport : undefined}
+        importColumns={STUDENT_IMPORT_COLUMNS}
+        toolbarLabels={toolbarLabels}
         loading={isStudentsLoading}
         error={hasFailedToLoad(error, students) ? error : null}
         renderError={(currentError) => (

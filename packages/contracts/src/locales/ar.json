@@ -1015,7 +1015,22 @@
       "rowView": "عرض",
       "rowEdit": "تعديل",
       "rowDelete": "حذف",
-      "actionsColumn": "الإجراءات"
+      "actionsColumn": "الإجراءات",
+      "tableActions": "إجراءات الجدول",
+      "export": "تصدير",
+      "import": "استيراد",
+      "print": "طباعة",
+      "importDescription": "اختر ملف XLSX أو CSV أو JSON. يستخدم Excel الورقة الأولى، مع العناوين في الصف الأول.",
+      "importFile": "ملف XLSX أو CSV أو JSON",
+      "importReading": "جارٍ قراءة الملف…",
+      "importPreview": "{{count}} صف جاهز للاستيراد. معاينة أول 5 صفوف:",
+      "importConfirm": "استيراد",
+      "importCancel": "إلغاء",
+      "importFailed": "فشل الاستيراد.",
+      "importDrop": "أفلت ملفًا هنا أو انقر للتصفح",
+      "importRemove": "إزالة الملف",
+      "importColumns": "الأعمدة المتوقعة",
+      "importRowCount": "{{count}} صف"
     },
     "pagination": {
       "rowsPerPage": "صفوف/صفحة",
@@ -4066,6 +4081,21 @@
     "invitation": {
       "sent": "تم إرسال بريد الدعوة إلى {{email}}. يفعّل التلميذ حسابه من الرابط.",
       "notSent": "تم إنشاء التلميذ، لكن تعذّر إرسال بريد الدعوة. أعد إرساله عبر «إعادة تعيين الوصول» في صفحة المستخدمين."
+    },
+    "import": {
+      "description": "كل صف ينشئ تلميذًا في السنة الدراسية النشطة. يتم التعرف على القسم والفوج بالاسم، ويمكن إعادة استيراد الملف المُصدَّر كما هو.",
+      "problem": "الصف {{row}}: {{reason}}",
+      "created": "تم استيراد {{count}} تلميذ",
+      "failed": "تعذّر استيراد {{count}} صف",
+      "reasons": {
+        "missingName": "الاسم مفقود",
+        "invalidGender": "يجب أن يكون الجنس M أو F، وليس \"{{value}}\"",
+        "invalidStatus": "حالة غير معروفة \"{{value}}\"",
+        "unknownClass": "لا يوجد قسم باسم \"{{value}}\"",
+        "unknownSection": "لا يحتوي القسم على فوج باسم \"{{value}}\"",
+        "invalidDate": "\"{{value}}\" ليس تاريخًا بصيغة YYYY-MM-DD",
+        "duplicateCode": "رمز التلميذ \"{{value}}\" مكرر في الملف"
+      }
     }
   },
   "cycles": {

@@ -645,7 +645,22 @@
       "rowView": "Voir",
       "rowEdit": "Modifier",
       "rowDelete": "Supprimer",
-      "actionsColumn": "Actions"
+      "actionsColumn": "Actions",
+      "tableActions": "Actions du tableau",
+      "export": "Exporter",
+      "import": "Importer",
+      "print": "Imprimer",
+      "importDescription": "Choisissez un fichier XLSX, CSV ou JSON. Excel utilise la première feuille, avec les en-têtes sur la première ligne.",
+      "importFile": "Fichier XLSX, CSV ou JSON",
+      "importReading": "Lecture du fichier…",
+      "importPreview": "{{count}} ligne(s) prête(s) à importer. Aperçu des 5 premières lignes :",
+      "importConfirm": "Importer",
+      "importCancel": "Annuler",
+      "importFailed": "Échec de l’importation.",
+      "importDrop": "Déposez un fichier ici ou cliquez pour parcourir",
+      "importRemove": "Retirer le fichier",
+      "importColumns": "Colonnes attendues",
+      "importRowCount": "{{count}} ligne(s)"
     },
     "pagination": {
       "rowsPerPage": "Lignes/page",
@@ -4202,6 +4217,21 @@
     "invitation": {
       "sent": "E-mail d'invitation envoyé à {{email}}. L'élève active son compte depuis le lien.",
       "notSent": "L'élève a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
+    },
+    "import": {
+      "description": "Chaque ligne crée un élève dans l’année scolaire active. La classe et la section sont reconnues par leur nom, et un fichier exporté se réimporte tel quel.",
+      "problem": "Ligne {{row}} : {{reason}}",
+      "created": "{{count}} élève(s) importé(s)",
+      "failed": "{{count}} ligne(s) n’ont pas pu être importée(s)",
+      "reasons": {
+        "missingName": "le nom est manquant",
+        "invalidGender": "le genre doit être M ou F, pas « {{value}} »",
+        "invalidStatus": "statut inconnu « {{value}} »",
+        "unknownClass": "aucune classe nommée « {{value}} »",
+        "unknownSection": "la classe n’a pas de section nommée « {{value}} »",
+        "invalidDate": "« {{value}} » n’est pas une date AAAA-MM-JJ",
+        "duplicateCode": "le code élève « {{value}} » apparaît deux fois dans le fichier"
+      }
     }
   },
   "subjects": {
