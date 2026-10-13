@@ -5,7 +5,7 @@ import { useTranslation } from 'najm-i18n/react';
 import { CheckCircle2, Printer } from 'lucide-react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { usePayments } from '../../hooks/usePayments';
-import { printReceipt } from './printReceipt';
+import { usePrintReceipt } from './usePrintReceipt';
 
 interface PaymentRecordedPromptProps {
   /** The payment row the record endpoint returned (no student or processor join). */
@@ -21,6 +21,7 @@ export const PaymentRecordedPrompt = ({ payment, student }: PaymentRecordedPromp
   const { t } = useTranslation();
   const { pop } = useDialog();
   const { currency, majorMoney } = useSchoolFormat();
+  const { printReceipt, isReceiptLoading } = usePrintReceipt();
   // The record response is the bare row; read the student's name and code
   // as on a reprint from the payments table.
   const { payment: recorded, isPaymentLoading } = usePayments({ paymentId: payment.id, enabled: false });
@@ -59,7 +60,7 @@ export const PaymentRecordedPrompt = ({ payment, student }: PaymentRecordedPromp
           {t('common.close')}
         </NButton>
         {canPrint && (
-          <NButton onClick={handlePrint} loading={isPaymentLoading} disabled={isPaymentLoading} className="gap-2">
+          <NButton onClick={handlePrint} loading={isPaymentLoading || isReceiptLoading} disabled={isPaymentLoading || isReceiptLoading} className="gap-2">
             <Printer className="h-4 w-4" />
             {t('payments.dialogs.printReceipt')}
           </NButton>

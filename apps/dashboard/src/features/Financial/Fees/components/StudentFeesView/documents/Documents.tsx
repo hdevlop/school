@@ -4,13 +4,14 @@ import { NajmScroll, NButton, NSkeleton } from 'najm-kit';
 
 import { FileText, Printer } from "lucide-react";
 import { usePayments } from "@/features/Financial/Payment/hooks/usePayments";
-import { printReceipt } from "@/features/Financial/Payment/components/ReceiptPrint/printReceipt";
+import { usePrintReceipt } from "@/features/Financial/Payment/components/ReceiptPrint/usePrintReceipt";
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTranslation } from 'najm-i18n/react';
 
 export const Documents = ({ studentId }) => {
   const { t } = useTranslation();
   const { currency, displayDateOnly, majorMoney } = useSchoolFormat();
+  const { printReceipt, isReceiptLoading } = usePrintReceipt();
   const { studentPayments, isStudentPaymentsLoading } = usePayments({ studentId });
 
   const payments = Array.isArray(studentPayments) ? studentPayments : [];
@@ -99,6 +100,7 @@ export const Documents = ({ studentId }) => {
                   size="sm"
                   variant="outline"
                   onClick={() => handlePrint(payment)}
+                  disabled={isReceiptLoading}
                   className="gap-1.5"
                 >
                   <Printer className="w-4 h-4" />

@@ -8,6 +8,29 @@ import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 const toAmount = (value: unknown) => Number(value ?? 0) || 0;
 
+// NTable renders cell functions as components. Keep this identity stable when
+// allocation changes rebuild the columns, so typing does not remount the input.
+const AllocatedAmountCell = ({ row }: any) => {
+   const inst = row.original;
+   const isSelected = usePaymentStore((state) => Boolean(state.selectedInstallments[inst.id]));
+   const allocatedAmount = usePaymentStore((state) => state.selectedInstallments[inst.id]?.allocatedAmount ?? '');
+   const updateAllocatedAmount = usePaymentStore((state) => state.updateAllocatedAmount);
+
+   return (
+      <input
+         type="number"
+         value={allocatedAmount}
+         onChange={(e) => updateAllocatedAmount(inst.id, e.target.value)}
+         disabled={!isSelected || !isInstallmentPayable(inst)}
+         className="w-24 rounded-md border border-gray-300 px-2 py-1.5 text-right text-xs transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
+         step="0.01"
+         min="0"
+         max={getInstallmentAvailableAmount(inst)}
+         placeholder="0"
+      />
+   );
+};
+
 const StatusBadge = ({ status, reservedAmount = 0, availableAmount = 0 }) => {
    const { t } = useTranslation();
    const isReserved = status !== 'paid' && toAmount(reservedAmount) > 0 && toAmount(availableAmount) <= 0;
@@ -37,7 +60,6 @@ const FeeInstallmentsTable = ({
    selectedInstallments,
    toggleInstallment,
    toggleAllFeeInstallments,
-   updateAllocatedAmount,
 }: any) => {
    const { t } = useTranslation();
    const { majorMoney, displayDateOnly } = useSchoolFormat();
@@ -158,26 +180,7 @@ const FeeInstallmentsTable = ({
          accessorKey: 'allocatedAmount',
          header: t('installments.table.allocate'),
          enableSorting: false,
-         cell: ({ row }: any) => {
-            const inst = row.original;
-            const isSelected = selectedInstallments[inst.id];
-            const availableAmount = getInstallmentAvailableAmount(inst);
-            const isPayable = isInstallmentPayable(inst);
-
-            return (
-               <input
-                  type="number"
-                  value={isSelected?.allocatedAmount ?? ''}
-                  onChange={(e) => updateAllocatedAmount(inst.id, e.target.value)}
-                  disabled={!isSelected || !isPayable}
-                  className="w-24 rounded-md border border-gray-300 px-2 py-1.5 text-right text-xs transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100"
-                  step="0.01"
-                  min="0"
-                  max={availableAmount}
-                  placeholder="0"
-               />
-            );
-         },
+         cell: AllocatedAmountCell,
       },
       {
          accessorKey: 'status',
@@ -193,7 +196,7 @@ const FeeInstallmentsTable = ({
             </div>
          ),
       },
-   ], [allPayableSelected, visibleFee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, updateAllocatedAmount, t, majorMoney, displayDateOnly]);
+   ], [allPayableSelected, visibleFee, payableRows.length, selectedInstallments, somePayableSelected, toggleAllFeeInstallments, toggleInstallment, t, majorMoney, displayDateOnly]);
 
    const nothingDue = visibleRows.length === 0 && hiddenCount > 0;
 
@@ -257,7 +260,6 @@ export const InstallmentList = ({ studentFees }) => {
    const selectedInstallments = usePaymentStore((state) => state.selectedInstallments);
    const toggleInstallment = usePaymentStore((state) => state.toggleInstallment);
    const toggleAllFeeInstallments = usePaymentStore((state) => state.toggleAllFeeInstallments);
-   const updateAllocatedAmount = usePaymentStore((state) => state.updateAllocatedAmount);
    const [expandedFees, setExpandedFees] = useState({});
 
    useEffect(() => {
@@ -362,7 +364,6 @@ export const InstallmentList = ({ studentFees }) => {
                            selectedInstallments={selectedInstallments}
                            toggleInstallment={toggleInstallment}
                            toggleAllFeeInstallments={toggleAllFeeInstallments}
-                           updateAllocatedAmount={updateAllocatedAmount}
                         />
                      )}
                   </div>

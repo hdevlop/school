@@ -8,7 +8,7 @@ import PaymentCard from './PaymentCard';
 import PaymentEditForm from './PaymentEditForm';
 import { usePaymentsTableColumns } from '../hooks/usePaymentsTableColumns';
 import { usePaymentsTableFilters } from '../hooks/usePaymentsTableFilters';
-import { printReceipt } from './ReceiptPrint/printReceipt';
+import { usePrintReceipt } from './ReceiptPrint/usePrintReceipt';
 import { Printer, SearchX } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -19,6 +19,7 @@ import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewin
 function PaymentsTable({studentId}) {
   const { t } = useTranslation();
   const { currency } = useSchoolFormat();
+  const { printReceipt, isReceiptLoading } = usePrintReceipt();
   const { viewingYear } = useViewingAcademicYear();
   // The per-student history includes every year. Only the school-wide list
   // returns the portion of each receipt allocated to a selected fee year.
@@ -85,6 +86,7 @@ function PaymentsTable({studentId}) {
               variant="outline"
               size="sm"
               onClick={() => handlePrint(payment)}
+              disabled={isReceiptLoading}
               className="gap-2 self-start"
             >
               <Printer className="w-4 h-4" />

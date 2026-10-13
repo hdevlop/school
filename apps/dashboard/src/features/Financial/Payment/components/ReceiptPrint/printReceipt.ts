@@ -14,6 +14,7 @@ export interface ReceiptData {
   checkNumber?: string;
   notes?: string;
   schoolName?: string;
+  schoolLogo?: string;
   schoolAddress?: string;
   schoolPhone?: string;
 }
@@ -60,6 +61,9 @@ export function buildReceiptHtml(data: ReceiptData) {
   const school = data.schoolName ?? 'École Privée';
   const address = data.schoolAddress ?? '';
   const phone = data.schoolPhone ?? '';
+  // Only image URLs are accepted; attributes still go through HTML escaping.
+  const logo = data.schoolLogo?.trim();
+  const logoUrl = logo && /^(https?:\/\/|\/(?!\/))/i.test(logo) ? logo : undefined;
   const methodFR = METHOD_FR[data.paymentMethod] ?? data.paymentMethod;
   const methodAR = METHOD_AR[data.paymentMethod] ?? data.paymentMethod;
   const amountWords = data.currency === 'MAD' ? amountInWordsFR(data.amount) : '';
@@ -98,6 +102,14 @@ export function buildReceiptHtml(data: ReceiptData) {
     }
     .header { text-align: center; padding-bottom: 2mm; }
     .header h1 { font-size: 15px; font-weight: 700; }
+    .school-logo {
+      display: block;
+      max-width: 48mm;
+      max-height: 20mm;
+      object-fit: contain;
+      margin: 0 auto 2mm;
+      filter: grayscale(1) contrast(1.5);
+    }
     .header p { margin-top: 1mm; }
     .receipt-title { font-size: 13px; font-weight: 700; margin-top: 2mm; }
     .receipt-number { font-size: 11px; }
@@ -128,6 +140,7 @@ export function buildReceiptHtml(data: ReceiptData) {
 <body>
 <div class="page">
   <header class="header">
+    ${logoUrl ? `<img class="school-logo" src="${escapeHtml(logoUrl)}" alt="" />` : ''}
     <h1>${escapeHtml(school)}</h1>
     ${address ? `<p>${escapeHtml(address)}</p>` : ''}
     ${phone ? `<p>Tél : ${escapeHtml(phone)}</p>` : ''}
