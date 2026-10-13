@@ -1,4 +1,4 @@
-import { cancel, confirm, isCancel, select, text as promptText } from '@clack/prompts';
+import { cancel, confirm, isCancel, multiselect, select, text as promptText } from '@clack/prompts';
 import { getConfiguredSeedAcademicYear, getSeedAcademicYear, parseSeedAcademicYear } from './scripts/shared/academic-year';
 
 const production = process.env.NODE_ENV === 'production';
@@ -10,7 +10,9 @@ const help = `School seed commands:
   bun seed demo --year=2025-2026 --resume-from=announcements  Resume after Payroll
   bun seed history         Seed the last 3 years up to today; the same students move up each year
   bun seed history --years=4  Seed a longer history
-  bun seed reset-demo      Delete all school data
+  bun seed academic        Add the default classes, sections A-C and subjects for a year
+  bun seed academic --year=2026-2027 --levels=maternelle,primaire,college  Without a prompt
+  bun seed reset-demo      Delete school data; classes, sections and subjects stay
   bun run seed:admin       Create or reset the administrator
 ${production ? '' : '  bun seed demo-ui         Open the development demo generator\n'}`;
 
@@ -32,7 +34,8 @@ if (!command) {
       { value: 'admin', label: 'Create or reset administrator' },
       { value: 'demo', label: 'Add demo data' },
       { value: 'history', label: 'Seed 3 years of demo history', hint: 'empty school, students promoted each year' },
-      { value: 'reset-demo', label: 'Delete all school data', hint: 'destructive' },
+      { value: 'academic', label: 'Add classes, sections and subjects', hint: 'default Moroccan levels; no people' },
+      { value: 'reset-demo', label: 'Delete school data', hint: 'destructive; keeps classes, sections and subjects' },
       ...(!production ? [{ value: 'demo-ui', label: 'Open development demo generator' }] : []),
     ],
   });
@@ -43,53 +46,85 @@ if (!command) {
   command = choice;
 }
 
+const hasFlag = (name: string) => process.argv.slice(3).some((value) => value === name || value.startsWith(`${name}=`));
+const interactive = () => process.stdin.isTTY && process.stdout.isTTY;
+
+/** Adds `--year` from a prompt; `offsets` are the other years offered, relative to the current one. */
+async function promptForYear(message: string, offsets: number[]) {
+  const current = getSeedAcademicYear();
+  const start = Number(current.slice(0, 4));
+  const year = await select({
+    message,
+    options: [
+      { value: current, label: `${current} (current teaching year)` },
+      ...offsets.map((offset) => ({
+        value: `${start + offset}-${start + offset + 1}`,
+        label: `${start + offset}-${start + offset + 1}`,
+      })),
+      { value: 'custom', label: 'Enter another academic year' },
+    ],
+  });
+  if (isCancel(year)) {
+    cancel('Seed cancelled; no data was changed.');
+    process.exit(0);
+  }
+  let chosenYear = year;
+  if (year === 'custom') {
+    const entered = await promptText({
+      message: 'Academic year (YYYY-YYYY)',
+      placeholder: current,
+      validate: (value) => {
+        try { parseSeedAcademicYear(value); return; }
+        catch { return 'Enter consecutive years, for example 2025-2026'; }
+      },
+    });
+    if (isCancel(entered)) {
+      cancel('Seed cancelled; no data was changed.');
+      process.exit(0);
+    }
+    chosenYear = parseSeedAcademicYear(entered);
+  }
+  process.argv.push(`--year=${chosenYear}`);
+}
+
 switch (command) {
   case 'admin':
     await import('./scripts/admin/seed-admin');
     break;
   case 'demo':
-    if (!process.argv.slice(3).some((value) => value === '--year' || value.startsWith('--year='))) {
-      if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    if (!hasFlag('--year')) {
+      if (!interactive()) {
         throw new Error('Demo seed requires --year=YYYY-YYYY without an interactive terminal.');
       }
-      const current = getSeedAcademicYear();
-      const start = Number(current.slice(0, 4));
-      const year = await select({
-        message: 'Choose the academic year for demo data',
-        options: [
-          { value: current, label: `${current} (current teaching year)` },
-          ...[1, 2, 3].map((offset) => ({
-            value: `${start - offset}-${start - offset + 1}`,
-            label: `${start - offset}-${start - offset + 1}`,
-          })),
-          { value: 'custom', label: 'Enter another academic year' },
-        ],
-      });
-      if (isCancel(year)) {
-        cancel('Seed cancelled; no data was changed.');
-        process.exit(0);
-      }
-      let chosenYear = year;
-      if (year === 'custom') {
-        const entered = await promptText({
-          message: 'Academic year (YYYY-YYYY)',
-          placeholder: current,
-          validate: (value) => {
-            try { parseSeedAcademicYear(value); return; }
-            catch { return 'Enter consecutive years, for example 2025-2026'; }
-          },
-        });
-        if (isCancel(entered)) {
-          cancel('Seed cancelled; no data was changed.');
-          process.exit(0);
-        }
-        chosenYear = parseSeedAcademicYear(entered);
-      }
-      process.argv.push(`--year=${chosenYear}`);
+      await promptForYear('Choose the academic year for demo data', [-1, -2, -3]);
     }
     console.log(`Demo academic year: ${getConfiguredSeedAcademicYear()}`);
     await import('./scripts/demo/seed-demo');
     break;
+  case 'academic': {
+    if (!hasFlag('--year')) {
+      if (!interactive()) {
+        throw new Error('Academic seed requires --year=YYYY-YYYY without an interactive terminal.');
+      }
+      await promptForYear('Choose the academic year for the classes', [1]);
+    }
+    if (!hasFlag('--levels') && interactive()) {
+      const { ACADEMIC_LEVELS } = await import('./scripts/shared/academic-structure');
+      const levels = await multiselect({
+        message: 'Choose the levels this school teaches',
+        options: ACADEMIC_LEVELS.map((level) => ({ value: level, label: level })),
+        initialValues: ACADEMIC_LEVELS,
+        required: true,
+      });
+      if (isCancel(levels)) {
+        cancel('Seed cancelled; no data was changed.');
+        process.exit(0);
+      }
+      process.argv.push(`--levels=${levels.join(',')}`);
+    }
+    await import('./scripts/school/seed-academic');
+    break;
+  }
   case 'history': {
     const { runHistorySeedCommand } = await import('./scripts/demo/seed-history');
     await runHistorySeedCommand(process.argv.slice(3));
@@ -100,7 +135,7 @@ switch (command) {
       throw new Error('Demo reset requires an interactive terminal.');
     }
     const confirmed = await confirm({
-      message: 'Delete all school data? This cannot be undone.',
+      message: 'Delete all school data except classes, sections and subjects? This cannot be undone.',
       initialValue: false,
     });
     if (isCancel(confirmed) || !confirmed) {

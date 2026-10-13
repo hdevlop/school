@@ -138,4 +138,17 @@ describe('seed reset foreign-key order', () => {
     expect(at('staffService.clearAssignmentsForSeedReset')).toBeLessThan(at('vehicleService.deleteAll'));
     expect(calls.at(-1)).toBe('academicYears.clearForSeedReset');
   });
+
+  it('keeps classes, sections and subjects', async () => {
+    const calls: string[] = [];
+    const recorder = new Proxy({}, {
+      get: (_service, field) => new Proxy({}, {
+        get: (_method, method) => async () => { calls.push(`${String(field)}.${String(method)}`); },
+      }),
+    });
+
+    await SeedService.prototype.clearAllData.call(recorder);
+
+    expect(calls.filter(call => /^(classService|sectionService|subjectService)\./.test(call))).toEqual([]);
+  });
 });

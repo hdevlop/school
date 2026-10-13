@@ -85,6 +85,7 @@
     "seed:role-permissions": "bun run --cwd packages/seed seed:role-permissions",
     "seed:staff": "bun run --cwd packages/seed seed:staff",
     "seed:school": "bun run --cwd packages/seed seed:school",
+    "seed:academic": "bun run --cwd packages/seed seed:academic",
     "seed:history:base": "bun packages/server/tests/academicYears/fixtures/seedAlertsHistory.ts",
     "seed:history:alerts": "bun packages/server/tests/academicYears/fixtures/seedAlertsHistoryCases.ts",
     "seed:history:announcements": "bun packages/server/tests/academicYears/fixtures/seedAnnouncementsHistoryCases.ts",

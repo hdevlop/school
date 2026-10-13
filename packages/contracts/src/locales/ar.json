@@ -3722,7 +3722,7 @@
       "confirmDescription": "لا يمكن التراجع عن هذا الإجراء",
       "confirmTitle": "تأكيد الإجراء",
       "warningMessage": "هذا إجراء مدمر",
-      "success": "تم إكمال Clear بنجاح"
+      "success": "تم حذف بيانات المدرسة مع الاحتفاظ بحساب المدير والمستويات والأقسام والمواد."
     },
     "notifications": {
       "academicAlerts": "التنبيهات الأكاديمية",

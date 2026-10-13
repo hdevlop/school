@@ -1178,7 +1178,7 @@
       "confirmDescription": "This will permanently delete all data from the database.",
       "warningMessage": "This action will delete all data from the system.",
       "confirm": "Clear All Data",
-      "success": "All data cleared successfully. Admin account preserved."
+      "success": "School data cleared. The admin account, classes, sections and subjects were kept."
     },
     "notifications": {
       "title": "Notification Settings",

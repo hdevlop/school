@@ -15,9 +15,6 @@ import {
   VehicleService,
   DriverService,
   ParentService,
-  SectionService,
-  ClassService,
-  SubjectService,
   FeeTypeService,
   SettingsService,
   AcademicYearRepository,
@@ -66,9 +63,6 @@ runSeedTask('demo reset', async (server) => {
   const vehicleService = await server.container.resolve(VehicleService);
   const driverService = await server.container.resolve(DriverService);
   const parentService = await server.container.resolve(ParentService);
-  const sectionService = await server.container.resolve(SectionService);
-  const classService = await server.container.resolve(ClassService);
-  const subjectService = await server.container.resolve(SubjectService);
   const feeTypeService = await server.container.resolve(FeeTypeService);
   const settingsService = await server.container.resolve(SettingsService);
   const academicYearRepository = await server.container.resolve(AcademicYearRepository);
@@ -78,7 +72,9 @@ runSeedTask('demo reset', async (server) => {
   const classRoutineService = await server.container.resolve(ClassRoutineService);
   const rolloverService = await server.container.resolve(RolloverService);
 
-  console.log('⚠️  WARNING: This will delete all school data!\n');
+  // Classes, sections and subjects are the Moroccan levels every school starts
+  // from; everything that points at them is cleared first, so they stay.
+  console.log('⚠️  WARNING: This will delete all school data except classes, sections and subjects!\n');
   console.log('🧹 Clearing all school data...');
 
   await classRoutineService.clearForSeedReset();
@@ -168,15 +164,6 @@ runSeedTask('demo reset', async (server) => {
   await parentService.clearForSeedReset();
   console.log('✅ Parents cleared');
 
-  await sectionService.clearForSeedReset();
-  console.log('✅ Sections cleared');
-
-  await classService.clearForSeedReset();
-  console.log('✅ Classes cleared');
-
-  await subjectService.clearForSeedReset();
-  console.log('✅ Subjects cleared');
-
   await feeTypeService.deleteAll();
   console.log('✅ Fee types cleared');
 
@@ -185,5 +172,5 @@ runSeedTask('demo reset', async (server) => {
   console.log('Academic-year registry cleared');
   console.log('✅ Settings cleared');
 
-  console.log('\n✨ All school data cleared successfully!');
+  console.log('\n✨ School data cleared. Classes, sections and subjects were kept.');
 });

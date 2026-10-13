@@ -1112,7 +1112,7 @@
       "confirmDescription": "Cela supprimera définitivement toutes les données de la base de données.",
       "confirmTitle": "Effacer Toutes les Données",
       "warningMessage": "Cette action supprimera tous les véhicules, opérateurs, opérations, enregistrements de maintenance, alertes et données utilisateur.",
-      "success": "Clear terminé avec succès"
+      "success": "Données de l’école effacées. Le compte administrateur, les classes, les sections et les matières ont été conservés."
     },
     "academic": {
       "semesterPlaceholder": "Semestre",

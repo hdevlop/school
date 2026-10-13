@@ -3708,7 +3708,7 @@
       "confirmDescription": "Esta acción no se puede deshacer",
       "confirmTitle": "Confirmar acción",
       "warningMessage": "Esta es una acción destructiva",
-      "success": "Clear completado correctamente"
+      "success": "Datos del colegio eliminados. Se conservaron la cuenta de administrador, las clases, las secciones y las asignaturas."
     },
     "notifications": {
       "academicAlerts": "Alertas académicas",
