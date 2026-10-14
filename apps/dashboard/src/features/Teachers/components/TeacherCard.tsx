@@ -3,7 +3,7 @@
 import React from 'react';
 import { Phone, GraduationCap, Mail } from 'lucide-react';
 import { NAvatar, NBadge } from 'najm-kit';
-import { NSectionInfo } from 'najm-kit';
+import { NCardInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { Label } from 'najm-kit';
 import { useRouter } from 'next/navigation';
@@ -49,10 +49,12 @@ const TeacherCard = ({ data }) => {
             <NAvatar src={teacher?.image} fallback={teacher.name} size="lg" version={teacher?.updatedAt} />
          </div>
 
-         <div className="flex-1 flex flex-col gap-2">
+         {/* min-w-0 lets a long name or email shrink to the card instead of
+             widening the row and pushing the avatar out of view. */}
+         <div className="flex min-w-0 flex-1 flex-col gap-2">
 
-            <div className='flex flex-col gap-1'>
-               <Label className="text-md font-bold">
+            <div className='flex min-w-0 flex-col gap-1'>
+               <Label className="text-md block truncate font-bold">
                   {teacher.name}
                </Label>
 
@@ -65,30 +67,27 @@ const TeacherCard = ({ data }) => {
 
             <div className="space-y-2">
 
-               <NSectionInfo
+               {/* NCardInfo truncates to the card width, so a long email
+                   ends in an ellipsis instead of running under the border. */}
+               <NCardInfo
                   icon={Phone}
-                  iconColor="text-muted-foreground"
                   label={t('teachers.table.phone')}
                   value={teacher.phone}
                />
 
-               <NSectionInfo
+               <NCardInfo
                   icon={Mail}
-                  iconColor="text-muted-foreground"
                   label={t('teachers.table.email')}
                   value={teacher.email}
-                  maxChars={22}
                />
 
-               <NSectionInfo
+               <NCardInfo
                   icon={GraduationCap}
-                  iconColor="text-primary"
                   label={t('teachers.table.classes')}
                   value={getAllClasses()}
-                  valueColor="text-primary"
+                  iconClassName="text-primary"
+                  valueClassName="text-primary"
                />
-
-
             </div>
          </div>
       </div>

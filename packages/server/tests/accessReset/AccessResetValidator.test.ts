@@ -93,6 +93,20 @@ describe('AccessResetValidator — supported account classes', () => {
     expect(resolved.temporaryCredential).toBeUndefined();
   });
 
+  // No invitation could be sent to a parent created without an email, so the
+  // CIN on file is their way in.
+  it('sends a pending parent with no email down the credential path', async () => {
+    for (const email of [null, '', '  ']) {
+      const validator = validatorWith({
+        account: account({ roleName: 'parent', status: 'pending', email }),
+        parent: { id: 'p1', cin: 'BB46123' },
+      });
+      const resolved = await validator.resolveTarget('user-1', ACTOR);
+      expect(resolved.mode).toBe('parent_credential_setup');
+      expect(resolved.temporaryCredential).toBe('bb46123');
+    }
+  });
+
   it('mails an active student', async () => {
     const validator = validatorWith({
       account: account({ roleName: 'student', status: 'active' }),
@@ -193,6 +207,18 @@ describe('AccessResetValidator — refusals', () => {
       validatorWith({ account: account({ roleName: 'parent' }), parent: { id: 'p1', cin: '???' } }),
       'parentCinInvalid',
     );
+  });
+
+  it('refuses to mail an account that has no email', async () => {
+    const cases: Rows[] = [
+      { account: account({ roleName: 'student', status: 'active', email: null }), student: { id: 's1', status: 'active' } },
+      { account: account({ roleName: 'student', status: 'pending', email: null }), student: { id: 's1', status: 'active' } },
+      {
+        account: account({ roleName: 'secretary', status: 'active', email: null }),
+        staff: { id: 'st1', userId: 'user-1', accessRoleId: 'role-1', status: 'active' },
+      },
+    ];
+    for (const rows of cases) await expectRefusal(validatorWith(rows), 'noEmail');
   });
 
   it('refuses a student whose enrolment is no longer current', async () => {

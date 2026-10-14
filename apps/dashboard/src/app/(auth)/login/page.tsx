@@ -12,10 +12,18 @@ import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
 
-// `identifier` is Najm Auth v3's wire field. School authenticates by email, so
-// the value is still validated and labelled as one.
+// `identifier` is Najm Auth's wire field. An account is reached by its email,
+// its phone, or both, so either is accepted here; the server normalizes a
+// local number such as 0612345678 to the stored international form.
+const PHONE_IDENTIFIER = /^\+?[\d\s().-]{8,}$/;
 const loginSchema = z.object({
-  identifier: z.string().email({ message: 'Invalid mail address' }),
+  identifier: z
+    .string()
+    .trim()
+    .refine(
+      (value) => z.string().email().safeParse(value).success || PHONE_IDENTIFIER.test(value),
+      { message: 'Enter your email address or phone number' },
+    ),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
   rememberMe: z.boolean()
 })
@@ -123,10 +131,10 @@ const Login = () => {
           <FormInput
             name='identifier'
             type='text'
-            formLabel={t('auth.form.email')}
-            placeholder={t('auth.form.emailPlaceholder')}
+            formLabel={t('auth.form.emailOrPhone')}
+            placeholder={t('auth.form.emailOrPhonePlaceholder')}
             variant='default'
-            icon="Mail"
+            icon="User"
           />
 
           <FormInput

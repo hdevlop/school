@@ -241,7 +241,7 @@ ignore `bun.lock` and the `overrides` block that pins the Najm versions.
 - `bun run db:check`
 - `bun run seed:admin`
 - `bun run seed:school`
-- `bun run seed:academic` (default classes, sections A-C and subjects; no people)
+- `bun run seed:academic` (default classes, sections A-C, subjects and fee types; no people)
 - `bun run seed:demo`
 - `bun run seed:full`
 - `bun run reset:demo`

@@ -5,6 +5,7 @@ import { UserService } from '../../../auth';
 import { StorageService } from 'najm-storage';
 import { pickProps } from '../../../shared';
 import { resolveUserPassword } from '../../../shared/userPassword';
+import { loginIdentity, loginIdentityUpdate } from '../../../shared/loginIdentity';
 import { nanoid } from 'nanoid';
 import { eq } from 'drizzle-orm';
 import { StaffService } from '../../staff/StaffService';
@@ -90,7 +91,7 @@ export class DriverService {
 
     const user = await this.userService.create({
       id: data.userId,
-      email: data.email,
+      ...loginIdentity(data),
       name: data.name,
       image,
       password: resolveUserPassword(data.password),
@@ -136,7 +137,7 @@ export class DriverService {
 
   async update(id: string, data: UpdateDriverDto) {
     const USER_UPDATE_KEYS = [
-      'name', 'email', 'image', 'password'
+      'name', 'image', 'password'
     ];
 
     const STAFF_UPDATE_KEYS = [
@@ -152,7 +153,7 @@ export class DriverService {
     await this.driverValidator.validate(data, id);
 
     const driver = await this.driverRepository.getById(id);
-    const userData = pickProps(data, USER_UPDATE_KEYS);
+    const userData = { ...pickProps(data, USER_UPDATE_KEYS), ...loginIdentityUpdate(data, driver) };
     const staffData = pickProps(data, STAFF_UPDATE_KEYS);
     const driverData = pickProps(data, DRIVER_UPDATE_KEYS);
 

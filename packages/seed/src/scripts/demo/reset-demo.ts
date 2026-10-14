@@ -15,7 +15,6 @@ import {
   VehicleService,
   DriverService,
   ParentService,
-  FeeTypeService,
   SettingsService,
   AcademicYearRepository,
   AcademicYearTransitionRepository,
@@ -63,7 +62,6 @@ runSeedTask('demo reset', async (server) => {
   const vehicleService = await server.container.resolve(VehicleService);
   const driverService = await server.container.resolve(DriverService);
   const parentService = await server.container.resolve(ParentService);
-  const feeTypeService = await server.container.resolve(FeeTypeService);
   const settingsService = await server.container.resolve(SettingsService);
   const academicYearRepository = await server.container.resolve(AcademicYearRepository);
   const yearTransitionRepository = await server.container.resolve(AcademicYearTransitionRepository);
@@ -72,9 +70,9 @@ runSeedTask('demo reset', async (server) => {
   const classRoutineService = await server.container.resolve(ClassRoutineService);
   const rolloverService = await server.container.resolve(RolloverService);
 
-  // Classes, sections and subjects are the Moroccan levels every school starts
+  // Classes, sections, subjects and fee types are the frame every school starts
   // from; everything that points at them is cleared first, so they stay.
-  console.log('⚠️  WARNING: This will delete all school data except classes, sections and subjects!\n');
+  console.log('⚠️  WARNING: This will delete all school data except classes, sections, subjects and fee types!\n');
   console.log('🧹 Clearing all school data...');
 
   await classRoutineService.clearForSeedReset();
@@ -164,13 +162,10 @@ runSeedTask('demo reset', async (server) => {
   await parentService.clearForSeedReset();
   console.log('✅ Parents cleared');
 
-  await feeTypeService.deleteAll();
-  console.log('✅ Fee types cleared');
-
   await settingsService.deleteAll();
   await academicYearRepository.clearForSeedReset();
   console.log('Academic-year registry cleared');
   console.log('✅ Settings cleared');
 
-  console.log('\n✨ School data cleared. Classes, sections and subjects were kept.');
+  console.log('\n✨ School data cleared. Classes, sections, subjects and fee types were kept.');
 });

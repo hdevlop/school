@@ -71,7 +71,8 @@
       "parentCinMissing": "Ce parent n'a pas de CIN enregistrée ; une réinitialisation par CIN est impossible",
       "parentCinInvalid": "La CIN de ce parent n'est pas valide ; une réinitialisation par CIN est impossible",
       "staleConfirmation": "Ce compte a changé depuis l'affichage de la confirmation. Rechargez la liste puis réessayez",
-      "cooldown": "Une réinitialisation de l'accès vient d'être demandée pour ce compte. Veuillez patienter avant de réessayer"
+      "cooldown": "Une réinitialisation de l'accès vient d'être demandée pour ce compte. Veuillez patienter avant de réessayer",
+      "noEmail": "Ce compte n'a pas d'adresse e-mail : aucun lien ne peut lui être envoyé"
     }
   },
   "financialOperations": {
@@ -270,7 +271,9 @@
       "passwordPlaceholder": "Saisissez votre mot de passe",
       "password": "Mot de passe",
       "emailPlaceholder": "Saisissez votre e-mail",
-      "email": "E-mail"
+      "email": "E-mail",
+      "emailOrPhone": "E-mail ou téléphone",
+      "emailOrPhonePlaceholder": "Saisissez votre e-mail ou votre numéro de téléphone"
     },
     "success": {
       "resetLinkSent": "Lien de réinitialisation envoyé par e-mail",
@@ -328,7 +331,7 @@
       "unsupported": "L'accès de ce compte ne peut pas être réinitialisé ici.",
       "unsupportedHint": "Rechargez la liste et vérifiez le statut, le rôle et le profil du compte.",
       "modes": {
-        "parentCredentialSetup": "Le mot de passe du parent sera remplacé par la CIN enregistrée. Il se connecte avec son e-mail et cette CIN, puis doit choisir un nouveau mot de passe. Les sessions actives prennent fin immédiatement.",
+        "parentCredentialSetup": "Le mot de passe du parent sera remplacé par la CIN enregistrée. Il se connecte avec son e-mail ou son téléphone et cette CIN, puis doit choisir un nouveau mot de passe. Les sessions actives prennent fin immédiatement.",
         "resetEmailSent": "Un lien de réinitialisation à usage unique est envoyé à l'adresse actuelle de ce compte. Les sessions existantes restent valides jusqu'à l'enregistrement du nouveau mot de passe.",
         "invitationResent": "L'invitation existante est renvoyée à l'adresse actuelle de ce compte. Aucun second compte ni profil n'est créé."
       },
@@ -336,7 +339,7 @@
         "sent": "Un e-mail de récupération a été envoyé.",
         "simulated": "La messagerie n'est pas configurée dans cet environnement : aucun e-mail n'est réellement parvenu au destinataire.",
         "notSent": "L'e-mail n'a pas pu être envoyé. Veuillez réessayer.",
-        "notApplicable": "Le parent peut désormais se connecter avec son e-mail et la CIN enregistrée."
+        "notApplicable": "Le parent peut désormais se connecter avec son e-mail ou son téléphone et la CIN enregistrée."
       }
     },
     "view": {
@@ -346,7 +349,7 @@
       "accountInformation": "Informations du compte"
     },
     "subtitle": {
-      "count": "{{count}} utilisateurs au total"
+      "count": "Total : {{count}}"
     },
     "success": {
       "retrieved": "Utilisateur récupéré avec succès",
@@ -359,7 +362,9 @@
     "errors": {
       "notFound": "Aucun utilisateur trouvé avec les informations fournies",
       "adminRoleNotFound": "Rôle administrateur introuvable",
-      "idExists": "L'ID utilisateur existe déjà"
+      "idExists": "L'ID utilisateur existe déjà",
+      "emailOrPhoneRequired": "Saisissez une adresse e-mail ou un numéro de téléphone",
+      "phoneExists": "Ce numéro de téléphone est déjà utilisé par un autre compte"
     },
     "validation": {
       "nameMinLength": "Le nom doit contenir au moins 2 caractères",
@@ -412,7 +417,7 @@
   },
   "roles": {
     "subtitle": {
-      "count": "{{count}} rôles au total"
+      "count": "Total : {{count}}"
     },
     "success": {
       "retrieved": "Rôle récupéré avec succès",
@@ -825,7 +830,7 @@
     "loading": "Chargement du personnel...",
     "noData": "Aucun membre du personnel trouvé",
     "subtitle": {
-      "count": "{{count}} membres au total",
+      "count": "Total : {{count}}",
       "members": "membres"
     },
     "invitation": {
@@ -1112,7 +1117,7 @@
       "confirmDescription": "Cela supprimera définitivement toutes les données de la base de données.",
       "confirmTitle": "Effacer Toutes les Données",
       "warningMessage": "Cette action supprimera tous les véhicules, opérateurs, opérations, enregistrements de maintenance, alertes et données utilisateur.",
-      "success": "Données de l’école effacées. Le compte administrateur, les classes, les sections et les matières ont été conservés."
+      "success": "Données de l’école effacées. Le compte administrateur, les classes, les sections, les matières et les types de frais ont été conservés."
     },
     "academic": {
       "semesterPlaceholder": "Semestre",
@@ -1859,7 +1864,7 @@
   },
   "payroll": {
     "subtitle": {
-      "count": "{{count}} employés"
+      "count": "Employés : {{count}}"
     },
     "success": {
       "retrieved": "Paie récupérée avec succès",
@@ -2103,7 +2108,7 @@
   },
   "expenses": {
     "subtitle": {
-      "count": "{{count}} dépenses au total"
+      "count": "Total : {{count}}"
     },
     "success": {
       "retrieved": "Dépense récupérée avec succès",
@@ -2256,7 +2261,7 @@
       "loadingStudentFees": "Chargement des frais…"
     },
     "subtitle": {
-      "count": "{{count}} étudiants au total"
+      "count": "Étudiants : {{count}}"
     },
     "form": {
       "byStudent": "Par élève",
@@ -2294,7 +2299,9 @@
       "studentsInClass": "Étudiants dans la classe",
       "total": "Total",
       "unknownFeeType": "Type de frais inconnu",
-      "academicYear": "Année scolaire"
+      "academicYear": "Année scolaire",
+      "addFee": "Ajouter des frais",
+      "noFeesAdded": "Aucun frais ajouté pour le moment."
     },
     "status": {
       "paying": "En cours",
@@ -2796,7 +2803,7 @@
       "notPublished": "L'annonce n'est pas publiée"
     },
     "subtitle": {
-      "count": "{{count}} annonces au total"
+      "count": "Total : {{count}}"
     },
     "audience": {
       "all": "Tous",
@@ -2867,7 +2874,7 @@
   },
   "assessments": {
     "subtitle": {
-      "count": "{{count}} évaluations au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -3083,7 +3090,7 @@
       "classRequired": "La classe est obligatoire"
     },
     "subtitle": {
-      "count": "{{count}} classes au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -3131,7 +3138,7 @@
       "inUse": "Des classes ou des comptables d'une année scolaire utilisent ce cycle. Désactivez-le au lieu de le supprimer"
     },
     "subtitle": {
-      "count": "{{count}} cycles au total"
+      "count": "Total : {{count}}"
     },
     "form": {
       "cycleInformation": "Informations sur le cycle",
@@ -3163,7 +3170,7 @@
   },
   "drivers": {
     "subtitle": {
-      "count": "{{count}} chauffeurs au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
       "bulkDeleteItemName": "élément",
@@ -3262,7 +3269,7 @@
   },
   "exams": {
     "subtitle": {
-      "count": "{{count}} examens au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -3360,7 +3367,7 @@
   },
   "feeTypes": {
     "subtitle": {
-      "count": "{{count}} types de frais au total"
+      "count": "Total : {{count}}"
     },
     "category": {
       "activities": "Activités",
@@ -3435,7 +3442,7 @@
       "nothingToSave": "Rien à enregistrer."
     },
     "subtitle": {
-      "count": "{{count}} étudiants"
+      "count": "Étudiants : {{count}}"
     },
     "errors": {
       "outsideSelectedYear": "L'évaluation ou l'examen de cette note appartient à une autre année scolaire",
@@ -3539,7 +3546,7 @@
   },
   "parents": {
     "subtitle": {
-      "count": "{{count}} parents au total"
+      "count": "Total : {{count}}"
     },
     "success": {
       "retrieved": "Parent récupéré avec succès",
@@ -3613,7 +3620,9 @@
       "personalInformation": "Informations personnelles",
       "phone": "Téléphone",
       "phonePlaceholder": "Entrez le numéro de téléphone",
-      "relationshipType": "Type de relation"
+      "relationshipType": "Type de relation",
+      "addParent": "Ajouter un parent",
+      "noParentsAdded": "Aucun parent ajouté pour le moment."
     },
     "profile": {
       "activeStudents": "Étudiants actifs",
@@ -3896,7 +3905,7 @@
       "classOutsideSelectedYear": "La classe de la section doit appartenir à l'année scolaire sélectionnée"
     },
     "subtitle": {
-      "count": "{{count}} sections au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -3990,6 +3999,7 @@
       "seeded": "Élèves initialisés avec succès"
     },
     "errors": {
+      "hasFinancialHistory": "Cet élève a un historique de paiements ou de crédits et ne peut pas être supprimé. Mettez fin à son inscription à la place.",
       "idExists": "Cet identifiant d'élève existe déjà",
       "notFound": "Élève introuvable",
       "studentCodeExists": "Un élève avec ce code existe déjà",
@@ -4011,9 +4021,10 @@
       "notInSection": "L'élève n'est pas dans cette section"
     },
     "subtitle": {
-      "count": "{{count}} étudiants au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
+      "deleteWarning": "Cette action supprime définitivement cet élève, ses dossiers scolaires, ses frais impayés et ses affectations de transport pour toutes les années scolaires. Les parents liés sont conservés. Cette action est irréversible. Un élève ayant un historique de paiements ou de crédits ne peut pas être supprimé.",
       "createTitleForYear": "Ajouter un élève en {{year}}",
       "bulkDeleteItemName": "élément",
       "createButton": "Créer l’élève",
@@ -4245,7 +4256,7 @@
       "someInUse": "Certaines matières sont utilisées par des enseignants ou des alertes ; elles ne peuvent pas toutes être supprimées"
     },
     "subtitle": {
-      "count": "{{count}} matières au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -4297,7 +4308,7 @@
       "emailExists": "Un enseignant avec cet e-mail existe déjà"
     },
     "subtitle": {
-      "count": "{{count}} enseignants au total"
+      "count": "Total : {{count}}"
     },
     "dialogs": {
       "bulkDeleteItemName": "élément",
@@ -4318,8 +4329,9 @@
       "academicDegreesPlaceholder": "Entrez les diplômes",
       "address": "Adresse",
       "addressPlaceholder": "Entrez l'adresse",
-      "assignment": "Devoir",
+      "assignment": "Affectation",
       "assignmentInformation": "Informations sur l'affectation",
+      "assignmentsStep": "Affectations",
       "bankAccount": "Compte bancaire",
       "bankAccountPlaceholder": "Entrez le compte bancaire",
       "cin": "CIN",
@@ -4360,7 +4372,9 @@
       "workloadHoursPlaceholder": "Entrez les heures de charge",
       "yearsOfExperience": "Années d'expérience",
       "yearsOfExperiencePlaceholder": "Entrez les années d'expérience",
-      "noAssignments": "Aucune affectation"
+      "noAssignments": "Aucune affectation",
+      "addAssignment": "Ajouter une affectation",
+      "noAssignmentsAdded": "Aucune affectation ajoutée pour le moment."
     },
     "profile": {
       "table": {
@@ -4477,7 +4491,7 @@
   },
   "vehicles": {
     "subtitle": {
-      "count": "{{count}} véhicules au total"
+      "count": "Total : {{count}}"
     },
     "card": {
       "currentMileage": "Kilométrage actuel",
@@ -4743,7 +4757,7 @@
   },
   "permissions": {
     "subtitle": {
-      "count": "{{count}} permissions au total"
+      "count": "Total : {{count}}"
     },
     "success": {
       "assigned": "Permission affecté avec succès",

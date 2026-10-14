@@ -10,9 +10,9 @@ const help = `School seed commands:
   bun seed demo --year=2025-2026 --resume-from=announcements  Resume after Payroll
   bun seed history         Seed the last 3 years up to today; the same students move up each year
   bun seed history --years=4  Seed a longer history
-  bun seed academic        Add the default classes, sections A-C and subjects for a year
+  bun seed academic        Add the default classes, sections A-C, subjects and fee types for a year
   bun seed academic --year=2026-2027 --levels=maternelle,primaire,college  Without a prompt
-  bun seed reset-demo      Delete school data; classes, sections and subjects stay
+  bun seed reset-demo      Delete school data; classes, sections, subjects and fee types stay
   bun run seed:admin       Create or reset the administrator
 ${production ? '' : '  bun seed demo-ui         Open the development demo generator\n'}`;
 
@@ -34,8 +34,8 @@ if (!command) {
       { value: 'admin', label: 'Create or reset administrator' },
       { value: 'demo', label: 'Add demo data' },
       { value: 'history', label: 'Seed 3 years of demo history', hint: 'empty school, students promoted each year' },
-      { value: 'academic', label: 'Add classes, sections and subjects', hint: 'default Moroccan levels; no people' },
-      { value: 'reset-demo', label: 'Delete school data', hint: 'destructive; keeps classes, sections and subjects' },
+      { value: 'academic', label: 'Add classes, sections, subjects and fee types', hint: 'default Moroccan levels; no people' },
+      { value: 'reset-demo', label: 'Delete school data', hint: 'destructive; keeps classes, sections, subjects and fee types' },
       ...(!production ? [{ value: 'demo-ui', label: 'Open development demo generator' }] : []),
     ],
   });
@@ -135,7 +135,7 @@ switch (command) {
       throw new Error('Demo reset requires an interactive terminal.');
     }
     const confirmed = await confirm({
-      message: 'Delete all school data except classes, sections and subjects? This cannot be undone.',
+      message: 'Delete all school data except classes, sections, subjects and fee types? This cannot be undone.',
       initialValue: false,
     });
     if (isCancel(confirmed) || !confirmed) {

@@ -104,7 +104,7 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
             <div className="grid gap-3 sm:grid-cols-2">
               <FormInput
                 name="schoolPhone"
-                type="text"
+                type="phone"
                 formLabel={t('settings.school.schoolPhone')}
                 icon={Phone}
                 iconColor="#f59e0b"
@@ -120,15 +120,26 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
                 placeholder="info@myschool.edu"
               />
             </div>
-            <FormInput
-              name="currentAcademicYear"
-              type="select"
-              formLabel={t('settings.setup.academicYear')}
-              items={yearOptions}
-              icon={CalendarRange}
-              iconColor="#10b981"
-              required
-            />
+            <div className="grid gap-3 sm:grid-cols-2">
+              <FormInput
+                name="currentAcademicYear"
+                type="select"
+                formLabel={t('settings.setup.academicYear')}
+                items={yearOptions}
+                icon={CalendarRange}
+                iconColor="#10b981"
+                required
+              />
+              <FormInput
+                name="language"
+                type="select"
+                formLabel={t('settings.system.language')}
+                items={languageOptions}
+                icon={Languages}
+                iconColor="#8b5cf6"
+                required
+              />
+            </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <FormInput
                 name="timeZone"
@@ -145,15 +156,6 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
                 items={NAJM_CURRENCY_OPTIONS}
                 icon={DollarSign}
                 iconColor="#ef4444"
-                required
-              />
-              <FormInput
-                name="language"
-                type="select"
-                formLabel={t('settings.system.language')}
-                items={languageOptions}
-                icon={Languages}
-                iconColor="#8b5cf6"
                 required
               />
             </div>

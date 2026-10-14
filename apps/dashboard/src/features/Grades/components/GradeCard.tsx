@@ -40,7 +40,7 @@ const GradeCard = ({ data }: any) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="min-w-0 flex-1 flex flex-col gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-md font-bold">{studentName || t('common.notAssigned')}</Label>
           {studentCode && <span className="text-xs text-muted-foreground">{studentCode}</span>}

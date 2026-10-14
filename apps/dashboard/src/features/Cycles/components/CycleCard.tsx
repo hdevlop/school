@@ -16,7 +16,7 @@ const CycleCard = ({ data }: any) => {
           <CalendarRange className="w-6 h-6 text-primary dark:text-white" />
         </div>
       </div>
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="min-w-0 flex-1 flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2">
           <Label className="text-md font-bold">{cycle?.labels?.[language] || cycle.name}</Label>
           {!cycle.active && <Badge className="bg-slate-200 text-xs text-slate-700">{t('status.inactive')}</Badge>}

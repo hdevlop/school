@@ -100,7 +100,10 @@ export class FeeTypeService {
   async seedDemoFeeTypes(feeTypesData: SeedFeeTypeDto[]) {
     const createdFeeTypes = [];
     for (const feeTypeData of feeTypesData) {
-      const alreadyExists = await this.feeTypeValidator.isExists(feeTypeData.id);
+      // A fee type the school already has, by id or by name, is kept as it
+      // is, so the seed can run again or after a reset.
+      const alreadyExists = await this.feeTypeValidator.isExists(feeTypeData.id)
+        || await this.feeTypeValidator.isNameExists(feeTypeData.name);
       if (alreadyExists) continue;
       await this.feeTypeValidator.validate(feeTypeData);
       const feeType = await this.feeTypeRepository.create({ ...feeTypeData });

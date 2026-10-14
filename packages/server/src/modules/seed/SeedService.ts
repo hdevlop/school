@@ -169,7 +169,7 @@ export class SeedService {
 
   /**
    * Delete all school data in dependency order, preserving the admin user.
-   * Classes, sections and subjects stay: they are the Moroccan levels every
+   * Classes, sections, subjects and fee types stay: they are the frame every
    * school starts from, and everything that points at them is cleared first.
    */
   async clearAllData() {
@@ -200,7 +200,6 @@ export class SeedService {
     await this.driverService.deleteAll();
     await this.staffService.deleteAll();
     await this.parentService.clearForSeedReset();
-    await this.feeTypeService.deleteAll();
     await this.settingsService.deleteAll();
     await this.academicYears.clearForSeedReset();
   }

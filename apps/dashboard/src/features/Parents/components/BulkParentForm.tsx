@@ -25,8 +25,8 @@ export const BulkParentFormContent = () => {
       name="parents"
       title={t('parents.form.parent')}
       onAdd={handleAddParent}
-      addLabel={t('common.addItem')}
-      emptyLabel={t('common.noItemsAdded')}
+      addLabel={t('parents.form.addParent')}
+      emptyLabel={t('parents.form.noParentsAdded')}
       className="[&>button]:order-first"
     >
       <div className='flex flex-col gap-4'>

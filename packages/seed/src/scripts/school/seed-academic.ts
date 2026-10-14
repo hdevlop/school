@@ -5,14 +5,16 @@ import {
   ClassService,
   ClassRepository,
   SectionService,
+  FeeTypeService,
 } from '@sms/server/modules/seed';
 import { runSeedTask } from '../shared/run-seed';
 import { getConfiguredSeedAcademicYear } from '../shared/academic-year';
 import { academicStructure, parseAcademicLevels } from '../shared/academic-structure';
 
-// Only the school's academic frame: no settings, years, fees or people. A
-// class, section or subject that already exists is kept as it is, so the
-// command can be run again, or after a reset, without duplicating anything.
+// Only the school's frame: classes, sections, subjects and the default fee
+// types, with no settings, years, student fees or people. Anything that
+// already exists is kept as it is, so the command can be run again, or after
+// a reset, without duplicating anything.
 const academicYear = getConfiguredSeedAcademicYear();
 const levels = parseAcademicLevels();
 const structure = academicStructure(academicYear, levels);
@@ -22,6 +24,7 @@ runSeedTask(`academic structure for ${academicYear}`, async (server) => {
   const classService = await server.container.resolve(ClassService);
   const classRepository = await server.container.resolve(ClassRepository);
   const sectionService = await server.container.resolve(SectionService);
+  const feeTypeService = await server.container.resolve(FeeTypeService);
 
   console.log(`🌱 Levels: ${levels.join(', ')}`);
 
@@ -44,6 +47,9 @@ runSeedTask(`academic structure for ${academicYear}`, async (server) => {
     status: 'active' as const,
   })));
   console.log(`✅ Sections: ${sections.length} added, ${structure.sections.length - sections.length} already there`);
+
+  const feeTypes = await feeTypeService.seedDemoFeeTypes(structure.feeTypes);
+  console.log(`✅ Fee types: ${feeTypes.length} added, ${structure.feeTypes.length - feeTypes.length} already there`);
 
   console.log(`\n✨ Academic structure ready for ${academicYear}. It shows in the dashboard once that year exists.`);
 });

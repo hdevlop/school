@@ -52,6 +52,8 @@ describe('parentSchema', () => {
     expect(parentSchema.safeParse({ ...parent, dateOfBirth: '1985-04-02' }).success).toBe(true);
     expect(parentSchema.safeParse({ ...parent, dateOfBirth: '02/04/1985' }).success).toBe(false);
     expect(parentSchema.safeParse({ ...parent, dateOfBirth: null }).success).toBe(true);
+    // The form starts the field as ''; left empty, it is simply not given.
+    expect(parentSchema.parse({ ...parent, dateOfBirth: '' }).dateOfBirth).toBeNull();
   });
 
   it('insists on the three fields the school needs to reach and identify a guardian', () => {

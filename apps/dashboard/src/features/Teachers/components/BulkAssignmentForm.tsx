@@ -102,6 +102,8 @@ export const AssignmentFormContent = ({ classes, subjects }) => {
          <DynamicArray
             name="assignments"
             title={t('teachers.form.assignment')}
+            addLabel={t('teachers.form.addAssignment')}
+            emptyLabel={t('teachers.form.noAssignmentsAdded')}
             onAdd={handleAddAssignment}
          >
             <AssignmentItem classes={classes} subjects={subjects} />

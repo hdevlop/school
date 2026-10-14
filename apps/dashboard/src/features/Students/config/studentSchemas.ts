@@ -5,9 +5,9 @@ const optionalId = z.preprocess(
   (value) => (value === '' ? undefined : value),
   z.string().min(1, 'ID cannot be empty').nullish().optional(),
 );
-const requiredId = z.preprocess(
+const requiredId = (message: string) => z.preprocess(
   (value) => value ?? '',
-  z.string().min(1, 'ID is required'),
+  z.string().min(1, message),
 );
 const emailField = z.string().email('Invalid email format').or(z.literal(''));
 const phoneField = z.preprocess(
@@ -46,8 +46,8 @@ const locationValueSchema = z.object({
  */
 export const studentSchema = z.object({
   id: optionalId,
-  classId: requiredId,
-  sectionId: requiredId,
+  classId: requiredId('Class is required'),
+  sectionId: requiredId('Section is required'),
   studentCode: z.string(),
   name: nameField,
   email: emailField,
@@ -75,13 +75,6 @@ export const studentProfileEditSchema = studentSchema.extend({
   classId: optionalId,
   sectionId: optionalId,
   status: z.string().nullish(),
-  correctionPlacementId: z.string().optional(),
-  yearEnrolledOn: z.string().optional(),
-  yearLeftOn: z.string().optional(),
-  yearStatus: z.enum(['active', 'withdrawn', 'graduated', 'transferred']).optional(),
-  placementValidFrom: z.string().optional(),
-  placementValidTo: z.string().optional(),
-  correctionReason: z.string().max(500).optional(),
 });
 
 /** The fields a profile edit leaves to the enrollment records. */

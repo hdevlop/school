@@ -71,7 +71,8 @@
       "parentCinMissing": "Este progenitor no tiene CIN registrada, por lo que no es posible un restablecimiento por CIN",
       "parentCinInvalid": "La CIN de este progenitor no es válida, por lo que no es posible un restablecimiento por CIN",
       "staleConfirmation": "Esta cuenta cambió desde que se mostró la confirmación. Recarga la lista e inténtalo de nuevo",
-      "cooldown": "Se acaba de solicitar un restablecimiento de acceso para esta cuenta. Espera antes de volver a intentarlo"
+      "cooldown": "Se acaba de solicitar un restablecimiento de acceso para esta cuenta. Espera antes de volver a intentarlo",
+      "noEmail": "Esta cuenta no tiene correo electrónico, así que no se le puede enviar ningún enlace"
     }
   },
   "financialOperations": {
@@ -270,7 +271,9 @@
       "passwordPlaceholder": "Introduce tu contraseña",
       "password": "Contraseña",
       "emailPlaceholder": "Introduce tu correo",
-      "email": "Correo electrónico"
+      "email": "Correo electrónico",
+      "emailOrPhone": "Correo o teléfono",
+      "emailOrPhonePlaceholder": "Introduce tu correo o tu número de teléfono"
     },
     "success": {
       "resetLinkSent": "Enlace de restablecimiento enviado a tu correo",
@@ -328,7 +331,7 @@
       "unsupported": "El acceso de esta cuenta no se puede restablecer desde aquí.",
       "unsupportedHint": "Recarga la lista y comprueba el estado, el rol y el perfil de la cuenta.",
       "modes": {
-        "parentCredentialSetup": "La contraseña del progenitor se sustituirá por la CIN registrada. Inicia sesión con su correo y esa CIN, y después debe elegir una contraseña nueva. Las sesiones activas finalizan de inmediato.",
+        "parentCredentialSetup": "La contraseña del progenitor se sustituirá por la CIN registrada. Inicia sesión con su correo o su teléfono y esa CIN, y después debe elegir una contraseña nueva. Las sesiones activas finalizan de inmediato.",
         "resetEmailSent": "Se envía un enlace de restablecimiento de un solo uso a la dirección actual de esta cuenta. Las sesiones existentes siguen siendo válidas hasta que se guarde la nueva contraseña.",
         "invitationResent": "La invitación existente se vuelve a enviar a la dirección actual de esta cuenta. No se crea una segunda cuenta ni un segundo perfil."
       },
@@ -336,7 +339,7 @@
         "sent": "Se envió un correo de recuperación.",
         "simulated": "El correo no está configurado en este entorno, así que ningún mensaje llegó realmente al destinatario.",
         "notSent": "No se pudo enviar el correo. Inténtalo de nuevo.",
-        "notApplicable": "El progenitor ya puede iniciar sesión con su correo y la CIN registrada."
+        "notApplicable": "El progenitor ya puede iniciar sesión con su correo o su teléfono y la CIN registrada."
       }
     },
     "view": {
@@ -346,7 +349,7 @@
       "accountInformation": "Información de la cuenta"
     },
     "subtitle": {
-      "count": "{{count}} usuarios en total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Usuario recuperado exitosamente",
@@ -358,7 +361,9 @@
     "errors": {
       "notFound": "No se encontró ningún usuario con la información proporcionada",
       "adminRoleNotFound": "Rol de administrador no encontrado",
-      "idExists": "El ID de usuario ya existe"
+      "idExists": "El ID de usuario ya existe",
+      "emailOrPhoneRequired": "Introduce un correo electrónico o un número de teléfono",
+      "phoneExists": "Este número de teléfono ya lo usa otra cuenta"
     },
     "validation": {
       "nameMinLength": "El nombre debe tener al menos 2 caracteres",
@@ -411,7 +416,7 @@
   },
   "roles": {
     "subtitle": {
-      "count": "{{count}} roles en total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Rol recuperado exitosamente",
@@ -1364,7 +1369,7 @@
   },
   "payroll": {
     "subtitle": {
-      "count": "{{count}} empleados"
+      "count": "Empleados: {{count}}"
     },
     "success": {
       "retrieved": "Nómina obtenida correctamente",
@@ -1588,7 +1593,7 @@
       "loadingStudentFees": "Cargando tarifas…"
     },
     "subtitle": {
-      "count": "{{count}} estudiantes en total"
+      "count": "Estudiantes: {{count}}"
     },
     "form": {
       "byStudent": "Por estudiante",
@@ -1626,7 +1631,9 @@
       "studentsInClass": "Estudiantes en la clase",
       "total": "Total",
       "unknownFeeType": "Tipo de cuota desconocido",
-      "academicYear": "Año académico"
+      "academicYear": "Año académico",
+      "addFee": "Añadir cuota",
+      "noFeesAdded": "Aún no se han añadido cuotas."
     },
     "status": {
       "paying": "Pagando",
@@ -2128,7 +2135,7 @@
       "notPublished": "El anuncio no está publicado"
     },
     "subtitle": {
-      "count": "{{count}} anuncios en total"
+      "count": "Total: {{count}}"
     },
     "audience": {
       "all": "Todos",
@@ -2199,7 +2206,7 @@
   },
   "assessments": {
     "subtitle": {
-      "count": "{{count}} evaluaciones en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -2415,7 +2422,7 @@
       "classRequired": "La clase es obligatoria"
     },
     "subtitle": {
-      "count": "{{count}} clases en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -2458,7 +2465,7 @@
   },
   "drivers": {
     "subtitle": {
-      "count": "{{count}} conductores en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
       "bulkDeleteItemName": "elemento",
@@ -2557,7 +2564,7 @@
   },
   "exams": {
     "subtitle": {
-      "count": "{{count}} exámenes en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -2655,7 +2662,7 @@
   },
   "expenses": {
     "subtitle": {
-      "count": "{{count}} gastos en total"
+      "count": "Total: {{count}}"
     },
     "categories": {
       "payroll": "Nómina",
@@ -2760,7 +2767,7 @@
   },
   "feeTypes": {
     "subtitle": {
-      "count": "{{count}} tipos de tarifa en total"
+      "count": "Total: {{count}}"
     },
     "category": {
       "activities": "Actividades",
@@ -2835,7 +2842,7 @@
       "nothingToSave": "No hay nada que guardar."
     },
     "subtitle": {
-      "count": "{{count}} estudiantes"
+      "count": "Estudiantes: {{count}}"
     },
     "errors": {
       "outsideSelectedYear": "La evaluación o el examen de esta calificación pertenece a otro año escolar",
@@ -2939,7 +2946,7 @@
   },
   "parents": {
     "subtitle": {
-      "count": "{{count}} padres en total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Padre o madre obtenido correctamente",
@@ -3013,7 +3020,9 @@
       "personalInformation": "Información personal",
       "phone": "Teléfono",
       "phonePlaceholder": "Ingrese el número de teléfono",
-      "relationshipType": "Tipo de relación"
+      "relationshipType": "Tipo de relación",
+      "addParent": "Añadir padre",
+      "noParentsAdded": "Aún no se han añadido padres."
     },
     "profile": {
       "activeStudents": "Estudiantes activos",
@@ -3339,7 +3348,7 @@
       "classOutsideSelectedYear": "La clase de la sección debe pertenecer al año escolar seleccionado"
     },
     "subtitle": {
-      "count": "{{count}} secciones en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -3528,7 +3537,7 @@
     "loading": "Cargando personal...",
     "noData": "No se encontraron miembros del personal",
     "subtitle": {
-      "count": "{{count}} miembros en total",
+      "count": "Total: {{count}}",
       "members": "miembros"
     },
     "invitation": {
@@ -3708,7 +3717,7 @@
       "confirmDescription": "Esta acción no se puede deshacer",
       "confirmTitle": "Confirmar acción",
       "warningMessage": "Esta es una acción destructiva",
-      "success": "Datos del colegio eliminados. Se conservaron la cuenta de administrador, las clases, las secciones y las asignaturas."
+      "success": "Datos del colegio eliminados. Se conservaron la cuenta de administrador, las clases, las secciones, las asignaturas y los tipos de cuota."
     },
     "notifications": {
       "academicAlerts": "Alertas académicas",
@@ -3840,6 +3849,7 @@
       "seeded": "Estudiantes inicializados correctamente"
     },
     "errors": {
+      "hasFinancialHistory": "Este alumno tiene historial de pagos o créditos y no se puede eliminar. Finalice su matrícula en su lugar.",
       "idExists": "El ID del estudiante ya existe",
       "notFound": "Estudiante no encontrado",
       "studentCodeExists": "Ya existe un estudiante con este código",
@@ -3861,9 +3871,10 @@
       "notInSection": "El alumno no está en esta sección"
     },
     "subtitle": {
-      "count": "{{count}} estudiantes en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
+      "deleteWarning": "Esta acción elimina permanentemente al alumno, sus registros académicos, cuotas sin pagar y asignaciones de transporte de todos los años escolares. Se conservan los padres vinculados. No se puede deshacer. No se pueden eliminar alumnos con historial de pagos o créditos.",
       "createTitleForYear": "Añadir un estudiante a {{year}}",
       "bulkDeleteItemName": "elemento",
       "createButton": "Crear estudiante",
@@ -4091,7 +4102,7 @@
       "inUse": "Clases o contables de algún año escolar usan este ciclo. Desactívelo en lugar de eliminarlo"
     },
     "subtitle": {
-      "count": "{{count}} ciclos en total"
+      "count": "Total: {{count}}"
     },
     "form": {
       "cycleInformation": "Información del ciclo",
@@ -4132,7 +4143,7 @@
       "someInUse": "Algunas asignaturas las usan profesores o alertas, así que no se pueden eliminar todas"
     },
     "subtitle": {
-      "count": "{{count}} asignaturas en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -4184,7 +4195,7 @@
       "emailExists": "Ya existe un docente con este correo electrónico"
     },
     "subtitle": {
-      "count": "{{count}} profesores en total"
+      "count": "Total: {{count}}"
     },
     "dialogs": {
       "bulkDeleteItemName": "elemento",
@@ -4205,8 +4216,9 @@
       "academicDegreesPlaceholder": "Ingrese los títulos",
       "address": "Dirección",
       "addressPlaceholder": "Ingrese la dirección",
-      "assignment": "Tarea",
+      "assignment": "Asignación",
       "assignmentInformation": "Información de asignación",
+      "assignmentsStep": "Asignaciones",
       "bankAccount": "Cuenta bancaria",
       "bankAccountPlaceholder": "Ingrese la cuenta bancaria",
       "cin": "CIN",
@@ -4247,7 +4259,9 @@
       "workloadHoursPlaceholder": "Ingrese las horas de carga",
       "yearsOfExperience": "Años de experiencia",
       "yearsOfExperiencePlaceholder": "Ingrese los años de experiencia",
-      "noAssignments": "Sin asignaciones"
+      "noAssignments": "Sin asignaciones",
+      "addAssignment": "Añadir asignación",
+      "noAssignmentsAdded": "Aún no se han añadido asignaciones."
     },
     "profile": {
       "table": {
@@ -4364,7 +4378,7 @@
   },
   "vehicles": {
     "subtitle": {
-      "count": "{{count}} vehículos en total"
+      "count": "Total: {{count}}"
     },
     "card": {
       "currentMileage": "Kilometraje actual",
@@ -4630,7 +4644,7 @@
   },
   "permissions": {
     "subtitle": {
-      "count": "{{count}} permisos en total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "assigned": "Permiso asignado correctamente",

@@ -86,14 +86,12 @@ describe('studentProfileEditSchema', () => {
     expect(studentProfileEditSchema.safeParse({ ...student, name: 'A' }).success).toBe(false);
   });
 
-  it('saves blank optional profile fields as null, including when a historical correction is submitted', () => {
+  it('saves blank optional profile fields as null', () => {
     const parsed = studentProfileEditSchema.parse({
       ...student, phone: '', dateOfBirth: '',
-      correctionPlacementId: 'past-placement', correctionReason: 'Correct the historical section',
     });
     expect(parsed.phone).toBeNull();
     expect(parsed.dateOfBirth).toBeNull();
-    expect(parsed.correctionReason).toBe('Correct the historical section');
     expect(studentSchema.parse({ ...student, phone: '', dateOfBirth: '' }).phone).toBeNull();
   });
 

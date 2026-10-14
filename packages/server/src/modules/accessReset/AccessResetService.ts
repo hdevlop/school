@@ -1,7 +1,7 @@
 import { CacheService } from 'najm-cache';
 import { moroccanCinTemporaryCredential } from 'najm-auth';
 
-import { AuthService } from '../../auth';
+import { AuthService, UserService } from '../../auth';
 import { Service, Transaction } from '../../najm';
 import type { AccessResetDelivery, AccessResetResult, ResetAccessDto } from './AccessResetDto';
 import { AccessResetRepository } from './AccessResetRepository';
@@ -34,6 +34,7 @@ export class AccessResetService {
     private accessResetValidator: AccessResetValidator,
     private authService: AuthService,
     private cache: CacheService,
+    private userService: UserService,
   ) {}
 
   /**
@@ -100,6 +101,13 @@ export class AccessResetService {
       fresh.account.id,
       moroccanCinTemporaryCredential(temporaryCredential),
     );
+
+    // Only a parent with no email reaches this path while pending: no
+    // invitation could be sent, so the CIN is their way in and the account
+    // opens with it. Inside the same transaction as the credential.
+    if (fresh.account.status === 'pending') {
+      await this.userService.update(fresh.account.id, { status: 'active' });
+    }
 
     await this.accessResetRepository.recordAudit({
       actorId: actor.id,

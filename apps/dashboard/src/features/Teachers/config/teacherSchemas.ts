@@ -24,9 +24,17 @@ const numberField = (schema: z.ZodNumber): any =>
     return trimmed === '' ? value : Number(trimmed);
   }, schema);
 
-/** A cleared number input holds `null`; an optional field reads it as not given. */
+/** A cleared number input holds `null` or `''`; an optional field reads it as not given. */
 const optionalNumberField = (schema: z.ZodNumber): any =>
-  z.preprocess((value) => (value === null ? undefined : value), numberField(schema).optional());
+  z.preprocess((value) => (value === null || value === '' ? undefined : value), numberField(schema).optional());
+
+/**
+ * An optional text or phone input starts as `''`. Read blank as not given, so
+ * it is neither checked against the field's rules nor sent: the API refuses
+ * `''` for these fields.
+ */
+const optionalText = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((value) => (typeof value === 'string' && value.trim() === '' ? undefined : value), schema.optional());
 
 /**
  * Hiring a teacher, in the three steps the wizard walks through.
@@ -46,8 +54,8 @@ export const teacherPersonalSchema = z.object({
   phone: phoneField,
   address: addressField,
   gender: z.enum(GENDER_VALUES).optional(),
-  emergencyContact: nameField.optional(),
-  emergencyPhone: phoneField,
+  emergencyContact: optionalText(nameField),
+  emergencyPhone: optionalText(phoneField),
   status: z.enum(TEACHER_STATUS_VALUES).default('active'),
   image: z.union([z.string(), z.instanceof(File), z.null()]).optional(),
 });
@@ -71,15 +79,23 @@ export const assignmentSchema = z.object({
   subjectIds: z.array(z.string()).min(1, 'At least one subject is required'),
 });
 
-/** Step 3 — the timetable. Also bound on its own by the bulk assignment dialog. */
+/** The bulk assignment dialog: it is opened to assign, so it needs one line. */
 export const assignmentsSchema = z.object({
-  assignments: z.array(assignmentSchema).min(1, 'At least one parent is required'),
+  assignments: z.array(assignmentSchema).min(1, 'At least one assignment is required'),
+});
+
+/**
+ * Step 3 — the timetable. A teacher may have none yet, and removing the last
+ * one is how an edit clears the year's assignments before a delete.
+ */
+export const teacherAssignmentsStepSchema = z.object({
+  assignments: z.array(assignmentSchema),
 });
 
 export const teacherFullSchema = z.object({
   ...teacherPersonalSchema.shape,
   ...teacherProfessionalSchema.shape,
-  ...assignmentsSchema.shape,
+  ...teacherAssignmentsStepSchema.shape,
 });
 
 export type TeacherPersonalFormValues = z.input<typeof teacherPersonalSchema>;

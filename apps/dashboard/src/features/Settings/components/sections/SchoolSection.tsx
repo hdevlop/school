@@ -42,11 +42,10 @@ const SchoolSection: React.FC = () => {
 
         <FormInput
           name="schoolPhone"
-          type="text"
+          type="phone"
           formLabel={t('settings.school.schoolPhone')}
           icon={Phone}
           placeholder="+212600000000"
-          inputMode="tel"
           required={true}
         />
 

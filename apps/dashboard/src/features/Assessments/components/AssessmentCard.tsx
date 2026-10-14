@@ -47,7 +47,7 @@ const AssessmentCard = ({ data }: any) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="min-w-0 flex-1 flex flex-col gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-md font-bold">{a.title}</Label>
           {a.type && <NBadge color={ASSESSMENT_TYPE_COLORS[a.type]} label={t(`assessments.type.${a.type}`)} look="soft" />}

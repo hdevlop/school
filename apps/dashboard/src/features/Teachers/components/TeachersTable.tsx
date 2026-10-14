@@ -51,7 +51,7 @@ function TeachersTable() {
 
   const createAndInviteTeacher = async (data) => {
     const response = await createTeacher(data);
-    announceInvitation(response?.data?.emailSent, {
+    announceInvitation(response?.data?.emailSent, data.email, {
       sent: t('teachers.invitation.sent', { email: data.email }),
       notSent: t('teachers.invitation.notSent'),
     });

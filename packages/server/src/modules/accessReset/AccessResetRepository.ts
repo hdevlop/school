@@ -15,7 +15,7 @@ import { eq, inArray } from 'drizzle-orm';
 export type AccessResetAccount = {
   id: string;
   name: string | null;
-  email: string;
+  email: string | null;
   status: 'active' | 'inactive' | 'pending' | null;
   roleId: string | null;
   roleName: string | null;

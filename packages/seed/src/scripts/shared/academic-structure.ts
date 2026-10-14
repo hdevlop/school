@@ -1,4 +1,4 @@
-import { classesData, sectionsData } from '@sms/contracts/fixtures';
+import { classesData, feeTypeData, sectionsData } from '@sms/contracts/fixtures';
 import { normalizedSubjectsData } from './school-seed-data';
 
 /** The Moroccan cycles the default classes belong to, in school order. */
@@ -25,6 +25,10 @@ export function parseAcademicLevels(args = process.argv.slice(2)): string[] {
  * demo's ids and room numbers: ids are generated, and rooms are the school's
  * own. Sections name their class, which is matched by name in the year, so a
  * class the school already has keeps its id and gains only missing sections.
+ *
+ * Fee types belong to the school, not to a year or a cycle, so every level
+ * choice gets all of them. They keep their fixture ids, which the demo fees
+ * point at.
  */
 export function academicStructure(academicYear: string, levels: readonly string[] = ACADEMIC_LEVELS) {
   const classes = classesData.filter((schoolClass) => levels.includes(schoolClass.level));
@@ -35,5 +39,6 @@ export function academicStructure(academicYear: string, levels: readonly string[
     sections: sectionsData
       .filter((section) => classNames.has(section.classId))
       .map(({ classId, name, maxStudents }) => ({ className: classNames.get(classId)!, name, maxStudents })),
+    feeTypes: feeTypeData,
   };
 }

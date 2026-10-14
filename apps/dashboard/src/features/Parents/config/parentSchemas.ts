@@ -11,11 +11,16 @@ const nameField = z
   .string()
   .min(2, 'Name must be at least 2 characters')
   .max(100, 'Name too long');
-const optionalDateField = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
-  .nullable()
-  .optional();
+// The date input starts as `''`; read blank as not given rather than as a
+// malformed date, so an optional date of birth can be left empty.
+const optionalDateField = z.preprocess(
+  (value) => (value === '' ? null : value),
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+    .nullable()
+    .optional(),
+);
 const cinField = z.string().min(8, 'CIN must be at least 8 characters').max(20, 'CIN too long');
 const addressField = z.string().max(500, 'Address too long').optional();
 

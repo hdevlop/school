@@ -71,7 +71,7 @@ function ParentsTable() {
         loading: isCreating,
         onClick: async (parentData) => {
           const response = await createParent(parentData);
-          announceInvitation(response?.data?.emailSent, {
+          announceInvitation(response?.data?.emailSent, parentData.email, {
             sent: t('parents.invitation.sent', { email: parentData.email }),
             notSent: t('parents.invitation.notSent', { name: parentData.name }),
           });

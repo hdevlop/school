@@ -18,7 +18,7 @@ const ClassCard = ({ data }: any) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="min-w-0 flex-1 flex flex-col gap-2">
         <Label className="text-md font-bold">
           {classData.name}
         </Label>

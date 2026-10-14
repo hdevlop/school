@@ -74,8 +74,8 @@ export class StudentValidator {
   }
 
   async ensureCanDelete(id: string) {
-    if (await this.studentEnrollments.hasAnyForStudent(id)) {
-      Err(409, this.st('hasEnrollmentHistory'));
+    if (await this.studentRepository.hasFinancialHistory(id)) {
+      Err(409, this.st('hasFinancialHistory'));
     }
   }
 

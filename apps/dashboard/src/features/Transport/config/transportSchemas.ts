@@ -6,11 +6,16 @@ export const locationValueSchema = z.object({
   longitude: z.number().min(-180).max(180).nullable(),
 });
 
-const optionalDateField = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
-  .nullable()
-  .optional();
+// A blank date input holds `''`; read it as not given. The student wizard
+// starts the assignment blank and validates it even with transport off.
+const optionalDateField = z.preprocess(
+  (value) => (value === '' ? null : value),
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+    .nullable()
+    .optional(),
+);
 
 /**
  * Putting a student on a bus.

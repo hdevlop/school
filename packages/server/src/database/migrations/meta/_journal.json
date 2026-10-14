@@ -470,6 +470,13 @@
       "when": 1791836098725,
       "tag": "0066_role_permission_defaults",
       "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1792017202099,
+      "tag": "0067_users_email_or_phone",
+      "breakpoints": true
     }
   ]
 }

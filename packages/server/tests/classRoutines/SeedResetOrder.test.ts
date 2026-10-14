@@ -23,6 +23,7 @@ import { StudentEnrollmentRepository } from '../../src/modules/studentEnrollment
 import { AcademicYearTransitionRepository } from '../../src/modules/academicYearTransitions/AcademicYearTransitionRepository';
 import { AcademicYearMigrationIssueRepository } from '../../src/modules/academicYearMigrationIssues/AcademicYearMigrationIssueRepository';
 import { SeedService } from '../../src/modules/seed/SeedService';
+import { FeeTypeService } from '../../src/modules/financial/feeTypes/FeeTypeService';
 import { TeacherRepository } from '../../src/modules/teachers/TeacherRepository';
 import { StaffAssignmentRepository } from '../../src/modules/staff/StaffAssignmentRepository';
 import { drizzle } from 'drizzle-orm/pg-proxy';
@@ -139,7 +140,7 @@ describe('seed reset foreign-key order', () => {
     expect(calls.at(-1)).toBe('academicYears.clearForSeedReset');
   });
 
-  it('keeps classes, sections and subjects', async () => {
+  it('keeps classes, sections, subjects and fee types', async () => {
     const calls: string[] = [];
     const recorder = new Proxy({}, {
       get: (_service, field) => new Proxy({}, {
@@ -149,6 +150,31 @@ describe('seed reset foreign-key order', () => {
 
     await SeedService.prototype.clearAllData.call(recorder);
 
-    expect(calls.filter(call => /^(classService|sectionService|subjectService)\./.test(call))).toEqual([]);
+    expect(calls.filter(call => /^(classService|sectionService|subjectService|feeTypeService)\./.test(call))).toEqual([]);
+  });
+});
+
+describe('default fee type seed', () => {
+  it('keeps a fee type the school already has, by id or by name', async () => {
+    const created: string[] = [];
+    const service = {
+      feeTypeValidator: {
+        isExists: async (id: string) => id === 'FT00',
+        isNameExists: async (name: string) => name === 'Registration Fee',
+        validate: async () => true,
+      },
+      feeTypeRepository: {
+        create: async (data: { id: string }) => { created.push(data.id); return data; },
+      },
+    };
+
+    const result = await FeeTypeService.prototype.seedDemoFeeTypes.call(service, [
+      { id: 'FT00', name: 'Tuition Fee' },
+      { id: 'FT01', name: 'Registration Fee' },
+      { id: 'FT02', name: 'Transport Fee' },
+    ] as any);
+
+    expect(created).toEqual(['FT02']);
+    expect(result).toHaveLength(1);
   });
 });

@@ -7,6 +7,7 @@ import { StorageService } from 'najm-storage';
 import { nanoid } from 'nanoid';
 import { calculateAge, pickProps, isEmpty } from '../../shared';
 import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
+import { loginIdentity, loginIdentityUpdate } from '../../shared/loginIdentity';
 import type {
   CreateParentDto,
   CreateParentsBulkDto,
@@ -115,7 +116,7 @@ export class ParentService {
     const account = {
       id: data.userId,
       name: data.name,
-      email: data.email,
+      ...loginIdentity(data),
       image,
       role: 'parent',
     };
@@ -152,7 +153,7 @@ export class ParentService {
     // credential reset: that path has no audit, forces no replacement and
     // revokes no session. Recovery goes through the Reset access command.
     const USER_UPDATE_KEYS = [
-      'name', 'email', 'image'
+      'name', 'image'
     ];
 
     const PARENT_UPDATE_KEYS = [
@@ -170,7 +171,7 @@ export class ParentService {
     if (data.phone) await this.parentValidator.ensurePhoneUnique(data.phone, id);
 
     const parent = await this.parentRepository.getById(id);
-    const userData = pickProps(data, USER_UPDATE_KEYS);
+    const userData = { ...pickProps(data, USER_UPDATE_KEYS), ...loginIdentityUpdate(data, parent) };
     const parentData = pickProps(data, PARENT_UPDATE_KEYS);
 
     if (data.image !== undefined) {

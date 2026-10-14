@@ -197,8 +197,8 @@ export const BulkFeeFormContent = ({
          name="fees"
          title={getFeeTypeName}
          onAdd={handleAddFees}
-         addLabel={t('common.addItem')}
-         emptyLabel={t('common.noItemsAdded')}
+         addLabel={t('fees.form.addFee')}
+         emptyLabel={t('fees.form.noFeesAdded')}
          className="[&>button]:order-first [&>button]:border-muted-foreground/40 [&>button]:hover:border-primary/60"
       >
          <FeeItem

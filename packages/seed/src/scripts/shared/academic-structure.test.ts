@@ -31,6 +31,17 @@ describe('academic structure seed', () => {
     expect(new Set(sections.map((section) => section.className))).toEqual(new Set(classes.map((schoolClass) => schoolClass.name)));
   });
 
+  it('seeds every default fee type whatever the levels, with the ids demo fees use', () => {
+    const all = academicStructure('2026-2027');
+    const one = academicStructure('2026-2027', ['Lycée']);
+    expect(one.feeTypes).toEqual(all.feeTypes);
+    expect(all.feeTypes.map((feeType) => feeType.name)).toContain('Tuition Fee');
+    expect(all.feeTypes.find((feeType) => feeType.name === 'Tuition Fee')).toMatchObject({
+      id: 'FT00', category: 'tuition', paymentType: 'recurring', status: 'active',
+    });
+    expect(new Set(all.feeTypes.map((feeType) => feeType.id)).size).toBe(all.feeTypes.length);
+  });
+
   it('reads --levels without caring about accents or case', () => {
     expect(parseAcademicLevels([])).toEqual(ACADEMIC_LEVELS);
     expect(parseAcademicLevels(['--levels=maternelle,PRIMAIRE,college'])).toEqual(['Maternelle', 'Primaire', 'Collège']);

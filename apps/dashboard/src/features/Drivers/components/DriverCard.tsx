@@ -19,7 +19,7 @@ const DriverCard = ({ data }) => {
             <NAvatar src={driver?.image} fallback={driver.name} size="lg" version={driver?.updatedAt} />
          </div>
 
-         <div className="flex-1 flex flex-col gap-2">
+         <div className="min-w-0 flex-1 flex flex-col gap-2">
 
             <div className='flex flex-col'>
                <Label className="text-md font-bold">

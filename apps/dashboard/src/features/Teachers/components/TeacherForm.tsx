@@ -6,12 +6,12 @@ import { WizardForm, useDialog } from 'najm-kit'
 import type { StepConfig } from 'najm-kit'
 import { AvatarFormInput, FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormHeader } from 'najm-kit';
-import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, DollarSign, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
+import { Briefcase, IdCard, User, UserRound, Mail, Activity, UserPlus, BookOpen, Award, Calendar, Wallet, Landmark, Clock, GraduationCap, Phone, MapPin, Loader2 } from 'lucide-react'
 import { useTranslation } from 'najm-i18n/react'
 import {
   teacherPersonalSchema,
   teacherProfessionalSchema,
-  assignmentsSchema,
+  teacherAssignmentsStepSchema,
   teacherFullSchema,
 } from '../config/teacherSchemas'
 import {
@@ -69,7 +69,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
    const steps: StepConfig[] = useMemo(() => [
       {
          id: 'personal',
-         title: 'Personal Information',
+         title: t('teachers.form.personalInformation'),
          schema: teacherPersonalSchema,
          fields: Object.keys(teacherPersonalSchema.shape),
          render: () => (
@@ -80,7 +80,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       },
       {
          id: 'professional',
-         title: 'Professional Information',
+         title: t('teachers.form.professionalInformation'),
          schema: teacherProfessionalSchema,
          fields: Object.keys(teacherProfessionalSchema.shape),
          render: () => (
@@ -91,8 +91,8 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
       },
       {
          id: 'assignments',
-         title: 'Assignments',
-         schema: assignmentsSchema,
+         title: t('teachers.form.assignmentsStep'),
+         schema: teacherAssignmentsStepSchema,
          fields: ['assignments'],
          render: () => (
             <>
@@ -100,7 +100,7 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
             </>
          ),
       },
-   ], [classes, subjects])
+   ], [classes, subjects, t])
 
    const defaultValues = useMemo(() => ({
       ...getTeacherPersonalDefaultValues(teacher),
@@ -136,6 +136,11 @@ const TeacherForm = ({ teacher = null, classes = [], subjects = [], onSubmitTeac
             defaultValues={defaultValues}
             onSubmit={handleSubmit}
             className={isSubmitting ? 'pointer-events-none select-none' : undefined}
+            classNames={{
+               root: 'h-full min-h-0',
+               step: 'pb-4',
+               footer: 'sticky bottom-0 z-10 bg-background pt-3',
+            }}
             nextLabel={t('common.next')}
             previousLabel={t('common.previous')}
             submitLabel={isSubmitting ? (
@@ -305,7 +310,7 @@ export const ProfessionalInfoContent = () => {
                type='number'
                formLabel={t('teachers.form.salary')}
                placeholder={t('teachers.form.salaryPlaceholder')}
-               icon={DollarSign}
+               icon={Wallet}
             />
 
             <FormInput

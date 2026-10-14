@@ -17,7 +17,7 @@ import { useStudentsTableFilters } from '../hooks/useStudentsTableFilters';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useRouter } from 'next/navigation';
 import { useBusinessDate } from '@/features/Settings/hooks/useSettings';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
@@ -50,7 +50,6 @@ function StudentsTable() {
   // Fee types only fill the new-student form.
   const { feeTypes } = useFeeTypes({ enabled: canCreate });
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
-  const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const columns = useStudentsTableColumns();
 
   const {
@@ -58,12 +57,10 @@ function StudentsTable() {
     createStudent,
     updateStudent,
     deleteStudent,
-    bulkDeleteStudents,
     error,
     isStudentsLoading,
     isUpdating,
     isDeleting,
-    isBulkDeleting
   } = useStudents();
   const { filters, filteredStudents } = useStudentsTableFilters(students);
 
@@ -72,12 +69,12 @@ function StudentsTable() {
   // Parents created in the same form are invited too, one notice each.
   const createAndInviteStudent = async (data) => {
     const response = await createStudent(data);
-    announceInvitation(response?.data?.emailSent, {
+    announceInvitation(response?.data?.emailSent, data.email, {
       sent: t('students.invitation.sent', { email: data.email }),
       notSent: t('students.invitation.notSent'),
     });
     for (const parent of response?.data?.parentInvitations ?? []) {
-      announceInvitation(parent.emailSent, {
+      announceInvitation(parent.emailSent, parent.email, {
         sent: t('parents.invitation.sent', { email: parent.email }),
         notSent: t('parents.invitation.notSent', { name: parent.name }),
       });
@@ -132,7 +129,7 @@ function StudentsTable() {
   const handleEdit = (student) => {
     openDialog({
       title: `${t('students.dialogs.editTitle')} - ${student.name}`,
-      children: <SimpleStudentForm student={student} classes={classes} canCorrect={role === 'admin' || role === 'principal'} />,
+      children: <SimpleStudentForm student={student} classes={classes} />,
       width: '4xl',
       height: 'full',
       primaryButton: {
@@ -149,29 +146,15 @@ function StudentsTable() {
   const handleDelete = (student) => {
     confirmDelete({
       title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
+      warningText: t('students.dialogs.deleteWarning'),
       cancelText: t('common.cancel'),
       itemName: student.name,
       confirmText: t('students.dialogs.deleteButton'),
       loading: isDeleting,
       onConfirm: async () => {
-        await deleteStudent(student.id);
-      }
-    });
-  };
-
-  const handleBulkDelete = (ids) => {
-    confirmDelete({
-      title: t('common.delete'),
-      warningText: t('common.deleteConfirm'),
-      cancelText: t('common.cancel'),
-      itemName: t('students.dialogs.bulkDeleteItemName', { count: ids.length }),
-      confirmText: t('students.dialogs.deleteButton'),
-      loading: isBulkDeleting,
-      onConfirm: async () => {
-        await bulkDeleteStudents(ids);
-        setRowSelection({});
-      }
+        await withAcademicYear(viewingYear, () => deleteStudent(student.id));
+        await queryClient.invalidateQueries();
+      },
     });
   };
 
@@ -233,9 +216,6 @@ function StudentsTable() {
         onRowClick={handleView}
         onEdit={canUpdate ? handleEdit : undefined}
         onDelete={canDelete ? handleDelete : undefined}
-        onBulkDelete={canDelete ? handleBulkDelete : undefined}
-        rowSelection={canDelete ? rowSelection : undefined}
-        onRowSelectionChange={canDelete ? setRowSelection : undefined}
         dataActions={true}
         toolbarActionDisplay='settings'
         showImportButton={canCreate}

@@ -47,7 +47,7 @@ const ExamCard = ({ data }: any) => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col gap-2">
+      <div className="min-w-0 flex-1 flex flex-col gap-2">
         <div className="flex items-center gap-2 flex-wrap">
           <Label className="text-md font-bold">{e.title}</Label>
           {e.type && <NBadge color={EXAM_TYPE_COLORS[e.type]} label={t(`exams.type.${e.type}`)} look="soft" />}

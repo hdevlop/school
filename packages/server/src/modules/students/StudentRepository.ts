@@ -1,5 +1,9 @@
 import { DB } from '../../database/db';
-import { students, classes, sections, users, parents, studentParents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
+import {
+  students, classes, sections, users, parents, studentParents, studentEnrollments,
+  studentEnrollmentPlacements, attendance, disciplineIncidents, behaviorRewards,
+  fees, feeInstallments, payments, paymentAllocations, studentCreditLots,
+} from '../../database/schema';
 import { Repository, t } from '../../najm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { count, eq, desc, inArray, and, or, gt, lte, isNull, sql } from 'drizzle-orm';
@@ -189,7 +193,44 @@ export class StudentRepository {
     return updatedStudent;
   }
 
-  async delete(id) {
+  /** Called inside the delete transaction; identity deletion spans every year. */
+  async lockForDeletion(id: string) {
+    await this.db.select({ id: students.id }).from(students)
+      .where(and(this.ownedWhere(), eq(students.id, id))).for('update');
+    const schedules = await this.db.select({ id: fees.id }).from(fees)
+      .where(eq(fees.studentId, id)).orderBy(fees.id);
+    // Use the same locks as payment allocation and fee schedule writers.
+    for (const fee of schedules) {
+      await this.db.execute(sql`SELECT pg_advisory_xact_lock(hashtext('school.finance.schedule'), hashtext(${fee.id}))`);
+    }
+  }
+
+  /** Receipts, credit and legacy paid balances must survive identity cleanup. */
+  async hasFinancialHistory(id: string) {
+    const [row] = await this.db.execute<{ retained: boolean }>(sql`
+      SELECT EXISTS (SELECT 1 FROM ${payments} WHERE ${payments.studentId} = ${id})
+        OR EXISTS (SELECT 1 FROM ${studentCreditLots} WHERE ${studentCreditLots.studentId} = ${id})
+        OR EXISTS (SELECT 1 FROM ${fees} WHERE ${fees.studentId} = ${id} AND ${fees.paidAmount} > 0)
+        OR EXISTS (SELECT 1 FROM ${feeInstallments}
+          JOIN ${fees} ON ${fees.id} = ${feeInstallments.feeId}
+          WHERE ${fees.studentId} = ${id} AND ${feeInstallments.paidAmount} > 0)
+        OR EXISTS (SELECT 1 FROM ${paymentAllocations}
+          JOIN ${fees} ON ${fees.id} = ${paymentAllocations.feeId}
+          WHERE ${fees.studentId} = ${id}) AS retained`);
+    return row?.retained ?? false;
+  }
+
+  async delete(id: string) {
+    // Remove restrictive academic dependents explicitly. Other student links
+    // (grades, unpaid fees, routes and parent links) use their existing cascades.
+    await this.db.delete(attendance).where(eq(attendance.studentId, id));
+    await this.db.delete(disciplineIncidents).where(eq(disciplineIncidents.studentId, id));
+    await this.db.delete(behaviorRewards).where(eq(behaviorRewards.studentId, id));
+    const enrollments = this.db.select({ id: studentEnrollments.id }).from(studentEnrollments)
+      .where(eq(studentEnrollments.studentId, id));
+    await this.db.delete(studentEnrollmentPlacements)
+      .where(inArray(studentEnrollmentPlacements.enrollmentId, enrollments));
+    await this.db.delete(studentEnrollments).where(eq(studentEnrollments.studentId, id));
     const [deletedStudent] = await this.db
       .delete(students)
       .where(eq(students.id, id))

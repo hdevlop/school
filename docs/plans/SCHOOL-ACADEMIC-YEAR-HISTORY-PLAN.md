@@ -178,6 +178,8 @@ A School context provider adds the validated year and the shared role rule to th
 
 ### 0.2 Ground rules
 
+**Owner simplification, 2026-10-15:** Student Edit now edits profile details only. The enrollment-correction inputs, history fetch and frontend correction payload builder were removed completely. Class and section remain enrollment-owned. Earlier same-form correction UI descriptions below are historical; the separate enrollment operations and backend correction contract remain.
+
 - Use `bun`, never npm/yarn/pnpm, and run commands from the repository root.
 - The Najm source at `C:\Users\hdevlop\Desktop\najm` is **read-only reference**. School uses only the published versions pinned in the root `package.json`. Never link, copy or publish Najm.
 - Do not commit, push, reset, stash, restore or clean unless the owner asks. The tree contains work that is not yours; change only what the current module needs.
@@ -406,6 +408,7 @@ Unknown/inaccessible years fail visibly. Valid empty years return scoped empty s
 
 ### 3.3 Historical relationships
 
+- **Owner update, 2026-10-15: explicit student deletion is supported.** An account with `delete:students` may confirm permanent deletion of one student across all years, including enrollment placements, attendance, grades, discipline, rewards, unpaid fees and transport links. The linked student login is deleted; parents and school structure remain. Payment, allocation, credit or recorded paid-balance history blocks deletion with 409. Cleanup runs in one transaction, with avatar removal after commit. Withdrawal remains the operation for a student leaving school. This is an explicit exception to identity-history retention, not a selected-year-only delete. Unit coverage is `StudentDeletion.test.ts`; `StudentDeletionDatabase.test.ts` verifies cleanup, financial refusals and rollback using only temporary tables on the guarded local history fixture. Browser and authenticated REST/MCP deletion acceptance are separate and have not been run for this change.
 - Preserve one enrollment per student/year and dated placements with exclusive `validTo`. Prevent overlapping intervals and class/section/year contradictions with transactional/database protections.
 - Annual lists use the latest placement in the year. Dated rosters use both enrollment and placement covering the day; transfers do not double-count annual students.
 - Initial admission and yearly enrollment start remain distinct. The enrollment service remains the sole owner of current class/section/status projections. Editing an old enrollment must not alter the active projection.

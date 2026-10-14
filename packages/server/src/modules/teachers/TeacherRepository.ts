@@ -339,6 +339,22 @@ export class TeacherRepository {
     return assignment;
   }
 
+  async getAssignmentRows(teacherId: string) {
+    return await this.db
+      .select({
+        classId: teacherAssignments.classId,
+        sectionId: teacherAssignments.sectionId,
+        subjectId: teacherAssignments.subjectId,
+      })
+      .from(teacherAssignments)
+      .where(
+        and(
+          eq(teacherAssignments.teacherId, teacherId),
+          inArray(teacherAssignments.classId, this.classesInSelectedYear()),
+        )
+      );
+  }
+
   async findAssignment(teacherId, sectionId, subjectId) {
     const [assignment] = await this.db
       .select()

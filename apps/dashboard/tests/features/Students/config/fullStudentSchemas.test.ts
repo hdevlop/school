@@ -88,6 +88,23 @@ describe('fullStudentSchema composition', () => {
     expect(parsed.transportAssignment).toBeUndefined();
   });
 
+  // The wizard starts the assignment blank and validates it with transport
+  // off; a blank date there used to block the submit with no visible error.
+  it('accepts the blank assignment the wizard starts with', () => {
+    const blank = { address: '', latitude: null, longitude: null };
+    const result = fullStudentSchema.safeParse({
+      ...enrolment,
+      transportEnabled: false,
+      transportAssignment: {
+        vehicleId: '', assignmentDate: '', pickup: blank, pickupPlaceId: null,
+        dropoff: blank, dropoffPlaceId: null, notes: '',
+      },
+    });
+
+    expect(result.error?.issues).toBeUndefined();
+    expect(result.data?.transportAssignment?.assignmentDate).toBeNull();
+  });
+
   it('accepts an enrolment that books a bus seat', () => {
     const parsed = fullStudentSchema.parse({
       ...enrolment,

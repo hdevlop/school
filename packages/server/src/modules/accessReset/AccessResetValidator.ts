@@ -26,6 +26,9 @@ const STAFF_ACCESS_ROLES = new Set([
 /** A staff member on leave still holds a working login; a terminated one does not. */
 const CURRENT_STAFF_STATUSES = new Set(['active', 'onLeave']);
 
+/** An account reached by phone only has no mailbox to send a link to. */
+const hasEmail = (account: AccessResetAccount) => Boolean(account.email?.trim());
+
 export type ResolvedAccessTarget = {
   account: AccessResetAccount;
   mode: AccessResetMode;
@@ -91,7 +94,9 @@ export class AccessResetValidator {
 
     // A pending parent has never signed in, so there is no credential worth
     // replacing — the invitation they were already sent is what they need.
-    if (status === 'pending') return { account, mode: 'invitation_resent' };
+    // A parent with no email was never sent one: the CIN on file is the only
+    // way in, and that path also activates the account.
+    if (status === 'pending' && hasEmail(account)) return { account, mode: 'invitation_resent' };
 
     const cin = parent.cin?.trim();
     if (!cin) Err(409, this.at('parentCinMissing'));
@@ -114,6 +119,7 @@ export class AccessResetValidator {
     // Enrolment status is tracked apart from the login: a graduated or
     // transferred student keeps a row, but is not someone to restore access for.
     if (student.status !== 'active') Err(409, this.at('profileNotCurrent'));
+    this.ensureMailbox(account);
 
     return { account, mode: status === 'pending' ? 'invitation_resent' : 'reset_email_sent' };
   }
@@ -129,6 +135,7 @@ export class AccessResetValidator {
     // orphaned and this is not a target.
     const teacher = await this.accessResetRepository.getTeacherByStaffId(staffRow.id);
     if (!teacher) Err(409, this.at('teacherChainMismatch'));
+    this.ensureMailbox(account);
 
     return { account, mode: status === 'pending' ? 'invitation_resent' : 'reset_email_sent' };
   }
@@ -138,7 +145,13 @@ export class AccessResetValidator {
     status: 'active' | 'pending',
   ): Promise<ResolvedAccessTarget> {
     await this.ensureStaffRow(account);
+    this.ensureMailbox(account);
     return { account, mode: status === 'pending' ? 'invitation_resent' : 'reset_email_sent' };
+  }
+
+  /** Every path but the parent CIN one sends a link, which needs an address. */
+  private ensureMailbox(account: AccessResetAccount) {
+    if (!hasEmail(account)) Err(409, this.at('noEmail'));
   }
 
   private async ensureStaffRow(account: AccessResetAccount) {

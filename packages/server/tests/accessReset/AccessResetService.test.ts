@@ -23,12 +23,15 @@ type Fakes = {
   resolveThrows?: Error;
   authThrows?: Error;
   auditThrows?: Error;
+  status?: 'active' | 'pending';
+  email?: string | null;
 };
 
 const build = (fakes: Fakes = {}) => {
   const audits: any[] = [];
   const authCalls: any[] = [];
   const locked: string[] = [];
+  const activations: Array<{ userId: string; data: unknown }> = [];
   const cacheCounts = new Map<string, number>();
 
   const mode = fakes.mode ?? 'reset_email_sent';
@@ -52,7 +55,10 @@ const build = (fakes: Fakes = {}) => {
       resolveCalls += 1;
       const effective = resolveCalls > 1 ? (fakes.modeOnRecheck ?? mode) : mode;
       return {
-        account: { id: 'user-1', name: 'Target', email: 'target@example.com', status: 'active', roleName: 'parent' },
+        account: {
+          id: 'user-1', name: 'Target', email: fakes.email === undefined ? 'target@example.com' : fakes.email,
+          status: fakes.status ?? 'active', roleName: 'parent',
+        },
         mode: effective,
         temporaryCredential: fakes.temporaryCredential,
       };
@@ -98,9 +104,10 @@ const build = (fakes: Fakes = {}) => {
     validator as any,
     authService as any,
     cache as any,
+    { update: async (userId: string, data: unknown) => { activations.push({ userId, data }); } } as any,
   );
 
-  return { service, audits, authCalls, cacheCounts, locked };
+  return { service, audits, authCalls, cacheCounts, locked, activations };
 };
 
 const BODY = { reason: 'Parent lost access after a phone change', expectedMode: 'reset_email_sent' as any };
@@ -164,6 +171,24 @@ describe('AccessResetService — truthful delivery', () => {
     expect(result.delivery).toBe('not_applicable');
     expect(authCalls[0].method).toBe('resetToTemporaryCredential');
     expect(authCalls[0].credential).toEqual({ kind: 'ma-cin', value: 'bb46123' });
+  });
+
+  it('leaves an active parent active on the CIN path', async () => {
+    const { service, activations } = build({ mode: 'parent_credential_setup', temporaryCredential: 'bb46123' });
+    await service.resetAccess('user-1', { ...BODY, expectedMode: 'parent_credential_setup' as any }, ACTOR);
+    expect(activations).toEqual([]);
+  });
+
+  // A parent created with a phone and no email was never sent an invitation,
+  // so the CIN path is their way in and must open the account it sets up.
+  it('activates a pending parent with no email once the CIN is set', async () => {
+    const { service, authCalls, activations } = build({
+      mode: 'parent_credential_setup', temporaryCredential: 'bb46123', status: 'pending', email: null,
+    });
+    const result = await service.resetAccess('user-1', { ...BODY, expectedMode: 'parent_credential_setup' as any }, ACTOR);
+    expect(result.delivery).toBe('not_applicable');
+    expect(authCalls[0].method).toBe('resetToTemporaryCredential');
+    expect(activations).toEqual([{ userId: 'user-1', data: { status: 'active' } }]);
   });
 
   it('resends an invitation through the invitation method, not the reset one', async () => {

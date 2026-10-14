@@ -5,6 +5,7 @@ import { AuthService, UserService } from '../../auth';
 import { StorageService } from 'najm-storage';
 import { formatDate, isEmpty, pickProps } from '../../shared';
 import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
+import { loginIdentity, loginIdentityUpdate } from '../../shared/loginIdentity';
 import { nanoid } from 'nanoid';
 import { StaffService } from '../staff/StaffService';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
@@ -205,7 +206,7 @@ export class TeacherService {
     const account = {
       id: data.userId,
       name: data.name,
-      email: data.email,
+      ...loginIdentity(data),
       image,
       role: 'teacher',
     };
@@ -250,12 +251,13 @@ export class TeacherService {
     return 'emailSent' in user ? { ...created, emailSent: user.emailSent } : created;
   }
 
+  @Transaction()
   async update(id: string, data: UpdateTeacherDto) {
     // No 'password' here. A routine profile edit must not double as a
     // credential reset: that path has no audit, forces no replacement and
     // revokes no session. Recovery goes through the Reset access command.
     const USER_UPDATE_KEYS = [
-      'name', 'email', 'image'
+      'name', 'image'
     ];
 
     const STAFF_UPDATE_KEYS = [
@@ -274,7 +276,7 @@ export class TeacherService {
     await this.teacherValidator.ensurePhoneUnique(data.phone, id);
     await this.teacherValidator.ensureAssignmentsValid(data.assignments);
 
-    const userData = pickProps(data, USER_UPDATE_KEYS);
+    const userData = { ...pickProps(data, USER_UPDATE_KEYS), ...loginIdentityUpdate(data, teacher) };
     const staffData: Record<string, any> = pickProps(data, STAFF_UPDATE_KEYS);
     const teacherData = pickProps(data, TEACHER_UPDATE_KEYS);
     if (staffData.hireDate !== undefined) staffData.hireDate = formatDate(staffData.hireDate);
@@ -295,6 +297,11 @@ export class TeacherService {
     }
     if (Object.keys(teacherData).length > 0) {
       await this.teacherRepository.update(id, teacherData);
+    }
+    // The edit form sends the year's whole list: absent leaves it alone, an
+    // empty list removes every assignment of the year.
+    if (data.assignments !== undefined) {
+      await this.replaceTeacherAssignments(id, data.assignments);
     }
     return await this.teacherRepository.getById(id);
   }
@@ -371,6 +378,38 @@ export class TeacherService {
             sectionId,
           });
         }
+      }
+    }
+  }
+
+  // Makes the selected year's assignments match the list: rows already there
+  // keep their ids, missing ones are added and the rest removed. Other years
+  // are not touched, since the repository reads and deletes inside the year.
+  private async replaceTeacherAssignments(teacherId: string, assignments: TeacherAssignmentDto[]) {
+    const key = (row: { classId: string; sectionId: string; subjectId: string }) =>
+      `${row.classId}|${row.sectionId}|${row.subjectId}`;
+
+    const wanted = new Map<string, { classId: string; sectionId: string; subjectId: string }>();
+    for (const { classId, sectionIds, subjectIds } of assignments) {
+      for (const sectionId of sectionIds) {
+        for (const subjectId of subjectIds) {
+          const row = { classId, sectionId, subjectId };
+          wanted.set(key(row), row);
+        }
+      }
+    }
+
+    const current = await this.teacherRepository.getAssignmentRows(teacherId);
+    const currentKeys = new Set(current.map(key));
+
+    for (const row of current) {
+      if (!wanted.has(key(row))) {
+        await this.teacherRepository.deleteAssignment(teacherId, row.sectionId, row.subjectId);
+      }
+    }
+    for (const [rowKey, row] of wanted) {
+      if (!currentKeys.has(rowKey)) {
+        await this.teacherRepository.createAssignment({ ...row, teacherId });
       }
     }
   }

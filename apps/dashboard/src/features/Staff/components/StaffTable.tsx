@@ -68,7 +68,7 @@ const StaffTable = () => {
   // Only a role with app access gets a login, and so an invitation.
   const createAndInviteStaff = async (data) => {
     const response = await createStaff(data);
-    announceInvitation(response?.data?.emailSent, {
+    announceInvitation(response?.data?.emailSent, data.email, {
       sent: t('staff.invitation.sent', { email: data.email }),
       notSent: t('staff.invitation.notSent'),
     });

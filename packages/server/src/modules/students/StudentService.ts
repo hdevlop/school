@@ -1,10 +1,11 @@
-import { Service, Transaction, Events, EventService } from '../../najm';
+import { Service, Transaction, Events, EventService, Inject, TransactionService } from '../../najm';
 import { StudentEnrollmentService } from '../studentEnrollments/StudentEnrollmentService';
 import type {CreateStudentDto, CreateStudentsBulkDto, UpdateStudentDto,} from './StudentDto';
 import { StudentRouteService } from '../transport/studentRoutes/StudentRouteService';
 import type { ResolvedAcademicYear } from '../academicYears/AcademicYearValidator';
 import { Year } from '../academicYears/requestYear';
 import { resolveUserPassword, isSeeding } from '../../shared/userPassword';
+import { loginIdentity, loginIdentityUpdate } from '../../shared/loginIdentity';
 import { FeeService } from '../financial/fees/FeeService';
 import { ParentService } from '../parents/ParentService';
 import { StudentRepository } from './StudentRepository';
@@ -18,6 +19,7 @@ import { nanoid } from 'nanoid';
 export class StudentService {
   @Year() private readonly year!: ResolvedAcademicYear;
   @Events() private events!: EventService;
+  @Inject(TransactionService) private transactions!: TransactionService;
 
   constructor(
     private studentRepository: StudentRepository,
@@ -135,7 +137,7 @@ export class StudentService {
     const account = {
       id: data.userId,
       name: data.name,
-      email: data.email,
+      ...loginIdentity(data),
       image,
       role: 'student',
     };
@@ -199,7 +201,7 @@ export class StudentService {
     // credential reset: that path has no audit, forces no replacement and
     // revokes no session. Recovery goes through the Reset access command.
     const USER_UPDATE_KEYS = [
-      'name', 'email', 'image'
+      'name', 'image'
     ];
 
     const STUDENT_UPDATE_KEYS = [
@@ -220,7 +222,7 @@ export class StudentService {
     await this.studentValidator.ensurePhoneUnique(data.phone ?? undefined, id);
     await this.studentValidator.ensureClassAndSectionValid(data.classId, data.sectionId);
 
-    const userData = pickProps(data, USER_UPDATE_KEYS);
+    const userData = { ...pickProps(data, USER_UPDATE_KEYS), ...loginIdentityUpdate(data, student) };
     const studentData = pickProps(data, STUDENT_UPDATE_KEYS);
 
     if (data.image !== undefined) {
@@ -244,11 +246,14 @@ export class StudentService {
     return this.getById(id);
   }
 
+  @Transaction()
   async delete(id: string) {
+    await this.studentRepository.lockForDeletion(id);
     await this.studentValidator.ensureExists(id);
     await this.studentValidator.ensureCanDelete(id);
     const result = await this.studentRepository.delete(id);
-    this.storage.delete('students', `${id}_avatar.png`).catch(() => {});
+    await this.transactions.afterCommit(() =>
+      this.storage.delete('students', `${id}_avatar.png`).catch(() => {}));
     return result;
   }
 

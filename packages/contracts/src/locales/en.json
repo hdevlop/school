@@ -71,7 +71,8 @@
       "parentCinMissing": "This parent has no CIN on file, so a CIN credential reset is not possible",
       "parentCinInvalid": "This parent's CIN is not valid, so a CIN credential reset is not possible",
       "staleConfirmation": "This account changed since the confirmation was shown. Reload the list and try again",
-      "cooldown": "An access reset for this account was just requested. Please wait before trying again"
+      "cooldown": "An access reset for this account was just requested. Please wait before trying again",
+      "noEmail": "This account has no email address, so no link can be sent to it"
     }
   },
   "financialOperations": {
@@ -270,7 +271,9 @@
       "passwordPlaceholder": "Enter your password",
       "password": "Password",
       "emailPlaceholder": "Enter your email",
-      "email": "Email"
+      "email": "Email",
+      "emailOrPhone": "Email or phone",
+      "emailOrPhonePlaceholder": "Enter your email or phone number"
     },
     "success": {
       "resetLinkSent": "Password reset link sent to your email",
@@ -328,7 +331,7 @@
       "unsupported": "This account cannot have its access reset from here.",
       "unsupportedHint": "Reload the list and check the account status, role and profile.",
       "modes": {
-        "parentCredentialSetup": "The parent's password will be replaced with the CIN on file. They sign in with their email and that CIN, then must choose a new password. Active sessions end immediately.",
+        "parentCredentialSetup": "The parent's password will be replaced with the CIN on file. They sign in with their email or phone and that CIN, then must choose a new password. Active sessions end immediately.",
         "resetEmailSent": "A one-time password reset link is emailed to this account's current address. Existing sessions stay valid until the new password is saved.",
         "invitationResent": "The existing invitation is emailed again to this account's current address. No second account or profile is created."
       },
@@ -336,7 +339,7 @@
         "sent": "A recovery email was sent.",
         "simulated": "Mail is not configured in this environment, so no email actually reached the recipient.",
         "notSent": "The email could not be sent. Please try again.",
-        "notApplicable": "The parent can now sign in with their email and the CIN on file."
+        "notApplicable": "The parent can now sign in with their email or phone and the CIN on file."
       }
     },
     "view": {
@@ -346,7 +349,7 @@
       "accountInformation": "Account Information"
     },
     "subtitle": {
-      "count": "{{count}} users total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "User retrieved successfully",
@@ -359,7 +362,9 @@
     "errors": {
       "notFound": "No user found with the provided information",
       "adminRoleNotFound": "Admin role not found",
-      "idExists": "User ID already exists"
+      "idExists": "User ID already exists",
+      "emailOrPhoneRequired": "Enter an email address or a phone number",
+      "phoneExists": "This phone number is already used by another account"
     },
     "validation": {
       "nameMinLength": "Name must be at least 2 characters long",
@@ -412,7 +417,7 @@
   },
   "roles": {
     "subtitle": {
-      "count": "{{count}} roles total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Role retrieved successfully",
@@ -467,7 +472,7 @@
   },
   "permissions": {
     "subtitle": {
-      "count": "{{count}} permissions total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Permission retrieved successfully",
@@ -1178,7 +1183,7 @@
       "confirmDescription": "This will permanently delete all data from the database.",
       "warningMessage": "This action will delete all data from the system.",
       "confirm": "Clear All Data",
-      "success": "School data cleared. The admin account, classes, sections and subjects were kept."
+      "success": "School data cleared. The admin account, classes, sections, subjects and fee types were kept."
     },
     "notifications": {
       "title": "Notification Settings",
@@ -1220,7 +1225,7 @@
   },
   "feeTypes": {
     "subtitle": {
-      "count": "{{count}} fee types total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Fee type retrieved successfully",
@@ -1352,7 +1357,7 @@
       "otherYearDebt": "{{year}} ({{count}} unpaid)"
     },
     "subtitle": {
-      "count": "{{count}} students total"
+      "count": "Students: {{count}}"
     },
     "success": {
       "retrieved": "Fee retrieved successfully",
@@ -1533,7 +1538,9 @@
       "sectionPlaceholder": "Select section",
       "students": "Students",
       "studentsInClass": "Students in class",
-      "unknownFeeType": "Unknown fee type"
+      "unknownFeeType": "Unknown fee type",
+      "addFee": "Add fee",
+      "noFeesAdded": "No fees added yet."
     },
     "dialogs": {
       "createTitle": "Create New Fee",
@@ -1755,6 +1762,7 @@
       "bulkDeleted": "Student records deleted successfully"
     },
     "errors": {
+      "hasFinancialHistory": "This student has payment or credit history and cannot be deleted. Withdraw their enrollment instead.",
       "idExists": "Student ID already exists",
       "notFound": "Student not found",
       "studentCodeExists": "A student with this student code already exists",
@@ -1897,6 +1905,7 @@
       "existingParentFoundDescription": "We found an existing parent with the same {field}. Would you like to link this parent instead of creating a new one?"
     },
     "dialogs": {
+      "deleteWarning": "This permanently deletes the student and their academic records, unpaid fees and transport assignments across all school years. Linked parents are kept. This cannot be undone. Students with payment or credit history cannot be deleted.",
       "createTitleForYear": "Add a student to {{year}}",
       "createTitle": "Create New Student",
       "createButton": "Create Student",
@@ -2133,7 +2142,7 @@
     },
     "title": "Title",
     "subtitle": {
-      "count": "{{count}} students total"
+      "count": "Total: {{count}}"
     },
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The student activates the account from the link.",
@@ -2186,7 +2195,7 @@
       "orphaned": "Orphaned parent: no kids, no students linked."
     },
     "subtitle": {
-      "count": "{{count}} parents total"
+      "count": "Total: {{count}}"
     },
     "validation": {
       "nameMinLength": "Name must be at least 2 characters long",
@@ -2226,7 +2235,9 @@
       "parentImage": "Parent Photo",
       "parent": "Parent",
       "image": "Upload Photo",
-      "name": "Name"
+      "name": "Name",
+      "addParent": "Add parent",
+      "noParentsAdded": "No parents added yet."
     },
     "relationships": {
       "father": "Father",
@@ -2532,7 +2543,7 @@
     "loading": "Loading staff...",
     "noData": "No staff members found",
     "subtitle": {
-      "count": "{{count}} members total",
+      "count": "Total: {{count}}",
       "members": "members"
     },
     "invitation": {
@@ -2638,7 +2649,7 @@
   },
   "teachers": {
     "subtitle": {
-      "count": "{{count}} teachers total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Teacher retrieved successfully",
@@ -2676,6 +2687,7 @@
       "personalInformation": "Personal Information",
       "professionalInformation": "Professional Information",
       "assignmentInformation": "Assignment Information",
+      "assignmentsStep": "Assignments",
       "financialInformation": "Financial Information",
       "emergencyContact": "Emergency Contact",
       "assignment": "Assignment",
@@ -2743,7 +2755,8 @@
       "noTeacherFound": "No teacher found",
       "searchTeacher": "Search teacher...",
       "teacher": "Teacher",
-      "teacherPlaceholder": "Select teacher"
+      "teacherPlaceholder": "Select teacher",
+      "noAssignmentsAdded": "No assignments added yet."
     },
     "status": {
       "active": "Active",
@@ -2883,7 +2896,7 @@
   },
   "drivers": {
     "subtitle": {
-      "count": "{{count}} drivers total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Driver retrieved successfully",
@@ -3347,7 +3360,7 @@
   },
   "sections": {
     "subtitle": {
-      "count": "{{count}} sections total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Section retrieved successfully",
@@ -3424,7 +3437,7 @@
       "nothingToSave": "Nothing to save."
     },
     "subtitle": {
-      "count": "{{count}} students"
+      "count": "Students: {{count}}"
     },
     "form": {
       "studentAndAssessment": "Student & Assessment",
@@ -3556,7 +3569,7 @@
   },
   "exams": {
     "subtitle": {
-      "count": "{{count}} exams total"
+      "count": "Total: {{count}}"
     },
     "form": {
       "noSections": "No sections found",
@@ -3662,7 +3675,7 @@
   },
   "assessments": {
     "subtitle": {
-      "count": "{{count}} assessments total"
+      "count": "Total: {{count}}"
     },
     "form": {
       "noSections": "No sections found",
@@ -3764,7 +3777,7 @@
   },
   "announcements": {
     "subtitle": {
-      "count": "{{count}} announcements total"
+      "count": "Total: {{count}}"
     },
     "form": {
       "noClasses": "No classes found",
@@ -3966,7 +3979,7 @@
   },
   "classes": {
     "subtitle": {
-      "count": "{{count}} classes total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Class retrieved successfully",
@@ -4031,7 +4044,7 @@
       "inUse": "Classes or accountants in some school year use this cycle. Deactivate it instead of deleting it"
     },
     "subtitle": {
-      "count": "{{count}} cycles total"
+      "count": "Total: {{count}}"
     },
     "form": {
       "cycleInformation": "Cycle Information",
@@ -4063,7 +4076,7 @@
   },
   "subjects": {
     "subtitle": {
-      "count": "{{count}} subjects total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Subject retrieved successfully",
@@ -4121,7 +4134,7 @@
   },
   "expenses": {
     "subtitle": {
-      "count": "{{count}} expenses total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Expense retrieved successfully",
@@ -4250,7 +4263,7 @@
   },
   "vehicles": {
     "subtitle": {
-      "count": "{{count}} vehicles total"
+      "count": "Total: {{count}}"
     },
     "success": {
       "retrieved": "Vehicle retrieved successfully",
@@ -4746,7 +4759,7 @@
   },
   "payroll": {
     "subtitle": {
-      "count": "{{count}} employees"
+      "count": "Employees: {{count}}"
     },
     "success": {
       "retrieved": "Payroll retrieved successfully",
