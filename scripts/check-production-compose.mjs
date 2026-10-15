@@ -54,7 +54,8 @@ try {
     assert.equal(migrate.healthcheck.disable, true);
     assert.equal(app.depends_on.migrate.condition, 'service_completed_successfully');
     assert.equal(worker.depends_on.migrate.condition, 'service_completed_successfully');
-    assert.equal(app.volumes[0].bind.create_host_path, false);
+    // Compose v2 omits false Boolean fields from its normalized JSON.
+    assert.equal(app.volumes[0].bind.create_host_path ?? false, false);
     assert.equal(app.ports[0].host_ip, '127.0.0.1');
     assert.equal(app.environment.POSTGRES_PASSWORD, `fixture-${name}-database`);
     assert.equal(postgres.environment.POSTGRES_PASSWORD, `fixture-${name}-database`);
