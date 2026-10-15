@@ -57,6 +57,11 @@ A comprehensive, modern school management system built with Next.js and TypeScri
 
 ## Installation
 
+For the demo at `myscolai.com` and independently versioned customer at
+`jhlschool.com`, follow the [deployment guide](docs/deployment/demo-and-customer.md).
+It covers the existing-demo transition, isolated data, empty customer setup,
+manual image selection in Dokploy and release verification.
+
 1. **Clone the repository**
 ```bash
 git clone <repository-url>

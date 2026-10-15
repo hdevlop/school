@@ -7,7 +7,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 export const storageConfig = () =>
   storage({
     provider: 'local',
-    basePath: 'storage',
+    basePath: process.env.SCHOOL_STORAGE_PATH?.trim() || 'storage',
     servePrefix: '/api',
     maxFileSize: MAX_FILE_SIZE,
     allowedCategories: [FileCategory.IMAGE, FileCategory.PDF, FileCategory.DOCUMENT],

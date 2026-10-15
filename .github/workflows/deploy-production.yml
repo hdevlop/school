@@ -1,4 +1,4 @@
-name: Verify, publish, and deploy School
+name: Verify, publish, and deploy School demo
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: school-production-vps
+  group: school-deploy-demo
   cancel-in-progress: false
 
 permissions:
@@ -61,12 +61,10 @@ jobs:
           fi
 
           runtime_changed=false
-          # Keep this fail-closed allowlist synchronized with section 11 of the
-          # active School connected acceptance plan.
+          # Only documentation and evidence can skip runtime publication.
           for path in "${changed_files[@]}"; do
             case "$path" in
-              docs/evidence/* | docs/*.md | \
-              SCHOOL-CONNECTED-ACCEPTANCE-PLAN.md)
+              docs/evidence/* | docs/*.md)
                 ;;
               *)
                 runtime_changed=true
@@ -79,7 +77,7 @@ jobs:
           if [ "$runtime_changed" = "true" ]; then
             echo "Application image publication and deployment are required."
           else
-            echo "Only tests, evidence, or the active acceptance plan changed; publication and deployment will be skipped."
+            echo "Only documentation or evidence changed; publication and deployment will be skipped."
           fi
 
   verify:
@@ -88,8 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DB_URL: postgresql://build:build@127.0.0.1:5432/build
-      NEXT_PUBLIC_APP_URL: https://demo.example.invalid
-      FRONTEND_URL: https://demo.example.invalid
+      FRONTEND_URL: https://build.example.invalid
       NAJM_AUTH_INTERNAL_URL: http://127.0.0.1:3000/api/auth/session/recover
       JWT_ACCESS_SECRET: build-only-access-secret-at-least-32-characters
       JWT_REFRESH_SECRET: build-only-refresh-secret-at-least-32-characters
@@ -110,6 +107,17 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Verify the complete root contract
         run: bun run check
+      - name: Verify isolated demo and customer Compose configurations
+        run: bun scripts/check-production-compose.mjs
+      - name: Check the build has no installation domain
+        run: |
+          if rg -l 'myscolai\.com|jhlschool\.com' apps/dashboard/.next/server apps/dashboard/.next/static; then
+            echo '::error::An installation domain was baked into the reusable build.'
+            exit 1
+          else
+            result=$?
+            test "$result" -eq 1
+          fi
 
   publish:
     name: Build and publish image
@@ -144,27 +152,61 @@ jobs:
           push: true
           provenance: mode=max
           sbom: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
-            ${{ env.IMAGE_NAME }}:main
+          tags: ${{ env.IMAGE_NAME }}:sha-${{ github.sha }}
           build-args: |
             OCI_CREATED=${{ steps.created.outputs.value }}
             OCI_REVISION=${{ github.sha }}
-            NEXT_PUBLIC_APP_URL=https://myscolai.com
-            FRONTEND_URL=https://myscolai.com
+      - name: Record the immutable release
+        env:
+          IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        run: |
+          jq -n \
+            --arg revision "$GITHUB_SHA" \
+            --arg image "${IMAGE_NAME}@${IMAGE_DIGEST}" \
+            --arg run "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            '{revision: $revision, image: $image, buildRun: $run}' > release.json
+          echo "### Published release" >> "$GITHUB_STEP_SUMMARY"
+          echo "Revision: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Image: ${IMAGE_NAME}@${IMAGE_DIGEST}" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Customer promotion is manual in Dokploy after demo acceptance.' >> "$GITHUB_STEP_SUMMARY"
+      - name: Save release details
+        uses: actions/upload-artifact@v4
+        with:
+          name: school-release-${{ github.sha }}
+          path: release.json
+          retention-days: 90
 
   deploy:
-    name: Deploy through Dokploy
+    name: Deploy and verify demo through Dokploy
     needs: publish
+    if: ${{ vars.DEMO_DEPLOY_PAUSED != 'true' }}
     runs-on: ubuntu-latest
-    environment: production-vps
+    environment: demo
     permissions:
       contents: read
-      packages: read
+      packages: write
     steps:
+      - name: Authenticate to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Point demo at this published image
+        env:
+          IMAGE_DIGEST: ${{ needs.publish.outputs.digest }}
+          DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEMO_DEPLOY_WEBHOOK }}
+        run: |
+          test -n "$DOKPLOY_DEPLOY_WEBHOOK"
+          docker buildx imagetools create --prefer-index=false \
+            --tag "${IMAGE_NAME}:demo" "${IMAGE_NAME}@${IMAGE_DIGEST}"
+          actual_digest="$(docker buildx imagetools inspect "${IMAGE_NAME}:demo" --format '{{json .Manifest}}' | jq -r '.digest')"
+          test "$actual_digest" = "$IMAGE_DIGEST"
       - name: Trigger Dokploy deployment
         env:
-          DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_SCHOOL_DEPLOY_WEBHOOK }}
+          DOKPLOY_DEPLOY_WEBHOOK: ${{ secrets.DOKPLOY_DEMO_DEPLOY_WEBHOOK }}
           DEPLOY_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           test -n "$DOKPLOY_DEPLOY_WEBHOOK"
@@ -176,7 +218,7 @@ jobs:
               --arg ref "$GITHUB_REF" \
               --arg after "$GITHUB_SHA" \
               --arg message "$DEPLOY_MESSAGE" \
-              '{ref: $ref, after: $after, head_commit: {message: $message}, commits: []}'
+              '{ref: $ref, after: $after, head_commit: {id: $after, message: $message}, commits: []}'
           )"
           curl \
             --fail-with-body \
@@ -252,3 +294,11 @@ jobs:
 
           echo "::error::Dokploy accepted the webhook, but revision $DEPLOY_REVISION did not become ready within 15 minutes (served revision: $last_revision, apex: $last_apex_status, www: $last_www_status, readiness: $last_readiness_status)."
           exit 1
+      - name: Record successful demo deployment
+        env:
+          IMAGE_DIGEST: ${{ needs.publish.outputs.digest }}
+        run: |
+          echo '### Demo deployment verified' >> "$GITHUB_STEP_SUMMARY"
+          echo "Revision: $GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Customer candidate: ${IMAGE_NAME}@${IMAGE_DIGEST}" >> "$GITHUB_STEP_SUMMARY"
+          echo 'Test the demo workflows before manually selecting this image in customer Dokploy.' >> "$GITHUB_STEP_SUMMARY"

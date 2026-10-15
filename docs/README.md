@@ -8,6 +8,7 @@ Start with the document that matches the work:
 | Darija tool and answer verification | [Current validation guide](tests/jev-router-validation.md) |
 | Chatbot results and historical recovery | [Evidence index](evidence/chatbot-latency/README.md) |
 | Workspace structure and boundaries | [Workspace architecture](architecture/workspace.md) |
+| Demo testing and manual customer releases | [Deployment guide](deployment/demo-and-customer.md) |
 | Published async reply preparation | [Framework contract](architecture/jev-async-reply-contract.md) |
 | Local embeddings | [Setup and verification](tests/local-embeddings.md) |
 | Deployment and other work orders | [Plans](plans/) |

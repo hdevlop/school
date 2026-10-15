@@ -12,6 +12,14 @@ describe('school-owned landing content', () => {
     expect(landingContentDto.parse(DEFAULT_LANDING_CONTENT)).toEqual(DEFAULT_LANDING_CONTENT);
     expect(DEFAULT_LANDING_CONTENT.stats).toHaveLength(0);expect(DEFAULT_LANDING_CONTENT.testimonials).toHaveLength(0);expect(DEFAULT_LANDING_CONTENT.news).toHaveLength(0);
     expect(DEFAULT_LANDING_CONTENT.admissionsOpen).toBe(false);
+    expect(DEFAULT_LANDING_CONTENT.published).toBe(false);
+  });
+  it('keeps an empty installation unpublished and respects saved publication', async () => {
+    const empty = new LandingService({ get: async () => undefined } as never, {} as never);
+    expect((await empty.get()).published).toBe(false);
+    const published = { ...DEFAULT_LANDING_CONTENT, published: true };
+    const existing = new LandingService({ get: async () => published } as never, {} as never);
+    expect((await existing.get()).published).toBe(true);
   });
   it('rejects unbounded lists, ratings and unsafe social URLs', () => {
     const news={date:'2026-10-11',tag:text,title:text,body:text};

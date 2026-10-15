@@ -22,7 +22,7 @@ describe('public landing loaders', () => {
   });
   it('supports no settings and no cycles on a fresh installation', async () => {
     rows([]);expect(await loadSchoolLandingProfile()).toBeNull();expect(await loadLandingCycles()).toEqual([]);
-    const content=await loadSchoolLandingContent();expect(content.stats).toEqual([]);expect(content.published).toBe(true);
+    const content=await loadSchoolLandingContent();expect(content.stats).toEqual([]);expect(content.published).toBe(false);
   });
   it('projects cycle identifiers and labels without reading private student records', async () => {
     const cycles=[{id:'primary',name:'Primary',labels:{fr:'Primaire'}}];const projected=rows(cycles);

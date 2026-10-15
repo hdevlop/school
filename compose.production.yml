@@ -1,21 +1,17 @@
-name: school
-
 x-app: &app
-  # The GitHub workflow publishes this tag immediately before calling the
-  # Dokploy webhook. Always pull it so a successful webhook cannot leave an
-  # older SHA-pinned container running.
-  image: ghcr.io/hdevlop/school:main
+  # Demo follows :demo; each customer selects an accepted @sha256:... digest.
+  # Always pull so the floating demo tag also updates on a redeployment.
+  image: ${SCHOOL_IMAGE:?SCHOOL_IMAGE must select a release}
   pull_policy: always
   env_file:
-    # Dokploy writes the service's encrypted environment to this file in its
-    # deployment checkout. Direct host runs fall through to the root-only file.
-    - path: ./.env
-      required: false
-    - path: /opt/school/env/app.env
-      required: false
+    # Dokploy writes this installation's environment into its own checkout.
+    # Never load a shared host file: omitted keys must not inherit demo secrets.
+    - ./.env
+  environment: &runtime-environment
+    SCHOOL_STORAGE_PATH: /srv/school/storage
   volumes:
     - type: bind
-      source: ${SCHOOL_STORAGE_HOST_PATH:-/srv/school/storage-demo}
+      source: ${SCHOOL_STORAGE_HOST_PATH:?SCHOOL_STORAGE_HOST_PATH must be unique to this installation}
       target: /srv/school/storage
       bind:
         create_host_path: false
@@ -35,6 +31,8 @@ services:
   app:
     <<: *app
     restart: unless-stopped
+    mem_limit: ${SCHOOL_APP_MEMORY:-1024m}
+    cpus: ${SCHOOL_APP_CPUS:-1.5}
     depends_on:
       postgres:
         condition: service_healthy
@@ -43,7 +41,7 @@ services:
       migrate:
         condition: service_completed_successfully
     ports:
-      - 127.0.0.1:${SCHOOL_LOOPBACK_PORT:-3400}:3000
+      - 127.0.0.1:${SCHOOL_LOOPBACK_PORT:?SCHOOL_LOOPBACK_PORT must be unique to this installation}:3000
     healthcheck:
       test: ["CMD", "bun", "-e", "const r=await fetch('http://127.0.0.1:3000/api/health/status');process.exit(r.ok?0:1)"]
       interval: 15s
@@ -54,16 +52,34 @@ services:
   migrate:
     <<: *app
     restart: "no"
+    mem_limit: ${SCHOOL_MIGRATE_MEMORY:-768m}
+    cpus: ${SCHOOL_MIGRATE_CPUS:-1.0}
+    healthcheck:
+      disable: true
+    environment:
+      <<: *runtime-environment
+      SCHOOL_SEED_LANDING: ${SCHOOL_SEED_LANDING:-false}
     depends_on:
       postgres:
         condition: service_healthy
-    # Initialize landing content once against the mounted production database.
-    # Both web and worker wait for migrations and this seed to succeed.
-    command: ["sh", "-ec", "bun x drizzle-kit migrate && bun run seed:landing"]
+    # Fictional landing content is opt-in for demo only. Fail on invalid flags
+    # before migrating so a typo cannot silently change initialization behavior.
+    command:
+      - sh
+      - -ec
+      - |
+        case "$$SCHOOL_SEED_LANDING" in
+          true|false) ;;
+          *) echo 'SCHOOL_SEED_LANDING must be true or false' >&2; exit 1 ;;
+        esac
+        bun x drizzle-kit migrate
+        if [ "$$SCHOOL_SEED_LANDING" = true ]; then bun run seed:landing; fi
 
   notifications-worker:
     <<: *app
     restart: unless-stopped
+    mem_limit: ${SCHOOL_WORKER_MEMORY:-384m}
+    cpus: ${SCHOOL_WORKER_CPUS:-0.5}
     networks:
       - backend
       - notifications-egress
@@ -85,12 +101,10 @@ services:
   postgres:
     image: pgvector/pgvector:pg18
     restart: unless-stopped
-    env_file:
-      - path: /opt/school/env/infrastructure.env
-        required: false
+    mem_limit: ${SCHOOL_POSTGRES_MEMORY:-768m}
+    cpus: ${SCHOOL_POSTGRES_CPUS:-1.0}
     environment:
-      # Dokploy resolves these from its generated .env. They intentionally
-      # override the optional host-only env_file without exposing app secrets.
+      # Resolved from this installation's Dokploy environment only.
       POSTGRES_DB: ${POSTGRES_DB:-school_production}
       POSTGRES_USER: ${POSTGRES_USER:-school}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
@@ -121,12 +135,13 @@ services:
   redis:
     image: redis:7.4.5-bookworm
     restart: unless-stopped
-    env_file:
-      - path: /opt/school/env/infrastructure.env
-        required: false
+    mem_limit: ${SCHOOL_REDIS_MEMORY:-192m}
+    cpus: ${SCHOOL_REDIS_CPUS:-0.25}
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
-    command: ["sh", "-ec", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\""]
+      REDIS_MAXMEMORY: ${SCHOOL_REDIS_MAXMEMORY:-96mb}
+    # Throttle counters and sessions must not be silently evicted under load.
+    command: ["sh", "-ec", "exec redis-server --appendonly yes --requirepass \"$$REDIS_PASSWORD\" --maxmemory \"$$REDIS_MAXMEMORY\" --maxmemory-policy noeviction"]
     volumes:
       - redis_data:/data
     networks:

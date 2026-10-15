@@ -32,10 +32,9 @@ cleanup/financial-retention plan. If any required item is missing, continue only
 the independent read-only cases and report the mutation cases BLOCKED. Do not
 recreate containers to start a browser attempt.
 
-The separate demo/customer transition owns VPS preparation and release promotion.
-Its pending local guide is `docs/deployment/demo-and-customer.md`; that guide and
-the runtime transition are outside this browser-plan publication. Preparation is
-not assumed complete. This plan targets the myscolai.com demo installation; customer JHL
+The [demo/customer deployment guide](../../deployment/demo-and-customer.md)
+owns VPS preparation and release promotion. Its preparation is not assumed
+complete. This plan targets the myscolai.com demo installation; customer JHL
 data, credentials, host storage and deployment remain outside this run. A missing
 off-server destination remains an explicit customer-launch blocker. Testing the
 currently serving demo does not require deploying the pending Compose changes.

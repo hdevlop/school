@@ -11,8 +11,8 @@ import { db } from '../database/db';
 /**
  * Plugins with no School policy beyond what is written here.
  *
- *   CORS_ORIGIN           the dashboard's origin; falls back to NEXT_PUBLIC_APP_URL
- *   NEXT_PUBLIC_APP_URL   then http://localhost:3000
+ *   CORS_ORIGIN           the dashboard's origin; falls back to FRONTEND_URL
+ *   FRONTEND_URL          runtime installation origin, then http://localhost:3000
  */
 
 export const databaseConfig = () => database({ default: db });
@@ -25,7 +25,7 @@ export const corsConfig = () =>
   cors({
     origin: [
       envString(process.env.CORS_ORIGIN) ??
-        envString(process.env.NEXT_PUBLIC_APP_URL) ??
+        envString(process.env.FRONTEND_URL) ??
         'http://localhost:3000',
       'http://localhost:4100',
       'app://-',

@@ -20,7 +20,7 @@ export interface LandingContent {
   socialLinks: { facebook?: string; instagram?: string; youtube?: string; linkedin?: string };
 }
 export const DEFAULT_LANDING_CONTENT: LandingContent = {
-  published: true, stats: [], testimonials: [], news: [], programBlurbs: {}, programPhotoSlots: {},
+  published: false, stats: [], testimonials: [], news: [], programBlurbs: {}, programPhotoSlots: {},
   admissionsOpen: false, admissionsYearLabel: null, socialLinks: {},
 };
 export interface LandingProfile {
