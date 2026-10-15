@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata, ResolvingMetadata, Viewport } from 'next';
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
@@ -15,12 +15,12 @@ const load = cache(async () => {
   if (!content.published) notFound();
   return { session, snapshot, profile, cycles, content };
 });
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata(_props: unknown, parent: ResolvingMetadata): Promise<Metadata> {
   const { profile, snapshot } = await load();
   const title = `${profile?.schoolName || schoolApp.appName} — ${schoolI18n.translate(snapshot.preferences.language, 'landing.meta.tagline')}`;
   const description = schoolI18n.translate(snapshot.preferences.language, 'landing.meta.description');
   const origin = landingOrigin();
-  return { title, description, metadataBase: origin, icons: { icon: snapshot.branding.slots.authLogo ?? undefined }, alternates: { canonical: '/' }, openGraph: { title, description, images: ['/images/landing/og.webp'] } };
+  return { title, description, metadataBase: origin, icons: { ...(await parent).icons, icon: snapshot.branding.slots.authLogo ?? undefined }, alternates: { canonical: '/' }, openGraph: { title, description, images: ['/images/landing/og.webp'] } };
 }
 export default async function SchoolLanding() {
   const { profile, cycles, content, session, snapshot } = await load();

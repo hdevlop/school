@@ -1,17 +1,27 @@
 import type { MetadataRoute } from 'next'
-import { SCHOOL_HOME_PATH } from '@/najm.config';
+import { schoolApp, SCHOOL_HOME_PATH } from '@/najm.config';
+import { loadSettings } from '@/najm.server';
 
-// No `icons`: School's logos are per-school branding stored at runtime, and
-// the static `/icon-192x192.png` and `/icon-512x512.png` this listed never
-// existed, so every page logged a 404. Add them here with real brand files.
-export default function manifest(): MetadataRoute.Manifest {
+export const dynamic = 'force-dynamic';
+
+export default async function manifest(): Promise<MetadataRoute.Manifest> {
+  const { school } = await loadSettings();
+  const name = school.schoolName || schoolApp.appName;
   return {
-    name: 'MyScolAI',
-    short_name: 'MyScolAI',
+    id: '/',
+    name,
+    short_name: name,
     description: 'School management',
     start_url: SCHOOL_HOME_PATH,
+    scope: '/',
     display: 'standalone',
     background_color: '#ffffff',
     theme_color: '#000000',
+    icons: [192, 512].map((size) => ({
+      src: `/app-icons/${size}.png`,
+      sizes: `${size}x${size}`,
+      type: 'image/png',
+      purpose: 'any',
+    })),
   }
 }

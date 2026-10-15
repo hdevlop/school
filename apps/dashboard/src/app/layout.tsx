@@ -1,4 +1,4 @@
-import type { Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 import { NajmPwaRegistration } from 'najm-next/pwa/react';
 import "@/styles/globals.css";
 import "flag-icons/css/flag-icons.min.css";
@@ -9,6 +9,11 @@ import { loadUiSnapshot } from '@/najm.server';
 import NajmClientRoot from '@/components/NajmClientRoot';
 import { AcademicYearSelectionOwner } from '@/features/AcademicYears/components/AcademicYearSelectionOwner';
 import { RenderedActiveAcademicYearProvider } from '@/features/Settings/context/RenderedActiveAcademicYear';
+
+export const metadata: Metadata = {
+  icons: { apple: [{ url: '/app-icons/180.png', sizes: '180x180', type: 'image/png' }] },
+  appleWebApp: { capable: true, statusBarStyle: 'default' },
+};
 
 export const viewport: Viewport = {
   width: 'device-width',
