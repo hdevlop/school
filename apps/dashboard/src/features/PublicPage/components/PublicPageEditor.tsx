@@ -64,7 +64,7 @@ function ContentEditor({ initial, cycles }: { initial: LandingContent; cycles: L
         <NButton variant="outline" disabled={content.news.length>=LANDING_NEWS_SLOTS.length} onClick={()=>set('news',[...content.news,{date:new Date().toISOString().slice(0,10),tag:emptyText(),title:emptyText(),body:emptyText()}])}>{t('publicPage.addNews')}</NButton>
       </>}
       {tab === 'photos' && <NThemeSettingsProvider client={{baseUrl:'/api'}} language={language} t={t} onPersisted={()=>router.refresh()}><p className="text-sm text-muted-foreground">{t('publicPage.photoHint')}</p><NThemeBrandingSettings slotKeys={['landingHero','landingAssistant',...LANDING_PROGRAM_SLOTS,...LANDING_NEWS_SLOTS]} /><NThemeSettingsActions resources={['branding']} /></NThemeSettingsProvider>}
-      {tab === 'publish' && <><label className="flex gap-3"><input type="checkbox" checked={content.published} onChange={event=>set('published',event.target.checked)} />{t('publicPage.published')}</label><Link href="/welcome" target="_blank" className="text-primary underline">{t('publicPage.view')}</Link></>}
+      {tab === 'publish' && <><label className="flex gap-3"><input type="checkbox" checked={content.published} onChange={event=>set('published',event.target.checked)} />{t('publicPage.published')}</label><Link href="/" target="_blank" className="text-primary underline">{t('publicPage.view')}</Link></>}
     </div>
     {mutation.isError && <p role="alert" className="text-destructive">{t('publicPage.failed')}</p>}{mutation.isSuccess && <p role="status">{t('publicPage.saved')}</p>}
     {tab!=='photos' && <NButton disabled={mutation.isPending} onClick={()=>mutation.mutate(content)}>{t('publicPage.save')}</NButton>}

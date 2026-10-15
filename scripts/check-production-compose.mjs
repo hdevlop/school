@@ -39,7 +39,7 @@ function configuration(name, overrides = {}, missing) {
 }
 
 try {
-  const demo = configuration('demo', { SCHOOL_SEED_LANDING: 'true' });
+  const demo = configuration('demo');
   const customer = configuration('customer');
   for (const [name, config] of [['demo', demo], ['customer', customer]]) {
     const { app, migrate, 'notifications-worker': worker, postgres, redis } = config.services;
@@ -47,10 +47,11 @@ try {
     assert.equal(app.image, worker.image);
     for (const service of [app, worker, migrate]) {
       assert.equal(service.environment.SCHOOL_STORAGE_PATH, service.volumes[0].target);
+      assert.equal(service.environment.SCHOOL_SEED_LANDING, 'true');
     }
     assert.equal(app.pull_policy, 'always');
     assert.equal(app.environment.FRONTEND_URL, `https://${name}.example.test`);
-    assert.equal(migrate.environment.SCHOOL_SEED_LANDING, name === 'demo' ? 'true' : 'false');
+    assert.equal(migrate.environment.SCHOOL_SEED_LANDING, 'true');
     assert.equal(migrate.healthcheck.disable, true);
     assert.equal(app.depends_on.migrate.condition, 'service_completed_successfully');
     assert.equal(worker.depends_on.migrate.condition, 'service_completed_successfully');
@@ -75,6 +76,10 @@ try {
   assert.notEqual(demo.services.app.volumes[0].source, customer.services.app.volumes[0].source);
   assert.notEqual(demo.services.app.ports[0].published, customer.services.app.ports[0].published);
   assert.notEqual(demo.services.app.environment.POSTGRES_PASSWORD, customer.services.app.environment.POSTGRES_PASSWORD);
+  const optedOut = configuration('customer', { SCHOOL_SEED_LANDING: 'false' });
+  for (const name of ['app', 'migrate', 'notifications-worker']) {
+    assert.equal(optedOut.services[name].environment.SCHOOL_SEED_LANDING, 'false');
+  }
   for (const required of ['SCHOOL_IMAGE', 'SCHOOL_STORAGE_HOST_PATH', 'SCHOOL_LOOPBACK_PORT', 'POSTGRES_PASSWORD', 'REDIS_PASSWORD']) {
     configuration('customer', {}, required);
   }

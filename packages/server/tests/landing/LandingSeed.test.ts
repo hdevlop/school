@@ -13,6 +13,7 @@ import type { DB } from '../../src/database/db';
 
 describe('packaged landing defaults', () => {
   it('includes the dev page content and bundled photos', () => {
+    expect(landingSeedContent.published).toBe(true);
     expect(landingSeedContent.stats).toHaveLength(4);
     expect(landingSeedContent.news).toHaveLength(6);
     expect(landingSeedContent.testimonials).toHaveLength(2);
@@ -46,6 +47,7 @@ describe.skipIf(process.env.LANDING_SEED_DB_TEST !== '1')('landing seed PostgreS
     await fixture(async (repository, database) => {
       expect(await repository.seedDefaults(landingSeedContent, landingSeedPrograms)).toBe(true);
       const [seeded] = await database.select().from(schoolLanding);
+      expect(seeded.published).toBe(true);
       expect(seeded.news).toHaveLength(6);
       expect(Object.keys(seeded.programPhotoSlots)).toHaveLength(3);
       expect(await database.select().from(cycles)).toHaveLength(3);

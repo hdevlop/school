@@ -4,7 +4,7 @@ Status: **NOT RUN**. Applies to every feature guide.
 
 ## Target and evidence
 
-- Confirm exactly `https://myscolai.com`, valid TLS, intended full serving SHA from `/deployment-revision.txt`, successful `/login` and `/api/health/status`. Record statuses and SHA only. Readiness alone is not browser acceptance or schema proof.
+- Confirm exactly `https://myscolai.com`, valid TLS, intended full serving SHA from `/deployment-revision.txt`, public landing at `/`, successful `/login` and `/api/health/status`. `/welcome` redirects to `/`; `/home` and `/dashboard` remain protected. Record statuses and SHA only. An intentionally unpublished landing returns 404 and is excluded from the sitemap. Readiness alone is not browser acceptance or schema proof.
 - Obtain deployment evidence that the intended revision is the sole healthy app revision. A revision response alone cannot establish every replica; record this limitation if operational evidence is unavailable.
 - Record source/test SHA separately from serving SHA. A documentation-only commit may legitimately differ. Stop an attempt if the serving revision changes.
 - Record browser/version, viewport, locale, role, named tester and exact case selection. Start with authentication; retain local Gate A/A-R prerequisites for promotion.
@@ -19,6 +19,23 @@ Read-only cases can inspect forms and cancel dialogs. Mutation cases apply only 
 Never run SQL, migrations, seeds, reset commands, Docker/Dokploy mutations or production clock changes during a browser attempt. Never rerun the partial data reset described in [the incident record](../seed-reset-routine.md) as test setup. Financial posting, school-wide settings, rollover and mail/push to real recipients require their own concrete scope; if a disposable/controlled scope is unavailable, mark those cases BLOCKED and use an isolated environment.
 
 Maintain an in-memory fixture manifest of exact created IDs and relationships. Cleanup uses supported product/API actions in reverse dependency order, scoped to that manifest; never delete by a broad name prefix alone. Verify cleanup after success or failure. Record counts and remaining fixture labels only. If a posted financial record cannot be safely removed/reversed, establish an approved retention/reversal plan before creating it.
+
+### Attendance saves require a controlled full roster
+
+The current attendance Save action considers the entire loaded roster, including
+unrecorded people whose default mark is present. Search, role/status filters,
+pagination and selected checkboxes do not restrict the submitted roster. The
+staff and teacher attendance routes render the same staff register and write the
+same attendance records.
+
+Before any student, staff or teacher attendance save, verify through supported
+reads that every person in the full loaded roster belongs to the authorized
+fixture manifest. An owned student section can provide that isolation; filtering
+the school-wide staff register to one test person cannot. If any roster member
+is unrelated or the full scope cannot be established, mark browser save cases
+BLOCKED and use an isolated environment. Keep any supported single-record
+MCP/REST verification separate from browser acceptance. Do not submit to discover
+the write scope, intercept/rewrite the request, or delete real marks as cleanup.
 
 ## Browser attempt
 

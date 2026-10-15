@@ -1,5 +1,13 @@
 > Preserved reference from the retired root acceptance plan. This text is retained verbatim below for traceability, including its old status, section numbers, paths and commands. It is not a current execution result. Use the [production browser index](../README.md), [preflight](../00-preflight.md) and [current runner status](../automation-and-release.md) before execution. Local/database obligations remain open; production smoke does not satisfy them.
 
+Current applicability note (2026-10-15, outside the preserved text): B02 uses the
+[current serving-role inventory](../authentication.md#current-role-inventory).
+E03 follows the [shared staff/teacher register](../teacher-attendance.md), with
+[full-roster write isolation](../00-preflight.md#attendance-saves-require-a-controlled-full-roster);
+it does not require a separate teacher attendance store. F04 browser status and
+deletion checks now live in [Alerts](../alerts.md). The historical matrix below
+remains intact for traceability; other evidence obligations remain applicable.
+
 ## 7. Complete feature matrix
 
 Every row is mandatory. A group passes only when every named feature in it has

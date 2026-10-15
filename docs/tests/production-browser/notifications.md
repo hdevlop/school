@@ -1,8 +1,8 @@
-# Notifications and alerts
+# Notifications and delivery
 
 Status: **NOT RUN**. Target: `https://myscolai.com`.
 
-Entry point: `/notifications` and notification bell; legacy alert controls only if exposed. Original coverage: F04, G12.
+Entry point: `/notifications` and notification bell. Original coverage: G12; notification inbox extension. Alert status and deletion coverage F04 lives in [Alerts](alerts.md).
 
 [All features](README.md) · [Required preflight](00-preflight.md) · [Evidence ledger](evidence-ledger.md)
 
@@ -14,7 +14,7 @@ Dedicated recipient with owned unread/read notifications. Use an identity allowe
 
 - [ ] **notifications-R01**: Open bell and inbox; ordering, unread counts and destinations agree.
 - [ ] **notifications-R02**: Follow a notification link; it cannot expose a forbidden entity.
-- [ ] **notifications-R03**: If legacy alert/health-alert controls are absent, retain their API checks as unverified.
+- [ ] **notifications-R03**: Keep notification inbox/bell read state distinct from `/alerts` status. Follow the separate [Alerts checklist](alerts.md) for acknowledge/resolve/dismiss/delete; a notification read does not pass an alert transition. Backend-only alert creation or health-alert generation remains separate API evidence.
 
 ## Owned-fixture mutations
 

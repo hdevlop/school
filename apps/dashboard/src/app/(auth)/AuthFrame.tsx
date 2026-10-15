@@ -61,7 +61,7 @@ export function AuthFrame({ children }: { readonly children: ReactNode }) {
 
             {children}
 
-            <Link href="/welcome" className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"><ArrowLeft size={16} className="rtl:-scale-x-100" />{t('landing.nav.website')}</Link>
+            <Link href="/" className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground"><ArrowLeft size={16} className="rtl:-scale-x-100" />{t('landing.nav.website')}</Link>
 
             <p className="mt-8 text-center text-xs text-muted-foreground">
               © {new Date().getFullYear()}. {t('landing.footer.rights')}

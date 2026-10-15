@@ -32,7 +32,7 @@ function hasNavHref(items: NavItem[], href: string): boolean {
  * Fees item and reach it through their own profile, which stays highlighted.
  */
 function sidebarActivePath(pathname: string, navItems: NavItem[], isMobile: boolean) {
-  if (pathname === '/') return isMobile ? '/home' : '/dashboard';
+  if (pathname === '/home') return isMobile ? '/home' : '/dashboard';
   return STUDENT_FEES_PATH.test(pathname) && hasNavHref(navItems, '/fees') ? '/fees' : pathname;
 }
 
@@ -89,7 +89,7 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const sidebar = useNSidebar();
   const isMobile = useCardViewport();
-  const isHome = pathname === '/home' || pathname === '/';
+  const isHome = pathname === '/home';
   const { user } = useAuth();
   const { t } = useTranslation();
   const role = (user as any)?.role ?? 'teacher';

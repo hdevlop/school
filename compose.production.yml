@@ -9,6 +9,8 @@ x-app: &app
     - ./.env
   environment: &runtime-environment
     SCHOOL_STORAGE_PATH: /srv/school/storage
+    # Publish the bundled landing on first initialization unless explicitly disabled.
+    SCHOOL_SEED_LANDING: ${SCHOOL_SEED_LANDING:-true}
   volumes:
     - type: bind
       source: ${SCHOOL_STORAGE_HOST_PATH:?SCHOOL_STORAGE_HOST_PATH must be unique to this installation}
@@ -56,13 +58,11 @@ services:
     cpus: ${SCHOOL_MIGRATE_CPUS:-1.0}
     healthcheck:
       disable: true
-    environment:
-      <<: *runtime-environment
-      SCHOOL_SEED_LANDING: ${SCHOOL_SEED_LANDING:-false}
     depends_on:
       postgres:
         condition: service_healthy
-    # Fictional landing content is opt-in for demo only. Fail on invalid flags
+    # Initialize the bundled landing once by default. Saved rows are preserved.
+    # Customer installations can explicitly opt out. Fail on invalid flags
     # before migrating so a typo cannot silently change initialization behavior.
     command:
       - sh

@@ -9,6 +9,7 @@ import { useTranslation } from 'najm-i18n/react';
 import type { SchoolLocale } from '@sms/contracts/locales';
 import { languageOptions } from '@/shared/languageOptions';
 import { landingFont } from '../config/landingFont';
+import { SCHOOL_HOME_PATH } from '@/najm.config';
 
 export function SchoolBrand({ schoolName }: { schoolName: string }) {
   return <a href="#about" className="landing-brand"><NThemeImage slot="authLogo" alt={schoolName} className="landing-logo" /></a>;
@@ -22,7 +23,7 @@ export function LandingNav({ schoolName, signedIn, programs, news, contact }: { 
   const [open, setOpen] = useState(false);
   const links = [['about', true], ['parents', true], ['news', news], ['programs', programs], ['contact', contact]] as const;
   const anchors = links.filter(([, visible]) => visible).map(([id]) => <a key={id} href={`#${id}`} onClick={() => setOpen(false)}>{t(`landing.nav.${id}`)}</a>);
-  const portal = <Link href={signedIn ? '/' : '/login'} className="landing-button landing-portal"><UserRound size={17} />{t(signedIn ? 'landing.nav.dashboard' : 'landing.nav.portal')}</Link>;
+  const portal = <Link href={signedIn ? SCHOOL_HOME_PATH : '/login'} className="landing-button landing-portal"><UserRound size={17} />{t(signedIn ? 'landing.nav.dashboard' : 'landing.nav.portal')}</Link>;
   return <header className="landing-header"><div className="landing-container landing-header-inner">
     <SchoolBrand schoolName={schoolName} />
     <nav aria-label={t('landing.nav.label')} className="landing-desktop-nav">{anchors}</nav>

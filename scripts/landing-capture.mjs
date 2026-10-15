@@ -18,7 +18,7 @@ for(const [type,email,password,size] of [['dashboard','admin@landing.example.tes
   await page.locator('input[name="identifier"]').fill(email);await page.locator('input[name="password"]').fill(password);
   await page.getByRole('button',{name:'Login',exact:true}).click();
   await page.waitForURL(u=>!u.pathname.startsWith('/login'),{timeout:60000});
-  await page.goto(`${base}${type==='dashboard'?'/':'/students'}`,{waitUntil:'networkidle',timeout:120000});
+  await page.goto(`${base}${type==='dashboard'?'/dashboard':'/students'}`,{waitUntil:'networkidle',timeout:120000});
   await page.waitForTimeout(2000);
   await page.screenshot({path:`docs/evidence/landing/product-${type}.png`});
   await sharp(`docs/evidence/landing/product-${type}.png`).webp({quality:88}).toFile(`apps/dashboard/public/images/landing/product-${type}.webp`);

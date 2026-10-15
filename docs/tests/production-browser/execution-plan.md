@@ -50,6 +50,8 @@ parent-A, parent-B and student-A/student-B. Reuse controlled accounts where safe
 Add principal, driver, other configured roles and a pending/roleless/inactive
 account for the complete grant matrix. Determine allowed actions from effective
 grants and ownership on the serving release, rather than role names alone.
+Use the [current role inventory](authentication.md#current-role-inventory),
+including supervisor; the preserved twelve-role list is historical.
 
 If non-admin test accounts do not yet exist, complete admin login, anonymous
 denial and logout first. After the write prerequisites, create the minimum
@@ -97,11 +99,11 @@ Entry points: `/login`, `/register`, `/forgot-password`, `/reset-password` and
 
 | Case | Browser action | Pass condition |
 | --- | --- | --- |
-| AUTH-01 | Signed out, open `/`, `/students`, `/users`, `/fees` and one owned detail URL. | Protected content is not disclosed; login/denial is consistent. The corresponding protected request is unauthenticated, not a successful data response. |
+| AUTH-01 | Signed out, open `/home`, `/dashboard`, `/students`, `/users`, `/fees` and one owned detail URL. Separately open public `/` and the `/welcome` alias under authentication-R08. | Protected content is not disclosed; login/denial is consistent. The corresponding protected request is unauthenticated, not a successful data response. The published website at `/` remains accessible without signing in. |
 | AUTH-02 | Submit missing/invalid fields, then one wrong password for an owned account. | Useful validation, no session, no credential leakage. Use a total cap of three wrong-password attempts per account for this run. |
 | AUTH-03 | Sign in as admin, reload, open a new tab, navigate, log out through UI, use Back and reload both tabs. | Session persists while valid; logout removes protected access in both tabs and no late request restores it. |
 | AUTH-04 | Compare Remember Me on/off in fresh contexts; exercise refresh during normal navigation. | Expected persistence policy and safe cookie attributes; no refresh loop or auth flash. Record attributes only, never values. |
-| AUTH-05 | Sign in separately with every in-scope role; use both menu navigation and direct denied URLs. | Allowed views work, denied screens never disclose restricted content, and list/detail results follow ownership. |
+| AUTH-05 | Sign in separately with every in-scope role from the serving catalog, including supervisor; use both menu navigation and direct denied URLs. Repeat `/home` at desktop and phone widths under authentication-R07, and the public landing/Portal/login flow under authentication-R08. | Allowed views work, denied screens never disclose restricted content, and list/detail results follow ownership. Desktop role/grant redirects differ from MobileHome at `/home` below 1024px; neither exposes forbidden data. `/` remains the public website for either session state. |
 | AUTH-06 | Use an owned pending/roleless, inactive and revoked-session account. | Pending/inactive users cannot gain usable access; roleless users cannot access privileged resources. Revocation takes effect on the next protected operation. |
 | AUTH-07 | Recover/change a disposable password and complete temporary-credential setup. | Controlled recipient receives the real message; weak/mismatched input fails, replacement succeeds, old password fails, and used/expired links cannot be reused. Never alter the sole admin account. |
 | AUTH-08 | Try an external return target and inspect registration plus the Users reset action. | Redirect stays within allowed app routes; self-registration cannot grant roles or bypass pending status; reset behavior matches the target account and preserves other sessions according to policy. |
@@ -172,13 +174,13 @@ an explained scope exclusion and separate API obligations, never a browser PASS.
 
 | Work package | Routes/surfaces and required behavior | Guides |
 | --- | --- | --- |
-| Navigation and dashboards | `/`, `/dashboard`, `/home`; role-specific landing, search, preferences, language, theme, responsive cards, totals and safe direct navigation. | [Dashboard](dashboard.md), [navigation](navigation-search.md), [appearance](appearance-localization.md), [mobile home](../mobile-home.md) |
+| Navigation and dashboards | `/dashboard`, `/home`; role-specific signed-in home, search, preferences, language, theme, responsive cards, totals and safe direct navigation. Public `/` is covered by EXTRA-01. | [Dashboard](dashboard.md), [navigation](navigation-search.md), [appearance](appearance-localization.md), [mobile home](../mobile-home.md) |
 | Academic catalogs | `/cycles`, `/classes`, `/sections`, `/subjects`; owned create/edit/delete, duplicates, parent/child consistency and reference conflicts. Use a separate empty catalog fixture for delete. | [Cycles](cycles.md), [classes](classes.md), [sections](sections.md), [subjects](subjects.md) |
 | Scheduling | `/class-routines`, `/calendar`; CRUD on owned timetable/events, teacher/room conflicts, dates and visibility. | [Class routines](class-routines.md), [calendar](calendar.md), [events](events.md) |
-| Attendance | `/attendance/students`, `/attendance/teachers`, `/attendance/staff`; mark/correct/clear owned attendance, dated roster, duplicate handling and retained history. | [Student](student-attendance.md), [teacher](teacher-attendance.md), [staff](staff-attendance.md) |
+| Attendance | `/attendance/students`, `/attendance/teachers`, `/attendance/staff`; inspect dated roster and history. Browser saves require the entire loaded roster to be run-owned under preflight; mixed/unverified rosters are BLOCKED. Teacher and staff routes share the staff register and stored marks. | [Student](student-attendance.md), [teacher](teacher-attendance.md), [staff](staff-attendance.md) |
 | Learning | `/assessments`, `/exams`, `/grades`; owned assessment/exam CRUD, valid/invalid grades, inline save/blur/reload and teacher scope. | [Assessments](assessments.md), [exams](exams.md), [grades](grades.md) |
 | Conduct | `/discipline`, `/behavior-rewards`; owned CRUD, correct student/year and role restrictions. | [Discipline](discipline.md), [rewards](behavior-rewards.md) |
-| Communications | `/announcements`, `/notifications`, `/alerts`, `/preferences`; owned CRUD/actions where exposed, read/unread/delete, intended audience, bell consistency and opt-in preferences. No school-wide broadcast. | [Announcements](announcements.md), [notifications](notifications.md), [push preferences](push-preferences.md) |
+| Communications | `/announcements`, `/notifications`, `/alerts`, `/preferences`; owned announcement draft CRUD, notification read/unread, alert acknowledge/resolve/dismiss/delete, audience, bell consistency and opt-in preferences. Announcement publish/unpublish and alert create/content-edit lack current UI controls: record those browser cases BLOCKED and keep transport proof separate. No school-wide broadcast. | [Announcements](announcements.md), [alerts](alerts.md), [notifications](notifications.md), [push preferences](push-preferences.md) |
 | Transport | `/vehicles`, `/drivers`, `/transport`; owned vehicle/driver CRUD, assignment/unassignment, capacity/conflict checks and historical route intervals. Refuel/maintenance CRUD only where a browser surface exists. | [Vehicles](vehicles.md), [drivers](drivers.md), [assignments](vehicle-assignments.md), [routes](student-routes.md), [refuel/maintenance](refuels-maintenance.md), [transport](transport.md) |
 | Administration | `/users`, `/roles`, `/permissions`, `/settings`; owned user CRUD/status/role changes, disposable role tests, denied escalation and settings read/edit validation. Preserve system roles and effective shared settings. | [Users](users.md), [roles](roles.md), [permissions](permissions.md), [settings](settings.md), [reset access](access-reset.md) |
 | People details | `/students`, `/students/[id]`, `/parents`, `/parents/[id]`, `/teachers`, `/teachers/[id]`, `/staff`; Phase C outcomes, relationship changes and lower-privilege visibility. | Phase C and linked person guides |
@@ -188,7 +190,7 @@ Additional current-source surfaces need explicit cases alongside the older guide
 
 | Case | Surface | Planned browser acceptance |
 | --- | --- | --- |
-| EXTRA-01 | `/public-page` and `/welcome` | Admin editor loads, sections validate, preview renders, uploads persist; anonymous landing exposes only published content and permitted actions. Saved edits/publication changes affect a global page: use read/preview/cancel on production unless an exact restoration scope is authorized. Check metadata links use the serving installation origin. |
+| EXTRA-01 | `/public-page`, public `/` and `/welcome` alias | Admin editor loads, sections validate, preview renders, uploads persist; landing exposes only published content and permitted actions. `/welcome` redirects to `/`; canonical and sitemap point to `/`. Portal chooses `/login` or `/home` from session state; test authentication-R08. Saved edits/publication changes affect a global page: use read/preview/cancel on production unless an exact restoration scope is authorized. Check metadata links use the serving installation origin. |
 | EXTRA-02 | `/visit-requests` and the landing request form | Create one controlled visitor request, verify admin list/detail and supported status/edit/delete actions; validate duplicate/invalid input and deny non-admin access to visitor details. Verify mail only to controlled recipients. Missing actions are recorded explicitly. |
 | EXTRA-03 | `/academic-year-migration` and global year selector | Review owned issues if available; preview/cancel repair actions only. Switch between registered years, then back: URL/state, list/detail, cache, ownership and totals follow selection; active-year settings remain unchanged. Production migration/repair commits are outside this run. |
 | EXTRA-04 | Chat/global assistant, if mounted | Read-only question for each role, correct selected-year scope and no private cross-owner results; tool writes restricted to explicitly owned fixtures. Missing live surface/provider is BLOCKED for that case. |
@@ -201,6 +203,10 @@ general CRUD approval. Exercise safe previews or use isolation for those cases.
 
 For multi-select CRUD, select two exact owned IDs and prove only those records
 change. Never use an unbounded delete-all or a whole-class action on a mixed roster.
+Attendance Save is not a selected-row action: it processes the full loaded roster
+and can create default present marks for people hidden by filters. Apply the
+[attendance prerequisite](00-preflight.md#attendance-saves-require-a-controlled-full-roster)
+before saving on any attendance route; use isolation when the roster is mixed.
 
 ## 7. Phase E — finance with independent expected amounts
 

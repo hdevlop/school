@@ -19,6 +19,8 @@ export interface LandingContent {
   admissionsYearLabel: string | null;
   socialLinks: { facebook?: string; instagram?: string; youtube?: string; linkedin?: string };
 }
+// Empty draft for explicit opt-out/editor state. Packaged new-install content
+// is owned by the server's LandingDefaults and does not overwrite saved rows.
 export const DEFAULT_LANDING_CONTENT: LandingContent = {
   published: false, stats: [], testimonials: [], news: [], programBlurbs: {}, programPhotoSlots: {},
   admissionsOpen: false, admissionsYearLabel: null, socialLinks: {},

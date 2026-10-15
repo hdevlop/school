@@ -13,8 +13,11 @@ Set the customer administrator email in Dokploy, using the address supplied by
 the owner, and enter its password interactively on the VPS. A login address
 does not configure outgoing email: the customer's mail provider and verified
 sender still need configuring.
-The customer public landing starts unpublished; publish only reviewed customer
-content from the landing editor.
+Both demo and customer installations initialize and display the bundled landing
+content by default. The customer configuration below makes that choice explicit
+with `SCHOOL_SEED_LANDING=true`; replace the bundled content through the landing
+editor as needed. Set false only when an intentionally blank, unpublished
+installation is wanted. Existing saved landing content is always preserved.
 
 ## Prepare the existing demo before publishing these changes
 
@@ -94,7 +97,7 @@ Set these customer-specific values in Dokploy:
 SCHOOL_IMAGE=ghcr.io/hdevlop/school@sha256:<full accepted digest>
 SCHOOL_STORAGE_HOST_PATH=/srv/school/storage-jhl
 SCHOOL_LOOPBACK_PORT=3401
-SCHOOL_SEED_LANDING=false
+SCHOOL_SEED_LANDING=true
 FRONTEND_URL=https://jhlschool.com
 POSTGRES_DB=school_jhl
 POSTGRES_USER=school_jhl
@@ -136,8 +139,9 @@ provider firewall configuration.
 Use a throwaway Compose project, distinct credentials/storage/port and a new
 database. Do not run this rehearsal against either persistent installation.
 
-1. Run migrations with `SCHOOL_SEED_LANDING=false`. The app and worker wait for
-   the migration service to finish; the one-shot service has no healthcheck.
+1. Run migrations with the default `SCHOOL_SEED_LANDING=true`. The migration
+   service initializes the bundled landing only if its singleton is absent;
+   app and worker wait for completion. The one-shot service has no healthcheck.
 2. Bootstrap only auth/reference data, using the selected release image. In
    that project's checkout, with its own `.env` and exact `-p` project name:
 
@@ -162,18 +166,22 @@ database. Do not run this rehearsal against either persistent installation.
    subjects and fee types after reviewing whether the customer wants them.
    It creates **no people or settings**. For a fully customer-defined structure,
    create these through the normal administration flows instead.
-5. Confirm no fictional people, fees, news, statistics or testimonials exist.
-   `/welcome` should return 404 until the customer publishes content; login
-   should work and sitemap should omit unpublished landing content. Confirm
-   `/robots.txt` refers to the customer domain.
+5. Confirm no demo people or fees were created. The public `/` should render the
+   bundled published landing, `/welcome` should redirect to `/`, and login should
+   work. Review statistics, news, testimonials and admissions content in **Public
+   Page** and save the customer's content there. Confirm robots and sitemap use
+   the customer domain and only published landing content is indexed.
 6. Verify settings/year creation, login, an essential school workflow,
    migration ordering, worker heartbeat, mail delivery and non-overlapping
    deployments. Record this evidence before provisioning the real customer.
 
 Never run demo/reset/full/school/history/expense/top-up seeds on customer data.
-`seed:landing` publishes fictional content and must remain disabled there.
-The app's missing-row fallback is unpublished; existing saved publication state
-and landing edits retain their values.
+Landing initialization is separate from those seeds: it installs only the
+packaged landing content and missing program catalog on first initialization.
+With an explicit `SCHOOL_SEED_LANDING=false` opt-out, a missing landing row stays
+an unpublished blank draft and `/` returns 404 until the editor publishes it.
+Without that opt-out, a missing row displays the packaged page. Existing saved
+publication state and landing edits always retain their values.
 
 ## Select and deploy a customer release
 

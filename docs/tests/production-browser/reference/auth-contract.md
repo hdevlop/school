@@ -1,5 +1,11 @@
 > Preserved reference from the retired root acceptance plan. This text is retained verbatim below for traceability, including its old status, section numbers, paths and commands. It is not a current execution result. Use the [production browser index](../README.md), [preflight](../00-preflight.md) and [current runner status](../automation-and-release.md) before execution. Local/database obligations remain open; production smoke does not satisfy them.
 
+Current applicability note (2026-10-15, outside the preserved text): execute role
+isolation with the serving release's catalog and grants from the
+[current authentication inventory](../authentication.md#current-role-inventory).
+Its current ten roles, including supervisor, supersede the historical twelve-role
+list below. Gate titles, lifecycle assertions and evidence requirements remain.
+
 ## 6. Gate A — dedicated auth lifecycle
 
 Auth is a separate serial suite. It must not select any feature spec.

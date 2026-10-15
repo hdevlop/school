@@ -1,9 +1,10 @@
 import { asc, desc, eq } from 'drizzle-orm';
-import { DEFAULT_LANDING_CONTENT, type LandingProfile, type LandingContent } from '@sms/contracts';
+import type { LandingProfile, LandingContent } from '@sms/contracts';
 import { db } from './database/db';
 import { settings } from './modules/settings/settingSchema';
 import { cycles } from './modules/cycles/cycleSchema';
 import { schoolLanding } from './modules/landing/LandingSchema';
+import { defaultLandingContent } from './modules/landing/LandingDefaults';
 
 // Explicit projection: public rendering must never expose admin settings.
 export async function loadSchoolLandingProfile(): Promise<LandingProfile | null> {
@@ -24,5 +25,5 @@ export async function loadSchoolLandingContent(): Promise<LandingContent> {
     programPhotoSlots: schoolLanding.programPhotoSlots, admissionsOpen: schoolLanding.admissionsOpen,
     admissionsYearLabel: schoolLanding.admissionsYearLabel, socialLinks: schoolLanding.socialLinks,
   }).from(schoolLanding).where(eq(schoolLanding.id, 'school')).limit(1);
-  return row ?? structuredClone(DEFAULT_LANDING_CONTENT);
+  return row ?? defaultLandingContent();
 }

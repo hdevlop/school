@@ -1,10 +1,13 @@
 # Mobile Home
 
-At widths below 1024px, the authenticated root route shows a Home screen with
+At widths below 1024px, the authenticated `/home` route shows a Home screen with
 three columns of illustrated feature cards, a user card, notifications, and the
 existing language switcher. Desktop keeps the existing role-dependent
 landing behaviour. The full dashboard is available at `/dashboard`, with its
-existing server page guard. `/home` and the mobile drawer's Home entry return to the grid.
+existing server page guard. `/home` is the signed-in entry point used after login
+and by the public landing page's Portal button; the mobile drawer's Home entry
+returns there. The public root `/` shows the website for both signed-out and
+signed-in visitors, and `/welcome` redirects to `/`.
 Direct links to other modules keep their destinations.
 
 Home has no footer bar. Its font and card styles are scoped to the feature.

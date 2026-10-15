@@ -2,7 +2,7 @@
 
 Status: **NOT RUN**. Target: `https://myscolai.com`.
 
-Entry point: `/`. Original coverage: B01, I02.
+Entry point: `/home` (responsive signed-in entry) and `/dashboard` (guarded full dashboard). Original coverage: B01, I02. The public root `/` is the landing website.
 
 [All features](README.md) · [Required preflight](00-preflight.md) · [Evidence ledger](evidence-ledger.md)
 

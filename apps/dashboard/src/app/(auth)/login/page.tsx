@@ -11,6 +11,7 @@ import { useLogin } from 'najm-auth/client/react'
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
+import { loginRedirectPath } from '@/shared/loginRedirect';
 
 // `identifier` is Najm Auth's wire field. An account is reached by its email,
 // its phone, or both, so either is accepted here; the server normalizes a
@@ -48,44 +49,11 @@ const getLoginErrorMessage = (error: unknown) => {
   return 'Login failed. Please try again.';
 };
 
-// `/change-password` is listed so a stale `?from=` cannot send a user who just
-// finished setup straight back into the setup screen.
-const INVALID_REDIRECT_PREFIXES = ['/login', '/register', '/forgot-password', '/change-password', '/_next', '/api', '/images', '/storage'];
-const INVALID_REDIRECT_EXACT_PATHS = new Set(['/manifest.webmanifest', '/favicon.ico', '/sw.js']);
-const INVALID_REDIRECT_FILE_EXTENSIONS = /\.(?:webmanifest|ico|png|jpe?g|svg|webp|gif|css|js|map)$/i;
-
-const isSafeRedirectPath = (path: string) => {
-  if (!path.startsWith('/') || path.startsWith('//')) {
-    return false;
-  }
-
-  const pathname = path.split('?')[0] ?? path;
-
-  if (INVALID_REDIRECT_EXACT_PATHS.has(pathname)) {
-    return false;
-  }
-
-  if (INVALID_REDIRECT_PREFIXES.some((prefix) => pathname.startsWith(prefix))) {
-    return false;
-  }
-
-  if (INVALID_REDIRECT_FILE_EXTENSIONS.test(pathname)) {
-    return false;
-  }
-
-  return true;
-};
-
 const getLoginRedirectPath = () => {
-  if (typeof window === 'undefined') {
-    return '/';
-  }
-
-  const from = new URLSearchParams(window.location.search).get('from');
-
-  return from && isSafeRedirectPath(from)
-    ? from
-    : '/';
+  const from = typeof window === 'undefined'
+    ? null
+    : new URLSearchParams(window.location.search).get('from');
+  return loginRedirectPath(from);
 };
 
 const Login = () => {

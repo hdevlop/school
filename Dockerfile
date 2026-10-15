@@ -71,8 +71,8 @@ ENV HOSTNAME=0.0.0.0 \
 #   the server's source theme files that najm-theme resolves at runtime;
 # - notifications worker (`bun run notifications:worker`): the root scripts,
 #   server and contracts source, and the root tsconfig's decorator settings;
-# - migrate: drizzle config, schema/migrations, contracts, and optional demo
-#   landing defaults from seed source (SCHOOL_SEED_LANDING=true only);
+# - migrate: drizzle config, schema/migrations, contracts, and bundled landing
+#   defaults from seed source (enabled by default; SCHOOL_SEED_LANDING=false opts out);
 # - seed:admin: the seed source and the production environment injected at runtime.
 COPY --from=build --chown=bun:bun /app/package.json /app/bun.lock /app/tsconfig.json /app/drizzle.config.ts ./
 COPY --from=build --chown=bun:bun /app/node_modules ./node_modules

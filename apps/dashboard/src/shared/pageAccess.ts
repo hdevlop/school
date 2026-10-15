@@ -74,5 +74,5 @@ export function dashboardLandingPath(viewer: PageViewer): string {
   if (viewer.role === 'parent' || viewer.role === 'student') {
     return PAGE_ACCESS.students(viewer) ? '/students' : '/notifications';
   }
-  return PAGE_ACCESS.dashboard(viewer) ? '/' : '/notifications';
+  return PAGE_ACCESS.dashboard(viewer) ? '/dashboard' : '/notifications';
 }

@@ -1,6 +1,7 @@
 import { defineNajmApp } from 'najm-next/app';
 
 export const SCHOOL_DEFAULT_CURRENCY = 'MAD' as const;
+export const SCHOOL_HOME_PATH = '/home' as const;
 
 export const schoolApp = defineNajmApp({
   id: 'school',
@@ -9,6 +10,7 @@ export const schoolApp = defineNajmApp({
     apiBaseURL: '/api',
     authPrefix: '/auth',
     publicRoutes: [
+      '/',
       '/welcome',
       '/login',
       '/register',
@@ -17,9 +19,9 @@ export const schoolApp = defineNajmApp({
       '/change-password',
       '/manifest.webmanifest',
     ],
-    protectedRoutes: ['/', '/:path*'],
+    protectedRoutes: ['/:path*'],
     loginRoute: '/login',
-    forbiddenRoute: '/',
+    forbiddenRoute: SCHOOL_HOME_PATH,
     proxySessionMode: 'authoritative',
     rememberCookieName: 'sms.remember',
     refreshThreshold: 0.8,

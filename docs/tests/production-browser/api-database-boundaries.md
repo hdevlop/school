@@ -6,7 +6,8 @@ Status: **NOT VERIFIED in this documentation change**. These obligations survive
 | --- | --- |
 | B09 | Auth/users/roles/permissions MCP discovery and tool authorization match REST policy. Use internal Najm MCP/REST and the repository Najm skill at execution. |
 | D08-D10 | Staff-role/zone lifecycle if no management UI; global search if absent; student/parent/teacher projection fields and privacy. |
-| F04 | Legacy alert lifecycle, audience/status and protected health-alert command if no UI is exposed. |
+| F03 | Announcement publish/unpublish through supported transport while the browser has no publishing controls; retain audience, year and authorization proof separately from draft UI CRUD. |
+| F04 | Alert creation/content editing and health-alert generation where supported, plus detail/status/delete authorization that the browser cannot express. Browser status/delete cases live in [Alerts](alerts.md); transport setup is not browser creation. |
 | G04-G07 | Payments, installments, allocations and credit exact reconciliation, rollback, concurrent writers, uniqueness and idempotency. |
 | G10-G13 | Rollover idempotency/calendar boundaries, notification generation/duplicate delivery and physical append-only audit enforcement. |
 | H05-H06 | Refuel/maintenance lifecycle if no browser control exists, plus vehicle linkage and validation. |
@@ -20,6 +21,6 @@ Retain the [complete original matrix](reference/feature-matrix.md) and [auth con
 
 Financial expectations reconcile exact integer minor units at server boundaries and correctly formatted amounts in the UI. Inspect the actual API contract before comparing transport values; do not infer financial correctness from formatting.
 
-Current committed role/grant sources: [roles](../../../packages/seed/src/scripts/admin/data/roles.json), [role permissions](../../../packages/seed/src/scripts/admin/data/rolePermissions.json). Cover admin, principal, accounting, teacher, student, parent, counselor, nurse, secretary, librarian, driver and assistant using controlled accounts; derive access from actual grants.
+Current committed role/grant sources: [roles](../../../packages/seed/src/scripts/admin/data/roles.json), [role permissions](../../../packages/seed/src/scripts/admin/data/rolePermissions.json). Cover every role in the serving release's inventory using controlled accounts and actual effective grants, including supervisor in the current catalog. The [authentication inventory](authentication.md#current-role-inventory) supersedes the preserved historical twelve-role list; record any serving-source difference before execution.
 
 Keep the [Routine migration and acceptance record](../routine-timetable.md) and [partial reset incident](../seed-reset-routine.md) open until their specific connected/database checks are proved.

@@ -1,7 +1,8 @@
-import MobileHome from '@/features/Home/components/MobileHome';
+import DashboardLanding from '@/features/Home/components/DashboardLanding';
 import { requireSession } from '@/najm.server';
+import { PAGE_ACCESS, dashboardLandingPath, pageViewer } from '@/shared/pageAccess';
 
 export default async function HomePage() {
-  await requireSession();
-  return <MobileHome />;
+  const viewer = pageViewer(await requireSession());
+  return <DashboardLanding canOpenDashboard={PAGE_ACCESS.dashboard(viewer)} desktopHref={dashboardLandingPath(viewer)} />;
 }

@@ -17,7 +17,11 @@ Owned section roster/date; no real attendance edits. Use an identity allowed by 
 
 ## Owned-fixture mutations
 
-Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
+Run only within the recorded production fixture scope and the
+[full-roster attendance rule](00-preflight.md#attendance-saves-require-a-controlled-full-roster).
+Every student in the loaded section/roster must be owned: Save can create default
+present marks for unrecorded rows hidden by filters. A mixed roster makes these
+browser save cases BLOCKED; use an owned section or an isolated environment.
 
 - [ ] **student-attendance-M01**: Mark owned students, save once and reload; one persisted mark per student/date remains.
 - [ ] **student-attendance-M02**: Update the mark and switch sections/dates; drafts and results must not leak. Check phone-card parity and role denial.

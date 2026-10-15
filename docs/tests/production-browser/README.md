@@ -11,6 +11,12 @@ For the ordered live run requested on 2026-10-15, use the
 [security checks](security.md), then people CRUD, remaining modules and finance.
 It supplements these feature guides; all execution outcomes remain NOT RUN.
 
+Source applicability reviewed on 2026-10-15: use the current role inventory and
+viewport-specific landing checks in [Authentication](authentication.md), the
+[full-roster attendance prerequisite](00-preflight.md#attendance-saves-require-a-controlled-full-roster),
+and the publishing availability limits in [Announcements](announcements.md).
+These corrections establish no production result.
+
 1. Read [production preflight and fixture rules](00-preflight.md).
 2. Record the serving revision and a new attempt in [the evidence ledger](evidence-ledger.md).
 3. Run [authentication](authentication.md), [registration](registration.md) and [administrative access reset](access-reset.md) as applicable. Full feature promotion still requires the retained Gate A and A-R contracts; an incomplete auth smoke does not satisfy those gates.
@@ -30,7 +36,7 @@ Every guide starts as NOT RUN. The unit column maps the old acceptance matrix to
 | [Controlled security checks](security.md) | Known owned pages, fixtures, auth, uploads and financial actions | Security extension |
 | [Registration](registration.md) | `/register` | A extension |
 | [Users: reset access](access-reset.md) | `/users` row/card action | A-R |
-| [Dashboard](dashboard.md) | `/` | B01, I02 |
+| [Dashboard](dashboard.md) | `/home`, `/dashboard`; public `/` is the landing website | B01, I02 |
 | [Navigation and global search](navigation-search.md) | Dashboard shell and any exposed search control | B02, D09 |
 | [Appearance and localization](appearance-localization.md) | Dashboard shell, appearance/language controls | B03, B04 |
 | [School settings](settings.md) | `/settings` | B05 |
@@ -61,7 +67,8 @@ Every guide starts as NOT RUN. The unit column maps the old acceptance matrix to
 | [Discipline](discipline.md) | `/discipline` | F01 |
 | [Behavior rewards](behavior-rewards.md) | `/behavior-rewards` | F02 |
 | [Announcements](announcements.md) | `/announcements` | F03 |
-| [Notifications and alerts](notifications.md) | `/notifications` and notification bell; legacy alert controls only if exposed | F04, G12 |
+| [Alerts](alerts.md) | `/alerts`; owned acknowledge/resolve/dismiss/delete actions | F04 |
+| [Notifications and delivery](notifications.md) | `/notifications` and notification bell | G12, notification extension |
 | [Push notification preferences](push-preferences.md) | `/preferences` | Notification extension |
 | [Fee types](fee-types.md) | `/fee-types` | G01 |
 | [Fees](fees.md) | `/fees` | G02 |
@@ -83,7 +90,7 @@ Every guide starts as NOT RUN. The unit column maps the old acceptance matrix to
 | [Refuels and maintenance](refuels-maintenance.md) | Vehicle-related controls if exposed; no standalone route in this checkout | H05, H06 |
 | [Transport workspace](transport.md) | `/transport` | H07 |
 
-Shared non-browser units B09 and I01-I05 live in [API/database boundaries](api-database-boundaries.md). Financial notifications and alerts are covered by Notifications and Financial operations; profile API projections are covered by the three profile guides with separate API proof. Refuels, maintenance, staff-role management and search must report missing browser surfaces explicitly.
+Shared non-browser units B09 and I01-I05 live in [API/database boundaries](api-database-boundaries.md). Financial notifications are covered by Notifications and Financial operations; alert status/deletion has its own guide. Profile API projections are covered by the three profile guides with separate API proof. Announcement publishing, alert creation/content editing, refuels, maintenance, staff-role management and search must report missing browser surfaces explicitly.
 
 ## Preserved contracts and history
 
