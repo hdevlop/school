@@ -111,7 +111,7 @@ jobs:
         run: bun scripts/check-production-compose.mjs
       - name: Check the build has no installation domain
         run: |
-          if rg -l 'myscolai\.com|jhlschool\.com' apps/dashboard/.next/server apps/dashboard/.next/static; then
+          if grep -R -l -E 'myscolai\.com|jhlschool\.com' apps/dashboard/.next/server apps/dashboard/.next/static; then
             echo '::error::An installation domain was baked into the reusable build.'
             exit 1
           else
