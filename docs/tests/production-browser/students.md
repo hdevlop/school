@@ -20,7 +20,7 @@ Existing class/section, owned parent and optional fee type; controlled email. Us
 Run only within the recorded production fixture scope; otherwise mark these cases BLOCKED.
 
 - [ ] **students-M01**: Create an owned student through all three steps with nested parent/fee data where authorized; reload and verify each relationship once.
-- [ ] **students-M02**: Edit class/section and permitted identity fields; upload a nonsensitive test avatar if included in scope.
+- [ ] **students-M02**: Edit permitted identity fields; use the supported enrollment correction/transfer workflow for class/section placement and verify dated history. Upload a nonsensitive test avatar if included in scope. A profile edit must not silently reset yearly placement.
 - [ ] **students-M03**: Cancel deletion, then remove only an owned student after its dependent records are cleaned; invalid/duplicate input must not create partial records.
 
 ## Finish and evidence

@@ -6,6 +6,11 @@ This folder replaces the root School connected acceptance plan. Each feature has
 
 ## Start here
 
+For the ordered live run requested on 2026-10-15, use the
+[real browser execution plan](execution-plan.md): authentication and controlled
+[security checks](security.md), then people CRUD, remaining modules and finance.
+It supplements these feature guides; all execution outcomes remain NOT RUN.
+
 1. Read [production preflight and fixture rules](00-preflight.md).
 2. Record the serving revision and a new attempt in [the evidence ledger](evidence-ledger.md).
 3. Run [authentication](authentication.md), [registration](registration.md) and [administrative access reset](access-reset.md) as applicable. Full feature promotion still requires the retained Gate A and A-R contracts; an incomplete auth smoke does not satisfy those gates.
@@ -22,6 +27,7 @@ Every guide starts as NOT RUN. The unit column maps the old acceptance matrix to
 | Guide | Entry point | Original units |
 | --- | --- | --- |
 | [Authentication and sessions](authentication.md) | `/login`, `/forgot-password`, `/reset-password`, `/change-password` | A |
+| [Controlled security checks](security.md) | Known owned pages, fixtures, auth, uploads and financial actions | Security extension |
 | [Registration](registration.md) | `/register` | A extension |
 | [Users: reset access](access-reset.md) | `/users` row/card action | A-R |
 | [Dashboard](dashboard.md) | `/` | B01, I02 |
