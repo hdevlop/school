@@ -18,32 +18,32 @@ This preserves the audit before the continuation. Paths are relative to `package
 
 | Service | Direct Err calls | Dedicated validator exists |
 | --- | ---: | --- |
-| [academicSources/AcademicSourceService.ts](../../packages/server/src/modules/academicSources/AcademicSourceService.ts) | 5 | No |
-| [academicYearMigrationIssues/AcademicYearMigrationIssueService.ts](../../packages/server/src/modules/academicYearMigrationIssues/AcademicYearMigrationIssueService.ts) | 7 | No |
-| [academicYearTransitions/AcademicYearTransitionService.ts](../../packages/server/src/modules/academicYearTransitions/AcademicYearTransitionService.ts) | 10 | No |
-| [academicYears/AcademicYearService.ts](../../packages/server/src/modules/academicYears/AcademicYearService.ts) | 12 | Yes |
-| [accessReset/AccessResetService.ts](../../packages/server/src/modules/accessReset/AccessResetService.ts) | 2 | Yes |
-| [classRoutines/ClassRoutineService.ts](../../packages/server/src/modules/classRoutines/ClassRoutineService.ts) | 8 | Yes |
-| [dashboard/teacher/TeacherDashboardService.ts](../../packages/server/src/modules/dashboard/teacher/TeacherDashboardService.ts) | 1 | No |
-| [financial/allocations/AllocationService.ts](../../packages/server/src/modules/financial/allocations/AllocationService.ts) | 7 | Yes |
-| [financial/auditLog/FinancialAuditService.ts](../../packages/server/src/modules/financial/auditLog/FinancialAuditService.ts) | 1 | No |
-| [financial/credits/CreditService.ts](../../packages/server/src/modules/financial/credits/CreditService.ts) | 3 | No |
-| [financial/fees/FeeService.ts](../../packages/server/src/modules/financial/fees/FeeService.ts) | 16 | Yes |
-| [financial/installments/InstallmentService.ts](../../packages/server/src/modules/financial/installments/InstallmentService.ts) | 4 | Yes |
-| [financial/notifications/NotificationService.ts](../../packages/server/src/modules/financial/notifications/NotificationService.ts) | 1 | No |
-| [financial/payments/PaymentService.ts](../../packages/server/src/modules/financial/payments/PaymentService.ts) | 14 | Yes |
-| [financial/payroll/PayrollService.ts](../../packages/server/src/modules/financial/payroll/PayrollService.ts) | 3 | Yes |
-| [financial/rollover/RolloverService.ts](../../packages/server/src/modules/financial/rollover/RolloverService.ts) | 10 | No |
-| [notifications/NotificationService.ts](../../packages/server/src/modules/notifications/NotificationService.ts) | 2 | No |
-| [settings/SettingsService.ts](../../packages/server/src/modules/settings/SettingsService.ts) | 5 | Yes |
-| [staff/roles/StaffRoleService.ts](../../packages/server/src/modules/staff/roles/StaffRoleService.ts) | 7 | No |
-| [staff/StaffService.ts](../../packages/server/src/modules/staff/StaffService.ts) | 13 | Yes |
-| [staff/zones/ZoneService.ts](../../packages/server/src/modules/staff/zones/ZoneService.ts) | 3 | No |
-| [studentEnrollments/StudentEnrollmentService.ts](../../packages/server/src/modules/studentEnrollments/StudentEnrollmentService.ts) | 31 | No |
-| [teachers/TeacherService.ts](../../packages/server/src/modules/teachers/TeacherService.ts) | 5 | Yes |
-| [transport/maintenance/MaintenanceService.ts](../../packages/server/src/modules/transport/maintenance/MaintenanceService.ts) | 1 | Yes |
-| [transport/studentRoutes/StudentRouteService.ts](../../packages/server/src/modules/transport/studentRoutes/StudentRouteService.ts) | 8 | Yes |
-| [transport/vehicleAssignments/VehicleAssignmentService.ts](../../packages/server/src/modules/transport/vehicleAssignments/VehicleAssignmentService.ts) | 10 | Yes |
+| [academicSources/AcademicSourceService.ts](../../../packages/server/src/modules/academicSources/AcademicSourceService.ts) | 5 | No |
+| [academicYearMigrationIssues/AcademicYearMigrationIssueService.ts](../../../packages/server/src/modules/academicYearMigrationIssues/AcademicYearMigrationIssueService.ts) | 7 | No |
+| [academicYearTransitions/AcademicYearTransitionService.ts](../../../packages/server/src/modules/academicYearTransitions/AcademicYearTransitionService.ts) | 10 | No |
+| [academicYears/AcademicYearService.ts](../../../packages/server/src/modules/academicYears/AcademicYearService.ts) | 12 | Yes |
+| [accessReset/AccessResetService.ts](../../../packages/server/src/modules/accessReset/AccessResetService.ts) | 2 | Yes |
+| [classRoutines/ClassRoutineService.ts](../../../packages/server/src/modules/classRoutines/ClassRoutineService.ts) | 8 | Yes |
+| [dashboard/teacher/TeacherDashboardService.ts](../../../packages/server/src/modules/dashboard/teacher/TeacherDashboardService.ts) | 1 | No |
+| [financial/allocations/AllocationService.ts](../../../packages/server/src/modules/financial/allocations/AllocationService.ts) | 7 | Yes |
+| [financial/auditLog/FinancialAuditService.ts](../../../packages/server/src/modules/financial/auditLog/FinancialAuditService.ts) | 1 | No |
+| [financial/credits/CreditService.ts](../../../packages/server/src/modules/financial/credits/CreditService.ts) | 3 | No |
+| [financial/fees/FeeService.ts](../../../packages/server/src/modules/financial/fees/FeeService.ts) | 16 | Yes |
+| [financial/installments/InstallmentService.ts](../../../packages/server/src/modules/financial/installments/InstallmentService.ts) | 4 | Yes |
+| [financial/notifications/NotificationService.ts](../../../packages/server/src/modules/financial/notifications/NotificationService.ts) | 1 | No |
+| [financial/payments/PaymentService.ts](../../../packages/server/src/modules/financial/payments/PaymentService.ts) | 14 | Yes |
+| [financial/payroll/PayrollService.ts](../../../packages/server/src/modules/financial/payroll/PayrollService.ts) | 3 | Yes |
+| [financial/rollover/RolloverService.ts](../../../packages/server/src/modules/financial/rollover/RolloverService.ts) | 10 | No |
+| [notifications/NotificationService.ts](../../../packages/server/src/modules/notifications/NotificationService.ts) | 2 | No |
+| [settings/SettingsService.ts](../../../packages/server/src/modules/settings/SettingsService.ts) | 5 | Yes |
+| [staff/roles/StaffRoleService.ts](../../../packages/server/src/modules/staff/roles/StaffRoleService.ts) | 7 | No |
+| [staff/StaffService.ts](../../../packages/server/src/modules/staff/StaffService.ts) | 13 | Yes |
+| [staff/zones/ZoneService.ts](../../../packages/server/src/modules/staff/zones/ZoneService.ts) | 3 | No |
+| [studentEnrollments/StudentEnrollmentService.ts](../../../packages/server/src/modules/studentEnrollments/StudentEnrollmentService.ts) | 31 | No |
+| [teachers/TeacherService.ts](../../../packages/server/src/modules/teachers/TeacherService.ts) | 5 | Yes |
+| [transport/maintenance/MaintenanceService.ts](../../../packages/server/src/modules/transport/maintenance/MaintenanceService.ts) | 1 | Yes |
+| [transport/studentRoutes/StudentRouteService.ts](../../../packages/server/src/modules/transport/studentRoutes/StudentRouteService.ts) | 8 | Yes |
+| [transport/vehicleAssignments/VehicleAssignmentService.ts](../../../packages/server/src/modules/transport/vehicleAssignments/VehicleAssignmentService.ts) | 10 | Yes |
 
 ## Verification
 

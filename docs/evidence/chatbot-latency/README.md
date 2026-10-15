@@ -4,7 +4,7 @@ Provider/model comparisons are closed. Benchmark source and unused datasets were
 removed on 2026-10-09; recover them from `a75cd0f` if needed. Retained reports
 describe historical runs. Current code has no benchmark endpoints or CLIs.
 
-Active work: [Jev + router optimization plan](../../plans/CHATBOT-JEV-ROUTER-PLAN.md).
+Implementation record: [Archived Jev + router plan](../../archive/plans/CHATBOT-JEV-ROUTER-PLAN.md).
 Validation: [Darija tool and answer checks](../../tests/jev-router-validation.md).
 
 The [2026-10-10 Darija repair and activation report](darija-fixes-results-20261010.md)

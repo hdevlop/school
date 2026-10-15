@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-15",
+  "generator": "Built-in image_gen",
+  "description": "Entirely fictional parent portraits for the two packaged example testimonials. Other authors retain initials.",
+  "assets": [
+    {
+      "path": "apps/dashboard/public/images/landing/family-salma.webp",
+      "author": "Salma B.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square parent portrait for a Moroccan school's family testimonial avatar, displayed in a small circular crop. Generate one entirely fictional Moroccan woman, approximately 35 years old, friendly natural smile, warm brown eyes, simple light beige hijab and muted terracotta blouse. Natural photographic head-and-shoulders portrait, looking at camera, face centered with generous margin around the head for a circular crop. Soft warm daylight, softly blurred pale cream courtyard background, realistic skin texture, approachable everyday parent, professional editorial photograph. One person only, no text, no lettering, no border, no watermark. Output one square image."
+    },
+    {
+      "path": "apps/dashboard/public/images/landing/family-omar.webp",
+      "author": "Omar A.",
+      "prompt": "Use case: photorealistic-natural. Asset type: square parent portrait for a Moroccan school's family testimonial avatar, displayed in a small circular crop. Generate one entirely fictional Moroccan man, approximately 40 years old, friendly natural smile, brown eyes, short dark hair, neatly trimmed short beard, simple muted blue casual button-down shirt. Natural photographic head-and-shoulders portrait, looking at camera, face centered with generous margin around the head for a circular crop. Soft warm daylight, softly blurred pale cream courtyard background with a hint of greenery, realistic skin texture, approachable everyday father, professional editorial photograph. One person only, no text, no lettering, no border, no watermark. Output one square image."
+    }
+  ]
+}

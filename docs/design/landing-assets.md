@@ -24,6 +24,7 @@ is a 1200 × 630 classroom crop at quality 85.
 | hero-moroccan-boy.webp | Transparent portrait with a new fictional Moroccan face, dark wavy hair and brown eyes. Retains the approved pose, charcoal jacket, grey shirt and yellow backpack. The existing `landingHero` branding slot replaces this main portrait. |
 | hero-moroccan-girl.webp | Transparent companion with a new fictional Moroccan face, dark braids and brown eyes. Retains the approved pose, yellow ribbons, white shirt, colorful skirt and yellow/turquoise backpack. Decorative illustration alongside the main school-managed portrait. |
 | assistant.webp | Moroccan mother in her thirties, patterned beige/navy hijab and emerald blouse, smiling at her smartphone on a cream sofa. Warm Moroccan home with plants and subtle tile details. Natural hands and fabric; waist-up portrait with room for an architectural arch crop. No text, logos, watermark or UI. |
+| assistant-chatbot.webp | Current assistant showcase, edited with built-in ImageGen on 2026-10-15 from `assistant-showcase.webp`. Uses the school's `auth-logo.png` crest in the phone header and assistant avatar, with the header renamed to “Chatbot”. Preserves the Darija transcript, grade chart, mother and arch composition. Transparent 1448 × 1086 WebP at quality 88. Full prompt: [landing-assistant-prompt.json](landing-assistant-prompt.json). |
 | program-default.webp | Bright empty Moroccan classroom, wooden desks, notebooks, books and plants in morning light. Editorial photograph with cream/navy accents. No people, visible writing, badges, logos or watermarks. |
 | program-1.webp | Smiling Moroccan boy aged eight with tousled straight dark hair, navy sweater and white shirt, seated at a classroom desk. Warm light, blurred children, centered head and shoulders with wide crop margins. No text, logos or watermark. |
 | program-2.webp | Moroccan girl aged thirteen with straight dark hair and purple glasses, navy cardigan and white shirt, smiling at a classroom desk. Distinct from the hero. Warm classroom, blurred classmates, centered crop. No text, logos or watermark. |
@@ -75,8 +76,9 @@ as history. The hero's headline,
 links, description and school-managed statistics are real HTML, with the
 colored panels and pastel cards implemented in CSS.
 
-`zellige.svg` is an authored repeating geometric pattern. Device frames and
-the assistant transcript are implemented in HTML/CSS/SVG. The landing page
+`zellige.svg` is an authored repeating geometric pattern. The platform device
+frames use HTML/CSS; the assistant phone and transcript are part of the static
+`assistant-chatbot.webp` illustration. The landing page
 locally bundles [Lilita One](https://github.com/google/fonts/tree/main/ofl/lilitaone)
 through its public layout and uses it throughout the navigation, headings,
 body copy, cards, footer and form controls. The Open Font License is retained

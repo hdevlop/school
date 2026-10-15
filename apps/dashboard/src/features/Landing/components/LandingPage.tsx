@@ -48,7 +48,7 @@ export function LandingPage({ profile, cycles, content, language, defaultLanguag
         <div><p className="landing-eyebrow">{t('landing.assistant.eyebrow')}</p><LandingSectionTitle title={t('landing.assistant.title')} /><p className="landing-lead">{t('landing.assistant.subtitle')}</p>
           <div className="landing-language-pills">{['العربية', 'الدارجة', 'Français', 'English', 'Español'].map(name => <span key={name}>{name}</span>)}</div>
         </div>
-        <figure className="landing-assistant-visual"><Image src="/images/landing/assistant-showcase.webp" alt={t('landing.assistant.alt')} width={1448} height={1086} sizes="(min-width: 1024px) 700px, 100vw" />
+        <figure className="landing-assistant-visual"><Image src="/images/landing/assistant-chatbot.webp" alt={t('landing.assistant.alt')} width={1448} height={1086} sizes="(min-width: 1024px) 700px, 100vw" />
           <figcaption className="landing-disclosure">{t('landing.demoDisclosure')} · {t('landing.photoDisclosure')}</figcaption></figure>
       </div></section>
       {cycles.length > 0 && <section id="programs" className="landing-stripe"><div className="landing-container landing-section">

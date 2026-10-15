@@ -105,4 +105,4 @@ The original content is split without discarding its obligations or historical e
 
 The historical package pins, test counts and command examples are not current claims. This folder adds current browser guides while retaining the original source/UI/local-connected/remote evidence boundaries. Full acceptance requires every applicable assertion and separate server/database proof; absent features and blocked fixtures remain open.
 
-Related records: [Routine timetable evidence](../routine-timetable.md), [seed-reset incident](../seed-reset-routine.md), [access-reset implementation plan](../../plans/USER-ACCESS-RESET-PLAN.md).
+Related records: [Routine timetable evidence](../routine-timetable.md), [seed-reset incident](../seed-reset-routine.md), [access-reset implementation plan](../../archive/plans/USER-ACCESS-RESET-PLAN.md).
