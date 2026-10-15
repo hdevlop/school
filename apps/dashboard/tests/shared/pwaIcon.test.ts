@@ -8,7 +8,7 @@ describe('install icons', () => {
   });
 
   it.each([180, 192, 512] as const)('renders a real opaque %i square PNG from the bundled school logo', async (size) => {
-    const input = new Uint8Array(await Bun.file('packages/server/src/theme/sidebar-logo-collapsed.png').arrayBuffer());
+    const input = new Uint8Array(await Bun.file('packages/server/src/theme/auth-logo.png').arrayBuffer());
     const output = await renderPwaIcon(input, size);
     expect(pwaIconSize(`${size}.png`)).toBe(size);
     const image = await sharp(output).metadata();

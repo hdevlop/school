@@ -8,7 +8,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ fil
   if (!size) return new Response(null, { status: 404 });
 
   const { branding } = await loadUiSnapshot();
-  const source = branding.slots.sidebarLogoCollapsed ?? branding.slots.authLogo;
+  const source = branding.slots.authLogo ?? branding.slots.sidebarLogoCollapsed;
   // Branding is owned by Najm. Resolve its public asset in-process rather than
   // fetching a host supplied in a request or introducing a second logo store.
   if (!source || !/^\/api\/branding\/(?:assets|factory)\/[^/?#]+$/.test(source)) {
