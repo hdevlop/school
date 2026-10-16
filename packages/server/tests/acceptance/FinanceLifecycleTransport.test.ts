@@ -296,6 +296,34 @@ describe('real PostgreSQL finance lifecycle over authenticated HTTP and MCP', ()
 // These are ordinary assertions, deliberately exposing defects found in the
 // review. They must pass after the production fix; do not convert them to skips.
 describe('finance review regression cases', () => {
+  it('refuses pre-hire direct, existing-slip and bulk payments without changing history; pays the hire month', async () => {
+    const id = `finance-prehire-${suffix}`;
+    payslipIds.push(id);
+    await db.insert(payslips).values({ id, staffId, staffName: 'Nadia El Mansouri', staffRole: 'teacher',
+      period: '2026-09', baseSalary: '100', grossAmount: '100', netAmount: '100' });
+    await db.update(staff).set({ hireDate: '2026-12-15' }).where(eq(staff.id, staffId));
+    try {
+      expect((await request('/payroll/pay-staff', 'POST', { staffId, period: '2026-10' }, adminToken)).status).toBe(400);
+      expect(await db.select().from(payslips).where(and(eq(payslips.staffId, staffId), eq(payslips.period, '2026-10')))).toHaveLength(0);
+      expect((await request(`/payroll/${id}/pay`, 'POST', { paymentMethod: 'cash' }, adminToken)).status).toBe(400);
+      expect((await request('/payroll/pay-staff', 'POST', { staffId, period: '2026-09' }, adminToken)).status).toBe(400);
+      const bulk = await request('/payroll/pay-staff-bulk', 'POST', { staffIds: [staffId], period: '2026-10' }, adminToken);
+      expect(bulk.status).toBe(200);
+      expect(bulk.body.data).toMatchObject({ paidCount: 0, requested: 1 });
+      const unchanged = await request(`/payroll/${id}`, 'GET', undefined, adminToken);
+      expect(unchanged.status).toBe(200);
+      expect(unchanged.body.data).toMatchObject({ status: 'pending', netAmount: '100.00', paymentDate: null });
+      expect(unchanged.body.data.staff.hireDate).toBe('2026-12-15');
+      expect(await db.select().from(financialAuditLogs).where(eq(financialAuditLogs.entityId, id))).toHaveLength(0);
+      const paid = await request('/payroll/pay-staff', 'POST', { staffId, period: '2026-12' }, adminToken);
+      if (paid.body.data?.id) payslipIds.push(paid.body.data.id);
+      expect(paid.status, JSON.stringify(paid.body)).toBe(200);
+      expect(paid.body.data).toMatchObject({ status: 'paid', netAmount: '100.00' });
+    } finally {
+      await db.update(staff).set({ hireDate: '2024-09-01' }).where(eq(staff.id, staffId));
+    }
+  });
+
   it('replays concurrent identical idempotency keys without returning a server error', async () => {
     const { fee } = await newFee();
     const key = crypto.randomUUID();

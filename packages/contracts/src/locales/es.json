@@ -1416,7 +1416,8 @@
       "outsideYear": "El periodo de nómina está fuera del año escolar seleccionado",
       "statusViaWorkflow": "Paga o anula el pago de una nómina con su acción propia; una edición solo puede cancelar una nómina pendiente.",
       "paidLocked": "Una nómina pagada conserva los importes con que se pagó. Anula primero el pago.",
-      "deductionsExceedGross": "Las deducciones no pueden superar el salario bruto."
+      "deductionsExceedGross": "Las deducciones no pueden superar el salario bruto.",
+      "beforeHire": "El período de nómina no puede ser anterior al mes de contratación del empleado."
     },
     "stats": {
       "period": "Periodo",
@@ -1458,7 +1459,12 @@
       "paySelected": "Ejecutar nómina"
     },
     "loading": "Cargando nómina...",
-    "noData": "No se encontraron registros de nómina"
+    "noData": "No se encontraron registros de nómina",
+    "dialogs": {
+      "payTitle": "Confirmar el pago del salario",
+      "payOne": "¿Pagar {{amount}} a {{name}} por {{period}} mediante transferencia bancaria?",
+      "payMany": "¿Pagar a {{count}} empleados un total de {{amount}} por {{period}} mediante transferencia bancaria?"
+    }
   },
   "attendance": {
     "subtitle": {

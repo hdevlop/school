@@ -1,5 +1,6 @@
 import { Err, I18n, Service } from '../../../najm';
 import { PayrollRepository } from './PayrollRepository';
+import { isPayrollPeriodAfterHire } from '@sms/contracts';
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 
@@ -18,6 +19,11 @@ export class PayrollValidator {
 
   ensureCompensation(base: number) {
     if (!(base > 0)) Err(400, this.t('noCompensation'));
+  }
+
+  ensureHiredForPeriod(period: string, staff: { hireDate: string } | null | undefined) {
+    if (!staff) Err(404, this.t('staffNotFound'));
+    if (!isPayrollPeriodAfterHire(period, staff.hireDate)) Err(400, this.t('beforeHire'));
   }
 
   ensurePeriodInSelectedYear(period: string) {

@@ -8,6 +8,8 @@ import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
 import { useTranslation } from 'najm-i18n/react';
+import { isPayrollPeriodAfterHire } from '@sms/contracts';
+import { useDialog } from '@/shared/useDialog';
 import { usePayroll } from '@/features/Financial/Payroll/hooks/usePayroll';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -40,6 +42,7 @@ const formatPeriod = (period: string, locale: string) => {
 
 const PayrollTable = () => {
   const { t } = useTranslation();
+  const { openDialog } = useDialog();
   const { locale, majorMoney } = useSchoolFormat();
   // 'YYYY-MM', what the backend expects; undefined until a period is picked.
   const [period, setPeriod] = useState<string>();
@@ -76,7 +79,9 @@ const PayrollTable = () => {
 
   // The server's roster: active staff with a salary, teachers included. The
   // Staff list leaves teachers out, so a month without payslips lost them.
-  const eligibleStaff = roster;
+  const eligibleStaff = useMemo(() => roster.filter((member) =>
+    isPayrollPeriodAfterHire(effectivePeriod, member.hireDate)
+    || payslips.some((slip) => slip.staffId === member.id)), [roster, payslips, effectivePeriod]);
 
   const payslipByStaff = useMemo(() => {
     const map = new Map<string, any>();
@@ -102,6 +107,8 @@ const PayrollTable = () => {
         payrollPeriod: formatPeriod(effectivePeriod, locale),
         paymentAmount: Number(slip?.netAmount ?? calculateStaffPay(member)),
         paymentStatus: slip ? slip.status : 'notRun',
+        canPay: isPayrollPeriodAfterHire(effectivePeriod, member.hireDate)
+          && (!slip || slip.status === 'pending'),
         payslipNumber: slip?.payslipNumber ?? null,
         teacherId: member.teacherId ?? null,
       };
@@ -124,6 +131,8 @@ const PayrollTable = () => {
         payrollPeriod: formatPeriod(effectivePeriod, locale),
         paymentAmount: Number(slip.netAmount),
         paymentStatus: slip.status,
+        canPay: isPayrollPeriodAfterHire(effectivePeriod, slip.staff?.hireDate)
+          && slip.status === 'pending',
         payslipNumber: slip.payslipNumber,
         teacherId: null,
       }));
@@ -140,15 +149,27 @@ const PayrollTable = () => {
   // Unpaid (not-yet-paid) selected staff — these are the ones a bulk pay would act on.
   const selectedUnpaidStaffIds = useMemo(() => {
     return Object.keys(rowSelection)
+      .filter((rowId) => rowSelection[rowId])
       .map((rowId) => tableRows.find((item) => item.id === rowId))
-      .filter((row): row is (typeof tableRows)[number] => Boolean(row && row.paymentStatus !== 'paid'))
+      .filter((row): row is (typeof tableRows)[number] => Boolean(row?.canPay))
       .map((row) => row.staffId);
   }, [rowSelection, tableRows]);
 
-  // One click: create the payslip (if needed) and mark it paid. Salaries default to bank transfer.
+  // The dialog captures the displayed staff, amount and period before any payment.
   const handlePayOne = useCallback(async (staffId: string) => {
-    await payStaff({ staffId, period: effectivePeriod, paymentMethod: 'bankTransfer' });
-  }, [payStaff, effectivePeriod]);
+    const row = tableRows.find((item) => item.staffId === staffId);
+    if (!row?.canPay) return;
+    await openDialog({
+      title: t('payroll.dialogs.payTitle'),
+      children: <p>{t('payroll.dialogs.payOne', {
+        name: row.name, period: row.payrollPeriod, amount: majorMoney(row.paymentAmount),
+      })}</p>,
+      primaryButton: {
+        text: t('payroll.actions.pay'),
+        onClick: async () => { await payStaff({ staffId, period: effectivePeriod, paymentMethod: 'bankTransfer' }); },
+      },
+    });
+  }, [payStaff, effectivePeriod, tableRows, openDialog, t, majorMoney]);
 
   // Toggle off — undo a payment made by mistake (keeps the payslip history, back to pending).
   const handleUnpayOne = useCallback(async (staffId: string) => {
@@ -156,16 +177,27 @@ const PayrollTable = () => {
   }, [unpayStaff, effectivePeriod]);
 
   const handlePaySelected = useCallback(async (staffIds: string[]) => {
-    if (staffIds.length === 0) return;
-    await payStaffBulk({ staffIds, period: effectivePeriod, paymentMethod: 'bankTransfer' });
-    setRowSelection((current) => {
-      const next = { ...current };
-      tableRows.forEach((row) => {
-        if (staffIds.includes(row.staffId)) delete next[row.id];
-      });
-      return next;
+    const targets = tableRows.filter((row) => row.canPay && staffIds.includes(row.staffId));
+    if (targets.length === 0) return;
+    await openDialog({
+      title: t('payroll.dialogs.payTitle'),
+      children: <p>{t('payroll.dialogs.payMany', {
+        count: targets.length, period: formatPeriod(effectivePeriod, locale),
+        amount: majorMoney(targets.reduce((sum, row) => sum + row.paymentAmount, 0)),
+      })}</p>,
+      primaryButton: {
+        text: t('payroll.actions.pay'),
+        onClick: async () => {
+          await payStaffBulk({ staffIds: targets.map((row) => row.staffId), period: effectivePeriod, paymentMethod: 'bankTransfer' });
+          setRowSelection((current) => {
+            const next = { ...current };
+            targets.forEach((row) => { delete next[row.id]; });
+            return next;
+          });
+        },
+      },
     });
-  }, [payStaffBulk, effectivePeriod, tableRows]);
+  }, [payStaffBulk, effectivePeriod, tableRows, openDialog, t, majorMoney, locale]);
 
   const columns = useMemo(() => [
     {
@@ -207,7 +239,7 @@ const PayrollTable = () => {
           <NButton
             size="sm"
             variant={isPaid ? 'outline' : 'default'}
-            disabled={isPaying}
+            disabled={isPaying || (!isPaid && !row.original.canPay)}
             onClick={() => (isPaid ? handleUnpayOne(row.original.staffId) : handlePayOne(row.original.staffId))}
             className="gap-1"
           >
@@ -321,8 +353,8 @@ const PayrollTable = () => {
         headerSlot={
           (() => {
             // No selection → pay everyone unpaid; with selection → pay just those.
-            const allUnpaidIds = tableRows.filter((r) => r.paymentStatus !== 'paid').map((r) => r.staffId);
-            const payTargets = selectedUnpaidStaffIds.length > 0 ? selectedUnpaidStaffIds : allUnpaidIds;
+            const allUnpaidIds = tableRows.filter((r) => r.canPay).map((r) => r.staffId);
+            const payTargets = Object.values(rowSelection).some(Boolean) ? selectedUnpaidStaffIds : allUnpaidIds;
             const payLabel = `${t('payroll.actions.pay')} (${payTargets.length})`;
             return (
               <NButton

@@ -4849,7 +4849,8 @@
       "outsideYear": "Payroll period is outside the selected school year",
       "statusViaWorkflow": "Pay or unpay a payslip with its own action; an edit can only cancel a pending payslip.",
       "paidLocked": "A paid payslip keeps the amounts it was paid with. Unpay it first.",
-      "deductionsExceedGross": "Deductions cannot exceed the gross salary."
+      "deductionsExceedGross": "Deductions cannot exceed the gross salary.",
+      "beforeHire": "Payroll period cannot be before the staff member’s hire month."
     },
     "stats": {
       "period": "Period",
@@ -4891,7 +4892,12 @@
       "paySelected": "Run Payroll"
     },
     "loading": "Loading payroll...",
-    "noData": "No payroll records found"
+    "noData": "No payroll records found",
+    "dialogs": {
+      "payTitle": "Confirm salary payment",
+      "payOne": "Pay {{amount}} to {{name}} for {{period}} by bank transfer?",
+      "payMany": "Pay {{count}} staff members a total of {{amount}} for {{period}} by bank transfer?"
+    }
   },
   "reports": {
     "title": "Financial Reports",

@@ -1918,7 +1918,8 @@
       "outsideYear": "La période de paie est en dehors de l'année scolaire sélectionnée",
       "statusViaWorkflow": "Payez ou annulez le paiement d'une fiche avec l'action prévue ; une modification peut seulement annuler une fiche en attente.",
       "paidLocked": "Une fiche payée garde les montants payés. Annulez d’abord le paiement.",
-      "deductionsExceedGross": "Les retenues ne peuvent pas dépasser le salaire brut."
+      "deductionsExceedGross": "Les retenues ne peuvent pas dépasser le salaire brut.",
+      "beforeHire": "La période de paie ne peut pas précéder le mois d’embauche du salarié."
     },
     "stats": {
       "period": "Période",
@@ -1960,7 +1961,12 @@
       "paySelected": "Lancer la paie"
     },
     "loading": "Chargement de la paie...",
-    "noData": "Aucun bulletin de paie trouvé"
+    "noData": "Aucun bulletin de paie trouvé",
+    "dialogs": {
+      "payTitle": "Confirmer le paiement du salaire",
+      "payOne": "Payer {{amount}} à {{name}} pour {{period}} par virement bancaire ?",
+      "payMany": "Payer {{count}} salariés pour un total de {{amount}} pour {{period}} par virement bancaire ?"
+    }
   },
   "reports": {
     "title": "Rapports financiers",

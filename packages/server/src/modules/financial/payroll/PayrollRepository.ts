@@ -53,6 +53,7 @@ export class PayrollRepository {
           employeeCode: staff.employeeCode,
           department: staff.department,
           employmentType: staff.employmentType,
+          hireDate: staff.hireDate,
           status: staff.status,
           gender: staff.gender,
           image: staffUsers.image,

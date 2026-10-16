@@ -4,8 +4,9 @@ import { PayrollService } from '../../src/modules/financial/payroll/PayrollServi
 it('creates demo payroll only for this run while normal payroll retains the full staff roster', async () => {
   const inserted: any[][] = [];
   const staff = [
-    { id: 'new-demo', name: 'Demo Teacher', role: 'teacher', salary: '5000', compensationMode: 'monthly' },
-    { id: 'earlier-demo', name: 'Earlier Teacher', role: 'teacher', salary: '5000', compensationMode: 'monthly' },
+    { id: 'new-demo', name: 'Demo Teacher', role: 'teacher', salary: '5000', compensationMode: 'monthly', hireDate: '2025-09-15' },
+    { id: 'earlier-demo', name: 'Earlier Teacher', role: 'teacher', salary: '5000', compensationMode: 'monthly', hireDate: '2024-09-01' },
+    { id: 'later-hire', name: 'Later Teacher', role: 'teacher', salary: '5000', compensationMode: 'monthly', hireDate: '2025-10-01' },
     { id: 'unpaid-demo', name: 'Volunteer', role: 'assistant', salary: '0', compensationMode: 'monthly' },
   ];
   const service = new PayrollService({

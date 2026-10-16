@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { ExpenseValidator } from '../../src/modules/financial/expenses/ExpenseValidator';
 import { PayrollValidator } from '../../src/modules/financial/payroll/PayrollValidator';
+import { withEnglishMessages } from '../support/englishMessages';
 
 // The production browser run (2026-10-16) set a pending expense to `paid`
 // through the generic edit: no approver, no payment date, counted as spent.
@@ -32,6 +33,13 @@ describe('expense status through the generic edit', () => {
 
 const payslipEdit = (current: string, next: Parameters<PayrollValidator['ensureEditable']>[1]) =>
   () => PayrollValidator.prototype.ensureEditable.call({ t: (key: string) => key }, { status: current }, next);
+
+it('refuses payroll before hire with a translated error and allows the hire month', () => {
+  const validator = withEnglishMessages(new PayrollValidator({} as any));
+  expect(() => validator.ensureHiredForPeriod('2026-09', { hireDate: '2026-10-15' }))
+    .toThrow('Payroll period cannot be before the staff member’s hire month.');
+  expect(() => validator.ensureHiredForPeriod('2026-10', { hireDate: '2026-10-15' })).not.toThrow();
+});
 
 describe('payslip generic edit', () => {
   it('refuses deductions above gross', () => {

@@ -20,6 +20,7 @@ export type PayrollRow = {
   payrollPeriod: string;
   paymentAmount: number;
   paymentStatus: string;
+  canPay: boolean;
   payslipNumber: string | null;
   teacherId: string | null;
 };
@@ -115,7 +116,7 @@ export default function PayrollCard({ data: row, isPaying, onPay, onUnpay }: Pro
         <NButton
           size="sm"
           variant={isPaid ? 'outline' : 'default'}
-          disabled={isPaying}
+          disabled={isPaying || (!isPaid && !row.canPay)}
           onClick={(event) => {
             // The card itself selects the row; the button only pays.
             event.stopPropagation();

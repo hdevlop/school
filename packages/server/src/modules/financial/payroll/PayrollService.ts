@@ -16,6 +16,7 @@ import { formatDateOnly } from '../utils/dateOnly';
 import { fromCents } from '../utils/money';
 import { getBusinessDate } from '../../../shared/businessDate';
 import { isSeeding } from '../../../shared/userPassword';
+import { isPayrollPeriodAfterHire } from '@sms/contracts';
 
 const money = (value: unknown) => Number(value ?? 0);
 const toMoney = (value: number) => fromCents(Math.round(value * 100));
@@ -85,7 +86,8 @@ export class PayrollService {
 
   private async generatePayroll(period: string, processedBy?: string, staffIds?: Set<string>) {
     this.payrollValidator.ensurePeriodInSelectedYear(period);
-    const eligible = (await this.getRoster()).filter((member) => !staffIds || staffIds.has(member.id));
+    const eligible = (await this.getRoster()).filter((member) =>
+      isPayrollPeriodAfterHire(period, member.hireDate) && (!staffIds || staffIds.has(member.id)));
 
     const alreadyPaid = new Set(await this.payrollRepository.getStaffIdsWithPayslip(period));
     const toCreate = eligible.filter((member) => !alreadyPaid.has(member.id));
@@ -128,6 +130,8 @@ export class PayrollService {
   @Transaction()
   async pay(id: string, data: PayPayslipDto, processedBy?: string) {
     const existing = await this.payrollValidator.ensurePayable(id);
+    this.payrollValidator.ensureHiredForPeriod(existing.period,
+      await this.staffRepository.getById(existing.staffId));
 
     const update: Record<string, any> = {
       status: 'paid',
@@ -168,6 +172,7 @@ export class PayrollService {
     }
 
     const staff = this.payrollValidator.ensureActiveStaff(await this.staffRepository.getById(staffId));
+    this.payrollValidator.ensureHiredForPeriod(period, staff);
 
     const base = calculateStaffBasePay(staff);
     this.payrollValidator.ensureCompensation(base);
