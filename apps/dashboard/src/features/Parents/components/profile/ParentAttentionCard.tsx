@@ -7,7 +7,8 @@ import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 type ParentAttentionCardProps = {
-  overdueAmount: number;
+  /** Null when finance is unavailable to the viewer. */
+  overdueAmount: number | null;
   absences: number;
   lateArrivals: number;
   upcomingAssessments: number;
@@ -49,7 +50,7 @@ const ParentAttentionCard = ({
   const label = (key: string) => t(`parents.profile.dashboard.attention.${key}`);
 
   const rows: AttentionRow[] = [
-    {
+    ...(overdueAmount === null ? [] : [{
       key: 'overduePayments',
       label: label('overduePayments'),
       icon: Wallet,
@@ -57,7 +58,7 @@ const ParentAttentionCard = ({
       href: links.fees,
       count: overdueAmount,
       value: majorMoney(overdueAmount),
-    },
+    }]),
     {
       key: 'absences',
       label: label('absences'),

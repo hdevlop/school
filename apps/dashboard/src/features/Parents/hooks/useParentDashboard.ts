@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { usePermissions } from 'najm-auth/client/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { getUpcomingAssessmentsApi } from '@/services/assessmentApi';
 import { getAttendanceByStudentApi } from '@/services/attendanceApi';
 import { getDisciplineApi } from '@/services/disciplineApi';
@@ -45,6 +45,8 @@ export interface ParentChildDashboardData {
 
 export function useParentDashboard(parentId: string) {
   const { viewingYear, activeYear, isResolving } = useViewingAcademicYear();
+  const { can, isSchoolWide } = useViewerRole();
+  const canReadFees = isSchoolWide && can('read:fees');
   // Upcoming items are matched against today's classes, so another year also
   // reads each child's current placement.
   const otherYear = Boolean(viewingYear && viewingYear !== activeYear);
@@ -74,7 +76,7 @@ export function useParentDashboard(parentId: string) {
   const childIds = children.map((child: any) => child.id).filter(Boolean);
 
   const childDataQuery = useQuery({
-    queryKey: ['parents', parentId, 'dashboard-children', childIds, viewingYear ?? null],
+    queryKey: ['parents', parentId, 'dashboard-children', childIds, viewingYear ?? null, canReadFees],
     queryFn: () => withAcademicYear(viewingYear, async () => {
       // One read for the family: the incidents the viewer may see, counted per
       // child. A refused read is "unknown", not "none".
@@ -86,7 +88,7 @@ export function useParentDashboard(parentId: string) {
           const [attendance, grades, feeAccount] = await Promise.all([
             safelyCollection(getAttendanceByStudentApi(child.id)),
             safelyCollection(getGradesByStudentApi(child.id)),
-            safely<any>(getFeesByStudentApi(child.id), null),
+            canReadFees ? safely<any>(getFeesByStudentApi(child.id), null) : null,
           ]);
           const fees = Array.isArray(feeAccount?.fees) ? feeAccount.fees : [];
           const overdueAmount = Number(feeAccount?.summary?.totalOverdueAmount) || 0;
@@ -105,7 +107,6 @@ export function useParentDashboard(parentId: string) {
 
   // School-wide items need their own read grants. Asking without one only
   // collects a 403 per profile view, so a reader without it gets none.
-  const { can } = usePermissions();
   const canReadAssessments = can('read:assessments');
   const canReadEvents = can('read:events');
   const schoolQuery = useQuery({
@@ -132,6 +133,7 @@ export function useParentDashboard(parentId: string) {
     children,
     currentChildren: familyQuery.data?.currentChildren ?? [],
     childData: childDataQuery.data ?? [],
+    canReadFees,
     assessments: schoolQuery.data?.assessments ?? [],
     events: schoolQuery.data?.events ?? [],
     isLoading,

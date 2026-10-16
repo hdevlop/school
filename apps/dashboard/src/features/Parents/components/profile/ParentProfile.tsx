@@ -113,6 +113,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
     children,
     currentChildren,
     childData,
+    canReadFees,
     assessments,
     events,
     isLoading,
@@ -364,7 +365,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
         </TabsContent>
         <TabsContent value="overview" className="mt-0 fit:min-h-0">
         <div className="flex min-h-full flex-col gap-3 pb-1 fit:h-full">
-          <div className="grid shrink-0 grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+          <div className={`grid shrink-0 grid-cols-2 gap-3 ${canReadFees ? 'md:grid-cols-3 xl:grid-cols-6' : 'xl:grid-cols-4'}`}>
             <NStatCard
               icon={UsersRound}
               label={t('parents.profile.totalChildren')}
@@ -389,19 +390,19 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
               value={dashboard.pendingAssessments.length}
               onClick={() => router.push('/assessments')}
             />
-            <NStatCard
+            {canReadFees && <NStatCard
               icon={Wallet}
               label={text('outstandingBalance')}
               value={majorMoney(dashboard.outstandingFees)}
               onClick={() => router.push('/fees')}
-            />
-            <NStatCard
+            />}
+            {canReadFees && <NStatCard
               icon={AlertTriangle}
               label={text('overdueAmount')}
               value={majorMoney(dashboard.overdueFees)}
               classNames={dashboard.overdueFees > 0 ? { value: 'text-destructive' } : undefined}
               onClick={() => router.push('/fees')}
-            />
+            />}
           </div>
 
           {/* Three equal columns, as on the teacher overview, so the chart is not
@@ -558,7 +559,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             </NCard>
 
             <ParentAttentionCard
-              overdueAmount={dashboard.overdueFees}
+              overdueAmount={canReadFees ? dashboard.overdueFees : null}
               absences={dashboard.absences}
               lateArrivals={dashboard.lateArrivals}
               upcomingAssessments={dashboard.pendingAssessments.length}
@@ -568,7 +569,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 fit:min-h-[17rem] fit:flex-1 fit:basis-0 [&>*]:min-w-0 fit:[&>*]:min-h-0">
+          <div className={`grid grid-cols-1 gap-3 ${canReadFees ? 'lg:grid-cols-3' : 'lg:grid-cols-2'} fit:min-h-[17rem] fit:flex-1 fit:basis-0 [&>*]:min-w-0 fit:[&>*]:min-h-0`}>
             <NCard title={text('recentGrades')} icon={Award} className="flex h-full w-full" classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}>
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/grades')}>
@@ -618,7 +619,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
               )}
             </NCard>
 
-            <NCard title={text('feesPayments')} icon={CreditCard} className="flex h-full w-full" classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}>
+            {canReadFees && <NCard title={text('feesPayments')} icon={CreditCard} className="flex h-full w-full" classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}>
               <NCardAction>
                 <NButton type="button" variant="ghost" size="sm" onClick={() => router.push('/fees')}>
                   {t('parents.profile.viewAllFees')}
@@ -685,7 +686,7 @@ const ParentProfile: React.FC<ParentProfileProps> = ({ parentId }) => {
                   </NCardFooter>
                 </div>
               )}
-            </NCard>
+            </NCard>}
 
             <NCard title={text('upcomingEvents')} icon={CalendarDays} className="flex h-full w-full" classNames={{ content: 'fit:min-h-0 fit:flex-1 fit:overflow-y-auto' }}>
               <NCardAction>
