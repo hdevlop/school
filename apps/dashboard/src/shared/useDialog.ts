@@ -6,7 +6,8 @@
  * change those defaults. Most of School's dialogs pass only a primary button,
  * so every one of them showed an English "Cancel" in French, Arabic and
  * Spanish. This hook is najm-kit's `useDialog` with the omitted labels taken
- * from the shared catalog; whatever a caller passes still wins.
+ * from the shared catalog; whatever a caller passes still wins. It also marks a
+ * refused `pop` as handled, see below.
  */
 
 import { useMemo } from 'react';
@@ -30,6 +31,15 @@ export function useDialog(): DialogApi {
       ...dialog,
       custom: open,
       openDialog: open,
+      // A form's submit pops its result into the dialog's primary handler. A
+      // refused save rejects that pop and keeps the dialog open; most forms do
+      // not await it, so the rejection surfaced as an uncaught page error. Mark
+      // it handled here: a caller that awaits pop still receives it.
+      pop: (result?: unknown) => {
+        const popped = dialog.pop(result);
+        popped.catch(() => undefined);
+        return popped;
+      },
       push: (options: PushDialogOptions) => dialog.push(withLabels(options)),
       confirmDelete: (options: DeleteDialogOptions) => dialog.confirmDelete({
         title: t('common.delete'),
