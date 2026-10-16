@@ -1,0 +1,49 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "0c243238a73d0a784a18332d4a3065773f162bbd",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-16T20:12:28.511Z",
+  "scope": "Real-response localized staff-dialog keyboard and client validation; no mocks, no saves",
+  "results": [
+    {
+      "case": "es: staff wizard uses localized Next",
+      "outcome": "PASS"
+    },
+    {
+      "case": "es: dialog uses expected direction",
+      "outcome": "PASS"
+    },
+    {
+      "case": "es: staff dialog fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "es: keyboard focus stays within dialog",
+      "outcome": "PASS"
+    },
+    {
+      "case": "es: Escape closes dialog and restores focus",
+      "outcome": "FAIL"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/auth/refresh"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/refresh"
+    }
+  ],
+  "failure": {
+    "case": "es: Escape closes dialog and restores focus",
+    "active": {
+      "lang": "es",
+      "phase": "dialog"
+    }
+  }
+}

@@ -1,0 +1,1471 @@
+{
+  "revision": "0c243238a73d0a784a18332d4a3065773f162bbd",
+  "origin": "https://myscolai.com",
+  "startedUtc": "2026-10-16T20-08-30-910Z",
+  "completedUtc": "2026-10-16T20:11:22.203Z",
+  "browser": "155.0.8059.80",
+  "scope": "Read-only real-response navigation; no mocks or data writes",
+  "results": [
+    {
+      "case": "admin: authentication",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin desktop: /dashboard",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/dashboard",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /dashboard page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /reports",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/reports",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /reports page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /aging",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/aging",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /aging page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /reminders",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/reminders",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /reminders page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /financial-operations",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/financial-operations",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /financial-operations page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /transport",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/transport",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /transport page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /vehicles",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/vehicles",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /vehicles page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /staff",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/staff",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /staff page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /drivers",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/staff",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /drivers page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /attendance/staff",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/attendance/staff",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /attendance/staff page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /attendance/teachers",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/attendance/teachers",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /attendance/teachers page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /attendance/students",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/attendance/students",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /attendance/students page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /class-routines",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/class-routines",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /class-routines page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /calendar",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/calendar",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /calendar page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /grades",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/grades",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /grades page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /assessments",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/assessments",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /assessments page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /exams",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/exams",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /exams page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /alerts",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/alerts",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /alerts page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /announcements",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/announcements",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /announcements page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /notifications",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/notifications",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /notifications page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /preferences",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/preferences",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /preferences page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /settings",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/settings",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /settings page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /users",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/users",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /users page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /roles",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/roles",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /roles page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /permissions",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/permissions",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /permissions page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /students",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/students",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /students page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /parents",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/parents",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /parents page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /teachers",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/teachers",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /teachers page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /fees",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/fees",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /fees page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /fee-types",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/fee-types",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /fee-types page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /expenses",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/expenses",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /expenses page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /payroll",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/payroll",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /payroll page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /discipline",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/discipline",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /discipline page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /behavior-rewards",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/behavior-rewards",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /behavior-rewards page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /classes",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/classes",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /classes page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /sections",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/sections",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /sections page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /cycles",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/cycles",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /cycles page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin desktop: /subjects",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/subjects",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin desktop: /subjects page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin tablet: /reports",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/reports",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin tablet: /reports page fits viewport",
+      "outcome": "PASS",
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "case": "admin tablet: /transport",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/transport",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin tablet: /transport page fits viewport",
+      "outcome": "PASS",
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "case": "admin tablet: /staff",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/staff",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin tablet: /staff page fits viewport",
+      "outcome": "PASS",
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "case": "admin tablet: /attendance/staff",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/attendance/staff",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin tablet: /attendance/staff page fits viewport",
+      "outcome": "PASS",
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "case": "admin tablet: /class-routines",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/class-routines",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin tablet: /class-routines page fits viewport",
+      "outcome": "PASS",
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "case": "admin tablet: /grades",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/grades",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin tablet: /grades page fits viewport",
+      "outcome": "PASS",
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "case": "admin tablet: /notifications",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/notifications",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin tablet: /notifications page fits viewport",
+      "outcome": "PASS",
+      "width": 1024,
+      "scrollWidth": 1024
+    },
+    {
+      "case": "teacher-a: authentication",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher desktop: /dashboard",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/dashboard",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /dashboard page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /students",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/students",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /students page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /parents",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/parents",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /parents page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /teachers",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/teachers",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /teachers page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /grades",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/grades",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /grades page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /assessments",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/assessments",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /assessments page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /exams",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/exams",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /exams page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /attendance/students",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/attendance/students",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /attendance/students page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /class-routines",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/class-routines",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /class-routines page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /calendar",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/calendar",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /calendar page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /alerts",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/alerts",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /alerts page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /announcements",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/announcements",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /announcements page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /discipline",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/discipline",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /discipline page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /behavior-rewards",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/behavior-rewards",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /behavior-rewards page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /notifications",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/notifications",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /notifications page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "teacher desktop: /preferences",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/preferences",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "teacher desktop: /preferences page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: authentication",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a: /students",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/students",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /students page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /assessments",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/assessments",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /assessments page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /exams",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/exams",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /exams page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /class-routines",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/class-routines",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /class-routines page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /calendar",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/calendar",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /calendar page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /alerts",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/alerts",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /alerts page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /announcements",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/announcements",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /announcements page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /discipline",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/discipline",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /discipline page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /behavior-rewards",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/behavior-rewards",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /behavior-rewards page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /notifications",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/notifications",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /notifications page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-a: /preferences",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/preferences",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-a: /preferences page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: authentication",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b: /students",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/students",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /students page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /assessments",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/assessments",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /assessments page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /exams",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/exams",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /exams page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /class-routines",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/class-routines",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /class-routines page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /calendar",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/calendar",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /calendar page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /alerts",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/alerts",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /alerts page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /announcements",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/announcements",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /announcements page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /discipline",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/discipline",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /discipline page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /behavior-rewards",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/behavior-rewards",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /behavior-rewards page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /notifications",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/notifications",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /notifications page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "parent-b: /preferences",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/preferences",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "parent-b: /preferences page fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "admin: authentication",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /home",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/home",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /home page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /home",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /reports",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/reports",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /reports page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /reports",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /transport",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/transport",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /transport page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /transport",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /staff",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/staff",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /staff page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /staff",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /attendance/staff",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/attendance/staff",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /attendance/staff page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /attendance/staff",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /class-routines",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/class-routines",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /class-routines page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /class-routines",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /grades",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/grades",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /grades page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /grades",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /financial-operations",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/financial-operations",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /financial-operations page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /financial-operations",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /settings",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/settings",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /settings page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /settings",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin Arabic phone: /notifications",
+      "outcome": "PASS",
+      "http": 200,
+      "finalPath": "/notifications",
+      "diagnosticCount": 0,
+      "pageError": false,
+      "rawTranslationKey": false
+    },
+    {
+      "case": "admin Arabic phone: /notifications page fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "Arabic RTL /notifications",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Serving revision remained immutable",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "failure": null
+}

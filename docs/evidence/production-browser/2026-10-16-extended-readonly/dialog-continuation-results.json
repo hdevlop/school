@@ -1,0 +1,107 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "0c243238a73d0a784a18332d4a3065773f162bbd",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-16T20:14:11.024Z",
+  "scope": "Real-response localized staff-dialog keyboard and client validation; no mocks, no saves",
+  "results": [
+    {
+      "case": "ar: staff wizard uses localized Next",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar: dialog uses expected direction",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar: staff dialog fits viewport",
+      "outcome": "PASS",
+      "width": 390,
+      "scrollWidth": 390
+    },
+    {
+      "case": "ar: keyboard focus stays within dialog",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar: Escape focus restoration after asynchronous teardown",
+      "outcome": "PASS",
+      "immediate": {
+        "focused": false,
+        "activeTag": "BODY",
+        "connected": true
+      },
+      "settled": {
+        "focused": true,
+        "activeTag": "BUTTON",
+        "connected": true
+      },
+      "diagnosticHypothesis": "Allow deferred focus repair after dialog unmount"
+    },
+    {
+      "case": "ar: opening and dismissing staff form sends no domain writes",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar: no unexpected API or browser errors",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: staff wizard uses localized Next",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: dialog uses expected direction",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: staff dialog fits viewport",
+      "outcome": "PASS",
+      "width": 1440,
+      "scrollWidth": 1440
+    },
+    {
+      "case": "fr: keyboard focus stays within dialog",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: Escape focus restoration after asynchronous teardown",
+      "outcome": "PASS",
+      "immediate": {
+        "focused": false,
+        "activeTag": "BODY",
+        "connected": true
+      },
+      "settled": {
+        "focused": true,
+        "activeTag": "BUTTON",
+        "connected": true
+      },
+      "diagnosticHypothesis": "Allow deferred focus repair after dialog unmount"
+    },
+    {
+      "case": "fr: opening and dismissing staff form sends no domain writes",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr: no unexpected API or browser errors",
+      "outcome": "PASS"
+    },
+    {
+      "case": "French staff validation follows the interface language",
+      "outcome": "FAIL",
+      "englishErrorCount": 4,
+      "fingerprint": "StaffForm.personal.schema.literal-English-errors",
+      "knownFinding": true
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "failure": {
+    "case": "French staff validation follows the interface language",
+    "active": {
+      "lang": "fr",
+      "phase": "empty-form-validation"
+    }
+  }
+}

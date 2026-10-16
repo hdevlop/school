@@ -1,0 +1,327 @@
+{
+    "results":  [
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /users",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /roles",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /permissions",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /fees",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /payments",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /payroll",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /expenses",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /zones",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Anonymous denial /staff-roles",
+                        "details":  {
+                                        "http":  401
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /users",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /roles",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /permissions",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /fees",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /payments",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /payroll",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /expenses",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /zones",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a restricted API /staff-roles",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "teacher-a retains public school preferences",
+                        "details":  {
+                                        "http":  200
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /users",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /roles",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /permissions",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /fees",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /payments",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /payroll",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /expenses",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /zones",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a restricted API /staff-roles",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a retains public school preferences",
+                        "details":  {
+                                        "http":  200
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /users",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /roles",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /permissions",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /fees",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /payments",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /payroll",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /expenses",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /zones",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b restricted API /staff-roles",
+                        "details":  {
+                                        "http":  403
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b retains public school preferences",
+                        "details":  {
+                                        "http":  200
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Live read-only registry zones_get_zones",
+                        "details":  {
+                                        "readOnly":  true,
+                                        "registered":  true
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Admin reads zones_get_zones through MCP",
+                        "details":  {
+                                        "success":  true
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Zone catalog availability",
+                        "details":  {
+                                        "count":  0,
+                                        "staffCreationWithoutZone":  "BLOCKED"
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Live read-only registry staff-roles_list_all",
+                        "details":  {
+                                        "readOnly":  true,
+                                        "registered":  true
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Admin reads staff-roles_list_all through MCP",
+                        "details":  {
+                                        "success":  true
+                                    }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Serving revision stayed immutable",
+                        "details":  {
+                                        "sameRevision":  true
+                                    }
+                    }
+                ],
+    "scope":  "Read-only API security and catalog checks; authentication only",
+    "completedUtc":  "2026-10-16T20:09:42.9237166Z",
+    "failure":  null,
+    "revision":  "0c243238a73d0a784a18332d4a3065773f162bbd",
+    "origin":  "https://myscolai.com"
+}
