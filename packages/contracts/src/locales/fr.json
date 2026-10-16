@@ -3636,6 +3636,10 @@
       "selectClass": "Sélectionnez une classe pour commencer.",
       "selectSection": "Sélectionnez une section pour afficher les élèves.",
       "noStudents": "Aucun élève dans la section sélectionnée."
+    },
+    "validation": {
+      "marksMin": "Doit être supérieur ou égal à 0",
+      "marksMax": "Ne peut pas dépasser {{max}}"
     }
   },
   "parents": {
@@ -5010,7 +5014,11 @@
       "pickupLocation": "Lieu de prise en charge",
       "pickupPlaceholder": "ex. Rue Ibn Battouta",
       "dropoffLocation": "Lieu de dépose",
-      "dropoffPlaceholder": "ex. Portail de l'école"
+      "dropoffPlaceholder": "ex. Portail de l'école",
+      "assignTitle": "Affecter un élève à {{vehicle}}",
+      "assignSubmit": "Affecter et créer les frais de transport",
+      "assignStudent": "Affecter un élève",
+      "unassigned": "{{student}} retiré de {{vehicle}}"
     },
     "form": {
       "stepTitle": "Transport",

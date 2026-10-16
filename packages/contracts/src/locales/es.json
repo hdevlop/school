@@ -2993,6 +2993,10 @@
       "selectClass": "Seleccione una clase para empezar.",
       "selectSection": "Seleccione un grupo para ver los alumnos.",
       "noStudents": "No hay alumnos en el grupo seleccionado."
+    },
+    "validation": {
+      "marksMin": "Debe ser 0 o más",
+      "marksMax": "No puede superar {{max}}"
     }
   },
   "parents": {
@@ -4900,7 +4904,11 @@
       "pickupLocation": "Lugar de recogida",
       "pickupPlaceholder": "p. ej. Rue Ibn Battouta",
       "dropoffLocation": "Lugar de llegada",
-      "dropoffPlaceholder": "p. ej. Puerta del colegio"
+      "dropoffPlaceholder": "p. ej. Puerta del colegio",
+      "assignTitle": "Asignar un alumno a {{vehicle}}",
+      "assignSubmit": "Asignar y crear la cuota de transporte",
+      "assignStudent": "Asignar alumno",
+      "unassigned": "{{student}} quitado de {{vehicle}}"
     },
     "form": {
       "stepTitle": "Transporte",

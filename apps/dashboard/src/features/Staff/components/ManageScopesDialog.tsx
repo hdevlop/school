@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { Badge, Button, FormInput, NForm } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useZones } from '../hooks/useZones';
@@ -77,8 +76,8 @@ const ManageScopesDialog = () => {
           else await createZone(cleanZonePayload(data));
           refreshZones();
           pop();
-        } catch (e) {
-          toast.error(e?.response?.data?.message || e?.message);
+        } catch {
+          // The CRUD command already announced the refusal; stay open to correct it.
         }
       }} />,
       width: 'lg',
@@ -97,8 +96,8 @@ const ManageScopesDialog = () => {
         try {
           await deleteZone(zone.id);
           refreshZones();
-        } catch (e) {
-          toast.error(e?.response?.data?.message || e?.message);
+        } catch {
+          // The CRUD command already announced the refusal.
         }
       },
     });

@@ -8,18 +8,21 @@ import { User, Truck, Calendar, FileText } from 'lucide-react'
 import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { z } from 'zod'
+import { useMemo } from 'react'
 
-const assignDriverSchema = z.object({
+const createAssignDriverSchema = (t: (key: string) => string) => z.object({
    vehicleName: z.string(),
-   driverId: z.string().min(1, 'Driver is required'),
-   assignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
+   driverId: z.string().min(1, t('staff.validation.required')),
+   assignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, t('staff.validation.dateInvalid')),
    notes: z.string().optional(),
 })
 
-type AssignDriverData = z.infer<typeof assignDriverSchema>
+type AssignDriverData = z.infer<ReturnType<typeof createAssignDriverSchema>>
 
 const AssignDriverForm = ({ drivers, vehicle}) => {
    const { pop } = useDialog()
+   const { t } = useTranslation()
+   const assignDriverSchema = useMemo(() => createAssignDriverSchema(t), [t])
 
    const defaultValues = {
       vehicleName: `${vehicle?.name}  (${vehicle?.licensePlate})`,

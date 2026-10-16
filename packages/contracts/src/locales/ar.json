@@ -3007,6 +3007,10 @@
       "selectClass": "اختر قسمًا للبدء.",
       "selectSection": "اختر مجموعة لعرض الطلاب.",
       "noStudents": "لا يوجد طلاب في المجموعة المحددة."
+    },
+    "validation": {
+      "marksMin": "يجب أن تكون 0 أو أكثر",
+      "marksMax": "لا يمكن أن تتجاوز {{max}}"
     }
   },
   "parents": {
@@ -4914,7 +4918,11 @@
       "pickupLocation": "مكان الصعود",
       "pickupPlaceholder": "مثال: شارع ابن بطوطة",
       "dropoffLocation": "مكان النزول",
-      "dropoffPlaceholder": "مثال: بوابة المدرسة"
+      "dropoffPlaceholder": "مثال: بوابة المدرسة",
+      "assignTitle": "إسناد تلميذ إلى {{vehicle}}",
+      "assignSubmit": "الإسناد وإنشاء رسوم النقل",
+      "assignStudent": "إسناد تلميذ",
+      "unassigned": "تم إلغاء إسناد {{student}} من {{vehicle}}"
     },
     "form": {
       "stepTitle": "النقل",

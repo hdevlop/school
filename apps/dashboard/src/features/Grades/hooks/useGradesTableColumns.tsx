@@ -110,8 +110,8 @@ export const useGradesTableColumns = ({
         step: 0.5,
         validate: (v, row) => {
           if (v == null || v === '') return null;
-          if (v < 0) return 'Must be ≥ 0';
-          if (row.totalMarks != null && v > row.totalMarks) return `Max ${row.totalMarks}`;
+          if (v < 0) return t('grades.validation.marksMin');
+          if (row.totalMarks != null && v > row.totalMarks) return t('grades.validation.marksMax', { max: row.totalMarks });
           return null;
         },
       },

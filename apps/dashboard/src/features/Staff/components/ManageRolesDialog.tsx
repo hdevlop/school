@@ -7,7 +7,6 @@ import { useDialog } from '@/shared/useDialog';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaffRoles, useStaffRoleMutations } from '../hooks/useStaffRoles';
-import { toast } from 'sonner';
 
 type T = (key: string) => string;
 
@@ -99,8 +98,8 @@ const ManageRolesDialog = () => {
           await createRole({ ...cleanRolePayload(data), active: data.active ?? true });
           refetch();
           pop();
-        } catch (e) {
-          toast.error(e?.response?.data?.message || e?.message);
+        } catch {
+          // The CRUD command already announced the refusal; stay open to correct it.
         }
       }} />,
       width: 'lg',
@@ -117,8 +116,8 @@ const ManageRolesDialog = () => {
           await updateRole({ code: role.code, ...cleanRolePayload(data) });
           refetch();
           pop();
-        } catch (e) {
-          toast.error(e?.response?.data?.message || e?.message);
+        } catch {
+          // The CRUD command already announced the refusal; stay open to correct it.
         }
       }} />,
       width: 'lg',
@@ -137,8 +136,8 @@ const ManageRolesDialog = () => {
         try {
           await removeRole(role.code);
           refetch();
-        } catch (e) {
-          toast.error(e?.response?.data?.message || e?.message);
+        } catch {
+          // The CRUD command already announced the refusal.
         }
       },
     });

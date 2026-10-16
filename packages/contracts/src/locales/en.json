@@ -3292,7 +3292,11 @@
       "pickupLocation": "Pickup location",
       "pickupPlaceholder": "e.g. Rue Ibn Battouta",
       "dropoffLocation": "Drop-off location",
-      "dropoffPlaceholder": "e.g. School gate"
+      "dropoffPlaceholder": "e.g. School gate",
+      "assignTitle": "Assign a student to {{vehicle}}",
+      "assignSubmit": "Assign and create transport fee",
+      "assignStudent": "Assign student",
+      "unassigned": "{{student}} unassigned from {{vehicle}}"
     },
     "success": {
       "retrieved": "Bus retrieved successfully",
@@ -3642,6 +3646,10 @@
       "selectClass": "Select a class to start.",
       "selectSection": "Select a section to load students.",
       "noStudents": "No students found in the selected section."
+    },
+    "validation": {
+      "marksMin": "Must be 0 or more",
+      "marksMax": "Cannot exceed {{max}}"
     }
   },
   "exams": {

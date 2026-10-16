@@ -142,12 +142,12 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
   const handleAssign = () => {
     const openedYear = academicYear
     openDialog({
-      title: `Assign Student to ${vehicle.name}`,
+      title: t('transport.panel.assignTitle', { vehicle: vehicle.name }),
       children: <AssignStudentForm students={availableStudents} vehicleId={vehicle.id} />,
       width: 'lg',
       primaryButton: {
         form: 'assign-student-form',
-        text: 'Assign & Create Transport Fee',
+        text: t('transport.panel.assignSubmit'),
         loading: isAssigning,
         onClick: async (data: any) => {
           await assignStudent(data, openedYear)
@@ -172,7 +172,7 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
         loading: false,
         onClick: async () => {
           await unassignStudent(route.id, openedYear)
-          toast.success(`${route.student?.name} unassigned from ${vehicle.name}`)
+          toast.success(t('transport.panel.unassigned', { student: route.student?.name, vehicle: vehicle.name }))
         },
       },
     })
@@ -199,7 +199,7 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
           variant="outline"
           className={`text-xs ${pct >= 100 ? 'border-red-300 text-red-700 bg-red-50' : pct >= 80 ? 'border-amber-300 text-amber-700 bg-amber-50' : 'border-green-300 text-green-700 bg-green-50'}`}
         >
-          <Users className="w-3 h-3 mr-1" />
+          <Users className="w-3 h-3 me-1" />
           {occupancy}/{capacity}
         </Badge>
       </div>
@@ -258,8 +258,8 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
         onClick={handleAssign}
         disabled={isAssigning || (capacity > 0 && occupancy >= capacity)}
       >
-        <UserPlus className="w-4 h-4 mr-2" />
-        Assign Student
+        <UserPlus className="w-4 h-4 me-2" />
+        {t('transport.panel.assignStudent')}
       </NButton>
     </div>
   )
