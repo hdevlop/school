@@ -3,6 +3,7 @@ import { ArrowRight, Calculator, Palette, PencilRuler } from 'lucide-react';
 import { LANDING_HERO_FALLBACK, type LandingContent, type LandingText } from '@sms/contracts';
 import { schoolI18n, type SchoolLocale, type SchoolTranslationKey } from '@sms/contracts/locales';
 import { LandingImage } from './LandingImage';
+import { InstallAppButton } from './InstallAppButton';
 
 export function LandingHero({ stats, language, defaultLanguage, programs }: {
   stats: LandingContent['stats'];
@@ -23,6 +24,7 @@ export function LandingHero({ stats, language, defaultLanguage, programs }: {
         </h1>
         <div className="landing-cta-row">
           <a href="#contact" className="landing-button landing-hero-button">{t('landing.hero.visit')}<span><ArrowRight className="landing-arrow" size={15} aria-hidden /></span></a>
+          <InstallAppButton />
           {programs && <a href="#programs" className="landing-hero-programs">{t('landing.hero.programs')}<ArrowRight className="landing-arrow" size={16} aria-hidden /></a>}
         </div>
         <svg className="landing-hero-scribble" viewBox="0 0 80 90" fill="none" aria-hidden="true" focusable="false">

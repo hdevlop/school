@@ -5879,6 +5879,15 @@
     "noItemsOnDay": "Nothing scheduled on this day"
   },
   "landing": {
+    "install": {
+      "action": "Install app",
+      "description": "Keep your school app within reach on your phone or computer.",
+      "ios": "Open this page in Safari, tap Share, then Add to Home Screen. If shown, enable Open as Web App, then tap Add.",
+      "android": "Open this page in Chrome. In the browser menu, choose Install app or Add to Home screen, then confirm.",
+      "mac": "In Safari, choose File → Add to Dock. In Chrome or Edge, use the install icon in the address bar or the browser menu.",
+      "desktop": "In Chrome or Edge, use the install icon in the address bar or choose Install app from the browser menu.",
+      "unavailable": "If the install option is missing, the app may already be installed. Otherwise, open this page in a supported browser outside private browsing."
+    },
     "meta": {
       "tagline": "Where every student shines",
       "description": "Discover our school, our programs and a connected school life. Contact us to arrange a visit."

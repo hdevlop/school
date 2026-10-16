@@ -5106,6 +5106,15 @@
     "noItemsOnDay": "Nada programado para este día"
   },
   "landing": {
+    "install": {
+      "action": "Instalar aplicación",
+      "description": "Ten la aplicación de tu escuela a mano en tu teléfono u ordenador.",
+      "ios": "Abre esta página en Safari, toca Compartir y luego Añadir a la pantalla de inicio. Si aparece, activa Abrir como app web y toca Añadir.",
+      "android": "Abre esta página en Chrome. En el menú del navegador, elige Instalar aplicación o Añadir a la pantalla de inicio y confirma.",
+      "mac": "En Safari, elige Archivo → Añadir al Dock. En Chrome o Edge, usa el icono de instalación en la barra de direcciones o el menú del navegador.",
+      "desktop": "En Chrome o Edge, usa el icono de instalación en la barra de direcciones o elige Instalar aplicación en el menú del navegador.",
+      "unavailable": "Si no aparece la opción de instalación, puede que la aplicación ya esté instalada. Si no lo está, abre esta página en un navegador compatible fuera del modo privado."
+    },
     "meta": {
       "tagline": "Donde cada estudiante brilla",
       "description": "Descubra nuestro colegio, nuestros programas y una vida escolar conectada. Contáctenos para concertar una visita."

@@ -402,6 +402,21 @@
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+.landing-install-button {
+  border: 1px solid var(--landing-accent);
+  padding-inline: 18px;
+  background: transparent;
+  color: var(--landing-accent);
+  box-shadow: none;
+  cursor: pointer;
+}
+.landing .landing-install-button:hover {
+  background: var(--landing-tint);
+}
+.landing-install-button:disabled {
+  cursor: wait;
+  opacity: .6;
+}
 .landing-hero-scribble {
   position: absolute;
   inset-inline-end: 2px;
