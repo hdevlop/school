@@ -1,0 +1,137 @@
+{
+  "revision": "bc4e665ebff4714a7db68bc7cf085fa8aedea0c7",
+  "browser": "155.0.8059.80",
+  "results": [
+    {
+      "case": "French sign-in reaches dashboard",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Disabled visit-request link removed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "favicon serves image",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "announcements: localized Cancel",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Non-class announcement passes browser validation",
+      "outcome": "PASS",
+      "transport": "request intercepted before write"
+    },
+    {
+      "case": "vehicles: localized Cancel",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Vehicle with untouched purchase date passes browser validation",
+      "outcome": "PASS",
+      "transport": "request intercepted before write"
+    },
+    {
+      "case": "discipline: localized Cancel",
+      "outcome": "PASS"
+    },
+    {
+      "case": "discipline: date defaults inside active teaching year",
+      "outcome": "PASS",
+      "displayedDate": "30 juin 2026"
+    },
+    {
+      "case": "behaviorRewards: localized Cancel",
+      "outcome": "PASS"
+    },
+    {
+      "case": "behaviorRewards: date defaults inside active teaching year",
+      "outcome": "PASS",
+      "displayedDate": "30 juin 2026"
+    },
+    {
+      "case": "students: date defaults inside active teaching year",
+      "outcome": "PASS",
+      "displayedDate": "30 juin 2026"
+    },
+    {
+      "case": "Authorized administrator retains parent finance section",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Expenses page renders",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Back after logout returns to sign-in",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Teacher grading page opens after grant reconciliation",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Unauthorized teacher profile shows not found",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a: profile/dashboard loads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a: profile avoids forbidden school-data requests",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a: unavailable finance section is hidden",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b: profile/dashboard loads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b: profile avoids forbidden school-data requests",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b: unavailable finance section is hidden",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic mobile uses RTL",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic mobile has no horizontal page overflow",
+      "outcome": "PASS",
+      "width": 390,
+      "scroll": 390
+    },
+    {
+      "case": "Mobile public-page link removed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No uncaught browser page errors",
+      "outcome": "PASS",
+      "count": 0
+    }
+  ],
+  "diagnostics": [
+    {
+      "alias": "teacher-a",
+      "type": "response",
+      "status": 404,
+      "path": "/api/:segment/:segment/:segment/:segment"
+    },
+    {
+      "alias": "teacher-a",
+      "type": "response",
+      "status": 404,
+      "path": "/api/:segment/:segment"
+    }
+  ]
+}

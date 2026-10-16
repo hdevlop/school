@@ -1,0 +1,230 @@
+{
+    "revision":  "bc4e665ebff4714a7db68bc7cf085fa8aedea0c7",
+    "completedUtc":  "2026-10-16T17:29:13.0119086Z",
+    "failure":  null,
+    "origin":  "https://myscolai.com",
+    "results":  [
+                    {
+                        "outcome":  "PASS",
+                        "case":  "MCP registry",
+                        "detail":  {
+                                       "http":  200
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Reject payment 0.001",
+                        "detail":  {
+                                       "http":  400
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Reject payment 1E-09",
+                        "detail":  {
+                                       "http":  400
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Invalid payments leave receipt count and fee balance unchanged",
+                        "detail":  {
+                                       "balanceUnchanged":  true,
+                                       "beforeCount":  1,
+                                       "afterCount":  1
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Expense cannot be paid through generic edit",
+                        "detail":  {
+                                       "http":  409
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Expense partial payment-date edit checks stored expense date",
+                        "detail":  {
+                                       "http":  400
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Refused expense edits leave pending record unchanged",
+                        "detail":  {
+                                       "status":  "pending",
+                                       "paymentDateEmpty":  true,
+                                       "payerEmpty":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Expense approval records actor",
+                        "detail":  {
+                                       "status":  "approved",
+                                       "approverPresent":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Expense payment workflow records actor and date",
+                        "detail":  {
+                                       "payerPresent":  true,
+                                       "status":  "paid",
+                                       "paymentDatePresent":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Expense rejection workflow",
+                        "detail":  {
+                                       "status":  "rejected"
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Owned staff pay workflow",
+                        "detail":  {
+                                       "status":  "paid"
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Paid payslip amounts are locked",
+                        "detail":  {
+                                       "http":  409
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Payslip cannot be paid through generic edit",
+                        "detail":  {
+                                       "http":  409
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Payslip deductions cannot exceed gross",
+                        "detail":  {
+                                       "http":  400
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Refused payslip edits preserve pending status and amounts",
+                        "detail":  {
+                                       "netUnchanged":  true,
+                                       "status":  "pending"
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Non-class announcement persists through MCP",
+                        "detail":  {
+                                       "created":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Vehicle with no purchase date persists through MCP",
+                        "detail":  {
+                                       "created":  true,
+                                       "purchaseDateEmpty":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Owned assessment setup",
+                        "detail":  {
+                                       "created":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Teacher can read assigned assessment after reconciliation",
+                        "detail":  {
+                                       "readable":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Teacher can record an assigned student grade",
+                        "detail":  {
+                                       "created":  true,
+                                       "marks":  "15.00"
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Teacher grade edit persists on reopen",
+                        "detail":  {
+                                       "marks":  "16.00"
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-a retains own-child access and other-family denial",
+                        "detail":  {
+                                       "otherHttp":  404,
+                                       "ownReadable":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "parent-b retains own-child access and other-family denial",
+                        "detail":  {
+                                       "otherHttp":  404,
+                                       "ownReadable":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Cleanup owned grade",
+                        "detail":  {
+                                       "removed":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Cleanup owned assessment",
+                        "detail":  {
+                                       "removed":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Cleanup owned vehicle",
+                        "detail":  {
+                                       "removed":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Cleanup owned announcement",
+                        "detail":  {
+                                       "removed":  true
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Cleanup owned expense",
+                        "detail":  {
+                                       "http":  404
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Cleanup owned expense",
+                        "detail":  {
+                                       "http":  404
+                                   }
+                    },
+                    {
+                        "outcome":  "PASS",
+                        "case":  "Cleanup owned payslip",
+                        "detail":  {
+                                       "http":  404
+                                   }
+                    }
+                ]
+}

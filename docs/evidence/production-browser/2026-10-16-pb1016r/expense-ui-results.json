@@ -1,0 +1,28 @@
+{
+  "revision": "389a4ec6ae6635f9b073d9203b8c8796264dbeff",
+  "results": [
+    {
+      "case": "Pending expense exposes approve and reject actions",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Approve action calls the supported approval route",
+      "outcome": "PASS",
+      "transport": "intercepted before write"
+    },
+    {
+      "case": "Reject action sends a reason to the approval route",
+      "outcome": "PASS",
+      "transport": "intercepted before write"
+    },
+    {
+      "case": "Approved expense opens the payment form",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Record-payment form reaches its workflow route",
+      "outcome": "PASS",
+      "transport": "intercepted before write"
+    }
+  ]
+}

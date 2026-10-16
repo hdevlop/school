@@ -5,6 +5,7 @@
 | Run | Target / serving SHA | Outcome | Record |
 | --- | --- | --- | --- |
 | pb1016, 2026-10-16 | myscolai.com / `7657cc0` | Partial: auth, ownership and most CRUD pass; finance regressions 1, 2, 4, 5 and two form defects fail on the serving release, fixed locally and not yet deployed | [pb1016](../../evidence/production-browser/2026-10-16-pb1016/README.md) |
+| pb1016r, 2026-10-16 | myscolai.com / `389a4ec`, then `bc4e665` | Deployed and targeted retests pass: 30 API/MCP checks and 27 final browser checks; 5 expense-menu checks on the first release. Four finance regressions verified fixed, role defaults reconciled, remaining parent-profile 403 fixed in the follow-up. Concurrency and full matrix remain unrun. | [pb1016r](../../evidence/production-browser/2026-10-16-pb1016r/README.md) |
 
 Features not listed in that record remain **NOT RUN**.
 
