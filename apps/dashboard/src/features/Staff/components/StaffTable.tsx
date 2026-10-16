@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
 import { Banknote, Briefcase, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
-import { useDialog, Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
+import { useDialog, Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useStaff } from '../hooks/useStaff';

@@ -1,7 +1,8 @@
 import { DB } from '../../database/db';
 import { classes, sections, students, teacherAssignments, teachers, staff, parents, studentParents, users, subjects, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
-import { eq, count, countDistinct, and, desc, inArray, sql, type SQL } from 'drizzle-orm';
+import { eq, ne, count, countDistinct, and, desc, inArray, sql, type SQL } from 'drizzle-orm';
 import { Repository } from '../../najm';
+import { classNameAliases } from '@sms/contracts';
 import { Owned, type OwnedWhere } from '../../auth';
 import { jsonAgg } from '../../shared';
 import { Class } from './ClassGuards';
@@ -46,7 +47,7 @@ export const studentSelect = {
   enrollmentDate: students.enrollmentDate,
   medicalConditions: students.medicalConditions,
   status: students.status,
-  image: users.image,
+  image: sql<string>`coalesce(${users.image}, ${students.image})`,
   createdAt: students.createdAt,
   updatedAt: students.updatedAt,
 };
@@ -96,7 +97,7 @@ export const parentSelect = {
   relationshipType: parents.relationshipType,
   isEmergencyContact: parents.isEmergencyContact,
   financialResponsibility: parents.financialResponsibility,
-  image: users.image,
+  image: sql<string>`coalesce(${users.image}, ${parents.image})`,
   createdAt: parents.createdAt,
   updatedAt: parents.updatedAt,
 };
@@ -169,8 +170,14 @@ export class ClassRepository {
     return result;
   }
 
-  async getByName(name: string, academicYear: string) {
-    const [result] = await this.selectClasses(and(eq(classes.name, name), eq(classes.academicYear, academicYear)))
+  async getByName(name: string, academicYear: string, excludeId?: string) {
+    const normalizedName = sql`upper(btrim(${classes.name}))`;
+    const [result] = await this.selectClasses(and(
+      inArray(normalizedName, classNameAliases(name).map(alias => alias.toUpperCase())),
+      eq(classes.academicYear, academicYear),
+      excludeId ? ne(classes.id, excludeId) : undefined,
+    ))
+      .orderBy(sql`case when ${normalizedName} = ${name.trim().toUpperCase()} then 0 else 1 end`, classes.id)
       .limit(1);
     return result;
   }

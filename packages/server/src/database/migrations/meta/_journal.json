@@ -477,6 +477,20 @@
       "when": 1792017202099,
       "tag": "0067_users_email_or_phone",
       "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1792109858957,
+      "tag": "0068_optional_family_logins",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792111621892,
+      "tag": "0069_student_arabic_name",
+      "breakpoints": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { User, GraduationCap, BookOpen } from 'lucide-react';
+import { User, GraduationCap, BookOpen, IdCard } from 'lucide-react';
 import { NAvatar } from 'najm-kit';
 import { NSectionInfo } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
@@ -12,6 +12,8 @@ import { Label } from 'najm-kit';
 const StudentCard = ({ data }) => {
   const { t } = useTranslation();
   const student = data;
+  const arabicName = student.arabicName?.trim();
+  const massarCode = student.studentCode?.trim();
   
   const getGenderDisplay = (gender: 'M' | 'F') =>
     gender === 'M' ? t('common.male') : t('common.female');
@@ -28,11 +30,26 @@ const StudentCard = ({ data }) => {
       </div>
 
       <div className="min-w-0 flex-1 flex flex-col gap-2">
-        <Label className="text-md font-bold">
-          {student.name}
-        </Label>
+        <div className="space-y-1">
+          <Label className="text-md font-bold break-words">
+            {student.name}
+          </Label>
+          {arabicName && (
+            <p lang="ar" dir="rtl" className="text-sm text-muted-foreground break-words">
+              {arabicName}
+            </p>
+          )}
+        </div>
 
         <div className="space-y-2">
+          {massarCode && (
+            <NSectionInfo
+              icon={IdCard}
+              iconColor="text-muted-foreground"
+              label={t('students.card.massarCode')}
+              value={<bdi dir="ltr" className="font-mono break-all">{massarCode}</bdi>}
+            />
+          )}
           <NSectionInfo
             icon={User}
             iconColor="text-muted-foreground"

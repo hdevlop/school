@@ -48,7 +48,7 @@ export class StudentRouteRepository {
           id: students.id,
           name: students.name,
           studentCode: students.studentCode,
-          image: users.image,
+          image: sql<string>`coalesce(${users.image}, ${students.image})`,
         },
         vehicle: {
           id: vehicles.id,

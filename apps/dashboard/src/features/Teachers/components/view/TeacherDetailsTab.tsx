@@ -2,7 +2,8 @@
 
 import React, { useMemo } from 'react';
 import { Briefcase, GraduationCap, SearchX, UserRound, UsersRound } from 'lucide-react';
-import { NBadge, NCard, NEmptyState, NErrorState, NTable } from 'najm-kit';
+import { NBadge, NCard, NEmptyState, NErrorState } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import type { TeacherDashboardClass } from '@sms/contracts/teacher-dashboard';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';

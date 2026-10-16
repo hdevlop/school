@@ -8,3 +8,4 @@
  */
 export * from './enums';
 export * from './landing';
+export * from './classNames';

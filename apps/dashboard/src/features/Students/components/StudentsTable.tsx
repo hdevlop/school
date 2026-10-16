@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton, NTable } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { GraduationCap, Plus, SearchX } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
 import StudentProfile from './StudentProfile';
@@ -22,7 +23,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import { createStudentApi } from '@/services/studentApi';
-import { buildStudentImport, STUDENT_IMPORT_COLUMNS } from '../config/studentImport';
+import { buildStudentImport } from '../config/studentImport';
 import { announceInvitation } from '@/shared/invitationNotice';
 import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
@@ -181,9 +182,12 @@ function StudentsTable() {
         failed.push(t('students.import.problem', { row: index + 2, reason: cause instanceof Error ? cause.message : '' }));
       }
     }
-    await queryClient.invalidateQueries({ queryKey: ['students'] });
+    await Promise.all(['students', 'parents', 'users'].map(key => queryClient.invalidateQueries({ queryKey: [key] })));
 
     const created = payloads.length - failed.length;
+    if (!created && failed.length) {
+      throw new Error(`${t('students.import.failed', { count: failed.length })}\n${failed.slice(0, 5).join('\n')}`);
+    }
     if (created) toast.success(t('students.import.created', { count: created }));
     if (failed.length) {
       toast.error(t('students.import.failed', { count: failed.length }), { description: failed.slice(0, 5).join('\n') });
@@ -220,7 +224,6 @@ function StudentsTable() {
         toolbarActionDisplay='settings'
         showImportButton={canCreate}
         onDataChange={canCreate ? handleImport : undefined}
-        importColumns={STUDENT_IMPORT_COLUMNS}
         toolbarLabels={toolbarLabels}
         loading={isStudentsLoading}
         error={hasFailedToLoad(error, students) ? error : null}

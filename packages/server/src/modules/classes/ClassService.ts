@@ -64,10 +64,10 @@ export class ClassService {
   }
 
   async getStudentsByName(className: string, sectionName: string | null = null) {
-    await this.classValidator.ensureExistsByName(className);
+    const schoolClass = await this.classValidator.ensureExistsByName(className);
     const settings = await this.settingsRepository.getPublicSettings();
     return await this.classRepository.getStudentsByClassName(
-      className, sectionName, settings?.currentAcademicYear || getCurrentAcademicYear(),
+      schoolClass.name, sectionName, settings?.currentAcademicYear || getCurrentAcademicYear(),
     );
   }
 

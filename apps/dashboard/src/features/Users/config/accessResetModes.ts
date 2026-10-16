@@ -41,8 +41,8 @@ export const resolveExpectedMode = (user: AccessResetRow): AccessResetMode | nul
   if (!role || role === 'admin') return null;
   if (status !== 'active' && status !== 'pending') return null;
 
-  // An account reached by phone only has no mailbox. A parent still has the
-  // CIN on file; any other role has no way back the dialog could promise.
+  // An account reached by phone only has no mailbox. A parent can receive a
+  // temporary credential; other roles have no handover this dialog promises.
   if (!user.email?.trim()) return role === 'parent' ? 'parent_credential_setup' : null;
 
   // A pending account has never chosen a password, so the invitation it was

@@ -37,8 +37,14 @@ export const useStudentsTableColumns = () => {
         if (!needle) return true;
         const name = String(row.original?.name ?? '').toLowerCase();
         const code = String(row.original?.studentCode ?? '').toLowerCase();
-        return name.includes(needle) || code.includes(needle);
+        const arabicName = String(row.original?.arabicName ?? '').toLowerCase();
+        return name.includes(needle) || code.includes(needle) || arabicName.includes(needle);
       },
+    },
+    {
+      accessorKey: 'arabicName',
+      header: t('students.form.arabicName'),
+      cell: ({ getValue }) => <span lang="ar" dir="rtl">{getValue() || ''}</span>,
     },
     {
       accessorKey: 'email',

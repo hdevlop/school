@@ -2,7 +2,8 @@
 
 import { SearchX } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NEmptyState, NTable } from 'najm-kit';
+import { NEmptyState } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import InstallmentCard from './InstallmentCard';
 import InstallmentDetails from './InstallmentDetails';
 import { useDialog } from 'najm-kit';

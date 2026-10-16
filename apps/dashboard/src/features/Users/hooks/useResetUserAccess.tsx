@@ -20,6 +20,7 @@ export type ResetAccessResult = {
   userId: string;
   mode: AccessResetMode;
   delivery: AccessResetDelivery;
+  temporaryCredential?: string;
 };
 
 /**
@@ -37,6 +38,7 @@ export const useResetUserAccess = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
+    gcTime: 0,
     mutationFn: async ({ userId, reason, expectedMode }: ResetAccessVariables) => {
       const response = await resetUserAccessApi(userId, { reason, expectedMode });
       return (response?.data ?? response) as ResetAccessResult;

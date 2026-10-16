@@ -23,6 +23,7 @@ export const studentSelect = {
   userId: students.userId,
   studentCode: students.studentCode,
   name: students.name,
+  arabicName: students.arabicName,
   email: users.email,
   phone: students.phone,
   address: students.address,
@@ -38,7 +39,7 @@ export const studentSelect = {
   medicalConditions: students.medicalConditions,
   previousSchool: students.previousSchool,
   status: students.status,
-  image: users.image,
+  image: sql<string>`coalesce(${users.image}, ${students.image})`,
   createdAt: students.createdAt,
   updatedAt: students.updatedAt,
 };

@@ -1,5 +1,6 @@
 import { CacheService } from 'najm-cache';
 import { moroccanCinTemporaryCredential } from 'najm-auth';
+import { nanoid } from 'nanoid';
 
 import { AuthService, UserService } from '../../auth';
 import { Service, Transaction } from '../../najm';
@@ -89,9 +90,11 @@ export class AccessResetService {
     const fresh = await this.accessResetValidator.resolveTarget(target.account.id, actor);
     this.accessResetValidator.ensureConfirmationFresh(body.expectedMode, fresh.mode);
 
-    // The validator only reaches this mode with a normalized CIN in hand.
-    // Checking anyway keeps an empty value from ever being hashed as one.
-    const temporaryCredential = this.accessResetValidator.ensureTemporaryCredential(fresh.temporaryCredential);
+    // A missing CIN uses an unpredictable handover password. It is returned
+    // only after the credential, activation and audit succeed together.
+    const temporaryCredential = fresh.generateTemporaryCredential
+      ? `${nanoid(20)}Aa1!`
+      : this.accessResetValidator.ensureTemporaryCredential(fresh.temporaryCredential);
 
     // Every refusal is now behind us, so this is the first line that spends
     // the target's window.
@@ -99,12 +102,12 @@ export class AccessResetService {
 
     await this.authService.resetToTemporaryCredential(
       fresh.account.id,
-      moroccanCinTemporaryCredential(temporaryCredential),
+      fresh.generateTemporaryCredential ? temporaryCredential : moroccanCinTemporaryCredential(temporaryCredential),
     );
 
     // Only a parent with no email reaches this path while pending: no
-    // invitation could be sent, so the CIN is their way in and the account
-    // opens with it. Inside the same transaction as the credential.
+    // invitation could be sent, so the temporary credential activates it
+    // inside the same transaction.
     if (fresh.account.status === 'pending') {
       await this.userService.update(fresh.account.id, { status: 'active' });
     }
@@ -119,7 +122,10 @@ export class AccessResetService {
       outcome: 'credential_replaced',
     });
 
-    return { userId: fresh.account.id, mode: fresh.mode, delivery: 'not_applicable' };
+    return {
+      userId: fresh.account.id, mode: fresh.mode, delivery: 'not_applicable',
+      ...(fresh.generateTemporaryCredential ? { temporaryCredential } : {}),
+    };
   }
 
   /**

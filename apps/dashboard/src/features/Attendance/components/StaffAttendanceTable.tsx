@@ -1,7 +1,8 @@
 'use client';
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NTable } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { CalendarCheck, SearchX } from 'lucide-react';
 import { useCallback, useMemo, useState } from 'react';
 import RosterHeader from './RosterHeader';

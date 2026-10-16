@@ -114,7 +114,6 @@ export const ParentFormContent = () => {
                   formLabel={t('parents.form.cin')}
                   placeholder={t('parents.form.cinPlaceholder')}
                   icon={IdCard}
-                  required={true}
                />
 
                <FormInput
@@ -164,7 +163,6 @@ export const ParentFormContent = () => {
                formLabel={t('parents.form.phone')}
                placeholder={t('parents.form.phonePlaceholder')}
                icon={Phone}
-               required={true}
             />
          </div>
 
@@ -176,6 +174,8 @@ export const ParentFormContent = () => {
             icon={MapPin}
 
          />
+
+         <p className='text-xs text-muted-foreground'>{t('parents.form.loginHelp')}</p>
 
          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <FormInput

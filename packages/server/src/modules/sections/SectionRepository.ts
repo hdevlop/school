@@ -1,7 +1,7 @@
 import { Repository } from '../../najm';
 import { DB } from '../../database/db';
 import { sections, classes, students, teacherAssignments, teachers, staff, subjects, users, studentParents, parents, studentEnrollments, studentEnrollmentPlacements } from '../../database/schema';
-import { eq, count, countDistinct, and, desc, ne, type SQL, inArray } from 'drizzle-orm';
+import { sql, eq, count, countDistinct, and, desc, ne, type SQL, inArray } from 'drizzle-orm';
 import { Owned, type OwnedWhere } from '../../auth';
 import { Section } from './SectionGuards';
 import { Year } from '../academicYears/requestYear';
@@ -73,7 +73,7 @@ export const parentSelect = {
   relationshipType: parents.relationshipType,
   isEmergencyContact: parents.isEmergencyContact,
   financialResponsibility: parents.financialResponsibility,
-  image: users.image,
+  image: sql<string>`coalesce(${users.image}, ${parents.image})`,
   createdAt: parents.createdAt,
   updatedAt: parents.updatedAt,
 };

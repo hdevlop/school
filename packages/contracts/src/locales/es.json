@@ -325,13 +325,15 @@
       "reasonLabel": "Motivo administrativo",
       "reasonPlaceholder": "¿Por qué esta cuenta necesita restablecer su acceso?",
       "reasonTooShort": "Indica un motivo de al menos 3 caracteres",
+      "temporaryPassword": "Contraseña temporal",
+      "temporaryPasswordHint": "Solo se muestra aquí. Entregue la contraseña al padre de forma privada. Inicia sesión con su teléfono o correo y debe elegir una nueva contraseña.",
       "reasonTooLong": "El motivo no puede superar los 500 caracteres",
       "pending": "Restableciendo acceso...",
       "failed": "Error al restablecer el acceso",
       "unsupported": "El acceso de esta cuenta no se puede restablecer desde aquí.",
       "unsupportedHint": "Recarga la lista y comprueba el estado, el rol y el perfil de la cuenta.",
       "modes": {
-        "parentCredentialSetup": "La contraseña del progenitor se sustituirá por la CIN registrada. Inicia sesión con su correo o su teléfono y esa CIN, y después debe elegir una contraseña nueva. Las sesiones activas finalizan de inmediato.",
+        "parentCredentialSetup": "Restablecer el acceso sustituye la contraseña por una credencial temporal: el CIN registrado o una contraseña generada si no hay CIN. El padre debe elegir una nueva contraseña al iniciar sesión. Se cierran las sesiones activas.",
         "resetEmailSent": "Se envía un enlace de restablecimiento de un solo uso a la dirección actual de esta cuenta. Las sesiones existentes siguen siendo válidas hasta que se guarde la nueva contraseña.",
         "invitationResent": "La invitación existente se vuelve a enviar a la dirección actual de esta cuenta. No se crea una segunda cuenta ni un segundo perfil."
       },
@@ -2966,6 +2968,7 @@
       "emailExists": "Ya existe un padre o madre con este correo electrónico",
       "cinExists": "Ya existe un padre o madre con este CIN",
       "phoneExists": "Ya existe un padre o madre con este número de teléfono",
+      "identityConflict": "Los identificadores del tutor corresponden a padres diferentes",
       "hasLinkedStudents": "No se puede eliminar un padre o madre con estudiantes vinculados",
       "someLinked": "Algunos padres o madres siguen vinculados a estudiantes. Desvincule a sus hijos, o elimínelos uno por uno.",
       "studentNotLinked": "El estudiante no está vinculado a este padre o madre",
@@ -3020,6 +3023,7 @@
       "personalInformation": "Información personal",
       "phone": "Teléfono",
       "phonePlaceholder": "Ingrese el número de teléfono",
+      "loginHelp": "Un correo o teléfono real crea una cuenta de padre. Deje ambos vacíos para completar los datos de contacto más adelante.",
       "relationshipType": "Tipo de relación",
       "addParent": "Añadir padre",
       "noParentsAdded": "Aún no se han añadido padres."
@@ -3917,13 +3921,15 @@
       "personalData": "Datos personales",
       "phone": "Teléfono",
       "phonePlaceholder": "Ingrese el número de teléfono",
+      "loginHelp": "Use el correo o teléfono personal del alumno para su propia cuenta. Deje ambos vacíos si iniciará sesión el padre.",
       "previousSchool": "Escuela anterior",
       "previousSchoolPlaceholder": "Ingrese la escuela anterior",
       "section": "Sección",
       "sectionPlaceholder": "Seleccione la sección",
       "studentCode": "Código del estudiante",
       "studentCodePlaceholder": "Ingrese el código del estudiante",
-      "studentImage": "Imagen del estudiante"
+      "studentImage": "Imagen del estudiante",
+      "arabicName": "Nombre en árabe"
     },
     "status": {
       "active": "Activo",
@@ -4091,8 +4097,13 @@
         "unknownClass": "no hay ninguna clase llamada \"{{value}}\"",
         "unknownSection": "la clase no tiene ninguna sección llamada \"{{value}}\"",
         "invalidDate": "\"{{value}}\" no es una fecha AAAA-MM-DD",
-        "duplicateCode": "el código de estudiante \"{{value}}\" aparece dos veces en el archivo"
+        "duplicateCode": "el código de estudiante \"{{value}}\" aparece dos veces en el archivo",
+        "invalidGuardian": "los datos del tutor no son válidos: {{value}}",
+        "invalidArabicName": "El nombre en árabe debe tener como máximo 100 caracteres"
       }
+    },
+    "card": {
+      "massarCode": "Código Massar"
     }
   },
   "cycles": {

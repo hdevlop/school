@@ -34,6 +34,7 @@ export type ResolvedAccessTarget = {
   mode: AccessResetMode;
   /** Normalized CIN for the parent path only. Never leaves the server. */
   temporaryCredential?: string;
+  generateTemporaryCredential?: boolean;
 };
 
 @Service()
@@ -94,12 +95,12 @@ export class AccessResetValidator {
 
     // A pending parent has never signed in, so there is no credential worth
     // replacing — the invitation they were already sent is what they need.
-    // A parent with no email was never sent one: the CIN on file is the only
-    // way in, and that path also activates the account.
+    // A parent with no email uses the CIN on file or a generated temporary
+    // password. That path also activates the account.
     if (status === 'pending' && hasEmail(account)) return { account, mode: 'invitation_resent' };
 
     const cin = parent.cin?.trim();
-    if (!cin) Err(409, this.at('parentCinMissing'));
+    if (!cin) return { account, mode: 'parent_credential_setup', generateTemporaryCredential: true };
     if (!isMoroccanCin(cin)) Err(409, this.at('parentCinInvalid'));
 
     return {

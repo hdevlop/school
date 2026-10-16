@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NEmptyState, NButton, NTable } from 'najm-kit';
+import { useDialog, NPageHeader, NPageHeaderActions, NEmptyState, NButton } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Receipt, Plus, SearchX } from 'lucide-react';
 import React from 'react';
 import ExpenseForm from './ExpenseForm';

@@ -1,6 +1,7 @@
 'use client';
 
-import { NBadge, NAvatar, NButton, NEmptyState, NPageHeader, NPageHeaderActions, NTable } from 'najm-kit';
+import { NBadge, NAvatar, NButton, NEmptyState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Bell, BellRing, Search, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { useFinanceOverdue } from '@/features/Dashboard/hooks/useDashboardHooks';

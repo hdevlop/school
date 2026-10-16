@@ -31,6 +31,7 @@ export interface Student {
   userId: string;
   studentCode: string;
   name: string;
+  arabicName?: string | null;
   email: string;
   phone: string | null;
   address: string;

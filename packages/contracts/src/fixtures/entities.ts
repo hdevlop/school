@@ -1,5 +1,6 @@
 import * as fake from './fakers';
 import { nanoid } from 'nanoid';
+import { findClassByName, toAppClassName } from '../classNames';
 import { feeTypeData, vehiclesData, sectionsData, DISCOUNT_CATALOG, SCHEDULES, classesData, subjectsData } from './staticData';
 import { chance, getNumberOfChildren, getSubjectByName, getSubjectsNames, pickRandom, randomClass, randomSubject } from './fakers';
 
@@ -8,7 +9,7 @@ import { chance, getNumberOfChildren, getSubjectByName, getSubjectsNames, pickRa
 //=========================================================================//
 
 export function getClassByName(className: string) {
-   return classesData.find(c => c.name === className);
+   return findClassByName(classesData, className);
 }
 
 export function getSectionsByClass(classId: string) {
@@ -324,7 +325,7 @@ const CLASS_LEVEL: Record<string, string> = {
    '1AC': 'college', '2AC': 'college', '3AC': 'college',
    TC: 'lycee', '1BAC': 'lycee', '2BAC': 'lycee',
 };
-const getClassLevel = (className: string) => CLASS_LEVEL[className] ?? 'primary';
+const getClassLevel = (className: string) => CLASS_LEVEL[toAppClassName(className)] ?? 'primary';
 
 export function createAssignments(policy) {
    const assignmentsByTeacher = new Map();

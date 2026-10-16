@@ -8,8 +8,9 @@ export const maritalStatusEnum = pgEnum('maritalStatus', getEnumValues('maritalS
 
 export const parents = pgTable('parents', {
   id: idField(),
-  userId: userRef('cascade').unique(),
+  userId: userRef('set null').unique(),
   name: text('name').notNull(),
+  image: text('image'),
   cin: text('cin').unique(),
   phone: text('phone'),
   gender: genderEnum('gender'),

@@ -23,6 +23,7 @@ const ResetAccessDialog = ({ user }: { user: AccessResetRow }) => {
   const { pop } = useDialog();
   const { resetAccess, isResettingAccess } = useResetUserAccess();
   const [failure, setFailure] = useState<string | null>(null);
+  const [temporaryCredential, setTemporaryCredential] = useState<string | null>(null);
 
   const mode = resolveExpectedMode(user);
 
@@ -33,6 +34,21 @@ const ResetAccessDialog = ({ user }: { user: AccessResetRow }) => {
       .min(3, { message: t('users.accessReset.reasonTooShort') })
       .max(500, { message: t('users.accessReset.reasonTooLong') }),
   });
+
+  if (temporaryCredential) {
+    return (
+      <div className='flex w-full flex-col gap-4'>
+        <Label className='text-sm font-semibold'>{user.name}</Label>
+        <NAlert tone='warning' icon={KeyRound} description={t('users.accessReset.temporaryPasswordHint')} />
+        <code className='select-all break-all rounded-md border bg-muted p-3 text-center font-mono text-lg' aria-label={t('users.accessReset.temporaryPassword')}>
+          {temporaryCredential}
+        </code>
+        <div className='flex justify-end'>
+          <NButton onClick={() => { setTemporaryCredential(null); pop(); }}>{t('common.close')}</NButton>
+        </div>
+      </div>
+    );
+  }
 
   if (!mode) {
     return (
@@ -69,6 +85,11 @@ const ResetAccessDialog = ({ user }: { user: AccessResetRow }) => {
       // success it cannot vouch for.
       if (result.delivery === 'not_sent') {
         setFailure(t('users.accessReset.delivery.notSent'));
+        return;
+      }
+
+      if (result.temporaryCredential) {
+        setTemporaryCredential(result.temporaryCredential);
         return;
       }
 

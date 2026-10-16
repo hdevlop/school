@@ -325,13 +325,15 @@
       "reasonLabel": "Motif administratif",
       "reasonPlaceholder": "Pourquoi cet accès doit-il être réinitialisé ?",
       "reasonTooShort": "Indiquez un motif d’au moins 3 caractères",
+      "temporaryPassword": "Mot de passe temporaire",
+      "temporaryPasswordHint": "Affiché uniquement ici. Transmettez ce mot de passe au parent en privé. Il se connecte avec son téléphone ou son e-mail et doit choisir un nouveau mot de passe.",
       "reasonTooLong": "Le motif ne peut pas dépasser 500 caractères",
       "pending": "Réinitialisation de l'accès...",
       "failed": "Échec de la réinitialisation de l'accès",
       "unsupported": "L'accès de ce compte ne peut pas être réinitialisé ici.",
       "unsupportedHint": "Rechargez la liste et vérifiez le statut, le rôle et le profil du compte.",
       "modes": {
-        "parentCredentialSetup": "Le mot de passe du parent sera remplacé par la CIN enregistrée. Il se connecte avec son e-mail ou son téléphone et cette CIN, puis doit choisir un nouveau mot de passe. Les sessions actives prennent fin immédiatement.",
+        "parentCredentialSetup": "La réinitialisation remplace le mot de passe du parent par un identifiant temporaire : la CIN enregistrée, ou un mot de passe généré en l'absence de CIN. Le parent doit choisir un nouveau mot de passe à la connexion. Les sessions actives sont fermées.",
         "resetEmailSent": "Un lien de réinitialisation à usage unique est envoyé à l'adresse actuelle de ce compte. Les sessions existantes restent valides jusqu'à l'enregistrement du nouveau mot de passe.",
         "invitationResent": "L'invitation existante est renvoyée à l'adresse actuelle de ce compte. Aucun second compte ni profil n'est créé."
       },
@@ -3566,6 +3568,7 @@
       "emailExists": "Un parent avec cet e-mail existe déjà",
       "cinExists": "Un parent avec cette CIN existe déjà",
       "phoneExists": "Un parent avec ce numéro de téléphone existe déjà",
+      "identityConflict": "Les identifiants du responsable correspondent à des parents différents",
       "hasLinkedStudents": "Impossible de supprimer un parent lié à des élèves",
       "someLinked": "Certains parents sont encore liés à des élèves. Détachez leurs enfants, ou supprimez les parents un par un.",
       "studentNotLinked": "Cet élève n'est pas lié à ce parent",
@@ -3620,6 +3623,7 @@
       "personalInformation": "Informations personnelles",
       "phone": "Téléphone",
       "phonePlaceholder": "Entrez le numéro de téléphone",
+      "loginHelp": "Un e-mail ou un téléphone crée un compte parent. Laissez les deux vides pour compléter les coordonnées plus tard.",
       "relationshipType": "Type de relation",
       "addParent": "Ajouter un parent",
       "noParentsAdded": "Aucun parent ajouté pour le moment."
@@ -4067,13 +4071,15 @@
       "personalData": "Données personnelles",
       "phone": "Téléphone",
       "phonePlaceholder": "Entrez le numéro de téléphone",
+      "loginHelp": "Utilisez l'e-mail ou le téléphone personnel de l'élève pour son compte. Laissez les deux vides si le parent se connecte à sa place.",
       "previousSchool": "École précédente",
       "previousSchoolPlaceholder": "Entrez l'école précédente",
       "section": "Section",
       "sectionPlaceholder": "Sélectionnez la section",
       "studentCode": "Code étudiant",
       "studentCodePlaceholder": "Entrez le code étudiant",
-      "studentImage": "Image de l'étudiant"
+      "studentImage": "Image de l'étudiant",
+      "arabicName": "Nom en arabe"
     },
     "status": {
       "active": "Actif",
@@ -4241,8 +4247,13 @@
         "unknownClass": "aucune classe nommée « {{value}} »",
         "unknownSection": "la classe n’a pas de section nommée « {{value}} »",
         "invalidDate": "« {{value}} » n’est pas une date AAAA-MM-JJ",
-        "duplicateCode": "le code élève « {{value}} » apparaît deux fois dans le fichier"
+        "duplicateCode": "le code élève « {{value}} » apparaît deux fois dans le fichier",
+        "invalidGuardian": "les informations du responsable sont invalides : {{value}}",
+        "invalidArabicName": "Le nom en arabe doit contenir au maximum 100 caractères"
       }
+    },
+    "card": {
+      "massarCode": "Code Massar"
     }
   },
   "subjects": {

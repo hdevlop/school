@@ -11,8 +11,10 @@ const parent = {
 };
 
 describe('parentSchema', () => {
-  it('needs only a name, a phone, a CIN and a relationship', () => {
+  it('accepts a named guardian before phone and CIN are known', () => {
     expect(parentSchema.safeParse(parent).success).toBe(true);
+    expect(parentSchema.safeParse({ name: 'Fatima Alaoui', relationshipType: 'guardian' }).success).toBe(true);
+    expect(parentSchema.parse({ ...parent, phone: '', cin: '' })).toMatchObject({ phone: null, cin: null });
   });
 
   it('accepts every relationship, marital status and gender the API accepts', () => {
@@ -70,6 +72,6 @@ describe('parentsSchema', () => {
 
   it('validates each guardian in the list', () => {
     expect(parentsSchema.safeParse({ parents: [parent, parent] }).success).toBe(true);
-    expect(parentsSchema.safeParse({ parents: [parent, { ...parent, cin: '' }] }).success).toBe(false);
+    expect(parentsSchema.safeParse({ parents: [parent, { ...parent, cin: '' }] }).success).toBe(true);
   });
 });

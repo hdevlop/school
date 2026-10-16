@@ -2,7 +2,8 @@
 
 import React, { useMemo } from 'react';
 import { Banknote, CalendarDays, FileText, ReceiptText, SearchX } from 'lucide-react';
-import { NBadge, NCard, NEmptyState, NErrorState, NForbiddenState, NStatCard, NTable } from 'najm-kit';
+import { NBadge, NCard, NEmptyState, NErrorState, NForbiddenState, NStatCard } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';

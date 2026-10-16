@@ -51,7 +51,7 @@ export const studentSelect = {
   enrollmentDate: students.enrollmentDate,
   medicalConditions: students.medicalConditions,
   status: students.status,
-  image: users.image,
+  image: sql<string>`coalesce(${users.image}, ${students.image})`,
   createdAt: students.createdAt,
   updatedAt: students.updatedAt,
 };

@@ -325,13 +325,15 @@
       "reasonLabel": "Administrative reason",
       "reasonPlaceholder": "Why does this account need its access reset?",
       "reasonTooShort": "Give a reason of at least 3 characters",
+      "temporaryPassword": "Temporary password",
+      "temporaryPasswordHint": "Shown only here. Give this password privately to the parent. They sign in with their phone or email and must choose a new password.",
       "reasonTooLong": "The reason may not exceed 500 characters",
       "pending": "Resetting access...",
       "failed": "Access reset failed",
       "unsupported": "This account cannot have its access reset from here.",
       "unsupportedHint": "Reload the list and check the account status, role and profile.",
       "modes": {
-        "parentCredentialSetup": "The parent's password will be replaced with the CIN on file. They sign in with their email or phone and that CIN, then must choose a new password. Active sessions end immediately.",
+        "parentCredentialSetup": "Reset access replaces the parent password with a temporary credential: the CIN on file, or a generated password if no CIN is recorded. The parent must choose a new password at sign-in. Active sessions end immediately.",
         "resetEmailSent": "A one-time password reset link is emailed to this account's current address. Existing sessions stay valid until the new password is saved.",
         "invitationResent": "The existing invitation is emailed again to this account's current address. No second account or profile is created."
       },
@@ -1817,6 +1819,7 @@
       "dateOfBirthPlaceholder": "Select date",
       "phone": "Phone",
       "phonePlaceholder": "Enter phone number",
+      "loginHelp": "Use the student's own email or phone for an individual login. Leave both blank when the parent will sign in instead.",
       "address": "Address",
       "addressPlaceholder": "Enter full address",
       "medicalConditions": "Medical Conditions",
@@ -1902,7 +1905,8 @@
       "occupation": "Occupation",
       "occupationPlaceholder": "Enter occupation",
       "existingParentFound": "Existing Parent Found",
-      "existingParentFoundDescription": "We found an existing parent with the same {field}. Would you like to link this parent instead of creating a new one?"
+      "existingParentFoundDescription": "We found an existing parent with the same {field}. Would you like to link this parent instead of creating a new one?",
+      "arabicName": "Arabic name"
     },
     "dialogs": {
       "deleteWarning": "This permanently deletes the student and their academic records, unpaid fees and transport assignments across all school years. Linked parents are kept. This cannot be undone. Students with payment or credit history cannot be deleted.",
@@ -1940,7 +1944,8 @@
     "card": {
       "personalInfo": "Personal Information",
       "academicInfo": "Academic Information",
-      "medicalInfo": "Medical Information"
+      "medicalInfo": "Medical Information",
+      "massarCode": "Massar code"
     },
     "status": {
       "graduated": "Graduated",
@@ -2160,7 +2165,9 @@
         "unknownClass": "no class named \"{{value}}\"",
         "unknownSection": "the class has no section named \"{{value}}\"",
         "invalidDate": "\"{{value}}\" is not a YYYY-MM-DD date",
-        "duplicateCode": "student code \"{{value}}\" appears twice in the file"
+        "duplicateCode": "student code \"{{value}}\" appears twice in the file",
+        "invalidGuardian": "guardian details are invalid: {{value}}",
+        "invalidArabicName": "Arabic name must be 100 characters or fewer"
       }
     }
   },
@@ -2183,6 +2190,7 @@
       "emailExists": "A parent with this email already exists",
       "cinExists": "A parent with this CIN already exists",
       "phoneExists": "A parent with this phone number already exists",
+      "identityConflict": "Guardian identifiers match different parent records",
       "hasLinkedStudents": "Cannot delete parent with linked students",
       "someLinked": "Some parents are still linked to students. Unlink their children, or delete parents one by one.",
       "studentNotLinked": "Student is not linked to this parent",
@@ -2215,6 +2223,7 @@
       "emailPlaceholder": "Enter email address",
       "phone": "Phone Number",
       "phonePlaceholder": "Enter phone number",
+      "loginHelp": "A real email or phone creates a parent login. Leave both blank to complete the guardian's contact details later.",
       "cin": "National ID (CIN)",
       "cinPlaceholder": "Enter national ID number",
       "gender": "Gender",

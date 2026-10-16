@@ -1,5 +1,6 @@
 'use client';
-import { NTable, NPageHeader, NButton, NForm, FormInput, useDialog } from 'najm-kit';
+import { NPageHeader, NButton, NForm, FormInput, useDialog } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import { usePermissions } from 'najm-auth/client/react';
 import { useVisitRequests } from '../hooks/useVisitRequests';

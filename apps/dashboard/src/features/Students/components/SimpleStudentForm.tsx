@@ -19,6 +19,7 @@ export const getStudentDefaultValues = (student = null, businessDate?: string | 
     ...(student?.id && { id: student.id }),
     studentCode: student?.studentCode ?? '',
     name: student?.name ?? '',
+    arabicName: student?.arabicName ?? '',
     email: student?.email ?? '',
     phone: student?.phone ?? '',
     addressLocation: normalizeLocationValue({
@@ -146,6 +147,15 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
           />
 
           <FormInput
+            name='arabicName'
+            type='text'
+            formLabel={t('students.form.arabicName')}
+            icon={User}
+            dir='rtl'
+            lang='ar'
+          />
+
+          <FormInput
             name='gender'
             type='select'
             formLabel={t('students.form.gender')}
@@ -177,6 +187,8 @@ export const StudentFormContent = ({ classes = [], prefix = '', student: _studen
             placeholder={t('students.form.phonePlaceholder')}
             icon={Phone}
           />
+
+          <p className='text-xs text-muted-foreground md:col-span-2'>{t('students.form.loginHelp')}</p>
 
           <FormLocationInput
             name={fieldName('addressLocation')}

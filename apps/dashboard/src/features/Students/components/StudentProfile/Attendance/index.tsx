@@ -1,6 +1,7 @@
 'use client';
 
-import { NBadge, NEmptyState, NStatCard, NTable } from 'najm-kit';
+import { NBadge, NEmptyState, NStatCard } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useMemo } from 'react';
 import { CalendarCheck, CalendarDays, CheckCircle2, Clock3, UserX } from 'lucide-react';
 import { useStudentAttendanceRecords } from '@/features/Attendance/hooks/useAttendance';

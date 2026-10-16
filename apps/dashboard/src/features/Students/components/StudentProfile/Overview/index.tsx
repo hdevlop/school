@@ -508,6 +508,7 @@ function ReadOnlyOverview({
         <InfoCard>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
             <StudentFact icon={User} label={t('students.form.fullName')} value={student.name} tone="blue" />
+            {student.arabicName?.trim() && <StudentFact icon={User} label={t('students.form.arabicName')} value={<span lang="ar" dir="rtl">{student.arabicName}</span>} tone="blue" />}
             <StudentFact icon={IdCard} label={t('students.form.studentCode')} value={student.studentCode} tone="violet" />
             <StudentFact
               icon={Calendar}
@@ -592,6 +593,7 @@ function EditableOverview({
         <InfoCard>
           <div className="grid grid-cols-1 gap-x-3 gap-y-2.5 md:grid-cols-3">
             <EditableField icon={User} label={t('students.form.fullName')} value={draft.name} iconColor="#3b82f6" onChange={update('name')} />
+            <EditableField icon={User} label={t('students.form.arabicName')} value={draft.arabicName} iconColor="#3b82f6" onChange={update('arabicName')} />
             <EditableField icon={IdCard} label={t('students.form.studentCode')} value={draft.studentCode} iconColor="#8b5cf6" onChange={update('studentCode')} />
             <EditableField icon={Calendar} label={t('students.form.dateOfBirth')} value={draft.dateOfBirth} type="date" iconColor="#ec4899" onChange={update('dateOfBirth')} />
             <EditableField icon={Cake} label={t('students.profile.age')} value={student.age ? t('students.profile.yearsLong', { count: student.age }) : ''} disabled iconColor="#f59e0b" onChange={() => {}} />

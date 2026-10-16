@@ -1,9 +1,10 @@
 import { z } from 'zod';
+import { toAppClassName } from '@sms/contracts';
 import { academicYearField, optionalId } from '../../shared/fields';
 
 const classSchema = z.object({
   id: optionalId,
-  name: z.string().min(1, 'Class name is required').max(50, 'Class name too long'),
+  name: z.string().trim().min(1, 'Class name is required').max(50, 'Class name too long').overwrite(toAppClassName),
   description: z.string().max(500, 'Description too long').optional(),
   level: z.string().min(1, 'Class level is required'),
   cycleId: z.string().min(1).optional().nullable(),

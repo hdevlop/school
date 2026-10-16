@@ -48,8 +48,8 @@ export class ClassValidator {
 
   // Unique within one year: the selected year unless a trusted seed names one.
   async ensureNameUnique(name: string, academicYear = this.year.label, excludeId?: string) {
-    const existing = await this.classRepository.getByName(name, academicYear);
-    if (existing && existing.id !== excludeId) {
+    const existing = await this.classRepository.getByName(name, academicYear, excludeId);
+    if (existing) {
       Err(409, this.t('nameExists'));
     }
   }

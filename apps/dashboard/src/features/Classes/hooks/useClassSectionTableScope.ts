@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'najm-i18n/react';
+import { compareClassNames } from '@sms/contracts';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -64,7 +65,9 @@ export function useClassSectionTableScope({ includeSection = true, placements }:
       placeholder: t('students.filters.filterByClass'),
       value: classId,
       onChange: setClassId,
-      options: (classes || []).map((item) => ({ value: item.id, label: item.name })),
+      options: [...(classes || [])]
+        .sort((left, right) => compareClassNames(left.name, right.name))
+        .map((item) => ({ value: item.id, label: item.name })),
       className: 'w-full lg:w-48',
     },
     ...(includeSection ? [{

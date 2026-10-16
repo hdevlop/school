@@ -1,4 +1,4 @@
-import { Service, Events, EventService } from '../../najm';
+import { Service, Events, EventService, Transaction } from '../../najm';
 import { ParentRepository } from './ParentRepository';
 import { ParentChildrenRepository } from './ParentChildrenRepository';
 import { ParentValidator } from './ParentValidator';
@@ -89,6 +89,7 @@ export class ParentService {
 
   // ========== CREATE-METHOD ==========
 
+  @Transaction()
   async create(data: CreateParentDto) {
     if (data.userId) await this.parentValidator.ensureUserIdUnique(data.userId);
     if (data.id) await this.parentValidator.ensureIdUnique(data.id);
@@ -120,16 +121,19 @@ export class ParentService {
       image,
       role: 'parent',
     };
-    const user = password
-      ? await this.authService.provisionUser({ ...account, password })
-      : await this.authService.inviteUser({ ...account, status: 'pending' });
+    const user = account.email || account.phone || password || data.userId
+      ? password
+        ? await this.authService.provisionUser({ ...account, password })
+        : await this.authService.inviteUser({ ...account, status: 'pending' })
+      : null;
 
     const parent = await this.parentRepository.create({
       id: parentId,
-      userId: user.id,
+      userId: user?.id ?? null,
       name: data.name,
-      cin: data.cin,
-      phone: data.phone,
+      image,
+      cin: data.cin || null,
+      phone: data.phone || null,
       gender: data.gender,
       address: data.address,
       dateOfBirth: data.dateOfBirth,
@@ -143,11 +147,12 @@ export class ParentService {
     });
     // Only an invited account carries `emailSent`; the dashboard uses it to
     // say whether the activation mail left or must be re-sent.
-    return 'emailSent' in user ? { ...parent, emailSent: user.emailSent } : parent;
+    return user && 'emailSent' in user ? { ...parent, emailSent: user.emailSent } : parent;
   }
 
   // ========== UPDATE-METHOD ==========
 
+  @Transaction()
   async update(id: string, data: UpdateParentDto) {
     // No 'password' here. A routine profile edit must not double as a
     // credential reset: that path has no audit, forces no replacement and
@@ -159,7 +164,7 @@ export class ParentService {
     const PARENT_UPDATE_KEYS = [
       'name', 'cin', 'phone', 'gender', 'address', 'dateOfBirth',
       'occupation', 'nationality', 'maritalStatus', 'relationshipType',
-      'isEmergencyContact', 'financialResponsibility'
+      'isEmergencyContact', 'financialResponsibility', 'image'
     ];
 
     await this.parentValidator.ensureExists(id);
@@ -180,14 +185,24 @@ export class ParentService {
         filePath: `${id}_avatar.png`,
         fallback: `/images/parent_${genderSuffix}.png`,
       });
+      parentData.image = userData.image;
     }
 
     if (parentData.dateOfBirth) {
       (parentData as Record<string, unknown>).age = calculateAge(parentData.dateOfBirth);
     }
 
-    if (Object.keys(userData).length > 0) {
+    if (parent.userId && Object.keys(userData).length > 0) {
       await this.userService.update(parent.userId, userData);
+    } else if (!parent.userId) {
+      const identity = loginIdentity({ ...parent, ...data });
+      if (identity.email || identity.phone) {
+        const user = await this.authService.inviteUser({
+          ...identity, name: data.name ?? parent.name,
+          image: userData.image ?? parent.image, role: 'parent', status: 'pending',
+        });
+        Object.assign(parentData, { userId: user.id });
+      }
     }
     if (Object.keys(parentData).length > 0) {
       return await this.parentRepository.update(id, parentData);
@@ -284,44 +299,12 @@ export class ParentService {
     };
 
     for (const parentData of parents) {
-      let parentId;
-
-      if (typeof parentData === 'string') {
-        try {
-          await this.getById(parentData);
-          parentId = parentData;
-          linkedParentIds.push(parentId);
-        } catch {
-          throw new Error(`Parent with ID ${parentData} not found`);
-        }
-      } else {
-        if (parentData.cin) {
-          try {
-            const existingParent = await this.getByCin(parentData.cin);
-            parentId = existingParent.id;
-            linkedParentIds.push(parentId);
-          } catch {
-            const newParent = await createNew(parentData);
-            parentId = newParent.id;
-            linkedParentIds.push(parentId);
-          }
-        } else if (parentData.phone) {
-          try {
-            const existingParent = await this.getByPhone(parentData.phone);
-            parentId = existingParent.id;
-            linkedParentIds.push(parentId);
-          } catch {
-            const newParent = await createNew(parentData);
-            parentId = newParent.id;
-            linkedParentIds.push(parentId);
-          }
-        } else {
-          const newParent = await createNew(parentData);
-          parentId = newParent.id;
-          linkedParentIds.push(parentId);
-        }
-      }
-      await this.linkStudent(parentId, studentId);
+      const parent = typeof parentData === 'string'
+        ? await this.getById(parentData)
+        : await this.parentValidator.findReusable(parentData) ?? await createNew(parentData);
+      if (linkedParentIds.includes(parent.id)) continue;
+      await this.linkStudent(parent.id, studentId);
+      linkedParentIds.push(parent.id);
     }
 
     return { linkedParentIds, invitations };

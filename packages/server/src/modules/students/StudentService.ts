@@ -128,6 +128,8 @@ export class StudentService {
       fallback: `/images/student_${genderSuffix}.png`,
     });
 
+    // A school record needs no login. Provision only when personal contact
+    // details are supplied; guardian contacts belong to the parent account.
     // Seeding passes a password: the account is created active and silently.
     // The dashboard passes none: the account stays pending and the student is
     // emailed an activation link to /reset-password. Choosing a password there
@@ -141,17 +143,21 @@ export class StudentService {
       image,
       role: 'student',
     };
-    const user = password
-      ? await this.authService.provisionUser({ ...account, password })
-      : await this.authService.inviteUser({ ...account, status: 'pending' });
+    const user = account.email || account.phone || password || data.userId
+      ? password
+        ? await this.authService.provisionUser({ ...account, password })
+        : await this.authService.inviteUser({ ...account, status: 'pending' })
+      : null;
 
     const student = await this.studentRepository.create({
       id: studentId,
-      userId: user.id,
+      userId: user?.id ?? null,
       classId: data.classId,
       sectionId: data.sectionId,
       studentCode: data.studentCode,
       name: data.name,
+      arabicName: data.arabicName,
+      image,
       phone: data.phone,
       address: data.address,
       addressPlaceId: data.addressPlaceId,
@@ -172,10 +178,10 @@ export class StudentService {
       classId: data.classId,
       sectionId: data.sectionId,
       enrolledOn: data.yearEnrolledOn,
-    }, actorId || user.id);
+    }, actorId || user!.id);
 
     const linkedParents = await this.parentService.processParents(student, parentsToProcess);
-    await this.feeService.processFees(student, validatedData.fees, actor ?? { id: user.id }, data.yearEnrolledOn, year.label);
+    await this.feeService.processFees(student, validatedData.fees, actor ?? { id: user!.id }, data.yearEnrolledOn, year.label);
 
     if (data.transportAssignment) {
       await this.studentRouteService.assign({
@@ -187,10 +193,9 @@ export class StudentService {
 
     // Only invited accounts carry `emailSent`: the student's own, and one per
     // parent created alongside. The dashboard says which activation mails left.
-    if (!('emailSent' in user)) return student;
     return {
       ...student,
-      emailSent: user.emailSent,
+      ...(user && 'emailSent' in user ? { emailSent: user.emailSent } : {}),
       parentInvitations: linkedParents?.invitations ?? [],
     };
   }
@@ -205,10 +210,10 @@ export class StudentService {
     ];
 
     const STUDENT_UPDATE_KEYS = [
-      'name', 'studentCode', 'phone', 'address', 'addressPlaceId',
+      'name', 'arabicName', 'studentCode', 'phone', 'address', 'addressPlaceId',
       'addressLatitude', 'addressLongitude', 'gender',
       'dateOfBirth', 'enrollmentDate', 'graduationDate', 'medicalConditions',
-      'previousSchool'
+      'previousSchool', 'image'
     ];
 
     const student = await this.studentValidator.ensureExists(id);
@@ -231,14 +236,24 @@ export class StudentService {
         filePath: `${id}_avatar.png`,
         fallback: `/images/student_${genderSuffix}.png`,
       });
+      studentData.image = userData.image;
     }
 
     if (studentData.dateOfBirth) {
       (studentData as Record<string, unknown>).age = calculateAge(studentData.dateOfBirth);
     }
 
-    if (Object.keys(userData).length > 0) {
+    if (student.userId && Object.keys(userData).length > 0) {
       await this.userService.update(student.userId, userData);
+    } else if (!student.userId) {
+      const identity = loginIdentity({ ...student, ...data });
+      if (identity.email || identity.phone) {
+        const user = await this.authService.inviteUser({
+          ...identity, name: data.name ?? student.name,
+          image: userData.image ?? student.image, role: 'student', status: 'pending',
+        });
+        Object.assign(studentData, { userId: user.id });
+      }
     }
     if (Object.keys(studentData).length > 0) {
       await this.studentRepository.update(id, studentData);

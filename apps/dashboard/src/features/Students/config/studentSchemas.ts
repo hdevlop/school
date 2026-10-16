@@ -50,6 +50,7 @@ export const studentSchema = z.object({
   sectionId: requiredId('Section is required'),
   studentCode: z.string(),
   name: nameField,
+  arabicName: z.string().trim().max(100, 'Arabic name too long').nullish(),
   email: emailField,
   phone: phoneField,
   addressLocation: locationValueSchema,

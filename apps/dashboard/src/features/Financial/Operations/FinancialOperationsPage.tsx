@@ -11,8 +11,8 @@ import {
   NPageHeader,
   NPageHeaderActions,
   useDialog,
-  NTable,
 } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { toast } from 'sonner';
 import { Ban, CheckCircle2, Landmark, RotateCw, SearchX, Undo2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';

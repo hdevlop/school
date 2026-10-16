@@ -17,6 +17,11 @@ const student = {
 };
 
 describe('studentSchema', () => {
+  it('preserves an optional Arabic name and allows clearing it', () => {
+    expect(studentSchema.parse({ ...student, arabicName: '  ياسمين العلوي  ' }).arabicName).toBe('ياسمين العلوي');
+    expect(studentProfileEditSchema.parse({ ...student, arabicName: '' }).arabicName).toBe('');
+    expect(studentSchema.safeParse({ ...student, arabicName: 'ا'.repeat(101) }).success).toBe(false);
+  });
   it('defaults a new student to active', () => {
     expect(studentSchema.parse(student).status).toBe('active');
   });

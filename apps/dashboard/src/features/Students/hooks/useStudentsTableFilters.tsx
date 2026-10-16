@@ -11,6 +11,7 @@ export const useStudentsTableFilters = (students = []) => {
     const needle = name.toLowerCase().trim();
     return students.filter(student => matches(student)
       && (!needle || String(student.name ?? '').toLowerCase().includes(needle)
+        || String(student.arabicName ?? '').toLowerCase().includes(needle)
         || String(student.studentCode ?? '').toLowerCase().includes(needle)));
   }, [students, name, matches]);
 

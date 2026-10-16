@@ -195,11 +195,16 @@ describe('AccessResetValidator — refusals', () => {
     );
   });
 
-  it('refuses an active parent with no CIN instead of quietly mailing them', async () => {
-    await expectRefusal(
-      validatorWith({ account: account({ roleName: 'parent' }), parent: { id: 'p1', cin: null } }),
-      'parentCinMissing',
-    );
+  it('uses a generated handover credential when a parent has no CIN', async () => {
+    for (const status of ['active', 'pending']) {
+      const validator = validatorWith({
+        account: account({ roleName: 'parent', status, email: null }), parent: { id: 'p1', cin: null },
+      });
+      const result = await validator.resolveTarget('user-1', ACTOR);
+      expect(result.mode).toBe('parent_credential_setup');
+      expect(result.generateTemporaryCredential).toBe(true);
+      expect(result.temporaryCredential).toBeUndefined();
+    }
   });
 
   it('refuses an active parent whose CIN is not a CIN', async () => {

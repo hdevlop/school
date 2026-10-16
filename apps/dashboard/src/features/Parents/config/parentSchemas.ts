@@ -29,8 +29,8 @@ const addressField = z.string().max(500, 'Address too long').optional();
  *
  * Almost everything is optional because the school often has only a name, a
  * phone and a CIN when a child is enrolled, and a half-filled record is worth
- * more than none. The three that are not optional — name, phone, CIN — are the
- * ones the school needs to reach and identify the person.
+ * more than none. A contact or CIN can be filled in later; a guardian with no
+ * email or phone has a school record without a login.
  *
  * `image` accepts a `File` as well as a string: the same schema validates both
  * a freshly picked upload and a record loaded back from the API with a stored
@@ -40,11 +40,11 @@ export const parentSchema = z.object({
   id: optionalId,
   name: nameField,
   email: emailField.optional(),
-  phone: phoneField,
+  phone: z.preprocess(value => value === '' ? null : value, phoneField.nullish()),
   gender: z.enum(GENDER_VALUES).optional(),
   address: addressField,
   dateOfBirth: optionalDateField,
-  cin: cinField,
+  cin: z.preprocess(value => value === '' ? null : value, cinField.nullish()),
   occupation: z.string().max(100, 'Occupation too long').optional(),
   nationality: z.string().max(100, 'Nationality too long').optional(),
   maritalStatus: z.enum(MARITAL_STATUS_VALUES).optional(),

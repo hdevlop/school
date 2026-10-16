@@ -1,6 +1,7 @@
 'use client';
 
-import { NButton, NEmptyState, NStatCard, NTable } from 'najm-kit';
+import { NButton, NEmptyState, NStatCard } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useGrades, useStudentReport } from '@/features/Grades/hooks/useGrades';

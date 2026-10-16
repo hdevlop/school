@@ -19,6 +19,7 @@ type Fakes = {
   /** Mode returned by the *second* resolve, standing in for a concurrent edit. */
   modeOnRecheck?: string;
   temporaryCredential?: string;
+  generateTemporaryCredential?: boolean;
   delivery?: { emailSent: boolean; undeliveredLinkLive: boolean };
   resolveThrows?: Error;
   authThrows?: Error;
@@ -61,6 +62,7 @@ const build = (fakes: Fakes = {}) => {
         },
         mode: effective,
         temporaryCredential: fakes.temporaryCredential,
+        generateTemporaryCredential: fakes.generateTemporaryCredential,
       };
     },
     // The real one throws on a mismatch; this mirrors that so a re-check that
@@ -177,6 +179,17 @@ describe('AccessResetService — truthful delivery', () => {
     const { service, activations } = build({ mode: 'parent_credential_setup', temporaryCredential: 'bb46123' });
     await service.resetAccess('user-1', { ...BODY, expectedMode: 'parent_credential_setup' as any }, ACTOR);
     expect(activations).toEqual([]);
+  });
+
+  it('returns a generated temporary password only for handover and never writes it to the audit', async () => {
+    const { service, authCalls, activations, audits } = build({
+      mode: 'parent_credential_setup', generateTemporaryCredential: true, status: 'pending', email: null,
+    });
+    const result = await service.resetAccess('user-1', { ...BODY, expectedMode: 'parent_credential_setup' }, ACTOR);
+    expect(result.temporaryCredential).toHaveLength(24);
+    expect(authCalls[0].credential).toBe(result.temporaryCredential);
+    expect(activations).toEqual([{ userId: 'user-1', data: { status: 'active' } }]);
+    expect(JSON.stringify(audits)).not.toContain(result.temporaryCredential!);
   });
 
   // A parent created with a phone and no email was never sent an invitation,

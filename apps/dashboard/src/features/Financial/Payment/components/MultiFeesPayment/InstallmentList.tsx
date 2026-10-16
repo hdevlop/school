@@ -1,7 +1,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useState, useEffect, useMemo } from 'react';
 import { ChevronDown, ChevronUp, AlertTriangle, CalendarClock, Clock, CheckCircle2, LockKeyhole, SearchX } from 'lucide-react';
-import { NBadge, Label, NajmScroll, NEmptyState, NTable } from 'najm-kit';
+import { NBadge, Label, NajmScroll, NEmptyState } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { getInstallmentAvailableAmount, isInstallmentPayable, usePaymentStore } from '../../store/paymentStore';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';

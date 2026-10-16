@@ -10,11 +10,13 @@ export const studentStatusEnum = pgEnum('studentStatus', getEnumValues('studentS
 
 export const students = pgTable('students', {
   id: idField(),
-  userId: userRef('cascade').unique(),
+  userId: userRef('set null').unique(),
   classId: classRef(),
   sectionId: sectionRef(),
   studentCode: text('student_code').notNull().unique(),
   name: text('name').notNull(),
+  arabicName: text('arabic_name'),
+  image: text('image'),
   phone: text('phone'),
   address: text('address'),
   addressPlaceId: text('address_place_id'),

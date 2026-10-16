@@ -2,7 +2,8 @@
 
 import { CheckCheck, CircleCheck, CircleSlash, SearchX, Trash2 } from 'lucide-react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, useDialog, NTable } from 'najm-kit';
+import { NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions, useDialog } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { useTranslation } from 'najm-i18n/react';
 import type { AlertStatus } from '@sms/contracts';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';

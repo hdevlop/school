@@ -2,7 +2,8 @@ type Identity = { email?: string | null; phone?: string | null };
 
 /**
  * What a person's login is reached by: the email, or the phone when there is
- * no email. Never neither — najm-auth refuses that account.
+ * no email. A record with neither stays without a login; najm-auth still
+ * refuses an account without an identity.
  *
  * The phone stays off an account that has an email. `users.phone` is unique
  * across every account and families share numbers, so a student given a

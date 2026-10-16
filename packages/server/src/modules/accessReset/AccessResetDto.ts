@@ -45,4 +45,6 @@ export type AccessResetResult = {
   userId: string;
   mode: AccessResetMode;
   delivery: AccessResetDelivery;
+  /** Newly generated handover password only; a stored CIN is never returned. */
+  temporaryCredential?: string;
 };

@@ -22,7 +22,7 @@ export const parentSelect = {
   relationshipType: parents.relationshipType,
   isEmergencyContact: parents.isEmergencyContact,
   financialResponsibility: parents.financialResponsibility,
-  image: users.image,
+  image: sql<string>`coalesce(${users.image}, ${parents.image})`,
   createdAt: parents.createdAt,
   updatedAt: parents.updatedAt,
 };
@@ -43,7 +43,7 @@ export const studentSelect = {
   enrollmentDate: students.enrollmentDate,
   medicalConditions: students.medicalConditions,
   status: students.status,
-  image: users.image,
+  image: sql<string>`coalesce(${users.image}, ${students.image})`,
   createdAt: students.createdAt,
   updatedAt: students.updatedAt,
 };

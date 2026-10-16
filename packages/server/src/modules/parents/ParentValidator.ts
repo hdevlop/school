@@ -1,6 +1,7 @@
 import { Service, Err, I18n, t } from '../../najm';
 import { ParentRepository } from './ParentRepository';
 import { UserValidator } from '../../auth';
+import type { CreateParentDto } from './ParentDto';
 
 @Service()
 export class ParentValidator {
@@ -10,6 +11,18 @@ export class ParentValidator {
     private parentRepository: ParentRepository,
     private userValidator: UserValidator,
   ) { }
+
+  /** Reuse only a stable identifier; a shared name alone cannot identify a guardian. */
+  async findReusable(data: CreateParentDto) {
+    const matches = await Promise.all([
+      data.cin ? this.parentRepository.getByCin(data.cin) : undefined,
+      data.phone ? this.parentRepository.getByPhone(data.phone) : undefined,
+      data.email ? this.parentRepository.getByEmail(data.email.trim().toLowerCase()) : undefined,
+    ]);
+    const parents = [...new Map(matches.filter(Boolean).map(parent => [parent!.id, parent!])).values()];
+    if (parents.length > 1) Err(409, this.pt('identityConflict'));
+    return parents.length ? this.ensureExists(parents[0].id) : undefined;
+  }
 
   // ========== UNIQUENESS CHECKS ==========
 

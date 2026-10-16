@@ -14,11 +14,11 @@ const parentSchema = z.object({
   id: optionalId,
   name: nameField,
   email: emailField.optional(),
-  phone: phoneField,
+  phone: z.preprocess(value => value === '' ? null : value, phoneField.nullish()),
   gender: genderEnum.optional(),
   address: addressField,
   dateOfBirth: optionalDateField,
-  cin: cinField,
+  cin: z.preprocess(value => value === '' ? null : value, cinField.nullish()),
   occupation: z.string().max(100, 'Occupation too long').optional(),
   nationality: z.string().max(100, 'Nationality too long').optional(),
   maritalStatus: maritalStatusEnum.optional(),
@@ -61,9 +61,9 @@ export const deleteBulkParentDto = z.object({
   ids: z.array(z.string().min(1)),
 });
 
-export type CreateParentDto = z.input<typeof createParentDto>;
-export type UpdateParentDto = z.input<typeof updateParentDto>;
-export type CreateParentsBulkDto = z.input<typeof createParentsBulkDto>;
+export type CreateParentDto = z.infer<typeof createParentDto>;
+export type UpdateParentDto = z.infer<typeof updateParentDto>;
+export type CreateParentsBulkDto = z.infer<typeof createParentsBulkDto>;
 export type ParentSearchQueryDto = z.infer<typeof parentSearchQueryDto>;
 export type LinkStudentDto = z.infer<typeof linkStudentDto>;
 export type DeleteBulkParentDto = z.infer<typeof deleteBulkParentDto>;

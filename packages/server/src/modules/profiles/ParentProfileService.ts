@@ -53,7 +53,7 @@ export class ParentProfileService {
     const parent = await this.parentService.getById(parentId);
     const [children, events] = await Promise.all([
       this.parentService.getLinkedChildren(parentId),
-      this.eventService.getUpcomingForParent(parent.userId),
+      parent.userId ? this.eventService.getUpcomingForParent(parent.userId) : Promise.resolve([]),
     ]);
     return { children, events };
   }

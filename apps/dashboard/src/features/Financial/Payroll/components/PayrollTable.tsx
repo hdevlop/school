@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Banknote, CalendarDays, Clock, HandCoins, ReceiptText, Undo2, Wallet, SearchX } from 'lucide-react';
-import { NButton, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NEmptyState, NErrorState, NForbiddenState, NTable } from 'najm-kit';
+import { NButton, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NEmptyState, NErrorState, NForbiddenState } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
 import type { RowSelectionState } from '@tanstack/react-table';
 import { useTranslation } from 'najm-i18n/react';

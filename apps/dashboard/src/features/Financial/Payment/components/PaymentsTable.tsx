@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NButton, NEmptyState, NTable } from 'najm-kit';
+import { useDialog, NButton, NEmptyState } from 'najm-kit';
+import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { usePayments } from '../hooks/usePayments';
 import { useTranslation } from 'najm-i18n/react';
 import PaymentCard from './PaymentCard';
