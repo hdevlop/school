@@ -4,7 +4,7 @@ Unified repo guide for agentic tools working in this School Management System mo
 
 This file merges the high-signal parts of:
 - `CLAUDE.md`
-- the `najm` skill (`.claude/skills/najm/SKILL.md`), which covers both the framework reference and live MCP/REST data operations
+- the `najm` skill (`.agents/skills/najm/SKILL.md`), a short index over `.agents/skills/najm/references/` (`framework.md`, `dashboard-ops.md` for live MCP/REST data operations, `publishing.md`); Claude Code splits it into `.claude/skills/najm` and `.claude/skills/najm-ops` over the same references
 - the repo-relevant skill guidance for frontend design and React/Next performance
 
 Use this file as the default entry point. Read the deeper files only when a task needs their extra detail.
@@ -263,7 +263,7 @@ Verification rules:
 Use these files when behavior matters more than documentation:
 
 - `CLAUDE.md`
-- `.claude/skills/najm/SKILL.md`
+- `.agents/skills/najm/references/`
 - `apps/dashboard/.env.local.example`
 - `apps/dashboard/src/providers/AppProviders.tsx`
 - `apps/dashboard/src/najm.auth.ts`
