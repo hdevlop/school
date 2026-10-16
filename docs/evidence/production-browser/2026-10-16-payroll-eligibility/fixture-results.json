@@ -1,0 +1,26 @@
+{
+  "target": "local PostgreSQL school_history_test",
+  "marker": "academic-history-alerts-v1",
+  "suites": [
+    { "name": "FinanceLifecycleTransport", "passed": 16, "failed": 0, "exitCode": 0 },
+    { "name": "PayrollHistoryDatabase", "passed": 1, "failed": 0, "exitCode": 0 },
+    { "name": "PayrollHistoryTransport", "passed": 1, "failed": 0, "exitCode": 0 }
+  ],
+  "sourceChecks": {
+    "rootTestsPassed": 1717,
+    "focusedFinanceTestsPassed": 104,
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "i18n": "PASS",
+    "productionBuild": "PASS"
+  },
+  "cleanup": {
+    "runOwnedUsers": 0,
+    "runOwnedStaff": 0,
+    "runOwnedRoles": 0,
+    "runOwnedFeeTypes": 0,
+    "originalStudents": 10,
+    "originalAcademicYears": 3
+  },
+  "sharedDemoConcurrency": "NOT RUN"
+}

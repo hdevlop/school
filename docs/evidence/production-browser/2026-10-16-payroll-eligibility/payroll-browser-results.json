@@ -1,0 +1,102 @@
+{
+  "revision": "7b5b8d521b8cef69af3988faa931ff42c67eed6f",
+  "origin": "https://myscolai.com",
+  "completedUtc": "2026-10-16T19:43:28.697Z",
+  "results": [
+    {
+      "case": "desktop: future hire absent from June roster",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: pre-hire pending payslip stays visible and cannot be paid",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: historical pending payslip remains payable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: single confirmation includes staff, period, amount and localized Cancel",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: opening confirmation sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: cancelling sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: confirming single sends captured staff and June once",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: bulk confirmation includes eligible count and total",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: opening bulk sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: cancelling bulk sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop: confirming bulk sends only eligible staff once",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: future hire absent from June roster",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: pre-hire pending payslip stays visible and cannot be paid",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: historical pending payslip remains payable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: single confirmation includes staff, period, amount and localized Cancel",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: opening confirmation sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: cancelling sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: confirming single sends captured staff and June once",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: bulk confirmation includes eligible count and total",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: opening bulk sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: cancelling bulk sends no payment",
+      "outcome": "PASS"
+    },
+    {
+      "case": "phone: confirming bulk sends only eligible staff once",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No uncaught browser errors",
+      "outcome": "PASS"
+    }
+  ],
+  "errors": [],
+  "failure": null,
+  "transport": "Presentation fixtures and intercepted payroll writes; no domain mutations"
+}
