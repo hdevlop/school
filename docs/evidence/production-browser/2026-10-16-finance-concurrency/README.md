@@ -45,9 +45,24 @@ bun --env-file=apps/dashboard/.env.local scripts/run-finance-acceptance.ts Finan
 - Lint, typecheck, translation checks, all 1,715 root tests and the production
   build pass. [Sanitized database test result](fixture-results.json).
 
-The source candidate includes the payment service correction, the fixture
-compatibility fix and regression assertions. Release verification and demo
-deployment are pending. This record will be updated with the deployed revision.
+## Release and live acceptance
+
+Source revision: `c554edb61389ef6716b0a88f1d29e73aa9be6215`.
+[CI, publication and demo deployment passed](https://github.com/hdevlop/school/actions/runs/38950497950).
+Published image:
+`ghcr.io/hdevlop/school@sha256:6b476401bf3896991de48171bf7413ba11be8d84ee323ca3394490a626f53f9d`.
+
+At 2026-10-16 19:03:59 UTC, the demo app and notifications worker both served
+that revision and image and were healthy. Apex and www login and public
+database/cache readiness returned HTTP 200. Persistent storage and the test
+mail-hub configuration were preserved. See [deployment proof](deployment-proof.json).
+
+All [30 live REST/MCP smoke checks](api-results.json) passed again on this
+revision, including the original four finance fixes, workflow actor/date
+metadata, teacher grade persistence, family ownership and run-owned cleanup.
+The simultaneous payment cases remain isolated to the local marked database;
+they were not repeated on the shared demo. There were no frontend changes in
+this follow-up; the preceding browser acceptance is recorded in pb1016r.
 
 Logs and credentials remain in ignored local paths. No secrets or identities
 are included in this record.

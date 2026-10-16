@@ -1,0 +1,61 @@
+{
+    "verifiedUtc":  "2026-10-16T19:03:59.6780201Z",
+    "revision":  "c554edb61389ef6716b0a88f1d29e73aa9be6215",
+    "endpoints":  [
+                      {
+                          "url":  "https://myscolai.com/login",
+                          "status":  200
+                      },
+                      {
+                          "url":  "https://www.myscolai.com/login",
+                          "status":  200
+                      },
+                      {
+                          "url":  "https://myscolai.com/api/health/status",
+                          "status":  200
+                      }
+                  ],
+    "containers":  [
+                       {
+                           "name":  "/school-school-lghkg3-app-1",
+                           "imageId":  "sha256:6b476401bf3896991de48171bf7413ba11be8d84ee323ca3394490a626f53f9d",
+                           "revision":  "c554edb61389ef6716b0a88f1d29e73aa9be6215",
+                           "health":  "healthy",
+                           "mounts":  [
+                                          "/srv/school/storage-production:/srv/school/storage"
+                                      ],
+                           "networks":  [
+                                            "dokploy-network",
+                                            "school-school-lghkg3_default"
+                                        ],
+                           "mail":  [
+                                        "EMAIL_PROVIDER=smtp",
+                                        "SMTP_HOST=najmstack-mailpit",
+                                        "SMTP_SECURE=false",
+                                        "SMTP_PORT=1025"
+                                    ]
+                       },
+                       {
+                           "name":  "/school-school-lghkg3-notifications-worker-1",
+                           "imageId":  "sha256:6b476401bf3896991de48171bf7413ba11be8d84ee323ca3394490a626f53f9d",
+                           "revision":  "c554edb61389ef6716b0a88f1d29e73aa9be6215",
+                           "health":  "healthy",
+                           "mounts":  [
+                                          "/srv/school/storage-production:/srv/school/storage"
+                                      ],
+                           "networks":  [
+                                            "school-school-lghkg3_backend",
+                                            "school-school-lghkg3_notifications-egress"
+                                        ],
+                           "mail":  [
+                                        "SMTP_HOST=najmstack-mailpit",
+                                        "SMTP_PORT=1025",
+                                        "EMAIL_PROVIDER=smtp",
+                                        "SMTP_SECURE=false"
+                                    ]
+                       }
+                   ],
+    "imageDigests":  [
+                         "ghcr.io/hdevlop/school@sha256:6b476401bf3896991de48171bf7413ba11be8d84ee323ca3394490a626f53f9d"
+                     ]
+}
