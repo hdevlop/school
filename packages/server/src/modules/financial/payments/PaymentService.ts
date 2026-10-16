@@ -24,8 +24,15 @@ const UPDATE_KEYS = [
   'transactionRef', 'receiptNumber', 'notes'
 ];
 
-function isUniqueViolation(error: any): boolean {
-  return error?.code === '23505' || /unique|duplicate key/i.test(String(error?.message ?? ''));
+function isUniqueViolation(error: unknown): boolean {
+  const seen = new Set<unknown>();
+  while (error && typeof error === 'object' && !seen.has(error)) {
+    seen.add(error);
+    const current = error as { code?: string; cause?: unknown };
+    if (current.code === '23505') return true;
+    error = current.cause;
+  }
+  return false;
 }
 
 @Service()

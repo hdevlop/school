@@ -116,7 +116,9 @@ part of this evidence.
 ## Remaining coverage and follow-ups
 
 - Concurrent duplicate payments were not run on the shared demo. That regression
-  requires the marked disposable database fixture.
+  requires the marked disposable database fixture. The subsequent
+  [concurrency follow-up](../2026-10-16-finance-concurrency/README.md) runs that
+  fixture and records the resulting correction.
 - This is targeted acceptance, not a repeat of all feature, delivery and
   connected-browser matrices. No customer image was promoted.
 - The active year is still 2025-2026. Cleaner/security staff zone setup,

@@ -6,7 +6,7 @@ import { NotificationRepository } from '../../src/modules/financial/notification
 import { runNotificationsDto } from '../../src/modules/financial/notifications/NotificationDto';
 import { PaymentService } from '../../src/modules/financial/payments/PaymentService';
 import { PaymentValidator } from '../../src/modules/financial/payments/PaymentValidator';
-import { updatePaymentDto } from '../../src/modules/financial/payments/PaymentDto';
+import { createPaymentDto, updatePaymentDto } from '../../src/modules/financial/payments/PaymentDto';
 import { AllocationService } from '../../src/modules/financial/allocations/AllocationService';
 import { AllocationValidator } from '../../src/modules/financial/allocations/AllocationValidator';
 import { InstallmentRepository } from '../../src/modules/financial/installments/InstallmentRepository';
@@ -19,6 +19,49 @@ import { StudentRouteService } from '../../src/modules/transport/studentRoutes/S
 import { StudentRouteValidator } from '../../src/modules/transport/studentRoutes/StudentRouteValidator';
 import { withEnglishMessages } from '../support/englishMessages';
 import { events, feeHarness, recurringInput } from '../support/financeHarness';
+
+describe('payment idempotency after a transaction rollback', () => {
+  const input = createPaymentDto.parse({ studentId: 'student', amount: 50,
+    paymentMethod: 'cash', paymentDate: '2026-10-03', idempotencyKey: '00000000-0000-4000-8000-000000000001',
+    allocations: [{ feeId: 'fee', number: 1, amount: 50 }] });
+
+  function harness(failure: Error) {
+    const payment = { id: 'existing-receipt' };
+    let lookups = 0;
+    const service = new PaymentService({} as any,
+      { findByIdempotencyKey: async () => { lookups++; return payment; } } as any,
+      {} as any, { getByPaymentId: async () => [] } as any,
+      {} as any, {} as any, {} as any, {} as any);
+    Object.assign(service, { events, recordTransaction: async () => { throw failure; } });
+    return { service, payment, get lookups() { return lookups; } };
+  }
+
+  it('replays the committed receipt when Drizzle wraps PostgreSQL 23505 in cause', async () => {
+    const failure = new Error('Failed query: insert into payments', {
+      cause: Object.assign(new Error('duplicate key'), { code: '23505' }),
+    });
+    const h = harness(failure);
+    expect(await h.service.record(input)).toBe(h.payment);
+    expect(h.lookups).toBe(1);
+  });
+
+  it('propagates other database failures instead of treating SQL text as a duplicate', async () => {
+    const failure = new Error('Failed query: unique_reference', {
+      cause: Object.assign(new Error('check constraint'), { code: '23514' }),
+    });
+    const h = harness(failure);
+    await expect(h.service.record(input)).rejects.toBe(failure);
+    expect(h.lookups).toBe(0);
+  });
+
+  it('propagates a cyclic cause without looping', async () => {
+    const failure = new Error('Cyclic cause');
+    failure.cause = failure;
+    const h = harness(failure);
+    await expect(h.service.record(input)).rejects.toBe(failure);
+    expect(h.lookups).toBe(0);
+  });
+});
 
 describe('SEC-005 financial cron input and SQL boundary', () => {
   it('rejects SQL canaries, invalid dates, fractional/unbounded days and body extras', () => {

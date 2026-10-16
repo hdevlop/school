@@ -33,6 +33,8 @@ const year = '2026-2027';
 const actorId = `finance-accountant-${suffix}`;
 const outsiderId = `finance-outsider-${suffix}`;
 const roleId = `finance-accounting-role-${suffix}`;
+let accountingRoleId = roleId;
+let createdAccountingRole = false;
 const staffId = `finance-staff-${suffix}`;
 const typeIds: string[] = [];
 const feeIds: string[] = [];
@@ -105,10 +107,15 @@ beforeAll(async () => {
   expect(marker[0]?.id).toBe('academic-history-alerts-v1');
   const password = `Fixture-${crypto.randomUUID()}-A1!`;
   const hash = await Bun.password.hash(password, { algorithm: 'bcrypt', cost: 10 });
-  await db.insert(roles).values({ id: roleId, name: 'accounting' });
+  const [existingAccountingRole] = await db.select({ id: roles.id }).from(roles).where(eq(roles.name, 'accounting'));
+  if (existingAccountingRole) accountingRoleId = existingAccountingRole.id;
+  else {
+    await db.insert(roles).values({ id: roleId, name: 'accounting' });
+    createdAccountingRole = true;
+  }
   await db.insert(users).values([
     { id: actorId, name: 'Youssef Bennani', email: `${actorId}@example.test`, password: hash,
-      roleId, status: 'active', emailVerified: true },
+      roleId: accountingRoleId, status: 'active', emailVerified: true },
     { id: outsiderId, name: 'Salma Idrissi', email: `${outsiderId}@example.test`, password: hash,
       status: 'active', emailVerified: true },
   ]);
@@ -152,7 +159,7 @@ afterAll(async () => {
   await db.delete(financialAuditLogs).where(eq(financialAuditLogs.actorId, actorId));
   if (payslipIds.length) await db.delete(financialAuditLogs).where(inArray(financialAuditLogs.entityId, payslipIds));
   await db.delete(users).where(inArray(users.id, [actorId, outsiderId]));
-  await db.delete(roles).where(eq(roles.id, roleId));
+  if (createdAccountingRole) await db.delete(roles).where(eq(roles.id, roleId));
 });
 
 describe('real PostgreSQL finance lifecycle over authenticated HTTP and MCP', () => {
@@ -299,6 +306,21 @@ describe('finance review regression cases', () => {
     expect(await storedFee(fee.id)).toMatchObject({ paidAmount: '50.00' });
     expect(repeat.map(result => result.status), JSON.stringify(repeat)).toEqual([200, 200]);
     expect(repeat[0].body.data.id).toBe(repeat[1].body.data.id);
+    const id = repeat[0].body.data.id;
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.paymentId, id))).toHaveLength(1);
+    expect(await db.select().from(financialAuditLogs).where(and(eq(financialAuditLogs.entityId, id),
+      eq(financialAuditLogs.action, 'payment.completed')))).toHaveLength(1);
+  });
+
+  it('refuses concurrent changed payloads sharing one idempotency key', async () => {
+    const { fee } = await newFee();
+    const key = crypto.randomUUID();
+    const repeat = await Promise.all([record(fee.id, 50, { idempotencyKey: key }),
+      record(fee.id, 51, { idempotencyKey: key })]);
+    expect(repeat.map(result => result.status).sort()).toEqual([200, 409]);
+    const [payment] = await db.select().from(payments).where(eq(payments.idempotencyKey, key));
+    expect(Number((await storedFee(fee.id)).paidAmount)).toBe(Number(payment!.amount));
+    expect(await db.select().from(paymentAllocations).where(eq(paymentAllocations.paymentId, payment!.id))).toHaveLength(1);
   });
 
   it('rejects sub-cent money with a client validation error and no writes', async () => {
