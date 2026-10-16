@@ -2,16 +2,18 @@
 
 import React, { useMemo } from 'react';
 import { z } from 'zod';
-import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { Badge, Button, FormInput, NForm } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
-import { Briefcase, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaffRoles, useStaffRoleMutations } from '../hooks/useStaffRoles';
 import { toast } from 'sonner';
 
-const roleSchema = z.object({
-  code: z.string().min(1),
-  label: z.string().min(1),
+type T = (key: string) => string;
+
+const createRoleSchema = (t: T) => z.object({
+  code: z.string().trim().min(1, t('staff.validation.required')),
+  label: z.string().trim().min(1, t('staff.validation.required')),
   labels: z.object({
     fr: z.string().optional().or(z.literal('')),
     ar: z.string().optional().or(z.literal('')),
@@ -39,6 +41,7 @@ const cleanRolePayload = (data) => {
 
 const RoleEditorForm = ({ role = null, onSubmit, formId }) => {
   const { t } = useTranslation();
+  const roleSchema = useMemo(() => createRoleSchema(t), [t]);
   const defaults = {
     code: role?.code || '',
     label: role?.label || '',
@@ -143,7 +146,6 @@ const ManageRolesDialog = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <NFormSectionHeader icon={Briefcase} title={t('staffRoles.dialogs.manageTitle')} />
       <div className="flex justify-end">
         <Button onClick={onAdd} size="sm" className="gap-1">
           <Plus className="h-4 w-4" />
@@ -158,16 +160,16 @@ const ManageRolesDialog = () => {
                 <span className="font-medium text-sm">{role.label}</span>
                 <Badge variant="outline" className="text-xs font-mono">{role.code}</Badge>
                 {role.isSystem && <Badge className="bg-amber-100 text-amber-800 text-xs">{t('staffRoles.table.system')}</Badge>}
-                {!role.active && <Badge className="bg-slate-200 text-slate-700 text-xs">{t('common.inactive') || 'Inactive'}</Badge>}
+                {!role.active && <Badge className="bg-slate-200 text-slate-700 text-xs">{t('common.inactive')}</Badge>}
               </div>
               {role.category && <span className="text-xs text-muted-foreground">{role.category}</span>}
             </div>
             <div className="flex items-center gap-1">
-              <Button variant="ghost" size="sm" onClick={() => onEdit(role)} aria-label="edit">
+              <Button variant="ghost" size="sm" onClick={() => onEdit(role)} aria-label={`${t('common.edit')} ${role.label || role.code}`}>
                 <Pencil className="h-4 w-4" />
               </Button>
               {!role.isSystem && (
-                <Button variant="ghost" size="sm" onClick={() => onDelete(role)} className="text-red-600" aria-label="delete">
+                <Button variant="ghost" size="sm" onClick={() => onDelete(role)} className="text-red-600" aria-label={`${t('common.delete')} ${role.label || role.code}`}>
                   <Trash2 className="h-4 w-4" />
                 </Button>
               )}

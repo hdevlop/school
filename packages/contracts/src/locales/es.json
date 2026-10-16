@@ -3616,6 +3616,36 @@
       "afternoon": "Tarde",
       "evening": "Noche",
       "fullDay": "Jornada completa"
+    },
+    "validation": {
+      "required": "Este campo es obligatorio",
+      "tooLong": "Este valor es demasiado largo",
+      "nameMin": "El nombre debe tener al menos 2 caracteres",
+      "cinMin": "El CIN debe tener al menos 8 caracteres",
+      "phoneInvalid": "Número de teléfono no válido",
+      "emailInvalid": "Correo electrónico no válido",
+      "addressRequired": "La dirección es obligatoria",
+      "roleRequired": "El rol es obligatorio",
+      "dateInvalid": "Introduce una fecha válida",
+      "numberInvalid": "Introduce un número válido",
+      "positiveNumber": "Debe ser mayor que cero",
+      "wholeNumber": "Introduce un número entero igual o mayor que cero",
+      "salaryRequired": "El salario es obligatorio",
+      "salaryPositive": "El salario debe ser mayor que cero",
+      "hourlyRateRequired": "La tarifa por hora es obligatoria para el personal por horas",
+      "workloadHoursRequired": "Las horas de trabajo son obligatorias para el personal por horas",
+      "licenseNumberMin": "El número de licencia debe tener al menos 5 caracteres",
+      "licenseNumberRequired": "El número de licencia es obligatorio",
+      "licenseTypeRequired": "El tipo de licencia es obligatorio",
+      "licenseExpiryRequired": "La fecha de vencimiento de la licencia es obligatoria",
+      "zoneRequired": "La zona es obligatoria",
+      "classRequired": "Selecciona al menos una clase",
+      "vehicleRequired": "El vehículo es obligatorio",
+      "cycleRequired": "El ciclo es obligatorio"
+    },
+    "actions": {
+      "manageZones": "Zonas",
+      "manageJobTitles": "Puestos"
     }
   },
   "staffRoles": {
@@ -4952,7 +4982,7 @@
       "createZoneTitle": "Crear zona",
       "deleteZone": "Eliminar zona",
       "editZone": "Editar zona",
-      "manageTitle": "Gestionar ámbitos del personal",
+      "manageTitle": "Gestionar zonas",
       "updateZone": "Actualizar zona"
     },
     "empty": {

@@ -2,17 +2,18 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ComponentProps, ComponentType, ReactNode } from 'react';
-import { z } from 'zod';
 import { Activity, Award, Briefcase, Calendar, Car, CreditCard, FileText, Hash, HeartPulse, IdCard, Loader2, Mail, MapPin, Phone, User, UserRound, Wallet } from 'lucide-react';
 import { AvatarFormInput, FormInput, NFormSectionHeader as FormSectionHeader, WizardForm } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import type { StepConfig } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
+import { COMPENSATION_MODE_VALUES, EMPLOYMENT_TYPE_VALUES, SHIFT_VALUES, STAFF_STATUS_VALUES } from '@sms/contracts';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useStaffRoles } from '../hooks/useStaffRoles';
 import { useCycles } from '@/features/Cycles/hooks/useCycles';
 import { useZones } from '../hooks/useZones';
 import { useVehicles } from '../hooks/useVehicles';
+import { createStaffSchemas } from '../config/staffSchemas';
 
 type StaffWizardFormProps = Omit<ComponentProps<typeof WizardForm>, 'submitLabel'> & {
   submitLabel?: ReactNode;
@@ -22,124 +23,12 @@ const StaffWizardForm = WizardForm as ComponentType<StaffWizardFormProps>;
 
 const STAFF_FORM_EXCLUDED_ROLES = new Set(['teacher']);
 const STAFF_ASSIGNMENT_ROLES = new Set(['assistant', 'cleaner', 'accountant', 'security', 'driver', 'busAssistant']);
-const STAFF_STATUS_VALUES = ['active', 'inactive', 'onLeave', 'suspended', 'terminated'] as const;
-const EMPLOYMENT_TYPE_VALUES = ['fullTime', 'partTime', 'contract', 'temporary'] as const;
-const COMPENSATION_MODE_VALUES = ['monthly', 'hourly'] as const;
-const SHIFT_VALUES = ['morning', 'afternoon', 'evening', 'fullDay'] as const;
 
 const staffRoleHasAssignments = (role?: string) => !role || STAFF_ASSIGNMENT_ROLES.has(role);
-const optionalNumber = <T extends z.ZodNumber | z.ZodCoercedNumber>(schema: T) => z.preprocess(
-  (value) => (value === '' || value === null ? undefined : value),
-  schema.optional()
-);
-const requiredNumber = <T extends z.ZodNumber | z.ZodCoercedNumber>(schema: T, message: string) => z.preprocess(
-  (value) => (value === '' || value === null ? undefined : value),
-  schema.refine((value) => value !== undefined, message)
-);
-const optionalString = (schema: z.ZodString) => schema.optional().or(z.literal(''));
-const dateString = z.string().regex(
-  /^(\d{4}-\d{2}-\d{2}|\d{2}\/\d{2}\/\d{4}|\d{2}-\d{2}-\d{2}|\d{2}-\d{2}-\d{4})$/,
-  'Date must be in YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, DD-MM-YY, or DD-MM-YYYY format'
-);
-const optionalDateString = dateString.optional().or(z.literal(''));
-const phoneString = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, 'Invalid phone number');
 
 const ROLE_PROFILE_FIELDS = {
   driver: ['licenseNumber', 'licenseType', 'licenseExpiry', 'yearsOfExperience', 'notes'],
 } as const;
-
-const staffPersonalSchema = z.object({
-  id: z.string().optional(),
-  name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name too long'),
-  employeeCode: optionalString(z.string().min(1, 'Employee code is required').max(50, 'Employee code too long')),
-  cin: z.string().min(8, 'CIN must be at least 8 characters').max(20, 'CIN too long'),
-  gender: z.enum(['M', 'F']).optional(),
-  phone: phoneString,
-  email: z.string().email().optional().or(z.literal('')),
-  address: z.string().min(1, 'Address is required').max(500, 'Address too long'),
-  medicalConditions: z.string().max(1000, 'Medical conditions description too long').optional().nullable().or(z.literal('')),
-  image: z.string().nullish(),
-  role: z.string().min(1, 'Role is required'),
-  status: z.enum(STAFF_STATUS_VALUES),
-  emergencyContact: optionalString(z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name too long')),
-  emergencyPhone: optionalString(phoneString),
-});
-
-const staffEmploymentSchema = z.object({
-  department: optionalString(z.string().max(100, 'Department too long')),
-  employmentType: z.enum(EMPLOYMENT_TYPE_VALUES).optional().or(z.literal('')),
-  compensationMode: z.enum(COMPENSATION_MODE_VALUES).default('monthly'),
-  salary: requiredNumber(z.coerce.number().positive('Salary must be positive'), 'Salary is required'),
-  hourlyRate: optionalNumber(z.coerce.number().positive()),
-  workloadHours: optionalNumber(z.coerce.number().int().min(0)),
-  shift: z.enum(SHIFT_VALUES).optional().or(z.literal('')),
-  hireDate: dateString,
-  endDate: optionalDateString,
-  bankAccount: optionalString(z.string().max(100, 'Bank account too long')),
-});
-
-const staffAssignmentSchema = z.object({
-  zoneId: z.string().optional().or(z.literal('')),
-  classId: z.string().optional().or(z.literal('')),
-  sectionId: z.string().optional().or(z.literal('')),
-  cycleId: z.string().optional().or(z.literal('')),
-  vehicleId: z.string().optional().or(z.literal('')),
-  startDate: optionalDateString,
-  endDate: optionalDateString,
-  notes: optionalString(z.string().max(1000, 'Notes too long')),
-});
-
-const staffAssignmentsSchema = z.object({
-  assignments: z.array(staffAssignmentSchema).optional(),
-  // Assistant-only: many classes selected in a single multiselect (expanded on submit).
-  classIds: z.array(z.string()).optional(),
-});
-
-const driverDetailsSchema = z.object({
-  licenseNumber: optionalString(z.string().min(5, 'License number must be at least 5 characters').max(20, 'License number too long')),
-  licenseType: optionalString(z.string().max(10, 'License type too long')),
-  licenseExpiry: optionalDateString,
-  yearsOfExperience: optionalNumber(z.coerce.number().int().min(0)),
-  notes: optionalString(z.string().max(1000, 'Notes too long')),
-});
-
-const staffFullSchema = staffPersonalSchema
-  .merge(staffEmploymentSchema)
-  .merge(staffAssignmentsSchema)
-  .merge(driverDetailsSchema)
-  .superRefine((data, ctx) => {
-    if (data.compensationMode === 'hourly') {
-      if (!(Number(data.hourlyRate) > 0)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['hourlyRate'], message: 'Hourly rate is required for hourly staff' });
-      }
-      if (!(Number(data.workloadHours) > 0)) {
-        ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['workloadHours'], message: 'Workload hours are required for hourly staff' });
-      }
-    }
-    if (data.role === 'driver') {
-      if (!data.licenseNumber) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['licenseNumber'], message: 'License number is required' });
-      if (!data.licenseType) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['licenseType'], message: 'License type is required' });
-      if (!data.licenseExpiry) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['licenseExpiry'], message: 'License expiry is required' });
-    }
-    if (data.role === 'cleaner' && data.assignments?.some((item) => !item.zoneId)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['assignments', 0, 'zoneId'], message: 'Zone is required' });
-    }
-    if (data.role === 'assistant' && !(data.classIds?.length)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['classIds'], message: 'Select at least one class' });
-    }
-    if (data.role === 'busAssistant' && data.assignments?.some((item) => !item.vehicleId)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['assignments', 0, 'vehicleId'], message: 'Vehicle is required' });
-    }
-    if (data.role === 'accountant' && data.assignments?.some((item) => !item.cycleId)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['assignments', 0, 'cycleId'], message: 'Cycle is required' });
-    }
-    if (data.role === 'security' && data.assignments?.some((item) => !item.zoneId)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['assignments', 0, 'zoneId'], message: 'Zone is required' });
-    }
-    if (data.role === 'driver' && data.assignments?.some((item) => !item.vehicleId)) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['assignments', 0, 'vehicleId'], message: 'Vehicle is required' });
-    }
-  });
 
 const toStaffPayload = (data) => {
   const profileFields = ROLE_PROFILE_FIELDS[data.role] || [];
@@ -248,6 +137,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const submissionPromiseRef = useRef<Promise<unknown> | null>(null);
   const showAssignmentsStep = staffRoleHasAssignments(selectedRole);
+  const schemas = useMemo(() => createStaffSchemas(t), [t]);
 
   useEffect(() => {
     setSelectedRole(defaultValues.role);
@@ -259,16 +149,16 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
       {
         id: 'personal',
         title: t('staff.form.personalInformation'),
-        schema: staffPersonalSchema,
-        fields: [...Object.keys(staffPersonalSchema.shape)],
+        schema: schemas.personal,
+        fields: [...Object.keys(schemas.personal.shape)],
         render: ({ form }) => <PersonalStep form={form} lockedRole={Boolean(staff?.id)} onRoleChange={setSelectedRole} />,
       },
       {
         id: 'details',
         title: t('staff.form.employmentInformation'),
-        schema: staffEmploymentSchema.merge(driverDetailsSchema),
+        schema: schemas.employment.merge(schemas.driverDetails),
         // `role` is carried (not validated here) so the step can branch on it, e.g. driver license fields.
-        fields: [...Object.keys(staffEmploymentSchema.shape), ...Object.keys(driverDetailsSchema.shape), 'role'],
+        fields: [...Object.keys(schemas.employment.shape), ...Object.keys(schemas.driverDetails.shape), 'role'],
         render: ({ form }) => <DetailsStep form={form} />,
       },
     ];
@@ -277,7 +167,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
       visibleSteps.push({
         id: 'assignments',
         title: t('staff.form.assignments'),
-        schema: staffAssignmentsSchema,
+        schema: schemas.assignments,
         // `role` is carried (not validated here) so the step can show role-based assignment fields.
         fields: ['assignments', 'classIds', 'role'],
         render: ({ form }) => <AssignmentsStep form={form} />,
@@ -285,7 +175,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
     }
 
     return visibleSteps;
-  }, [showAssignmentsStep, staff?.id, t]);
+  }, [schemas, showAssignmentsStep, staff?.id, t]);
 
   useEffect(() => {
     setCurrentStep((step) => Math.min(step, steps.length));
@@ -316,7 +206,7 @@ const StaffForm = ({ staff = null, onSubmitStaff }) => {
     <div className="h-full min-h-0" aria-busy={isSubmitting}>
       <StaffWizardForm
         steps={steps}
-        schema={staffFullSchema}
+        schema={schemas.full}
         defaultValues={defaultValues}
         onSubmit={handleSubmit}
         currentStep={currentStep}

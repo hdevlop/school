@@ -2,15 +2,18 @@
 
 import React, { useMemo } from 'react';
 import { z } from 'zod';
-import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { Badge, Button, FormInput, NForm } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
-import { MapPinned, Pencil, Plus, Trash2 } from 'lucide-react';
+import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
+import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useZones } from '../hooks/useZones';
 
-const zoneSchema = z.object({
-  name: z.string().min(1),
+type T = (key: string) => string;
+
+const createZoneSchema = (t: T) => z.object({
+  name: z.string().trim().min(1, t('staff.validation.required')).max(100, t('staff.validation.tooLong')),
   building: z.string().optional().or(z.literal('')),
   floor: z.string().optional().or(z.literal('')),
   description: z.string().optional().or(z.literal('')),
@@ -25,6 +28,7 @@ const cleanZonePayload = (data) => ({
 
 const ZoneEditorForm = ({ zone = null, formId, onSubmit }) => {
   const { t } = useTranslation();
+  const zoneSchema = useMemo(() => createZoneSchema(t), [t]);
   const defaults = {
     name: zone?.name || '',
     building: zone?.building || '',
@@ -53,6 +57,7 @@ const ZoneEditorForm = ({ zone = null, formId, onSubmit }) => {
 
 const ManageScopesDialog = () => {
   const { t } = useTranslation();
+  const { can } = useViewerRole();
   const { zones, refetch: refetchZones, createZone, updateZone, deleteZone } = useZones();
   const { openDialog, confirmDelete, pop } = useDialog();
 
@@ -89,22 +94,26 @@ const ManageScopesDialog = () => {
       itemName: zone.name,
       confirmText: t('staffScopes.dialogs.deleteZone'),
       onConfirm: async () => {
-        await deleteZone(zone.id);
-        refreshZones();
+        try {
+          await deleteZone(zone.id);
+          refreshZones();
+        } catch (e) {
+          toast.error(e?.response?.data?.message || e?.message);
+        }
       },
     });
   };
 
   return (
     <div className="flex flex-col gap-4">
-      <NFormSectionHeader icon={MapPinned} title={t('staffScopes.dialogs.manageTitle')} />
-
-      <div className="flex justify-end">
-        <Button size="sm" className="gap-1" onClick={() => openZoneForm()}>
-          <Plus className="h-4 w-4" />
-          {t('staffScopes.form.addZone')}
-        </Button>
-      </div>
+      {can('create:staff') && (
+        <div className="flex justify-end">
+          <Button size="sm" className="gap-1" onClick={() => openZoneForm()}>
+            <Plus className="h-4 w-4" />
+            {t('staffScopes.form.addZone')}
+          </Button>
+        </div>
+      )}
 
       <div className="divide-y rounded-md border">
         {orderedZones.map((zone) => (
@@ -119,12 +128,16 @@ const ManageScopesDialog = () => {
               </div>
             </div>
             <div className="flex shrink-0 items-center gap-1">
-              <Button variant="ghost" size="sm" onClick={() => openZoneForm(zone)} aria-label="edit zone">
-                <Pencil className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" onClick={() => confirmZoneDelete(zone)} className="text-red-600" aria-label="delete zone">
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              {can('update:staff') && (
+                <Button variant="ghost" size="sm" onClick={() => openZoneForm(zone)} aria-label={`${t('common.edit')} ${zone.name}`}>
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              )}
+              {can('delete:staff') && (
+                <Button variant="ghost" size="sm" onClick={() => confirmZoneDelete(zone)} className="text-red-600" aria-label={`${t('common.delete')} ${zone.name}`}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </div>
         ))}

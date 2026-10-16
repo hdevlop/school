@@ -3630,6 +3630,36 @@
       "afternoon": "مسائي",
       "evening": "ليلي",
       "fullDay": "يوم كامل"
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب",
+      "tooLong": "هذه القيمة طويلة جدًا",
+      "nameMin": "يجب أن يتكون الاسم من حرفين على الأقل",
+      "cinMin": "يجب أن يتكون رقم التعريف من 8 أحرف على الأقل",
+      "phoneInvalid": "رقم الهاتف غير صالح",
+      "emailInvalid": "عنوان البريد الإلكتروني غير صالح",
+      "addressRequired": "العنوان مطلوب",
+      "roleRequired": "الدور مطلوب",
+      "dateInvalid": "أدخل تاريخًا صالحًا",
+      "numberInvalid": "أدخل رقمًا صالحًا",
+      "positiveNumber": "يجب أن يكون أكبر من صفر",
+      "wholeNumber": "أدخل عددًا صحيحًا يساوي صفرًا أو أكثر",
+      "salaryRequired": "الراتب مطلوب",
+      "salaryPositive": "يجب أن يكون الراتب أكبر من صفر",
+      "hourlyRateRequired": "الأجر بالساعة مطلوب للموظفين بالساعة",
+      "workloadHoursRequired": "عدد ساعات العمل مطلوب للموظفين بالساعة",
+      "licenseNumberMin": "يجب أن يتكون رقم الرخصة من 5 أحرف على الأقل",
+      "licenseNumberRequired": "رقم الرخصة مطلوب",
+      "licenseTypeRequired": "نوع الرخصة مطلوب",
+      "licenseExpiryRequired": "تاريخ انتهاء الرخصة مطلوب",
+      "zoneRequired": "المنطقة مطلوبة",
+      "classRequired": "اختر قسمًا واحدًا على الأقل",
+      "vehicleRequired": "المركبة مطلوبة",
+      "cycleRequired": "السلك مطلوب"
+    },
+    "actions": {
+      "manageZones": "المناطق",
+      "manageJobTitles": "المسميات الوظيفية"
     }
   },
   "staffRoles": {
@@ -4966,7 +4996,7 @@
       "createZoneTitle": "إنشاء منطقة",
       "deleteZone": "حذف المنطقة",
       "editZone": "تعديل المنطقة",
-      "manageTitle": "إدارة نطاقات الموظفين",
+      "manageTitle": "إدارة المناطق",
       "updateZone": "تحديث المنطقة"
     },
     "empty": {

@@ -2577,6 +2577,36 @@
     "invitation": {
       "sent": "Invitation email sent to {{email}}. The staff member activates the account from the link.",
       "notSent": "The staff member was created, but the invitation email could not be sent. Send it again with \"Reset access\" on the Users page."
+    },
+    "validation": {
+      "required": "This field is required",
+      "tooLong": "This value is too long",
+      "nameMin": "Name must be at least 2 characters",
+      "cinMin": "CIN must be at least 8 characters",
+      "phoneInvalid": "Invalid phone number",
+      "emailInvalid": "Invalid email address",
+      "addressRequired": "Address is required",
+      "roleRequired": "Role is required",
+      "dateInvalid": "Enter a valid date",
+      "numberInvalid": "Enter a valid number",
+      "positiveNumber": "Must be greater than zero",
+      "wholeNumber": "Enter a whole number of zero or more",
+      "salaryRequired": "Salary is required",
+      "salaryPositive": "Salary must be greater than zero",
+      "hourlyRateRequired": "Hourly rate is required for hourly staff",
+      "workloadHoursRequired": "Workload hours are required for hourly staff",
+      "licenseNumberMin": "License number must be at least 5 characters",
+      "licenseNumberRequired": "License number is required",
+      "licenseTypeRequired": "License type is required",
+      "licenseExpiryRequired": "License expiry is required",
+      "zoneRequired": "Zone is required",
+      "classRequired": "Select at least one class",
+      "vehicleRequired": "Vehicle is required",
+      "cycleRequired": "Cycle is required"
+    },
+    "actions": {
+      "manageZones": "Zones",
+      "manageJobTitles": "Job titles"
     }
   },
   "staffRoles": {
@@ -2657,7 +2687,7 @@
       "description": "Description"
     },
     "dialogs": {
-      "manageTitle": "Manage Staff Scopes",
+      "manageTitle": "Manage zones",
       "createCycleTitle": "Create Cycle",
       "createCycle": "Create Cycle",
       "editCycle": "Edit Cycle",

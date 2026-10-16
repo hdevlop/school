@@ -2,7 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import React, { useMemo } from 'react';
-import { Banknote, Briefcase, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
+import { Banknote, Briefcase, BriefcaseBusiness, Calendar, Eye, Hash, IdCard, MapPinned, Pencil, Phone, Trash2, UserRound, Wallet, Plus, SearchX } from 'lucide-react';
 import { Badge, NAvatar, NPageHeader, NPageHeaderActions, NStatCard, NStatCardSkeleton, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -16,6 +16,8 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/services/apiError';
 import StaffForm from './StaffForm';
 import StaffCard from './StaffCard';
+import ManageScopesDialog from './ManageScopesDialog';
+import ManageRolesDialog from './ManageRolesDialog';
 import { formatAssignments } from '../utils/staffAssignments';
 import { getStaffAvatar } from '../utils/staffAvatar';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
@@ -41,10 +43,14 @@ const STAFF_LIST_EXCLUDED_ROLES = new Set(['teacher']);
 
 const StaffTable = () => {
   const { t, language } = useTranslation();
-  const { can } = useViewerRole();
+  const { can, role } = useViewerRole();
   const canCreate = can('create:staff');
   const canUpdate = can('update:staff');
   const canDelete = can('delete:staff');
+  // Zones are written by the staff permissions; job titles stay with the admin,
+  // as `@isAdmin()` on StaffRoleController decides.
+  const canManageZones = canCreate || canUpdate || canDelete;
+  const canManageJobTitles = role?.toLowerCase() === 'admin';
   const { canReset, resetItems } = useResetLogin();
   const { majorMoney } = useSchoolFormat();
   const {
@@ -93,6 +99,24 @@ const StaffTable = () => {
       children: <StaffForm staff={staffMember} onSubmitStaff={updateStaff} />,
       width: '4xl',
       height: 'xxl',
+      showButtons: false,
+    });
+  };
+
+  const handleManageZones = () => {
+    openDialog({
+      title: t('staffScopes.dialogs.manageTitle'),
+      children: <ManageScopesDialog />,
+      width: 'lg',
+      showButtons: false,
+    });
+  };
+
+  const handleManageJobTitles = () => {
+    openDialog({
+      title: t('staffRoles.dialogs.manageTitle'),
+      children: <ManageRolesDialog />,
+      width: 'lg',
       showButtons: false,
     });
   };
@@ -308,6 +332,29 @@ const StaffTable = () => {
         subtitle={isCountUnknown(isError ? error : null, rows, isStaffLoading) ? undefined : t('staff.subtitle.count', { count: rows.length })}
       >
         <NPageHeaderActions>
+          {/* Icon only at phone width, where the label left no room for the title. */}
+          {canManageZones && (
+            <NButton
+              variant="outline"
+              onClick={handleManageZones}
+              aria-label={t('staff.actions.manageZones')}
+              title={t('staff.actions.manageZones')}
+            >
+              <MapPinned className="h-4 w-4 sm:me-2" aria-hidden />
+              <span className="max-sm:hidden">{t('staff.actions.manageZones')}</span>
+            </NButton>
+          )}
+          {canManageJobTitles && (
+            <NButton
+              variant="outline"
+              onClick={handleManageJobTitles}
+              aria-label={t('staff.actions.manageJobTitles')}
+              title={t('staff.actions.manageJobTitles')}
+            >
+              <BriefcaseBusiness className="h-4 w-4 sm:me-2" aria-hidden />
+              <span className="max-sm:hidden">{t('staff.actions.manageJobTitles')}</span>
+            </NButton>
+          )}
           <PageHeaderGlobalActions />
         </NPageHeaderActions>
       </NPageHeader>

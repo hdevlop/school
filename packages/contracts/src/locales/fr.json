@@ -862,6 +862,36 @@
       "afternoon": "Après-midi",
       "evening": "Soir",
       "fullDay": "Journée complète"
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire",
+      "tooLong": "Cette valeur est trop longue",
+      "nameMin": "Le nom doit contenir au moins 2 caractères",
+      "cinMin": "La CIN doit contenir au moins 8 caractères",
+      "phoneInvalid": "Numéro de téléphone invalide",
+      "emailInvalid": "Adresse e-mail invalide",
+      "addressRequired": "L'adresse est obligatoire",
+      "roleRequired": "Le rôle est obligatoire",
+      "dateInvalid": "Saisissez une date valide",
+      "numberInvalid": "Saisissez un nombre valide",
+      "positiveNumber": "Doit être supérieur à zéro",
+      "wholeNumber": "Saisissez un nombre entier positif ou nul",
+      "salaryRequired": "Le salaire est obligatoire",
+      "salaryPositive": "Le salaire doit être supérieur à zéro",
+      "hourlyRateRequired": "Le taux horaire est obligatoire pour le personnel payé à l’heure",
+      "workloadHoursRequired": "Le volume horaire est obligatoire pour le personnel payé à l’heure",
+      "licenseNumberMin": "Le numéro de permis doit contenir au moins 5 caractères",
+      "licenseNumberRequired": "Le numéro de permis est obligatoire",
+      "licenseTypeRequired": "La catégorie de permis est obligatoire",
+      "licenseExpiryRequired": "La date d'expiration du permis est obligatoire",
+      "zoneRequired": "La zone est obligatoire",
+      "classRequired": "Sélectionnez au moins une classe",
+      "vehicleRequired": "Le véhicule est obligatoire",
+      "cycleRequired": "Le cycle est obligatoire"
+    },
+    "actions": {
+      "manageZones": "Zones",
+      "manageJobTitles": "Postes"
     }
   },
   "staffRoles": {
@@ -5062,7 +5092,7 @@
       "createZoneTitle": "Créer une zone",
       "deleteZone": "Supprimer la zone",
       "editZone": "Modifier la zone",
-      "manageTitle": "Gérer les périmètres du personnel",
+      "manageTitle": "Gérer les zones",
       "updateZone": "Mettre à jour la zone"
     },
     "empty": {
