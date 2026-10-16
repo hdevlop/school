@@ -4,6 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useYearScopedQuery } from '@/features/AcademicYears/hooks/useYearScopedQuery'
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope'
+import { useViewingYearDate } from '@/features/AcademicYears/hooks/useViewingAcademicYear'
+import { useSchoolToday } from '@/hooks/useSchoolFormat'
 import {
   assignStudentToRouteApi,
   deleteStudentRouteApi,
@@ -17,6 +19,9 @@ import {
 export const useStudentRoutes = (options?: { vehicleId?: string; studentId?: string }) => {
   const { vehicleId, studentId } = options || {}
   const queryClient = useQueryClient()
+  // A route ends today, kept inside the viewed year: the server refuses an end
+  // date outside it, which today is once that year's term is over.
+  const [endDate] = useViewingYearDate(useSchoolToday())
   const enabled = Boolean(vehicleId || studentId)
 
   const { query, scope } = useYearScopedQuery({
@@ -56,8 +61,8 @@ export const useStudentRoutes = (options?: { vehicleId?: string; studentId?: str
       withAcademicYear(year, () => reassignStudentRouteApi(data)), ...mutationOptions,
   })
   const unassignMutation = useMutation({
-    mutationFn: ({ id, year }: { id: string; year?: string }) =>
-      withAcademicYear(year, () => unassignStudentFromRouteApi(id)), ...mutationOptions,
+    mutationFn: ({ id, year, date }: { id: string; year?: string; date: string }) =>
+      withAcademicYear(year, () => unassignStudentFromRouteApi(id, date)), ...mutationOptions,
   })
   const deleteMutation = useMutation({
     mutationFn: ({ id, year }: { id: string; year?: string }) =>
@@ -76,7 +81,7 @@ export const useStudentRoutes = (options?: { vehicleId?: string; studentId?: str
     reassignStudent: (data: Parameters<typeof reassignStudentRouteApi>[0], year = scope.academicYear) =>
       reassignMutation.mutateAsync({ data, year }),
     unassignStudent: (id: string, year = scope.academicYear) =>
-      unassignMutation.mutateAsync({ id, year }),
+      unassignMutation.mutateAsync({ id, year, date: endDate }),
     deleteRoute: (id: string, year = scope.academicYear) =>
       deleteMutation.mutateAsync({ id, year }),
     isAssigning: assignMutation.isPending,

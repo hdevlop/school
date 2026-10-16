@@ -131,8 +131,8 @@ export const reassignStudentRouteApi = async (data: { id: string; vehicleId: str
   return res.data
 }
 
-export const unassignStudentFromRouteApi = async (assignmentId: string) => {
-  const res = await api.delete(`/student-routes/${assignmentId}/unassign`)
+export const unassignStudentFromRouteApi = async (assignmentId: string, unassignmentDate?: string) => {
+  const res = await api.post(`/student-routes/${assignmentId}/unassign`, { unassignmentDate })
   return res.data
 }
 

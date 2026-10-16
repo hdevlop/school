@@ -111,7 +111,7 @@ export const useGradesTableColumns = ({
         validate: (v, row) => {
           if (v == null || v === '') return null;
           if (v < 0) return t('grades.validation.marksMin');
-          if (row.totalMarks != null && v > row.totalMarks) return t('grades.validation.marksMax', { max: row.totalMarks });
+          if (row.totalMarks != null && v > row.totalMarks) return t('grades.validation.marksMax', { max: Number(row.totalMarks) });
           return null;
         },
       },
