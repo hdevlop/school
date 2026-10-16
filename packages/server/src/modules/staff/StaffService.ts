@@ -348,7 +348,11 @@ export class StaffService {
     const linkedTeacher = await this.staffRepository.getLinkedTeacher(id);
     const linkedDriver = await this.staffRepository.getLinkedDriver(id);
 
-    this.staffValidator.ensureDeletionAllowed(Boolean(linkedTeacher || linkedDriver), options.allowLinked);
+    // A teacher keeps its own academic workflow. A driver profile belongs to the
+    // staff member and is removed below, unless it has vehicle history. The
+    // drivers routes answer 410 and send deletes here, so refusing every
+    // driver left none deletable.
+    this.staffValidator.ensureDeletionAllowed(Boolean(linkedTeacher), options.allowLinked);
     this.staffValidator.ensureNoRecordedHistory(await this.staffRepository.countRecordedHistory(id));
 
     // Role assignment FKs are onDelete: 'restrict', so clear them first.

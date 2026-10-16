@@ -14,13 +14,13 @@ afterEach(() => {
 
 type Calls = string[];
 
-function service(calls: Calls, options: { role?: string; history?: Partial<Record<string, number>> } = {}) {
+function service(calls: Calls, options: { role?: string; history?: Partial<Record<string, number>>; linkedDriver?: boolean; linkedTeacher?: boolean } = {}) {
   const role = options.role ?? 'driver';
   const staffRepository = {
     getById: async () => ({ id: 'staff-1', role, userId: null, email: null }),
     update: async (_id: string, data: object) => { calls.push(`update ${JSON.stringify(data)}`); return { id: 'staff-1', role, ...data }; },
-    getLinkedTeacher: async () => null,
-    getLinkedDriver: async () => null,
+    getLinkedTeacher: async () => (options.linkedTeacher ? { id: 'teacher-1' } : null),
+    getLinkedDriver: async () => (options.linkedDriver ? { id: 'driver-1' } : null),
     delete: async () => { calls.push('delete staff'); return { id: 'staff-1' }; },
     getAttendanceRoster: async (date: string) => { calls.push(`roster ${date}`); return []; },
     countRecordedHistory: async () => ({ payslips: 0, attendance: 0, duties: 0, vehicleAssignments: 0, ...options.history }),
@@ -103,6 +103,23 @@ describe('staff: shared identity with dated assignments', () => {
     const calls: Calls = [];
     await service(calls, { role: 'cleaner' }).delete('staff-1');
     expect(calls).toEqual(['delete assignments', 'delete staff']);
+  });
+
+  // The drivers routes send deletes to Staff, and Staff refused every staff
+  // member with a driver profile, so no driver could be deleted at all.
+  it('deletes a driver with no vehicle history, profile first, and still refuses one with history', async () => {
+    const calls: Calls = [];
+    await service(calls, { linkedDriver: true }).delete('staff-1');
+    expect(calls).toEqual(['delete assignments', 'delete vehicle history', 'delete driver', 'delete staff']);
+
+    const kept: Calls = [];
+    await expect(service(kept, { linkedDriver: true, history: { vehicleAssignments: 1 } }).delete('staff-1'))
+      .rejects.toThrow('cannot be deleted');
+    expect(kept).toEqual([]);
+
+    const teacher: Calls = [];
+    await expect(service(teacher, { role: 'teacher', linkedTeacher: true }).delete('staff-1')).rejects.toThrow();
+    expect(teacher).toEqual([]);
   });
 
   it("builds the attendance roster for the school's day, not the server clock's", async () => {

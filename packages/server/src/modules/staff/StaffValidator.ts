@@ -71,9 +71,11 @@ export class StaffValidator {
   }
 
   // Payslips, attendance marks and timetable duties restrict the delete in the
-  // database; say why instead of failing on the foreign key.
-  ensureNoRecordedHistory(history: { payslips: number; attendance: number; duties: number }) {
-    if (history.payslips || history.attendance || history.duties) {
+  // database; say why instead of failing on the foreign key. A driver's vehicle
+  // assignments would be deleted with the profile, so they refuse it too, as
+  // they refuse leaving the driver role.
+  ensureNoRecordedHistory(history: { payslips: number; attendance: number; duties: number; vehicleAssignments?: number }) {
+    if (history.payslips || history.attendance || history.duties || history.vehicleAssignments) {
       Err(409, this.t('hasHistory'));
     }
   }
