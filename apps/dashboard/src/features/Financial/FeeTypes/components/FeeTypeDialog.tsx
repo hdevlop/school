@@ -7,16 +7,19 @@ import { Badge } from 'najm-kit'
 import { useTranslation } from 'najm-i18n/react'
 import { getFeeTypeDisplayName } from '@/features/Financial/Fees/utils/feeUtils'
 import FeeCategoryIcon from '@/features/Financial/Fees/components/FeeCategoryIcon'
+import { useSchoolFormat } from '@/hooks/useSchoolFormat'
+import { PAYMENT_TYPE_TRANSLATION_PREFIX } from '@/features/Financial/FeeTypes/config/feeTypeOptions'
 
 const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
   const { t, language } = useTranslation()
+  const { majorMoney } = useSchoolFormat()
 
   if (!feeTypes || feeTypes.length === 0) {
     return (
       <div className="text-center py-12">
         <DollarSign className="h-12 w-12 mx-auto text-muted-foreground/50 mb-2" />
         <p className="text-sm text-muted-foreground">
-          No fee types available
+          {t('feeTypes.dialogs.noFeeTypes')}
         </p>
       </div>
     )
@@ -69,17 +72,17 @@ const FeeTypeSelectionContent = ({ feeTypes, tempSelected, onToggle }) => {
                 </div>
 
                 <div className="flex items-center justify-between pt-2 border-t">
-                  <div className="text-xs text-muted-foreground">Amount</div>
+                  <div className="text-xs text-muted-foreground">{t('feeTypes.form.amount')}</div>
                   <div className="font-bold text-primary">
-                    ${parseFloat(feeType.amount.toString()).toFixed(2)}
+                    {majorMoney(feeType.amount)}
                   </div>
                 </div>
 
                 {feeType.paymentType && (
                   <div className="flex items-center justify-between">
-                    <div className="text-xs text-muted-foreground">Payment Type</div>
+                    <div className="text-xs text-muted-foreground">{t('feeTypes.form.paymentType')}</div>
                     <Badge variant="secondary" className="text-xs">
-                      {feeType.paymentType}
+                      {t(`${PAYMENT_TYPE_TRANSLATION_PREFIX}.${feeType.paymentType}`)}
                     </Badge>
                   </div>
                 )}

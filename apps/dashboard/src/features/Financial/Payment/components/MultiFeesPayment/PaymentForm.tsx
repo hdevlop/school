@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useEffect, useRef } from 'react';
-import { NForm, useDialog } from 'najm-kit';
+import { NForm } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { FormInput } from 'najm-kit';
 import { DollarSign, CreditCard, Calendar, Hash, CalendarClock, FileText } from 'lucide-react';
 import { useFormContext, useWatch } from 'react-hook-form';

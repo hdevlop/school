@@ -16,13 +16,13 @@ import type { SchoolLocale } from '@sms/contracts/locales';
  * School queries and raises its own toast.
  */
 const LanguageSwitcher = () => {
-  const { language } = useTranslation();
+  const { language, t } = useTranslation();
   const { updateLang, isLoading: isUpdatingLang } = useUpdateLang();
 
   return (
     <NLanguageMenu
       contentClassName="w-48"
-      label="Change language"
+      label={t('navigation.changeLanguage')}
       onChange={(next) => updateLang(next)}
       // `useUpdateLang` already presents its own failure; swallowing the
       // rejection here keeps it from being reported twice.

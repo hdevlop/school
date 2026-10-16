@@ -3,19 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, CalendarDays, CreditCard, LayoutDashboard, Pencil, UserRound } from 'lucide-react';
-import {
-  NButton,
-  NErrorState,
-  NajmScroll,
-  NLoadingState,
-  NPageHeader,
-  NPageHeaderActions,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  useDialog,
-} from 'najm-kit';
+import { NButton, NErrorState, NajmScroll, NLoadingState, NPageHeader, NPageHeaderActions, Tabs, TabsContent, TabsList, TabsTrigger } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { getTeacherByIdApi } from '@/services/teacherApi';

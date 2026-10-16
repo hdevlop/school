@@ -45,4 +45,20 @@ export class PayrollValidator {
     }
     return payslip;
   }
+
+  /**
+   * A generic payslip edit. Paying has its own route, which records the method
+   * and date; an edit that set `paid` skipped both. A paid payslip keeps the
+   * amounts it was paid with, and a net below zero is never payable.
+   */
+  ensureEditable(current: { status: string }, next: { status?: string; amountsChanged: boolean; gross?: number; deductions?: number }) {
+    if (next.status !== undefined && next.status !== current.status
+      && !(next.status === 'cancelled' && current.status === 'pending')) {
+      Err(409, this.t('statusViaWorkflow'));
+    }
+    if (next.amountsChanged && current.status === 'paid') Err(409, this.t('paidLocked'));
+    if (next.gross !== undefined && next.deductions !== undefined && next.deductions > next.gross) {
+      Err(400, this.t('deductionsExceedGross'));
+    }
+  }
 }

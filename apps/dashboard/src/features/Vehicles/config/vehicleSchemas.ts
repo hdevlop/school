@@ -5,11 +5,16 @@ const optionalId = z.preprocess(
   (value) => (value === '' ? undefined : value),
   z.string().min(1, 'ID cannot be empty').nullish().optional(),
 );
-const optionalDateField = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
-  .nullable()
-  .optional();
+// The form starts an untouched date picker at '', which the date pattern
+// rejects; without this, a vehicle could not be saved with no purchase date.
+const optionalDateField = z.preprocess(
+  (value) => (value === '' ? null : value),
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+    .nullable()
+    .optional(),
+);
 const numberField = (schema: z.ZodNumber): any =>
   z.preprocess((value) => {
     if (typeof value !== 'string') return value;

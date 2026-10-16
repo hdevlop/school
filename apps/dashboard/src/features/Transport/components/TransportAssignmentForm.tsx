@@ -2,7 +2,8 @@
 
 import { useMemo } from 'react'
 import { Bus, CalendarDays, NotebookPen } from 'lucide-react'
-import { FormInput, NForm, useDialog } from 'najm-kit'
+import { FormInput, NForm } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'
 import { standaloneTransportAssignmentSchema } from '../config/transportSchemas'
 import { useFormContext, useWatch } from 'react-hook-form'

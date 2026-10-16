@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NButton } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Tag, Plus, SearchX } from 'lucide-react';
 import React from 'react';

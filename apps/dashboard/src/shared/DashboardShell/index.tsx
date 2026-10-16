@@ -59,7 +59,10 @@ function SidebarFooterContent({ collapsed, onOpenSettings }: Readonly<{ collapse
           // preferences, so they must not survive into the next person's
           // session on a shared machine.
           await clearNajmUiPreferences();
-          router.push('/login');
+          // A document navigation, not router.push: the client router would
+          // keep this page in its cache and history, and Back would restore a
+          // dashboard whose requests are now refused, stuck on its loader.
+          window.location.replace('/login');
         }}
       >
         <button type="button" className={itemClassName}>
@@ -108,6 +111,10 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
     <NavigationActionsProvider value={{ openThemeSettings: (sheet) => { sidebar?.closeMobile(); setActiveThemeSheet(sheet); } }}>
     <div className="flex h-dvh w-full overflow-hidden bg-background font-sans">
       <NSidebar
+        hamburgerLabel={t('navigation.openSidebar')}
+        closeLabel={t('navigation.closeSidebar')}
+        collapseLabel={t('navigation.collapseSidebar')}
+        expandLabel={t('navigation.expandSidebar')}
         // The render prop, rather than a second reading of the sidebar state:
         // the sidebar already knows whether it is collapsed and whether it is
         // rendering as the mobile drawer, where the expanded mark is correct
@@ -161,10 +168,10 @@ function DashboardShellContent({ children }: { children: React.ReactNode }) {
         mcpApiPath="/api/mcp"
         testApiPath=""
         suggestions={[
-          'List students who need attention',
-          'Summarize recent fee activity',
-          'Find today attendance issues',
-          'Help me create a new student record',
+          t('chatbot.suggestions.studentsAttention'),
+          t('chatbot.suggestions.feeActivity'),
+          t('chatbot.suggestions.attendanceIssues'),
+          t('chatbot.suggestions.createStudent'),
         ]}
         theme={{ primary: 'var(--primary)', radius: 'var(--radius)' }}
       />

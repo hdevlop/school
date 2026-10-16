@@ -10,7 +10,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { useCallback, useEffect } from 'react'
 import { feeSchema } from '../config/feeSchemas'
 import { buildFeeStatusOptions, buildScheduleOptions } from '../config/feeOptions'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { calculateFeeAmounts, getFeeDiscountPerPeriod } from '@/features/Financial/Fees/utils/feeUtils'
 import { usePrefix } from 'najm-kit';
 

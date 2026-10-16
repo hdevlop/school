@@ -11,7 +11,10 @@ import { AcademicYearSelectionOwner } from '@/features/AcademicYears/components/
 import { RenderedActiveAcademicYearProvider } from '@/features/Settings/context/RenderedActiveAcademicYear';
 
 export const metadata: Metadata = {
-  icons: { apple: [{ url: '/app-icons/180.png', sizes: '180x180', type: 'image/png' }] },
+  icons: {
+    icon: [{ url: '/app-icons/32.png', sizes: '32x32', type: 'image/png' }],
+    apple: [{ url: '/app-icons/180.png', sizes: '180x180', type: 'image/png' }],
+  },
   appleWebApp: { capable: true, statusBarStyle: 'default' },
 };
 

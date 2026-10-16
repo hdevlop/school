@@ -3,7 +3,7 @@
 import { NForm, NButton } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { Loader2, LogIn } from 'lucide-react'
 import { z } from 'zod'
@@ -12,42 +12,23 @@ import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
 import { loginRedirectPath } from '@/shared/loginRedirect';
+import { authErrorMessage } from '../authMessages';
 
 // `identifier` is Najm Auth's wire field. An account is reached by its email,
 // its phone, or both, so either is accepted here; the server normalizes a
 // local number such as 0612345678 to the stored international form.
 const PHONE_IDENTIFIER = /^\+?[\d\s().-]{8,}$/;
-const loginSchema = z.object({
+const loginSchema = (t: (key: string) => string) => z.object({
   identifier: z
     .string()
     .trim()
     .refine(
       (value) => z.string().email().safeParse(value).success || PHONE_IDENTIFIER.test(value),
-      { message: 'Enter your email address or phone number' },
+      { message: t('auth.validation.identifierInvalid') },
     ),
-  password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
+  password: z.string().min(6, { message: t('auth.validation.loginPasswordMinLength') }),
   rememberMe: z.boolean()
 })
-
-const getLoginErrorMessage = (error: unknown) => {
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-
-  if (typeof error === 'object' && error !== null) {
-    const responseError = error as {
-      response?: {
-        data?: {
-          message?: string;
-        };
-      };
-    };
-
-    return responseError.response?.data?.message ?? 'Login failed. Please try again.';
-  }
-
-  return 'Login failed. Please try again.';
-};
 
 const getLoginRedirectPath = () => {
   const from = typeof window === 'undefined'
@@ -58,6 +39,7 @@ const getLoginRedirectPath = () => {
 
 const Login = () => {
   const { t } = useTranslation();
+  const schema = useMemo(() => loginSchema(t), [t]);
   const { login, isLoading } = useLogin({
     // v3 login has two outcomes. Only the authenticated one has a session, so
     // only it may reach the dashboard. A hard navigation is required here: the
@@ -72,7 +54,7 @@ const Login = () => {
       window.location.replace('/change-password');
     },
     onError: (error) => {
-      toast.error(getLoginErrorMessage(error));
+      toast.error(authErrorMessage(error, t, 'auth.errors.loginFailed', { 401: 'auth.errors.invalidCredentials' }));
     },
   });
 
@@ -95,12 +77,13 @@ const Login = () => {
 
       <div className='flex w-full flex-col gap-2'>
 
-        <NForm id='login-form' schema={loginSchema} defaultValues={defaultValues} onSubmit={handleLogin}>
+        <NForm id='login-form' schema={schema} defaultValues={defaultValues} onSubmit={handleLogin}>
           <FormInput
             name='identifier'
             type='text'
             formLabel={t('auth.form.emailOrPhone')}
             placeholder={t('auth.form.emailOrPhonePlaceholder')}
+            autoComplete='username'
             variant='default'
             icon="User"
           />
@@ -110,6 +93,7 @@ const Login = () => {
             type='password'
             formLabel={t('auth.form.password')}
             placeholder={t('auth.form.passwordPlaceholder')}
+            autoComplete='current-password'
             variant='default'
             icon="Lock"
           />
@@ -119,7 +103,7 @@ const Login = () => {
             <FormInput
               name="rememberMe"
               type="checkbox"
-              label="Keep me logged in"
+              label={t('auth.page.rememberMe')}
               variant='ghost'
               className="w-auto shrink-0"
               classNames={{ item: "w-auto shrink-0" }}
@@ -141,17 +125,15 @@ const Login = () => {
           className="w-full bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 active:bg-primary/80 disabled:bg-primary/45 disabled:text-primary-foreground/80 disabled:opacity-100 disabled:cursor-not-allowed [&_svg]:size-5"
           disabled={isLoading}
         >
-          {/* Both captions stay hardcoded English for the same reason as the
-              checkbox above: the acceptance suite clicks `name: 'Login'`. */}
           {isLoading ? (
             <>
               <Loader2 className="animate-spin" />
-              Logging in...
+              {t('auth.page.loginPending')}
             </>
           ) : (
             <>
               <LogIn />
-              Login
+              {t('auth.page.loginSubmit')}
             </>
           )}
         </NButton>

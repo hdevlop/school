@@ -9,7 +9,7 @@ import {
   ClipboardList, FileText, Tag, Building, DoorOpen, BookOpen, User,
   Calendar, Clock, Award, Activity,
 } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { assessmentSchema } from '../config/assessmentSchemas'
 import { useTranslation } from 'najm-i18n/react'
 import { buildAssessmentStatusOptions, buildAssessmentTypeOptions } from '../config/assessmentOptions'

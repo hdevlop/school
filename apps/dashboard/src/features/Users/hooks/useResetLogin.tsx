@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { KeyRound } from 'lucide-react';
-import { useDialog } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 
 import ResetLoginDialog from '../components/ResetLoginDialog';

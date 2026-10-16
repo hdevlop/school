@@ -2,7 +2,8 @@
 
 import React, { useMemo } from 'react';
 import { z } from 'zod';
-import { useDialog, Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { MapPinned, Pencil, Plus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from 'najm-i18n/react';

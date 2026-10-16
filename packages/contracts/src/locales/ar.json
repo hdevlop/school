@@ -257,7 +257,10 @@
       "rightsReserved": "© {{year}} {{app}}. جميع الحقوق محفوظة.",
       "activateTitle": "فعّل حسابك",
       "activateSubtitle": "اختر كلمة مرور لتفعيل حسابك",
-      "activateSubmit": "تفعيل الحساب"
+      "activateSubmit": "تفعيل الحساب",
+      "rememberMe": "ابقَ متصلاً",
+      "loginSubmit": "تسجيل الدخول",
+      "loginPending": "جارٍ تسجيل الدخول…"
     },
     "form": {
       "fullName": "الاسم الكامل",
@@ -305,11 +308,25 @@
       "refreshTokenVerificationFailed": "فشل في التحقق من رمز التحديث",
       "refreshTokenMissing": "رمز التحديث مفقود. يرجى تقديم رمز التحديث",
       "refreshTokenInvalid": "رمز التحديث غير صحيح. يرجى تسجيل الدخول مرة أخرى",
-      "authInitFailed": "فشل في تهيئة المصادقة"
+      "authInitFailed": "فشل في تهيئة المصادقة",
+      "loginFailed": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+      "tooManyAttempts": "محاولات كثيرة جدًا. يرجى الانتظار قليلًا ثم المحاولة مجددًا.",
+      "resetLinkInvalid": "هذا الرابط غير صالح أو سبق استخدامه. اطلب رابطًا جديدًا.",
+      "setPasswordFailed": "تعذّر تعيين كلمة المرور. ربما انتهت صلاحية الرابط.",
+      "setupSessionExpired": "تعذّر تعيين كلمة المرور. ربما انتهت جلسة الإعداد.",
+      "registerFailed": "تعذّر إنشاء حسابك. يرجى المحاولة مرة أخرى."
     },
     "validation": {
       "emailInvalid": "تنسيق عنوان البريد الإلكتروني غير صحيح",
-      "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
+      "passwordMinLength": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+      "identifierInvalid": "أدخل بريدك الإلكتروني أو رقم هاتفك",
+      "loginPasswordMinLength": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+      "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+      "passwordsMismatch": "كلمتا المرور غير متطابقتين",
+      "fullNameRequired": "يرجى إدخال اسمك الكامل",
+      "passwordUppercase": "يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل",
+      "passwordLowercase": "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل",
+      "passwordNumber": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل"
     },
     "users": {
       "success": {
@@ -386,7 +403,8 @@
       "newPassword": "كلمة المرور الجديدة (اتركها فارغة للاحتفاظ بالحالية)",
       "confirmPassword": "تأكيد كلمة المرور",
       "confirmPasswordPlaceholder": "أكد كلمة المرور",
-      "userRole": "دور المستخدم"
+      "userRole": "دور المستخدم",
+      "invitationHint": "سيُرسل بريد إلكتروني للدعوة ليتمكن هذا المستخدم من تعيين كلمة المرور الخاصة به."
     },
     "roles": {
       "admin": "مدير",
@@ -1189,7 +1207,12 @@
     "behaviorRewardsShort": "المكافآت",
     "myChildren": "أبنائي",
     "myProfile": "ملفي",
-    "pendingChecks": "الشيكات"
+    "pendingChecks": "الشيكات",
+    "changeLanguage": "تغيير اللغة",
+    "openSidebar": "فتح القائمة",
+    "closeSidebar": "إغلاق القائمة",
+    "collapseSidebar": "طي",
+    "expandSidebar": "توسيع"
   },
   "classRoutines": {
     "success": {
@@ -1394,7 +1417,8 @@
       "unpaid": "تم التراجع عن الدفع",
       "updated": "تم تحديث قسيمة الراتب بنجاح",
       "deleted": "تم حذف قسيمة الراتب بنجاح",
-      "bulkDeleted": "تم حذف قسائم الرواتب بنجاح"
+      "bulkDeleted": "تم حذف قسائم الرواتب بنجاح",
+      "created": "تم تسجيل كشف الراتب بنجاح"
     },
     "errors": {
       "notFound": "قسيمة الراتب غير موجودة",
@@ -1403,7 +1427,10 @@
       "staffNotFound": "الموظف غير موجود",
       "staffInactive": "لا يمكن صرف الأجر إلا للموظفين النشطين",
       "noCompensation": "لم يُحدَّد أجر لهذا الموظف",
-      "outsideYear": "فترة الأجور خارج السنة الدراسية المحددة"
+      "outsideYear": "فترة الأجور خارج السنة الدراسية المحددة",
+      "statusViaWorkflow": "استخدم إجراء الدفع أو إلغاء الدفع الخاص بكشف الراتب؛ التعديل يمكنه فقط إلغاء كشف قيد الانتظار.",
+      "paidLocked": "يحتفظ كشف الراتب المدفوع بالمبالغ التي دُفعت. ألغِ الدفع أولًا.",
+      "deductionsExceedGross": "لا يمكن أن تتجاوز الاقتطاعات الراتب الإجمالي."
     },
     "stats": {
       "period": "الفترة",
@@ -1503,7 +1530,8 @@
       "updated": "تم تحديث الحضور بنجاح",
       "deleted": "تم حذف سجل الحضور",
       "allDeleted": "تم حذف جميع سجلات الحضور",
-      "seeded": "تم إنشاء بيانات تجريبية للحضور"
+      "seeded": "تم إنشاء بيانات تجريبية للحضور",
+      "created": "تم تسجيل الحضور بنجاح"
     },
     "errors": {
       "selectTeacherSubject": "اختر أستاذاً ومادة قبل حفظ الحضور.",
@@ -1657,7 +1685,8 @@
       "paid": "مدفوع",
       "partiallyPaid": "مدفوع جزئيًا",
       "pending": "قيد الانتظار",
-      "fullPaidCongratulations": "دفع كاملاً. مبروك!"
+      "fullPaidCongratulations": "دفع كاملاً. مبروك!",
+      "cancelled": "ملغى"
     },
     "filters": {
       "class": "القسم",
@@ -2196,7 +2225,9 @@
     },
     "status": {
       "draft": "مسودة",
-      "published": "منشور"
+      "published": "منشور",
+      "expired": "منتهية",
+      "upcoming": "قادمة"
     },
     "table": {
       "author": "المؤلف",
@@ -2765,7 +2796,9 @@
       "deleted": "تم حذف المصروف بنجاح",
       "paymentRecorded": "تم تسجيل الدفع بنجاح",
       "retrieved": "تم جلب المصروف بنجاح",
-      "updated": "تم تحديث المصروف بنجاح"
+      "updated": "تم تحديث المصروف بنجاح",
+      "approved": "تمت الموافقة على المصروف",
+      "rejected": "تم رفض المصروف"
     },
     "errors": {
       "outsideYear": "تاريخ المصروف خارج السنة الدراسية المحددة",
@@ -2778,7 +2811,15 @@
       "checkNumberRequired": "رقم الشيك مطلوب للدفع بالشيك",
       "idExists": "هذا المصروف موجود مسبقًا",
       "notFound": "المصروف غير موجود",
-      "paymentDateBeforeExpense": "لا يمكن أن يسبق تاريخ الدفع تاريخ المصروف"
+      "paymentDateBeforeExpense": "لا يمكن أن يسبق تاريخ الدفع تاريخ المصروف",
+      "statusViaWorkflow": "استخدم إجراء الموافقة أو الرفض أو الدفع الخاص بالمصروف؛ التعديل يمكنه إلغاؤه فقط."
+    },
+    "actions": {
+      "approve": "موافقة",
+      "reject": "رفض",
+      "recordPayment": "تسجيل الدفع",
+      "rejectReason": "سبب رفض هذا المصروف (10 أحرف على الأقل)",
+      "paymentTitle": "تسجيل دفع المصروف"
     }
   },
   "feeTypes": {
@@ -2798,7 +2839,8 @@
       "cafeteria": "المطعم",
       "sports": "الرياضة",
       "technology": "التكنولوجيا",
-      "fieldtrip": "رحلة مدرسية"
+      "fieldtrip": "رحلة مدرسية",
+      "library": "المكتبة"
     },
     "dialogs": {
       "createButton": "إنشاء",
@@ -2806,7 +2848,8 @@
       "deleteButton": "حذف",
       "editTitle": "تعديل",
       "updateButton": "تحديث",
-      "viewTitle": "التفاصيل"
+      "viewTitle": "التفاصيل",
+      "noFeeTypes": "لا توجد أنواع رسوم متاحة"
     },
     "filters": {
       "filterByCategory": "تصفية حسب الفئة",
@@ -3174,7 +3217,10 @@
     "success": {
       "voided": "تم إلغاء الدفع",
       "checkMarked": "تم تعليم الشيك {{status}}",
-      "recorded": "تم تسجيل الدفع بنجاح"
+      "recorded": "تم تسجيل الدفع بنجاح",
+      "created": "تم تسجيل الدفعة بنجاح",
+      "updated": "تم تحديث الدفعة بنجاح",
+      "deleted": "تم حذف الدفعة بنجاح"
     },
     "dialogs": {
       "deleteButton": "حذف",
@@ -3185,7 +3231,13 @@
       "receiptAfterCheck": "يمكن طباعة الوصل بعد تحصيل الشيك.",
       "createButton": "تسجيل الدفعة",
       "selectInstallments": "اختر الأقساط المراد دفعها",
-      "noFeeData": "لا توجد بيانات رسوم"
+      "noFeeData": "لا توجد بيانات رسوم",
+      "depositCheck": "إيداع الشيك",
+      "completeCheck": "تحصيل الشيك",
+      "bounceCheck": "تسجيل الشيك كمرتجع",
+      "voidPayment": "إلغاء الدفعة",
+      "bounceReason": "سبب رجوع الشيك",
+      "voidReason": "سبب إلغاء هذه الدفعة"
     },
     "register": {
       "missing": "الناقص",
@@ -3273,13 +3325,18 @@
       "creditCard": "بطاقة ائتمان",
       "debitCard": "بطاقة خصم",
       "mobilePayment": "دفع عبر الهاتف",
-      "online": "عبر الإنترنت"
+      "online": "عبر الإنترنت",
+      "wireTransfer": "تحويل بنكي"
     },
     "status": {
       "completed": "مكتمل",
       "failed": "فشل",
       "pending": "قيد الانتظار",
-      "refunded": "مسترد"
+      "refunded": "مسترد",
+      "processing": "قيد المعالجة",
+      "partially_refunded": "مسترد جزئيًا",
+      "cancelled": "ملغى",
+      "on_hold": "معلّق"
     },
     "table": {
       "allocatedToYear": "المخصص للسنة {{year}}",
@@ -3561,6 +3618,12 @@
     "invitation": {
       "sent": "تم إرسال بريد الدعوة إلى {{email}}. يفعّل الموظف حسابه من الرابط.",
       "notSent": "تم إنشاء الموظف، لكن تعذّر إرسال بريد الدعوة. أعد إرساله عبر «إعادة تعيين الوصول» في صفحة المستخدمين."
+    },
+    "shifts": {
+      "morning": "صباحي",
+      "afternoon": "مسائي",
+      "evening": "ليلي",
+      "fullDay": "يوم كامل"
     }
   },
   "staffRoles": {
@@ -3750,7 +3813,10 @@
       "lowGradeAlerts": "تنبيهات الدرجات المنخفضة",
       "parentNotifications": "إشعارات الوالدين",
       "smsNotifications": "إشعارات SMS",
-      "title": "العنوان"
+      "title": "العنوان",
+      "description": "اضبط كيفية ووقت تلقي إشعارات أحداث النظام.",
+      "systemNotifications": "إشعارات النظام",
+      "examAlerts": "تنبيهات الامتحانات"
     },
     "school": {
       "namePlaceholder": "مدرستي",
@@ -3812,7 +3878,8 @@
     "success": {
       "created": "تم إنشاء الإعدادات بنجاح",
       "retrieved": "تم جلب الإعدادات بنجاح",
-      "updated": "تم تحديث الإعدادات بنجاح"
+      "updated": "تم تحديث الإعدادات بنجاح",
+      "deleted": "تم حذف الإعدادات بنجاح"
     },
     "saveSettings": "حفظ الإعدادات"
   },
@@ -4155,6 +4222,12 @@
     },
     "filters": {
       "searchByName": "ابحث باسم السلك..."
+    },
+    "success": {
+      "retrieved": "تم جلب الأسلاك بنجاح",
+      "created": "تم إنشاء السلك بنجاح",
+      "updated": "تم تحديث السلك بنجاح",
+      "deleted": "تم حذف السلك بنجاح"
     }
   },
   "subjects": {
@@ -4676,7 +4749,8 @@
       "deleted": "تم حذف الصلاحية بنجاح",
       "removed": "تمت إزالة الصلاحية بنجاح",
       "retrieved": "تم جلب الصلاحية بنجاح",
-      "updated": "تم تحديث الصلاحية بنجاح"
+      "updated": "تم تحديث الصلاحية بنجاح",
+      "created": "تم إنشاء الصلاحية بنجاح"
     },
     "dialogs": {
       "createButton": "إنشاء صلاحية",
@@ -4793,7 +4867,18 @@
       "noStudent": "لم يتم العثور على تلميذ",
       "searchStudents": "ابحث عن التلاميذ…",
       "selectStudent": "اختر تلميذاً…",
-      "student": "التلميذ"
+      "student": "التلميذ",
+      "studentRoutes": "مسارات التلاميذ",
+      "noActiveVehicles": "لا توجد مركبات نشطة",
+      "addVehiclesFirst": "أضف المركبات أولاً من قسم المركبات",
+      "noStudentsAssigned": "لا يوجد تلاميذ معيّنون",
+      "unassignTitle": "إلغاء تعيين التلميذ",
+      "unassignQuestion": "إزالة {{student}} من {{vehicle}}؟",
+      "unassignFeeNote": "ستبقى رسوم النقل الخاصة به، لكن لن تُنشأ أقساط جديدة.",
+      "pickupLocation": "مكان الصعود",
+      "pickupPlaceholder": "مثال: شارع ابن بطوطة",
+      "dropoffLocation": "مكان النزول",
+      "dropoffPlaceholder": "مثال: بوابة المدرسة"
     },
     "form": {
       "stepTitle": "النقل",
@@ -4858,6 +4943,15 @@
       "unassign": "إلغاء التعيين",
       "unassigned": "تم إنهاء تعيين نقل التلميذ",
       "history": "سجل النقل"
+    },
+    "validation": {
+      "studentRequired": "التلميذ مطلوب",
+      "dateFormat": "يجب أن يكون التاريخ بالتنسيق YYYY-MM-DD"
+    },
+    "success": {
+      "created": "تم إنشاء الحافلة بنجاح",
+      "updated": "تم تحديث الحافلة بنجاح",
+      "deleted": "تم حذف الحافلة بنجاح"
     }
   },
   "staffScopes": {
@@ -4879,6 +4973,11 @@
       "description": "الوصف",
       "floor": "الطابق",
       "name": "الاسم"
+    },
+    "success": {
+      "created": "تم إنشاء النطاق بنجاح",
+      "updated": "تم تحديث النطاق بنجاح",
+      "deleted": "تم حذف النطاق بنجاح"
     }
   },
   "emptyStates": {
@@ -5068,6 +5167,12 @@
       "notFound": "المنطقة غير موجودة",
       "inUse": "هذه المنطقة مستخدمة في إسنادات الموظفين ولا يمكن حذفها",
       "nameExists": "اسم المنطقة موجود مسبقًا"
+    },
+    "success": {
+      "retrieved": "تم جلب المناطق بنجاح",
+      "created": "تم إنشاء المنطقة بنجاح",
+      "updated": "تم تحديث المنطقة بنجاح",
+      "deleted": "تم حذف المنطقة بنجاح"
     }
   },
   "enrollments": {
@@ -5328,6 +5433,71 @@
         "landingNews5": "صورة الخبر 5",
         "landingNews6": "صورة الخبر 6"
       }
+    }
+  },
+  "chatbot": {
+    "assistant": "المساعد الذكي",
+    "apiKey": "مفتاح API",
+    "askAnything": "اسأل عن أي شيء",
+    "backToChat": "العودة إلى المحادثة",
+    "baseUrl": "عنوان URL الأساسي",
+    "clearChat": "مسح المحادثة",
+    "close": "إغلاق",
+    "connected": "متصل",
+    "copied": "تم النسخ",
+    "copy": "نسخ",
+    "getKey": "الحصول على مفتاح",
+    "instruction": "التعليمات",
+    "invalidSettings": "إعدادات غير صالحة",
+    "messagesSentToLlm": "الرسائل المرسلة إلى النموذج",
+    "model": "النموذج",
+    "memoryHint": "تذكّر رسائل هذه الجلسة واستخدامها في الردود اللاحقة.",
+    "removeModel": "إزالة النموذج",
+    "resize": "تغيير الحجم",
+    "save": "حفظ",
+    "savedKey": "المفتاح المحفوظ",
+    "saved": "تم الحفظ",
+    "send": "إرسال",
+    "settingsReady": "تبدو الإعدادات جاهزة",
+    "settings": "الإعدادات",
+    "showModelSuggestions": "عرض اقتراحات النماذج",
+    "stop": "إيقاف",
+    "memoryLimit": "حد الذاكرة المخزنة",
+    "testConnection": "اختبار الاتصال",
+    "useMemory": "استخدام ذاكرة المحادثة",
+    "suggestions": {
+      "studentsAttention": "اعرض التلاميذ الذين يحتاجون إلى متابعة",
+      "feeActivity": "لخّص نشاط الرسوم الأخير",
+      "attendanceIssues": "ابحث عن مشكلات الحضور اليوم",
+      "createStudent": "ساعدني في إنشاء سجل تلميذ جديد"
+    }
+  },
+  "attendance-staff": {
+    "success": {
+      "created": "تم تسجيل حضور الموظفين بنجاح",
+      "updated": "تم تحديث حضور الموظفين بنجاح",
+      "deleted": "تم حذف حضور الموظفين بنجاح"
+    }
+  },
+  "behavior-rewards": {
+    "success": {
+      "created": "تمت إضافة التقدير بنجاح",
+      "updated": "تم تحديث التقدير بنجاح",
+      "deleted": "تم حذف التقدير بنجاح"
+    }
+  },
+  "publicSettings": {
+    "success": {
+      "created": "تم حفظ الإعدادات بنجاح",
+      "updated": "تم تحديث الإعدادات بنجاح",
+      "deleted": "تم حذف الإعدادات بنجاح"
+    }
+  },
+  "visit-requests": {
+    "success": {
+      "created": "تم إرسال طلب الزيارة بنجاح",
+      "updated": "تم تحديث طلب الزيارة بنجاح",
+      "deleted": "تم حذف طلب الزيارة بنجاح"
     }
   }
 }

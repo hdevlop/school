@@ -9,7 +9,7 @@ import {
   GraduationCap, FileText, Tag, Building, DoorOpen, BookOpen, User,
   Calendar, Clock, Award, Activity, Hash,
 } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { examSchema } from '../config/examSchemas'
 import { useTranslation } from 'najm-i18n/react'
 import { buildExamStatusOptions, buildExamTypeOptions } from '../config/examOptions'

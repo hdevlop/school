@@ -5,15 +5,12 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { CalendarDays, FileText, User, GraduationCap, DoorOpen, BookOpen, Activity } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { attendanceSchema } from '../config/attendanceSchemas'
 import { useTranslation } from 'najm-i18n/react'
 
-const statusOptions = [
-  { label: 'Present', value: 'present' },
-  { label: 'Absent', value: 'absent' },
-  { label: 'Late', value: 'late' },
-];
+const STATUS_VALUES = ['present', 'absent', 'late'] as const
+;
 
 const StudentAttendanceForm = ({ attendanceData = null }) => {
   const { t } = useTranslation();
@@ -99,7 +96,7 @@ const StudentAttendanceForm = ({ attendanceData = null }) => {
                 name='status'
                 type='select'
                 formLabel={t('attendance.form.status')}
-                items={statusOptions}
+                items={STATUS_VALUES.map((value) => ({ value, label: t(`attendance.status.${value}`) }))}
                 icon={Activity}
                 required={true}
               />

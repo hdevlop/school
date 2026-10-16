@@ -6,7 +6,7 @@ import { NEmptyState } from 'najm-kit';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import InstallmentCard from './InstallmentCard';
 import InstallmentDetails from './InstallmentDetails';
-import { useDialog } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { useInstallmentsTableColumns } from '../hooks/useInstallmentsTableColumns';
 import { useInstallmentsTableFilters } from '../hooks/useInstallmentsTableFilters';

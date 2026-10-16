@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { GraduationCap, FileText, Layers } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { classSchema } from '../config/classSchemas'
 import { useTranslation } from 'najm-i18n/react'
 

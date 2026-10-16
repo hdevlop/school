@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { z } from 'zod'
 import { NForm, NButton, FormInput } from 'najm-kit'
@@ -10,10 +10,9 @@ import { toast } from 'sonner'
 import { auth } from '@/najm.auth'
 import { useTranslation } from 'najm-i18n/react'
 import { AuthHeading } from '../AuthHeading'
+import { emailSchema } from '../authMessages'
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
-})
+const forgotPasswordSchema = (t: (key: string) => string) => z.object({ email: emailSchema(t) })
 
 /**
  * Password recovery, as a route rather than the dialog it used to be, so it
@@ -25,6 +24,7 @@ const forgotPasswordSchema = z.object({
  */
 const ForgotPassword = () => {
   const { t } = useTranslation()
+  const schema = useMemo(() => forgotPasswordSchema(t), [t])
 
   const mutation = useMutation({
     mutationFn: (data: { email: string }) => auth.client.forgotPassword(data),
@@ -46,7 +46,7 @@ const ForgotPassword = () => {
       <div className='flex w-full flex-col gap-2'>
         <NForm
           id='forgot-password-form'
-          schema={forgotPasswordSchema}
+          schema={schema}
           defaultValues={{ email: '' }}
           onSubmit={({ email }: { email: string }) => mutation.mutateAsync({ email })}
         >

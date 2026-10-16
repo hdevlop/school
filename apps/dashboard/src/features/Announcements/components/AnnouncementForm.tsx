@@ -6,7 +6,7 @@ import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { useWatch } from 'react-hook-form'
 import { Megaphone, FileText, Users, Building, Calendar } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { announcementSchema } from '../config/announcementSchemas'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/features/Classes/hooks/useClasses'

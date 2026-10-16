@@ -3,7 +3,8 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ShieldAlert } from 'lucide-react';
-import { NAlert, NButton, NLoadingState, useDialog } from 'najm-kit';
+import { NAlert, NButton, NLoadingState } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 
 import { getResetTargetApi } from '@/services/userApi';

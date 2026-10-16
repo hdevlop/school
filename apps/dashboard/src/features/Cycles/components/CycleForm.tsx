@@ -3,7 +3,8 @@
 import React from 'react';
 import { z } from 'zod';
 import { CalendarRange, Hash, Languages, ToggleRight } from 'lucide-react';
-import { FormInput, NForm, NFormSectionHeader as FormSectionHeader, useDialog } from 'najm-kit';
+import { FormInput, NForm, NFormSectionHeader as FormSectionHeader } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 
 const cycleSchema = z.object({

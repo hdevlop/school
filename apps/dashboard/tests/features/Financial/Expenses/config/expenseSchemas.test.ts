@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { EXPENSE_CATEGORY_VALUES, EXPENSE_STATUS_VALUES } from '@sms/contracts';
 
-import { buildExpenseCategoryOptions, buildExpenseStatusOptions } from '@/features/Financial/Expenses/config/expenseOptions';
+import { buildEditableExpenseStatusOptions, buildExpenseCategoryOptions, buildExpenseStatusOptions } from '@/features/Financial/Expenses/config/expenseOptions';
 import { expenseSchema } from '@/features/Financial/Expenses/config/expenseSchemas';
 
 const echo = (key: string) => key;
@@ -66,5 +66,22 @@ describe('expense option builders', () => {
     for (const option of buildExpenseCategoryOptions(echo)) {
       expect(expenseSchema.safeParse({ ...expense, category: option.value }).success).toBe(true);
     }
+  });
+});
+
+describe('expense edit status select', () => {
+  // Approve, reject and pay are their own actions; the server refuses them
+  // through the generic edit, so the edit form offers only cancellation.
+  const values = (current) => buildEditableExpenseStatusOptions(echo, current).map((option) => option.value);
+
+  it('offers cancellation only while the expense is open', () => {
+    expect(values('pending')).toEqual(['pending', 'cancelled']);
+    expect(values('approved')).toEqual(['approved', 'cancelled']);
+  });
+
+  it('keeps a closed expense on its stored status', () => {
+    expect(values('paid')).toEqual(['paid']);
+    expect(values('rejected')).toEqual(['rejected']);
+    expect(values('cancelled')).toEqual(['cancelled']);
   });
 });

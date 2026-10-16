@@ -84,7 +84,6 @@ export const createNavigationItems = (t: (key: string) => string, viewer: PageVi
     },
     { id: '/alerts', label: t('navigation.alerts'), icon: FEATURE_ICONS.alerts, href: '/alerts', access: 'alerts' },
     { id: '/announcements', label: t('navigation.announcements'), icon: FEATURE_ICONS.announcements, href: '/announcements', access: 'announcements' },
-    { id: '/visit-requests', label: t('visitRequests.title'), icon: FEATURE_ICONS.visitRequests, href: '/visit-requests', access: 'visitRequests' },
     {
       id: 'student-conduct',
       label: t('navigation.studentConductShort'),

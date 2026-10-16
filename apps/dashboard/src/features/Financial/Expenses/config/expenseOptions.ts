@@ -41,3 +41,24 @@ export const buildExpenseCategoryOptions = (t: Translate): readonly EnumOption<E
 
 export const buildExpenseStatusOptions = (t: Translate): readonly EnumOption<ExpenseStatus>[] =>
   optionsFromValues(EXPENSE_STATUS_VALUES, t, EXPENSE_STATUS_TRANSLATION_PREFIX);
+
+/** Statuses the generic edit may move an open expense to. */
+const EDIT_CANCELLABLE: readonly ExpenseStatus[] = ['pending', 'approved'];
+
+/**
+ * The status select on the edit form: the stored status, plus `cancelled`
+ * while the expense is still open.
+ *
+ * Narrower than the API's list on purpose. Approval, rejection and payment
+ * have their own actions, which record who acted and how it was paid; the
+ * server refuses any other change through the generic edit
+ * (`expenses.errors.statusViaWorkflow`), so offering it would only fail.
+ */
+export const buildEditableExpenseStatusOptions = (
+  t: Translate,
+  current: ExpenseStatus,
+): readonly EnumOption<ExpenseStatus>[] => {
+  const values: ExpenseStatus[] = [current];
+  if (EDIT_CANCELLABLE.includes(current)) values.push('cancelled');
+  return optionsFromValues(values, t, EXPENSE_STATUS_TRANSLATION_PREFIX);
+};

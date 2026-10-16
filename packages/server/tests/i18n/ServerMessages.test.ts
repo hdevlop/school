@@ -44,6 +44,9 @@ function referencedKeys() {
     if (/import \{[^}]*\bt\b[^}]*\} from '(?:\.\.\/)+najm'/.test(text) || /import \{[^}]*\bt\b[^}]*\} from 'najm-i18n'/.test(text)) {
       for (const [, key] of text.matchAll(/(?<![\w.])t\(\s*'([^']+\.[^']+)'/g)) keys.set(key!, path);
     }
+    // A route's success message, translated when the response is sent. A
+    // missing key reaches the dashboard's toast as the raw key.
+    for (const [, key] of text.matchAll(/@ResMsg\(\s*(?:\{\s*message:\s*)?'([^']+\.[^']+)'/g)) keys.set(key!, path);
   }
   return keys;
 }

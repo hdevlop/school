@@ -9,7 +9,7 @@ import { useFormContext, useWatch } from 'react-hook-form'
 import { Label } from 'najm-kit';import { Badge } from 'najm-kit';import { useTranslation } from 'najm-i18n/react'
 import { bulkFeeFormSchema } from '../config/feeSchemas'
 import { buildScheduleOptions } from '../config/feeOptions'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { getFeeTypeDisplayName, injectStudentIdToFees } from '../utils/feeUtils'
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { calculateFeeAmounts, calculateTotalFees, buildInstallmentsPreview } from '@/features/Financial/Fees/utils/feeUtils'

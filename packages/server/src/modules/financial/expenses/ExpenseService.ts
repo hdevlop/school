@@ -126,7 +126,16 @@ export class ExpenseService {
     ];
 
     const existing = await this.expenseValidator.checkExists(id);
+    this.expenseValidator.ensureEditableStatusChange(existing.status, data.status);
     await this.expenseValidator.validate(data, id);
+    // A payment date edited on its own is still checked against the stored
+    // expense date, not only against one sent in the same request.
+    if (data.paymentDate) {
+      await this.expenseValidator.validatePaymentDate(
+        formatDate(data.paymentDate),
+        formatDate(data.expenseDate ?? existing.expenseDate),
+      );
+    }
     if (data.expenseDate !== undefined) {
       this.expenseValidator.ensureExpenseDateInSelectedYear(formatDate(data.expenseDate));
     }

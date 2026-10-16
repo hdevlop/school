@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo } from 'react';
-import { FormInput, NForm, useDialog } from 'najm-kit';
+import { FormInput, NForm } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useQuery } from '@tanstack/react-query';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'najm-i18n/react';

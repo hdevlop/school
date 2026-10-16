@@ -16,7 +16,7 @@ for(const [type,email,password,size] of [['dashboard','admin@landing.example.tes
   await context.addCookies([{name:'school-ui-language',value:'en',url:base}]);
   const page=await context.newPage();await page.goto(`${base}/login`,{waitUntil:'networkidle',timeout:120000});
   await page.locator('input[name="identifier"]').fill(email);await page.locator('input[name="password"]').fill(password);
-  await page.getByRole('button',{name:'Login',exact:true}).click();
+  await page.locator('button[form="login-form"]').click();
   await page.waitForURL(u=>!u.pathname.startsWith('/login'),{timeout:60000});
   await page.goto(`${base}${type==='dashboard'?'/dashboard':'/students'}`,{waitUntil:'networkidle',timeout:120000});
   await page.waitForTimeout(2000);

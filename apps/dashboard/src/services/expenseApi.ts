@@ -101,7 +101,7 @@ export const createExpenseApi = async (data: CreateExpenseData) => {
 };
 
 export const handleApprovalApi = async (id: string, data: ApprovalData) => {
-  const res = await api.post(`/expenses/${id}/approval`, data);
+  const res = await api.post(`/expenses/${id}/approve`, data);
   return res.data;
 };
 

@@ -19,7 +19,8 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { BookOpen, Coffee, GripVertical, Plus, Trash2 } from 'lucide-react';
-import { FormInput, NButton, NForm, useDialog, useNForm } from 'najm-kit';
+import { FormInput, NButton, NForm, useNForm } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { z } from 'zod';
 import { useTranslation } from 'najm-i18n/react';
 import type { RoutineScheduleFormProps, TimelineItem } from '../types';

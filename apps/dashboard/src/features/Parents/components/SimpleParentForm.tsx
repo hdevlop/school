@@ -4,7 +4,7 @@ import { AvatarFormInput, NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { IdCard, Mail, User, Users, UserRound, Globe, Calendar, Briefcase, Heart, Phone, MapPin } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { parentSchema } from '../config/parentSchemas'
 import { usePrefix } from 'najm-kit';

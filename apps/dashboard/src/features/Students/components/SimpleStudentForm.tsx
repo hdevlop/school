@@ -1,7 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useMemo } from 'react'
-import { AvatarFormInput, NForm, useDialog } from 'najm-kit';
+import { AvatarFormInput, NForm } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { FormLocationInput, normalizeLocationValue } from 'najm-kit/location'

@@ -45,3 +45,18 @@ export const expenseSchema = z.object({
 });
 
 export type ExpenseFormValues = z.input<typeof expenseSchema>;
+
+/**
+ * The record-payment dialog. The server's payment route takes the method and
+ * date; a cheque also needs its number.
+ */
+export const expensePaymentSchema = z.object({
+  paymentMethod: z.enum(PAYMENT_METHOD_VALUES),
+  paymentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
+  checkNumber: z.string().max(50, 'Check number too long').optional().nullable(),
+}).refine((data) => data.paymentMethod !== 'check' || Boolean(data.checkNumber?.trim()), {
+  message: 'Check number is required',
+  path: ['checkNumber'],
+});
+
+export type ExpensePaymentValues = z.input<typeof expensePaymentSchema>;

@@ -9,7 +9,7 @@ import {
   GraduationCap, ClipboardList, Building, DoorOpen, BookOpen, User, Award,
   ListChecks, UserCircle,
 } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { gradeSchema } from '../config/gradeSchemas'
 import { useTranslation } from 'najm-i18n/react'
 import { useClasses } from '@/features/Classes/hooks/useClasses'

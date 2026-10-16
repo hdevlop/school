@@ -1,6 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
+import { usePermissions } from 'najm-auth/client/react';
 import { getUpcomingAssessmentsApi } from '@/services/assessmentApi';
 import { getAttendanceByStudentApi } from '@/services/attendanceApi';
 import { getDisciplineApi } from '@/services/disciplineApi';
@@ -102,22 +103,28 @@ export function useParentDashboard(parentId: string) {
     staleTime: 30_000,
   });
 
+  // School-wide items need their own read grants. Asking without one only
+  // collects a 403 per profile view, so a reader without it gets none.
+  const { can } = usePermissions();
+  const canReadAssessments = can('read:assessments');
+  const canReadEvents = can('read:events');
   const schoolQuery = useQuery({
-    queryKey: ['parents', 'dashboard-school-items'],
+    queryKey: ['parents', 'dashboard-school-items', canReadAssessments, canReadEvents],
     queryFn: async () => {
       const [assessments, events] = await Promise.all([
-        safely<any[]>(getUpcomingAssessmentsApi(), []),
-        safely<any[]>(getEventsApi(), []),
+        canReadAssessments ? safely<any[]>(getUpcomingAssessmentsApi(), []) : [],
+        canReadEvents ? safely<any[]>(getEventsApi(), []) : [],
       ]);
 
       return { assessments, events };
     },
+    enabled: familyQuery.isSuccess,
     staleTime: 60_000,
   });
 
   const isLoading =
     familyQuery.isPending ||
-    schoolQuery.isPending ||
+    (familyQuery.isSuccess && schoolQuery.isPending) ||
     (children.length > 0 && childDataQuery.isPending);
 
   return {

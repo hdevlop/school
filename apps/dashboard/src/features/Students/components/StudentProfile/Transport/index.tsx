@@ -1,7 +1,8 @@
 'use client'
 
 import { Bus, CalendarDays, History, MapPin, Pencil, RefreshCw, UserRound, UserRoundMinus } from 'lucide-react'
-import { Badge, NButton, NSkeleton, useDialog } from 'najm-kit'
+import { Badge, NButton, NSkeleton } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { toast } from 'sonner'
 import { useStudentRoutes } from '@/features/Transport/hooks/useStudentRoutes'
 import { TransportAssignmentForm } from '@/features/Transport/components/TransportAssignmentForm'

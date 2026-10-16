@@ -2,7 +2,8 @@
 
 import { useCallback, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react'
-import { WizardForm, useDialog } from 'najm-kit'
+import { WizardForm } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import type { StepConfig } from 'najm-kit'
 import { AvatarFormInput, FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormHeader } from 'najm-kit';

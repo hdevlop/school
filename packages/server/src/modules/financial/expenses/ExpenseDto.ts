@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { dateField, num, optionalDateField, optionalId } from '../../../shared/fields';
+import { dateField, optionalDateField, optionalId, money } from '../../../shared/fields';
 import { expenseCategoryEnum, expenseStatusEnum, paymentMethodEnum } from '../../../shared/enums';
 
 const expenseSchema = z.object({
   id: optionalId,
   category: expenseCategoryEnum,
   title: z.string().min(3, 'Title must be at least 3 characters').max(200, 'Title too long'),
-  amount: num().positive('Amount must be greater than 0').max(10000000, 'Amount too large'),
+  amount: money().positive('Amount must be greater than 0').max(10000000, 'Amount too large'),
   expenseDate: dateField,
   paymentMethod: paymentMethodEnum.optional().nullable(),
   paymentDate: optionalDateField.nullable(),

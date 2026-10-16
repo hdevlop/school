@@ -22,7 +22,7 @@ export const StudentHeader = ({ studentFees, onPayClick, payDisabled = false }) 
                variant="ghost"
                size="icon"
                className="-ms-1 lg:hidden"
-               aria-label="Open sidebar"
+               aria-label={t('navigation.openSidebar')}
                onClick={() => sidebar?.openMobile()}
             >
                <Menu className="h-5 w-5" />

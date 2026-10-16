@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { GraduationCap, Plus, SearchX } from 'lucide-react';
 import FullStudentForm from './FullStudentForm';
@@ -25,7 +26,9 @@ import { hasFailedToLoad, isCountUnknown, isAuthorizationError } from '@/service
 import { createStudentApi } from '@/services/studentApi';
 import { buildStudentImport } from '../config/studentImport';
 import { announceInvitation } from '@/shared/invitationNotice';
-import { useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { useAcademicYearOptions, useViewingAcademicYear } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
+import { localDateInput } from 'najm-kit/format';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { usePermissions } from 'najm-auth/client/react';
 
@@ -51,6 +54,8 @@ function StudentsTable() {
   // Fee types only fill the new-student form.
   const { feeTypes } = useFeeTypes({ enabled: canCreate });
   const { businessDate, isBusinessDateLoading, refetchBusinessDate } = useBusinessDate();
+  const { data: registeredYears } = useAcademicYearOptions();
+  const activeYearCalendar = registeredYears?.years.find((year) => year.label === activeYear);
   const columns = useStudentsTableColumns();
 
   const {
@@ -96,7 +101,9 @@ function StudentsTable() {
         <FullStudentForm
           classes={newStudentClasses}
           feeTypes={feeTypes || []}
-          businessDate={resolvedBusinessDate}
+          // A new student is placed in the active year, which refuses an
+          // admission outside it; after that year ends, today would be.
+          businessDate={teachingDateWithinYear(resolvedBusinessDate ?? localDateInput(), activeYearCalendar)}
           onSubmitStudent={(data) => withAcademicYear(activeYear, () => createAndInviteStudent(data))}
         />
       ),

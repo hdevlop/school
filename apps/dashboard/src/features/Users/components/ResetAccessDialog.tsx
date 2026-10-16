@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
 import { FileText, KeyRound, Mail, ShieldAlert } from 'lucide-react';
-import { NAlert, NButton, NForm, FormInput, Label, useDialog } from 'najm-kit';
+import { NAlert, NButton, NForm, FormInput, Label } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { toast } from 'sonner';
 

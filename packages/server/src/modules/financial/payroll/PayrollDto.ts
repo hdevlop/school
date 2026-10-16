@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { dateField, num } from '../../../shared/fields';
+import { dateField, money } from '../../../shared/fields';
 import { paymentMethodEnum, payslipStatusEnum } from '../../../shared/enums';
 
 const periodField = z
@@ -18,8 +18,8 @@ export const payPayslipDto = z.object({
 });
 
 export const updatePayslipDto = z.object({
-  totalAllowances: num().min(0, 'Allowances cannot be negative').optional(),
-  totalDeductions: num().min(0, 'Deductions cannot be negative').optional(),
+  totalAllowances: money().min(0, 'Allowances cannot be negative').optional(),
+  totalDeductions: money().min(0, 'Deductions cannot be negative').optional(),
   status: payslipStatusEnum.optional(),
   paymentMethod: paymentMethodEnum.optional(),
   paymentDate: z.preprocess((val) => (val === '' ? null : val), dateField.optional().nullable()),

@@ -1,11 +1,14 @@
 'use client';
 
 import { CalendarDays, Clock3, FileText, MapPin, ShieldAlert, UserRound } from 'lucide-react';
-import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
+import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { useTranslation } from 'najm-i18n/react';
 import { disciplineSchema } from '../config/disciplineSchemas';
 import { DISCIPLINE_CATEGORIES, DISCIPLINE_SEVERITIES, type DisciplineIncident } from '../disciplineConstants';
+import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 
 const localParts = (value?: string) => {
   const date = value ? new Date(value) : new Date();
@@ -22,7 +25,11 @@ export default function DisciplineForm({ incident }: { incident?: DisciplineInci
   const { t } = useTranslation();
   const { pop } = useDialog();
   const { students, isStudentsLoading } = useStudents();
+  const yearCalendar = useViewingYearCalendar();
   const dateParts = localParts(incident?.incidentAt);
+  // A new incident starts on today's date inside the viewed year; once that
+  // year has ended, today would be refused as outside it.
+  if (!incident?.id) dateParts.incidentDate = teachingDateWithinYear(dateParts.incidentDate, yearCalendar);
   const studentOptions = (students || [])
     .filter((student) => student.status === 'active')
     .map((student) => ({ value: student.id, label: `${student.name} · ${student.studentCode}` }));

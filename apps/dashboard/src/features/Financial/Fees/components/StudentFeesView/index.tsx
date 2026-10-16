@@ -5,7 +5,8 @@ import { NButton, NErrorState, NForbiddenState, NSkeleton, Tabs, TabsContent, Ta
 import { useTranslation } from "najm-i18n/react";
 import { StudentHeader } from "./header";
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
-import { useDialog, useDialogStore } from "najm-kit";
+import { useDialogStore } from "najm-kit";
+import { useDialog } from '@/shared/useDialog';
 import { useFees } from "@/features/Financial/Fees/hooks/useFees";
 import MultiFeesPayment from "@/features/Financial/Payment/components/MultiFeesPayment";
 import { PaymentRecordedPrompt } from "@/features/Financial/Payment/components/ReceiptPrint/PaymentRecordedPrompt";

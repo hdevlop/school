@@ -5,10 +5,10 @@ import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { DollarSign, FileText, Layers, Calendar, CreditCard, Receipt, Hash, Activity } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { expenseSchema } from '../config/expenseSchemas'
-import { buildExpenseCategoryOptions, buildExpenseStatusOptions } from '../config/expenseOptions'
+import { buildEditableExpenseStatusOptions, buildExpenseCategoryOptions } from '../config/expenseOptions'
 import { buildPaymentMethodOptions } from '@/features/Financial/Payment/config/paymentOptions'
 import { useWatch } from 'react-hook-form'
 
@@ -49,19 +49,19 @@ const ExpenseForm = ({ expense = null }) => {
 
    return (
       <NForm id='expense-form' schema={expenseFormSchema} defaultValues={defaultValues} onSubmit={handleSubmit} >
-         <ExpenseFormContent isEdit={isEdit} />
+         <ExpenseFormContent isEdit={isEdit} currentStatus={expense?.status || 'pending'} />
       </NForm>
    )
 }
 
-const ExpenseFormContent = ({ isEdit }) => {
+const ExpenseFormContent = ({ isEdit, currentStatus }) => {
    const { t } = useTranslation();
    const paymentMethod = useWatch({ name: 'paymentMethod' });
 
    // Salaries are recorded via Payroll (payslips), not as expenses — keep them out to avoid double-counting.
    const expenseCategoryOptions = buildExpenseCategoryOptions(t);
    const paymentMethodOptions = buildPaymentMethodOptions(t);
-   const statusOptions = buildExpenseStatusOptions(t);
+   const statusOptions = buildEditableExpenseStatusOptions(t, currentStatus);
 
    return (
       <>

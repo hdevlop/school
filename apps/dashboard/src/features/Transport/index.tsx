@@ -68,7 +68,7 @@ export default function TransportPage() {
           <TabsList className="bg-transparent rounded-none justify-start h-auto p-0 border-0">
             <TabsTrigger value="routes" className={TAB_STYLES}>
               <Bus className="w-4 h-4 mr-2" />
-              Student Routes
+              {t('transport.panel.studentRoutes')}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -79,8 +79,8 @@ export default function TransportPage() {
           ) : activeVehicles.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
               <Bus className="w-10 h-10 mb-3 opacity-30" />
-              <p className="text-sm">No active vehicles found</p>
-              <p className="text-xs mt-1">Add vehicles in the Vehicles section first</p>
+              <p className="text-sm">{t('transport.panel.noActiveVehicles')}</p>
+              <p className="text-xs mt-1">{t('transport.panel.addVehiclesFirst')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

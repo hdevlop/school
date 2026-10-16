@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { UserPlus, UserMinus, Bus, Users, MapPin, CalendarDays } from 'lucide-react'
-import { Badge, NButton, NForm, NSkeleton, useDialog } from 'najm-kit';
+import { Badge, NButton, NForm, NSkeleton } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useStudentRoutes } from '../hooks/useStudentRoutes'
 import { useStudents } from '@/features/Students/hooks/useStudents'
 import { FormInput } from 'najm-kit';
@@ -13,9 +14,9 @@ import { locationValueSchema } from '../config/transportSchemas'
 import { useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'najm-i18n/react';
 
-const assignSchema = z.object({
-  studentId: z.string().min(1, 'Student is required'),
-  assignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format'),
+const assignSchema = (t: (key: string) => string) => z.object({
+  studentId: z.string().min(1, t('transport.validation.studentRequired')),
+  assignmentDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, t('transport.validation.dateFormat')),
   pickup: locationValueSchema,
   pickupPlaceId: z.string().max(255).optional().nullable(),
   dropoff: locationValueSchema,
@@ -65,8 +66,8 @@ const AssignStudentFields = ({ students }) => {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <FormLocationInput
           name="pickup"
-          formLabel="Pickup location"
-          placeholder="e.g. Rue Ibn Battouta"
+          formLabel={t('transport.panel.pickupLocation')}
+          placeholder={t('transport.panel.pickupPlaceholder')}
           providerMeta={pickup && pickupPlaceId
             ? { provider: 'google', placeId: pickupPlaceId, ...pickup }
             : null}
@@ -74,8 +75,8 @@ const AssignStudentFields = ({ students }) => {
         />
         <FormLocationInput
           name="dropoff"
-          formLabel="Drop-off location"
-          placeholder="e.g. School gate"
+          formLabel={t('transport.panel.dropoffLocation')}
+          placeholder={t('transport.panel.dropoffPlaceholder')}
           providerMeta={dropoff && dropoffPlaceId
             ? { provider: 'google', placeId: dropoffPlaceId, ...dropoff }
             : null}
@@ -89,11 +90,13 @@ const AssignStudentFields = ({ students }) => {
 
 const AssignStudentForm = ({ students, vehicleId }) => {
   const { pop } = useDialog()
+  const { t } = useTranslation()
+  const schema = useMemo(() => assignSchema(t), [t])
 
   return (
     <NForm
       id="assign-student-form"
-      schema={assignSchema}
+      schema={schema}
       defaultValues={{
         studentId: '',
         assignmentDate: new Date().toISOString().slice(0, 10),
@@ -156,15 +159,15 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
   const handleUnassign = (route: any) => {
     const openedYear = academicYear
     openDialog({
-      title: 'Unassign Student',
+      title: t('transport.panel.unassignTitle'),
       children: (
         <p className="text-sm text-muted-foreground">
-          Remove <strong>{route.student?.name}</strong> from <strong>{vehicle.name}</strong>?
-          Their transport fee will remain but no new installments will be generated.
+          {t('transport.panel.unassignQuestion', { student: route.student?.name, vehicle: vehicle.name })}{' '}
+          {t('transport.panel.unassignFeeNote')}
         </p>
       ),
       primaryButton: {
-        text: 'Unassign',
+        text: t('transport.panel.unassign'),
         variant: 'destructive',
         loading: false,
         onClick: async () => {
@@ -218,7 +221,7 @@ export const VehicleStudentsPanel = ({ vehicle }: VehicleStudentsPanelProps) => 
           ))}
         </div>
       ) : routes.length === 0 ? (
-        <p className="text-xs text-muted-foreground text-center py-4">No students assigned</p>
+        <p className="text-xs text-muted-foreground text-center py-4">{t('transport.panel.noStudentsAssigned')}</p>
       ) : (
         <div className="flex flex-col gap-1.5">
           {(routes as any[]).map((route: any) => (

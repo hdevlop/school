@@ -5,7 +5,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { CalendarDays, FileText, User, Activity } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { z } from 'zod'
 
@@ -16,11 +16,8 @@ const staffAttendanceFormSchema = z.object({
   notes: z.string().max(500, 'Notes too long').optional(),
 });
 
-const statusOptions = [
-  { label: 'Present', value: 'present' },
-  { label: 'Absent', value: 'absent' },
-  { label: 'Late', value: 'late' },
-];
+const STATUS_VALUES = ['present', 'absent', 'late'] as const
+;
 
 const TeacherAttendanceForm = ({ attendanceData = null }) => {
   const { t } = useTranslation();
@@ -75,7 +72,7 @@ const TeacherAttendanceForm = ({ attendanceData = null }) => {
                 name='status'
                 type='select'
                 formLabel={t('attendance.form.status')}
-                items={statusOptions}
+                items={STATUS_VALUES.map((value) => ({ value, label: t(`attendance.status.${value}`) }))}
                 icon={Activity}
                 required={true}
               />

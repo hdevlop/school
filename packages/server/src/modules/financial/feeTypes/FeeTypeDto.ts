@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { num, optionalId } from '../../../shared/fields';
+import { optionalId, money } from '../../../shared/fields';
 import { feeTypeStatusEnum, paymentTypeEnum } from '../../../shared/enums';
 
 const feeTypeSchema = z.object({
@@ -7,7 +7,7 @@ const feeTypeSchema = z.object({
   name: z.string().min(2, 'Fee type name must be at least 2 characters').max(100, 'Fee type name too long'),
   description: z.string().max(500, 'Description too long').optional().nullable(),
   category: z.string(),
-  amount: num().positive('Amount must be greater than 0').max(100000, 'Amount too large'),
+  amount: money().positive('Amount must be greater than 0').max(100000, 'Amount too large'),
   paymentType: paymentTypeEnum.default('recurring'),
   status: feeTypeStatusEnum.default('active').optional(),
 });

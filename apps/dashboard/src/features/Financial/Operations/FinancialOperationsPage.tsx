@@ -3,15 +3,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import type { RowSelectionState } from '@tanstack/react-table';
-import {
-  NButton,
-  NEmptyState,
-  NErrorState,
-  NForbiddenState,
-  NPageHeader,
-  NPageHeaderActions,
-  useDialog,
-} from 'najm-kit';
+import { NButton, NEmptyState, NErrorState, NForbiddenState, NPageHeader, NPageHeaderActions } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { toast } from 'sonner';
 import { Ban, CheckCircle2, Landmark, RotateCw, SearchX, Undo2 } from 'lucide-react';

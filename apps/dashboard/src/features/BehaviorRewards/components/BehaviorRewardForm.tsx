@@ -1,11 +1,14 @@
 'use client';
 
 import { Award, CalendarClock, FileText, Gift, Star, Trophy, UserRound } from 'lucide-react';
-import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
+import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { behaviorRewardSchema } from '../config/behaviorRewardSchemas';
 import { useStudents } from '@/features/Students/hooks/useStudents';
 import { toLocalDateTimeInput } from '../behaviorRewardConstants';
+import { useViewingYearCalendar } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
+import { teachingDateWithinYear } from '@/features/AcademicYears/utils/viewingYear';
 import {
   buildBehaviorRecognitionLevelOptions,
   buildBehaviorRewardCategoryOptions,
@@ -24,9 +27,12 @@ const BehaviorRewardForm = ({ behaviorReward = null }: { behaviorReward?: any })
       label: `${student.name} · ${student.studentCode}`,
     }));
 
+  const yearCalendar = useViewingYearCalendar();
+  const storedDate = toLocalDateTimeInput(behaviorReward?.behaviorAt).slice(0, 10);
   const defaultValues = {
     studentId: behaviorReward?.studentId || '',
-    behaviorDate: toLocalDateTimeInput(behaviorReward?.behaviorAt).slice(0, 10),
+    // A new record starts on today's date inside the viewed year.
+    behaviorDate: behaviorReward?.behaviorAt ? storedDate : teachingDateWithinYear(storedDate, yearCalendar),
     behaviorTime: toLocalDateTimeInput(behaviorReward?.behaviorAt).slice(11, 16),
     category: behaviorReward?.category || 'academic_effort',
     recognitionLevel: behaviorReward?.recognitionLevel || 'appreciation',

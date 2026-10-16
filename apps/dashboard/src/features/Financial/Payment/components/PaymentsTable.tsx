@@ -1,7 +1,8 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NButton, NEmptyState } from 'najm-kit';
+import { NButton, NEmptyState } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { usePayments } from '../hooks/usePayments';
 import { useTranslation } from 'najm-i18n/react';
@@ -62,7 +63,7 @@ function PaymentsTable({studentId}) {
 
   const handleView = (payment) => {
     const updateCheck = async (status) => {
-      const reason = status === 'bounced' ? window.prompt('Reason for bounced check') : undefined;
+      const reason = status === 'bounced' ? window.prompt(t('payments.dialogs.bounceReason')) : undefined;
       if (status === 'bounced' && !reason) return;
       await updateCheckStatusApi(payment.id, { status, reason });
       await refetch();
@@ -70,7 +71,7 @@ function PaymentsTable({studentId}) {
     };
 
     const voidPayment = async () => {
-      const reason = window.prompt('Reason for voiding this payment');
+      const reason = window.prompt(t('payments.dialogs.voidReason'));
       if (!reason) return;
       await voidPaymentApi(payment.id, reason);
       await refetch();
@@ -97,13 +98,13 @@ function PaymentsTable({studentId}) {
           {payment.paymentMethod === 'check' && ['pending', 'deposited', 'completed'].includes(payment.status) && (
             <div className="flex flex-wrap gap-2">
               {payment.status === 'pending' && (
-                <NButton size="sm" onClick={() => updateCheck('deposited')}>Deposit check</NButton>
+                <NButton size="sm" onClick={() => updateCheck('deposited')}>{t('payments.dialogs.depositCheck')}</NButton>
               )}
               {payment.status === 'deposited' && (
-                <NButton size="sm" onClick={() => updateCheck('completed')}>Complete check</NButton>
+                <NButton size="sm" onClick={() => updateCheck('completed')}>{t('payments.dialogs.completeCheck')}</NButton>
               )}
-              <NButton variant="outline" size="sm" onClick={() => updateCheck('bounced')}>Bounce check</NButton>
-              <NButton variant="destructive" size="sm" onClick={voidPayment}>Void payment</NButton>
+              <NButton variant="outline" size="sm" onClick={() => updateCheck('bounced')}>{t('payments.dialogs.bounceCheck')}</NButton>
+              <NButton variant="destructive" size="sm" onClick={voidPayment}>{t('payments.dialogs.voidPayment')}</NButton>
             </div>
           )}
         </div>
@@ -135,7 +136,7 @@ function PaymentsTable({studentId}) {
       itemName: payment.receiptNumber,
       confirmText: t('payments.dialogs.deleteButton'),
       onConfirm: async () => {
-        const reason = window.prompt('Reason for voiding this payment');
+        const reason = window.prompt(t('payments.dialogs.voidReason'));
         if (!reason) return;
         await voidPaymentApi(payment.id, reason);
         await refetch();

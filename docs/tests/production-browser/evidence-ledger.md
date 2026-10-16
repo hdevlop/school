@@ -1,6 +1,12 @@
 # Production browser evidence ledger
 
-No attempts have been recorded. Every feature remains **NOT RUN**.
+## Attempts
+
+| Run | Target / serving SHA | Outcome | Record |
+| --- | --- | --- | --- |
+| pb1016, 2026-10-16 | myscolai.com / `7657cc0` | Partial: auth, ownership and most CRUD pass; finance regressions 1, 2, 4, 5 and two form defects fail on the serving release, fixed locally and not yet deployed | [pb1016](../../evidence/production-browser/2026-10-16-pb1016/README.md) |
+
+Features not listed in that record remain **NOT RUN**.
 
 Copy the following block for each attempt; keep earlier failures and partial results. Store sanitized run records under `docs/evidence/production-browser/` when execution occurs, and link them from here. Do not create a PASS row from a documentation review.
 

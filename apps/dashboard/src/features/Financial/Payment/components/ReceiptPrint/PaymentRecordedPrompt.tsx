@@ -1,6 +1,7 @@
 'use client'
 
-import { NButton, useDialog } from 'najm-kit';
+import { NButton } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { CheckCircle2, Printer } from 'lucide-react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';

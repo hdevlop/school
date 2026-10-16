@@ -1,7 +1,8 @@
 'use client';
 
 import { ClipboardList, UserRound } from 'lucide-react';
-import { FormInput, NForm, useDialog } from 'najm-kit';
+import { FormInput, NForm } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { z } from 'zod';
 import { useTranslation } from 'najm-i18n/react';
 import { useRoutineDutyCandidates } from '../hooks/useClassRoutines';

@@ -59,7 +59,8 @@ const SchoolSetup: React.FC<{ canInstall: boolean }> = ({ canInstall }) => {
     <SignOutButton
       onSuccess={async () => {
         await clearNajmUiPreferences();
-        router.push('/login');
+        // A document navigation, so Back cannot restore this signed-in screen.
+        window.location.replace('/login');
       }}
     >
       <NButton type="button" variant="ghost">

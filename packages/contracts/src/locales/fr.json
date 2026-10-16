@@ -257,7 +257,10 @@
       "rightsReserved": "© {{year}} {{app}}. Tous droits réservés.",
       "activateTitle": "Activez votre compte",
       "activateSubtitle": "Choisissez un mot de passe pour activer votre compte",
-      "activateSubmit": "Activer le compte"
+      "activateSubmit": "Activer le compte",
+      "rememberMe": "Rester connecté",
+      "loginSubmit": "Se connecter",
+      "loginPending": "Connexion…"
     },
     "form": {
       "fullName": "Nom complet",
@@ -305,11 +308,25 @@
       "refreshTokenVerificationFailed": "Échec de la vérification du jeton de rafraîchissement",
       "refreshTokenMissing": "Jeton de rafraîchissement manquant. Veuillez fournir un jeton de rafraîchissement",
       "refreshTokenInvalid": "Jeton de rafraîchissement invalide. Veuillez vous reconnecter",
-      "authInitFailed": "Échec de l'initialisation de l'authentification"
+      "authInitFailed": "Échec de l'initialisation de l'authentification",
+      "loginFailed": "Échec de la connexion. Veuillez réessayer.",
+      "tooManyAttempts": "Trop de tentatives. Patientez un instant puis réessayez.",
+      "resetLinkInvalid": "Ce lien est invalide ou a déjà été utilisé. Demandez-en un nouveau.",
+      "setPasswordFailed": "Impossible de définir votre mot de passe. Le lien a peut-être expiré.",
+      "setupSessionExpired": "Impossible de définir votre mot de passe. La session de configuration a peut-être expiré.",
+      "registerFailed": "Impossible de créer votre compte. Veuillez réessayer."
     },
     "validation": {
       "emailInvalid": "Format d'adresse e-mail invalide",
-      "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères"
+      "passwordMinLength": "Le mot de passe doit contenir au moins 8 caractères",
+      "identifierInvalid": "Saisissez votre e-mail ou votre numéro de téléphone",
+      "loginPasswordMinLength": "Le mot de passe doit contenir au moins 6 caractères",
+      "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
+      "passwordsMismatch": "Les mots de passe ne correspondent pas",
+      "fullNameRequired": "Veuillez saisir votre nom complet",
+      "passwordUppercase": "Le mot de passe doit contenir au moins une lettre majuscule",
+      "passwordLowercase": "Le mot de passe doit contenir au moins une lettre minuscule",
+      "passwordNumber": "Le mot de passe doit contenir au moins un chiffre"
     },
     "users": {
       "success": {
@@ -387,7 +404,8 @@
       "newPassword": "Nouveau Mot de Passe (laisser vide pour conserver l'actuel)",
       "confirmPassword": "Confirmer le Mot de Passe",
       "confirmPasswordPlaceholder": "Confirmer le mot de passe",
-      "userRole": "Rôle de l'Utilisateur"
+      "userRole": "Rôle de l'Utilisateur",
+      "invitationHint": "Un e-mail d'invitation sera envoyé pour que cet utilisateur choisisse son propre mot de passe."
     },
     "roles": {
       "admin": "Administrateur",
@@ -838,6 +856,12 @@
     "invitation": {
       "sent": "E-mail d'invitation envoyé à {{email}}. Le membre du personnel active son compte depuis le lien.",
       "notSent": "Le membre du personnel a été créé, mais l'e-mail d'invitation n'a pas pu être envoyé. Renvoyez-le avec « Réinitialiser l'accès » sur la page Utilisateurs."
+    },
+    "shifts": {
+      "morning": "Matin",
+      "afternoon": "Après-midi",
+      "evening": "Soir",
+      "fullDay": "Journée complète"
     }
   },
   "staffRoles": {
@@ -1111,7 +1135,8 @@
       "feesReminder": "Rappel de frais",
       "homeworkAlerts": "Alertes de devoirs",
       "lowGradeAlerts": "Alertes de notes basses",
-      "parentNotifications": "Notifications aux parents"
+      "parentNotifications": "Notifications aux parents",
+      "examAlerts": "Alertes d'examen"
     },
     "clear": {
       "confirm": "Effacer Toutes les Données",
@@ -1613,7 +1638,7 @@
     }
   },
   "navigation": {
-    "dashboard": "Dashboard",
+    "dashboard": "Tableau de bord",
     "fields": "Champs",
     "vehicles": "Véhicules",
     "operations": "Opérations",
@@ -1670,7 +1695,12 @@
     "behaviorRewardsShort": "Récompenses",
     "myChildren": "Mes enfants",
     "myProfile": "Mon profil",
-    "pendingChecks": "Chèques"
+    "pendingChecks": "Chèques",
+    "changeLanguage": "Changer de langue",
+    "openSidebar": "Ouvrir le menu",
+    "closeSidebar": "Fermer le menu",
+    "collapseSidebar": "Réduire",
+    "expandSidebar": "Développer"
   },
   "classRoutines": {
     "success": {
@@ -1875,7 +1905,8 @@
       "unpaid": "Paiement annulé",
       "updated": "Fiche de paie mise à jour avec succès",
       "deleted": "Fiche de paie supprimée avec succès",
-      "bulkDeleted": "Fiches de paie supprimées avec succès"
+      "bulkDeleted": "Fiches de paie supprimées avec succès",
+      "created": "Bulletin de paie enregistré avec succès"
     },
     "errors": {
       "notFound": "Fiche de paie introuvable",
@@ -1884,7 +1915,10 @@
       "staffNotFound": "Membre du personnel introuvable",
       "staffInactive": "Seul le personnel actif peut être payé",
       "noCompensation": "Aucune rémunération n'est définie pour ce membre du personnel",
-      "outsideYear": "La période de paie est en dehors de l'année scolaire sélectionnée"
+      "outsideYear": "La période de paie est en dehors de l'année scolaire sélectionnée",
+      "statusViaWorkflow": "Payez ou annulez le paiement d'une fiche avec l'action prévue ; une modification peut seulement annuler une fiche en attente.",
+      "paidLocked": "Une fiche payée garde les montants payés. Annulez d’abord le paiement.",
+      "deductionsExceedGross": "Les retenues ne peuvent pas dépasser le salaire brut."
     },
     "stats": {
       "period": "Période",
@@ -2028,7 +2062,8 @@
       "updated": "Présence mise à jour avec succès",
       "deleted": "Présence supprimée",
       "allDeleted": "Toutes les présences supprimées",
-      "seeded": "Données de démonstration de présence créées"
+      "seeded": "Données de démonstration de présence créées",
+      "created": "Présence enregistrée avec succès"
     },
     "errors": {
       "selectTeacherSubject": "Sélectionnez un enseignant et une matière avant d’enregistrer les présences.",
@@ -2119,7 +2154,9 @@
       "updated": "Dépense mise à jour avec succès",
       "deleted": "Dépense supprimée avec succès",
       "allDeleted": "Toutes les dépenses supprimées avec succès",
-      "paymentRecorded": "Paiement enregistré avec succès"
+      "paymentRecorded": "Paiement enregistré avec succès",
+      "approved": "Dépense approuvée",
+      "rejected": "Dépense rejetée"
     },
     "errors": {
       "idExists": "La dépense existe déjà",
@@ -2137,7 +2174,8 @@
       "cannotPay": "Cette dépense ne peut pas être payée dans son statut actuel",
       "rejectionReasonRequired": "Un motif de refus est requis",
       "checkNumberRequired": "Un numéro de chèque est requis pour un paiement par chèque",
-      "paymentDateBeforeExpense": "La date de paiement ne peut pas précéder la date de la dépense"
+      "paymentDateBeforeExpense": "La date de paiement ne peut pas précéder la date de la dépense",
+      "statusViaWorkflow": "Approuvez, rejetez ou payez une dépense avec l'action prévue ; une modification peut seulement l'annuler."
     },
     "form": {
       "basicInformation": "Informations de base",
@@ -2235,6 +2273,13 @@
       "amountRequired": "Le montant est obligatoire",
       "amountPositive": "Le montant doit être supérieur à 0",
       "expenseDateRequired": "La date de dépense est obligatoire"
+    },
+    "actions": {
+      "approve": "Approuver",
+      "reject": "Rejeter",
+      "recordPayment": "Enregistrer le paiement",
+      "rejectReason": "Motif du rejet de cette dépense (au moins 10 caractères)",
+      "paymentTitle": "Enregistrer le paiement de la dépense"
     }
   },
   "fees": {
@@ -2311,7 +2356,8 @@
       "paid": "Payé",
       "partiallyPaid": "Partiellement payé",
       "pending": "En attente",
-      "fullPaidCongratulations": "Entièrement payé. Félicitations !"
+      "fullPaidCongratulations": "Entièrement payé. Félicitations !",
+      "cancelled": "Annulé"
     },
     "filters": {
       "class": "Classe",
@@ -2850,7 +2896,9 @@
     },
     "status": {
       "draft": "Brouillon",
-      "published": "Publié"
+      "published": "Publié",
+      "expired": "Expirée",
+      "upcoming": "À venir"
     },
     "table": {
       "author": "Auteur",
@@ -2865,13 +2913,13 @@
     "success": {
       "allDeleted": "Tous les enregistrements Annonce ont été supprimés avec succès",
       "bulkDeleted": "Enregistrements Annonce supprimés avec succès",
-      "created": "Annonce créé avec succès",
-      "deleted": "Annonce supprimé avec succès",
-      "published": "Annonce publié avec succès",
-      "retrieved": "Annonce récupéré avec succès",
+      "created": "Annonce créée avec succès",
+      "deleted": "Annonce supprimée avec succès",
+      "published": "Annonce publiée avec succès",
+      "retrieved": "Annonce récupérée avec succès",
       "seeded": "Annonce initialisé avec succès",
-      "unpublished": "Annonce dépublié avec succès",
-      "updated": "Annonce mis à jour avec succès"
+      "unpublished": "Annonce dépubliée avec succès",
+      "updated": "Annonce mise à jour avec succès"
     }
   },
   "assessments": {
@@ -2953,11 +3001,11 @@
     "success": {
       "allDeleted": "Tous les enregistrements Évaluation ont été supprimés avec succès",
       "bulkDeleted": "Enregistrements Évaluation supprimés avec succès",
-      "created": "Évaluation créé avec succès",
-      "deleted": "Évaluation supprimé avec succès",
-      "retrieved": "Évaluation récupéré avec succès",
+      "created": "Évaluation créée avec succès",
+      "deleted": "Évaluation supprimée avec succès",
+      "retrieved": "Évaluation récupérée avec succès",
       "seeded": "Évaluation initialisé avec succès",
-      "updated": "Évaluation mis à jour avec succès"
+      "updated": "Évaluation mise à jour avec succès"
     },
     "errors": {
       "notFound": "Évaluation introuvable",
@@ -3126,11 +3174,11 @@
     },
     "success": {
       "allDeleted": "Tous les enregistrements Classe ont été supprimés avec succès",
-      "created": "Classe créé avec succès",
-      "deleted": "Classe supprimé avec succès",
-      "retrieved": "Classe récupéré avec succès",
+      "created": "Classe créée avec succès",
+      "deleted": "Classe supprimée avec succès",
+      "retrieved": "Classe récupérée avec succès",
       "seeded": "Classe initialisé avec succès",
-      "updated": "Classe mis à jour avec succès"
+      "updated": "Classe mise à jour avec succès"
     }
   },
   "cycles": {
@@ -3168,6 +3216,12 @@
     },
     "filters": {
       "searchByName": "Rechercher par nom de cycle..."
+    },
+    "success": {
+      "retrieved": "Cycles récupérés avec succès",
+      "created": "Cycle créé avec succès",
+      "updated": "Cycle mis à jour avec succès",
+      "deleted": "Cycle supprimé avec succès"
     }
   },
   "drivers": {
@@ -3384,7 +3438,8 @@
       "cafeteria": "Cantine",
       "sports": "Sports",
       "technology": "Technologie",
-      "fieldtrip": "Sortie scolaire"
+      "fieldtrip": "Sortie scolaire",
+      "library": "Bibliothèque"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -3392,7 +3447,8 @@
       "deleteButton": "Supprimer",
       "editTitle": "Modifier",
       "updateButton": "Mettre à jour",
-      "viewTitle": "Détails"
+      "viewTitle": "Détails",
+      "noFeeTypes": "Aucun type de frais disponible"
     },
     "filters": {
       "filterByCategory": "Filtrer par catégorie",
@@ -3524,11 +3580,11 @@
       "saved": "Notes enregistrées.",
       "allDeleted": "Tous les enregistrements Note ont été supprimés avec succès",
       "bulkDeleted": "Enregistrements Note supprimés avec succès",
-      "created": "Note créé avec succès",
-      "deleted": "Note supprimé avec succès",
-      "retrieved": "Note récupéré avec succès",
+      "created": "Note créée avec succès",
+      "deleted": "Note supprimée avec succès",
+      "retrieved": "Note récupérée avec succès",
       "seeded": "Note initialisé avec succès",
-      "updated": "Note mis à jour avec succès"
+      "updated": "Note mise à jour avec succès"
     },
     "toolbar": {
       "highest": "Maximum",
@@ -3760,7 +3816,10 @@
     "success": {
       "voided": "Paiement annulé",
       "checkMarked": "Chèque marqué {{status}}",
-      "recorded": "Paiement enregistré avec succès"
+      "recorded": "Paiement enregistré avec succès",
+      "created": "Paiement enregistré avec succès",
+      "updated": "Paiement mis à jour avec succès",
+      "deleted": "Paiement supprimé avec succès"
     },
     "dialogs": {
       "deleteButton": "Supprimer",
@@ -3771,7 +3830,13 @@
       "receiptAfterCheck": "Le reçu pourra être imprimé une fois le chèque encaissé.",
       "createButton": "Enregistrer le paiement",
       "selectInstallments": "Sélectionner les échéances à payer",
-      "noFeeData": "Aucune donnée de frais disponible"
+      "noFeeData": "Aucune donnée de frais disponible",
+      "depositCheck": "Déposer le chèque",
+      "completeCheck": "Encaisser le chèque",
+      "bounceCheck": "Marquer comme rejeté",
+      "voidPayment": "Annuler le paiement",
+      "bounceReason": "Motif du rejet du chèque",
+      "voidReason": "Motif de l'annulation de ce paiement"
     },
     "register": {
       "missing": "Manquant",
@@ -3859,13 +3924,18 @@
       "creditCard": "Carte de crédit",
       "debitCard": "Carte de débit",
       "mobilePayment": "Paiement mobile",
-      "online": "En ligne"
+      "online": "En ligne",
+      "wireTransfer": "Virement bancaire"
     },
     "status": {
       "completed": "Terminé",
       "failed": "Échoué",
       "pending": "En attente",
-      "refunded": "Remboursé"
+      "refunded": "Remboursé",
+      "processing": "En cours de traitement",
+      "partially_refunded": "Partiellement remboursé",
+      "cancelled": "Annulé",
+      "on_hold": "En attente"
     },
     "table": {
       "allocatedToYear": "Affecté à {{year}}",
@@ -3945,11 +4015,11 @@
     },
     "success": {
       "allDeleted": "Tous les enregistrements Section ont été supprimés avec succès",
-      "created": "Section créé avec succès",
-      "deleted": "Section supprimé avec succès",
-      "retrieved": "Section récupéré avec succès",
+      "created": "Section créée avec succès",
+      "deleted": "Section supprimée avec succès",
+      "retrieved": "Section récupérée avec succès",
       "seeded": "Section initialisé avec succès",
-      "updated": "Section mis à jour avec succès"
+      "updated": "Section mise à jour avec succès"
     }
   },
   "students": {
@@ -4297,11 +4367,11 @@
     },
     "success": {
       "allDeleted": "Tous les enregistrements Matière ont été supprimés avec succès",
-      "created": "Matière créé avec succès",
-      "deleted": "Matière supprimé avec succès",
-      "retrieved": "Matière récupéré avec succès",
+      "created": "Matière créée avec succès",
+      "deleted": "Matière supprimée avec succès",
+      "retrieved": "Matière récupérée avec succès",
       "seeded": "Matière initialisé avec succès",
-      "updated": "Matière mis à jour avec succès"
+      "updated": "Matière mise à jour avec succès"
     }
   },
   "teachers": {
@@ -4475,11 +4545,11 @@
     "success": {
       "allRetrieved": "Tous les enregistrements Affectation de véhicule ont été récupérés avec succès",
       "assigned": "Affectation de véhicule affecté avec succès",
-      "created": "Affectation de véhicule créé avec succès",
-      "deleted": "Affectation de véhicule supprimé avec succès",
-      "retrieved": "Affectation de véhicule récupéré avec succès",
+      "created": "Affectation de véhicule créée avec succès",
+      "deleted": "Affectation de véhicule supprimée avec succès",
+      "retrieved": "Affectation de véhicule récupérée avec succès",
       "unassigned": "Affectation de véhicule désaffecté avec succès",
-      "updated": "Affectation de véhicule mis à jour avec succès"
+      "updated": "Affectation de véhicule mise à jour avec succès"
     },
     "errors": {
       "driverAssignmentNotActive": "L'affectation du chauffeur n'est pas active",
@@ -4772,10 +4842,11 @@
     },
     "success": {
       "assigned": "Permission affecté avec succès",
-      "deleted": "Permission supprimé avec succès",
+      "deleted": "Permission supprimée avec succès",
       "removed": "Permission retiré avec succès",
-      "retrieved": "Permission récupéré avec succès",
-      "updated": "Permission mis à jour avec succès"
+      "retrieved": "Permission récupérée avec succès",
+      "updated": "Permission mise à jour avec succès",
+      "created": "Autorisation créée avec succès"
     },
     "dialogs": {
       "createButton": "Créer une autorisation",
@@ -4892,7 +4963,18 @@
       "noStudent": "Aucun élève trouvé",
       "searchStudents": "Rechercher des élèves…",
       "selectStudent": "Sélectionner un élève…",
-      "student": "Élève"
+      "student": "Élève",
+      "studentRoutes": "Itinéraires des élèves",
+      "noActiveVehicles": "Aucun véhicule actif",
+      "addVehiclesFirst": "Ajoutez d'abord des véhicules dans la section Véhicules",
+      "noStudentsAssigned": "Aucun élève affecté",
+      "unassignTitle": "Retirer l'élève",
+      "unassignQuestion": "Retirer {{student}} de {{vehicle}} ?",
+      "unassignFeeNote": "Ses frais de transport restent, mais aucune nouvelle échéance ne sera générée.",
+      "pickupLocation": "Lieu de prise en charge",
+      "pickupPlaceholder": "ex. Rue Ibn Battouta",
+      "dropoffLocation": "Lieu de dépose",
+      "dropoffPlaceholder": "ex. Portail de l'école"
     },
     "form": {
       "stepTitle": "Transport",
@@ -4957,6 +5039,15 @@
       "unassign": "Désaffecter",
       "unassigned": "Affectation de transport terminée",
       "history": "Historique du transport"
+    },
+    "validation": {
+      "studentRequired": "L'élève est obligatoire",
+      "dateFormat": "La date doit être au format AAAA-MM-JJ"
+    },
+    "success": {
+      "created": "Bus créé avec succès",
+      "updated": "Bus mis à jour avec succès",
+      "deleted": "Bus supprimé avec succès"
     }
   },
   "staffScopes": {
@@ -4978,6 +5069,11 @@
       "description": "Description",
       "floor": "Étage",
       "name": "Nom"
+    },
+    "success": {
+      "created": "Périmètre créé avec succès",
+      "updated": "Périmètre mis à jour avec succès",
+      "deleted": "Périmètre supprimé avec succès"
     }
   },
   "emptyStates": {
@@ -5167,6 +5263,12 @@
       "notFound": "Zone introuvable",
       "inUse": "Cette zone est utilisée par des affectations du personnel et ne peut pas être supprimée",
       "nameExists": "Ce nom de zone existe déjà"
+    },
+    "success": {
+      "retrieved": "Zones récupérées avec succès",
+      "created": "Zone créée avec succès",
+      "updated": "Zone mise à jour avec succès",
+      "deleted": "Zone supprimée avec succès"
     }
   },
   "enrollments": {
@@ -5427,6 +5529,71 @@
         "landingNews5": "Photo actualité 5",
         "landingNews6": "Photo actualité 6"
       }
+    }
+  },
+  "chatbot": {
+    "assistant": "Assistant IA",
+    "apiKey": "Clé API",
+    "askAnything": "Posez votre question",
+    "backToChat": "Retour à la discussion",
+    "baseUrl": "URL de base",
+    "clearChat": "Effacer la discussion",
+    "close": "Fermer",
+    "connected": "Connecté",
+    "copied": "Copié",
+    "copy": "Copier",
+    "getKey": "Obtenir une clé",
+    "instruction": "Instruction",
+    "invalidSettings": "Paramètres invalides",
+    "messagesSentToLlm": "Messages envoyés au LLM",
+    "model": "Modèle",
+    "memoryHint": "Mémoriser les messages de cette session et les utiliser dans les réponses suivantes.",
+    "removeModel": "Retirer le modèle",
+    "resize": "Redimensionner",
+    "save": "Enregistrer",
+    "savedKey": "Clé enregistrée",
+    "saved": "Enregistré",
+    "send": "Envoyer",
+    "settingsReady": "Les paramètres semblent prêts",
+    "settings": "Paramètres",
+    "showModelSuggestions": "Afficher les suggestions de modèles",
+    "stop": "Arrêter",
+    "memoryLimit": "Limite de mémoire enregistrée",
+    "testConnection": "Tester la connexion",
+    "useMemory": "Utiliser la mémoire de conversation",
+    "suggestions": {
+      "studentsAttention": "Lister les élèves qui nécessitent une attention",
+      "feeActivity": "Résumer l'activité récente des frais",
+      "attendanceIssues": "Trouver les problèmes de présence du jour",
+      "createStudent": "Aide-moi à créer une nouvelle fiche élève"
+    }
+  },
+  "attendance-staff": {
+    "success": {
+      "created": "Présence du personnel enregistrée avec succès",
+      "updated": "Présence du personnel mise à jour avec succès",
+      "deleted": "Présence du personnel supprimée avec succès"
+    }
+  },
+  "behavior-rewards": {
+    "success": {
+      "created": "Reconnaissance ajoutée avec succès",
+      "updated": "Reconnaissance mise à jour avec succès",
+      "deleted": "Reconnaissance supprimée avec succès"
+    }
+  },
+  "publicSettings": {
+    "success": {
+      "created": "Paramètres enregistrés avec succès",
+      "updated": "Paramètres mis à jour avec succès",
+      "deleted": "Paramètres supprimés avec succès"
+    }
+  },
+  "visit-requests": {
+    "success": {
+      "created": "Demande de visite envoyée avec succès",
+      "updated": "Demande de visite mise à jour avec succès",
+      "deleted": "Demande de visite supprimée avec succès"
     }
   }
 }

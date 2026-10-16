@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import Link from 'next/link'
 import { z } from 'zod'
 import { NForm, NButton, FormInput } from 'najm-kit'
@@ -11,33 +11,22 @@ import { toast } from 'sonner'
 import { auth } from '@/najm.auth'
 import { useTranslation } from 'najm-i18n/react'
 import { AuthHeading } from '../AuthHeading'
+import { authErrorMessage, emailSchema, strongPasswordSchema } from '../authMessages'
 
 // Mirrors najm-auth's `registerDto` password rule exactly. Restating it here is
 // what lets the browser reject a weak password before the round trip; the
 // server stays the authority and re-checks the same rule.
-const registerSchema = z.object({
-  name: z.string().trim().min(2, { message: 'Please enter your full name' }).max(100),
-  email: z.string().email({ message: 'Invalid email address' }),
-  password: z.string()
-    .min(8, { message: 'Password must be at least 8 characters' })
-    .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
-    .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
-    .regex(/\d/, { message: 'Password must contain at least one number' }),
-  confirmPassword: z.string().min(8, { message: 'Please confirm your password' }),
+const registerSchema = (t: (key: string) => string) => z.object({
+  name: z.string().trim().min(2, { message: t('auth.validation.fullNameRequired') }).max(100),
+  email: emailSchema(t),
+  password: strongPasswordSchema(t),
+  confirmPassword: z.string().min(8, { message: t('auth.validation.confirmPasswordRequired') }),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwords do not match',
+  message: t('auth.validation.passwordsMismatch'),
   path: ['confirmPassword'],
 })
 
-type RegisterValues = z.infer<typeof registerSchema>
-
-const getErrorMessage = (error: unknown) => {
-  if (typeof error === 'object' && error !== null) {
-    const e = error as { response?: { data?: { message?: string } }; message?: string }
-    return e.response?.data?.message ?? e.message ?? 'Could not create your account. Please try again.'
-  }
-  return 'Could not create your account. Please try again.'
-}
+type RegisterValues = z.infer<ReturnType<typeof registerSchema>>
 
 /**
  * Self-service account creation against najm-auth's public `/auth/register`.
@@ -49,6 +38,7 @@ const getErrorMessage = (error: unknown) => {
  */
 const Register = () => {
   const { t } = useTranslation()
+  const schema = useMemo(() => registerSchema(t), [t])
   const router = useRouter()
 
   const mutation = useMutation({
@@ -62,7 +52,7 @@ const Register = () => {
       router.replace('/login')
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error))
+      toast.error(authErrorMessage(error, t, 'auth.errors.registerFailed'))
     },
   })
 
@@ -76,7 +66,7 @@ const Register = () => {
       <div className='flex w-full flex-col gap-2'>
         <NForm
           id='register-form'
-          schema={registerSchema}
+          schema={schema}
           defaultValues={{ name: '', email: '', password: '', confirmPassword: '' }}
           onSubmit={(values: RegisterValues) => mutation.mutateAsync(values)}
         >
@@ -101,6 +91,7 @@ const Register = () => {
           <FormInput
             name='password'
             type='password'
+            autoComplete='new-password'
             formLabel={t('auth.form.password')}
             placeholder={t('auth.form.passwordPlaceholder')}
             variant='default'
@@ -110,6 +101,7 @@ const Register = () => {
           <FormInput
             name='confirmPassword'
             type='password'
+            autoComplete='new-password'
             formLabel={t('auth.form.confirmPassword')}
             placeholder={t('auth.form.confirmPasswordPlaceholder')}
             variant='default'

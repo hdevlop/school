@@ -1,7 +1,9 @@
 'use client';
 
 import { CalendarDays } from 'lucide-react';
-import { NButton } from 'najm-kit';
+import { NButton, NErrorState } from 'najm-kit';
+import { useTranslation } from 'najm-i18n/react';
+import { isNotFoundError } from '@/services/apiError';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';
 import { useTeacherOverview } from '../../hooks/useTeacherDashboard';
 import TeacherKpis from './TeacherKpis';
@@ -42,6 +44,20 @@ const TeacherOverview = ({ teacherId, onViewDetails }: TeacherOverviewProps) => 
   const loadError = overview ? null : error;
   const retry = () => { void refetch(); };
   const cardState = { loading: isLoading, error: loadError, onRetry: retry };
+  const { t } = useTranslation();
+
+  // Without an overview every figure below would read 0, which says "nothing
+  // to do" about a teacher this reader cannot see or a request that failed.
+  if (loadError) {
+    return (
+      <NErrorState
+        surface="panel"
+        title={isNotFoundError(loadError) ? t('teachers.profile.teacherNotFound') : t('common.feedback.errorTitle')}
+        onRetry={retry}
+        className="min-h-80"
+      />
+    );
+  }
 
   return (
     <div className="flex min-h-full flex-col gap-3 pb-1 fit:h-full">

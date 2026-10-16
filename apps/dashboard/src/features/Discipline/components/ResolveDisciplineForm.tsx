@@ -1,7 +1,8 @@
 'use client';
 
 import { FileCheck2, FileText, Gavel } from 'lucide-react';
-import { FormInput, NForm, NFormSectionHeader, useDialog } from 'najm-kit';
+import { FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useTranslation } from 'najm-i18n/react';
 import { resolveDisciplineSchema } from '../config/disciplineSchemas';
 import { DISCIPLINE_ACTIONS } from '../disciplineConstants';

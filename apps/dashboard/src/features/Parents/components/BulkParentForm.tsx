@@ -1,7 +1,7 @@
 'use client'
 
 import { NForm } from 'najm-kit'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { DynamicArray } from 'najm-kit';
 

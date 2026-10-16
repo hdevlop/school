@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from 'react'
 import { BookOpen, User, GraduationCap, Layers } from 'lucide-react'
-import { DynamicArray, NForm, useDialog, usePrefix } from 'najm-kit';
+import { DynamicArray, NForm, usePrefix } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react'

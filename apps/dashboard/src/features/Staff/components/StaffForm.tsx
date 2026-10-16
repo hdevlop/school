@@ -4,7 +4,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ComponentProps, ComponentType, ReactNode } from 'react';
 import { z } from 'zod';
 import { Activity, Award, Briefcase, Calendar, Car, CreditCard, FileText, Hash, HeartPulse, IdCard, Loader2, Mail, MapPin, Phone, User, UserRound, Wallet } from 'lucide-react';
-import { AvatarFormInput, FormInput, NFormSectionHeader as FormSectionHeader, WizardForm, useDialog } from 'najm-kit';
+import { AvatarFormInput, FormInput, NFormSectionHeader as FormSectionHeader, WizardForm } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import type { StepConfig } from 'najm-kit';
 import { useTranslation } from 'najm-i18n/react';
 import { useClasses } from '@/features/Classes/hooks/useClasses';

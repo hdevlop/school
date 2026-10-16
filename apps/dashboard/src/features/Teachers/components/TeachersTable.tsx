@@ -3,7 +3,8 @@
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useResetLogin } from '@/features/Users/hooks/useResetLogin';
-import { useDialog, NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NErrorState, NForbiddenState, NEmptyState, NButton } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { Eye, Pencil, Trash2, Users, Plus, SearchX } from 'lucide-react';
 import React from 'react';

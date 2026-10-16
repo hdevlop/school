@@ -4,7 +4,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import React from 'react'
 import { Tag, FileText } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { roleValidationSchema } from '../config/rolesValidateSchema'
 import { useTranslation } from 'najm-i18n/react'
 

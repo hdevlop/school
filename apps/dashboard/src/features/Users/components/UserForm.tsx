@@ -4,7 +4,7 @@ import { NForm } from 'najm-kit'
 import { FormInput } from 'najm-kit';
 import React from 'react'
 import { Mail, User, Shield } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { usersValidationSchema, updateUsersValidationSchema } from '../config/usersValidateSchema'
 import { useRoles } from '@/features/Roles/hooks/useRoles'
 import { useTranslation } from 'najm-i18n/react'
@@ -91,7 +91,7 @@ const UserForm = ({ user = null, mode = 'create' }) => {
 
                {!isUpdateMode && (
                   <p className='text-sm text-muted-foreground'>
-                     An invitation email will be sent so this user can set their own password.
+                     {t('users.form.invitationHint')}
                   </p>
                )}
 

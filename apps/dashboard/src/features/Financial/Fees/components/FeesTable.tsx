@@ -2,7 +2,8 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useEffect, useMemo, useState } from 'react';
-import { useDialog, NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
 import { CircleDollarSign, Plus, SearchX, Users } from 'lucide-react';
 import FeeForm from './FeeForm';

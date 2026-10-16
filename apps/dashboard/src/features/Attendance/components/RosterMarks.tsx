@@ -3,27 +3,28 @@
 import { Check, Clock, X } from 'lucide-react';
 import { NButton } from 'najm-kit';
 import { cn } from 'najm-kit';
+import { useTranslation } from 'najm-i18n/react';
 import type { RosterStatus } from '../hooks/useAttendanceRoster';
 
 const IDLE = 'border-2 border-slate-300 bg-white text-slate-500 shadow-none hover:border-slate-500 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-slate-500 dark:hover:bg-slate-800';
 
 export const ROSTER_STATUSES: RosterStatus[] = ['present', 'absent', 'late'];
 
-export const ROSTER_STATUS_META: Record<RosterStatus, { label: string; icon: any; idle: string; active: string }> = {
+export const ROSTER_STATUS_META: Record<RosterStatus, { labelKey: string; icon: any; idle: string; active: string }> = {
   present: {
-    label: 'Present',
+    labelKey: 'attendance.status.present',
     icon: Check,
     idle: IDLE + ' hover:text-emerald-600 dark:hover:text-emerald-400',
     active: 'border-2 border-emerald-700 bg-emerald-600 text-white shadow-none outline outline-2 outline-offset-1 outline-emerald-200 hover:bg-emerald-700 dark:border-emerald-400 dark:bg-emerald-500 dark:text-white dark:outline-emerald-900',
   },
   absent: {
-    label: 'Absent',
+    labelKey: 'attendance.status.absent',
     icon: X,
     idle: IDLE + ' hover:text-red-600 dark:hover:text-red-400',
     active: 'border-2 border-red-700 bg-red-600 text-white shadow-none outline outline-2 outline-offset-1 outline-red-200 hover:bg-red-700 dark:border-red-400 dark:bg-red-500 dark:text-white dark:outline-red-900',
   },
   late: {
-    label: 'Late',
+    labelKey: 'attendance.status.late',
     icon: Clock,
     idle: IDLE + ' hover:text-amber-600 dark:hover:text-amber-400',
     active: 'border-2 border-amber-600 bg-amber-500 text-white shadow-none outline outline-2 outline-offset-1 outline-amber-200 hover:bg-amber-600 dark:border-amber-400 dark:bg-amber-500 dark:text-white dark:outline-amber-900',
@@ -44,6 +45,7 @@ interface RosterMarksProps {
  * neither can drift from the other.
  */
 export default function RosterMarks({ current, onSelect, className }: RosterMarksProps) {
+  const { t } = useTranslation();
   return (
     <div className={cn('flex w-full justify-center gap-2', className)}>
       {ROSTER_STATUSES.map((status) => {
@@ -56,7 +58,8 @@ export default function RosterMarks({ current, onSelect, className }: RosterMark
             type="button"
             variant="outline"
             size="sm"
-            title={meta.label}
+            title={t(meta.labelKey)}
+            aria-label={t(meta.labelKey)}
             aria-pressed={active}
             onClick={(event) => {
               // Cards sit inside a clickable row; marking must not also count

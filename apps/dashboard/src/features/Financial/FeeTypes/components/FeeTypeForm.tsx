@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
 import React from 'react'
 import { DollarSign, Tag, FileText, Layers, CreditCard } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { useTranslation } from 'najm-i18n/react'
 import { feeTypeSchema } from '../config/feeTypeSchemas'
 import { buildFeeCategoryOptionsFor, buildPaymentTypeOptions } from '../config/feeTypeOptions'

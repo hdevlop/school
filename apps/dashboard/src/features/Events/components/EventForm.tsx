@@ -15,7 +15,7 @@ import { NForm } from 'najm-kit';
 import { FormInput } from 'najm-kit';
 
 import { NFormSectionHeader as FormSectionHeader } from 'najm-kit';
-import { useDialog } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { eventSchema } from '../config/eventSchemas';
 import {
   buildEventStatusOptions,

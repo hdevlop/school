@@ -1,15 +1,15 @@
 import { z } from 'zod';
-import { dateField, num, optionalDateField, optionalId, requiredId } from '../../../shared/fields';
+import { dateField, optionalDateField, optionalId, requiredId, money } from '../../../shared/fields';
 import { paymentMethodEnum, paymentStatusEnum } from '../../../shared/enums';
 
 const paymentAllocationSchema = z.object({
   feeId: requiredId,
   number: z.coerce.number().int().positive('Installment must be a positive number'),
-  amount: num().positive('Amount must be greater than 0'),
+  amount: money().positive('Amount must be greater than 0'),
 });
 
 const paymentBaseSchema = z.object({
-  amount: num().positive('Amount must be greater than 0').max(1_000_000, 'Amount too large'),
+  amount: money().positive('Amount must be greater than 0').max(1_000_000, 'Amount too large'),
   paymentMethod: paymentMethodEnum,
   paymentDate: dateField,
   checkNumber: z.preprocess((val) => (val === '' ? null : val), z.string().max(50, 'Check number too long').optional().nullable()),

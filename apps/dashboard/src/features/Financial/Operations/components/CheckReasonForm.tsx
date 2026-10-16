@@ -1,7 +1,8 @@
 'use client';
 
 import { FileText } from 'lucide-react';
-import { FormInput, NForm, useDialog } from 'najm-kit';
+import { FormInput, NForm } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { checkReasonSchema, type CheckReasonValues } from '../config/checkSchemas';
 
 export const CHECK_REASON_FORM_ID = 'check-reason-form';

@@ -1,7 +1,7 @@
 'use client'
 
 import { useTranslation } from 'najm-i18n/react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { FeeTypeDialogContent } from '../../FeeTypes/components/FeeTypeDialog'
 import {
    FeeFactory,

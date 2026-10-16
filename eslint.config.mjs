@@ -65,6 +65,12 @@ export default defineConfig([
             message:
               "Selects are built by typed, self-contained feature option builders in features/<Feature>/config/<feature>Options.ts.",
           },
+          {
+            name: "najm-kit",
+            importNames: ["useDialog"],
+            message:
+              "Use useDialog from @/shared/useDialog: najm-kit fills omitted dialog buttons with English labels.",
+          },
         ],
         patterns: [
           {

@@ -1,18 +1,8 @@
 "use client"
 
 import { useMemo, useState } from 'react';
-import {
-  cn,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  NBadge,
-  NButton,
-  Progress,
-  useDialog,
-} from 'najm-kit';
+import { cn, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, NBadge, NButton, Progress } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { CalendarClock, CheckCircle2, ChevronDown, CreditCard, MoreVertical } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useSchoolFormat } from '@/hooks/useSchoolFormat';

@@ -120,6 +120,18 @@ export class ExpenseValidator {
 
   // ========== STATUS VALIDATION ==========
 
+  /**
+   * A generic edit may only cancel an open expense. Approval, rejection and
+   * payment each have their own route, which records who acted, when and how
+   * it was paid; an edit that set `paid` skipped all three and counted the
+   * amount as spent.
+   */
+  ensureEditableStatusChange(current: string, next: string | undefined) {
+    if (next === undefined || next === current) return;
+    if (next === 'cancelled' && (current === 'pending' || current === 'approved')) return;
+    Err(409, this.t('statusViaWorkflow'));
+  }
+
   async checkCanApprove(id: string) {
     const expense = await this.expenseRepository.getById(id);
     if (!expense) {

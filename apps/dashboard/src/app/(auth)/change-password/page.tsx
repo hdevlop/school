@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { z } from 'zod'
+import React, { useEffect, useMemo, useState } from 'react'
 import { NForm, NButton, FormInput } from 'najm-kit'
 import { Loader2, KeyRound, LogOut } from 'lucide-react'
 import { useMutation } from '@tanstack/react-query'
@@ -9,29 +8,14 @@ import { toast } from 'sonner'
 import { credentialSetupApi } from '@/services/credentialSetupApi'
 import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
-
-// Min 8 to match Najm's default credential-setup password rule.
-const changePasswordSchema = z.object({
-  newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
-  confirmPassword: z.string().min(8, { message: 'Please confirm your password' }),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-})
-
-const getErrorMessage = (error: unknown) => {
-  if (typeof error === 'object' && error !== null) {
-    const e = error as { response?: { data?: { message?: string } }; message?: string }
-    return e.response?.data?.message ?? e.message ?? 'Could not set your password. The setup session may have expired.'
-  }
-  return 'Could not set your password. The setup session may have expired.'
-}
+import { authErrorMessage, newPasswordSchema } from '../authMessages';
 
 // Reached only from a login that answered `nextStep: 'credential_setup'`. The
 // user holds Najm's one-time setup cookie and no session, so this page is
 // public and must never assume an authenticated identity.
 const ChangePassword = () => {
   const { t } = useTranslation();
+  const schema = useMemo(() => newPasswordSchema(t), [t]);
   const [checking, setChecking] = useState(true)
 
   useEffect(() => {
@@ -51,7 +35,7 @@ const ChangePassword = () => {
       // Setup deliberately does not issue a session; a fresh login is required.
       window.location.replace('/login')
     },
-    onError: (error) => toast.error(getErrorMessage(error)),
+    onError: (error) => toast.error(authErrorMessage(error, t, 'auth.errors.setupSessionExpired')),
   })
 
   const cancelMutation = useMutation({
@@ -77,13 +61,14 @@ const ChangePassword = () => {
       <div className='flex w-full flex-col gap-2'>
         <NForm
           id='change-password-form'
-          schema={changePasswordSchema}
+          schema={schema}
           defaultValues={{ newPassword: '', confirmPassword: '' }}
           onSubmit={(values) => mutation.mutate(values.newPassword)}
         >
           <FormInput
             name='newPassword'
             type='password'
+            autoComplete='new-password'
             formLabel={t('auth.form.newPassword')}
             placeholder={t('auth.form.newPasswordPlaceholder')}
             variant='default'
@@ -93,6 +78,7 @@ const ChangePassword = () => {
           <FormInput
             name='confirmPassword'
             type='password'
+            autoComplete='new-password'
             formLabel={t('auth.form.confirmPassword')}
             placeholder={t('auth.form.confirmPasswordPlaceholder')}
             variant='default'

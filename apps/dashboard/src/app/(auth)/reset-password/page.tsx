@@ -1,7 +1,6 @@
 'use client'
 
-import React, { Suspense } from 'react'
-import { z } from 'zod'
+import React, { Suspense, useMemo } from 'react'
 import { NForm, NButton, FormInput } from 'najm-kit'
 import { Loader2, KeyRound } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -11,23 +10,7 @@ import Link from 'next/link'
 import { auth } from '@/najm.auth'
 import { useTranslation } from 'najm-i18n/react';
 import { AuthHeading } from '../AuthHeading';
-
-// Min 8 to match the backend's confirmResetPasswordDto password rule.
-const resetPasswordSchema = z.object({
-  newPassword: z.string().min(8, { message: 'Password must be at least 8 characters' }),
-  confirmPassword: z.string().min(8, { message: 'Please confirm your password' }),
-}).refine((data) => data.newPassword === data.confirmPassword, {
-  message: 'Passwords do not match',
-  path: ['confirmPassword'],
-})
-
-const getErrorMessage = (error: unknown) => {
-  if (typeof error === 'object' && error !== null) {
-    const e = error as { response?: { data?: { message?: string } }; message?: string }
-    return e.response?.data?.message ?? e.message ?? 'Could not set your password. The link may have expired.'
-  }
-  return 'Could not set your password. The link may have expired.'
-}
+import { authErrorMessage, newPasswordSchema } from '../authMessages';
 
 // Whether the link came from an account invitation rather than a password
 // reset. Only the wording depends on it: the payload is read, not trusted, and
@@ -48,6 +31,7 @@ const isInvitationToken = (token: string) => {
 // invitation also verifies the email and activates the pending account.
 const ResetPasswordForm = () => {
   const { t } = useTranslation();
+  const schema = useMemo(() => newPasswordSchema(t), [t]);
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get('token') ?? ''
@@ -60,7 +44,7 @@ const ResetPasswordForm = () => {
       router.replace('/login')
     },
     onError: (error) => {
-      toast.error(getErrorMessage(error))
+      toast.error(authErrorMessage(error, t, 'auth.errors.setPasswordFailed', { 400: 'auth.errors.resetLinkInvalid' }))
     },
   })
 
@@ -84,13 +68,14 @@ const ResetPasswordForm = () => {
         <div className='flex w-full flex-col gap-2'>
           <NForm
             id='reset-password-form'
-            schema={resetPasswordSchema}
+            schema={schema}
             defaultValues={{ newPassword: '', confirmPassword: '' }}
             onSubmit={handleSubmit}
           >
             <FormInput
               name='newPassword'
               type='password'
+              autoComplete='new-password'
               formLabel={t('auth.form.newPassword')}
               placeholder={t('auth.form.resetNewPasswordPlaceholder')}
               variant='default'
@@ -100,6 +85,7 @@ const ResetPasswordForm = () => {
             <FormInput
               name='confirmPassword'
               type='password'
+              autoComplete='new-password'
               formLabel={t('auth.form.confirmPassword')}
               placeholder={t('auth.form.resetConfirmPasswordPlaceholder')}
               variant='default'

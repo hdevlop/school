@@ -42,23 +42,36 @@ type ZodNumChainable = z.ZodNumber & {
   int: (msg?: string) => ZodNumChainable;
 };
 
-export const num = (): ZodNumChainable => {
-  const createChainable = (currentSchema: z.ZodNumber): ZodNumChainable => {
-    // Capture native methods before Object.assign overwrites them
-    const nativePositive = currentSchema.positive.bind(currentSchema);
-    const nativeMin = currentSchema.min.bind(currentSchema);
-    const nativeMax = currentSchema.max.bind(currentSchema);
-    const nativeInt = currentSchema.int.bind(currentSchema);
+const createChainable = (currentSchema: z.ZodNumber): ZodNumChainable => {
+  // Capture native methods before Object.assign overwrites them
+  const nativePositive = currentSchema.positive.bind(currentSchema);
+  const nativeMin = currentSchema.min.bind(currentSchema);
+  const nativeMax = currentSchema.max.bind(currentSchema);
+  const nativeInt = currentSchema.int.bind(currentSchema);
 
-    const methods = {
-      positive: (msg = 'Must be positive') => createChainable(nativePositive(msg)),
-      min: (value: number, msg?: string) => createChainable(nativeMin(value, msg || `Must be at least ${value}`)),
-      max: (value: number, msg?: string) => createChainable(nativeMax(value, msg || `Cannot exceed ${value}`)),
-      int: (msg = 'Must be an integer') => createChainable(nativeInt(msg)),
-    };
-
-    return Object.assign(currentSchema, methods) as ZodNumChainable;
+  const methods = {
+    positive: (msg = 'Must be positive') => createChainable(nativePositive(msg)),
+    min: (value: number, msg?: string) => createChainable(nativeMin(value, msg || `Must be at least ${value}`)),
+    max: (value: number, msg?: string) => createChainable(nativeMax(value, msg || `Cannot exceed ${value}`)),
+    int: (msg = 'Must be an integer') => createChainable(nativeInt(msg)),
   };
 
-  return createChainable(z.coerce.number());
+  return Object.assign(currentSchema, methods) as ZodNumChainable;
 };
+
+export const num = (): ZodNumChainable => createChainable(z.coerce.number());
+
+/** Whole centimes: the money columns hold two decimals. */
+const hasCentimes = (value: number) => {
+  const centimes = Math.round(value * 100);
+  // Floating-point tolerance must not admit a nonzero amount that stores as zero.
+  return (value === 0 || centimes !== 0) && Math.abs(value * 100 - centimes) < 1e-6;
+};
+
+/**
+ * A money amount from a client. The columns are numeric(…, 2), so 0.001
+ * used to pass validation and fail in the database as a 500; it is now a 400
+ * with nothing written.
+ */
+export const money = (): ZodNumChainable =>
+  createChainable(z.coerce.number().refine(hasCentimes, 'Amount cannot have more than 2 decimal places') as unknown as z.ZodNumber);

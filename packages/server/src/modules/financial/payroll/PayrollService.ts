@@ -240,6 +240,7 @@ export class PayrollService {
   @Transaction()
   async update(id: string, data: UpdatePayslipDto, actorId?: string) {
     const existing = await this.payrollValidator.ensureExists(id);
+    this.payrollValidator.ensureEditable(existing, { status: data.status, amountsChanged: false });
 
     const update: Record<string, any> = {};
     if (data.status !== undefined) update.status = data.status;
@@ -257,6 +258,7 @@ export class PayrollService {
         ? money(data.totalDeductions)
         : money(existing.totalDeductions);
       const gross = base + allowances;
+      this.payrollValidator.ensureEditable(existing, { status: data.status, amountsChanged: true, gross, deductions });
       update.totalAllowances = toMoney(allowances);
       update.totalDeductions = toMoney(deductions);
       update.grossAmount = toMoney(gross);

@@ -2,7 +2,8 @@
 
 import React, { useMemo } from 'react';
 import { z } from 'zod';
-import { useDialog, Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { Badge, Button, FormInput, NForm, NFormSectionHeader } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { Briefcase, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useTranslation } from 'najm-i18n/react';
 import { useStaffRoles, useStaffRoleMutations } from '../hooks/useStaffRoles';

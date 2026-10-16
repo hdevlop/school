@@ -38,9 +38,16 @@ export const announcementSchema = z.object({
   authorId: optionalId,
   targetAudience: z.enum(ANNOUNCEMENT_AUDIENCE_VALUES),
   classId: optionalId,
-  classIds: z.array(requiredId).min(1, 'Select at least one class').optional(),
+  classIds: z.array(requiredId).optional(),
   publishDate: dateField.optional(),
   expiryDate: dateField.optional(),
+}).superRefine((data, ctx) => {
+  // Only the class audience shows the class picker. Requiring classes for any
+  // other audience failed on a field the form does not render, so Create did
+  // nothing and said nothing.
+  if (data.targetAudience === 'class' && !(data.classIds?.length)) {
+    ctx.addIssue({ code: 'custom', path: ['classIds'], message: 'Select at least one class' });
+  }
 });
 
 export type AnnouncementFormValues = z.input<typeof announcementSchema>;

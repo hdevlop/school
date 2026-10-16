@@ -1,9 +1,13 @@
 "use client"
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
-import { useDialog, NPageHeader, NPageHeaderActions, NEmptyState, NButton } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NButton } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { Receipt, Plus, SearchX } from 'lucide-react';
+import { Receipt, Plus, SearchX, Eye, Pencil, Trash2, Check, X, Banknote } from 'lucide-react';
+import { toast } from 'sonner';
+import { handleApprovalApi, recordPaymentApi } from '@/services/expenseApi';
+import ExpensePaymentForm from './ExpensePaymentForm';
 import React from 'react';
 import ExpenseForm from './ExpenseForm';
 import { useExpenses } from '../hooks/useExpenses';
@@ -27,6 +31,7 @@ function ExpensesTable() {
     createExpense,
     updateExpense,
     deleteExpense,
+    refetch,
     isExpensesLoading,
     isUpdating,
     isCreating,
@@ -94,6 +99,54 @@ function ExpensesTable() {
     });
   };
 
+  // Approval, rejection and payment have their own routes, which record who
+  // acted and how the expense was paid; the edit form can only cancel.
+  const runWorkflow = async (action: () => Promise<unknown>, successKey: string) => {
+    if (!academicYear) return;
+    const targetYear = academicYear;
+    try {
+      await withAcademicYear(targetYear, action);
+      toast.success(t(successKey));
+      await refetch();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message ?? error?.message ?? t('common.feedback.errorTitle'));
+    }
+  };
+
+  const handleApprove = (expense) =>
+    runWorkflow(() => handleApprovalApi(expense.id, { action: 'approve' }), 'expenses.success.approved');
+
+  const handleReject = (expense) => {
+    const rejectionReason = window.prompt(t('expenses.actions.rejectReason'))?.trim();
+    if (!rejectionReason) return;
+    return runWorkflow(() => handleApprovalApi(expense.id, { action: 'reject', rejectionReason }), 'expenses.success.rejected');
+  };
+
+  const handleRecordPayment = async (expense) => {
+    const payment = await openDialog({
+      title: `${t('expenses.actions.paymentTitle')} - ${expense.title}`,
+      children: <ExpensePaymentForm expense={expense} />,
+      primaryButton: { form: 'expense-payment-form', text: t('expenses.actions.recordPayment') },
+    });
+    if (!payment) return;
+    return runWorkflow(() => recordPaymentApi(expense.id, payment), 'expenses.success.paymentRecorded');
+  };
+
+  // Providing `menu.row` replaces NTable's built-in items, so View, Edit and
+  // Delete are restated around the workflow step the expense is at.
+  const rowMenu = (expense) => [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(expense) },
+    { label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(expense) },
+    ...(expense.status === 'pending' ? [
+      { label: t('expenses.actions.approve'), icon: Check, separatorBefore: true, onSelect: () => handleApprove(expense) },
+      { label: t('expenses.actions.reject'), icon: X, onSelect: () => handleReject(expense) },
+    ] : []),
+    ...(expense.status === 'approved' ? [
+      { label: t('expenses.actions.recordPayment'), icon: Banknote, separatorBefore: true, onSelect: () => handleRecordPayment(expense) },
+    ] : []),
+    { label: t('common.delete'), icon: Trash2, danger: true, separatorBefore: true, onSelect: () => handleDelete(expense) },
+  ];
+
   const total = expenses?.length ?? 0;
 
   return (
@@ -117,6 +170,7 @@ function ExpensesTable() {
         onView={handleView}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        menu={{ row: rowMenu }}
         loading={isExpensesLoading}
         renderCard={ExpenseCard}
         addButtonText={t('expenses.dialogs.createButton')}

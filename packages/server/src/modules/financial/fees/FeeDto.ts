@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { academicYearField, num, optionalDateField, optionalId, requiredId } from '../../../shared/fields';
+import { academicYearField, optionalDateField, optionalId, requiredId, money } from '../../../shared/fields';
 import { feeStatusEnum, scheduleEnum } from '../../../shared/enums';
 
 const feeSchema = z.object({
@@ -10,11 +10,11 @@ const feeSchema = z.object({
   effectiveDate: optionalDateField,
   status: feeStatusEnum.optional(),
   schedule: scheduleEnum,
-  baseAmount: num().positive('Base amount must be positive').optional(),
-  grossAmount: num().positive('Gross amount must be positive').optional(),
-  netAmount: num().optional(),
-  paidAmount: num().min(0, 'Paid amount cannot be negative').optional(),
-  discountAmount: num().min(0, 'Discount cannot be negative').optional(),
+  baseAmount: money().positive('Base amount must be positive').optional(),
+  grossAmount: money().positive('Gross amount must be positive').optional(),
+  netAmount: money().optional(),
+  paidAmount: money().min(0, 'Paid amount cannot be negative').optional(),
+  discountAmount: money().min(0, 'Discount cannot be negative').optional(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
   assignedBy: optionalId.nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
@@ -56,8 +56,8 @@ export const classBulkFeeDto = z.object({
   schedule: scheduleEnum,
   academicYear: academicYearField.optional(),
   effectiveDate: optionalDateField,
-  baseAmount: num().positive('Base amount must be positive').optional(),
-  discountAmount: num().min(0, 'Discount cannot be negative').optional(),
+  baseAmount: money().positive('Base amount must be positive').optional(),
+  discountAmount: money().min(0, 'Discount cannot be negative').optional(),
   discountReason: z.string().max(500, 'Discount reason too long').optional().nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
 });

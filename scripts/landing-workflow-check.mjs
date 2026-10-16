@@ -36,7 +36,7 @@ try {
   await page.goto(`${base}/login`);
   await page.locator('input[name="identifier"]').fill('admin@landing.example.test');
   await page.locator('input[name="password"]').fill('LandingDemo2026!');
-  await page.getByRole('button',{name:'Login',exact:true}).click();
+  await page.locator('button[form="login-form"]').click();
   await page.waitForURL(url=>!url.pathname.startsWith('/login'));
   await page.goto(`${base}/public-page`,{waitUntil:'networkidle',timeout:120000});
   await page.getByRole('tab',{name:'Programs',exact:true}).click();

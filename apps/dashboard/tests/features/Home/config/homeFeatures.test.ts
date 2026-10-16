@@ -62,7 +62,14 @@ describe('Home cards', () => {
     const cards = createHomeCards(t, viewer('admin', ['*:*']), ['*:*']);
     expect(cards.every((card) => card.accessible)).toBe(true);
     expect(new Set(cards.map((card) => card.id)).size).toBe(cards.length);
-    expect(cards.map((card) => card.id)).toEqual(expect.arrayContaining(['/dashboard', '/staff', '/fees', '/grades', '/settings', '/visit-requests', '/public-page']));
+    expect(cards.map((card) => card.id)).toEqual(expect.arrayContaining(['/dashboard', '/staff', '/fees', '/grades', '/settings']));
+  });
+
+  it('offers no link to the disabled visit-request and public-page screens', () => {
+    // Both routes render notFound() since 4429ad5; a card would open a 404.
+    const ids = createHomeCards(t, viewer('admin', ['*:*']), ['*:*']).map((card) => card.id);
+    expect(ids).not.toContain('/visit-requests');
+    expect(ids).not.toContain('/public-page');
   });
 
   it('shows personal labels and permitted academic cards to family accounts', () => {

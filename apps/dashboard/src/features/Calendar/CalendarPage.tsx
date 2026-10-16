@@ -1,6 +1,7 @@
 'use client';
 
-import { useDialog, NButton, NPageHeader, NPageHeaderActions, NTabs, NLoadingState } from 'najm-kit';
+import { NButton, NPageHeader, NPageHeaderActions, NTabs, NLoadingState } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 
 import React, { useCallback, useMemo, useState } from 'react';
 import {

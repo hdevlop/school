@@ -257,7 +257,10 @@
       "rightsReserved": "© {{year}} {{app}}. All rights reserved.",
       "activateTitle": "Activate your account",
       "activateSubtitle": "Choose a password to activate your account",
-      "activateSubmit": "Activate account"
+      "activateSubmit": "Activate account",
+      "rememberMe": "Keep me logged in",
+      "loginSubmit": "Login",
+      "loginPending": "Logging in..."
     },
     "form": {
       "fullName": "Full name",
@@ -305,11 +308,25 @@
       "refreshTokenVerificationFailed": "Refresh token verification failed",
       "refreshTokenMissing": "Refresh token missing. Please provide a refresh token",
       "refreshTokenInvalid": "Invalid refresh token. Please login again",
-      "authInitFailed": "Authentication initialization failed"
+      "authInitFailed": "Authentication initialization failed",
+      "loginFailed": "Login failed. Please try again.",
+      "tooManyAttempts": "Too many attempts. Please wait a moment and try again.",
+      "resetLinkInvalid": "This link is invalid or has already been used. Ask for a new one.",
+      "setPasswordFailed": "Could not set your password. The link may have expired.",
+      "setupSessionExpired": "Could not set your password. The setup session may have expired.",
+      "registerFailed": "Could not create your account. Please try again."
     },
     "validation": {
       "emailInvalid": "Invalid email address format",
-      "passwordMinLength": "Password must be at least 8 characters long"
+      "passwordMinLength": "Password must be at least 8 characters long",
+      "identifierInvalid": "Enter your email address or phone number",
+      "loginPasswordMinLength": "Password must be at least 6 characters",
+      "confirmPasswordRequired": "Please confirm your password",
+      "passwordsMismatch": "Passwords do not match",
+      "fullNameRequired": "Please enter your full name",
+      "passwordUppercase": "Password must contain at least one uppercase letter",
+      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordNumber": "Password must contain at least one number"
     },
     "users": {
       "success": {
@@ -387,7 +404,8 @@
       "newPassword": "New Password (leave blank to keep current)",
       "confirmPassword": "Confirm Password",
       "confirmPasswordPlaceholder": "Confirm password",
-      "userRole": "User Role"
+      "userRole": "User Role",
+      "invitationHint": "An invitation email will be sent so this user can set their own password."
     },
     "roles": {
       "admin": "Admin",
@@ -1280,7 +1298,8 @@
       "viewTitle": "Fee Type Details",
       "editTitle": "Edit Fee Type",
       "updateButton": "Update Fee Type",
-      "deleteButton": "Delete Fee Type"
+      "deleteButton": "Delete Fee Type",
+      "noFeeTypes": "No fee types available"
     },
     "table": {
       "selectAll": "Select all",
@@ -3143,7 +3162,13 @@
       "printReceipt": "Print receipt",
       "receiptAfterCheck": "The receipt can be printed once the check is completed.",
       "selectInstallments": "Select installments to pay",
-      "noFeeData": "No fee data available"
+      "noFeeData": "No fee data available",
+      "depositCheck": "Deposit check",
+      "completeCheck": "Complete check",
+      "bounceCheck": "Bounce check",
+      "voidPayment": "Void payment",
+      "bounceReason": "Reason for bounced check",
+      "voidReason": "Reason for voiding this payment"
     },
     "register": {
       "missing": "Missing",
@@ -3226,7 +3251,18 @@
       "noStudent": "No student found",
       "searchStudents": "Search students…",
       "selectStudent": "Select student…",
-      "student": "Student"
+      "student": "Student",
+      "studentRoutes": "Student Routes",
+      "noActiveVehicles": "No active vehicles found",
+      "addVehiclesFirst": "Add vehicles in the Vehicles section first",
+      "noStudentsAssigned": "No students assigned",
+      "unassignTitle": "Unassign Student",
+      "unassignQuestion": "Remove {{student}} from {{vehicle}}?",
+      "unassignFeeNote": "Their transport fee will remain but no new installments will be generated.",
+      "pickupLocation": "Pickup location",
+      "pickupPlaceholder": "e.g. Rue Ibn Battouta",
+      "dropoffLocation": "Drop-off location",
+      "dropoffPlaceholder": "e.g. School gate"
     },
     "success": {
       "retrieved": "Bus retrieved successfully",
@@ -3247,7 +3283,9 @@
       "driverNameMinLength": "Driver name must be at least 2 characters long",
       "driverPhoneRequired": "Driver phone number is required",
       "routeNameRequired": "Route name is required",
-      "capacityPositive": "Capacity must be a positive number"
+      "capacityPositive": "Capacity must be a positive number",
+      "studentRequired": "Student is required",
+      "dateFormat": "Date must be in YYYY-MM-DD format"
     },
     "form": {
       "stepTitle": "Transport",
@@ -4081,6 +4119,12 @@
     },
     "filters": {
       "searchByName": "Search by cycle name..."
+    },
+    "success": {
+      "retrieved": "Cycles retrieved successfully",
+      "created": "Cycle created successfully",
+      "updated": "Cycle updated successfully",
+      "deleted": "Cycle deleted successfully"
     }
   },
   "subjects": {
@@ -4152,7 +4196,9 @@
       "updated": "Expense updated successfully",
       "deleted": "Expense deleted successfully",
       "allDeleted": "All expenses deleted successfully",
-      "paymentRecorded": "Payment recorded successfully"
+      "paymentRecorded": "Payment recorded successfully",
+      "approved": "Expense approved",
+      "rejected": "Expense rejected"
     },
     "errors": {
       "idExists": "Expense already exists",
@@ -4170,7 +4216,8 @@
       "cannotApprove": "This expense cannot be approved in its current status",
       "cannotPay": "This expense cannot be paid in its current status",
       "rejectionReasonRequired": "A rejection reason is required",
-      "checkNumberRequired": "A check number is required for check payments"
+      "checkNumberRequired": "A check number is required for check payments",
+      "statusViaWorkflow": "Approve, reject or pay an expense with its own action; an edit can only cancel it."
     },
     "form": {
       "basicInformation": "Basic Information",
@@ -4268,6 +4315,13 @@
       "amountRequired": "Amount is required",
       "amountPositive": "Amount must be greater than 0",
       "expenseDateRequired": "Expense date is required"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "recordPayment": "Record payment",
+      "rejectReason": "Reason for rejecting this expense (at least 10 characters)",
+      "paymentTitle": "Record expense payment"
     }
   },
   "vehicles": {
@@ -4572,7 +4626,12 @@
     "alerts": "Alerts",
     "myChildren": "My children",
     "myProfile": "My profile",
-    "pendingChecks": "Checks"
+    "pendingChecks": "Checks",
+    "changeLanguage": "Change language",
+    "openSidebar": "Open sidebar",
+    "closeSidebar": "Close sidebar",
+    "collapseSidebar": "Collapse",
+    "expandSidebar": "Expand"
   },
   "classRoutines": {
     "success": {
@@ -4777,7 +4836,8 @@
       "unpaid": "Payment reverted",
       "updated": "Payslip updated successfully",
       "deleted": "Payslip deleted successfully",
-      "bulkDeleted": "Payslips deleted successfully"
+      "bulkDeleted": "Payslips deleted successfully",
+      "created": "Payslip recorded successfully"
     },
     "errors": {
       "notFound": "Payslip not found",
@@ -4786,7 +4846,10 @@
       "staffNotFound": "Staff not found",
       "staffInactive": "Only active staff can be paid",
       "noCompensation": "Staff member has no compensation set",
-      "outsideYear": "Payroll period is outside the selected school year"
+      "outsideYear": "Payroll period is outside the selected school year",
+      "statusViaWorkflow": "Pay or unpay a payslip with its own action; an edit can only cancel a pending payslip.",
+      "paidLocked": "A paid payslip keeps the amounts it was paid with. Unpay it first.",
+      "deductionsExceedGross": "Deductions cannot exceed the gross salary."
     },
     "stats": {
       "period": "Period",
@@ -4930,7 +4993,8 @@
       "updated": "Attendance updated successfully",
       "deleted": "Attendance record deleted",
       "allDeleted": "All attendance records deleted",
-      "seeded": "Attendance demo data seeded"
+      "seeded": "Attendance demo data seeded",
+      "created": "Attendance recorded successfully"
     },
     "errors": {
       "selectTeacherSubject": "Select a teacher and subject before saving student attendance.",
@@ -5827,6 +5891,12 @@
       "notFound": "Zone not found",
       "inUse": "Zone is named by staff assignments and cannot be deleted",
       "nameExists": "Zone name already exists"
+    },
+    "success": {
+      "retrieved": "Zones retrieved successfully",
+      "created": "Zone created successfully",
+      "updated": "Zone updated successfully",
+      "deleted": "Zone deleted successfully"
     }
   },
   "enrollments": {
@@ -6087,6 +6157,71 @@
         "landingNews5": "News photo 5",
         "landingNews6": "News photo 6"
       }
+    }
+  },
+  "chatbot": {
+    "assistant": "AI Assistant",
+    "apiKey": "API Key",
+    "askAnything": "Ask anything",
+    "backToChat": "Back to chat",
+    "baseUrl": "Base URL",
+    "clearChat": "Clear chat",
+    "close": "Close",
+    "connected": "Connected",
+    "copied": "Copied",
+    "copy": "Copy",
+    "getKey": "Get key",
+    "instruction": "Instruction",
+    "invalidSettings": "Invalid settings",
+    "messagesSentToLlm": "Messages sent to LLM",
+    "model": "Model",
+    "memoryHint": "Remember messages for this session and use them in follow-up replies.",
+    "removeModel": "Remove model",
+    "resize": "Resize",
+    "save": "Save",
+    "savedKey": "Saved key",
+    "saved": "Saved",
+    "send": "Send",
+    "settingsReady": "Settings look ready",
+    "settings": "Settings",
+    "showModelSuggestions": "Show model suggestions",
+    "stop": "Stop",
+    "memoryLimit": "Stored memory limit",
+    "testConnection": "Test connection",
+    "useMemory": "Use conversation memory",
+    "suggestions": {
+      "studentsAttention": "List students who need attention",
+      "feeActivity": "Summarize recent fee activity",
+      "attendanceIssues": "Find today attendance issues",
+      "createStudent": "Help me create a new student record"
+    }
+  },
+  "attendance-staff": {
+    "success": {
+      "created": "Staff attendance recorded successfully",
+      "updated": "Staff attendance updated successfully",
+      "deleted": "Staff attendance deleted successfully"
+    }
+  },
+  "behavior-rewards": {
+    "success": {
+      "created": "Recognition added successfully",
+      "updated": "Recognition updated successfully",
+      "deleted": "Recognition deleted successfully"
+    }
+  },
+  "publicSettings": {
+    "success": {
+      "created": "Settings saved successfully",
+      "updated": "Settings updated successfully",
+      "deleted": "Settings deleted successfully"
+    }
+  },
+  "visit-requests": {
+    "success": {
+      "created": "Visit request sent successfully",
+      "updated": "Visit request updated successfully",
+      "deleted": "Visit request deleted successfully"
     }
   }
 }

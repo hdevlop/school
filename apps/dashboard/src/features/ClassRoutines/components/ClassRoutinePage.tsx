@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { BookOpen, CalendarClock, Clock3, Plus } from 'lucide-react';
-import { ComboboxInput, NajmScroll, NButton, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput, useDialog } from 'najm-kit';
+import { ComboboxInput, NajmScroll, NButton, NFilterBar, NPageHeader, NPageHeaderActions, NSheet, NSkeleton, SelectInput } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { useAuth } from 'najm-auth/client/react';
 import { useViewerRole } from '@/features/Users/hooks/useViewerRole';
 import { useClasses } from '@/features/Classes/hooks/useClasses';

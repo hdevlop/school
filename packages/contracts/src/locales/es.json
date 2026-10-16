@@ -257,7 +257,10 @@
       "rightsReserved": "© {{year}} {{app}}. Todos los derechos reservados.",
       "activateTitle": "Activa tu cuenta",
       "activateSubtitle": "Elige una contraseña para activar tu cuenta",
-      "activateSubmit": "Activar cuenta"
+      "activateSubmit": "Activar cuenta",
+      "rememberMe": "Mantener la sesión iniciada",
+      "loginSubmit": "Iniciar sesión",
+      "loginPending": "Iniciando sesión…"
     },
     "form": {
       "fullName": "Nombre completo",
@@ -305,11 +308,25 @@
       "refreshTokenVerificationFailed": "Falló la verificación del token de actualización",
       "refreshTokenMissing": "Falta el token de actualización. Por favor, proporciona un token de actualización",
       "refreshTokenInvalid": "Token de actualización inválido. Por favor, inicia sesión de nuevo",
-      "authInitFailed": "Falló la inicialización de la autenticación"
+      "authInitFailed": "Falló la inicialización de la autenticación",
+      "loginFailed": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+      "tooManyAttempts": "Demasiados intentos. Espera un momento e inténtalo de nuevo.",
+      "resetLinkInvalid": "Este enlace no es válido o ya se ha utilizado. Solicita uno nuevo.",
+      "setPasswordFailed": "No se pudo establecer tu contraseña. Es posible que el enlace haya caducado.",
+      "setupSessionExpired": "No se pudo establecer tu contraseña. Es posible que la sesión de configuración haya caducado.",
+      "registerFailed": "No se pudo crear tu cuenta. Inténtalo de nuevo."
     },
     "validation": {
       "emailInvalid": "Formato de dirección de correo electrónico inválido",
-      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres"
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "identifierInvalid": "Introduce tu correo electrónico o tu número de teléfono",
+      "loginPasswordMinLength": "La contraseña debe tener al menos 6 caracteres",
+      "confirmPasswordRequired": "Confirma tu contraseña",
+      "passwordsMismatch": "Las contraseñas no coinciden",
+      "fullNameRequired": "Introduce tu nombre completo",
+      "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+      "passwordLowercase": "La contraseña debe contener al menos una letra minúscula",
+      "passwordNumber": "La contraseña debe contener al menos un número"
     },
     "users": {
       "success": {
@@ -386,7 +403,8 @@
       "newPassword": "Nueva Contraseña (dejar en blanco para mantener la actual)",
       "confirmPassword": "Confirmar Contraseña",
       "confirmPasswordPlaceholder": "Confirmar contraseña",
-      "userRole": "Rol de Usuario"
+      "userRole": "Rol de Usuario",
+      "invitationHint": "Se enviará un correo de invitación para que este usuario establezca su propia contraseña."
     },
     "roles": {
       "admin": "Administrador",
@@ -1175,7 +1193,12 @@
     "behaviorRewardsShort": "Recompensas",
     "myChildren": "Mis hijos",
     "myProfile": "Mi perfil",
-    "pendingChecks": "Cheques"
+    "pendingChecks": "Cheques",
+    "changeLanguage": "Cambiar idioma",
+    "openSidebar": "Abrir menú",
+    "closeSidebar": "Cerrar menú",
+    "collapseSidebar": "Contraer",
+    "expandSidebar": "Expandir"
   },
   "classRoutines": {
     "success": {
@@ -1380,7 +1403,8 @@
       "unpaid": "Pago revertido",
       "updated": "Recibo de nómina actualizado correctamente",
       "deleted": "Recibo de nómina eliminado correctamente",
-      "bulkDeleted": "Recibos de nómina eliminados correctamente"
+      "bulkDeleted": "Recibos de nómina eliminados correctamente",
+      "created": "Nómina registrada correctamente"
     },
     "errors": {
       "notFound": "Recibo de nómina no encontrado",
@@ -1389,7 +1413,10 @@
       "staffNotFound": "Miembro del personal no encontrado",
       "staffInactive": "Solo se puede pagar al personal activo",
       "noCompensation": "Este miembro del personal no tiene remuneración definida",
-      "outsideYear": "El periodo de nómina está fuera del año escolar seleccionado"
+      "outsideYear": "El periodo de nómina está fuera del año escolar seleccionado",
+      "statusViaWorkflow": "Paga o anula el pago de una nómina con su acción propia; una edición solo puede cancelar una nómina pendiente.",
+      "paidLocked": "Una nómina pagada conserva los importes con que se pagó. Anula primero el pago.",
+      "deductionsExceedGross": "Las deducciones no pueden superar el salario bruto."
     },
     "stats": {
       "period": "Periodo",
@@ -1489,7 +1516,8 @@
       "updated": "Asistencia actualizada con éxito",
       "deleted": "Registro de asistencia eliminado",
       "allDeleted": "Todos los registros de asistencia eliminados",
-      "seeded": "Datos de demostración de asistencia creados"
+      "seeded": "Datos de demostración de asistencia creados",
+      "created": "Asistencia registrada correctamente"
     },
     "errors": {
       "selectTeacherSubject": "Selecciona un profesor y una asignatura antes de guardar la asistencia.",
@@ -1643,7 +1671,8 @@
       "paid": "Pagado",
       "partiallyPaid": "Parcialmente pagado",
       "pending": "Pendiente",
-      "fullPaidCongratulations": "¡Totalmente pagado. Felicitaciones!"
+      "fullPaidCongratulations": "¡Totalmente pagado. Felicitaciones!",
+      "cancelled": "Cancelado"
     },
     "filters": {
       "class": "Clase",
@@ -2182,7 +2211,9 @@
     },
     "status": {
       "draft": "Borrador",
-      "published": "Publicado"
+      "published": "Publicado",
+      "expired": "Caducado",
+      "upcoming": "Próximo"
     },
     "table": {
       "author": "Autor",
@@ -2751,7 +2782,9 @@
       "deleted": "Gasto eliminado correctamente",
       "paymentRecorded": "Pago registrado correctamente",
       "retrieved": "Gasto obtenido correctamente",
-      "updated": "Gasto actualizado correctamente"
+      "updated": "Gasto actualizado correctamente",
+      "approved": "Gasto aprobado",
+      "rejected": "Gasto rechazado"
     },
     "errors": {
       "outsideYear": "La fecha del gasto está fuera del año escolar seleccionado",
@@ -2764,7 +2797,15 @@
       "checkNumberRequired": "Se requiere un número de cheque para los pagos con cheque",
       "idExists": "Este gasto ya existe",
       "notFound": "Gasto no encontrado",
-      "paymentDateBeforeExpense": "La fecha de pago no puede ser anterior a la del gasto"
+      "paymentDateBeforeExpense": "La fecha de pago no puede ser anterior a la del gasto",
+      "statusViaWorkflow": "Aprueba, rechaza o paga un gasto con su acción propia; una edición solo puede cancelarlo."
+    },
+    "actions": {
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "recordPayment": "Registrar pago",
+      "rejectReason": "Motivo del rechazo de este gasto (al menos 10 caracteres)",
+      "paymentTitle": "Registrar el pago del gasto"
     }
   },
   "feeTypes": {
@@ -2784,7 +2825,8 @@
       "cafeteria": "Cafetería",
       "sports": "Deportes",
       "technology": "Tecnología",
-      "fieldtrip": "Excursión"
+      "fieldtrip": "Excursión",
+      "library": "Biblioteca"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -2792,7 +2834,8 @@
       "deleteButton": "Eliminar",
       "editTitle": "Editar",
       "updateButton": "Actualizar",
-      "viewTitle": "Detalles"
+      "viewTitle": "Detalles",
+      "noFeeTypes": "No hay tipos de cuota disponibles"
     },
     "filters": {
       "filterByCategory": "Filtrar por categoría",
@@ -3160,7 +3203,10 @@
     "success": {
       "voided": "Pago anulado",
       "checkMarked": "Cheque marcado {{status}}",
-      "recorded": "Pago registrado correctamente"
+      "recorded": "Pago registrado correctamente",
+      "created": "Pago registrado correctamente",
+      "updated": "Pago actualizado correctamente",
+      "deleted": "Pago eliminado correctamente"
     },
     "dialogs": {
       "deleteButton": "Eliminar",
@@ -3171,7 +3217,13 @@
       "receiptAfterCheck": "El recibo podrá imprimirse cuando se cobre el cheque.",
       "createButton": "Registrar pago",
       "selectInstallments": "Seleccionar las cuotas a pagar",
-      "noFeeData": "No hay datos de cuotas disponibles"
+      "noFeeData": "No hay datos de cuotas disponibles",
+      "depositCheck": "Depositar cheque",
+      "completeCheck": "Cobrar cheque",
+      "bounceCheck": "Marcar como devuelto",
+      "voidPayment": "Anular pago",
+      "bounceReason": "Motivo del cheque devuelto",
+      "voidReason": "Motivo de la anulación de este pago"
     },
     "register": {
       "missing": "Faltante",
@@ -3259,13 +3311,18 @@
       "creditCard": "Tarjeta de crédito",
       "debitCard": "Tarjeta de débito",
       "mobilePayment": "Pago móvil",
-      "online": "En línea"
+      "online": "En línea",
+      "wireTransfer": "Transferencia bancaria"
     },
     "status": {
       "completed": "Completado",
       "failed": "Fallido",
       "pending": "Pendiente",
-      "refunded": "Reembolsado"
+      "refunded": "Reembolsado",
+      "processing": "En proceso",
+      "partially_refunded": "Reembolsado parcialmente",
+      "cancelled": "Cancelado",
+      "on_hold": "En espera"
     },
     "table": {
       "allocatedToYear": "Asignado a {{year}}",
@@ -3547,6 +3604,12 @@
     "invitation": {
       "sent": "Correo de invitación enviado a {{email}}. El miembro del personal activa la cuenta desde el enlace.",
       "notSent": "El miembro del personal se creó, pero no se pudo enviar el correo de invitación. Vuelve a enviarlo con «Restablecer acceso» en la página Usuarios."
+    },
+    "shifts": {
+      "morning": "Mañana",
+      "afternoon": "Tarde",
+      "evening": "Noche",
+      "fullDay": "Jornada completa"
     }
   },
   "staffRoles": {
@@ -3736,7 +3799,10 @@
       "lowGradeAlerts": "Alertas de notas bajas",
       "parentNotifications": "Notificaciones a padres",
       "smsNotifications": "Notificaciones SMS",
-      "title": "Título"
+      "title": "Título",
+      "description": "Configura cómo y cuándo recibes notificaciones sobre los eventos del sistema.",
+      "systemNotifications": "Notificaciones del sistema",
+      "examAlerts": "Alertas de exámenes"
     },
     "school": {
       "namePlaceholder": "Mi escuela",
@@ -3798,7 +3864,8 @@
     "success": {
       "created": "Configuración creado correctamente",
       "retrieved": "Configuración obtenido correctamente",
-      "updated": "Configuración actualizado correctamente"
+      "updated": "Configuración actualizado correctamente",
+      "deleted": "Configuración eliminada correctamente"
     },
     "saveSettings": "Guardar ajustes"
   },
@@ -4141,6 +4208,12 @@
     },
     "filters": {
       "searchByName": "Buscar por nombre de ciclo..."
+    },
+    "success": {
+      "retrieved": "Ciclos obtenidos correctamente",
+      "created": "Ciclo creado correctamente",
+      "updated": "Ciclo actualizado correctamente",
+      "deleted": "Ciclo eliminado correctamente"
     }
   },
   "subjects": {
@@ -4662,7 +4735,8 @@
       "deleted": "Permiso eliminado correctamente",
       "removed": "Permiso eliminado correctamente",
       "retrieved": "Permiso obtenido correctamente",
-      "updated": "Permiso actualizado correctamente"
+      "updated": "Permiso actualizado correctamente",
+      "created": "Permiso creado correctamente"
     },
     "dialogs": {
       "createButton": "Crear permiso",
@@ -4779,7 +4853,18 @@
       "noStudent": "No se encontró ningún estudiante",
       "searchStudents": "Buscar estudiantes…",
       "selectStudent": "Selecciona un estudiante…",
-      "student": "Estudiante"
+      "student": "Estudiante",
+      "studentRoutes": "Rutas de los alumnos",
+      "noActiveVehicles": "No hay vehículos activos",
+      "addVehiclesFirst": "Primero añade vehículos en la sección Vehículos",
+      "noStudentsAssigned": "No hay alumnos asignados",
+      "unassignTitle": "Quitar alumno",
+      "unassignQuestion": "¿Quitar a {{student}} de {{vehicle}}?",
+      "unassignFeeNote": "Su cuota de transporte se mantiene, pero no se generarán nuevos plazos.",
+      "pickupLocation": "Lugar de recogida",
+      "pickupPlaceholder": "p. ej. Rue Ibn Battouta",
+      "dropoffLocation": "Lugar de llegada",
+      "dropoffPlaceholder": "p. ej. Puerta del colegio"
     },
     "form": {
       "stepTitle": "Transporte",
@@ -4844,6 +4929,15 @@
       "unassign": "Desasignar",
       "unassigned": "Asignación de transporte finalizada",
       "history": "Historial de transporte"
+    },
+    "validation": {
+      "studentRequired": "El alumno es obligatorio",
+      "dateFormat": "La fecha debe tener el formato AAAA-MM-DD"
+    },
+    "success": {
+      "created": "Autobús creado correctamente",
+      "updated": "Autobús actualizado correctamente",
+      "deleted": "Autobús eliminado correctamente"
     }
   },
   "staffScopes": {
@@ -4865,6 +4959,11 @@
       "description": "Descripción",
       "floor": "Planta",
       "name": "Nombre"
+    },
+    "success": {
+      "created": "Ámbito creado correctamente",
+      "updated": "Ámbito actualizado correctamente",
+      "deleted": "Ámbito eliminado correctamente"
     }
   },
   "emptyStates": {
@@ -5054,6 +5153,12 @@
       "notFound": "Zona no encontrada",
       "inUse": "Esta zona se usa en asignaciones del personal y no se puede eliminar",
       "nameExists": "Ese nombre de zona ya existe"
+    },
+    "success": {
+      "retrieved": "Zonas obtenidas correctamente",
+      "created": "Zona creada correctamente",
+      "updated": "Zona actualizada correctamente",
+      "deleted": "Zona eliminada correctamente"
     }
   },
   "enrollments": {
@@ -5314,6 +5419,71 @@
         "landingNews5": "Foto de noticia 5",
         "landingNews6": "Foto de noticia 6"
       }
+    }
+  },
+  "chatbot": {
+    "assistant": "Asistente de IA",
+    "apiKey": "Clave de API",
+    "askAnything": "Pregunta lo que quieras",
+    "backToChat": "Volver al chat",
+    "baseUrl": "URL base",
+    "clearChat": "Borrar chat",
+    "close": "Cerrar",
+    "connected": "Conectado",
+    "copied": "Copiado",
+    "copy": "Copiar",
+    "getKey": "Obtener clave",
+    "instruction": "Instrucción",
+    "invalidSettings": "Configuración no válida",
+    "messagesSentToLlm": "Mensajes enviados al LLM",
+    "model": "Modelo",
+    "memoryHint": "Recordar los mensajes de esta sesión y usarlos en las respuestas siguientes.",
+    "removeModel": "Quitar modelo",
+    "resize": "Redimensionar",
+    "save": "Guardar",
+    "savedKey": "Clave guardada",
+    "saved": "Guardado",
+    "send": "Enviar",
+    "settingsReady": "La configuración parece lista",
+    "settings": "Configuración",
+    "showModelSuggestions": "Mostrar sugerencias de modelos",
+    "stop": "Detener",
+    "memoryLimit": "Límite de memoria almacenada",
+    "testConnection": "Probar conexión",
+    "useMemory": "Usar la memoria de la conversación",
+    "suggestions": {
+      "studentsAttention": "Lista los alumnos que necesitan atención",
+      "feeActivity": "Resume la actividad reciente de cuotas",
+      "attendanceIssues": "Encuentra las incidencias de asistencia de hoy",
+      "createStudent": "Ayúdame a crear una nueva ficha de alumno"
+    }
+  },
+  "attendance-staff": {
+    "success": {
+      "created": "Asistencia del personal registrada correctamente",
+      "updated": "Asistencia del personal actualizada correctamente",
+      "deleted": "Asistencia del personal eliminada correctamente"
+    }
+  },
+  "behavior-rewards": {
+    "success": {
+      "created": "Reconocimiento añadido correctamente",
+      "updated": "Reconocimiento actualizado correctamente",
+      "deleted": "Reconocimiento eliminado correctamente"
+    }
+  },
+  "publicSettings": {
+    "success": {
+      "created": "Configuración guardada correctamente",
+      "updated": "Configuración actualizada correctamente",
+      "deleted": "Configuración eliminada correctamente"
+    }
+  },
+  "visit-requests": {
+    "success": {
+      "created": "Solicitud de visita enviada correctamente",
+      "updated": "Solicitud de visita actualizada correctamente",
+      "deleted": "Solicitud de visita eliminada correctamente"
     }
   }
 }

@@ -6,7 +6,7 @@ import { FormInput } from 'najm-kit';
 import { NFormSectionHeader as FormHeader } from 'najm-kit';
 import React from 'react'
 import { Car, Hash, Calendar, DollarSign, Gauge, Tag, Truck, Users, Activity, User, FileText } from 'lucide-react'
-import { useDialog } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { vehicleSchema } from '../config/vehicleSchemas'
 import { buildVehicleStatusOptions, buildVehicleTypeOptions } from '../config/vehicleOptions'
 import { useTranslation } from 'najm-i18n/react'

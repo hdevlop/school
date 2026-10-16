@@ -1,7 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { NBadge, NButton, NEmptyState, NErrorState, NForbiddenState, NSkeleton, useDialog } from 'najm-kit';
+import { NBadge, NButton, NEmptyState, NErrorState, NForbiddenState, NSkeleton } from 'najm-kit';
+import { useDialog } from '@/shared/useDialog';
 import { localDateInput } from 'najm-kit/format';
 import { ArrowRightLeft, CalendarRange, LogOut, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';

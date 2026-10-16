@@ -1,6 +1,7 @@
 "use client"
 
-import { Badge, NButton, useDialog } from 'najm-kit'
+import { Badge, NButton } from 'najm-kit'
+import { useDialog } from '@/shared/useDialog'
 import { DollarSign, Pencil, Plus, Tag } from 'lucide-react'
 import { useFees } from '@/features/Financial/Fees/hooks/useFees'
 import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes'

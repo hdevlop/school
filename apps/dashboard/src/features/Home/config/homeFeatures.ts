@@ -71,7 +71,6 @@ export function createHomeCards(t: (key: string) => string, viewer: PageViewer, 
   const items: GatedNavItem[] = [
     ...createNavigationItems(t, viewer, true),
     { id: '/settings', href: '/settings', label: t('navigation.settings'), icon: FEATURE_ICONS.settings, access: 'settings' },
-    { id: '/public-page', href: '/public-page', label: t('mobileHome.publicPage'), icon: FEATURE_ICONS.publicPage, access: 'publicPage' },
   ];
   const cards: HomeCard[] = [];
 
