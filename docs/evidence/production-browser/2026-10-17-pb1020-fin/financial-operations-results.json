@@ -1,0 +1,108 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "752e1bd83fab1108707583fa94c0b158b2d762dd",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T15:41:34.710Z",
+  "scope": "PB1020 financial operations: check panel, rollover preview, audit, refusals",
+  "results": [
+    {
+      "case": "Setup: student-A's retained Field Trip fee is fully due",
+      "outcome": "PASS",
+      "fee": {
+        "net": 200,
+        "paid": 0,
+        "status": "overdue"
+      }
+    },
+    {
+      "case": "Setup: no PB1020 check is pending",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Setup: the check payment is recorded as pending (API)",
+      "outcome": "PASS",
+      "status": 200,
+      "message": "Paiement enregistré avec succès"
+    },
+    {
+      "case": "financial-operations-R01: the check row shows student, amount and due date; the count equals the read",
+      "outcome": "PASS",
+      "row": " student-A student-A STUDENT-A-CODE PB1020-OPS-1 25/06/2026 En retard 200,00 MAD En attente Déposer ",
+      "count": 1
+    },
+    {
+      "case": "financial-operations-R01: the rollover dialog opens with its preview step and no commit made",
+      "outcome": "PASS"
+    },
+    {
+      "case": "financial-operations-M01: deposit succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "case": "financial-operations-M01: the check is deposited and still listed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "financial-operations-M01: bounce with a reason succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "case": "financial-operations-M01: the bounced check leaves the panel",
+      "outcome": "PASS"
+    },
+    {
+      "case": "financial-operations-M01: the fee is fully due again after the bounce",
+      "outcome": "PASS",
+      "paid": 0,
+      "status": "overdue"
+    },
+    {
+      "case": "financial-operations-R02: the audit log holds the record, deposit and bounce of the check",
+      "outcome": "PASS",
+      "actions": [
+        "payment.check.bounced",
+        "payment.check.deposited",
+        "payment.checkRecorded"
+      ]
+    },
+    {
+      "case": "financial-operations-R02: the audit card lists the check actions with no edit or delete control",
+      "outcome": "PASS",
+      "buttons": [
+        "Actualiser"
+      ]
+    },
+    {
+      "case": "financial-operations-R03: teacher-A gets no checks, the API refuses read and write, and the session stays",
+      "outcome": "PASS",
+      "read": 403,
+      "write": 403,
+      "me": 200
+    },
+    {
+      "case": "Only the expected writes were sent",
+      "outcome": "PASS",
+      "writes": [
+        "admin POST /api/payments (setup, API)",
+        "admin POST /api/payments/:id/check-status",
+        "admin POST /api/payments/:id/check-status"
+      ]
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors and no CSP violations",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    "admin POST /api/payments (setup, API)",
+    "admin POST /api/payments/:id/check-status",
+    "admin POST /api/payments/:id/check-status"
+  ],
+  "failure": null
+}

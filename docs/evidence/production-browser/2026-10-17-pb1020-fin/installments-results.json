@@ -1,0 +1,146 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T17:19:27.586Z",
+  "scope": "PB1020 installments R01, M01, M02 on an owned fee",
+  "results": [
+    {
+      "case": "Student-A has no Technologie fee before the run",
+      "outcome": "PASS"
+    },
+    {
+      "case": "installments-M01: fee types in the picker are checkboxes with a French count",
+      "outcome": "PASS"
+    },
+    {
+      "case": "installments-M01: Space selects the fee type and the count follows",
+      "outcome": "PASS"
+    },
+    {
+      "case": "installments-M02: the billing calendar opens on June 2026 and offers no day before the enrollment",
+      "outcome": "PASS",
+      "grid": "juin 2026",
+      "previousMonthDisabled": true
+    },
+    {
+      "case": "installments-M02: the monthly preview bills only the billable month, June 2026",
+      "outcome": "PASS",
+      "months": [
+        "2026-06"
+      ]
+    },
+    {
+      "case": "installments-R01: the selected-fees total shows the preview sum in dirhams, no \"$\"",
+      "outcome": "PASS",
+      "previewTotal": 200
+    },
+    {
+      "case": "installments-M01: the fee is created, with the French success message",
+      "outcome": "PASS",
+      "status": 200,
+      "message": "Frais créés avec succès",
+      "sent": {
+        "fees": [
+          {
+            "feeTypeId": "FT07",
+            "effectiveDate": "2026-06-01",
+            "schedule": "monthly",
+            "baseAmount": 200,
+            "discountAmount": 0,
+            "notes": "",
+            "studentId": "student-a-id",
+            "academicYear": "2025-2026"
+          }
+        ]
+      }
+    },
+    {
+      "case": "installments-R01: one Technologie fee exists for student-A",
+      "outcome": "PASS"
+    },
+    {
+      "case": "installments-R01: the saved schedule matches the preview: dates and amounts",
+      "outcome": "PASS",
+      "saved": [
+        [
+          "2026-06-01",
+          "200.00"
+        ]
+      ],
+      "preview": [
+        [
+          "2026-06-01",
+          200
+        ]
+      ]
+    },
+    {
+      "case": "installments-R01: the installments sum to the fee net amount",
+      "outcome": "PASS",
+      "net": 200
+    },
+    {
+      "case": "installments-R01: past installments are overdue, none paid",
+      "outcome": "PASS",
+      "statuses": [
+        "overdue"
+      ]
+    },
+    {
+      "case": "installments-M01: changing the schedule to quarterly is saved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "installments-M01: after reload one quarterly installment in June 2026, no duplicate or leftover",
+      "outcome": "PASS",
+      "due": [
+        "2026-06-01"
+      ]
+    },
+    {
+      "case": "installments-M01: the quarterly installments still sum to the net amount",
+      "outcome": "PASS",
+      "net": 200
+    },
+    {
+      "case": "installments-M02: July 1-14 closeout and later boundaries need a controlled clock",
+      "outcome": "NOT RUN",
+      "outcome_note": "NOT RUN on production by design"
+    },
+    {
+      "case": "installments: the owned fee is deleted",
+      "outcome": "PASS"
+    },
+    {
+      "case": "installments: the fee and its installments are gone",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Only the expected writes were sent",
+      "outcome": "PASS",
+      "writes": [
+        "POST /api/fees/bulk",
+        "PUT /api/fees/:id",
+        "DELETE /api/fees/:id"
+      ]
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors and no CSP violations",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    "POST /api/fees/bulk",
+    "PUT /api/fees/:id",
+    "DELETE /api/fees/:id"
+  ],
+  "cleanup": "removed 0 leftover, 0 remain",
+  "failure": null
+}

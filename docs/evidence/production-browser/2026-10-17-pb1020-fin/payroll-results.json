@@ -1,0 +1,106 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T17:21:13.940Z",
+  "scope": "PB1020 payroll R01, M01, M02 on an owned staff record",
+  "results": [
+    {
+      "case": "No PB1020 payroll staff exists before the run",
+      "outcome": "PASS",
+      "existing": 0
+    },
+    {
+      "case": "Setup: the owned staff record is created (API)",
+      "outcome": "PASS",
+      "status": 200,
+      "message": "Membre du personnel créé avec succès"
+    },
+    {
+      "case": "payroll-R01: the owned staff row shows period, type, amount and status",
+      "outcome": "PASS",
+      "row": " PB1020 staff fixture juin 2026 Permanent 3.210,00 MAD Non défini Payer le salaire"
+    },
+    {
+      "case": "payroll-R01: the roster read lists the owned staff with the same salary",
+      "outcome": "PASS",
+      "rosterRow": {
+        "salary": "3210.00",
+        "licenseType": null,
+        "employmentType": "fullTime",
+        "status": "active"
+      }
+    },
+    {
+      "case": "payroll-M01: the confirmation names the staff member, amount and period",
+      "outcome": "PASS"
+    },
+    {
+      "case": "payroll-M01: paying succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "case": "payroll-M01: one paid payslip of 3,210.00 for June 2026",
+      "outcome": "PASS",
+      "slips": [
+        {
+          "status": "paid",
+          "net": "3210.00"
+        }
+      ]
+    },
+    {
+      "case": "payroll-M01: the row now reads paid and offers the undo action",
+      "outcome": "PASS",
+      "row": " PB1020 staff fixture juin 2026 Permanent 3.210,00 MAD Payé Annuler"
+    },
+    {
+      "case": "payroll-M01: paying an already paid period is refused (in French) and keeps one payslip",
+      "outcome": "PASS",
+      "status": 400,
+      "message": "Cette fiche de paie a déjà été payée",
+      "count": 1
+    },
+    {
+      "case": "payroll-M01: undoing the payment succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "case": "payroll-M01: the payslip is kept and back to pending",
+      "outcome": "PASS",
+      "status": "pending"
+    },
+    {
+      "case": "payroll-M02: teacher-A sees no payroll rows on /payroll",
+      "outcome": "PASS"
+    },
+    {
+      "case": "payroll-M02: teacher-A cannot pay or read payroll and stays signed in",
+      "outcome": "PASS",
+      "pay": 403,
+      "read": 403,
+      "me": 200
+    },
+    {
+      "case": "payroll-M02: the refused request changed nothing",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors and no CSP violations",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    "admin POST /api/payroll/pay-staff",
+    "admin POST /api/payroll/pay-staff (repeat, API)",
+    "admin POST /api/payroll/unpay-staff"
+  ],
+  "cleanup": "payslips deleted 1; staff delete 200; 0 left",
+  "failure": null
+}

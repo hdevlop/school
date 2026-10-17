@@ -1,0 +1,62 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T17:21:30.434Z",
+  "scope": "PB1020 student credits: browser surface absent; API read and refusals",
+  "results": [
+    {
+      "case": "student-credits-R01/M01/M02 in the browser",
+      "outcome": "BLOCKED",
+      "reason": "no student credit panel or overpayment option since 4f2f9a4 (2026-10-07); credit routes remain in the API",
+      "creditTextOnOperationsPage": false
+    },
+    {
+      "case": "student-credits-R01 (API): student-A's credit read answers, with no available credit",
+      "outcome": "PASS",
+      "lots": 0
+    },
+    {
+      "case": "student-credits-M02 (API): an amount of 0 is refused",
+      "outcome": "PASS",
+      "status": 400,
+      "message": "Amount must be greater than 0"
+    },
+    {
+      "case": "student-credits-M02 (API): an amount of -5 is refused",
+      "outcome": "PASS",
+      "status": 400,
+      "message": "Amount must be greater than 0"
+    },
+    {
+      "case": "student-credits-M02 (API): more than the available credit is refused in French",
+      "outcome": "PASS",
+      "status": 400,
+      "message": "L'avoir demandé (50) dépasse le solde disponible (0.00)"
+    },
+    {
+      "case": "student-credits-M02 (API): the refusals consumed no credit and changed no fee balance",
+      "outcome": "PASS",
+      "due": [
+        "200.00",
+        "200.00"
+      ]
+    },
+    {
+      "case": "student-credits-M03: credit creation and reversal",
+      "outcome": "NOT RUN",
+      "reason": "supported-API/database obligation; creating a credit posts an overpayment"
+    },
+    {
+      "case": "student-credits (API): teacher-A can neither read nor apply credit",
+      "outcome": "PASS",
+      "read": 403,
+      "apply": 403
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    }
+  ],
+  "failure": null
+}

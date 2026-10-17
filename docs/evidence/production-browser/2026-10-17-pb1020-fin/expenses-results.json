@@ -1,0 +1,137 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T17:19:58.751Z",
+  "scope": "PB1020 expenses R01, M01, M02 on an owned expense",
+  "results": [
+    {
+      "case": "No PB1020 expense exists before the run",
+      "outcome": "PASS",
+      "existing": 0
+    },
+    {
+      "case": "expenses-R01: a failed list shows an error, not \"no expenses\" or \"Total : 0\"",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses-R01: the header count equals the list",
+      "outcome": "PASS",
+      "listed": 0
+    },
+    {
+      "case": "expenses-M01: an empty form is refused in French",
+      "outcome": "PASS",
+      "shown": [
+        "Le titre doit contenir au moins 3 caractères",
+        "Le montant est obligatoire"
+      ]
+    },
+    {
+      "case": "expenses-M01: choosing a cheque shows the cheque number field",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses-M01: the expense is created",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "expenses-M01: the server holds the date, amount, method, cheque and receipt numbers",
+      "outcome": "PASS",
+      "expenseDate": "2026-06-15",
+      "amount": "1234.50",
+      "method": "check"
+    },
+    {
+      "case": "expenses-R01: the row shows the amount, date, category and status in French",
+      "outcome": "PASS",
+      "row": " Lq1MU Fournitures PB1020 Fournitures de test 1.234,50 MAD 15/06/2026 Chèque En attente "
+    },
+    {
+      "case": "expenses-M01: switching away from a cheque hides the cheque number field",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses-M01: the edit is saved",
+      "outcome": "PASS",
+      "status": 200
+    },
+    {
+      "case": "expenses-M01: after reload the title and method changed and the cheque number is gone",
+      "outcome": "PASS",
+      "method": "bankTransfer",
+      "checkNumber": null
+    },
+    {
+      "case": "expenses: approval moves the expense to approved",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses: a cheque payment without its number is refused in French",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses: the payment is recorded",
+      "outcome": "PASS",
+      "status": 200,
+      "message": "Paiement enregistré avec succès"
+    },
+    {
+      "case": "expenses: the expense is paid by cheque PB1020-CHK-2",
+      "outcome": "PASS",
+      "status": "paid"
+    },
+    {
+      "case": "expenses-R01: at phone width the card shows the title, amount and status",
+      "outcome": "PASS",
+      "hasTitle": true,
+      "hasAmount": true,
+      "hasPaid": true,
+      "paidLabel": "Payé",
+      "card": "Notes Calendrier Planning Académique Transport Contrôle d’accès Apparence Notifications Paramètres Déconnecter Dépenses PB1020 Fournitures modifiées Fournitures Payé Montant: 1.234,50 MAD Date de la dépense: 15/06/2026 Méthode de paiement: Chèque"
+    },
+    {
+      "case": "expenses-M02: cancelling the deletion keeps the expense",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses-M02: the deletion succeeds",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expenses-M02: after reload the expense is gone from the list and the server",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Only the expected writes were sent",
+      "outcome": "PASS",
+      "writes": [
+        "POST /api/expenses",
+        "PUT /api/expenses/:id",
+        "POST /api/expenses/:id/approve",
+        "POST /api/expenses/:id/payment",
+        "DELETE /api/expenses/:id"
+      ]
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors and no CSP violations",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    "POST /api/expenses",
+    "PUT /api/expenses/:id",
+    "POST /api/expenses/:id/approve",
+    "POST /api/expenses/:id/payment",
+    "DELETE /api/expenses/:id"
+  ],
+  "cleanup": "removed 0 leftover, 0 remain",
+  "failure": null
+}

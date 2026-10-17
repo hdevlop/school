@@ -1,0 +1,117 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "browser": "155.0.8059.80",
+  "completedUtc": "2026-10-17T17:20:51.890Z",
+  "scope": "PB1020 aging and reports, read-only",
+  "results": [
+    {
+      "case": "aging-R01: the report names the viewed year",
+      "outcome": "PASS"
+    },
+    {
+      "case": "aging-R01: the four bucket cards and the total show the API figures",
+      "outcome": "PASS",
+      "buckets": [
+        0,
+        0,
+        0,
+        887051
+      ]
+    },
+    {
+      "case": "aging-R02: the grand total equals the sum of the student rows",
+      "outcome": "PASS",
+      "detailTotal": 887051
+    },
+    {
+      "case": "aging-R02: each student total equals that student's overdue balance on the fees list",
+      "outcome": "PASS",
+      "rows": 59,
+      "feeDebtors": 59,
+      "mismatched": []
+    },
+    {
+      "case": "aging-R02: fully paid students are not in the report",
+      "outcome": "PASS",
+      "paidStudents": 46
+    },
+    {
+      "case": "aging-R01: nothing is \"upcoming\" because every 2025-2026 due date has passed (as of today)",
+      "outcome": "PASS",
+      "futureDue": 0
+    },
+    {
+      "case": "aging-R01: the class filter keeps only that class",
+      "outcome": "PASS",
+      "cm2": 11,
+      "leaked": []
+    },
+    {
+      "case": "aging-R03: at phone width the page has no horizontal overflow",
+      "outcome": "PASS",
+      "overflow": 0
+    },
+    {
+      "case": "aging-R03: teacher-A sees no aging figures, the API refuses, and the session stays",
+      "outcome": "PASS",
+      "api": 403,
+      "me": 200
+    },
+    {
+      "case": "aging-R03: a search with no match shows an empty state, not an error or stale rows",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reports-R01: the heading names the viewed year; the trend and collection charts render",
+      "outcome": "PASS",
+      "charts": 2
+    },
+    {
+      "case": "reports-R02: trend income, collection paid and the year KPI agree",
+      "outcome": "PASS",
+      "trend": 869133,
+      "collection": 869133,
+      "kpi": 869133
+    },
+    {
+      "case": "reports-R02: each class row equals the fees list for that class (due, paid, students)",
+      "outcome": "PASS",
+      "classMismatch": []
+    },
+    {
+      "case": "reports-R01: the collection table heads its last column \"Élèves\" and lists every class",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reports-R02: with no 2025-2026 expense the breakdown says so",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reports-R02: a failed expense breakdown is shown as a failure, not as \"no expenses\"",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reports-R03: export",
+      "outcome": "NOT EXPOSED",
+      "exportControls": 0
+    },
+    {
+      "case": "No writes",
+      "outcome": "PASS",
+      "writes": []
+    },
+    {
+      "case": "Revision stayed immutable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "No page errors and no CSP violations",
+      "outcome": "PASS",
+      "diagnostics": []
+    }
+  ],
+  "diagnostics": [],
+  "writes": [],
+  "failure": null
+}
