@@ -1,10 +1,11 @@
 'use client';
 
 import { NajmAppProvider } from 'najm-next/app/client';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 import { schoolI18n } from '@sms/contracts/locales';
 import { auth } from '@/najm.auth';
+import { languageHeader } from '@/lib/requestHeaders';
 import type { SchoolUiSnapshot } from '@/najm.server';
 
 // Below lg every table is one card list that reveals rows as the page scrolls.
@@ -12,6 +13,10 @@ import type { SchoolUiSnapshot } from '@/najm.server';
 const TABLE_DEFAULTS = { mobileList: true };
 
 export function AppProviders({  children,snapshot}: Readonly<{ children: ReactNode; snapshot: SchoolUiSnapshot }>) {
+  // Auth operations bypass services/http, so they name the page language here;
+  // a reset requested from a sign-in page is then emailed in that language.
+  useEffect(() => auth.client.setRequestHeaders(() => languageHeader()), []);
+
   return (
     <NajmAppProvider
       authClient={auth.client}

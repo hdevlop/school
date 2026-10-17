@@ -122,7 +122,7 @@
     "@types/node": "^25.6.0",
     "ioredis": "5.11.1",
     "najm-api": "5.0.0",
-    "najm-auth": "6.5.0",
+    "najm-auth": "6.6.0",
     "najm-cache": "2.3.0",
     "najm-chatbot": "3.7.0",
     "najm-cookies": "2.0.3",
