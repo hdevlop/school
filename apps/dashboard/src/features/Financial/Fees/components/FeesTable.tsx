@@ -119,7 +119,7 @@ function FeesTableForYear() {
       value: selectedClassId,
       onChange: setSelectedClassId,
       options: classOptions,
-      className: 'w-full lg:w-32',
+      className: 'w-full sm:w-24 xl:w-24',
     },
     {
       name: 'section',
@@ -130,7 +130,7 @@ function FeesTableForYear() {
       onChange: (value: string) => setSelectedSectionId(value === '__all__' ? '' : value),
       options: [{ value: '__all__', label: t('fees.filters.allSections') }, ...sectionOptions],
       disabled: sectionOptions.length === 0,
-      className: 'w-full lg:w-40',
+      className: 'w-full sm:w-28 xl:w-28',
     },
     {
       name: 'search',
