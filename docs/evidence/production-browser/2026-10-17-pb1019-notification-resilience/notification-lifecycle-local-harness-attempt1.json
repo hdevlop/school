@@ -1,0 +1,169 @@
+{
+  "source": "local-working-source",
+  "origin": "http://127.0.0.1:3107",
+  "completedUtc": "2026-10-17T20:29:22.417Z",
+  "scope": "Browser-only response and push fixtures. Subscription operations never reach the real server or push provider; does not prove backend delivery or production opt-in.",
+  "results": [
+    {
+      "case": "inbox-error-is-visible",
+      "outcome": "PASS"
+    },
+    {
+      "case": "inbox-error-disables-mark-all",
+      "outcome": "PASS"
+    },
+    {
+      "case": "inbox-retry-restores-messages",
+      "outcome": "PASS"
+    },
+    {
+      "case": "inbox-order-is-newest-first",
+      "outcome": "PASS"
+    },
+    {
+      "case": "failed-read-keeps-unread-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "successful-read-updates-item",
+      "outcome": "PASS"
+    },
+    {
+      "case": "read-state-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "bell-count-reconciles-one-unread",
+      "outcome": "PASS"
+    },
+    {
+      "case": "mark-all-updates-only-remaining-unread",
+      "outcome": "PASS"
+    },
+    {
+      "case": "bell-clears-after-mark-all",
+      "outcome": "PASS"
+    },
+    {
+      "case": "forbidden-inbox-hides-stale-messages",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expect(locator).toBeEnabled() failed",
+      "outcome": "FAIL"
+    }
+  ],
+  "diagnostics": [],
+  "requests": [
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "PATCH",
+      "path": "/api/notifications/:browser-fixture/read",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "PATCH",
+      "path": "/api/notifications/:browser-fixture/read",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "PATCH",
+      "path": "/api/notifications/read-all",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 403,
+      "browserOnly": true
+    }
+  ],
+  "failure": {
+    "message": "expect(locator).toBeEnabled() failed"
+  },
+  "actualSubscriptionsCreated": 0,
+  "realDelivery": 0
+}

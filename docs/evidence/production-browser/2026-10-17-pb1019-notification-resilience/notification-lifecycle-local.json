@@ -1,0 +1,510 @@
+{
+  "source": "local-working-source",
+  "origin": "http://127.0.0.1:3107",
+  "completedUtc": "2026-10-17T20:43:06.495Z",
+  "scope": "Browser-only response and push fixtures. Subscription operations never reach the real server or push provider; does not prove backend delivery or production opt-in.",
+  "results": [
+    {
+      "case": "inbox-error-is-visible",
+      "outcome": "PASS"
+    },
+    {
+      "case": "inbox-error-disables-mark-all",
+      "outcome": "PASS"
+    },
+    {
+      "case": "inbox-retry-restores-messages",
+      "outcome": "PASS"
+    },
+    {
+      "case": "inbox-order-is-newest-first",
+      "outcome": "PASS"
+    },
+    {
+      "case": "failed-read-keeps-unread-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "successful-read-updates-item",
+      "outcome": "PASS"
+    },
+    {
+      "case": "read-state-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "bell-count-reconciles-one-unread",
+      "outcome": "PASS"
+    },
+    {
+      "case": "mark-all-updates-only-remaining-unread",
+      "outcome": "PASS"
+    },
+    {
+      "case": "bell-clears-after-mark-all",
+      "outcome": "PASS"
+    },
+    {
+      "case": "forbidden-inbox-hides-stale-messages",
+      "outcome": "PASS"
+    },
+    {
+      "case": "failed-subscribe-rolls-back-browser",
+      "outcome": "PASS"
+    },
+    {
+      "case": "failed-subscribe-stays-off",
+      "outcome": "PASS"
+    },
+    {
+      "case": "subscribe-retry-registers-both-sides",
+      "outcome": "PASS"
+    },
+    {
+      "case": "successful-opt-in-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "failed-unsubscribe-preserves-retry-endpoint",
+      "outcome": "PASS"
+    },
+    {
+      "case": "unsubscribe-retry-cleans-both-sides",
+      "outcome": "PASS"
+    },
+    {
+      "case": "successful-opt-out-survives-reload",
+      "outcome": "PASS"
+    },
+    {
+      "case": "browser-unsubscribe-error-does-not-claim-success",
+      "outcome": "PASS"
+    },
+    {
+      "case": "already-removed-server-row-allows-browser-cleanup-retry",
+      "outcome": "PASS"
+    },
+    {
+      "case": "pending-config-disables-switch-with-loading-reason",
+      "outcome": "PASS"
+    },
+    {
+      "case": "loaded-config-enables-switch",
+      "outcome": "PASS"
+    },
+    {
+      "case": "failed-config-is-disabled-with-explanation",
+      "outcome": "PASS"
+    },
+    {
+      "case": "failed-config-has-working-retry",
+      "outcome": "PASS"
+    },
+    {
+      "case": "initialization-rejection-has-accessible-error",
+      "outcome": "PASS"
+    },
+    {
+      "case": "initialization-retry-recovers",
+      "outcome": "PASS"
+    },
+    {
+      "case": "permission-refusal-makes-no-subscription",
+      "outcome": "PASS"
+    },
+    {
+      "case": "denied-accurate-accessible-feedback",
+      "outcome": "PASS"
+    },
+    {
+      "case": "denied-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "unsupported-accurate-accessible-feedback",
+      "outcome": "PASS"
+    },
+    {
+      "case": "unsupported-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-accurate-accessible-feedback",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-error-retry-has-no-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "Arabic-phone-error-retry-recovers",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-inbox-dates-use-app-locale",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-bell-dates-use-app-locale",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-inbox-dates-use-app-locale",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-bell-dates-use-app-locale",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unhandled-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "requests": [
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "PATCH",
+      "path": "/api/notifications/:browser-fixture/read",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "PATCH",
+      "path": "/api/notifications/:browser-fixture/read",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "PATCH",
+      "path": "/api/notifications/read-all",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 403,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "POST",
+      "path": "/api/notifications/push-subscriptions",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "POST",
+      "path": "/api/notifications/push-subscriptions",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "DELETE",
+      "path": "/api/notifications/push-subscriptions",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "DELETE",
+      "path": "/api/notifications/push-subscriptions",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "push-retry-and-persistence",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "browser-cleanup-failure",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "browser-cleanup-failure",
+      "method": "DELETE",
+      "path": "/api/notifications/push-subscriptions",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "browser-cleanup-failure",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "browser-cleanup-failure",
+      "method": "DELETE",
+      "path": "/api/notifications/push-subscriptions",
+      "status": 404,
+      "browserOnly": true
+    },
+    {
+      "scenario": "configuration-loading",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "config-failure",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "config-failure",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "config-failure",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "initialization-failure",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "initialization-failure",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "default-permission",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "denied",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "unsupported",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "inbox-failure-and-recovery",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "Arabic-phone",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "Arabic-phone-config-error",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "Arabic-phone-config-error",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 500,
+      "browserOnly": true
+    },
+    {
+      "scenario": "Arabic-phone-config-error",
+      "method": "GET",
+      "path": "/api/notifications/push-config",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "fr-app-English-browser",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "fr-app-English-browser",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "fr-app-English-browser",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "ar-app-English-browser",
+      "method": "GET",
+      "path": "/api/notifications/unread-count",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "ar-app-English-browser",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    },
+    {
+      "scenario": "ar-app-English-browser",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 200,
+      "browserOnly": true
+    }
+  ],
+  "failure": null,
+  "actualSubscriptionsCreated": 0,
+  "realDelivery": 0
+}

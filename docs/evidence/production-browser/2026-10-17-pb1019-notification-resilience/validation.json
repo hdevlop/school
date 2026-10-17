@@ -1,0 +1,188 @@
+{
+  "sourceCommit": "ff7d5717e2f4cced8e60e741d0bfb7148744234b",
+  "coreFixCommit": "2400f28407166d63469d8bc5d92eceffaf7331b6",
+  "sourceFiles": [
+    {
+      "file": "apps/dashboard/src/features/Notifications/NotificationsPage.tsx",
+      "sha256": "95ae0253890936334284af1a0709dc1d95810e0201b89dd4fcb7ef681bfa3029",
+      "workingCopyMatches": true
+    },
+    {
+      "file": "apps/dashboard/src/features/Notifications/NotificationsMenu.tsx",
+      "sha256": "294a57a27b8aab6174d953af789c75abe8a393fc0007aa50bfdbac9c9fae7204",
+      "workingCopyMatches": true
+    },
+    {
+      "file": "apps/dashboard/src/features/Notifications/PushOptIn.tsx",
+      "sha256": "2a3943c3fa0efbc380d5b9eb977d0bb45f6e97103641476640f6ba7a7b526ee6",
+      "workingCopyMatches": true
+    }
+  ],
+  "localRoot": {
+    "commit": "2400f28407166d63469d8bc5d92eceffaf7331b6",
+    "command": "bun run check",
+    "exitCode": 0,
+    "isolatedCheckout": true,
+    "includes": "lint, types, translations, tests, production build, migration checks",
+    "logSha256": "435d6e52b4df0f40f1bc85d0f3223d7087b8bfc99309e600e4a3ee03b4e9d9bf"
+  },
+  "localeFollowup": {
+    "commands": [
+      "bun run lint",
+      "bun run --cwd apps/dashboard typecheck"
+    ],
+    "exitCodes": [
+      0,
+      0
+    ],
+    "note": "Repeated successfully after the final locale prop placement. Local final 40-check browser rerun and exact-source full CI also cover the final placement."
+  },
+  "releaseCi": {
+    "url": "https://github.com/hdevlop/school/actions/runs/39068069187",
+    "source": "ff7d5717e2f4cced8e60e741d0bfb7148744234b",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "Classify deployment impact",
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify",
+        "conclusion": "success"
+      },
+      {
+        "name": "Build and publish image",
+        "conclusion": "success"
+      },
+      {
+        "name": "Deploy and verify demo through Dokploy",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "supersededWorkflow": {
+    "id": 39067259125,
+    "outcome": "CANCELLED",
+    "reason": "Superseded by the containing locale follow-up before publication/deployment; no failed gate accepted."
+  },
+  "browserCounts": {
+    "local": {
+      "PASS": 40,
+      "FAIL": 0,
+      "BLOCKED": 0
+    },
+    "deployedBrowserFixtures": {
+      "PASS": 41,
+      "FAIL": 0,
+      "BLOCKED": 0
+    },
+    "deployedUnmockedReadOnly": {
+      "PASS": 31,
+      "FAIL": 0,
+      "BLOCKED": 0
+    }
+  },
+  "diagnostics": {
+    "localPageErrors": 0,
+    "deployedFixturePageErrors": 0,
+    "deployedUnmocked": [
+      {
+        "actor": "admin",
+        "sessionId": 1,
+        "at": 1792270785947,
+        "type": "expected-prefetch-cancellation",
+        "method": "GET",
+        "sameOrigin": true,
+        "ownedStudentFeeRoute": false,
+        "path": "/notifications",
+        "code": "net::ERR_ABORTED",
+        "prefetch": true,
+        "routerPrefetch": "1",
+        "segmentPrefetch": false,
+        "rsc": "1",
+        "startedPhase": "initial",
+        "phase": "initial",
+        "navigation": false,
+        "resourceType": "fetch",
+        "responseStatus": 200
+      },
+      {
+        "actor": "teacher-a",
+        "sessionId": 2,
+        "at": 1792270794346,
+        "type": "expected-prefetch-cancellation",
+        "method": "GET",
+        "sameOrigin": true,
+        "ownedStudentFeeRoute": false,
+        "path": "/notifications",
+        "code": "net::ERR_ABORTED",
+        "prefetch": true,
+        "routerPrefetch": "1",
+        "segmentPrefetch": false,
+        "rsc": "1",
+        "startedPhase": "initial",
+        "phase": "initial",
+        "navigation": false,
+        "resourceType": "fetch",
+        "responseStatus": 200
+      },
+      {
+        "actor": "parent-a",
+        "sessionId": 3,
+        "at": 1792270805419,
+        "type": "expected-prefetch-cancellation",
+        "method": "GET",
+        "sameOrigin": true,
+        "ownedStudentFeeRoute": false,
+        "path": "/notifications",
+        "code": "net::ERR_ABORTED",
+        "prefetch": true,
+        "routerPrefetch": "1",
+        "segmentPrefetch": false,
+        "rsc": "1",
+        "startedPhase": "initial",
+        "phase": "initial",
+        "navigation": false,
+        "resourceType": "fetch",
+        "responseStatus": 200
+      },
+      {
+        "actor": "parent-b",
+        "sessionId": 4,
+        "at": 1792270815226,
+        "type": "expected-prefetch-cancellation",
+        "method": "GET",
+        "sameOrigin": true,
+        "ownedStudentFeeRoute": false,
+        "path": "/notifications",
+        "code": "net::ERR_ABORTED",
+        "prefetch": true,
+        "routerPrefetch": "1",
+        "segmentPrefetch": false,
+        "rsc": "1",
+        "startedPhase": "initial",
+        "phase": "initial",
+        "navigation": false,
+        "resourceType": "fetch",
+        "responseStatus": 200
+      }
+    ]
+  },
+  "realSubscriptionsCreated": 0,
+  "realDelivery": 0,
+  "businessWrites": 0,
+  "scope": "Production UI exercises browser-fulfilled notification responses and a simulated PushManager. These are UI resilience assertions, not backend, native push or delivery acceptance. Unmocked live checks are separately retained.",
+  "localTeardown": "Dedicated 127.0.0.1:3107 dev process stopped after acceptance; shared dev server untouched.",
+  "cumulativeCommunicationCases": {
+    "PASS": 8,
+    "partialOrBlocked": 17,
+    "evidence": "../2026-10-17-pb1019-comm-continuation/checklist-coverage.json",
+    "changedByThisRun": 0
+  },
+  "notRun": [
+    "Real deployed nonempty inbox lifecycle",
+    "Native configured push subscribe/unsubscribe and delivery",
+    "Student/supervisor and second-teacher browser matrix",
+    "School-selected time zone/date format for NNotifyItem (shared API accepts locale only)"
+  ]
+}

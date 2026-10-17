@@ -1,0 +1,37 @@
+{
+  "accepted": {
+    "local": "notification-lifecycle-local.json",
+    "deployed": "notification-lifecycle-deployed.json",
+    "liveReadOnly": "notification-live-readonly.json"
+  },
+  "attempts": [
+    {
+      "file": "notification-deployment-pending.json",
+      "classification": "ENVIRONMENT",
+      "reason": "Early readiness probe still found healthy prior revision cf09583 while the rollout was in progress. This was correctly rejected as acceptance of ff7d571; browser retests waited for exact healthy runtime proof."
+    },
+    {
+      "file": null,
+      "classification": "TEST",
+      "retained": "Summary only; initial temporary raw report was overwritten before evidence retention.",
+      "reason": "First probe replaced navigator.serviceWorker wholesale and broke application register(). It produced the harness page error navigator.serviceWorker.register is not a function and a switch locator timeout. Corrected to override only ready."
+    },
+    {
+      "file": "notification-failures-observer-attempt1.json",
+      "classification": "TEST",
+      "reason": "Observer checked configuration while React Query retry was still pending, prematurely marking that one check PASS. Corrected observer waits for the retry and settled terminal error; six PRODUCT failures are retained in notification-failures-before.json."
+    },
+    {
+      "file": "notification-lifecycle-local-harness-attempt1.json",
+      "classification": "TEST",
+      "reason": "A subsequent browser context reused an already-rotated refresh token and was redirected to login. Fixed state handoff between contexts and reset only the simulated push fixture key. Intermediate passes excluded from final counts."
+    },
+    {
+      "file": "notification-locale-local-attempt1.json",
+      "classification": "PRODUCT",
+      "deployment": "Local intermediate implementation only; never deployed.",
+      "reason": "NNotifyList overrides itemProps.locale with its direct locale prop. Initial placement fixed inbox dates but failed bell dates. Moved to direct locale prop; full rerun passes both French and Arabic with an English browser."
+    }
+  ],
+  "diagnostics": "Injected 500/403/404 responses and corresponding console errors in before-fix records are intentional browser-only fixtures. The writes list there contains browser-intercepted POST/DELETE requests; none reached the installation or a push provider."
+}

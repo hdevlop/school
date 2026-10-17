@@ -1,0 +1,134 @@
+{
+  "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+  "completedUtc": "2026-10-17T20:26:11.834Z",
+  "scope": "Browser-only notification error responses and simulated push API; no installation settings, actual subscriptions or real delivery changed",
+  "results": [
+    {
+      "case": "inbox-load-failure-has-visible-error",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "inbox-load-failure-disables-mark-all",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "push-config-failure-keeps-switch-disabled",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "push-init-rejection-is-handled",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "failed-server-subscribe-rolls-back-new-browser-subscription",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "failed-server-unsubscribe-preserves-browser-for-retry",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "serving-source-stable",
+      "outcome": "PASS",
+      "classification": "PRODUCT"
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "GET",
+      "path": "/api/notifications",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "actor": "admin",
+      "type": "pageerror",
+      "message": "Controlled initialization failure"
+    },
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "POST",
+      "path": "/api/notifications",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "DELETE",
+      "path": "/api/notifications",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    }
+  ],
+  "writes": [
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/notifications/push-subscriptions"
+    },
+    {
+      "actor": "admin",
+      "method": "DELETE",
+      "path": "/api/notifications/push-subscriptions"
+    }
+  ],
+  "failure": null
+}

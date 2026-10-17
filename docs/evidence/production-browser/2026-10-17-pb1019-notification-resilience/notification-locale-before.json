@@ -1,0 +1,12 @@
+{
+  "source": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+  "scope": "French app with English browser locale; browser-only inbox fixture; does not test school time-zone formatting",
+  "result": {
+    "case": "notification-date-follows-app-locale",
+    "outcome": "FAIL",
+    "classification": "PRODUCT"
+  },
+  "sourceStable": true,
+  "writes": [],
+  "diagnostics": []
+}

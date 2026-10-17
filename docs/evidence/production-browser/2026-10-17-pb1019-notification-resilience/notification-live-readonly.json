@@ -1,0 +1,327 @@
+{
+  "source": "ff7d5717e2f4cced8e60e741d0bfb7148744234b",
+  "origin": "https://myscolai.com",
+  "browserVersion": "155.0.8059.80",
+  "completedUtc": "2026-10-17T21:00:18.422Z",
+  "scope": "Unmocked live internal REST reads and browser display only; no read commands, subscriptions or delivery invoked.",
+  "results": [
+    {
+      "case": "admin-live-reads-authorized",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin-live-list-count-contract",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin-inbox-matches-live-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin-empty-inbox-is-explicit-and-mark-all-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin-bell-count-and-inbox-link-match-live-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin-disabled-server-push-has-accurate-accessible-reason",
+      "outcome": "PASS"
+    },
+    {
+      "case": "admin-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher-a-live-reads-authorized",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher-a-live-list-count-contract",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher-a-inbox-matches-live-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher-a-empty-inbox-is-explicit-and-mark-all-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher-a-bell-count-and-inbox-link-match-live-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher-a-disabled-server-push-has-accurate-accessible-reason",
+      "outcome": "PASS"
+    },
+    {
+      "case": "teacher-a-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a-live-reads-authorized",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a-live-list-count-contract",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a-inbox-matches-live-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a-empty-inbox-is-explicit-and-mark-all-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a-bell-count-and-inbox-link-match-live-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a-disabled-server-push-has-accurate-accessible-reason",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-a-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b-live-reads-authorized",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b-live-list-count-contract",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b-inbox-matches-live-list",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b-empty-inbox-is-explicit-and-mark-all-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b-bell-count-and-inbox-link-match-live-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b-disabled-server-push-has-accurate-accessible-reason",
+      "outcome": "PASS"
+    },
+    {
+      "case": "parent-b-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "zero-real-business-writes",
+      "outcome": "PASS"
+    },
+    {
+      "case": "zero-unexpected-browser-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "snapshots": [
+    {
+      "actor": "admin",
+      "language": "fr",
+      "inboxRows": 0,
+      "unread": 0,
+      "pushEnabled": false,
+      "publicKeyConfigured": false
+    },
+    {
+      "actor": "teacher-a",
+      "language": "fr",
+      "inboxRows": 0,
+      "unread": 0,
+      "pushEnabled": false,
+      "publicKeyConfigured": false
+    },
+    {
+      "actor": "parent-a",
+      "language": "fr",
+      "inboxRows": 0,
+      "unread": 0,
+      "pushEnabled": false,
+      "publicKeyConfigured": false
+    },
+    {
+      "actor": "parent-b",
+      "language": "ar",
+      "inboxRows": 0,
+      "unread": 0,
+      "pushEnabled": false,
+      "publicKeyConfigured": false
+    }
+  ],
+  "requests": [
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications/push-config",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications/unread-count",
+      "status": 200
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/notifications?limit=100",
+      "status": 200
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792270785947,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "teacher-a",
+      "sessionId": 2,
+      "at": 1792270794346,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "parent-a",
+      "sessionId": 3,
+      "at": 1792270805419,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "parent-b",
+      "sessionId": 4,
+      "at": 1792270815226,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/notifications",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "initial",
+      "phase": "initial",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    }
+  ],
+  "writes": [],
+  "actualSubscriptionsCreated": 0,
+  "realDelivery": 0,
+  "failure": null
+}
