@@ -1142,7 +1142,7 @@
       "timeFormat12": "Format 12 heures",
       "timeFormat24": "Format 24 heures",
       "timeZone": "Fuseau horaire",
-      "success": "System terminé avec succès"
+      "success": "Paramètres système par défaut initialisés avec succès"
     },
     "operational": {
       "maintenanceInterval": "Intervalle d'Alerte de Maintenance",
@@ -2503,7 +2503,7 @@
       "allocationDeleted": "Affectation supprimée avec succès",
       "allocationRetrieved": "Affectation récupérée avec succès",
       "allocationsRetrieved": "Affectations récupérées avec succès",
-      "bulkCreated": "Frais terminé avec succès",
+      "bulkCreated": "Frais créés avec succès",
       "bulkDeleted": "Enregistrements Frais supprimés avec succès",
       "created": "Frais créé avec succès",
       "dataRetrieved": "Données Frais récupérées avec succès",
@@ -2516,9 +2516,9 @@
       "paymentRefunded": "Paiement remboursé avec succès",
       "paymentUpdated": "Paiement mis à jour avec succès",
       "paymentVoided": "Paiement annulé avec succès",
-      "paymentsRetrieved": "Frais terminé avec succès",
+      "paymentsRetrieved": "Paiements récupérés avec succès",
       "retrieved": "Frais récupéré avec succès",
-      "revenueRetrieved": "Frais terminé avec succès",
+      "revenueRetrieved": "Revenus récupérés avec succès",
       "statsRetrieved": "Statistiques récupérées avec succès",
       "updated": "Frais mis à jour avec succès"
     },
@@ -4913,7 +4913,7 @@
   "maintenance": {
     "success": {
       "allDeleted": "Tous les enregistrements Maintenance ont été supprimés avec succès",
-      "completed": "Maintenance terminé avec succès",
+      "completed": "Maintenance terminée avec succès",
       "created": "Maintenance créé avec succès",
       "deleted": "Maintenance supprimé avec succès",
       "overdueMarked": "Maintenance terminé avec succès",
@@ -5051,7 +5051,7 @@
     }
   },
   "search": {
-    "success": "Recherche terminé avec succès"
+    "success": "Recherche terminée avec succès"
   },
   "studentRoutes": {
     "success": {

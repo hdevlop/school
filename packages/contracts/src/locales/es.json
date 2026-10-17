@@ -1778,7 +1778,7 @@
       "allocationDeleted": "Asignación eliminada correctamente",
       "allocationRetrieved": "Asignación obtenida correctamente",
       "allocationsRetrieved": "Asignaciones obtenidas correctamente",
-      "bulkCreated": "Cuota completado correctamente",
+      "bulkCreated": "Cuotas creadas correctamente",
       "bulkDeleted": "Registros de Cuota eliminados correctamente",
       "created": "Cuota creado correctamente",
       "dataRetrieved": "Datos de Cuota obtenidos correctamente",
@@ -1791,9 +1791,9 @@
       "paymentRefunded": "Pago reembolsado correctamente",
       "paymentUpdated": "Pago actualizado correctamente",
       "paymentVoided": "Pago anulado correctamente",
-      "paymentsRetrieved": "Cuota completado correctamente",
+      "paymentsRetrieved": "Pagos obtenidos correctamente",
       "retrieved": "Cuota obtenido correctamente",
-      "revenueRetrieved": "Cuota completado correctamente",
+      "revenueRetrieved": "Ingresos obtenidos correctamente",
       "statsRetrieved": "Estadísticas obtenidas correctamente",
       "updated": "Cuota actualizado correctamente"
     },
@@ -3983,7 +3983,7 @@
       "timeFormat24": "Formato de 24 horas",
       "timeZone": "Zona horaria",
       "title": "Título",
-      "success": "System completado correctamente"
+      "success": "Valores predeterminados del sistema inicializados correctamente"
     },
     "calendarSystem": {
       "SEMESTER": "Semestre",
@@ -4947,7 +4947,7 @@
     }
   },
   "search": {
-    "success": "Búsqueda completado correctamente"
+    "success": "Búsqueda completada correctamente"
   },
   "studentRoutes": {
     "success": {

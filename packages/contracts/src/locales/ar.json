@@ -1792,7 +1792,7 @@
       "allocationDeleted": "تم حذف التخصيص بنجاح",
       "allocationRetrieved": "تم جلب التخصيص بنجاح",
       "allocationsRetrieved": "تم جلب التخصيصات بنجاح",
-      "bulkCreated": "تم إكمال الرسوم بنجاح",
+      "bulkCreated": "تم إنشاء الرسوم بنجاح",
       "bulkDeleted": "تم حذف سجلات الرسوم بنجاح",
       "created": "تم إنشاء الرسوم بنجاح",
       "dataRetrieved": "تم جلب بيانات الرسوم بنجاح",
@@ -1805,9 +1805,9 @@
       "paymentRefunded": "تم رد الدفع بنجاح",
       "paymentUpdated": "تم تحديث الدفع بنجاح",
       "paymentVoided": "تم إلغاء الدفع بنجاح",
-      "paymentsRetrieved": "تم إكمال الرسوم بنجاح",
+      "paymentsRetrieved": "تم استرجاع المدفوعات بنجاح",
       "retrieved": "تم جلب الرسوم بنجاح",
-      "revenueRetrieved": "تم إكمال الرسوم بنجاح",
+      "revenueRetrieved": "تم استرجاع الإيرادات بنجاح",
       "statsRetrieved": "تم جلب الإحصائيات بنجاح",
       "updated": "تم تحديث الرسوم بنجاح"
     },
@@ -3997,7 +3997,7 @@
       "timeFormat24": "نظام 24 ساعة",
       "timeZone": "المنطقة الزمنية",
       "title": "العنوان",
-      "success": "تم إكمال System بنجاح"
+      "success": "تمت تهيئة إعدادات النظام الافتراضية بنجاح"
     },
     "calendarSystem": {
       "SEMESTER": "فصل دراسي",
