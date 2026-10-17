@@ -19,7 +19,7 @@ const FeeCard = ({ data }: any) => {
   const netAmount = Number(data?.netAmount ?? 0);
   const totalPaid = Number(data?.totalPaid ?? 0);
   const totalDue = Number(data?.totalDue ?? 0);
-  const overdueCount = Number(data?.overdueCount ?? 0);
+  const hasOverdue = Number(data?.overdueAmount ?? 0) > 0;
   const hasFees = Number(data?.totalFees ?? 0) > 0;
 
   const isPaid = hasFees && totalDue <= 0;
@@ -57,22 +57,22 @@ const FeeCard = ({ data }: any) => {
           <NBadge status="paid" look="solid" showIcon className="mr-2">
             {t('fees.status.paid') || 'Paid'}
           </NBadge>
-        ) : hasFees && overdueCount > 0 && (
+        ) : hasFees && hasOverdue && (
           <NBadge status="overdue" look="solid" showIcon className="mr-2">
-            {overdueCount} {t('fees.status.overdue') || 'Overdue'}
+            {t('fees.status.overdue') || 'Overdue'}
           </NBadge>
         )}
       </div>
 
       {hasFees ? <>
         <div className="text-center">
-          <p className={`text-xl font-bold tabular-nums ${isPaid ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`text-xl font-bold tabular-nums ${isPaid ? 'text-green-600' : hasOverdue ? 'text-red-600' : 'text-foreground'}`}>
             {majorMoney(isPaid ? netAmount : totalDue)}
           </p>
         </div>
 
         <div className="space-y-1">
-          <Progress value={progress} className="h-2" color={isPaid ? 'success' : 'primary'} />
+          <Progress value={progress} className="h-2" color="success" />
           <div className="flex items-center justify-between text-[11px] text-muted-foreground">
             <span>{t('fees.table.paidAmount')}: {majorMoney(totalPaid)}</span>
             <span>{Math.round(progress)}%</span>

@@ -2,12 +2,11 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useEffect, useMemo, useState } from 'react';
-import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState } from 'najm-kit';
+import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
-import { CircleDollarSign, Plus, SearchX, Users } from 'lucide-react';
+import { Banknote, CircleDollarSign, HandCoins, Landmark, Plus, ReceiptText, SearchX, Wallet } from 'lucide-react';
 import FeeForm from './FeeForm';
-import ClassBulkFeeForm from './ClassBulkFeeForm';
 import EditFeeForm from './EditFeeForm';
 import { useFees } from '../hooks/useFees';
 import { useTranslation } from 'najm-i18n/react';
@@ -17,9 +16,7 @@ import { useFeeTypes } from '@/features/Financial/FeeTypes/hooks/useFeeTypes';
 import { useClasses } from '@/features/Classes/hooks/useClasses';
 import { useSections } from '@/features/Sections/hooks/useSections';
 import { useRouter } from 'next/navigation';
-import { createBulkClassFeesApi, createBulkFeesApi } from '@/services/feeApi';
-import { useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { createBulkFeesApi } from '@/services/feeApi';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
@@ -27,13 +24,14 @@ import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
 import { hasFailedToLoad, isAuthorizationError, isCountUnknown } from '@/services/apiError';
+import { toMinorUnits, useSchoolFormat } from '@/hooks/useSchoolFormat';
 
 function FeesTableForYear() {
 
   const { t } = useTranslation();
+  const { majorMoney } = useSchoolFormat();
   const router = useRouter();
   const { openDialog, confirmDelete } = useDialog();
-  const queryClient = useQueryClient();
 
   const { students } = useStudents();
   const { feeTypes } = useFeeTypes();
@@ -81,7 +79,7 @@ function FeesTableForYear() {
       if (query && !row.student?.name?.toLowerCase().includes(query)
         && !row.student?.studentCode?.toLowerCase().includes(query)) return false;
 
-      const overdue = Number(row.overdueCount ?? 0);
+      const overdue = Number(row.overdueAmount ?? 0);
       const totalDue = Number(row.totalDue ?? 0);
       if (statusFilter === 'paid' && (Number(row.totalFees ?? 0) === 0 || totalDue > 0)) return false;
       if (statusFilter === 'overdue' && overdue === 0) return false;
@@ -89,6 +87,16 @@ function FeesTableForYear() {
       return true;
     });
   }, [fees, selectedClassId, selectedSectionId, searchText, statusFilter, isAllClasses]);
+
+  const stats = useMemo(() => filteredFees.reduce((totals, row) => {
+    // Fee amounts have two decimal places; sum in minor units to keep totals exact.
+    totals.collected += toMinorUnits(row.collectedToDate, 2) ?? 0;
+    totals.cash += toMinorUnits(row.collectedCashToDate, 2) ?? 0;
+    totals.check += toMinorUnits(row.collectedCheckToDate, 2) ?? 0;
+    totals.bankTransfer += toMinorUnits(row.collectedBankTransferToDate, 2) ?? 0;
+    totals.overdue += toMinorUnits(row.overdueAmount, 2) ?? 0;
+    return totals;
+  }, { collected: 0, cash: 0, check: 0, bankTransfer: 0, overdue: 0 }), [filteredFees]);
 
   const classOptions = useMemo(
     () => [
@@ -128,7 +136,7 @@ function FeesTableForYear() {
       placeholder: t('fees.filters.section'),
       value: selectedSectionId,
       onChange: (value: string) => setSelectedSectionId(value === '__all__' ? '' : value),
-      options: [{ value: '__all__', label: t('fees.filters.allSections') }, ...sectionOptions],
+      options: [{ value: '__all__', label: t('common.all') }, ...sectionOptions],
       disabled: sectionOptions.length === 0,
       className: 'w-full sm:w-28 xl:w-28',
     },
@@ -171,31 +179,6 @@ function FeesTableForYear() {
           return await withAcademicYear(openedYear, () => createBulkFeesApi(withFeeYear(feeData, openedYear)));
         }
       }
-    });
-  };
-
-  const handleClassFeeClick = () => {
-    if (!viewingYear) return;
-    const openedYear = viewingYear;
-    openDialog({
-      title: t('fees.classBulk.title'),
-      children: <ClassBulkFeeForm classes={classes} feeTypes={feeTypes} />,
-      width: '6xl',
-      primaryButton: {
-        form: 'class-bulk-fee-form',
-        text: t('fees.classBulk.action'),
-        onClick: async (feeData) => {
-          const response = await withAcademicYear(openedYear, () => createBulkClassFeesApi(feeData));
-          const result = response?.data ?? response;
-          await queryClient.invalidateQueries({ queryKey: ['fees'] });
-          toast[result.errors?.length ? 'warning' : 'success'](t('fees.classBulk.result', {
-            created: result.created ?? 0,
-            skipped: result.skipped ?? 0,
-            failed: result.errors?.length ?? 0,
-          }));
-          return response;
-        },
-      },
     });
   };
 
@@ -253,22 +236,58 @@ function FeesTableForYear() {
       >
         <NPageHeaderActions>
           <PageHeaderGlobalActions />
-          {viewingYear && (
-            // Icon only at phone width, where the label left no room for the title.
-            <NButton
-              size="sm"
-              variant="outline"
-              onClick={handleClassFeeClick}
-              disabled={!classes?.length}
-              aria-label={t('fees.classBulk.action')}
-              title={t('fees.classBulk.action')}
-            >
-              <Users className="h-4 w-4" aria-hidden />
-              <span className="max-sm:hidden">{t('fees.classBulk.action')}</span>
-            </NButton>
-          )}
         </NPageHeaderActions>
       </NPageHeader>
+
+      {isFeesLoading || isAcademicYearLoading ? (
+        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-5">
+          {Array.from({ length: 5 }, (_, index) => <NStatCardSkeleton key={index} />)}
+        </div>
+      ) : failedToLoad ? null : (
+        <div className="grid shrink-0 grid-cols-2 gap-3 xl:grid-cols-5">
+          <NStatCard
+            icon={HandCoins}
+            label={t('fees.stats.collected')}
+            value={majorMoney(stats.collected / 100)}
+            className="min-w-0"
+            classNames={{
+              icon: 'bg-green-500/10 text-green-600 dark:text-green-400',
+              value: 'tabular-nums wrap-anywhere text-green-600 dark:text-green-400',
+            }}
+          />
+          <NStatCard
+            icon={Banknote}
+            label={t('payments.methods.cash')}
+            value={majorMoney(stats.cash / 100)}
+            className="min-w-0"
+            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
+          />
+          <NStatCard
+            icon={ReceiptText}
+            label={t('payments.methods.check')}
+            value={majorMoney(stats.check / 100)}
+            className="min-w-0"
+            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
+          />
+          <NStatCard
+            icon={Landmark}
+            label={t('payments.methods.bankTransfer')}
+            value={majorMoney(stats.bankTransfer / 100)}
+            className="min-w-0"
+            classNames={{ icon: 'bg-muted text-muted-foreground', value: 'tabular-nums wrap-anywhere' }}
+          />
+          <NStatCard
+            icon={Wallet}
+            label={t('fees.stats.overdueAmount')}
+            value={majorMoney(stats.overdue / 100)}
+            className="min-w-0"
+            classNames={{
+              icon: 'bg-red-500/10 text-red-600 dark:text-red-400',
+              value: 'tabular-nums wrap-anywhere text-red-600 dark:text-red-400',
+            }}
+          />
+        </div>
+      )}
 
       <NTable
         data={filteredFees}

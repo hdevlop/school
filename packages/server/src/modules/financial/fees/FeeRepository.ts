@@ -165,6 +165,7 @@ export class FeeRepository {
 
   async getAll(studentId?: string) {
     const { id: academicYearId, label: academicYear } = this.year;
+    const today = formatDateOnly(getBusinessDate());
     // Pick one placement per enrollment before joining fees. Joining every
     // transfer would multiply each fee and inflate the financial aggregates.
     const lastPlacement = this.db.selectDistinctOn(
@@ -193,6 +194,36 @@ export class FeeRepository {
       ), 0)
     `;
 
+    const collectedToDateForFee = (method?: typeof payments.$inferSelect.paymentMethod) => sql`
+      coalesce((
+        select sum(${paymentAllocations.amount}::numeric)
+        from ${paymentAllocations}
+        inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
+        where ${paymentAllocations.feeId} = ${fees.id}
+          and ${payments.status} = 'completed'
+          and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
+          ${method ? sql`and ${payments.paymentMethod} = ${method}` : sql``}
+      ), 0)
+    `;
+    // Derive the unpaid balance from completed allocations, rather than a
+    // cached status: partially paid installments can also be overdue.
+    const overdueAmountForFee = sql`
+      coalesce((
+        select sum(greatest(${feeInstallments.amount}::numeric - coalesce((
+          select sum(${paymentAllocations.amount}::numeric)
+          from ${paymentAllocations}
+          inner join ${payments} on ${paymentAllocations.paymentId} = ${payments.id}
+          where ${paymentAllocations.installmentId} = ${feeInstallments.id}
+            and ${payments.status} = 'completed'
+            and coalesce(${payments.settledDate}, ${payments.paymentDate}) <= ${today}
+        ), 0), 0))
+        from ${feeInstallments}
+        where ${feeInstallments.feeId} = ${fees.id}
+          and ${feeInstallments.dueDate} < ${today}
+          and ${feeInstallments.status} != 'cancelled'
+      ), 0)
+    `;
+
     const result = await this.db.select({
       studentId: students.id,
       studentName: students.name,
@@ -207,6 +238,11 @@ export class FeeRepository {
       totalFees: getTotalFeesCount().as('totalFees'),
       netAmount: getNetAmountSum().as('netAmount'),
       totalPaid: sql<string>`coalesce(sum(${completedAllocatedForFee}), 0)::text`.as('totalPaid'),
+      collectedToDate: sql<string>`coalesce(sum(${collectedToDateForFee()}), 0)::text`.as('collectedToDate'),
+      collectedCashToDate: sql<string>`coalesce(sum(${collectedToDateForFee('cash')}), 0)::text`.as('collectedCashToDate'),
+      collectedCheckToDate: sql<string>`coalesce(sum(${collectedToDateForFee('check')}), 0)::text`.as('collectedCheckToDate'),
+      collectedBankTransferToDate: sql<string>`coalesce(sum(${collectedToDateForFee('bankTransfer')}), 0)::text`.as('collectedBankTransferToDate'),
+      overdueAmount: sql<string>`coalesce(sum(${overdueAmountForFee}), 0)::text`.as('overdueAmount'),
       totalDiscount: getTotalDiscountSum().as('totalDiscount'),
       totalDue: sql<string>`coalesce(sum(${fees.netAmount}::numeric - ${completedAllocatedForFee}), 0)::text`.as('totalDue'),
       paidCount: getStatusCount('paid').as('paidCount'),
@@ -255,6 +291,11 @@ export class FeeRepository {
       totalFees: student.totalFees,
       netAmount: student.netAmount,
       totalPaid: student.totalPaid,
+      collectedToDate: student.collectedToDate,
+      collectedCashToDate: student.collectedCashToDate,
+      collectedCheckToDate: student.collectedCheckToDate,
+      collectedBankTransferToDate: student.collectedBankTransferToDate,
+      overdueAmount: student.overdueAmount,
       totalDiscount: student.totalDiscount,
       totalDue: student.totalDue,
       paidCount: student.paidCount,

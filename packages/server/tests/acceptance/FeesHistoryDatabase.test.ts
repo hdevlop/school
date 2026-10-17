@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 import { scopedHistoryRepository } from '../academicYears/fixtures/scopedHistoryRepository';
+import { getBusinessDate } from '../../src/shared/businessDate';
+import { formatDateOnly } from '../../src/modules/financial/utils/dateOnly';
 
 const rawUrl = process.env.SCHOOL_HISTORY_TEST_DB_URL;
 if (!rawUrl) throw new Error('SCHOOL_HISTORY_TEST_DB_URL is required');
@@ -17,6 +19,65 @@ const { FeeRepository } = await import('../../src/modules/financial/fees/FeeRepo
 const rollback = Symbol('rollback');
 
 describe('fee year scope on the marked PostgreSQL fixture', () => {
+  it('counts collected money and overdue installment balances only through today', async () => {
+    const day = (offset: number) => {
+      const date = getBusinessDate();
+      date.setDate(date.getDate() + offset);
+      return formatDateOnly(date)!;
+    };
+    try {
+      await db.transaction(async (transaction) => {
+        const tx = transaction as unknown as typeof db;
+        const { repo, inYear } = await scopedHistoryRepository(FeeRepository, tx);
+        const studentId = 'history-student-08';
+        const feeId = 'history-fee-asof';
+        const read = async () => (await inYear('history-year-2026', () => repo.getAll(studentId)))[0];
+        const before = await read();
+        await tx.insert(feeTypes).values({ id: 'history-type-asof', name: 'As-of-date fee',
+          category: 'tuition', amount: '1300', paymentType: 'recurring', status: 'active' });
+        await tx.insert(fees).values({ id: feeId, studentId, feeTypeId: 'history-type-asof',
+          academicYear: '2026-2027', baseAmount: '1300', grossAmount: '1300', netAmount: '1300' });
+        await tx.insert(feeInstallments).values([
+          { id: 'asof-past', feeId, number: 1, dueDate: day(-1), amount: '400', status: 'partiallyPaid' },
+          { id: 'asof-today', feeId, number: 2, dueDate: day(0), amount: '200' },
+          { id: 'asof-future', feeId, number: 3, dueDate: day(1), amount: '500' },
+          { id: 'asof-cancelled', feeId, number: 4, dueDate: day(-1), amount: '100', status: 'cancelled' },
+          { id: 'asof-paid', feeId, number: 5, dueDate: day(-1), amount: '100', status: 'paid' },
+        ]);
+        const receipts = [
+          { id: 'asof-received', status: 'completed' as const, paymentMethod: 'cash' as const, amount: '100', paymentDate: day(0), installmentId: 'asof-past' },
+          { id: 'asof-advance', status: 'completed' as const, paymentMethod: 'bankTransfer' as const, amount: '70', paymentDate: day(-1), installmentId: 'asof-future' },
+          { id: 'asof-full', status: 'completed' as const, paymentMethod: 'check' as const, amount: '100', paymentDate: day(-1), installmentId: 'asof-paid' },
+          { id: 'asof-dated-future', status: 'completed' as const, paymentMethod: 'cash' as const, amount: '50', paymentDate: day(1), installmentId: 'asof-past' },
+          { id: 'asof-pending', status: 'pending' as const, paymentMethod: 'check' as const, amount: '30', paymentDate: day(-1), installmentId: 'asof-past' },
+          { id: 'asof-voided', status: 'voided' as const, paymentMethod: 'bankTransfer' as const, amount: '20', paymentDate: day(-1), installmentId: 'asof-past' },
+          { id: 'asof-deposited', status: 'deposited' as const, paymentMethod: 'check' as const, amount: '60', paymentDate: day(-1), installmentId: 'asof-past' },
+          { id: 'asof-settles-future', status: 'completed' as const, paymentMethod: 'check' as const, amount: '40', paymentDate: day(-1),
+            settledDate: day(1), installmentId: 'asof-past' },
+        ];
+        await tx.insert(payments).values(receipts.map(({ installmentId: _, ...receipt }) => ({
+          ...receipt, studentId,
+        })));
+        await tx.insert(paymentAllocations).values(receipts.map((receipt) => ({
+          id: `alloc-${receipt.id}`, paymentId: receipt.id, feeId,
+          installmentId: receipt.installmentId, amount: receipt.amount, type: 'installment',
+        })));
+
+        const after = await read();
+        expect(Number(after.collectedToDate) - Number(before?.collectedToDate ?? 0)).toBe(270);
+        expect(Number(after.collectedCashToDate) - Number(before?.collectedCashToDate ?? 0)).toBe(100);
+        expect(Number(after.collectedCheckToDate) - Number(before?.collectedCheckToDate ?? 0)).toBe(100);
+        expect(Number(after.collectedBankTransferToDate) - Number(before?.collectedBankTransferToDate ?? 0)).toBe(70);
+        expect(Number(after.overdueAmount) - Number(before?.overdueAmount ?? 0)).toBe(300);
+        // The existing annual balance still includes the future-dated completed receipts.
+        expect(Number(after.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(360);
+        throw rollback;
+      });
+    } catch (error) {
+      if (error !== rollback) throw error;
+    }
+  });
+
   it('keeps charged-year rows, fee-only students and completed cross-year allocations exact', async () => {
     try {
       await db.transaction(async (transaction) => {

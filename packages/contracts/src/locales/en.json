@@ -1396,6 +1396,10 @@
     }
   },
   "fees": {
+    "stats": {
+      "collected": "Collected to date",
+      "overdueAmount": "Overdue amount"
+    },
     "classBulk": {
       "action": "Charge a class",
       "title": "Charge a class in the viewed school year",

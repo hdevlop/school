@@ -62,7 +62,7 @@ export const useFeesTableColumns = () => {
         const amount = row.original.totalDue || '0';
         const numAmount = Number(amount);
         return (
-          <span className={numAmount > 0 ? 'text-red-600 font-medium' : 'text-gray-500'}>
+          <span className={Number(row.original.overdueAmount ?? 0) > 0 ? 'text-red-600 font-medium' : 'text-foreground'}>
             {majorMoney(numAmount)}
           </span>
         );
@@ -72,7 +72,7 @@ export const useFeesTableColumns = () => {
       id: "status",
       accessorFn: (row: any) => {
         if (Number(row.totalFees ?? 0) === 0) return 'noFees';
-        if (row.overdueCount > 0) return 'overdue';
+        if (Number(row.overdueAmount ?? 0) > 0) return 'overdue';
         if (Number(row.totalDue ?? 0) <= 0) return 'paid';
         return 'paying';
       },
@@ -83,11 +83,11 @@ export const useFeesTableColumns = () => {
         if (Number(row.original.totalFees ?? 0) === 0) {
           return <span className="text-muted-foreground">{t('fees.studentView.noFees')}</span>;
         }
-        const overdue = row.original.overdueCount || 0;
+        const overdue = Number(row.original.overdueAmount ?? 0);
         const totalDue = Number(row.original.totalDue ?? 0);
 
         if (overdue > 0) {
-          return <NBadge status="overdue" look="solid" showIcon>{overdue} {t('fees.status.overdue')}</NBadge>;
+          return <NBadge status="overdue" look="solid" showIcon>{t('fees.status.overdue')}</NBadge>;
         }
 
         if (totalDue <= 0) {

@@ -1636,6 +1636,10 @@
     }
   },
   "fees": {
+    "stats": {
+      "collected": "Cobrado hasta hoy",
+      "overdueAmount": "Importe vencido"
+    },
     "classBulk": {
       "action": "Cobrar a una clase",
       "title": "Cobrar a una clase en el año escolar mostrado",

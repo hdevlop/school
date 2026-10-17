@@ -2356,6 +2356,10 @@
     }
   },
   "fees": {
+    "stats": {
+      "collected": "Encaissé à ce jour",
+      "overdueAmount": "Montant en retard"
+    },
     "classBulk": {
       "action": "Facturer une classe",
       "title": "Facturer une classe pour l'année scolaire affichée",
