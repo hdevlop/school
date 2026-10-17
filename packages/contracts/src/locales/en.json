@@ -1665,6 +1665,7 @@
       "searchByStudentCode": "Search by student code...",
       "filterByFeeType": "Filter by fee type...",
       "allSections": "All sections",
+      "allSchedules": "All payment frequencies",
       "filterByStatus": "Filter by status...",
       "filterBySchedule": "Filter by schedule...",
       "filterByAcademicYear": "Filter by academic year...",

@@ -1,0 +1,98 @@
+{
+  "run": "PB1019 combined release",
+  "validatedUtc": "2026-10-17T15:03:09.383Z",
+  "authorization": "Owner explicitly requested inclusion of all current changes after validation.",
+  "precedingFinanceCommit": "65664e26dfcfca5505e66aab94d7c6e01ac9e9ae",
+  "scope": "Translated finance schemas and failure states, fee schedule filtering before totals, collection labels, student wizard schema composition, Claude Najm skill guidance.",
+  "checks": [
+    {
+      "command": "bun run test:finance",
+      "exitCode": 0,
+      "passed": 123,
+      "failed": 0,
+      "assertions": 537
+    },
+    {
+      "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/FeesHistoryDatabase.test.ts",
+      "exitCode": 0,
+      "passed": 3,
+      "failed": 0,
+      "assertions": 50
+    },
+    {
+      "command": "bun --env-file=apps/dashboard/.env.local test packages/server/tests/acceptance/FeesHistoryTransport.test.ts",
+      "exitCode": 0,
+      "passed": 2,
+      "failed": 0,
+      "assertions": 37
+    },
+    {
+      "command": "bun run check",
+      "exitCode": 0,
+      "distDir": ".next-release-all"
+    },
+    {
+      "command": "bun run i18n:check and bun run test:finance after final wire-transfer label corrections",
+      "exitCode": 0
+    }
+  ],
+  "changesAfterFullGate": [
+    "packages/contracts/src/locales/ar.json",
+    "packages/contracts/src/locales/es.json",
+    "packages/contracts/src/locales/fr.json"
+  ],
+  "changesAfterFullGateDetail": "Three localized wire-transfer labels changed to distinguish international transfer from bank transfer. Translation check and all 123 Finance tests reran successfully; exact candidate receives independent CI build.",
+  "initialTransportAttempt": {
+    "classification": "ENVIRONMENT",
+    "passed": 1,
+    "failed": 1,
+    "errorCode": "42703",
+    "reason": "Isolated school_history_test settings lacked receipt_language from existing migration 0070.",
+    "correction": "Applied only the existing additive 0070 SQL to guarded loopback school_history_test; complete two-test rerun passes. No production schema or data changed."
+  },
+  "validatedSourceSnapshot": {
+    ".claude/skills/najm/SKILL.md": "1825f6e65b4368d487b7bec87df67ec969d3cf07984c7078eb145de692be6b99",
+    "apps/dashboard/src/features/Financial/Expenses/components/ExpenseForm.tsx": "c9c3b65582d06728048129ffe021a0e8774fe04dae88decd8090080b88773b20",
+    "apps/dashboard/src/features/Financial/Expenses/components/ExpensePaymentForm.tsx": "a9ce9d7170e40ec945307d03086de049085a8833d039980d9e4c95f9899d632b",
+    "apps/dashboard/src/features/Financial/Expenses/components/ExpensesTable.tsx": "dcb383d2ba67cd13ca684f61be7e82f3ccbf45d78afd529a38cc43e24cd5529b",
+    "apps/dashboard/src/features/Financial/Expenses/config/expenseSchemas.ts": "f08ca8f708356781d5f2754e15dcde291d8dd4b2c1b2f53daf265dce50479e2e",
+    "apps/dashboard/src/features/Financial/FeeTypes/components/FeeTypeForm.tsx": "c6454b705f843e76d32fa3d5ca45868da61e7d49e5cb9042f386c6aa4a557715",
+    "apps/dashboard/src/features/Financial/FeeTypes/components/FeeTypesTable.tsx": "b1779bf821a889701ca383a72e286455d21be6f392ee641fe8182ca5b475e235",
+    "apps/dashboard/src/features/Financial/FeeTypes/config/feeTypeSchemas.ts": "2c68a26b677b7ae54a78622922f07332e75546da32ff9d60fc813b702d066263",
+    "apps/dashboard/src/features/Financial/Fees/components/BulkFeeForm.tsx": "97cb80bf17fc276a87b8fd5f8582eea808a47187c19c52ebabf8bf636cd93fb6",
+    "apps/dashboard/src/features/Financial/Fees/components/ClassBulkFeeForm.tsx": "6b68b0a04a0176367909826a1ab7c3290ed1faaeec06fdc0ba1861f4887ac9f3",
+    "apps/dashboard/src/features/Financial/Fees/components/EditFeeForm.tsx": "2c3c22e624242ee629a181e0e6dc00a1dc7a74cee0f04365874e019ff5661ed6",
+    "apps/dashboard/src/features/Financial/Fees/components/FeeForm.tsx": "0289dda92992014d82bc237ad04b51e761a4d23adb7f6edd0072b05d2229baac",
+    "apps/dashboard/src/features/Financial/Fees/components/FeesTable.tsx": "751edefbeb3a8a5643e11ac5ff65fca63db2849e8069aea4a73354165df2e263",
+    "apps/dashboard/src/features/Financial/Fees/components/StudentFeesView/index.tsx": "3fbdb35466151fd841732a155aa1a6b1ca358a33df11db3f5bf454aedbbd4d9f",
+    "apps/dashboard/src/features/Financial/Fees/config/feeSchemas.ts": "c26a5f792fcebe7b871514078132664bde443e01166f584babafef5095590459",
+    "apps/dashboard/src/features/Financial/Fees/hooks/useFees.tsx": "c531e38732623d3c292015875da0f717e952ccfbe1006bb8135e85521f7a9be6",
+    "apps/dashboard/src/features/Financial/Payment/components/MultiFeesPayment/PaymentForm.tsx": "b0c30a73e77a5fc85db34d04e70214f7e9eecced595ab6dcb3f1427beb50d4f0",
+    "apps/dashboard/src/features/Financial/Payment/components/PaymentEditForm.tsx": "1b12b2fcdcd56d17f708e838c9eabfba23254006cbbffda9d20271cf8932733a",
+    "apps/dashboard/src/features/Financial/Payment/components/PaymentsTable.tsx": "1c3a6dea693701a520b29a0db8a3298612e547bf4f5adb8e0d7f31b15da4d0ad",
+    "apps/dashboard/src/features/Financial/Payment/config/paymentSchemas.ts": "6f19dd7643c889f69761b7abb80fa975069e7dd295c35a0e7aac0cf33c10068a",
+    "apps/dashboard/src/features/Financial/Payment/hooks/usePayments.tsx": "733409d3cea94a8a42791c1bb0c5ecea39096b800bc3121b19066a1b9a83669b",
+    "apps/dashboard/src/features/Reports/components/CollectionByClassChart.tsx": "2bdce2dce3ca4ace00ca99e60556a1a3a652dbe4813d4967379f4d188ef4a208",
+    "apps/dashboard/src/features/Students/components/FullStudentForm.tsx": "746c9dcd77c04acb063902154730bdd6d3a69831c49207b307398e56f53a75a6",
+    "apps/dashboard/src/features/Students/config/fullStudentSchemas.ts": "f4ca49f3a738eddce298258ecbce5dfbb0ca1acd956ebb57506c8db5de71c3f0",
+    "apps/dashboard/src/services/feeApi.ts": "7c7b3f522ce714cfd4f59183cc1f5bbba25e709bcd3141e16674b98bba336a5c",
+    "apps/dashboard/tests/features/Financial/Expenses/config/expenseSchemas.test.ts": "6ab042c6f0c21e18796ab70332c203ed8a0830c633b434f9605c59d19e25efe6",
+    "apps/dashboard/tests/features/Financial/FeeTypes/config/feeTypeSchemas.test.ts": "a6368cf709eaa38271521de94c4d76993f36eeb154b60dc4f2692246be6d95f0",
+    "apps/dashboard/tests/features/Financial/Fees/config/feeSchemas.test.ts": "0dc59a11f1ca06486e096118d8097431371eaab3b8ff9a31ba77cad54e0fbabf",
+    "apps/dashboard/tests/features/Financial/Payment/config/paymentSchemas.test.ts": "07e288130d74f034ee9453b581cd926c27ca07419f71ef3b7514dff5384d0c7c",
+    "apps/dashboard/tests/features/Students/config/fullStudentSchemas.test.ts": "a09940e394e5e5308cd5b2f8464345b74ab31f08d7e21b17e24789b6995e3393",
+    "packages/contracts/src/locales/ar.json": "4da699e5a05dd59bc1537378cbefe0564b2c72456ce8b50fc1d4b42109b87b03",
+    "packages/contracts/src/locales/en.json": "ddf21534d62a0578576ab9d7fd3ee3be5be83cd6fb7b88d44a921c6f354bf5ac",
+    "packages/contracts/src/locales/es.json": "2f4d49163c62ef06d7d28204f9aef8c6727f00a15489083b609a0d2fbff26586",
+    "packages/contracts/src/locales/fr.json": "d9ab60c6cce7da4f96c02a49c0320b6e1e9a1c2de0a67c0dbcaccacc4a6529e5",
+    "packages/server/src/modules/financial/fees/FeeController.ts": "1f2237a23d2fe85f90df5868259f74c437ea6c3cf8f05ae9523912d342a857d0",
+    "packages/server/src/modules/financial/fees/FeeDto.ts": "bd6750c661ad315652b53be475d22aedb785d79c170efc8d80cff3939e9107c5",
+    "packages/server/src/modules/financial/fees/FeeRepository.ts": "d8dbf014d78f4239c6fb9349e3742fce8cc63e1abc28e3121c18c11fa9f7d9d8",
+    "packages/server/src/modules/financial/fees/FeeService.ts": "33ff7b015c580fadae11f173bfbcca8fd49c77ef7e70fa6f3f099ebb07f079a8",
+    "packages/server/tests/academicYears/FeeListYearScope.test.ts": "d5db947100b256fdee20b5b7888495c0a5ebd044fb6b75dc5e9edafac3e754b8",
+    "packages/server/tests/acceptance/FeesHistoryDatabase.test.ts": "9f08853fdfc08ffccd943f633cf539347a6c2a49457a6faa4d444b183b4371be",
+    "packages/server/tests/acceptance/FeesHistoryTransport.test.ts": "e4fb7f6efc0847810d6a0bcab2be959b82e382071355dba5a8a9d2019223481e",
+    ".claude/skills/najm-internals/SKILL.md": "25a9ae7b646da5c2a1210d1f5ddc9ab3b7eecac3e5d22fae21bee045c7044a11"
+  },
+  "productionFinancialWrites": 0
+}

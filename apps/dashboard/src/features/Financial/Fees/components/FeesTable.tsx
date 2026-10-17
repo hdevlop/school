@@ -2,6 +2,7 @@
 
 import { FEATURE_ICONS } from '@/shared/featureIcons';
 import { useEffect, useMemo, useState } from 'react';
+import type { Schedule } from '@sms/contracts';
 import { NPageHeader, NPageHeaderActions, NEmptyState, NButton, NErrorState, NForbiddenState, NStatCard, NStatCardSkeleton } from 'najm-kit';
 import { useDialog } from '@/shared/useDialog';
 import { SchoolTable as NTable } from '@/components/SchoolTable';
@@ -20,6 +21,7 @@ import { createBulkFeesApi } from '@/services/feeApi';
 import { withFeeYear } from '../utils/feeUtils';
 import { withAcademicYear } from '@/features/AcademicYears/utils/yearScope';
 import { useFeesTableColumns } from '../hooks/useFeesTableColumns';
+import { buildScheduleOptions } from '../config/feeOptions';
 import PageHeaderGlobalActions from '@/shared/PageHeaderGlobalActions';
 import { useActiveAcademicYear } from '@/features/Settings/hooks/useSettings';
 import { useViewingAcademicYear, useViewingYearKey } from '@/features/AcademicYears/hooks/useViewingAcademicYear';
@@ -44,6 +46,7 @@ function FeesTableForYear() {
   const [selectedSectionId, setSelectedSectionId] = useState('');
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('__all__');
+  const [scheduleFilter, setScheduleFilter] = useState<Schedule>();
 
   const {
     fees,
@@ -53,7 +56,7 @@ function FeesTableForYear() {
     deleteFee,
     isUpdating,
     isDeleting,
-  } = useFees();
+  } = useFees({ schedule: scheduleFilter });
 
   const isAllClasses = selectedClassId === 'all';
 
@@ -150,6 +153,19 @@ function FeesTableForYear() {
       className: 'w-full lg:w-52',
     },
     {
+      name: 'schedule',
+      type: 'select',
+      showIcon: false,
+      placeholder: t('fees.form.schedule'),
+      value: scheduleFilter ?? '__all__',
+      onChange: (value: string) => setScheduleFilter(value === '__all__' ? undefined : value as Schedule),
+      options: [
+        { value: '__all__', label: t('fees.filters.allSchedules') },
+        ...buildScheduleOptions(t),
+      ],
+      className: 'w-full lg:w-44',
+    },
+    {
       name: 'status',
       type: 'select',
       showIcon: false,
@@ -164,7 +180,7 @@ function FeesTableForYear() {
       ],
       className: 'w-full lg:w-36',
     },
-  ], [t, selectedClassId, selectedSectionId, searchText, statusFilter, classOptions, sectionOptions]);
+  ], [t, selectedClassId, selectedSectionId, searchText, statusFilter, scheduleFilter, classOptions, sectionOptions]);
 
   const handleAddClick = () => {
     if (!viewingYear) return;
@@ -217,9 +233,10 @@ function FeesTableForYear() {
     });
   };
 
+  const isFilteredEmpty = filteredFees.length === 0 && (scheduleFilter !== undefined || !!fees?.length);
   const noDataText = !selectedClassId
       ? (t('fees.noData.selectClass') || 'Select a class to view fees')
-      : filteredFees.length === 0 && fees?.length > 0
+      : isFilteredEmpty
         ? (t('fees.noData.noResults') || 'No students match the current filters')
         : (t('fees.noData.noFees') || 'No fees data available');
 
@@ -299,7 +316,7 @@ function FeesTableForYear() {
 
       <NTable
         data={filteredFees}
-        isFilteredEmpty={filteredFees.length === 0 && !!fees?.length}
+        isFilteredEmpty={isFilteredEmpty}
         columns={columns}
         filters={filters}
         onCreate={handleAddClick}

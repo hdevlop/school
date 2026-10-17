@@ -1,5 +1,6 @@
 'use client'
 import { useMemo } from 'react';
+import type { Schedule } from '@sms/contracts';
 import { useTranslation } from 'najm-i18n/react';
 import { useEntityCRUD } from 'najm-kit/query/crud';
 import { useYearScopedDetail, useYearScopedList } from '@/features/AcademicYears/hooks/useYearScopedQuery';
@@ -12,6 +13,7 @@ type UseFeesOptions = {
   feeId?: string;
   studentId?: string;
   enabled?: boolean;
+  schedule?: Schedule;
   /** The students owing fees of any year: the fees table's outstanding view. */
   allYears?: boolean;
   /** The student's fees of this year instead of the viewed one. */
@@ -22,12 +24,12 @@ type UseFeesOptions = {
 
 export const useFees = (options?: UseFeesOptions) => {
   const { t, language } = useTranslation();
-  const { feeId, studentId, enabled = true, allYears = false, studentYear, studentAllYears = false } = options || {};
+  const { feeId, studentId, enabled = true, schedule, allYears = false, studentYear, studentAllYears = false } = options || {};
   const { viewingYear } = useViewingAcademicYear();
   const mutationYear = studentYear ?? viewingYear;
 
   const crud = useEntityCRUD(['fees', 'installments', 'payments'], {
-    getAll: feeApi.getFeesApi,
+    getAll: () => feeApi.getFeesApi(),
     getByScope: feeApi.getOutstandingFeesApi,
     getByStudentAllYears: feeApi.getFeesByStudentAllYearsApi,
     create: feeApi.createFeeApi,
@@ -39,7 +41,12 @@ export const useFees = (options?: UseFeesOptions) => {
 
   // The list follows the viewed year. `allYears` reads the students owing
   // fees of any year, which the outstanding view needs whatever year is viewed.
-  const yearFees = useYearScopedList({ resource: 'fees', fetch: feeApi.getFeesApi, enabled: enabled && !allYears });
+  const yearFees = useYearScopedList({
+    resource: 'fees',
+    parts: schedule ? ['schedule', schedule] : [],
+    fetch: () => feeApi.getFeesApi(schedule),
+    enabled: enabled && !allYears,
+  });
   const allYearFees = crud.useGetByParam('scope', allYears ? 'outstanding' : undefined, enabled && allYears);
   const { data: fees, isLoading: isFeesLoading, isError, error, refetch } = allYears ? allYearFees : yearFees;
   // A fee belongs to its year: outside the viewed year the server has none.

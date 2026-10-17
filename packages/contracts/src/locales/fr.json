@@ -2449,7 +2449,8 @@
       "selectClass": "Sélectionner une classe",
       "filterByStatus": "Filtrer par statut",
       "searchByStudent": "Rechercher un élève...",
-      "allSections": "Toutes les sections"
+      "allSections": "Toutes les sections",
+      "allSchedules": "Toutes les périodicités"
     },
     "dialogs": {
       "createButton": "Créer",
@@ -4032,7 +4033,7 @@
       "debitCard": "Carte de débit",
       "mobilePayment": "Paiement mobile",
       "online": "En ligne",
-      "wireTransfer": "Virement bancaire"
+      "wireTransfer": "Virement international"
     },
     "status": {
       "completed": "Terminé",

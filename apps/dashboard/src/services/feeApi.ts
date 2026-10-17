@@ -1,8 +1,9 @@
 import { api } from './http';
+import type { Schedule } from '@sms/contracts';
 
 // One row per student for fees charged to the request's school year.
-export const getFeesApi = async () => {
-  const res = await api.get('/fees');
+export const getFeesApi = async (schedule?: Schedule) => {
+  const res = await api.get('/fees', { params: { schedule } });
   return res.data;
 };
 

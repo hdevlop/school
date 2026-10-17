@@ -1724,7 +1724,8 @@
       "selectClass": "Seleccionar clase",
       "filterByStatus": "Filtrar por estado",
       "searchByStudent": "Buscar estudiante...",
-      "allSections": "Todas las secciones"
+      "allSections": "Todas las secciones",
+      "allSchedules": "Todas las frecuencias de pago"
     },
     "dialogs": {
       "createButton": "Crear",
@@ -3389,7 +3390,7 @@
       "debitCard": "Tarjeta de débito",
       "mobilePayment": "Pago móvil",
       "online": "En línea",
-      "wireTransfer": "Transferencia bancaria"
+      "wireTransfer": "Transferencia internacional"
     },
     "status": {
       "completed": "Completado",

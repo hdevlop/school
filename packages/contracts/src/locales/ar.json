@@ -1738,7 +1738,8 @@
       "selectClass": "اختر قسماً",
       "filterByStatus": "تصفية حسب الحالة",
       "searchByStudent": "البحث عن طالب...",
-      "allSections": "جميع الشعب"
+      "allSections": "جميع الشعب",
+      "allSchedules": "جميع دوريات الدفع"
     },
     "dialogs": {
       "createButton": "إنشاء",
@@ -3403,7 +3404,7 @@
       "debitCard": "بطاقة خصم",
       "mobilePayment": "دفع عبر الهاتف",
       "online": "عبر الإنترنت",
-      "wireTransfer": "تحويل بنكي"
+      "wireTransfer": "تحويل دولي"
     },
     "status": {
       "completed": "مكتمل",

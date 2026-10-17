@@ -19,6 +19,74 @@ const { FeeRepository } = await import('../../src/modules/financial/fees/FeeRepo
 const rollback = Symbol('rollback');
 
 describe('fee year scope on the marked PostgreSQL fixture', () => {
+  it('limits student totals and receipt metrics to the selected payment schedule', async () => {
+    try {
+      await db.transaction(async (transaction) => {
+        const tx = transaction as unknown as typeof db;
+        const { repo, inYear } = await scopedHistoryRepository(FeeRepository, tx);
+        const studentId = 'history-student-08';
+        const read = async (schedule?: 'monthly' | 'annually') =>
+          (await inYear('history-year-2026', () => repo.getAll(studentId, schedule)))[0];
+        const beforeMonthly = await read('monthly');
+        const beforeAnnual = await read('annually');
+        const beforeAll = await read();
+        const today = formatDateOnly(getBusinessDate())!;
+        const yesterday = getBusinessDate();
+        yesterday.setDate(yesterday.getDate() - 1);
+        await tx.insert(feeTypes).values([
+          { id: 'schedule-type-monthly', name: 'Schedule filter monthly', category: 'tuition',
+            amount: '1200', paymentType: 'recurring', status: 'active' },
+          { id: 'schedule-type-annual', name: 'Schedule filter annual', category: 'tuition',
+            amount: '500', paymentType: 'recurring', status: 'active' },
+        ]);
+        await tx.insert(fees).values([
+          { id: 'schedule-monthly', studentId, feeTypeId: 'schedule-type-monthly', schedule: 'monthly',
+            academicYear: '2026-2027', baseAmount: '1200', grossAmount: '1200', netAmount: '1200' },
+          { id: 'schedule-annual', studentId, feeTypeId: 'schedule-type-annual', schedule: 'annually',
+            academicYear: '2026-2027', baseAmount: '500', grossAmount: '500', netAmount: '500' },
+          { id: 'schedule-old-monthly', studentId, feeTypeId: 'schedule-type-monthly', schedule: 'monthly',
+            academicYear: '2025-2026', baseAmount: '900', grossAmount: '900', netAmount: '900' },
+        ]);
+        await tx.insert(payments).values({ id: 'schedule-receipt', studentId, amount: '150',
+          paymentDate: today, paymentMethod: 'cash', status: 'completed' });
+        await tx.insert(feeInstallments).values([
+          { id: 'schedule-month-inst', feeId: 'schedule-monthly', number: 1,
+            dueDate: formatDateOnly(yesterday)!, amount: '1200' },
+          { id: 'schedule-annual-inst', feeId: 'schedule-annual', number: 1,
+            dueDate: formatDateOnly(yesterday)!, amount: '500' },
+        ]);
+        await tx.insert(paymentAllocations).values([
+          { id: 'schedule-alloc-monthly', paymentId: 'schedule-receipt', feeId: 'schedule-monthly',
+            installmentId: 'schedule-month-inst', amount: '100', type: 'installment' },
+          { id: 'schedule-alloc-annual', paymentId: 'schedule-receipt', feeId: 'schedule-annual',
+            installmentId: 'schedule-annual-inst', amount: '50', type: 'installment' },
+        ]);
+
+        const monthly = await read('monthly');
+        const annual = await read('annually');
+        const all = await read();
+        for (const [row, before, net, paid] of [
+          [monthly, beforeMonthly, 1200, 100],
+          [annual, beforeAnnual, 500, 50],
+          [all, beforeAll, 1700, 150],
+        ] as const) {
+          expect(Number(row.netAmount) - Number(before?.netAmount ?? 0)).toBe(net);
+          expect(Number(row.totalPaid) - Number(before?.totalPaid ?? 0)).toBe(paid);
+          expect(Number(row.totalDue) - Number(before?.totalDue ?? 0)).toBe(net - paid);
+          expect(Number(row.collectedCashToDate) - Number(before?.collectedCashToDate ?? 0)).toBe(paid);
+          expect(Number(row.overdueAmount) - Number(before?.overdueAmount ?? 0)).toBe(net - paid);
+        }
+        expect(monthly.fees.map((fee) => fee.id)).toContain('schedule-monthly');
+        expect(monthly.fees.map((fee) => fee.id)).not.toContain('schedule-annual');
+        expect(monthly.fees.map((fee) => fee.id)).not.toContain('schedule-old-monthly');
+        expect(annual.fees.map((fee) => fee.id)).not.toContain('schedule-monthly');
+        throw rollback;
+      });
+    } catch (error) {
+      if (error !== rollback) throw error;
+    }
+  });
+
   it('counts collected money and overdue installment balances only through today', async () => {
     const day = (offset: number) => {
       const date = getBusinessDate();

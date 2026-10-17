@@ -7,6 +7,7 @@ import { getBusinessDate, jsonAgg } from '../../../shared';
 import { formatDateOnly } from '../utils/dateOnly';
 import { Year } from '../../academicYears/requestYear';
 import type { ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
+import type { ListFeesQueryDto } from './FeeDto';
 import {
   getAvgPaymentAmount,
   getCompletedPaymentCount,
@@ -164,7 +165,7 @@ export class FeeRepository {
     }));
   }
 
-  async getAll(studentId?: string) {
+  async getAll(studentId?: string, schedule?: ListFeesQueryDto['schedule']) {
     const { id: academicYearId, label: academicYear } = this.year;
     const today = formatDateOnly(getBusinessDate());
     // Pick one placement per enrollment before joining fees. Joining every
@@ -270,6 +271,8 @@ export class FeeRepository {
       .where(and(
         studentId ? eq(students.id, studentId) : undefined,
         or(isNotNull(studentEnrollments.id), isNotNull(fees.id)),
+        // Filter before aggregating so balances and collection metrics use only matching fees.
+        schedule ? eq(fees.schedule, schedule) : undefined,
       ))
       .groupBy(
         students.id, students.name, students.studentCode, users.image,

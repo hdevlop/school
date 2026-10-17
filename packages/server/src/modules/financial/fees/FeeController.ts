@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Params, Post, Put, ResMsg, User, Validate } from '../../../najm';
+import { Body, Controller, Delete, Get, Params, Post, Put, Query, ResMsg, User, Validate } from '../../../najm';
 import { McpTool, ToolGroup } from 'najm-mcp';
 import { FeeService } from './FeeService';
 import { buildFeeRecalculationResponse } from './buildFeeRecalculationResponse';
@@ -10,6 +10,7 @@ import {
   deleteFeesBulkInputDto,
   deleteFeesBulkDto,
   feeIdParam,
+  listFeesQueryDto,
   overdueStudentBody,
   studentIdParam,
   updateFeeDto,
@@ -19,6 +20,7 @@ import {
   type DeleteFeesBulkDto,
   type UpdateFeeDto,
   type OverdueStudentBody,
+  type ListFeesQueryDto,
 } from './FeeDto';
 
 @ToolGroup('fees')
@@ -30,10 +32,11 @@ export class FeeController {
 
   @Get()
   @CanSchoolWide('read:fees')
-  @McpTool({ description: 'List all fees', readOnly: true })
+  @Validate({ query: listFeesQueryDto })
+  @McpTool({ description: 'List student fee totals in the selected year, optionally filtered by payment schedule', readOnly: true })
   @ResMsg('fees.success.retrieved')
-  async getFees() {
-    return this.feeService.getAll();
+  async getFees(@Query() filters: ListFeesQueryDto = {}) {
+    return this.feeService.getAll(filters);
   }
 
   @Get('/outstanding')

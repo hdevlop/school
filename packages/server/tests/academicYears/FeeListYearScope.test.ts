@@ -2,6 +2,8 @@ import { describe, expect, it } from 'bun:test';
 import { drizzle } from 'drizzle-orm/pg-proxy';
 import { FeeService } from '../../src/modules/financial/fees/FeeService';
 import { FeeRepository } from '../../src/modules/financial/fees/FeeRepository';
+import { listFeesQueryDto } from '../../src/modules/financial/fees/FeeDto';
+import { SCHEDULE_VALUES } from '@sms/contracts';
 
 const oldYear = { id: 'year-old', label: '2025-2026' } as any;
 
@@ -50,6 +52,40 @@ describe('explicit all-year outstanding fees', () => {
 });
 
 describe('normal fee list year scope', () => {
+  it('accepts each payment schedule, with omission restoring the unfiltered list', () => {
+    expect(listFeesQueryDto.parse({})).toEqual({});
+    for (const schedule of SCHEDULE_VALUES) {
+      expect(listFeesQueryDto.parse({ schedule })).toEqual({ schedule });
+    }
+    expect(listFeesQueryDto.safeParse({ schedule: 'invalid' }).success).toBe(false);
+  });
+
+  it('filters fee rows before student totals while preserving the selected year', async () => {
+    const statements: Array<{ sql: string; params: unknown[] }> = [];
+    const repo = new FeeRepository();
+    (repo as any).year = oldYear;
+    repo.db = drizzle(async (sql, params) => {
+      statements.push({ sql, params });
+      return { rows: [] };
+    }) as any;
+    const service = new FeeService(repo, {} as any, {} as any, {} as any, {} as any,
+      {} as any, {} as any, {} as any, {} as any);
+
+    for (const schedule of SCHEDULE_VALUES) {
+      await service.getAll({ schedule });
+      const query = statements.at(-1)!;
+      const predicate = query.sql.indexOf('"fees"."schedule" =');
+      expect(predicate).toBeGreaterThan(query.sql.lastIndexOf('where'));
+      expect(predicate).toBeLessThan(query.sql.indexOf('group by'));
+      expect(query.params).toContain(schedule);
+      expect(query.params).toContain(oldYear.id);
+      expect(query.params).toContain(oldYear.label);
+    }
+
+    await service.getAll();
+    expect(statements.at(-1)!.sql).not.toContain('"fees"."schedule" =');
+  });
+
   it('validates the requested year and lists the fees of the resolved year', async () => {
     const { service, calls } = serviceHarness();
     expect(await service.getAll()).toHaveLength(1);

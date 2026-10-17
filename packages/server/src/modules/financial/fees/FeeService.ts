@@ -19,7 +19,7 @@ import { StudentEnrollmentRepository } from '../../studentEnrollments/StudentEnr
 import { AcademicYearValidator, type ResolvedAcademicYear } from '../../academicYears/AcademicYearValidator';
 import { FinancialAuditService } from '../auditLog/FinancialAuditService';
 import { Year } from '../../academicYears/requestYear';
-import type { CreateFeeDto, UpdateFeeDto, ClassBulkFeeDto } from './FeeDto';
+import type { CreateFeeDto, UpdateFeeDto, ClassBulkFeeDto, ListFeesQueryDto } from './FeeDto';
 
 const FEE_UPDATE_KEYS = [
   'studentId', 'schedule', 'academicYear', 'effectiveDate', 'baseAmount',
@@ -49,8 +49,8 @@ export class FeeService {
     private academicYears: AcademicYearValidator,
   ) { }
 
-  async getAll() {
-    return this.feeRepository.getAll();
+  async getAll(filters: ListFeesQueryDto = {}) {
+    return this.feeRepository.getAll(undefined, filters.schedule);
   }
 
   /**

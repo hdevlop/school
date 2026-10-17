@@ -67,6 +67,43 @@ afterAll(async () => {
 });
 
 describe('authenticated fee year scope', () => {
+  it('filters the fee list by schedule and rejects unknown schedules', async () => {
+    for (const [schedule, includesFee] of [['oneTime', true], ['monthly', false]] as const) {
+      const response = await request(`/fees?schedule=${schedule}`, '2025-2026');
+      expect(response.status).toBe(200);
+      const ids = response.body.data.flatMap((row: { fees: Array<{ id: string }> }) =>
+        row.fees.map((fee) => fee.id));
+      expect(ids.includes(oldId)).toBe(includesFee);
+      expect(ids).not.toContain(currentId);
+    }
+    expect((await request('/fees?schedule=invalid', '2025-2026')).status).toBe(400);
+
+    const { Client } = await import('@modelcontextprotocol/sdk/client/index.js');
+    const { StreamableHTTPClientTransport } = await import('@modelcontextprotocol/sdk/client/streamableHttp.js');
+    const client = new Client({ name: 'school-fee-schedule-test', version: '1.0.0' });
+    const transport = new StreamableHTTPClientTransport(new URL(`http://localhost:${port}/api/mcp`), {
+      requestInit: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    await client.connect(transport);
+    try {
+      const tools = await client.listTools();
+      const list = tools.tools.find((item) => item.name === 'fees_get_fees');
+      expect(list?.inputSchema.properties).toHaveProperty('academicYear');
+      expect(list?.inputSchema.properties).toHaveProperty('schedule');
+      for (const [schedule, includesFee] of [['oneTime', true], ['monthly', false]] as const) {
+        const result = await client.callTool({ name: list!.name,
+          arguments: { academicYear: '2025-2026', schedule } }) as {
+          content: Array<{ text: string }>; isError?: boolean;
+        };
+        expect(result.isError).not.toBe(true);
+        const ids = (JSON.parse(result.content[0].text) as Array<{ fees: Array<{ id: string }> }>)
+          .flatMap((row) => row.fees.map((fee) => fee.id));
+        expect(ids.includes(oldId)).toBe(includesFee);
+        expect(ids).not.toContain(currentId);
+      }
+    } finally { await transport.close(); }
+  });
+
   it('keeps fee views, corrections and MCP input on the selected charged year', async () => {
     const studentId = 'history-student-01';
     const listIds = async (year?: string) => (await request('/fees', year)).body.data
