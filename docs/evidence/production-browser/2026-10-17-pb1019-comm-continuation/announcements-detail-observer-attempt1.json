@@ -1,0 +1,89 @@
+{
+  "origin": "https://myscolai.com",
+  "revision": "e553b1622a5b50e722d90100954bebb031414f92",
+  "completedUtc": "2026-10-17T19:33:10.679Z",
+  "browser": "Chrome 155 via standalone Playwright explicitly requested by owner",
+  "results": [
+    {
+      "case": "announcements-R02-admin-create-visible",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-one-create-persists-draft",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-create-reloads",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R02-edit-and-delete-exposed",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R02-no-publishing-action",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-M01-update-accepted",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-title-content-audience-and-draft-reconcile",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-supported-author-present",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-desktop-author-status-audience-match-supported-read",
+      "outcome": "PASS"
+    },
+    {
+      "case": "announcements-R01-desktop-empty-publish-date-matches-draft",
+      "outcome": "PASS"
+    },
+    {
+      "case": "expect(locator).toHaveCount(expected) failed",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "cleanup-owned-draft-absent",
+      "outcome": "PASS"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "exact-browser-write-list",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "actor": "admin",
+      "method": "POST",
+      "path": "/api/announcements"
+    },
+    {
+      "actor": "admin",
+      "method": "PUT",
+      "path": "/api/announcements/:owned-id"
+    }
+  ],
+  "failure": {
+    "case": "expect(locator).toHaveCount(expected) failed"
+  },
+  "cleanup": {
+    "created": 1,
+    "remaining": 0
+  },
+  "published": 0
+}

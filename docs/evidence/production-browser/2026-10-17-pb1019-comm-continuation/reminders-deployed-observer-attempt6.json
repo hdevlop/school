@@ -1,0 +1,747 @@
+{
+  "revision": "e553b1622a5b50e722d90100954bebb031414f92",
+  "completedUtc": "2026-10-17T19:35:55.868Z",
+  "scope": "Live owned overdue student and fee reads; no financial mutation or delivery",
+  "results": [
+    {
+      "case": "reminders-R01-supported-overdue-read",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-R01-controlled-student-present",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-R01-owning-fee-record-identity",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-R01-overdue-total-reconciles-installments",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-R01-oldest-due-date-reconciles",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-R01-overdue-age-reconciles",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-R02-exact-student-fee-link",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-M01-unsent-action-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-M01-explains-disabled-action",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-no-false-reminded-label",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-R01-visible-overdue-age",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-R01-visible-due-date",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-R01-visible-money",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-desktop-R02-keyboard-navigation-preserves-identity",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-R02-exact-student-fee-link",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-M01-unsent-action-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-M01-explains-disabled-action",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-no-false-reminded-label",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-R01-visible-overdue-age",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-R02-keyboard-navigation-preserves-identity",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-R02-exact-student-fee-link",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-M01-unsent-action-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-M01-explains-disabled-action",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-no-false-reminded-label",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-R01-visible-overdue-age",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-no-horizontal-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-R02-keyboard-navigation-preserves-identity",
+      "outcome": "PASS"
+    },
+    {
+      "case": "R02-destination-read-stays-denied-teacher-a",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "R02-destination-read-stays-denied-parent-a",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "R02-destination-read-stays-denied-parent-b",
+      "outcome": "PASS",
+      "status": 403
+    },
+    {
+      "case": "no-browser-mutations",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-unexpected-browser-diagnostics",
+      "outcome": "FAIL"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265738649,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": true,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265738875,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265738930,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265738932,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265738986,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265739208,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265739291,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265739293,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265739311,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265739491,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265739535,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265739538,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 1,
+      "at": 1792265740462,
+      "type": "requestfailed",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": true,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": false,
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "follow-owned-student",
+      "phase": "follow-owned-student",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 2,
+      "at": 1792265745434,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": true,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 2,
+      "at": 1792265745651,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 2,
+      "at": 1792265745714,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 2,
+      "at": 1792265745716,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 2,
+      "at": 1792265745752,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752219,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": true,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752220,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": true,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752221,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": true,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752435,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752442,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752472,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752573,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    },
+    {
+      "actor": "admin",
+      "sessionId": 3,
+      "at": 1792265752685,
+      "type": "expected-prefetch-cancellation",
+      "method": "GET",
+      "sameOrigin": true,
+      "ownedStudentFeeRoute": false,
+      "path": "/students/:student-id",
+      "code": "net::ERR_ABORTED",
+      "prefetch": true,
+      "routerPrefetch": "1",
+      "segmentPrefetch": false,
+      "rsc": "1",
+      "startedPhase": "reminders-load",
+      "phase": "reminders-load",
+      "navigation": false,
+      "resourceType": "fetch",
+      "responseStatus": 200
+    }
+  ],
+  "completedRoutes": [
+    [
+      {
+        "at": 1792265740337,
+        "status": 200,
+        "prefetch": true,
+        "resourceType": "fetch"
+      }
+    ],
+    [
+      {
+        "at": 1792265746557,
+        "status": 200,
+        "prefetch": true,
+        "resourceType": "fetch"
+      },
+      {
+        "at": 1792265746616,
+        "status": 200,
+        "prefetch": false,
+        "resourceType": "fetch"
+      }
+    ],
+    [
+      {
+        "at": 1792265753468,
+        "status": 200,
+        "prefetch": true,
+        "resourceType": "fetch"
+      },
+      {
+        "at": 1792265753507,
+        "status": 200,
+        "prefetch": false,
+        "resourceType": "fetch"
+      }
+    ]
+  ],
+  "writes": [],
+  "requests": [
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/dashboard/finance/overdue?limit=100",
+      "status": 200
+    },
+    {
+      "actor": "admin",
+      "method": "GET",
+      "path": "/fees/student/:owned-student",
+      "status": 200
+    },
+    {
+      "actor": "teacher-a",
+      "method": "GET",
+      "path": "/fees/student/:owned-student",
+      "status": 403
+    },
+    {
+      "actor": "parent-a",
+      "method": "GET",
+      "path": "/fees/student/:owned-student",
+      "status": 403
+    },
+    {
+      "actor": "parent-b",
+      "method": "GET",
+      "path": "/fees/student/:owned-student",
+      "status": 403
+    }
+  ],
+  "failure": {
+    "message": "no-unexpected-browser-diagnostics"
+  },
+  "cleanup": "No fixture records created; no business records changed",
+  "delivery": "BLOCKED: send implementation absent; controls explicitly disabled"
+}

@@ -1,0 +1,65 @@
+{
+  "expectedRevision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+  "servingRevision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+  "release": {
+    "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+    "image": "ghcr.io/hdevlop/school@sha256:9b3aab74646ddb179a0fc1daf8b5e2b672ac731310493eab911d2b92d975b826",
+    "buildRun": "https://github.com/hdevlop/school/actions/runs/39062228402"
+  },
+  "containers": [
+    {
+      "name": "school-school-lghkg3-app-1",
+      "configuredImage": "ghcr.io/hdevlop/school:demo",
+      "imageId": "sha256:9b3aab74646ddb179a0fc1daf8b5e2b672ac731310493eab911d2b92d975b826",
+      "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+      "state": "running",
+      "health": "healthy",
+      "mounts": [
+        {
+          "source": "/srv/school/storage-production",
+          "destination": "/srv/school/storage"
+        }
+      ]
+    },
+    {
+      "name": "school-school-lghkg3-notifications-worker-1",
+      "configuredImage": "ghcr.io/hdevlop/school:demo",
+      "imageId": "sha256:9b3aab74646ddb179a0fc1daf8b5e2b672ac731310493eab911d2b92d975b826",
+      "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+      "state": "running",
+      "health": "healthy",
+      "mounts": [
+        {
+          "source": "/srv/school/storage-production",
+          "destination": "/srv/school/storage"
+        }
+      ]
+    }
+  ],
+  "images": [
+    {
+      "imageId": "sha256:9b3aab74646ddb179a0fc1daf8b5e2b672ac731310493eab911d2b92d975b826",
+      "repoDigests": [
+        "ghcr.io/hdevlop/school@sha256:9b3aab74646ddb179a0fc1daf8b5e2b672ac731310493eab911d2b92d975b826"
+      ],
+      "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f"
+    }
+  ],
+  "endpoints": [
+    {
+      "url": "https://myscolai.com/login",
+      "status": 200
+    },
+    {
+      "url": "https://www.myscolai.com/login",
+      "status": 200
+    },
+    {
+      "url": "https://myscolai.com/api/health/status",
+      "status": 200
+    }
+  ],
+  "healthy": true,
+  "digestMatches": true,
+  "verifiedUtc": "2026-10-17T19:39:52.482Z"
+}

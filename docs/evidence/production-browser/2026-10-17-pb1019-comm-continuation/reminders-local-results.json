@@ -1,0 +1,120 @@
+{
+  "target": "loopback dev candidate",
+  "completedUtc": "2026-10-17T19:11:56.118Z",
+  "scope": "Browser-only response fixtures; no financial records written; injected 500/403 are not live server failures",
+  "results": [
+    {
+      "case": "desktop-exact-student-fee-destination",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop-send-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "desktop-accessible-unavailability-reason",
+      "outcome": "PASS"
+    },
+    {
+      "case": "bulk-send-disabled",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-false-reminded-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "filtered-empty-differs-from-load-error",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-student-link-and-disabled-send",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-no-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "fr-phone-direction",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-student-link-and-disabled-send",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-no-overflow",
+      "outcome": "PASS"
+    },
+    {
+      "case": "ar-phone-direction",
+      "outcome": "PASS"
+    },
+    {
+      "case": "error-no-false-zero-or-stale-student",
+      "outcome": "PASS"
+    },
+    {
+      "case": "error-no-financial-summary-or-bulk-control",
+      "outcome": "PASS"
+    },
+    {
+      "case": "error-dedicated-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "forbidden-no-false-zero-or-stale-student",
+      "outcome": "PASS"
+    },
+    {
+      "case": "forbidden-no-financial-summary-or-bulk-control",
+      "outcome": "PASS"
+    },
+    {
+      "case": "forbidden-dedicated-state",
+      "outcome": "PASS"
+    },
+    {
+      "case": "valid-empty-shows-zero-count",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-browser-mutations",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-page-errors",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [],
+  "writes": [
+    {
+      "method": "POST",
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    },
+    {
+      "method": "POST",
+      "path": "/api/mcp",
+      "rpcMethod": "tools/list"
+    }
+  ],
+  "failure": null
+}

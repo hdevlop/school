@@ -1,0 +1,64 @@
+{
+  "revision": "b472ff2c28fc4f0d1b0d485ae2686b117aadf1a3",
+  "completedUtc": "2026-10-17T19:07:51.929Z",
+  "scope": "Controlled read-only reminders continuation; synthetic HTTP failure affects only this browser",
+  "results": [
+    {
+      "case": "reminders-owned-row-has-student-destination",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "reminders-no-false-sent-state",
+      "outcome": "FAIL",
+      "classification": "PRODUCT",
+      "deliveryRequests": 0
+    },
+    {
+      "case": "reminders-server-failure-displays-error",
+      "outcome": "PASS"
+    },
+    {
+      "case": "reminders-server-failure-keeps-count-unknown",
+      "outcome": "FAIL",
+      "classification": "PRODUCT"
+    },
+    {
+      "case": "serving-revision-stable",
+      "outcome": "PASS"
+    },
+    {
+      "case": "no-browser-mutations",
+      "outcome": "PASS"
+    }
+  ],
+  "diagnostics": [
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "GET",
+      "path": "/api/dashboard",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    },
+    {
+      "actor": "admin",
+      "type": "responseerror",
+      "method": "GET",
+      "path": "/api/dashboard",
+      "status": 500
+    },
+    {
+      "actor": "admin",
+      "type": "consoleerror",
+      "message": "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    }
+  ],
+  "writes": [],
+  "failure": null,
+  "productionDataChanges": 0
+}

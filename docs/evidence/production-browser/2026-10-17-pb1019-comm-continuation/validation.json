@@ -1,0 +1,49 @@
+{
+  "sourceCommit": "e553b1622a5b50e722d90100954bebb031414f92",
+  "sourceFiles": [
+    "apps/dashboard/src/features/Reports/RemindersPage.tsx",
+    "apps/dashboard/src/features/Reports/components/ReminderCard.tsx"
+  ],
+  "isolatedCheckout": "e553b1622a5b50e722d90100954bebb031414f92",
+  "rootCommand": "bun run check",
+  "rootExitCode": 0,
+  "rootScope": "Exact committed source in separate checkout; frozen Bun install; lint, typecheck, translations, tests, production build and migration checks",
+  "initialSharedBuild": {
+    "outcome": "ENVIRONMENT",
+    "reason": "Parallel in-progress form-schema edits changed during the shared-workspace build. Four unmatched imports caused type checking to fail; no parallel source was reset or staged. Exact committed source passed in isolation."
+  },
+  "ci": "https://github.com/hdevlop/school/actions/runs/39061459814",
+  "browserCounts": {
+    "reminders-before-fix": {
+      "FAIL": 3,
+      "PASS": 3
+    },
+    "reminders-local-results": {
+      "PASS": 21
+    },
+    "reminders-deployed-results": {
+      "PASS": 35
+    },
+    "pw-announcements-results": {
+      "PASS": 32,
+      "BLOCKED": 2
+    }
+  },
+  "delivery": "Not implemented. Individual and bulk controls are disabled with an accessible explanation; no success toast or reminded state is fabricated.",
+  "mutations": "One owned unpublished announcement draft is created/edited/deleted; reminders use existing controlled records and read-only APIs; no financial write or delivery.",
+  "cleanup": "See announcement report for exact owned cleanup; no reminders fixtures created",
+  "localTeardown": "Dedicated loopback dev server stopped; shared server untouched",
+  "successorAcceptance": {
+    "sourceCommit": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+    "ci": "https://github.com/hdevlop/school/actions/runs/39062228402",
+    "exactRootCi": "PASS",
+    "imageAndDeploy": "PASS",
+    "browser": {
+      "reminders": 35,
+      "announcements": 34,
+      "failures": 0
+    },
+    "localizedAnnouncementRefusals": "PASS; invalid French title/content produce translated errors without a write",
+    "proof": "successor-37147d7/deployment-proof.json"
+  }
+}

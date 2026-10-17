@@ -1,0 +1,199 @@
+{
+  "scope": "Cumulative Communication coverage; only three promoted cases are newly accepted here. Historical passes retain their original source boundary.",
+  "selectedCases": 25,
+  "outcomes": {
+    "PASS": 7,
+    "BLOCKED": 18,
+    "FAIL": 0
+  },
+  "cases": [
+    {
+      "id": "announcements-R01",
+      "outcome": "PASS",
+      "reason": "Expanded list/detail author, content, draft status, class audience, empty publish date and Arabic phone projection reconcile with supported reads.",
+      "evidence": "pw-announcements-results.json",
+      "revision": "e553b1622a5b50e722d90100954bebb031414f92"
+    },
+    {
+      "id": "announcements-R02",
+      "outcome": "PASS",
+      "reason": "Admin create/edit/delete and missing publish/unpublish controls observed. Teacher and both parents cannot create or read the private draft.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "announcements-M01",
+      "outcome": "PASS",
+      "reason": "Browser creates and edits one unpublished class-targeted draft; reload and supported reads confirm persistence.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "announcements-M02",
+      "outcome": "BLOCKED",
+      "reason": "Browser confirms no publish control; class audience includes uncontrolled students. No publication or calendar acceptance.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "announcements-M03",
+      "outcome": "BLOCKED",
+      "reason": "Browser confirms no unpublish control; no active publication created.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "announcements-M04",
+      "outcome": "PASS",
+      "reason": "Browser cancellation preserves the draft; confirmation deletes it once; reload and supported read confirm absence.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-R01",
+      "outcome": "BLOCKED",
+      "reason": "Desktop and Arabic phone identify owned alerts; class/section filters and translated status pass. Full priority/date/navigation matrix remains open.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-R02",
+      "outcome": "BLOCKED",
+      "reason": "Parent A/B row isolation and teacher audience filtering pass in browser; earlier scoped transport denials retained. Student login and teacher-B absent.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-R03",
+      "outcome": "BLOCKED",
+      "reason": "Parent sees acknowledge only; teacher and admin supported person-alert actions observed. Shared class notice, student and supervisor unavailable.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-R04",
+      "outcome": "BLOCKED",
+      "reason": "Admin historical selection hides current fixtures and switching back restores them; parent has no year switch; active year unchanged. Shared-notice and complete error/filtered-empty matrix remain open.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-M01",
+      "outcome": "BLOCKED",
+      "reason": "Both parents acknowledge own child and reload persistence passes. Student-self half remains unavailable.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-M02",
+      "outcome": "BLOCKED",
+      "reason": "Teacher acknowledge/resolve/dismiss each persist on a controlled person alert. Shared class notice half remains unavailable.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-M03",
+      "outcome": "BLOCKED",
+      "reason": "Admin resolves/dismisses controlled person alert and reloads; unrelated alerts unchanged. Separate class/supervisor/acknowledge matrix remains open.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "alerts-M04",
+      "outcome": "PASS",
+      "reason": "Cancel preserves controlled alert; one confirmed browser delete persists after reload. Parent delete UI absent and prior transport refusals retained; unrelated alerts unchanged.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "notifications-R01",
+      "outcome": "BLOCKED",
+      "reason": "Four controlled accounts show empty inbox, zero API count and bell footer; Arabic phone labels pass. Nonempty ordering/destinations unavailable.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "notifications-R02",
+      "outcome": "BLOCKED",
+      "reason": "No owned deployed notification destination to follow; no broad trigger invoked.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "notifications-R03",
+      "outcome": "BLOCKED",
+      "reason": "Alert status transitions passed separately and inboxes remain empty; positive independent bell/read state requires a real owned message.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "notifications-M01",
+      "outcome": "BLOCKED",
+      "reason": "Parent empty mark-all returns zero and reload stays zero. Fresh positive read/read-all regression passes locally; deployed positive lifecycle remains unavailable.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "notifications-M02",
+      "outcome": "BLOCKED",
+      "reason": "No controlled nonfinancial recipient-only live trigger; no real delivery, duplicate or cross-recipient browser acceptance.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "reminders-R01",
+      "outcome": "PASS",
+      "reason": "Controlled overdue amount, oldest due date and age independently reconcile with the owning fee installments; desktop and French/Arabic phone views identify the same record.",
+      "evidence": "reminders-deployed-results.json",
+      "revision": "e553b1622a5b50e722d90100954bebb031414f92"
+    },
+    {
+      "id": "reminders-R02",
+      "outcome": "PASS",
+      "reason": "Keyboard navigation follows the exact controlled student fee link on desktop and phone; destination identity persists and denied actors retain transport refusals.",
+      "evidence": "reminders-deployed-results.json",
+      "revision": "e553b1622a5b50e722d90100954bebb031414f92"
+    },
+    {
+      "id": "reminders-M01",
+      "outcome": "BLOCKED",
+      "reason": "Controlled row button displays SMS-coming-soon toast and makes zero delivery requests. Actual send and duplicate handling are unimplemented.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "push-preferences-R01",
+      "outcome": "BLOCKED",
+      "reason": "All four accounts show a disabled switch with accessible unavailability reason; Arabic phone labels pass. Server push disabled; undecided/denied/unsupported permission matrix remains open.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "push-preferences-M01",
+      "outcome": "BLOCKED",
+      "reason": "Server enabled=false/publicKey=null; real opt-in and reload persistence unavailable.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    },
+    {
+      "id": "push-preferences-M02",
+      "outcome": "BLOCKED",
+      "reason": "No live subscription or delivery; real opt-out persistence and nondelivery unavailable.",
+      "evidence": "../2026-10-17-pb1019-comm/checklist-coverage.json",
+      "scope": "Retained earlier outcome; not rerun by this continuation"
+    }
+  ],
+  "latestDeployedRecheck": {
+    "revision": "37147d72ef8dc119f282f8a6305fc88fc47a2f3f",
+    "acceptedCases": [
+      "announcements-R01",
+      "reminders-R01",
+      "reminders-R02"
+    ],
+    "evidence": [
+      "successor-37147d7/reminders-deployed-results.json",
+      "successor-37147d7/pw-announcements-results.json"
+    ],
+    "note": "Cumulative outcome remains 7 PASS / 18 partial or BLOCKED; earlier cases retain their historical evidence."
+  }
+}

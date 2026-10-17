@@ -1,0 +1,61 @@
+{
+  "attempts": [
+    {
+      "evidence": "announcements-detail-observer-attempt1.json",
+      "classification": "TEST",
+      "reason": "Detail tooltip dismissal used a global tooltip count or mouse movement. Explicit Escape dismisses the matched tooltip; owned draft cleanup passed on failed attempts."
+    },
+    {
+      "evidence": "announcements-detail-observer-attempt2.json",
+      "classification": "TEST",
+      "reason": "Detail tooltip dismissal used a global tooltip count or mouse movement. Explicit Escape dismisses the matched tooltip; owned draft cleanup passed on failed attempts."
+    },
+    {
+      "evidence": "reminders-deployed-observer-attempt1.json",
+      "classification": "TEST",
+      "reason": "Observer initially treated Next prefetch and HTTP 200 RSC stream cancellations as failures. Final observer restricts expected cancellations to supported-read link targets or the exact owned HTTP 200 RSC destination whose identity/fee view passed; no API failure is ignored."
+    },
+    {
+      "evidence": "reminders-deployed-observer-attempt2.json",
+      "classification": "TEST",
+      "reason": "Observer initially treated Next prefetch and HTTP 200 RSC stream cancellations as failures. Final observer restricts expected cancellations to supported-read link targets or the exact owned HTTP 200 RSC destination whose identity/fee view passed; no API failure is ignored."
+    },
+    {
+      "evidence": "reminders-deployed-observer-attempt3.json",
+      "classification": "TEST",
+      "reason": "Observer initially treated Next prefetch and HTTP 200 RSC stream cancellations as failures. Final observer restricts expected cancellations to supported-read link targets or the exact owned HTTP 200 RSC destination whose identity/fee view passed; no API failure is ignored."
+    },
+    {
+      "evidence": "reminders-deployed-observer-attempt4.json",
+      "classification": "TEST",
+      "reason": "Observer initially treated Next prefetch and HTTP 200 RSC stream cancellations as failures. Final observer restricts expected cancellations to supported-read link targets or the exact owned HTTP 200 RSC destination whose identity/fee view passed; no API failure is ignored."
+    },
+    {
+      "evidence": "reminders-deployed-observer-attempt5.json",
+      "classification": "TEST",
+      "reason": "Observer initially treated Next prefetch and HTTP 200 RSC stream cancellations as failures. Final observer restricts expected cancellations to supported-read link targets or the exact owned HTTP 200 RSC destination whose identity/fee view passed; no API failure is ignored."
+    },
+    {
+      "evidence": "reminders-deployed-observer-attempt6.json",
+      "classification": "TEST",
+      "reason": "Observer initially treated Next prefetch and HTTP 200 RSC stream cancellations as failures. Final observer restricts expected cancellations to supported-read link targets or the exact owned HTTP 200 RSC destination whose identity/fee view passed; no API failure is ignored."
+    }
+  ],
+  "finalOnlyCounts": {
+    "reminders-before-fix": {
+      "FAIL": 3,
+      "PASS": 3
+    },
+    "reminders-local-results": {
+      "PASS": 21
+    },
+    "reminders-deployed-results": {
+      "PASS": 35
+    },
+    "pw-announcements-results": {
+      "PASS": 32,
+      "BLOCKED": 2
+    }
+  },
+  "finalRouteCancellationPolicy": "Same-origin GET; known supported-read prefetch target with a prefetch header, or exact controlled fee destination with RSC=1, HTTP 200 headers, ERR_ABORTED during navigation and verified final student identity/fee view. All events retained; API failures remain unexpected."
+}
