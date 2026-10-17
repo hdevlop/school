@@ -168,7 +168,7 @@
     "chooseYear": "Choose a year",
     "chooseTwoYears": "Choose two different school years",
     "noAuditEntries": "No financial changes recorded yet.",
-    "subtitle": "{{count}} checks awaiting settlement",
+    "subtitle": "Checks awaiting settlement: {{count}}",
     "searchPlaceholder": "Search student or check number...",
     "rolloverButton": "Year rollover",
     "bounceTitle": "Bounce check",
@@ -183,7 +183,7 @@
       "projectedTotal": "Projected total"
     },
     "advanceSelected": "Next step",
-    "bulkUpdated": "{{count}} checks updated",
+    "bulkUpdated": "Checks updated: {{count}}",
     "bulkPartial": "{{done}} of {{total}} checks updated"
   },
   "installments": {
@@ -1615,6 +1615,7 @@
       "dueDate": "Due Date",
       "installmentPreview": "Installment Preview",
       "installments": "Installments",
+      "installmentCount": "Installments: {{count}}",
       "section": "Section",
       "sectionPlaceholder": "Select section",
       "students": "Students",
@@ -4323,7 +4324,8 @@
       "cannotPay": "This expense cannot be paid in its current status",
       "rejectionReasonRequired": "A rejection reason is required",
       "checkNumberRequired": "A check number is required for check payments",
-      "statusViaWorkflow": "Approve, reject or pay an expense with its own action; an edit can only cancel it."
+      "statusViaWorkflow": "Approve, reject or pay an expense with its own action; an edit can only cancel it.",
+      "paidLocked": "A paid expense is closed and can no longer be edited or deleted"
     },
     "form": {
       "basicInformation": "Basic Information",
@@ -5006,14 +5008,17 @@
       "pay": "Pay Salary",
       "paid": "Paid",
       "unpay": "Unpay",
-      "paySelected": "Run Payroll"
+      "paySelected": "Run Payroll",
+      "unpayConfirm": "Undo payment"
     },
     "loading": "Loading payroll...",
     "noData": "No payroll records found",
     "dialogs": {
       "payTitle": "Confirm salary payment",
       "payOne": "Pay {{amount}} to {{name}} for {{period}} by bank transfer?",
-      "payMany": "Pay {{count}} staff members a total of {{amount}} for {{period}} by bank transfer?"
+      "payMany": "Pay {{count}} staff members a total of {{amount}} for {{period}} by bank transfer?",
+      "unpayTitle": "Undo the salary payment",
+      "unpayOne": "Undo the payment of {{amount}} to {{name}} for {{period}}? The payslip is kept and returns to pending."
     }
   },
   "reports": {

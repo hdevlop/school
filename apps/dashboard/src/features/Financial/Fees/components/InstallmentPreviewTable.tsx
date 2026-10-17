@@ -24,7 +24,7 @@ const InstallmentPreviewTable = ({ installments, visible = true }: InstallmentPr
                {t('fees.form.installmentPreview') || 'Installment Schedule Preview'}
             </h4>
             <p className="text-xs text-muted-foreground">
-               {installments.length} {t('fees.form.installments') || 'installments'} — {t('fees.form.total') || 'Total'}: {majorMoney(total)}
+               {t('fees.form.installmentCount', { count: installments.length })} — {t('fees.form.total')}: {majorMoney(total)}
             </p>
          </div>
          <div className="max-h-48 overflow-y-auto">

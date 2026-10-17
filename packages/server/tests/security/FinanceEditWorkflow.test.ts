@@ -28,6 +28,21 @@ describe('expense status through the generic edit', () => {
   });
 });
 
+// PB1020 (2026-10-17): a paid expense could still be edited or deleted,
+// erasing money that had left the school.
+describe('paid expense', () => {
+  const validator = withEnglishMessages(new ExpenseValidator({} as any));
+
+  it('refuses editing or deleting a paid expense with a translated error', () => {
+    expect(() => validator.ensureNotPaid('paid'))
+      .toThrow('A paid expense is closed and can no longer be edited or deleted');
+  });
+
+  it.each(['pending', 'approved', 'rejected', 'cancelled'])('leaves a %s expense open', (status) => {
+    expect(() => validator.ensureNotPaid(status)).not.toThrow();
+  });
+});
+
 // Same run: a payslip took deductions of 150 against a gross of 100 and
 // showed a net of -50; the generic edit could also set `paid` directly.
 

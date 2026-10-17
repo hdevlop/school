@@ -126,6 +126,11 @@ export class ExpenseValidator {
    * it was paid; an edit that set `paid` skipped all three and counted the
    * amount as spent.
    */
+  /** A paid expense records money that left the school: it is closed. */
+  ensureNotPaid(status: string) {
+    if (status === 'paid') Err(409, this.t('paidLocked'));
+  }
+
   ensureEditableStatusChange(current: string, next: string | undefined) {
     if (next === undefined || next === current) return;
     if (next === 'cancelled' && (current === 'pending' || current === 'approved')) return;

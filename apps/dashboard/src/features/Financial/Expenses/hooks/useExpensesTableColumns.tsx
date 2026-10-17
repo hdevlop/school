@@ -10,16 +10,6 @@ export const useExpensesTableColumns = () => {
 
   return useMemo(() => [
     {
-      accessorKey: "id",
-      header: t('expenses.table.id'),
-      enableSorting: true,
-      cell: ({ getValue }) => (
-        <div className="font-mono text-xs text-muted-foreground">
-          {getValue()}
-        </div>
-      ),
-    },
-    {
       accessorKey: "category",
       header: t('expenses.table.category'),
       enableSorting: true,

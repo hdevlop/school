@@ -135,8 +135,11 @@ function ExpensesTable() {
   };
 
   // Providing `menu.row` replaces NTable's built-in items, so View, Edit and
-  // Delete are restated around the workflow step the expense is at.
-  const rowMenu = (expense) => [
+  // Delete are restated around the workflow step the expense is at. A paid
+  // expense is closed: the server refuses to edit or delete it.
+  const rowMenu = (expense) => expense.status === 'paid' ? [
+    { label: t('common.view'), icon: Eye, onSelect: () => handleView(expense) },
+  ] : [
     { label: t('common.view'), icon: Eye, onSelect: () => handleView(expense) },
     { label: t('common.edit'), icon: Pencil, onSelect: () => handleEdit(expense) },
     ...(expense.status === 'pending' ? [

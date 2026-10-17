@@ -113,8 +113,10 @@ describe('authenticated expense year scope', () => {
       expect(isError).not.toBe(true);
       expect((JSON.parse(content[0].text) as Array<{ id: string }>).map((row) => row.id)).toContain(oldId);
     } finally { await transport.close(); }
-    expect((await request(`/expenses/${oldId}`, '2025-2026', 'DELETE')).status).toBe(200);
-    expect(await visibleIds('2025-2026')).toEqual([]);
+    // A paid expense is closed; `afterAll` removes it from the fixture directly.
+    expect((await request(`/expenses/${oldId}`, '2025-2026', 'DELETE')).status).toBe(409);
+    expect((await request(`/expenses/${oldId}`, '2025-2026', 'PUT', { title: 'after payment' })).status).toBe(409);
+    expect(await visibleIds('2025-2026')).toEqual([oldId]);
     expect(await visibleIds('2026-2027')).toEqual([currentId]);
   });
 });

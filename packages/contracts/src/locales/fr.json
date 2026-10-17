@@ -34,9 +34,9 @@
       "missingTargetSection": "Section ciblée introuvable",
       "targetYearMismatch": "Section ciblée d’une autre année",
       "sourceDateOutsideYear": "Date hors de cette année",
-      "missingStudent": "Étudiant introuvable",
+      "missingStudent": "Élève introuvable",
       "missingDatedPlacement": "Aucun placement daté ce jour-là",
-      "studentSectionNotTargeted": "Section de l’étudiant non ciblée",
+      "studentSectionNotTargeted": "Section de l’élève non ciblée",
       "missingSourceDate": "Aucune date d’évaluation ou d’examen",
       "ambiguousGradeSource": "Doit avoir exactement une évaluation ou un examen",
       "gradeSourceYearMismatch": "Évaluation ou examen enregistré dans une autre année",
@@ -168,7 +168,7 @@
     "chooseYear": "Choisir une année",
     "chooseTwoYears": "Choisissez deux années scolaires différentes",
     "noAuditEntries": "Aucune modification financière enregistrée pour le moment.",
-    "subtitle": "{{count}} chèques en attente de règlement",
+    "subtitle": "Chèques en attente de règlement : {{count}}",
     "searchPlaceholder": "Rechercher un élève ou un numéro de chèque...",
     "rolloverButton": "Report d’année",
     "bounceTitle": "Chèque impayé",
@@ -183,7 +183,7 @@
       "projectedTotal": "Total prévu"
     },
     "advanceSelected": "Étape suivante",
-    "bulkUpdated": "{{count}} chèques mis à jour",
+    "bulkUpdated": "Chèques mis à jour : {{count}}",
     "bulkPartial": "{{done}} sur {{total}} chèques mis à jour"
   },
   "installments": {
@@ -1119,7 +1119,7 @@
       "title": "Paramètres de Sécurité",
       "twoFactorAuth": "Authentification à Deux Facteurs",
       "parentAccessEnabled": "Accès parent",
-      "studentAccessEnabled": "Accès étudiant",
+      "studentAccessEnabled": "Accès élève",
       "teacherAccessEnabled": "Accès enseignant"
     },
     "system": {
@@ -1659,7 +1659,7 @@
     "refunded": "Remboursé",
     "rescheduled": "Reprogrammé",
     "reviewed": "Examiné",
-    "students": "Étudiants",
+    "students": "Élèves",
     "teachers": "Enseignants",
     "transferred": "Transféré",
     "new": "Nouveau",
@@ -1726,7 +1726,7 @@
     "map": "Carte",
     "academic": "Académique",
     "communications": "Communications",
-    "students": "Étudiants",
+    "students": "Élèves",
     "teachers": "Enseignants",
     "parents": "Parents",
     "classes": "Classes",
@@ -2025,14 +2025,17 @@
       "pay": "Payer le salaire",
       "paid": "Payé",
       "unpay": "Annuler",
-      "paySelected": "Lancer la paie"
+      "paySelected": "Lancer la paie",
+      "unpayConfirm": "Annuler le paiement"
     },
     "loading": "Chargement de la paie...",
     "noData": "Aucun bulletin de paie trouvé",
     "dialogs": {
       "payTitle": "Confirmer le paiement du salaire",
       "payOne": "Payer {{amount}} à {{name}} pour {{period}} par virement bancaire ?",
-      "payMany": "Payer {{count}} salariés pour un total de {{amount}} pour {{period}} par virement bancaire ?"
+      "payMany": "Payer {{count}} salariés pour un total de {{amount}} pour {{period}} par virement bancaire ?",
+      "unpayTitle": "Annuler le paiement du salaire",
+      "unpayOne": "Annuler le paiement de {{amount}} à {{name}} pour {{period}} ? La fiche de paie est conservée et repasse en attente."
     }
   },
   "reports": {
@@ -2082,7 +2085,7 @@
   },
   "attendance": {
     "subtitle": {
-      "studentCount": "{{count}} étudiants",
+      "studentCount": "{{count}} élèves",
       "staffCount": "{{count}} membres du personnel"
     },
     "table": {
@@ -2249,7 +2252,8 @@
       "rejectionReasonRequired": "Un motif de refus est requis",
       "checkNumberRequired": "Un numéro de chèque est requis pour un paiement par chèque",
       "paymentDateBeforeExpense": "La date de paiement ne peut pas précéder la date de la dépense",
-      "statusViaWorkflow": "Approuvez, rejetez ou payez une dépense avec l'action prévue ; une modification peut seulement l'annuler."
+      "statusViaWorkflow": "Approuvez, rejetez ou payez une dépense avec l'action prévue ; une modification peut seulement l'annuler.",
+      "paidLocked": "Une dépense payée est clôturée : elle ne peut plus être modifiée ni supprimée"
     },
     "form": {
       "basicInformation": "Informations de base",
@@ -2379,7 +2383,7 @@
       "scope": "Frais affichés",
       "scopeYear": "Année scolaire {{year}}",
       "scopeOutstanding": "Impayés, toutes années scolaires",
-      "outstandingCount": "{{count}} étudiants avec des frais impayés, toutes années scolaires confondues",
+      "outstandingCount": "{{count}} élèves avec des frais impayés, toutes années scolaires confondues",
       "noOutstanding": "Aucun frais impayé, toutes années scolaires confondues",
       "otherYearDebts": "Frais impayés d’autres années scolaires :",
       "otherYearDebt": "{{year}} ({{count}} impayés)"
@@ -2391,7 +2395,7 @@
       "loadingStudentFees": "Chargement des frais…"
     },
     "subtitle": {
-      "count": "Étudiants : {{count}}"
+      "count": "Élèves : {{count}}"
     },
     "form": {
       "byStudent": "Par élève",
@@ -2412,22 +2416,23 @@
       "feeTypePlaceholder": "Sélectionnez le type de frais",
       "installmentPreview": "Aperçu des versements",
       "installments": "Versements",
+      "installmentCount": "Versements : {{count}}",
       "netAmount": "Montant net",
-      "noStudentFound": "Aucun étudiant trouvé",
+      "noStudentFound": "Aucun élève trouvé",
       "notes": "Notes",
       "notesPlaceholder": "Entrez des notes",
       "schedule": "Calendrier",
       "schedulePlaceholder": "Sélectionnez le calendrier",
-      "searchStudent": "Rechercher un étudiant...",
+      "searchStudent": "Rechercher un élève...",
       "section": "Section",
       "sectionPlaceholder": "Sélectionnez la section",
       "selectFeeTypes": "Sélectionner les types de frais",
       "selectedFees": "Frais sélectionnés",
       "status": "Statut",
-      "student": "Étudiant",
-      "studentPlaceholder": "Sélectionnez l'étudiant",
-      "students": "Étudiants",
-      "studentsInClass": "Étudiants dans la classe",
+      "student": "Élève",
+      "studentPlaceholder": "Sélectionnez l'élève",
+      "students": "Élèves",
+      "studentsInClass": "Élèves dans la classe",
       "total": "Total",
       "unknownFeeType": "Type de frais inconnu",
       "academicYear": "Année scolaire",
@@ -2488,8 +2493,8 @@
       "paidAmount": "Montant payé",
       "remainingAmount": "Restant",
       "status": "Statut",
-      "student": "Étudiant",
-      "studentCode": "Code étudiant"
+      "student": "Élève",
+      "studentCode": "Code élève"
     },
     "schedule": {
       "monthly": "Mensuel",
@@ -2958,7 +2963,7 @@
       "all": "Tous",
       "class": "Classe",
       "parents": "Parents",
-      "students": "Étudiants",
+      "students": "Élèves",
       "teachers": "Enseignants"
     },
     "dialogs": {
@@ -3609,7 +3614,7 @@
       "nothingToSave": "Rien à enregistrer."
     },
     "subtitle": {
-      "count": "Étudiants : {{count}}"
+      "count": "Élèves : {{count}}"
     },
     "errors": {
       "outsideSelectedYear": "L'évaluation ou l'examen de cette note appartient à une autre année scolaire",
@@ -3651,9 +3656,9 @@
       "passingMarksRef": "Note de réussite",
       "section": "Section",
       "sectionPlaceholder": "Sélectionnez la section",
-      "student": "Étudiant",
-      "studentAndAssessment": "Étudiant et évaluation",
-      "studentPlaceholder": "Sélectionnez l'étudiant",
+      "student": "Élève",
+      "studentAndAssessment": "Élève et évaluation",
+      "studentPlaceholder": "Sélectionnez l'élève",
       "subject": "Matière",
       "subjectPlaceholder": "Sélectionnez la matière",
       "teacher": "Enseignant",
@@ -3664,7 +3669,7 @@
       "averagePercentage": "Pourcentage moyen",
       "noGradesRecorded": "Aucune note enregistrée",
       "overallGPA": "Moyenne générale",
-      "selectStudent": "Sélectionnez un étudiant",
+      "selectStudent": "Sélectionnez un élève",
       "subjectAverage": "Moyenne par matière",
       "subjectGPA": "Moyenne de la matière",
       "totalGrades": "Total des notes"
@@ -3682,8 +3687,8 @@
       "phone": "Téléphone",
       "section": "Section",
       "status": "Statut",
-      "student": "Étudiant",
-      "studentCode": "Code étudiant"
+      "student": "Élève",
+      "studentCode": "Code élève"
     },
     "success": {
       "saved": "Notes enregistrées.",
@@ -3726,8 +3731,8 @@
       "updated": "Parent mis à jour avec succès",
       "deleted": "Parent supprimé avec succès",
       "allDeleted": "Tous les parents ont été supprimés avec succès",
-      "studentLinked": "Étudiant lié au parent avec succès",
-      "studentUnlinked": "Étudiant détaché du parent avec succès",
+      "studentLinked": "Élève lié au parent avec succès",
+      "studentUnlinked": "Élève détaché du parent avec succès",
       "seeded": "Parents initialisés avec succès",
       "bulkDeleted": "Enregistrements Parent supprimés avec succès"
     },
@@ -3747,7 +3752,7 @@
       "invalidMaritalStatus": "Veuillez sélectionner un état civil valide"
     },
     "tooltips": {
-      "orphaned": "Parent orphelin : aucun enfant ni étudiant lié."
+      "orphaned": "Parent orphelin : aucun enfant ni élève lié."
     },
     "dialogs": {
       "bulkDeleteItemName": "élément",
@@ -3798,7 +3803,7 @@
       "noParentsAdded": "Aucun parent ajouté pour le moment."
     },
     "profile": {
-      "activeStudents": "Étudiants actifs",
+      "activeStudents": "Élèves actifs",
       "additionalInfo": "Informations supplémentaires",
       "addressInfo": "Adresse",
       "agreements": "Accords",
@@ -3811,10 +3816,10 @@
       "feesByChild": "Frais par enfant",
       "financial": "Financier",
       "financialResponsibility": "Responsabilité financière",
-      "graduatedStudents": "Étudiants diplômés",
+      "graduatedStudents": "Élèves diplômés",
       "idDocuments": "Documents d'identité",
       "linkedChildren": "Enfants liés",
-      "linkedStudents": "Étudiants liés",
+      "linkedStudents": "Élèves liés",
       "noChildrenLinked": "Aucun enfant lié",
       "noDocuments": "Aucun document",
       "noFeesForChild": "Aucun frais pour cet enfant",
@@ -4063,7 +4068,7 @@
       "paymentMethod": "Mode de paiement",
       "receiptNumber": "Numéro de reçu",
       "status": "Statut",
-      "student": "Étudiant",
+      "student": "Élève",
       "transactionRef": "Réf. de transaction",
       "studentCode": "Code élève"
     },
@@ -4118,8 +4123,8 @@
     "form": {
       "class": "Classe",
       "classPlaceholder": "Sélectionnez la classe",
-      "maxStudents": "Max étudiants",
-      "maxStudentsPlaceholder": "Entrez le nombre max d'étudiants",
+      "maxStudents": "Max élèves",
+      "maxStudentsPlaceholder": "Entrez le nombre max d'élèves",
       "roomNumber": "Numéro de salle",
       "roomNumberPlaceholder": "Entrez le numéro de salle",
       "sectionInformation": "Informations sur la section",
@@ -4269,9 +4274,9 @@
       "previousSchoolPlaceholder": "Entrez l'école précédente",
       "section": "Section",
       "sectionPlaceholder": "Sélectionnez la section",
-      "studentCode": "Code étudiant",
-      "studentCodePlaceholder": "Entrez le code étudiant",
-      "studentImage": "Image de l'étudiant",
+      "studentCode": "Code élève",
+      "studentCodePlaceholder": "Entrez le code élève",
+      "studentImage": "Photo de l'élève",
       "arabicName": "Nom en arabe"
     },
     "status": {
@@ -4289,7 +4294,7 @@
       "phone": "Téléphone",
       "section": "Section",
       "status": "Statut",
-      "studentCode": "Code étudiant"
+      "studentCode": "Code élève"
     },
     "profile": {
       "detailsTitle": "Détails de l’élève",
@@ -4857,7 +4862,7 @@
       "public": "Public",
       "private": "Privé",
       "teachers": "Enseignants",
-      "students": "Étudiants",
+      "students": "Élèves",
       "parents": "Parents",
       "staff": "Personnel"
     },
@@ -5055,11 +5060,11 @@
   },
   "studentRoutes": {
     "success": {
-      "assigned": "Trajet étudiant affecté avec succès",
-      "deleted": "Trajet étudiant supprimé avec succès",
-      "retrieved": "Trajet étudiant récupéré avec succès",
-      "unassigned": "Trajet étudiant désaffecté avec succès",
-      "updated": "Trajet étudiant mis à jour avec succès"
+      "assigned": "Trajet élève affecté avec succès",
+      "deleted": "Trajet élève supprimé avec succès",
+      "retrieved": "Trajet élève récupéré avec succès",
+      "unassigned": "Trajet élève désaffecté avec succès",
+      "updated": "Trajet élève mis à jour avec succès"
     },
     "errors": {
       "activeHasNoEnd": "Un trajet actif ne peut pas avoir de date de fin d'affectation",

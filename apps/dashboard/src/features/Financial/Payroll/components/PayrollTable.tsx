@@ -171,10 +171,22 @@ const PayrollTable = () => {
     });
   }, [payStaff, effectivePeriod, tableRows, openDialog, t, majorMoney]);
 
-  // Toggle off — undo a payment made by mistake (keeps the payslip history, back to pending).
+  // Undo a payment made by mistake: the payslip is kept and returns to pending.
+  // It reverses money already recorded as paid, so it is confirmed like paying.
   const handleUnpayOne = useCallback(async (staffId: string) => {
-    await unpayStaff({ staffId, period: effectivePeriod });
-  }, [unpayStaff, effectivePeriod]);
+    const row = tableRows.find((item) => item.staffId === staffId);
+    if (!row || row.paymentStatus !== 'paid') return;
+    await openDialog({
+      title: t('payroll.dialogs.unpayTitle'),
+      children: <p>{t('payroll.dialogs.unpayOne', {
+        name: row.name, period: row.payrollPeriod, amount: majorMoney(row.paymentAmount),
+      })}</p>,
+      primaryButton: {
+        text: t('payroll.actions.unpayConfirm'),
+        onClick: async () => { await unpayStaff({ staffId, period: effectivePeriod }); },
+      },
+    });
+  }, [unpayStaff, effectivePeriod, tableRows, openDialog, t, majorMoney]);
 
   const handlePaySelected = useCallback(async (staffIds: string[]) => {
     const targets = tableRows.filter((row) => row.canPay && staffIds.includes(row.staffId));

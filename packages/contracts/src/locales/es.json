@@ -168,7 +168,7 @@
     "chooseYear": "Elija un año",
     "chooseTwoYears": "Elija dos años escolares diferentes",
     "noAuditEntries": "Aún no hay cambios financieros registrados.",
-    "subtitle": "{{count}} cheques pendientes de liquidar",
+    "subtitle": "Cheques pendientes de liquidar: {{count}}",
     "searchPlaceholder": "Buscar alumno o número de cheque...",
     "rolloverButton": "Traspaso de año",
     "bounceTitle": "Cheque devuelto",
@@ -183,7 +183,7 @@
       "projectedTotal": "Total previsto"
     },
     "advanceSelected": "Siguiente paso",
-    "bulkUpdated": "{{count}} cheques actualizados",
+    "bulkUpdated": "Cheques actualizados: {{count}}",
     "bulkPartial": "{{done}} de {{total}} cheques actualizados"
   },
   "installments": {
@@ -1488,14 +1488,17 @@
       "pay": "Pagar salario",
       "paid": "Pagado",
       "unpay": "Anular",
-      "paySelected": "Ejecutar nómina"
+      "paySelected": "Ejecutar nómina",
+      "unpayConfirm": "Anular el pago"
     },
     "loading": "Cargando nómina...",
     "noData": "No se encontraron registros de nómina",
     "dialogs": {
       "payTitle": "Confirmar el pago del salario",
       "payOne": "¿Pagar {{amount}} a {{name}} por {{period}} mediante transferencia bancaria?",
-      "payMany": "¿Pagar a {{count}} empleados un total de {{amount}} por {{period}} mediante transferencia bancaria?"
+      "payMany": "¿Pagar a {{count}} empleados un total de {{amount}} por {{period}} mediante transferencia bancaria?",
+      "unpayTitle": "Anular el pago del salario",
+      "unpayOne": "¿Anular el pago de {{amount}} a {{name}} por {{period}}? La nómina se conserva y vuelve a pendiente."
     }
   },
   "attendance": {
@@ -1687,6 +1690,7 @@
       "feeTypePlaceholder": "Seleccione el tipo de cuota",
       "installmentPreview": "Vista previa de cuotas",
       "installments": "Cuotas",
+      "installmentCount": "Cuotas: {{count}}",
       "netAmount": "Monto neto",
       "noStudentFound": "No se encontró estudiante",
       "notes": "Notas",
@@ -2859,7 +2863,8 @@
       "idExists": "Este gasto ya existe",
       "notFound": "Gasto no encontrado",
       "paymentDateBeforeExpense": "La fecha de pago no puede ser anterior a la del gasto",
-      "statusViaWorkflow": "Aprueba, rechaza o paga un gasto con su acción propia; una edición solo puede cancelarlo."
+      "statusViaWorkflow": "Aprueba, rechaza o paga un gasto con su acción propia; una edición solo puede cancelarlo.",
+      "paidLocked": "Un gasto pagado está cerrado y ya no se puede modificar ni eliminar"
     },
     "actions": {
       "approve": "Aprobar",

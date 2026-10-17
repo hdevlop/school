@@ -126,6 +126,7 @@ export class ExpenseService {
     ];
 
     const existing = await this.expenseValidator.checkExists(id);
+    this.expenseValidator.ensureNotPaid(existing.status);
     this.expenseValidator.ensureEditableStatusChange(existing.status, data.status);
     await this.expenseValidator.validate(data, id);
     // A payment date edited on its own is still checked against the stored
@@ -154,6 +155,7 @@ export class ExpenseService {
   @Transaction()
   async delete(id: string, actorId?: string) {
     const existing = await this.expenseValidator.checkExists(id);
+    this.expenseValidator.ensureNotPaid(existing.status);
     const deleted = await this.expenseRepository.delete(id);
     await this.auditService.record({
       entityType: 'expense', entityId: id, action: 'expense.deleted', actorId,

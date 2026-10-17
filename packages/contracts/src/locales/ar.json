@@ -168,7 +168,7 @@
     "chooseYear": "اختر سنة",
     "chooseTwoYears": "اختر سنتين دراسيتين مختلفتين",
     "noAuditEntries": "لا توجد تغييرات مالية مسجلة بعد.",
-    "subtitle": "{{count}} شيكات في انتظار التسوية",
+    "subtitle": "شيكات في انتظار التسوية: {{count}}",
     "searchPlaceholder": "ابحث عن تلميذ أو رقم شيك...",
     "rolloverButton": "ترحيل السنة",
     "bounceTitle": "شيك مرتجع",
@@ -183,7 +183,7 @@
       "projectedTotal": "الإجمالي المتوقع"
     },
     "advanceSelected": "الخطوة التالية",
-    "bulkUpdated": "تم تحديث {{count}} شيكات",
+    "bulkUpdated": "الشيكات المحدَّثة: {{count}}",
     "bulkPartial": "تم تحديث {{done}} من {{total}} شيكات"
   },
   "installments": {
@@ -1502,14 +1502,17 @@
       "pay": "صرف الراتب",
       "paid": "مدفوع",
       "unpay": "إلغاء الدفع",
-      "paySelected": "تشغيل الرواتب"
+      "paySelected": "تشغيل الرواتب",
+      "unpayConfirm": "إلغاء الدفع"
     },
     "loading": "جاري تحميل الرواتب...",
     "noData": "لا توجد سجلات رواتب",
     "dialogs": {
       "payTitle": "تأكيد دفع الراتب",
       "payOne": "دفع {{amount}} إلى {{name}} عن {{period}} عن طريق التحويل البنكي؟",
-      "payMany": "دفع مبلغ إجمالي قدره {{amount}} إلى {{count}} موظفين عن {{period}} عن طريق التحويل البنكي؟"
+      "payMany": "دفع مبلغ إجمالي قدره {{amount}} إلى {{count}} موظفين عن {{period}} عن طريق التحويل البنكي؟",
+      "unpayTitle": "إلغاء دفع الراتب",
+      "unpayOne": "إلغاء دفع {{amount}} إلى {{name}} عن {{period}}؟ يُحتفظ بقسيمة الراتب وتعود إلى قيد الانتظار."
     }
   },
   "attendance": {
@@ -1701,6 +1704,7 @@
       "feeTypePlaceholder": "اختر نوع الرسوم",
       "installmentPreview": "معاينة الأقساط",
       "installments": "الأقساط",
+      "installmentCount": "الأقساط: {{count}}",
       "netAmount": "المبلغ الصافي",
       "noStudentFound": "لا يوجد تلميذ",
       "notes": "ملاحظات",
@@ -2873,7 +2877,8 @@
       "idExists": "هذا المصروف موجود مسبقًا",
       "notFound": "المصروف غير موجود",
       "paymentDateBeforeExpense": "لا يمكن أن يسبق تاريخ الدفع تاريخ المصروف",
-      "statusViaWorkflow": "استخدم إجراء الموافقة أو الرفض أو الدفع الخاص بالمصروف؛ التعديل يمكنه إلغاؤه فقط."
+      "statusViaWorkflow": "استخدم إجراء الموافقة أو الرفض أو الدفع الخاص بالمصروف؛ التعديل يمكنه إلغاؤه فقط.",
+      "paidLocked": "النفقة المدفوعة مغلقة ولا يمكن تعديلها أو حذفها"
     },
     "actions": {
       "approve": "موافقة",
